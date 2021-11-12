@@ -161,7 +161,7 @@
           (click)="confirm()" pButton type="button" icon="fa fa-trash" iconPos="left"
           label="{{ 'general.boton.eliminar' | translate}}"></button>
 
-        <button *ngIf="!historico" [disabled]=" !permisoEscritura" (click)="nuevo()" pButton
+        <button *ngIf="!historico" [disabled]=" !permisoEscritura" (click)="isNuevo()" pButton
           type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
       </div>
   </div>
@@ -171,7 +171,7 @@
 
 <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
   <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-check" label="Sí" (click)="cd.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
   </p-footer>
 </p-confirmDialog>

@@ -23,6 +23,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
 
   comboContadorFacturasRectificativas: any[] = [];
   contadorFacturasRectificativasSeleccionado: ContadorSeriesItem = new ContadorSeriesItem();
+  nuevo: boolean = false;
 
   contadoresRectificativasSerie: ContadorSeriesItem[] = [];
 
@@ -99,10 +100,29 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
     }
   }
 
+  // Nuevo
+  nuevoContador() {
+    this.nuevo = true;
+    this.contadorFacturasRectificativasSeleccionado = new ContadorSeriesItem();
+    this.contadorFacturasRectificativasSeleccionado.contador = "1";
+  }
+
+  // Back to select
+  backToSelect() {
+    this.nuevo = false;
+    this.actualizarInputs();
+  }
+
   // Restablecer
 
   restablecer(): void {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (!this.nuevo) {
+      this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+      this.actualizarInputs();
+    } else {
+      this.contadorFacturasRectificativasSeleccionado = new ContadorSeriesItem();
+      this.contadorFacturasRectificativasSeleccionado.contador = "1";
+    }
   }
 
   // Guardar
@@ -110,20 +130,45 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
   guardar(): void {
     this.progressSpinner = true;
 
-    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
-      n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.persistenceService.setDatos(this.bodyInicial);
-        this.guardadoSend.emit();
+    if (this.nuevo) {
+      this.contadorFacturasRectificativasSeleccionado.facturaRectificativa = true;
+      this.contadorFacturasRectificativasSeleccionado.idSerieFacturacion = this.body.idSerieFacturacion;
+      this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasRectificativasSeleccionado).subscribe(
+        n => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          console.log(n);
+          this.body.idContadorFacturasRectificativas = JSON.parse(n.body).id;
+          this.nuevo = false;
 
-        this.progressSpinner = false;
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
-      }
-    );
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.persistenceService.setDatos(this.bodyInicial);
+          this.guardadoSend.emit();
+          this.ngOnInit();
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          this.progressSpinner = false;
+        }
+      );
+    } else {
+      this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
+        n => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.persistenceService.setDatos(this.bodyInicial);
+          this.guardadoSend.emit();
+          this.ngOnInit();
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
 
   clear() {
@@ -142,7 +187,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
   // Abrir y cerrar la ficha
 
   esFichaActiva(): boolean {
-    return this.openTarjetaContadorFacturasRectificativas;// this.fichaPosible.activa;
+    return this.openTarjetaContadorFacturasRectificativas;
   }
 
   abreCierraFicha(key): void {

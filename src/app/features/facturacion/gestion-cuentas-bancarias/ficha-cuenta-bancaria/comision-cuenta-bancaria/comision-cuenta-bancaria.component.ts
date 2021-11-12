@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -30,7 +31,8 @@ export class ComisionCuentaBancariaComponent implements OnInit {
   constructor(
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -55,6 +57,55 @@ export class ComisionCuentaBancariaComponent implements OnInit {
       },
       err => {
         console.log(err);
+      }
+    );
+  }
+
+  // Restablecer
+
+  restablecer(): void {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos = false;
+  }
+
+  // Guadar
+
+  isValid(): boolean {
+    return this.body.comisionImporte != undefined 
+      && this.body.comisionDescripcion != undefined && this.body.comisionDescripcion.trim() != ""
+      && this.body.idTipoIVA != undefined && this.body.idTipoIVA.trim() != "";
+  }
+
+  checkSave(): void {
+    if (this.isValid()) {
+      this.save();
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
+
+  save(): void {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("facturacionPyS_actualizaCuentaBancaria", this.body).subscribe(
+      n => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.persistenceService.setDatos(this.bodyInicial);
+        this.guardadoSend.emit();
+
+        this.progressSpinner = false;
+      },
+      err => {
+        let error = JSON.parse(err.error).error;
+        if (error != undefined && error.message != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
+        this.progressSpinner = false;
       }
     );
   }

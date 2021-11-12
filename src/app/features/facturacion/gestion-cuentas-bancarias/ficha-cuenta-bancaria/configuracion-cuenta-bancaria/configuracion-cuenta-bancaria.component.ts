@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-configuracion-cuenta-bancaria',
@@ -31,7 +33,9 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit {
 
   constructor(
     private persistenceService: PersistenceService,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
@@ -70,6 +74,56 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit {
       { value: "0", label: "Normal (140 caracteres)" },
       { value: "1", label: "Ampliado (640 caracteres)" }
     ];
+  }
+
+  // Restablecer
+
+  restablecer(): void {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos = false;
+  }
+
+  // Guadar
+
+  isValid(): boolean {
+    return this.body.configFicherosSecuencia != undefined && this.body.configFicherosSecuencia.trim() != ""
+      && this.body.configFicherosEsquema != undefined && this.body.configFicherosEsquema.trim() != ""
+      && this.body.configLugaresQueMasSecuencia != undefined && this.body.configLugaresQueMasSecuencia.trim() != ""
+      && this.body.configConceptoAmpliado != undefined && this.body.configConceptoAmpliado.trim() != "";
+  }
+
+  checkSave(): void {
+    if (this.isValid()) {
+      this.save();
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
+
+  save(): void {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("facturacionPyS_actualizaCuentaBancaria", this.body).subscribe(
+      n => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.persistenceService.setDatos(this.bodyInicial);
+        this.guardadoSend.emit();
+
+        this.progressSpinner = false;
+      },
+      err => {
+        let error = JSON.parse(err.error).error;
+        if (error != undefined && error.message != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
+        this.progressSpinner = false;
+      }
+    );
   }
 
   showMessage(severity, summary, msg) {

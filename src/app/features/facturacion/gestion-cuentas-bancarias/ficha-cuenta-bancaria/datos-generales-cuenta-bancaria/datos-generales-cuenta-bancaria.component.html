@@ -16,15 +16,15 @@
           </div>
           <div class="d-flex justify-content-between default">
             <label>IBAN: 
-              <span>{{ body.IBAN }}</span></label>
+              <span>{{ body.iban }}</span></label>
             <label>Descripción: 
               <span>{{ body.descripcion }}</span></label>
             <label>BIC: 
-              <span>{{ body.BIC }}</span></label>
+              <span>{{ body.bic }}</span></label>
             <label>Banco: 
               <span>{{ body.nombre }}</span></label>
             <label>Estado: 
-              <span>{{ body.numUsos }}</span></label>
+              <span>{{ estado }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
               *ngIf="!esFichaActiva('datosGenerales')"></i>
@@ -48,11 +48,11 @@
       <div class="form-row lg-12 md-12">
         <div class="form-group col-lg-3 col-md-3">
           <label>IBAN (*)</label>
-          <input type="text" [ngClass]="styleObligatorio(body.IBAN)" class="form-control" [(ngModel)]="body.iban" maxlength="{{ focusIBAN ? 24 : 29 }}" (focus)="onFocusIBAN($event)" (blur)="onBlurIBAN($event)" pInputText>
+          <input type="text" [ngClass]="styleObligatorio(body.iban)" class="form-control" [(ngModel)]="body.iban" maxlength="{{ focusIBAN ? 24 : 29 }}" (focus)="removeSpacesFromIBAN()" (blur)="addSpacesToIBAN()" [disabled]="modoEdicion" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Descripción (*)</label>
-          <input type="text" [ngClass]="styleObligatorio(body.descripcion)" class="form-control" [(ngModel)]="body.descripcion" maxlength="40" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.descripcion" maxlength="40" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>C. contable pago por banco</label>
@@ -64,15 +64,15 @@
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>BIC (*)</label>
-          <input type="text" [ngClass]="styleObligatorio(body.BIC)" class="form-control" [(ngModel)]="body.bic" maxlength="11" [disabled]="true" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.bic" maxlength="11" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Banco (*)</label>
-          <input type="text" [ngClass]="styleObligatorio(body.nombre)" class="form-control" [(ngModel)]="body.nombre" [disabled]="true" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Estado (*)</label>
-          <input type="text" [ngClass]="styleObligatorio(body.numUsos)" class="form-control" [(ngModel)]="body.numUsos" [disabled]="true" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="estado" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Nº ficheros emitidos</label>
@@ -84,8 +84,9 @@
     <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
       <div class="text-right main-button">
         <button pButton *ngIf="esActivo()" (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+        <!--
         <button pButton *ngIf="!esActivo()" (click)="confirmReactivar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
-
+        -->
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
