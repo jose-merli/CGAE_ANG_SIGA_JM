@@ -7,6 +7,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { Router } from '@angular/router';
 import { saveAs } from "file-saver/FileSaver";
 import { RemesasResultadoItem } from '../../../../models/sjcs/RemesasResultadoItem';
+import { RemesasResolucionItem } from '../../../../models/sjcs/RemesasResolucionItem';
 
 @Component({
   selector: 'app-tabla-remesas-resoluciones',
@@ -199,37 +200,15 @@ export class TablaRemesasResolucionesComponent implements OnInit {
 
   descargarFicheros(){
     this.progressSpinner = true;
-    let remesasResultados: RemesasResultadoItem[] = []
+    let remesasResultados: RemesasResolucionItem[] = []
     this.selectedDatos.forEach(rem => {
-      let remesa: RemesasResultadoItem = new RemesasResultadoItem(
-        {
-          'idRemesaResultado': rem.idRemesaResultado,
-          'numRemesaPrefijo': '',
-          'numRemesaNumero': '',
-          'numRemesaSufijo': '',
-          'numRegistroPrefijo': '',
-          'numRegistroNumero': '',
-          'numRegistroSufijo': '',
-          'nombreFichero': rem.nombreFichero,
-          'fechaRemesaDesde': '',
-          'fechaRemesaHasta': '',
-          'fechaCargaDesde': '',
-          'fechaCargaHasta': '',
-          'observacionesRemesaResultado': '',
-          'fechaCargaRemesaResultado': '',
-          'fechaResolucionRemesaResultado': '',
-          'idRemesa': null,
-          'numeroRemesa': '',
-          'prefijoRemesa': '',
-          'sufijoRemesa': '',
-          'descripcionRemesa': '',
-          'numRegistroRemesaCompleto': '',
-          'numRemesaCompleto': ''
-          }
-      );
+      let remesa: RemesasResolucionItem = new RemesasResolucionItem();
+      remesa.idRemesaResolucion = rem.idRemesaResolucion;
+      remesa.nombreFichero = rem.nombreFichero;
+      remesa.log = rem.log;
       remesasResultados.push(remesa);
     });
-    let descarga =  this.sigaServices.postDownloadFiles("remesasResultados_descargarFicheros", remesasResultados);
+    let descarga =  this.sigaServices.postDownloadFiles("remesasResoluciones_descargarRemesasResolucion", remesasResultados);
     descarga.subscribe(
       data => {
         let blob = null;
@@ -238,7 +217,7 @@ export class TablaRemesasResolucionesComponent implements OnInit {
         if(documentoAsociado != undefined){
             blob = new Blob([data], { type: "application/zip" });
             if(blob.size > 50){
-              saveAs(blob, "descargaRemesasResultados.zip");
+              saveAs(blob, "descargaRemesasResoluciones.zip");
             } else {
               this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
             }

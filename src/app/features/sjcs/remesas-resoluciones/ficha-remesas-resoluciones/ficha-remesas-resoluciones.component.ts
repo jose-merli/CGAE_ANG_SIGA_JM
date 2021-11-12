@@ -23,34 +23,9 @@ export class FichaRemesasResolucionesComponent implements OnInit {
   msgs;
   item; 
   remesaTabla;
-  remesaAuxiliar : RemesasResultadoItem;
+  remesaAuxiliar : RemesasResolucionItem;
   remesaResolucion : RemesasResolucionItem = new RemesasResolucionItem();
-  remesaItem: RemesasResultadoItem = new RemesasResultadoItem(
-    {
-    'idRemesaResultado': null,
-    'numRemesaPrefijo': '',
-    'numRemesaNumero': '',
-    'numRemesaSufijo': '',
-    'numRegistroPrefijo': '',
-    'numRegistroNumero': '',
-    'numRegistroSufijo': '',
-    'nombreFichero': '',
-    'fechaRemesaDesde': '',
-    'fechaRemesaHasta': '',
-    'fechaCargaDesde': '',
-    'fechaCargaHasta': '',
-    'observacionesRemesaResultado': '',
-    'fechaCargaRemesaResultado': '',
-    'fechaResolucionRemesaResultado': '',
-    'idRemesa': null,
-    'numeroRemesa': '',
-    'prefijoRemesa': '',
-    'sufijoRemesa': '',
-    'descripcionRemesa': '',
-    'numRegistroRemesaCompleto': '',
-    'numRemesaCompleto': ''
-    }
-  );
+  remesaItem:  RemesasResolucionItem = new RemesasResolucionItem();
 
   fichaRemesaResolucion : string = '';
   file: File = undefined;
@@ -127,10 +102,10 @@ export class FichaRemesasResolucionesComponent implements OnInit {
 
   rellenarDatosNuevo(datosContador){
     if(datosContador.prefijo !== null){
-      this.remesaItem.prefijoRemesa = datosContador.prefijo;
+      this.remesaItem.numRemesaPrefijo = datosContador.prefijo;
     }
     if(datosContador.sufijo !== null){
-      this.remesaItem.sufijoRemesa = datosContador.sufijo;
+      this.remesaItem.numRemesaSufijo = datosContador.sufijo;
     }
   } 
   
@@ -142,7 +117,7 @@ export class FichaRemesasResolucionesComponent implements OnInit {
 
 
   restablecer(){
-    if(this.remesaItem.idRemesa == null){
+    if(this.remesaItem.idRemesaResolucion == null){
       this.tarjetaDatosGeneralesRemesasResoluciones.remesaItem.observaciones= "";
       this.tarjetaDatosGeneralesRemesasResoluciones.remesaItem.fechaResolucion="";
       this.tarjetaDatosGeneralesRemesasResoluciones.remesaItem.nombreFichero = "";
@@ -151,8 +126,8 @@ export class FichaRemesasResolucionesComponent implements OnInit {
       this.tarjetaDatosGeneralesRemesasResoluciones.archivoDisponible = false;
 
     }else{
-      this.tarjetaDatosGeneralesRemesasResoluciones.remesaItem.observaciones= this.remesaAuxiliar.observacionesRemesaResultado;
-      this.tarjetaDatosGeneralesRemesasResoluciones.remesaItem.fechaResolucion = this.remesaAuxiliar.fechaResolucionRemesaResultado;
+      this.tarjetaDatosGeneralesRemesasResoluciones.remesaItem.observaciones= this.remesaAuxiliar.observaciones;
+      this.tarjetaDatosGeneralesRemesasResoluciones.remesaItem.fechaResolucion = this.remesaAuxiliar.fechaResolucion;
     }
   }
 

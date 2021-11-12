@@ -327,7 +327,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     this.file)
     .subscribe(
       data => {
-        let accion = JSON.parse(data.body).error.description;
+        let accion = data.error.description;;
         if(accion == "Insert"){
           this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.actualizacionCorrecta"));
         }else if(accion == "Updated"){

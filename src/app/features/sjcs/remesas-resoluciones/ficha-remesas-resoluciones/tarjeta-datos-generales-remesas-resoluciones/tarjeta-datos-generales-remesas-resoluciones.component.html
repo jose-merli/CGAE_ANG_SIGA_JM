@@ -17,15 +17,12 @@
           <div class="d-flex justify-content-between" style="cursor:default">
             <label>{{ "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" | translate }}
               <span *ngIf="remesaItem != null" > {{ remesaItem.numCompleto }}</span>
-              <span *ngIf="remesaItem == null"> {{ remesaItem.numCompleto }}</span>
             </label>
             <label>{{ "justiciaGratuita.remesasResultados.tabla.fechaRemesa" | translate }}
               <span *ngIf="remesaItem != null"> {{ remesaItem.fechaCarga}}</span>
-              <span *ngIf="remesaItem == null"> {{ remesaItem.fechaCarga }}</span>
             </label>
             <label>{{ "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" | translate }}
               <span *ngIf="remesaItem != null"> {{ remesaItem.nombreFichero }}</span>
-              <span *ngIf="remesaItem == null"> {{ remesaItem.nombreFichero }}</span>
             </label>
             <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "
@@ -76,7 +73,8 @@
     
             <div class="form-group-interlineado col-lg-3 col-md-3">
               <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaRemesa' | translate }}</label>
-              <app-fecha [(value)]="remesaItem.fechaResolucion" name="fechaRemesa" ngDefaultControl (valueChangeSelected)="fillFechaResolucion($event)" [(ngModel)]="remesaItem.fechaResolucion"></app-fecha>
+              <app-fecha [(value)]="remesaItem.fechaResolucion" name="fechaRemesa" (valueChangeInput)=fillFechaResolucion($event)
+              ngDefaultControl (valueChangeSelected)="fillFechaResolucion($event)" [(ngModel)]="remesaItem.fechaResolucion"></app-fecha>
             </div> 
     
             <div class="form-group-interlineado col-lg-3 col-md-3">
