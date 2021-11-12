@@ -169,7 +169,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
       solicitud.fechaDenegada = row.fechaDenegada;
       peticion.push(solicitud);
     });
-    this.sigaServices.post('PyS_aprobarCompraMultiple', peticion).subscribe(
+    this.sigaServices.post('PyS_aprobarSuscripcionMultiple', peticion).subscribe(
       (n) => {
         if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
