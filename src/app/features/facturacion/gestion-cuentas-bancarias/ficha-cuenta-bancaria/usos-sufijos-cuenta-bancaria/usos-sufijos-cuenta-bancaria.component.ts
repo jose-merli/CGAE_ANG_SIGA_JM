@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
@@ -12,7 +12,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './usos-sufijos-cuenta-bancaria.component.html',
   styleUrls: ['./usos-sufijos-cuenta-bancaria.component.scss']
 })
-export class UsosSufijosCuentaBancariaComponent implements OnInit {
+export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
 
   msgs;
   progressSpinner: boolean = false;
@@ -36,7 +36,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   selectedDatos;
 
-  body: CuentasBancariasItem = new CuentasBancariasItem();
+  @Input() body: CuentasBancariasItem;
 
   resaltadoDatos: boolean = false;
 
@@ -56,14 +56,14 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
     this.progressSpinner = true;
 
     this.getCols();
-    this.getComboSufijo();
-    this.getComboSerieFacturacion();
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-    }
-    this.getUsosSufijos();
     
     this.progressSpinner = false;
+  }
+
+  ngOnChanges() {
+    this.getComboSufijo();
+    this.getComboSerieFacturacion();
+    this.getUsosSufijos();
   }
 
   // Combo de sufijos
@@ -127,7 +127,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
       },
       {
         field: 'numPendientes',
-        header: 'Núm. Pendientes'
+        header: 'facturacion.cuentaBancaria.numPendientes'
       },
       {
         field: 'sufijo',
@@ -215,8 +215,9 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_insertaActualizaSerie", this.datos).subscribe(
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.body.numUsos = this.datos.length;
+        this.persistenceService.setDatos(this.body);
         this.guardadoSend.emit();
-        this.getUsosSufijos();
 
         this.progressSpinner = false;
       },

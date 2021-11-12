@@ -13,7 +13,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './datos-generales-cuenta-bancaria.component.html',
   styleUrls: ['./datos-generales-cuenta-bancaria.component.scss']
 })
-export class DatosGeneralesCuentaBancariaComponent implements OnInit {
+export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges {
 
   msgs;
   progressSpinner: boolean = false;
@@ -25,7 +25,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
   @Output() guardadoSend = new EventEmitter<any>();
 
   bodyInicial: CuentasBancariasItem;
-  body: CuentasBancariasItem = new CuentasBancariasItem();
+  @Input() body: CuentasBancariasItem = new CuentasBancariasItem();
   estado: string;
 
   resaltadoDatos: boolean = false;
@@ -40,19 +40,12 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
     private datePipe: DatePipe
   ) { }
 
-  ngOnInit() {
-    this.progressSpinner = true;
+  ngOnInit() { }
 
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-      this.addSpacesToIBAN();
-      this.checkEstado();
-
-      console.log(this.body);
-    }
-
-    this.progressSpinner = false;
+  ngOnChanges() {
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.addSpacesToIBAN();
+    this.checkEstado();
   }
 
   // Validación del IBAN
@@ -71,7 +64,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
 
   checkEstado(): void {
     this.estado = this.body.fechaBaja ? `BAJA DESDE ${this.datePipe.transform(this.body.fechaBaja, 'dd/MM/yyyy')}` : 
-        ( this.body.numUsos != null ? (Number.parseInt(this.body.numUsos) > 0 ? "EN USO" : "SIN USO") : "-");
+        ( this.body.numUsos != undefined ? (this.body.numUsos > 0 ? "EN USO" : "SIN USO") : "-");
   }
 
   // Restablecer
@@ -106,10 +99,8 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
       this.sigaServices.post("facturacionPyS_actualizaCuentaBancaria", this.body).subscribe(
         n => {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-          this.persistenceService.setDatos(this.bodyInicial);
+          this.persistenceService.setDatos(this.body);
           this.guardadoSend.emit();
-          this.addSpacesToIBAN();
   
           this.progressSpinner = false;
         },
@@ -134,8 +125,6 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
           this.body = JSON.parse(n.body).cuentasBancariasITem[0];
           this.persistenceService.setDatos(this.body);
           this.guardadoSend.emit();
-          this.ngOnInit();
-          this.addSpacesToIBAN();
 
           this.progressSpinner = false;
         },
@@ -181,10 +170,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_borrarCuentasBancarias", [this.body]).subscribe(
       data => {
         this.body.fechaBaja = new Date();
-        this.checkEstado();
-
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.persistenceService.setDatos(this.bodyInicial);
+        this.persistenceService.setDatos(this.body);
         this.guardadoSend.emit();
         this.showMessage("success", "Eliminar", "La cuenta bancaria ha sido dada de baja con exito.");
       },

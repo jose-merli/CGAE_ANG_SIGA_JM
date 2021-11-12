@@ -15,15 +15,15 @@
             <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>IBAN: 
+            <label>{{ 'censo.mutualidad.literal.iban' | translate }}: 
               <span>{{ body.iban }}</span></label>
-            <label>Descripción: 
+            <label>{{ 'general.description' | translate }}: 
               <span>{{ body.descripcion }}</span></label>
-            <label>BIC: 
+            <label>{{ 'censo.fichaCliente.datosBancarios.cuentaBancaria.bic' | translate }}: 
               <span>{{ body.bic }}</span></label>
-            <label>Banco: 
+            <label>{{ 'censo.tipoAbono.banco' | translate }}: 
               <span>{{ body.nombre }}</span></label>
-            <label>Estado: 
+            <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate }}: 
               <span>{{ estado }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
@@ -47,35 +47,35 @@
     <div *ngIf="esFichaActiva('datosGenerales')" class="card-body card-body-ficha">
       <div class="form-row lg-12 md-12">
         <div class="form-group col-lg-3 col-md-3">
-          <label>IBAN (*)</label>
+          <label>{{ 'censo.mutualidad.literal.iban' | translate }} (*)</label>
           <input type="text" [ngClass]="styleObligatorio(body.iban)" class="form-control" [(ngModel)]="body.iban" maxlength="{{ focusIBAN ? 24 : 29 }}" (focus)="removeSpacesFromIBAN()" (blur)="addSpacesToIBAN()" [disabled]="modoEdicion" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Descripción (*)</label>
+          <label>{{ 'general.description' | translate }} (*)</label>
           <input type="text" class="form-control" [(ngModel)]="body.descripcion" maxlength="40" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>C. contable pago por banco</label>
+          <label>{{ 'facturacion.cuentaBancaria.contableBanco' | translate }}</label>
           <input type="text" class="form-control" [(ngModel)]="body.asientoContable" maxlength="20" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>C. contable pago por tarjeta</label>
+          <label>{{ 'facturacion.cuentaBancaria.contableTarjeta' | translate }}</label>
           <input type="text" class="form-control" [(ngModel)]="body.cuentaContableTarjeta" maxlength="20" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>BIC (*)</label>
+          <label>{{ 'censo.fichaCliente.datosBancarios.cuentaBancaria.bic' | translate }} (*)</label>
           <input type="text" class="form-control" [(ngModel)]="body.bic" maxlength="11" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Banco (*)</label>
+          <label>{{ 'censo.tipoAbono.banco' | translate }} (*)</label>
           <input type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Estado (*)</label>
+          <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate }} (*)</label>
           <input type="text" class="form-control" [(ngModel)]="estado" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Nº ficheros emitidos</label>
+          <label>{{ 'facturacion.cuentaBancaria.fichEmitidos' | translate }}</label>
           <input type="text" class="form-control" [(ngModel)]="body.numFicheros" [disabled]="true" pInputText>
         </div>
       </div>
