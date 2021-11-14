@@ -71,7 +71,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
     this.getComboJuzgados();
     this.getComboComisarias();
     if(sessionStorage.getItem("volver") != "true"){
-      this.filtro.estado = "0";
+      this.filtro.estado = ["0"];
     }else{
       if(this.filtro.idTurno){
         this.onChangeTurno(this.filtro.idTurno);

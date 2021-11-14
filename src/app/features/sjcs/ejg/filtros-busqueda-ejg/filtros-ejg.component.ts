@@ -233,6 +233,17 @@ export class FiltrosEjgComponent implements OnInit {
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
+      && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
+      this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+      this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
+    }else{
+      this.usuarioBusquedaExpress.numColegiado = " ";
+      this.body.numColegiado = "";
+      this.body.idPersona = "";
+      sessionStorage.removeItem("numColegiado");
+      this.numColegiadoRelleno=false;
+    }
   }
 
   getComboProcedimiento() {
