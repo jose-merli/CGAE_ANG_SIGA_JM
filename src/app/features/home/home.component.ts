@@ -163,6 +163,8 @@ export class HomeComponent implements OnInit {
 	}
 
 	getInstitucionActual() {
-		this.sigaServices.get("institucionActual").subscribe(n => { this.localStorageService.institucionActual = n.value });
+		this.sigaServices.get("institucionActual").subscribe((n)=> { 
+			this.localStorageService.institucionActual = n.value 
+		});
 	}
 }

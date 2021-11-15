@@ -12,14 +12,12 @@
       <div *ngIf="showDatosJustificacion" class="module vista-avanzada">
         <!--FIla 1-->
         <div class="form-row">
-          <!--Codigo-->
+          <!--Colegio-->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.colegio' | translate}}</label>
-            <p-multiSelect #estadoMultiselect class="select-form" [(ngModel)]='filtros.idCodigo'
-              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboColegios" [filter]="true"
-              maxSelectedLabels="10" filterBy="label,labelSinTilde" styleClass="widthAll"
-              (onPanelShow)="focusInputField(estadoMultiselect)" (onChange)="onChangeMultiSelect($event, 'idEstado')">
-            </p-multiSelect>
+            <p-dropdown [disabled]="disableColegio" class="select-form" [(ngModel)]='filtros.idColegio' placeholder="Seleccionar"
+            [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeColegio($event)">
+            </p-dropdown>
           </div>
           <!--Partida Presupuestaria-->
           <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -32,7 +30,7 @@
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.oficio.turnos.grupofacturacion" | translate }}</label>
             <p-dropdown class="select-form" [(ngModel)]='filtros.idFacturacion' placeholder="Seleccionar"
-              [disabled]="disableComboFacturacion" [options]="comboGrupoFacturacion" [filter]="true"
+              [disabled]="disableComboFact" [options]="comboGrupoFacturacion" [filter]="true"
               filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
           </div>
           <!--Conceptos y servicios-->

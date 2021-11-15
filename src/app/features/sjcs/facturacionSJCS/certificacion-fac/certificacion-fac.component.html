@@ -8,7 +8,7 @@
 </div>
 
 <div class="busqueda-container">
-    <app-filtro-certificacion-fac (busqueda)="getCertificaciones($event)" (nuevo)="newCertificacion($event)" [permisoEscritura]="permisoEscritura"> </app-filtro-certificacion-fac>
+    <app-filtro-certificacion-fac [disableColegio]="disableColegio" (busqueda)="getCertificaciones($event)" (nuevo)="newCertificacion($event)" [permisoEscritura]="permisoEscritura"> </app-filtro-certificacion-fac>
     <app-tabla-certificacion-fac *ngIf="buscar" [datos]="datos" (delete)="deleteCertificacion($event)" [permisoEscritura]="permisoEscritura"></app-tabla-certificacion-fac>
 </div>
 
