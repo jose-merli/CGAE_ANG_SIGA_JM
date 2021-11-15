@@ -515,6 +515,10 @@ import { ComisionCuentaBancariaComponent } from './features/facturacion/gestion-
 import { ConfiguracionCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/configuracion-cuenta-bancaria/configuracion-cuenta-bancaria.component';
 import { UsoFicherosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/uso-ficheros-cuenta-bancaria/uso-ficheros-cuenta-bancaria.component';
 import { UsosSufijosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/usos-sufijos-cuenta-bancaria/usos-sufijos-cuenta-bancaria.component';
+import { DatosGeneracionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/datos-generacion-adeudos/datos-generacion-adeudos.component';
+import { CuentaEntidadAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/cuenta-entidad-adeudos/cuenta-entidad-adeudos.component';
+import { FacturasAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturas-adeudos/facturas-adeudos.component';
+import { FacturacionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturacion-adeudos/facturacion-adeudos.component';
 enableRipple(true);
 
 @NgModule({
@@ -945,7 +949,11 @@ enableRipple(true);
 		ComisionCuentaBancariaComponent,
 		ConfiguracionCuentaBancariaComponent,
 		UsoFicherosCuentaBancariaComponent,
-		UsosSufijosCuentaBancariaComponent
+		UsosSufijosCuentaBancariaComponent,
+		DatosGeneracionAdeudosComponent,
+		CuentaEntidadAdeudosComponent,
+		FacturasAdeudosComponent,
+		FacturacionAdeudosComponent
 	],
 	imports: [
 		Paginador3Module,
