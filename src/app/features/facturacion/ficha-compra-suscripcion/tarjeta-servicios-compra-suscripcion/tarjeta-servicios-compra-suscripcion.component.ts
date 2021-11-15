@@ -456,7 +456,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     }
 
   checkServicioSeleccionado(selectedServicio : ListaServiciosItems) {
-    if (selectedServicio.formapago != this.translateService.instant("facturacion.servicios.pagoNoDisponible")) {
+    if (selectedServicio.formapago != this.translateService.instant("facturacion.productos.pagoNoDisponible")) {
       
       if (selectedServicio.fechaBajaIva == null) {
         let serviciosLista : ListaServiciosSuscripcionItem[] = JSON.parse(JSON.stringify(this.serviciosTarjeta));
@@ -478,8 +478,8 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
             return true;
           } else {
             this.showMessage("error",
-              this.translateService.instant("facturacion.servicios.servicioPresenteLista"),
-              this.translateService.instant("facturacion.servicios.servicioPresenteListaDesc")
+              this.translateService.instant("facturacion.productos.productoPresenteLista"),
+              this.translateService.instant("facturacion.productos.productoPresenteListaDesc")
             );
             return false;
           }
@@ -490,15 +490,15 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       }
       else {
         this.showMessage("error",
-          this.translateService.instant("facturacion.servicios.servicioIvaDerogado"),
-          this.translateService.instant("facturacion.servicios.servicioIvaDerogadoDesc"));
+          this.translateService.instant("facturacion.productos.productoIvaDerogado"),
+          this.translateService.instant("facturacion.productos.productoIvaDerogadoDesc"));
         return false;
       }
     }
     else {
       this.showMessage("error",
-      this.translateService.instant("servicioSinFormaPago"),
-      this.translateService.instant("servicioSinFormaPago"));
+      this.translateService.instant("productoSinFormaPago"),
+      this.translateService.instant("productoSinFormaPago"));
       return false;
     }
   }

@@ -29,7 +29,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   @ViewChild("cliente") tarjCliente;
   @ViewChild("productos") tarjProductos;
   @ViewChild("servicios") tarjServicios;
-  esColegiado: boolean;
+  esColegiado: boolean; // Con esta variable se determina si el usuario conectado es un colegiado o no.
 
 
   constructor(private location: Location, 

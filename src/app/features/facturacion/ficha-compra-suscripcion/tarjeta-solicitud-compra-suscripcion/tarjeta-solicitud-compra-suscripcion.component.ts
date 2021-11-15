@@ -11,6 +11,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { Location } from '@angular/common';
 import { TarjetaProductosCompraSuscripcionComponent } from '../tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
 import { TarjetaServiciosCompraSuscripcionComponent } from '../tarjeta-servicios-compra-suscripcion/tarjeta-servicios-compra-suscripcion.component';
+import { stringify } from 'querystring';
 
 @Component({
   selector: 'app-tarjeta-solicitud-compra-suscripcion',
@@ -337,14 +338,19 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     }
     //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
     //REVISAR : Cambiar mensaje
-    else if(this.esColegiado && this.ficha.servicios == null && (this.ficha.servicios.find(el => el.solicitarBaja == "0") != undefined)){
+    else if(this.esColegiado && this.ficha.servicios != null && (this.ficha.servicios.find(el => el.solicitarBaja == "0") != undefined)){
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+    }
+    //Se comprueba que todos los servicios de la peticion son manuales ya que los servicios automaticos no se pueden anular
+    //REVISAR : Cambiar mensaje
+    else if(this.esColegiado && this.ficha.servicios != null && (this.ficha.servicios.find(el => el.automatico == "1") != undefined)){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
     }
     //Se comprueba si hay alguna factura asociada cuando el personal del colegio va a anular una petición
     //REVISAR: Revisar concepto de factura anulada y no anulada y su anulación.
-    else if(!this.esColegiado && this.ficha.facturas != null && this.ficha.facturas.length > 0){
-      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
-    }
+    // else if(!this.esColegiado && this.ficha.facturas != null && this.ficha.facturas.length > 0){
+    //   this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+    // }
     else{
       this.confirmAnular();
     }
@@ -386,7 +392,11 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   solicitarCompra(){
     this.progressSpinner = true; 
-		this.sigaServices.post('PyS_solicitarCompra', this.ficha).subscribe(
+    let peticion : FichaCompraSuscripcionItem = JSON.parse(JSON.stringify(this.ficha));
+    peticion.productos = this.tarjProductos.productosTarjeta;
+    peticion.idFormaPagoSeleccionada = this.tarjProductos.selectedPago;
+    peticion.cuentaBancSelecc = this.tarjProductos.datosTarjeta.cuentaBancSelecc;
+		this.sigaServices.post('PyS_solicitarCompra', peticion).subscribe(
 			(n) => {
 				if( n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -407,7 +417,11 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   solicitarSuscripcion(){
     this.progressSpinner = true; 
-		this.sigaServices.post('PyS_solicitarSuscripcion', this.ficha).subscribe(
+    let peticion : FichaCompraSuscripcionItem = JSON.parse(JSON.stringify(this.ficha));
+    peticion.servicios = this.tarjServicios.serviciosTarjeta;
+    peticion.idFormaPagoSeleccionada = this.tarjServicios.selectedPago;
+    peticion.cuentaBancSelecc = this.tarjServicios.datosTarjeta.cuentaBancSelecc;
+		this.sigaServices.post('PyS_solicitarSuscripcion', peticion).subscribe(
 			(n) => {
 				if( n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
