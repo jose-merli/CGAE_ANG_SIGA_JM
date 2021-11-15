@@ -22,7 +22,6 @@ export class TablaRemesasComponent implements OnInit {
   datosInicial = [];
   selectedBefore;
 
-
   body;
 
   selectedItem: number = 10;
@@ -43,6 +42,8 @@ export class TablaRemesasComponent implements OnInit {
   @Input() permisos;
 
   @Output() search = new EventEmitter<boolean>();
+
+  @Input() remesaInformacionEconomica;
 
   @ViewChild("tabla") tabla;
 
@@ -240,6 +241,11 @@ export class TablaRemesasComponent implements OnInit {
     this.router.navigate(["/fichaRemesasEnvio"]);
     localStorage.setItem('remesaItem', JSON.stringify(evento));
     localStorage.setItem('ficha', "registro");
+    if(this.remesaInformacionEconomica){
+      localStorage.setItem('remesaInformacionEconomica', "true");
+    }else{
+      localStorage.setItem('remesaInformacionEconomica', "false");
+    }
   }
 
   onChangeRowsPerPages(event) {

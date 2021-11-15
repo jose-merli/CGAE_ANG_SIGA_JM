@@ -131,7 +131,7 @@ export class RemesasComponent implements OnInit {
       'numeroEJG': (this.filtrosValues.numeroEJG != null && this.filtrosValues.numeroEJG != undefined) ? this.filtrosValues.numeroEJG.toString() : this.filtrosValues.numeroEJG,
       'prefijo': (this.filtrosValues.prefijo != null && this.filtrosValues.prefijo != undefined) ? this.filtrosValues.prefijo.toString() : this.filtrosValues.prefijo,
       'sufijo': (this.filtrosValues.sufijo != null && this.filtrosValues.sufijo != undefined) ? this.filtrosValues.sufijo.toString() : this.filtrosValues.sufijo,
-      'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : !this.remesaInformacionEconomica
+      'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
     };
     this.progressSpinner = true;
     this.sigaServices.post("filtrosremesas_buscarRemesa", this.remesasDatosEntradaItem).subscribe(

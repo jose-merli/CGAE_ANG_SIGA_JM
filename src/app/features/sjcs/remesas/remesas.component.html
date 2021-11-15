@@ -3,13 +3,15 @@
   <i class="fa fa-square"></i>
   <p>{{'menu.justiciaGratuita' | translate}}
     <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.remesas' | translate}}
-    <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.remesas.envio' | translate}}
+    <i class="fa fa-angle-right"></i>
   </p>
+  <p *ngIf="!remesaInformacionEconomica">{{'menu.justiciaGratuita.remesas.envio' | translate}}</p>
+  <p *ngIf="remesaInformacionEconomica">{{'menu.justiciaGratuita.remesas.informacionEconomica' | translate}}</p>
 </div>
 
 <div class="busqueda-container">
   <app-filtro-remesas [permisoEscritura]="permisoEscritura" (filtrosValues) = "getFiltrosValues($event)"></app-filtro-remesas>
-  <app-tabla-remesas *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tabla-remesas>
+  <app-tabla-remesas *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" [remesaInformacionEconomica]="remesaInformacionEconomica" (search)="search()"></app-tabla-remesas>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

@@ -2,8 +2,11 @@
 <div class="header-title">
   <i class="fa fa-square"></i>
   <p>{{'menu.justiciaGratuita' | translate}}
-    <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.remesas.envio' | translate}}
+    <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.remesas' | translate}}
+    <i class="fa fa-angle-right"></i>
   </p>
+  <p *ngIf="!remesaInformacionEconomica">{{'menu.justiciaGratuita.remesas.envio' | translate}}</p>
+  <p *ngIf="remesaInformacionEconomica">{{'menu.justiciaGratuita.remesas.informacionEconomica' | translate}}</p>
 </div>
 
 <div class="busqueda-container">

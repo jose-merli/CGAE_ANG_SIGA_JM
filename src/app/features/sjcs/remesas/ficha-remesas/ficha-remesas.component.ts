@@ -39,6 +39,7 @@ export class FichaRemesasComponent implements OnInit {
   getAccionesRemesas;
   acciones: boolean = false;
   estado: boolean = false;
+  remesaInformacionEconomica: boolean;
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -49,6 +50,14 @@ export class FichaRemesasComponent implements OnInit {
 
   ngOnInit() {
     this.botonValidar = false;
+
+    if(localStorage.getItem('remesaInformacionEconomica') == "true"){
+      localStorage.removeItem('remesaInformacionEconomica');
+      this.remesaInformacionEconomica = true;
+    }else{
+      localStorage.removeItem('remesaInformacionEconomica');
+      this.remesaInformacionEconomica = false;
+    }
 
     if (localStorage.getItem('ficha') == "registro") {
       this.remesaTabla = JSON.parse(localStorage.getItem('remesaItem'));
@@ -467,7 +476,11 @@ export class FichaRemesasComponent implements OnInit {
   
   volver(){
     this.progressSpinner = true;
-    this.router.navigate(["/remesas"]);
+    if(this.remesaInformacionEconomica){
+      this.router.navigate(["/remesas/1"]);
+    }else{
+      this.router.navigate(["/remesas/0"]);
+    }
   }
 
   restablecer(){
