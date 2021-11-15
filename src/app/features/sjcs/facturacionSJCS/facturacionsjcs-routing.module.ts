@@ -10,6 +10,7 @@ import { RetencionesComponent } from './retenciones/retenciones.component';
 import { FichaRetencionJudicialComponent } from './retenciones/ficha-retencion-judicial/ficha-retencion-judicial.component';
 import { BaremosDeGuardiaComponent } from './baremos-de-guardia/baremos-de-guardia.component';
 import { FichaCertificacionFacComponent } from './certificacion-fac/ficha-certificacion-fac/ficha-certificacion-fac.component';
+import { FichaBaremosDeGuardiaComponent } from './baremos-de-guardia/ficha-baremos-de-guardia/ficha-baremos-de-guardia.component';
 
 const routesFacturacionsjcs: Routes = [
   {
@@ -50,6 +51,11 @@ const routesFacturacionsjcs: Routes = [
   {
     path: 'baremosDeGuardia',
     component: BaremosDeGuardiaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'fichaBaremosDeGuardia',
+    component: FichaBaremosDeGuardiaComponent,
     canActivate: [AuthGuard]
   },
   {

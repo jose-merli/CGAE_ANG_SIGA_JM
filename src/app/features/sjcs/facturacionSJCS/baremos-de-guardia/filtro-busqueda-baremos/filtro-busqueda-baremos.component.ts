@@ -4,6 +4,7 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { BaremosRequestDTO } from '../../../../../models/sjcs/BaremosRequestDTO';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-filtro-busqueda-baremos',
@@ -27,7 +28,8 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -150,7 +152,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
   }
 
   nuevo() {
-
+    this.router.navigate(['/fichaBaremosDeGuardia']);
   }
 
   buscar() {

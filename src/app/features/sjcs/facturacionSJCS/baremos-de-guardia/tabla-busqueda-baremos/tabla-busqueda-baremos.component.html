@@ -7,13 +7,13 @@
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
-          <col *ngFor="let col of cols" [style.width]="col.width">
+          <col *ngFor="let col of cols | slice:0:10" [style.width]="col.width">
         </colgroup>
       </ng-template>
 
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          <th *ngFor="let col of columns | slice:0:10" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
             <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
@@ -25,7 +25,7 @@
       <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
         <tr>
 
-          <td *ngFor="let col of columns">
+          <td *ngFor="let col of columns | slice:0:10">
             <div class="d-flex">
               <a [pRowToggler]="rowData">
                 <div *ngIf="col.field =='idTurno'">
@@ -43,15 +43,16 @@
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="rowexpansion" let-dato let-columns="columns">
-        <tr>
-          <td *ngFor="let col of columns">
-            <div [ngClass]="{'displayMargin': col.field =='idTurno'}">
-              <span>Prueba</span>
+      <ng-template pTemplate="rowexpansion" let-dato let-columns="subCols">
+
+        <tr *ngFor="let guardia of dato.guardias">
+          <td *ngFor="let sub of subCols">
+            <div [ngClass]="{'displayMargin' : (sub.field == 'idGuardia')}">
+              <span>{{ guardia[sub.field] }}</span>
             </div>
           </td>
-
         </tr>
+
       </ng-template>
 
       <ng-template pTemplate="emptymessage" let-columns>

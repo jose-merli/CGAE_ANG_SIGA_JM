@@ -1,0 +1,146 @@
+<div id="facSJCSFichaBarConfiFac">
+
+    <div class="card">
+
+        <div class="card-header header-ficha">
+
+            <div *ngIf="!showTarjeta" class="form-row">
+
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado" (click)="onHideTarjeta()">
+                        <i class="fa fa-user icon-ficha"></i>
+                    </div>
+                </div>
+
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1" (click)="onHideTarjeta()">
+                        <label class="mr-auto title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiFac' | translate }}
+                        </label>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
+                            <span>A</span>
+                        </label>
+                        <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center"
+                (click)="onHideTarjeta()">
+                <div class="img-colegiado">
+                    <i class="fa fa-user icon-ficha"></i>
+                </div>
+                <label class="title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiFac' | translate }} </label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+
+        </div>
+
+        <div *ngIf="showTarjeta" class="card-body card-body-ficha">
+
+            <div class="row">
+
+                <div class="bloque col-lg-6 col-md-6 col-sm-6 py-2 pl-2">
+                    <div class="form-row">
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-checkbox name="porDispo" label="Por disponibilidad" class="ml-0"></p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-checkbox name="agrupar1" label="Agrupar" class="ml-0"></p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-checkbox name="L" label="L"></p-checkbox>
+                            <p-checkbox name="M" label="M"></p-checkbox>
+                            <p-checkbox name="X" label="X"></p-checkbox>
+                            <p-checkbox name="J" label="J"></p-checkbox>
+                            <p-checkbox name="V" label="V"></p-checkbox>
+                            <p-checkbox name="S" label="S"></p-checkbox>
+                            <p-checkbox name="D" label="D"></p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Contando Asistencias"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Contando Actuaciones"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>Importe</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6"></div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>Disponibilidad con asuntos</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>A partir de</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>Máximo</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>A partir de</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bloque col-lg-6 col-md-6 col-sm-6">
+                    <div class="form-row">
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-checkbox name="porAsisActu" label="Por asistencia / actuaciones" class="ml-0">
+                            </p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-checkbox name="agrupar1" label="Agrupar" class="ml-0"></p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-checkbox name="L" label="L"></p-checkbox>
+                            <p-checkbox name="M" label="M"></p-checkbox>
+                            <p-checkbox name="X" label="X"></p-checkbox>
+                            <p-checkbox name="J" label="J"></p-checkbox>
+                            <p-checkbox name="V" label="V"></p-checkbox>
+                            <p-checkbox name="S" label="S"></p-checkbox>
+                            <p-checkbox name="D" label="D"></p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Contando Asistencias"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Contando Actuaciones"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Precio Único"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Precio por tipos"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>Importe</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 verticalAlign">
+                            <a>Ir a tipos</a>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>Mínimo</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>Máximo</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

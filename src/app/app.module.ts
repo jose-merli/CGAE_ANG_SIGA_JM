@@ -490,6 +490,10 @@ import { TarjetaDatosGeneralesComponent } from './features/sjcs/facturacionSJCS/
 import { TarjetaFacturacionComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-facturacion/tarjeta-facturacion.component';
 import { TarjetaMovimientosVariosAsociadosComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-movimientos-varios-asociados/tarjeta-movimientos-varios-asociados.component';
 import { TarjetaMovimientosVariosAplicadosComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-movimientos-varios-aplicados/tarjeta-movimientos-varios-aplicados.component';
+import { FichaBaremosDeGuardiaComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-baremos-de-guardia.component';
+import { FichaBarDatosGeneralesComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-datos-generales/ficha-bar-datos-generales.component';
+import { FichaBarConfiFacComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-confi-fac/ficha-bar-confi-fac.component';
+import { FichaBarConfiAdiComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-confi-adi/ficha-bar-confi-adi.component';
 
 @NgModule({
 	declarations: [
@@ -890,6 +894,10 @@ import { TarjetaMovimientosVariosAplicadosComponent } from './features/sjcs/fact
 		BaremosDeGuardiaComponent,
 		FiltroBusquedaBaremosComponent, 
 		TablaBusquedaBaremosComponent,
+		FichaBaremosDeGuardiaComponent,
+		FichaBarDatosGeneralesComponent, 
+		FichaBarConfiFacComponent, 
+		FichaBarConfiAdiComponent,
 		//certificacion de facturacion
 		CertificacionFacComponent,
 		FichaCertificacionFacComponent,

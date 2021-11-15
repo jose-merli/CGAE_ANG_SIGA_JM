@@ -9,11 +9,47 @@ export class TablaBusquedaBaremosComponent implements OnInit {
 
   selectedDatos = [];
   datos = [
-    { idTurno: 'Turno1', nDias: 'nDias1', tipoBaremo: 'tipoBaremo1', diasAplicar: 'diasAplicar1', minimo: 'minimo1', dispImporte: 'dispImporte1', naPartir1: 'naPartir11', maximo: 'maximo1', naPartir2: 'naPartir21', porDia: 'porDia1' },
-    { idTurno: 'Turno2', nDias: 'nDias2', tipoBaremo: 'tipoBaremo2', diasAplicar: 'diasAplicar2', minimo: 'minimo2', dispImporte: 'dispImporte2', naPartir1: 'naPartir12', maximo: 'maximo2', naPartir2: 'naPartir22', porDia: 'porDia2' },
-    { idTurno: 'Turno3', nDias: 'nDias3', tipoBaremo: 'tipoBaremo3', diasAplicar: 'diasAplicar3', minimo: 'minimo3', dispImporte: 'dispImporte3', naPartir1: 'naPartir13', maximo: 'maximo3', naPartir2: 'naPartir23', porDia: 'porDia3' }
+    {
+      idTurno: 'Turno1',
+      nDias: 'nDias1',
+      tipoBaremo: 'tipoBaremo1',
+      diasAplicar: 'diasAplicar1',
+      minimo: 'minimo1',
+      dispImporte: 'dispImporte1',
+      naPartir1: 'naPartir11',
+      maximo: 'maximo1',
+      naPartir2: 'naPartir21',
+      porDia: 'porDia1',
+      guardias: [
+        {
+          idGuardia: 'idGuardia1',
+          nDiasGuardia: 'nDiasGuardia1',
+          tipoBaremoGuardia: 'tipoBaremoGuardia1',
+          diasAplicarGuardia: 'diasAplicarGuardia1',
+          minimoGuardia: 'minimoGuardia1',
+          dispImporteGuardia: 'dispImporteGuardia1',
+          naPartir1Guardia: 'naPartir1Guardia1',
+          maximoGuardia: 'maximoGuardia1',
+          naPartir2Guardia: 'naPartir2Guardia1',
+          porDiaGuardia: 'porDiaGuardia1'
+        },
+        {
+          idGuardia: 'idGuardia2',
+          nDiasGuardia: 'nDiasGuardia2',
+          tipoBaremoGuardia: 'tipoBaremoGuardia2',
+          diasAplicarGuardia: 'diasAplicarGuardia2',
+          minimoGuardia: 'minimoGuardia2',
+          dispImporteGuardia: 'dispImporteGuardia2',
+          naPartir1Guardia: 'naPartir1Guardia2',
+          maximoGuardia: 'maximoGuardia2',
+          naPartir2Guardia: 'naPartir2Guardia2',
+          porDiaGuardia: 'porDiaGuardia2'
+        },
+      ]
+    }
   ];
   cols = [];
+  subCols = [];
   rowsPerPage = [];
   selectedItem: number = 10;
 
@@ -39,6 +75,19 @@ export class TablaBusquedaBaremosComponent implements OnInit {
       { field: "maximo", header: "facturacionSJCS.baremosDeGuardia.maximo", width: '10%' },
       { field: "naPartir2", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '10%' },
       { field: "porDia", header: "facturacionSJCS.baremosDeGuardia.porDia", width: '10%' }
+    ];
+
+    this.subCols = [
+      { field: "idGuardia" },
+      { field: "nDiasGuardia" },
+      { field: "tipoBaremoGuardia" },
+      { field: "diasAplicarGuardia" },
+      { field: "minimoGuardia" },
+      { field: "dispImporteGuardia" },
+      { field: "naPartir1Guardia" },
+      { field: "maximoGuardia" },
+      { field: "naPartir2Guardia" },
+      { field: "porDiaGuardia" }
     ];
 
     this.rowsPerPage = [
