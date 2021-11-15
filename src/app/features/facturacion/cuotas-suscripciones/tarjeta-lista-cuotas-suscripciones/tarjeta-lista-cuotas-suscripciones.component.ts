@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Message, SortEvent } from 'primeng/api';
+import { ConfirmationService, Message, SortEvent } from 'primeng/api';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
@@ -58,9 +58,10 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
     }
   ];
 
-  permisoSolicitarSuscripcion;
-  permisoAprobarSuscripcion;
-  permisoDenegar;
+  permisoSolicitarSuscripcion: boolean = false;
+  permisoAprobarSuscripcion: boolean = false;
+  permisoAnularSuscripcion: boolean = false;
+  permisoDenegar: boolean = false;
 
   selectedRows: ListaSuscripcionesItem[] = []; //Datos de las filas seleccionadas.
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
@@ -72,14 +73,20 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
   currentDate: Date = new Date();
 
   progressSpinner: boolean = false;
-  esColegiado: boolean = this.localStorageService.isLetrado;
+  esColegiado: boolean; // Con esta variable se determina si el usuario conectado es un colegiado o no.
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService,
     private commonsService: CommonsService, private router: Router,
-    private localStorageService: SigaStorageService,) { }
+    private localStorageService: SigaStorageService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
     this.checkPermisos();
     this.initComboEstadoSuscripcion();
   }
@@ -115,6 +122,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
   checkPermisos() {
     this.getPermisoAprobarSuscripcion();
     this.getPermisoDenegar();
+    this.getPermisoAnularSuscripcion();
   }
 
   checkAprobar() {
@@ -122,7 +130,10 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
 
     if (msg != null) {
       this.msgs = msg;
-    } else {
+    } else if(this.esColegiado){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    }
+    else {
       this.aprobarSuscripcion();
     }
   }
@@ -138,14 +149,121 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
     }
   }
 
-  checkAnular(){
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Boton no funcional actualmente"
+  // REVISAR: Añadir comprobación de facturación
+  checkAnularSuscripcion(){
+    let msg = this.commonsService.checkPermisos(this.permisoAnularSuscripcion, undefined);
+
+    
+    if (msg != null) {
+      this.msgs = msg;
+    }  
+    else {
+
+      let susShow : ListaSuscripcionesItem[] = [];
+
+      //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
+      //REVISAR : Cambiar mensaje
+      //Este parametro "solicitarBaja" de este objeto tiene una logica distinta a la de los servicios
+      if(this.esColegiado && (this.selectedRows.filter(el => el.solicitarBaja != "0") != undefined)){
+      susShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
+      this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
       }
-    ];
+      //Se comprueba si hay algún servicio automatico ya que entonces no se puede realizar la accion
+      //REVISAR: Cambiar mensaje.
+      if(this.selectedRows.filter(el => el.automatico == "1") != undefined){
+        susShow.concat(this.selectedRows.filter(el => el.automatico = "1"));
+        this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
+      }
+      this.confirmAnular(susShow);
+    }
+  }
+
+  confirmAnular(susShow) {
+
+    //REVISAR MENSAJE
+    let mess = this.translateService.instant(
+      "facturacion.productos.anulConf"
+    );
+
+    //REVISAR LOGICA FACTURAS
+    //Se comprueba si alguna solicitud tiene alguna factura asoviada
+    if(this.selectedRows.find(el => el.facturas != "0") != undefined) {
+      mess = this.translateService.instant("facturacion.productos.factNoAnuladaPet");
+    }
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: 'anulPeticion',
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.anularPeticion(susShow);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: this.translateService.instant("general.boton.cancel"),
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  anularPeticion(susShow: ListaSuscripcionesItem[]){
+    if(this.selectedRows.length > 0){
+      this.progressSpinner = true;
+      let peticion: FichaCompraSuscripcionItem[] = [];
+      this.selectedRows.forEach(row => {
+        let solicitud: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
+        solicitud.nSolicitud = row.nSolicitud;
+        solicitud.fechaAceptada = row.fechaEfectiva;
+        solicitud.fechaDenegada = row.fechaDenegada;
+        solicitud.fechaAnulada = row.fechaAnulada;
+        solicitud.fechaSolicitadaAnulacion = row.fechaSolicitadaAnulacion;
+        peticion.push(solicitud);
+      });
+      this.sigaServices.post('PyS_anularPeticionMultiple', peticion).subscribe(
+        (n) => {
+          if (n.status != 200) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else if(JSON.parse(n.body).error.description!="" || susShow.length > 0){
+            let mess = "";
+            for(let sus of susShow){
+              mess += sus.nSolicitud + ", ";
+            }
+            mess = mess.substr(1,mess.length-3);
+            this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description+", "+mess);
+          }else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            //Se actualiza la información de la ficha
+            this.actualizarLista.emit(true);
+          }
+
+          
+          this.selectedRows = [];
+          this.numSelectedRows = 0;
+          this.progressSpinner = false;
+        },
+        (err) => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.progressSpinner = false;
+        }
+      );
+    }
+    else{
+      let mess = "";
+      for(let sus of susShow){
+        mess += sus.nSolicitud + ", ";
+      }
+      mess = mess.substr(1,mess.length-3);
+
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + mess);
+          
+    }
   }
 
   checkFacturar(){
@@ -323,6 +441,16 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.rowsPerPage = event.value;
     this.suscripcionesTable.reset();
+  }
+
+  getPermisoAnularSuscripcion(){
+    //En la documentación no parece distinguir que se requiera una permiso especifico para esta acción
+    this.commonsService
+			.checkAcceso(procesos_PyS.anularSuscripcion)
+			.then((respuesta) => {
+				this.permisoAnularSuscripcion = respuesta;
+			})
+			.catch((error) => console.error(error));
   }
 
 }

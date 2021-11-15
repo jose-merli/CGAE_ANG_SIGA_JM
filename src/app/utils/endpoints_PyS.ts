@@ -21,4 +21,7 @@ export let endpoints_PyS: any = {
     PyS_aprobarSuscripcion: "pys/aprobarSuscripcion",
     PyS_updateServiciosPeticion: "/pys/updateServiciosPeticion",
     serviciosBusqueda_comboTiposMultiple: "pys/listadoTipoServicioByIdCategoriaMultiple",
+    PyS_aprobarSuscripcionMultiple: "pys/aprobarSuscripcionMultiple",
+    PyS_denegarSuscripcionMultiple: "pys/denegarSuscripcionMultiple",
+    PyS_anularSuscripcionMultiple: "pys/anularSuscripcionMultiple",
 }
