@@ -1,5 +1,3 @@
-<!-- <app-my-iframe url="{{ url }}"></app-my-iframe> -->
-
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
 <div class="busqueda-container">
@@ -13,24 +11,6 @@
   <div class="card mt-3">
     <div class="card-body p-0">
 
-    <!-- TABLA RESULTADOS -- BORRAR --
-    <p-table [autoLayout]="true" [value]="listaCuentasBancarias" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
-      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor' : selectMultiple }"
-      selectionMode="multiple" paginatorPosition="both" (onRowSelect)="checkAddRemesa(selectedDatos)">
-
-      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-          <td class="text-center" *ngFor="let col of columns">
-            <div >
-              <div>
-                <span>{{dato[col.field]}}</span>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </ng-template> -->
-      
-    <!--NUEVA TABLA DE RESULTADOS [columns]="cols" [value]="listaCuentasBancarias"-->
     <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
       class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
       selectionMode="multiple" paginatorPosition="both"   id="tablaFoco">
@@ -76,44 +56,6 @@
           </td>
         </tr>
       </ng-template>
-      <!--
-      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-          <td *ngFor="let col of columns">-->
-
-            <!-- Muestra las cuentas actuales -->
-            <!--
-            <div *ngIf="!historico">
-              <div *ngIf="col.field === 'iban'">
-                <span >(... {{ cuentaBancaria[col.field] | slice:-4 }} )</span>
-              </div>
-              <div *ngIf="col.field === 'descripcion'">
-                <span class="enlace">{{ cuentaBancaria[col.field] }}</span>
-              </div>
-              <div *ngIf="col.field !== 'iban' && col.field !== 'descripcion'">
-                <span>{{ cuentaBancaria[col.field] }}</span>
-              </div>
-            </div>
-            -->
-
-            <!-- Muestra el historico de cuentas -->
-            
-            <!--
-            {{ dato[col.field] }}
-            <div *ngIf="col.field === 'iban'">
-              <span [ngClass]="{ historico: historico }">(... {{ dato[col.field] | slice:-4 }} )</span>
-            </div>
-            <div *ngIf="col.field === 'descripcion'">
-              <span [ngClass]="{ historico: historico }" class="enlace">{{ dato[col.field] }}</span>
-            </div>
-            <div *ngIf="col.field !== 'iban' && col.field !== 'descripcion'">
-              <span [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span>
-            </div>
-            -->
-            <!--
-          </td>
-        </tr>
-      </ng-template>-->
 
       <ng-template pTemplate="emptymessage" let-columns>
         <tr>

@@ -20,8 +20,8 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
 
-  bodyInicial: CuentasBancariasItem;
-  @Input() body;
+  @Input() bodyInicial: CuentasBancariasItem;
+  body: CuentasBancariasItem;
 
   resaltadoDatos: boolean = false;
 
@@ -47,7 +47,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.restablecer();
   }
 
   // Cargar combos

@@ -20,8 +20,8 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit, OnChanges {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
 
-  bodyInicial: CuentasBancariasItem;
-  @Input() body: CuentasBancariasItem;
+  @Input() bodyInicial: CuentasBancariasItem;
+  body: CuentasBancariasItem;
 
   resaltadoDatos: boolean = false;
 
@@ -39,7 +39,7 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     this.getComboSufijo();
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.restablecer();
   }
 
   // Combo de sufijos

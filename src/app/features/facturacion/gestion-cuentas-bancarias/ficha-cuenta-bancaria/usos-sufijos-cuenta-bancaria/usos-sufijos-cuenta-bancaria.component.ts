@@ -1,4 +1,6 @@
+import { ThrowStmt } from '@angular/compiler';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
@@ -49,7 +51,8 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -61,6 +64,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
+    this.restablecer();
     this.getComboSufijo();
     this.getComboSerieFacturacion();
     this.getUsosSufijos();
@@ -238,6 +242,16 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   styleObligatorio(evento: string) {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
       return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  // Editar una serie de facturación
+  openTab(selectedRow) {
+    if (selectedRow.tipo == "SERIE") {
+      let serieFacturacionItem: SerieFacturacionItem = selectedRow;
+      sessionStorage.setItem("cuentaBancariaItem", JSON.stringify(this.body));
+      sessionStorage.setItem("serieFacturacionItem", JSON.stringify(serieFacturacionItem));
+      this.router.navigate(["/datosSeriesFactura"]);
     }
   }
 

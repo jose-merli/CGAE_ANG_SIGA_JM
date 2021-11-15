@@ -19,7 +19,7 @@ export class FichaCuentaBancariaComponent implements OnInit, AfterViewInit {
   iconoTarjetaResumen = "clipboard";
   body: CuentasBancariasItem = new CuentasBancariasItem();
   datos = [];
-  enlacesTarjetaResumen;
+  enlacesTarjetaResumen = [];
 
   manuallyOpened: boolean;
   openTarjetaDatosGenerales: boolean = true;
@@ -179,9 +179,18 @@ export class FichaCuentaBancariaComponent implements OnInit, AfterViewInit {
   // Obtener descripción
 
   calcDescripcion(): void {
-    // Falta poner la parte del principio
+    let abrBanco: string = "";
+
+    if (this.body.nombre.indexOf("~") > 1) {
+      abrBanco = this.body.nombre.substring(0, this.body.nombre.indexOf("~")).trim();
+    } else if (this.body.nombre.indexOf("(") > 0) {
+      abrBanco = this.body.nombre.substring(0, this.body.nombre.indexOf("(")).trim();
+    } else {
+      abrBanco = this.body.nombre;
+    }
+
     let ibanEnd: string = this.body.iban.slice(-4);
-    this.body.descripcion = ` (...${ibanEnd})`;
+    this.body.descripcion = `${abrBanco} (...${ibanEnd})`;
   }
 
   showMessage(severity, summary, msg) {
