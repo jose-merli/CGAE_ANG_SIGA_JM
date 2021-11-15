@@ -76,9 +76,49 @@ export class EjgComisionComponent implements OnInit {
 
   searchEJGs(event) {
 
-    this.progressSpinner = true;
-    
-    this.sigaServices.post("filtrosejgcomision_busquedaEJGComision", this.filtros.body).subscribe(
+    // Creamos una copia de los filtros y modificamos los elementos de selección múltiple (cambiamos los arrays por strings separados por ',')
+    let filtros = JSON.parse(JSON.stringify(this.filtros.body));
+
+    if (filtros.tipoEJG) {
+      if (filtros.tipoEJG.length > 0) {
+        filtros.tipoEJG = filtros.tipoEJG.toString();
+      } else {
+        filtros.tipoEJG = undefined;
+      }
+    }
+
+    if (filtros.tipoEJGColegio) {
+      if (filtros.tipoEJGColegio.length > 0) {
+        filtros.tipoEJGColegio = filtros.tipoEJGColegio.toString();
+      } else {
+        filtros.tipoEJGColegio = undefined;
+      }
+    }
+
+    if (filtros.creadoDesde) {
+      if (filtros.creadoDesde.length > 0) {
+        let cadena = "";
+        filtros.creadoDesde.forEach((el: string, i: number) => {
+          cadena += "'" + el + "'";
+          if (i < filtros.creadoDesde.length - 1) {
+            cadena += ", ";
+          }
+        });
+        filtros.creadoDesde = cadena;
+      } else {
+        filtros.creadoDesde = undefined;
+      }
+    }
+
+    if (filtros.estadoEJG) {
+      if (filtros.estadoEJG.length > 0) {
+        filtros.estadoEJG = filtros.estadoEJG.toString();
+      } else {
+        filtros.estadoEJG = undefined;
+      }
+    }
+
+    this.sigaServices.post("filtrosejgcomision_busquedaEJGComision", filtros).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
         let error = JSON.parse(n.body).error;
@@ -90,6 +130,7 @@ export class EjgComisionComponent implements OnInit {
           this.tabla.table.reset();
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
+        //cadena = [];
         this.progressSpinner = false;
         if (error != null && error.description != null) {
           this.showMessageError("info", this.translateService.instant("general.message.informacion"), error.description);
@@ -99,12 +140,12 @@ export class EjgComisionComponent implements OnInit {
         this.progressSpinner = false;
         console.log(err);
       },
-      () =>{
+      () => {
         this.progressSpinner = false;
         setTimeout(() => {
           this.commonsService.scrollTablaFoco('tablaFoco');
           this.commonsService.scrollTop();
-        }, 5);       
+        }, 5);
       }
     );
   }
