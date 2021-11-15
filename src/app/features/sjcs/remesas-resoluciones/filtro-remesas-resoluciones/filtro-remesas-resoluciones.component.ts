@@ -21,7 +21,7 @@ export class FiltroRemesasResolucionesComponent implements OnInit {
   filtros: RemesasResolucionItem = new RemesasResolucionItem();
   filtroAux: RemesasResolucionItem = new RemesasResolucionItem();
   historico: boolean = false;
-
+  numOperacion ;
   isDisabledPoblacion: boolean = true;
   resultadosPoblaciones: any;
 
@@ -51,6 +51,7 @@ export class FiltroRemesasResolucionesComponent implements OnInit {
     } else {
       this.filtros = new RemesasBusquedaItem();
     }
+    this.obtenerOperacionTipoAccion();
 
   }
 
@@ -98,7 +99,7 @@ export class FiltroRemesasResolucionesComponent implements OnInit {
 
   openTab() {
     this.router.navigate(["/remesasResolucionesFicha"]);
-    localStorage.setItem('ficha', "nuevo");
+    localStorage.setItem('fichaRemesaResolucion', "nuevo");
   }
 
   numberOnly(event): boolean {
@@ -120,8 +121,30 @@ export class FiltroRemesasResolucionesComponent implements OnInit {
   }
 
   obtenerResoluciones(){
-
+//remesasResoluciones_obtenerResoluciones
   }
+
+  obtenerOperacionTipoAccion(){
+
+    this.sigaServices
+    .get("remesasResoluciones_obtenerOperacionTipoAccion")
+    .subscribe(
+      data => {
+        console.log(data);
+        if(data.error.description == "Empty" && data.error.code == 404) {
+          this.buttonNew = true;
+        }else if(data.ecomOperacionTipoaccion[0].idoperacion != null &&  data.error.code == 200) {
+          this.buttonNew = false;
+          this.numOperacion = data.ecomOperacionTipoaccion[0].idoperacion;
+        }
+      },
+      error => { },
+      () => { }
+    );
+
+
+}
+  
 
 
 }

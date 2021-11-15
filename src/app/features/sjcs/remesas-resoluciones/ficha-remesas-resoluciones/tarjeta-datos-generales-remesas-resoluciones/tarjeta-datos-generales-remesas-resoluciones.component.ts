@@ -148,7 +148,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
     console.log("Empieza;")
     console.log(this.remesaItem)
     console.log("FIN")
-    if(this.remesaItem.idRemesa == null){
+    if(this.remesaItem.idRemesaResolucion == null){
       this.getUltimoRegitroRemesa();
       this.remesaItem.fechaCarga = moment(new Date()).format('DD/MM/YYYY');
 
@@ -186,13 +186,13 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
   getUltimoRegitroRemesa() {
     console.log("Dentro del getUltimoRegistroRemesa");
     this.sigaServices
-      .get("ficharemesas_getUltimoRegistroRemesa")
+      .get("remesasResultados_recuperarDatosContador")
       .subscribe(
         n => {
           console.log("Dentro de la respuesta. Contenido --> ", n.contador);
           //this.remesaItem.numero = n.contador + 1;
           this.remesaItem.numRemesaPrefijo = n.prefijo;
-          this.remesaItem.numRemesaNumero = (n.contador+1);
+          this.remesaItem.numRemesaNumero = n.contador;
         },
         error => { },
         () => { }
@@ -201,36 +201,14 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
 
   descargarFicheros(){
     this.progressSpinner = true;
-    let remesasResultados: RemesasResultadoItem[] = []
-    let remesa: RemesasResultadoItem = new RemesasResultadoItem(
-        {
-          'idRemesaResultado': this.remesaItem.idRemesaResolucion,
-          'numRemesaPrefijo': '',
-          'numRemesaNumero': '',
-          'numRemesaSufijo': '',
-          'numRegistroPrefijo': '',
-          'numRegistroNumero': '',
-          'numRegistroSufijo': '',
-          'nombreFichero': this.remesaItem.nombreFichero,
-          'fechaRemesaDesde': '',
-          'fechaRemesaHasta': '',
-          'fechaCargaDesde': '',
-          'fechaCargaHasta': '',
-          'observacionesRemesaResultado': '',
-          'fechaCargaRemesaResultado': '',
-          'fechaResolucionRemesaResultado': '',
-          'idRemesa': null,
-          'numeroRemesa': '',
-          'prefijoRemesa': '',
-          'sufijoRemesa': '',
-          'descripcionRemesa': '',
-          'numRegistroRemesaCompleto': '',
-          'numRemesaCompleto': ''
-          }
-      );
+    let remesasResultados: RemesasResolucionItem[] = []
+    let remesa: RemesasResolucionItem = new RemesasResolucionItem();
+    remesa.idRemesaResolucion = this.remesaItem.idRemesaResolucion;
+    remesa.nombreFichero = this.remesaItem.nombreFichero;
+    remesa.log = this.remesaItem.log;
     remesasResultados.push(remesa);
     
-    let descarga =  this.sigaServices.postDownloadFiles("remesasResultados_descargarFicheros", remesasResultados);
+    let descarga =  this.sigaServices.postDownloadFiles("remesasResoluciones_descargarRemesasResolucion", remesasResultados);
     descarga.subscribe(
       data => {
         let blob = null;
@@ -239,7 +217,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
         if(documentoAsociado != undefined){
             blob = new Blob([data], { type: "application/zip" });
             if(blob.size > 50){
-              saveAs(blob, "descargaRemesasResultados.zip");
+              saveAs(blob, "descargaRemesasResolucion.zip");
             } else {
               this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
             }
@@ -344,7 +322,54 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
     this.msgs.push({ severity: "error", summary: "", detail: mensaje });
   }
   
-save(){}
+  save(){
+  if(this.remesaItem != null){
+    this.remesaResolucion = {
+      'idRemesaResolucion' : this.remesaItem.idRemesaResolucion,
+      'observaciones' : this.remesaItem.observaciones,
+      'nombreFichero' : this.remesaItem.nombreFichero,
+      'fechaResolucion' :  this.datepipe.transform(this.remesaItem.fechaResolucion, 'dd/MM/yyyy'),
+    };
+  }
+  if(this.remesaResolucion.idRemesaResolucion == null ){
+    this.remesaResolucion.idRemesaResolucion = 0;
+  }
+  this.progressSpinner = true;
+  this.sigaServices
+  .postSendContentAndParameter(
+  "remesasResoluciones_guardarRemesaResolucion",
+  "?idRemesaResolucion=" + this.remesaResolucion.idRemesaResolucion +
+  "&observaciones=" + this.remesaResolucion.observaciones + 
+  "&nombreFichero=" + this.remesaResolucion.nombreFichero +
+  "&fechaResolucion=" + this.remesaResolucion.fechaResolucion,
+  this.file)
+  .subscribe(
+    data => {
+      let accion = data.error.description;
+      if(accion == "Insert"){
+        this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.actualizacionCorrecta"));
+      }else if(accion == "Updated"){
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.guardadoCorrecto"));
+      }
+      this.progressSpinner = false;
+    },
+    err => {
+      if (err.error != null && err.error.error != null && err.error.error.code == 400) {
+        if (err.error.error.description != null) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
+        }
+      } else {
+        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
+        console.log(err);
+      }
+      this.progressSpinner = false;
+    },
+    () => {
+    }
+  );
+  }
 
 }
 
