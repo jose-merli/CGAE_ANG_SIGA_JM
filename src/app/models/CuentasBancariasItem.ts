@@ -11,7 +11,7 @@ export class CuentasBancariasItem{
     asientoContable: string;
     cuentaContableTarjeta: string;
     bic: string;
-    numUsos: string;
+    numUsos: number;
     numFicheros: string;
 
     comisionImporte: number;

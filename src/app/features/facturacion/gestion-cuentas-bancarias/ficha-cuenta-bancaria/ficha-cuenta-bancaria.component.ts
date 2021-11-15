@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate';
@@ -11,7 +11,7 @@ import { PersistenceService } from '../../../../_services/persistence.service';
   templateUrl: './ficha-cuenta-bancaria.component.html',
   styleUrls: ['./ficha-cuenta-bancaria.component.scss']
 })
-export class FichaCuentaBancariaComponent implements OnInit {
+export class FichaCuentaBancariaComponent implements OnInit, AfterViewInit {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -55,11 +55,14 @@ export class FichaCuentaBancariaComponent implements OnInit {
     if (this.modoEdicion) {
       this.updateTarjetaResumen();
     }
-    
-    this.updateEnlacesTarjetaResumen();
 
     this.progressSpinner = false;
     this.goTop();
+  }
+
+  // Espero a que se inicialicen las tarjetas antes de buscarlas por su 'id'
+  ngAfterViewInit() {
+    this.updateEnlacesTarjetaResumen();
   }
 
   // Tarjeta resumen
@@ -96,27 +99,27 @@ export class FichaCuentaBancariaComponent implements OnInit {
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "general.message.datos.generales",
+      label: "facturacion.cuentaBancaria.comision",
       value: document.getElementById("comision"),
-      nombre: "comision",
+      nombre: "comision"
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "general.message.datos.generales",
+      label: "facturacion.cuentaBancaria.configuracion",
       value: document.getElementById("configuracion"),
-      nombre: "configuracion",
+      nombre: "configuracion"
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "general.message.datos.generales",
+      label: "facturacion.cuentaBancaria.usoFicheros",
       value: document.getElementById("usoFicheros"),
-      nombre: "usoFicheros",
+      nombre: "usoFicheros"
     });
 
     this.enlacesTarjetaResumen.push({
-      label: "general.message.datos.generales",
+      label: "facturacion.cuentaBancaria.usosSufijos",
       value: document.getElementById("usosSufijos"),
-      nombre: "usosSufijos",
+      nombre: "usosSufijos"
     });
 
   }

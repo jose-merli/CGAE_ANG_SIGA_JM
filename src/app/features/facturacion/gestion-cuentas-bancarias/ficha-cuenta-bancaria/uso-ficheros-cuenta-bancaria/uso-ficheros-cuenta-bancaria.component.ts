@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -10,7 +10,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './uso-ficheros-cuenta-bancaria.component.html',
   styleUrls: ['./uso-ficheros-cuenta-bancaria.component.scss']
 })
-export class UsoFicherosCuentaBancariaComponent implements OnInit {
+export class UsoFicherosCuentaBancariaComponent implements OnInit, OnChanges {
 
   msgs;
   progressSpinner: boolean = false;
@@ -21,7 +21,7 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit {
   @Output() guardadoSend = new EventEmitter<any>();
 
   bodyInicial: CuentasBancariasItem;
-  body: CuentasBancariasItem = new CuentasBancariasItem();
+  @Input() body: CuentasBancariasItem;
 
   resaltadoDatos: boolean = false;
 
@@ -35,16 +35,11 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit {
     private translateService: TranslateService
   ) { }
 
-  ngOnInit() {
-    this.progressSpinner = true;
+  ngOnInit() { }
 
+  ngOnChanges() {
     this.getComboSufijo();
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    }
-
-    this.progressSpinner = false;
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
   }
 
   // Combo de sufijos
@@ -89,8 +84,7 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_actualizaCuentaBancaria", this.body).subscribe(
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.persistenceService.setDatos(this.bodyInicial);
+        this.persistenceService.setDatos(this.body);
         this.guardadoSend.emit();
 
         this.progressSpinner = false;
@@ -119,6 +113,12 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  // Label de un combo
+  findLabelInCombo(combo: any[], value) {
+    let item = combo.find(c => c.value == value);
+    return item ? item.label : "";
   }
 
   // Estilo obligatorio

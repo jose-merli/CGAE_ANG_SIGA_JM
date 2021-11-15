@@ -12,16 +12,16 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('comision')">
-            <label class="mr-auto title-ficha pointer">Comisión bancaria por devolución de recibos para aplicar a clientes</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.cuentaBancaria.comision' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>Importe: 
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }}: 
               <span>{{ body.comisionImporte }}</span></label>
-            <label>Descripción: 
+            <label>{{ 'general.description' | translate }}: 
               <span>{{ body.comisionDescripcion }}</span></label>
-            <label>IVA: 
-              <span>{{ body.idTipoIVA }}</span></label>
-            <label>C. contable: 
+            <label>{{ 'facturacion.productos.iva' | translate }}: 
+              <span>{{ findLabelInCombo(comboTiposIVA, body.idTipoIVA) }}</span></label>
+            <label>{{ 'facturacion.cuentaBancaria.contable' | translate }}: 
               <span>{{ body.asientoContable }}</span></label>
                 
             
@@ -37,7 +37,7 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Comisión bancaria por devolución de recibos para aplicar a clientes</label>
+        <label class="title-ficha pointer">{{ 'facturacion.cuentaBancaria.comision' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -46,21 +46,20 @@
     <div *ngIf="esFichaActiva('comision')" class="card-body card-body-ficha">
       <div class="form-row lg-12 md-12">
         <div class="form-group col-lg-3 col-md-3">
-          <label>Importe (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.comisionImporte" [ngClass]="styleObligatorio(body.comisionImporte)" maxlength="10" pInputText>
-        </div>
+          <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }} (*)</label>
+          <input type="text" class="form-control" [(ngModel)]="body.comisionImporte" [ngClass]="styleObligatorio(body.comisionImporte)" maxlength="10" pInputText>        </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Descripción (*)</label>
+          <label>{{ 'general.description' | translate }} (*)</label>
           <input type="text" class="form-control" [(ngModel)]="body.comisionDescripcion" [ngClass]="styleObligatorio(body.comisionDescripcion)" maxlength="255" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>IVA (*)</label>
+          <label>{{ 'facturacion.productos.iva' | translate }} (*)</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idTipoIVA' placeholder="Seleccionar"
               [options]="comboTiposIVA" [filter]="true" filterBy="label,labelSinTilde"
               [ngClass]="styleObligatorio(body.idTipoIVA)" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>C. contable</label>
+          <label>{{ 'facturacion.cuentaBancaria.contable' | translate }}</label>
           <input type="text" class="form-control" [(ngModel)]="body.asientoContable" maxlength="20" pInputText>
         </div>
       </div>
