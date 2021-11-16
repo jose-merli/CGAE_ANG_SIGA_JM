@@ -192,8 +192,14 @@ export class GuardiasInscripcionesComponent implements OnInit {
     }
 
   }
+
+/*  ngOnDestroy(): void {
+    this.persistenceService.clearFiltros();
+  }*/
+
   getFiltrosValues(event) {
     this.filtrosValues = JSON.parse(JSON.stringify(event));
+    this.persistenceService.setFiltros(this.filtrosValues);
     this.convertArraysToStrings();
     this.buscarIns();
 
@@ -422,8 +428,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
       }
 
       let objCells = [
-        { type: 'text', value: res.ncolegiado },                                                                 //0
-        { type: 'text', value: res.apellidosnombre },                                                            //1
+        { type: 'link', value: res.ncolegiado },                                                                 //0
+        { type: 'link', value: res.apellidosnombre },                                                            //1
         { type: 'textToolTip', value: [res.nombre, res.abreviatura] }, //turno                                    //2
         { type: 'textToolTip', value: [res.descripcionGuardia, res.nombreGuardia] },                             //3
         { type: 'text', value: res.fechasolicitud },                                                             //4

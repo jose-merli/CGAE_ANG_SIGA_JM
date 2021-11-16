@@ -84,9 +84,23 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-    if (this.persistenceService.getFiltros() != undefined) {
+    if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("FichaInscripciones")!= undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      //this.isBuscar();
+      if(this.filtros.afechade!=null && this.filtros.afechade != undefined){
+        this.filtros.afechade = this.transformaFecha(this.filtros.afechade);
+      }
+      if(this.filtros.fechadesde!=null && this.filtros.fechadesde != undefined){
+        this.filtros.fechadesde = this.transformaFecha(this.filtros.fechadesde);
+      }
+      if(this.filtros.fechahasta!=null && this.filtros.fechahasta != undefined){
+        this.filtros.fechahasta = this.transformaFecha(this.filtros.fechahasta);
+      }
+      this.persistenceService.clearFiltros();
+      sessionStorage.removeItem("FichaInscripciones");
+      this.isBuscar();
+    }else{
+      sessionStorage.removeItem("FichaInscripciones");
+      this.persistenceService.clearFiltros();
     }
 
     if (this.isLetrado) {

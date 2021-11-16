@@ -39,11 +39,11 @@
   <div id="fijoInscripciones">
   <app-tarjeta-resumen-fija class="pb-50" *ngIf="permisosTarjetaResumen"  [chincheta]="true" icono="far fa-file-alt" [enlaces]="enlacesTarjetaResumen"
     titulo="justiciaGratuita.oficio.turnos.inforesumen" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
-    <app-tarjeta-cola class="pb-50" *ngIf="permisosTarjetaCola" chincheta="true" icono="far fa-file-alt" 
-    titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3"></app-tarjeta-cola>
     </div> 
   
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
+    <!--<app-tarjeta-cola class="pb-50" *ngIf="permisosTarjetaCola" chincheta="true" icono="far fa-file-alt" 
+    titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3"></app-tarjeta-cola>-->
     <app-tarjeta-letrado (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaLetrado]="tarjetaLetrado"  [letradoItem]="letradoItem" 
       (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'letrado'" [openLetrado]="openLetrado"></app-tarjeta-letrado>
     <app-tarjeta-inscripcion-guardia [datos]="datos" [idPersona]="idPersona" (seleccionadosSend)="seleccionadosSend($event)"  [modoEdicion]="modoEdicion"

@@ -84,7 +84,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	}
 
 	ngOnInit() {
-
+		sessionStorage.setItem("FichaInscripciones","1");
 		this.sigaServices.get("institucionActual").subscribe(n => {
 			this.institucionActual = n.value;
 			let parametro = new ParametroRequestDto();

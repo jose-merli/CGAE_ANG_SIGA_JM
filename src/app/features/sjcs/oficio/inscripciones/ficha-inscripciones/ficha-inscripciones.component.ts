@@ -163,6 +163,10 @@ export class FichaInscripcionesComponent implements OnInit {
 		
 		this.fichasPosibles = [
 			{
+				key: 'cola',
+				activa: true
+			},
+			{
 				key: 'letrado',
 				activa: true
 			},
