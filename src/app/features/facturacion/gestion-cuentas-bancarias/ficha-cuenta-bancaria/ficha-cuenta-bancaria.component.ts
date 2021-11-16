@@ -11,7 +11,7 @@ import { PersistenceService } from '../../../../_services/persistence.service';
   templateUrl: './ficha-cuenta-bancaria.component.html',
   styleUrls: ['./ficha-cuenta-bancaria.component.scss']
 })
-export class FichaCuentaBancariaComponent implements OnInit, AfterViewInit {
+export class FichaCuentaBancariaComponent implements OnInit {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -56,13 +56,12 @@ export class FichaCuentaBancariaComponent implements OnInit, AfterViewInit {
       this.updateTarjetaResumen();
     }
 
+    setTimeout(() => {
+      this.updateEnlacesTarjetaResumen();
+    }, 5);
+
     this.progressSpinner = false;
     this.goTop();
-  }
-
-  // Espero a que se inicialicen las tarjetas antes de buscarlas por su 'id'
-  ngAfterViewInit() {
-    this.updateEnlacesTarjetaResumen();
   }
 
   // Tarjeta resumen

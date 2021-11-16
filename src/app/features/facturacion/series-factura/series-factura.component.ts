@@ -78,10 +78,11 @@ export class SeriesFacturaComponent implements OnInit {
         
         this.progressSpinner = false;
         if (error != null && error.description != null) {
-          this.showMessageError("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
         }
       },
       err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner = false;
       },
       () => {
@@ -94,16 +95,7 @@ export class SeriesFacturaComponent implements OnInit {
     );
   }
 
-  showMessage(event) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: event.severity,
-      summary: event.summary,
-      detail: event.msg
-    });
-  }
-
-  showMessageError(severity, summary, msg) {
+  showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
       severity: severity,

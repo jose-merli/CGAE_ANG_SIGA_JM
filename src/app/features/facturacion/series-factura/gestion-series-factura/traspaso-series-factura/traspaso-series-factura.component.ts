@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -11,13 +11,13 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './traspaso-series-factura.component.html',
   styleUrls: ['./traspaso-series-factura.component.scss']
 })
-export class TraspasoSeriesFacturaComponent implements OnInit {
+export class TraspasoSeriesFacturaComponent implements OnInit, OnChanges {
 
   msgs: Message[];
   progressSpinner: boolean = false;
 
   body: SerieFacturacionItem;
-  bodyInicial: SerieFacturacionItem;
+  @Input() bodyInicial: SerieFacturacionItem;
 
   @Input() openTarjetaTraspasoFacturas;
   @Output() opened = new EventEmitter<Boolean>();
@@ -33,15 +33,10 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
     private translateService: TranslateService
   ) { }
 
-  ngOnInit() {
-    this.progressSpinner = true;
+  ngOnInit() { }
 
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    }
-
-    this.progressSpinner = false;
+  ngOnChanges() {
+    this.restablecer();
   }
 
   // Restablecer
@@ -53,8 +48,9 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
   // Guardar
 
   isValid(): boolean {
-    return (this.body.traspasoPlantilla == undefined || this.body.traspasoPlantilla.trim() == "" || this.body.traspasoPlantilla.trim().length <= 10 )
-      && (this.body.traspasoCodAuditoriaDef != undefined || this.body.traspasoCodAuditoriaDef.trim() == "" || this.body.traspasoCodAuditoriaDef.trim().length <= 10);
+    return this.body.traspasoFacturas == undefined ||!this.body.traspasoFacturas || ( this.body.traspasoFacturas 
+      && this.body.traspasoPlantilla != undefined && this.body.traspasoPlantilla.trim() != "" && this.body.traspasoPlantilla.trim().length <= 10 
+      && this.body.traspasoCodAuditoriaDef != undefined && this.body.traspasoCodAuditoriaDef.trim() != "" && this.body.traspasoCodAuditoriaDef.trim().length <= 10);
   }
 
   checkSave(): void {
@@ -72,8 +68,7 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.persistenceService.setDatos(this.bodyInicial);
+        this.persistenceService.setDatos(this.body);
         this.guardadoSend.emit();
 
         this.progressSpinner = false;
@@ -83,6 +78,13 @@ export class TraspasoSeriesFacturaComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  // Estilo obligatorio
+  styleObligatorio(evento: string) {
+    if (this.resaltadoDatos && this.body.traspasoFacturas && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
   }
 
   clear() {

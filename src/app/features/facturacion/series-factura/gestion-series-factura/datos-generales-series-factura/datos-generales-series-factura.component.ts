@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { t } from '@angular/core/src/render3';
 import { ConfirmationService } from 'primeng/api';
 import { AutoComplete } from 'primeng/primeng';
@@ -13,7 +13,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './datos-generales-series-factura.component.html',
   styleUrls: ['./datos-generales-series-factura.component.scss']
 })
-export class DatosGeneralesSeriesFacturaComponent implements OnInit {
+export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
 
   msgs;
   progressSpinner: boolean = false;
@@ -24,7 +24,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
 
-  bodyInicial: SerieFacturacionItem;
+  @Input() bodyInicial: SerieFacturacionItem;
   body: SerieFacturacionItem = new SerieFacturacionItem();
 
   // Opciones de los combos y el autocompletado
@@ -57,31 +57,11 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
     private translateService: TranslateService
   ) { }
 
-  ngOnInit() {
-    this.progressSpinner = false;
+  ngOnInit() { }
 
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-      
-      console.log(this.body);
-
-      this.estado = this.esActivo() ? "Alta" : "Baja";
-      this.body.tiposProductos.forEach(e => {
-        if (e.color == undefined) {
-          e.color = "#024eff";
-        }
-      });
-      this.body.tiposServicios.forEach(e => {
-        if (e.color == undefined) {
-          e.color = "#024eff";
-        }
-      });
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    }
-
+  ngOnChanges() {
+    this.restablecer();
     this.getCombos();
-
-    this.progressSpinner = false;
   }
 
   getCombos() {
@@ -131,7 +111,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   }
 
   getComboTiposProductos() {
-    this.sigaServices.get("tiposProductos_comboProducto").subscribe(
+    this.sigaServices.get("facturacionPyS_comboProductos").subscribe(
       n => {
         this.comboTiposProductos = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTiposProductos);
@@ -149,7 +129,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   }
 
   getComboTiposServicios() {
-    this.sigaServices.get("tiposServicios_comboServicios").subscribe(
+    this.sigaServices.get("facturacionPyS_comboServicios").subscribe(
       n => {
         this.comboTiposServicios = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTiposServicios);
@@ -227,9 +207,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_eliminaSerieFacturacion", [this.body]).subscribe(
       data => {
         this.body.fechaBaja = new Date();
-        this.estado = this.esActivo() ? "Alta" : "Baja";
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.persistenceService.setDatos(this.bodyInicial);
+        this.persistenceService.setDatos(this.body);
         this.guardadoSend.emit();
         this.showMessage("success", "Eliminar", "Las serie de facturación han sido dada de baja con exito.");
       },
@@ -267,9 +245,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_reactivarSerieFacturacion", [this.body]).subscribe(
       data => {
         this.body.fechaBaja = null;
-        this.estado = this.esActivo() ? "Alta" : "Baja";
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.persistenceService.setDatos(this.bodyInicial);
+        this.persistenceService.setDatos(this.body);
         this.guardadoSend.emit();
         this.showMessage("success", "Reactivar", "Las series de facturación han sido reactivadas con éxito.");
       },
@@ -287,6 +263,18 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.estado = this.esActivo() ? "Alta" : "Baja";
+
+    this.body.tiposProductos.forEach(e => {
+      if (e.color == undefined) {
+        e.color = "#024eff";
+      }
+    });
+    this.body.tiposServicios.forEach(e => {
+      if (e.color == undefined) {
+        e.color = "#024eff";
+      }
+    });
+
     this.resaltadoDatos = false;
   }
 
@@ -316,8 +304,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
         if (this.modoEdicion) {
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-          this.persistenceService.setDatos(this.bodyInicial);
+          this.persistenceService.setDatos(this.body);
           this.guardadoSend.emit();
         } else {
           this.recuperarDatosSerieFacuturacion();
@@ -348,7 +335,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit {
         let datos: SerieFacturacionItem[] = JSON.parse(n.body).serieFacturacionItems;
         this.body = datos.find(d => d.idSerieFacturacion == this.body.idSerieFacturacion);
         this.persistenceService.setDatos(this.body);
-        
+        this.guardadoSend.emit();
         
         this.progressSpinner = false;
       },

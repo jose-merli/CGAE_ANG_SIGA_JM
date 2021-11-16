@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
@@ -12,12 +13,12 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './destinatarios-individuales-series-factura.component.html',
   styleUrls: ['./destinatarios-individuales-series-factura.component.scss']
 })
-export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
+export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, OnChanges {
 
   msgs: Message[];
   progressSpinner: boolean = false;
 
-  body: SerieFacturacionItem;
+  @Input() body: SerieFacturacionItem;
 
   // Tabla
   datos: DestinatariosItem[];
@@ -42,18 +43,26 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router
   ) { }
 
   ngOnInit() {
+    this.getCols();
+  }
+
+  ngOnChanges() {
     this.progressSpinner = true;
 
-    this.getCols();
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
+    if (sessionStorage.getItem("destinatarioIndv")) {
+      let nuevoDestinatario: any = JSON.parse(sessionStorage.getItem("destinatarioIndv"));
+      this.guardarDestinarariosSerie(nuevoDestinatario);
 
-      this.getDestinatariosSeries();
+      sessionStorage.removeItem("destinatarioIndv");
+      sessionStorage.removeItem("AddDestinatarioIndvBack");
     }
+
+    this.getDestinatariosSeries();
 
     this.progressSpinner = false;
   }
@@ -114,6 +123,59 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit {
     );
   }
 
+  addDestinatario() {
+    this.numSelected = 0;
+    sessionStorage.setItem("AddDestinatarioIndv", "true");
+
+    let migaPan = this.translateService.instant("menu.facturacion.asignacionDeConceptosFacturables");
+    let menuProcede = this.translateService.instant("menu.facturacion");
+
+    sessionStorage.setItem("migaPan", migaPan);
+    sessionStorage.removeItem("migaPan2");
+    sessionStorage.setItem("menuProcede", menuProcede);
+
+    this.router.navigate(["/busquedaGeneral"]);
+  }
+
+  guardarDestinarariosSerie(destinatariosSerie: any) {
+    destinatariosSerie.idSerieFacturacion = this.body.idSerieFacturacion;
+
+    console.log(destinatariosSerie);
+
+    this.sigaServices.post("facturacionPyS_nuevoDestinatariosSerie", destinatariosSerie).subscribe(
+      n => {
+        this.getDestinatariosSeries();
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  eliminarDestinarariosSerie() {
+    this.selectedDatos.forEach(e => {
+      e.idSerieFacturacion = this.body.idSerieFacturacion;
+    });
+
+    return this.sigaServices.post("facturacionPyS_eliminaDestinatariosSerie", this.selectedDatos).subscribe(
+      n => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.getDestinatariosSeries();
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
   clear() {
     this.msgs = [];
