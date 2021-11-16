@@ -24,4 +24,5 @@ export let endpoints_PyS: any = {
     PyS_aprobarSuscripcionMultiple: "pys/aprobarSuscripcionMultiple",
     PyS_denegarSuscripcionMultiple: "pys/denegarSuscripcionMultiple",
     PyS_anularSuscripcionMultiple: "pys/anularSuscripcionMultiple",
+    PyS_anularCompraMultiple: "pys/anularCompraMultiple",
 }

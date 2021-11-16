@@ -161,12 +161,17 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
 
       let susShow : ListaSuscripcionesItem[] = [];
 
+      //Se comprueban los estados de las solicitudes
+      if(this.selectedRows.filter(el => !((el.fechaEfectiva != null && el.fechaSolicitadaAnulacion != null) && el.fechaAnulada == null)) != undefined){
+        susShow.concat(this.selectedRows.filter(el => !((el.fechaEfectiva != null && el.fechaSolicitadaAnulacion != null) && el.fechaAnulada == null)));
+        this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
+      } 
       //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
       //REVISAR : Cambiar mensaje
       //Este parametro "solicitarBaja" de este objeto tiene una logica distinta a la de los servicios
       if(this.esColegiado && (this.selectedRows.filter(el => el.solicitarBaja != "0") != undefined)){
-      susShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
-      this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
+        susShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
+        this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
       }
       //Se comprueba si hay algún servicio automatico ya que entonces no se puede realizar la accion
       //REVISAR: Cambiar mensaje.
@@ -226,7 +231,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
         solicitud.fechaSolicitadaAnulacion = row.fechaSolicitadaAnulacion;
         peticion.push(solicitud);
       });
-      this.sigaServices.post('PyS_anularPeticionMultiple', peticion).subscribe(
+      this.sigaServices.post('PyS_anularSuscripcionMultiple', peticion).subscribe(
         (n) => {
           if (n.status != 200) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));

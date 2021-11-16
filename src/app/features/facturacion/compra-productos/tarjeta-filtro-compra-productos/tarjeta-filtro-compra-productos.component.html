@@ -62,6 +62,10 @@
         placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idEstadoSolicitud'
         [options]="estadosCompraObject">
       </p-dropdown>
+      <!-- <p-multiSelect  styleClass="widthAll"
+        [(ngModel)]='filtrosSuscripciones.idEstadoSolicitud' defaultLabel="{{'general.boton.seleccionar' | translate}}"
+        [options]="estadosSuscripcionObject" [disabled]="filtrosSuscripciones.aFechaDe != null">
+      </p-multiSelect> -->
     </div>
   </div>
 
