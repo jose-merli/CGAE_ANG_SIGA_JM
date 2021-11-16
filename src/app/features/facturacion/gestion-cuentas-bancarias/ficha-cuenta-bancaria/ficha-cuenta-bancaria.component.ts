@@ -11,7 +11,7 @@ import { PersistenceService } from '../../../../_services/persistence.service';
   templateUrl: './ficha-cuenta-bancaria.component.html',
   styleUrls: ['./ficha-cuenta-bancaria.component.scss']
 })
-export class FichaCuentaBancariaComponent implements OnInit, AfterViewInit {
+export class FichaCuentaBancariaComponent implements OnInit {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -19,7 +19,7 @@ export class FichaCuentaBancariaComponent implements OnInit, AfterViewInit {
   iconoTarjetaResumen = "clipboard";
   body: CuentasBancariasItem = new CuentasBancariasItem();
   datos = [];
-  enlacesTarjetaResumen;
+  enlacesTarjetaResumen = [];
 
   manuallyOpened: boolean;
   openTarjetaDatosGenerales: boolean = true;
@@ -56,13 +56,12 @@ export class FichaCuentaBancariaComponent implements OnInit, AfterViewInit {
       this.updateTarjetaResumen();
     }
 
+    setTimeout(() => {
+      this.updateEnlacesTarjetaResumen();
+    }, 5);
+
     this.progressSpinner = false;
     this.goTop();
-  }
-
-  // Espero a que se inicialicen las tarjetas antes de buscarlas por su 'id'
-  ngAfterViewInit() {
-    this.updateEnlacesTarjetaResumen();
   }
 
   // Tarjeta resumen
@@ -179,9 +178,18 @@ export class FichaCuentaBancariaComponent implements OnInit, AfterViewInit {
   // Obtener descripción
 
   calcDescripcion(): void {
-    // Falta poner la parte del principio
+    let abrBanco: string = "";
+
+    if (this.body.nombre.indexOf("~") > 1) {
+      abrBanco = this.body.nombre.substring(0, this.body.nombre.indexOf("~")).trim();
+    } else if (this.body.nombre.indexOf("(") > 0) {
+      abrBanco = this.body.nombre.substring(0, this.body.nombre.indexOf("(")).trim();
+    } else {
+      abrBanco = this.body.nombre;
+    }
+
     let ibanEnd: string = this.body.iban.slice(-4);
-    this.body.descripcion = ` (...${ibanEnd})`;
+    this.body.descripcion = `${abrBanco} (...${ibanEnd})`;
   }
 
   showMessage(severity, summary, msg) {

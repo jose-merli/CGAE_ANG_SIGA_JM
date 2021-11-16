@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -9,7 +9,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './observaciones-series-factura.component.html',
   styleUrls: ['./observaciones-series-factura.component.scss']
 })
-export class ObservacionesSeriesFacturaComponent implements OnInit {
+export class ObservacionesSeriesFacturaComponent implements OnInit, OnChanges {
 
   msgs;
   progressSpinner: boolean = false;
@@ -19,7 +19,7 @@ export class ObservacionesSeriesFacturaComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
 
-  bodyInicial: SerieFacturacionItem;
+  @Input() bodyInicial: SerieFacturacionItem;
   body: SerieFacturacionItem = new SerieFacturacionItem();
   
   apiKey: string = "";
@@ -51,15 +51,13 @@ export class ObservacionesSeriesFacturaComponent implements OnInit {
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
     }
-    
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    }
-
+  
     this.progressSpinner = false;
   }
 
+  ngOnChanges() {
+    this.restablecer();
+  }
 
   // Restablecer
 
@@ -76,8 +74,7 @@ export class ObservacionesSeriesFacturaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.bodyInicial = this.body;
-        this.persistenceService.setDatos(this.bodyInicial);
+        this.persistenceService.setDatos(this.body);
         this.guardadoSend.emit();
 
         this.progressSpinner = false;

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -11,13 +11,13 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './envio-series-factura.component.html',
   styleUrls: ['./envio-series-factura.component.scss']
 })
-export class EnvioSeriesFacturaComponent implements OnInit {
+export class EnvioSeriesFacturaComponent implements OnInit, OnChanges {
 
   msgs: Message[];
   progressSpinner: boolean = false;
 
   body: SerieFacturacionItem;
-  bodyInicial: SerieFacturacionItem;
+  @Input() bodyInicial: SerieFacturacionItem;
   resaltadoDatos: boolean = false;
 
   comboPlantillasEnvio: any[] = [];
@@ -34,16 +34,11 @@ export class EnvioSeriesFacturaComponent implements OnInit {
     private translateService: TranslateService
   ) { }
 
-  ngOnInit() {
-    this.progressSpinner = true;
+  ngOnInit() { }
 
+  ngOnChanges() {
     this.getComboPlantillasEnvio();
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    }
-
-    this.progressSpinner = false;
+    this.restablecer();
   }
 
   // Combo de plantillas envío masivo
@@ -89,8 +84,7 @@ export class EnvioSeriesFacturaComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.persistenceService.setDatos(this.bodyInicial);
+        this.persistenceService.setDatos(this.body);
         this.guardadoSend.emit();
 
         this.progressSpinner = false;

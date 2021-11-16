@@ -24,8 +24,8 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
 
-  bodyInicial: CuentasBancariasItem;
-  @Input() body: CuentasBancariasItem = new CuentasBancariasItem();
+  @Input() bodyInicial: CuentasBancariasItem;
+  body: CuentasBancariasItem = new CuentasBancariasItem();
   estado: string;
 
   resaltadoDatos: boolean = false;
@@ -43,9 +43,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   ngOnInit() { }
 
   ngOnChanges() {
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    this.addSpacesToIBAN();
-    this.checkEstado();
+    this.restablecer();
   }
 
   // Validación del IBAN

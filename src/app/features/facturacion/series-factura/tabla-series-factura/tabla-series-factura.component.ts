@@ -197,11 +197,10 @@ export class TablaSeriesFacturaComponent implements OnInit {
       data => {
         this.busqueda.emit();
         this.showMessage("success", "Eliminar", "Las series de facturación han sido dadas de baja con exito.");
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
-      },
-      () => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner = false;
       }
     );
@@ -232,11 +231,10 @@ export class TablaSeriesFacturaComponent implements OnInit {
       data => {
         this.busqueda.emit();
         this.showMessage("success", "Reactivar", "Las series de facturación han sido reactivadas con éxito.");
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
-      },
-      () => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner = false;
       }
     );

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { ContadorItem } from '../../../../../models/ContadorItem';
@@ -13,13 +13,13 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './contador-rect-series-factura.component.html',
   styleUrls: ['./contador-rect-series-factura.component.scss']
 })
-export class ContadorRectSeriesFacturaComponent implements OnInit {
+export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
 
   msgs: Message[];
   progressSpinner: boolean = false;
 
   body: SerieFacturacionItem;
-  bodyInicial: SerieFacturacionItem;
+  @Input() bodyInicial: SerieFacturacionItem;
 
   comboContadorFacturasRectificativas: any[] = [];
   contadorFacturasRectificativasSeleccionado: ContadorSeriesItem = new ContadorSeriesItem();
@@ -39,18 +39,12 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
     private translateService: TranslateService
   ) { }
 
-  ngOnInit() {
-    this.progressSpinner = true;
+  ngOnInit() { }
 
+  ngOnChanges() {
     this.getComboContadorFacturasRectificativas();
     this.getContadoresRectificativasSerie();
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    }
-    
-
-    this.progressSpinner = false;
+    this.restablecer();
   }
 
   // Combo de contador de facturas rectificativas
@@ -140,10 +134,8 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
           this.body.idContadorFacturasRectificativas = JSON.parse(n.body).id;
           this.nuevo = false;
 
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-          this.persistenceService.setDatos(this.bodyInicial);
+          this.persistenceService.setDatos(this.body);
           this.guardadoSend.emit();
-          this.ngOnInit();
 
           this.progressSpinner = false;
         },
@@ -156,10 +148,8 @@ export class ContadorRectSeriesFacturaComponent implements OnInit {
       this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
         n => {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-          this.persistenceService.setDatos(this.bodyInicial);
+          this.persistenceService.setDatos(this.body);
           this.guardadoSend.emit();
-          this.ngOnInit();
 
           this.progressSpinner = false;
         },

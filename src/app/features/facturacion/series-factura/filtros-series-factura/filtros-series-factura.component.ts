@@ -108,7 +108,7 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   }
 
   getComboTiposProductos() {
-    this.sigaServices.get("tiposProductos_comboProducto").subscribe(
+    this.sigaServices.get("facturacionPyS_comboProductos").subscribe(
       n => {
         this.comboTiposProductos = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTiposProductos);
@@ -120,7 +120,7 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   }
 
   getComboTiposServicios() {
-    this.sigaServices.get("tiposServicios_comboServicios").subscribe(
+    this.sigaServices.get("facturacionPyS_comboServicios").subscribe(
       n => {
         this.comboTiposServicios = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTiposServicios);

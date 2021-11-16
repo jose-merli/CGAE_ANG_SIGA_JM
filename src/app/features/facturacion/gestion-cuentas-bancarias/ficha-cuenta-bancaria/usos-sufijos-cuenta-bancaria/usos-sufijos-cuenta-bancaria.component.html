@@ -73,7 +73,7 @@
               <td class="text-center" *ngFor="let col of columns">
                 <div [ngSwitch]="col.field">
                   <div *ngSwitchCase="'abreviatura'">
-                    <span *ngIf="!dato['nuevo']" class="enlace">{{ dato[col.field] }}</span>
+                    <span *ngIf="!dato['nuevo']"><a class="enlace" (click)="openTab(dato)">{{ dato[col.field] }}</a></span>
                     <p-dropdown *ngIf="dato['nuevo']" class="select-form" [(ngModel)]="datos[rowIndex].idSerieFacturacion" placeholder="Seleccionar"
                       [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde"
                       [ngClass]="styleObligatorio(datos[rowIndex].idSerieFacturacion)" [showClear]="true"></p-dropdown>

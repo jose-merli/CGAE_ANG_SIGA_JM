@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -11,12 +11,12 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './pago-automatico-series-factura.component.html',
   styleUrls: ['./pago-automatico-series-factura.component.scss']
 })
-export class PagoAutomaticoSeriesFacturaComponent implements OnInit {
+export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
 
   msgs: Message[];
   progressSpinner: boolean = false;
 
-  body: SerieFacturacionItem;
+  @Input() body: SerieFacturacionItem;
   
   formasPagosSeleccionadasInicial: any[];
   formasPagosNoSeleccionadasInicial: any[];
@@ -36,17 +36,10 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit {
     private translateService: TranslateService
   ) { }
 
-  ngOnInit() {
-    this.progressSpinner = true;
+  ngOnInit() { }
 
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-
-      this.cargarDatos();
-    }
-    
-
-    this.progressSpinner = false;
+  ngOnChanges() {
+    this.cargarDatos();
   }
 
   // Obtener todas las etiquetas
@@ -104,7 +97,8 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit {
 
     this.sigaServices.post("facturacionPyS_guardarFormasPagosSerie", objEtiquetas).subscribe(
       n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));        this.formasPagosSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosSeleccionadas));
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));        
+        this.formasPagosSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosSeleccionadas));
         this.formasPagosNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosNoSeleccionadas));
         this.progressSpinner = false;
       },

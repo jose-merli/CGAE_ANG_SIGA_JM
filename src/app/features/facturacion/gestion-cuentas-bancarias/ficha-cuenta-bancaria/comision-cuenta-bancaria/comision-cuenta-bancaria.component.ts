@@ -20,8 +20,8 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
 
-  bodyInicial: CuentasBancariasItem;
-  @Input() body: CuentasBancariasItem;
+  @Input() bodyInicial: CuentasBancariasItem;
+  body: CuentasBancariasItem;
 
   resaltadoDatos: boolean = false;
 
@@ -38,7 +38,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
   ngOnInit() { }
 
   ngOnChanges() {
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    this.restablecer();
     this.getComboTiposIVA();
   }
 

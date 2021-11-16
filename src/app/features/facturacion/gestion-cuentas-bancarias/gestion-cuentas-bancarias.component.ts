@@ -133,6 +133,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
   mostrarOcultarHistoricos() {
     this.historico = !this.historico;
     this.cargarListaCuentasBancarias();
+    this.selectedDatos = [];
   }
 
   cargarListaCuentasBancarias() {

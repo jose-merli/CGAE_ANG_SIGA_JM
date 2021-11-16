@@ -10,10 +10,10 @@
     <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
     </app-tarjeta-resumen-fija>
 
-    <app-datos-generales-cuenta-bancaria [modoEdicion]="modoEdicion" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" [body]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-datos-generales-cuenta-bancaria>
-    <app-comision-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaComision]="openTarjetaComision" [body]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-comision-cuenta-bancaria>
-    <app-configuracion-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaConfiguracion]="openTarjetaConfiguracion" [body]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-configuracion-cuenta-bancaria>
-    <app-uso-ficheros-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaUsoFicheros]="openTarjetaUsoFicheros" [body]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-uso-ficheros-cuenta-bancaria>
+    <app-datos-generales-cuenta-bancaria [modoEdicion]="modoEdicion" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-datos-generales-cuenta-bancaria>
+    <app-comision-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaComision]="openTarjetaComision" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-comision-cuenta-bancaria>
+    <app-configuracion-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaConfiguracion]="openTarjetaConfiguracion" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-configuracion-cuenta-bancaria>
+    <app-uso-ficheros-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaUsoFicheros]="openTarjetaUsoFicheros" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-uso-ficheros-cuenta-bancaria>
     <app-usos-sufijos-cuenta-bancaria *ngIf="modoEdicion" [openTarjetaUsosSufijos]="openTarjetaUsosSufijos" [body]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend()"></app-usos-sufijos-cuenta-bancaria>
   </div>
 </div>

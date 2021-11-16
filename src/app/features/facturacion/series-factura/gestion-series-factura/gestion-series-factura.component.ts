@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
@@ -38,7 +38,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
 
 
   datos = [];
-  enlacesTarjetaResumen;
+  enlacesTarjetaResumen = [];
   modoEdicion: boolean = true;
 
   constructor(
@@ -66,8 +66,10 @@ export class GestionSeriesFacturaComponent implements OnInit {
     if (this.modoEdicion) {
       this.updateTarjetaResumen();
     }
-    
-    this.updateEnlacesTarjetaResumen();
+
+    setTimeout(() => {
+      this.updateEnlacesTarjetaResumen();
+    }, 5);
 
     this.progressSpinner = false;
     this.goTop();

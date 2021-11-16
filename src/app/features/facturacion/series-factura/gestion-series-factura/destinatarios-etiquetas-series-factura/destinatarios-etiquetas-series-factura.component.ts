@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/components/common/message';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -11,12 +11,12 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './destinatarios-etiquetas-series-factura.component.html',
   styleUrls: ['./destinatarios-etiquetas-series-factura.component.scss']
 })
-export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
+export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnChanges {
 
   msgs: Message[];
   progressSpinner: boolean = false;
 
-  body: SerieFacturacionItem;
+  @Input() body: SerieFacturacionItem;
   
   etiquetasSeleccionadasInicial: any[];
   etiquetasNoSeleccionadasInicial: any[];
@@ -36,17 +36,10 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit {
     private translateService: TranslateService
   ) { }
 
-  ngOnInit() {
-    this.progressSpinner = true;
+  ngOnInit() { }
 
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
-
-      this.cargarDatos();
-    }
-    
-
-    this.progressSpinner = false;
+  ngOnChanges() {
+    this.cargarDatos();
   }
 
   // Obtener todas las etiquetas
