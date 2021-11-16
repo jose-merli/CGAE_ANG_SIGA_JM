@@ -13,3 +13,19 @@
         }
     }
 }
+
+.card-header{
+    position: relative;
+}
+
+.card-actions-wrapper{
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    label{
+        padding-right: 15px;
+    }
+}
+

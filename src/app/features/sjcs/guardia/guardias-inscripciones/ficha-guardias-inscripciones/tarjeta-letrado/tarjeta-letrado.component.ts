@@ -388,7 +388,7 @@ import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 
 export class TarjetaLetradoComponent implements OnInit {
   // datos;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   body: ResultadoInscripciones = new ResultadoInscripciones("");
   bodyInicial;
   progressSpinner: boolean = false;
@@ -663,7 +663,9 @@ export class TarjetaLetradoComponent implements OnInit {
     }
   }
 
-
+  abreCierraFicha() {
+        this.openFicha = !this.openFicha;
+  }
   /*actualizarFichaResumen() {
     if (this.modoEdicion) {
 
