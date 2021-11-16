@@ -202,14 +202,12 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
             if(servicio.fechaBaja != null){
               servicio.fechaBaja = new Date(servicio.fechaBaja);
             }
+            
+            servicio.impNeto = Number(servicio.impNeto).toFixed(2);
+            servicio.precioServicioValor = Number(servicio.precioServicioValor).toFixed(2);
           }
           this.newFormaPagoCabecera();
           this.getComboPrecios();
-
-          for(let servicioTarj of this.serviciosTarjeta){
-            servicioTarj.impNeto = Number(servicioTarj.impNeto).toFixed(2);
-            servicioTarj.precioServicioValor = Number(servicioTarj.precioServicioValor).toFixed(2);
-          }
 
           this.datosTarjeta = this.ficha;
 
@@ -803,7 +801,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
                 serv.idPrecioServicio = precioDef.idpreciosservicios.toString();
                 serv.precioServicioDesc = precioDef.descripcionprecio;
                 serv.precioServicioValor = precioDef.precio;
-                serv.periodicidadValor = precioDef.periodicidadValor.toString();//REVISAR
+                serv.periodicidadValor = precioDef.periodicidadValor.toString();
                 serv.periodicidadDesc = precioDef.descripcionperiodicidad;
                 serv.idPeriodicidad = precioDef.idperiodicidad.toString();
               }
@@ -812,7 +810,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
               this.comboPrecios = [];
               let i = 0;
               serv.idComboPrecio = "0";
-              let total = 0;
+              let total = 1000000;//REVISAR. Solucion temporal no optima.
               this.arrayPrecios.forEach(el =>{
                 //Comprobamos la mejor tarifa para la seleccion por defecto
                 if(total > ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100))){
@@ -825,6 +823,10 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
                 this.comboPrecios.push(comb);
                 i++;
               })
+              //Si el servicio tiene un precio seleccionado
+              if(serv.idPrecioServicio != null){
+                serv.idComboPrecio = this.arrayPrecios.findIndex(el => el.idpreciosservicios.toString() == serv.idPrecioServicio).toString();
+              }
             }
           })
           this.checkTotal();

@@ -109,7 +109,7 @@
 
                     <span *ngIf="col.field == 'precioServicioDesc' && (ficha.fechaAceptada != null || (ficha.fechaAceptada == null && rowData['automatico'] == '1'))">{{rowData[col.field]}}</span>
                     <p-dropdown [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'precioServicioDesc' && ficha.fechaAceptada == null && rowData['automatico'] != '1'" [filter]="true" styleClass="widthAll" [showClear]="true"
-                    placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idprecio'
+                    placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idComboPrecio'
                     [options]="comboPrecios" (onChange)="onChangePrecio(rowData)" (input)="checkTotal()"
                     [ngClass]="{'camposObligatorios': aGuardar && rowData.idperiodicidad == null}">
                     </p-dropdown>
