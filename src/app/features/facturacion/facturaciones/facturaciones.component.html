@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-filtros-facturaciones (busqueda)="searchFacturacionesSerie()"></app-filtros-facturaciones>
+    <app-filtros-facturaciones (busqueda)="searchFacturacionProgramada()"></app-filtros-facturaciones>
     <app-tabla-facturaciones *ngIf="buscar"></app-tabla-facturaciones>
 </div>
 

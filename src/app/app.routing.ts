@@ -551,12 +551,12 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'facturaciones',
+		path: 'factProgramadas',
 		component: FacturacionesComponent,
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'fichaFacturaciones',
+		path: 'fichaFactProgramadas',
 		component: FichaFacturacionesComponent,
 		canActivate: [AuthGuard]
 	},

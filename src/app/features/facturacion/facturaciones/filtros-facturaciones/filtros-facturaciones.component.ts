@@ -52,7 +52,7 @@ export class FiltrosFacturacionesComponent implements OnInit {
 
     this.persistenceService.clearDatos();
     sessionStorage.setItem("Nuevo", "true");
-    this.router.navigate(["/fichaFacturaciones"]);
+    this.router.navigate(["/fichaFactProgramadas"]);
   }
 
   // Clear filters
