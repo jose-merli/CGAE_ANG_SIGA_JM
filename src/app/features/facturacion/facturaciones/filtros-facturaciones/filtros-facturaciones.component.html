@@ -1,0 +1,151 @@
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{ "menu.facturacion" | translate }}
+    <i class="fa fa-angle-right"></i>Búsqueda de Facturaciones
+  </p>
+</div>
+
+<div class="card">
+  <!-- Datos generales -->
+  <div class="card-body">
+    <p class="title-module" (click)="onHideDatosGenerales()">{{ "administracion.catalogos.titulo.datos.generales" | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Serie Facturación Compras/Suscripción</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idSerieFacturacion' placeholder="Seleccionar"
+            [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Compras/Suscripción Desde</label>
+          <app-fecha [(value)]="body.fechaCompraSuscripcionDesde"
+            (valueChangeSelected)="fillFechaCompraSuscripcionDesde($event)" (valueChangeInput)="fillFechaCompraSuscripcionDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Compras/Suscripción Hasta</label>
+          <app-fecha [(value)]="body.fechaCompraSuscripcionHasta"
+            (valueChangeSelected)="fillFechaCompraSuscripcionHasta($event)" (valueChangeInput)="fillFechaCompraSuscripcionHasta($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Importe Desde</label>
+          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeDesde" maxlength="10" pInputText>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Importe Hasta</label>
+          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeHasta" maxlength="10" pInputText>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estados -->
+    <p class="title-module" (click)="onHideEstados()">Estados
+      <i *ngIf="showEstados" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showEstados" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <div *ngIf="showEstados" class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Estado Facturación</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idEstadoConfirmacion' placeholder="Seleccionar"
+            [options]="comboEstadosFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Estado Ficheros Facturas</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idEstadoPDF' placeholder="Seleccionar"
+            [options]="comboEstadosFicheros" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Estado Envío Facturas</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idEstadoEnvio' placeholder="Seleccionar"
+            [options]="comboEstadosEnvio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Estado Traspaso Facturas</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idEstadoTraspaso' placeholder="Seleccionar"
+            [options]="comboEstadosTraspaso" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fechas -->
+    <p class="title-module" (click)="onHideFechas()">Fechas
+      <i *ngIf="showFechas" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showFechas" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <div *ngIf="showFechas" class="module vista-avanzada">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Prevista Generación Desde</label>
+          <app-fecha [(value)]="body.fechaPrevistaGeneracionDesde"
+            (valueChangeSelected)="fillFechaPrevistaGeneracionDesde($event)" (valueChangeInput)="fillFechaPrevistaGeneracionDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Prevista Generación Hasta</label>
+          <app-fecha [(value)]="body.fechaPrevistaGeneracionHasta"
+            (valueChangeSelected)="fillFechaPrevistaGeneracionHasta($event)" (valueChangeInput)="fillFechaPrevistaGeneracionHasta($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Prevista Confirmación Desde</label>
+          <app-fecha [(value)]="body.fechaPrevistaConfirmDesde"
+            (valueChangeSelected)="fillFechaPrevistaConfirmDesde($event)" (valueChangeInput)="fillFechaPrevistaConfirmDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Prevista Confirmación Hasta</label>
+          <app-fecha [(value)]="body.fechaPrevistaConfirmHasta"
+            (valueChangeSelected)="fillFechaPrevistaConfirmHasta($event)" (valueChangeInput)="fillFechaPrevistaConfirmHasta($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Real Generación Desde</label>
+          <app-fecha [(value)]="body.fechaRealGeneracionDesde"
+            (valueChangeSelected)="fillFechaRealGeneracionDesde($event)" (valueChangeInput)="fillFechaRealGeneracionDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Real Generación Hasta</label>
+          <app-fecha [(value)]="body.fechaRealGeneracionHasta"
+            (valueChangeSelected)="fillFechaRealGeneracionHasta($event)" (valueChangeInput)="fillFechaRealGeneracionHasta($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Real Confirmación Desde</label>
+          <app-fecha [(value)]="body.fechaConfirmacionDesde"
+            (valueChangeSelected)="fillFechaConfirmacionDesde($event)" (valueChangeInput)="fillFechaConfirmacionDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Fecha Real Confirmación Hasta</label>
+          <app-fecha [(value)]="body.fechaConfirmacionHasta"
+            (valueChangeSelected)="fillFechaConfirmacionHasta($event)" (valueChangeInput)="fillFechaConfirmacionHasta($event)">
+          </app-fecha>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+        label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="searchFacturaciones()" pButton type="button" icon="fa fa-search" iconPos="left"
+        label="{{'general.boton.search' | translate}}"></button>
+      <button (click)="nuevaFacturacion()" pButton type="button"  icon="fa fa-plus"
+        iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

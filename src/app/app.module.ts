@@ -519,6 +519,10 @@ import { DatosGeneracionAdeudosComponent } from './features/facturacion/ficheros
 import { CuentaEntidadAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/cuenta-entidad-adeudos/cuenta-entidad-adeudos.component';
 import { FacturasAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturas-adeudos/facturas-adeudos.component';
 import { FacturacionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturacion-adeudos/facturacion-adeudos.component';
+import { FacturacionesComponent } from './features/facturacion/facturaciones/facturaciones.component';
+import { FiltrosFacturacionesComponent } from './features/facturacion/facturaciones/filtros-facturaciones/filtros-facturaciones.component';
+import { TablaFacturacionesComponent } from './features/facturacion/facturaciones/tabla-facturaciones/tabla-facturaciones.component';
+import { FichaFacturacionesComponent } from './features/facturacion/facturaciones/ficha-facturaciones/ficha-facturaciones.component';
 enableRipple(true);
 
 @NgModule({
@@ -953,7 +957,11 @@ enableRipple(true);
 		DatosGeneracionAdeudosComponent,
 		CuentaEntidadAdeudosComponent,
 		FacturasAdeudosComponent,
-		FacturacionAdeudosComponent
+		FacturacionAdeudosComponent,
+		FacturacionesComponent,
+		FiltrosFacturacionesComponent,
+		TablaFacturacionesComponent,
+		FichaFacturacionesComponent
 	],
 	imports: [
 		Paginador3Module,
