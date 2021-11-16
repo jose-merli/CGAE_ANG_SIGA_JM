@@ -400,12 +400,14 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       let styles = {
         'width': size + 'px',
       };
+      return styles;
     }else{
       let styles = {
         'max-width': size + 'px',
       };
+      return styles;
     }
-    return styles;
+    
   }
 
   searchChange(x: any) {
