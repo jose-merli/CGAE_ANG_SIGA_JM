@@ -430,7 +430,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             let searchParametros = JSON.parse(data["body"]);
             let datosBuscar = searchParametros.parametrosItems;
             if(datosBuscar.length > 0){
-              let paramInst = datosBuscar.find(el => el.idInstitucion == el.idinstitucionActual);
+              let paramInst = datosBuscar.find(el => el.idInstitucion == el.idinstitucionActual || el.idInstitucion == '0');
               //Si ha encontrado el parametro para la institucion actual
               if(paramInst != undefined){
                 if(paramInst.valor == "1"){
@@ -440,13 +440,8 @@ para poder filtrar el dato con o sin estos caracteres*/
                   this.permisoIntPNJ = false;
                 }
               }
-              else if(datosBuscar[0].idInstitucion == "0"){
-                if(datosBuscar[0].valor == "1"){
-                  this.permisoIntPNJ = true;
-                }
-                else{
-                  this.permisoIntPNJ = false;
-                }
+              else {
+                this.permisoIntPNJ = false;
               }
             }
             else{
@@ -707,7 +702,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   detallePlantilla() {
-    this.body.cuerpo = "";
+    // this.body.cuerpo = "";
 
     let datosPlantilla = {
       idPlantillaEnvios: this.bodyNuevaComm.idPlantillaEnvios, 
