@@ -36,7 +36,7 @@
             </div>
 
             <div *ngIf="col.field == 'totalRemesa'">
-              <span>{{ dato[col.field] }} €</span>
+              <span>{{ dato[col.field] | number:'':'es-ES' }} €</span>
             </div>
 
             <div *ngIf="col.field == 'idDisqueteCargos'">

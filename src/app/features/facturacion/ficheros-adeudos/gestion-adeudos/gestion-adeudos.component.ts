@@ -45,8 +45,6 @@ export class GestionAdeudosComponent implements OnInit {
       this.datos = JSON.parse(sessionStorage.getItem("FicherosAdeudosItem")); 
       sessionStorage.removeItem("FicherosAdeudosItem");
 
-      //this.persistenceService.setDatos(this.datos);
-
       this.modoEdicion=true;
     }else{
       this.modoEdicion=false;
@@ -132,27 +130,27 @@ export class GestionAdeudosComponent implements OnInit {
     this.datosResumen = [
       {
         label: this.translateService.instant("administracion.grupos.literal.id"),
-        value: event.idDisqueteCargos
+        value: (event.idDisqueteCargos!=undefined ? event.idDisqueteCargos : undefined)
       },
       {
         label: this.translateService.instant("informesycomunicaciones.comunicaciones.busqueda.fechaCreacion"),
-        value: event.fechaCreacion
+        value: (event.fechaCreacion!=undefined ? event.fechaCreacion : undefined)
       },
       {
         label: this.translateService.instant("facturacionPyS.ficherosAdeudos.serie"),
-        value: event.nombreabreviado
+        value: (event.nombreabreviado!=undefined ? event.nombreabreviado : undefined)
       },
       {
         label: this.translateService.instant("menu.facturacion"),
-        value: event.facturacion
+        value: (event.facturacion!=undefined ? event.facturacion : undefined)
       },
       {
         label: this.translateService.instant("facturacion.seriesFactura.cuentaBancaria"),
-        value: event.cuentaEntidad
+        value: (event.cuentaEntidad!=undefined ? event.cuentaEntidad : undefined)
       },
       {
         label: this.translateService.instant("administracion.parametrosGenerales.literal.sufijo"),
-        value: event.sufijo
+        value: (event.sufijo!=undefined ? event.sufijo : undefined)
       },
     ];
   }

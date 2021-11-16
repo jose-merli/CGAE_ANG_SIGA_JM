@@ -30,6 +30,7 @@ export class FicherosAdeudosItem {
 	fechaRecibosRecurrentes: Date;
 	fechaRecibosCOR: Date;
 	fechaRecibosB2B: Date;
+	fechaUltimaModificacion: Date;
 	
     constructor() { }
 }

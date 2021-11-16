@@ -39,11 +39,37 @@
     <div *ngIf="esFichaActiva('datosGeneracion')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
-            <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }}(*)</label>
-            <!-- <app-fecha [inputStyleClass]="styleObligatorio(body.)" [(value)]="body.fechaApertura"
-              (valueChangeSelected)="fillFechaApertura($event)" (valueChangeInput)="fillFechaApertura($event)">
-            </app-fecha> -->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaPresentacion" [ngClass]="styleObligatorio(body.fechaPresentacion)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaPresentacion')" (valueChangeInput)="fillFecha($event, 'fechaPresentacion')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoPrimerosRecibos" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaRecibosPrimeros" [ngClass]="styleObligatorio(body.fechaRecibosPrimeros)" [minDate]="fechaHoy"  (valueChangeSelected)="fillFecha($event, 'fechaRecibosPrimeros')" (valueChangeInput)="fillFecha($event, 'fechaRecibosPrimeros')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoRecibosRecurrentes" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaRecibosRecurrentes" [ngClass]="styleObligatorio(body.fechaRecibosRecurrentes)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaRecibosRecurrentes')" (valueChangeInput)="fillFecha($event, 'fechaRecibosRecurrentes')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoRecibosCOR" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaRecibosCOR" [ngClass]="styleObligatorio(body.fechaRecibosCOR)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaRecibosCOR')" (valueChangeInput)="fillFecha($event, 'fechaRecibosCOR')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoRecibosB2B" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaRecibosB2B" [ngClass]="styleObligatorio(body.fechaRecibosB2B)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaRecibosB2B')" (valueChangeInput)="fillFecha($event, 'fechaRecibosB2B')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "administracion.grupos.literal.id" | translate }}</label>
+            <input type="text" class="form-control" pInputText [(ngModel)]="body.idDisqueteCargos" disabled/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" | translate }}</label>
+            <app-fecha [(value)]="body.fechaCreacion" disabled></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaUltModificacion" | translate }}</label>
+            <app-fecha [(value)]="body.fechaUltimaModificacion" disabled></app-fecha>
           </div>
         </div>
       </div>
