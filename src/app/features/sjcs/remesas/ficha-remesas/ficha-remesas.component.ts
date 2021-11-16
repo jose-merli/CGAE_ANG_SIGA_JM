@@ -211,13 +211,15 @@ export class FichaRemesasComponent implements OnInit {
       remesaAccion = {
         'idRemesa': this.remesaTabla.idRemesa,
         'accion': accion,
-        'descripcion': this.getAccionesRemesas[accion-1].descripcion
+        'descripcion': this.getAccionesRemesas[accion-1].descripcion,
+        'informacionEconomica': this.remesaInformacionEconomica
       };
     } else if (this.remesaItem != null) {
       remesaAccion = {
         'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
         'accion': accion,
-        'descripcion': this.getAccionesRemesas[accion-1].descripcion
+        'descripcion': this.getAccionesRemesas[accion-1].descripcion,
+        'informacionEconomica': this.remesaInformacionEconomica
       };
     }
 
