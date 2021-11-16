@@ -31,4 +31,5 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_insertaCuentaBancaria: "facturacionPyS/insertaCuentaBancaria",
     facturacionPyS_actualizaCuentaBancaria: "facturacionPyS/actualizaCuentaBancaria",
     facturacionPyS_insertaActualizaSerie: "facturacionPyS/insertaActualizaSerie",
+    facturacionPyS_parametrosSEPA: "facturacionPyS/general/parametrosSEPA",
 }
