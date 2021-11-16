@@ -90,7 +90,7 @@
               <div class="form-group col-lg-6 col-md-6">
                 <p-checkbox [(ngModel)]='checkVisible' binary="true"
                   label="{{'facturacionSJCS.facturacionesYPagos.visible' | translate}}"
-                  [disabled]='cerrada || !permisos || camposDisabled()'></p-checkbox>
+                  [disabled]="cerrada || !permisos || camposDisabled() || idEstadoFacturacion != '20'"></p-checkbox>
               </div>
             </div>
           </div>

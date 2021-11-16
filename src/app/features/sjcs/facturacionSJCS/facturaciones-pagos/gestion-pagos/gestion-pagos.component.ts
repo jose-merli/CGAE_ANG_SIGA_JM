@@ -115,39 +115,40 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
         (params) => {
           this.idFacturacionDesdeFichaFac = params.get('idFacturacion');
 
-          if(this.idFacturacionDesdeFichaFac != null) {
+          if (this.idFacturacionDesdeFichaFac != null) {
             this.persistenceService.clearDatos();
           }
 
           if (null != this.persistenceService.getDatos()) {
-        this.datos = this.persistenceService.getDatos();
-        this.idPago = this.datos.idPagosjg;
-        this.idEstadoPago = this.datos.idEstado;
-        this.idFacturacion = this.datos.idFacturacion;
-        this.getPago();
-      }
+            this.datos = this.persistenceService.getDatos();
+            this.idPago = this.datos.idPagosjg;
+            this.idEstadoPago = this.datos.idEstado;
+            this.idFacturacion = this.datos.idFacturacion;
+            this.getPago();
+          }
 
-      if (undefined == this.datos || null == this.datos || undefined == this.datos.idPagosjg) {
-        this.modoEdicion = false;
-      } else {
-        this.modoEdicion = true;
-      }
+          if (undefined == this.datos || null == this.datos || undefined == this.datos.idPagosjg) {
+            this.modoEdicion = false;
+          } else {
+            this.modoEdicion = true;
+          }
 
-      this.numCriterios = 0;
-      this.showCards = true;
+          this.numCriterios = 0;
+          this.showCards = true;
         });
 
     });
   }
 
   volver() {
-    if(this.idFacturacionDesdeFichaFac != null) {
+    if (this.idFacturacionDesdeFichaFac != null) {
       const datos = {
         idFacturacion: this.idFacturacionDesdeFichaFac,
         idEstado: '30'
       }
       this.persistenceService.setDatos(datos);
     }
+    this.sigaServices.setRutaMenu("fichaPagos");
     this.location.back();
   }
 

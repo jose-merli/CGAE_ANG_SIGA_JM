@@ -20,28 +20,19 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
   numSelected = 0;
 
   progressSpinner: boolean = false;
-  permisoEscritura: boolean = false;
-  modoBusqueda;
   modoSeleccion = "multiple";
 
   @ViewChild("table") tabla: Table;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
+
+  @Input() permisoEscritura: boolean;
+  @Input() modoBusqueda;
   @Input() datos = [];
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private commonsService: CommonsService) { }
 
   ngOnInit() {
-
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.modoBusqueda = this.persistenceService.getFiltros().modoBusqueda;
-    }
-
     this.getCols();
-
   }
 
   getCols() {

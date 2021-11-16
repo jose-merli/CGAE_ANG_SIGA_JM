@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
+import { CartasFacturacionPagosItem } from '../../../../../../models/sjcs/CartasFacturacionPagosItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
@@ -54,11 +55,10 @@ export class CartasFacturacionComponent implements OnInit {
 
     if (undefined != this.idFacturacion && null != this.idFacturacion && undefined != this.idEstadoFacturacion && null != this.idEstadoFacturacion && (this.idEstadoFacturacion == '30' || this.idEstadoFacturacion == '20')) {
 
-      const datosCartasFacturacion = {
-        idFacturacion: [this.idFacturacion],
-        idEstadoFacturacion: this.idEstadoFacturacion,
-        modoBusqueda: 'f'
-      };
+      const datosCartasFacturacion: CartasFacturacionPagosItem = new CartasFacturacionPagosItem();
+      datosCartasFacturacion.idFacturacion = [this.idFacturacion];
+      datosCartasFacturacion.idEstado = this.idEstadoFacturacion;
+      datosCartasFacturacion.modoBusqueda = 'f';
 
       sessionStorage.setItem("datosCartasFacturacion", JSON.stringify(datosCartasFacturacion));
 
