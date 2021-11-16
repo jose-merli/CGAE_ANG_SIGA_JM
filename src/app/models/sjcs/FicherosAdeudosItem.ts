@@ -25,7 +25,11 @@ export class FicherosAdeudosItem {
 	numRecibosHasta: String;
 	origen: String;
 	facturacion: String;
-	
+	fechaPresentacion: Date;
+	fechaRecibosPrimeros: Date;
+	fechaRecibosRecurrentes: Date;
+	fechaRecibosCOR: Date;
+	fechaRecibosB2B: Date;
 	
     constructor() { }
 }

@@ -18,6 +18,7 @@ export class FicherosAdeudosComponent implements OnInit {
 
   datos;
   msgs;
+  filtro;
 
   progressSpinner: boolean = false;
   buscar: boolean = false;
@@ -39,11 +40,11 @@ export class FicherosAdeudosComponent implements OnInit {
   }
 
   buscarFicherosAdeudos(event) {
-    let filtros = JSON.parse(JSON.stringify(this.filtros.body));
+    this.filtro = JSON.parse(JSON.stringify(this.filtros.body));
 
     this.progressSpinner = true;
 
-    this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).subscribe(
+    this.sigaServices.post("facturacionPyS_getFicherosAdeudos", this.filtro).subscribe(
       n => {
         this.progressSpinner = false;
 
@@ -60,7 +61,7 @@ export class FicherosAdeudosComponent implements OnInit {
 
         //comprobamos el mensaje de info de resultados
         if (error!=undefined && error!=null) {
-          this.showMessage("info", "INFO", this.translateService.instant(error.message));
+          this.showMessage("info",this.translateService.instant("general.message.informacion"), this.translateService.instant(error.message));
         }
 
         this.progressSpinner = false;
@@ -73,6 +74,7 @@ export class FicherosAdeudosComponent implements OnInit {
       () => {
         this.progressSpinner = false;
         setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
           this.commonsService.scrollTop();
         }, 5);
       }

@@ -1,3 +1,22 @@
-<p>
-  gestion-adeudos works!
-</p>
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+      <i class="fa fa-square"></i>
+      <p>{{'menu.justiciaGratuita' | translate}}
+          <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}
+  </div>
+  <div>
+      <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosResumen" [icono]="'clipboard'" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+      </app-tarjeta-resumen-fija>
+      <app-datos-generacion-adeudos [datos]="datos" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-datos-generacion-adeudos>
+
+       <!-- [tarjetaDatosGeneracion]="tarjetaDatosGeneracion" [modoEdicion]="modoEdicion" [openTarjetaDatosGeneracion]="openTarjetaDatosGeneracion" -->
+
+      <!-- <app-datos-generales-ejg 
+      *ngIf="permisoEscrituraDatosGenerales != undefined" [permisoEscritura]="permisoEscrituraDatosGenerales" (guardadoSend)="guardadoSend($event)"  (newEstado)="newEstado()" [noAsocDes]="noAsocDes">
+      </app-datos-generales-ejg> -->
+  </div>
+
+</div>
+<div class="mt-3 text-right main-button" id="down">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>

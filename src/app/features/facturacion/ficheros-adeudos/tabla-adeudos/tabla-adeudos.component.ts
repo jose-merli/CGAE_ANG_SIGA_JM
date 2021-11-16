@@ -33,6 +33,7 @@ export class TablaAdeudosComponent implements OnInit {
   selectDatos: FicherosAdeudosItem = new FicherosAdeudosItem();
 
   @Input() datos;
+  @Input() filtro;
 
   @ViewChild("table") table: DataTable;
 
@@ -48,12 +49,16 @@ export class TablaAdeudosComponent implements OnInit {
   }
 
   navigateTo(dato){
+    sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(dato));
+    this.persistenceService.setFiltros(this.filtro);
+
     this.router.navigate(['/gestionAdeudos']);
   }
   
   descargarFicheroAdeudo(){
 
   }
+  
   getCols() {
     this.cols = [
       { field: "idDisqueteCargos", header: "administracion.grupos.literal.id", width: "5%" },

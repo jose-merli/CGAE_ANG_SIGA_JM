@@ -45,6 +45,13 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
 
   ngOnInit() {
     this.cargaCombos();
+
+    if(this.persistenceService.getFiltros()){
+      this.body = this.persistenceService.getFiltros();
+      this.persistenceService.clearFiltros();
+
+      this.buscar();
+    }
   }
 
   cargaCombos(){
