@@ -1,4 +1,4 @@
-import { ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';
 import { SigaServices } from '../../_services/siga.service';
 import { CommonsService } from '../../_services/commons.service';
+import { PaginadorComponent } from '../paginador/paginador.component';
 
 
 /*interface Cabecera {
@@ -105,6 +106,7 @@ export class TablaResultadoMixComponent implements OnInit {
   @Input() firstColumn: number = 0;
   @Input() lastColumn: number = 10;
   @Input() filtrosValues = new CalendarioProgramadoItem();
+  @ViewChild(PaginadorComponent) paginador : PaginadorComponent;
   constructor(
     
     private renderer: Renderer2,
@@ -114,7 +116,8 @@ export class TablaResultadoMixComponent implements OnInit {
     private translateService: TranslateService,
     private datePipe: DatePipe,
     private commonsService : CommonsService,
-    private sigaServices : SigaServices
+    private sigaServices : SigaServices,
+    private cd : ChangeDetectorRef
 
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -474,6 +477,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     }
   }
   perPage(perPage){
+    if(perPage)
     this.numperPage = perPage;
   }
   getValuesOMIndex(index){
@@ -824,10 +828,15 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     }
     row.id = 0;
     this.rowGroups.map(row => row.id += 1);
-    this.rowGroups.unshift(row);
+    this.rowGroups.push(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
-    //this.to = this.totalRegistros;
+    
+    this.cd.detectChanges();
+
+    if(this.paginador){
+      this.paginador.onChangeRowsPerPages(this.numperPage);
+    }
   }
   inputChange(event, i, z, cell){
     this.enableGuardar = true;

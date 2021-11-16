@@ -63,15 +63,15 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
     }
 
     this.comboEstadoAsistencias = [
-      {value: "0", label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente").toUpperCase()},
-      {value: "1", label: "CONFIRMADA"},
-      {value: "2", label: "DENEGADA"}
+      {value: "0", label: this.translateService.instant("sjcs.solicitudescentralita.estado.pendiente").toUpperCase()},
+      {value: "1", label: this.translateService.instant("sjcs.solicitudescentralita.estado.confirmada").toUpperCase()},
+      {value: "2", label: this.translateService.instant("sjcs.solicitudescentralita.estado.denegada").toUpperCase()}
     ];
     this.getComboTurnos();
     this.getComboJuzgados();
     this.getComboComisarias();
     if(sessionStorage.getItem("volver") != "true"){
-      this.filtro.estado = "0";
+      this.filtro.estado = ["0"];
     }else{
       if(this.filtro.idTurno){
         this.onChangeTurno(this.filtro.idTurno);

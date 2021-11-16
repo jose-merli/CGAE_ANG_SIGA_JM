@@ -14,7 +14,7 @@ import { DeleteIncompatibilidadesDatosEntradaItem } from './DeleteIncompatibilid
 import { SaveIncompatibilidadesDatosEntradaItem } from './SaveIncompatibilidadesDatosEntradaItem.model copy';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ResultadoIncompatibilidades } from './ResultadoIncompatibilidades.model';
-import { Row, TablaResultadoMixIncompService } from '../../../../../commons/tabla-resultado-mix/tabla-resultado-mix-incompatib.service';
+import { Cell, Row, TablaResultadoMixIncompService } from '../../../../../commons/tabla-resultado-mix/tabla-resultado-mix-incompatib.service';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { ComboIncompatibilidadesDatosEntradaItem } from './ComboIncompatibilidadesDatosEntradaItem';
 import { ComboIncompatibilidadesRes } from './ComboIncompatibilidadesRes';

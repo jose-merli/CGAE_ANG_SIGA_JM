@@ -78,7 +78,7 @@ export class DefensaJuridicaComponent implements OnInit {
     //en this.body en el caso de que haya una designacion
     if (this.designa != null) {
       //this.body = this.designa;
-      this.body.numAnnioProcedimiento = this.designa.ano;
+      this.body.numAnnioProcedimiento = this.body.procedimiento;
       this.body.nig = this.designa.nig;
       this.body.observaciones = this.designa.observaciones;
       this.body.calidad = this.designa.idCalidad;
@@ -311,8 +311,8 @@ export class DefensaJuridicaComponent implements OnInit {
 				this.translateService.instant('general.message.incorrect'),
 				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
 			);
-		} else if (this.validarNProcedimiento(this.body.numAnnioProcedimiento)) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
-    //Comprobamos el formato del NIG y al ser un servicio siga, a llamada del metodo de guardado estar en su interior.
+    } else if (this.validarNProcedimiento(this.body.procedimiento)) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
+  //Comprobamos el formato del NIG y al ser un servicio siga, a llamada del metodo de guardado estar en su interior.
     else this.validarNig(this.body.nig)
   }
 

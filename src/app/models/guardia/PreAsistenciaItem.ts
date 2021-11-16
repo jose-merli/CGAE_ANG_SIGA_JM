@@ -1,7 +1,7 @@
 export class PreAsistenciaItem{
     idSolicitud : string;
     nAvisoCentralita : string;
-    estado : string;
+    estado : string[];
     idTurno : string;
     idGuardia : string;
     fechaLlamadaDsd : string;
