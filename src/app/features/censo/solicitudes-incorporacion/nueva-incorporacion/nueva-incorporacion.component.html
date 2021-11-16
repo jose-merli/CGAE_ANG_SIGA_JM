@@ -84,7 +84,7 @@
                             </div>
                             <div class="form-group col-lg-4 col-md-5" style="float:right">
                                 <label>{{"censo.nuevaSolicitud.fechaSolicitud" | translate }} (*)</label>
-                                <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaSolicitud)"
+                                <app-fecha [inputStyleClass]="styleObligatorioAprobar(solicitudEditar.fechaSolicitud)"
                                     [(value)]="solicitudEditar.fechaSolicitud" [disabled]="consulta" [utc]="false"
                                     (valueChangeSelected)="fillFechaSolicitud($event)"
                                     (valueChangeInput)="fillFechaSolicitud($event)"></app-fecha>
@@ -145,21 +145,21 @@
                 <div class="form-row">
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.solicitudDe" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorio(tipoSolicitudSelected)" [filter]="true" [showClear]="true"
+                        <p-dropdown [ngClass]="styleObligatorioAprobar(tipoSolicitudSelected)" [filter]="true" [showClear]="true"
                             filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
                             [(ngModel)]="tipoSolicitudSelected" [options]="tiposSolicitud"
                             placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.tipoColegiacion" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorio(tipoColegiacionSelected)" [filter]="true" [showClear]="true"
+                        <p-dropdown [ngClass]="styleObligatorioAprobar(tipoColegiacionSelected)" [filter]="true" [showClear]="true"
                             filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
                             [(ngModel)]="tipoColegiacionSelected" placeholder="{{'general.boton.seleccionar' | translate}}"
                             [options]="tipoColegiacion"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-4">
                         <label>{{"censo.nuevaSolicitud.modDocumentacion" | translate}} (*)</label>
-                        <p-dropdown [ngClass]="styleObligatorio(modalidadDocumentacionSelected)" [filter]="true"
+                        <p-dropdown [ngClass]="styleObligatorioAprobar(modalidadDocumentacionSelected)" [filter]="true"
                             [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta" class="select-form"
                             [(ngModel)]="modalidadDocumentacionSelected"
                             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="modalidadDocumentacion">
@@ -167,7 +167,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.nuevaIncorporacion.literal.fechaPrimerEstado" | translate}} (*)</label>
-                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaEstado)"
+                        <app-fecha [inputStyleClass]="styleObligatorioAprobar(solicitudEditar.fechaEstado)"
                             [(value)]="solicitudEditar.fechaEstado" [disabled]="consulta" [utc]="false"
                             (valueChangeSelected)="fillFechaEstado($event)" (valueChangeInput)="fillFechaEstado($event)">
                         </app-fecha>
@@ -350,7 +350,7 @@
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}} (*)</label>
-                        <app-fecha [inputStyleClass]="styleObligatorio(solicitudEditar.fechaNacimiento)"
+                        <app-fecha [inputStyleClass]="styleObligatorioAprobar(solicitudEditar.fechaNacimiento)"
                             [(value)]="solicitudEditar.fechaNacimiento" [disabled]="consulta" [utc]="false"
                             (valueChangeSelected)="fillFechaNacimiento($event)"
                             (valueChangeInput)="fillFechaNacimiento($event)"></app-fecha>
@@ -415,7 +415,7 @@
                         <label>
                             {{"censo.datosDireccion.literal.pais2" | translate}} (*)
                         </label>
-                        <p-dropdown [ngClass]="styleObligatorio(paisSelected)" [filter]="true" [showClear]="true"
+                        <p-dropdown [ngClass]="styleObligatorioAprobar(paisSelected)" [filter]="true" [showClear]="true"
                             filterBy="label,labelSinTilde" [disabled]="consulta"
                             placeholder="{{'general.boton.seleccionar' | translate}}" class="select-form"
                             [(ngModel)]="paisSelected" [options]="paises"
@@ -426,17 +426,17 @@
                         <label>
                             {{"censo.consultaDirecciones.literal.direccion" | translate}} (*)
                         </label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.domicilio)" [disabled]="consulta" type="text"
+                        <input [ngClass]="styleObligatorioAprobar(solicitudEditar.domicilio)" [disabled]="consulta" type="text"
                             class="form-control" pInputText [(ngModel)]="solicitudEditar.domicilio">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.ws.literal.codigopostal" | translate}} (*)
                         </label>
-                        <input *ngIf="!isPoblacionExtranjera" [ngClass]="styleObligatorio(solicitudEditar.codigoPostal)"
+                        <input *ngIf="!isPoblacionExtranjera" [ngClass]="styleObligatorioAprobar(solicitudEditar.codigoPostal)"
                             [disabled]="consulta" type="text" class="form-control" [maxLength]="5"
                             [(ngModel)]="solicitudEditar.codigoPostal" (ngModelChange)="onChangeCodigoPostal()" pInputText>
-                        <input *ngIf="isPoblacionExtranjera" [ngClass]="styleObligatorio(solicitudEditar.codigoPostal)"
+                        <input *ngIf="isPoblacionExtranjera" [ngClass]="styleObligatorioAprobar(solicitudEditar.codigoPostal)"
                             [(ngModel)]="solicitudEditar.codigoPostal" type="text" class="form-control" [maxLength]="5"
                             [disabled]="consulta" pInputText>
                     </div>
@@ -477,7 +477,7 @@
 
                     <div *ngIf="isPoblacionExtranjera" class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)</label>
-                        <input [ngClass]="styleObligatorio(poblacionExtranjeraSelected)"
+                        <input [ngClass]="styleObligatorioAprobar(poblacionExtranjeraSelected)"
                             [(ngModel)]="poblacionExtranjeraSelected" type="text" class="form-control" [maxLength]="99"
                             pInputText>
                     </div>
@@ -532,7 +532,7 @@
                         <label>
                             {{"censo.datosDireccion.literal.correo" | translate}} (*)</label>
                         <a id = "mailHref" class="enlace">
-                        <input id = "mailNuevaIncorporacion" style="color: #0000EE !important;" [ngClass]="styleObligatorio(solicitudEditar.correoElectronico)" [disabled]="consulta"
+                        <input id = "mailNuevaIncorporacion" style="color: #0000EE !important;" [ngClass]="styleObligatorioAprobar(solicitudEditar.correoElectronico)" [disabled]="consulta"
                             type="text" class="form-control enlace" [(ngModel)]="solicitudEditar.correoElectronico"
                             pInputText>
                         <div *ngIf="!emailValido">
@@ -743,8 +743,10 @@
     <div class="mt-3 text-right main-button ">
         <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
             label="{{ 'general.boton.volver' | translate}}"></button>
+        <!-- GUARDAR -->
         <button *ngIf="!consulta" id = "buttonGuardar" (click)="checkDatos()" pButton type="button " icon="fa fa-save" iconPos="left"
             label="Guardar" [disabled]="consulta"></button>
+        <!-- APROBAR -->
         <button (click)="checkDatosAprobar()" [disabled]="isLetrado"
             *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30')"
             pButton type="button " icon="fas fa-check" iconPos="left" label="Aprobar "></button>
