@@ -22,7 +22,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
-  @Output() descargaLog= new EventEmitter<Boolean>();
+  @Output() descargaLog= new EventEmitter<String>();
   @Input() tarjetaDatosGenerales= {
     'duplicar' : '',
     'tabla': [],
@@ -48,7 +48,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   @Output() disGen = new EventEmitter<Boolean>();
   @Output() fillDatosTarjetaGuardiasCalendario = new EventEmitter<any[]>();
   @Output() linkGuardiaColegiado2 = new EventEmitter<any>();
-  @Output() searchGuardiasFromCal = new EventEmitter<string>();
+  @Output() searchGuardiasFromCal = new EventEmitter<any>();
   @Input() estado;
   dataReady = false;
   tipoGuardiaResumen = {
@@ -467,7 +467,12 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
         this.sigaService.postPaginado(
           "guardiaCalendario_eliminarGuardiaCalendar", "?idCalendar=" +this.idCal, lista).subscribe(
             data => {
-              this.searchGuardiasFromCal.emit(this.idCal);
+              let dat = {
+                'idCal': this.idCal,
+                'fechaDesde' : this.tarjetaDatosGenerales.fechaDesde,
+                'fechaHasta' : this.tarjetaDatosGenerales.fechaHasta
+              }
+              this.searchGuardiasFromCal.emit(dat);
             }, err => {
               console.log(err);
             });
@@ -496,7 +501,8 @@ jsonToRow(fromCombo){
     { type: 'text', value: dat.generado, combo: null, hiddenValue:'', required : false},
     { type: 'link2', value:  this.datosTarjetaGuardiasCalendario.length , combo: null, hiddenValue:'', required : false},
     { type: 'invisible', value: dat.idGuardia, combo: null, hiddenValue:'', required : false},
-    { type: 'invisible', value: dat.idTurno, combo: null, hiddenValue:'', required : false}
+    { type: 'invisible', value: dat.idTurno, combo: null, hiddenValue:'', required : false},
+    { type: 'invisible', value: dat.idCalendarioGuardia, combo: null, hiddenValue:'', required : false}
     ];
     let obj:Row = {cells: objCells};
     arr.push(obj);
@@ -621,7 +627,12 @@ setGuardiasCalendario(guardiaCalendario){
     this.sigaService.postPaginado(
       "guardiaCalendario_guardarGuardiaCalendar", "?idCalendar=" +this.idCal + "&update=" + update , lista).subscribe(
         data => {
-          this.searchGuardiasFromCal.emit(this.idCal);
+          let dat = {
+            'idCal': this.idCal,
+            'fechaDesde' : this.tarjetaDatosGenerales.fechaDesde,
+            'fechaHasta' : this.tarjetaDatosGenerales.fechaHasta
+          }
+          this.searchGuardiasFromCal.emit(dat);
         }, err => {
           this.jsonToRow(false);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");

@@ -106,7 +106,8 @@ comboListaGuardias =[];
               'listaGuarias':   {value : this.comboListaGuardias.find(comboItem => comboItem.label == this.calendarioItem.listaGuardias).value},
               'idCalendarioProgramado': this.calendarioItem.idCalendarioProgramado,
               'facturado': this.calendarioItem.facturado,
-              'asistenciasAsociadas': this.calendarioItem.asistenciasAsociadas
+              'asistenciasAsociadas': this.calendarioItem.asistenciasAsociadas,
+              //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
             };
           this.dataRecived = true;
           }else{

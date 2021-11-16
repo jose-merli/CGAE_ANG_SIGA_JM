@@ -102,7 +102,8 @@ export class CalendariosComponent implements OnInit {
                 'listaGuarias': {value : this.comboListaGuardias.find(comboItem => comboItem.label == datos.listaGuardias).value},
                 'idCalendarioProgramado': datos.idCalendarioProgramado,
                 'facturado': datos.facturado,
-                'asistenciasAsociadas': datos.asistenciasAsociadas
+                'asistenciasAsociadas': datos.asistenciasAsociadas,
+                //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
               };
 
               this.persistenceService.setDatos(responseObject);

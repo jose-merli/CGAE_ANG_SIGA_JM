@@ -13,8 +13,8 @@
         <div class="table-header-child p-1" *ngFor="let cabecera of cabeceras; let j = index" [ngStyle]="setMyStyles(cabecera.size)" #BorderedHeader>
 
         <!--<div class="table-header-child p-1" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>-->
-          <div>
-            <div [mat-sort-header]=cabecera.id disableClear>{{cabecera.name | translate}}</div>
+          <div [ngStyle]="setMyStyles(cabecera.size)">
+            <div [ngStyle]="setMyStyles(cabecera.size)" [mat-sort-header]=cabecera.id disableClear>{{cabecera.name | translate}}</div>
             <input type="text" class="form-control" pInputText [(ngModel)]="searchText[j]"
               (ngModelChange)="searchChange(j)" autocomplete="off" placeholder="Buscar">
           </div>
@@ -23,16 +23,16 @@
     <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
         <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
             <div *ngFor="let cell of row['cells'] | slice:firstColumn:lastColumn; let z = index" class="table-cell p-2 selectedRowClass" [ngStyle]="setMyStyles(cell.size)" [ngClass]="{'borders-child': isPar(row['id']), 'borders-child-last': isLast(i)}" #cellSelected>
-                <div [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass">
-                    <span class="w100 cell-value" *ngIf="cell.type == 'text' && calendarios">{{cell.value}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'dateTime' && calendarios" >{{cell.value.label}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'link' && calendarios"  class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'date' && calendarios"  class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text" [disabled]="cell.disabled" class="form-control mt-2" pInputText [(ngModel)]="cell.value"  (change) ="inputChange($event, row['id'], z, cell)"></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'text'  && !calendarios" class="enlace" (click)="llamarFicha(row)">{{cell.value}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'label'  && calendarios" >{{cell.value.label}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left" [label]="cell.value"></button></span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'"> <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
+                <div [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass wrapName2">
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'text' && calendarios">{{cell.value}}</span> 
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'dateTime' && calendarios" >{{cell.value.label}}</span> 
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'link' && calendarios"  class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'date' && calendarios"  class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'input'"><input type="text" [disabled]="cell.disabled" class="form-control mt-2" pInputText [(ngModel)]="cell.value"  (change) ="inputChange($event, row['id'], z, cell)"></span>
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'text'  && !calendarios" class="enlace" (click)="llamarFicha(row)">{{cell.value}}</span> 
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'label'  && calendarios" >{{cell.value.label}}</span> 
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'buttom'"><button pButton type="button"  iconPos="left" [label]="cell.value"></button></span> 
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'checkbox'"> <p-checkbox [ngModel]="validaCheck(cell.value)" binary="true">
                     </p-checkbox></span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'"><app-fecha [(value)]="fechaIncorporacionDesdeSelect" [utc]="false" (valueChangeSelected)="fillFechaIncorporacionDesde($event)"	(valueChangeInput)="fillFechaIncorporacionDesde($event)">	
                     </app-fecha></span>

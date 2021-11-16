@@ -393,9 +393,15 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     return "";
   }
   setMyStyles(size) {
-    let styles = {
-      'max-width': size + 'px',
-    };
+    if (this.calendarios){
+      let styles = {
+        'width': size + 'px',
+      };
+    }else{
+      let styles = {
+        'max-width': size + 'px',
+      };
+    }
     return styles;
   }
 
@@ -502,7 +508,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
           'idCalendarioProgramado': selectedRowValue.cells[10].value,
           'idTurno': selectedRowValue.cells[11].value,
           'idGuardia': selectedRowValue.cells[12].value,
-          'filtrosBusqueda' : this.filtrosValues
+          'filtrosBusqueda' : this.filtrosValues,
+          'idCalendarioGuardia': selectedRowValue.cells[16].value,
         }
           if( dataToSend.estado == "Generada"){
             dataToSendArr.push(dataToSend);
@@ -885,6 +892,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
                 'idCalendarioProgramado': datos.idCalendarioProgramado,
                 'facturado': datos.facturado,
                 'asistenciasAsociadas': datos.asistenciasAsociadas
+                //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
               };
               if (compareDate (this.last.fechaDesde, fechaDesdeSelected, true) == 1 && idGuardiaSelected == this.last.idGuardia){
                 this.entra = true;

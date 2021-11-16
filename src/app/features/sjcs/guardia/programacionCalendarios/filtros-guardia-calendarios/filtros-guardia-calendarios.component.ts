@@ -127,10 +127,10 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
   getComboEstado() {
     this.comboEstado = [
-      { label: "Pendiente", value: "3" },
+      { label: "Pendiente", value: "5" },
       { label: "Programada", value: "1" },
       { label: "En proceso", value: "2" },
-      { label: "Procesada con Errores", value: "5" },
+      { label: "Procesada con Errores", value: "3" },
       { label: "Generada", value: "4" }
     ];
     /*this.sigaServices.get("busquedaGuardia_estado").subscribe(
