@@ -36,20 +36,23 @@ export class FacturacionesComponent implements OnInit {
     let filtros = JSON.parse(JSON.stringify(this.filtros.body));
     this.progressSpinner = true;
 
-    this.sigaServices.post("facturacionPyS_getFacturaciones", filtros).subscribe(
+    this.sigaServices.post("facturacionPyS_getFacturacionesProgramadas", filtros).subscribe(
       n => {
-        this.datos = JSON.parse(n.body).serieFacturacionItems;
+        this.datos = JSON.parse(n.body).facturacionprogramadaItems;
 
         console.log(this.datos);
 
         this.buscar = true;
         
+        // Descomentar cuando funcione la tabla de facturaciones.
+        /*
         if (this.tabla != undefined) {
           this.tabla.table.sortOrder = 0;
           this.tabla.table.sortField = '';
           this.tabla.table.reset();
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
+        */
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));

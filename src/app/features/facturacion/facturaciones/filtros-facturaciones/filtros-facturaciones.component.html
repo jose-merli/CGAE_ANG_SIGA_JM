@@ -16,9 +16,14 @@
     <div *ngIf="showDatosGenerales" class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Serie Facturación Compras/Suscripción</label>
+          <label>Serie Facturación</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idSerieFacturacion' placeholder="Seleccionar"
             [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>Compras/Suscripción</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.compraSuscripcion' placeholder="Seleccionar"
+            [options]="comboCompraSuscripcion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Fecha Compras/Suscripción Desde</label>

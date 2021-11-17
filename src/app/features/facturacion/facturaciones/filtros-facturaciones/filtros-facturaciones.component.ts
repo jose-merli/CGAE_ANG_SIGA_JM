@@ -1,10 +1,12 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
+import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FacFacturacionprogramadaItem } from '../../../../models/FacFacturacionprogramadaItem';
-import { KEY_CODE } from '../../../../_services/commons.service';
+import { CommonsService, KEY_CODE } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-filtros-facturaciones',
@@ -24,6 +26,7 @@ export class FiltrosFacturacionesComponent implements OnInit {
 
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
 
+  comboCompraSuscripcion: ComboItem[] = [];
   comboSeriesFacturacion: ComboItem[] = [];
   comboEstadosFacturacion: ComboItem[] = [];
   comboEstadosFicheros: ComboItem[] = [];
@@ -32,10 +35,14 @@ export class FiltrosFacturacionesComponent implements OnInit {
 
   constructor(
     private persistenceService: PersistenceService,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
     private router: Router
   ) { }
 
   ngOnInit() {
+    this.getCombos();
   }
 
   // Buscar facturaciones
@@ -53,6 +60,85 @@ export class FiltrosFacturacionesComponent implements OnInit {
     this.persistenceService.clearDatos();
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/fichaFactProgramadas"]);
+  }
+
+  // Combos
+  getCombos() {
+    this.getComboSerieFacturacion();
+    this.getComboCompraSuscripcion();
+    this.getComboEstadosFacturacion();
+    this.getComboEstadosFicheros();
+    this.getComboEstadosEnvios();
+    this.getComboEstadosTraspasos();
+  }
+
+  getComboSerieFacturacion() {
+    this.sigaServices.get("facturacionPyS_comboSeriesFacturacion").subscribe(
+      n => {
+        this.comboSeriesFacturacion = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboSeriesFacturacion);
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  getComboCompraSuscripcion() {
+    this.comboCompraSuscripcion = [
+      //{ value: "0", label: "Compras y Suscripciones", local: undefined },
+      { value: "1", label: "Sólo Compras", local: undefined },
+      { value: "2", label: "Sólo Suscripciones", local: undefined }
+    ];
+    this.commonsService.arregloTildesCombo(this.comboCompraSuscripcion);
+  }
+
+  getComboEstadosFacturacion() {
+    this.sigaServices.get("facturacionPyS_comboEstadosFacturacion").subscribe(
+      n => {
+        this.comboEstadosFacturacion = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboEstadosFacturacion);
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  getComboEstadosFicheros() {
+    this.sigaServices.get("facturacionPyS_comboEstadosFicheros").subscribe(
+      n => {
+        this.comboEstadosFicheros = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboEstadosFicheros);
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  getComboEstadosEnvios() {
+    this.sigaServices.get("facturacionPyS_comboEstadosEnvios").subscribe(
+      n => {
+        this.comboEstadosEnvio = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboEstadosEnvio);
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  getComboEstadosTraspasos() {
+    this.sigaServices.get("facturacionPyS_comboEstadosTraspasos").subscribe(
+      n => {
+        this.comboEstadosTraspaso = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboEstadosTraspaso);
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 
   // Clear filters

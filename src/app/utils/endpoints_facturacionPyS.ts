@@ -35,4 +35,9 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_insertaCuentaBancaria: "facturacionPyS/insertaCuentaBancaria",
     facturacionPyS_actualizaCuentaBancaria: "facturacionPyS/actualizaCuentaBancaria",
     facturacionPyS_insertaActualizaSerie: "facturacionPyS/insertaActualizaSerie",
+    facturacionPyS_comboEstadosFacturacion: "facturacionPyS/general/comboEstadosFacturacion",
+    facturacionPyS_comboEstadosFicheros: "facturacionPyS/general/comboEstadosFicheros",
+    facturacionPyS_comboEstadosEnvios: "facturacionPyS/general/comboEstadosEnvios",
+    facturacionPyS_comboEstadosTraspasos: "facturacionPyS/general/comboEstadosTraspasos",
+    facturacionPyS_getFacturacionesProgramadas: "facturacionPyS/getFacturacionesProgramadas",
 }
