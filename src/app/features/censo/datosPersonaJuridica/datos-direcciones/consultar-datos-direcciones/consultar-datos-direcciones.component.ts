@@ -253,7 +253,10 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           this.fechaModificacion;
         // this.showInfo('Fecha de modificación:' + this.fechaModificacion);
       }
-      this.onChangePais();
+      
+      if (this.body.idPais != null) {
+        this.onChangePais();
+      }
 
       // this.isDisabledProvincia = true;
     } else {
