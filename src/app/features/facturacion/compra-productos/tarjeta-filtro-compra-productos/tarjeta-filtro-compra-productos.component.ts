@@ -186,7 +186,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
   getComboTipo() {
     this.progressSpinner = true;
 
-    this.subscriptionTypeSelectValues = this.sigaServices.getParam("productosBusqueda_comboTipos", "?idCategoria=" + this.filtrosCompraProductos.idCategoria).subscribe(
+    this.subscriptionTypeSelectValues = this.sigaServices.getParam("productosBusqueda_comboTiposMultiple", "?idCategoria=" + this.filtrosCompraProductos.idCategoria).subscribe(
       TipoSelectValues => {
         this.progressSpinner = false;
 
