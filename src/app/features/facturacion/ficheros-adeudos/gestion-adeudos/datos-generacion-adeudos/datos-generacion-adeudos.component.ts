@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
+import { ConfirmationService } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
@@ -14,10 +15,10 @@ import { SigaServices } from '../../../../../_services/siga.service';
 })
 export class DatosGeneracionAdeudosComponent implements OnInit {
 
-  @Input() datos;
+  @Input() bodyInicial: FicherosAdeudosItem;
   @Input() modoEdicion;
   @Input() openTarjetaDatosGeneracion;
-  // @Input() permisoEscritura;
+  @Input() permisoEscritura;
   @Input() tarjetaDatosGeneracion: string;
 
   @Output() opened = new EventEmitter<Boolean>();
@@ -28,14 +29,16 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   progressSpinner: boolean = false;
   resaltadoDatos: boolean = false;
   activacionTarjeta: boolean = true;
-  nuevo: boolean = false;
 
   body: FicherosAdeudosItem;
-  bodyInicial: FicherosAdeudosItem;
 
   fechaHoy = new Date();
+  minDateRecibos = new Date();
+  minDateRecurrentes = new Date();
+  minDateCOR = new Date();
+  minDateB2B = new Date();
 
-  msgs = [];
+  msgs;
 
   primerosRecibosSEPA=0;
   recibosRecurrentesSEPA=0;
@@ -44,52 +47,20 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
 
   fichaPosible = {
     key: "datosGeneracion",
-    activa: false
+    activa: true
   }
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
+  constructor(private sigaServices: SigaServices, private confirmationService: ConfirmationService,
     private commonsServices: CommonsService, private translateService: TranslateService,
-    private router: Router, private localStorageService: SigaStorageService) { }
+    private localStorageService: SigaStorageService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.rest();
 
-    if (this.datos) {
-      this.modoEdicion = true;
-      this.nuevo = false;
-      this.body = this.datos;
-      this.bodyInicial = this.body;
-
-      if(undefined!=this.datos.fechaCreacion)
-        this.body.fechaCreacion= new Date(this.datos.fechaCreacion);
-
-      if (undefined!=this.datos.fechaUltimaModificacion)
-        this.body.fechaUltimaModificacion= new Date(this.datos.fechaUltimaModificacion);
-
-      if (undefined!=this.datos.fechaPresentacion)
-        this.body.fechaPresentacion= new Date(this.datos.fechaPresentacion)
-      
-      if (undefined!=this.datos.fechaRecibosPrimeros)
-        this.body.fechaRecibosPrimeros= new Date(this.datos.fechaRecibosPrimeros)
-      
-      if (undefined!=this.datos.fechaRecibosRecurrentes)
-        this.body.fechaRecibosRecurrentes= new Date(this.datos.fechaRecibosRecurrentes)
-      
-      if (undefined!=this.datos.fechaRecibosCOR)
-        this.body.fechaRecibosCOR= new Date(this.datos.fechaRecibosCOR)
-      
-      if (undefined!=this.datos.fechaRecibosB2B)
-        this.body.fechaRecibosB2B= new Date(this.datos.fechaRecibosB2B)
-
-
+    if(this.body.idInstitucion)
       this.cargaDatosSEPA(this.body.idInstitucion);
-    } else {
-      this.nuevo = true;
-      this.modoEdicion = false;
-      this.body = new FicherosAdeudosItem();
-      this.bodyInicial = new FicherosAdeudosItem();
-
+    else 
       this.cargaDatosSEPA(this.localStorageService.institucionActual);
-    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -98,6 +69,85 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
         this.fichaPosible.activa = !this.fichaPosible.activa;
         this.openFicha = !this.openFicha;
       }
+    }
+  }
+
+  descargarFicheroAdeudo(){
+
+  }
+
+  confirmEliminar(): void {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
+    let icon = "fa fa-eraser";
+
+    this.confirmationService.confirm({
+      //key: "asoc",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.progressSpinner = true;
+        this.eliminar();
+      },
+      reject: () => {
+        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+      }
+    });
+  }
+
+  eliminar() {
+    // this.sigaServices.post("facturacionPyS_eliminaSerieFacturacion", this.selectedDatos).subscribe(
+    //   data => {
+    //     this.busqueda.emit();
+    //     this.showMessage("success", "Eliminar", "Las series de facturación han sido dadas de baja con exito.");
+    //     this.progressSpinner = false;
+    //   },
+    //   err => {
+    //     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    //     this.progressSpinner = false;
+    //   }
+    // );
+  }
+
+  rest(){
+    this.body =  JSON.parse(JSON.stringify(this.bodyInicial));
+    this.resaltadoDatos = false;
+
+    this.arreglaFechas();
+  }
+
+  arreglaFechas(){
+    if(undefined!=this.body.fechaCreacion)
+    this.body.fechaCreacion= new Date(this.body.fechaCreacion);
+
+    if (undefined!=this.body.fechaUltimaModificacion)
+      this.body.fechaUltimaModificacion= new Date(this.body.fechaUltimaModificacion);
+
+    if (undefined!=this.body.fechaPresentacion)
+      this.body.fechaPresentacion= new Date(this.body.fechaPresentacion)
+    
+    if (undefined!=this.body.fechaRecibosPrimeros)
+      this.body.fechaRecibosPrimeros= new Date(this.body.fechaRecibosPrimeros)
+    
+    if (undefined!=this.body.fechaRecibosRecurrentes)
+      this.body.fechaRecibosRecurrentes= new Date(this.body.fechaRecibosRecurrentes)
+    
+    if (undefined!=this.body.fechaRecibosCOR)
+      this.body.fechaRecibosCOR= new Date(this.body.fechaRecibosCOR)
+    
+    if (undefined!=this.body.fechaRecibosB2B)
+      this.body.fechaRecibosB2B= new Date(this.body.fechaRecibosB2B)
+  }
+
+  isValid(): boolean {
+    return this.body.fechaRecibosRecurrentes != undefined && this.body.fechaPresentacion != undefined && this.body.fechaRecibosPrimeros != undefined && this.body.fechaRecibosB2B != undefined && this.body.fechaRecibosCOR != undefined;
+  }
+
+  save(){
+    if (this.isValid()) {
+     
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
     }
   }
 
@@ -112,15 +162,19 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
           
           if(data[i].value=="SEPA_DIAS_HABILES_PRIMEROS_RECIBOS"){
             this.primerosRecibosSEPA=data[i].label;
+            this.minDateRecibos = new Date(this.fechaHoy.getTime()+(this.primerosRecibosSEPA*24*60*60*1000));
 
           }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_RECURRENTES"){
             this.recibosRecurrentesSEPA=data[i].label;
+            this.minDateRecurrentes = new Date(this.fechaHoy.getTime()+(this.recibosRecurrentesSEPA*24*60*60*1000));
 
           }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_COR1"){
             this.recibosCORSEPA=data[i].label;
+            this.minDateCOR = new Date(this.fechaHoy.getTime()+(this.recibosCORSEPA*24*60*60*1000));
 
           }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_B2B"){
             this.recibosB2BSEPA=data[i].label;
+            this.minDateB2B = new Date(this.fechaHoy.getTime()+(this.recibosB2BSEPA*24*60*60*1000));
           }
         }
 
@@ -177,15 +231,32 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   }
 
   fillFecha(event, campo) {
-    if(campo==='fechaPresentacion')
+    if(campo==='fechaPresentacion'){
       this.body.fechaPresentacion = event;
-    else if(campo==='fechaRecibosPrimeros')
+      
+      this.body.fechaRecibosPrimeros = new Date(this.body.fechaPresentacion.getTime()+(this.primerosRecibosSEPA*24*60*60*1000));
+      this.minDateRecibos = this.body.fechaRecibosPrimeros
+
+      this.body.fechaRecibosRecurrentes = new Date(this.body.fechaPresentacion.getTime()+(this.recibosRecurrentesSEPA*24*60*60*1000));
+      this.minDateRecurrentes = this.body.fechaRecibosRecurrentes
+
+      this.body.fechaRecibosCOR = new Date(this.body.fechaPresentacion.getTime()+(this.recibosCORSEPA*24*60*60*1000));
+      this.minDateCOR = this.body.fechaRecibosCOR
+
+      this.body.fechaRecibosB2B = new Date(this.body.fechaPresentacion.getTime()+(this.recibosB2BSEPA*24*60*60*1000));
+      this.minDateB2B = this.body.fechaRecibosB2B
+
+    }else if(campo==='fechaRecibosPrimeros'){
       this.body.fechaRecibosPrimeros = event;
-    else if(campo==='fechaRecibosRecurrentes')
+    
+    }else if(campo==='fechaRecibosRecurrentes'){
       this.body.fechaRecibosRecurrentes = event;
-    else if(campo==='fechaRecibosCOR')
+    
+    }else if(campo==='fechaRecibosCOR'){
       this.body.fechaRecibosCOR = event;
-    else if(campo==='fechaRecibosB2B')
+    
+    }else if(campo==='fechaRecibosB2B'){
       this.body.fechaRecibosB2B = event;
+    }
   }
 }

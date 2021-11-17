@@ -1,3 +1,30 @@
-<p>
-  cuenta-entidad-adeudos works!
-</p>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="facturacion">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+      <div class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <!-- <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }}: <span>{{body.fechaPresentacion | date: 'dd/MM/yyyy'}}</span></label>
+            <label>{{ "administracion.grupos.literal.id" | translate }}: <span>{{body.idDisqueteCargos}}</span></label>
+            <label>{{ "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" | translate }}: <span>{{body.fechaCreacion | date: 'dd/MM/yyyy'}}</span></label>
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaUltModificacion"| translate }}: <span>{{body.fechaUltimaModificacion | date: 'dd/MM/yyyy'}}</span></label> -->
+            <i class="fa fa-angle-down float-right ml-auto"></i> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

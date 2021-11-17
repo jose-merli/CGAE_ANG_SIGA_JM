@@ -1,11 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
 import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
-import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
-import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-gestion-adeudos',
@@ -19,39 +16,57 @@ export class GestionAdeudosComponent implements OnInit {
   progressSpinner: boolean = false;
   manuallyOpened: boolean;
   modoEdicion: boolean;
+
   openTarjetaDatosGeneracion: boolean = true;
+  openTarjetaFacturas: boolean = false;
+
+  permisoEscrituraDatosGeneracion:boolean = true; //cambiar con los permisos
+  permisoEscrituraFacturas: boolean = true; //cambiar con los permisos
 
   permisos;
   nuevo;
   msgs;
-  permisoEscrituraResumen;
 
   enlacesTarjetaResumen = [];
   datosResumen = [];
   
-  datos: FicherosAdeudosItem;
+  body: FicherosAdeudosItem;
 
-  constructor(private sigaServices: SigaServices,
-    private translateService: TranslateService,
+  constructor(private translateService: TranslateService,
     private location: Location,
-    private persistenceService: PersistenceService,
-    private router: Router,
-    private commonsService: CommonsService) { }
+    private persistenceService: PersistenceService) { }
 
   async ngOnInit() {
     this.progressSpinner = true;
 
     if (sessionStorage.getItem("FicherosAdeudosItem")) {
-      this.datos = JSON.parse(sessionStorage.getItem("FicherosAdeudosItem")); 
+      this.body = JSON.parse(sessionStorage.getItem("FicherosAdeudosItem")); 
       sessionStorage.removeItem("FicherosAdeudosItem");
 
+      this.persistenceService.setDatos(this.body);
       this.modoEdicion=true;
-    }else{
-      this.modoEdicion=false;
+
+    } else if(this.persistenceService.getDatos()) {
+      this.body = this.persistenceService.getDatos();
+      this.modoEdicion=true;
+
+    } else if(sessionStorage.getItem("Nuevo")) {
+      sessionStorage.removeItem("Nuevo");
+      this.body = new FicherosAdeudosItem();
+
+      this.modoEdicion = false;
     }
 
+    if (this.modoEdicion) {
+      this.updateTarjetaResumen();
+    }
+
+    setTimeout(() => {
+      this.updateEnlacesTarjetaResumen();
+    }, 5);
+
+    this.progressSpinner = false;
     this.goTop();
-    this.updateTarjResumen(this.datos);
   }
 
   goTop() {
@@ -88,29 +103,15 @@ export class GestionAdeudosComponent implements OnInit {
     this.location.back();
   }
 
-  enviarEnlacesTarjeta() {
-    this.enlacesTarjetaResumen = []
-
-    let tarjeta;
-
-    setTimeout(() => {
-
-      tarjeta = {
-          label: "facturacionPyS.ficherosAdeudos.datosGeneracion",
-          value: document.getElementById("datosGeneracion"),
-          nombre: "datosGeneracion",
-        };
-
-        this.enlacesTarjetaResumen.push(tarjeta);
-    }, 5)
-    this.progressSpinner = false;
-  }
 
   isCloseReceive(event) {
     if (event != undefined) {
       switch (event) {
         case "datosGeneracion":
           this.openTarjetaDatosGeneracion = this.manuallyOpened;
+          break;
+        case "facturas":
+          this.openTarjetaFacturas = this.manuallyOpened;
           break;
       }
     }
@@ -122,36 +123,67 @@ export class GestionAdeudosComponent implements OnInit {
         case "datosGeneracion":
           this.openTarjetaDatosGeneracion = true;
           break;
+        case "facturas":
+          this.openTarjetaFacturas = true;
+          break;
       }
     }
   }
 
-  updateTarjResumen(event) {
+  updateTarjetaResumen() {
     this.datosResumen = [
       {
         label: this.translateService.instant("administracion.grupos.literal.id"),
-        value: (event.idDisqueteCargos!=undefined ? event.idDisqueteCargos : undefined)
+        value: this.body.idDisqueteCargos
       },
       {
         label: this.translateService.instant("informesycomunicaciones.comunicaciones.busqueda.fechaCreacion"),
-        value: (event.fechaCreacion!=undefined ? event.fechaCreacion : undefined)
+        value: this.body.fechaCreacion
       },
       {
         label: this.translateService.instant("facturacionPyS.ficherosAdeudos.serie"),
-        value: (event.nombreabreviado!=undefined ? event.nombreabreviado : undefined)
+        value: this.body.nombreabreviado
       },
       {
         label: this.translateService.instant("menu.facturacion"),
-        value: (event.facturacion!=undefined ? event.facturacion : undefined)
+        value: this.body.facturacion
       },
       {
         label: this.translateService.instant("facturacion.seriesFactura.cuentaBancaria"),
-        value: (event.cuentaEntidad!=undefined ? event.cuentaEntidad : undefined)
+        value: this.body.cuentaEntidad
       },
       {
         label: this.translateService.instant("administracion.parametrosGenerales.literal.sufijo"),
-        value: (event.sufijo!=undefined ? event.sufijo : undefined)
+        value: this.body.sufijo
       },
     ];
+  }
+
+  updateEnlacesTarjetaResumen(){
+    this.enlacesTarjetaResumen = [];
+
+    this.enlacesTarjetaResumen.push({
+      label: 'facturacionPyS.ficherosAdeudos.datosGeneracion',
+      value: document.getElementById("datosGeneracion"),
+      nombre: "datosGeneracion",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "menu.facturacion",
+      value: document.getElementById("facturacion"),
+      nombre: "facturacion",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.seriesFactura.bancoEntidad",
+      value: document.getElementById("cuentaEntidad"),
+      nombre: "cuentaEntidad",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "menu.facturacion.facturas",
+      value: document.getElementById("facturas"),
+      nombre: "facturas",
+    });
   }
 }

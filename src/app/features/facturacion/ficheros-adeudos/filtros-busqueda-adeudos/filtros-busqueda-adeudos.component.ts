@@ -136,6 +136,16 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
     }
   }
 
+  nuevo(){
+    if (sessionStorage.getItem("FicherosAdeudosItem")) {
+      sessionStorage.removeItem("FicherosAdeudosItem");
+    }
+
+    this.persistenceService.clearDatos();
+    sessionStorage.setItem("Nuevo", "true");
+    this.router.navigate(["/gestionAdeudos"]);
+  }
+
   buscar() {
     if(this.checkFilters()){
       this.buscarFicherosAdeudos.emit(false);
