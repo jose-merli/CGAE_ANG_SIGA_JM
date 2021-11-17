@@ -1,20 +1,20 @@
 import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef, SimpleChanges, ViewChildren } from '@angular/core';
-import { TranslateService } from '../../../../commons/translate';
-import { SigaServices } from '../../../../_services/siga.service';
-import { PersistenceService } from '../../../../_services/persistence.service';
+import { TranslateService } from '../../../../../commons/translate';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 import { ConfirmationService, Paginator } from 'primeng/primeng';
-import { CommonsService } from '../../../../_services/commons.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '@angular/router';
 import { saveAs } from "file-saver/FileSaver";
-import { RemesasResultadoItem } from '../../../../models/sjcs/RemesasResultadoItem';
-import { RemesasResolucionItem } from '../../../../models/sjcs/RemesasResolucionItem';
+import { RemesasResultadoItem } from '../../../../../models/sjcs/RemesasResultadoItem';
+import { RemesasResolucionItem } from '../../../../../models/sjcs/RemesasResolucionItem';
 
 @Component({
-  selector: 'app-tabla-remesas-resoluciones',
-  templateUrl: './tabla-remesas-resoluciones.component.html',
-  styleUrls: ['./tabla-remesas-resoluciones.component.scss']
+  selector: 'app-tabla-carga-designa-procurador',
+  templateUrl: './tabla-carga-designa-procurador.component.html',
+  styleUrls: ['./tabla-carga-designa-procurador.component.scss']
 })
-export class TablaRemesasResolucionesComponent implements OnInit {
+export class TablaCargaDesignaProcuradorComponent implements OnInit {
 
   rowsPerPage: any = [];
   cols;
@@ -113,8 +113,8 @@ export class TablaRemesasResolucionesComponent implements OnInit {
 
     this.cols = [
       { field: "numRegistroRemesaCompleto", header: "justiciaGratuita.remesasResultados.tabla.numRegistro" },
-      { field: "fechaCarga", header: "justiciaGratuita.remesasResultados.tabla.fechaCarga", width: "12%" },
-      { field: "fechaResolucion", header: "justiciaGratuita.remesasResultados.tabla.fechaRemesa", width: "12%" },
+      { field: "fechaCarga", header: "justiciaGratuita.remesasResultados.tabla.fechaCarga", width: "6%" },
+      { field: "fechaResolucion", header: "justiciaGratuita.remesasResultados.tabla.fechaRemesa", width: "6%" },
       { field: "nombreFichero", header: "justiciaGratuita.remesasResultados.tabla.nombreFichero" },
       { field: "observaciones", header: "justiciaGratuita.remesasResultados.tabla.observaciones" }
     ];
@@ -151,9 +151,9 @@ export class TablaRemesasResolucionesComponent implements OnInit {
     this.persistenceService.setPaginacion(paginacion);
     this.progressSpinner = true;
     this.persistenceService.setDatos(evento);
-    this.router.navigate(["/remesasResolucionesFicha"]);
+    this.router.navigate(["/cargaDesignaProcuradorFicha"]);
     localStorage.setItem('remesaItem', JSON.stringify(evento));
-    localStorage.setItem('fichaRemesaResolucion', "registro");
+    localStorage.setItem('fichaCargaDesignaProcurador', "registro");
     console.log("123 "+ evento)
     console.log(JSON.stringify(this.selectedDatos))
   }
@@ -217,7 +217,7 @@ export class TablaRemesasResolucionesComponent implements OnInit {
         if(documentoAsociado != undefined){
             blob = new Blob([data], { type: "application/zip" });
             if(blob.size > 50){
-              saveAs(blob, "descargaRemesasResoluciones.zip");
+              saveAs(blob, "descargaDesignaProcurador.zip");
             } else {
               this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
             }

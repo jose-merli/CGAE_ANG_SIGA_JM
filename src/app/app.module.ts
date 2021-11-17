@@ -486,7 +486,10 @@ import { TablaRemesasResolucionesComponent } from './features/sjcs/remesas-resol
 import { FiltroRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/filtro-remesas-resoluciones/filtro-remesas-resoluciones.component';
 import { FichaRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/ficha-remesas-resoluciones.component';
 import { TarjetaDatosGeneralesRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/tarjeta-datos-generales-remesas-resoluciones/tarjeta-datos-generales-remesas-resoluciones.component';
-
+import { FiltroCargaDesignaProcuradorComponent} from './features/sjcs/intercambios/carga-designa-procurador/filtro-carga-designa-procurador/filtro-carga-designa-procurador.component';
+import { TablaCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/tabla-carga-designa-procurador/tabla-carga-designa-procurador.component';
+import { FichaCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/ficha-carga-designa-procurador/ficha-carga-designa-procurador.component';
+import { TarjetaDatosCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/ficha-carga-designa-procurador/tarjeta-datos-carga-designa-procurador/tarjeta-datos-carga-designa-procurador.component';
 
 
 @NgModule({
@@ -892,7 +895,11 @@ import { TarjetaDatosGeneralesRemesasResolucionesComponent } from './features/sj
 		CargaMasivaProcuradoresComponent,
 		CargaDesignaProcuradorComponent,
 		TarjetaDatosCurricularesComponent,
-		TarjetaListadoComponent
+		TarjetaListadoComponent,
+		FiltroCargaDesignaProcuradorComponent,
+		TablaCargaDesignaProcuradorComponent,
+		FichaCargaDesignaProcuradorComponent,
+		TarjetaDatosCargaDesignaProcuradorComponent
 
 	],
 	imports: [

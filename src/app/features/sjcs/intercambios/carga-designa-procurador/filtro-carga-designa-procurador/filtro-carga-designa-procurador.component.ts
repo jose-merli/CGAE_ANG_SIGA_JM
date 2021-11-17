@@ -96,10 +96,10 @@ export class FiltroCargaDesignaProcuradorComponent implements OnInit {
       detail: msg
     });
   }
-
+  
   openTab() {
-    this.router.navigate(["/remesasResolucionesFicha"]);
-    localStorage.setItem('fichaRemesaResolucion', "nuevo");
+    this.router.navigate(["/cargaDesignaProcuradorFicha"]);
+    localStorage.setItem('fichaCargaDesignaProcurador', "nuevo");
   }
 
   numberOnly(event): boolean {
@@ -124,6 +124,26 @@ export class FiltroCargaDesignaProcuradorComponent implements OnInit {
 
   obtenerDesignaProcurador(){}
   
+  obtenerOperacionTipoAccion(){
 
+    this.sigaServices
+    .get("remesasResoluciones_obtenerOperacionTipoAccion")
+    .subscribe(
+      data => {
+        console.log(data);
+        if(data == null || data != 404) {
+          this.buttonNew = true;
+        }else if(data == 4) {
+          this.buttonNew = false;
+         
+        }
+      },
+      error => { },
+      () => { }
+    );
+
+
+}
+  
 
 }

@@ -8,10 +8,12 @@
   
 </div>
 <div class="busqueda-container">
-  <app-filtro-carga-designa-procurador (filtrosValues)="getFiltrosValues($event)"></app-filtro-carga-designa-procurador>
 
-  </div>
- 
+  <app-filtro-carga-designa-procurador (filtrosValues)="getFiltrosValues($event)"></app-filtro-carga-designa-procurador>
+  <app-tabla-carga-designa-procurador *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tabla-carga-designa-procurador>
+  
+</div> 
+  
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
