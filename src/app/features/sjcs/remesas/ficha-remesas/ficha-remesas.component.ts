@@ -35,7 +35,7 @@ export class FichaRemesasComponent implements OnInit {
   remesaItem: RemesasItem = new RemesasItem();
   ejgItem;
   tipoPCAJG;
-  remesa: { idRemesa: any; descripcion: string; numero: number; };
+  remesa: { idRemesa: any; descripcion: string; numero: number; informacionEconomica: boolean; };
   getAccionesRemesas;
   acciones: boolean = false;
   estado: boolean = false;
@@ -62,6 +62,7 @@ export class FichaRemesasComponent implements OnInit {
     if (localStorage.getItem('ficha') == "registro") {
       this.remesaTabla = JSON.parse(localStorage.getItem('remesaItem'));
       localStorage.removeItem('remesaItem');
+      this.remesaTabla.informacionEconomica = this.remesaInformacionEconomica;
       console.log("Item en JSON -> ", this.remesaTabla);
       this.guardado = true;
       this.getAcciones();
@@ -81,7 +82,8 @@ export class FichaRemesasComponent implements OnInit {
     this.remesa = {
       'idRemesa': 0,
       'descripcion': "",
-      'numero': 0
+      'numero': 0,
+      'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
     }
 
     this.commonsService.checkAcceso(procesos_comision.guardadoRemesasEnvio)
@@ -145,6 +147,7 @@ export class FichaRemesasComponent implements OnInit {
     {
       'idRemesa': (this.remesaTabla.idRemesa != null && this.remesaTabla.idRemesa != undefined) ? this.remesaTabla.idRemesa.toString() : this.remesaTabla.idRemesa,
       'descripcion': (this.remesaTabla.descripcion != null && this.remesaTabla.descripcion != undefined) ? this.remesaTabla.descripcion.toString() : this.remesaTabla.descripcion,
+      'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
       };
     this.progressSpinner = true;
     this.sigaServices.post("filtrosremesas_buscarRemesa", remesasDatosEntradaItem).subscribe(
@@ -290,13 +293,15 @@ export class FichaRemesasComponent implements OnInit {
       this.remesa = {
         'idRemesa': this.remesaTabla.idRemesa,
         'descripcion': this.remesaTabla.descripcion,
-        'numero': this.remesaTabla.numero
+        'numero': this.remesaTabla.numero,
+        'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
       };
     } else if (this.tarjetaDatosGenerales.remesaItem != null) {
       this.remesa = {
         'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
         'descripcion': this.tarjetaDatosGenerales.remesaItem.descripcion,
-        'numero': this.tarjetaDatosGenerales.remesaItem.numero
+        'numero': this.tarjetaDatosGenerales.remesaItem.numero,
+        'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
       };
     }
 
@@ -470,9 +475,6 @@ export class FichaRemesasComponent implements OnInit {
       localStorage.setItem('remesa', JSON.stringify(this.remesaTabla)); 
     }else{
       localStorage.setItem('remesa', JSON.stringify(this.remesa)); 
-    }
-    if(this.tarjetaDatosGenerales.busquedaActualizaciones){
-      localStorage.setItem('busquedaActualizaciones', "true");
     }
   }
   

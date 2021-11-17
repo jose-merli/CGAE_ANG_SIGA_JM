@@ -14,6 +14,7 @@ export class RemesasItem {
     comboIncidencia?: string;
     ficha?: boolean;
     incidencias?: string;
+    informacionEconomica?: boolean;
 
     constructor() { }
 }

@@ -113,6 +113,7 @@ export class FiltrosEjgComponent implements OnInit {
 
     if(this.remesa != null || this.remesa != undefined){
       this.remesaFicha = true;
+      this.body.informacionEconomica = this.remesa.informacionEconomica;
     }
 
     console.log("Viene de la ficha de una remesa? -> ", this.remesaFicha);
@@ -144,6 +145,9 @@ export class FiltrosEjgComponent implements OnInit {
     } else {
       this.body = new EJGItem();
       this.body.annio = new Date().getFullYear().toString();
+      if(this.remesa != null || this.remesa != undefined){
+        this.body.informacionEconomica = this.remesa.informacionEconomica;
+      }
     }
 
 
@@ -698,6 +702,10 @@ export class FiltrosEjgComponent implements OnInit {
     this.body.annio = new Date().getFullYear().toString();
 
     this.getComboColegio();
+
+    if(this.remesa != null || this.remesa != undefined){
+      this.body.informacionEconomica = this.remesa.informacionEconomica;
+    }
 
     this.showdatosIdentificacion = true;
     this.showDatosGeneralesEJG = false;

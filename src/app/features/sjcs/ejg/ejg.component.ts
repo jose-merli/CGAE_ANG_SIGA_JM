@@ -29,7 +29,6 @@ export class EJGComponent implements OnInit {
   progressSpinner: boolean = false;
   buscar: boolean = false;
   remesa;
-  busquedaActualizaciones: boolean = false;
 
   permisoEscritura: any;
 
@@ -75,12 +74,6 @@ export class EJGComponent implements OnInit {
       localStorage.removeItem('remesa');
       console.log("Remesa -> ", this.remesa);
     }
-
-    if (localStorage.getItem('busquedaActualizaciones') != null) {
-      this.busquedaActualizaciones = true; 
-      localStorage.removeItem('busquedaActualizaciones');  
-    }
-    console.log("busquedaActualizaciones -> ", this.busquedaActualizaciones);
   }
 
   searchEJGs(event) {
