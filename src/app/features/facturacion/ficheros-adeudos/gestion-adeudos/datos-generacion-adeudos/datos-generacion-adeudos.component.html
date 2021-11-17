@@ -9,18 +9,14 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGeneracion')">
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('datosGeneracion')">
             <label class="mr-auto title-ficha pointer">{{ 'facturacionPyS.ficherosAdeudos.datosGeneracion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <!-- <label>{{ "gratuita.busquedaEJG.literal.fechaApertura" | translate }}: <span>{{body.fechaApertura | date:
-                'dd/MM/yyyy'}}</span></label>
-            <label>{{ "justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento" | translate }}:
-              <span>{{body.numAnnioProcedimiento}}</span></label>
-            <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}: <span>{{tipoEJGDesc}}</span></label>
-            <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate }}: <span>{{tipoEJGColDesc}}</span></label>
-            <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}:
-              <span>{{body.estadoEJG}}</span></label>-->
+            <label>{{ "justiciaGratuita.ejg.documentacion.fechaPre" | translate }}: <span>{{body.fechaPresentacion | date: 'dd/MM/yyyy'}}</span></label>
+            <label>{{ "administracion.grupos.literal.id" | translate }}: <span>{{body.idDisqueteCargos}}</span></label>
+            <label>{{ "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" | translate }}: <span>{{body.fechaCreacion | date: 'dd/MM/yyyy'}}</span></label>
+            <label>{{ "censo.datosDireccion.literal.fechaModificacion"| translate }}: <span>{{body.fechaUltimaModificacion | date: 'dd/MM/yyyy'}}</span></label>
             <i class="fa fa-angle-down float-right ml-auto" (click)="abreCierraFicha('datosGeneracion')"
               *ngIf="!esFichaActiva('datosGeneracion')"></i> 
           </div>
@@ -39,11 +35,37 @@
     <div *ngIf="esFichaActiva('datosGeneracion')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-row">
-          <div class="form-group col-lg-3 col-md-3">
-            <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }}(*)</label>
-            <!-- <app-fecha [inputStyleClass]="styleObligatorio(body.)" [(value)]="body.fechaApertura"
-              (valueChangeSelected)="fillFechaApertura($event)" (valueChangeInput)="fillFechaApertura($event)">
-            </app-fecha> -->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaPresentacion"  [inputStyleClass]="styleObligatorio(body.fechaApertura)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaPresentacion')" (valueChangeInput)="fillFecha($event, 'fechaPresentacion')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoPrimerosRecibos" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaRecibosPrimeros"  [inputStyleClass]="styleObligatorio(body.fechaRecibosPrimeros)" [minDate]="minDateRecibos" (valueChangeSelected)="fillFecha($event, 'fechaRecibosPrimeros')" (valueChangeInput)="fillFecha($event, 'fechaRecibosPrimeros')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoRecibosRecurrentes" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaRecibosRecurrentes"  [inputStyleClass]="styleObligatorio(body.fechaRecibosRecurrentes)"[minDate]="minDateRecurrentes" (valueChangeSelected)="fillFecha($event, 'fechaRecibosRecurrentes')" (valueChangeInput)="fillFecha($event, 'fechaRecibosRecurrentes')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoRecibosCOR" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaRecibosCOR"  [inputStyleClass]="styleObligatorio(body.fechaRecibosCOR)" [minDate]="minDateCOR" (valueChangeSelected)="fillFecha($event, 'fechaRecibosCOR')" (valueChangeInput)="fillFecha($event, 'fechaRecibosCOR')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoRecibosB2B" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaRecibosB2B"  [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" [minDate]="minDateB2B" (valueChangeSelected)="fillFecha($event, 'fechaRecibosB2B')" (valueChangeInput)="fillFecha($event, 'fechaRecibosB2B')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "administracion.grupos.literal.id" | translate }}</label>
+            <input type="text" class="form-control" pInputText [(ngModel)]="body.idDisqueteCargos" disabled/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" | translate }}</label>
+            <app-fecha [(value)]="body.fechaCreacion" disabled></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaUltModificacion" | translate }}</label>
+            <app-fecha [(value)]="body.fechaUltimaModificacion" disabled></app-fecha>
           </div>
         </div>
       </div>
@@ -52,23 +74,15 @@
     <div *ngIf="esFichaActiva('datosGeneracion')" class="card-footer">
       <div class="text-right main-button ">
         <!-- <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion" type="button"
-          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button>
+          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button> -->
+        
+        <button pButton type="button" icon="fas fa-download" iconPos="left" [disabled]="!permisoEscritura" (click)="descargarFicheroAdeudo()" label="{{'general.boton.download' | translate }}"></button>
 
-        <button (click)="checkPermisosCreateDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion" type="button"
-          icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="!permisoEscritura" (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-        <button (click)="checkPermisosAddExp()" pButton [disabled]="!permisoEscritura || !modoEdicion || noAsocDes" type="button"
-          icon="fa fa-plus" iconPos="left"
-          label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="rest()" label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-        <button (click)="checkPermisosComunicar()" pButton [disabled]="!permisoEscritura || !modoEdicion" type="button"
-          icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button> -->
-
-        <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}"></button>
-
-        <!-- <button (click)="save()" pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}"></button> -->
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura" (click)="save()" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

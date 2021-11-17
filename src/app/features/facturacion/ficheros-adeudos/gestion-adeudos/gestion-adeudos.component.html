@@ -2,21 +2,22 @@
   <div class="header-title">
       <i class="fa fa-square"></i>
       <p>{{'menu.justiciaGratuita' | translate}}
-          <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}
+          <i class="fa fa-angle-right"></i>{{"menu.facturacion" | translate}}
   </div>
   <div>
       <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosResumen" [icono]="'clipboard'" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
       </app-tarjeta-resumen-fija>
-      <app-datos-generacion-adeudos [datos]="datos" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-datos-generacion-adeudos>
 
-       <!-- [tarjetaDatosGeneracion]="tarjetaDatosGeneracion" [modoEdicion]="modoEdicion" [openTarjetaDatosGeneracion]="openTarjetaDatosGeneracion" -->
+      <app-datos-generacion-adeudos [bodyInicial]="body" [permisoEscritura]="permisoEscrituraDatosGeneracion" [tarjetaDatosGeneracion]="tarjetaDatosGeneracion" [openTarjetaDatosGeneracion]="openTarjetaDatosGeneracion" (opened)="manuallyOpened = $event" [modoEdicion]="modoEdicion" (idOpened)="isCloseReceive($event)"></app-datos-generacion-adeudos>
 
-      <!-- <app-datos-generales-ejg 
-      *ngIf="permisoEscrituraDatosGenerales != undefined" [permisoEscritura]="permisoEscrituraDatosGenerales" (guardadoSend)="guardadoSend($event)"  (newEstado)="newEstado()" [noAsocDes]="noAsocDes">
-      </app-datos-generales-ejg> -->
+      <app-facturacion-adeudos *ngIf="modoEdicion" [bodyInicial]="body"></app-facturacion-adeudos>
+
+      <app-cuenta-entidad-adeudos *ngIf="modoEdicion" [bodyInicial]="body"></app-cuenta-entidad-adeudos>
+
+      <app-facturas-adeudos *ngIf="modoEdicion" [bodyInicial]="body" [permisoEscritura]="permisoEscrituraFacturas" [tarjetaFacturas]="tarjetaFacturas" [openTarjetaFacturas]="openTarjetaFacturas" (opened)="manuallyOpened = $event" [modoEdicion]="modoEdicion" (idOpened)="isCloseReceive($event)"></app-facturas-adeudos>
   </div>
-
 </div>
+
 <div class="mt-3 text-right main-button" id="down">
   <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
 </div>

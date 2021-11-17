@@ -1,3 +1,61 @@
-<p>
-  facturas-adeudos works!
-</p>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="facturacion">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+      <div *ngIf="!esFichaActiva('facturas')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('facturas')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('facturas')">
+            <label class="mr-auto title-ficha pointer">{{ 'menu.facturacion.facturas' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <!-- <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }}: <span>{{body.fechaPresentacion | date: 'dd/MM/yyyy'}}</span></label>
+            <label>{{ "administracion.grupos.literal.id" | translate }}: <span>{{body.idDisqueteCargos}}</span></label>
+            <label>{{ "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" | translate }}: <span>{{body.fechaCreacion | date: 'dd/MM/yyyy'}}</span></label>
+            <label>{{ "facturacionPyS.ficherosAdeudos.fechaUltModificacion"| translate }}: <span>{{body.fechaUltimaModificacion | date: 'dd/MM/yyyy'}}</span></label> -->
+            <i class="fa fa-angle-down float-right ml-auto" (click)="abreCierraFicha('facturas')"
+              *ngIf="!esFichaActiva('facturas')"></i> 
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('facturas')"
+        class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('facturas')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'menu.facturacion.facturas' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('facturas')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <!-- <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }} (*)</label>
+            <app-fecha [(value)]="body.fechaPresentacion"  [inputStyleClass]="styleObligatorio(body.fechaApertura)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaPresentacion')" (valueChangeInput)="fillFecha($event, 'fechaPresentacion')"></app-fecha> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva('facturas')" class="card-footer">
+      <div class="text-right main-button ">
+        <!-- <button pButton type="button" icon="fas fa-download" iconPos="left" [disabled]="!permisoEscritura" (click)="descargarFicheroAdeudo()" label="{{'general.boton.download' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="!permisoEscritura" (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button> -->
+
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="rest()" label="{{ 'general.boton.restablecer' | translate}}"></button>
+
+        <!-- <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura" (click)="save()" label="{{ 'general.boton.guardar' | translate}}"></button> -->
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
