@@ -256,6 +256,8 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
       
       if (this.body.idPais != null) {
         this.onChangePais();
+      } else {
+        this.body.idPais = "";
       }
 
       // this.isDisabledProvincia = true;
