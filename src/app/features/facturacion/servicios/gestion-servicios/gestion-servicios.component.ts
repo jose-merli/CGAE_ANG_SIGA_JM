@@ -3,8 +3,11 @@ import { Router } from '@angular/router';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
+import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { ListaServiciosDTO } from '../../../../models/ListaServiciosDTO';
 import { ListaServiciosItems } from '../../../../models/ListaServiciosItems';
+import { ListaServiciosSuscripcionItem } from '../../../../models/ListaServiciosSuscripcionItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -33,6 +36,7 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
   rowsPerPageSelectValues: any[] = []; //Valores del combo Mostrar X registros
   first = 0;
   buscadores = [];
+  esColegiado = true;
 
   //Variables control
   historico: boolean = false; //Indica si se estan mostrando historicos o no para por ejemplo ocultar/mostrar los botones de historico.
@@ -43,9 +47,18 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
   //Suscripciones
   subscriptionActivarDesactivarServicios: Subscription;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService, private sigaServices: SigaServices, private router: Router) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, 
+    private translateService: TranslateService, private confirmationService: ConfirmationService, 
+    private sigaServices: SigaServices, private router: Router,
+    private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
 
     if (this.persistenceService.getPaginacion() != undefined) {
       let paginacion = this.persistenceService.getPaginacion();
@@ -119,6 +132,228 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
     ];
 
     this.colsServices.forEach(it => this.buscadores.push(""));
+  }
+
+  checkServ(){
+    if(this.selectedRows.length != 1){
+      this.showMessage("error",
+              "** Limite de servicios por suscripcion",
+              "** Solo se admite un servicio por suscripcion"
+            );
+    }
+    else if (this.checkServicioSeleccionado(this.selectedRows[0])) {
+      this.nuevaSuscripcion();
+      // let newServicio: ListaServiciosSuscripcionItem = new ListaServiciosSuscripcionItem();
+      // newServicio.cantidad = "1";
+      // newServicio.descripcion = selectedServicio.descripcion;
+      // newServicio.orden = (this.serviciosTarjeta.length + 1).toString();
+      // newServicio.idServicio = selectedServicio.idservicio;
+      // newServicio.idTipoServicios = selectedServicio.idtiposervicios;
+      // newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
+      // // newServicio.precioServicioValor = selectedServicio.precioperiodicidad.split(" ")[0];
+      // // newServicio.precioServicioValor = newServicio.precioServicioValor.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
+      // newServicio.iva = selectedServicio.iva;
+      // newServicio.valorIva = selectedServicio.valorIva;
+      // newServicio.idtipoiva = selectedServicio.idtipoiva;
+      // newServicio.idPeticion = this.ficha.nSolicitud;
+      // newServicio.automatico = selectedServicio.automatico;
+      // newServicio.noFacturable = selectedServicio.noFacturable;
+      // newServicio.solicitarBaja = selectedServicio.solicitarBaja;
+      // this.serviciosTarjeta.push(newServicio);
+      // this.checkTotal();
+      // this.getComboPrecios();
+    }
+  }
+
+  nuevaSuscripcion() {
+    this.progressSpinner = true;
+
+    sessionStorage.removeItem("FichaCompraSuscripcion");
+    let nuevaSuscripcion = new FichaCompraSuscripcionItem();
+
+    nuevaSuscripcion.servicios = [];
+
+    let newServicio: ListaServiciosSuscripcionItem = new ListaServiciosSuscripcionItem();
+
+
+
+    newServicio.idServicio = this.selectedRows[0].idservicio;
+    newServicio.idTipoServicios = this.selectedRows[0].idtiposervicios;
+    newServicio.idServiciosInstitucion = this.selectedRows[0].idserviciosinstitucion;
+    newServicio.cantidad = "1";
+    newServicio.descripcion = this.selectedRows[0].descripcion;
+    newServicio.orden = "1";
+    newServicio.iva = this.selectedRows[0].iva;
+    newServicio.valorIva = this.selectedRows[0].valorIva;
+    newServicio.idtipoiva = this.selectedRows[0].idtipoiva;
+    newServicio.automatico = this.selectedRows[0].automatico;
+    newServicio.noFacturable = this.selectedRows[0].noFacturable;
+    newServicio.solicitarBaja = this.selectedRows[0].solicitarBaja;
+
+    nuevaSuscripcion.servicios.push(newServicio);
+
+    this.sigaServices.post('PyS_getFichaCompraSuscripcion', nuevaSuscripcion).subscribe(
+      (n) => {
+        this.progressSpinner = false;
+
+        if (n.status == 200) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          sessionStorage.setItem("FichaCompraSuscripcion", n.body);
+          this.router.navigate(["/fichaCompraSuscripcion"]);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      },
+      (err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  checkServicioSeleccionado(selectedServicio : ListaServiciosItems) {
+    if (selectedServicio.formapago != this.translateService.instant("facturacion.productos.pagoNoDisponible")) {
+      
+      if (selectedServicio.fechaBajaIva == null) {
+        let serviciosLista : ListaServiciosSuscripcionItem[] = [];
+
+        let newServicio = new ListaServiciosSuscripcionItem();
+        newServicio.idServicio = selectedServicio.idservicio;
+        newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
+        newServicio.idTipoServicios = selectedServicio.idtiposervicios;
+        newServicio.noFacturable = selectedServicio.noFacturable;
+        newServicio.descripcion = selectedServicio.descripcion;
+
+        serviciosLista.push(newServicio);
+
+        if (this.checkFormasPagoComunes(serviciosLista)) {
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      else {
+        this.showMessage("error",
+          this.translateService.instant("facturacion.productos.productoIvaDerogado"),
+          this.translateService.instant("facturacion.productos.productoIvaDerogadoDesc"));
+        return false;
+      }
+    }
+    else {
+      this.showMessage("error",
+      this.translateService.instant("productoSinFormaPago"),
+      this.translateService.instant("productoSinFormaPago"));
+      return false;
+    }
+  }
+
+  checkFormasPagoComunes(serviciosLista: ListaServiciosSuscripcionItem[]) {
+    let error: boolean = false;
+
+
+    //Se extrae el atributo y se separan las distintas formas de pago.
+    let formasPagoArrays: any[] = [];
+
+    let result = [];
+
+    let serv;
+    serviciosLista.forEach(element => {
+      serv = this.serviceData.find(serv =>
+        serv.idservicio == element.idServicio && serv.idtiposervicios == element.idTipoServicios && serv.idserviciosinstitucion == element.idServiciosInstitucion
+      )
+      let idformaspago;
+      if(serv.idFormasPago != null){
+        idformaspago = serv.idFormasPago.split(",");
+      }
+      if(serv.noFacturable == "1"){
+        if(idformaspago != undefined){
+          idformaspago.push("-1");
+        }
+        else{
+          idformaspago = ["-1"];
+        }
+      }
+      formasPagoArrays.push(idformaspago);
+    });
+
+    //Se comprueba si todas las filas seleccionadas comparten alguna forma de pago.
+    result = formasPagoArrays.shift().filter(function (v) {
+      return formasPagoArrays.every(function (a) {
+        return a.indexOf(v) !== -1;
+      });
+    });
+
+    if (result.length > 0) {
+      //Comprobamos si las formas de pago comunes se corresponden con 
+      //las formas de pago permitidas al usuario ( por internet o por secretaria)
+      // Personal del colegio = pago por secretaria ("S"), colegiado = formas de pago por internet ("A").
+      //Se hace una excepción con la forma de pago seleccionada anteriormente si es una solicitud pendiente.
+      let resultUsu = [];
+      for(let idpago of result){
+        //"No factuable" se acepta siempre
+        if(idpago == "-1"){
+          resultUsu.push("-1");
+        }
+        else{
+          let index = serv.idFormasPago.split(",").indexOf(idpago);
+          if((this.esColegiado && serv.formasPagoInternet.split(",")[index] == "A") ||
+          ((!this.esColegiado && serv.formasPagoInternet.split(",")[index] == "S"))){
+            resultUsu.push(serv.idFormasPago.split(",")[index]);
+          }
+        }
+      }
+
+      if(resultUsu.length > 0){
+        if(this.checkNoFacturable(serviciosLista)){
+          return true;
+        }
+        else {
+          this.msgs = [
+            {
+              severity: "error",
+              summary: this.translateService.instant("facturacion.productos.facturableNoComp"),
+              detail: this.translateService.instant("facturacion.productos.facturableNoComp")
+            }
+          ];
+          return false;
+        }
+      }
+      else {
+        this.showMessage("error",
+          this.translateService.instant("menu.facturacion.noCompatiblePorUsuario"),
+          this.translateService.instant("menu.facturacion.noCompatiblePorUsuarioDesc")
+        );
+        return false;
+      }
+    }
+    else {
+      this.showMessage("error",
+        this.translateService.instant(
+          "facturacion.servicios.ResFormasPagoNoCompatibles"
+        ),
+        this.translateService.instant(
+          "facturacion.servicios.FormasPagoNoCompatibles"
+        )
+      );
+      return false;
+    }
+  }
+
+  checkNoFacturable(servicios: ListaServiciosSuscripcionItem[]) { 
+    let i = 0;
+    //Se comprueba si todos los servicios seleccionados son no facturables facturables
+    for (let serv of servicios) {
+      if (serv.noFacturable == "1") i++;
+    }
+
+    if (i == 0 || i == servicios.length) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 
   customSort(event: SortEvent) {

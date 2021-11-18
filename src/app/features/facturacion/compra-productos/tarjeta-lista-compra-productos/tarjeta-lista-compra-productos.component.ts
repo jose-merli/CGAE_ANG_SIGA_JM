@@ -169,7 +169,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
       //Este parametro "solicitarBaja" de este objeto tiene una logica distinta a la de los servicios
       if(this.esColegiado && (this.selectedRows.filter(el => el.solicitarBaja != "0") != undefined)){
         compShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
-      this.selectedRows = this.selectedRows.filter( ( el ) => !compShow.includes( el ) );
+        this.selectedRows = this.selectedRows.filter( ( el ) => !compShow.includes( el ) );
       }
       this.confirmAnular(compShow);
     }

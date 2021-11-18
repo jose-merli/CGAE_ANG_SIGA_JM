@@ -136,8 +136,9 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     }
     else {
       this.ficha.impTotal = "0";
-      this.serviciosTarjeta = this.ficha.servicios;
-      if(this.serviciosTarjeta.length>0){
+      if(this.ficha.servicios.length>0){
+        this.ficha.servicios.forEach(el => el.idPeticion = this.ficha.nSolicitud);
+        this.serviciosTarjeta = this.ficha.servicios;
         this.getComboPrecios();
       }
     }
@@ -414,8 +415,6 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       newServicio.idServicio = selectedServicio.idservicio;
       newServicio.idTipoServicios = selectedServicio.idtiposervicios;
       newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
-      // newServicio.precioServicioValor = selectedServicio.precioperiodicidad.split(" ")[0];
-      // newServicio.precioServicioValor = newServicio.precioServicioValor.replace(",", "."); //para evitar que utilice comas que se procesan de forma erronea
       newServicio.iva = selectedServicio.iva;
       newServicio.valorIva = selectedServicio.valorIva;
       newServicio.idtipoiva = selectedServicio.idtipoiva;
@@ -815,7 +814,11 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
                 //Comprobamos la mejor tarifa para la seleccion por defecto
                 if(total > ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100))){
                   total = ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100));
-                  serv.idComboPrecio = i.toString();
+                  //Se asigna el precio por defecto unicamente cuando no tiene uno ya elegido
+                  if(serv.idPrecioServicio == null){
+                    serv.idComboPrecio = i.toString();
+                    this.onChangePrecio(serv);
+                  }
                 }
                 let comb = new ComboItem();
                 comb.label = el.descripcionprecio;
@@ -826,6 +829,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
               //Si el servicio tiene un precio seleccionado
               if(serv.idPrecioServicio != null){
                 serv.idComboPrecio = this.arrayPrecios.findIndex(el => el.idpreciosservicios.toString() == serv.idPrecioServicio).toString();
+                this.onChangePrecio(this.serviciosTarjeta[0]);
               }
             }
           })
@@ -849,12 +853,23 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   }
 
   onChangePrecio(rowData : ListaServiciosSuscripcionItem){
-    rowData.idPrecioServicio = this.arrayPrecios[rowData.idComboPrecio].idpreciosservicios.toString();
-    rowData.precioServicioValor = this.arrayPrecios[rowData.idComboPrecio].precio;
-    rowData.periodicidadValor = this.arrayPrecios[rowData.idComboPrecio].periodicidadValor.toString();//REVISAR
-    rowData.periodicidadDesc = this.arrayPrecios[rowData.idComboPrecio].descripcionperiodicidad;
-    rowData.idPeriodicidad = this.arrayPrecios[rowData.idComboPrecio].idperiodicidad.toString();
-    this.checkTotal();
+    if(rowData.idComboPrecio != null){
+      rowData.precioServicioDesc = this.arrayPrecios[rowData.idComboPrecio].descripcionprecio.toString(); 
+      rowData.idPrecioServicio = this.arrayPrecios[rowData.idComboPrecio].idpreciosservicios.toString();
+      rowData.precioServicioValor = this.arrayPrecios[rowData.idComboPrecio].precio;
+      rowData.periodicidadValor = this.arrayPrecios[rowData.idComboPrecio].periodicidadValor.toString();
+      rowData.periodicidadDesc = this.arrayPrecios[rowData.idComboPrecio].descripcionperiodicidad;
+      rowData.idPeriodicidad = this.arrayPrecios[rowData.idComboPrecio].idperiodicidad.toString();
+      this.checkTotal();
+    }
+    else{
+      rowData.idPrecioServicio = null;
+      rowData.precioServicioDesc = "";
+      rowData.precioServicioValor = "0";
+      rowData.periodicidadValor = "0";
+      rowData.periodicidadDesc = "";
+      this.checkTotal();
+    }
     this.tablaServiciosSuscripcion.reset();
   }
 
