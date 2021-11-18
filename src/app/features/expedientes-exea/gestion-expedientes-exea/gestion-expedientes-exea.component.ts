@@ -17,14 +17,14 @@ export class GestionExpedientesExeaComponent implements OnInit {
   rutas = ["Expedientes EXEA", "Gestionar Expedientes"];
   constructor(private sigaStorageService : SigaStorageService,
     private sigaServices : SigaServices) {
-      this.getIdFormBusqueda();
+      this.getUrlEXEA();
   }
 
   ngOnInit() {
     
   }
 
-  getIdFormBusqueda(){
+  getIdFormBusqueda(url : String){
     let parametro = new ParametroRequestDto();
     parametro.idInstitucion = this.sigaStorageService.institucionActual;
     parametro.modulo = "EXEA";
@@ -40,8 +40,35 @@ export class GestionExpedientesExeaComponent implements OnInit {
         }
 
         if(idFormulario){
-          this.url = this.sigaServices.getEXEAUrl() + "showProcedureList.do?search=true&formSelect=" + idFormulario.valor;
-          this.showFrame = true;
+          //this.url = this.sigaServices.getEXEAUrl() + "showProcedureList.do?search=true&formSelect=" + idFormulario.valor;
+          //this.showFrame = true;
+          window.open(url + "showProcedureList.do?search=true&formSelect=" + idFormulario.valor,'_blank');
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
+  }
+
+  getUrlEXEA(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.sigaStorageService.institucionActual;
+    parametro.modulo = "EXEA";
+    parametro.parametrosGenerales = "URL_EXEA";
+
+    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+      data => {
+        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+        let url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == element.idinstitucionActual);
+        
+        if(!url){
+          url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == '0');
+        }
+
+        if(url){
+          this.getIdFormBusqueda(url.valor);
         }
       },
       err => {
