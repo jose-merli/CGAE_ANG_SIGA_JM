@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService, SortEvent } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
@@ -51,7 +52,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   subscriptionCrearEditarPrecios: Subscription;
   subscriptionEliminarPrecios: Subscription;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
     if (this.persistenceService.getPaginacion() != undefined) {
@@ -62,15 +63,27 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
       this.rowsPerPage = paginacion.selectedItem;
     }
 
-    if (this.servicio.editar) {
-
-    }
-
     this.initrowsPerPageSelect();
     this.initcolsPrecios();
     this.getListaPrecios();
     this.getComboPeriodicidad();
     this.getComboCondicionSuscripcion();
+
+    //Si hemos pulsado en el boton nueva condicion nos habra llevado a la ficha consultas en la cual habremos creado una nueva consulta y al darle a guardar tendra en cuenta que veniamos de fichaServicios
+    //Y nos traera de vuelta con el combo de condiciones fijado a la recien creada consulta
+    if(sessionStorage.getItem("vieneDeNuevaCondicion") == "true"){
+      let maxId;
+      maxId = Math.max.apply(Math, this.condicionesSuscripcionObject.combooItems.map(function(o) { return o.value; }))
+      let precioDetalle = JSON.parse(sessionStorage.getItem("precioDetalle"));
+      //Recorremos los precios para cambiarle el idconsulta al precio el cual seleccionamos previamente a la hora de crear nueva condicion
+      this.preciosDatos.forEach(precio => {
+        //Comprobamos usando la pk el precio correcto
+        if(precioDetalle.idtiposervicios == precio.idtiposervicios && precioDetalle.idservicio == precio.idservicio && precioDetalle.idserviciosinstitucion == precio.idserviciosinstitucion 
+          && precioDetalle.idperiodicidad == precio.idperiodicidad && precioDetalle.idpreciosservicios == precio.idpreciosservicios){
+            precio.idconsulta = maxId;
+          }
+      });  
+    }
   }
 
   //Necesario para liberar memoria
@@ -565,6 +578,12 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
         ];
       }
     });
+  }
+
+  nuevacondicion(){
+    sessionStorage.setItem("servicioDetalle", JSON.stringify(this.servicio));
+    sessionStorage.setItem("precioDetalle", JSON.stringify(this.selectedRows));
+    this.router.navigate(["/fichaConsulta"]);
   }
 
   //FIN METODOS SERVICIOS

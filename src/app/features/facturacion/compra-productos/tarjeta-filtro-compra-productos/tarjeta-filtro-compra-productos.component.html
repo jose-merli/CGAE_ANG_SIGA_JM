@@ -58,10 +58,10 @@
     <!-- Estado Solicitud -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "censo.solicitudincorporacion.estadoSolicitud" | translate}}</label>
-      <p-dropdown  [filter]="true" styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idEstadoSolicitud'
+      <p-multiSelect  styleClass="widthAll"
+        [(ngModel)]='filtrosCompraProductos.idEstadoSolicitud' defaultLabel="{{'general.boton.seleccionar' | translate}}"
         [options]="estadosCompraObject">
-      </p-dropdown>
+      </p-multiSelect>
     </div>
   </div>
 
@@ -69,19 +69,19 @@
     <!-- Categoria -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.categoria" | translate}}</label>
-      <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idCategoria'
+      <p-multiSelect  styleClass="widthAll" (onChange)="valueChangeCategoria()"
+        [(ngModel)]='filtrosCompraProductos.idCategoria' defaultLabel="{{'general.boton.seleccionar' | translate}}"
         [options]="categoriasObject.combooItems">
-      </p-dropdown>
+      </p-multiSelect>
     </div>
 
     <!-- Tipo -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.tipo" | translate}}</label>
-      <p-dropdown [disabled]="filtrosCompraProductos.idCategoria == null" [filter]="true" styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idTipoProducto'
+      <p-multiSelect [disabled]="filtrosCompraProductos.idCategoria == null" styleClass="widthAll" 
+        [(ngModel)]='filtrosCompraProductos.idTipoProducto' defaultLabel="{{'general.boton.seleccionar' | translate}}"
         [options]="tiposObject.combooItems">
-      </p-dropdown>
+      </p-multiSelect>
     </div>
 
     <!-- Producto -->
@@ -93,10 +93,10 @@
     <!-- Estado Factura -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.estadoFactura" | translate}}</label>
-      <p-dropdown  [filter]="true" styleClass="widthAll" [showClear]="true"
-        placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosCompraProductos.idEstadoFactura'
+      <p-multiSelect styleClass="widthAll" 
+        [(ngModel)]='filtrosCompraProductos.idEstadoFactura' defaultLabel="{{'general.boton.seleccionar' | translate}}"
         [options]="estadosFacturaObject">
-      </p-dropdown>
+      </p-multiSelect>
     </div>
   </div>
 </div>

@@ -75,7 +75,6 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private cdRef: ChangeDetectorRef,
-    private localStorageService: SigaStorageService,
     private router: Router) { }
 
   ngOnInit() {

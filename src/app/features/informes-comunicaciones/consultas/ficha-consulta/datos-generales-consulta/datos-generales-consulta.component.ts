@@ -108,6 +108,11 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       this.body.idClaseComunicacion = "1";
       this.generica = 'N';
 
+      if(sessionStorage.getItem("precioDetalle") != undefined){
+        let precioDetalle = JSON.parse(sessionStorage.getItem("precioDetalle"));
+        this.body.nombre = this.servicioDetalle.descripcion + " " + precioDetalle.descripcionprecio;
+      }
+
     }
 
     this.cols = [
@@ -528,7 +533,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           console.log(err);
         },
         () => {
-          if(sessionStorage.getItem("servicioDetalle") != undefined){
+          if(sessionStorage.getItem("servicioDetalle") != undefined || sessionStorage.getItem("precioDetalle") != undefined){
             sessionStorage.setItem("vieneDeNuevaCondicion", "true");
             this.router.navigate(["/fichaServicios"]);
           }

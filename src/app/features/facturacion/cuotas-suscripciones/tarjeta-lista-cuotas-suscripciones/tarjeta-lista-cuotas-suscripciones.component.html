@@ -1,0 +1,112 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+
+<div class="card mt-3">
+  <div class="card-body p-0">
+    <p-table #suscripcionesTable [value]="listaSuscripciones" [columns]="cols" [(selection)]="selectedRows"
+      selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
+      (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
+      (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both" id="suscripcionesTable">
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+              *ngSwitchCase="col.field" pInputText type="text"
+              (input)="suscripcionesTable.filter($event.target.value, col.field, 'contains')" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+            <div *ngIf="col.field !='fechaSolicitud' && col.field != 'fechaEfectiva'" >
+              <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}} (a {{currentDate | date: 'dd/MM/yyyy'}}) </span>
+              <span *ngIf="col.field == 'idEstadoSolicitud'">{{estadosSuscripcionObject[rowData[col.field]-1].label}}</span>
+              <span *ngIf="col.field != 'concepto' && col.field != 'idEstadoSolicitud'">{{rowData[col.field]}}</span>
+            </div>
+            <div *ngIf="col.field =='fechaSolicitud' || (col.field == 'fechaEfectiva' && rowData['fechaBaja'] == null)" >
+              <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+            <div *ngIf="col.field =='fechaEfectiva' && rowData['fechaBaja'] != null" >
+              <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}} - {{rowData['fechaBaja'] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">Mostrando registros del {{suscripcionesTable.first + 1}} al
+            {{suscripcionesTable.first +
+            suscripcionesTable.rows}} de un total de {{suscripcionesTable.totalRecords}}</label>
+          <div>
+            <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
+              translate }}: {{numSelectedRows}}
+            </label>
+          </div>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="rowsPerPage" [options]="rowsPerPageSelectValues"
+            (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAllRows()" [(ngModel)]="selectAllRows" binary="true"
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname">
+            </p-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+
+    <p-footer>
+      <div class="text-right main-button">
+      <!-- Aprobar -->
+        <button pButton *ngIf="!esColegiado"  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="selectedRows.length == 0"></button>
+      <!-- Denegar/Cancelar -->
+        <button *ngIf="!esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.denegar' | translate}}" [disabled]="selectedRows.length == 0"></button>
+        <button *ngIf="esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.cancel' | translate}}" [disabled]="selectedRows.length == 0"></button>
+      <!-- Anular -->
+        <button pButton  (click)="checkAnularSuscripcion()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.anular' | translate}}" [disabled]="selectedRows.length == 0"></button>
+      <!-- Comunicaciones -->
+          <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'facturacion.consultamorosos.literal.comunicaciones' | translate}}" [disabled]="selectedRows.length > 0"></button>
+      </div>
+    </p-footer>
+
+  </div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="anulPeticion" icon="icon"
+  width="425" #anulPeticion>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="{{ 'messages.si' | translate }}" (click)="anulPeticion.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="{{ 'general.boton.no' | translate }}" (click)="anulPeticion.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+

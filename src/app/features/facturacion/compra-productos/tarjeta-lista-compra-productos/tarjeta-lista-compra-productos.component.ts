@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Message, SortEvent } from 'primeng/components/common/api';
+import { ConfirmationService, Message, SortEvent } from 'primeng/components/common/api';
+import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
@@ -24,9 +25,10 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 
   @Output() actualizarLista = new EventEmitter<Boolean>();
   @Input() listaCompraProductos: ListaComprasProductosItem[];
+  @ViewChild("productsTable") productsTable: DataTable;
 
   cols = [
-    { field: "fechaSolicitud", header: "censo.resultadosSolicitudesModificacion.literal.fecha" },
+    { field: "fechaSolicitud", header: "formacion.busquedaInscripcion.fechaSolicitud" },
     { field: "nSolicitud", header: "facturacion.productos.nSolicitud" },
     { field: "nIdentificacion", header: "censo.consultaDatosColegiacion.literal.numIden" },
     { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
@@ -58,9 +60,10 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     }
   ];
 
-  permisoSolicitarCompra;
-  permisoAprobarCompra;
-  permisoDenegar;
+  permisoSolicitarCompra: boolean = false;
+  permisoAprobarCompra: boolean = false;
+  permisoDenegar: boolean = false;
+  permisoAnularCompra: boolean = false;
 
   selectedRows: ListaComprasProductosItem[] = []; //Datos de las filas seleccionadas.
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
@@ -71,14 +74,20 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
   buscadores = [];
 
   progressSpinner: boolean = false;
-  esColegiado: boolean = this.localStorageService.isLetrado;
+  esColegiado: boolean = true;
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService,
     private commonsService: CommonsService, private router: Router,
-    private localStorageService: SigaStorageService,) { }
+    private localStorageService: SigaStorageService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
     this.checkPermisos();
     this.initComboEstadoCompra();
   }
@@ -114,6 +123,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
   checkPermisos() {
     this.getPermisoAprobarCompra();
     this.getPermisoDenegar();
+    this.getPermisoAnularCompra();
   }
 
   checkAprobar() {
@@ -137,14 +147,120 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     }
   }
 
-  checkAnular(){
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Boton no funcional actualmente"
+  // REVISAR: Añadir comprobación de facturación
+  checkAnularCompra(){
+    let msg = this.commonsService.checkPermisos(this.permisoAnularCompra, undefined);
+
+    
+    if (msg != null) {
+      this.msgs = msg;
+    }  
+    else {
+
+      let compShow : ListaComprasProductosItem[] = [];
+
+      //Se comprueban los estados de las solicitudes
+      if(this.selectedRows.filter(el => !((el.fechaEfectiva != null && el.fechaSolicitadaAnulacion != null) && el.fechaAnulada == null)) != undefined){
+        compShow.concat(this.selectedRows.filter(el => !((el.fechaEfectiva != null && el.fechaSolicitadaAnulacion != null) && el.fechaAnulada == null)));
+        this.selectedRows = this.selectedRows.filter( ( el ) => !compShow.includes( el ) );
+      } 
+      //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
+      //REVISAR : Cambiar mensaje
+      //Este parametro "solicitarBaja" de este objeto tiene una logica distinta a la de los servicios
+      if(this.esColegiado && (this.selectedRows.filter(el => el.solicitarBaja != "0") != undefined)){
+        compShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
+        this.selectedRows = this.selectedRows.filter( ( el ) => !compShow.includes( el ) );
       }
-    ];
+      this.confirmAnular(compShow);
+    }
+  }
+
+  confirmAnular(compShow) {
+
+    //REVISAR MENSAJE
+    let mess = this.translateService.instant(
+      "facturacion.productos.anulConf"
+    );
+
+    //REVISAR LOGICA FACTURAS
+    //Se comprueba si alguna solicitud tiene alguna factura asoviada
+    if(this.selectedRows.find(el => el.facturas != "0") != undefined) {
+      mess = this.translateService.instant("facturacion.productos.factNoAnuladaPet");
+    }
+
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: 'anulPeticion',
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.anularPeticion(compShow);
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: this.translateService.instant("general.boton.cancel"),
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
+  }
+
+  anularPeticion(compShow: ListaComprasProductosItem[]){
+    if(this.selectedRows.length > 0){
+      this.progressSpinner = true;
+      let peticion: FichaCompraSuscripcionItem[] = [];
+      this.selectedRows.forEach(row => {
+        let solicitud: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
+        solicitud.nSolicitud = row.nSolicitud;
+        solicitud.fechaAceptada = row.fechaEfectiva;
+        solicitud.fechaDenegada = row.fechaDenegada;
+        solicitud.fechaAnulada = row.fechaAnulada;
+        solicitud.fechaSolicitadaAnulacion = row.fechaSolicitadaAnulacion;
+        peticion.push(solicitud);
+      });
+      this.sigaServices.post('PyS_anularCompraMultiple', peticion).subscribe(
+        (n) => {
+          if (n.status != 200) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else if(JSON.parse(n.body).error.description!="" || compShow.length > 0){
+            let mess = "";
+            for(let sus of compShow){
+              mess += sus.nSolicitud + ", ";
+            }
+            mess = mess.substr(1,mess.length-3);
+            this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description+", "+mess);
+          }else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            //Se actualiza la información de la ficha
+            this.actualizarLista.emit(true);
+          }
+
+          
+          this.selectedRows = [];
+          this.numSelectedRows = 0;
+          this.progressSpinner = false;
+        },
+        (err) => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.progressSpinner = false;
+        }
+      );
+    }
+    else{
+      let mess = "";
+      for(let sus of compShow){
+        mess += sus.nSolicitud + ", ";
+      }
+      mess = mess.substr(1,mess.length-3);
+
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + mess);
+          
+    }
   }
 
   checkFacturar(){
@@ -312,5 +428,20 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 
       return (event.order * result);
     });
+  }
+
+  onChangeRowsPerPages(event) {
+    this.rowsPerPage = event.value;
+    this.productsTable.reset();
+  }
+
+  getPermisoAnularCompra(){
+    //En la documentación no parece distinguir que se requiera una permiso especifico para esta acción
+    this.commonsService
+			.checkAcceso(procesos_PyS.anularCompra)
+			.then((respuesta) => {
+				this.permisoAnularCompra = respuesta;
+			})
+			.catch((error) => console.error(error));
   }
 }

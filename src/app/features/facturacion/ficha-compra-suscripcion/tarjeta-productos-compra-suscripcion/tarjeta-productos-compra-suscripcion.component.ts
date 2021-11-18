@@ -28,7 +28,6 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
   showTarjeta: boolean = false;
-  esColegiado  = this.localStorageService.isLetrado;
 
   productoEditable: boolean = false;
   observacionesEditable: boolean = false;
@@ -84,6 +83,8 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   ];
 
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
+  @Input("resaltadoDatos") resaltadoDatos: boolean;
+  @Input("esColegiado") esColegiado: boolean;
   @Output() actualizaFicha = new EventEmitter<Boolean>();
   @ViewChild("productsTable") tablaProductos;
 
@@ -118,7 +119,9 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.getPermisoEditarImporte();
     this.getPermisoActualizarProductos();
     this.getComboTipoIva();
-    this.cargarDatosBancarios();
+    if(this.ficha.idPersona != null){
+      this.cargarDatosBancarios(); //Se buscan las cuentas bancarias asociadas al cliente
+    }
 
     if (this.ficha.fechaPendiente != null) {
       //Se recomenda añadir un procesamiento asincrono
@@ -133,8 +136,9 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    if (this.subscriptionProductosBusqueda)
+    if (this.subscriptionProductosBusqueda){
       this.subscriptionProductosBusqueda.unsubscribe();
+    }
   }
 
   //INICIO SERVICIOS
@@ -402,7 +406,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.progressSpinner = true;
     let productoItem: ListaProductosItems = selectedRow;
     sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
-    sessionStorage.setItem("origin", "Cliente");
+    sessionStorage.setItem("origin", "Compra");
     sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
     this.router.navigate(["/fichaProductos"]);
   }
@@ -424,6 +428,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       newProducto.idtipoiva = selectedProducto.idtipoiva;
       newProducto.idPeticion = this.ficha.nSolicitud;
       newProducto.noFacturable = selectedProducto.noFacturable;
+      newProducto.solicitarBaja = selectedProducto.solicitarBaja;
       this.productosTarjeta.push(newProducto);
       this.checkTotal();
     }
@@ -495,7 +500,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  checkFormasPagoComunes(productosLista: any[]) {
+  checkFormasPagoComunes(productosLista: ListaProductosCompraItem[]) {
     let error: boolean = false;
 
 
@@ -672,6 +677,9 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
   onChangePago(){
     this.newFormaPagoCabecera();
+    if(this.selectedPago == "80" && this.ficha.idPersona == null){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "** Debe tener un cliente seleccionado para mostrar las cuentas bancarias asociadas");
+    }
   }
   newFormaPagoCabecera(){
     if(this.selectedPago != null){
@@ -704,7 +712,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.numSelectedRows = this.selectedRows.length;
   }
 
-  checkNoFacturable(productos: ListaProductosItems[]) {
+  checkNoFacturable(productos: ListaProductosCompraItem[]) {
     let i = 0;
     //Se comprueba si todos los productos seleccionados son no facturables facturables
     for (let prod of productos) {
@@ -747,6 +755,12 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       let orden = this.selectedRows[0].orden;
       this.productosTarjeta[Number(orden)].orden = (Number(orden) + 1) + "";
       this.productosTarjeta[Number(orden) - 1].orden = (Number(orden)) + "";
+    }
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
     }
   }
 

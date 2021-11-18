@@ -75,26 +75,26 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.busquedaClientesAvanzada.literal.tipoCliente" | translate }}
               </label>
-              <p-dropdown class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
+              <p-dropdown [ngClass]="styleObligatorio(ficha.idPersona)" class="select-form" [options]="tipoIdentificacion" disabled placeholder="{{'general.boton.seleccionar' | translate}}"
                 [(ngModel)]="ficha.idtipoidentificacion" showClear="true" disabled></p-dropdown>
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
               </label>
-              <input [(ngModel)]="ficha.nif" type="text" class="form-control" disabled pInputText/>
+              <input [ngClass]="styleObligatorio(ficha.idPersona)" [(ngModel)]="ficha.nif" type="text" class="form-control" disabled pInputText/>
             </div>
           </div>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate }}
               </label>
-              <input [(ngModel)]="ficha.apellidos" type="text" disabled class="form-control" 
+              <input [ngClass]="styleObligatorio(ficha.idPersona)" [(ngModel)]="ficha.apellidos" type="text" disabled class="form-control" 
                 pInputText/>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
               </label>
-              <input [(ngModel)]="ficha.nombre" type="text" disabled class="form-control" 
+              <input [ngClass]="styleObligatorio(ficha.idPersona)" [(ngModel)]="ficha.nombre" type="text" disabled class="form-control" 
                 pInputText />
             </div>
           </div>
@@ -104,7 +104,7 @@
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
-        <button pButton *ngIf="showSearch"  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
+        <button pButton *ngIf="!esColegiado && ficha.fechaPendiente == null"  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
       </div>
     </div>
   </div>

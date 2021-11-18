@@ -5,13 +5,17 @@
         <i class="fa fa-angle-right"></i>{{'facturacion.productos.CompraSuscripcion' | translate}}
   </div>
   <div>
-      <app-tarjeta-cliente-compra-suscripcion #cliente [(ficha)]="ficha">
+      <app-tarjeta-cliente-compra-suscripcion #cliente [(ficha)]="ficha" [esColegiado]="esColegiado" [resaltadoDatos]="resaltadoDatos" id="cliente">
       </app-tarjeta-cliente-compra-suscripcion>
-      <app-tarjeta-solicitud-compra-suscripcion  [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" [tarjProductos]="tarjProductos">
+      <app-tarjeta-solicitud-compra-suscripcion  [(ficha)]="ficha" (scrollToOblig)="scrollToOblig($event)" (actualizaFicha)="actualizarFicha()" 
+      [tarjProductos]="tarjProductos" [esColegiado]="esColegiado" [tarjServicios]="tarjServicios" >
       </app-tarjeta-solicitud-compra-suscripcion>
-      <app-tarjeta-productos-compra-suscripcion #productos *ngIf="ficha.productos != null" [(ficha)]="ficha" (actualizaFicha)="actualizarFicha()" 
-      > 
+      <app-tarjeta-productos-compra-suscripcion #productos *ngIf="ficha.productos != null" [(ficha)]="ficha" [resaltadoDatos]="resaltadoDatos" 
+      (actualizaFicha)="actualizarFicha()" [esColegiado]="esColegiado" id="productos"> 
       </app-tarjeta-productos-compra-suscripcion>
+      <app-tarjeta-servicios-compra-suscripcion #servicios *ngIf="ficha.servicios != null" [(ficha)]="ficha" [resaltadoDatos]="resaltadoDatos" 
+      (actualizaFicha)="actualizarFicha()" [esColegiado]="esColegiado" id="servicios"> 
+      </app-tarjeta-servicios-compra-suscripcion>
       <app-tarjeta-descuentos-anticipos-compra-suscripcion [(ficha)]="ficha"></app-tarjeta-descuentos-anticipos-compra-suscripcion>
       <app-tarjeta-factura-compra-suscripcion  [(ficha)]="ficha">
       </app-tarjeta-factura-compra-suscripcion>

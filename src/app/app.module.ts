@@ -523,6 +523,10 @@ import { FacturacionesComponent } from './features/facturacion/facturaciones/fac
 import { FiltrosFacturacionesComponent } from './features/facturacion/facturaciones/filtros-facturaciones/filtros-facturaciones.component';
 import { TablaFacturacionesComponent } from './features/facturacion/facturaciones/tabla-facturaciones/tabla-facturaciones.component';
 import { FichaFacturacionesComponent } from './features/facturacion/facturaciones/ficha-facturaciones/ficha-facturaciones.component';
+import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/cuotas-suscripciones.component';
+import { TarjetaFiltroCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones.component';
+import { TarjetaListaCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones.component';
+import { TarjetaServiciosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-servicios-compra-suscripcion/tarjeta-servicios-compra-suscripcion.component';
 enableRipple(true);
 
 @NgModule({
@@ -962,6 +966,10 @@ enableRipple(true);
 		FiltrosFacturacionesComponent,
 		TablaFacturacionesComponent,
 		FichaFacturacionesComponent
+		CuotasSuscripcionesComponent,
+		TarjetaFiltroCuotasSuscripcionesComponent,
+		TarjetaListaCuotasSuscripcionesComponent,
+		TarjetaServiciosCompraSuscripcionComponent
 	],
 	imports: [
 		Paginador3Module,

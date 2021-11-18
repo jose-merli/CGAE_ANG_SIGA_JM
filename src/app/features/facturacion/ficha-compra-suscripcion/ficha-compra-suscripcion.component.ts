@@ -5,6 +5,8 @@ import { SigaServices } from '../../../_services/siga.service';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../commons/translate';
 import { ListaProductosCompraItem } from '../../../models/ListaProductosCompraItem';
+import { CommonsService } from '../../../_services/commons.service';
+import { SigaStorageService } from '../../../siga-storage.service';
 
 @Component({
   selector: 'app-ficha-compra-suscripcion',
@@ -18,6 +20,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   progressSpinner: boolean = false;
 
   ficha: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem;
+  resaltadoDatos: boolean = false;
 
   comboComun: any[] = [];
   desFormaPagoSelecc: string;
@@ -25,12 +28,22 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
   @ViewChild("cliente") tarjCliente;
   @ViewChild("productos") tarjProductos;
+  @ViewChild("servicios") tarjServicios;
+  esColegiado: boolean; // Con esta variable se determina si el usuario conectado es un colegiado o no.
 
 
   constructor(private location: Location, 
-    private sigaServices: SigaServices, private translateService: TranslateService,) { }
+    private sigaServices: SigaServices, private translateService: TranslateService,
+    private commonsService : CommonsService,
+    private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
 
     sessionStorage.removeItem("origin");
 
@@ -72,6 +85,8 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   }
 
   actualizarFicha(){
+    this.progressSpinner = true;
+
     this.sigaServices.post('PyS_getFichaCompraSuscripcion', this.ficha).subscribe(
       (n) => {
 
@@ -80,6 +95,10 @@ export class FichaCompraSuscripcionComponent implements OnInit {
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.ficha = JSON.parse(n.body);
+
+          if(this.ficha.servicios != null){
+            this.tarjServicios.getServiciosSuscripcion();
+          }
         }
 
         this.progressSpinner = false;
@@ -90,6 +109,20 @@ export class FichaCompraSuscripcionComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  scrollToOblig(element : string){
+    this.resaltadoDatos = true;
+    this.commonsService.scrollTablaFoco(element);
+    if(element == "cliente"){
+      this.tarjCliente.showTarjeta = true;
+    }
+    if(element == "productos"){
+      this.tarjProductos.showTarjeta = true;
+    }
+    if(element == "servicios"){
+      this.tarjServicios.showTarjeta = true;
+    }
   }
 
   backTo(){

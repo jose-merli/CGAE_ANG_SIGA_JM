@@ -5,8 +5,10 @@ import { TranslateService } from '../../../commons/translate';
 import { FiltrosCompraProductosItem } from '../../../models/FiltrosCompraProductosItem';
 import { ListaComprasProductosItem } from '../../../models/ListaComprasProductosItem';
 import { CommonsService } from '../../../_services/commons.service';
+import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { TarjetaFiltroCompraProductosComponent } from './tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
+import { TarjetaListaCompraProductosComponent } from './tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
 
 @Component({
   selector: 'app-compra-productos',
@@ -23,12 +25,13 @@ export class CompraProductosComponent implements OnInit {
   muestraTablaCompraProductos: boolean = false;
 
   @ViewChild(TarjetaFiltroCompraProductosComponent) filtrosBusqueda;
+  @ViewChild(TarjetaListaCompraProductosComponent) listaBusqueda;
   
   //Suscripciones
   subscriptionProductosBusqueda: Subscription;
 
   constructor(private commonsService:CommonsService, private sigaServices: SigaServices,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService, private persistenceService: PersistenceService) { }
 
   ngOnInit() {
   }
@@ -42,16 +45,24 @@ export class CompraProductosComponent implements OnInit {
     this.progressSpinner = true;
     let filtrosProductos: FiltrosCompraProductosItem = this.filtrosBusqueda.filtrosCompraProductos;
 
+    sessionStorage.setItem("filtroBusqCompra",JSON.stringify(this.filtrosBusqueda.filtrosCompraProductos));
+
     this.subscriptionProductosBusqueda = this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
       listaCompraProductosDTO => {
 
-        this.listaCompraProductos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
 
-        if (JSON.parse(listaCompraProductosDTO.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
+        if (JSON.parse(listaCompraProductosDTO.body).error.code == 200) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          this.listaCompraProductos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
+
           this.muestraTablaCompraProductos= true;
+          this.listaBusqueda.productsTable.reset();
+          setTimeout(() => {
+            this.commonsService.scrollTablaFoco('tablaCompraProductos');
+          }, 5);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
 
         this.progressSpinner = false;

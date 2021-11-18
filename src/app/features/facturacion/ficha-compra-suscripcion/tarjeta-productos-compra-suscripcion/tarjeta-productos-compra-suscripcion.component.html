@@ -82,17 +82,17 @@
 
                     <span *ngIf="col.field == 'cantidad' && !cantidadEditable"
                       (click)="changeEditable()">{{rowData[col.field]}}</span>
-                    <input *ngIf="col.field == 'cantidad' && cantidadEditable" (input)="checkTotal()" pInputText
+                    <input [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'cantidad' && cantidadEditable" (input)="checkTotal()" pInputText
                       type="text" (keypress)="numberOnly($event)" [(ngModel)]="rowData[col.field]" type="text" pInputText>
 
                     <span *ngIf="col.field == 'precioUnitario' && !precioUnitarioEditable"
                       (click)="changeEditable()">{{rowData[col.field]}} €</span>
-                    <input *ngIf="col.field == 'precioUnitario' && precioUnitarioEditable" (input)="checkTotal()"
+                    <input [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'precioUnitario' && precioUnitarioEditable" (input)="checkTotal()"
                       pInputText type="text" (keypress)="numberOnly($event)" [(ngModel)]="rowData[col.field]" type="text" pInputText>
 
                     <span *ngIf="col.field == 'iva' && !ivaEditable"
                       (click)="changeEditable()">{{rowData[col.field]}}</span>
-                    <p-dropdown *ngIf="col.field == 'iva' && ivaEditable" [filter]="true" styleClass="widthAll"
+                    <p-dropdown [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'iva' && ivaEditable" [filter]="true" styleClass="widthAll"
                       [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                       [(ngModel)]='rowData.idtipoiva' [options]="ivaCombo">
                     </p-dropdown>
@@ -159,7 +159,7 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "facturacion.productos.formapago" | translate }}
               </label>
-              <p-dropdown class="select-form" [options]="comboComun" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || selectedPago == '-1'"
+              <p-dropdown [ngClass]="styleObligatorio(selectedPago)" class="select-form" [options]="comboComun" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || selectedPago == '-1' || comboComun.length == 0"
                 placeholder="{{'general.boton.seleccionar' | translate}}" (onChange)="onChangePago()" [(ngModel)]="selectedPago" showClear="true">
               </p-dropdown>
             </div>
@@ -195,7 +195,7 @@
               <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}
               </label>
               <p-dropdown class="select-form" [options]="cuentasBanc"
-              [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null"
+              [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.idPersona == null"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="datosTarjeta.cuentaBancSelecc"
                 showClear="true"></p-dropdown>
              </div>

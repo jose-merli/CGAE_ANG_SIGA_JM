@@ -430,8 +430,14 @@ export class SigaServices {
     solicitudModificacion_searchSolModifDatosCambiarFotoDetail:
       'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
     solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
+
+
+    // Monederos
+    monederosBusqueda_searchListadoMonederos: 'pys/getMonederos',
+
     //PRODUCTOS Y SERVICIOS
     //PANTALLA TIPOS PRODUCTOS
+
     tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
     tiposProductos_searchListadoProductosHistorico: 'pys/listadoTipoProductoHistorico',
     tiposProductos_activarDesactivarProducto: 'pys/activarDesactivarProducto',
@@ -481,6 +487,7 @@ export class SigaServices {
     constructorConsultas_guardarDatosConstructor: 'consultas/pys/constructorConsultas',
     constructorConsultas_obtenerConfigColumnasQueryBuilder: 'consultas/pys/obtenerConfigColumnasQueryBuilder',
     constructorConsultas_obtenerCombosQueryBuilder: 'consultas/pys/obtenerCombosQueryBuilder',
+
 
     // FOTO
     solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',

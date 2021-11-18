@@ -444,6 +444,8 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
         this.progressSpinner = false;
       },
       () => {
+        //Si hemos pulsado en el boton nueva condicion nos habra llevado a la ficha consultas en la cual habremos creado una nueva consulta y al darle a guardar tendra en cuenta que veniamos de fichaServicios
+        //Y nos traera de vuelta con el combo de condiciones fijado a la recien creada consulta
         if(sessionStorage.getItem("vieneDeNuevaCondicion") == "true"){
           let maxId;
           maxId = Math.max.apply(Math, this.condicionesSuscripcionObject.combooItems.map(function(o) { return o.value; }))

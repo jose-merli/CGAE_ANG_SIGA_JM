@@ -80,7 +80,7 @@
         <button *ngIf="selectedRows && selectedRows.length > 0" (click)="navigateComunicar(selectedRows)" pButton
           type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
 
-        <button *ngIf="selectedRows && selectedRows.length > 0" (click)="navigateComunicar(selectedRows)" pButton
+        <button *ngIf="selectedRows && selectedRows.length > 0" [disabled]="selectedRows.length != 1" (click)="checkServ()" pButton
           type="button" icon="fa-shopping-basket" iconPos="left"
           label="{{'facturacion.servicios.suscribir' | translate }}"></button>
 
