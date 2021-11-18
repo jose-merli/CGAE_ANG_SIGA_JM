@@ -46,9 +46,11 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
   ngOnInit() {
     this.cargaCombos();
 
-    if(this.persistenceService.getFiltros()){
+    if(this.persistenceService.getFiltros() && sessionStorage.getItem("volver")){
       this.body = this.persistenceService.getFiltros();
       this.persistenceService.clearFiltros();
+
+      sessionStorage.removeItem("volver");
 
       this.buscar();
     }
