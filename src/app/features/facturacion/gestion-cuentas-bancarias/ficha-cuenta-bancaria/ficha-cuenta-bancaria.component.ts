@@ -5,6 +5,7 @@ import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../models/CuentasBancariasItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-ficha-cuenta-bancaria',
@@ -34,7 +35,8 @@ export class FichaCuentaBancariaComponent implements OnInit {
     private location: Location,
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
-    private router: Router
+    private router: Router,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
@@ -44,9 +46,6 @@ export class FichaCuentaBancariaComponent implements OnInit {
       this.body = JSON.parse(sessionStorage.getItem("cuentaBancariaItem"));
       sessionStorage.removeItem("cuentaBancariaItem");
       this.calcDescripcion();
-      this.persistenceService.setDatos(this.body);
-    } else if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
     } else if(sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.modoEdicion = false;
@@ -123,10 +122,71 @@ export class FichaCuentaBancariaComponent implements OnInit {
 
   }
 
-  guardadoSend(): void {
-    this.modoEdicion = true;
-    this.ngOnInit();
-    // this.router.navigate(["/fichaCuentaBancaria"]);
+  guardadoSend(event: CuentasBancariasItem): void {
+    this.progressSpinner = true;
+    console.log(event);
+
+    if (this.modoEdicion) {
+      this.sigaServices.post("facturacionPyS_actualizaCuentaBancaria", event).subscribe(
+        n => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.body = JSON.parse(JSON.stringify(event));
+          
+          this.ngOnInit();
+        },
+        err => {
+          let error = JSON.parse(err.error).error;
+          if (error != undefined && error.message != undefined) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+  
+          this.progressSpinner = false;
+        }
+      );
+    } else {
+      this.sigaServices.post("facturacionPyS_insertaCuentaBancaria", event).subscribe(
+        n => {
+          let bancosCodigo = JSON.parse(n.body).id;
+          this.body.bancosCodigo = bancosCodigo;
+          this.recuperarCuentaBancaria();
+        },
+        err => {
+          let error = JSON.parse(err.error).error;
+          if (error != undefined && error.message != undefined) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+
+          this.progressSpinner = false;
+        }
+      );
+    }
+  }
+
+  recuperarCuentaBancaria(): void {
+    this.sigaServices.getParam("facturacionPyS_getCuentasBancarias", "?idCuenta=" + this.body.bancosCodigo).subscribe(
+      n => {
+        let datos: CuentasBancariasItem[] = JSON.parse(n.body).cuentasBancariasITem;
+
+        if (datos.length != 0) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          this.body = datos.find(d => d.bancosCodigo == this.body.bancosCodigo);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+        
+        this.modoEdicion = true;
+        this.ngOnInit();
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
   // Abrir tarjetas desde enlaces
@@ -199,6 +259,10 @@ export class FichaCuentaBancariaComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
   goTop() {

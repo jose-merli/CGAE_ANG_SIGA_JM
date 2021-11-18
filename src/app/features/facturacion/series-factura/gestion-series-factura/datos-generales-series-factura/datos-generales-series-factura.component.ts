@@ -264,16 +264,21 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.estado = this.esActivo() ? "Alta" : "Baja";
 
-    this.body.tiposProductos.forEach(e => {
-      if (e.color == undefined) {
-        e.color = "#024eff";
-      }
-    });
-    this.body.tiposServicios.forEach(e => {
-      if (e.color == undefined) {
-        e.color = "#024eff";
-      }
-    });
+    if (this.body.tiposProductos != undefined) {
+      this.body.tiposProductos.forEach(e => {
+        if (e.color == undefined) {
+          e.color = "#024eff";
+        }
+      });
+    }
+    
+    if (this.body.tiposServicios != undefined) {
+      this.body.tiposServicios.forEach(e => {
+        if (e.color == undefined) {
+          e.color = "#024eff";
+        }
+      });
+    }
 
     this.resaltadoDatos = false;
   }
@@ -301,12 +306,14 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
 
     this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
       n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        let idSerieFacturacion = JSON.parse(n.body).id;
 
         if (this.modoEdicion) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.persistenceService.setDatos(this.body);
           this.guardadoSend.emit();
         } else {
+          this.body.idSerieFacturacion = idSerieFacturacion;
           this.recuperarDatosSerieFacuturacion();
         }
         
@@ -327,15 +334,19 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
 
   recuperarDatosSerieFacuturacion(): void {
     let filtros = new SerieFacturacionItem();
-    filtros.abreviatura = this.body.abreviatura;
-    filtros.descripcion = this.body.descripcion;
+    filtros.idSerieFacturacion = this.body.idSerieFacturacion;
     
     this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
       n => {
         let datos: SerieFacturacionItem[] = JSON.parse(n.body).serieFacturacionItems;
-        this.body = datos.find(d => d.idSerieFacturacion == this.body.idSerieFacturacion);
-        this.persistenceService.setDatos(this.body);
-        this.guardadoSend.emit();
+
+        if (datos.length != 0) {
+          this.body = datos.find(d => d.idSerieFacturacion == this.body.idSerieFacturacion);
+          this.persistenceService.setDatos(this.body);
+          this.guardadoSend.emit();
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
         
         this.progressSpinner = false;
       },
