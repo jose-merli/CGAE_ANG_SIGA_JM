@@ -118,11 +118,9 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     } else {
       this.sigaServices.post("facturacionPyS_insertaCuentaBancaria", this.body).subscribe(
         n => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          console.log(n);
-          this.body = JSON.parse(n.body).cuentasBancariasITem[0];
-          this.persistenceService.setDatos(this.body);
-          this.guardadoSend.emit();
+          let bancosCodigo = JSON.parse(n.body).id;
+          this.body.bancosCodigo = bancosCodigo;
+          this.recuperarCuentaBancaria();
 
           this.progressSpinner = false;
         },
@@ -141,6 +139,30 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
       );
     }
     
+  }
+
+  recuperarCuentaBancaria(): void {
+    this.sigaServices.getParam("facturacionPyS_getCuentasBancarias", "?idCuenta=" + this.body.bancosCodigo).subscribe(
+      n => {
+        let datos: CuentasBancariasItem[] = JSON.parse(n.body).cuentasBancariasITem;
+
+        if (datos.length != 0) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          this.body = datos.find(d => d.bancosCodigo == this.body.bancosCodigo);
+          this.persistenceService.setDatos(this.body);
+          this.guardadoSend.emit();
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+        
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
   // Eliminar cuenta bancaria

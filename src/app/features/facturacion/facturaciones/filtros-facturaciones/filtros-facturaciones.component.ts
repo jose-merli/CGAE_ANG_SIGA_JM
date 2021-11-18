@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate';
@@ -17,6 +17,7 @@ export class FiltrosFacturacionesComponent implements OnInit {
 
   progressSpinner: boolean = false;
   msgs: Message[] = [];
+  permisoEscritura: boolean = false;
 
   @Output() busqueda = new EventEmitter<boolean>();
 
@@ -42,6 +43,10 @@ export class FiltrosFacturacionesComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    if (this.persistenceService.getPermisos() != undefined) {
+      this.permisoEscritura = this.persistenceService.getPermisos();
+    }
+
     this.getCombos();
   }
 
@@ -77,6 +82,8 @@ export class FiltrosFacturacionesComponent implements OnInit {
       n => {
         this.comboSeriesFacturacion = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboSeriesFacturacion);
+
+        console.log("facturacionPyS_comboSeriesFacturacion", this.comboSeriesFacturacion);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -98,6 +105,8 @@ export class FiltrosFacturacionesComponent implements OnInit {
       n => {
         this.comboEstadosFacturacion = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadosFacturacion);
+
+        console.log("facturacionPyS_comboEstadosFacturacion", this.comboEstadosFacturacion);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -110,6 +119,8 @@ export class FiltrosFacturacionesComponent implements OnInit {
       n => {
         this.comboEstadosFicheros = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadosFicheros);
+
+        console.log("facturacionPyS_comboEstadosFicheros", this.comboEstadosFicheros);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -122,6 +133,8 @@ export class FiltrosFacturacionesComponent implements OnInit {
       n => {
         this.comboEstadosEnvio = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadosEnvio);
+
+        console.log("facturacionPyS_comboEstadosEnvios", this.comboEstadosEnvio);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -134,6 +147,8 @@ export class FiltrosFacturacionesComponent implements OnInit {
       n => {
         this.comboEstadosTraspaso = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadosTraspaso);
+
+        console.log("facturacionPyS_comboEstadosTraspasos", this.comboEstadosTraspaso);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));

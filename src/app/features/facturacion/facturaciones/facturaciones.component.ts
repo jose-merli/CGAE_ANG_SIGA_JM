@@ -44,15 +44,12 @@ export class FacturacionesComponent implements OnInit {
 
         this.buscar = true;
         
-        // Descomentar cuando funcione la tabla de facturaciones.
-        /*
         if (this.tabla != undefined) {
           this.tabla.table.sortOrder = 0;
           this.tabla.table.sortField = '';
           this.tabla.table.reset();
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
         }
-        */
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));

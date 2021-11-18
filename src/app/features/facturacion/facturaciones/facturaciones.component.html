@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
     <app-filtros-facturaciones (busqueda)="searchFacturacionProgramada()"></app-filtros-facturaciones>
-    <app-tabla-facturaciones *ngIf="buscar"></app-tabla-facturaciones>
+    <app-tabla-facturaciones *ngIf="buscar" [datos]="datos" (busqueda)="searchFacturacionProgramada()"></app-tabla-facturaciones>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
