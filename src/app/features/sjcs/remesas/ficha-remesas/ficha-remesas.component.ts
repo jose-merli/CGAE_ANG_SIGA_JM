@@ -35,7 +35,7 @@ export class FichaRemesasComponent implements OnInit {
   remesaItem: RemesasItem = new RemesasItem();
   ejgItem;
   tipoPCAJG;
-  remesa: { idRemesa: any; descripcion: string; numero: number; informacionEconomica: boolean; };
+  remesa: { idRemesa: any; descripcion: string; numero: string; informacionEconomica: boolean; };
   getAccionesRemesas;
   acciones: boolean = false;
   estado: boolean = false;
@@ -82,7 +82,7 @@ export class FichaRemesasComponent implements OnInit {
     this.remesa = {
       'idRemesa': 0,
       'descripcion': "",
-      'numero': 0,
+      'numero': "0",
       'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
     }
 
@@ -232,6 +232,7 @@ export class FichaRemesasComponent implements OnInit {
       data => {
         this.showMessage("info", this.translateService.instant("general.message.informacion"), JSON.parse(data.body).error.description);
         this.remesa.idRemesa = JSON.parse(data.body).id;
+        this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa, true);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -300,7 +301,7 @@ export class FichaRemesasComponent implements OnInit {
       this.remesa = {
         'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
         'descripcion': this.tarjetaDatosGenerales.remesaItem.descripcion,
-        'numero': this.tarjetaDatosGenerales.remesaItem.numero,
+        'numero': this.tarjetaDatosGenerales.remesaItem.numero.toString(),
         'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
       };
     }
@@ -311,6 +312,7 @@ export class FichaRemesasComponent implements OnInit {
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
         this.remesa.idRemesa = JSON.parse(data.body).id;
+        this.guardado = true;
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -410,7 +412,11 @@ export class FichaRemesasComponent implements OnInit {
       },
       () => {
         this.progressSpinner = false;
-        this.router.navigate(["/remesas"]);
+        if(this.remesaInformacionEconomica){
+          this.router.navigate(["/remesas/1"]);
+        }else{
+          this.router.navigate(["/remesas/0"]);
+        }
         localStorage.setItem('remesaBorrada', "true");
       }
     );

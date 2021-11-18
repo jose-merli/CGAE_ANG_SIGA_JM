@@ -10,7 +10,7 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtro-remesas [permisoEscritura]="permisoEscritura" (filtrosValues) = "getFiltrosValues($event)"></app-filtro-remesas>
+  <app-filtro-remesas [permisoEscritura]="permisoEscritura" [remesaInformacionEconomica]="remesaInformacionEconomica" (filtrosValues) = "getFiltrosValues($event)"></app-filtro-remesas>
   <app-tabla-remesas *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" [remesaInformacionEconomica]="remesaInformacionEconomica" (search)="search()"></app-tabla-remesas>
 </div>
 

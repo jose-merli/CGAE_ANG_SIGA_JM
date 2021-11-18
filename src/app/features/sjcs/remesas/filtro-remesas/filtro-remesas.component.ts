@@ -27,6 +27,8 @@ export class FiltroRemesasComponent implements OnInit {
   @Input() permisoEscritura;
   @ViewChild("prueba") prueba;
 
+  @Input() remesaInformacionEconomica;
+
   comboEstados = [];
 
   @Output() filtrosValues = new EventEmitter<RemesasBusquedaItem>();
@@ -120,6 +122,12 @@ export class FiltroRemesasComponent implements OnInit {
   openTab() {
     this.router.navigate(["/fichaRemesasEnvio"]);
     localStorage.setItem('ficha', "nuevo");
+
+    if(this.remesaInformacionEconomica){
+      localStorage.setItem('remesaInformacionEconomica', "true");
+    }else{
+      localStorage.setItem('remesaInformacionEconomica', "false");
+    }
   }
 
   numberOnly(event): boolean {

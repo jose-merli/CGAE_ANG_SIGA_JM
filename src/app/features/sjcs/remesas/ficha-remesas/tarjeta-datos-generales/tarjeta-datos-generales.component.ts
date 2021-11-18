@@ -129,7 +129,19 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
       .subscribe(
         n => {
           console.log("Dentro de la respuesta. Contenido --> ", n.contador);
-          this.remesaItem.numero = n.contador + 1;
+          let contador: string = "";
+
+          contador = String(n.contador + 1);
+
+          if(contador.length < 5){
+            let ceros: string = "";
+            for(;(ceros.length + contador.length) < 5;){
+              ceros += "0";
+            }
+            contador = ceros + contador;
+          }
+
+          this.remesaItem.numero = contador;
           console.log("remesaItem -> ", this.remesaItem);
         },
         error => { },

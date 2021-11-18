@@ -7,9 +7,9 @@ export class RemesasItem {
     idInstitucion?: number;
     idRemesa?: number;
     incidenciasEJG?: number;
-    numero?: number;
-    prefijo?: number;
-    sufijo?: number;
+    numero?: string;
+    prefijo?: string;
+    sufijo?: string;
     totalEJG?: number;
     comboIncidencia?: string;
     ficha?: boolean;

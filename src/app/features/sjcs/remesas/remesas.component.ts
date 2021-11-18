@@ -45,13 +45,7 @@ export class RemesasComponent implements OnInit {
 
     if(this.activatedRoute.snapshot.paramMap.get('tipoRemesa') == '0'){
       this.remesaInformacionEconomica = false;
-    }
-    
-    if(this.activatedRoute.snapshot.paramMap.get('tipoRemesa') == '1'){
-      this.remesaInformacionEconomica = true;
-    }
-
-    this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
+      this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
@@ -68,7 +62,10 @@ export class RemesasComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
-
+    }
+    
+    if(this.activatedRoute.snapshot.paramMap.get('tipoRemesa') == '1'){
+      this.remesaInformacionEconomica = true;
       this.commonsService.checkAcceso(procesos_comision.remesasInformacionEconomica)
       .then(respuesta => {
 
@@ -86,11 +83,12 @@ export class RemesasComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
+    }
 
-      if(localStorage.getItem('remesaBorrada') == "true"){
-        this.showMessage("success", this.translateService.instant("general.message.correct"), "La remesa se ha borrado correctmente");
-        localStorage.removeItem('remesaBorrada');
-      }
+    if(localStorage.getItem('remesaBorrada') == "true"){
+      this.showMessage("success", this.translateService.instant("general.message.correct"), "La remesa se ha borrado correctmente");
+      localStorage.removeItem('remesaBorrada');
+    }
   }
 
   getFiltrosValues(event) {
