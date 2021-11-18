@@ -8,6 +8,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { FacturacionesYPagosModule } from './facturaciones-pagos/facturaciones-pagos.module';
 import { CartasFacturacionPagoModule } from './cartas-facturacion-pago/cartas-facturacion-pago.module';
 
+
 @NgModule({
         declarations: [],
         imports: [
