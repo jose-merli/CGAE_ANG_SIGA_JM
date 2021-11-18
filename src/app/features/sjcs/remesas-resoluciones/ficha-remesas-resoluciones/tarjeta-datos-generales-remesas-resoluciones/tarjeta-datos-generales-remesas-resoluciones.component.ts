@@ -327,6 +327,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
     this.remesaResolucion = {
       'idRemesaResolucion' : this.remesaItem.idRemesaResolucion,
       'observaciones' : this.remesaItem.observaciones,
+      'idTipoRemesa' : 1,
       'nombreFichero' : this.remesaItem.nombreFichero,
       'fechaResolucion' :  this.datepipe.transform(this.remesaItem.fechaResolucion, 'dd/MM/yyyy'),
     };
@@ -340,6 +341,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
   "remesasResoluciones_guardarRemesaResolucion",
   "?idRemesaResolucion=" + this.remesaResolucion.idRemesaResolucion +
   "&observaciones=" + this.remesaResolucion.observaciones + 
+  "&idTipoRemesa=" + 1 + 
   "&nombreFichero=" + this.remesaResolucion.nombreFichero +
   "&fechaResolucion=" + this.remesaResolucion.fechaResolucion,
   this.file)

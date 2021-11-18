@@ -124,26 +124,25 @@ export class FiltroCargaDesignaProcuradorComponent implements OnInit {
 
   obtenerDesignaProcurador(){}
   
-  obtenerOperacionTipoAccion(){
 
-    this.sigaServices
-    .get("remesasResoluciones_obtenerOperacionTipoAccion")
-    .subscribe(
-      data => {
-        console.log(data);
-        if(data == null || data != 404) {
-          this.buttonNew = true;
-        }else if(data == 4) {
-          this.buttonNew = false;
-         
-        }
-      },
-      error => { },
-      () => { }
-    );
+obtenerOperacionTipoAccion(){
 
+  this.sigaServices
+  .get("remesasResoluciones_obtenerOperacionTipoAccion")
+  .subscribe(
+    data => {
+      console.log(data);
+      if(data.error.description == "Empty" && data.error.code == 404) {
+        this.buttonNew = true;
+      }else if(data.ecomOperacionTipoaccion[0].idoperacion != null &&  data.error.code == 200) {
+        this.buttonNew = false;
+        //this.numOperacion = data.ecomOperacionTipoaccion[0].idoperacion;
+      }
+    },
+    error => { },
+    () => { }
+  );
 
 }
-  
 
 }

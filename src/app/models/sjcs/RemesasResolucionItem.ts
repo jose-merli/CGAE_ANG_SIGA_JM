@@ -14,5 +14,6 @@ export class RemesasResolucionItem {
     observaciones?: string;
     numCompleto?: string;
     log ?: number;
+    idTipoRemesa ?: number;
     constructor() { }
 }
