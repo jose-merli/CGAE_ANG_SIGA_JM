@@ -22,7 +22,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   @Input() openTarjetaUsosSufijos;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<CuentasBancariasItem>();
   
   // Tabla
   datos: any[] = [];
@@ -220,8 +220,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.body.numUsos = this.datos.length;
-        this.persistenceService.setDatos(this.body);
-        this.guardadoSend.emit();
+        this.guardadoSend.emit(this.body);
 
         this.progressSpinner = false;
       },

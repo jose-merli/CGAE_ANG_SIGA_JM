@@ -22,7 +22,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   @Input() openTarjetaDatosGenerales;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<CuentasBancariasItem>();
 
   @Input() bodyInicial: CuentasBancariasItem;
   body: CuentasBancariasItem = new CuentasBancariasItem();
@@ -83,87 +83,14 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   checkSave(): void {
     this.removeSpacesFromIBAN();
     if (this.isValid()) {
-      this.save();
+      this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
     }
   }
 
-  save(): void {
-    this.progressSpinner = true;
-
-    if (this.modoEdicion) {
-      this.sigaServices.post("facturacionPyS_actualizaCuentaBancaria", this.body).subscribe(
-        n => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.persistenceService.setDatos(this.body);
-          this.guardadoSend.emit();
   
-          this.progressSpinner = false;
-        },
-        err => {
-          let error = JSON.parse(err.error).error;
-          if (error != undefined && error.message != undefined) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          }
-
-          this.addSpacesToIBAN();
-  
-          this.progressSpinner = false;
-        }
-      );
-    } else {
-      this.sigaServices.post("facturacionPyS_insertaCuentaBancaria", this.body).subscribe(
-        n => {
-          let bancosCodigo = JSON.parse(n.body).id;
-          this.body.bancosCodigo = bancosCodigo;
-          this.recuperarCuentaBancaria();
-
-          this.progressSpinner = false;
-        },
-        err => {
-          let error = JSON.parse(err.error).error;
-          if (error != undefined && error.message != undefined) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          }
-  
-          this.addSpacesToIBAN();
-
-          this.progressSpinner = false;
-        }
-      );
-    }
-    
-  }
-
-  recuperarCuentaBancaria(): void {
-    this.sigaServices.getParam("facturacionPyS_getCuentasBancarias", "?idCuenta=" + this.body.bancosCodigo).subscribe(
-      n => {
-        let datos: CuentasBancariasItem[] = JSON.parse(n.body).cuentasBancariasITem;
-
-        if (datos.length != 0) {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
-          this.body = datos.find(d => d.bancosCodigo == this.body.bancosCodigo);
-          this.persistenceService.setDatos(this.body);
-          this.guardadoSend.emit();
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        }
-        
-        this.progressSpinner = false;
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
-      }
-    );
-  }
 
   // Eliminar cuenta bancaria
 
