@@ -13,9 +13,9 @@ import { SigaServices } from '../../../_services/siga.service';
 
 
 @Component({
-  selector: 'app-previsiones-factura',
-  templateUrl: './previsiones-factura.component.html',
-  styleUrls: ['./previsiones-factura.component.scss'],
+  selector: 'app-previsiones-facturas',
+  templateUrl: './previsiones-facturas.component.html',
+  styleUrls: ['./previsiones-facturas.component.scss'],
 
 })
 export class MonederoComponent implements OnInit {
@@ -43,29 +43,29 @@ export class MonederoComponent implements OnInit {
     this.progressSpinner = true;
     let filtrosProductos: FiltrosCompraProductosItem = this.filtrosBusqueda.filtrosCompraProductos;
 
-    this.subscriptionProductosBusqueda = this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
-      listaCompraProductosDTO => {
+  //   this.subscriptionProductosBusqueda = this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
+  //     listaCompraProductosDTO => {
 
 
-        if (JSON.parse(listaCompraProductosDTO.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+  //       if (JSON.parse(listaCompraProductosDTO.body).error.code == 500) {
+  //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+  //       } else {
+  //         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
-          this.listaMonederos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
+  //         this.listaMonederos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
 
-          this.muestraTablaCompraProductos= true;
-          this.listaBusqueda.productsTable.reset();
-        }
+  //         this.muestraTablaCompraProductos= true;
+  //         this.listaBusqueda.productsTable.reset();
+  //       }
 
-        this.progressSpinner = false;
+  //       this.progressSpinner = false;
 
-      },
-      err => {
-        this.progressSpinner = false;
-      }, () => {
-        this.progressSpinner = false;
-      });;
+  //     },
+  //     err => {
+  //       this.progressSpinner = false;
+  //     }, () => {
+  //       this.progressSpinner = false;
+  //     });;
   }
 
 

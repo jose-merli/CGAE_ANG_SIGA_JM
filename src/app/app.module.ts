@@ -965,7 +965,7 @@ enableRipple(true);
 		FacturacionesComponent,
 		FiltrosFacturacionesComponent,
 		TablaFacturacionesComponent,
-		FichaFacturacionesComponent
+		FichaFacturacionesComponent,
 		CuotasSuscripcionesComponent,
 		TarjetaFiltroCuotasSuscripcionesComponent,
 		TarjetaListaCuotasSuscripcionesComponent,

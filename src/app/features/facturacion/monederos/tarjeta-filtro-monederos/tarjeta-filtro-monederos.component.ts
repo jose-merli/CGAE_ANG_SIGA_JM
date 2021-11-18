@@ -8,9 +8,9 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { SigaStorageService } from '../../../../siga-storage.service';
 
 @Component({
-  selector: 'app-tarjeta-filtro-monedero',
-  templateUrl: './tarjeta-filtro-monedero.component.html',
-  styleUrls: ['./tarjeta-filtro-monedero.component.scss']
+  selector: 'app-tarjeta-filtro-monederos',
+  templateUrl: './tarjeta-filtro-monederos.component.html',
+  styleUrls: ['./tarjeta-filtro-monederos.component.scss']
 })
 export class TarjetaFiltroMonederosComponent implements OnInit {
 
@@ -32,15 +32,15 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 			sessionStorage.removeItem("abogado");
     }
     else if(this.localStorageService.isLetrado){
-      this.sigaServices.get(this.sigaServices.endpoints.monederosBusqueda_searchListadoMonederos, this.filtrosMonederoItem.fechaDesde)
-      this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
-				n => {
-					let data = JSON.parse(n.body).colegiadoItem;
+      // this.sigaServices.get(this.sigaServices.endpoints.monederosBusqueda_searchListadoMonederos, this.filtrosMonederoItem.fechaDesde)
+      // this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
+			// 	n => {
+			// 		let data = JSON.parse(n.body).colegiadoItem;
 				
-				},
-				err => {
-					this.progressSpinner = false;
-				});
+			// 	},
+			// 	err => {
+			// 		this.progressSpinner = false;
+			// 	});
     }
 
     this.filtrosMonederoItem.fechaDesde = new Date(); 
