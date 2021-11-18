@@ -10,7 +10,7 @@
 
       <app-datos-generacion-adeudos [bodyInicial]="body" [permisoEscritura]="permisoEscrituraDatosGeneracion" [tarjetaDatosGeneracion]="tarjetaDatosGeneracion" [openTarjetaDatosGeneracion]="openTarjetaDatosGeneracion" (opened)="manuallyOpened = $event" [modoEdicion]="modoEdicion" (idOpened)="isCloseReceive($event)"></app-datos-generacion-adeudos>
 
-      <app-facturacion-adeudos *ngIf="modoEdicion" [bodyInicial]="body"></app-facturacion-adeudos>
+      <app-facturacion-adeudos *ngIf="modoEdicion && muestraFacturacion" [bodyInicial]="body"></app-facturacion-adeudos>
 
       <app-cuenta-entidad-adeudos *ngIf="modoEdicion" [bodyInicial]="body"></app-cuenta-entidad-adeudos>
 

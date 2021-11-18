@@ -13,9 +13,9 @@ import { SigaServices } from '../../../_services/siga.service';
 
 
 @Component({
-  selector: 'app-previsiones-facturas',
-  templateUrl: './previsiones-facturas.component.html',
-  styleUrls: ['./previsiones-facturas.component.scss'],
+  selector: 'app-monederos',
+  templateUrl: './monederos.component.html',
+  styleUrls: ['./monederos.component.scss'],
 
 })
 export class MonederoComponent implements OnInit {

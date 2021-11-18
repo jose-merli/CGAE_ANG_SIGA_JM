@@ -16,6 +16,7 @@ export class GestionAdeudosComponent implements OnInit {
   progressSpinner: boolean = false;
   manuallyOpened: boolean;
   modoEdicion: boolean;
+  muestraFacturacion: boolean = false;
 
   openTarjetaDatosGeneracion: boolean = true;
   openTarjetaFacturas: boolean = false;
@@ -59,6 +60,10 @@ export class GestionAdeudosComponent implements OnInit {
 
     if (this.modoEdicion) {
       this.updateTarjetaResumen();
+
+      if(this.body.idprogramacion!=null){
+        this.muestraFacturacion=true;
+      }
     }
 
     setTimeout(() => {
@@ -100,9 +105,9 @@ export class GestionAdeudosComponent implements OnInit {
   }
 
   backTo() {
+    sessionStorage.setItem("volver", "true")
     this.location.back();
   }
-
 
   isCloseReceive(event) {
     if (event != undefined) {
@@ -137,11 +142,7 @@ export class GestionAdeudosComponent implements OnInit {
         value: this.body.idDisqueteCargos
       },
       {
-        label: this.translateService.instant("informesycomunicaciones.comunicaciones.busqueda.fechaCreacion"),
-        value: this.body.fechaCreacion
-      },
-      {
-        label: this.translateService.instant("facturacionPyS.ficherosAdeudos.serie"),
+        label: this.translateService.instant("menu.facturacion.asignacionDeConceptosFacturables"),
         value: this.body.nombreabreviado
       },
       {
@@ -168,11 +169,13 @@ export class GestionAdeudosComponent implements OnInit {
       nombre: "datosGeneracion",
     });
 
-    this.enlacesTarjetaResumen.push({
-      label: "menu.facturacion",
-      value: document.getElementById("facturacion"),
-      nombre: "facturacion",
-    });
+    if(this.body.idprogramacion!=null){
+      this.enlacesTarjetaResumen.push({
+        label: "menu.facturacion",
+        value: document.getElementById("facturacion"),
+        nombre: "facturacion",
+      });
+    }
 
     this.enlacesTarjetaResumen.push({
       label: "facturacion.seriesFactura.bancoEntidad",

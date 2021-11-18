@@ -17,13 +17,10 @@ export class FacturacionAdeudosComponent implements OnInit {
 
   ngOnInit() {
     this.body =  JSON.parse(JSON.stringify(this.bodyInicial));
-
-    if(this.body.idprogramacion!=undefined){
-      this.cargaDatos();
-    }
   }
 
-  cargaDatos(){
-
-  }//hacer cuando este listo la pantalla de facturaciones
+  ir(){
+  //   sessionStorage.setItem("idInstitucionFichaColegial", idInstitucion.toString());
+  //   this.router.navigate(["/turnoOficioCenso"]);
+  }
 }
