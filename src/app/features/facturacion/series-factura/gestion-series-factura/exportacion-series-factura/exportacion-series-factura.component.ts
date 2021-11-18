@@ -25,7 +25,7 @@ export class ExportacionSeriesFacturaComponent implements OnInit, OnChanges {
   @Input() openTarjetaExportacionContabilidad;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
   
   constructor(
     private sigaServices: SigaServices,
@@ -70,21 +70,7 @@ export class ExportacionSeriesFacturaComponent implements OnInit, OnChanges {
   // Guardar
 
   guardar(): void {
-    this.progressSpinner = true;
-
-    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
-      n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.persistenceService.setDatos(this.body);
-        this.guardadoSend.emit();
-
-        this.progressSpinner = false;
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
-      }
-    );
+    this.guardadoSend.emit(this.body);
   }
 
   clear() {

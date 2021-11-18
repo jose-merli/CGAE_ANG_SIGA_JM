@@ -24,7 +24,7 @@ export class GeneracionSeriesFacturaComponent implements OnInit, OnChanges {
   @Input() openTarjetaGeneracion;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
 
   resaltadoDatos: boolean = false;
   
@@ -71,29 +71,11 @@ export class GeneracionSeriesFacturaComponent implements OnInit, OnChanges {
 
   checkSave(): void {
     if (this.isValid()) {
-      this.guardar();
+      this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
     }
-  }
-
-  guardar(): void {
-    this.progressSpinner = true;
-
-    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
-      n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.persistenceService.setDatos(this.body);
-        this.guardadoSend.emit();
-
-        this.progressSpinner = false;
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
-      }
-    );
   }
 
   clear() {

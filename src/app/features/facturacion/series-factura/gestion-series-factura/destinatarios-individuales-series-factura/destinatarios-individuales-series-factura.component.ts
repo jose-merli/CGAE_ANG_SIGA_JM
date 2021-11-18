@@ -37,7 +37,7 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
   @Input() openTarjetaDestinatariosIndividuales;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
   
   constructor(
     private sigaServices: SigaServices,

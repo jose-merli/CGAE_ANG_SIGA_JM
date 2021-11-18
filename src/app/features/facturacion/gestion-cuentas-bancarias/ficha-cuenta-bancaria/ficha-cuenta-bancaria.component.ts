@@ -133,6 +133,7 @@ export class FichaCuentaBancariaComponent implements OnInit {
           this.body = JSON.parse(JSON.stringify(event));
           
           this.ngOnInit();
+          this.progressSpinner = false;
         },
         err => {
           let error = JSON.parse(err.error).error;
@@ -181,6 +182,7 @@ export class FichaCuentaBancariaComponent implements OnInit {
         
         this.modoEdicion = true;
         this.ngOnInit();
+        this.progressSpinner = false;
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));

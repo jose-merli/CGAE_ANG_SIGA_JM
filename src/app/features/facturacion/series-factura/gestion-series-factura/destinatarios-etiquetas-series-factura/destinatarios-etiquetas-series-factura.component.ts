@@ -27,7 +27,7 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
   @Input() openTarjetaDestinatariosEtiquetas;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
   
   constructor(
     private sigaServices: SigaServices,

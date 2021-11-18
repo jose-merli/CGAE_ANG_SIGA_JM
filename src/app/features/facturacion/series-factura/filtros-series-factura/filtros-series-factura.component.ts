@@ -53,13 +53,14 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     this.progressSpinner = true;
 
     this.getCombos();
-    if (this.persistenceService.getPermisos() != undefined) {
+    if (this.persistenceService.getPermisos()) {
       this.permisos = this.persistenceService.getPermisos();
     }
 
-    if (this.persistenceService.getFiltros() != undefined) {
+    if (this.persistenceService.getFiltros() && sessionStorage.getItem("volver")) {
       this.body = this.persistenceService.getFiltros();
       this.persistenceService.clearFiltros();
+      sessionStorage.removeItem("volver");
 
       this.busqueda.emit();
     }

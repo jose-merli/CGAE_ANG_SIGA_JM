@@ -22,7 +22,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
   @Input() modoEdicion: boolean;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
 
   @Input() bodyInicial: SerieFacturacionItem;
   body: SerieFacturacionItem = new SerieFacturacionItem();
@@ -294,69 +294,12 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
 
   checkSave(): void {
     if (this.isValid()) {
-      this.save();
+      this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
     }
   }
-
-  save(): void {
-    this.progressSpinner = true;
-
-    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
-      n => {
-        let idSerieFacturacion = JSON.parse(n.body).id;
-
-        if (this.modoEdicion) {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.persistenceService.setDatos(this.body);
-          this.guardadoSend.emit();
-        } else {
-          this.body.idSerieFacturacion = idSerieFacturacion;
-          this.recuperarDatosSerieFacuturacion();
-        }
-        
-        this.progressSpinner = false;
-      },
-      err => {
-        let error = JSON.parse(err.error).error;
-        if (error != undefined && error.code == 500 && error.message != undefined) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        }
-
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  recuperarDatosSerieFacuturacion(): void {
-    let filtros = new SerieFacturacionItem();
-    filtros.idSerieFacturacion = this.body.idSerieFacturacion;
-    
-    this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
-      n => {
-        let datos: SerieFacturacionItem[] = JSON.parse(n.body).serieFacturacionItems;
-
-        if (datos.length != 0) {
-          this.body = datos.find(d => d.idSerieFacturacion == this.body.idSerieFacturacion);
-          this.persistenceService.setDatos(this.body);
-          this.guardadoSend.emit();
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        }
-        
-        this.progressSpinner = false;
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
-      }
-    );
-  }
-  
 
   // Estilo obligatorio
   styleObligatorio(evento: string) {

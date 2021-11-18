@@ -131,8 +131,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
           this.body.idContadorFacturas = JSON.parse(n.body).id;
           this.nuevo = false;
 
-          this.persistenceService.setDatos(this.body);
-          this.guardadoSend.emit();
+          this.guardadoSend.emit(this.body);
 
           this.progressSpinner = false;
         },
@@ -142,19 +141,8 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
         }
       );
     } else {
-      this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
-        n => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.persistenceService.setDatos(this.body);
-          this.guardadoSend.emit();
-
-          this.progressSpinner = false;
-        },
-        err => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          this.progressSpinner = false;
-        }
-      );
+      this.progressSpinner = false;
+      this.guardadoSend.emit(this.body);
     }
   }
 

@@ -17,7 +17,7 @@ export class ObservacionesSeriesFacturaComponent implements OnInit, OnChanges {
   @Input() openTarjetaObservaciones;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
 
   @Input() bodyInicial: SerieFacturacionItem;
   body: SerieFacturacionItem = new SerieFacturacionItem();
@@ -69,21 +69,7 @@ export class ObservacionesSeriesFacturaComponent implements OnInit, OnChanges {
   // Guadar
 
   save(): void {
-    this.progressSpinner = true;
-
-    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
-      n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.persistenceService.setDatos(this.body);
-        this.guardadoSend.emit();
-
-        this.progressSpinner = false;
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
-      }
-    );
+    this.guardadoSend.emit(this.body);
   }
 
   showMessage(severity, summary, msg) {

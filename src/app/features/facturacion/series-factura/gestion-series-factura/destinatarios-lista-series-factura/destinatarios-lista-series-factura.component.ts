@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
+import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 
 @Component({
   selector: 'app-destinatarios-lista-series-factura',
@@ -32,7 +33,7 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit {
   @Input() openTarjetaListaDestinatarios;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<any>();
+  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
   
   constructor() { }
 

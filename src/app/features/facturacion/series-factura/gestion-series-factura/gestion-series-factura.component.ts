@@ -5,6 +5,7 @@ import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-gestion-series-factura',
@@ -45,7 +46,8 @@ export class GestionSeriesFacturaComponent implements OnInit {
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
@@ -54,9 +56,6 @@ export class GestionSeriesFacturaComponent implements OnInit {
     if (sessionStorage.getItem("serieFacturacionItem")) {
       this.body = JSON.parse(sessionStorage.getItem("serieFacturacionItem"));
       sessionStorage.removeItem("serieFacturacionItem");
-      this.persistenceService.setDatos(this.body);
-    } else if(this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
     } else if(sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.body = new SerieFacturacionItem();
@@ -180,10 +179,63 @@ export class GestionSeriesFacturaComponent implements OnInit {
 
   }
 
-  guardadoSend(): void {
-    this.modoEdicion = true;
-    this.ngOnInit();
-    //this.router.navigate(["/datosSeriesFactura"]);
+  guardadoSend(event: SerieFacturacionItem): void {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
+      n => {
+        let idSerieFacturacion = JSON.parse(n.body).id;
+
+        if (this.modoEdicion) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.body = JSON.parse(JSON.stringify(event));
+
+          this.modoEdicion = true;
+          this.ngOnInit();
+        } else {
+          this.body.idSerieFacturacion = idSerieFacturacion;
+          this.recuperarDatosSerieFacuturacion();
+        }
+        
+        this.progressSpinner = false;
+      },
+      err => {
+        let error = JSON.parse(err.error).error;
+        if (error != undefined && error.code == 500 && error.message != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  recuperarDatosSerieFacuturacion(): void {
+    let filtros = new SerieFacturacionItem();
+    filtros.idSerieFacturacion = this.body.idSerieFacturacion;
+    
+    this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
+      n => {
+        let datos: SerieFacturacionItem[] = JSON.parse(n.body).serieFacturacionItems;
+
+        if (datos.length != 0) {
+          this.body = datos.find(d => d.idSerieFacturacion == this.body.idSerieFacturacion);
+
+          this.modoEdicion = true;
+          this.ngOnInit();
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+        
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
   // Abrir tarjetas desde enlaces
@@ -295,6 +347,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
   }
 
   backTo() {
+    sessionStorage.setItem("volver", "true");
     this.location.back();
   }
 }
