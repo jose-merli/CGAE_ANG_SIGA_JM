@@ -6,11 +6,11 @@ import { CuentasBancariasItem } from '../../../../models/CuentasBancariasItem';
 import { FacFacturacionprogramadaItem } from '../../../../models/FacFacturacionprogramadaItem';
 
 @Component({
-  selector: 'app-ficha-facturaciones',
-  templateUrl: './ficha-facturaciones.component.html',
-  styleUrls: ['./ficha-facturaciones.component.scss']
+  selector: 'app-ficha-fact-programadas',
+  templateUrl: './ficha-fact-programadas.component.html',
+  styleUrls: ['./ficha-fact-programadas.component.scss']
 })
-export class FichaFacturacionesComponent implements OnInit {
+export class FichaFactProgramadasComponent implements OnInit {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;

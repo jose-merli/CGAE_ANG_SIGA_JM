@@ -4,15 +4,15 @@ import { TranslateService } from '../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../models/FacFacturacionprogramadaItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
-import { FiltrosFacturacionesComponent } from './filtros-facturaciones/filtros-facturaciones.component';
-import { TablaFacturacionesComponent } from './tabla-facturaciones/tabla-facturaciones.component';
+import { FiltrosFactProgramadasComponent } from './filtros-fact-programadas/filtros-fact-programadas.component';
+import { TablaFactProgramadasComponent } from './tabla-fact-programadas/tabla-fact-programadas.component';
 
 @Component({
-  selector: 'app-facturaciones',
-  templateUrl: './facturaciones.component.html',
-  styleUrls: ['./facturaciones.component.scss']
+  selector: 'app-fact-programadas',
+  templateUrl: './fact-programadas.component.html',
+  styleUrls: ['./fact-programadas.component.scss']
 })
-export class FacturacionesComponent implements OnInit {
+export class FactProgramadasComponent implements OnInit {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -20,8 +20,8 @@ export class FacturacionesComponent implements OnInit {
   buscar: boolean = false;
   datos: FacFacturacionprogramadaItem[] = [];
 
-  @ViewChild(FiltrosFacturacionesComponent) filtros;
-  @ViewChild(TablaFacturacionesComponent) tabla;
+  @ViewChild(FiltrosFactProgramadasComponent) filtros;
+  @ViewChild(TablaFactProgramadasComponent) tabla;
 
   constructor(
     private sigaServices: SigaServices,

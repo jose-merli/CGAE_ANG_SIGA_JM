@@ -9,11 +9,11 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
-  selector: 'app-filtros-facturaciones',
-  templateUrl: './filtros-facturaciones.component.html',
-  styleUrls: ['./filtros-facturaciones.component.scss']
+  selector: 'app-filtros-fact-programadas',
+  templateUrl: './filtros-fact-programadas.component.html',
+  styleUrls: ['./filtros-fact-programadas.component.scss']
 })
-export class FiltrosFacturacionesComponent implements OnInit {
+export class FiltrosFactProgramadasComponent implements OnInit {
 
   progressSpinner: boolean = false;
   msgs: Message[] = [];

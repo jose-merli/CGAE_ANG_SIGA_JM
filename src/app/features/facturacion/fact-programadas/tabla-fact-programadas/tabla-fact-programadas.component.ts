@@ -7,11 +7,11 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 
 @Component({
-  selector: 'app-tabla-facturaciones',
-  templateUrl: './tabla-facturaciones.component.html',
-  styleUrls: ['./tabla-facturaciones.component.scss']
+  selector: 'app-tabla-fact-programadas',
+  templateUrl: './tabla-fact-programadas.component.html',
+  styleUrls: ['./tabla-fact-programadas.component.scss']
 })
-export class TablaFacturacionesComponent implements OnInit, OnChanges {
+export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;

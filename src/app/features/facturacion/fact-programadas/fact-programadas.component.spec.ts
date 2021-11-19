@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TablaFacturacionesComponent } from './tabla-facturaciones.component';
+import { FactProgramadasComponent } from './fact-programadas.component';
 
-describe('TablaFacturacionesComponent', () => {
-  let component: TablaFacturacionesComponent;
-  let fixture: ComponentFixture<TablaFacturacionesComponent>;
+describe('FactProgramadasComponent', () => {
+  let component: FactProgramadasComponent;
+  let fixture: ComponentFixture<FactProgramadasComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TablaFacturacionesComponent ]
+      declarations: [ FactProgramadasComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TablaFacturacionesComponent);
+    fixture = TestBed.createComponent(FactProgramadasComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

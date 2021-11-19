@@ -519,14 +519,14 @@ import { DatosGeneracionAdeudosComponent } from './features/facturacion/ficheros
 import { CuentaEntidadAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/cuenta-entidad-adeudos/cuenta-entidad-adeudos.component';
 import { FacturasAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturas-adeudos/facturas-adeudos.component';
 import { FacturacionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturacion-adeudos/facturacion-adeudos.component';
-import { FacturacionesComponent } from './features/facturacion/facturaciones/facturaciones.component';
-import { FiltrosFacturacionesComponent } from './features/facturacion/facturaciones/filtros-facturaciones/filtros-facturaciones.component';
-import { TablaFacturacionesComponent } from './features/facturacion/facturaciones/tabla-facturaciones/tabla-facturaciones.component';
-import { FichaFacturacionesComponent } from './features/facturacion/facturaciones/ficha-facturaciones/ficha-facturaciones.component';
 import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/cuotas-suscripciones.component';
 import { TarjetaFiltroCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones.component';
 import { TarjetaListaCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones.component';
 import { TarjetaServiciosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-servicios-compra-suscripcion/tarjeta-servicios-compra-suscripcion.component';
+import { FactProgramadasComponent } from './features/facturacion/fact-programadas/fact-programadas.component';
+import { FiltrosFactProgramadasComponent } from './features/facturacion/fact-programadas/filtros-fact-programadas/filtros-fact-programadas.component';
+import { TablaFactProgramadasComponent } from './features/facturacion/fact-programadas/tabla-fact-programadas/tabla-fact-programadas.component';
+import { FichaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/ficha-fact-programadas.component';
 enableRipple(true);
 
 @NgModule({
@@ -962,10 +962,10 @@ enableRipple(true);
 		CuentaEntidadAdeudosComponent,
 		FacturasAdeudosComponent,
 		FacturacionAdeudosComponent,
-		FacturacionesComponent,
-		FiltrosFacturacionesComponent,
-		TablaFacturacionesComponent,
-		FichaFacturacionesComponent,
+		FactProgramadasComponent,
+		FiltrosFactProgramadasComponent,
+		TablaFactProgramadasComponent,
+		FichaFactProgramadasComponent,
 		CuotasSuscripcionesComponent,
 		TarjetaFiltroCuotasSuscripcionesComponent,
 		TarjetaListaCuotasSuscripcionesComponent,
