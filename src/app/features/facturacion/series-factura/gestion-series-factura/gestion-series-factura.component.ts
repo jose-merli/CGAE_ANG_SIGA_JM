@@ -182,8 +182,9 @@ export class GestionSeriesFacturaComponent implements OnInit {
   guardadoSend(event: SerieFacturacionItem): void {
     this.progressSpinner = true;
 
-    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", this.body).subscribe(
+    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", event).subscribe(
       n => {
+        console.log("Nuevo id:", n);
         let idSerieFacturacion = JSON.parse(n.body).id;
 
         if (this.modoEdicion) {

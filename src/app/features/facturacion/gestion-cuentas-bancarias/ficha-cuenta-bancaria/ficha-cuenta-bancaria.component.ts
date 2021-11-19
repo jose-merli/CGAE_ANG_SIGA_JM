@@ -89,7 +89,6 @@ export class FichaCuentaBancariaComponent implements OnInit {
   updateEnlacesTarjetaResumen(): void {
     this.enlacesTarjetaResumen = [];
 
-    // Por terminar
     this.enlacesTarjetaResumen.push({
       label: "general.message.datos.generales",
       value: document.getElementById("datosGenerales"),
@@ -149,6 +148,7 @@ export class FichaCuentaBancariaComponent implements OnInit {
     } else {
       this.sigaServices.post("facturacionPyS_insertaCuentaBancaria", event).subscribe(
         n => {
+          console.log("Nuevo id:", n);
           let bancosCodigo = JSON.parse(n.body).id;
           this.body.bancosCodigo = bancosCodigo;
           this.recuperarCuentaBancaria();
@@ -170,7 +170,7 @@ export class FichaCuentaBancariaComponent implements OnInit {
   recuperarCuentaBancaria(): void {
     this.sigaServices.getParam("facturacionPyS_getCuentasBancarias", "?idCuenta=" + this.body.bancosCodigo).subscribe(
       n => {
-        let datos: CuentasBancariasItem[] = JSON.parse(n.body).cuentasBancariasITem;
+        let datos: CuentasBancariasItem[] = n.cuentasBancariasITem;
 
         if (datos.length != 0) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));

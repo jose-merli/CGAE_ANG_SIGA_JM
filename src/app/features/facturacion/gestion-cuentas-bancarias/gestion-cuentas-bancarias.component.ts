@@ -119,7 +119,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
 
   cargarDatos() {
     this.allCuentasBancarias = [];
-    this.sigaServices.get("facturacionPyS_getCuentasBancarias").subscribe(
+    this.sigaServices.getParam("facturacionPyS_getCuentasBancarias", "?idCuenta=").subscribe(
       data => {
         this.allCuentasBancarias = data.cuentasBancariasITem;
         this.cargarListaCuentasBancarias();
