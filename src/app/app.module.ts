@@ -494,6 +494,7 @@ import { FichaBaremosDeGuardiaComponent } from './features/sjcs/facturacionSJCS/
 import { FichaBarDatosGeneralesComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-datos-generales/ficha-bar-datos-generales.component';
 import { FichaBarConfiFacComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-confi-fac/ficha-bar-confi-fac.component';
 import { FichaBarConfiAdiComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-confi-adi/ficha-bar-confi-adi.component';
+import { TarjetaFacturacionGenericaComponent } from './features/sjcs/facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.component';
 
 @NgModule({
 	declarations: [
@@ -907,6 +908,7 @@ import { FichaBarConfiAdiComponent } from './features/sjcs/facturacionSJCS/barem
 		TarjetaFacturacionComponent,
 		TarjetaMovimientosVariosAsociadosComponent,
 		TarjetaMovimientosVariosAplicadosComponent,
+		TarjetaFacturacionGenericaComponent,
 
 	],
 	imports: [

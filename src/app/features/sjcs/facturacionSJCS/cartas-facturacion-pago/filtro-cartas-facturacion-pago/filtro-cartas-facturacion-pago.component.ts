@@ -44,7 +44,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
     this.isLetrado = this.sigaStorageService.isLetrado;
 
-    if (sessionStorage.getItem("datosCartasFacturacion") && !this.isLetrado) {
+    if (sessionStorage.getItem("datosCartasFacturacion")) {
       this.filtros = JSON.parse(sessionStorage.getItem("datosCartasFacturacion"));
       sessionStorage.removeItem("datosCartasFacturacion")
       this.modoBusqueda = this.filtros.modoBusqueda;
@@ -58,7 +58,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
       if (this.checkFiltersInit()) {
         this.emitSearch.emit(this.modoBusqueda)
       }
-    } else if (sessionStorage.getItem("datosCartasPago") && !this.isLetrado) {
+    } else if (sessionStorage.getItem("datosCartasPago")) {
       this.filtros = JSON.parse(sessionStorage.getItem("datosCartasPago"));
       sessionStorage.removeItem("datosCartasPago")
       this.modoBusqueda = this.filtros.modoBusqueda;
