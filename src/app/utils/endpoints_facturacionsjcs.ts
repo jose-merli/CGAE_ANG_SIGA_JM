@@ -68,6 +68,10 @@ export let endpoints_facturacionsjcs: any = {
     retenciones_eliminarRetenciones: "retenciones/deleteRetenciones",
     retenciones_saveOrUpdateRetencion: "retenciones/saveOrUpdateRetencion",
     retenciones_buscarRetencionesAplicadas: "retenciones/searchRetencionesAplicadas",
-    retenciones_buscarAplicacionesRetenciones: "retenciones/getAplicacionesRetenciones"
+    retenciones_buscarAplicacionesRetenciones: "retenciones/getAplicacionesRetenciones",
+
+    /*Endpoins impreso 190 */
+
+    impreso190_generar:"facturacionsjcs/impreso190generar"
 }
 

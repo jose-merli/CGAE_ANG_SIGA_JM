@@ -1,0 +1,36 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-body">
+      <div class="form-row">
+      </div>
+      <p class="title-module" (click)="onHideshowDatosGenerales()">
+        {{ 'general.message.datos.generales' | translate }}
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      </p>
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+        <!--FIla 1-->
+        <div class="form-row">
+          <!--Colegio-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}}</label>
+            <input class="form-control" type="number" name="anio" min="1900" max="2099" step="1" [(ngModel)]='anio'
+            pInputText />
+          </div>
+          
+        </div>
+        
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"
+          (click)="restablecer()"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.search' | translate }}" (click)="buscarImpresos()"></button>
+        
+      </div>
+    </div>
+  </div>
+</div>
