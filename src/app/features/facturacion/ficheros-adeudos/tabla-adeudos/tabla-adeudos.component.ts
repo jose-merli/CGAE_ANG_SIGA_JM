@@ -15,7 +15,6 @@ import { SigaServices } from '../../../../_services/siga.service';
 export class TablaAdeudosComponent implements OnInit {
   cols;
   msgs;
-  message;
 
   selectedDatos = [];
   rowsPerPage = [];

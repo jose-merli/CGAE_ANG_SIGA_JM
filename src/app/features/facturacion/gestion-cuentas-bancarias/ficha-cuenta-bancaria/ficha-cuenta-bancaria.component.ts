@@ -45,7 +45,11 @@ export class FichaCuentaBancariaComponent implements OnInit {
     if (sessionStorage.getItem("cuentaBancariaItem")) {
       this.body = JSON.parse(sessionStorage.getItem("cuentaBancariaItem"));
       sessionStorage.removeItem("cuentaBancariaItem");
+      
+      this.modoEdicion=true;
+      
       this.calcDescripcion();
+
     } else if(sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.modoEdicion = false;
