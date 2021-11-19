@@ -131,7 +131,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
           console.log("Dentro de la respuesta. Contenido --> ", n.contador);
           let contador: string = "";
 
-          contador = String(n.contador + 1);
+           contador = String(n.contador);
 
           if(contador.length < 5){
             let ceros: string = "";

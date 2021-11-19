@@ -313,6 +313,7 @@ export class FichaRemesasComponent implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), JSON.parse(data.body).error.description);
         this.remesa.idRemesa = JSON.parse(data.body).id;
         this.guardado = true;
+        this.estado = true;
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -326,6 +327,7 @@ export class FichaRemesasComponent implements OnInit {
         this.tarjetaEJGs.getEJGRemesa(this.remesa, true);
         this.progressSpinner = false;
         this.guardado = true;
+        this.estado = true;
       }
     );
   }
