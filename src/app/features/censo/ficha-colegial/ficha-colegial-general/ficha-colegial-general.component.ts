@@ -194,6 +194,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
 
   mostrarDatosBancarios: boolean = false;
 
+  datosTratamientos: any[] = [];
 
   // etiquetas
   showGuardar: boolean = false;
@@ -549,6 +550,9 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
 
     this.tarjetasActivas = true;
       this.stringAComisiones();
+
+    // Se obtienen los tratamientos disponibles
+    this.getTratamientos();
   }
   
    stringAComisiones() {
@@ -565,6 +569,16 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   
   }
 
+  getTratamientos() {
+    this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
+      n => {
+        this.datosTratamientos = n.combooItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 
   getColegiadoLogeado() {
     this.generalBody.searchLoggedUser = true;
