@@ -527,6 +527,13 @@ import { FactProgramadasComponent } from './features/facturacion/fact-programada
 import { FiltrosFactProgramadasComponent } from './features/facturacion/fact-programadas/filtros-fact-programadas/filtros-fact-programadas.component';
 import { TablaFactProgramadasComponent } from './features/facturacion/fact-programadas/tabla-fact-programadas/tabla-fact-programadas.component';
 import { FichaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/ficha-fact-programadas.component';
+import { DatosGeneralesFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/datos-generales-fact-programadas/datos-generales-fact-programadas.component';
+import { GenAdeudosFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/gen-adeudos-fact-programadas/gen-adeudos-fact-programadas.component';
+import { GenFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/gen-factura-fact-programadas/gen-factura-fact-programadas.component';
+import { EnvioFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/envio-fact-programadas/envio-fact-programadas.component';
+import { TraspasoFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/traspaso-fact-programadas/traspaso-fact-programadas.component';
+import { SerieFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/serie-factura-fact-programadas/serie-factura-fact-programadas.component';
+import { InfoFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/info-factura-fact-programadas/info-factura-fact-programadas.component';
 enableRipple(true);
 
 @NgModule({
@@ -969,7 +976,14 @@ enableRipple(true);
 		CuotasSuscripcionesComponent,
 		TarjetaFiltroCuotasSuscripcionesComponent,
 		TarjetaListaCuotasSuscripcionesComponent,
-		TarjetaServiciosCompraSuscripcionComponent
+		TarjetaServiciosCompraSuscripcionComponent,
+		DatosGeneralesFactProgramadasComponent,
+		GenAdeudosFactProgramadasComponent,
+		GenFacturaFactProgramadasComponent,
+		EnvioFactProgramadasComponent,
+		TraspasoFactProgramadasComponent,
+		SerieFacturaFactProgramadasComponent,
+		InfoFacturaFactProgramadasComponent
 	],
 	imports: [
 		Paginador3Module,
