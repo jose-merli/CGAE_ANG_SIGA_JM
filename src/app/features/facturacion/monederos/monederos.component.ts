@@ -52,7 +52,7 @@ export class MonederoComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.listaMonederos = JSON.parse(listaMonederosDTO.body).monederoItems
           this.muestraTablaMonederos = true;
-          this.listaBusqueda.monederosTable.reset();
+          // this.listaBusqueda.monederosTable.reset();
         }
 
         this.progressSpinner = false;

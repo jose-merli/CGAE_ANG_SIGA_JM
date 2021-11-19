@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslateService } from '../../../../commons/translate';
 import { CargaMasivaItem } from '../../../../models/CargaMasivaItem';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -15,6 +15,7 @@ export class TarjetaBusquedaCmcComponent implements OnInit {
   filtro: CargaMasivaItem = new CargaMasivaItem();
   @Output() filtrosValues = new EventEmitter<CargaMasivaItem>();
   showTipo: boolean = false;
+  @Input("permisoEscritura") permisoEscrituta;
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices) { }
