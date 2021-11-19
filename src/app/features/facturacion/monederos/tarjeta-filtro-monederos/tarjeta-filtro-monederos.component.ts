@@ -8,9 +8,9 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { SigaStorageService } from '../../../../siga-storage.service';
 
 @Component({
-  selector: 'app-tarjeta-filtro-monedero',
-  templateUrl: './tarjeta-filtro-monedero.component.html',
-  styleUrls: ['./tarjeta-filtro-monedero.component.scss']
+  selector: 'app-tarjeta-filtro-monederos',
+  templateUrl: './tarjeta-filtro-monederos.component.html',
+  styleUrls: ['./tarjeta-filtro-monederos.component.scss']
 })
 export class TarjetaFiltroMonederosComponent implements OnInit {
 
@@ -32,28 +32,30 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 			sessionStorage.removeItem("abogado");
     }
     else if(this.localStorageService.isLetrado){
-      this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
+      this.sigaServices.post("monederosBusqueda_searchListadoMonederos", this.filtrosMonederoItem).subscribe(
 				n => {
-					let data = JSON.parse(n.body).colegiadoItem;
-				
+					
+			
 				},
 				err => {
 					this.progressSpinner = false;
 				});
     }
 
-    this.filtrosMonederoItem.fechaDesde = new Date(); 
+    this.filtrosMonederoItem.fechaDesde = new Date();
+    this.filtrosMonederoItem.fechaHasta = new Date(); 
 
     //En la documentación funcional se pide que por defecto aparezca el campo 
     //con la fecha de dos años antes
     this.filtrosMonederoItem.fechaDesde.setDate(this.filtrosMonederoItem.fechaDesde.getDate() - (1));
+    this.filtrosMonederoItem.fechaHasta.setDate(this.filtrosMonederoItem.fechaDesde.getDate());
   }
 
   
 
 
   // Control de fechas
-  getFechaHastaCalendar(fechaInputDesde, fechainputHasta) {
+  getFechaHastaCalendar(fechaInputDesde : Date, fechainputHasta : Date) : Date{
     if (
       fechaInputDesde != undefined &&
       fechainputHasta != undefined
@@ -70,7 +72,7 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
     return fechainputHasta;
   }
 
-  getFechaDesdeCalendar(fechaInputesde : Date, fechaInputHasta : Date) {
+  getFechaDesdeCalendar(fechaInputesde : Date, fechaInputHasta : Date) : Date{
     if (
       fechaInputesde != undefined &&
       fechaInputHasta != undefined
@@ -100,10 +102,6 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
   }
 
 
-  checkBuscar(){
-    if(!this.checkFilters())this.showMessage("error",  this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-    else this.buscar();
-  }
 
   buscar() {
     this.busqueda.emit(true);
@@ -113,6 +111,10 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
     if(this.filtrosMonederoItem.fechaDesde != null) return true;
     if(this.filtrosMonederoItem.fechaHasta != null) return true;
     return false;
+  }
+
+  nuevoMonedero(){
+    // TODO: Pendging implementation
   }
 
   //Inicializa las propiedades necesarias para el dialogo de confirmacion

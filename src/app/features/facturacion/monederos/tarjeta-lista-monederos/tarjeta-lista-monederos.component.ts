@@ -4,13 +4,11 @@ import { Message, SortEvent } from 'primeng/components/common/api';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
-import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
-import { ListaComprasProductosItem } from '../../../../models/ListaComprasProductosItem';
+import { ListaMonederosItem } from '../../../../models/ListaMonederosItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
-import { FichaCompraSuscripcionComponent } from '../../ficha-compra-suscripcion/ficha-compra-suscripcion.component';
 
 @Component({
   selector: 'app-tarjeta-lista-monederos',
@@ -24,22 +22,18 @@ export class TarjetaListaMonederosComponent implements OnInit {
   estadosCompraObject: ComboItem[] = [];
 
   @Output() actualizarLista = new EventEmitter<Boolean>();
-  @Input() listaCompraProductos: ListaComprasProductosItem[];
-  @ViewChild("productsTable") productsTable: DataTable;
+  @Input() listaMonederos: ListaMonederosItem[];
+  @ViewChild("monederosTable") monederosTable: DataTable;
 
   cols = [
-    { field: "fechaSolicitud", header: "formacion.busquedaInscripcion.fechaSolicitud" },
-    { field: "nSolicitud", header: "facturacion.productos.nSolicitud" },
-    { field: "nIdentificacion", header: "censo.consultaDatosColegiacion.literal.numIden" },
-    { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
-    { field: "apellidosNombre", header: "justiciaGratuita.oficio.designas.interesados.apellidosnombre" },
-    { field: "concepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
-    { field: "desFormaPago", header: "facturacion.productos.formapago" },
-    { field: "importe", header: "facturacionSJCS.facturacionesYPagos.importe" },
-    { field: "idEstadoSolicitud", header: "solicitudes.literal.titulo.estadosolicitud" },
-    { field: "fechaEfectiva", header: "administracion.auditoriaUsuarios.literal.fechaEfectiva" },
-    { field: "estadoFactura", header: "facturacion.productos.estadoFactura" },
-  ];
+    {field: "fecha", header: "formacion.busquedaInscripcion.fechaSolicitud"},
+    {field: "nifCif", header: "censo.consultaDatosColegiacion.literal.numIden"},
+    {field: "nombreCompleto", header: "justiciaGratuita.oficio.designas.interesados.apellidosnombre"},
+    {field: "descripcion", header: "general.description"},
+    {field: "importeInicial", header: "facturacionSJCS.facturacionesYPagos.importe"},
+    {field: "importeRestante", header: "facturacionSJCS.facturacionesYPagos.importe"},
+    {field: "importeUsado", header: "facturacionSJCS.facturacionesYPagos.importe"},
+      ];
 
   rowsPerPageSelectValues = [
     {
@@ -60,13 +54,9 @@ export class TarjetaListaMonederosComponent implements OnInit {
     }
   ];
 
-  permisoSolicitarCompra;
-  permisoAprobarCompra;
-  permisoDenegar;
-
-  selectedRows: ListaComprasProductosItem[] = []; //Datos de las filas seleccionadas.
+  selectedRows: ListaMonederosItem[] = []; //Datos de las filas seleccionadas.
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
-  selectMultipleRows: boolean = true; //Seleccion multiples filas de la tabla
+  selectMultipleRows: boolean = false; //Seleccion multiples filas de la tabla
   selectAllRows: boolean = false; //Selecciona todas las filas de la pagina actual de la tabla
   rowsPerPage: number = 10; //Define el numero de filas mostradas por pagina
   first = 0;
@@ -81,132 +71,11 @@ export class TarjetaListaMonederosComponent implements OnInit {
     private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
-    this.checkPermisos();
-    
   }
 
-
-
-  checkPermisos() {
-    this.getPermisoAprobarCompra();
-    this.getPermisoDenegar();
-  }
-
-  checkAprobar() {
-    let msg = this.commonsService.checkPermisos(this.permisoAprobarCompra, undefined);
-
-    if (msg != null) {
-      this.msgs = msg;
-    } else {
-      this.aprobarCompra();
-    }
-  }
-
-  checkDenegar() {
-    let msg = null;
-    msg = this.commonsService.checkPermisos(this.permisoDenegar, undefined);
-
-    if (msg != null) {
-      this.msgs = msg;
-    } else {
-      this.denegar();
-    }
-  }
-
-  checkAnular(){
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Boton no funcional actualmente"
-      }
-    ];
-  }
-
-  checkFacturar(){
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Boton no funcional actualmente"
-      }
-    ];
-  }
-
-  aprobarCompra() {
-
-    this.progressSpinner = true;
-    let peticion: FichaCompraSuscripcionItem[] = [];
-    this.selectedRows.forEach(row => {
-      let solicitud: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
-      solicitud.nSolicitud = row.nSolicitud;
-      solicitud.fechaAceptada = row.fechaEfectiva;
-      solicitud.fechaDenegada = row.fechaDenegada;
-      peticion.push(solicitud);
-    });
-    this.sigaServices.post('PyS_aprobarCompraMultiple', peticion).subscribe(
-      (n) => {
-        if (n.status != 200) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else if(JSON.parse(n.body).error.description!=""){
-          this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description);
-        }else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          //Se actualiza la información de la ficha
-          this.actualizarLista.emit(true);
-        }
-
-        
-        this.selectedRows = [];
-        this.numSelectedRows = 0;
-        this.progressSpinner = false;
-      },
-      (err) => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  denegar() {
-    this.progressSpinner = true;
-    let peticion: FichaCompraSuscripcionItem[] = [];
-    this.selectedRows.forEach(row => {
-      let solicitud: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
-      solicitud.nSolicitud = row.nSolicitud;
-      solicitud.fechaAceptada = row.fechaEfectiva;
-      solicitud.fechaDenegada = row.fechaDenegada;
-      peticion.push(solicitud);
-    });
-    this.sigaServices.post('PyS_denegarPeticionMultiple', peticion).subscribe(
-      (n) => {
-        if (n.status != 200) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else if(JSON.parse(n.body).error.description!=""){
-          this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description);
-        }else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          //Se actualiza la información de la ficha
-          this.actualizarLista.emit(true);
-        }
-
-        
-
-
-        this.selectedRows = [];
-        this.numSelectedRows = 0;
-        this.progressSpinner = false;
-      },
-      (err) => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        this.progressSpinner = false;
-      }
-
-    );
-  }
 
   openTab(rowData) {
-    this.progressSpinner = true;
+/*     this.progressSpinner = true;
     let compra = new FichaCompraSuscripcionItem();
     compra.nSolicitud = rowData.nSolicitud;
     compra.productos = [];
@@ -217,7 +86,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
         sessionStorage.setItem("FichaCompraSuscripcion", n.body);
         this.router.navigate(["/fichaCompraSuscripcion"]);
       }
-    );
+    ); */
   }
 
   showMessage(severity, summary, msg) {
@@ -229,30 +98,13 @@ export class TarjetaListaMonederosComponent implements OnInit {
     });
   }
 
-  getPermisoAprobarCompra() {
-    this.commonsService
-      .checkAcceso(procesos_PyS.aprobarCompra)
-      .then((respuesta) => {
-        this.permisoAprobarCompra = respuesta;
-      })
-      .catch((error) => console.error(error));
-  }
 
-  getPermisoDenegar() {
-    //Según la documentación funcional de Productos y Servicios, cualquier usuario que tenga acceso total puede realizar esta acción
-    this.commonsService
-      .checkAcceso(procesos_PyS.fichaCompraSuscripcion)
-      .then((respuesta) => {
-        this.permisoDenegar = respuesta;
-      })
-      .catch((error) => console.error(error));
-  }
 
   //Metodo activado al pulsar sobre el checkbox Seleccionar todo
   onChangeSelectAllRows() {
     if (this.selectAllRows === true) {
-      this.selectedRows = this.listaCompraProductos;
-      this.numSelectedRows = this.listaCompraProductos.length;
+      this.selectedRows = this.listaMonederos;
+      this.numSelectedRows = this.listaMonederos.length;
 
     } else {
       this.selectedRows = [];
@@ -292,6 +144,6 @@ export class TarjetaListaMonederosComponent implements OnInit {
 
   onChangeRowsPerPages(event) {
     this.rowsPerPage = event.value;
-    this.productsTable.reset();
+    this.monederosTable.reset();
   }
 }

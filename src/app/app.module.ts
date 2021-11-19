@@ -499,6 +499,10 @@ import { TarjetaFicheroModeloCmcComponent } from './features/facturacion/cargas-
 import { TarjetaSubidaFicheroCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-subida-fichero-cmc/tarjeta-subida-fichero-cmc.component';
 import { TarjetaBusquedaCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-busqueda-cmc/tarjeta-busqueda-cmc.component';
 import { TarjetaListadoCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-listado-cmc/tarjeta-listado-cmc.component';
+import { MonederoComponent } from './features/facturacion/monederos/monederos.component';
+import { TarjetaListaMonederosComponent } from  './features/facturacion/monederos/tarjeta-lista-monederos/tarjeta-lista-monederos.component';
+import { TarjetaFiltroMonederosComponent } from './features/facturacion/monederos/tarjeta-filtro-monederos/tarjeta-filtro-monederos.component';
+
 enableRipple(true);
 
 @NgModule({
@@ -580,6 +584,9 @@ enableRipple(true);
 
 		//Facturacion
 		MantenimientoSufijosComponent,
+		MonederoComponent,
+		TarjetaListaMonederosComponent,
+        TarjetaFiltroMonederosComponent,
 		FacturaPlantillasComponent,
 		GestionCuentasBancariasComponent,
 		SeriesFacturaComponent,

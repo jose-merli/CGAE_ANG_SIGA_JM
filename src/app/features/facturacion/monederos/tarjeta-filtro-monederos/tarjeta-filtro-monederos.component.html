@@ -11,17 +11,17 @@
     <div class="col-lg-3 col-md-3">
       <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
       </label>
-      <app-fecha [(value)]="filtrosCompraProductos.fechaSolicitudDesde"
-        [maxDate]="getFechaHastaCalendar(filtrosCompraProductos.fechaSolicitudDesde, filtrosCompraProductos.fechaSolicitudHasta)"
-        (valueChangeSelected)="fillFechaSolicitudDesde($event)" (valueChangeInput)="fillFechaSolicitudDesde($event)">
+      <app-fecha [(value)]="filtrosMonederoItem.fechaDesde"
+        [maxDate]="getFechaHastaCalendar(filtrosMonederoItem.fechaDesde, filtrosMonederoItem.fechaHasta)"
+        (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)">
       </app-fecha>
     </div>
     <div class="ol-lg-3 col-md-3">
       <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
       </label>
-      <app-fecha [(value)]="filtrosCompraProductos.fechaSolicitudHasta"
-        [minDate]="getFechaDesdeCalendar(filtrosCompraProductos.fechaSolicitudDesde, filtrosCompraProductos.fechaSolicitudHasta)"
-        (valueChangeSelected)="fillFechaSolicitudHasta($event)" (valueChangeInput)="fillFechaSolicitudHasta($event)">
+      <app-fecha [(value)]="filtrosMonederoItem.fechaHasta"
+        [minDate]="getFechaDesdeCalendar(filtrosMonederoItem.fechaDesde, filtrosMonederoItem.fechaHasta)"
+        (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)">
       </app-fecha>
     </div>
 
@@ -36,9 +36,9 @@
     </button>
 
     <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"
-      (click)="checkBuscar()">
+      (click)="buscar()">
     </button>
     
-    <!-- <button (click)="checkNuevaCompra()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
+    <!-- <button (click)="nuevoMonedero()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
   </div>
 </div>
