@@ -534,6 +534,9 @@ import { EnvioFactProgramadasComponent } from './features/facturacion/fact-progr
 import { TraspasoFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/traspaso-fact-programadas/traspaso-fact-programadas.component';
 import { SerieFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/serie-factura-fact-programadas/serie-factura-fact-programadas.component';
 import { InfoFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/info-factura-fact-programadas/info-factura-fact-programadas.component';
+import { FiltrosBusquedaTransferenciasComponent } from './features/facturacion/ficheros-transferencia/filtros-busqueda-transferencias/filtros-busqueda-transferencias.component';
+import { TablaFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/tabla-ficheros-transferencias/tabla-ficheros-transferencias.component';
+import { GestionFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component';
 enableRipple(true);
 
 @NgModule({
@@ -983,7 +986,10 @@ enableRipple(true);
 		EnvioFactProgramadasComponent,
 		TraspasoFactProgramadasComponent,
 		SerieFacturaFactProgramadasComponent,
-		InfoFacturaFactProgramadasComponent
+		InfoFacturaFactProgramadasComponent,
+		FiltrosBusquedaTransferenciasComponent,
+		TablaFicherosTransferenciasComponent,
+		GestionFicherosTransferenciasComponent
 	],
 	imports: [
 		Paginador3Module,

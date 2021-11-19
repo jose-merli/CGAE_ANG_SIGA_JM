@@ -2,21 +2,20 @@ import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular
 import { Router } from '@angular/router';
 import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
-import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
-  selector: 'app-tabla-adeudos',
-  templateUrl: './tabla-adeudos.component.html',
-  styleUrls: ['./tabla-adeudos.component.scss']
+  selector: 'app-tabla-ficheros-transferencias',
+  templateUrl: './tabla-ficheros-transferencias.component.html',
+  styleUrls: ['./tabla-ficheros-transferencias.component.scss']
 })
-export class TablaAdeudosComponent implements OnInit {
+export class TablaFicherosTransferenciasComponent implements OnInit {
   cols;
   msgs;
 
-  selectedDatos = [] ;
+  selectedDatos = [];
   rowsPerPage = [];
   buscadores = [];
 
@@ -34,7 +33,7 @@ export class TablaAdeudosComponent implements OnInit {
 
   @ViewChild("table") table: DataTable;
 
-  constructor( private changeDetectorRef: ChangeDetectorRef, private router: Router, private persistenceService: PersistenceService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef, private router: Router, private persistenceService: PersistenceService) { }
 
   ngOnInit() {
     this.selectedDatos = [];
@@ -44,26 +43,26 @@ export class TablaAdeudosComponent implements OnInit {
   }
 
   navigateTo(dato){
-    sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(dato));
+    sessionStorage.setItem("FicherosTransferenciasItem", JSON.stringify(dato));
     this.persistenceService.setFiltros(this.filtro);
 
-    this.router.navigate(['/gestionAdeudos']);
+    this.router.navigate(['/gestionFicherosTransferencias']);
   }
   
-  descargarFicheroAdeudo(){
+  // descargarFicheroAdeudo(){
 
-  }
+  // }
   
   getCols() {
     this.cols = [
-      { field: "idDisqueteCargos", header: "administracion.grupos.literal.id", width: "5%" },
-      { field: "fechaCreacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion", width: "10%" },
-      { field: "nombreabreviado", header: "facturacionPyS.ficherosAdeudos.serie", width: "20%" },
-      { field: "descripcion", header: "menu.facturacion", width: "20%" },
-      { field: "cuentaEntidad", header: "facturacion.seriesFactura.cuentaBancaria", width: "15%" },
-      { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo", width: "10%" },
-      { field: "numRecibos", header: 'facturacionPyS.ficherosAdeudos.numRecibos', width: "10%" },
-      { field: "totalRemesa", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "10%" },
+      // { field: "idDisqueteCargos", header: "administracion.grupos.literal.id", width: "5%" },
+      // { field: "fechaCreacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion", width: "10%" },
+      // { field: "nombreabreviado", header: "facturacionPyS.ficherosAdeudos.serie", width: "20%" },
+      // { field: "descripcion", header: "menu.facturacion", width: "20%" },
+      // { field: "cuentaEntidad", header: "facturacion.seriesFactura.cuentaBancaria", width: "15%" },
+      // { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo", width: "10%" },
+      // { field: "numRecibos", header: 'facturacionPyS.ficherosAdeudos.numRecibos', width: "10%" },
+      // { field: "totalRemesa", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "10%" },
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
