@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { TranslateService } from '../../../commons/translate';
 import { CommonsService } from '../../../_services/commons.service';
-import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { FiltrosBusquedaAdeudosComponent } from './filtros-busqueda-adeudos/filtros-busqueda-adeudos.component';
 import { TablaAdeudosComponent } from './tabla-adeudos/tabla-adeudos.component';
@@ -29,9 +27,7 @@ export class FicherosAdeudosComponent implements OnInit {
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private commonsService: CommonsService,
-    private persistenceService: PersistenceService,
-    private router: Router) {
+    private commonsService: CommonsService) {
   }
 
   ngOnInit() {

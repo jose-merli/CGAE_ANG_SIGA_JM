@@ -527,6 +527,9 @@ import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-susc
 import { TarjetaFiltroCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones.component';
 import { TarjetaListaCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones.component';
 import { TarjetaServiciosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-servicios-compra-suscripcion/tarjeta-servicios-compra-suscripcion.component';
+import { FiltrosBusquedaTransferenciasComponent } from './features/facturacion/ficheros-transferencia/filtros-busqueda-transferencias/filtros-busqueda-transferencias.component';
+import { TablaFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/tabla-ficheros-transferencias/tabla-ficheros-transferencias.component';
+import { GestionFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component';
 enableRipple(true);
 
 @NgModule({
@@ -969,7 +972,10 @@ enableRipple(true);
 		CuotasSuscripcionesComponent,
 		TarjetaFiltroCuotasSuscripcionesComponent,
 		TarjetaListaCuotasSuscripcionesComponent,
-		TarjetaServiciosCompraSuscripcionComponent
+		TarjetaServiciosCompraSuscripcionComponent,
+		FiltrosBusquedaTransferenciasComponent,
+		TablaFicherosTransferenciasComponent,
+		GestionFicherosTransferenciasComponent
 	],
 	imports: [
 		Paginador3Module,
