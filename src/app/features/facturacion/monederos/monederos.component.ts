@@ -43,7 +43,7 @@ export class MonederoComponent implements OnInit {
     this.progressSpinner = true;
     let filtrosProductos: FiltrosCompraProductosItem = this.filtrosBusqueda.filtrosCompraProductos;
 
-    this.subscriptionProductosBusqueda = this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
+    this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
       listaCompraProductosDTO => {
 
 
@@ -68,7 +68,14 @@ export class MonederoComponent implements OnInit {
       });;
   }
 
-
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
 
 

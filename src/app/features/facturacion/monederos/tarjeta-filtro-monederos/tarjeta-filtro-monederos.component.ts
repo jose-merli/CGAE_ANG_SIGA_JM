@@ -32,7 +32,6 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 			sessionStorage.removeItem("abogado");
     }
     else if(this.localStorageService.isLetrado){
-      this.sigaServices.get(this.sigaServices.endpoints.monederosBusqueda_searchListadoMonederos, this.filtrosMonederoItem.fechaDesde)
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
 				n => {
 					let data = JSON.parse(n.body).colegiadoItem;
