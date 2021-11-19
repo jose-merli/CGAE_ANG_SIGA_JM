@@ -15,8 +15,8 @@ export class ActasItem {
 	  nombresecretario:String;
 	  fecharesolucion:Date;
 	  fechareunion:Date;
-	  horainicio: Date;
-	  horafin: Date;
+	  horainicio: String;
+	  horafin: String;
 	  usumodificacion: Number;
 	  idInstitucion: String;
     constructor() { }

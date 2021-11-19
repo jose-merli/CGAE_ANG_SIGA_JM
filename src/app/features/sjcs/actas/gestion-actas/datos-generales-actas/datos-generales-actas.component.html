@@ -53,11 +53,11 @@
             </div>
             <div class="form-group col-lg-2 col-md-2">
               <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label>
-                  <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="datosFiltro.horainicioreunion">
+                  <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="inicio">
             </div>
             <div class="form-group col-lg-2 col-md-2">
               <label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label>
-                  <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="datosFiltro.horafinreunion">
+                  <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="fin">
             </div>
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucion' |
@@ -120,18 +120,24 @@
       <br>
     </div>
 
-    <div *ngIf="openFicha" class="card-footer ">
+    <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="guardarActa()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
+        <button (click)="guardarActaDialogo()" pButton type="button" icon="far fa-save" iconPos="left"
           label="Guardar"></button>
-          <button (click)="restablecer()" pButton [disabled]="disabledSave()" type="button" icon="fa fa-eraser" iconPos="left"
+          <button (click)="restablecer()" pButton type="button" icon="fa fa-eraser" iconPos="left"
           label="Restablecer"></button>
-          <button (click)="anadirEJGPendientesCAJG()" pButton [disabled]="disabledSave()" type="button" icon="far fa-folder-open" iconPos="left"
+          <button (click)="anadirEJGPendientesCAJG()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-folder-open" iconPos="left"
           label="Añadir EJG`s pendientes de CAJG"></button>
-          <button (click)="abrirActa()" pButton [disabled]="disabledSave()" type="button" icon="far fa-folder-open" iconPos="left"
+          <button (click)="abrirActaDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-folder-open" iconPos="left"
           label="Abrir Acta"></button>
-          <button (click)="cerrarActa()" pButton [disabled]="disabledSave()" type="button" icon="far fa-times-circle" iconPos="left"
+          <button (click)="cerrarActaDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-times-circle" iconPos="left"
           label="Cerrar Acta"></button>
+          <p-confirmDialog  header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+            <p-footer>
+              <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+              <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+            </p-footer>
+          </p-confirmDialog>
       </div>
     </div>
   </div>

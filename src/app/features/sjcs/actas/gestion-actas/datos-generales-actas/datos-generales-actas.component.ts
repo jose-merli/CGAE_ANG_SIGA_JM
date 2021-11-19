@@ -5,11 +5,13 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { DatePipe } from '@angular/common';
+import {ConfirmationService} from 'primeng/api';
 
 @Component({
   selector: 'app-datos-generales-actas',
   templateUrl: './datos-generales-actas.component.html',
-  styleUrls: ['./datos-generales-actas.component.scss']
+  styleUrls: ['./datos-generales-actas.component.scss'],
+  providers: [ConfirmationService]
 })
 export class DatosGeneralesActasComponent implements OnInit {
 
@@ -28,8 +30,10 @@ export class DatosGeneralesActasComponent implements OnInit {
   observaciones: String;
   expedientes: String;
   expedientesActa: String;
-  inicio: Date;
-  fin: Date;
+  inicio: String;
+  inicioAux: Date;
+  fin: String;
+  finAux: Date;
   numeroEjgAsociadosActa: Number;
   fechaResolucion: Date;
   fechaReunion: Date;
@@ -75,10 +79,15 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   progressSpinner: boolean = false;
 
+  disabledSave: boolean = true;
+
+  fechaActualAux : Date;
+  fechaActual: String;
+
   
 
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private confirmationService: ConfirmationService,
     private translateService: TranslateService, private commonsService: CommonsService) {
      }
 
@@ -88,17 +97,27 @@ export class DatosGeneralesActasComponent implements OnInit {
     this.getComboSufijo();
     this.getComboSecretario();
     this.getActa();
+    this.onDisabledSave();
+    this.getFechaActual();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos()
 
     }
    }
 
+   getFechaActual(){
+    this.fechaActualAux = new Date();
+    this.fechaActual = this.numero2Cifras(this.fechaActualAux.getHours()) + ":"+ this.numero2Cifras(this.fechaActualAux.getMinutes());
+    this.inicio = this.fechaActual;
+    this.fin = this.fechaActual;
+   }
+
    
 
    getComboPresidente() {
     this.sigaServices
-      .get("filtrosejg_comboPresidente")
+      .get("filtrosejgcomision_comboPresidente")
+      //.get("filtrosejg_comboPresidente")
       .subscribe(
         n => {
           this.comboPresidente = n.combooItems;
@@ -110,8 +129,24 @@ export class DatosGeneralesActasComponent implements OnInit {
       );
   }
 
+  guardarActaDialogo() {
+
+    this.confirmationService.confirm({
+      message: '¿Estas seguro que quieres guardar el acta?',
+      accept: () => {
+        console.log("aceptado guardar acta");
+        this.guardarActa();
+      },
+      reject: () => {
+        console.log("rechazado guardar acta");
+      }
+  });
+}
+
   guardarActa() {
     this.progressSpinner = true;
+    this.datosFiltro.horainicio = this.inicio;
+    this.datosFiltro.horafin = this.fin;
     this.sigaServices.post("filtrosacta_guardarActa", this.datosFiltro).subscribe(
       data => {
 
@@ -136,6 +171,19 @@ export class DatosGeneralesActasComponent implements OnInit {
     this.datosFiltro =JSON.parse(JSON.stringify(this.restablecerDatosFiltro));
   }
 
+  abrirActaDialogo() {
+
+    this.confirmationService.confirm({
+      message: '¿Estas seguro que quieres abrir el acta?',
+      accept: () => {
+        console.log("aceptado abrir acta");
+        this.abrirActa();
+      },
+      reject: () => {
+        console.log("rechazado abrir acta");
+      }
+  });
+}
 
   abrirActa() {
     this.progressSpinner = true;
@@ -157,6 +205,20 @@ export class DatosGeneralesActasComponent implements OnInit {
       }
     );
   }
+
+  cerrarActaDialogo() {
+
+    this.confirmationService.confirm({
+      message: '¿Estas seguro que quieres cerrar el acta?',
+      accept: () => {
+        console.log("aceptado cerrar acta");
+        this.cerrarActa();
+      },
+      reject: () => {
+        console.log("rechazado cerrar acta");
+      }
+  });
+}
 
    cerrarActa() {
     this.progressSpinner = true;
@@ -195,7 +257,11 @@ export class DatosGeneralesActasComponent implements OnInit {
           }else{
           this.datosFiltro.fecharesolucion = new Date(JSON.parse(n.body).fecharesolucion);
           }
-          this.restablecerDatosFiltro = JSON.parse(JSON.stringify(this.datosFiltro));
+          this.inicioAux = new Date(JSON.parse(n.body).horainicioreunion);
+          this.inicio = this.numero2Cifras(this.inicioAux.getHours()) + ":"+ this.numero2Cifras(this.inicioAux.getMinutes());
+          this.finAux = new Date(JSON.parse(n.body).horafinreunion);
+          this.fin = this.numero2Cifras(this.finAux.getHours()) + ":"+this.numero2Cifras(this.finAux.getMinutes());
+          this.restablecerDatosFiltro = JSON.parse(JSON.stringify(this.datosFiltro));   
          //let date: Date = new Date(JSON.parse(n.body).horainicioreunion);
          //this.datosFiltro.horaInicio =  this.datePipe.transform((new Date(JSON.parse(n.body).horainicioreunion)));
          //this.datosFiltro.horaFin = this.datePipe.transform((new Date(JSON.parse(n.body).horafinreunion)));
@@ -204,6 +270,16 @@ export class DatosGeneralesActasComponent implements OnInit {
           console.log(err);
         }
       );
+  }
+
+  numero2Cifras(numero: number){
+    let n: String = null;
+    if(numero < 10){
+      n = "0" + numero.toString();
+    }else{
+      n=numero.toString();
+    }
+    return n;
   }
 
 
@@ -224,7 +300,8 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   getComboSecretario() {
     this.sigaServices
-      .get("filtrosejg_comboSecretario")
+      .get("filtrosejgcomision_comboSecretario")
+      //.get("filtrosejg_comboSecretario")
       .subscribe(
         n => {
           this.comboSecretario = n.combooItems;
@@ -294,7 +371,12 @@ export class DatosGeneralesActasComponent implements OnInit {
     });
   }
 
-  disabledSave() {
+  onDisabledSave() {
+    if (this.datos.idacta != undefined && this.datos.idacta != "") {
+      this.disabledSave = false;
+    } else {
+      this.disabledSave = true;
+    }
   }
 
   numberOnly(event): boolean {
