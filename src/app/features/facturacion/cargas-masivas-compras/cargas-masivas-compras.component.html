@@ -1,0 +1,19 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{ "menu.facturacion" | translate}}
+    <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.cargaMasiva' | translate }}
+  </p>
+</div>
+
+<app-tarjeta-fichero-modelo-cmc></app-tarjeta-fichero-modelo-cmc> 
+<app-tarjeta-subida-fichero-cmc [permisoEscritura]="permisoEscritura"></app-tarjeta-subida-fichero-cmc>
+
+<app-tarjeta-busqueda-cmc [permisoEscritura]="permisoEscritura" (filtrosValues) = "getFiltrosValues($event)" (search)="search()"></app-tarjeta-busqueda-cmc>
+<app-tarjeta-listado-cmc *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tarjeta-listado-cmc>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>

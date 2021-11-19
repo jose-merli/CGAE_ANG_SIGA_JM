@@ -1,0 +1,17 @@
+<div class="card">
+  <div class="card-body">
+    <p class="title-module">
+      <span (click)="abreCierraCuerpoFicheroModelo()">{{ 'oficio.cargasMasivas.ficheroModelo' | translate }}</span>
+      <i (click)="abreCierraCuerpoFicheroModelo()" *ngIf="!showCuerpoFicheroModelo" class="fa fa-angle-up float-right"></i>
+      <i (click)="abreCierraCuerpoFicheroModelo()" *ngIf="showCuerpoFicheroModelo" class="fa fa-angle-down float-right"></i>
+    </p>
+    <div *ngIf="showCuerpoFicheroModelo" class="module vista-simple">
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTON TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="descargarModelo()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'oficio.cargasMasivas.botonDescargar' | translate}}"></button>
+    </div>
+  </div>
+</div>
