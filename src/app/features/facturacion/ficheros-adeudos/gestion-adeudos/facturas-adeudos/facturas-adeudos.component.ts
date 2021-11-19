@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
+import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
@@ -21,26 +22,35 @@ export class FacturasAdeudosComponent implements OnInit {
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  // @Output() guardadoSend = new EventEmitter<any>();
+
+  @ViewChild("table") table: DataTable;
 
   openFicha: boolean = true;
   progressSpinner: boolean = false;
-  resaltadoDatos: boolean = false;
   activacionTarjeta: boolean = true;
 
-  body: FicherosAdeudosItem;
+  datosFicheros: FicherosAdeudosItem;
+
+  
 
   msgs;
+  cols;
+
+  rowsPerPage = [];
+  buscadores = [];
+  selectedItem: number = 10;
 
   fichaPosible = {
     key: "facturas",
     activa: false
   }
   
-  constructor(private sigaServices: SigaServices, private confirmationService: ConfirmationService, private commonsServices: CommonsService, private translateService: TranslateService, private localStorageService: SigaStorageService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
   async ngOnInit() {
     await this.rest();
+
+    this.getCols();
 
   }
 
@@ -54,10 +64,46 @@ export class FacturasAdeudosComponent implements OnInit {
   }
 
   rest(){
-    this.body =  JSON.parse(JSON.stringify(this.bodyInicial));
-    this.resaltadoDatos = false;
+    this.datosFicheros =  JSON.parse(JSON.stringify(this.bodyInicial));
 
     // this.arreglaFechas();
+  }
+
+  getCols() {
+    this.cols = [
+      { field: "estado", header: "censo.fichaIntegrantes.literal.estado", width: "20%" },
+      { field: "formaPago", header: "facturacion.productos.formapago", width: "20%" },
+      { field: "numFacturas", header: 'menu.facturacion.facturas', width: "10%" },
+      { field: "total", header: 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total', width: "20%" },
+      { field: "totalPendiente", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente", width: "20%" },
+    ];
+
+    this.cols.forEach(it => this.buscadores.push(""));
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
   }
 
   showMessage(severity, summary, msg) {
@@ -71,17 +117,6 @@ export class FacturasAdeudosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
-  }
-
-  styleObligatorio(evento) {
-    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
-      return this.commonsServices.styleObligatorio(evento);
-    }
-  }
-
-  muestraCamposObligatorios() {
-    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
-    this.resaltadoDatos = true;
   }
 
   esFichaActiva(key) {

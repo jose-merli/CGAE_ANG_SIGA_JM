@@ -13,10 +13,15 @@
             <label class="mr-auto title-ficha pointer">{{ 'menu.facturacion.facturas' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <!-- <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }}: <span>{{body.fechaPresentacion | date: 'dd/MM/yyyy'}}</span></label>
-            <label>{{ "administracion.grupos.literal.id" | translate }}: <span>{{body.idDisqueteCargos}}</span></label>
-            <label>{{ "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" | translate }}: <span>{{body.fechaCreacion | date: 'dd/MM/yyyy'}}</span></label>
-            <label>{{ "facturacionPyS.ficherosAdeudos.fechaUltModificacion"| translate }}: <span>{{body.fechaUltimaModificacion | date: 'dd/MM/yyyy'}}</span></label> -->
+            <label>{{ "menu.facturacion.facturas" | translate }}:  <!--<span>{{body.numFacturas }}</span>--></label> 
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total" | translate }}:  <!--<span>{{body.total | number:'':'es-ES'}} €</span>--></label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente" | translate }}:  <!--<span>{{body.fechaCreacion | number:'':'es-ES'}} €</span>--></label>
+            <label class="float-right ml-12 pointer">
+              <a (click)="ir()">
+                <span style="color: blue; text-decoration: underline">{{ 'menu.justiciaGratuita.informes.fichaFacturacion' | translate }}
+                </span>
+              </a>
+            </label>
             <i class="fa fa-angle-down float-right ml-auto" (click)="abreCierraFicha('facturas')"
               *ngIf="!esFichaActiva('facturas')"></i> 
           </div>
@@ -29,29 +34,74 @@
           <i class="far fa-address-book icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'menu.facturacion.facturas' | translate }}</label>
+        <label class="float-right ml-auto pointer">
+          <a (click)="ir()">
+            <span style="color: blue; text-decoration: underline">{{ 'menu.justiciaGratuita.informes.fichaFacturacion' | translate }}
+            </span>
+          </a>
+        </label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <div *ngIf="esFichaActiva('facturas')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-row">
-          <div class="form-group-interlineado col-lg-3 col-md-3">
-            <!-- <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }} (*)</label>
-            <app-fecha [(value)]="body.fechaPresentacion"  [inputStyleClass]="styleObligatorio(body.fechaApertura)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaPresentacion')" (valueChangeInput)="fillFecha($event, 'fechaPresentacion')"></app-fecha> -->
-          </div>
+          <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [responsive]="true" #table
+          class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" selectionMode="single" paginatorPosition="both" >
+    
+            <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                <col *ngFor="let col of cols" [style.width]="col.width">
+              </colgroup>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                  {{ col.header | translate }}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                  <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                    type="text" (input)="
+                      table.filter($event.target.value, col.field, 'contains')
+                    " />
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                <td class="text-center" *ngFor="let col of columns">
+                  <div *ngIf="col.field != 'totalPendiente' && col.field != 'total'">
+                    <span>{{dato[col.field]}}</span>
+                  </div>
+      
+                  <div *ngIf="col.field == 'totalPendiente' || col.field == 'total'">
+                    <span>{{ dato[col.field] | number:'':'es-ES' }} €</span>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="columns.length">
+                  {{'justiciaGratuita.maestros.fundamentosCalificacion.tabla.sinResultados'|translate}}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+                  + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+                <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+                </label>
+                <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+                </label>
+                <label>{{"general.message.mostrar" | translate}}</label>
+                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+                </p-dropdown>
+                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+              </div>
+            </ng-template>
+          </p-table>
         </div>
-      </div>
-    </div>
-
-    <div *ngIf="esFichaActiva('facturas')" class="card-footer">
-      <div class="text-right main-button ">
-        <!-- <button pButton type="button" icon="fas fa-download" iconPos="left" [disabled]="!permisoEscritura" (click)="descargarFicheroAdeudo()" label="{{'general.boton.download' | translate }}"></button>
-
-        <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="!permisoEscritura" (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button> -->
-
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="rest()" label="{{ 'general.boton.restablecer' | translate}}"></button>
-
-        <!-- <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura" (click)="save()" label="{{ 'general.boton.guardar' | translate}}"></button> -->
       </div>
     </div>
   </div>

@@ -31,7 +31,7 @@ export class CuentaEntidadAdeudosComponent implements OnInit {
       data => {
         this.progressSpinner=false;
 
-        sessionStorage.setItem("cuentaBancariaItem",data.cuentasBancariasITem[0]);
+        sessionStorage.setItem("cuentaBancariaItem", JSON.stringify(data.cuentasBancariasITem[0]));
         this.router.navigate(["/fichaCuentaBancaria"]);
       },
       err => {
