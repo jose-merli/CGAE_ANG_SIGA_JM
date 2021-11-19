@@ -59,15 +59,15 @@ export class TablaFacturacionesComponent implements OnInit, OnChanges {
   // Definición de las columnas
   getCols() {
     this.cols = [
-      { field: "nombreAbreviado", header: "Serie Facturación", width: "5%" },
+      { field: "nombreAbreviado", header: "Serie Facturación", width: "10%" },
       { field: "descripcion", header: "enviosMasivos.literal.descripcion", width: "20%" },
       { field: "compraSuscripcion", header: "Compras / Suscripción", width: "10%" },
-      { field: "desde", header: "Desde", width: "10%" },
-      { field: "hasta", header: "Hasta", width: "10%" },
-      { field: "fechaPrevistaGeneracion", header: "Fecha prevista generación", width: "10%" },
-      { field: "fechaConfirmacion", header: "Fecha confirmación", width: "10%" },
-      { field: "importe", header: "Importe total", width: "5%" },
-      { field: "estado", header: "Estado", width: "20%" }
+      { field: "fechaCompraSuscripcionDesde", header: "Desde", width: "5%" }, 
+      { field: "fechaCompraSuscripcionHasta", header: "Hasta", width: "5%" },
+      { field: "fechaPrevistaGeneracion", header: "Fecha prevista generación", width: "5%" },
+      { field: "fechaConfirmacion", header: "Fecha confirmación", width: "5%" },
+      { field: "importe", header: "Importe total", width: "10%" },
+      { field: "estado", header: "Estado", width: "10%" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -143,8 +143,51 @@ export class TablaFacturacionesComponent implements OnInit, OnChanges {
     this.router.navigate(["/fichaFactProgramadas"]);
   }
 
-  calcBadgeEstado(idEstado: string): string {
-    return "success";
+  // Badges para la columna 'estado'
+  calcBadgeEstado(estado: string, idEstado: string): string {
+    let res = "light";
+
+    switch (estado) {
+      case 'fac':
+        if (idEstado == "1" || idEstado == "3" || idEstado == "18" || idEstado == "19") {
+          res = "warning";
+        } else if(idEstado == "2" || idEstado == "17" ) {
+          res = "success";
+        } else if(idEstado == "4" || idEstado == "20" || idEstado == "21") {
+          res = "danger";
+        }
+        break;
+      case 'pdf':
+        if (idEstado == "6" || idEstado == "7" || idEstado == "8") {
+          res = "warning";
+        } else if(idEstado == "9") {
+          res = "success";
+        } else if(idEstado == "10") {
+          res = "danger";
+        }
+        break;
+      case 'env':
+        if (idEstado == "12" || idEstado == "13" || idEstado == "14") {
+          res = "warning";
+        } else if(idEstado == "15") {
+          res = "success";
+        } else if(idEstado == "16") {
+          res = "danger";
+        }
+        break;
+      case 'tra':
+        if (idEstado == "23" || idEstado == "24" || idEstado == "25") {
+          res = "warning";
+        } else if(idEstado == "26") {
+          res = "success";
+        } else if(idEstado == "27") {
+          res = "danger";
+        }
+      break;
+      default:
+        break;
+    }
+    return res;
   }
 
   confirmEliminar(): void {

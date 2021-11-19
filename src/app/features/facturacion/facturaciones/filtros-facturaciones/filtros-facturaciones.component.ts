@@ -47,12 +47,22 @@ export class FiltrosFacturacionesComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
+    // Opción para volver desde la ficha
+    if (this.persistenceService.getFiltros() && sessionStorage.getItem("volver")) {
+      this.body = this.persistenceService.getFiltros();
+      this.persistenceService.clearFiltros();
+      sessionStorage.removeItem("volver");
+
+      this.busqueda.emit();
+    }
+
     this.getCombos();
   }
 
   // Buscar facturaciones
   searchFacturaciones(): void {
     console.log(this.body);
+    this.persistenceService.setFiltros(this.body);
     this.busqueda.emit();
   }
 
@@ -93,7 +103,7 @@ export class FiltrosFacturacionesComponent implements OnInit {
 
   getComboCompraSuscripcion() {
     this.comboCompraSuscripcion = [
-      //{ value: "0", label: "Compras y Suscripciones", local: undefined },
+      { value: "0", label: "Compras y Suscripciones", local: undefined },
       { value: "1", label: "Sólo Compras", local: undefined },
       { value: "2", label: "Sólo Suscripciones", local: undefined }
     ];

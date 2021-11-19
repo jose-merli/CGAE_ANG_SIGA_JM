@@ -48,16 +48,25 @@
                   <a class="enlace" (click)="openTab(dato)"><span [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span></a>
                 </div>
 
+
+                <div *ngSwitchCase="'fechaCompraSuscripcionDesde'">
+                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] | date: "dd/MM/yyyy" }}</span>
+                </div>
+
+                <div *ngSwitchCase="'fechaCompraSuscripcionHasta'">
+                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] | date: "dd/MM/yyyy" }}</span>
+                </div>
+
                 <div *ngSwitchCase="'importe'">
                   <span [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
                 </div>
 
                 <div *ngSwitchCase="'estado'">
                   <span [ngClass]="{ historico: historico }">
-                    <span class="badge badge-{{ calcBadgeEstado(dato['idEstadoConfirmacion']) }}">{{ dato['idEstadoConfirmacion'] }}</span>
-                    <span class="badge badge-{{ calcBadgeEstado(dato['idEstadoPDF']) }}">{{ dato['idEstadoPDF'] }}</span>
-                    <span class="badge badge-{{ calcBadgeEstado(dato['idEstadoEnvio']) }}">{{ dato['idEstadoEnvio'] }}</span>
-                    <span class="badge badge-{{ calcBadgeEstado(dato['idEstadoTraspaso']) }}">{{ dato['idEstadoTraspaso'] }}</span>
+                    <span class="badge badge-{{ calcBadgeEstado('fac', dato['idEstadoConfirmacion']) }}">Fac</span>
+                    <span class="badge badge-{{ calcBadgeEstado('pdf', dato['idEstadoPDF']) }}">PDF</span>
+                    <span class="badge badge-{{ calcBadgeEstado('env', dato['idEstadoEnvio']) }}">Env</span>
+                    <span class="badge badge-{{ calcBadgeEstado('tra', dato['idEstadoTraspaso']) }}">Tra</span>
                   </span>
                 </div>
   
@@ -99,6 +108,12 @@
 
       <button pButton *ngIf="!historico" (click)="confirmArchivar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="Archivar"></button>
       <button pButton *ngIf="historico" (click)="confirmDesarchivar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="Desarchivar"></button>
+
+      <button pButton (click)="confirmEliminar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="Eliminar"></button>
+
+      <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="Descargar LOG"></button>
+      <button pButton (click)="confirmComunicar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="Comunicar"></button>
+      <button pButton (click)="nuevoFicheroAdeudos()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-plus" iconPos="left" label="Nuevo Fichero Adeudos"></button>
     </div>
   </div>
 </div>

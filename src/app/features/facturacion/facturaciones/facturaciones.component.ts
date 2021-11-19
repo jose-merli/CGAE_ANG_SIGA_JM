@@ -42,6 +42,12 @@ export class FacturacionesComponent implements OnInit {
 
         console.log(this.datos);
 
+        this.datos.forEach(d => {
+          d.compraSuscripcion = this.calcCompraSuscripcion(d);
+          d.fechaCompraSuscripcionDesde = this.minDate(d.fechaInicioServicios, d.fechaInicioProductos);
+          d.fechaCompraSuscripcionHasta = this.maxDate(d.fechaFinServicios, d.fechaFinProductos);
+        });
+
         this.buscar = true;
         
         if (this.tabla != undefined) {
@@ -65,6 +71,47 @@ export class FacturacionesComponent implements OnInit {
     );
   }
 
+  calcCompraSuscripcion(dato: FacFacturacionprogramadaItem): string {
+    let isServicio: boolean = dato.fechaInicioServicios != undefined && dato.fechaFinServicios != undefined;
+    let isProducto: boolean = dato.fechaInicioProductos != undefined && dato.fechaFinProductos != undefined;
+
+    if (isServicio && isProducto) {
+      return "Compras/Suscripción";
+    } else if (isProducto) {
+      return "Compras";
+    } else {
+      return "Suscripción";
+    }
+  }
+
+  // Fecha mínima para la columna 'desde'
+  minDate(d1: Date, d2: Date) {
+    if (d1 == undefined)
+      return d2;
+    if (d2 == undefined)
+      return d1;
+
+    if (d1 < d2) {
+      return d1;
+    } else {
+      return d2;
+    }
+  }
+
+  // Fecha máxima para la columna 'hasta'
+  maxDate(d1: Date, d2: Date) {
+    if (d1 == undefined)
+      return d2;
+    if (d2 == undefined)
+      return d1;
+
+    if (d1 > d2) {
+      return d1;
+    } else {
+      return d2;
+    }
+  }
+
   // Funciones de utilidad
 
   goTop() {
@@ -83,6 +130,10 @@ export class FacturacionesComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }
