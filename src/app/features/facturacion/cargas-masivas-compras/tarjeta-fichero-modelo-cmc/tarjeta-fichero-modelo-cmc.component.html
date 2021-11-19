@@ -2,11 +2,7 @@
   <div class="card-body">
     <p class="title-module">
       <span (click)="abreCierraCuerpoFicheroModelo()">{{ 'oficio.cargasMasivas.ficheroModelo' | translate }}</span>
-      <i (click)="abreCierraCuerpoFicheroModelo()" *ngIf="!showCuerpoFicheroModelo" class="fa fa-angle-up float-right"></i>
-      <i (click)="abreCierraCuerpoFicheroModelo()" *ngIf="showCuerpoFicheroModelo" class="fa fa-angle-down float-right"></i>
     </p>
-    <div *ngIf="showCuerpoFicheroModelo" class="module vista-simple">
-    </div>
   </div>
   <div class="card-footer">
     <!-- BOTON TARJETA -->

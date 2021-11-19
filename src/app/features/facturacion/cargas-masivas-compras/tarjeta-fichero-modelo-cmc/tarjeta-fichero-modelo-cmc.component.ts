@@ -27,7 +27,7 @@ export class TarjetaFicheroModeloCmcComponent implements OnInit {
     let request = null;
     this.sigaServices
       .postDownloadFiles(
-        "cargasMasivasCompras_decargarModelo", 
+        "cargasMasivasCompras_descargarModelo", 
                request
       )
       .subscribe(
