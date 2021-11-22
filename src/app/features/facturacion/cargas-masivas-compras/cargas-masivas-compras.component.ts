@@ -5,6 +5,7 @@ import { TranslateService } from '../../../commons/translate';
 import { CargaMasivaItem } from '../../../models/CargaMasivaItem';
 import { CargaMasivaObject } from '../../../models/CargaMasivaObject';
 import { FiltroCargaMasivaCompras } from '../../../models/FiltroCargaMasivaCompras';
+import { procesos_PyS } from '../../../permisos/procesos_PyS';
 import { CommonsService } from '../../../_services/commons.service';
 import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -32,6 +33,7 @@ export class CargasMasivasComprasComponent implements OnInit {
   cargaMasivaDatosEntradaItem;
   datos;
   msgs;
+  permisoSolicitarCompra: boolean = false;
 
   permisoEscritura;
 
@@ -41,11 +43,29 @@ export class CargasMasivasComprasComponent implements OnInit {
   ngOnInit() {
   }
 
+  getPermisoSolicitarCompra() {
+    //Según la documentación funcional de Productos y Servicios, cualquier usuario que tenga acceso total puede realizar esta acción
+    this.commonsService
+      .checkAcceso(procesos_PyS.solicitarCompra)
+      .then((respuesta) => {
+        this.permisoSolicitarCompra = respuesta;
+      })
+      .catch((error) => console.error(error));
+  }
+
 	getFiltrosValues() {
     this.filtrosValues.fechaCargaDesde = new Date(this.filtros.fechaCargaDesde);
     this.filtrosValues.fechaCargaHasta = new Date(this.filtros.fechaCargaHasta);
     // this.convertArraysToStrings();
-    this.search();
+
+    let msg = this.commonsService.checkPermisos(this.permisoSolicitarCompra, undefined);
+    
+    if (msg != null) {
+      this.msgs = msg;
+    }  
+    else {
+      this.search();
+    }
   }
 
   convertArraysToStrings() {
