@@ -147,7 +147,7 @@ export class RemesasComponent implements OnInit {
 
         if (this.datos.length == 200) {
           console.log("Dentro del if del mensaje con mas de 200 resultados");
-          this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
+          this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
         }
       },
       err => {

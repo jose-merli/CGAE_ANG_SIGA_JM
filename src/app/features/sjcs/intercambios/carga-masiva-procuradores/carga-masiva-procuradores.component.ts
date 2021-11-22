@@ -9,6 +9,7 @@ import { CargaMasivaObject } from '../../../../models/CargaMasivaObject';
 import { CargaMasivaItem } from '../../../../models/CargaMasivaItem';
 import { TarjetaDatosCurricularesComponent } from './tarjta-datos-curriculares/tarjeta-datos-curriculares.component';
 import { TarjetaListadoComponent } from './tarjeta-listado/tarjeta-listado.component';
+import { procesos_intercambios } from '../../../../permisos/procesos_intercambios';
 
 @Component({
   selector: 'app-carga-masiva-procuradores',
@@ -38,6 +39,23 @@ export class CargaMasivaProcuradoresComponent implements OnInit {
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router, private datepipe: DatePipe) { }
 
   ngOnInit() {
+    this.commonsService.checkAcceso(procesos_intercambios.cargaMasivaProcuradores)
+      .then(respuesta => {
+
+        this.permisoEscritura = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscritura);
+
+        if (this.permisoEscritura == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+      ).catch(error => console.error(error));
   }
 
 	getFiltrosValues(event) {

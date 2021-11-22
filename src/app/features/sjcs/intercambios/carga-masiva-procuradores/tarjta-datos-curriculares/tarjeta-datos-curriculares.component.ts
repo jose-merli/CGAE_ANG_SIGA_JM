@@ -1,9 +1,14 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { KEY_CODE } from '../../../../censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component';
 import { TranslateService } from '../../../../../commons/translate';
+import { ConfirmationService } from 'primeng/primeng';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { saveAs } from "file-saver/FileSaver";
 import { CargaMasivaItem } from '../../../../../models/CargaMasivaItem';
+import { procesos_intercambios } from '../../../../../permisos/procesos_intercambios';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tarjeta-datos-curriculares',
@@ -18,17 +23,39 @@ export class TarjetaDatosCurricularesComponent implements OnInit {
   showTipo: boolean = false;
   file: File = undefined;
   uploadFileDisable: boolean = true;
+  permisoCargarFichero: boolean = true;
 
   @Input() permisoEscritura;
   @Output() tipoEvent = new EventEmitter<string>();
   @ViewChild("pUploadFile") pUploadFile;
   @Output() filtrosValues = new EventEmitter<CargaMasivaItem>();
 
-  constructor(private translateService: TranslateService,
-    private sigaServices: SigaServices) { }
+  constructor(private sigaServices: SigaServices,
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService,
+    private router: Router,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
     this.showTipo = true;
+    /* this.commonsService.checkAcceso(procesos_intercambios.cargarFicheroCMProcuradores)
+      .then(respuesta => {
+
+        this.permisoCargarFichero = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoCargarFichero);
+
+        if (this.permisoCargarFichero == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+      }
+    ).catch(error => console.error(error)); */
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -38,10 +65,20 @@ export class TarjetaDatosCurricularesComponent implements OnInit {
       this.pUploadFile.clear();
       this.pUploadFile.chooseLabel = "Seleccionar Archivo";
     }
-}
+  }
 
   fillFechaCarga(event) {
       this.filtro.fechaCarga = event;
+  }
+
+  checkPermisosCargarFichero() {
+    let msg = this.commonsService.checkPermisos(this.permisoCargarFichero, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+        this.uploadFile();
+    }
   }
 
   getFile(event: any) {
