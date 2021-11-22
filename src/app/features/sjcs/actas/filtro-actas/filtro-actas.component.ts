@@ -63,7 +63,7 @@ export class FiltroActasComponent implements OnInit {
       );
   }
 
-  nuevo(evento) {
+  nuevo() {
 
     this.progressSpinner = true;
 
