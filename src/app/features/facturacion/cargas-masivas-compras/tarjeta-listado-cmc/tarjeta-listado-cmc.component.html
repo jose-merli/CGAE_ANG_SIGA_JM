@@ -14,7 +14,8 @@
       </ng-template>
       <ng-template pTemplate="header" let-columns>
         <tr>
-          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field"
+          [ngStyle]="{'display': col.width}">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
             <input *ngIf="col.field != 'fechaCarga'"
@@ -32,18 +33,18 @@
         </tr>
       </ng-template>
 
-      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+      <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
 
           <td class="text-center" *ngFor="let col of columns">
 
             <span
-              *ngIf="col.field != 'fechaCarga'">
-              {{dato[col.field]}}
+              *ngIf="col.field != 'fechaCarga' && col.field != 'idCargaMasiva'">
+              {{rowData[col.field]}}
             </span>
 
             <span *ngIf="col.field == 'fechaCarga'">
-              {{dato[col.field] | date: 'dd/MM/yyyy'}}
+              {{rowData[col.field] | date: 'dd/MM/yyyy'}}
             </span>
 
           </td>

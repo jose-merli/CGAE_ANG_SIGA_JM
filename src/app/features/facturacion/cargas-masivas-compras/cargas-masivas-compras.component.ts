@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { TranslateService } from '../../../commons/translate';
 import { CargaMasivaItem } from '../../../models/CargaMasivaItem';
 import { CargaMasivaObject } from '../../../models/CargaMasivaObject';
+import { FiltroCargaMasivaCompras } from '../../../models/FiltroCargaMasivaCompras';
 import { CommonsService } from '../../../_services/commons.service';
 import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -21,12 +22,12 @@ export class CargasMasivasComprasComponent implements OnInit {
   historico: boolean = false;
 
   resultadoBusqueda: CargaMasivaObject = new CargaMasivaObject();
-  filtrosValues: CargaMasivaItem = new CargaMasivaItem();
+  filtrosValues: FiltroCargaMasivaCompras = new FiltroCargaMasivaCompras();
 
   progressSpinner: boolean = false;
 
-  @ViewChild(TarjetaBusquedaCmcComponent) filtros;
-  @ViewChild(TarjetaListadoCmcComponent) tabla;
+  @ViewChild("filtro") filtros: TarjetaBusquedaCmcComponent;
+  @ViewChild("lista") tabla: TarjetaListadoCmcComponent;
 
   cargaMasivaDatosEntradaItem;
   datos;
@@ -40,9 +41,10 @@ export class CargasMasivasComprasComponent implements OnInit {
   ngOnInit() {
   }
 
-	getFiltrosValues(event) {
-    this.filtrosValues = JSON.parse(JSON.stringify(event));
-    this.convertArraysToStrings();
+	getFiltrosValues() {
+    this.filtrosValues.fechaCargaDesde = new Date(this.filtros.fechaCargaDesde);
+    this.filtrosValues.fechaCargaHasta = new Date(this.filtros.fechaCargaHasta);
+    // this.convertArraysToStrings();
     this.search();
   }
 
@@ -63,23 +65,19 @@ export class CargasMasivasComprasComponent implements OnInit {
 
   search() {
     console.log("Dentro del search del padre");
-    this.cargaMasivaDatosEntradaItem =
-    {
-      'fechaCarga': (this.filtrosValues.fechaCarga != null && this.filtrosValues.fechaCarga != undefined) ? this.filtrosValues.fechaCarga : this.filtrosValues.fechaCarga,
-    };
     this.progressSpinner = true;
-    this.sigaServices.post("cargasMasivasCompras_listado", this.cargaMasivaDatosEntradaItem).subscribe(
+    this.sigaServices.post("cargasMasivasCompras_listado", this.filtrosValues).subscribe(
       n => {
         console.log("Dentro del servicio del padre que llama al busqueda de Carga Masiva Compras");
-        this.datos = JSON.parse(n.body).cargaMasivaProcuradorItem;
+        this.datos = JSON.parse(n.body).cargaMasivaComprasItem;
  
-        console.log("Contenido de la respuesta del back de Carga Masiva Procuradores--> ", this.datos);
+        console.log("Contenido de la respuesta del back de Carga Masiva Compras--> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
 
         this.resetSelect();
 
-        if (this.datos.length == 200) {
+        if (this.datos != undefined && this.datos.length == 200) {
           console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
         }

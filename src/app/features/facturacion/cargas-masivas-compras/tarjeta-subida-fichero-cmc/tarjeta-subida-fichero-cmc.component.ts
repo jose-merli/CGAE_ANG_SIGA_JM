@@ -36,11 +36,8 @@ export class TarjetaSubidaFicheroCmcComponent implements OnInit {
       this.pUploadFile.clear();
       this.pUploadFile.chooseLabel = "Seleccionar Archivo";
     }
-}
-
-  fillFechaCarga(event) {
-      this.filtro.fechaCarga = event;
   }
+
 
   getFile(event: any) {
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen

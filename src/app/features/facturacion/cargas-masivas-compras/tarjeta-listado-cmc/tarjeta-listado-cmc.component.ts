@@ -35,7 +35,9 @@ export class TarjetaListadoCmcComponent implements OnInit {
 
   initDatos;
   progressSpinner: boolean = false;
-  buscadores = []
+  buscadores = [];
+
+  rowData;
   //Resultados de la busqueda
   @Input() datos;
 
@@ -154,19 +156,20 @@ export class TarjetaListadoCmcComponent implements OnInit {
     this.selectMultiple = true;
   }
 
-  setItalic(dato) {
-    if (dato.fechabaja == null) return false;
+  setItalic(rowData) {
+    if (rowData.fechabaja == null) return false;
     else return true;
   }
 
   getCols() {
 
     this.cols = [
-      { field: "fechaCarga", header: "censo.datosCv.literal.fechaCarga" },
-      { field: "usuario", header: "censo.usuario.usuario" },
-      { field: "nombreFichero", header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" },
-      { field: "numRegistros", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" },
-      { field: "numRegistrosErroneos", header: "cargaMasivaDatosCurriculares.numRegistrosErroneos.literal" }
+      { field: "fechaCarga", header: "censo.datosCv.literal.fechaCarga", display: "table-cell" },
+      { field: "usuario", header: "censo.usuario.usuario", display: "table-cell" },
+      { field: "nombreFichero", header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero", display: "table-cell" },
+      { field: "numRegistros", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros", display: "table-cell" },
+      { field: "numRegistrosErroneos", header: "cargaMasivaDatosCurriculares.numRegistrosErroneos.literal", display: "table-cell" },
+      { field: "idCargasMasiva", header: "", width: "0.001%"}
     ];
     this.cols.forEach(it => this.buscadores.push(""))
 

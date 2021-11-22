@@ -12,7 +12,8 @@ export class TarjetaBusquedaCmcComponent implements OnInit {
 
   
   msgs: any[];
-  filtro: CargaMasivaItem = new CargaMasivaItem();
+  fechaCargaDesde: Date;
+  fechaCargaHasta: Date;
   @Output() filtrosValues = new EventEmitter<CargaMasivaItem>();
   showTipo: boolean = false;
   @Input("permisoEscritura") permisoEscrituta;
@@ -21,15 +22,60 @@ export class TarjetaBusquedaCmcComponent implements OnInit {
     private sigaServices: SigaServices) { }
 
   ngOnInit() {
+    
+    this.fechaCargaDesde = new Date(); 
+
+    //En la documentación funcional se pide que por defecto aparezca el campo 
+    //con la fecha de dos años antes
+    this.fechaCargaDesde.setDate(this.fechaCargaDesde.getDate() - (365*2));
   }
 
   
-  fillFechaCarga(event) {
-    this.filtro.fechaCarga = event;
+  fillFechaCargaDesde(event) {
+    this.fechaCargaDesde = event;
+  }
+
+  fillFechaCargaHasta(event) {
+    this.fechaCargaHasta = event;
+  }
+
+  // Control de fechas
+  getFechaHastaCalendar(fechaInputDesde, fechainputHasta) {
+    if (
+      fechaInputDesde != undefined &&
+      fechainputHasta != undefined
+    ) {
+      let one_day = 1000 * 60 * 60 * 24;
+
+      // convertir fechas en milisegundos
+      let fechaDesde = new Date(fechaInputDesde).getTime();
+      let fechaHasta = new Date(fechainputHasta).getTime();
+      let msRangoFechas = fechaHasta - fechaDesde;
+
+      if (msRangoFechas < 0) fechainputHasta = undefined;
+    }
+    return fechainputHasta;
+  }
+
+  getFechaDesdeCalendar(fechaInputesde, fechaInputHasta) {
+    if (
+      fechaInputesde != undefined &&
+      fechaInputHasta != undefined
+    ) {
+      let one_day = 1000 * 60 * 60 * 24;
+
+      // convertir fechas en milisegundos
+      let fechaDesde = new Date(fechaInputesde).getTime();
+      let fechaHasta = new Date(fechaInputHasta).getTime();
+      let msRangoFechas = fechaHasta - fechaDesde;
+
+      if (msRangoFechas < 0) fechaInputesde = undefined;
+    }
+    return fechaInputesde;
   }
 
   search() {
-    this.filtrosValues.emit(this.filtro);
+    this.filtrosValues.emit();
   }
 
   abreCierraTipo(){

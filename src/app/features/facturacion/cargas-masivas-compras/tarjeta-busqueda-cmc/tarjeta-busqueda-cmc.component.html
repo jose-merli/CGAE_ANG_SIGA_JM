@@ -8,16 +8,24 @@
     </p>
     <div *ngIf="showTipo" class="module vista-simple">
       <div class="row">
-        <div class="form-group col-lg-3 col-md-3">
-          <label><strong>{{ "censo.datosCv.literal.fechaCarga" | translate }}</strong></label>
-          <br>
-          <app-fecha [(value)]="filtro.fechaCarga" (valueChangeSelected)="fillFechaCarga($event)"
-            (valueChangeInput)="fillFechaCarga($event)">
+        <div class="col-lg-3 col-md-3">
+          <label>**{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
+          </label>
+          <app-fecha [(value)]="fechaCargaDesde"
+            [maxDate]="getFechaHastaCalendar(fechaCargaDesde, fechaCargaHasta)"
+            (valueChangeSelected)="fillFechaCargaDesde($event)" (valueChangeInput)="fillFechaCargaDesde($event)">
+          </app-fecha>
+        </div>
+        <div class="ol-lg-3 col-md-3">
+          <label>**{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
+          </label>
+          <app-fecha [(value)]="fechaCargaHasta"
+            [minDate]="getFechaDesdeCalendar(fechaCargaDesde, fechaCargaHasta)"
+            (valueChangeSelected)="fillFechaCargaHasta($event)" (valueChangeInput)="fillFechaCargaHasta($event)">
           </app-fecha>
         </div>
       </div>
     </div>
-
   </div>
 
   <!-- BOTON TARJETA -->
