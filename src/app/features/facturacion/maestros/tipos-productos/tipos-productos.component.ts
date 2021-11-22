@@ -5,6 +5,7 @@ import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { ComboObject } from '../../../../models/ComboObject';
 import { TiposProductosObject } from '../../../../models/TiposProductosObject';
+
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -253,11 +254,13 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
   emptyDescripcion: boolean;
   changeTableField(row) {
     this.edit = true;
-    if (row.descripcion == "") {
-      this.emptyDescripcion = true;
-    } else {
-      this.emptyDescripcion = false;
-    }
+
+    this.emptyDescripcion = false;
+    this.productsToEditCreate.forEach(producto => {
+      if(producto.descripcion == ""){
+        this.emptyDescripcion = true;
+      }
+    });
 
     if (this.productsToEditCreate.length > 0) {
       let indexRow = this.productsToEditCreate.findIndex(producto => (producto.idproducto == row.idproducto && producto.idtipoproducto == row.idtipoproducto))

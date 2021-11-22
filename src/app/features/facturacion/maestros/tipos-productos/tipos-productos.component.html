@@ -47,7 +47,7 @@
               <p-dropdown *ngIf="rowData.nuevo != undefined" [ngClass]="{'historico': rowData.fechabaja != null}"
                 autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="rowData.idtipoproducto"
                 [options]="comboItem" showClear="true" styleClass="widthAll" (keydown)="changeTableField(rowData)"
-                placeholder="{{ 'general.boton.seleccionar' | translate }}">
+                placeholder="{{ 'general.boton.seleccionar' | translate }}" showClear="false">
               </p-dropdown>
 
             </div>
@@ -55,9 +55,9 @@
               <label *ngIf="!edit || historico" [ngClass]="{'historico': rowData.fechabaja != null}">{{
                 rowData[col.field]}}</label>
 
-              <input *ngIf="edit && !historico" [ngClass]="{'historico': rowData.fechabaja != null}" type="text"
+              <input *ngIf="edit && !historico" [ngClass]="{'historico': rowData.fechabaja != null, 'camposObligatorios': rowData.descripcion == ''}" type="text"
                 class="form-control mt-2" pInputText [(ngModel)]="rowData[col.field]"
-                (keydown)="changeTableField(rowData)">
+                (keyup)="changeTableField(rowData)">
             </div>
           </td>
         </tr>
