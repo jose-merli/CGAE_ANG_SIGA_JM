@@ -171,6 +171,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   tableColegiales: DataTable;
   @Input() openColegia;
 
+  @Input() datosTratamientos;
+
 
   constructor(private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
@@ -359,20 +361,13 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       }
     );
 
-    this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
-      n => {
-        this.generalTratamiento = n.combooItems;
-        let tratamiento = this.generalTratamiento.find(
-          item => item.value === this.generalBody.idTratamiento
-        );
-        if (tratamiento != undefined && tratamiento.label != undefined) {
-          this.tratamientoDesc = tratamiento.label;
-        }
-      },
-      err => {
-        console.log(err);
-      }
+    this.generalTratamiento = this.datosTratamientos;
+    let tratamiento = this.generalTratamiento.find(
+      item => item.value === this.generalBody.idTratamiento
     );
+    if (tratamiento != undefined && tratamiento.label != undefined) {
+      this.tratamientoDesc = tratamiento.label;
+    }
 
     this.sigaServices.get("fichaColegialGenerales_estadoCivil").subscribe(
       n => {
