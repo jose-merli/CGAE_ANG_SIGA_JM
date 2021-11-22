@@ -9,7 +9,7 @@
     <div *ngIf="showTipo" class="module vista-simple">
       <div class="row">
         <div class="col-lg-3 col-md-3">
-          <label>**{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
+          <label>{{ "facturacion.cmc.fechaSubidaDesde" | translate }}
           </label>
           <app-fecha [(value)]="fechaCargaDesde"
             [maxDate]="getFechaHastaCalendar(fechaCargaDesde, fechaCargaHasta)"
@@ -17,7 +17,7 @@
           </app-fecha>
         </div>
         <div class="ol-lg-3 col-md-3">
-          <label>**{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
+          <label>{{ "facturacion.cmc.fechaSubidaDesde" | translate }}
           </label>
           <app-fecha [(value)]="fechaCargaHasta"
             [minDate]="getFechaDesdeCalendar(fechaCargaDesde, fechaCargaHasta)"
