@@ -30,7 +30,7 @@ import { routing } from './app.routing';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './commons/header/header.component';
-import { MyIframeComponent } from './commons/my-iframe/my-iframe.component';
+import { MyIframeComponent, SafePipe } from './commons/my-iframe/my-iframe.component';
 import { MenuComponent } from './commons/menu/menu.component';
 import { HomeComponent } from './features/home/home.component';
 import { LoginComponent } from './commons/login/login.component';
@@ -488,6 +488,7 @@ import { ResultadoBuscadorProcuradorComponent } from './mockups/pantalla-buscado
 	declarations: [
 		AppComponent,
 		ImagePipe,
+		SafePipe,
 
 		MyIframeComponent,
 		MenuComponent,

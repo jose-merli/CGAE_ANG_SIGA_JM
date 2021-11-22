@@ -2,8 +2,8 @@ import {
   Component,
   OnInit,
   AfterViewInit,
-  ViewChild,
-  ElementRef
+  Pipe,
+  PipeTransform
 } from "@angular/core";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Input } from "@angular/core";
@@ -24,12 +24,10 @@ export class MyIframeComponent implements OnInit, AfterViewInit {
   // loading = true;
 
   constructor(
-    private domSanitizer: DomSanitizer,
     private service: OldSigaServices
   ) {}
 
   ngOnInit() {
-    this.url = this.domSanitizer.bypassSecurityTrustResourceUrl(this.url);
 
     //ajusteAlto('mainWorkArea');
     // this.service.get(this.url).subscribe(blob => {
@@ -40,5 +38,15 @@ export class MyIframeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     window.scrollTo(0, 0);
+  }
+}
+
+
+@Pipe({ name: 'safe' })
+export class SafePipe implements PipeTransform {
+  constructor(private sanitizer: DomSanitizer) {}
+  
+  transform(url) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 }
