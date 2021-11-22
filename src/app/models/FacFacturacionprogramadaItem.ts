@@ -48,6 +48,7 @@ export class FacFacturacionprogramadaItem {
     fechaProgramacion: Date;
     archivarFact: string;
     usuModificacion: string;
+    fechaModificacion: Date;
     nombreFichero: string;
     logError: string;
     logTraspaso: string;
@@ -55,6 +56,16 @@ export class FacFacturacionprogramadaItem {
     traspasoPlatilla: string;
     traspasoCodAuditoriaDef: string;
 
+    fechaPresentacion: Date;
+    fechaRecibosPrimeros: Date;
+    fechaRecibosRecurrentes: Date;
+    fechaRecibosCOR1: Date;
+    fechaRecibosB2B: Date;
+
+    idModeloFactura: string;
+    idModeloRectificativa: string;
+    modeloFactura: string;
+    modeloRectificativa: string;
   
     constructor() { }
   }

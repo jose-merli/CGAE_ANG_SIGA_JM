@@ -1,3 +1,90 @@
-<p>
-  gen-adeudos-fact-programadas works!
-</p>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="genAdeudos">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva('genAdeudos')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('genAdeudos')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('genAdeudos')">
+            <label class="mr-auto title-ficha pointer">Generación de Fichero de Adeudos</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>Serie de Facturación: 
+                <span>{{body.nombreAbreviado }}</span></label>
+            <label>{{ "general.description" | translate }}: 
+                <span>{{body.descripcion }}</span></label>
+            <label>Estado: 
+              <span>{{body.estado }}</span></label>
+            <label>Importe: 
+              <span>{{body.importe }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('genAdeudos')"
+              *ngIf="!esFichaActiva('genAdeudos')"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva('genAdeudos')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('genAdeudos')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">Generación de Fichero de Adeudos</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva('genAdeudos')" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Fecha presentación ficheros de adeudos (*)</label>
+          <app-fecha [(value)]="body.fechaPresentacion" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaPresentacion($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Fecha cargo para primeros recibos (*)</label>
+          <app-fecha [(value)]="body.fechaRecibosPrimeros" (valueChangeSelected)="fillFechaRecibosPrimeros($event)" (valueChangeInput)="fillFechaRecibosPrimeros($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Fecha cargo para recibos recurrentes (*)</label>
+          <app-fecha [(value)]="body.fechaRecibosRecurrentes" (valueChangeSelected)="fillFechaRecibosRecurrentes($event)" (valueChangeInput)="fillFechaRecibosRecurrentes($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Fecha cargo para recibos COR1 (*)</label>
+          <app-fecha [(value)]="body.fechaRecibosCOR1" (valueChangeSelected)="fillFechaRecibosCOR1($event)" (valueChangeInput)="fillFechaRecibosCOR1($event)">
+          </app-fecha>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Fecha cargo para recibos B2B (*)</label>
+          <app-fecha [(value)]="body.fechaRecibosB2B" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)">
+          </app-fecha>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva('genAdeudos')" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -1,3 +1,134 @@
-<p>
-  datos-generales-fact-programadas works!
-</p>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="datosGenerales">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva('datosGenerales')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
+            <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>Descripción: 
+                <span>{{ body.descripcion }}</span></label>
+            <label>Fecha de generación: 
+                <span>{{ body.fechaRealGeneracion | date: 'dd/MM/yyyy' }}</span></label>
+            <label>Fecha de confirmación: 
+              <span>{{body.fechaConfirmacion | date: 'dd/MM/yyyy' }}</span></label>
+            <label>Fecha mínima: 
+              <span>{{ body.fechaCompraSuscripcionDesde | date: 'dd/MM/yyyy' }}</span></label>
+            <label>Fecha máxima: 
+              <span>{{ body.fechaCompraSuscripcionHasta | date: 'dd/MM/yyyy' }}</span></label>
+            <label>Estado: 
+              <span>{{ body.estadoConfirmacion }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
+              *ngIf="!esFichaActiva('datosGenerales')"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva('datosGenerales')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('datosGenerales')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva('datosGenerales')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-3 col-md-3">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Descripción de Facturación (*)</label>
+              <input type="text" [(ngModel)]="body.descripcion" class="form-control" maxLength="255" pInputText>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Fecha Generación (*)</label>
+              <app-fecha [(value)]="body.fechaRealGeneracion" (valueChangeSelected)="fillFechaRealGeneracion($event)" (valueChangeInput)="fillFechaRealGeneracion($event)">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Fecha Confirmación</label>
+              <app-fecha [(value)]="body.fechaConfirmacion" (valueChangeSelected)="fillFechaConfirmacion($event)" (valueChangeInput)="fillFechaConfirmacion($event)">
+              </app-fecha>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-6 col-md-6">
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Incluir compras de productos desde (*)</label>
+              <app-fecha [(value)]="body.fechaInicioProductos" (valueChangeSelected)="fillFechaInicioProductos($event)" (valueChangeInput)="fillFechaInicioProductos($event)">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Incluir compras de productos hasta (*)</label>
+              <app-fecha [(value)]="body.fechaFinProductos" (valueChangeSelected)="fillFechaFinProductos($event)" (valueChangeInput)="fillFechaFinProductos($event)">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Incluir cuotas y suscripciones desde (*)</label>
+              <app-fecha [(value)]="body.fechaInicioServicios" (valueChangeSelected)="fillFechaInicioServicios($event)" (valueChangeInput)="fillFechaInicioServicios($event)">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Incluir cuotas y suscripciones hasta (*)</label>
+              <app-fecha [(value)]="body.fechaFinServicios" (valueChangeSelected)="fillFechaFinServicios($event)" (valueChangeInput)="fillFechaFinServicios($event)">
+              </app-fecha>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-3 col-md-3">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Fecha Modificación</label>
+              <app-fecha [(value)]="body.fechaModificacion" [disabled]="true">
+              </app-fecha>
+            </div>
+            <div class="form-group col-lg-12 col-md-12">
+              <label>Estado</label>
+              <input type="text" [(ngModel)]="body.estadoConfirmacion" class="form-control" [disabled]="true" pInputText>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+
+        <button pButton (click)="confirmDescargar()"
+          type="button" icon="fa fa-eraser" iconPos="left" label="Descargar LOG"></button>
+
+        <button pButton *ngIf="body.archivarFact == '0'" (click)="confirmArchivar()"
+          type="button" icon="fa fa-eraser" iconPos="left" label="Archivar"></button>
+        <button pButton *ngIf="body.archivarFact == '1'" (click)="confirmDesarchivar()"
+          type="button" icon="fa fa-eraser" iconPos="left" label="Desarchivar"></button>
+
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
