@@ -26,14 +26,14 @@ export class TarjetaListaMonederosComponent implements OnInit {
   @ViewChild("monederosTable") monederosTable: DataTable;
 
   cols = [
-    {field: "fecha", header: "formacion.busquedaInscripcion.fechaSolicitud"},
-    {field: "nifCif", header: "censo.consultaDatosColegiacion.literal.numIden"},
+    {field: "fecha", header: "informesycomunicaciones.enviosMasivos.fechaCreacion"},
+    {field: "nifCif", header: "administracion.usuarios.literal.NIFCIF"},
     {field: "nombreCompleto", header: "justiciaGratuita.oficio.designas.interesados.apellidosnombre"},
     {field: "descripcion", header: "general.description"},
-    {field: "importeInicial", header: "facturacionSJCS.facturacionesYPagos.importe"},
-    {field: "importeRestante", header: "facturacionSJCS.facturacionesYPagos.importe"},
-    {field: "importeUsado", header: "facturacionSJCS.facturacionesYPagos.importe"},
-      ];
+    {field: "importeInicial", header: "facturacion.monedero.impInicial"},
+    {field: "importeRestante", header: "facturacionSJCS.retenciones.importeRestante"},
+    {field: "importeUsado", header: "facturacion.monedero.impUsado"}
+  ];
 
   rowsPerPageSelectValues = [
     {
@@ -64,6 +64,8 @@ export class TarjetaListaMonederosComponent implements OnInit {
 
   progressSpinner: boolean = false;
   esColegiado: boolean = this.localStorageService.isLetrado;
+  historico: boolean = false;
+  listaMonederosActivos: ListaMonederosItem[] = [];
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService,
@@ -71,6 +73,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
     private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
+    this.listaMonederosActivos = this.listaMonederos;
   }
 
 
@@ -112,6 +115,16 @@ export class TarjetaListaMonederosComponent implements OnInit {
     }
   }
 
+  checkLiquidar(){
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Boton no funcional actualmente"
+      }
+    ];
+  }
+
   //Metodo para aplicar logica al deseleccionar filas
   onRowUnselect() {
     this.numSelectedRows = this.selectedRows.length;
@@ -145,5 +158,17 @@ export class TarjetaListaMonederosComponent implements OnInit {
   onChangeRowsPerPages(event) {
     this.rowsPerPage = event.value;
     this.monederosTable.reset();
+  }
+
+  searchHistorical() {
+    this.historico = !this.historico;
+    this.selectedRows = [];
+    if (this.historico) {
+      this.numSelectedRows = 0;
+      this.listaMonederosActivos = JSON.parse(JSON.stringify(this.listaMonederos));
+    } else {
+      this.listaMonederosActivos = this.listaMonederos.filter(
+        (dato) => dato.importeRestante == 0);
+    }
   }
 }

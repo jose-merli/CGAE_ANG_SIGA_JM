@@ -30,4 +30,5 @@ export let endpoints_PyS: any = {
     cargasMasivasCompras_listado: "cargaMasivaCompras/listado",
     cargasMasivasCompras_cargarFichero: "cargaMasivaCompras/cargarFichero",
     cargasMasivasCompras_descargarFicheros: "cargaMasivaCompras/descargarFicheros",
+    monederosBusqueda_searchListadoMonederos: "pys/getMonederos"
 }

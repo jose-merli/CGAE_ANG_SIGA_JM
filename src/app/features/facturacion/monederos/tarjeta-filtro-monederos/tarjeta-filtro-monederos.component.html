@@ -7,6 +7,15 @@
 <div class="card-body">
 
   <div class="form-row">
+    <div class="col-lg-6 col-md-6">
+      <label>{{ "justiciaGratuita.sjcs.designas.colegiado" | translate}}</label>
+    
+      <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'monedero'"
+                        [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                        [nombreAp]="usuarioBusquedaExpress.nombreAp" [disabled]="disabledBusquedaExpress"
+                        (colegiado)="changeColegiado($event)">
+                    </app-busqueda-colegiado-express>
+    </div>
     <!-- Fecha de solicitud -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
@@ -39,6 +48,6 @@
       (click)="buscar()">
     </button>
     
-    <!-- <button (click)="nuevoMonedero()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
+     <button (click)="nuevoMonedero()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> 
   </div>
 </div>

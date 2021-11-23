@@ -3,18 +3,18 @@
   </div>
   <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
   
-  <!-- Pantalla Facturacion > Compra de Productos -->
+  <!-- Pantalla Facturacion > Busqueda Monederos -->
   <div>
     <div class="header-title">
         <i class="fa fa-square"></i>
         <p>{{'menu.facturacion' | translate}}
           <i class="fa fa-angle-right"></i>{{'menu.facturacion.busquedaMonedero' | translate}}
     </div>
-    <!-- Buscador de compras de productos -->
+    <!-- Buscador de monederos -->
     <div class="card">
       <app-tarjeta-filtro-monederos (busqueda)="busquedaMonederos()" id="filtroMonederos"></app-tarjeta-filtro-monederos>
     </div>
-    <!-- Listado de compras de productos -->
+    <!-- Listado de monederos -->
     <div>
       <app-tarjeta-lista-monederos [hidden]="!muestraTablaMonederos" 
         (actualizarLista)="busquedaMonederos($event)" [listaMonederos]="listaMonederos" id="tablaMonederos">

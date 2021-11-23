@@ -6,7 +6,7 @@
 
 <div class="card mt-3">
   <div class="card-body p-0">
-    <p-table #monederosTable [value]="listaMonederos" [columns]="cols" [(selection)]="selectedRows"
+    <p-table #monederosTable [value]="listaMonederosActivos" [columns]="cols" [(selection)]="selectedRows"
       selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
       (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
       (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
@@ -36,12 +36,9 @@
               <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div> 
             <div *ngIf="col.field !='fecha'" >
-              <!-- <span *ngIf="col.field == 'importe'">{{rowData[col.field]}} €</span>
-              <span *nfIf="col.field == 'nifCif'">{{rowData[col.field]}}</span>
-              <span *nfIf="col.field == 'nombreCompleto'">{{rowData[col.field]}}</span>
-              <span *nfIf="col.field == 'descripcion'">{{rowData[col.field]}}</span>
-              <span *nfIf="col.field == 'importeInicial'">{{rowData[col.field]}}</span>
-              <span *nfIf="col.field == 'importeRestante'">{{rowData[col.field]}}</span> -->
+              <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'descripcion' || col.field == 'nombreCompleto' || col.field == 'nifCif'">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'importe' || col.field == 'importeInicial' || col.field == 'importeRestante'">{{rowData[col.field]}} €</span>
             </div> 
 
           </td>
@@ -84,8 +81,16 @@
 
     <p-footer>
       <div class="text-right main-button">
-
-      </div>
+        <!-- Mostrar/Ocultar Historico -->
+        <button *ngIf="!historico" (click)="searchHistorical()" pButton type="button" iconPos="left"
+          label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+        <button *ngIf="historico" (click)="searchHistorical()" pButton type="button"
+          icon="fa fa-history" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+        <!-- Liquidar -->
+        <!-- REVISAR pendiente de introducir etiquete e implementacion -->
+            <button pButton  (click)="checkLiquidar()" type="button" icon="fa fa-search" iconPos="left"
+            label="** LIQUIDAR" [disabled]="selectedRows.length == 0"></button>
+        </div>
     </p-footer>
 
   </div>

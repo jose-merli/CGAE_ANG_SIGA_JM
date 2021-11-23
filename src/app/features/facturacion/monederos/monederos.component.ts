@@ -39,11 +39,11 @@ export class MonederoComponent implements OnInit {
   }
 
 
-  busquedaMonederos(event) {
+  busquedaMonederos() {
     this.progressSpinner = true;
     let filtrosMonedero: FiltrosMonederoItem = this.filtrosBusqueda.filtrosMonederoItem;
 
-    this.sigaServices.post("monederosBusqueda_searchListadoMonederos", this.filtrosBusqueda.filtrosMonederoItem).subscribe(
+    this.sigaServices.post("monederosBusqueda_searchListadoMonederos", filtrosMonedero).subscribe(
       listaMonederosDTO => {
 
         if (JSON.parse(listaMonederosDTO.body).error.code == 500) {

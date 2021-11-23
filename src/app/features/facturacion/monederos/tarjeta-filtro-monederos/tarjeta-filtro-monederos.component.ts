@@ -17,6 +17,13 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
   msgs: Message[] = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false;
 
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
+
+  disabledBusquedaExpress: boolean = false;
+
   //Variables buscador
   filtrosMonederoItem: FiltrosMonederoItem = new FiltrosMonederoItem(); //Guarda los valores seleccionados/escritos en los campos
   
@@ -27,28 +34,42 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 
   ngOnInit() {
 
-    if(sessionStorage.getItem("abogado")){
-      let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
-			sessionStorage.removeItem("abogado");
-    }
-    else if(this.localStorageService.isLetrado){
-      this.sigaServices.post("monederosBusqueda_searchListadoMonederos", this.filtrosMonederoItem).subscribe(
-				n => {
-					
-			
-				},
-				err => {
-					this.progressSpinner = false;
-				});
-    }
 
     this.filtrosMonederoItem.fechaDesde = new Date();
     this.filtrosMonederoItem.fechaHasta = new Date(); 
 
+    
     //En la documentación funcional se pide que por defecto aparezca el campo 
     //con la fecha de dos años antes
-    this.filtrosMonederoItem.fechaDesde.setDate(this.filtrosMonederoItem.fechaDesde.getDate() - (1));
+    this.filtrosMonederoItem.fechaDesde.setDate(this.filtrosMonederoItem.fechaDesde.getDate() - (365*2));
     this.filtrosMonederoItem.fechaHasta.setDate(this.filtrosMonederoItem.fechaDesde.getDate());
+
+    if (sessionStorage.getItem("buscadorColegiados")) {
+      const { nombre, apellidos, nColegiado, idPersona } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+      this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
+      this.usuarioBusquedaExpress.numColegiado = nColegiado;
+      this.filtrosMonederoItem.idPersonaColegiado = idPersona;
+
+      sessionStorage.removeItem("buscadorColegiados");
+    }
+    else if(this.localStorageService.isLetrado){
+      this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
+				n => {
+					let data = JSON.parse(n.body).colegiadoItem;
+					this.usuarioBusquedaExpress.nombreAp = data.nombre;
+					this.usuarioBusquedaExpress.numColegiado = data.numColegiado;
+
+          this.filtrosMonederoItem.idPersonaColegiado = data.idPersona;
+          
+          this.disabledBusquedaExpress = true;
+				},
+				err => {
+					this.progressSpinner = false;
+				}
+      );
+
+    }
+
   }
 
   
@@ -99,6 +120,10 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 
   limpiar() {
     this.filtrosMonederoItem = new FiltrosMonederoItem();
+    this.usuarioBusquedaExpress = {
+      numColegiado: '',
+      nombreAp: ''
+    };
   }
 
 
@@ -107,14 +132,13 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
     this.busqueda.emit(true);
   }
 
-  checkFilters(){
-    if(this.filtrosMonederoItem.fechaDesde != null) return true;
-    if(this.filtrosMonederoItem.fechaHasta != null) return true;
-    return false;
-  }
-
   nuevoMonedero(){
-    // TODO: Pendging implementation
+    this.progressSpinner = true;
+
+    sessionStorage.removeItem("FichaMonedero");
+   
+    this.router.navigate(["/fichaMonedero"]);
+      
   }
 
   //Inicializa las propiedades necesarias para el dialogo de confirmacion
