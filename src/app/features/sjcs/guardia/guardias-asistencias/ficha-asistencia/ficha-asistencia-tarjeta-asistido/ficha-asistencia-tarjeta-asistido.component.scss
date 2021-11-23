@@ -1,0 +1,41 @@
+.inline {
+    display: inline-flex
+}
+
+.toBottom {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.padding-interior {
+    padding-right: 1.25rem !important;
+    padding-left: 1.25rem !important;
+}
+
+.bloque {
+    border-right: 1px solid #c6c7c8;
+    padding: 0.5rem 2rem;
+
+    &:last-child {
+        border-right: none;
+    }
+
+    &:first-child {
+        padding-left: 0.5rem;
+    }
+
+    .image-wrapper {
+        border-radius: 0%;
+        width: 100%;
+        position: relative;
+    }
+}
+
+.icon-search {
+    height: 27.38px;
+    display: flex;
+    justify-content: center;
+    color: linear-gradient(to top, rgba(0, 67, 117, .9) 0%, rgba(0, 67, 117, 1) 100%);
+    cursor: pointer !important;
+}

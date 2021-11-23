@@ -1,0 +1,44 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="buscadListaGuardias">
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel class="my-1" [expanded]="true">
+        <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+            <div class="w100 font-weight-bold">
+                <p class="w100">Configurar Listado Guardias</p>
+            </div>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+            <div class="form-row">
+              <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{'facturacion.productos.tipo' | translate}}</label>
+                <p-dropdown class="select-form"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                      [showClear]="true" [(ngModel)]="filtro.idTipo"
+                      [ngModelOptions]="{standalone: true}" [options]="comboTipo">
+                </p-dropdown>
+              </div>
+              <div class="form-group-interlineado col-lg-2 col-md-2">
+                  <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
+                  <input type="text" class="form-control" pInputText  [(ngModel)]="filtro.nombre" [ngModelOptions]="{standalone: true}"/>
+              </div>
+              <div class="form-group-interlineado col-lg-2 col-md-2">
+                  <label>{{"justiciaGratuita.guardia.asistenciasexpress.cabeceralugar" | translate}}</label>
+                  <input type="text" class="form-control" pInputText  [(ngModel)]="filtro.lugar" [ngModelOptions]="{standalone: true}"/>
+              </div>
+              <div class="form-group-interlineado col-lg-2 col-md-2">
+                  <label>{{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}}</label>
+                  <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idGrupoZona'
+                  [options]="comboGrupoZona" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected" 
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeGrupoZona($event)" ></p-multiSelect>
+              </div>
+              <div class="form-group-interlineado col-lg-2 col-md-2">
+                <label>{{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}}</label>
+                <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idZona' (onChange)="onChangeZona($event)"
+                  [options]="comboZona" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected" 
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
+            </div>
+            </div>
+        </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

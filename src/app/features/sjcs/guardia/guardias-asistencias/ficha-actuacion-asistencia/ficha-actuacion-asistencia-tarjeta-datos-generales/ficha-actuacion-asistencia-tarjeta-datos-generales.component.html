@@ -1,0 +1,115 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="row w-100 m-0 padding-interior">
+  <div class="bloque col-lg-4 col-md-4 mb-5">
+    <div class="form-row">
+      <div class="form-group col-lg-6 col-md-6 w-100">
+        <label>{{'justiciaGratuita.guardia.fichaactuacion.numeroactuacion' | translate}}</label>
+        <span class="font-weight-bold d-block w-100" style="height: 27.38px;">{{ datosGeneralesActuacion.idActuacion }}</span>
+      </div>
+      <!--<div class="form-group col-lg-6 col-md-6 w-100">
+        <label>Estado</label>
+        <span class="font-weight-bold d-block w-100" style="height: 27.38px;">{{ estado }}</span>
+      </div>-->
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-6 col-md-6 w-100">
+        <label>{{'justiciaGratuita.guardia.fichaactuacion.fechaactuacion' | translate}} (*)</label>
+        <app-fecha [(value)]="datosGeneralesActuacion.fechaActuacion" (valueChangeSelected)="fillFechaActuacion($event)" [disabled]="!editable"
+        (valueChangeInput)="fillFechaActuacion($event)" [inputStyleClass]="styleObligatorio(datosGeneralesActuacion.fechaActuacion)"></app-fecha>
+      </div>
+      <div class="form-group col-lg-6 col-md-6 w-100" id="check">
+        <p-checkbox binary="true" label="Día Después" [(ngModel)]="datosGeneralesActuacion.diaDespues" [ngModelOptions]="{standalone: true}" [disabled]="asistencia.diaDespuesDisabled || !editable"></p-checkbox>
+      </div>
+    </div>
+    <div  class="form-row">
+      <div class="form-group col-lg-12 col-md-12 w-100">
+        <label>{{'justiciaGratuita.maestros.gestionCostesFijos.tipoActuacion' | translate}} (*) </label>
+        <p-dropdown class="select-form"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
+        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.tipoActuacion" (onChange)="onChangeTipoActuacion()"
+        [ngModelOptions]="{standalone: true}" [options]="comboTipoActuacion" [ngClass]="styleObligatorio(datosGeneralesActuacion.tipoActuacion)"></p-dropdown>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-12 col-md-12 w-100">
+        <label>{{'justiciaGratuita.guardia.fichaasistencia.coste' | translate}}</label>
+        <p-dropdown class="select-form"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
+        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.idCoste"
+        [ngModelOptions]="{standalone: true}" [options]="comboCoste"></p-dropdown>
+      </div>
+    </div>
+  </div>
+  <div class="bloque col-lg-4 col-md-4 mb-5">
+    <div class="form-row">
+      <div class="form-group col-lg-4 col-md-4 w-100">
+        <label>{{'gratuita.mantActuacion.literal.nasunto' | translate}}</label>
+        <input type="text" class="form-control" [(ngModel)]="datosGeneralesActuacion.numAsunto" [disabled]="!editable"
+        [ngModelOptions]="{standalone: true}" pInputText>
+      </div>
+      <div class="form-group col-lg-8 col-md-8 w-100">
+        <label>{{'justiciaGratuita.ejg.datosGenerales.NIG' | translate}}</label>
+        <input type="text" class="form-control" pInputText [(ngModel)]="datosGeneralesActuacion.nig"
+        [ngModelOptions]="{standalone: true}" [disabled]="!editable">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-lg-12 col-md-12 w-100">
+        <label>{{'justiciaGratuita.guardia.fichaasistencia.comisaria' | translate}}</label>
+        <p-dropdown class="select-form"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
+        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.comisaria" (onChange)="onChangeComisaria()"
+        [ngModelOptions]="{standalone: true}" [options]="comboComisaria"></p-dropdown>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-12 col-md-12 w-100">
+        <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
+        <p-dropdown class="select-form"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
+        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.juzgado" (onChange)="onChangeJuzgado()"
+        [ngModelOptions]="{standalone: true}" [options]="comboJuzgado"></p-dropdown>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-12 col-md-12 w-100">
+        <label>{{'justiciaGratuita.guardia.fichaactuacion.prision' | translate}}</label>
+        <p-dropdown class="select-form"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+        [showClear]="true" [(ngModel)]="datosGeneralesActuacion.prision" [disabled]="!editable"
+        [ngModelOptions]="{standalone: true}" [options]="comboPrision"></p-dropdown>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 col-md-4 mb-5">
+    <div class="form-row">
+      <div class="form-group col-lg-12 col-md-12 w-100">
+        <label>{{'general.description' | translate}}</label>
+        <input type="text" class="form-control" pInputText [(ngModel)]="datosGeneralesActuacion.descripcion"
+        [ngModelOptions]="{standalone: true}" [disabled]="!editable">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-lg-12 col-md-12 w-100">
+        <label>{{'justiciaGratuita.Calendarios.Observaciones' | translate}}</label>
+        <textarea class="form-control" pInputTextarea [(ngModel)]="datosGeneralesActuacion.observaciones"
+        [ngModelOptions]="{standalone: true}" [disabled]="!editable"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
+      (click)="restablecer()" [disabled]="!editable"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
+      (click)="save()" [disabled]="!editable"></button>
+  </div>
+</div>

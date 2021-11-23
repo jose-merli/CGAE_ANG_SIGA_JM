@@ -3,6 +3,7 @@ import { SigaServices } from '../../../../../../../_services/siga.service';
 import { TurnosItems } from '../../../../../../../models/sjcs/TurnosItems';
 import { TranslateService } from '../../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-turno-guardias',
@@ -18,7 +19,8 @@ export class DatosTurnoGuardiasComponent implements OnInit {
   @Input() tarjetaTurno: string;
 
   constructor(private sigaServices: SigaServices,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private router : Router) { }
 
   ngOnInit() {
     this.sigaServices.datosRedy$.subscribe(
@@ -27,6 +29,10 @@ export class DatosTurnoGuardiasComponent implements OnInit {
         this.getResumen();
 
       });
+  }
+  goToFichaTurnos(){
+    sessionStorage.setItem("idGuardiaFromFichaGuardia",this.persistenceService.getDatos().idGuardia);
+    this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: this.persistenceService.getDatos().idTurno } });
   }
 
   getResumen() {

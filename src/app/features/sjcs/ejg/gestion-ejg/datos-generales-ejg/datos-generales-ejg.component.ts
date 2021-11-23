@@ -11,7 +11,8 @@ import { Message } from 'primeng/components/common/api';
 import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { Location } from '@angular/common'
-
+import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-datos-generales-ejg',
@@ -49,6 +50,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   comboTipoExpediente = [];
   tipoExpedienteDes: string;
   showTipoExp: boolean = false;
+  datosAsistencia : TarjetaAsistenciaItem;
 
   institucionActual;
 
@@ -106,6 +108,18 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.showTipoExp = true;
 
       this.getPrestacionesRechazadasEJG();
+    }else if(sessionStorage.getItem("asistencia")){ //Si hemos pulsado Crear EJG en la ficha de Asistencias en la tarjeta Relaciones o le hemos dado a Crear EJG en la pantalla de asistencias expres
+
+      this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
+      this.disabledNumEJG = true;
+      this.nuevo = true;
+      this.modoEdicion = false;
+      this.body = new EJGItem();
+      this.bodyInicial = new EJGItem();
+      this.showTipoExp = false;
+      this.body.fechaApertura = moment(this.datosAsistencia.fechaAsistencia.substr(0,10), 'DD/MM/YYYY').toDate();
+      this.body.creadoDesde = "A";
+      this.bodyInicial.creadoDesde = "A";
     } else {
       this.disabledNumEJG = true;
       this.nuevo = true;
@@ -352,6 +366,13 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.body.annio = this.body.fechaApertura.getFullYear().toString();
         this.body.idInstitucion = this.institucionActual;
 
+        //si viene de designacion, hay que poner el campo de creado desde
+        if (sessionStorage.getItem("Designacion")) {
+          this.body.creadoDesde='O';
+        }else if(this.body.creadoDesde==undefined || this.body.creadoDesde==null){
+          this.body.creadoDesde='M'
+        }
+
         this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
           n => {
             this.progressSpinner = false;
@@ -399,6 +420,37 @@ export class DatosGeneralesEjgComponent implements OnInit {
                   err => {
                     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
                     this.progressSpinner = false;
+                  }
+                );
+
+              }else if(this.datosAsistencia){
+
+                let ejgItem : EJGItem = new EJGItem();
+                ejgItem.annio = String(datosItem.annio);
+                ejgItem.numero = String(datosItem.numero);
+                ejgItem.tipoEJG = String(datosItem.tipoEJG);
+
+                this.sigaServices.postPaginado("busquedaGuardias_asociarEjg","?anioNumero="+this.datosAsistencia.anioNumero+"&copiarDatos=S", ejgItem).subscribe(
+                  n => {
+          
+                    let error = JSON.parse(n.body).error;
+                    this.progressSpinner = false;
+                    sessionStorage.removeItem("radioTajertaValue");
+          
+                    if (error != null && error.description != null) {
+                      this.showMessage("error", "Error al asociar el EJG con la Asistencia", error.description);
+                    } else {
+                      this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado el EJG con la Asistencia correctamente');
+                    }
+                  },
+                  err => {
+                    console.log(err);
+                    this.progressSpinner = false;
+                  }, () => {
+                    this.progressSpinner = false;
+                    sessionStorage.setItem("volver","true");
+                    sessionStorage.removeItem("asistencia");
+                    this.location.back();
                   }
                 );
 

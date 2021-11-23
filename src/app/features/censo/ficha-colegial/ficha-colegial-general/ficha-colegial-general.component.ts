@@ -631,7 +631,10 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.router.navigate(["/busquedaNoColegiados"]);
     } else if (sessionStorage.getItem("esColegiado") == "true" && sessionStorage.getItem("solicitudAprobada") != "true") {
       this.router.navigate(["/busquedaColegiados"]);
-    } else {
+    } else if(sessionStorage.getItem("originGuardiaColeg") == "true"){
+      sessionStorage.removeItem("originGuardiaColeg")
+      this.router.navigate(["/gestionGuardiaColegiado"]);
+    } else{
       sessionStorage.removeItem("solicitudAprobada")
       this.location.back();
     }
