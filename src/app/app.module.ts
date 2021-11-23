@@ -445,6 +445,7 @@ import { FiltroActasComponent } from './features/sjcs/actas/filtro-actas/filtro-
 import { TablaActasComponent } from './features/sjcs/actas/tabla-actas/tabla-actas.component';
 
 import { DatosGeneralesActasComponent } from './features/sjcs/actas/gestion-actas/datos-generales-actas/datos-generales-actas.component';
+import { TarjetaListadoEjgsComponent } from './features/sjcs/actas/gestion-actas/tarjeta-listado-ejgs/tarjeta-listado-ejgs.component';
 import { SelectorModule } from './commons/selector/selector.module';
 import { AsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component';
 import { BuscadorAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencia-expres/buscador-asistencia-expres.component';
@@ -902,6 +903,7 @@ import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
 		FiltroActasComponent,
 		TablaActasComponent,
 		DatosGeneralesActasComponent,
+		TarjetaListadoEjgsComponent,
 
 
 
