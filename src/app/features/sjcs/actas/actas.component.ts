@@ -82,9 +82,9 @@ export class ActasComponent implements OnInit {
       this.tabla.numSelected = 0;
       this.tabla.selectMultiple = false;
       this.tabla.selectAll = false;
-      this.tabla.tabla.sortOrder = 0;
-      this.tabla.tabla.sortField = '';
-      this.tabla.tabla.reset();
+      this.tabla.table.sortOrder = 0;
+      this.tabla.table.sortField = '';
+      this.tabla.table.reset();
       this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
 
     }
