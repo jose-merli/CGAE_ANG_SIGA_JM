@@ -253,7 +253,7 @@
       <div class="form-group-interlineado col-lg-4 col-md-4">
         <label class="d-block">{{'enviosMasivos.literal.plantillasEnvio' | translate}} (*)</label>
         <p-dropdown [ngClass]="styleObligatorio(bodyNuevaComm.idPlantillaEnvios)"
-          [options]="comboPlantillas" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="bodyNuevaComm.idPlantillaEnvios" class="select-form" (onChange)="detallePlantilla($event)"></p-dropdown>
+          [options]="comboPlantillas" placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="bodyNuevaComm.idPlantillaEnvios" class="select-form" (onChange)="detallePlantilla()"></p-dropdown>
       </div>
       <div class="form-group-interlineado col-lg-4 col-md-4">
         <label>{{"administracion.auditoriaUsuarios.literal.fechaEfectiva" | translate}} (*)</label>
