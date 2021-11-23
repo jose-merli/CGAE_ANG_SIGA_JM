@@ -41,13 +41,13 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div *ngIf="col.field == 'descripciontipo'">
-              <label *ngIf="rowData.nuevo == undefined" [ngClass]="{'historico': rowData.fechabaja != null}">{{
+              <label *ngIf="rowData.nuevo == false" [ngClass]="{'historico': rowData.fechabaja != null}">{{
                 rowData[col.field]}}</label>
 
-              <p-dropdown *ngIf="rowData.nuevo != undefined" [ngClass]="{'historico': rowData.fechabaja != null}"
+              <p-dropdown *ngIf="rowData.nuevo == true" [ngClass]="{'historico': rowData.fechabaja != null}"
                 autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="rowData.idtipoproducto"
-                [options]="comboItem" showClear="true" styleClass="widthAll" (keydown)="changeTableField(rowData)"
-                placeholder="{{ 'general.boton.seleccionar' | translate }}" showClear="false">
+                [options]="comboItem" [showClear]="false" styleClass="widthAll" (keydown)="changeTableField(rowData)"
+                placeholder="{{ 'general.boton.seleccionar' | translate }}">
               </p-dropdown>
 
             </div>
