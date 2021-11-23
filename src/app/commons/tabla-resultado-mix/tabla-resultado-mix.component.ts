@@ -396,12 +396,13 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     return "";
   }
   setMyStyles(size) {
+    let styles = {};
     if (this.calendarios){
-      let styles = {
+       styles = {
         'width': size + 'px',
       };
     }else{
-      let styles = {
+       styles = {
         'max-width': size + 'px',
       };
     }
