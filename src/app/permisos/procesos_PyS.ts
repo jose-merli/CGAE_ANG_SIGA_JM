@@ -8,6 +8,7 @@ export const procesos_PyS: any = {
     actualizarServicioSuscripcion: "39E",
     anularSuscripcion: "39F",
     solicitarSuscripcion: "39G",
-    aprobarSuscripcion: "39H"
+    aprobarSuscripcion: "39H",
+    fichaMonedero: "52"
 
 }

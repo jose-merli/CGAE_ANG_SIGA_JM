@@ -85,6 +85,7 @@ import { FichaCompraSuscripcionComponent } from './features/facturacion/ficha-co
 import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
 import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/cuotas-suscripciones.component';
 import { CargasMasivasComprasComponent } from "./features/facturacion/cargas-masivas-compras/cargas-masivas-compras.component";
+import { FichaMonederoComponent } from "./features/facturacion/monederos/ficha-monedero/ficha-monedero.component";
 
 //Modulo de Expedientes
 import { TiposExpedientesComponent } from './features/expedientes/tipos-expedientes/tipos-expedientes.component';
@@ -686,6 +687,11 @@ const appRoutes: Routes = [
 	{
 		path: 'cargasMasivasCompras',
 		component: CargasMasivasComprasComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaMonedero',
+		component: FichaMonederoComponent,
 		canActivate: [AuthGuard]
 	},
 

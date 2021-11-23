@@ -431,10 +431,6 @@ export class SigaServices {
       'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
     solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
 
-
-    // Monederos
-    monederosBusqueda_searchListadoMonederos: 'pys/getMonederos',
-
     //PRODUCTOS Y SERVICIOS
     //PANTALLA TIPOS PRODUCTOS
 
