@@ -13,6 +13,16 @@
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('serieFactura')">
             <label class="mr-auto title-ficha pointer">Serie de Facturación</label>
+
+            <label class="mr-3">
+              <i (click)="navigateToSerieFacturacion();$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2"></i>
+              <a (click)="navigateToSerieFacturacion();$event.stopPropagation();">
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  Ficha Serie de Facturación
+                </span>
+              </a>
+            </label>
           </div>
           <div class="d-flex justify-content-between default">
             
@@ -38,7 +48,17 @@
           <i class="far fa-address-book icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">Serie de Facturación</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+
+        <label class="ml-auto mr-3">
+          <i (click)="navigateToSerieFacturacion();$event.stopPropagation();"
+            class="fas fa-external-link-alt mr-2"></i>
+          <a (click)="navigateToSerieFacturacion();$event.stopPropagation();">
+            <span style="color: blue; text-decoration: underline;cursor:pointer;">
+              Ficha Serie de Facturación
+            </span>
+          </a>
+        </label>
+        <i class="fa fa-angle-up"></i>
       </div>
     </div>
 
@@ -49,7 +69,7 @@
           <label>Serie (*)</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idSerieFacturacion' placeholder="Seleccionar"
               [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde"
-              [showClear]="true" (onChange)="actualizarInputs()"></p-dropdown>
+              [ngClass]="styleObligatorio(body.idSerieFacturacion)" [showClear]="true" (onChange)="actualizarInputs()"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Descripción de Serie</label>

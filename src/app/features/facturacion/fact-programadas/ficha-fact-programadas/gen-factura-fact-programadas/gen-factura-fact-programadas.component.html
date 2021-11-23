@@ -17,7 +17,7 @@
           <div class="d-flex justify-content-between default">
             
             <label>Generar ficheros de facturas autom.: 
-                <span>{{body.generarPDF ? "Sí" : "No" }}</span></label>
+                <span>{{body.generaPDF ? "Sí" : "No" }}</span></label>
             <label>Modelo de generación del fichero de factura: 
                 <span>{{body.modeloFactura }}</span></label>
             <label>Modelo de generación del fichero de factura rectificativa: 
@@ -48,7 +48,7 @@
         <div class="form-check col-lg-3 col-md-3 align-self-center d-flex justify-content-between">
           <label class="form-group-label">Generar ficheros de facturas autom.</label>
           &nbsp;&nbsp;
-          <p-checkbox class="float-right" [(ngModel)]="body.generarPDF" binary="true"></p-checkbox>
+          <p-checkbox class="float-right" [(ngModel)]="body.generaPDF" binary="true"></p-checkbox>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Modelo de generación del fichero de factura</label>

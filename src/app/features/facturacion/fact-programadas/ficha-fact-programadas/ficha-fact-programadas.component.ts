@@ -24,7 +24,7 @@ export class FichaFactProgramadasComponent implements OnInit {
 
   manuallyOpened: boolean;
   openTarjetaDatosGenerales: boolean = true;
-  openTarjetaSerieFacturacion: boolean = false;
+  openTarjetaSerieFactura: boolean = false;
   openTarjetaGenFicheroAdeudos: boolean = false;
   openTarjetaInfoFacturacion: boolean = false;
   openTarjetaGenFicheroFacturas: boolean = false;
@@ -45,6 +45,10 @@ export class FichaFactProgramadasComponent implements OnInit {
     } else if(sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.modoEdicion = false;
+      this.openTarjetaSerieFactura = true;
+    } else {
+      this.progressSpinner = false;
+      this.backTo();
     }
 
     if (this.modoEdicion) {
@@ -100,8 +104,8 @@ export class FichaFactProgramadasComponent implements OnInit {
         case "datosGenerales":
           this.openTarjetaDatosGenerales = true;
           break;
-        case "serieFacturacion":
-          this.openTarjetaSerieFacturacion = true;
+        case "serieFactura":
+          this.openTarjetaSerieFactura = true;
           break;
         case "genFicheroAdeudos":
           this.openTarjetaGenFicheroAdeudos = true;
@@ -130,7 +134,7 @@ export class FichaFactProgramadasComponent implements OnInit {
           this.openTarjetaDatosGenerales = this.manuallyOpened;
           break;
         case "serieFacturacion":
-          this.openTarjetaSerieFacturacion = this.manuallyOpened;
+          this.openTarjetaSerieFactura = this.manuallyOpened;
           break;
         case "genFicheroAdeudos":
           this.openTarjetaGenFicheroAdeudos = this.manuallyOpened;

@@ -1,7 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
+import { TranslateService } from '../../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
+import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-gen-adeudos-fact-programadas',
@@ -25,7 +29,10 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   resaltadoDatos: boolean = false;
 
   constructor(
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -48,6 +55,66 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
     this.resaltadoDatos = false;
   }
 
+  isValid(): boolean {
+    return this.body.fechaPresentacion != undefined && this.body.fechaRecibosPrimeros != undefined
+        && this.body.fechaRecibosRecurrentes != undefined && this.body.fechaRecibosCOR1 != undefined
+        && this.body.fechaRecibosB2B != undefined;
+  }
+
+  checkSave(): void {
+    if (this.isValid()) {
+      this.guardadoSend.emit(this.body);
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
+
+  navigateToFicheroAdeudos() {
+    let filtros = { idProgramacion: this.body.idProgramacion };
+
+    this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).subscribe(
+      n => {
+        let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAdeudosItems;
+        if (results != undefined && results.length != 0) {
+          let ficherosAdeudosItem: FicherosAdeudosItem = results[0];
+
+          sessionStorage.setItem("facturacionProgramadaItem", JSON.stringify(this.bodyInicial));
+          sessionStorage.setItem("volver", "true");
+
+          sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficherosAdeudosItem));
+          this.router.navigate(["/gestionAdeudos"]);
+        }
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  // OnChange de las fechas
+
+  fillFechaPresentacion(event) {
+    this.body.fechaPresentacion = event;
+  }
+
+  fillFechaRecibosPrimeros(event) {
+    this.body.fechaRecibosPrimeros = event;
+  }
+  
+  fillFechaRecibosRecurrentes(event) {
+    this.body.fechaRecibosRecurrentes = event;
+  }
+  
+  fillFechaRecibosCOR1(event) {
+    this.body.fechaRecibosCOR1 = event;
+  }
+
+  fillFechaRecibosB2B(event) {
+    this.body.fechaRecibosB2B = event;
+  }
+  
+
   // Transformar fecha
   transformDate(fecha) {
     if (fecha != undefined)
@@ -59,8 +126,8 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   // Estilo obligatorio
-  styleObligatorio(evento: string) {
-    if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
+  styleObligatorio(evento: Date) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null)) {
       return this.commonsService.styleObligatorio(evento);
     }
   }

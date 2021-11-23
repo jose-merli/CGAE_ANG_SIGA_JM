@@ -9,7 +9,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
   templateUrl: './info-factura-fact-programadas.component.html',
   styleUrls: ['./info-factura-fact-programadas.component.scss']
 })
-export class InfoFacturaFactProgramadasComponent implements OnInit, OnChanges {
+export class InfoFacturaFactProgramadasComponent implements OnInit {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -21,7 +21,6 @@ export class InfoFacturaFactProgramadasComponent implements OnInit, OnChanges {
   @Output() guardadoSend = new EventEmitter<FacFacturacionprogramadaItem>();
 
   @Input() bodyInicial: FacFacturacionprogramadaItem;
-  body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
 
   resaltadoDatos: boolean = false;
 
@@ -43,18 +42,6 @@ export class InfoFacturaFactProgramadasComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getCols();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.bodyInicial != undefined)
-      this.restablecer();
-  }
-
-  // Restablecer
-
-  restablecer(): void {
-    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.resaltadoDatos = false;
   }
 
   // Definición de las columnas

@@ -46,13 +46,16 @@ export class FacFacturacionprogramadaItem {
     descripcion: string;
     nombreAbreviado: string;
     fechaProgramacion: Date;
-    archivarFact: string;
+    archivarFact: boolean;
     usuModificacion: string;
     fechaModificacion: Date;
     nombreFichero: string;
     logError: string;
     logTraspaso: string;
-    traspasoFacturas: string;
+    traspasoFacturas: boolean;
+    generaPDF: boolean;
+    envio: boolean;
+    idTipoPlantillaMail: string;
     traspasoPlatilla: string;
     traspasoCodAuditoriaDef: string;
 

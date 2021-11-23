@@ -13,15 +13,25 @@
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('infoFactura')">
             <label class="mr-auto title-ficha pointer">Informe de Facturación</label>
+
+            <label class="mr-3">
+              <i (click)="navigateToFacturas();$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2"></i>
+              <a (click)="navigateToFacturas();$event.stopPropagation();">
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  Búsqueda Facturas
+                </span>
+              </a>
+            </label>
           </div>
           <div class="d-flex justify-content-between default">
             
             <label>Número de facturas total: 
-                <span>{{body.nombreAbreviado }}</span></label>
+                <span></span></label>
             <label>Total: 
-                <span>{{body.descripcion }}</span></label>
+                <span></span></label>
             <label>Total pendiente: 
-              <span>{{body.estado }}</span></label>
+              <span></span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('infoFactura')"
               *ngIf="!esFichaActiva('infoFactura')"></i>
@@ -36,7 +46,17 @@
           <i class="far fa-address-book icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">Informe de Facturación</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+
+        <label class="ml-auto mr-3">
+          <i (click)="navigateToFacturas();$event.stopPropagation();"
+            class="fas fa-external-link-alt mr-2"></i>
+          <a (click)="navigateToFacturas();$event.stopPropagation();">
+            <span style="color: blue; text-decoration: underline;cursor:pointer;">
+              Búsqueda Facturas
+            </span>
+          </a>
+        </label>
+        <i class="fa fa-angle-up"></i>
       </div>
     </div>
 

@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/api';
+import { TranslateService } from '../../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-datos-generales-fact-programadas',
@@ -25,7 +27,9 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   resaltadoDatos: boolean = false;
 
   constructor(
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -51,6 +55,40 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     this.resaltadoDatos = false;
 
     console.log(this.body);
+  }
+
+  // Botón de archivar
+  archivar(): void {
+    this.progressSpinner = true;
+    this.bodyInicial.archivarFact = true;
+
+    this.sigaServices.post("facturacionPyS_archivarFacturacionesProgramadas", [this.bodyInicial]).subscribe(
+      n => {
+        this.guardadoSend.emit();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  // Botón de desarchivar
+  desarchivar(): void {
+    this.progressSpinner = true;
+    this.bodyInicial.archivarFact = false;
+
+    this.sigaServices.post("facturacionPyS_archivarFacturacionesProgramadas", [this.bodyInicial]).subscribe(
+      n => {
+        this.guardadoSend.emit();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
   // Cambios en fechas

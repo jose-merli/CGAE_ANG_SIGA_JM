@@ -114,9 +114,9 @@
         <button pButton (click)="confirmDescargar()"
           type="button" icon="fa fa-eraser" iconPos="left" label="Descargar LOG"></button>
 
-        <button pButton *ngIf="body.archivarFact == '0'" (click)="confirmArchivar()"
+        <button pButton *ngIf="!body.archivarFact" (click)="archivar()"
           type="button" icon="fa fa-eraser" iconPos="left" label="Archivar"></button>
-        <button pButton *ngIf="body.archivarFact == '1'" (click)="confirmDesarchivar()"
+        <button pButton *ngIf="body.archivarFact" (click)="desarchivar()"
           type="button" icon="fa fa-eraser" iconPos="left" label="Desarchivar"></button>
 
         <button pButton type="button" icon="fa fa-undo" iconPos="left"

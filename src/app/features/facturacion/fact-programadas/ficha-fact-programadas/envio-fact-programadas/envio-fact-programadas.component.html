@@ -19,7 +19,7 @@
             <label>Realizar el envío de las facturas autom.: 
               <span>{{body.envio ? "Sí" : "No" }}</span></label>
             <label>Plantilla de envío masivo: 
-              <span>{{body.idPlantilla }}</span></label>
+              <span>{{body.tipoPlantillaMail }}</span></label>
             <label>Estado: 
               <span>{{body.estadoEnvio }}</span></label>
             
@@ -50,7 +50,7 @@
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Plantilla de envío masivo</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.idPlantilla' placeholder="Seleccionar"
+          <p-dropdown class="select-form" [(ngModel)]='body.idTipoPlantillaMail' placeholder="Seleccionar"
               [options]="comboPlantillas" [filter]="true" filterBy="label,labelSinTilde"
               [showClear]="true"></p-dropdown>
         </div>

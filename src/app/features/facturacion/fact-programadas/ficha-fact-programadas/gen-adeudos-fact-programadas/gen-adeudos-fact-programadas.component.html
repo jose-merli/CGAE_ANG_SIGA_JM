@@ -13,6 +13,16 @@
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('genAdeudos')">
             <label class="mr-auto title-ficha pointer">Generación de Fichero de Adeudos</label>
+
+            <label class="mr-3">
+              <i (click)="navigateToFicheroAdeudos();$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2"></i>
+              <a (click)="navigateToFicheroAdeudos();$event.stopPropagation();">
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  Ficha Fichero de Adeudos
+                </span>
+              </a>
+            </label>
           </div>
           <div class="d-flex justify-content-between default">
             
@@ -38,7 +48,17 @@
           <i class="far fa-address-book icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">Generación de Fichero de Adeudos</label>
-        <i class="fa fa-angle-up ml-auto"></i>
+
+        <label class="ml-auto mr-3">
+          <i (click)="navigateToFicheroAdeudos();$event.stopPropagation();"
+            class="fas fa-external-link-alt mr-2"></i>
+          <a (click)="navigateToFicheroAdeudos();$event.stopPropagation();">
+            <span style="color: blue; text-decoration: underline;cursor:pointer;">
+              Ficha Fichero de Adeudos
+            </span>
+          </a>
+        </label>
+        <i class="fa fa-angle-up"></i>
       </div>
     </div>
 
@@ -47,27 +67,27 @@
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>Fecha presentación ficheros de adeudos (*)</label>
-          <app-fecha [(value)]="body.fechaPresentacion" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaPresentacion($event)">
+          <app-fecha [(value)]="body.fechaPresentacion" [inputStyleClass]="styleObligatorio(body.fechaPresentacion)" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaPresentacion($event)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Fecha cargo para primeros recibos (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosPrimeros" (valueChangeSelected)="fillFechaRecibosPrimeros($event)" (valueChangeInput)="fillFechaRecibosPrimeros($event)">
+          <app-fecha [(value)]="body.fechaRecibosPrimeros" [inputStyleClass]="styleObligatorio(body.fechaRecibosPrimeros)" (valueChangeSelected)="fillFechaRecibosPrimeros($event)" (valueChangeInput)="fillFechaRecibosPrimeros($event)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Fecha cargo para recibos recurrentes (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosRecurrentes" (valueChangeSelected)="fillFechaRecibosRecurrentes($event)" (valueChangeInput)="fillFechaRecibosRecurrentes($event)">
+          <app-fecha [(value)]="body.fechaRecibosRecurrentes" [inputStyleClass]="styleObligatorio(body.fechaRecibosRecurrentes)" (valueChangeSelected)="fillFechaRecibosRecurrentes($event)" (valueChangeInput)="fillFechaRecibosRecurrentes($event)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Fecha cargo para recibos COR1 (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosCOR1" (valueChangeSelected)="fillFechaRecibosCOR1($event)" (valueChangeInput)="fillFechaRecibosCOR1($event)">
+          <app-fecha [(value)]="body.fechaRecibosCOR1" [inputStyleClass]="styleObligatorio(body.fechaRecibosCOR1)" (valueChangeSelected)="fillFechaRecibosCOR1($event)" (valueChangeInput)="fillFechaRecibosCOR1($event)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>Fecha cargo para recibos B2B (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosB2B" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)">
+          <app-fecha [(value)]="body.fechaRecibosB2B" [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)">
           </app-fecha>
         </div>
       </div>

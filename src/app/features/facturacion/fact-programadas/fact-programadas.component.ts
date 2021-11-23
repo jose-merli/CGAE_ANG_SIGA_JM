@@ -39,6 +39,7 @@ export class FactProgramadasComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_getFacturacionesProgramadas", filtros).subscribe(
       n => {
         this.datos = JSON.parse(n.body).facturacionprogramadaItems;
+        let error = JSON.parse(n.body).error;
 
         console.log(this.datos);
 
@@ -55,6 +56,11 @@ export class FactProgramadasComponent implements OnInit {
           this.tabla.table.sortField = '';
           this.tabla.table.reset();
           this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+        }
+
+        // Comprobamos el mensaje de info de resultados
+        if (error != undefined  && error.message != undefined) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.message));
         }
       },
       err => {

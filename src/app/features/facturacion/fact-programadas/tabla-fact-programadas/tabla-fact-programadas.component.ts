@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTable, Message } from 'primeng/primeng';
+import { TranslateService } from '../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../models/FacFacturacionprogramadaItem';
 import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-tabla-fact-programadas',
@@ -39,7 +41,9 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     private commonsService: CommonsService,
     private router: Router,
     private changeDetectorRef: ChangeDetectorRef,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
@@ -131,9 +135,9 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   // Mostrar u ocultar histórico
   filterDatosByHistorico(): void {
     if (this.historico)
-      this.datosMostrados = this.datos.filter(dato => dato.archivarFact == "1");
+      this.datosMostrados = this.datos.filter(dato => dato.archivarFact);
     else
-      this.datosMostrados = this.datos.filter(dato => dato.archivarFact == "0");
+      this.datosMostrados = this.datos.filter(dato => !dato.archivarFact);
   }
 
   // Abrir ficha de serie facturación
@@ -149,9 +153,9 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
     switch (estado) {
       case 'fac':
-        if (idEstado == "1" || idEstado == "3" || idEstado == "18" || idEstado == "19") {
+        if (idEstado == "1" || idEstado == "18" || idEstado == "19") {
           res = "warning";
-        } else if(idEstado == "2" || idEstado == "17" ) {
+        } else if(idEstado == "2" || idEstado == "3" || idEstado == "17" ) {
           res = "success";
         } else if(idEstado == "4" || idEstado == "20" || idEstado == "21") {
           res = "danger";
@@ -194,12 +198,49 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
   }
 
-  confirmArchivar(): void {
+  archivar(): void {
+    this.progressSpinner = true;
+    this.selectedDatos.forEach((d: FacFacturacionprogramadaItem) => d.archivarFact = true);
 
+    this.sigaServices.post("facturacionPyS_archivarFacturacionesProgramadas", this.selectedDatos).subscribe(
+      n => {
+        this.busqueda.emit();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
-  confirmDesarchivar(): void {
+  desarchivar(): void {
+    this.progressSpinner = true;
+    this.selectedDatos.forEach((d: FacFacturacionprogramadaItem) => d.archivarFact = false);
 
+    this.sigaServices.post("facturacionPyS_archivarFacturacionesProgramadas", this.selectedDatos).subscribe(
+      n => {
+        this.busqueda.emit();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }
