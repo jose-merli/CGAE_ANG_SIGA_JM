@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
+import { MultiSelect } from 'primeng/primeng';
 
 @Component({
   selector: 'app-filtros-guardia',
@@ -27,7 +28,7 @@ export class FiltrosGuardiaComponent implements OnInit {
   @Input() permisoEscritura;
   @Output() isOpen = new EventEmitter<boolean>();
 
-
+  partidasJudiciales: any[] = [];
   comboGrupoZona = [];
   comboZona = [];
   comboJurisdicciones = [];
@@ -41,6 +42,10 @@ export class FiltrosGuardiaComponent implements OnInit {
   KEY_CODE = {
     ENTER: 13
   }
+
+  textFilter: string = "Seleccionar";
+  textSelected: String = "{0} etiquetas seleccionadas";
+  @Input() abogado = false;
   constructor(private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -59,11 +64,21 @@ export class FiltrosGuardiaComponent implements OnInit {
     this.getComboArea();
     this.getComboTipoGuardia();
     this.getComboTipoTurno();
-    this.getComboArea();
     this.getComboGrupoZona();
 
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
+    if (sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") != null) {
+
+      this.filtros = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
+      );
+
+      if (this.filtros.materia != null && this.filtros.materia != undefined && this.filtros.materia != '') {
+        this.getComboMateria("");
+        this.isDisabledMateria = false;
+      }
+
+      sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
+
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
@@ -169,8 +184,8 @@ export class FiltrosGuardiaComponent implements OnInit {
   }
 
 
-  onChangeZona() {
-
+  onChangeZona(event) {
+    this.filtros.grupoZona = event.value;
     this.filtros.zona = "";
     this.comboZona = [];
 
@@ -206,8 +221,41 @@ export class FiltrosGuardiaComponent implements OnInit {
     )
 
   }
-  onChangeSubZona() {
-    this.filtros.partidaJudicial = this.comboZona.find(it => it.value == this.filtros.zona).partido;
+  onChangeSubZona(event) {
+    // this.filtros.partidoJudicial = this.comboZona.find(it => it.value == this.filtros.zona).partido;
+    this.filtros.zona = event.value;
+    if (this.filtros.zona.length > 0) {
+      this.sigaServices
+        .getParam(
+          "fichaZonas_searchSubzones",
+          "?idZona=" + this.filtros.zona
+        )
+        .subscribe(
+          n => {
+            this.partidasJudiciales = n.zonasItems;
+          },
+          err => {
+            console.log(err);
+
+          }, () => {
+            this.getPartidosJudiciales();
+          }
+        );
+    } else {
+      //this.isDisabledSubZona = true;
+      this.filtros.partidoJudicial = "";
+    }
+  }
+
+  getPartidosJudiciales() {
+
+    for (let i = 0; i < this.partidasJudiciales.length; i++) {
+      this.partidasJudiciales[i].partidosJudiciales = [];
+      this.partidasJudiciales[i].jurisdiccion.forEach(partido => {
+        this.filtros.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales;
+
+      });
+    }
   }
 
 
@@ -256,11 +304,11 @@ export class FiltrosGuardiaComponent implements OnInit {
       );
   }
 
-  onChangeArea() {
-
+  onChangeArea(event) {
+    this.filtros.area = event.value;
     this.filtros.materia = "";
     this.comboMateria = [];
-    if (this.filtros.area != undefined && this.filtros.area != "") {
+    if (this.filtros.area != undefined && this.filtros.area != "" && this.filtros.area.length != 0) {
       this.isDisabledMateria = false;
       this.getComboMateria("");
 
@@ -271,6 +319,7 @@ export class FiltrosGuardiaComponent implements OnInit {
   }
 
   buscarMateria(e) {
+    this.filtros.materia = e.value;
     if (e.target.value && e.target.value !== null && e.target.value !== "") {
       if (e.target.value.length >= 3) {
         this.getComboMateria(e.target.value);
@@ -321,7 +370,8 @@ export class FiltrosGuardiaComponent implements OnInit {
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
-      this.filtroAux = this.persistenceService.getFiltrosAux()
+      this.filtroAux = this.persistenceService.getFiltrosAux();
+      sessionStorage.setItem('filtrosBusquedaGuardias', JSON.stringify(this.filtros));
       this.isOpen.emit(false)
     }
 
@@ -332,6 +382,7 @@ export class FiltrosGuardiaComponent implements OnInit {
   nuevo() {
     if (this.permisoEscritura) {
       this.persistenceService.clearDatos();
+      this.persistenceService.setHistorico(false); //Lo seteamos a false, ya que si hemos pulsado en mostrar historico y le damos a nuevo aparecen todos las campos disabled
       this.router.navigate(["/gestionGuardias"]);
     }
   }
@@ -384,6 +435,7 @@ export class FiltrosGuardiaComponent implements OnInit {
 
   rest() {
     this.filtros = new GuardiaItem();
+    this.isDisabledMateria = true;
   }
 
 
@@ -397,4 +449,33 @@ export class FiltrosGuardiaComponent implements OnInit {
     }
   }
 
+  focusInputField(multiSelect: MultiSelect) {
+    setTimeout(() => {
+      multiSelect.filterInputChild.nativeElement.focus();
+    }, 300);
+  }
+
+  onChangeTurno(event){
+    this.filtros.idTurno = event.value;
+  }
+
+  onChangeJurisdiccion(event){
+    this.filtros.jurisdiccion = event.value;
+  }
+
+  onChangeGrupoFact(event){
+    this.filtros.grupoFacturacion = event.value;
+  }
+
+  onChangePartPresupuestaria(event){
+    this.filtros.partidaPresupuestaria = event.value;
+  }
+
+  onChangeTipoTurno(event){
+    this.filtros.tipoTurno = event.value;
+  }
+
+  onChangeTipoGuardia(event){
+    this.filtros.idTipoGuardia =event.value;
+  }
 }

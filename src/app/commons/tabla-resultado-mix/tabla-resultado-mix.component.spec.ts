@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TablaResultadoDesplegableComponent } from './tabla-resultado-desplegable.component';
+import { TablaResultadoMixComponent } from './tabla-resultado-mix.component';
 
-describe('TablaResultadoDesplegableComponent', () => {
-  let component: TablaResultadoDesplegableComponent;
-  let fixture: ComponentFixture<TablaResultadoDesplegableComponent>;
+describe('TablaResultadoMixComponent', () => {
+  let component: TablaResultadoMixComponent;
+  let fixture: ComponentFixture<TablaResultadoMixComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TablaResultadoDesplegableComponent ]
+      declarations: [TablaResultadoMixComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TablaResultadoDesplegableComponent);
+    fixture = TestBed.createComponent(TablaResultadoMixComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

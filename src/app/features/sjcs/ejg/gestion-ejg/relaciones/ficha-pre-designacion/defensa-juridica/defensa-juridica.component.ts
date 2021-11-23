@@ -66,15 +66,19 @@ export class DefensaJuridicaComponent implements OnInit {
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
     //Se obtiene la designacion si hay una designacion entre las relaciones
-    if (sessionStorage.getItem("Designa")) this.designa = JSON.parse(sessionStorage.getItem("Designa"));
+    if (sessionStorage.getItem("Designa")){
+       this.designa = JSON.parse(sessionStorage.getItem("Designa"));
+    }
 
     this.body = this.persistenceService.getDatos();
+
+    this.getEjgItem();
 
     //Se sobreescribe la informacion de pre designacion (Primera mitad de la tarjeta) 
     //en this.body en el caso de que haya una designacion
     if (this.designa != null) {
       //this.body = this.designa;
-      this.body.numAnnioProcedimiento = this.designa.ano;
+      this.body.numAnnioProcedimiento = this.body.procedimiento;
       this.body.nig = this.designa.nig;
       this.body.observaciones = this.designa.observaciones;
       this.body.calidad = this.designa.idCalidad;
@@ -118,7 +122,6 @@ export class DefensaJuridicaComponent implements OnInit {
     }
 
   }
-
   ngOnChanges(changes: SimpleChanges): void {
 		if(this.permisoEscritura){
       this.perEscritura = true;
@@ -308,8 +311,8 @@ export class DefensaJuridicaComponent implements OnInit {
 				this.translateService.instant('general.message.incorrect'),
 				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
 			);
-		} else if (this.validarNProcedimiento(this.body.numAnnioProcedimiento)) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
-    //Comprobamos el formato del NIG y al ser un servicio siga, a llamada del metodo de guardado estar en su interior.
+    } else if (this.validarNProcedimiento(this.body.procedimiento)) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
+  //Comprobamos el formato del NIG y al ser un servicio siga, a llamada del metodo de guardado estar en su interior.
     else this.validarNig(this.body.nig)
   }
 
@@ -368,6 +371,25 @@ export class DefensaJuridicaComponent implements OnInit {
         this.progressSpinner = false;
 
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  getEjgItem() {
+    this.bodyInicial = this.body;
+    //Actualizamos la informacion en el body de la pantalla
+    this.sigaServices.post("gestionejg_datosEJG", this.bodyInicial).subscribe(
+      n => {
+        let ejgObject = JSON.parse(n.body).ejgItems;
+        let datosItem = ejgObject[0];
+        
+        this.persistenceService.setDatos(datosItem);
+        this.body = this.persistenceService.getDatos();
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
       }
     );
   }

@@ -48,7 +48,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   msgs: any;
-
+  esSociedad;
   formBusqueda: FormGroup;
   numSelected: number = 0;
   datos: any[];

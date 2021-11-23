@@ -3,7 +3,8 @@
     <div *ngIf="!openFicha" class="form-row">
       <div class="col-lg-1 col-md-2">
         <div class="img-colegiado">
-          <i class="fas fa-calendar-alt icon-ficha"></i>
+          <!--<i class="fas fa-calendar-alt icon-ficha"></i>-->
+          <i class="fas fa-link icon-ficha"></i>
         </div>
       </div>
       <div class="col-lg-11 col-md-10 cabeza">
@@ -21,7 +22,15 @@
             <strong>{{datos.generado}}</strong>
           </label>
           <label>
-            <a href="">{{'dato.jgr.guardia.guardias.fichaProgramacion' | translate}}</a>
+            <div class="verticalAlign">
+              <div>
+                <i class="fas fa-external-link-alt mr-2 icono-enlace"
+                aria-hidden="true"></i>
+              </div>
+              <div>
+                <a class="enlace" (click)="goToFichaProgramacion()">{{'dato.jgr.guardia.guardias.fichaProgramacion' | translate}}</a>
+              </div>
+            </div>
           </label>
         </div>
       </div>

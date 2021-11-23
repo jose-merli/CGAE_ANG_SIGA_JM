@@ -110,6 +110,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			if (sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
 			else this.contrario.emit(true);
 			this.permisoEscritura = true;
+			this.Associate();
 		}
 		/* Procede de ficha pre-designacion */
 		// else if (sessionStorage.getItem("procuradorFicha")) {

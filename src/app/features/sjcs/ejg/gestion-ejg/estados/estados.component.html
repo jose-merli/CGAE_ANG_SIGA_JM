@@ -17,7 +17,7 @@
             <label>{{ "censo.fichaIntegrantes.literal.estado" | translate }}: <span
                 *ngIf="estados && estados[0]">{{estados[0].descripcion}}</span></label>
             <label>{{ "censo.resultadosSolicitudesModificacion.literal.fecha" | translate }}: <span
-                *ngIf="estados && estados[0]">{{estados[0].fechaModificacion | date: 'dd/MM/yyyy'}}</span></label>
+                *ngIf="estados && estados[0]">{{estados[0].fechaInicio | date: 'dd/MM/yyyy'}}</span></label>
             <label>{{ "general.boton.usuario" | translate }}: <span
                 *ngIf="estados && estados[0]">{{estados[0].user}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('estados')"></i>
@@ -55,10 +55,10 @@
                 | date: 'dd/MM/yyyy'}}</span>
               <span *ngIf="editaEstado && datosEstados[rowIndex].isMod != true">{{car[col.field] | date:
                 'dd/MM/yyyy'}}</span>
-              <app-fecha *ngIf="creaEstado && datosEstados[rowIndex].nuevoRegistro" [(value)]="fechaEstado"></app-fecha>
+              <app-fecha *ngIf="creaEstado && datosEstados[rowIndex].nuevoRegistro" [(value)]="fechaIni" (valueChangeSelected)="fillFechaInicio($event)" (valueChangeInput)="fillFechaInicio($event)"></app-fecha>
               <app-fecha
                 *ngIf="datosEstados[rowIndex].isMod != undefined && datosEstados[rowIndex].isMod == true && !creaEstado && editaEstado"
-                [(value)]="fechaEstado"></app-fecha>
+                [(value)]="fechaIni" (valueChangeSelected)="fillFechaInicio($event,rowIndex)" (valueChangeInput)="fillFechaInicio($event,rowIndex)"></app-fecha>
 
             </div>
 

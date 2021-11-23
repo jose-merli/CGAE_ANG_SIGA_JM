@@ -230,6 +230,22 @@ export class FiltrosEjgComponent implements OnInit {
     }
   }
 
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
+      && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
+      this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+      this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
+    }else{
+      this.usuarioBusquedaExpress.numColegiado = " ";
+      this.body.numColegiado = "";
+      this.body.idPersona = "";
+      sessionStorage.removeItem("numColegiado");
+      this.numColegiadoRelleno=false;
+    }
+  }
+
   getComboProcedimiento() {
     this.sigaServices
       .get("busquedaProcedimientos_procedimientos")
@@ -247,9 +263,15 @@ export class FiltrosEjgComponent implements OnInit {
   getComboDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
       n => {
-        this.comboDictamen = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboDictamen);
         this.comboDictamen.push({ label: "Indiferente", value: "-1" });
+        this.comboDictamen.push({ label: "Sin dictamen", value: "0" });
+        if(n.combooItems!=null && n.combooItems != undefined){
+          n.combooItems.forEach(element => {
+            this.comboDictamen.push(element);
+          });
+          this.commonServices.arregloTildesCombo(this.comboDictamen);
+        }
+        this.bodyDictamen.push("-1");
       },
       err => {
         console.log(err);
@@ -428,7 +450,9 @@ export class FiltrosEjgComponent implements OnInit {
   getComboTurno() {
     if (this.body.tipoLetrado == "E") {
       this.tipoLetrado = "1";
-    } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "2"; }
+    } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") {
+      this.tipoLetrado = "2"; 
+    }
     this.sigaServices.getParam("filtrosejg_comboTurno",
       "?idTurno=" + this.tipoLetrado).subscribe(
         n => {
@@ -571,8 +595,8 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   checkFilters() {
-    if (this.body.annio != undefined)
-      this.body.annio = this.body.annio.trim();
+    //if (this.body.annio != undefined)
+    //  this.body.annio = this.body.annio.trim();
     if (this.body.numero != undefined)
       this.body.numero = this.body.numero.trim();
     if (this.body.asunto != undefined)
@@ -603,7 +627,7 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.nombre = this.body.nombre.trim();
 
     if (
-      (this.body.annio == null || this.body.annio.trim() == "" || this.body.annio.trim().length < 3) &&
+      (this.body.annio == null || this.body.annio == "" || this.body.annio.length < 3) &&
       (this.body.numero == null || this.body.numero.trim() == "" || this.body.numero.trim().length < 3) &&
       (this.body.numAnnioProcedimiento == null || this.body.numAnnioProcedimiento.trim() == "" || this.body.numAnnioProcedimiento.trim().length < 3) &&
       (this.body.nig == null || this.body.nig.trim() == "" || this.body.nig.trim().length < 3) &&
@@ -635,13 +659,16 @@ export class FiltrosEjgComponent implements OnInit {
         } else {
           this.muestraCamposObligatorios();
         }
-
-
       } else {
         if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
           && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
           this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
           this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
+        }
+
+        if(sessionStorage.getItem("numColegiado") != undefined && sessionStorage.getItem("numColegiado") != null 
+          && sessionStorage.getItem("numColegiado").trim() != ""){
+            this.body.numColegiado = sessionStorage.getItem("numColegiado");
         }
 
         if (this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != "") {
@@ -651,9 +678,9 @@ export class FiltrosEjgComponent implements OnInit {
         this.busqueda.emit(false);
         this.body.dictamen = "";
       }
-
     }
   }
+  
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -668,6 +695,7 @@ export class FiltrosEjgComponent implements OnInit {
     this.body.numColegiado = "";
     this.body.apellidosYNombre = "";
     this.body.tipoLetrado = "";
+    sessionStorage.removeItem("numColegiado")
   }
   clearFilters() {
     this.body = new EJGItem();
@@ -677,6 +705,7 @@ export class FiltrosEjgComponent implements OnInit {
 
     this.bodyDictamen = [];
 
+    this.clearFiltersTramitador();
     this.getComboColegio();
 
     this.showdatosIdentificacion = true;

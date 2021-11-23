@@ -1,0 +1,85 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="buscadSolCentralita">
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel class="my-1" [expanded]="expanded">
+        <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+            <div class="w100 font-weight-bold">
+                <p class="w100">{{ titulo }}</p>
+            </div>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+            <div class="form-row">
+                <div class="form-group-interlineado col-lg-2 col-md-2">
+                  <label>{{'justiciaGratuita.guardia.solicitudescentralita.navisocentralita' | translate}}</label>
+                  <input type="text" pKeyFilter="int" class="form-control" pInputText  [(ngModel)]="filtro.nAvisoCentralita" size="11"/>
+                </div>
+                <div class="form-group-interlineado col-lg-2 col-md-2">
+                    <label>{{'censo.fichaIntegrantes.literal.estado' | translate}}</label>
+                    <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.estado'
+                                [options]="comboEstadoAsistencias" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                                styleClass="widthAll" [filter]="true" filterBy="label" (onChange)="onChangeEstado($event)"></p-multiSelect>
+                      
+                </div>
+                <div class="form-group-interlineado col-lg-2 col-md-2">
+                  <label>{{'justiciaGratuita.guardia.solicitudescentralita.fechallamadadesde' | translate}}</label>
+                  <app-fecha [(value)]="filtro.fechaLlamadaDsd" (valueChangeSelected)="fillFechaDesde($event)"
+                  (valueChangeInput)="fillFechaDesde($event)" [showTime] = "true"></app-fecha>
+                </div>
+                <div class="form-group-interlineado col-lg-2 col-md-2">
+                  <label>{{'justiciaGratuita.guardia.solicitudescentralita.fechallamadahasta' | translate}}</label>
+                  <app-fecha [(value)]="filtro.fechaLlamadaHasta" (valueChangeSelected)="fillFechaHasta($event)"
+                  (valueChangeInput)="fillFechaHasta($event)" [showTime] = "true"></app-fecha>
+                </div>
+                <div class="form-group-interlineado col-lg-2 col-md-2">
+                    <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
+                    <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idTurno'
+                                [options]="comboTurnos" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                                styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeTurno($event)"></p-multiSelect>
+                </div>
+                <div class="form-group-interlineado col-lg-2 col-md-2">
+                    <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
+                    <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idGuardia'
+                    [options]="comboGuardias" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                    styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeGuardias($event)"></p-multiSelect>
+    
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group-interlineado col-lg-6 col-md-6">
+                    <label>{{"menu.facturacionSJCS.mantenimientoComisarias" | translate}}</label>
+                    <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idComisaria'
+                    [options]="comboComisarias" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                    styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeComisaria($event)"></p-multiSelect>
+    
+                </div>
+                <div class="form-group-interlineado col-lg-6 col-md-6">
+                  <label>{{"menu.facturacionSJCS.mantenimientoJuzgados" | translate}}</label>
+                  <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idJuzgado'
+                  [options]="comboJuzgados" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                  styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeJuzgado($event)"></p-multiSelect>
+  
+              </div>
+            </div>
+        </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel class="my-1" [expanded]="expanded">
+        <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+            <div class="w100 font-weight-bold">
+                <p class="w100">{{ "justiciaGratuita.justiciables.literal.colegiado" | translate}}</p>
+            </div>
+        </mat-expansion-panel-header>
+        <ng-template matExpansionPanelContent>
+            <div class="form-row">
+              <div class="form-group-interlineado col-lg-6 col-md-6">
+                <app-busqueda-colegiado-express [numColegiado]="filtro.numeroColegiado"
+                    [pantalla]="'guardia'"
+                    [nombreAp]="filtro.nombreColegiado" (colegiado)="changeColegiado($event)" [disabled]="disabledBusqColegiado">
+                </app-busqueda-colegiado-express>
+              </div>
+            </div>
+        </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

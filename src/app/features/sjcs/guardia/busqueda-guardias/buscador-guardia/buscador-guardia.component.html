@@ -10,8 +10,11 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtros-guardia [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtros-guardia>
-  <app-tabla-guardias *ngIf="buscar" [datos]="datos" (searchHistoricalSend)="search($event)"></app-tabla-guardias>
+  <app-filtros-guardia [abogado]="abogado" [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)"></app-filtros-guardia>
+  <app-tabla-guardias *ngIf="noUndefined" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo" [guardias]="datos"
+              [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
+              (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (searchHistoricalSend)="search($event)">
+            </app-tabla-guardias>
 </div>
 
 

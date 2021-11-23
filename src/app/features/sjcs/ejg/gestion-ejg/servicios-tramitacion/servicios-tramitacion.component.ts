@@ -162,13 +162,19 @@ export class ServiciosTramitacionComponent implements OnInit {
     }
 
     //Para evitar que se realice una busqueda innecesaria y lance errores por consola cuando no haya ningun turno seleccionado.
-    if(this.body.idTurno!=undefined && this.body.idTurno!=null)this.getComboGuardia();
+    if(this.body.idTurno!=undefined && this.body.idTurno!=null){
+      this.getComboGuardia();
+    }
 
     //Se desbloquea el desplegable de guardia si hay un turno seleccionado al inciar la tarjeta.
-    if (this.body.idTurno != undefined && this.body.idTurno != null) this.isDisabledGuardia = false;
+    if (this.body.idTurno != undefined && this.body.idTurno != null){
+      this.isDisabledGuardia = false;
+    }
 
     //Comprobamos si el colegiado fue seleccionado por art 27 o no. ES uno de los métodos más lentos del inicio
-    if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true) this.checkArt27();
+    if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true){ 
+      this.checkArt27();
+    }
   }
 
   checkArt27() {
@@ -234,10 +240,7 @@ export class ServiciosTramitacionComponent implements OnInit {
   }
   abreCierraFicha(key) {
     // this.resaltadoDatos = true;
-    if (
-      key == "serviciosTramitacion" &&
-      !this.activacionTarjeta
-    ) {
+    if (key == "serviciosTramitacion" && !this.activacionTarjeta) {
       this.fichaPosible.activa = !this.fichaPosible.activa;
       this.openFicha = !this.openFicha;
     }
@@ -286,10 +289,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
   getComboGuardia() {
     //this.progressSpinner = true;
-    this.sigaServices.getParam(
-      "combo_guardiaPorTurno",
-      "?idTurno=" + this.body.idTurno
-    )
+    this.sigaServices.getParam("combo_guardiaPorTurno","?idTurno=" + this.body.idTurno)
       .subscribe(
         col => {
           this.comboGuardia = col.combooItems;
@@ -398,6 +398,13 @@ export class ServiciosTramitacionComponent implements OnInit {
     } else {
       this.rest();
     }
+  }
+
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.body.numColegiado = event.nColegiado;
+    this.body.apellidosYNombre = event.nombreAp;
   }
 
   rest() {

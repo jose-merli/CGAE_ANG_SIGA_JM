@@ -6,7 +6,6 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
 import { PartidasPresupuestarias } from './partidasPresupuestarias/partidasPresupuestarias.component';
-import { GestionPartidasComponent } from './partidas.module';
 import { TablaPartidasComponent } from './gestion-partidas/gestion-partidaspresupuestarias.component';
 
 @Component({
