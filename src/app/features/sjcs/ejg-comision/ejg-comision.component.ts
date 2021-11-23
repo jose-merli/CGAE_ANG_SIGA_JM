@@ -78,6 +78,7 @@ export class EjgComisionComponent implements OnInit {
 
     // Creamos una copia de los filtros y modificamos los elementos de selección múltiple (cambiamos los arrays por strings separados por ',')
     let filtros = JSON.parse(JSON.stringify(this.filtros.body));
+    this.progressSpinner = true;
 
     if (filtros.tipoEJG) {
       if (filtros.tipoEJG.length > 0) {
