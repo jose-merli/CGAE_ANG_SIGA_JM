@@ -401,12 +401,14 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
        styles = {
         'width': size + 'px',
       };
+      return styles;
     }else{
        styles = {
         'max-width': size + 'px',
       };
+      return styles;
     }
-    return styles;
+    
   }
 
   searchChange(x: any) {

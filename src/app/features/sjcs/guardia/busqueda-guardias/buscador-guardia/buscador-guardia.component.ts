@@ -140,6 +140,8 @@ export class BuscadorGuardiaComponent implements OnInit {
         this.datos = JSON.parse(n.body).guardiaItems;
         if (this.datos != undefined){
           this.noUndefined = true;
+        }else{
+          this.noUndefined = false;
         }
         this.buscar = true;
         this.datos = this.datos.map(it => {

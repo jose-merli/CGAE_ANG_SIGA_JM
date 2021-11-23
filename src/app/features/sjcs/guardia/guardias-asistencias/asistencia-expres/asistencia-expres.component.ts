@@ -699,14 +699,14 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         (this.filtro.filtro.idTipoActuacion == null || this.filtro.filtro.idTipoActuacion == undefined || this.filtro.filtro.idTipoActuacion.length == 0) &&
         (this.filtro.filtro.idProcedimiento == null || this.filtro.filtro.idProcedimiento == undefined || this.filtro.filtro.idProcedimiento.length == 0) &&
         (this.filtro.filtro.nig == null || this.filtro.filtro.nig == undefined || this.filtro.filtro.nig.trim() == "" || this.filtro.filtro.nig.trim().length < 3) &&
-        (this.filtro.filtro.anio == null || this.filtro.filtro.anio == undefined || this.filtro.filtro.anio.trim() == "" || this.filtro.filtro.anio.trim().length < 3)) {
+        (this.filtro.filtro.anio == null || this.filtro.filtro.anio == undefined )) {
         
         this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
         return false;
       } else {   
         // quita espacios vacios antes de buscar
         if (this.filtro.filtro.anio != undefined && this.filtro.filtro.anio != null) {
-          this.filtro.filtro.anio = this.filtro.filtro.anio.trim();
+          this.filtro.filtro.anio = this.filtro.filtro.anio;
         }
         if (this.filtro.filtro.numero != undefined && this.filtro.filtro.numero != null) {
           this.filtro.filtro.numero = this.filtro.filtro.numero.trim();
