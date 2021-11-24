@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.component';
 
 @Component({
   selector: 'app-filtro-generar-impreso190',
@@ -12,6 +13,7 @@ export class FiltroGenerarImpreso190Component implements OnInit {
   anioPorDefecto = new Date().getFullYear();
   msgs = []
   @Output() getImpresos = new EventEmitter<boolean>();
+  @Input() permisoEscritura;
   constructor() { }
 
   ngOnInit() {
@@ -33,5 +35,13 @@ export class FiltroGenerarImpreso190Component implements OnInit {
   }
   clear() {
 		this.msgs = [];
+	}
+
+  //búsqueda con enter
+	@HostListener("document:keypress", ["$event"])
+	onKeyPress(event: KeyboardEvent) {
+		if (event.keyCode === KEY_CODE.ENTER) {
+			this.buscarImpresos();
+		}
 	}
 }

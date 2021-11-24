@@ -34,6 +34,9 @@ export const procesos_facturacionSJCS: any = {
     fichaRetTarjetaAplicacionEnPagos: "63C",
 
     // Permiso para búsqueda de baremos de guardia
-    busquedaBaremosDeGuardia: "618"
+    busquedaBaremosDeGuardia: "618",
+
+    //Permiso para generar impreso 190
+    generarImpreso190:'613'
 
 }

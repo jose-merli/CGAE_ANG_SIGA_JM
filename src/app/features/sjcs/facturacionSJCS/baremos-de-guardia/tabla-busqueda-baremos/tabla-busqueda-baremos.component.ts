@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
 import { Table } from 'primeng/table';
 @Component({
   selector: 'app-tabla-busqueda-baremos',
@@ -8,7 +8,7 @@ import { Table } from 'primeng/table';
 export class TablaBusquedaBaremosComponent implements OnInit {
 
   selectedDatos = [];
-  datos = [
+  datosDefecto = [
     {
       idTurno: 'Turno1',
       nDias: 'nDias1',
@@ -52,6 +52,11 @@ export class TablaBusquedaBaremosComponent implements OnInit {
   subCols = [];
   rowsPerPage = [];
   selectedItem: number = 10;
+  first = 0;
+
+  @Input()datos;
+  @Input()permisoEscritura;
+
 
   @ViewChild("table") tabla: Table;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
@@ -60,6 +65,10 @@ export class TablaBusquedaBaremosComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
+
+    if(this.datos == null || this.datos == undefined){
+      this.datos = this.datosDefecto
+    }
   }
 
   getCols() {

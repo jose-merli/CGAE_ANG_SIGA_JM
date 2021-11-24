@@ -33,6 +33,7 @@ export class FechaComponent implements OnInit, AfterViewInit {
 	@Input() disabledToday: boolean;
 	@Input() disabledDelete: boolean;
 	@Input() inputStyleClass: string;
+	@Input() appendTo = null;
 
 	es: any = esCalendar;
 	fechaSelectedFromCalendar: boolean = false;
@@ -164,4 +165,5 @@ export class FechaComponent implements OnInit, AfterViewInit {
 		this.calendar.overlayVisible = false;
 		this.fechaSelectedFromCalendar = true;
 	}
+
 }
