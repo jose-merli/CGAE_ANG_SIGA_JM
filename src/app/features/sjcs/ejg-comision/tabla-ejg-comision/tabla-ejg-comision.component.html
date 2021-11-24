@@ -251,7 +251,7 @@
         <label>Fundamento</label>
         <p-dropdown [(ngModel)]='valueFundamento' class="select-form" (onChange)="checkFundamento()"
           placeholder="Seleccionar" [options]="comboFundamento" [filter]="true" filterBy="label,labelSinTilde"
-          [showClear]="true" [disabled]="selectResolucionFundamento == true" [ngClass]="styleObligatorioFundamento(valueFundamento)"></p-dropdown>
+          [showClear]="true" [disabled]="selectResolucionFundamento == true" ></p-dropdown>
       </div>
       <div>
         <p-checkbox (onChange)="onChangeBorrarResolucionFundamento(selectResolucionFundamento?'A':'B')"
