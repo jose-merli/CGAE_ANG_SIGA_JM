@@ -40,11 +40,11 @@ export class DatosGeneralesMonederoComponent implements OnInit {
     this.getTiposIdentificacion();
     //Se comprueba si se ha realizado una busqueda y se rellena la tarjeta con los datos extraidos
     if (sessionStorage.getItem("buscadorColegiados")) {
-      const { nombre, apellidos, nColegiado, idPersona, nif, nInst } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+      const { nombre, apellidos, nColegiado, idPersona, nif, idInstitucion } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.ficha.nombre = nombre;
       this.ficha.apellidos = idPersona;
       this.ficha.nif = nif;
-      this.ficha.idInstitucion = nInst;
+      this.ficha.idInstitucion = idInstitucion;
       this.ficha.idPersona = idPersona;
 
       sessionStorage.removeItem("buscadorColegiados");
