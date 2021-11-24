@@ -25,6 +25,8 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
 
   resaltadoDatos: boolean = false;
+  editable: boolean = true;
+  porConfirmar: boolean = false;
 
   constructor(
     private commonsService: CommonsService,
@@ -54,7 +56,69 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     this.body.fechaModificacion = this.transformDate(this.body.fechaModificacion);
     this.resaltadoDatos = false;
 
+    this.editable = !this.modoEdicion || this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
+    this.porConfirmar = this.body.idEstadoConfirmacion == "21";
+
     console.log(this.body);
+  }
+
+  // Guardar
+
+  isValid(): boolean {
+    let camposObligatorios: boolean = this.body.idSerieFacturacion != undefined && this.body.idSerieFacturacion.trim() != "" 
+        && this.body.descripcion != undefined  && this.body.descripcion.trim() != "" && this.body.descripcion.length <= 255
+        && this.body.fechaRealGeneracion != undefined;
+
+    if (!camposObligatorios) {
+      this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
+      return false;
+    }
+
+    let fechaGeneracion: boolean = this.body.fechaRealGeneracion > new Date();
+    if (!fechaGeneracion) {
+      this.showMessage("error", "Error", "La Fecha de generación debe ser posterior a la fecha actual");
+      return false;
+    }
+
+    let fechaConfirmacion: boolean = this.body.fechaConfirmacion == undefined || this.body.fechaConfirmacion > this.body.fechaRealGeneracion;
+    if (!fechaConfirmacion) {
+      this.showMessage("error", "Error", "La Fecha de confirmación debe ser posterior a la fecha de generación");
+      return false;
+    }
+
+    let intervaloProductos: boolean = this.body.fechaInicioProductos != undefined && this.body.fechaFinProductos != undefined;
+    if (intervaloProductos) {
+      let intervalo: boolean = this.body.fechaInicioProductos < this.body.fechaFinProductos;
+      if (!intervalo) {
+        this.showMessage("error", "Error", "El intervalo de compras de productos es inválido");
+        return false;
+      }
+    } else {
+      this.showMessage("error", "Error", "La serie contiene tipos de productos");
+      return false;
+    }
+
+    let intervaloServicios: boolean = this.body.fechaInicioServicios != undefined && this.body.fechaFinServicios != undefined;
+    if (intervaloServicios) {
+      let intervalo: boolean = this.body.fechaInicioServicios < this.body.fechaFinServicios;
+      if (!intervalo) {
+        this.showMessage("error", "Error", "El intervalo de cuotas y suscripciones es inválido");
+        return false;
+      }
+    } else {
+      this.showMessage("error", "Error", "La serie contiene tipos de servicios");
+      return false;
+    }
+
+    return  true;
+  }
+
+  checkSave(): void {
+    if (this.isValid()) {
+      this.guardadoSend.emit(this.body);
+    } else {
+      this.resaltadoDatos = true;
+    }
   }
 
   // Botón de archivar
@@ -114,7 +178,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   }
 
   fillFechaFinServicios(event) {
-    this.body.fechaFinProductos = event;
+    this.body.fechaFinServicios = event;
   }
 
   // Transformar fecha
@@ -127,9 +191,34 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     return fecha;
   }
 
-  // Estilo obligatorio
+  // Estilo de error
+
   styleObligatorio(evento: string) {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleFechaGeneracion(evento) {
+    if (this.resaltadoDatos  && (this.body.fechaRealGeneracion == undefined || this.body.fechaRealGeneracion >= new Date())) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleFechaConfirmacion(evento) {
+    if (this.resaltadoDatos && this.body.fechaRealGeneracion != undefined && this.body.fechaConfirmacion != undefined && this.body.fechaRealGeneracion >= this.body.fechaConfirmacion) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleFechaProductos(evento) {
+    if (this.resaltadoDatos && !(this.body.fechaInicioProductos != undefined && this.body.fechaFinProductos != undefined && this.body.fechaInicioProductos < this.body.fechaFinProductos)) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleFechaServicios(evento) {
+    if (this.resaltadoDatos && !(this.body.fechaInicioServicios != undefined && this.body.fechaFinServicios != undefined || this.body.fechaInicioServicios < this.body.fechaFinServicios)) {
       return this.commonsService.styleObligatorio(evento);
     }
   }

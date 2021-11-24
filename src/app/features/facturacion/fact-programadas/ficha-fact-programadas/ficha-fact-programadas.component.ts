@@ -2,8 +2,11 @@ import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
+import { ComboItem } from '../../../../models/ComboItem';
 import { CuentasBancariasItem } from '../../../../models/CuentasBancariasItem';
 import { FacFacturacionprogramadaItem } from '../../../../models/FacFacturacionprogramadaItem';
+import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-ficha-fact-programadas',
@@ -21,19 +24,21 @@ export class FichaFactProgramadasComponent implements OnInit {
   enlacesTarjetaResumen = [];
 
   modoEdicion: boolean = true;
+  controlEmisionFacturasSII: boolean = false;
 
   manuallyOpened: boolean;
   openTarjetaDatosGenerales: boolean = true;
   openTarjetaSerieFactura: boolean = false;
-  openTarjetaGenFicheroAdeudos: boolean = false;
-  openTarjetaInfoFacturacion: boolean = false;
-  openTarjetaGenFicheroFacturas: boolean = false;
+  openTarjetaGenAdeudos: boolean = false;
+  openTarjetaInfoFactura: boolean = false;
+  openTarjetaGenFactura: boolean = false;
   openTarjetaEnvio: boolean = false;
   openTarjetaTraspaso: boolean = false;
 
   constructor(
     private translateService: TranslateService,
-    private location: Location
+    private location: Location,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
@@ -51,6 +56,7 @@ export class FichaFactProgramadasComponent implements OnInit {
       this.backTo();
     }
 
+    this.getParametrosCONTROL();
     if (this.modoEdicion) {
       this.updateTarjetaResumen();
     }
@@ -68,7 +74,7 @@ export class FichaFactProgramadasComponent implements OnInit {
   updateTarjetaResumen(): void {
     this.datos = [
       {
-        label: "Serie Facturación",
+        label: this.translateService.instant("facturacion.factProgramadas.serieFactu"),
         value: this.body.nombreAbreviado
       },
       {
@@ -76,11 +82,11 @@ export class FichaFactProgramadasComponent implements OnInit {
         value: this.body.descripcion
       },
       {
-        label: "Estado",
+        label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado"),
         value: this.body.estadoConfirmacion
       },
       {
-        label: "Importe",
+        label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.importe"),
         value: this.body.importe
       }
     ]
@@ -90,31 +96,96 @@ export class FichaFactProgramadasComponent implements OnInit {
     this.enlacesTarjetaResumen = [];
 
     this.enlacesTarjetaResumen.push({
+      label: "facturacion.factProgramadas.serieFactu",
+      value: document.getElementById("serieFactura"),
+      nombre: "serieFactura",
+    });
+
+    this.enlacesTarjetaResumen.push({
       label: "general.message.datos.generales",
       value: document.getElementById("datosGenerales"),
       nombre: "datosGenerales",
     });
 
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.factProgramadas.genAdeudos",
+      value: document.getElementById("genAdeudos"),
+      nombre: "genAdeudos",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.factProgramadas.infoFactura",
+      value: document.getElementById("infoFactura"),
+      nombre: "infoFactura",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.seriesFactura.generarPDF.literal",
+      value: document.getElementById("genFactura"),
+      nombre: "genFactura",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.seriesFactura.envioFact.literal",
+      value: document.getElementById("envio"),
+      nombre: "envio",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.seriesFactura.traspaso.literal",
+      value: document.getElementById("traspaso"),
+      nombre: "traspaso",
+    });
+
+  }
+
+  // Obtener parametros de CONTROL
+  getParametrosCONTROL(): void {
+    this.sigaServices.getParam("facturacionPyS_parametrosCONTROL", "?idInstitucion=").subscribe(
+      n => {
+        let items: ComboItem[] = n.combooItems;
+        let controlEmisionItem: ComboItem = items.find(item => item.label == "CONTROL_EMISION_FACTURAS_SII");
+
+        if (controlEmisionItem) {
+          this.controlEmisionFacturasSII = controlEmisionItem.value == "1";
+        }
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  serieFacturacionChanged(serie: SerieFacturacionItem) {
+    if (!this.modoEdicion) {
+      this.body = new FacFacturacionprogramadaItem();
+      this.body.idSerieFacturacion = serie.idSerieFacturacion;
+      this.body.descripcion = serie.abreviatura;
+
+      let minutesToAdd = 5;
+      let currentDate = new Date();
+      this.body.fechaRealGeneracion = new Date(currentDate.getTime() + minutesToAdd*60000);
+    }
   }
 
   // Abrir tarjetas desde enlaces
   isOpenReceive(event) {
     if (event != undefined) {
       switch (event) {
-        case "datosGenerales":
-          this.openTarjetaDatosGenerales = true;
-          break;
         case "serieFactura":
           this.openTarjetaSerieFactura = true;
           break;
-        case "genFicheroAdeudos":
-          this.openTarjetaGenFicheroAdeudos = true;
+        case "datosGenerales":
+          this.openTarjetaDatosGenerales = true;
           break;
-        case "infoFacturacion":
-          this.openTarjetaInfoFacturacion = true;
+        case "genAdeudos":
+          this.openTarjetaGenAdeudos = true;
           break;
-        case "genFicheroFacturas":
-          this.openTarjetaGenFicheroFacturas = true;
+        case "infoFactura":
+          this.openTarjetaInfoFactura = true;
+          break;
+        case "genFactura":
+          this.openTarjetaGenFactura = true;
           break;
         case "envio":
           this.openTarjetaEnvio = true;
@@ -130,20 +201,20 @@ export class FichaFactProgramadasComponent implements OnInit {
   isCloseReceive(event) {
     if (event != undefined) {
       switch (event) {
+        case "serieFactura":
+          this.openTarjetaSerieFactura = this.manuallyOpened;
+          break;
         case "datosGenerales":
           this.openTarjetaDatosGenerales = this.manuallyOpened;
           break;
-        case "serieFacturacion":
-          this.openTarjetaSerieFactura = this.manuallyOpened;
+        case "genAdeudos":
+          this.openTarjetaGenAdeudos = this.manuallyOpened;
           break;
-        case "genFicheroAdeudos":
-          this.openTarjetaGenFicheroAdeudos = this.manuallyOpened;
+        case "infoFactura":
+          this.openTarjetaInfoFactura = this.manuallyOpened;
           break;
-        case "infoFacturacion":
-          this.openTarjetaInfoFacturacion = this.manuallyOpened;
-          break;
-        case "genFicheroFacturas":
-          this.openTarjetaGenFicheroFacturas = this.manuallyOpened;
+        case "genFactura":
+          this.openTarjetaGenFactura = this.manuallyOpened;
           break;
         case "envio":
           this.openTarjetaEnvio = this.manuallyOpened;

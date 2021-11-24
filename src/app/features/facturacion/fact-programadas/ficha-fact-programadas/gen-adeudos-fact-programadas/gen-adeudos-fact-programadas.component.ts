@@ -55,6 +55,8 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
     this.resaltadoDatos = false;
   }
 
+  // Guardar
+  
   isValid(): boolean {
     return this.body.fechaPresentacion != undefined && this.body.fechaRecibosPrimeros != undefined
         && this.body.fechaRecibosRecurrentes != undefined && this.body.fechaRecibosCOR1 != undefined
@@ -71,7 +73,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   navigateToFicheroAdeudos() {
-    let filtros = { idProgramacion: this.body.idProgramacion };
+    let filtros = { idprogramacion: this.body.idProgramacion };
 
     this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).subscribe(
       n => {

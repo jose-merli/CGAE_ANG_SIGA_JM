@@ -12,28 +12,30 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('genAdeudos')">
-            <label class="mr-auto title-ficha pointer">Generación de Fichero de Adeudos</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.factProgramadas.genAdeudos' | translate }}</label>
 
             <label class="mr-3">
               <i (click)="navigateToFicheroAdeudos();$event.stopPropagation();"
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToFicheroAdeudos();$event.stopPropagation();">
                 <span style="color: blue; text-decoration: underline;cursor:pointer;">
-                  Ficha Fichero de Adeudos
+                  {{ 'facturacion.factProgramadas.genAdeudos.enlace' | translate }}
                 </span>
               </a>
             </label>
           </div>
           <div class="d-flex justify-content-between default">
             
-            <label>Serie de Facturación: 
-                <span>{{body.nombreAbreviado }}</span></label>
-            <label>{{ "general.description" | translate }}: 
-                <span>{{body.descripcion }}</span></label>
-            <label>Estado: 
-              <span>{{body.estado }}</span></label>
-            <label>Importe: 
-              <span>{{body.importe }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.presentacion' | translate }}: 
+              <span>{{ body.fechaPresentacion | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.primeros' | translate }}: 
+              <span>{{ body.fechaRecibosPrimeros | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.recurrentes' | translate }}: 
+              <span>{{ body.fechaRecibosRecurrentes | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.cor1' | translate }}: 
+              <span>{{ body.fechaRecibosCOR1 | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.b2b' | translate }}: 
+              <span>{{ body.fechaRecibosB2B | date: 'dd/MM/yyyy' }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('genAdeudos')"
               *ngIf="!esFichaActiva('genAdeudos')"></i>
@@ -47,14 +49,14 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Generación de Fichero de Adeudos</label>
+        <label class="title-ficha pointer">{{ 'facturacion.factProgramadas.genAdeudos' | translate }}</label>
 
         <label class="ml-auto mr-3">
           <i (click)="navigateToFicheroAdeudos();$event.stopPropagation();"
             class="fas fa-external-link-alt mr-2"></i>
           <a (click)="navigateToFicheroAdeudos();$event.stopPropagation();">
             <span style="color: blue; text-decoration: underline;cursor:pointer;">
-              Ficha Fichero de Adeudos
+              {{ 'facturacion.factProgramadas.genAdeudos.enlace' | translate }}
             </span>
           </a>
         </label>
@@ -66,27 +68,27 @@
     <div [hidden]="!esFichaActiva('genAdeudos')" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
-          <label>Fecha presentación ficheros de adeudos (*)</label>
+          <label>{{ 'facturacion.factProgramadas.genAdeudos' | translate }} (*)</label>
           <app-fecha [(value)]="body.fechaPresentacion" [inputStyleClass]="styleObligatorio(body.fechaPresentacion)" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaPresentacion($event)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Fecha cargo para primeros recibos (*)</label>
+          <label>{{ 'facturacion.factProgramadas.genAdeudos.primeros' | translate }} (*)</label>
           <app-fecha [(value)]="body.fechaRecibosPrimeros" [inputStyleClass]="styleObligatorio(body.fechaRecibosPrimeros)" (valueChangeSelected)="fillFechaRecibosPrimeros($event)" (valueChangeInput)="fillFechaRecibosPrimeros($event)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Fecha cargo para recibos recurrentes (*)</label>
+          <label>{{ 'facturacion.factProgramadas.genAdeudos.recurrentes' | translate }} (*)</label>
           <app-fecha [(value)]="body.fechaRecibosRecurrentes" [inputStyleClass]="styleObligatorio(body.fechaRecibosRecurrentes)" (valueChangeSelected)="fillFechaRecibosRecurrentes($event)" (valueChangeInput)="fillFechaRecibosRecurrentes($event)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Fecha cargo para recibos COR1 (*)</label>
+          <label>{{ 'facturacion.factProgramadas.genAdeudos.cor1' | translate }} (*)</label>
           <app-fecha [(value)]="body.fechaRecibosCOR1" [inputStyleClass]="styleObligatorio(body.fechaRecibosCOR1)" (valueChangeSelected)="fillFechaRecibosCOR1($event)" (valueChangeInput)="fillFechaRecibosCOR1($event)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Fecha cargo para recibos B2B (*)</label>
+          <label>{{ 'facturacion.factProgramadas.genAdeudos.b2b' | translate }} (*)</label>
           <app-fecha [(value)]="body.fechaRecibosB2B" [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)">
           </app-fecha>
         </div>

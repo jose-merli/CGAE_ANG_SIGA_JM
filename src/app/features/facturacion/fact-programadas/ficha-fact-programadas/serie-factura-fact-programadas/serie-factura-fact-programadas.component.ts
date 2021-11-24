@@ -14,7 +14,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './serie-factura-fact-programadas.component.html',
   styleUrls: ['./serie-factura-fact-programadas.component.scss']
 })
-export class SerieFacturaFactProgramadasComponent implements OnInit, OnChanges {
+export class SerieFacturaFactProgramadasComponent implements OnInit {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -23,7 +23,7 @@ export class SerieFacturaFactProgramadasComponent implements OnInit, OnChanges {
   @Input() openTarjetaSerieFactura;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<FacFacturacionprogramadaItem>();
+  @Output() serieFacturacionChanged = new EventEmitter<SerieFacturacionItem>();
 
   @Input() bodyInicial: FacFacturacionprogramadaItem;
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
@@ -44,11 +44,7 @@ export class SerieFacturaFactProgramadasComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getComboSerieFacturacion();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.bodyInicial != undefined)
-      this.restablecer();
+    this.restablecer();
   }
 
   // Combo de Series de Facturación
@@ -72,6 +68,9 @@ export class SerieFacturaFactProgramadasComponent implements OnInit, OnChanges {
       this.serieFacturacionSeleccionada = new SerieFacturacionItem();
       this.tiposProductos = "";
       this.tiposServicios = "";
+
+      if (!this.modoEdicion)
+        this.serieFacturacionChanged.emit(this.serieFacturacionSeleccionada);
     }
   }
 
@@ -108,6 +107,8 @@ export class SerieFacturaFactProgramadasComponent implements OnInit, OnChanges {
           this.tiposProductos = this.collapseTiposIncluidos(this.serieFacturacionSeleccionada.tiposProductos.map(t => t.label));
           this.tiposServicios = this.collapseTiposIncluidos(this.serieFacturacionSeleccionada.tiposServicios.map(t => t.label));
           console.log(this.serieFacturacionSeleccionada);
+
+          this.serieFacturacionChanged.emit(this.serieFacturacionSeleccionada);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -136,21 +137,6 @@ export class SerieFacturaFactProgramadasComponent implements OnInit, OnChanges {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.actualizarInputs();
     this.resaltadoDatos = false;
-  }
-
-  // Guadar
-
-  isValid(): boolean {
-    return this.body.idSerieFacturacion != undefined && this.body.idSerieFacturacion.trim() != "";
-  }
-
-  checkSave(): void {
-    if (this.isValid()) {
-      this.guardadoSend.emit(this.body);
-    } else {
-      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
-      this.resaltadoDatos = true;
-    }
   }
 
   // Estilo obligatorio

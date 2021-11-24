@@ -82,11 +82,11 @@ export class FactProgramadasComponent implements OnInit {
     let isProducto: boolean = dato.fechaInicioProductos != undefined && dato.fechaFinProductos != undefined;
 
     if (isServicio && isProducto) {
-      return "Compras/Suscripción";
+      return this.translateService.instant("facturacion.productos.CompraSuscripcion");
     } else if (isProducto) {
-      return "Compras";
+      return this.translateService.instant("facturacion.factProgramadas.literal.compra");
     } else {
-      return "Suscripción";
+      return this.translateService.instant("facturacion.factProgramadas.literal.suscripcion");
     }
   }
 

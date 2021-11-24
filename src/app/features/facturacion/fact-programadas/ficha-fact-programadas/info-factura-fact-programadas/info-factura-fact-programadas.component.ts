@@ -47,11 +47,11 @@ export class InfoFacturaFactProgramadasComponent implements OnInit {
   // Definición de las columnas
   getCols() {
     this.cols = [
-      { field: "momento", header: "Momento", width: "20%" },
-      { field: "descripcion", header: "Forma de pago", width: "30%" },
-      { field: "numFacturas", header: "Número de facturas", width: "30%" },
-      { field: "total", header: "Total", width: "10%" }, 
-      { field: "totalPendiente", header: "Total pendiente", width: "10%" }
+      { field: "momento", header: "facturacion.factProgramadas.serieFactu.momento", width: "20%" },
+      { field: "descripcion", header: "general.description", width: "30%" },
+      { field: "numFacturas", header: "facturacion.factProgramadas.serieFactu.numFactu", width: "30%" },
+      { field: "total", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "10%" }, 
+      { field: "totalPendiente", header: "facturacion.factProgramadas.serieFactu.totalPendiente", width: "10%" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));

@@ -12,17 +12,17 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('traspaso')">
-            <label class="mr-auto title-ficha pointer">Traspaso de Facturas Automático a Servicio Externo</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.traspaso.literal' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
             
-            <label>Generar ficheros de facturas autom.: 
+            <label>{{ 'facturacion.seriesFactura.generarPDF.auto' | translate }}: 
                 <span>{{body.traspasoFacturas ? "Sí" : "No" }}</span></label>
-            <label>Plantilla SII: 
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantilla' | translate }}: 
                 <span>{{body.traspasoPlantilla }}</span></label>
-            <label>Plantilla auditoria SII: 
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantillaAudit' | translate }}: 
               <span>{{body.traspasoCodAuditoriaTraspaso }}</span></label>
-            <label>Estado: 
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}: 
               <span>{{body.estadoTraspaso }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('traspaso')"
@@ -37,7 +37,7 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Traspaso de Facturas Automático a Servicio Externo</label>
+        <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.traspaso.literal' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -46,20 +46,20 @@
     <div [hidden]="!esFichaActiva('traspaso')" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-check col-lg-3 col-md-3 align-self-center d-flex justify-content-between">
-          <label class="form-group-label">Generar ficheros de facturas autom.</label>
+          <label class="form-group-label">{{ 'facturacion.seriesFactura.generarPDF.auto' | translate }}</label>
           &nbsp;&nbsp;
           <p-checkbox class="float-right" [(ngModel)]="body.traspasoFacturas" binary="true"></p-checkbox>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Plantilla SII</label>
+          <label>{{ 'facturacion.seriesFactura.traspaso.plantilla' | translate }}</label>
           <input type="text" [(ngModel)]="body.traspasoPlantilla" class="form-control" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Plantilla Auditoría SII</label>
+          <label>{{ 'facturacion.seriesFactura.traspaso.plantillaAudit' | translate }}</label>
           <input type="text" [(ngModel)]="body.traspasoCodAuditoriaDef" class="form-control" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Estado</label>
+          <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
           <input type="text" [(ngModel)]="body.estadoTraspaso" class="form-control" [disabled]="true" pInputText>
         </div>
       </div>

@@ -63,15 +63,15 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   // Definición de las columnas
   getCols() {
     this.cols = [
-      { field: "nombreAbreviado", header: "Serie Facturación", width: "10%" },
+      { field: "nombreAbreviado", header: "facturacion.factProgramadas.serieFactu", width: "10%" },
       { field: "descripcion", header: "enviosMasivos.literal.descripcion", width: "20%" },
-      { field: "compraSuscripcion", header: "Compras / Suscripción", width: "10%" },
-      { field: "fechaCompraSuscripcionDesde", header: "Desde", width: "5%" }, 
-      { field: "fechaCompraSuscripcionHasta", header: "Hasta", width: "5%" },
-      { field: "fechaPrevistaGeneracion", header: "Fecha prevista generación", width: "5%" },
-      { field: "fechaConfirmacion", header: "Fecha confirmación", width: "5%" },
-      { field: "importe", header: "Importe total", width: "10%" },
-      { field: "estado", header: "Estado", width: "10%" }
+      { field: "compraSuscripcion", header: "menu.productosYServicios.solicitudes.alta", width: "10%" },
+      { field: "fechaCompraSuscripcionDesde", header: "censo.solicitudincorporacion.fechaDesde", width: "5%" }, 
+      { field: "fechaCompraSuscripcionHasta", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta", width: "5%" },
+      { field: "fechaPrevistaGeneracion", header: "facturacion.factProgramadas.fechas.prevGen", width: "5%" },
+      { field: "fechaConfirmacion", header: "facturacion.factProgramadas.fechas.conf", width: "5%" },
+      { field: "importe", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "10%" },
+      { field: "estado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "10%" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));

@@ -16,17 +16,17 @@
           </div>
           <div class="d-flex justify-content-between default">
             
-            <label>Descripción: 
+            <label>{{ 'general.description' | translate }}: 
                 <span>{{ body.descripcion }}</span></label>
-            <label>Fecha de generación: 
+            <label>{{ 'justiciaGratuita.remesas.tabla.FechaGeneracion' | translate }}: 
                 <span>{{ body.fechaRealGeneracion | date: 'dd/MM/yyyy' }}</span></label>
-            <label>Fecha de confirmación: 
+            <label>{{ 'facturacion.factProgramadas.fechas.conf' | translate }}: 
               <span>{{body.fechaConfirmacion | date: 'dd/MM/yyyy' }}</span></label>
-            <label>Fecha mínima: 
+            <label>{{ 'facturacion.factProgramadas.fechas.min' | translate }}: 
               <span>{{ body.fechaCompraSuscripcionDesde | date: 'dd/MM/yyyy' }}</span></label>
-            <label>Fecha máxima: 
+            <label>{{ 'facturacion.factProgramadas.fechas.max' | translate }}: 
               <span>{{ body.fechaCompraSuscripcionHasta | date: 'dd/MM/yyyy' }}</span></label>
-            <label>Estado: 
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}: 
               <span>{{ body.estadoConfirmacion }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
@@ -52,17 +52,17 @@
         <div class="bloque col-lg-3 col-md-3">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label>Descripción de Facturación (*)</label>
-              <input type="text" [(ngModel)]="body.descripcion" class="form-control" maxLength="255" pInputText>
+              <label>{{ 'general.description' | translate }} (*)</label>
+              <input type="text" [(ngModel)]="body.descripcion" class="form-control" maxLength="255" [disabled]="!editable" pInputText>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>Fecha Generación (*)</label>
-              <app-fecha [(value)]="body.fechaRealGeneracion" (valueChangeSelected)="fillFechaRealGeneracion($event)" (valueChangeInput)="fillFechaRealGeneracion($event)">
+              <label>{{ 'justiciaGratuita.remesas.tabla.FechaGeneracion' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaRealGeneracion" [inputStyleClass]="styleFechaGeneracion(body.fechaRealGeneracion)" (valueChangeSelected)="fillFechaRealGeneracion($event)" (valueChangeInput)="fillFechaRealGeneracion($event)" [disabled]="!editable">
               </app-fecha>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>Fecha Confirmación</label>
-              <app-fecha [(value)]="body.fechaConfirmacion" (valueChangeSelected)="fillFechaConfirmacion($event)" (valueChangeInput)="fillFechaConfirmacion($event)">
+              <label>{{ 'facturacion.factProgramadas.fechas.conf' | translate }}</label>
+              <app-fecha [(value)]="body.fechaConfirmacion" [inputStyleClass]="styleFechaConfirmacion(body.fechaConfirmacion)" (valueChangeSelected)="fillFechaConfirmacion($event)" (valueChangeInput)="fillFechaConfirmacion($event)" [disabled]="!editable || porConfirmar">
               </app-fecha>
             </div>
           </div>
@@ -70,23 +70,23 @@
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
-              <label>Incluir compras de productos desde (*)</label>
-              <app-fecha [(value)]="body.fechaInicioProductos" (valueChangeSelected)="fillFechaInicioProductos($event)" (valueChangeInput)="fillFechaInicioProductos($event)">
+              <label>{{ 'facturacion.factProgramadas.datosGenerales.prodDesde' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaInicioProductos" [inputStyleClass]="styleFechaProductos(body.fechaInicioProductos)" (valueChangeSelected)="fillFechaInicioProductos($event)" (valueChangeInput)="fillFechaInicioProductos($event)" [disabled]="!editable">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>Incluir compras de productos hasta (*)</label>
-              <app-fecha [(value)]="body.fechaFinProductos" (valueChangeSelected)="fillFechaFinProductos($event)" (valueChangeInput)="fillFechaFinProductos($event)">
+              <label>{{ 'facturacion.factProgramadas.datosGenerales.prodHasta' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaFinProductos" [inputStyleClass]="styleFechaProductos(body.fechaFinProductos)" (valueChangeSelected)="fillFechaFinProductos($event)" (valueChangeInput)="fillFechaFinProductos($event)" [disabled]="!editable">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>Incluir cuotas y suscripciones desde (*)</label>
-              <app-fecha [(value)]="body.fechaInicioServicios" (valueChangeSelected)="fillFechaInicioServicios($event)" (valueChangeInput)="fillFechaInicioServicios($event)">
+              <label>{{ 'facturacion.factProgramadas.datosGenerales.susDesde' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaInicioServicios" [inputStyleClass]="styleFechaServicios(body.fechaInicioServicios)" (valueChangeSelected)="fillFechaInicioServicios($event)" (valueChangeInput)="fillFechaInicioServicios($event)" [disabled]="!editable">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>Incluir cuotas y suscripciones hasta (*)</label>
-              <app-fecha [(value)]="body.fechaFinServicios" (valueChangeSelected)="fillFechaFinServicios($event)" (valueChangeInput)="fillFechaFinServicios($event)">
+              <label>{{ 'facturacion.factProgramadas.datosGenerales.susHasta' | translate }} (*)</label>
+              <app-fecha [(value)]="body.fechaFinServicios" [inputStyleClass]="styleFechaServicios(body.fechaFinServicios)" (valueChangeSelected)="fillFechaFinServicios($event)" (valueChangeInput)="fillFechaFinServicios($event)" [disabled]="!editable">
               </app-fecha>
             </div>
           </div>
@@ -94,12 +94,12 @@
         <div class="bloque col-lg-3 col-md-3">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-12">
-              <label>Fecha Modificación</label>
+              <label>{{ 'censo.datosDireccion.literal.fechaModificacion' | translate }}</label>
               <app-fecha [(value)]="body.fechaModificacion" [disabled]="true">
               </app-fecha>
             </div>
             <div class="form-group col-lg-12 col-md-12">
-              <label>Estado</label>
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
               <input type="text" [(ngModel)]="body.estadoConfirmacion" class="form-control" [disabled]="true" pInputText>
             </div>
           </div>
@@ -112,12 +112,12 @@
         <button pButton (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
         <button pButton (click)="confirmDescargar()"
-          type="button" icon="fa fa-eraser" iconPos="left" label="Descargar LOG"></button>
+          type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
 
         <button pButton *ngIf="!body.archivarFact" (click)="archivar()"
-          type="button" icon="fa fa-eraser" iconPos="left" label="Archivar"></button>
+          type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.archivar' | translate }}"></button>
         <button pButton *ngIf="body.archivarFact" (click)="desarchivar()"
-          type="button" icon="fa fa-eraser" iconPos="left" label="Desarchivar"></button>
+          type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'form.busquedaCursos.literal.boton.desarchivar' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
