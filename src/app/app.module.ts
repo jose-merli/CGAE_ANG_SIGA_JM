@@ -537,6 +537,7 @@ import { InfoFacturaFactProgramadasComponent } from './features/facturacion/fact
 import { FiltrosBusquedaTransferenciasComponent } from './features/facturacion/ficheros-transferencia/filtros-busqueda-transferencias/filtros-busqueda-transferencias.component';
 import { TablaFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/tabla-ficheros-transferencias/tabla-ficheros-transferencias.component';
 import { GestionFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component';
+import { DatosGeneracionFichTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/datos-generacion-fich-transferencias/datos-generacion-fich-transferencias.component';
 enableRipple(true);
 
 @NgModule({
@@ -989,7 +990,8 @@ enableRipple(true);
 		InfoFacturaFactProgramadasComponent,
 		FiltrosBusquedaTransferenciasComponent,
 		TablaFicherosTransferenciasComponent,
-		GestionFicherosTransferenciasComponent
+		GestionFicherosTransferenciasComponent,
+		DatosGeneracionFichTransferenciasComponent
 	],
 	imports: [
 		Paginador3Module,

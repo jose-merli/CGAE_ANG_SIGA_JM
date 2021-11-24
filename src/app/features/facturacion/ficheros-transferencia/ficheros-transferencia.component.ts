@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '../../../commons/translate';
 import { CommonsService } from '../../../_services/commons.service';
-import { OldSigaServices } from '../../../_services/oldSiga.service'
 import { SigaServices } from '../../../_services/siga.service';
 import { FiltrosBusquedaTransferenciasComponent } from './filtros-busqueda-transferencias/filtros-busqueda-transferencias.component';
 import { TablaFicherosTransferenciasComponent } from './tabla-ficheros-transferencias/tabla-ficheros-transferencias.component';
@@ -44,7 +43,7 @@ export class FicherosTransferenciaComponent implements OnInit {
       n => {
         this.progressSpinner = false;
 
-        this.datos = JSON.parse(n.body).ficherosAdeudosItems;
+        this.datos = JSON.parse(n.body).ficherosTransferenciasItems;
         this.buscar = true;
         let error = JSON.parse(n.body).error;
 
