@@ -1,0 +1,86 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-body">
+      <div class="form-row">
+      </div>
+      <p class="title-module" (click)="onHideDatosJustificacion()">
+        {{ 'general.message.datos.generales' | translate }}
+        <i *ngIf="showDatosJustificacion" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosJustificacion" class="fa fa-angle-down float-right"></i>
+      </p>
+      <div *ngIf="showDatosJustificacion" class="module vista-avanzada">
+        <!--FIla 1-->
+        <div class="form-row">
+          <!--Colegio-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.colegio' | translate}}</label>
+            <p-dropdown [disabled]="disableColegio" class="select-form" [(ngModel)]='filtros.idColegio' placeholder="Seleccionar"
+            [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeColegio($event)">
+            </p-dropdown>
+          </div>
+          <!--Partida Presupuestaria-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "menu.justiciaGratuita.maestros.partidas" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idPartidaPresupuestaria' placeholder="Seleccionar"
+              [options]="comboPartidaPresupuestaria" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+          <!--Grupo de Facturacion-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.oficio.turnos.grupofacturacion" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idFacturacion' placeholder="Seleccionar"
+              [disabled]="disableComboFact" [options]="comboGrupoFacturacion" [filter]="true"
+              filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <!--Conceptos y servicios-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.conceptosyservicios" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='filtros.idConcepto' placeholder="Seleccionar"
+              [options]="comboConceptoServicios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+        </div>
+        <!--FIla 2-->
+        <div class="form-row">
+          <!--Nombre-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}}</label>
+            <input type="text" maxlength="95" name="nombre" class="form-control" [(ngModel)]='filtros.nombre'
+              pInputText />
+          </div>
+          <!--Estado-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
+            <p-multiSelect class="select-form" [(ngModel)]='filtros.estado'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstado" [filter]="true"
+              maxSelectedLabels="10" filterBy="label,labelSinTilde" styleClass="widthAll"
+              (onPanelShow)="focusInputField(conceptoMultiselect)" (onChange)="onChangeMultiSelect($event, 'estado')">
+            </p-multiSelect>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}}</label>
+            <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDesde($event)"
+              (valueChangeInput)="fillFechaDesde($event)" [(value)]="filtros.fechaDesde"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'gratuita.personaJG.literal.hasta' | translate}}</label>
+            <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event)"
+              (valueChangeInput)="fillFechaHasta($event)" [(value)]="filtros.fechaHasta" [minDate]="filtros.fechaDesde">
+            </app-fecha>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"
+          (click)="restablecer()"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.search' | translate }}" (click)="buscarCert()"></button>
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
+          [disabled]="!permisoEscritura" (click)="newCer()"></button>
+      </div>
+    </div>
+  </div>
+</div>

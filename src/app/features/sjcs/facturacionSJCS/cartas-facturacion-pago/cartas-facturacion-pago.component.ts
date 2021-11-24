@@ -3,12 +3,10 @@ import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturac
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TranslateService } from '../../../../commons/translate';
-import { Router, ActivatedRoute } from '@angular/router';
-import { Location } from "@angular/common";
+import { Router } from '@angular/router';
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroCartasFacturacionPagoComponent } from './filtro-cartas-facturacion-pago/filtro-cartas-facturacion-pago.component';
 import { TablaCartasFacturacionPagoComponent } from './tabla-cartas-facturacion-pago/tabla-cartas-facturacion-pago.component';
-import { SigaStorageService } from '../../../../siga-storage.service';
 
 @Component({
   selector: 'app-cartas-facturacion-pago',
@@ -21,7 +19,6 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
   datos = [];
   buscar: boolean = false;
   progressSpinner: boolean = false;
-  activaVolver: boolean = false;
   modoBusqueda: string;
   msgs = [];
 
@@ -29,8 +26,7 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
   @ViewChild(TablaCartasFacturacionPagoComponent) tabla;
 
   constructor(private commonsService: CommonsService, private persistenceService: PersistenceService,
-    private translateService: TranslateService, private router: Router, private activatedRoute: ActivatedRoute,
-    private location: Location, private sigaServices: SigaServices, private sigaStorageService: SigaStorageService) { }
+    private translateService: TranslateService, private router: Router, private sigaServices: SigaServices) { }
 
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_facturacionSJCS.cartasFacturacionPago)
@@ -50,54 +46,11 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
         }
       }
       ).catch(error => console.error(error));
-
-    this.activaVolver = false;
-
-    let isLetrado = this.sigaStorageService.isLetrado;
-
-    //Viene de ficha de facturación 
-    if (undefined != sessionStorage.getItem("datosCartasFacturacion")) {
-      let datos = JSON.parse(sessionStorage.getItem("datosCartasFacturacion"));
-      sessionStorage.removeItem("datosCartasFacturacion");
-      this.activaVolver = true;
-
-      //Si es letrado no puede ver las cartas de facturación de la ficha de facturación 
-      if (!isLetrado) {
-        this.filtros.filtros.idFacturacion = datos.idFacturacion;
-        this.persistenceService.setFiltros(datos);
-        this.search(datos.modo);
-      }
-    }
-
-    // Viene de ficha de pago
-    if (undefined != sessionStorage.getItem("datosCartasPago")) {
-      let datos = JSON.parse(sessionStorage.getItem("datosCartasPago"));
-      sessionStorage.removeItem("datosCartasPago");
-      this.activaVolver = true;
-
-      //Si es letrado no puede ver las cartas de pago de las ficha de pagos 
-      if (!isLetrado) {
-        this.filtros.filtros.idPago = [datos.idPago];
-        this.persistenceService.setFiltros(datos);
-        this.search(datos.modo);
-      }
-    }
-  }
-
-  volver() {
-    this.persistenceService.clearFiltros();
-    this.persistenceService.setFiltros(this.persistenceService.getFiltrosAux());
-    this.location.back();
-  }
-
-  desactivaVolver() {
-    this.activaVolver = false;
   }
 
   search(event) {
 
     this.modoBusqueda = event;
-    this.buscar = true;
 
     if (event == "f") {
       this.searchFacturacion();
@@ -107,6 +60,7 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
   }
 
   changeModoBusqueda() {
+    this.datos = [];
     this.buscar = false;
   }
 
@@ -169,6 +123,8 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
         if (error != null && error.description != null) {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
+
+        this.buscar = true;
 
       },
       err => {
@@ -245,6 +201,8 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
         if (error != null && error.description != null) {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
+
+        this.buscar = true;
 
       },
       err => {

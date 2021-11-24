@@ -1,0 +1,139 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card">
+  <div class="card-body">
+    <p class="title-module"> {{ 'general.message.datos.generales' | translate }}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
+    <div class="module vista-simple">
+      <div class="form-row">
+
+        <!-- TURNO -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
+          <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idTurno'
+            [options]="comboTurno" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectTurno)" (onChange)="onChangeTurno($event)">
+          </p-multiSelect>
+        </div>
+
+        <!-- GUARDIA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
+          <!--<input type="text" class="box" name="nombre" [(ngModel)]="filtros.nombre" class="form-control" pInputText>-->
+          <p-multiSelect #multiSelectGuardias [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.idGuardia' [disabled]="isDisabledGuardia"
+            [options]="comboGuardias" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectGuardias)">
+          </p-multiSelect>
+        </div>
+
+        <!-- AREAS -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.maestros.Area" | translate}}</label>
+          <p-multiSelect #multiSelectArea [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.area'
+            [options]="comboArea" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll" (onChange)="onChangeArea()"
+            [filter]="true" filterBy="label,labelSinTilde">daturnos
+          </p-multiSelect>
+        </div>
+
+        <!-- MATERIA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.maestros.Materia" | translate}}</label>
+          <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.materia'
+            [options]="comboMateria" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [filter]="true" filterBy="label,labelSinTilde">
+          </p-multiSelect>
+          <!-- <p-dropdown class="select-form" [(ngModel)]="filtros.materia" [options]="comboMateria" [filter]="true"
+            filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [(disabled)]="isDisabledMateria" (input)="buscarMateria($event)" [showClear]="true"
+            [emptyFilterMessage]="resultadosAreas">
+          </p-dropdown> -->
+        </div>
+
+        <!-- GRUPOZONA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera" | translate}}</label>
+          <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.grupoZona' (onChange)="onChangeZona()"
+          [options]="comboGrupoZona" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+          [filter]="true" filterBy="label,labelSinTilde">
+        </p-multiSelect>
+          
+        </div>
+
+        <!-- ZONA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.maestros.zonasYSubzonas.zona" | translate}}</label>
+          <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtros.zona' (onChange)="onChangeSubZona()"
+          [options]="comboZona" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll" (input)="buscarZona($event)"
+          [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledZona">
+        </p-multiSelect>
+        </div>
+
+        <!-- PARTIDO JUDICIAL -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"agenda.fichaEvento.tarjetaGenerales.partidoJudicial" | translate}}</label>
+          <input type="text" name="nombre" class="box" [disabled]="true" [(ngModel)]="filtros.partidoJudicial"
+            class="form-control" pInputText/>
+        </div>
+
+        <!-- JURISDICCION -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"menu.justiciaGratuita.maestros.Jurisdiccion" | translate}}</label>
+          <p-multiSelect #multiSelectJuric [defaultLabel]="textFilter" autoWidth="false"
+            [(ngModel)]='filtros.jurisdiccion' [options]="comboJurisdicciones" maxSelectedLabels="10"
+            [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            (onPanelShow)="focusInputField(multiSelectJuric)"></p-multiSelect>
+        </div>
+
+        <!-- GRUPO FACTURACION -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.oficio.turnos.grupofacturacion" | translate}}</label>
+          <p-multiSelect #multiSelectGrpFac [defaultLabel]="textFilter" autoWidth="false"
+            [(ngModel)]='filtros.grupoFacturacion' [options]="comboGrupoFacturacion" maxSelectedLabels="10"
+            [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            (onPanelShow)="focusInputField(multiSelectGrpFac)"></p-multiSelect>
+        </div>
+
+        <!-- PARTIDA PRESUPUESTARIA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.guardias.partidaPresupuestaria" | translate}}</label>
+          <p-multiSelect #multiSelectPartPre [defaultLabel]="textFilter" autoWidth="false"
+            [(ngModel)]='filtros.partidaPresupuestaria' [options]="comboPartidasPresupuestarias" maxSelectedLabels="10"
+            [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            (onPanelShow)="focusInputField(multiSelectPartPre)"></p-multiSelect>
+        </div>
+
+        <!-- TIPO TURNO -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"justiciaGratuita.oficio.turnos.tipoturno" | translate}}</label>
+          <p-multiSelect #multiSelectTipoTurno [defaultLabel]="textFilter" autoWidth="false"
+            [(ngModel)]='filtros.tipoTurno' [options]="comboTipoTurno" maxSelectedLabels="10"
+            [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            (onPanelShow)="focusInputField(multiSelectTipoTurno)"></p-multiSelect>
+        </div>
+
+        <!-- TIPO GUARDIA -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"dato.jgr.guardia.guardias.tipoGuardia" | translate}}</label>
+          <p-multiSelect #multiSelectTipoGuardia [defaultLabel]="textFilter" autoWidth="false"
+            [(ngModel)]='filtros.idTipoGuardia' [options]="comboTipoGuardia" maxSelectedLabels="10"
+            [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+            (onPanelShow)="focusInputField(multiSelectTipoGuardia)"></p-multiSelect>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button pButton (click)="rest()" type="button" icon="fa fa-eraser" iconPos="left"
+        label="{{ 'general.boton.clear' | translate}}"></button>
+      <button pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
+        label="{{ 'general.boton.search' | translate }}"></button>
+    </div>
+  </div>
+</div>

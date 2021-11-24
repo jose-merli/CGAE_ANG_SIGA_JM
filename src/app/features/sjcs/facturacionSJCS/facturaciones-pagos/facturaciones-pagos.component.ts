@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, EventEmitter, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { SigaServices } from "../../../../_services/siga.service";
 import { CommonsService } from '../../../../_services/commons.service';
@@ -10,6 +10,7 @@ import { TablaBusquedaFacturacionComponent } from "./tabla-busqueda-facturacion/
 import { FacturacionItem } from '../../../../models/sjcs/FacturacionItem';
 import { ErrorItem } from '../../../../models/ErrorItem';
 import { FacturacionDeleteDTO } from '../../../../models/sjcs/FacturacionDeleteDTO';
+import { Subscription } from 'rxjs';
 
 @Component({
 	selector: 'app-facturaciones-pagos',
@@ -17,7 +18,7 @@ import { FacturacionDeleteDTO } from '../../../../models/sjcs/FacturacionDeleteD
 	styleUrls: ['./facturaciones-pagos.component.scss']
 })
 
-export class FacturacionesYPagosComponent implements OnInit {
+export class FacturacionesYPagosComponent implements OnInit, OnDestroy {
 	permisoEscrituraFac: boolean;
 	permisoEscrituraPag: boolean;
 	buscar: boolean = false;
@@ -26,6 +27,7 @@ export class FacturacionesYPagosComponent implements OnInit {
 	progressSpinner: boolean = false;
 	msgs: any[] = [];
 	filtroSeleccionado: String;
+	rutaMenu: Subscription;
 
 	@ViewChild(FiltroBusquedaFacturacionComponent) filtros: FiltroBusquedaFacturacionComponent;
 	@ViewChild(TablaBusquedaFacturacionComponent) tabla: TablaBusquedaFacturacionComponent;
@@ -34,7 +36,16 @@ export class FacturacionesYPagosComponent implements OnInit {
 		private sigaServices: SigaServices,
 		private commonsService: CommonsService,
 		private persistenceService: PersistenceService,
-		private router: Router) { }
+		private router: Router) {
+		this.rutaMenu = this.sigaServices.rutaMenu$.subscribe(
+			ruta => {
+				if (ruta && ruta.length > 0 && ruta != 'fichaFacturacion' && ruta != 'fichaPagos') {
+					this.persistenceService.clearFiltros();
+					this.persistenceService.clearFiltrosAux();
+				}
+			}
+		);
+	}
 
 	ngOnInit() {
 		this.buscar = this.filtros.buscar;
@@ -291,8 +302,11 @@ export class FacturacionesYPagosComponent implements OnInit {
 		});
 	}
 
-
 	clear() {
 		this.msgs = [];
+	}
+
+	ngOnDestroy(): void {
+		this.rutaMenu.unsubscribe();
 	}
 }

@@ -36,7 +36,7 @@
 
       <app-datos-pagos *ngIf="showCards" [(idPago)]="idPago" [(idEstadoPago)]="idEstadoPago"
         [(modoEdicion)]="modoEdicion" [numCriterios]="numCriterios" [editingConceptos]="editingConceptos"
-        [facturasMarcadas]="facturasMarcadas" [paramDeducirCobroAutom]="paramDeducirCobroAutom"
+        [facturasMarcadas]="facturasMarcadas" [paramDeducirCobroAutom]="paramDeducirCobroAutom" [idFacturacionDesdeFichaFac]="idFacturacionDesdeFichaFac"
         (facturacionChange)="idFacturacion = $event" (compensacionFactEvent)="compensacionFact()"
         (addEnlace)="addEnlace($event)" (changePago)="getPago()">
       </app-datos-pagos>

@@ -76,7 +76,7 @@ export class EJGComponent implements OnInit {
   }
 
   searchEJGs(event) {
-
+    this.progressSpinner = true;
     // Creamos una copia de los filtros y modificamos los elementos de selección múltiple (cambiamos los arrays por strings separados por ',')
     let filtros = JSON.parse(JSON.stringify(this.filtros.body));
 

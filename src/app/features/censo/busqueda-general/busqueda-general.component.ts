@@ -152,7 +152,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.fromAbogadoContrarioEJG = true;
     }
 
-    sessionStorage.removeItem('origin');
+    //sessionStorage.removeItem('origin');
     this.progressSpinner = true;
     this.currentRoute = this.router.url;
     this.getMigaPan();
@@ -646,6 +646,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
     if (this.persona == 'f') {
       if (this.checkFilterFisic()) {
+        this.progressSpinner = true;
         if (this.bodyFisica.nif == undefined) {
           this.bodyFisica.nif = '';
         }
@@ -728,6 +729,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
             setTimeout(() => {
               this.commonsService.scrollTablaFoco('tablaFoco');
             }, 5);
+            this.progressSpinner = false;
           }
         );
       }
@@ -777,7 +779,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
         );
       }
     }
-    else {
+    else if(this.persona == 'j') {
       if (this.checkFilterJuridic()) {
         if (this.selectedTipo != undefined && this.selectedTipo.value == '') {
           this.bodyJuridica.tipo = '';
@@ -851,6 +853,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
               }, 5);
             }
           );
+      }else{
+        this.progressSpinner = false;
       }
     }
   }

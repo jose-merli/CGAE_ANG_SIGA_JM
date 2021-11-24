@@ -72,6 +72,7 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
   ];
 
   facturacion: FacturacionItem;
+  visualizarTarjetas: boolean = false;
 
   @ViewChild(PagosComponent) pagos;
   @ViewChild(BaremosComponent) baremos;
@@ -125,6 +126,7 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
       }
       this.numCriterios = 0;
       this.editingConceptos = false;
+      this.visualizarTarjetas = true;
 
     }).catch(error => console.error(error));
 
@@ -139,6 +141,7 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
   }
 
   volver() {
+    this.sigaService.setRutaMenu("fichaFacturacion");
     this.location.back();
   }
 
@@ -168,18 +171,15 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
 
   spinnerGlobal() {
     if (this.modoEdicion) {
-      if (this.conceptos != undefined || this.baremos != undefined || this.pagos != undefined || this.cartas != undefined) {
-        if (this.datosFac.progressSpinnerDatos || this.conceptos.progressSpinnerConceptos || this.baremos.progressSpinnerBaremos || this.pagos.progressSpinnerPagos || this.cartas.progressSpinnerCartas) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
+      if ((this.conceptos != undefined && this.conceptos.progressSpinnerConceptos) || (this.baremos != undefined && this.baremos.progressSpinnerBaremos) ||
+        (this.pagos != undefined && this.pagos.progressSpinnerPagos) || (this.cartas != undefined && this.cartas.progressSpinnerCartas) ||
+        (this.datosFac != undefined && this.datosFac.progressSpinnerDatos)) {
         return true;
+      } else {
+        return false;
       }
-
     } else {
-      if (this.datosFac.progressSpinnerDatos) {
+      if (this.datosFac != undefined && this.datosFac.progressSpinnerDatos) {
         return true;
       } else {
         return false;

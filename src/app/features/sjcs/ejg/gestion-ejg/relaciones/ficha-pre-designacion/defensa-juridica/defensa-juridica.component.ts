@@ -26,6 +26,7 @@ export class DefensaJuridicaComponent implements OnInit {
   designa = null;
   bodyInicial: EJGItem;
   @Input() permisoEscritura: boolean;
+  @Input() permisoDefensaJuridica:boolean;
 
   isDisabledProcedimiento: boolean = true;
 
@@ -65,15 +66,19 @@ export class DefensaJuridicaComponent implements OnInit {
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
     //Se obtiene la designacion si hay una designacion entre las relaciones
-    if (sessionStorage.getItem("Designa")) this.designa = JSON.parse(sessionStorage.getItem("Designa"));
+    if (sessionStorage.getItem("Designa")){
+       this.designa = JSON.parse(sessionStorage.getItem("Designa"));
+    }
 
     this.body = this.persistenceService.getDatos();
+
+    this.getEjgItem();
 
     //Se sobreescribe la informacion de pre designacion (Primera mitad de la tarjeta) 
     //en this.body en el caso de que haya una designacion
     if (this.designa != null) {
       //this.body = this.designa;
-      this.body.numAnnioProcedimiento = this.designa.ano;
+      this.body.numAnnioProcedimiento = this.body.procedimiento;
       this.body.nig = this.designa.nig;
       this.body.observaciones = this.designa.observaciones;
       this.body.calidad = this.designa.idCalidad;
@@ -110,9 +115,20 @@ export class DefensaJuridicaComponent implements OnInit {
     this.progressSpinner = false;
     if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
-    if(this.permisoEscritura)this.perEscritura= true;
+    if(this.permisoEscritura){
+      this.perEscritura = true;
+    }else{
+      this.perEscritura = false;
+    }
 
   }
+  ngOnChanges(changes: SimpleChanges): void {
+		if(this.permisoEscritura){
+      this.perEscritura = true;
+    }else{
+      this.perEscritura = false;
+    }
+	}
 
   //Codigo copiado de la tarjeta detalles de la ficha de designaciones
    validarNig(nig) {
@@ -173,25 +189,24 @@ export class DefensaJuridicaComponent implements OnInit {
     //Esto es para la validacion de CADENA
 
     //Obtenemos la institucion actual
-    let idInstitucion = this.body.idInstitucion;
+    // let idInstitucion = this.body.idInstitucion;
 
     //Codigo copiado de la tarjeta detalles de la ficha de designaciones
-    if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
-      idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
-      if (nProcedimiento != '') {
-        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
-        var ret = objRegExp.test(nProcedimiento);
-        return ret;
-      }
-      else
-        return true;
-    } else {
+    // if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
+    //   idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
+    //   if (nProcedimiento != '') {
+    //     var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+    //     var ret = objRegExp.test(nProcedimiento);
+    //     return ret;
+    //   }
+    //   else
+    //     return true;
+    // } else {
       // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
       var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
       var ret = objRegExp.test(nProcedimiento);
       return ret;
-    }
-
+    // }
   }
 
   getCabecera() {
@@ -221,10 +236,19 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   checkPermisosAsociarDes() {
-    let msg = this.commonsServices.checkPermisos(this.perEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
+    if (!this.perEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoDefensaJuridica) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else {
       this.asociarDes();
     }
   }
@@ -238,10 +262,19 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   checkPermisosCreateDes() {
-    let msg = this.commonsServices.checkPermisos(this.perEscritura, undefined);
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
+    if (!this.perEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoDefensaJuridica) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else {
       this.createDes();
     }
   }
@@ -266,8 +299,20 @@ export class DefensaJuridicaComponent implements OnInit {
 
   checkSave() {
     //Comprobamos que el numero de procedimiento tiene el formato adecuado según la institucion
-    if (this.validarNProcedimiento(this.body.numAnnioProcedimiento)) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
-    //Comprobamos el formato del NIG y al ser un servicio siga, a llamada del metodo de guardado estar en su interior.
+    if (!this.perEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoDefensaJuridica) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+    } else if (this.validarNProcedimiento(this.body.procedimiento)) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc"));
+  //Comprobamos el formato del NIG y al ser un servicio siga, a llamada del metodo de guardado estar en su interior.
     else this.validarNig(this.body.nig)
   }
 
@@ -326,6 +371,25 @@ export class DefensaJuridicaComponent implements OnInit {
         this.progressSpinner = false;
 
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  getEjgItem() {
+    this.bodyInicial = this.body;
+    //Actualizamos la informacion en el body de la pantalla
+    this.sigaServices.post("gestionejg_datosEJG", this.bodyInicial).subscribe(
+      n => {
+        let ejgObject = JSON.parse(n.body).ejgItems;
+        let datosItem = ejgObject[0];
+        
+        this.persistenceService.setDatos(datosItem);
+        this.body = this.persistenceService.getDatos();
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
       }
     );
   }
@@ -413,7 +477,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   getComboJuzgado() {
-    this.sigaServices.get("filtrosejg_comboJuzgados").subscribe(
+    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
       n => {
         this.comboJuzgado = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboJuzgado);

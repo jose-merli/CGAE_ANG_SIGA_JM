@@ -12,6 +12,8 @@ export let endpoints_facturacionsjcs: any = {
     combo_AplicadoEnPago: "/combo/comboAplicadoEnPago",
     combo_comboAgrupacionEnTurnos: "/combo/comboAgrupacionEnTurnos",
     combo_comboTiposMovVarios: "/combo/comboTiposMovimientos",
+    combo_comboColegios: "combo/getComboColegios",
+    combo_grupoFacturacionByColegio: "combo/grupoFacturacionByColegio",
 
     /* Endpoints FACTURACIONSJCS */
 
@@ -58,6 +60,23 @@ export let endpoints_facturacionsjcs: any = {
     pagosjcs_getCompensacionFacturas: "pagosjcs/getCompensacionFacturas",
     pagosjcs_cerrarPago: "pagosjcs/cerrarPago",
     pagosjcs_cerrarPagoManual: "pagosjcs/cerrarPagoManual",
+    pagosjcs_deshacerCierre: "pagosjcs/deshacerCierre",
+
+    /* Endpoints combos Retenciones */
+    retenciones_comboDestinatarios: "combo/getComboDestinatarios",
+    retenciones_comboPagos: "combo/getComboPagosRetenciones",
+
+    /* Endpoints Retenciones */
+    retenciones_buscarRetenciones: "retenciones/searchRetenciones",
+    retenciones_buscarRetencion: "retenciones/searchRetencion",
+    retenciones_eliminarRetenciones: "retenciones/deleteRetenciones",
+    retenciones_saveOrUpdateRetencion: "retenciones/saveOrUpdateRetencion",
+    retenciones_buscarRetencionesAplicadas: "retenciones/searchRetencionesAplicadas",
+    retenciones_buscarAplicacionesRetenciones: "retenciones/getAplicacionesRetenciones",
+
+    /*Endpoins impreso 190 */
+
+    impreso190_generar:"facturacionsjcs/impreso190generar",
 
     /* Endpoints Movimientos Varios*/
     movimientosVarios_busquedaMovimientosVarios: "movimientosVarios/busquedaMovimientosVarios",
@@ -70,5 +89,5 @@ export let endpoints_facturacionsjcs: any = {
     movimientosVarios_updateDatosGenMovimientosVarios: "movimientosVarios/updateDatosGenMovimientosVarios",
     movimientosVarios_saveCriteriosMovimientosVarios: "movimientosVarios/saveCriteriosMovimientosVarios",
     movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios"
-}
 
+}

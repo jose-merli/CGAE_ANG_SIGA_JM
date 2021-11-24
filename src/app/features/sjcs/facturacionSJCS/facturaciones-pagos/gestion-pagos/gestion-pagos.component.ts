@@ -12,7 +12,7 @@ import { ConceptosPagosComponent } from './conceptos-pagos/conceptos-pagos.compo
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CompensacionFacItem } from '../../../../../models/sjcs/CompensacionFacItem';
 import { ParametroItem } from '../../../../../models/ParametroItem';
 import { ParametroDto } from '../../../../../models/ParametroDto';
@@ -76,6 +76,7 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
       { id: 'facSJCSFichaPagosCompFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.compensacionFactura'), ref: null }
     ]
   };
+  idFacturacionDesdeFichaFac: string;
 
   @ViewChild(CompensacionFacturaComponent) compensacion: CompensacionFacturaComponent;
   @ViewChild(ConfiguracionFicherosComponent) configuracionFic: ConfiguracionFicherosComponent;
@@ -90,7 +91,8 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
     private changeDetectorRef: ChangeDetectorRef,
     private sigaStorageService: SigaStorageService,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService) {
+    private persistenceService: PersistenceService,
+    private activatedRoute: ActivatedRoute) {
     super(USER_VALIDATIONS);
   }
 
@@ -109,26 +111,44 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
 
       this.getParamDeducirCobroAutom();
 
-      if (null != this.persistenceService.getDatos()) {
-        this.datos = this.persistenceService.getDatos();
-        this.idPago = this.datos.idPagosjg;
-        this.idEstadoPago = this.datos.idEstado;
-        this.idFacturacion = this.datos.idFacturacion;
-        this.getPago();
-      }
+      this.activatedRoute.queryParamMap.subscribe(
+        (params) => {
+          this.idFacturacionDesdeFichaFac = params.get('idFacturacion');
 
-      if (undefined == this.datos || null == this.datos || undefined == this.datos.idPagosjg) {
-        this.modoEdicion = false;
-      } else {
-        this.modoEdicion = true;
-      }
+          if (this.idFacturacionDesdeFichaFac != null) {
+            this.persistenceService.clearDatos();
+          }
 
-      this.numCriterios = 0;
-      this.showCards = true;
+          if (null != this.persistenceService.getDatos()) {
+            this.datos = this.persistenceService.getDatos();
+            this.idPago = this.datos.idPagosjg;
+            this.idEstadoPago = this.datos.idEstado;
+            this.idFacturacion = this.datos.idFacturacion;
+            this.getPago();
+          }
+
+          if (undefined == this.datos || null == this.datos || undefined == this.datos.idPagosjg) {
+            this.modoEdicion = false;
+          } else {
+            this.modoEdicion = true;
+          }
+
+          this.numCriterios = 0;
+          this.showCards = true;
+        });
+
     });
   }
 
   volver() {
+    if (this.idFacturacionDesdeFichaFac != null) {
+      const datos = {
+        idFacturacion: this.idFacturacionDesdeFichaFac,
+        idEstado: '30'
+      }
+      this.persistenceService.setDatos(datos);
+    }
+    this.sigaServices.setRutaMenu("fichaPagos");
     this.location.back();
   }
 

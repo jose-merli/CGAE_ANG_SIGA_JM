@@ -8,6 +8,11 @@ import { BusquedaGeneralSJCSComponent } from '../../../commons/busqueda-generalS
 import { GestionPagosComponent } from './facturaciones-pagos/gestion-pagos/gestion-pagos.component';
 import {MovimientosVariosComponent} from './movimientos-varios/movimientos-varios.component';
 import { FichaMovimientosVariosComponent } from './movimientos-varios/ficha-movimientos-varios/ficha-movimientos-varios.component';
+import { RetencionesComponent } from './retenciones/retenciones.component';
+import { FichaRetencionJudicialComponent } from './retenciones/ficha-retencion-judicial/ficha-retencion-judicial.component';
+import { BaremosDeGuardiaComponent } from './baremos-de-guardia/baremos-de-guardia.component';
+import { FichaCertificacionFacComponent } from './certificacion-fac/ficha-certificacion-fac/ficha-certificacion-fac.component';
+import { FichaBaremosDeGuardiaComponent } from './baremos-de-guardia/ficha-baremos-de-guardia/ficha-baremos-de-guardia.component';
 
 const routesFacturacionsjcs: Routes = [
   {
@@ -31,6 +36,16 @@ const routesFacturacionsjcs: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'retenciones',
+    component: RetencionesComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: "fichaRetencionJudicial",
+    component: FichaRetencionJudicialComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'gestionGeneralSJCS',
     component: BusquedaGeneralSJCSComponent,
     canActivate: [AuthGuard]
@@ -44,7 +59,22 @@ const routesFacturacionsjcs: Routes = [
     path: "fichaMovimientosVarios",
     component: FichaMovimientosVariosComponent,
     canActivate: [AuthGuard]
-  }
+  },
+  {
+    path: 'baremosDeGuardia',
+    component: BaremosDeGuardiaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'fichaBaremosDeGuardia',
+    component: FichaBaremosDeGuardiaComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'fichaCertificacionFac',
+    component: FichaCertificacionFacComponent,
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({

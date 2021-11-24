@@ -425,8 +425,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.facturacionSJCS.programada"));
 
         this.historicoEstados();
-        // this.changeEstadoFacturacion.emit("50");
-        // this.changeCerrada.emit(true);
+        this.changeEstadoFacturacion.emit("50");
         this.progressSpinnerDatos = false;
       },
       err => {
@@ -658,6 +657,10 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
 
   ngAfterViewInit() {
     this.changeDetectorRef.detectChanges();
+  }
+
+  camposDisabled() {
+    return this.idEstadoFacturacion === '50';
   }
 
 }

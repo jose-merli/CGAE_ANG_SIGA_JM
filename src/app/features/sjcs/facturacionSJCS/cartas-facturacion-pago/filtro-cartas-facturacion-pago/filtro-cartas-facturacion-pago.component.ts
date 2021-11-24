@@ -34,40 +34,49 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
   @Output() emitSearch = new EventEmitter<string>();
   @Output() changeModoBusqueda = new EventEmitter<string>();
-  @Output() desactivaVolver = new EventEmitter();
 
   @Input() permisoEscritura;
-  @Input() activaVolver;
 
   constructor(private commonsService: CommonsService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private translateService: TranslateService, private sigaStorageService: SigaStorageService) { }
+    private translateService: TranslateService, private sigaStorageService: SigaStorageService,) { }
 
   ngOnInit() {
 
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-      if (this.filtros.modoBusqueda != undefined) {
-        this.modoBusqueda = this.filtros.modoBusqueda;
+    this.isLetrado = this.sigaStorageService.isLetrado;
 
-        if (this.modoBusqueda == "f") {
-          this.modoBusquedaFacturacion = true;
-        } else {
-          this.modoBusquedaFacturacion = false;
-        }
+    if (sessionStorage.getItem("datosCartasFacturacion")) {
+      this.filtros = JSON.parse(sessionStorage.getItem("datosCartasFacturacion"));
+      sessionStorage.removeItem("datosCartasFacturacion")
+      this.modoBusqueda = this.filtros.modoBusqueda;
+
+      if (this.modoBusqueda == 'f') {
+        this.modoBusquedaFacturacion = true;
+      } else {
+        this.modoBusquedaFacturacion = false;
       }
 
       if (this.checkFiltersInit()) {
         this.emitSearch.emit(this.modoBusqueda)
       }
+    } else if (sessionStorage.getItem("datosCartasPago")) {
+      this.filtros = JSON.parse(sessionStorage.getItem("datosCartasPago"));
+      sessionStorage.removeItem("datosCartasPago")
+      this.modoBusqueda = this.filtros.modoBusqueda;
 
+      if (this.modoBusqueda == 'f') {
+        this.modoBusquedaFacturacion = true;
+      } else {
+        this.modoBusquedaFacturacion = false;
+      }
+
+      if (this.checkFiltersInit()) {
+        this.emitSearch.emit(this.modoBusqueda)
+      }
     } else {
-      this.filtros = new CartasFacturacionPagosItem();
       this.filtros.modoBusqueda = this.modoBusqueda;
     }
 
     this.getCombos();
-
-    this.isLetrado = this.sigaStorageService.isLetrado;
 
     if (this.isLetrado) {
       this.isColegiado();
@@ -95,7 +104,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
   isColegiado() {
 
-    this.esColegiado = false
+    this.esColegiado = true;
 
     this.filtros.ncolegiado = this.sigaStorageService.numColegiado;
     this.filtros.idPersona = this.sigaStorageService.idPersona;
@@ -108,12 +117,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
     if (this.checkFilters()) {
       this.filtros.modoBusqueda = this.modoBusqueda;
-      this.persistenceService.setFiltros(this.filtros);
       this.emitSearch.emit(this.modoBusqueda);
-
-      if (this.activaVolver) {
-        this.desactivaVolver.emit();
-      }
     }
   }
 
@@ -125,8 +129,6 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
       this.filtros.apellidosNombre = undefined;
       this.filtros.ncolegiado = undefined;
     }
-
-    this.persistenceService.setFiltros(this.filtros);
   }
 
   recuperarIdPersona(event) {
@@ -135,8 +137,6 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     } else {
       this.filtros.idPersona = undefined;
     }
-
-    this.persistenceService.setFiltros(this.filtros);
   }
 
   checkFilters() {
@@ -262,28 +262,19 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   }
 
   changeFilters() {
-    if (!this.activaVolver) {
-      this.clearFilters();
-      this.persistenceService.clearFiltros();
+    this.clearFilters();
 
-      if (this.modoBusqueda == "f") {
-        this.modoBusquedaFacturacion = true;
-      } else if (this.modoBusqueda == "p") {
-        this.modoBusquedaFacturacion = false;
-      } else {
-        this.modoBusquedaFacturacion = true;
-        this.modoBusqueda == "f;"
-      }
-
-      if (this.activaVolver) {
-        this.desactivaVolver.emit();
-      }
-
-      this.filtros.modoBusqueda = this.modoBusqueda;
-      this.persistenceService.setFiltros(this.filtros);
-
-      this.changeModoBusqueda.emit();
+    if (this.modoBusqueda == "f") {
+      this.modoBusquedaFacturacion = true;
+    } else if (this.modoBusqueda == "p") {
+      this.modoBusquedaFacturacion = false;
+    } else {
+      this.modoBusquedaFacturacion = true;
+      this.modoBusqueda == "f";
     }
+
+    this.filtros.modoBusqueda = this.modoBusqueda;
+    this.changeModoBusqueda.emit();
   }
 
   clearFilters() {
@@ -297,10 +288,6 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
 
     } else {
       this.filtros = new CartasFacturacionPagosItem();
-    }
-
-    if (this.activaVolver) {
-      this.desactivaVolver.emit();
     }
   }
 

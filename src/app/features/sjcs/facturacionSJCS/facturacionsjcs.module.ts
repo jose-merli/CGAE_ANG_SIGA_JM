@@ -9,6 +9,7 @@ import { FacturacionesYPagosModule } from './facturaciones-pagos/facturaciones-p
 import { CartasFacturacionPagoModule } from './cartas-facturacion-pago/cartas-facturacion-pago.module';
 import {MovimientosVariosModule} from './movimientos-varios/movimientos-varios.module';
 
+
 @NgModule({
         declarations: [
               //  FiltrosMovimientosVariosComponent

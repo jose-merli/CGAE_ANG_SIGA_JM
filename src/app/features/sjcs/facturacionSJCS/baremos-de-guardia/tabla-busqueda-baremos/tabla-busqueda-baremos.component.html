@@ -1,0 +1,84 @@
+<div class="card mt-3">
+
+  <div class="card-body p-0" #tablaFoco>
+
+    <p-table class="tabla-listado" [responsive]="true" #table class="tabla-listado" [paginator]="true" [value]="datos"
+      dataKey="idTurno" [columns]="cols" [rows]="selectedItem" paginatorPosition="both">
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols | slice:0:10" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns | slice:0:10" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="table.filter($event.target.value, col.field, 'contains')" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
+        <tr>
+
+          <td *ngFor="let col of columns | slice:0:10">
+            <div class="d-flex">
+              <a [pRowToggler]="rowData">
+                <div *ngIf="col.field =='idTurno'">
+                  <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                  <a><span>{{rowData[col.field]}}</span></a>
+                </div>
+              </a>
+            </div>
+
+            <div *ngIf="col.field !='idTurno'">
+              <span>{{rowData[col.field]}}</span>
+            </div>
+
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="rowexpansion" let-dato let-columns="subCols">
+
+        <tr *ngFor="let guardia of dato.guardias">
+          <td *ngFor="let sub of subCols">
+            <div [ngClass]="{'displayMargin' : (sub.field == 'idGuardia')}">
+              <span>{{ guardia[sub.field] }}</span>
+            </div>
+          </td>
+        </tr>
+
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+            translate }}{{table.first + 1}}
+            al {{table.first
+            + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+            {{table.totalRecords}}</label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+        </div>
+      </ng-template>
+
+    </p-table>
+
+  </div>
+
+</div>

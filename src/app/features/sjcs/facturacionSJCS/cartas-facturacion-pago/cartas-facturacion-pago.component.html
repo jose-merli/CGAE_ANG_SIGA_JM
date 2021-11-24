@@ -8,12 +8,10 @@
 </div>
 
 <div class="busqueda-container">
-  <app-filtro-cartas-facturacion-pago [activaVolver]="activaVolver" [permisoEscritura]="permisoEscritura" (desactivaVolver)="desactivaVolver()" (emitSearch)="search($event)" (changeModoBusqueda)="changeModoBusqueda()"></app-filtro-cartas-facturacion-pago>
-  <app-tabla-cartas-facturacion-pago *ngIf="buscar" [datos]="datos"></app-tabla-cartas-facturacion-pago>
-</div>
-
-<div class="text-right main-button" *ngIf="activaVolver">
-  <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+  <app-filtro-cartas-facturacion-pago [permisoEscritura]="permisoEscritura" (emitSearch)="search($event)"
+    (changeModoBusqueda)="changeModoBusqueda()"></app-filtro-cartas-facturacion-pago>
+  <app-tabla-cartas-facturacion-pago *ngIf="buscar" [permisoEscritura]="permisoEscritura" [datos]="datos"
+    [modoBusqueda]="modoBusqueda"></app-tabla-cartas-facturacion-pago>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

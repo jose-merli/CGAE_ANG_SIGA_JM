@@ -8,9 +8,7 @@ import { FormsModule } from '../../../../../../node_modules/@angular/forms';
 import { InputTextModule, CheckboxModule, ConfirmDialogModule, ButtonModule, RadioButtonModule, DropdownModule, CalendarModule, DataTableModule, GrowlModule, MultiSelectModule } from '../../../../../../node_modules/primeng/primeng';
 import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
-import { FechaModule } from '../../../../commons/fecha/fecha.module';
 import { BusquedaColegiadoExpressModule } from '../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
-import { BusquedaColegiadoExpressComponent } from '../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
 
 @NgModule({
   imports: [

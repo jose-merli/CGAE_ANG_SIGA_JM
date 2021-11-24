@@ -21,6 +21,7 @@ export class PagosComponent implements OnInit {
   showFichaPagos: boolean = false;
   numPagos: number = 0;
   importePagado: number;
+  disableNuevo: boolean = false;
 
   permisos;
 
@@ -48,11 +49,29 @@ export class PagosComponent implements OnInit {
         this.router.navigate(["/errorAcceso"]);
       }
 
+      this.getFacEnableBotonNuevo();
       this.cargaDatos();
       this.getCols();
 
     }).catch(error => console.error(error));
 
+  }
+
+  getFacEnableBotonNuevo() {
+    this.sigaService.get("combo_comboFacturaciones").subscribe(
+      data => {
+        const facturaciones = data.combooItems;
+        this.commonsService.arregloTildesCombo(facturaciones);
+        const arrayFac = facturaciones.map(el => el.value);
+        if(this.idFacturacion != undefined && !arrayFac.includes(this.idFacturacion)) {
+          this.disableNuevo = true;
+        }
+      },
+      err => {
+        if (null != err.error) {
+          console.log(err.error);
+        }
+      });
   }
 
   cargaDatos() {
@@ -90,11 +109,13 @@ export class PagosComponent implements OnInit {
   }
 
   nuevo() {
-
+    this.router.navigate(['/fichaPagos'], {
+      queryParams: { 'idFacturacion': this.idFacturacion }
+    });
   }
 
   disabledNuevo() {
-    return true;
+    return  this.disableNuevo;
   }
 
   onHideDatosGenerales() {

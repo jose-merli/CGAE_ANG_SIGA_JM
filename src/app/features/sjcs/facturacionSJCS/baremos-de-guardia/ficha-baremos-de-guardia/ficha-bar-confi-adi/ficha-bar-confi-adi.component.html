@@ -1,0 +1,103 @@
+<div id="facSJCSFichaBarConfiAdi">
+
+    <div class="card">
+
+        <div class="card-header header-ficha">
+
+            <div *ngIf="!showTarjeta" class="form-row">
+
+                <div class="col-lg-1 col-md-2">
+                    <div class="img-colegiado" (click)="onHideTarjeta()">
+                        <i class="fa fa-user icon-ficha"></i>
+                    </div>
+                </div>
+
+                <div class="col-lg-11 col-md-10">
+                    <div class="d-flex justify-content-start mb-1" (click)="onHideTarjeta()">
+                        <label class="mr-auto title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiAdi' | translate }}
+                        </label>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
+                            <span>A</span>
+                        </label>
+                        <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+                    </div>
+                </div>
+
+            </div>
+
+            <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center"
+                (click)="onHideTarjeta()">
+                <div class="img-colegiado">
+                    <i class="fa fa-user icon-ficha"></i>
+                </div>
+                <label class="title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiAdi' | translate }} </label>
+                <i class="fa fa-angle-up ml-auto"></i>
+            </div>
+
+        </div>
+
+        <div *ngIf="showTarjeta" class="card-body card-body-ficha">
+
+            <div class="row">
+
+                <div class="bloque col-lg-6 col-md-6 col-sm-6 py-2 pl-2">
+                    <div class="form-row">
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-checkbox name="porDispo" label="Facturar Actuaciones Fuera de Guardia de forma diferente"
+                                class="ml-0"></p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Precio Único"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Precio por tipos"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>Importe</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 verticalAlign">
+                            <a>Ir a tipos</a>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>Máximo</label>
+                            <input pInputText class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bloque col-lg-6 col-md-6 col-sm-6">
+                    <div class="form-row">
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-checkbox name="porDispo" label="Facturar asuntos antiguos con precios de su facturación"
+                                class="ml-0">
+                            </p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-checkbox name="porDispo" label="Usar proceso de facturación controlados 2014"
+                                class="ml-0">
+                            </p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12">
+                            <p-checkbox name="porDispo" label="Descontar Guardias que deriven de jucion rápidos"
+                                class="ml-0">
+                            </p-checkbox>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Contando Asistencias"></p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <p-radioButton label="Contando Actuaciones"></p-radioButton>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

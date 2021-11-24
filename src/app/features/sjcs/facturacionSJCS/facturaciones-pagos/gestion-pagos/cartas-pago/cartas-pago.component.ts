@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild, SimpleChanges, OnChanges, Output, 
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
+import { CartasFacturacionPagosItem } from '../../../../../../models/sjcs/CartasFacturacionPagosItem';
 import { StringObject } from '../../../../../../models/StringObject';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
@@ -91,11 +92,10 @@ export class CartasPagoComponent implements OnInit, OnChanges, AfterViewInit {
 
     if (this.idEstadoPago == '30' && this.modoEdicion && this.idPago != undefined && this.idPago != null && this.idEstadoPago != undefined && this.idEstadoPago != null) {
 
-      const datosCartasPago = {
-        idPago: [this.idPago],
-        idEstadoPago: this.idEstadoPago,
-        modoBusqueda: 'p'
-      };
+      const datosCartasPago: CartasFacturacionPagosItem = new CartasFacturacionPagosItem();
+      datosCartasPago.idPago = [this.idPago];
+      datosCartasPago.idEstado = this.idEstadoPago;
+      datosCartasPago.modoBusqueda = 'p';
 
       sessionStorage.setItem("datosCartasPago", JSON.stringify(datosCartasPago));
 

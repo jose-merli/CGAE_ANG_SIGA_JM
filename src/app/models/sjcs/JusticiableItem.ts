@@ -23,7 +23,7 @@ export class JusticiableItem {
   tipopersonajg: string;
   idtipoidentificacion: string;
   observaciones: string;
-  idrepresentantejg: string;
+  idrepresentantejg: number;
   idtipoencalidad: string;
   sexo: string;
   idlenguaje: string;
