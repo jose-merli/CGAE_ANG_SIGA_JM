@@ -19,7 +19,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { TableModule } from 'primeng/table';
 
 import { MultiSelectModule } from "primeng/multiselect";
-import { DestinatariosRetencionesComponent } from './destinatarios-retenciones.component';
+//import { DestinatariosRetencionesComponent } from './destinatarios-retenciones.component';
 import { FiltrosRetenciones } from './filtros-retenciones/filtrosretenciones.component';
 import { TablaDestinatariosComponent } from './gestion-retenciones/gestion-retenciones.component';
 
@@ -40,13 +40,13 @@ import { TablaDestinatariosComponent } from './gestion-retenciones/gestion-reten
         MultiSelectModule,
         ConfirmDialogModule,
 
-        // FichaGrupoZonaModule
+        // FichaGrupoZonaModuleP
 
     ],
     declarations: [
-        DestinatariosRetencionesComponent,
-        TablaDestinatariosComponent,
-        FiltrosRetenciones
+        //DestinatariosRetencionesComponent,
+        //TablaDestinatariosComponent,
+        //FiltrosRetenciones
     ],
     providers: [
         // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
@@ -76,4 +76,4 @@ import { TablaDestinatariosComponent } from './gestion-retenciones/gestion-reten
         { provide: LOCALE_ID, useValue: 'es-ES' }
     ]
 })
-export class GestionDestinatariosComponent { }
+export class DestinatariosModule { }

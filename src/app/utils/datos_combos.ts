@@ -2,19 +2,19 @@ export const datos_combos: any = {
     comboUnidadesTiempo: [
         {
             label: "Días Naturales",
-            value: "1"
+            value: "D"
         },
         {
             label: "Semanas Naturales",
-            value: "2"
+            value: "S"
         },
         {
             label: "Quincenas Naturales",
-            value: "3"
+            value: "Q"
         },
         {
-            label: "MesesNaturales",
-            value: "4"
+            label: "Meses Naturales",
+            value: "M"
         },
     ],
     comboCalidad: [
@@ -62,4 +62,28 @@ export const datos_combos: any = {
         },
     ],
 
+    pesos_existentes: [
+        {
+            numero: "5",
+            por_filas: "Antigüedad en la cola",
+            orden: "ascendente"
+        },
+        {
+            numero: "0",
+            por_filas: "Apellidos y nombre",
+            orden: "ascendente"
+        },
+        {
+            numero: "0",
+            por_filas: "Nº Colegiado",
+            orden: "ascendente"
+        },
+        {
+            numero: "0",
+            por_filas: "Edad Colegiado",
+            orden: "ascendente"
+        },
+
+
+    ],
 }

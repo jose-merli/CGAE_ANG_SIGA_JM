@@ -22,6 +22,8 @@ import { TranslatePipe } from '../../commons/translate';
 import { PipeTranslationModule } from '../../commons/translate/pipe-translation.module';
 import { JusticiablesModule } from './justiciables/justiciables.module';
 import { FacturacionSJCSModule } from './facturacionSJCS/facturacionsjcs.module';
+import { OficioModule } from './oficio/oficio.module';
+import { EJGModule } from './ejg/ejg.module';
     
 
 @NgModule({
@@ -29,9 +31,11 @@ import { FacturacionSJCSModule } from './facturacionSJCS/facturacionsjcs.module'
   imports: [
     CommonModule,
     MaestrosModule,
+    OficioModule,
     JusticiablesModule,
     routingSjcs,
-    FacturacionSJCSModule
+    FacturacionSJCSModule,
+    EJGModule,
   ],
   providers: []
 })

@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message } from 'primeng/components/common/api';
@@ -9,9 +9,10 @@ import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { TarjetaAsistenciaItem } from '../../../../../../models/guardia/TarjetaAsistenciaItem';
+import * as moment from 'moment';
 import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
-import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-designacion-oficio',
@@ -33,6 +34,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   permisoEscritura: boolean;
   isLetrado: boolean;
+  datosAsistencia : TarjetaAsistenciaItem;
+  
   nif: any;
   nombreColegiado: any;
   apellido1Colegiado: any;
@@ -220,9 +223,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
     } else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
-      this.inputs[0].value = colegiadoGeneral[0].numeroColegiado;
+      if(this.campos.idInstitucion == colegiadoGeneral[0].numeroInstitucion){
+        this.inputs[0].value = colegiadoGeneral[0].numeroColegiado;
+      }
       this.inputs[1].value = colegiadoGeneral[0].apellidos;
       this.inputs[2].value = colegiadoGeneral[0].nombre;
+      this.inputs[0].disable = true;
+      this.inputs[1].disable = true;
+      this.inputs[2].disable = true;
       this.nif = colegiadoGeneral[0].nif;
       this.nombreColegiado = colegiadoGeneral[0].nombre;
       let apellidos =  colegiadoGeneral[0].apellidos.split(' ');
@@ -252,8 +260,21 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if (this.selectores[1].value = "") {
       this.selectores[1].value = "";
     }
-    //Se comprueba si se procede de la pantalla de gestion de EJG
-    if (sessionStorage.getItem("EJG")) {
+
+    if(sessionStorage.getItem("asistencia")){
+
+      this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
+      //Numero colegiado letrado
+      this.inputs[0].value = this.datosAsistencia.numeroColegiado;
+      //Apellidos letrado
+      this.inputs[1].value = this.datosAsistencia.nombreColegiado.split(" ")[0] + this.datosAsistencia.nombreColegiado.split(" ")[1];
+      //Nombre letrado
+      this.inputs[2].value = this.datosAsistencia.nombreColegiado.split(" ")[2];
+      //Valor combo turno
+      this.selectores[0].value = this.datosAsistencia.idTurno;
+      let fechaNoHora = moment(this.datosAsistencia.fechaAsistencia.substr(0,10), 'DD/MM/YYYY').toDate();
+      this.fechaGenerales = fechaNoHora;
+    } else if (sessionStorage.getItem("EJG")) { //Se comprueba si se procede de la pantalla de gestion de EJG
       this.datosEJG =JSON.parse(sessionStorage.getItem("EJG"));
       sessionStorage.removeItem("EJG");
 
@@ -378,9 +399,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     sessionStorage.removeItem("datosGeneralesDesigna");
     this.progressSpinner = true;
     this.msgs = [];
-    /* if (detail == "save" && (this.inputs[0].value == "" || this.inputs[0].value == undefined)) {
+    if (detail == "save" && ((this.inputs[0].value == "" && this.inputs[0].disable == false) || this.inputs[0].value == undefined)) {
       this.confirmarActivar(severity, summary, detail);
-    } else { */
+    } else { 
       
       if (detail == "save" && (this.anio.value == "") ) {
         detail = "Guardar";
@@ -420,8 +441,27 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               newDesignaRfresh.codigo = newId.id;
               newDesignaRfresh.idTurnos = [String(newDesigna.idTurno)];
 
-              //Introducimos aqui la asocion con EJG en el caso que venga de una ficha EJG
-              if(this.datosEJG != null && this.datosEJG != undefined){
+              if(this.datosAsistencia){
+                this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna","?anioNumero="+this.datosAsistencia.anioNumero+"&copiarDatos=S", newDesignaRfresh).subscribe(
+                  n => {
+          
+                    let error = JSON.parse(n.body).error;
+                    this.progressSpinner = false;
+          
+                    if (error != null && error.description != null) {
+                      this.showMsg("info", "Error al asociar la Designacion con la Asistencia", error.description);
+                    } else {
+                      this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
+                    }
+                  },
+                  err => {
+                    console.log(err);
+                    this.progressSpinner = false;
+                  }, () => {
+                    this.progressSpinner = false;
+                    sessionStorage.removeItem("asistencia");
+                  });
+              } else if(this.datosEJG != null && this.datosEJG != undefined){//Introducimos aqui la asocion con EJG en el caso que venga de una ficha EJG
 
                 //Realizamos un a peticion con un array strings sin determinar un objeto a medida ya que se considera que  
                 //el uso puntual de este servicio lo justifica.
@@ -550,8 +590,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           );
         }
       }
-
-   // }
+      if(this.resaltadoDatos == true){
+        this.progressSpinner = false;
+      }
+    }
 
     if (detail == "Restablecer") {
       this.nuevaDesigna = sessionStorage.getItem("nuevaDesigna");
@@ -695,6 +737,29 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                   newDesignaRfresh.ano = newDesigna.ano;
                   newDesignaRfresh.codigo = newId.id;
                   newDesignaRfresh.idTurnos = [String(newDesigna.idTurno)];
+                  if(this.datosAsistencia){
+                    this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna","?anioNumero="+this.datosAsistencia.anioNumero+"&copiarDatos=S", newDesignaRfresh).subscribe(
+                      n => {
+              
+                        let error = JSON.parse(n.body).error;
+                        this.progressSpinner = false;
+              
+                        if (error != null && error.description != null) {
+                          this.showMsg("info", "Error al asociar la Designacion con la Asistencia", error.description);
+                        } else {
+                          this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
+                        }
+                      },
+                      err => {
+                        console.log(err);
+                        this.progressSpinner = false;
+                      }, () => {
+                        this.progressSpinner = false;
+                        sessionStorage.removeItem("asistencia");
+                        this.location.back();
+                      }
+                    );
+                  }
                   this.progressSpinner = false;
                   this.busquedaDesignaciones(newDesignaRfresh);
                   //MENSAJE DE TODO CORRECTO

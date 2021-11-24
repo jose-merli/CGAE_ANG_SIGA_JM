@@ -260,8 +260,10 @@ export class DetalleTarjetaLetradosDesignaComponent implements OnInit {
   }
 
   NewLetrado(){
-    sessionStorage.setItem("letrado",  JSON.stringify(this.letrados[0]));
-    this.router.navigate(["/fichaCambioLetrado"]);
+    if(this.letrados != null && this.letrados != undefined){
+      sessionStorage.setItem("letrado",  JSON.stringify(this.letrados[0]));
+      this.router.navigate(["/fichaCambioLetrado"]);
+    }
   }
 
 }

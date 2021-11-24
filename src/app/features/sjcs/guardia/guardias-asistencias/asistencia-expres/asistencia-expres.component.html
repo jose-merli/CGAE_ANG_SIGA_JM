@@ -1,0 +1,79 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+<div class="card">
+    <div class="card-body">
+        <div>
+            <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="hideResponse()" class="mr-4"
+                name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
+        </div>
+        <div [hidden]="modoBusqueda != 'b'">
+            <app-buscador-asistencia-expres [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
+        </div>
+        <div [hidden]="modoBusqueda != 'a'">
+            <app-buscador-asistencias (searchAgain)="searchAsistenciasEvent($event)" [modoBusqueda]="modoBusqueda"></app-buscador-asistencias>
+        </div>
+    </div>
+    <div [hidden]="modoBusqueda != 'b'" class="card-footer">
+        <div class="text-right main-button">
+            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                label="{{ 'general.boton.clear' | translate}}" (click)="hideResponse();clearForm();"
+                [disabled]="isDisabled()"></button>
+            <button type="submit" pButton icon="fa fa-search" iconPos="left"
+                label="{{'general.boton.search' | translate}}"
+                (click)="checkSustitutoCheckBox()"
+                [disabled]="isDisabled()"></button>
+        </div>
+    </div>
+    <div [hidden]="modoBusqueda != 'a'" class="card-footer">
+        <div class="text-right main-button">
+            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                label="{{ 'general.boton.clear' | translate}}"
+                (click)="resetFiltros()"></button>
+            <button type="submit" pButton icon="fa fa-search" iconPos="left"
+                label="{{'general.boton.search' | translate}}"
+                (click)="searchAsistencias();"></button>
+                <!--icon="fa fa-plus"-->
+            <button type="button" pButton icon="fa fa-plus" iconPos="left"
+                label="{{'general.boton.new' | translate}}" (click)="nuevaAsistencia()"></button>
+        </div>
+    </div>
+</div>
+<div [hidden]="modoBusqueda != 'b' || !show">
+    <div class="card mt-3">
+        <div class="card-body p-0" id="tablaFoco1">
+            <app-resultado-asistencia-expres [filtro]="filtrosAE.filtro" [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
+            [comboJuzgadosAE]="comboJuzgados" [comboComisarias]="comboComisarias" [comboDelitos]="comboDelitos" [comboSexo] = "comboSexo"
+            (saveTableData)="saveTableData($event)"></app-resultado-asistencia-expres>
+        </div>
+    </div>
+</div>
+
+<div [hidden]="modoBusqueda != 'a' || !show">
+    <div class="card mt-3">
+        <div class="card-body p-0" id="tablaFoco2">
+            <!--Componente con la p-table para resultado de asistencias, por hacer-->
+            <app-resultado-asistencias [asistencias]="asistencias" [filtro]="filtro.filtro" (searchAgain)="searchAsistenciasEvent($event)"></app-resultado-asistencias>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+
+<p-dialog [(visible)]="showSustitutoDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+    <p-header>
+        <label>Confirmación</label>
+    </p-header>
+    <div class="row">
+        <div class="form-group col-lg-8 col-md-8">
+        {{mensajeSustitutoDialog}}
+        </div>
+    </div>
+    <p-footer>
+        <div class="text-right main-button ">
+        <button (click)="cancelar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+        <button (click)="confirmarSustituto()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.submit' | translate}}" pButton></button>
+        </div>
+    </p-footer>
+</p-dialog>

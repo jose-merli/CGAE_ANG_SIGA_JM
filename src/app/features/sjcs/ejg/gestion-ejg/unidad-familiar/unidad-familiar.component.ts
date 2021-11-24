@@ -36,6 +36,7 @@ export class UnidadFamiliarComponent implements OnInit {
   datosFamiliares;
   datosFamiliaresActivos;
   apellidosCabecera: string = "";
+  estadoEEJG: string = "No solicitado";
 
   selectionMode;
   editMode;
@@ -151,16 +152,20 @@ export class UnidadFamiliarComponent implements OnInit {
 
           //Se traduce el valor del back a su idioma y rol correspondientes
           //Si se selecciona el valor "Unidad Familiar" en el desplegable "Rol/Solicitante"
-          if (element.uf_enCalidad == "1") {
+          if (element.uf_solicitante == "0") {
             element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.unidadFamiliar');
           }
           //Si se selecciona el valor "Solicitante" en el desplegable "Rol/Solicitante"
-          if (element.uf_enCalidad == "2") {
+          if (element.uf_solicitante == "1") {
             element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.rol.solicitante');
           }
           //Si se selecciona el valor "Solicitante principal" en el desplegable "Rol/Solicitante"
-          if (element.uf_enCalidad == "3") {
+          if (element.uf_idPersona == element.solicitantePpal) {
             element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal');
+            this.solicitanteP=element;
+            if(element.expedienteEconom!=null && element.expedienteEconom!=undefined){
+              this.estadoEEJG = element.expedienteEconom;
+            }
           }
         });
         if (this.datosFamiliares != undefined) {
@@ -168,8 +173,8 @@ export class UnidadFamiliarComponent implements OnInit {
           this.datosFamiliaresActivos = this.datosFamiliares.filter(
             (dato) => /*dato.fechaBaja != undefined && */ dato.fechaBaja == null);
           //Obtenemos el solicitante principal
-          this.solicitanteP = this.datosFamiliaresActivos.filter(
-            (dato) => dato.uf_enCalidad == "3")[0];
+          //this.solicitanteP = this.datosFamiliaresActivos.filter(
+          //  (dato) => dato.uf_enCalidad == "3")[0];
           this.nExpedientes = this.datosFamiliaresActivos.length;
 
           if (this.solicitanteP != undefined) {

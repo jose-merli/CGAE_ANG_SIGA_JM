@@ -33,6 +33,7 @@ export class FichaCertificacionFacComponent implements OnInit {
   @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli;
   @ViewChild(TarjetaMovimientosVariosAsociadosComponent) tarjetaMovAso;
   idCertificacion;
+  progressSpinner: boolean = false;
   constructor(
     private location: Location,
     private persistenceService: PersistenceService,

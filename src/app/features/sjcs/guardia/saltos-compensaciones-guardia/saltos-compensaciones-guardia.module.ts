@@ -20,6 +20,11 @@ import { HeaderGestionEntidadService } from '../../../../_services/headerGestion
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltrosSaltosCompensacionesGuardiaComponent } from './saltos-compensaciones-guardia/filtros-saltos-compensaciones-guardia/filtros-saltos-compensaciones-guardia.component';
 import { SaltosCompensacionesGuardiaComponent } from './saltos-compensaciones-guardia/saltos-compensaciones-guardia.component';
+import { TablaResultadoMixSaltosCompGuardiaComponent } from './saltos-compensaciones-guardia/tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp-guardia.component';
+import { SelectorModule } from '../../../../commons/selector/selector.module';
+import { MatSortModule } from '@angular/material';
+import { PaginadorModule } from '../../../../commons/paginador/paginador.module';
+import { TablaResultadoMixSaltosCompService } from './saltos-compensaciones-guardia/tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp.service';
 import { TablaSaltosCompensacionesGuardiaComponent } from './saltos-compensaciones-guardia/tabla-saltos-compensaciones-guardia/tabla-saltos-compensaciones-guardia.component';
 
 @NgModule({
@@ -44,15 +49,19 @@ import { TablaSaltosCompensacionesGuardiaComponent } from './saltos-compensacion
     PickListModule,
     TablaDinamicaColaGuardiaModule,
     ConfirmDialogModule,
+    BusquedaColegiadoExpressModule,
+    SelectorModule,
+    MatSortModule,
     FechaModule,
-    BusquedaColegiadoExpressModule
+    PaginadorModule,
   ],
   declarations: [
     SaltosCompensacionesGuardiaComponent,
-    TablaSaltosCompensacionesGuardiaComponent,
-    FiltrosSaltosCompensacionesGuardiaComponent],
+    FiltrosSaltosCompensacionesGuardiaComponent,
+    TablaResultadoMixSaltosCompGuardiaComponent,
+    TablaSaltosCompensacionesGuardiaComponent
+  ],
   providers: [
-    // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },
     ImagePipe,
     DatePipe,
     TrimPipePipe,
@@ -63,8 +72,11 @@ import { TablaSaltosCompensacionesGuardiaComponent } from './saltos-compensacion
     MessageService,
     AuthenticationService,
     ConfirmationService,
-  ], schemas: [
-    CUSTOM_ELEMENTS_SCHEMA
+    TablaResultadoMixSaltosCompService
+
   ],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class SaltosCompensacionesGuardiaModule { }

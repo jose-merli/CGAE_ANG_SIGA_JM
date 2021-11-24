@@ -1115,7 +1115,6 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         "inscripcionCurrent",
         JSON.stringify(selectedDatos[0])
       );
-      console.log(selectedDatos);
       sessionStorage.removeItem("isCancelado");
       sessionStorage.setItem("pantallaListaInscripciones", "true");
       sessionStorage.setItem("datosTabla", JSON.stringify(this.datos));

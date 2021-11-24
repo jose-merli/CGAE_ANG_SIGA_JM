@@ -173,8 +173,8 @@ export class TablaBusquedaAsuntosComponent implements OnInit {
       this.sigaServices.post("designacion_asociarEjgDesigna", request).subscribe(
         m => {
 
-          if (JSON.parse(m.body).error.code == 200) this.showMessage("success", "Asociación con EJG realizada correctamente", "");
-          else this.showMessage("error", "Asociación con EJG fallida", "");
+          if (JSON.parse(m.body).error.code == 200) this.showMessage("success", "AsociaciÃ³n con EJG realizada correctamente", "");
+          else this.showMessage("error", "AsociaciÃ³n con EJG fallida", "");
           sessionStorage.removeItem("EJG");
           this.location.back();
         },
