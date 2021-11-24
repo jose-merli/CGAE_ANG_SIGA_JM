@@ -121,62 +121,6 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     }
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);    
-
-    setTimeout(() => {
-      console.log(this.tabla);
-      if(this.openFicha) {
-        this.tabla.filterConstraints['inCollection'] = function inCollection(value: any, filter: any): boolean{
-          // value = array con los datos de la fila actual
-          // filter = valor del filtro por el que se va a buscar en el array value
-    
-          let incidencias = value.split("/");
-    
-          if (filter === undefined || filter === null) {
-            return true;
-          }
-    
-          if (incidencias === undefined || incidencias === null || incidencias.length === 0) {
-              return false;
-          }
-    
-          for (let i = 0; i < incidencias.length; i++) {
-            switch (filter) {
-    
-              case "con_inci":
-                if(incidencias[0] == "1"){
-                  return true;
-                }
-                break;
-    
-              case "sin_inci":
-                if(incidencias[0] == "0"){
-                  return true;
-                }
-                break;
-            
-              case "inci_env":
-                if(incidencias[0] == "1" && incidencias[1] == "1"){
-                  return true;
-                }
-                break;
-    
-              case "desp_env":
-                if(incidencias[0] == "1" && incidencias[2] == "1"){
-                  return true;
-                }
-                break;
-            
-              default:
-                if(incidencias[0] == "1" && incidencias[3] == "0"){
-                  return true;
-                }
-                break;
-            }
-          }
-          return false;
-        }
-      }
-    }, 1000);
   }
 
   getFichaPosibleByKey(key): any {
@@ -292,19 +236,13 @@ export class TarjetaListadoEjgsComponent implements OnInit {
       });
   }
 
-  openTab(evento) {
+  asociarEJG() {
+    this.router.navigate(["/ejg-comision"]);
+    localStorage.setItem('ejgComision', JSON.stringify(this.selectedDatos));
+  }
 
-    let paginacion = {
-      paginacion: this.tabla.first,
-      selectedItem: this.selectedItem
-    };
+  consultarEditarEJG(){
 
-    this.persistenceService.setPaginacion(paginacion);
-    this.progressSpinner = true;
-    this.persistenceService.setDatos(evento);
-    this.router.navigate(["/fichaRemesasEnvio"]);
-    localStorage.setItem('remesaItem', JSON.stringify(this.selectedDatos));
-    localStorage.setItem('ficha', "registro");
   }
 
   onChangeRowsPerPages(event) {

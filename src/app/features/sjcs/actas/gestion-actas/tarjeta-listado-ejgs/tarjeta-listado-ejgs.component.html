@@ -65,7 +65,11 @@
 
           <td class="text-center" *ngFor="let col of columns;">
 
-            <span>
+            <span *ngIf="col.field == 'fechaApertura'">
+              {{dato[col.field] | date: 'dd/MM/yyyy'}}
+            </span>
+
+            <span *ngIf="col.field != 'fechaApertura'">
               {{dato[col.field]}}
             </span>
           </td>
@@ -108,13 +112,13 @@
       <div class="text-right main-button">
   
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || !permisos"
+          [disabled]="(selectedDatos == undefined || selectedDatos.length == 0 || selectedDatos.length > 1)"
           (click)="asociarEJG()" type="button" icon="fa fa-plus" iconPos="left"
           label="{{ 'general.boton.asociarEJG' | translate}}">
         </button>
         
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || !permisos"
+          [disabled]="(selectedDatos == undefined || selectedDatos.length == 0 || selectedDatos.length > 1)"
           (click)="consultarEditarEJG()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.consultarEditarEJG' | translate}}">
         </button>
