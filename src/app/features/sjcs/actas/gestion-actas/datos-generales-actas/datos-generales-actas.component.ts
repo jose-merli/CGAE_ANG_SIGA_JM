@@ -53,6 +53,8 @@ export class DatosGeneralesActasComponent implements OnInit {
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
 
+  event = new EventEmitter<any>();
+
   codigoPostalValido: boolean = true;
 
   openFicha: boolean = true;
@@ -66,7 +68,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   idComisaria;
   provinciaSelecionada: string;
 
-
+  anioNum :String;
   comboProvincias;
   comboPoblacion;
   isDisabledPoblacion: boolean = true;
@@ -76,14 +78,15 @@ export class DatosGeneralesActasComponent implements OnInit {
   visibleMovilValue: boolean = false;
   esDecanoValue: boolean = false;
   isCodigoEjisValue: boolean = false;
-
+  disabledAnio : boolean = true;
   progressSpinner: boolean = false;
 
   disabledSave: boolean = true;
-
+  editable : boolean = true;
   fechaActualAux : Date;
   fechaActual: String;
 
+  controlComboSufijo : boolean = true;
   
 
 
@@ -93,6 +96,14 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   ngOnInit() {
     console.log("Este es el objeto que se supone tiene los datos de la tabla" + this.datos);
+    console.log(this.datos)
+    if(this.datos.anioacta == null || this.datos.anioacta == undefined ){
+      this.datosFiltro.anioacta = this.getAnio();
+      this.getNumActa();
+    }else{
+      this.editable = false;
+    }
+    this.numAnio();
     this.getComboPresidente();
     this.getComboSufijo();
     this.getComboSecretario();
@@ -103,8 +114,44 @@ export class DatosGeneralesActasComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos()
 
     }
+    
+   }
+   numAnio(){
+     this.anioNum = this.translateService.instant("justiciaGratuita.maestros.calendarioLaboralAgenda.anio") +"/"+this.translateService.instant("gratuita.busquedaAsistencias.literal.numero");
+   }
+   getNumActa(){
+    this.sigaServices
+    .get("filtrosacta_getNumAca")
+    //.get("filtrosejg_comboPresidente")
+    .subscribe(
+      n => {
+       this.datosFiltro.numeroacta = n;
+      },
+      err => {
+        console.log(err);
+      }
+    );
    }
 
+   onChangeSufijo(){
+    console.log(this.datosFiltro.sufijo);
+    this.progressSpinner = true;
+      this.sigaServices.post("filtrosacta_getNumAca", this.datosFiltro).subscribe(
+        data => {
+          this.datosFiltro.numeroacta = data.body;
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  
+  }
+  getAnio(){
+    let fechaActual = new Date();
+    let anio = fechaActual.getFullYear().toString()
+    return anio;
+  }
    getFechaActual(){
     this.fechaActualAux = new Date();
     this.fechaActual = this.numero2Cifras(this.fechaActualAux.getHours()) + ":"+ this.numero2Cifras(this.fechaActualAux.getMinutes());
@@ -289,8 +336,14 @@ export class DatosGeneralesActasComponent implements OnInit {
       .get("filtrosacta_comboSufijo")
       .subscribe(
         n => {
-          this.comboSufijo = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboSufijo);
+          if(n.error.code == 404 && n.error.description == 'Empty'){
+            this.controlComboSufijo = false
+          }else{
+            this.comboSufijo = n.combooItems;
+            this.datosFiltro.sufijo = this.comboSufijo[0].value;
+            this.commonsService.arregloTildesCombo(this.comboSufijo);
+          }
+
         },
         err => {
           console.log(err);
