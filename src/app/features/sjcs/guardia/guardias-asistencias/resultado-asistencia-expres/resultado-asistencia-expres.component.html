@@ -1,0 +1,33 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+
+<app-tabla-resultado-desplegable [filtroAsistencia]="filtro" [seleccionarTodo]="seleccionarTodo" [ngClass]="{'customCursor': selectMultiple}"
+    [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
+    (anySelected)="notifyAnySelected($event)" [pantalla]="pantalla">
+</app-tabla-resultado-desplegable>
+
+
+<div class="card-footer ajustar marginButtons">
+    <div class="row inline">
+        <div class="center col-lg-4 col-md-4">
+            <div class="form-inline">
+                <label class="mr-3 textoAlineado form-group">{{"justiciaGratuita.oficio.designas.actuaciones.fechaJustificacion" | translate}}</label>
+                <app-fecha [(value)] = "fechaJustificacion" [utc]="false" [disabled]="isLetrado"(valueChangeSelected)="fillFecha($event)"  
+                (valueChangeInput)="fillFecha($event)"
+                 ></app-fecha>
+            </div>
+        </div>
+        <div class="right col main-button ">
+            <button [disabled]="isDisabled || disableCrearEJG" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="{{'general.boton.crearEJG' | translate}}"
+                (click)="crearEJG();"></button>
+            <button [disabled]="isDisabled" type="submit" pButton icon="fa fa-plus" iconPos="left"
+                label="{{'justiciaGratuita.guardia.asistenciasexpress.nuevaactuacion' | translate}}" (click)="nuevaActuacion()"></button>
+            <button type="submit" pButton icon="fa fa-plus" iconPos="left" (click)="nuevaAsistencia()" [disabled]="isDisabled"
+                label="{{'justiciaGratuita.guardia.asistenciasexpress.nuevaasistencia' | translate}}"></button>
+            <button [disabled]="isDisabled" type="submit" pButton icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
+                (click)="resetTable(); showMsg('success', 'Se ha restablecido correctamente', '')"></button>
+            <button [disabled]="isDisabled" type="submit" pButton icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
+                (click)="guardar();"></button>
+        </div>
+    </div>
+</div>

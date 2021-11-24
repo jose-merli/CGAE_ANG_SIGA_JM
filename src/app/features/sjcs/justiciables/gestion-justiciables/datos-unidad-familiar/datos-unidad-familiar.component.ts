@@ -75,6 +75,18 @@ export class DatosUnidadFamiliarComponent implements OnInit {
       let data = JSON.parse(sessionStorage.getItem("Familiar"));
       
       this.generalBody = data;
+      //Comprobamos el rol - fmansilla como solucion rapida utilizo lo establecido en la tarjeta pero habria que trasladar el dato del solicitante principal
+      if (this.generalBody.labelEnCalidad == "Unidad Familiar") {
+        this.generalBody.uf_enCalidad = "1";
+      }
+      //Si se selecciona el valor "Solicitante" en el desplegable "Rol/Solicitante"
+      if (this.generalBody.labelEnCalidad == "Solicitante") {
+        this.generalBody.uf_enCalidad = "2";
+      }
+      //Si se selecciona el valor "Solicitante principal" en el desplegable "Rol/Solicitante"
+      if (this.generalBody.labelEnCalidad == "Solicitante principal" ){
+        this.generalBody.uf_enCalidad = "3";
+      }
       //Se realiza la asignacion de esta manera para evitar que la variable cambie los valores
       //igual que la variable generalBody.
       this.initialBody = JSON.parse(JSON.stringify(data));
@@ -129,24 +141,24 @@ export class DatosUnidadFamiliarComponent implements OnInit {
       }
     }
     //Se comprueba el campo de rol y si ya hay un solicitante principal si se introduce dicho valor
-    if(this.generalBody.uf_enCalidad=="3"){
-      let ejg: EJGItem = new EJGItem();
-      //Comprobamos el solicitante principal asociado
-      //Si estamos en la creacion de una nueva unidad familiar 
-      if(sessionStorage.getItem("EJGItem")){
-        ejg = JSON.parse(sessionStorage.get("EJGItem"));
-      }
-      //Si se esta editando una unidad familiar desde su tarjeta en ejg
-      else if(this.persistenceService.getDatos()){
-        ejg = this.persistenceService.getDatos();
-      }
-      //Si la persona que selecciona el rol de solicitante principal es diferente a una ya designada, salta un error
-      if(ejg.idPersonajg != this.generalBody.uf_idPersona && ejg.idPersonajg != null){
-        this.showMessage("error", this.translateService.instant('general.message.incorrect'),
-        this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.errorSolPrinc'));
-        pass=false;
-      }
-    }
+    // if(this.generalBody.uf_enCalidad=="3"){
+    //   let ejg: EJGItem = new EJGItem();
+    //   //Comprobamos el solicitante principal asociado
+    //   //Si estamos en la creacion de una nueva unidad familiar 
+    //   if(sessionStorage.getItem("EJGItem")){
+    //     ejg = JSON.parse(sessionStorage.getItem("EJGItem"));
+    //   }
+    //   //Si se esta editando una unidad familiar desde su tarjeta en ejg
+    //   else if(this.persistenceService.getDatos()){
+    //     ejg = this.persistenceService.getDatos();
+    //   }
+    //   //Si la persona que selecciona el rol de solicitante principal es diferente a una ya designada, salta un error
+    //   if(ejg.idPersonajg != this.generalBody.uf_idPersona && ejg.idPersonajg != null){
+    //     this.showMessage("error", this.translateService.instant('general.message.incorrect'),
+    //     this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.errorSolPrinc'));
+    //     pass=false;
+    //   }
+    // }
     if(pass)this.save();
   }
 
@@ -206,9 +218,9 @@ export class DatosUnidadFamiliarComponent implements OnInit {
           if(this.generalBody.uf_enCalidad == "3") {
             //Si estamos en la creacion de una nueva unidad familiar 
               if(sessionStorage.getItem("EJGItem")){
-                let ejg: EJGItem = JSON.parse(sessionStorage.get("EJGItem"));
+                let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
                 ejg.idPersonajg = this.generalBody.uf_idPersona;
-                sessionStorage.set("EJGItem",JSON.stringify(ejg));
+                sessionStorage.setItem("EJGItem",JSON.stringify(ejg));
               }
               //Si se esta editando una unidad familiar desde su tarjeta en ejg
               else if(this.persistenceService.getDatos()){
@@ -221,7 +233,6 @@ export class DatosUnidadFamiliarComponent implements OnInit {
           this.showMessage("error", this.translateService.instant('general.message.incorrect'),
             this.translateService.instant('general.message.error.realiza.accion'));
         }
-
 
       },
       err => {

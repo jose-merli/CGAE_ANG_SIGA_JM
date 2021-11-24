@@ -12,7 +12,7 @@ import es from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 import { DialogModule } from "primeng/dialog";
 import { StepsModule } from 'primeng/steps';
-
+import * as $ from 'jquery'
 
 import { AuthGuard } from './_guards/auth.guards';
 import { OldSigaServices } from './_services/oldSiga.service';
@@ -419,9 +419,7 @@ import { DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent } from '.
 import { DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-datos-generales-designa/detalle-tarjeta-datos-generales-ficha-designacion-oficio.component';
 import { DetalleTarjetaDetalleFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-detalle-designa/detalle-tarjeta-detalle-ficha-designacion-oficio.component';
 import { DetalleTarjetaDocumentacionFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-documentacion-designa/detalle-tarjeta-documentacion-ficha-designacion-oficio.component';
-import { TablaResultadoOrderComponent } from './commons/tabla-resultado-order/tabla-resultado-order.component';
 import { TablaSimpleComponent } from './commons/tabla-simple/tabla-simple.component';
-import { TarjetaComponent } from './commons/tarjeta/tarjeta.component';
 import { TablaJustificacionExpresComponent } from './features/sjcs/oficio/designaciones/tabla-justificacion-expres/tabla-justificacion-expres.component';
 import { GestionDesignacionesComponent } from './features/sjcs/oficio/designaciones/gestion-designaciones/gestion-designaciones.component'
 import { FiltroDesignacionesComponent } from './features/sjcs/oficio/designaciones/filtro-designaciones/filtro-designaciones.component';
@@ -497,6 +495,54 @@ import { FichaBarConfiAdiComponent } from './features/sjcs/facturacionSJCS/barem
 import { TarjetaFacturacionGenericaComponent } from './features/sjcs/facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.component';
 import { TablaGenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/tabla-generar-impreso190/tabla-generar-impreso190.component';
 import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/filtro-generar-impreso190/filtro-generar-impreso190.component';
+import { BuscadorListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/buscador-lista-guardias/buscador-lista-guardias.component';
+import { CargasMasivasGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/cargas-masivas-guardia.component';
+import { FormularioBusquedaGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/formulario-busqueda-guardia/formulario-busqueda-guardia.component';
+import { FormularioSubidaGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/formulario-subida-guardia/formulario-subida-guardia.component';
+import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-masivas-guardia/lista-archivos-guardia/lista-archivos-guardia.component';
+import { FichaListaGuardiasTarjetaDatosGeneralesComponent } from './features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias-tarjeta-datos-generales/ficha-lista-guardias-tarjeta-datos-generales.component';
+import { FichaListaGuardiasTarjetaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias-tarjeta-guardias/ficha-lista-guardias-tarjeta-guardias.component';
+import { FichaListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias.component';
+import { ResultadoListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/resultado-lista-guardias/resultado-lista-guardias.component';
+import { FiltrosGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/filtros-guardia-colegiado/filtros-guardia-colegiado.component';
+import { CalendarioGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/calendario-gestion-guardia-colegiado/calendario-gestion-guardia-colegiado.component';
+import { ColegiadoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado.component';
+import { DatosGeneralesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado.component';
+import { GuardiaGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/guardia-gestion-guardia-colegiado/guardia-gestion-guardia-colegiado.component';
+import { PermutasGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/permutas-gestion-guardia-colegiado/permutas-gestion-guardia-colegiado.component';
+import { SustitucionesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado/sustituciones-gestion-guardia-colegiado.component';
+import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/turno-gestion-guardia-colegiado/turno-gestion-guardia-colegiado.component';
+import { AsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/asistencia-expres.component';
+import { BuscadorAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencia-expres/buscador-asistencia-expres.component';
+import { BuscadorAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/asistencia-expres/buscador-asistencias/buscador-asistencias.component';
+import { FichaActuacionAsistenciaTarjetaDatosGeneralesComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-datos-generales/ficha-actuacion-asistencia-tarjeta-datos-generales.component';
+import { FichaActuacionAsistenciaTarjetaDocumentacionComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-documentacion/ficha-actuacion-asistencia-tarjeta-documentacion.component';
+import { FichaActuacionAsistenciaTarjetaHistoricoComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-historico/ficha-actuacion-asistencia-tarjeta-historico.component';
+import { FichaActuacionAsistenciaTarjetaJustificacionComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia-tarjeta-justificacion/ficha-actuacion-asistencia-tarjeta-justificacion.component';
+import { FichaActuacionAsistenciaComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-actuacion-asistencia/ficha-actuacion-asistencia.component';
+import { FichaAsistenciaTarjetaActuacionesComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-actuaciones/ficha-asistencia-tarjeta-actuaciones.component';
+import { FichaAsistenciaTarjetaAsistidoComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-asistido/ficha-asistencia-tarjeta-asistido.component';
+import { FichaAsistenciaTarjetaCaracteristicasComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-caracteristicas/ficha-asistencia-tarjeta-caracteristicas.component';
+import { FichaAsistenciaTarjetaContrariosComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-contrarios/ficha-asistencia-tarjeta-contrarios.component';
+import { FichaAsistenciaTarjetaDatosGeneralesComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-datos-generales/ficha-asistencia-tarjeta-datos-generales.component';
+import { FichaAsistenciaTarjetaDefensaJuridicaComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-defensa-juridica/ficha-asistencia-tarjeta-defensa-juridica.component';
+import { FichaAsistenciaTarjetaDocumentacionComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-documentacion/ficha-asistencia-tarjeta-documentacion.component';
+import { FichaAsistenciaTarjetaObservacionesComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-observaciones/ficha-asistencia-tarjeta-observaciones.component';
+import { FichaAsistenciaTarjetaRelacionesComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-relaciones/ficha-asistencia-tarjeta-relaciones.component';
+import { FichaAsistenciaComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia.component';
+import { ResultadoAsistenciaExpresComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencia-expres/resultado-asistencia-expres.component';
+import { ResultadoAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/resultado-asistencias/resultado-asistencias.component';
+import { BuscadorSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/buscador-solicitudes-centralita/buscador-solicitudes-centralita.component';
+import { AsistenciasFichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/ficha-preasistencias/asistencias-ficha-preasistencias/asistencias-ficha-preasistencias.component';
+import { FichaPreasistenciasComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/ficha-preasistencias/ficha-preasistencias.component';
+import { GuardiasSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/guardias-solicitudes-centralita.component';
+import { ResultadoSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/resultado-solicitudes-centralita/resultado-solicitudes-centralita.component';
+import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component';
+import { GestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/gestion-guardia-colegiado.component';
+import { GuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/guardia-colegiado.component';
+import { TablaGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/tabla-guardia-colegiado/tabla-guardia-colegiado.component';
+import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
+import { TablaResultadoOrderModule } from './commons/tabla-resultado-order/tabla-resultado-order.module';
 
 @NgModule({
 	declarations: [
@@ -510,11 +556,7 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		DatePickerRangeComponent,
 		HoraComponent,
 		InputDivididoComponent,
-		TablaResultadoMixComponent,
-		TablaResultadoOrderComponent,
 		TablaSimpleComponent,
-		TarjetaComponent,
-
 		MyIframeComponent,
 		MenuComponent,
 		LoginComponent,
@@ -523,7 +565,49 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		LogoutComponent,
 		HeaderComponent,
 		HomeComponent,
-		TarjetaComponent,
+		BuscadorListaGuardiasComponent,
+		BuscadorAsistenciaExpresComponent,
+		ResultadoAsistenciaExpresComponent,
+		BuscadorAsistenciasComponent,
+		ResultadoAsistenciasComponent,
+		AsistenciaExpresComponent,
+		AsistenciasFichaPreasistenciasComponent,
+		FichaPreasistenciasComponent,
+		FiltrosGuardiaColegiadoComponent,
+		FormularioBusquedaGuardiaComponent,
+		CargasMasivasGuardiaComponent,
+		PartidosJudicialesComponent,
+		FormularioSubidaGuardiaComponent,
+		ListaArchivosGuardiaComponent,
+		FichaListaGuardiasComponent,
+		FichaListaGuardiasTarjetaDatosGeneralesComponent,
+		FichaListaGuardiasTarjetaGuardiasComponent,
+		ResultadoListaGuardiasComponent,
+		CalendarioGestionGuardiaColegiadoComponent,
+		ColegiadoGestionGuardiaColegiadoComponent,
+		DatosGeneralesGestionGuardiaColegiadoComponent,
+		GuardiaGestionGuardiaColegiadoComponent,
+		PermutasGestionGuardiaColegiadoComponent,
+		SustitucionesGestionGuardiaColegiadoComponent,
+		TurnoGestionGuardiaColegiadoComponent,
+		FichaActuacionAsistenciaTarjetaHistoricoComponent,
+		FichaActuacionAsistenciaComponent,
+		FichaActuacionAsistenciaTarjetaDatosGeneralesComponent,
+		FichaActuacionAsistenciaTarjetaDocumentacionComponent,
+		FichaActuacionAsistenciaTarjetaJustificacionComponent,
+		FichaAsistenciaTarjetaDatosGeneralesComponent,
+		FichaAsistenciaComponent,
+		FichaAsistenciaTarjetaActuacionesComponent,
+		FichaAsistenciaTarjetaAsistidoComponent,
+		FichaAsistenciaTarjetaCaracteristicasComponent,
+		FichaAsistenciaTarjetaContrariosComponent,
+		FichaAsistenciaTarjetaDefensaJuridicaComponent,
+		FichaAsistenciaTarjetaDocumentacionComponent,
+		FichaAsistenciaTarjetaObservacionesComponent,
+		FichaAsistenciaTarjetaRelacionesComponent,
+		BuscadorSolicitudesCentralitaComponent,
+		GuardiasSolicitudesCentralitaComponent,
+		ResultadoSolicitudesCentralitaComponent,
 		// Censo
 		AuditoriaComponent,
 		AccesoFichaPersonaComponent,
@@ -568,7 +652,10 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		ServiciosInteresComponent,
 		FacturacionSociedadesCensoComponent,
 		ComunicacionSociedadesComponent,
-
+		TablaGuardiaColegiadoComponent,
+		GuardiaColegiadoComponent,
+		GestionGuardiaColegiadoComponent,
+		
 		//Certificados
 		ComunicacionInterprofesionalComponent,
 		SolicitarCompraComponent,
@@ -637,7 +724,6 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		DetalleTarjetaActuacionesFichaDesignacionOficioComponent,
 		GuardiasSolicitudesTurnosComponent,
 		GuardiasIncompatibilidadesComponent,
-		ProgramacionCalendariosComponent,
 		GuardiasBajasTemporalesComponent,
 		GuardiasSaltosCompensacionesComponent,
 		DefinirListasGuardiasComponent,
@@ -853,9 +939,7 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		BuscadorColegiadosComponent,
 		TablaBuscadorColegiadosComponent,
 		FiltroBuscadorColegiadosComponent,
-		PaginadorComponent,
 		TablaResultadoComponent,
-		SelectorComponent,
 		MigasDePanComponent,
 		FormularioBusquedaComponent,
 		FormularioSubidaComponent,
@@ -989,6 +1073,8 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		OficioModule,
 		BusquedaAsuntosModule,
 		Paginador2Module,
+		TarjetaModule,
+		TablaResultadoOrderModule
 	],
 
 	exports: [],

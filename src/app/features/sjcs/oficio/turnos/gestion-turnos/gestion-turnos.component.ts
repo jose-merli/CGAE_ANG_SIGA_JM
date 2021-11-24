@@ -76,7 +76,8 @@ export class TablaTurnosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.currentRoute = this.router.url;
+    
+     this.currentRoute = this.router.url;
     this.selectedDatos = [];
     this.getCols();
     this.historico = this.persistenceService.getHistorico();
@@ -86,7 +87,7 @@ export class TablaTurnosComponent implements OnInit {
       let paginacion = this.persistenceService.getPaginacion();
       this.first = paginacion.paginacion;
       this.selectedItem = paginacion.selectedItem;
-    }
+    } 
   }
 
   ngOnChanges(changes: SimpleChanges) {

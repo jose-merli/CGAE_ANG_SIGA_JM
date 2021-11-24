@@ -34,6 +34,9 @@ export class TablaBuscadorColegiadosComponent implements OnInit {
     this.selectedDatos = [];
 
     this.getCols();
+
+    this.progressSpinner = false;
+
   }
 
   colegiadoSelected(event) {

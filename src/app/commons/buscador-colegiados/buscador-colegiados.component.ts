@@ -8,6 +8,7 @@ import { ColegiadosSJCSItem } from '../../models/ColegiadosSJCSItem';
 import { TablaBuscadorColegiadosComponent } from './tabla-buscador-colegiados/tabla-buscador-colegiados.component';
 import { Router } from "@angular/router";
 import { PersistenceService } from '../../_services/persistence.service';
+import { GuardiaItem } from '../../models/guardia/GuardiaItem';
 
 @Component({
   selector: 'app-buscador-colegiados',
@@ -19,6 +20,7 @@ export class BuscadorColegiadosComponent implements OnInit {
   msgs: Message[] = [];
   show = false;
   nuevaInscripcion:boolean = false;
+  nuevaInscripcionGuardia:boolean = false;
 
   datos: ColegiadosSJCSItem = new ColegiadosSJCSItem();
 
@@ -27,10 +29,33 @@ export class BuscadorColegiadosComponent implements OnInit {
   @ViewChild(TablaBuscadorColegiadosComponent) tabla;
 
   @Input() volver;
-
+  calendarioSelected = {
+    'duplicar' : '',
+    'tabla': [],
+    'turno':'',
+    'nombre': '',
+    'generado': '',
+    'numGuardias': '',
+    'listaGuarias': {label: '', value: ''},
+    'fechaDesde': '',
+    'fechaHasta': '',
+    'fechaProgramacion': null,
+    'estado': '',
+    'observaciones': '',
+    'idCalendarioProgramado': '',
+    'idTurno': '',
+    'idGuardia': '',
+    'orden' : '',
+    'idConjunto': ''
+  };
   constructor(private router: Router, private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
+    console.log('sessionStorage.getItem("calendariosProgramados"): ', sessionStorage.getItem("calendariosProgramados"))
+    if(sessionStorage.getItem("calendariosProgramados") == "true"){
+      this.calendarioSelected = JSON.parse(sessionStorage.getItem("calendarioSeleccinoado"));
+      console.log('calendarioSelected: ', this.calendarioSelected)
+    }
     if (sessionStorage.getItem('usuarioBusquedaExpress')) {
       sessionStorage.removeItem('usuarioBusquedaExpress')
     }
@@ -41,6 +66,11 @@ export class BuscadorColegiadosComponent implements OnInit {
       this.nuevaInscripcion=true;
     }
 
+     //Comprobar si viene del botón nuevo de busqueda de inscripciones
+     if (sessionStorage.getItem("sesion") =="nuevaInscripcion") {
+      sessionStorage.removeItem('sesion');
+      this.nuevaInscripcionGuardia=true;
+    }
     
 
   }
@@ -72,6 +102,8 @@ export class BuscadorColegiadosComponent implements OnInit {
   }
 
   buscar(){
+
+
     let guardia = "";
     let turno = "";
 
@@ -129,13 +161,62 @@ export class BuscadorColegiadosComponent implements OnInit {
       //sessionStorage.setItem("turno", JSON.stringify(event));
       sessionStorage.setItem("origin","newInscrip");
       this.router.navigate(["/gestionInscripciones"]);
-    } else{
+
+    } else if(this.nuevaInscripcionGuardia){
+      this.persistenceService.setDatos(event);
+      sessionStorage.setItem("sesion","nuevaInscripcion");
+      this.router.navigate(["/fichaInscripcionesGuardia"]);
+      
+    }else{
       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
 
       sessionStorage.getItem('nuevo');
       
       this.location.back();
     }
+
+    if(sessionStorage.getItem("calendariosProgramados") == "true"){
+      this.calendarioSelected = JSON.parse(sessionStorage.getItem("calendarioSeleccinoado"));
+       //redirigimos a fichaGuardiasColegiado
+      let guardia = new GuardiaItem()
+      guardia.idGuardia = this.calendarioSelected.idGuardia;
+      guardia.idTurno = this.calendarioSelected.idTurno;
+      guardia.orden = this.calendarioSelected.orden;
+      guardia.turno = this.calendarioSelected.turno;
+      guardia.nombre = this.calendarioSelected.nombre;
+      guardia.idPersona = event.idPersona;
+      guardia.letradosGuardia = event.nombre;
+      guardia.fechadesde = this.calendarioSelected.fechaDesde;
+      guardia.fechahasta = this.calendarioSelected.fechaHasta;
+      guardia.tipoTurno = this.calendarioSelected.turno;
+      guardia.tipoGuardia = this.calendarioSelected.nombre;
+      guardia.numColegiado = event.nColegiado;
+      guardia.idCalendarioGuardias = this.calendarioSelected.idCalendarioProgramado;
+      guardia.idConjuntoGuardia = this.calendarioSelected.idConjunto;
+      /*estadoGuardia: "Facturada - 1er Trimestre 2010 - GUARDIAS / ASISTENCIAS"
+      facturado: "1"
+      fechadesde: 1265842800000
+      fechahasta: 1265842800000
+      historico: false
+      idCalendarioGuardias: "1"
+      idFacturacion: 4
+      idGuardia: "769"
+      idPersona: "2005003253"
+      idTurno: "804"
+      letradosGuardia: "UOSSLU PCZYHJD,EMILIO"
+      numColegiado: "5896"
+      ordenGrupo: "Sin Grupo"
+      requeridaValidacion: false
+      tipoDiasGuardia: "Sin dias en la Guardia."
+      tipoGuardia: "G. Civil Villajoyosa"
+      tipoTurno: "T.O PENAL BENIDORM"
+      validada: "1"*/
+      this.persistenceService.setDatos(guardia);
+      sessionStorage.setItem("infoGuardiaColeg",JSON.stringify(guardia));
+      sessionStorage.setItem("originGuardiaColeg","true");
+      this.router.navigate(['/gestionGuardiaColegiado']);
+    }
+
   }
 
   showMessage(severity, summary, msg) {

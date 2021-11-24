@@ -7,6 +7,7 @@ import { PersistenceService } from '../../../../../../_services/persistence.serv
 import { GuardiaObject } from '../../../../../../models/guardia/GuardiaObject';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-tabla-guardias',
@@ -26,6 +27,7 @@ export class TablaGuardiasComponent implements OnInit {
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   historico: boolean = false;
+  isAbogado: boolean = false;
   buscadores = []
   message;
 
@@ -33,9 +35,12 @@ export class TablaGuardiasComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
+  disabledActivar : boolean = true;
 
   //Resultados de la busqueda
-  @Input() datos;
+  @Input() guardias : GuardiaItem[] = [];
+
+  datos;
 
   @ViewChild("table") table: DataTable;
 
@@ -47,7 +52,8 @@ export class TablaGuardiasComponent implements OnInit {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private sigaStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
@@ -55,8 +61,10 @@ export class TablaGuardiasComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
+    this.isAbogado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
+
     this.getCols();
-    this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+    this.initDatos = this.datos;
 
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
@@ -87,7 +95,7 @@ export class TablaGuardiasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "turno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
+      { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
       { field: "idTipoGuardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
       { field: "obligatoriedad", header: "dato.jgr.guardia.guardias.obligatoriedad" },
@@ -129,8 +137,8 @@ export class TablaGuardiasComponent implements OnInit {
       if (!this.historico) {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos;
-          this.numSelected = this.datos.length;
+          this.selectedDatos = this.guardias;
+          this.numSelected = this.guardias.length;
         } else {
           this.selectedDatos = [];
           this.numSelected = 0;
@@ -139,7 +147,7 @@ export class TablaGuardiasComponent implements OnInit {
       } else {
         if (this.selectAll) {
           this.selectMultiple = true;
-          this.selectedDatos = this.datos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
+          this.selectedDatos = this.guardias.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
           this.numSelected = this.selectedDatos.length;
         } else {
           this.selectedDatos = [];
@@ -180,6 +188,14 @@ export class TablaGuardiasComponent implements OnInit {
       if (evento.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
       }
+    }
+  }
+
+  checkSelectedRow(event){
+    if(this.historico && event.data.fechabaja){
+      this.disabledActivar = false;
+    }else{
+      this.disabledActivar = true;
     }
   }
 
@@ -241,9 +257,7 @@ export class TablaGuardiasComponent implements OnInit {
   confirmDelete() {
     if (this.permisoEscritura) {
 
-      let mess = this.translateService.instant(
-        "messages.deleteConfirmation"
-      );
+      let mess = 'Al dar de baja la guardia acepta dar de baja todas las inscripciones de los colegiados inscritos a dicha guardia. ¿Desea continuar?';
       let icon = "fa fa-edit";
       this.confirmationService.confirm({
         message: mess,
@@ -269,6 +283,13 @@ export class TablaGuardiasComponent implements OnInit {
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
+    if(!this.numSelected || this.numSelected == 0){
+      this.disabledActivar = true;
+    }else if(this.historico && this.selectedDatos.every(dato => dato.fechabaja)){
+      this.disabledActivar = false;
+    }else if(this.historico && this.selectedDatos.every(dato => !dato.fechabaja)){
+      this.disabledActivar = true;
+    }
   }
 
 

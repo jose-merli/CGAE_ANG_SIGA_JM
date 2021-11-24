@@ -123,17 +123,17 @@
       <div class="card-footer">
         <div class="text-right main-button">
           <button pButton type="button" icon="fa fa-comment" iconPos="left"
-            label="{{'general.boton.comunicar' | translate}}"></button>
+            label="{{'general.boton.comunicar' | translate}}" [disabled]="!permisoContrarios"></button>
           <button *ngIf="!historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-history"
-            iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+            iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}" [disabled]="!permisoContrarios"></button>
           <button *ngIf="historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo"
-            iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+            iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}" [disabled]="!permisoContrarios"></button>
           <button *ngIf="!historicoContrario" (click)="NewContrario()" pButton type="button" icon="fa fa-plus"
-            iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="!nuevo"></button>
-          <button *ngIf="!historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !eliminar" type="button"
+            iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="!nuevo || !permisoContrarios"></button>
+          <button *ngIf="!historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !eliminar || !permisoContrarios" type="button"
             (click)="Eliminar()" icon="fa fa-trash-alt" iconPos="left" 
             label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button *ngIf="historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !permisoEscritura" type="button"
+          <button *ngIf="historicoContrario" pButton [disabled]="selectedDatos.length == 0 || !permisoEscritura || !permisoContrarios" type="button"
             (click)="Eliminar()" icon="fa fa-plus" iconPos="left" 
             label="{{ 'general.boton.reactivar' | translate}}"></button>
         </div>

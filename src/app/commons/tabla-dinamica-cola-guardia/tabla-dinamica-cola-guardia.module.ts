@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DataTableModule, PaginatorModule, InputTextModule, DropdownModule, ButtonModule, CheckboxModule, GrowlModule } from '../../../../node_modules/primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, DropdownModule, ButtonModule, CheckboxModule, GrowlModule, ConfirmDialogModule } from '../../../../node_modules/primeng/primeng';
 import { FormsModule } from '../../../../node_modules/@angular/forms';
 import { PipeTranslationModule } from '../translate/pipe-translation.module';
 import { TableModule } from '../../../../node_modules/primeng/table';
@@ -21,6 +21,7 @@ import { TablaDinamicaModule } from '../tabla-dinamica/tabla-dinamica.module';
     PipeTranslationModule,
     TableModule,
     TablaDinamicaModule,
+    ConfirmDialogModule
   ],
   declarations: [TablaDinamicaColaGuardiaComponent],
   exports: [
