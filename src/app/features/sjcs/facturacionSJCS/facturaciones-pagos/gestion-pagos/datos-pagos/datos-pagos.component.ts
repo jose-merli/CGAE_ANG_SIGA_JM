@@ -92,7 +92,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
         if (undefined == this.idPago) {
           this.body = new PagosjgItem();
           this.bodyAux = new PagosjgItem();
-          if(this.idFacturacionDesdeFichaFac && this.idFacturacionDesdeFichaFac != null) {
+          if (this.idFacturacionDesdeFichaFac && this.idFacturacionDesdeFichaFac != null) {
             this.body.idFacturacion = this.idFacturacionDesdeFichaFac; this.body.idFacturacion = this.idFacturacionDesdeFichaFac;
           }
           this.showFicha = true;

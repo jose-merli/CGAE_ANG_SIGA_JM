@@ -72,6 +72,14 @@ export let endpoints_facturacionsjcs: any = {
 
     /*Endpoins impreso 190 */
 
-    impreso190_generar:"facturacionsjcs/impreso190generar"
+    impreso190_generar: "facturacionsjcs/impreso190generar",
+
+    /* Endpoints Tarjeta genérica facturaciones */
+    tarjGenFac_getFacturacionesPorAsuntoActuacionDesigna: "facturacionsjcs/getFacturacionesPorAsuntoActuacionDesigna",
+    tarjGenFac_getFacturacionesPorAsuntoAsistencia: "facturacionsjcs/getFacturacionesPorAsuntoAsistencia",
+    tarjGenFac_getFacturacionesPorAsuntoActuacionAsistencia: "facturacionsjcs/getFacturacionesPorAsuntoActuacionAsistencia",
+    tarjGenFac_getFacturacionesPorGuardia: "facturacionsjcs/getFacturacionesPorGuardia",
+    tarjGenFac_getFacturacionesPorEJG: "facturacionsjcs/getFacturacionesPorEJG",
+
 }
 
