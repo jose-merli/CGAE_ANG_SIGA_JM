@@ -7,16 +7,20 @@ import { MenubarModule } from 'primeng/menubar';
 
 import { FacturacionesYPagosModule } from './facturaciones-pagos/facturaciones-pagos.module';
 import { CartasFacturacionPagoModule } from './cartas-facturacion-pago/cartas-facturacion-pago.module';
+import {MovimientosVariosModule} from './movimientos-varios/movimientos-varios.module';
 
 @NgModule({
-        declarations: [],
+        declarations: [
+              //  FiltrosMovimientosVariosComponent
+        ],
         imports: [
                 CommonModule,
                 routingFacturacionsjcs,
                 FacturacionesYPagosModule,
                 MenubarModule,
                 SpinnerModule,
-                CartasFacturacionPagoModule
+                CartasFacturacionPagoModule,
+                MovimientosVariosModule
         ],
 
         providers: []

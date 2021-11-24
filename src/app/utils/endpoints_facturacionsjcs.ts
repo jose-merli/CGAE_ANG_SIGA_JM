@@ -8,6 +8,10 @@ export let endpoints_facturacionsjcs: any = {
     combo_comboFactColegio: "combo/comboFactColegio",
     combo_comboPagosColegio: "combo/comboPagosColegio",
     combo_comboFacturaciones: "combo/comboFacturaciones",
+    combo_comboFactMovimientos: "/combo/comboFactMovimientos",
+    combo_AplicadoEnPago: "/combo/comboAplicadoEnPago",
+    combo_comboAgrupacionEnTurnos: "/combo/comboAgrupacionEnTurnos",
+    combo_comboTiposMovVarios: "/combo/comboTiposMovimientos",
 
     /* Endpoints FACTURACIONSJCS */
 
@@ -53,6 +57,18 @@ export let endpoints_facturacionsjcs: any = {
     pagosjcs_getNumApuntesPago: "pagosjcs/getNumApuntesPago",
     pagosjcs_getCompensacionFacturas: "pagosjcs/getCompensacionFacturas",
     pagosjcs_cerrarPago: "pagosjcs/cerrarPago",
-    pagosjcs_cerrarPagoManual: "pagosjcs/cerrarPagoManual"
+    pagosjcs_cerrarPagoManual: "pagosjcs/cerrarPagoManual",
+
+    /* Endpoints Movimientos Varios*/
+    movimientosVarios_busquedaMovimientosVarios: "movimientosVarios/busquedaMovimientosVarios",
+    movimientosVarios_eliminarMovimiento: "movimientosVarios/deleteMovimientosVarios",
+    movimientosVarios_saveClienteMovimientosVarios: "movimientosVarios/saveClienteMovimientosVarios",
+    movimientosVarios_updateClienteMovimientosVarios: "movimientosVarios/updateClienteMovimientosVarios",
+    movimientosVarios_recogerDatosCliente: "movimientosVarios/recogerDatosCliente",
+    movimientosVarios_getListadoPagos: "movimientosVarios/getListadoPagos",
+    movimientosVarios_saveDatosGenMovimientosVarios: "movimientosVarios/saveDatosGenMovimientosVarios",
+    movimientosVarios_updateDatosGenMovimientosVarios: "movimientosVarios/updateDatosGenMovimientosVarios",
+    movimientosVarios_saveCriteriosMovimientosVarios: "movimientosVarios/saveCriteriosMovimientosVarios",
+    movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios"
 }
 

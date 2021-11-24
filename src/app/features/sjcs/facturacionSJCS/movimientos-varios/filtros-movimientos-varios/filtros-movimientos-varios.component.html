@@ -1,0 +1,169 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+
+<!--DATOS GENERALES-->
+    <div class="card-body">
+      <p class="title-module" (click)="onHideDatosGenerales()">
+        {{ 'general.message.datos.generales' | translate }}
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      </p>
+       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+        <div class="form-row">
+          
+          <!--DESCRIPCIÓN-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'general.description' | translate}}</label>
+            <input type="text" maxlength="95" [(ngModel)]='filtros.descripcion' name="descripcion" class="form-control"  pInputText />
+          </div>
+          <!--DESCRIPCIÓN-->
+
+           <!--TIPO-->
+           <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacion.productos.tipo' | translate}}</label>
+            <p-multiSelect [(ngModel)]='filtros.tipo' class="select-form" defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="tipos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'tipo')"> <!--(onPanelShow)="focusInputField(aplicadoEnPagoMultiselect)"-->
+            </p-multiSelect>
+          </div>
+          <!--TIPO-->
+
+           <!--CERTIFICACION-->
+           <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'menu.sjcs.ecom.certificacion' | translate}}</label>
+            <input type="text" maxlength="95" [(ngModel)]='filtros.certificacion' name="certificacion" class="form-control"  pInputText />
+          </div>
+          <!--CERTIFICACION-->
+
+          <!--APLICADO EN PAGO-->
+         <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.movimientosVarios.aplicadoEnPago' | translate}}</label>
+
+            <p-multiSelect [(ngModel)]='filtros.idAplicadoEnPago' class="select-form" defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="aplicadoEnPago" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idAplicadoEnPago')"> <!--(onPanelShow)="focusInputField(aplicadoEnPagoMultiselect)"-->
+            </p-multiSelect>
+          </div>
+          <!--APLICADO EN PAGO-->
+        </div>
+        
+        
+       <div class="form-row"> 
+          <!--FECHA DESDE-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.movimientosVarios.fechaAplicacionDesde' | translate}}</label>
+
+            <app-fecha (valueChangeSelected)="fillFechaDesde($event)"
+              (valueChangeInput)="fillFechaDesde($event)" [(value)]='filtros.fechaApDesde'>
+            </app-fecha>
+          </div>
+           <!--FECHA DESDE-->
+
+            <!--FECHA HASTA-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.movimientosVarios.fechaAplicacionHasta' | translate}}</label>
+
+            <app-fecha (valueChangeSelected)="fillFechaHasta($event)"
+              (valueChangeInput)="fillFechaHasta($event)" [(value)]='filtros.fechaApHasta'>
+            </app-fecha>
+          </div>
+           <!--FECHA HASTA-->
+        </div> 
+      </div>
+      </div>
+<!--FIN DE DATOS GENERALES-->
+
+<!--CRITERIOS DE APLICACIÓN-->
+      <div class="card-body">
+        <p class="title-module" (click)="onHideCriteriosAplicacion()">
+          {{ 'facturacionSJCS.movimientosVarios.criteriosAplicacion' | translate }}
+          <i *ngIf="showCriteriosAp" class="fa fa-angle-up float-right"></i>
+          <i *ngIf="!showCriteriosAp" class="fa fa-angle-down float-right"></i>
+        </p>
+         <div *ngIf="showCriteriosAp" class="module vista-avanzada">      
+        <div class="form-row">
+
+          <!--FACTURACIÓN DE APLICACIÓN INICIAL-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.movimientosVarios.facturacionApInicial' | translate}}</label>
+
+            <p-multiSelect  class="select-form" [(ngModel)]='filtros.idFacturacionApInicial' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
+            [options]="facturacionApInicial" [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} facturaciones seleccionadas'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idFacturacionApInicial')"> <!--(onPanelShow)="focusInputField(facturacionMultiselect)"-->
+            </p-multiSelect>
+          
+          </div>
+          <!--FACTURACIÓN DE APLICACIÓN INICIAL-->
+
+          <!--GRUPOS DE TURNOS-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.movimientosVarios.gruposTurnos' | translate}}</label>
+
+            <p-multiSelect class="select-form" [(ngModel)]='filtros.idGrupoFacturacion' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
+            [options]="gruposFacturacion" [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} grupos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idGrupoFacturacion')"> <!--(onPanelShow)="focusInputField(gruposTurnosMultiselect)"-->
+            </p-multiSelect>
+
+          </div>
+          <!--GRUPOS DE TURNOS-->
+
+          <!--CONCEPTO-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.conceptos' | translate}}</label>
+
+            <p-multiSelect class="select-form" [(ngModel)]='filtros.idConcepto' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
+              [options]="concepto" [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} conceptos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idConcepto')">  <!--(onPanelShow)="focusInputField(conceptosMultiselect)" -->
+            </p-multiSelect>
+
+          </div>
+
+          <!--CONCEPTO-->
+
+
+          <!--PARTIDA PRESUPUESTARIA-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}</label>
+
+            <p-multiSelect class="select-form" [(ngModel)]='filtros.idPartidaPresupuestaria' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
+            [options]="partidaPresupuestaria"  [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} partidas seleccionadas'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idPartidaPresupuestaria')"> <!--(onPanelShow)="focusInputField(partidaMultiselect)"-->
+            </p-multiSelect>
+          </div>         
+          <!--PARTIDA PRESUPUESTARIA-->
+
+        </div>
+      </div>
+    </div>
+<!--FIN DE CRITERIOS DE APLICACIÓN-->
+
+    
+<!--COMPONENTE DEL DESTINATARIO, BUSCADOR EXPRESS-->
+    <div class="card-body">
+      <p class="title-module" (click)="onHideDestinatario()">   <!--<p class="title-module" (click)="onHideDatosGenerales()"></p> -->
+        {{ 'facturacionSJCS.retenciones.destinatario' | translate }}
+        <i *ngIf="showDestinatario" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDestinatario" class="fa fa-angle-down float-right"></i>
+      </p>
+       <div *ngIf="showDestinatario" class="module vista-avanzada">
+            <app-busqueda-colegiado-express [disabled]="isLetrado" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
+
+            </app-busqueda-colegiado-express>
+       </div>
+    </div>
+<!--FIN COMPONENTE DEL DESTINATARIO, BUSCADOR EXPRESS-->
+  
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-eraser" iconPos="left" (click)="restablecer()" label="{{ 'general.boton.clear' | translate }}" ></button>
+        <button pButton [disabled]="!permisoEscritura" type="button"  icon="fa fa-search" iconPos="left"  (click)="isBuscar()" label="{{ 'general.boton.search' | translate }}"></button>
+        <button pButton [disabled]="isLetrado || !permisoEscritura" type="button"  icon="fa fa-plus" iconPos="left" (click)="new()" label="{{ 'general.boton.new' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

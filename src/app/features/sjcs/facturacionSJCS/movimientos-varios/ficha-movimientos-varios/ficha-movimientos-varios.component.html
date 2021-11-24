@@ -1,0 +1,31 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="consultas-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>SJCS
+      <i class="fa fa-angle-right"></i>{{ 'facturacionSJCS.movimientosVarios.fichaTitulo' | translate }}
+    </p>
+  </div>
+
+<div id="fijo">
+    <app-tarjeta-resumen-movimientos class="pb-50" [chincheta]="true" icono="far fa-file-alt" [enlaces]="enlacesTarjetaResumen"
+      titulo="justiciaGratuita.oficio.turnos.inforesumen" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-movimientos>
+</div> 
+    <app-tarjeta-datos-cliente [permisoEscritura]="permisoEscritura" (datosTarjetaResumenEmit)="datosTarjetaResumenEvent($event)" (datosClienteEmit)="datosClienteEvent($event)" (datosColegiadoEmit)="datosColegiadoEvent($event)" (bodyFisicaEmit)="bodyFisicaEvent($event)" [modoEdicion]="modoEdicion" [datos]="datos"></app-tarjeta-datos-cliente>
+    <app-tarjeta-datos-generales [permisoEscritura]="permisoEscritura" [modoEdicion]="modoEdicion" [datos]="datos" [datosClientes]="datosClientes" ></app-tarjeta-datos-generales>
+    <app-tarjeta-criterios-aplicacion [permisoEscritura]="permisoEscritura" [datos]="datos" [modoEdicion]="modoEdicion" [datosClientes]="datosClientes"></app-tarjeta-criterios-aplicacion>
+    <app-tarjeta-listado-pagos [permisoEscritura]="permisoEscritura" [datos]="datos" [datos2]="datosListadoPagos"></app-tarjeta-listado-pagos>
+
+
+
+</div>
+
+<div class="text-right main-button">
+  <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+    label="{{ 'general.boton.volver' | translate}}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+ </div>

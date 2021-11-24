@@ -366,7 +366,6 @@ import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/e
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
 import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
-import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
 import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
 import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component';
 import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
@@ -475,6 +474,7 @@ import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/f
 import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
 import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
 import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
+import { MovimientosVariosService } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.service';
 
 @NgModule({
 	declarations: [
@@ -652,7 +652,6 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 		MantenimientoFacturacionComponent,
 		PrevisionesComponent,
 		MantenimientoPagosComponent,
-		MovimientosVariosComponent,
 		TramosLECComponent,
 		RetencionesJudicialesComponent,
 		BusquedaRetencionesAplicadasComponent,
@@ -966,6 +965,7 @@ import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 		TablaResultadoDesplegableJEService,
 		TablaResultadoDesplegableAEService,
 		TablaResultadoMixDocDesigService,
+		MovimientosVariosService,
 
 		AuthGuard,
 		{

@@ -41,7 +41,6 @@ export class BuscadorColegiadosComponent implements OnInit {
       this.nuevaInscripcion=true;
     }
 
-    
 
   }
 
@@ -130,12 +129,20 @@ export class BuscadorColegiadosComponent implements OnInit {
       sessionStorage.setItem("origin","newInscrip");
       this.router.navigate(["/gestionInscripciones"]);
     } else{
-      sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
+
+      //ir a la ficha de movimientos vaios
+     if (sessionStorage.getItem("nuevoMovimientoVarios") =="true") {
+        sessionStorage.setItem("datosColegiado", JSON.stringify(event));
+       this.router.navigate(["/fichaMovimientosVarios"]);
+     }else{
+       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
 
       sessionStorage.getItem('nuevo');
       
       this.location.back();
     }
+  }
+
   }
 
   showMessage(severity, summary, msg) {
