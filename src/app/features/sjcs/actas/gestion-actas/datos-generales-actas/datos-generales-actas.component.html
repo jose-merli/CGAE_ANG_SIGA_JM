@@ -41,22 +41,28 @@
 
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="row">
+	  
         <div class="bloque col-lg-9 col-md-9">
 
-          <div *ngIf="editable" >
+
           <div class="form-row">
+		  
+		  
+            
             <div class="col-lg-2 col-md-2 pl5">
               <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
                   translate}}</strong></label>
               <input type="text" [(ngModel)]="datosFiltro.anioacta" class="form-control" (keypress)="numberOnly($event)"
                 maxLength="4" pInputText [disabled]="disabledAnio">
             </div>
+
             <div class="col-log-2 col-md-2 pr5">
               <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
                   translate}}</strong></label>
               <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroacta">
             </div>
-            <div *ngIf="controlComboSufijo">
+
+            
               <div class="form-group col-lg-2 col-md-2">
                 <label>{{ 'justiciaGratuita.ejg.datosGenerales.Sufijo' |
                   translate}}</label>
@@ -65,40 +71,36 @@
                 </p-dropdown>
               </div>
             </div>
-          </div>
-          <div *ngIf="!editable" >
-            <div class="form-row">
+
+          
+            
+			<div class="form-row">
+			
               <div class="col-lg-2 col-md-2 pl5">
                 <label><strong>{{ anioNum}}</strong></label>
                 <input type="text" [(ngModel)]="datosFiltro.numeroacta" class="form-control"
                   maxLength="4" pInputText [disabled]="disabledAnio">
               </div>
-            </div>
-
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucion' |
+			  
+			     <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucion' |
                  translate}}</label>
               <app-fecha [(value)]="this.datosFiltro.fecharesolucion" (valueChangeSelected)="fillFechaResolucion($event)"
                 (valueChangeInput)="fillFechaResolucion($event)">
               </app-fecha>
-            </div>
-
-            <div class="form-group col-lg-2 col-md-2">
-              <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label>
+			  
+			  <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label>
                   <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="inicio">
-            </div>
-            <div class="form-group col-lg-2 col-md-2">
-              <label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label>
+				  
+				<label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label>
                   <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="fin">
-            </div>
-    
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
+				  
+				               <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
                 translate}}</label>
               <app-fecha [(value)]="this.datosFiltro.fechareunion" (valueChangeSelected)="fillFechaReunion($event)"
                 (valueChangeInput)="fillFechaReunion($event)">
               </app-fecha>
             </div>
+
     
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ 'justiciaGratuita.ejg.datosGenerales.Presidente' |
@@ -140,7 +142,7 @@
               <input type="text" class="form-control" readonly="readonly" #inputNumero pInputText [(ngModel)]="datosFiltro.usumodificacion">
             </div>
           </div>
-        </div>
+
       </div>
       <br>
     </div>
