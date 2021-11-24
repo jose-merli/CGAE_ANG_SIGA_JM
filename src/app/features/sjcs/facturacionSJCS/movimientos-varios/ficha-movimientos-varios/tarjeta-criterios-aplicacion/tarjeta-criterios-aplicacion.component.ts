@@ -10,23 +10,23 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { MovimientosVariosFacturacionItem } from '../../MovimientosVariosFacturacionItem';
 
 @Component({
-  selector: 'app-tarjeta-criterios-aplicacion',
-  templateUrl: './tarjeta-criterios-aplicacion.component.html',
-  styleUrls: ['./tarjeta-criterios-aplicacion.component.scss']
+	selector: 'app-tarjeta-criterios-aplicacion',
+	templateUrl: './tarjeta-criterios-aplicacion.component.html',
+	styleUrls: ['./tarjeta-criterios-aplicacion.component.scss']
 })
 export class TarjetaCriteriosAplicacionComponent implements OnInit {
 
-  progressSpinner: boolean = false;
-  showFichaCriteriosAplicacion: boolean = false;
-  datosAux;
-  msgs;
-  gruposFacturacion: ComboItem;
+	progressSpinner: boolean = false;
+	showFichaCriteriosAplicacion: boolean = false;
+	datosAux;
+	msgs;
+	gruposFacturacion: ComboItem;
 	facturacion: ComboItem;
 	concepto: ComboItem;
 	partidaPresupuestaria: ComboItem;
 
-   datosCriteriosAplicacion: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
-   idFacturacionNueva;
+	datosCriteriosAplicacion: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
+	idFacturacionNueva;
 	isLetrado: boolean = false;
 
 	@Input() datos;
@@ -34,39 +34,39 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 	@Input() datosClientes;
 	@Input() permisoEscritura;
 
-  constructor(private persistenceService: PersistenceService,private sigaService: SigaServices,
+	constructor(private persistenceService: PersistenceService, private sigaService: SigaServices,
 		private commonsService: CommonsService, private sigaStorageService: SigaStorageService, private router: Router, private translateService: TranslateService) { }
 
-  ngOnInit() {
+	ngOnInit() {
 
-	this.isLetrado = this.sigaStorageService.isLetrado;
-	
-	//asegurar de que viene relleno
-	if(this.datos!= null || this.datos != undefined){
-    	// this.datos = this.persistenceService.getDatos();
-        this.datosAux = JSON.parse(JSON.stringify(this.datos));
+		this.isLetrado = this.sigaStorageService.isLetrado;
 
-	}else{
-		this.datos = new MovimientosVariosFacturacionItem();
-	}
-    	this.comboFacturacionApInicial();
+		//asegurar de que viene relleno
+		if (this.datos != null || this.datos != undefined) {
+			// this.datos = this.persistenceService.getDatos();
+			this.datosAux = JSON.parse(JSON.stringify(this.datos));
+
+		} else {
+			this.datos = new MovimientosVariosFacturacionItem();
+		}
+		this.comboFacturacionApInicial();
 		this.comboGruposTurnos();
 		this.comboConcepto();
-    	this.comboPartidasPresupuestarias();
+		this.comboPartidasPresupuestarias();
 
 
-  }
+	}
 
 
-   restablecer(){
- 	this.datos = JSON.parse(JSON.stringify(this.datosAux));
-  }
+	restablecer() {
+		this.datos = JSON.parse(JSON.stringify(this.datosAux));
+	}
 
-  onHideCriteriosAplicacion(){
-    this.showFichaCriteriosAplicacion = !this.showFichaCriteriosAplicacion;
-  }
+	onHideCriteriosAplicacion() {
+		this.showFichaCriteriosAplicacion = !this.showFichaCriteriosAplicacion;
+	}
 
-  comboPartidasPresupuestarias() {
+	comboPartidasPresupuestarias() {
 		this.progressSpinner = true;
 
 		this.sigaService.get("combo_partidasPresupuestarias").subscribe(
@@ -80,13 +80,13 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 				this.progressSpinner = false;
 			}
 		);
-    this.progressSpinner = false;
+		this.progressSpinner = false;
 	}
 
 
-  comboFacturacionApInicial(){
+	comboFacturacionApInicial() {
 
-    this.progressSpinner = true;
+		this.progressSpinner = true;
 
 		this.sigaService.get("combo_comboFactMovimientos").subscribe(
 			data => {
@@ -100,12 +100,12 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 			}
 		);
 
-    this.progressSpinner = false;
-  }
+		this.progressSpinner = false;
+	}
 
-  comboGruposTurnos(){
+	comboGruposTurnos() {
 
-    this.progressSpinner = true;
+		this.progressSpinner = true;
 
 		this.sigaService.get("combo_comboAgrupacionEnTurnos").subscribe(
 			data => {
@@ -119,12 +119,12 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 			}
 		);
 
-    this.progressSpinner = false;
-  }
+		this.progressSpinner = false;
+	}
 
-  comboConcepto(){
+	comboConcepto() {
 
-    this.progressSpinner = true;
+		this.progressSpinner = true;
 
 		this.sigaService.get("combo_comboFactConceptos").subscribe(
 			data => {
@@ -137,135 +137,139 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 				this.progressSpinner = false;
 			}
 		);
-    this.progressSpinner = false;
-  }
-
-  guardar(){
-
-	   let url;
-		if (!this.modoEdicion) {
-		  url = "movimientosVarios_saveCriteriosMovimientosVarios";
-		} else {
-		  url = "movimientosVarios_updateCriteriosMovimientosVarios";
-		}
-		this.callSaveService(url);
-	
-  }
-  
-  callSaveService(url) {
-	this.progressSpinner = true;
-	 //reunimos todas esas variables metiéndolas en el item de movimientos varios y según si es modo edicion o nuevo, realizamos un insert o update.
-	 this.datosCriteriosAplicacion=JSON.parse(JSON.stringify(this.datos));
-
-	 if(this.datos.idMovimiento == null || this.datos.idMovimiento == undefined){
-		 this.datosCriteriosAplicacion.idMovimiento = null;
-	 }else{
-		this.datosCriteriosAplicacion.idMovimiento = this.datos.idMovimiento;
-	 }
-
-	 if(this.datos.idGrupoFacturacion == null || this.datos.idGrupoFacturacion == undefined){
-		this.datosCriteriosAplicacion.idGrupoFacturacion = null;
-	}else{
-	   this.datosCriteriosAplicacion.idGrupoFacturacion = this.datos.idGrupoFacturacion;
+		this.progressSpinner = false;
 	}
 
-	if(this.datos.idFacturacion == undefined || this.datos.idFacturacion == null){
-        this.datosCriteriosAplicacion.idFacturacion = null;
-      }else{
-        this.datosCriteriosAplicacion.idFacturacion = this.datos.idFacturacion;
-      }
+	guardar() {
 
-	  if(this.datos.idConcepto == undefined || this.datos.idConcepto == null){
-        this.datosCriteriosAplicacion.idConcepto = null;
-      }else{
-        this.datosCriteriosAplicacion.idConcepto = this.datos.idConcepto;
-      }
-
-	  if(this.datos.idPartidaPresupuestaria == undefined || this.datos.idPartidaPresupuestaria == null){
-        this.datosCriteriosAplicacion.idPartidaPresupuestaria = null;
-      }else{
-        this.datosCriteriosAplicacion.idPartidaPresupuestaria = this.datos.idPartidaPresupuestaria;
-      }     
-     
-
-      if(this.datosClientes.idPersona == undefined || this.datosClientes.idPersona == null){
-        this.datosCriteriosAplicacion.idPersona = null;
-      }else{
-        this.datosCriteriosAplicacion.idPersona = this.datosClientes.idPersona;
-      }
-
-      if(!this.modoEdicion){
-		this.datosCriteriosAplicacion.descripcion = null;
-		this.datosCriteriosAplicacion.cantidad = null;
-		this.datosCriteriosAplicacion.tipo = null;
-		this.datosCriteriosAplicacion.motivo = null;
-		this.datosCriteriosAplicacion.certificacion=null;
-		this.datosCriteriosAplicacion.fechaAlta=null;
-        this.datosCriteriosAplicacion.nombrefacturacion = null;
-        this.datosCriteriosAplicacion.nombretipo = null;
-        this.datosCriteriosAplicacion.idAplicadoEnPago= null
-        this.datosCriteriosAplicacion.fechaApDesde = null;
-        this.datosCriteriosAplicacion.fechaApHasta = null;
-        this.datosCriteriosAplicacion.idFacturacionApInicial = null;
-        this.datosCriteriosAplicacion.ncolegiado = null;
-        this.datosCriteriosAplicacion.letrado = null;
-        this.datosCriteriosAplicacion.cantidadAplicada = null;
-        this.datosCriteriosAplicacion.cantidadRestante = null;
-        this.datosCriteriosAplicacion.idInstitucion = null;
-        this.datosCriteriosAplicacion.fechaModificacion = null;
-        this.datosCriteriosAplicacion.usuModificacion = null;
-        this.datosCriteriosAplicacion.contabilizado = null;
-        this.datosCriteriosAplicacion.historico = null;
-        this.datosCriteriosAplicacion.nif = null;
-        this.datosCriteriosAplicacion.apellido1 = null;
-        this.datosCriteriosAplicacion.apellido2 = null;
-        this.datosCriteriosAplicacion.nombre = null;
-        this.datosCriteriosAplicacion.nombrePago = null;
-      }
-      
-
-	this.sigaService.post(url, this.datosCriteriosAplicacion).subscribe(
-	  data => {
-  
-		// RECOGER BOLEANO 
-		console.log(data);
-  
-		this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-		this.progressSpinner = false;
-	  },
-	  err => {
-		this.progressSpinner = false;
-  
-		if (err.status == '403' || err.status == 403) {
-		  sessionStorage.setItem("codError", "403");
-		  sessionStorage.setItem(
-			"descError",
-			this.translateService.instant("generico.error.permiso.denegado")
-		  );
-		  this.router.navigate(["/errorAcceso"]);
+		let url;
+		if (!this.modoEdicion) {
+			url = "movimientosVarios_saveCriteriosMovimientosVarios";
 		} else {
-  
-		  if (null != err.error && JSON.parse(err.error).error.description != "") {
-			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-		  } else {
-			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-		  }
-  
+			url = "movimientosVarios_updateCriteriosMovimientosVarios";
 		}
-	  },
-	  () => {
-		this.progressSpinner = false;
-	  }
-	);
-  }
+		this.callSaveService(url);
 
-  showMessage(severity, summary, msg) {
-	this.msgs = [];
-	this.msgs.push({
-	  severity: severity,
-	  summary: summary,
-	  detail: msg
-	});
-  }
+	}
+
+	callSaveService(url) {
+		this.progressSpinner = true;
+		//reunimos todas esas variables metiéndolas en el item de movimientos varios y según si es modo edicion o nuevo, realizamos un insert o update.
+		this.datosCriteriosAplicacion = JSON.parse(JSON.stringify(this.datos));
+
+		if (this.datos.idMovimiento == null || this.datos.idMovimiento == undefined) {
+			this.datosCriteriosAplicacion.idMovimiento = null;
+		} else {
+			this.datosCriteriosAplicacion.idMovimiento = this.datos.idMovimiento;
+		}
+
+		if (this.datos.idGrupoFacturacion == null || this.datos.idGrupoFacturacion == undefined) {
+			this.datosCriteriosAplicacion.idGrupoFacturacion = null;
+		} else {
+			this.datosCriteriosAplicacion.idGrupoFacturacion = this.datos.idGrupoFacturacion;
+		}
+
+		if (this.datos.idFacturacion == undefined || this.datos.idFacturacion == null) {
+			this.datosCriteriosAplicacion.idFacturacion = null;
+		} else {
+			this.datosCriteriosAplicacion.idFacturacion = this.datos.idFacturacion;
+		}
+
+		if (this.datos.idConcepto == undefined || this.datos.idConcepto == null) {
+			this.datosCriteriosAplicacion.idConcepto = null;
+		} else {
+			this.datosCriteriosAplicacion.idConcepto = this.datos.idConcepto;
+		}
+
+		if (this.datos.idPartidaPresupuestaria == undefined || this.datos.idPartidaPresupuestaria == null) {
+			this.datosCriteriosAplicacion.idPartidaPresupuestaria = null;
+		} else {
+			this.datosCriteriosAplicacion.idPartidaPresupuestaria = this.datos.idPartidaPresupuestaria;
+		}
+
+
+		if (this.datosClientes.idPersona == undefined || this.datosClientes.idPersona == null) {
+			this.datosCriteriosAplicacion.idPersona = null;
+		} else {
+			this.datosCriteriosAplicacion.idPersona = this.datosClientes.idPersona;
+		}
+
+		if (!this.modoEdicion) {
+			this.datosCriteriosAplicacion.descripcion = null;
+			this.datosCriteriosAplicacion.cantidad = null;
+			this.datosCriteriosAplicacion.tipo = null;
+			this.datosCriteriosAplicacion.motivo = null;
+			this.datosCriteriosAplicacion.certificacion = null;
+			this.datosCriteriosAplicacion.fechaAlta = null;
+			this.datosCriteriosAplicacion.nombrefacturacion = null;
+			this.datosCriteriosAplicacion.nombretipo = null;
+			this.datosCriteriosAplicacion.idAplicadoEnPago = null
+			this.datosCriteriosAplicacion.fechaApDesde = null;
+			this.datosCriteriosAplicacion.fechaApHasta = null;
+			this.datosCriteriosAplicacion.idFacturacionApInicial = null;
+			this.datosCriteriosAplicacion.ncolegiado = null;
+			this.datosCriteriosAplicacion.letrado = null;
+			this.datosCriteriosAplicacion.cantidadAplicada = null;
+			this.datosCriteriosAplicacion.cantidadRestante = null;
+			this.datosCriteriosAplicacion.idInstitucion = null;
+			this.datosCriteriosAplicacion.fechaModificacion = null;
+			this.datosCriteriosAplicacion.usuModificacion = null;
+			this.datosCriteriosAplicacion.contabilizado = null;
+			this.datosCriteriosAplicacion.historico = null;
+			this.datosCriteriosAplicacion.nif = null;
+			this.datosCriteriosAplicacion.apellido1 = null;
+			this.datosCriteriosAplicacion.apellido2 = null;
+			this.datosCriteriosAplicacion.nombre = null;
+			this.datosCriteriosAplicacion.nombrePago = null;
+		}
+
+
+		this.sigaService.post(url, this.datosCriteriosAplicacion).subscribe(
+			data => {
+
+				// RECOGER BOLEANO 
+				console.log(data);
+
+				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+				this.progressSpinner = false;
+			},
+			err => {
+				this.progressSpinner = false;
+
+				if (err.status == '403' || err.status == 403) {
+					sessionStorage.setItem("codError", "403");
+					sessionStorage.setItem(
+						"descError",
+						this.translateService.instant("generico.error.permiso.denegado")
+					);
+					this.router.navigate(["/errorAcceso"]);
+				} else {
+
+					if (null != err.error && JSON.parse(err.error).error.description != "") {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+					} else {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+					}
+
+				}
+			},
+			() => {
+				this.progressSpinner = false;
+			}
+		);
+	}
+
+	showMessage(severity, summary, msg) {
+		this.msgs = [];
+		this.msgs.push({
+			severity: severity,
+			summary: summary,
+			detail: msg
+		});
+	}
+
+	clear() {
+		this.msgs = [];
+	}
 
 }

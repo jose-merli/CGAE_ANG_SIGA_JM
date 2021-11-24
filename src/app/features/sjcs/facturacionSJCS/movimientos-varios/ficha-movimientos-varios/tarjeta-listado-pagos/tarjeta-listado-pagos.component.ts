@@ -16,7 +16,7 @@ export class TarjetaListadoPagosComponent implements OnInit {
   rowsPerPage;
   cols;
   progressSpinner: boolean = false;
-  
+  msgs;
   selectAll;
   selectedDatos = [];
   numSelected = 0;
@@ -53,13 +53,13 @@ export class TarjetaListadoPagosComponent implements OnInit {
     //  if(!this.permisoEscritura){
     //   this.datos2 = [];
     //mirar lo de selectionMode=false;
-                 // selectedDatos=[];
-                 // numSelected = 0;
+    // selectedDatos=[];
+    // numSelected = 0;
     //  }
 
   }
 
-  onHideListadoPagos(){
+  onHideListadoPagos() {
     this.showFichaListadoPagos = !this.showFichaListadoPagos;
   }
 
@@ -71,7 +71,7 @@ export class TarjetaListadoPagosComponent implements OnInit {
       { field: "cantidad", header: "facturacionSJCS.retenciones.importe" },
       { field: "cantidadRestante", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente" }
     ];
-    
+
     this.rowsPerPage = [
       {
         label: 10,
@@ -98,43 +98,47 @@ export class TarjetaListadoPagosComponent implements OnInit {
     this.table.reset();
   }
 
-// getPagos(){
-//   this.progressSpinner = true;
-//   this.datos.fechaAlta = null;
+  // getPagos(){
+  //   this.progressSpinner = true;
+  //   this.datos.fechaAlta = null;
 
-//   this.sigaServices.post("movimientosVarios_getListadoPagos", this.datos).subscribe(
-//     n => {
-//       this.datos2 = JSON.parse(n.body).facturacionItem;
-//       this.progressSpinner=false;
-//     },
-//     err => {
-//       console.log(err);
-//       this.progressSpinner = false;
-//     }, () => {
-//       this.progressSpinner = false;
-//     }
-//   );
-// }
+  //   this.sigaServices.post("movimientosVarios_getListadoPagos", this.datos).subscribe(
+  //     n => {
+  //       this.datos2 = JSON.parse(n.body).facturacionItem;
+  //       this.progressSpinner=false;
+  //     },
+  //     err => {
+  //       console.log(err);
+  //       this.progressSpinner = false;
+  //     }, () => {
+  //       this.progressSpinner = false;
+  //     }
+  //   );
+  // }
 
-actualizaSeleccionados(selectedDatos) {
-  if (this.selectedDatos == undefined) {
-    this.selectedDatos = []
+  actualizaSeleccionados(selectedDatos) {
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = []
+    }
+    if (selectedDatos != undefined) {
+      this.numSelected = selectedDatos.length;
+    }
   }
-  if (selectedDatos != undefined) {
-    this.numSelected = selectedDatos.length;
-  }
-}
 
-onChangeSelectAll() {
-  if (this.selectAll === true) {
-    this.selectMultiple = false;
-    this.selectedDatos = this.datos2;
-    this.numSelected = this.datos2.length;
-  } else {
-    this.selectedDatos = [];
-    this.numSelected = 0;
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos2;
+      this.numSelected = this.datos2.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
   }
-}
+
+  clear() {
+    this.msgs = [];
+  }
 
 }
 
