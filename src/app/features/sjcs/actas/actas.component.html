@@ -1,4 +1,10 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i>{{'menu.sjcs.gestionActas' | translate}}
+  </p>
+</div>
 <div class="busqueda-container">
   <div class="busqueda-container">
     <app-filtro-actas (searchEmitter)="search($event)" [permisoEscritura]="permisoEscritura"></app-filtro-actas>

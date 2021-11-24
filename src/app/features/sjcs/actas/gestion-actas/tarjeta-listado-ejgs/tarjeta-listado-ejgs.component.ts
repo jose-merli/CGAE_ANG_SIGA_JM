@@ -5,8 +5,6 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { ConfirmationService, Paginator } from 'primeng/primeng';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
-import { ActasItem } from '../../../../../models/sjcs/ActasItem';
-import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 @Component({
   selector: 'app-tarjeta-listado-ejgs',
   templateUrl: './tarjeta-listado-ejgs.component.html',
@@ -19,7 +17,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   msgs;
   page: number = 0;
   selectedBefore;
-
+  abreviatura;
 
   body;
 
@@ -39,6 +37,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   actaDatosEntradaItem;
   resaltadoEJGsAsociados: boolean = false;
   modoEdicion: boolean = false;
+  ejgTotales;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -72,11 +71,27 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(this.datos != null){
-      this.getEJG(this.datos);
-    }
+    this.getAbreviatura();
     this.getCols();
     this.resaltadoEJGsAsociados = true;
+  }
+
+  getAbreviatura() {
+    this.sigaServices
+      .get("filtrosacta_getAbreviatura")
+      .subscribe(
+        n => {
+          this.abreviatura = n.abreviatura;
+
+          if(this.datos.anioacta != null && this.datos.anioacta != undefined){
+            this.getEJG(this.datos);
+          }
+
+        },
+        err => {
+          console.log(err);
+        }
+      );
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -251,6 +266,12 @@ export class TarjetaListadoEjgsComponent implements OnInit {
       n => {
         console.log("Dentro del servicio del padre que llama al getEJGRemesa");
         this.datos = JSON.parse(n.body).ejgItems;
+
+        this.ejgTotales = this.datos.length;
+
+        this.datos.forEach(element => {
+          element.numAnnioProcedimiento = this.abreviatura + "-" + element.numAnnioProcedimiento;
+        });
 
         console.log("Contenido de la respuesta del back --> ", this.datos);
         this.progressSpinner = false;

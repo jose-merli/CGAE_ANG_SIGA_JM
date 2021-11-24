@@ -14,7 +14,18 @@
             <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
           </div>
           <div class="d-flex justify-content-between">
-            <br>
+            <label> {{ "justiciaGratuita.ejg.datosGenerales.annioNum" | translate }} {{ "justiciaGratuita.ejg.datosGenerales.Acta" | translate }}
+              <span> {{ datosFiltro.anioacta }}/{{ datosFiltro.numeroacta }}</span>
+            </label>
+            <label> {{ "justiciaGratuita.ejg.datosGenerales.FechaReunion" | translate }}
+              <span> {{ this.datosFiltro.fechareunion | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label> {{ "justiciaGratuita.ejg.datosGenerales.FechaResolucion" | translate }}
+              <span> {{ this.datosFiltro.fecharesolucion | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label> {{ "justiciaGratuita.ejg.datosGenerales.Presidente" | translate }}
+              <span> {{ nombrePresidente.label }}</span>
+            </label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>
         </div>

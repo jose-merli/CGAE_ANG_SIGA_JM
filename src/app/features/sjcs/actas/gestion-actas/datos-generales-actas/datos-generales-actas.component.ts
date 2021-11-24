@@ -84,7 +84,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   fechaActualAux : Date;
   fechaActual: String;
 
-  
+  nombrePresidente;
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private confirmationService: ConfirmationService,
@@ -93,12 +93,12 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   ngOnInit() {
     console.log("Este es el objeto que se supone tiene los datos de la tabla" + this.datos);
-    this.getComboPresidente();
+    this.getActa();
     this.getComboSufijo();
     this.getComboSecretario();
-    this.getActa();
     this.onDisabledSave();
     this.getFechaActual();
+    //this.getComboPresidente();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos()
 
@@ -122,6 +122,7 @@ export class DatosGeneralesActasComponent implements OnInit {
         n => {
           this.comboPresidente = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboPresidente);
+          this.nombrePresidente = this.comboPresidente.find(presidente => presidente.value == this.datosFiltro.idpresidente);
         },
         err => {
           console.log(err);
@@ -261,7 +262,8 @@ export class DatosGeneralesActasComponent implements OnInit {
           this.inicio = this.numero2Cifras(this.inicioAux.getHours()) + ":"+ this.numero2Cifras(this.inicioAux.getMinutes());
           this.finAux = new Date(JSON.parse(n.body).horafinreunion);
           this.fin = this.numero2Cifras(this.finAux.getHours()) + ":"+this.numero2Cifras(this.finAux.getMinutes());
-          this.restablecerDatosFiltro = JSON.parse(JSON.stringify(this.datosFiltro));   
+          this.restablecerDatosFiltro = JSON.parse(JSON.stringify(this.datosFiltro));  
+          this.getComboPresidente(); 
          //let date: Date = new Date(JSON.parse(n.body).horainicioreunion);
          //this.datosFiltro.horaInicio =  this.datePipe.transform((new Date(JSON.parse(n.body).horainicioreunion)));
          //this.datosFiltro.horaFin = this.datePipe.transform((new Date(JSON.parse(n.body).horafinreunion)));
