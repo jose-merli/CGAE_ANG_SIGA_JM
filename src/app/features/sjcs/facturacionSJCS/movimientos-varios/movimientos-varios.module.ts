@@ -60,9 +60,17 @@ import { TarjetaListadoPagosComponent } from './ficha-movimientos-varios/tarjeta
     TarjetaDatosClienteComponent,
     TarjetaDatosGeneralesComponent,
     TarjetaCriteriosAplicacionComponent,
-    TarjetaListadoPagosComponent,
+    TarjetaListadoPagosComponent
     
-  ],
+  ],exports: [ MovimientosVariosComponent,
+    FiltrosMovimientosVariosComponent,
+    TablaMovimientosVariosComponent,
+    FichaMovimientosVariosComponent,
+    TarjetaResumenMovimientosComponent,
+    TarjetaDatosClienteComponent,
+    TarjetaDatosGeneralesComponent,
+    TarjetaCriteriosAplicacionComponent,
+    TarjetaListadoPagosComponent],
   providers: [
     ImagePipe,
     DatePipe,

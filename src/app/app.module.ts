@@ -544,6 +544,7 @@ import { TablaGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-
 import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 import { TablaResultadoOrderModule } from './commons/tabla-resultado-order/tabla-resultado-order.module';
 import { MovimientosVariosService } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.service';
+import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.module';
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,
@@ -757,7 +758,6 @@ import { MovimientosVariosService } from './features/sjcs/facturacionSJCS/movimi
 		RegtelEjgComponent,
 
 		GestionActasComponent,
-		MovimientosVariosComponent,
 		TramosLECComponent,
 		GenerarImpreso190Component,
 		EnvioReintegrosXuntaComponent,
@@ -1074,7 +1074,8 @@ import { MovimientosVariosService } from './features/sjcs/facturacionSJCS/movimi
 		BusquedaAsuntosModule,
 		Paginador2Module,
 		TarjetaModule,
-		TablaResultadoOrderModule
+		TablaResultadoOrderModule,
+		MovimientosVariosModule
 	],
 
 	exports: [],
