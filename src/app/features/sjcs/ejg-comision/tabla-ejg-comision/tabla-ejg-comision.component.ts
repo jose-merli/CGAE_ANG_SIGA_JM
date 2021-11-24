@@ -60,6 +60,7 @@ export class TablaEjgComisionComponent implements OnInit {
   valueComboEstado = "";
   valueComboRemesa;
   valueComboAnioRemesa;
+  num: string;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -174,10 +175,26 @@ export class TablaEjgComisionComponent implements OnInit {
 
   }
 
-  styleObligatorioFundamento(event) {
+  styleObligatorioFundamento(evento) {
     if (this.resaltadoDatosFundamento && this.valueResolucion != null) {
       console.log("styleObligatorioFundamento");
       return this.commonServices.styleObligatorio(event);
+    }
+  }
+  obligatorioFundamento(){
+
+    this.sigaServices.get("filtrosejgcomision_obligatorioFundamento")
+    .subscribe(
+      n => {
+        this.num= n;
+        console.log(n.body);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+    if(parseInt(this.num) != 0){
+      this.styleObligatorioFundamento(this.valueFundamento);
     }
   }
 
@@ -192,13 +209,21 @@ export class TablaEjgComisionComponent implements OnInit {
   checkPonente() {
     console.log("********************************checkPonente");
     console.log(this.valuePonente);
-    if (this.valuePonente != null && this.valueFechaPonente == null) {
+    if (this.valuePonente == null) {
+      this.muestraCampoObligatorioPonente();
+    }
+  }
+  checkPonenteFecha() {
+    console.log("********************************checkPonente");
+    console.log(this.valueFechaPonente);
+    if (this.valueFechaPonente == null) {
       this.muestraCampoObligatorioFechaPonente();
     }
   }
 
   checkResolucion() {
     console.log("********************************checkResolucion");
+    this.obligatorioFundamento();
     if (this.valueResolucion != null && this.valueFundamento == null && this.obligatoriedadResolucion != null) {
       this.muestraCampoObligatorioFundamento();
     }
@@ -216,7 +241,7 @@ export class TablaEjgComisionComponent implements OnInit {
     console.log("********************************fillFechaPrueba");
     console.log(event);
     this.valueFechaPonente = event;
-    if (this.valueFechaPonente != null && this.valuePonente == null) {
+    if (this.valueFechaPonente == null ) {
       this.muestraCampoObligatorioPonente();
     }
   }
