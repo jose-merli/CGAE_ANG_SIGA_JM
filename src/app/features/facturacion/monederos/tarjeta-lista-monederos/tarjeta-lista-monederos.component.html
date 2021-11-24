@@ -6,7 +6,7 @@
 
 <div class="card mt-3">
   <div class="card-body p-0">
-    <p-table #monederosTable [value]="listaMonederosActivos" [columns]="cols" [(selection)]="selectedRows"
+    <p-table #monederosTable [value]="listaMonederos" [columns]="cols" [(selection)]="selectedRows"
       selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
       (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
       (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message, SortEvent } from 'primeng/components/common/api';
 import { DataTable } from 'primeng/primeng';
@@ -73,6 +73,9 @@ export class TarjetaListaMonederosComponent implements OnInit {
     private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
+  }
+
+  ngOnchanges(change: SimpleChanges){
     this.listaMonederosActivos = this.listaMonederos;
   }
 
@@ -168,7 +171,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
       this.listaMonederosActivos = JSON.parse(JSON.stringify(this.listaMonederos));
     } else {
       this.listaMonederosActivos = this.listaMonederos.filter(
-        (dato) => dato.importeRestante == 0);
+        (dato) => dato.importeRestante != 0);
     }
   }
 }

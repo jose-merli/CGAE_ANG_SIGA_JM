@@ -695,6 +695,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
   getPermisoActualizarProductos() {
     this.commonsService
+    //REVISAR
       //.checkAcceso(procesos_PyS.actualizarProductos)
       .checkAcceso(procesos_PyS.fichaCompraSuscripcion)
       .then((respuesta) => {

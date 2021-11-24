@@ -23,7 +23,7 @@ export class FichaMonederoComponent implements OnInit {
 
   esColegiado: boolean; // Con esta variable se determina si el usuario conectado es un colegiado o no.
 
-  @ViewChild("cliente") tarjCliente;
+  @ViewChild("propietario") tarjProp;
 
   constructor(private location: Location, 
     private sigaServices: SigaServices, private translateService: TranslateService,
@@ -74,8 +74,8 @@ export class FichaMonederoComponent implements OnInit {
   scrollToOblig(element : string){
     this.resaltadoDatos = true;
     this.commonsService.scrollTablaFoco(element);
-    if(element == "cliente"){
-      this.tarjCliente.showTarjeta = true;
+    if(element == "propietario"){
+      this.tarjProp.showTarjeta = true;
     }
     // if(element == "productos"){
     //   this.tarjProductos.showTarjeta = true;

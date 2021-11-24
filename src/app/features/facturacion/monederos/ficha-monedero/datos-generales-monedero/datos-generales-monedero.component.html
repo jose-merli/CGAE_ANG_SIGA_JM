@@ -2,68 +2,24 @@
 
 <div class="ficha-container">
   <div class="card">
-    <div class="card-header header-ficha" (click)="onHideTarjeta()">
-      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
+    <div class="card-header header-ficha">
+      <div class="header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fa fa-user icon-ficha"></i>
         </div>
-        <label class="title-ficha">{{ 'facturacion.productos.Cliente' | translate }}</label>
+        <label class="title-ficha">{{ 'administracion.auditoriaUsuarios.literal.Propietario' | translate }}</label>
         <div class="d-flex justify-content-start mb-1 ml-auto">
           <label *ngIf="ficha.idPersona != null && ficha.idPersona != undefined" class="mr-3">
             <i (click)="$event.stopPropagation();irFichaColegial()" class="fas fa-external-link-alt mr-2"></i>
             <a (click)="$event.stopPropagation();irFichaColegial()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'facturacion.productos.Cliente' | translate }}
+              <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'administracion.auditoriaUsuarios.literal.Propietario' | translate }}
               </span>
             </a>
           </label>
-          <i class="fa fa-angle-up ml-auto"></i>
-        </div>
-      </div>
-      <div *ngIf="!showTarjeta" class="form-row">
-        <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado">
-            <i class="fa fa-user icon-ficha"></i>
-          </div>
-        </div>
-        <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha">{{ 'facturacion.productos.Cliente' | translate }}
-            </label>
-          </div>
-          <div class="row">
-            <div class="col-3">
-              <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}
-                <span>{{ ficha.nif }}</span>
-              </label>
-            </div>
-            <div class="col-3">
-              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
-                <span>{{ ficha.nombre }} {{ ficha.apellidos }}</span>
-              </label>
-
-            </div>
-            <div *ngIf="showEnlaceCliente" class="col-3">
-              <label *ngIf="ficha.idPersona != null && ficha.idPersona != undefined">
-                <i (click)="$event.stopPropagation();irFichaColegial()" class="fas fa-external-link-alt mr-2"></i>
-                <a (click)="$event.stopPropagation();irFichaColegial()">
-                  <span style="color: blue; text-decoration: underline;cursor:pointer;"> {{ 'facturacion.productos.Cliente' | translate }}
-                  </span>
-                </a>
-              </label>
-              <label *ngIf="ficha.idPersona == null || ficha.idPersona == undefined">
-                <i class="fas fa-external-link-alt mr-2"></i>
-                <span style="color: gray; text-decoration: underline;cursor:pointer;"> {{ 'facturacion.productos.Cliente' | translate }}
-                </span>
-              </label>
-            </div>
-            <div class="d-flex justify-content-start mb-1 ml-auto">
-              <i class="fa fa-angle-down ml-auto"></i>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-    <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
+    <div class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-2 col-md-2 col-sm-2 p-2">
           <div class="positionUpload img-colegiado text-center my-0 mx-auto">
@@ -102,7 +58,7 @@
       </div>
     </div>
 
-    <div [hidden]="!showTarjeta" class="card-footer">
+    <div class="card-footer">
       <div class="text-right main-button">
         <button pButton *ngIf="!esColegiado"  (click)="checkSearch()" type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate}}"></button>
       </div>
