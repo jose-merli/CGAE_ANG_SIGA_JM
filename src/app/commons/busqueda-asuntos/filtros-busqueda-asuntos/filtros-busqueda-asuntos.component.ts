@@ -48,7 +48,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   msgs: any;
-
+  esSociedad;
   formBusqueda: FormGroup;
   numSelected: number = 0;
   datos: any[];
@@ -722,5 +722,12 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     });
   }
 
+  recuperarColegiado(event){
+    if (event != undefined) {
+      this.filtros.nColegiado = event.nColegiado;
+    } else {
+      this.filtros.nColegiado = undefined;
+    }
+  }
 
 }

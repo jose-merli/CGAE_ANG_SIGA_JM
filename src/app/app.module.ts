@@ -361,9 +361,14 @@ import { OtrasColegiacionesFichaColegialComponent } from './features/censo/ficha
 import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/servicios-interes-ficha-colegial/servicios-interes-ficha-colegial.component';
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
+import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
-import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
+import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
+import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
+import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
+import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component';
+import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
 
 import { MatSelectModule } from '@angular/material/select';
@@ -469,34 +474,7 @@ import { LetradoSalienteComponent } from './features/sjcs/oficio/designaciones/f
 import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
 import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
 import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
-import { RetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/retenciones.component';
-import { FiltroBusquedaRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/filtro-busqueda-retenciones/filtro-busqueda-retenciones.component';
-import { TablaBusquedaRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones/tabla-busqueda-retenciones.component';
-import { TablaBusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones-aplicadas/tabla-busqueda-retenciones-aplicadas.component';
-import { TablaAplicacionRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/tabla-busqueda-retenciones-aplicadas/tabla-aplicacion-retenciones/tabla-aplicacion-retenciones.component';
-import { FichaRetencionJudicialComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/ficha-retencion-judicial.component';
-import { TarjetaColegiadoComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-colegiado/tarjeta-colegiado.component';
-import { TarjetaDatosRetencionComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-datos-retencion/tarjeta-datos-retencion.component'
-import { TarjetaAplicacionEnPagosComponent } from './features/sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-aplicacion-en-pagos/tarjeta-aplicacion-en-pagos.component';
-import { RetencionesService } from './features/sjcs/facturacionSJCS/retenciones/retenciones.service';
-import { BaremosDeGuardiaComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/baremos-de-guardia.component';
-import { FiltroBusquedaBaremosComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/filtro-busqueda-baremos/filtro-busqueda-baremos.component';
-import { TablaBusquedaBaremosComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/tabla-busqueda-baremos/tabla-busqueda-baremos.component';
-import { CertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/certificacion-fac.component';
-import { FichaCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-certificacion-fac.component';
-import { TablaCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/tabla-certificacion-fac/tabla-certificacion-fac.component';
-import { FiltroCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/filtro-certificacion-fac/filtro-certificacion-fac.component';
-import { TarjetaDatosGeneralesComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-datos-generales/tarjeta-datos-generales.component';
-import { TarjetaFacturacionComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-facturacion/tarjeta-facturacion.component';
-import { TarjetaMovimientosVariosAsociadosComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-movimientos-varios-asociados/tarjeta-movimientos-varios-asociados.component';
-import { TarjetaMovimientosVariosAplicadosComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-movimientos-varios-aplicados/tarjeta-movimientos-varios-aplicados.component';
-import { FichaBaremosDeGuardiaComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-baremos-de-guardia.component';
-import { FichaBarDatosGeneralesComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-datos-generales/ficha-bar-datos-generales.component';
-import { FichaBarConfiFacComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-confi-fac/ficha-bar-confi-fac.component';
-import { FichaBarConfiAdiComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-confi-adi/ficha-bar-confi-adi.component';
-import { TarjetaFacturacionGenericaComponent } from './features/sjcs/facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.component';
-import { TablaGenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/tabla-generar-impreso190/tabla-generar-impreso190.component';
-import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/filtro-generar-impreso190/filtro-generar-impreso190.component';
+import { MovimientosVariosService } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.service';
 
 @NgModule({
 	declarations: [
@@ -627,8 +605,8 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		DetalleTarjetaInteresadosFichaDesignacionOficioComponent,
 		DetalleTarjetaLetradosDesignaComponent,
 		FichaDesignacionesComponent,
-		FichaCambioLetradoComponent,
-		LetradoSalienteComponent,
+		FichaCambioLetradoComponent, 
+		LetradoSalienteComponent, 
 		LetradoEntranteComponent,
 		DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent,
 		DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent,
@@ -657,7 +635,7 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		ExpedientesEconomicosComponent,
 		RelacionesComponent,
 		FichaPreDesignacionComponent,
-		DefensaJuridicaComponent,
+  		DefensaJuridicaComponent,
 		EstadosComponent,
 		DocumentacionComponent,
 		InformeCalificacionComponent,
@@ -667,13 +645,18 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		AddExpedienteComponent,
 		ComunicacionesEJGComponent,
 		ProcuradorPreDesignacionComponent,
-		ContrariosPreDesignacionComponent,
+ 		ContrariosPreDesignacionComponent,
 		RegtelEjgComponent,
-
+		
 		GestionActasComponent,
-		MovimientosVariosComponent,
+		MantenimientoFacturacionComponent,
+		PrevisionesComponent,
+		MantenimientoPagosComponent,
 		TramosLECComponent,
+		RetencionesJudicialesComponent,
+		BusquedaRetencionesAplicadasComponent,
 		GenerarImpreso190Component,
+		ResumenPagosComponent,
 		EnvioReintegrosXuntaComponent,
 		JustificacionLetradoComponent,
 		InformeFacturacionComponent,
@@ -885,36 +868,6 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		CompensacionFacturaComponent,
 		ConceptosPagosComponent,
 		SiNoPipe,
-		RetencionesComponent,
-		FiltroBusquedaRetencionesComponent,
-		TablaBusquedaRetencionesComponent,
-		TablaBusquedaRetencionesAplicadasComponent,
-		TablaAplicacionRetencionesComponent,
-		FichaRetencionJudicialComponent,
-		TarjetaColegiadoComponent,
-		TarjetaDatosRetencionComponent,
-		TarjetaAplicacionEnPagosComponent,
-		BaremosDeGuardiaComponent,
-		FiltroBusquedaBaremosComponent, 
-		TablaBusquedaBaremosComponent,
-		FichaBaremosDeGuardiaComponent,
-		FichaBarDatosGeneralesComponent, 
-		FichaBarConfiFacComponent, 
-		FichaBarConfiAdiComponent,
-		//certificacion de facturacion
-		CertificacionFacComponent,
-		FichaCertificacionFacComponent,
-		TablaCertificacionFacComponent,
-		FiltroCertificacionFacComponent,
-		TarjetaDatosGeneralesComponent,
-		TarjetaFacturacionComponent,
-		TarjetaMovimientosVariosAsociadosComponent,
-		TarjetaMovimientosVariosAplicadosComponent,
-		TarjetaFacturacionGenericaComponent,
-		//Impreso 190
-		FiltroGenerarImpreso190Component, 
-		TablaGenerarImpreso190Component,
-
 	],
 	imports: [
 		Paginador3Module,
@@ -972,8 +925,8 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		// BusquedaAsuntosModule,
 		EditorModule,
 
-
-
+		
+		
 		MatExpansionModule,
 		MatCheckboxModule,
 		MatInputModule,
@@ -1012,7 +965,7 @@ import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJC
 		TablaResultadoDesplegableJEService,
 		TablaResultadoDesplegableAEService,
 		TablaResultadoMixDocDesigService,
-		RetencionesService,
+		MovimientosVariosService,
 
 		AuthGuard,
 		{

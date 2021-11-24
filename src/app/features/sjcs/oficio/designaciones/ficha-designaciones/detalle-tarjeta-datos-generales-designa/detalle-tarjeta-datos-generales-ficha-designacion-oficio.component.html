@@ -12,9 +12,7 @@
 
       <div class="form-group col-lg-3 col-md-3 w-100">
         <label>Fecha(*)</label>
-        <app-fecha [inputStyleClass]="(fechaGenerales == null || fechaGenerales == '') ? 'camposObligatorios': ''"
-          [(value)]='fechaGenerales' (valueChangeInput)="fillFechaHastaCalendar($event)"
-          (valueChangeSelected)="fillFechaHastaCalendar($event)" [utc]="true"></app-fecha>
+        <app-fecha [inputStyleClass]="(fechaGenerales == null || fechaGenerales == '') ? 'camposObligatorios': ''" [(value)]='fechaGenerales' (valueChangeInput)="fillFechaHastaCalendar($event)" (valueChangeSelected)="fillFechaHastaCalendar($event)" [utc]="false"></app-fecha>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores">

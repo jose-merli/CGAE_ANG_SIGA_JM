@@ -8,6 +8,10 @@ export let endpoints_facturacionsjcs: any = {
     combo_comboFactColegio: "combo/comboFactColegio",
     combo_comboPagosColegio: "combo/comboPagosColegio",
     combo_comboFacturaciones: "combo/comboFacturaciones",
+    combo_comboFactMovimientos: "/combo/comboFactMovimientos",
+    combo_AplicadoEnPago: "/combo/comboAplicadoEnPago",
+    combo_comboAgrupacionEnTurnos: "/combo/comboAgrupacionEnTurnos",
+    combo_comboTiposMovVarios: "/combo/comboTiposMovimientos",
     combo_comboColegios: "combo/getComboColegios",
     combo_grupoFacturacionByColegio: "combo/grupoFacturacionByColegio",
 
@@ -81,5 +85,23 @@ export let endpoints_facturacionsjcs: any = {
     /*Endpoints BaremosGuardias*/ 
     baremosGuardia_buscar: "baremosGuardia/buscar",
 
-}
+    /* Endpoints Tarjeta genérica facturaciones */
+    tarjGenFac_getFacturacionesPorAsuntoActuacionDesigna: "facturacionsjcs/getFacturacionesPorAsuntoActuacionDesigna",
+    tarjGenFac_getFacturacionesPorAsuntoAsistencia: "facturacionsjcs/getFacturacionesPorAsuntoAsistencia",
+    tarjGenFac_getFacturacionesPorAsuntoActuacionAsistencia: "facturacionsjcs/getFacturacionesPorAsuntoActuacionAsistencia",
+    tarjGenFac_getFacturacionesPorGuardia: "facturacionsjcs/getFacturacionesPorGuardia",
+    tarjGenFac_getFacturacionesPorEJG: "facturacionsjcs/getFacturacionesPorEJG",
 
+    /* Endpoints Movimientos Varios*/
+    movimientosVarios_busquedaMovimientosVarios: "movimientosVarios/busquedaMovimientosVarios",
+    movimientosVarios_eliminarMovimiento: "movimientosVarios/deleteMovimientosVarios",
+    movimientosVarios_saveClienteMovimientosVarios: "movimientosVarios/saveClienteMovimientosVarios",
+    movimientosVarios_updateClienteMovimientosVarios: "movimientosVarios/updateClienteMovimientosVarios",
+    movimientosVarios_recogerDatosCliente: "movimientosVarios/recogerDatosCliente",
+    movimientosVarios_getListadoPagos: "movimientosVarios/getListadoPagos",
+    movimientosVarios_saveDatosGenMovimientosVarios: "movimientosVarios/saveDatosGenMovimientosVarios",
+    movimientosVarios_updateDatosGenMovimientosVarios: "movimientosVarios/updateDatosGenMovimientosVarios",
+    movimientosVarios_saveCriteriosMovimientosVarios: "movimientosVarios/saveCriteriosMovimientosVarios",
+    movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios",
+
+}

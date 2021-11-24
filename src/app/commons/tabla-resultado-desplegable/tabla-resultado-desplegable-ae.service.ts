@@ -6,10 +6,19 @@ export class RowGroup {
 
 export class Row {
   cells: Cell[];
+  position: string;
 }
 
 export class Cell {
   type: string;
+  value: any;
+  combo: Combo[];
+  size : number;
+  showTime : boolean;
+}
+
+export class Combo {
+  label: string;
   value: string;
 }
 @Injectable()
@@ -117,19 +126,29 @@ export class TablaResultadoDesplegableAEService {
   };
   constructor() { }
 
-  public getTableData() {
+  public getTableData(resultModified) {
     let rowGroups: RowGroup[] = [];
-
+    this.result = resultModified;
     this.result.data.forEach((rowGroup, index) => {
       let rowGroupObject: RowGroup = new RowGroup();
       let rows: Row[] = [];
       Array.from(Object.values(rowGroup)[0]).forEach((row) => {
         let rowObject: Row = new Row();
+        rowObject.position = 'collapse';
         let cells: Cell[] = [];
         Array.from(Object.values(row)[0]).forEach((cell) => {
           let cellObject: Cell = new Cell();
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];
+          if(cell['combo'] != null && cell['combo'] != undefined){
+            cellObject.combo = cell['combo'];
+          }
+          if(cell['showTime']){
+            cellObject.showTime = cell['showTime'];
+          }
+          if(cell['size']){
+            cellObject.size = cell['size'];
+          }
           cells.push(cellObject);
         });
         rowObject.cells = cells;

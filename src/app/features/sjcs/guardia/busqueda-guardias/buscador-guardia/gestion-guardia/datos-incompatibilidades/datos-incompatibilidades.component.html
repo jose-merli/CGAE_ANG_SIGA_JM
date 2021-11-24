@@ -13,8 +13,23 @@
           <label class="mr-auto title-ficha">{{'dato.jgr.guardia.guardias.incompatibilidades' | translate}}</label>
         </div>
         <div class="d-flex justify-content-between sub">
-          <label>{{'dato.jgr.guardia.guardias.duracion' | translate}}:
-            <strong> {{resumenIncompatibilidades}}</strong>
+          <label>{{'dato.jgr.guardia.guardias.turno' | translate}}:
+            <strong> {{nombreTurno}}</strong>
+          </label>
+          <label>{{'menu.justiciaGratuita.GuardiaMenu' | translate}}:
+            <strong> {{nombreGuardia}}</strong>
+          </label>
+          <label>{{'dato.jgr.guardia.guardias.dias' | translate}}:
+            <strong> {{tipoDia}}</strong>
+          </label>
+          <label>{{'dato.jgr.guardia.guardias.motivos' | translate}}:
+            <strong> {{descripcionIncomp}}</strong>
+          </label>
+          <label>{{'dato.jgr.guardia.guardias.diasSeparacion' | translate}}:
+            <strong> {{diasSeparacion}}</strong>
+          </label>
+          <label>{{'justiciaGratuita.ejg.datosGenerales.numero.Documentos' | translate}}:
+            <strong> {{totalIncompatibilidades}}</strong>
           </label>
 
           <i (click)="abreCierraFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
@@ -35,7 +50,7 @@
         <label style="text-align:center; font-weight: bold;">{{ "dato.jgr.guardia.guardias.incompatibilidades" | translate }}</label>
       </div>
 
-      <p-table [value]="datos" [columns]="cols" [first]="page" [responsive]="true" #tabla class="tabla-listado" [paginator]="true"
+      <p-table [value]="datos" [columns]="cols" [first]="0" [responsive]="true" #tabla class="tabla-listado" [paginator]="true"
         [rows]="selectedItem" [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -61,6 +76,7 @@
             <td class="text-center" *ngFor="let col of columns">
 
               <span>
+                {{dato[nombre]}}
                 {{dato[col.field]}}
               </span>
 

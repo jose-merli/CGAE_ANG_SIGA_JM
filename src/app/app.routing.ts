@@ -1,5 +1,4 @@
-import { Routes, RouterModule } from "@angular/router";
-import { ActivatedRoute } from "@angular/router";
+import { Routes, RouterModule , ActivatedRoute} from "@angular/router";
 import { AppComponent } from "./app.component";
 import { LoginComponent } from "./commons/login/login.component";
 import { LoginDevelopComponent } from "./commons/login-develop/login-develop.component";

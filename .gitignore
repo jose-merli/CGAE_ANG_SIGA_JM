@@ -1161,3 +1161,7 @@ src/app/_services/authentication.service.ts
 .scannerwork/report-task.txt
 .scannerwork/.sonar_lock
 .scannerwork/
+<<<<<<< HEAD
+=======
+.vscode/tasks.json
+>>>>>>> Guardia

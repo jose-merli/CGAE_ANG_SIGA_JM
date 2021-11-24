@@ -78,7 +78,7 @@
 
           <div class="ml-3 selectAll">
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [(disabled)]='!permisos'>
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [(disabled)]='!permisoEscritura'>
             </p-checkbox>
           </div>
         </div>
@@ -87,12 +87,12 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton [disabled]="!permisos || selectedDatos.length == 0" 
-        (click)="confirmDelete()" type="button" icon="fa fa-trash-alt" iconPos="left"
+      <button pButton [disabled]="!permisoEscritura || selectedDatos.length == 0" 
+        (click)="delCert()" type="button" icon="fa fa-trash-alt" iconPos="left"
         label="{{ 'general.boton.eliminar' | translate}}"></button>
       <button pButton disabled type="button" icon="fa fa-comment" iconPos="left"
         label="{{ 'general.boton.comunicar' | translate}}"></button>
-        <button (click)="modificarCert()" [disabled]="!permisos" pButton type="button" icon="fa fa-save"
+        <button (click)="modificarCert()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
     </div>
   </div>

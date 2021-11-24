@@ -7,9 +7,8 @@
         <p-radioButton class="pr-2" name="carta" value="f"
           label="{{ 'facturacionSJCS.facturacionesYPagos.cartaFacturacion' | translate }}" [(ngModel)]='modoBusqueda'
           (click)="changeFilters()"></p-radioButton>
-        <p-radioButton [disabled]="activaVolver" name="carta" value="p"
-          label="{{ 'facturacionSJCS.facturacionesYPagos.cartaPago' | translate }}" [(ngModel)]='modoBusqueda'
-          (click)="changeFilters()"></p-radioButton>
+        <p-radioButton name="carta" value="p" label="{{ 'facturacionSJCS.facturacionesYPagos.cartaPago' | translate }}"
+          [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
       </div>
     </div>
     <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate }}

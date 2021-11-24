@@ -7,6 +7,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-buscador-guardia',
@@ -22,7 +23,13 @@ export class BuscadorGuardiaComponent implements OnInit {
   msgs;
   permisoEscritura
   progressSpinner: boolean = false;
-
+  totalRegistros;
+  seleccionarTodo;
+  cabeceras;
+  rowGroupsAux;
+  rowGroups;
+  noUndefined = false
+  abogado = false;
   @ViewChild(FiltrosGuardiaComponent) filtros;
   @ViewChild(TablaGuardiasComponent) tabla;
 
@@ -30,9 +37,12 @@ export class BuscadorGuardiaComponent implements OnInit {
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
-    private router: Router) { }
+    private router: Router,
+    private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
+    this.abogado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
+   
     this.commonsService.checkAcceso(procesos_guardia.guardias)
       .then(respuesta => {
 
@@ -50,6 +60,12 @@ export class BuscadorGuardiaComponent implements OnInit {
         }
       }
       ).catch(error => console.error(error));
+
+    if (sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") == null || sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") == undefined) {
+      this.datos = {};
+      this.buscar = false;
+    }
+
   }
 
 
@@ -59,14 +75,74 @@ export class BuscadorGuardiaComponent implements OnInit {
   }
 
   search(event) {
+
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
+
+    this.convertArraysToStrings();
+
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-    this.sigaServices.post("busquedaGuardias_searchGuardias", this.filtros.filtroAux).subscribe(
+    let guardiaItem = Object.assign({},this.filtros.filtroAux);
+    if(guardiaItem.idTurno && guardiaItem.idTurno.length > 0){
+      guardiaItem.idTurno = guardiaItem.idTurno.toString();
+    }else{
+      guardiaItem.idTurno ="";
+    }
+    if(guardiaItem.area && guardiaItem.area.length > 0){
+      guardiaItem.area = guardiaItem.area.toString();
+    }else{
+      guardiaItem.area ="";
+    }
+    if(guardiaItem.materia && guardiaItem.materia.length > 0){
+      guardiaItem.materia = guardiaItem.materia.toString();
+    }else{
+      guardiaItem.materia ="";
+    }
+    if(guardiaItem.grupoZona && guardiaItem.grupoZona.length > 0){
+      guardiaItem.grupoZona = guardiaItem.grupoZona.toString();
+    }else{
+      guardiaItem.grupoZona ="";
+    }
+    if(guardiaItem.zona  && guardiaItem.zona.length > 0){
+      guardiaItem.zona = guardiaItem.zona.toString();
+    }else{
+      guardiaItem.zona ="";
+    }
+    if(guardiaItem.jurisdiccion && guardiaItem.jurisdiccion.length > 0){
+      guardiaItem.jurisdiccion = guardiaItem.jurisdiccion.toString();
+    }else{
+      guardiaItem.jurisdiccion ="";
+    }
+    if(guardiaItem.grupoFacturacion  && guardiaItem.grupoFacturacion.length > 0){
+      guardiaItem.grupoFacturacion = guardiaItem.grupoFacturacion.toString();
+    }else{
+      guardiaItem.grupoFacturacion ="";
+    }
+    if(guardiaItem.partidaPresupuestaria  && guardiaItem.partidaPresupuestaria.length > 0){
+      guardiaItem.partidaPresupuestaria = guardiaItem.partidaPresupuestaria.toString();
+    }else{
+      guardiaItem.partidaPresupuestaria ="";
+    }
+    if(guardiaItem.tipoTurno  && guardiaItem.tipoTurno.length > 0){
+      guardiaItem.tipoTurno = guardiaItem.tipoTurno.toString();
+    }else{
+      guardiaItem.tipoTurno ="";
+    }
+    if(guardiaItem.idTipoGuardia  && guardiaItem.idTipoGuardia.length > 0){
+      guardiaItem.idTipoGuardia = guardiaItem.idTipoGuardia.toString();
+    }else{
+      guardiaItem.idTipoGuardia ="";
+    }
+    this.sigaServices.post("busquedaGuardias_searchGuardias", guardiaItem).subscribe(
       n => {
-
+        let error = JSON.parse(n.body).error;
         this.datos = JSON.parse(n.body).guardiaItems;
+        if (this.datos != undefined){
+          this.noUndefined = true;
+        }else{
+          this.noUndefined = false;
+        }
         this.buscar = true;
         this.datos = this.datos.map(it => {
           it.letradosIns = +it.letradosIns;
@@ -77,13 +153,19 @@ export class BuscadorGuardiaComponent implements OnInit {
           this.tabla.historico = event;
         }
         this.resetSelect();
+
+        if (error != null && error.description != null) {
+          this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
+        }
       },
       err => {
         this.progressSpinner = false;
         console.log(err);
       },
-      ()=>{
-        this.commonsService.scrollTablaFoco('tablaFoco');
+      () => {
+        setTimeout(() => {
+          this.commonsService.scrollTablaFoco('tablaFoco');
+        }, 5);
       });
   }
 
@@ -111,6 +193,32 @@ export class BuscadorGuardiaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  convertArraysToStrings() {
+
+    const array = ['idTurno', 'jurisdiccion', 'grupoFacturacion', 'partidaPresupuestaria', 'tipoTurno', 'idTipoGuardia'];
+
+    array.forEach(element => {
+      if (this.filtros.filtroAux[element] != undefined && this.filtros.filtroAux[element] != null && this.filtros.filtroAux[element].length > 0) {
+        let aux = this.filtros.filtroAux[element].toString();
+        this.filtros.filtroAux[element] = aux;
+      }
+
+      if (this.filtros.filtroAux[element] != undefined && this.filtros.filtroAux[element] != null && this.filtros.filtroAux[element].length == 0) {
+        delete this.filtros.filtroAux[element];
+      }
+
+    });
+
+  }
+
+  notifyAnySelected(event){
+
+  }
+
+  checkSelectedRow(event){
+
   }
 
 }

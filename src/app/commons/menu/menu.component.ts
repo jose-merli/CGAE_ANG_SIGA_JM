@@ -95,7 +95,7 @@ export class MenuComponent implements OnInit {
     }
  
   }
-  navigate(ruta) {
+  navigate(ruta : string) {
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     sessionStorage.removeItem("disabledPlantillaEnvio");
     if (ruta !== " ") {
@@ -110,16 +110,22 @@ export class MenuComponent implements OnInit {
           sessionStorage.removeItem("fichaColegialByMenu");
         }
 
-        this.onCloseMenu();
-        this.sigaServices.setRutaMenu(ruta);
-        this.router.navigate([ruta]);
+        if(ruta.includes("guardiasAsistencias")){
+          let searchMode : string = ruta.split("=")[1];
+          this.onCloseMenu();
+          this.router.navigate(["/guardiasAsistencias"], { queryParams: { searchMode: searchMode } });
+        }else{
+          this.onCloseMenu();
+          this.router.navigate([ruta]);
+        }
+        
       }
 
       if (ruta == "permisos") {
         setTimeout(() => {
           this.onCloseMenu();
         }, 100);
-        this.sigaServices.setRutaMenu(ruta);
+
         this.router.navigate([ruta]);
       }
     }

@@ -1,0 +1,112 @@
+
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div id="tarjetaListadoPagos"> 
+ <div class="card">
+   <div class="card-header header-ficha">
+     <div *ngIf="!showFichaListadoPagos" class="form-row">
+       <div class="col-lg-1 col-md-1">
+         <div class="img-colegiado" (click)="onHideListadoPagos()">
+           <i class="fas fa-map-marker  icon-ficha"></i>
+         </div>
+       </div>
+       <div class="col-lg-11 col-md-11">
+         <div class="d-flex justify-content-start mb-1" (click)="onHideListadoPagos()">
+           <label class="mr-auto title-ficha">{{ 'facturacionSJCS.movimientosVarios.listadoPagos' | translate}}
+           </label>
+           <i *ngIf="!showFichaListadoPagos" class="fa fa-angle-down float-right" (click)="onHideListadoPagos()"></i>
+         </div>
+       <div  class="d-flex justify-content-between">
+         <!-- <div *ngFor="let dato of datos"> -->
+           <label *ngIf="datos2 == undefined">{{ "Nº Total de Pagos:" }} 
+               <span >{{ "No existen pagos" }}</span> 
+          </label>  
+          <label *ngIf="datos2 && datos2.length > 0">{{ "Nº Total de Pagos:" }}  
+               <span>{{ datos2.length }}</span> 
+           </label>                  
+         <!-- </div> -->
+       </div>
+       </div>
+     </div>
+     <div *ngIf="showFichaListadoPagos" class="header-ficha-open d-flex justify-content-start align-items-center"
+       (click)="onHideListadoPagos()">
+       <div class="img-colegiado">
+         <i class="fas fa-map-marker  icon-ficha"></i>
+       </div>
+       <label class="title-ficha">{{ 'facturacionSJCS.movimientosVarios.listadoPagos' | translate}}</label>
+       <i class="fa fa-angle-up ml-auto"></i>
+     </div>
+   </div>
+   <div *ngIf="showFichaListadoPagos" class="card-body">
+     <div class="module vista-avanzada">
+       <div class="form-row">
+        <p-table [value]="datos2" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
+        #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="actualizaSeleccionados($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+         paginatorPosition="both">
+        <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of cols" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+              {{ col.header | translate }}
+              <p-sortIcon [field]="col.field"></p-sortIcon>
+              <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+                table.filter($event.target.value, col.field, 'contains')
+              " />
+            </th>
+          </tr>
+        </ng-template> 
+        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+            <td class="text-center" *ngFor="let col of columns">
+              <div *ngIf="col.field == 'fechaModificacion'">
+                <span>{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div>
+              <div *ngIf="col.field == 'nombrePago'">
+                <span>{{dato[col.field]}}</span>
+              </div>
+              <div *ngIf="col.field == 'cantidad'">
+                <span>{{dato.cantidad | number:'1.1-2'}} €</span>
+              </div>
+              <div *ngIf="col.field == 'cantidadRestante'">
+                <span>{{dato.cantidadRestante | number:'1.1-2'}} €</span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="columns.length">
+              {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+          <div class="mostrar d-flex text-right justify-content-end">
+            <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+              + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+            <label>{{"general.message.mostrar" | translate}}</label>
+            <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+            </p-dropdown>
+            <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          </div>
+        </ng-template>
+      </p-table>
+     </div>
+   </div>
+ </div>
+</div>
+
+<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+ <p-footer>
+   <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
+   <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+ </p-footer>
+</p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+ <div class="loader"></div>
+</div>

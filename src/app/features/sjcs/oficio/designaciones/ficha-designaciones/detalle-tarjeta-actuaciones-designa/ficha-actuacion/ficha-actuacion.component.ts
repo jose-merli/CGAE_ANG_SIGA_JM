@@ -178,10 +178,10 @@ export class FichaActuacionComponent implements OnInit {
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
-        }else if(permisoEscritura == true){
-          
+        } else if (permisoEscritura == true) {
+
           this.modoLectura = false;
-        }else{
+        } else {
           this.modoLectura = true;
         }
 
@@ -202,12 +202,12 @@ export class FichaActuacionComponent implements OnInit {
               this.usuarioLogado = new UsuarioLogado();
               this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
               this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
-            } 
+            }
           },
           (err) => {
             console.log(err);
           }
-        );         
+        );
 
         this.institucionActual = this.sigaStorageService.institucionActual;
 
