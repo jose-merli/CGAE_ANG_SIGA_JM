@@ -431,14 +431,17 @@ export class SigaServices {
       'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
     solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
 
-    //PRODUCTOS Y SERVICIOS
-    //PANTALLA TIPOS PRODUCTOS
 
+    // Monederos
+    monederosBusqueda_searchListadoMonederos: 'pys/getMonederos',
+
+    //INICIO PRODUCTOS Y SERVICIOS
+  
+    //PANTALLA TIPOS PRODUCTOS
     tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
     tiposProductos_searchListadoProductosHistorico: 'pys/listadoTipoProductoHistorico',
     tiposProductos_activarDesactivarProducto: 'pys/activarDesactivarProducto',
-    tiposProductos_crearProducto: 'pys/crearProducto',
-    tiposProductos_modificarProducto: 'pys/modificarProducto',
+    tiposProductos_crearEditarProducto: 'pys/crearEditarProducto',
     tiposProductos_comboProducto: 'combo/tipoProductos',
 
     //PANTALLA TIPOS SERVICIOS
@@ -483,6 +486,8 @@ export class SigaServices {
     constructorConsultas_guardarDatosConstructor: 'consultas/pys/constructorConsultas',
     constructorConsultas_obtenerConfigColumnasQueryBuilder: 'consultas/pys/obtenerConfigColumnasQueryBuilder',
     constructorConsultas_obtenerCombosQueryBuilder: 'consultas/pys/obtenerCombosQueryBuilder',
+
+    //FIN PRODUCTOS Y SERVICIOS
 
 
     // FOTO

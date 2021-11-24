@@ -5,6 +5,7 @@ import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { ComboObject } from '../../../../models/ComboObject';
 import { TiposProductosObject } from '../../../../models/TiposProductosObject';
+
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -44,8 +45,7 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
   subscriptionProductsList: Subscription;
   subscriptionEnableUnableProducts: Subscription;
   subscriptionProductTypeSelectValues: Subscription;
-  subscriptionCreateAProduct: Subscription;
-  subscriptionEditAProduct: Subscription;
+  subscriptionCreateEditAProduct: Subscription;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) {
 
@@ -74,10 +74,8 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
       this.subscriptionEnableUnableProducts.unsubscribe();
     if (this.subscriptionProductTypeSelectValues)
       this.subscriptionProductTypeSelectValues.unsubscribe();
-    if (this.subscriptionCreateAProduct)
-      this.subscriptionCreateAProduct.unsubscribe();
-    if (this.subscriptionEditAProduct)
-      this.subscriptionEditAProduct.unsubscribe();
+    if (this.subscriptionCreateEditAProduct)
+      this.subscriptionCreateEditAProduct.unsubscribe();
   }
 
   //INICIO METODOS P-TABLE
@@ -233,10 +231,11 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
       descripciontipo: "",
       descripcion: "",
       idtipoproducto: this.comboItem[0].value,
-      nuevo: ""
+      nuevo: true
     };
 
     this.productData.unshift(nuevoDato);
+    this.changeTableField(nuevoDato);
   }
 
   //Metodo para eliminar en caso de que sea necesario la fila añadida por newRegister
@@ -253,11 +252,6 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
   emptyDescripcion: boolean;
   changeTableField(row) {
     this.edit = true;
-    if (row.descripcion == "") {
-      this.emptyDescripcion = true;
-    } else {
-      this.emptyDescripcion = false;
-    }
 
     if (this.productsToEditCreate.length > 0) {
       let indexRow = this.productsToEditCreate.findIndex(producto => (producto.idproducto == row.idproducto && producto.idtipoproducto == row.idtipoproducto))
@@ -269,6 +263,13 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     } else if (this.productsToEditCreate.length == 0) {
       this.productsToEditCreate.push(row);
     }
+
+    this.emptyDescripcion = false;
+    this.productsToEditCreate.forEach(producto => {
+      if(producto.descripcion == ""){
+        this.emptyDescripcion = true;
+      }
+    });
   }
 
   //Metodo que reestablece la informacion original de la tabla al haber editado algun dato.
@@ -282,11 +283,7 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
   }
 
   guardar() {
-    if (this.nuevo) {
-      this.crearProducto(this.productsToEditCreate);
-    } else if (!this.nuevo) {
-      this.modificarProducto(this.productsToEditCreate);
-    }
+    this.crearEditarProducto();
   }
   //FIN METODOS P-TABLE
 
@@ -376,7 +373,7 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     );
   }
 
-  //Metodo para obtener los valores del combo de tipos de productos (columna categoria)
+  //Metodo para obtener los valores del combo de categorias de productos (columna categoria)
   comboObject: ComboObject;
   comboItem: ComboItem[];
   getComboTiposProductos() {
@@ -398,25 +395,21 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     );
   }
 
-  //Metodo para crear un nuevo registro producto en bd
-  crearProducto(productsToEditCreate) {
+   //Metodo para crear/editar un registro producto en bd
+   crearEditarProducto() {
     this.progressSpinner = true;
     let tiposProductosObject = new TiposProductosObject();
-    tiposProductosObject.tiposProductosItems = productsToEditCreate;
-    this.subscriptionCreateAProduct = this.sigaServices.post("tiposProductos_crearProducto", tiposProductosObject).subscribe(
+    tiposProductosObject.tiposProductosItems = this.productsToEditCreate;
+    this.subscriptionCreateEditAProduct = this.sigaServices.post("tiposProductos_crearEditarProducto", tiposProductosObject).subscribe(
       response => {
-        if (JSON.parse(response.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
+        if (response.status == 200) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
       },
       err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
+      
         this.progressSpinner = false;
       },
       () => {
@@ -432,42 +425,6 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
       }
     );
   }
-
-  //Metodo para modificar la descripcion de uno o multiples productos en bd
-  modificarProducto(productsToEditCreate) {
-    this.progressSpinner = true;
-    let tiposProductosObject = new TiposProductosObject();
-    tiposProductosObject.tiposProductosItems = productsToEditCreate;
-    this.subscriptionEditAProduct = this.sigaServices.post("tiposProductos_modificarProducto", tiposProductosObject).subscribe(
-      response => {
-        if (JSON.parse(response.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        }
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultipleRows = false;
-        this.selectAllRows = false;
-        this.edit = false;
-        this.selectedRows = []
-        this.productsToEditCreate = [];
-        this.nuevo = false;
-        this.getListaProductos();
-      }
-    );
-  }
-
 
   //Metodo para activar/desactivar productos (es decir fechabaja == null esta activo lo contrario inactivo)
   activarDesactivar(selectedRows) {
