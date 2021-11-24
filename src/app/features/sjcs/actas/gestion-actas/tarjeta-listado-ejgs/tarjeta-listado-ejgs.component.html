@@ -15,6 +15,9 @@
           </label>
         </div>
         <div class="d-flex justify-content-between" style="cursor:default">
+          <label> {{ "justiciaGratuita.remesas.ficha.EJGsAsociados" | translate }}
+            <span> {{ ejgTotales }}</span>
+          </label>
           <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "
             (click)="abreCierraFicha('EJGsAsociados')"></i>
         </div>
@@ -100,6 +103,25 @@
         </div>
       </ng-template>
     </p-table>
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+  
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || !permisos"
+          (click)="asociarEJG()" type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.asociarEJG' | translate}}">
+        </button>
+        
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || !permisos"
+          (click)="consultarEditarEJG()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.consultarEditarEJG' | translate}}">
+        </button>
+  
+      </div>
+    </div>
+
   </div>
 
   <div *ngIf="progressSpinner" class="overlay-spinner">

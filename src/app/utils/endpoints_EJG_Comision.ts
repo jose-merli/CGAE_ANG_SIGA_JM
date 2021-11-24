@@ -30,7 +30,8 @@ export let endpoints_EJG_Comision: any = {
     filtrosacta_borrar: "acta/filtros-acta/borrarActas",
     filtrosacta_abrirActa: "acta/filtros-acta/abrirActa",
     filtrosacta_cerrarActa: "acta/filtros-acta/cerrarActa",
-    filtrosacta_getNumAca : "acta/filtros-acta/getNumActa"
+    filtrosacta_getNumAca : "acta/filtros-acta/getNumActa",
+    filtrosacta_getAbreviatura: "acta/filtros-acta/getAbreviatura"
 
 
 
