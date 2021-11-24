@@ -249,6 +249,7 @@ import { GestionSeriesFacturaComponent } from "./features/facturacion/series-fac
 import { GestionAdeudosComponent } from "./features/facturacion/ficheros-adeudos/gestion-adeudos/gestion-adeudos.component";
 import { FactProgramadasComponent } from "./features/facturacion/fact-programadas/fact-programadas.component";
 import { FichaFactProgramadasComponent } from "./features/facturacion/fact-programadas/ficha-fact-programadas/ficha-fact-programadas.component";
+import { GestionFicherosTransferenciasComponent } from "./features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -624,6 +625,11 @@ const appRoutes: Routes = [
 	{
 		path: 'abonos',
 		component: AbonosComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'gestionFicherosTransferencias',
+		component: GestionFicherosTransferenciasComponent,
 		canActivate: [AuthGuard]
 	},
 	{

@@ -1,5 +1,4 @@
-import { DatePipe } from '@angular/common';
-import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
@@ -36,11 +35,9 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
  @Output() buscarFicherosAdeudos = new EventEmitter<boolean>();
 
   constructor(private router: Router,
-    private datepipe: DatePipe,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
-    private _elementRef: ElementRef,
     private commonServices: CommonsService) { }
 
   ngOnInit() {
@@ -53,6 +50,8 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
       sessionStorage.removeItem("volver");
 
       this.buscar();
+    }else{
+      this.body.fechaCreacionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));
     }
   }
 

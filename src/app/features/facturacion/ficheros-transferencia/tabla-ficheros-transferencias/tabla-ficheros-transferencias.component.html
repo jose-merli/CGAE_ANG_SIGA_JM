@@ -31,15 +31,15 @@
                 <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
-            <div *ngIf="col.field != 'fechaCreacion' && col.field != 'totalRemesa' && col.field != 'idDisqueteCargos'">
+            <div *ngIf="col.field != 'fechaCreacion' && col.field != 'importeTotal' && col.field != 'idDisqueteAbono'">
               <span>{{dato[col.field]}}</span>
             </div>
 
-            <div *ngIf="col.field == 'totalRemesa'">
+            <div *ngIf="col.field == 'importeTotal'">
               <span>{{ dato[col.field] | number:'':'es-ES' }} €</span>
             </div>
 
-            <div *ngIf="col.field == 'idDisqueteCargos'">
+            <div *ngIf="col.field == 'idDisqueteAbono'">
               <span class="enlace" (click)="navigateTo(dato)">{{dato[col.field]}}</span>
             </div>
           </td>

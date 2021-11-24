@@ -1,7 +1,7 @@
 import { ErrorItem } from '../ErrorItem';
 import { FicherosAdeudosItem } from './FicherosAdeudosItem';
 
-export class EJGObject {
+export class FicherosAdeudosObject {
     error: ErrorItem;
     ficherosAdeudosItem: FicherosAdeudosItem[] = [];
     

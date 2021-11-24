@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
-import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 
