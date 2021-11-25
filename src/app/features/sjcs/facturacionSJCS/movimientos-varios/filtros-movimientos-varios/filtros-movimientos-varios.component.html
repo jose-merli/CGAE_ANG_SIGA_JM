@@ -25,7 +25,7 @@
             <label>{{'facturacion.productos.tipo' | translate}}</label>
             <p-multiSelect [(ngModel)]='filtros.tipo' class="select-form" defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="tipos" [filter]="true"
               maxSelectedLabels="10" [selectedItemsLabel]="'{0} seleccionados'" filterBy="label,labelSinTilde"
-              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'tipo')"> <!--(onPanelShow)="focusInputField(aplicadoEnPagoMultiselect)"-->
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'tipo')"> 
             </p-multiSelect>
           </div>
           <!--TIPO-->
@@ -43,7 +43,7 @@
 
             <p-multiSelect [(ngModel)]='filtros.idAplicadoEnPago' class="select-form" defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="aplicadoEnPago" [filter]="true"
               maxSelectedLabels="10" [selectedItemsLabel]="'{0} seleccionados'" filterBy="label,labelSinTilde"
-              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idAplicadoEnPago')"> <!--(onPanelShow)="focusInputField(aplicadoEnPagoMultiselect)"-->
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idAplicadoEnPago')"> 
             </p-multiSelect>
           </div>
           <!--APLICADO EN PAGO-->
@@ -91,7 +91,7 @@
 
             <p-multiSelect  class="select-form" [(ngModel)]='filtros.idFacturacionApInicial' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
             [options]="facturacionApInicial" [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} facturaciones seleccionadas'" filterBy="label,labelSinTilde"
-              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idFacturacionApInicial')"> <!--(onPanelShow)="focusInputField(facturacionMultiselect)"-->
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idFacturacionApInicial')"> 
             </p-multiSelect>
           
           </div>
@@ -103,7 +103,7 @@
 
             <p-multiSelect class="select-form" [(ngModel)]='filtros.idGrupoFacturacion' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
             [options]="gruposFacturacion" [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} grupos seleccionados'" filterBy="label,labelSinTilde"
-              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idGrupoFacturacion')"> <!--(onPanelShow)="focusInputField(gruposTurnosMultiselect)"-->
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idGrupoFacturacion')"> 
             </p-multiSelect>
 
           </div>
@@ -115,7 +115,7 @@
 
             <p-multiSelect class="select-form" [(ngModel)]='filtros.idConcepto' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
               [options]="concepto" [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} conceptos seleccionados'" filterBy="label,labelSinTilde"
-              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idConcepto')">  <!--(onPanelShow)="focusInputField(conceptosMultiselect)" -->
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idConcepto')"> 
             </p-multiSelect>
 
           </div>
@@ -129,7 +129,7 @@
 
             <p-multiSelect class="select-form" [(ngModel)]='filtros.idPartidaPresupuestaria' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
             [options]="partidaPresupuestaria"  [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} partidas seleccionadas'"
-              filterBy="label,labelSinTilde" styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idPartidaPresupuestaria')"> <!--(onPanelShow)="focusInputField(partidaMultiselect)"-->
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idPartidaPresupuestaria')"> 
             </p-multiSelect>
           </div>         
           <!--PARTIDA PRESUPUESTARIA-->
@@ -142,7 +142,7 @@
     
 <!--COMPONENTE DEL DESTINATARIO, BUSCADOR EXPRESS-->
     <div class="card-body">
-      <p class="title-module" (click)="onHideDestinatario()">   <!--<p class="title-module" (click)="onHideDatosGenerales()"></p> -->
+      <p class="title-module" (click)="onHideDestinatario()"> 
         {{ 'facturacionSJCS.retenciones.destinatario' | translate }}
         <i *ngIf="showDestinatario" class="fa fa-angle-up float-right"></i>
         <i *ngIf="!showDestinatario" class="fa fa-angle-down float-right"></i>

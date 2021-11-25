@@ -492,7 +492,6 @@ import { FichaBaremosDeGuardiaComponent } from './features/sjcs/facturacionSJCS/
 import { FichaBarDatosGeneralesComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-datos-generales/ficha-bar-datos-generales.component';
 import { FichaBarConfiFacComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-confi-fac/ficha-bar-confi-fac.component';
 import { FichaBarConfiAdiComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/ficha-baremos-de-guardia/ficha-bar-confi-adi/ficha-bar-confi-adi.component';
-import { TarjetaFacturacionGenericaComponent } from './features/sjcs/facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.component';
 import { TablaGenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/tabla-generar-impreso190/tabla-generar-impreso190.component';
 import { FiltroGenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/filtro-generar-impreso190/filtro-generar-impreso190.component';
 import { BuscadorListaGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/buscador-lista-guardias/buscador-lista-guardias.component';
@@ -545,6 +544,7 @@ import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 import { TablaResultadoOrderModule } from './commons/tabla-resultado-order/tabla-resultado-order.module';
 import { MovimientosVariosService } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.service';
 import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.module';
+import { TarjetaFacturacionGenericaModule } from './features/sjcs/facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.module';
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,
@@ -656,7 +656,7 @@ import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimie
 		TablaGuardiaColegiadoComponent,
 		GuardiaColegiadoComponent,
 		GestionGuardiaColegiadoComponent,
-		
+
 		//Certificados
 		ComunicacionInterprofesionalComponent,
 		SolicitarCompraComponent,
@@ -979,11 +979,11 @@ import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimie
 		TarjetaDatosRetencionComponent,
 		TarjetaAplicacionEnPagosComponent,
 		BaremosDeGuardiaComponent,
-		FiltroBusquedaBaremosComponent, 
+		FiltroBusquedaBaremosComponent,
 		TablaBusquedaBaremosComponent,
 		FichaBaremosDeGuardiaComponent,
-		FichaBarDatosGeneralesComponent, 
-		FichaBarConfiFacComponent, 
+		FichaBarDatosGeneralesComponent,
+		FichaBarConfiFacComponent,
 		FichaBarConfiAdiComponent,
 		//certificacion de facturacion
 		CertificacionFacComponent,
@@ -994,9 +994,8 @@ import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimie
 		TarjetaFacturacionComponent,
 		TarjetaMovimientosVariosAsociadosComponent,
 		TarjetaMovimientosVariosAplicadosComponent,
-		TarjetaFacturacionGenericaComponent,
 		//Impreso 190
-		FiltroGenerarImpreso190Component, 
+		FiltroGenerarImpreso190Component,
 		TablaGenerarImpreso190Component,
 
 	],
@@ -1075,7 +1074,8 @@ import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimie
 		Paginador2Module,
 		TarjetaModule,
 		TablaResultadoOrderModule,
-		MovimientosVariosModule
+		MovimientosVariosModule,
+		TarjetaFacturacionGenericaModule,
 	],
 
 	exports: [],
@@ -1101,7 +1101,7 @@ import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimie
 		TablaResultadoMixDocDesigService,
 		RetencionesService,
 		MovimientosVariosService,
-		
+
 		AuthGuard,
 		{
 			provide: APP_BASE_HREF,

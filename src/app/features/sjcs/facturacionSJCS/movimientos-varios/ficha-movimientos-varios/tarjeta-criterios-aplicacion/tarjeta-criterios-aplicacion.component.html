@@ -35,14 +35,14 @@
       </div>
     </div>
     <div *ngIf="showFichaCriteriosAplicacion" class="card-body card-body-ficha">
-      <!-- <div class="module vista-avanzada"> -->
+   
             <div class="form-row pb-3">
               <!--FACTURACIÓN DE APLICACIÓN INICIAL-->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.movimientosVarios.facturacionApInicial' | translate}}</label>
  
             <p-dropdown class="select-form" [(ngModel)]='datos.idFacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" 
-            [options]="facturacion" name="idFacturacionNueva"> <!--(onPanelShow)="focusInputField(gruposTurnosMultiselect)"-->
+            [options]="facturacion" name="idFacturacionNueva"> 
             </p-dropdown>
           
           </div>
@@ -53,7 +53,7 @@
             <label>{{'facturacionSJCS.movimientosVarios.gruposTurnos' | translate}}</label>
 
             <p-dropdown class="select-form" [(ngModel)]='datos.idGrupoFacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" 
-            [options]="gruposFacturacion"> <!--(onPanelShow)="focusInputField(gruposTurnosMultiselect)"-->
+            [options]="gruposFacturacion">
             </p-dropdown>
 
           </div>
@@ -64,7 +64,7 @@
             <label>{{'facturacionSJCS.facturacionesYPagos.conceptos' | translate}}</label>
 
             <p-dropdown class="select-form" [(ngModel)]='datos.idConcepto' placeholder="{{'general.boton.seleccionar' | translate}}" 
-            [options]="concepto"> <!--(onPanelShow)="focusInputField(gruposTurnosMultiselect)"-->
+            [options]="concepto"> 
             </p-dropdown>
 
           </div>
@@ -77,12 +77,11 @@
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}</label>
 
             <p-dropdown class="select-form" [(ngModel)]='datos.idPartidaPresupuestaria' placeholder="{{'general.boton.seleccionar' | translate}}" 
-            [options]="partidaPresupuestaria" > <!--(onPanelShow)="focusInputField(partidaMultiselect)"-->
+            [options]="partidaPresupuestaria" > 
             </p-dropdown>
           </div>         
           <!--PARTIDA PRESUPUESTARIA-->
             </div>
-    <!-- </div> -->
 
   </div>
   <div class="card-footer" *ngIf="showFichaCriteriosAplicacion">

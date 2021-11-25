@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
-import { MovimientosVariosFacturacionItem } from '../../MovimientosVariosFacturacionItem';
 import { Table } from 'primeng/table';
-import { SSL_OP_SSLEAY_080_CLIENT_DH_BUG } from 'constants';
 
 @Component({
   selector: 'app-tarjeta-listado-pagos',
@@ -32,15 +30,8 @@ export class TarjetaListadoPagosComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices, private persistenceService: PersistenceService, private changeDetectorRef: ChangeDetectorRef) { }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   this.getCols();
-  //   if (this.datos != undefined) {
-  //     this.body = this.datos;
-  //     this.getInscripciones();
-  //   }
   ngOnInit() {
 
-    //this.tamListado=this.datos2.length;
 
     this.getCols();
 
@@ -97,24 +88,6 @@ export class TarjetaListadoPagosComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
-
-  // getPagos(){
-  //   this.progressSpinner = true;
-  //   this.datos.fechaAlta = null;
-
-  //   this.sigaServices.post("movimientosVarios_getListadoPagos", this.datos).subscribe(
-  //     n => {
-  //       this.datos2 = JSON.parse(n.body).facturacionItem;
-  //       this.progressSpinner=false;
-  //     },
-  //     err => {
-  //       console.log(err);
-  //       this.progressSpinner = false;
-  //     }, () => {
-  //       this.progressSpinner = false;
-  //     }
-  //   );
-  // }
 
   actualizaSeleccionados(selectedDatos) {
     if (this.selectedDatos == undefined) {

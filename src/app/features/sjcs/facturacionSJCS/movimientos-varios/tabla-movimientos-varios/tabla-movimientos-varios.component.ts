@@ -59,12 +59,6 @@ export class TablaMovimientosVariosComponent implements OnInit {
     private movimientosVariosService: MovimientosVariosService
     ) { }
 
-    ngOnChanges(changes: SimpleChanges) {
-      /*if (this.historico == false) {
-        this.selectMultiple = false;
-        this.selectionMode = "single"
-      }*/
-    }
 
   ngOnInit() {
 
