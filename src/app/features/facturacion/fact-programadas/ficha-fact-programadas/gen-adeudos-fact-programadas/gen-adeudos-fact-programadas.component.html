@@ -69,27 +69,27 @@
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaPresentacion" [inputStyleClass]="styleObligatorio(body.fechaPresentacion)" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaPresentacion($event)">
+          <app-fecha [(value)]="body.fechaPresentacion" [inputStyleClass]="styleObligatorio(body.fechaPresentacion)" [minDate]="fechaHoy" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaPresentacion($event)" [disabled]="!(porProgramar || porConfirmarError)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos.primeros' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosPrimeros" [inputStyleClass]="styleObligatorio(body.fechaRecibosPrimeros)" (valueChangeSelected)="fillFechaRecibosPrimeros($event)" (valueChangeInput)="fillFechaRecibosPrimeros($event)">
+          <app-fecha [(value)]="body.fechaRecibosPrimeros" [inputStyleClass]="styleObligatorio(body.fechaRecibosPrimeros)" [minDate]="minDateRecibos" (valueChangeSelected)="fillFechaRecibosPrimeros($event)" (valueChangeInput)="fillFechaRecibosPrimeros($event)" [disabled]="!(porProgramar || porConfirmarError)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos.recurrentes' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosRecurrentes" [inputStyleClass]="styleObligatorio(body.fechaRecibosRecurrentes)" (valueChangeSelected)="fillFechaRecibosRecurrentes($event)" (valueChangeInput)="fillFechaRecibosRecurrentes($event)">
+          <app-fecha [(value)]="body.fechaRecibosRecurrentes" [inputStyleClass]="styleObligatorio(body.fechaRecibosRecurrentes)" [minDate]="minDateRecurrentes" (valueChangeSelected)="fillFechaRecibosRecurrentes($event)" (valueChangeInput)="fillFechaRecibosRecurrentes($event)" [disabled]="!(porProgramar || porConfirmarError)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos.cor1' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosCOR1" [inputStyleClass]="styleObligatorio(body.fechaRecibosCOR1)" (valueChangeSelected)="fillFechaRecibosCOR1($event)" (valueChangeInput)="fillFechaRecibosCOR1($event)">
+          <app-fecha [(value)]="body.fechaRecibosCOR1" [inputStyleClass]="styleObligatorio(body.fechaRecibosCOR1)" [minDate]="minDateCOR" (valueChangeSelected)="fillFechaRecibosCOR1($event)" (valueChangeInput)="fillFechaRecibosCOR1($event)" [disabled]="!(porProgramar || porConfirmarError)">
           </app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos.b2b' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosB2B" [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)">
+          <app-fecha [(value)]="body.fechaRecibosB2B" [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" [minDate]="minDateB2B" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)" [disabled]="!(porProgramar || porConfirmarError)">
           </app-fecha>
         </div>
       </div>
@@ -97,10 +97,12 @@
 
     <div *ngIf="esFichaActiva('genAdeudos')" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button [disabled]="true" pButton (click)="nuevoFicheroAdeudos()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
+
+        <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
+        <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-save" iconPos="left"
           (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

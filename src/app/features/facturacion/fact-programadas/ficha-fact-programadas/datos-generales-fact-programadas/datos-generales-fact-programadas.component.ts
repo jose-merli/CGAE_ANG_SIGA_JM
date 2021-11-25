@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
+import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -23,10 +24,13 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   @Input() bodyInicial: FacFacturacionprogramadaItem;
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
+  @Input() serie: SerieFacturacionItem;
 
   resaltadoDatos: boolean = false;
-  editable: boolean = true;
+  porProgramar: boolean = true;
   porConfirmar: boolean = false;
+  porConfirmarError: boolean = false;
+  confirmada: boolean = false;
 
   constructor(
     private commonsService: CommonsService,
@@ -56,8 +60,10 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     this.body.fechaModificacion = this.transformDate(this.body.fechaModificacion);
     this.resaltadoDatos = false;
 
-    this.editable = !this.modoEdicion || this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
-    this.porConfirmar = this.body.idEstadoConfirmacion == "21";
+    this.porProgramar = !this.modoEdicion || this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
+    this.porConfirmar = this.body.idEstadoConfirmacion == "18" || this.body.idEstadoConfirmacion == "19" || this.body.idEstadoConfirmacion == "1" || this.body.idEstadoConfirmacion == "17";
+    this.porConfirmarError = this.body.idEstadoConfirmacion == "21";
+    this.confirmada = this.body.idEstadoConfirmacion == "3";
 
     console.log(this.body);
   }
@@ -86,7 +92,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       return false;
     }
 
-    let intervaloProductos: boolean = this.body.fechaInicioProductos != undefined && this.body.fechaFinProductos != undefined;
+    let intervaloProductos: boolean = this.serie.tiposProductos != undefined && this.serie.tiposProductos.length > 0 && this.body.fechaInicioProductos != undefined && this.body.fechaFinProductos != undefined;
     if (intervaloProductos) {
       let intervalo: boolean = this.body.fechaInicioProductos < this.body.fechaFinProductos;
       if (!intervalo) {
@@ -98,7 +104,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       return false;
     }
 
-    let intervaloServicios: boolean = this.body.fechaInicioServicios != undefined && this.body.fechaFinServicios != undefined;
+    let intervaloServicios: boolean = this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0 && this.body.fechaInicioServicios != undefined && this.body.fechaFinServicios != undefined;
     if (intervaloServicios) {
       let intervalo: boolean = this.body.fechaInicioServicios < this.body.fechaFinServicios;
       if (!intervalo) {

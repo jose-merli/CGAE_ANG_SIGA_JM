@@ -2,8 +2,10 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
+import { ComboItem } from '../../../../../models/ComboItem';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
 import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -27,15 +29,27 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
 
   resaltadoDatos: boolean = false;
+  porProgramar: boolean = true;
+  porConfirmar: boolean = false;
+  porConfirmarError: boolean = false;
+  confirmada: boolean = false;
+
+  fechaHoy = new Date();
+  minDateRecibos = new Date();
+  minDateRecurrentes = new Date();
+  minDateCOR = new Date();
+  minDateB2B = new Date();
 
   constructor(
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private router: Router
+    private router: Router,
+    private sigaStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
+    this.parametrosSEPA(this.sigaStorageService.institucionActual);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -53,6 +67,12 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
     this.body.fechaRecibosCOR1 = this.transformDate(this.body.fechaRecibosCOR1);
     this.body.fechaRecibosB2B = this.transformDate(this.body.fechaRecibosB2B);
     this.resaltadoDatos = false;
+
+    this.porProgramar = this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
+    this.porConfirmar = this.body.idEstadoConfirmacion == "18" || this.body.idEstadoConfirmacion == "19" || this.body.idEstadoConfirmacion == "1" || this.body.idEstadoConfirmacion == "17";
+    this.porConfirmarError = this.body.idEstadoConfirmacion == "21";
+    this.confirmada = this.body.idEstadoConfirmacion == "3";
+
   }
 
   // Guardar
@@ -90,6 +110,44 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  parametrosSEPA(idInstitucion){
+    this.progressSpinner=true;
+    
+    this.sigaServices.getParam("facturacionPyS_parametrosSEPA", "?idInstitucion=" + idInstitucion).subscribe(
+      n => {
+        let data: ComboItem[] = n.combooItems;
+
+        data.forEach(element => {
+          let value: number = +element.value;
+          switch (element.label) {
+            case "SEPA_DIAS_HABILES_PRIMEROS_RECIBOS":
+              this.minDateRecibos = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
+              break;
+
+            case "SEPA_DIAS_HABILES_RECIBOS_RECURRENTES":
+              this.minDateRecurrentes = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
+              break;
+
+            case "SEPA_DIAS_HABILES_RECIBOS_COR1":
+              this.minDateCOR = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
+              break;
+
+            case "SEPA_DIAS_HABILES_RECIBOS_B2B":
+              this.minDateB2B = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
+              break;
+          }
+        });
+
+        this.progressSpinner=false;
+      },
+      err => {
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
       }
     );
   }

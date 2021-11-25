@@ -3,6 +3,7 @@ import { Message } from 'primeng/components/common/message';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-envio-fact-programadas',
@@ -24,14 +25,23 @@ export class EnvioFactProgramadasComponent implements OnInit, OnChanges {
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
 
   resaltadoDatos: boolean = false;
+  porProgramar: boolean = true;
+  porConfirmar: boolean = false;
+  porConfirmarError: boolean = false;
+  confirmada: boolean = false;
+  noAplica: boolean = false;
+  finalizado: boolean = false;
+  finalizadoError: boolean = false;
 
   comboPlantillas: ComboItem[] = [];
 
   constructor(
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
+    this.getComboPlantillasEnvio();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -39,11 +49,35 @@ export class EnvioFactProgramadasComponent implements OnInit, OnChanges {
       this.restablecer();
   }
 
+  // Combo de plantillas envío masivo
+
+  getComboPlantillasEnvio() {
+    this.sigaServices.get("facturacionPyS_comboPlantillasEnvio").subscribe(
+      n => {
+        this.comboPlantillas = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboPlantillas);
+        console.log(n);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
   // Restablecer
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.resaltadoDatos = false;
+
+    this.porProgramar = this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
+    this.porConfirmar = this.body.idEstadoConfirmacion == "18" || this.body.idEstadoConfirmacion == "19" || this.body.idEstadoConfirmacion == "1" || this.body.idEstadoConfirmacion == "17";
+    this.porConfirmarError = this.body.idEstadoConfirmacion == "21";
+    this.confirmada = this.body.idEstadoConfirmacion == "3";
+
+    this.noAplica = this.body.idEstadoEnvio == "11";
+    this.finalizado = this.body.idEstadoEnvio == "12" || this.body.idEstadoEnvio == "13" || this.body.idEstadoEnvio == "14" || this.body.idEstadoEnvio == "15";
+    this.finalizadoError = this.body.idEstadoEnvio == "16";
   }
 
   // Estilo obligatorio

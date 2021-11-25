@@ -20,6 +20,7 @@ export class FichaFactProgramadasComponent implements OnInit {
 
   iconoTarjetaResumen = "clipboard";
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
+  serie: SerieFacturacionItem = new SerieFacturacionItem();
   datos = [];
   enlacesTarjetaResumen = [];
 
@@ -55,7 +56,7 @@ export class FichaFactProgramadasComponent implements OnInit {
       this.progressSpinner = false;
       this.backTo();
     }
-
+    
     this.getParametrosCONTROL();
     if (this.modoEdicion) {
       this.updateTarjetaResumen();
@@ -141,9 +142,11 @@ export class FichaFactProgramadasComponent implements OnInit {
 
   // Obtener parametros de CONTROL
   getParametrosCONTROL(): void {
-    this.sigaServices.getParam("facturacionPyS_parametrosCONTROL", "?idInstitucion=").subscribe(
+    this.sigaServices.getParam("facturacionPyS_parametrosCONTROL", "?idInstitucion=2005").subscribe(
       n => {
         let items: ComboItem[] = n.combooItems;
+        console.log(items);
+        
         let controlEmisionItem: ComboItem = items.find(item => item.label == "CONTROL_EMISION_FACTURAS_SII");
 
         if (controlEmisionItem) {
@@ -157,6 +160,9 @@ export class FichaFactProgramadasComponent implements OnInit {
   }
 
   serieFacturacionChanged(serie: SerieFacturacionItem) {
+    this.serie = serie;
+    console.log(serie);
+
     if (!this.modoEdicion) {
       this.body = new FacFacturacionprogramadaItem();
       this.body.idSerieFacturacion = serie.idSerieFacturacion;

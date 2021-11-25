@@ -25,6 +25,13 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
 
   resaltadoDatos: boolean = false;
+  porProgramar: boolean = true;
+  porConfirmar: boolean = false;
+  porConfirmarError: boolean = false;
+  confirmada: boolean = false;
+  noAplica: boolean = false;
+  finalizado: boolean = false;
+  finalizadoError: boolean = false;
 
   comboModelosFactura: ComboItem[] = [];
 
@@ -60,6 +67,15 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.resaltadoDatos = false;
+
+    this.porProgramar = this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
+    this.porConfirmar = this.body.idEstadoConfirmacion == "18" || this.body.idEstadoConfirmacion == "19" || this.body.idEstadoConfirmacion == "1" || this.body.idEstadoConfirmacion == "17";
+    this.porConfirmarError = this.body.idEstadoConfirmacion == "21";
+    this.confirmada = this.body.idEstadoConfirmacion == "3";
+
+    this.noAplica = this.body.idEstadoPDF == "5";
+    this.finalizado = this.body.idEstadoPDF == "6" || this.body.idEstadoPDF == "7" || this.body.idEstadoPDF == "8" || this.body.idEstadoPDF == "9";
+    this.finalizadoError = this.body.idEstadoPDF == "10";
   }
 
   // Estilo obligatorio

@@ -23,6 +23,13 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
 
   resaltadoDatos: boolean = false;
+  porProgramar: boolean = true;
+  porConfirmar: boolean = false;
+  porConfirmarError: boolean = false;
+  confirmada: boolean = false;
+  noAplica: boolean = false;
+  finalizado: boolean = false;
+  finalizadoError: boolean = false;
 
   constructor(
     private commonsService: CommonsService
@@ -41,6 +48,15 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.resaltadoDatos = false;
+
+    this.porProgramar = this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
+    this.porConfirmar = this.body.idEstadoConfirmacion == "18" || this.body.idEstadoConfirmacion == "19" || this.body.idEstadoConfirmacion == "1" || this.body.idEstadoConfirmacion == "17";
+    this.porConfirmarError = this.body.idEstadoConfirmacion == "21";
+    this.confirmada = this.body.idEstadoConfirmacion == "3";
+
+    this.noAplica = this.body.idEstadoTraspaso == "22";
+    this.finalizado = this.body.idEstadoTraspaso == "23" || this.body.idEstadoTraspaso == "24" || this.body.idEstadoTraspaso == "25" || this.body.idEstadoTraspaso == "26";
+    this.finalizadoError = this.body.idEstadoTraspaso == "27";
   }
 
   // Estilo obligatorio
