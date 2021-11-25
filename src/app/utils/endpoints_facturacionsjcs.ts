@@ -74,9 +74,16 @@ export let endpoints_facturacionsjcs: any = {
     retenciones_buscarRetencionesAplicadas: "retenciones/searchRetencionesAplicadas",
     retenciones_buscarAplicacionesRetenciones: "retenciones/getAplicacionesRetenciones",
 
-    /*Endpoins impreso 190 */
+    /*Endpoints impreso 190 */
 
-    impreso190_generar: "facturacionsjcs/impreso190generar",
+    impreso190_generar:"facturacionsjcs/impreso190generar",
+    impreso190_searchImpresos:"facturacionsjcs/searchImpreso190",
+    impreso190_descargar:"facturacionsjcs/impreso190descargar",
+    impreso190_eliminar:"facturacionsjcs/deleteImpreso190",
+    impreso190_searchConfImpreso190:"facturacionsjcs/searchConfImpreso190",
+
+    /*Endpoints BaremosGuardias*/ 
+    baremosGuardia_buscar: "baremosGuardia/buscar",
 
     /* Endpoints Tarjeta genérica facturaciones */
     tarjGenFac_getFacturacionesPorAsuntoActuacionDesigna: "facturacionsjcs/getFacturacionesPorAsuntoActuacionDesigna",

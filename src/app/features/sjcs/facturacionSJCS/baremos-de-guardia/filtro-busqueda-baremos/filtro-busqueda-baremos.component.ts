@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { BaremosRequestDTO } from '../../../../../models/sjcs/BaremosRequestDTO';
 import { Router } from '@angular/router';
+import { BaremosGuardiaItem } from '../../../../../models/sjcs/BaremosGuardiaItem';
 
 @Component({
   selector: 'app-filtro-busqueda-baremos',
@@ -16,7 +17,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
   showDatosGenerales: boolean = true;
   msgs: Message[] = [];
   progressSpinner: boolean = false;
-  filtros: BaremosRequestDTO = new BaremosRequestDTO();
+  filtros: BaremosGuardiaItem = new BaremosGuardiaItem();
   comboFacturacion: SelectItem[] = [];
   comboTurno: SelectItem[] = [];
   comboGuardia: SelectItem[] = [];
@@ -147,7 +148,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
   }
 
   limpiar() {
-    this.filtros = new BaremosRequestDTO();
+    this.filtros = new BaremosGuardiaItem();
     this.mostrarTablaResultadosEvent.emit(false);
   }
 

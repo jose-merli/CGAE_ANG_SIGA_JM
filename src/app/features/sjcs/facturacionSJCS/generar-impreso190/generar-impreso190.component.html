@@ -8,8 +8,8 @@
 </div>
 
 <div class="busqueda-container">
-    <app-filtro-generar-impreso190 (getImpresos) = "getImpresos($event)"> </app-filtro-generar-impreso190>
-    <app-tabla-generar-impreso190 *ngIf="buscar" [datos]="datos"></app-tabla-generar-impreso190>
+    <app-filtro-generar-impreso190 (getImpresos) = "getImpresos($event)" [permisoEscritura] = "permisoEscritura"> </app-filtro-generar-impreso190>
+    <app-tabla-generar-impreso190 *ngIf="buscar" [datos]="datos" (getImpresoRefresh) = "getImpresos($event)" [permisoEscritura] = "permisoEscritura"></app-tabla-generar-impreso190>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

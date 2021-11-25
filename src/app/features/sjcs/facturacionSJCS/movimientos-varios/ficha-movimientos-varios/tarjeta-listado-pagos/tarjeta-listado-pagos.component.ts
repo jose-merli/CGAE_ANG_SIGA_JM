@@ -14,7 +14,7 @@ export class TarjetaListadoPagosComponent implements OnInit {
   rowsPerPage;
   cols;
   progressSpinner: boolean = false;
-  
+  msgs;
   selectAll;
   selectedDatos = [];
   numSelected = 0;
@@ -44,13 +44,13 @@ export class TarjetaListadoPagosComponent implements OnInit {
     //  if(!this.permisoEscritura){
     //   this.datos2 = [];
     //mirar lo de selectionMode=false;
-                 // selectedDatos=[];
-                 // numSelected = 0;
+    // selectedDatos=[];
+    // numSelected = 0;
     //  }
 
   }
 
-  onHideListadoPagos(){
+  onHideListadoPagos() {
     this.showFichaListadoPagos = !this.showFichaListadoPagos;
   }
 
@@ -62,7 +62,7 @@ export class TarjetaListadoPagosComponent implements OnInit {
       { field: "cantidad", header: "facturacionSJCS.retenciones.importe" },
       { field: "cantidadRestante", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente" }
     ];
-    
+
     this.rowsPerPage = [
       {
         label: 10,
@@ -89,26 +89,29 @@ export class TarjetaListadoPagosComponent implements OnInit {
     this.table.reset();
   }
 
+  actualizaSeleccionados(selectedDatos) {
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = []
+    }
+    if (selectedDatos != undefined) {
+      this.numSelected = selectedDatos.length;
+    }
+  }
 
-actualizaSeleccionados(selectedDatos) {
-  if (this.selectedDatos == undefined) {
-    this.selectedDatos = []
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectMultiple = false;
+      this.selectedDatos = this.datos2;
+      this.numSelected = this.datos2.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
   }
-  if (selectedDatos != undefined) {
-    this.numSelected = selectedDatos.length;
-  }
-}
 
-onChangeSelectAll() {
-  if (this.selectAll === true) {
-    this.selectMultiple = false;
-    this.selectedDatos = this.datos2;
-    this.numSelected = this.datos2.length;
-  } else {
-    this.selectedDatos = [];
-    this.numSelected = 0;
+  clear() {
+    this.msgs = [];
   }
-}
 
 }
 

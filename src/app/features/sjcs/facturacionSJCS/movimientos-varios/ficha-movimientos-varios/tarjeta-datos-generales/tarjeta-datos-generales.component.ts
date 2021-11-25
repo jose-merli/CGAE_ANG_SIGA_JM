@@ -11,7 +11,7 @@ import { MovimientosVariosFacturacionItem } from '../../MovimientosVariosFactura
 import { TarjetaDatosClienteComponent } from '../tarjeta-datos-cliente/tarjeta-datos-cliente.component';
 
 @Component({
-  selector: 'app-tarjeta-datos-generales',
+  selector: 'app-tarjeta-datos-generales-fiMov',
   templateUrl: './tarjeta-datos-generales.component.html',
   styleUrls: ['./tarjeta-datos-generales.component.scss']
 })

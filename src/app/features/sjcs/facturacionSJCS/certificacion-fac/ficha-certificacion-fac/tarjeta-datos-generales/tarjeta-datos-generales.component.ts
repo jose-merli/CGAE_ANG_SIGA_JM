@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { CertificacionFacItem } from '../../../../../../models/sjcs/CertificacionFacItem';
 
 @Component({
-  selector: 'app-tarjeta-datos-generales',
+  selector: 'app-tarjeta-datos-generales-fiFac',
   templateUrl: './tarjeta-datos-generales.component.html',
   styleUrls: ['./tarjeta-datos-generales.component.scss']
 })
