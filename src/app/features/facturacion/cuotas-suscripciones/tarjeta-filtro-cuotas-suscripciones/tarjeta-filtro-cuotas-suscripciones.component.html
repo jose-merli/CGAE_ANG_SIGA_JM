@@ -10,7 +10,7 @@
   <div class="form-row">
     <!-- Activo a fecha de -->
     <div class="form-group col-lg-3 col-md-3">
-      <label>"** aFechaDe"
+      <label>{{ "facturacion.suscripciones.aFechaDe" | translate}}
       </label>
       <app-fecha [(value)]="filtrosSuscripciones.aFechaDe" (valueChangeInput)="fillAfechaDeCalendar($event)" (valueChangeSelected)="fillAfechaDeCalendar($event)"></app-fecha>
     </div>

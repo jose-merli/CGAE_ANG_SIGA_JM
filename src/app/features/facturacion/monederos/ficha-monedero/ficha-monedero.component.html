@@ -1,0 +1,23 @@
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+      <i class="fa fa-square"></i>
+      <p>{{'menu.facturacion' | translate}}
+        <i class="fa fa-angle-right"></i>{{'facturacion.monederos.Monedero' | translate}}
+  </div>
+  <div>
+      <app-datos-generales-monedero #propietario [(ficha)]="ficha" [esColegiado]="esColegiado" [resaltadoDatos]="resaltadoDatos" id="propietario">
+      </app-datos-generales-monedero>
+      <app-movimientos-monedero #movimientos [(ficha)]="ficha" (scrollToOblig)="scrollToOblig($event)" (actualizaFicha)="actualizarFicha()" [resaltadoDatos]="resaltadoDatos" id="movimientos">
+      </app-movimientos-monedero>
+      <app-servicios-asociados-monedero> 
+      </app-servicios-asociados-monedero>
+  </div>
+</div>
+
+<div class="mt-3 text-right main-button" id="down">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

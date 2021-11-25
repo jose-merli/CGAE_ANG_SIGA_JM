@@ -6,7 +6,7 @@
 
 <div class="card mt-3">
   <div class="card-body p-0">
-    <p-table #productsTable [value]="listaCompraProductos" [columns]="cols" [(selection)]="selectedRows"
+    <p-table #monederosTable [value]="listaMonederos" [columns]="cols" [(selection)]="selectedRows"
       selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
       (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
       (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
@@ -24,7 +24,7 @@
             <p-sortIcon [field]="col.field"></p-sortIcon>
             <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
               *ngSwitchCase="col.field" pInputText type="text"
-              (input)="productsTable.filter($event.target.value, col.field, 'contains')" />
+              (input)="monederosTable.filter($event.target.value, col.field, 'contains')" />
           </th>
         </tr>
       </ng-template>
@@ -32,14 +32,15 @@
       <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="col.field !='fechaSolicitud' && col.field != 'fechaEfectiva'" >
-              <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
-              <span *ngIf="col.field == 'idEstadoSolicitud'">{{estadosCompraObject[rowData[col.field]-1].label}}</span>
-              <span *ngIf="col.field != 'concepto' && col.field != 'idEstadoSolicitud'">{{rowData[col.field]}}</span>
-            </div>
-            <div *ngIf="col.field =='fechaSolicitud' || col.field == 'fechaEfectiva'" >
+            <div *ngIf="col.field =='fecha'" >
               <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
-            </div>
+            </div> 
+            <div *ngIf="col.field !='fecha'" >
+              <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'descripcion' || col.field == 'nombreCompleto' || col.field == 'nifCif'">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'importe' || col.field == 'importeInicial' || col.field == 'importeRestante'">{{rowData[col.field]}} €</span>
+            </div> 
+
           </td>
         </tr>
       </ng-template>
@@ -54,9 +55,9 @@
 
       <ng-template pTemplate="paginatorleft">
         <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">Mostrando registros del {{productsTable.first + 1}} al
-            {{productsTable.first +
-            productsTable.rows}} de un total de {{productsTable.totalRecords}}</label>
+          <label class="pr-3 registros-totales">Mostrando registros del {{monederosTable.first + 1}} al
+            {{monederosTable.first +
+            monederosTable.rows}} de un total de {{monederosTable.totalRecords}}</label>
           <div>
             <label class="pr-3 numSeleccionados">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
               translate }}: {{numSelectedRows}}
@@ -66,6 +67,7 @@
           <p-dropdown [(ngModel)]="rowsPerPage" [options]="rowsPerPageSelectValues"
             (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
+
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
 
           <div class="ml-3 selectAll">
@@ -79,36 +81,25 @@
 
     <p-footer>
       <div class="text-right main-button">
-      <!-- Aprobar -->
-        <button pButton *ngIf="!esColegiado"  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="selectedRows.length == 0"></button>
-      <!-- Denegar/Cancelar -->
-        <button *ngIf="!esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.denegar' | translate}}" [disabled]="selectedRows.length == 0"></button>
-        <button *ngIf="esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.cancel' | translate}}" [disabled]="selectedRows.length == 0"></button>
-      <!-- Anular -->
-        <button pButton  (click)="checkAnular()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.anular' | translate}}" [disabled]="selectedRows.length == 0"></button>
-      <!-- Facturar -->
-         <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.facturar' | translate}}" [disabled]="selectedRows.length == 0"></button>
-      <!-- Descargar facturas -->
-         <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
-         label="{{ 'facturacion.productos.descargarFacturas' | translate}}" [disabled]="selectedRows.length == 0"></button>
-      <!-- Comunicaciones -->
-          <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.consultamorosos.literal.comunicaciones' | translate}}" [disabled]="selectedRows.length > 0"></button>
-      </div>
+        <!-- Mostrar/Ocultar Historico -->
+        <button *ngIf="!historico" (click)="searchHistorical()" pButton type="button" iconPos="left"
+          label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+        <button *ngIf="historico" (click)="searchHistorical()" pButton type="button"
+          icon="fa fa-history" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+        <!-- Liquidar -->
+        <!-- REVISAR pendiente de introducir etiquete e implementacion -->
+            <button pButton  (click)="checkLiquidar()" type="button" icon="fa fa-search" iconPos="left"
+            label="** LIQUIDAR" [disabled]="selectedRows.length == 0"></button>
+        </div>
     </p-footer>
 
   </div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+<!-- <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
   width="425" #deletePlantillaDoc>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
   </p-footer>
-</p-confirmDialog>
+</p-confirmDialog> -->

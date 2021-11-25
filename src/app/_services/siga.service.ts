@@ -435,14 +435,13 @@ export class SigaServices {
     // Monederos
     monederosBusqueda_searchListadoMonederos: 'pys/getMonederos',
 
-    //PRODUCTOS Y SERVICIOS
+    //INICIO PRODUCTOS Y SERVICIOS
+  
     //PANTALLA TIPOS PRODUCTOS
-
     tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
     tiposProductos_searchListadoProductosHistorico: 'pys/listadoTipoProductoHistorico',
     tiposProductos_activarDesactivarProducto: 'pys/activarDesactivarProducto',
-    tiposProductos_crearProducto: 'pys/crearProducto',
-    tiposProductos_modificarProducto: 'pys/modificarProducto',
+    tiposProductos_crearEditarProducto: 'pys/crearEditarProducto',
     tiposProductos_comboProducto: 'combo/tipoProductos',
 
     //PANTALLA TIPOS SERVICIOS
@@ -487,6 +486,8 @@ export class SigaServices {
     constructorConsultas_guardarDatosConstructor: 'consultas/pys/constructorConsultas',
     constructorConsultas_obtenerConfigColumnasQueryBuilder: 'consultas/pys/obtenerConfigColumnasQueryBuilder',
     constructorConsultas_obtenerCombosQueryBuilder: 'consultas/pys/obtenerCombosQueryBuilder',
+
+    //FIN PRODUCTOS Y SERVICIOS
 
 
     // FOTO
@@ -831,6 +832,29 @@ export class SigaServices {
       })
       .map((response) => {
         return response;
+      })
+      .catch((response) => {
+        return this.parseErrorBlob(response);
+      });
+  }
+
+  postDownloadFilesWithFileName(service: string, body: any): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
+        responseType: 'blob'
+      })
+      .map((response) => {
+		let data = {
+			file: new Blob([response.body], {type: response.headers.get("Content-Type")}),
+			filename: response.headers.get("Content-Disposition"),
+			status: response.status
+		};
+        return data;
       })
       .catch((response) => {
         return this.parseErrorBlob(response);

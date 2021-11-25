@@ -26,4 +26,10 @@ export let endpoints_PyS: any = {
     PyS_denegarSuscripcionMultiple: "pys/denegarSuscripcionMultiple",
     PyS_anularSuscripcionMultiple: "pys/anularSuscripcionMultiple",
     PyS_anularCompraMultiple: "pys/anularCompraMultiple",
+    cargasMasivasCompras_descargarModelo: "cargaMasivaCompras/descargarModelo",
+    cargasMasivasCompras_listado: "cargaMasivaCompras/listado",
+    cargasMasivasCompras_cargarFichero: "cargaMasivaCompras/cargarFichero",
+    cargasMasivasCompras_descargarFicheros: "cargaMasivaCompras/descargarFicheros",
+    monederosBusqueda_searchListadoMonederos: "pys/getMonederos",
+    PyS_updatesMovimientosMonedero: "pys/updateMovimientosMonedero"
 }

@@ -1,1 +1,24 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
+  <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+  
+  <!-- Pantalla Facturacion > Busqueda Monederos -->
+  <div>
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{'menu.facturacion' | translate}}
+          <i class="fa fa-angle-right"></i>{{'menu.facturacion.busquedaMonedero' | translate}}
+    </div>
+    <!-- Buscador de monederos -->
+    <div class="card">
+      <app-tarjeta-filtro-monederos (busqueda)="busquedaMonederos()" id="filtroMonederos"></app-tarjeta-filtro-monederos>
+    </div>
+    <!-- Listado de monederos -->
+    <div>
+      <app-tarjeta-lista-monederos [hidden]="!muestraTablaMonederos" 
+        (actualizarLista)="busquedaMonederos($event)" [listaMonederos]="listaMonederos" id="tablaMonederos">
+      </app-tarjeta-lista-monederos>
+    </div>
+  </div>
+  

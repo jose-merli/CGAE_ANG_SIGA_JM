@@ -1,0 +1,13 @@
+<div class="card">
+  <div class="card-body">
+    <p class="title-module">
+      <span (click)="abreCierraCuerpoFicheroModelo()">{{ 'oficio.cargasMasivas.ficheroModelo' | translate }}</span>
+    </p>
+  </div>
+  <div class="card-footer">
+    <!-- BOTON TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="descargarModelo()" pButton type="button" icon="fa fa-download" iconPos="left" label="{{ 'oficio.cargasMasivas.botonDescargar' | translate}}"></button>
+    </div>
+  </div>
+</div>
