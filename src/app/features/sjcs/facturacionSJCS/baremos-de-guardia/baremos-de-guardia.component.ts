@@ -49,7 +49,7 @@ export class BaremosDeGuardiaComponent implements OnInit {
       this.progressSpinner = true;
       this.sigaServices.post("baremosGuardia_buscar",this.filtros.filtros).subscribe(
         data =>{
-          this.datos = JSON.parse(data.body).impreso190Item;
+          this.datos = JSON.parse(data.body).baremosRequestItems;
           this.mostrarTablaResultados = true;
 					let error = JSON.parse(data.body).error;
           this.progressSpinner = false;

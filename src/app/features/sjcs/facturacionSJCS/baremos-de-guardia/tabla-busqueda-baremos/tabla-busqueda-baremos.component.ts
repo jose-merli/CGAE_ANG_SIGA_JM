@@ -74,23 +74,23 @@ export class TablaBusquedaBaremosComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "idTurno", header: "facturacionSJCS.baremosDeGuardia.turnoguardia", width: '10%' },
-      { field: "nDias", header: "facturacionSJCS.baremosDeGuardia.nDias", width: '10%' },
-      { field: "tipoBaremo", header: "facturacionSJCS.baremosDeGuardia.tipoBaremo", width: '10%' },
-      { field: "diasAplicar", header: "facturacionSJCS.baremosDeGuardia.diasAplicar", width: '10%' },
-      { field: "minimo", header: "facturacionSJCS.baremosDeGuardia.minimo", width: '10%' },
-      { field: "dispImporte", header: "facturacionSJCS.baremosDeGuardia.dispImporte", width: '10%' },
-      { field: "naPartir1", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '10%' },
-      { field: "maximo", header: "facturacionSJCS.baremosDeGuardia.maximo", width: '10%' },
-      { field: "naPartir2", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '10%' },
-      { field: "porDia", header: "facturacionSJCS.baremosDeGuardia.porDia", width: '10%' }
+      { field: "nomTurno", header: "facturacionSJCS.baremosDeGuardia.turnoguardia", width: '20%' },
+      { field: "ndias", header: "facturacionSJCS.baremosDeGuardia.nDias", width: '5%' },
+      { field: "baremo", header: "facturacionSJCS.baremosDeGuardia.tipoBaremo", width: '15%' },
+      { field: "dias", header: "facturacionSJCS.baremosDeGuardia.diasAplicar", width: '5%' },
+      { field: "numMinimoSimple", header: "facturacionSJCS.baremosDeGuardia.minimo", width: '5%' },
+      { field: "simpleOImporteIndividual", header: "facturacionSJCS.baremosDeGuardia.dispImporte", width: '5%' },
+      { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
+      { field: "maximo", header: "facturacionSJCS.baremosDeGuardia.maximo", width: '5%' },
+      { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
+      { field: "porDia", header: "facturacionSJCS.baremosDeGuardia.porDia", width: '5%' }
     ];
 
     this.subCols = [
-      { field: "idGuardia" },
-      { field: "nDiasGuardia" },
-      { field: "tipoBaremoGuardia" },
+      { field: "nombre" },
       { field: "diasAplicarGuardia" },
+      { field: "tipoBaremoGuardia" },
+      { field: "diasGuardia" },
       { field: "minimoGuardia" },
       { field: "dispImporteGuardia" },
       { field: "naPartir1Guardia" },
