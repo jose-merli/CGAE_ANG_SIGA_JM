@@ -40,9 +40,9 @@
     </div>
 
     <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <div class="row">
+      <div class="form-row">
 	  
-        <div class="bloque col-lg-9 col-md-9">
+        <div class="col-lg-9 col-md-9">
 
 
           <div class="form-row">
@@ -100,12 +100,12 @@
           </div>
 
           <div class="col-lg-2 col-md-2 pl5">
-            <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label>
+            <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label><br>
             <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="inicio">
           </div>
 
           <div class="col-lg-2 col-md-2 pl5">
-            <label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label>
+            <label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label><br>
             <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="fin">
           </div>
           <br>
