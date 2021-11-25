@@ -261,8 +261,6 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
        filtros.fechaImparticionHasta)
       
     }
-
-  this.isBuscar();
    }
 
 
@@ -788,6 +786,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
     this.deshabilitarCombVis = false;
     this.deshabilitarCombCol = false;
     this.selectedTemas = [];
+    this.clearInformador();
   }
 
   onChangeSelectColegio(event) {
@@ -1176,6 +1175,11 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
 
   fillFechaImparticionHasta(event) {
     this.body.fechaImparticionHasta = event;
+  }
+
+  clearInformador() {
+    this.body.nombreApellidosFormador = undefined;
+    this.body.idFormador = undefined;
   }
 
   //búsqueda con enter

@@ -84,6 +84,8 @@
               <input type="text" class="form-control" pInputText [disabled]="true" [(ngModel)]="body.nombreApellidosFormador">
               <button pButton type="button" label="{{ 'general.boton.search' | translate}}" (click)="obtenerFormador()" icon="fa fa-search"
                 iconPos="left"> </button>
+              <button *ngIf="body.nombreApellidosFormador != undefined" pButton type="button" (click)="clearInformador()" icon="fa fa-times"
+                iconPos="left"> </button>
             </div>
           </div>
 
