@@ -35,7 +35,8 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
   
   constructor(private persistenceService: PersistenceService, 
     private sigaServices: SigaServices, private translateService: TranslateService, 
-    private router: Router, private commonsService: CommonsService, private localStorageService: SigaStorageService,) { }
+    private router: Router, private commonsService: CommonsService, 
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
 

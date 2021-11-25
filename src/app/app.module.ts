@@ -538,6 +538,19 @@ import { FiltrosBusquedaTransferenciasComponent } from './features/facturacion/f
 import { TablaFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/tabla-ficheros-transferencias/tabla-ficheros-transferencias.component';
 import { GestionFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component';
 import { DatosGeneracionFichTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/datos-generacion-fich-transferencias/datos-generacion-fich-transferencias.component';
+import { CargasMasivasComprasComponent } from './features/facturacion/cargas-masivas-compras/cargas-masivas-compras.component';
+import { TarjetaFicheroModeloCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-fichero-modelo-cmc/tarjeta-fichero-modelo-cmc.component';
+import { TarjetaSubidaFicheroCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-subida-fichero-cmc/tarjeta-subida-fichero-cmc.component';
+import { TarjetaBusquedaCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-busqueda-cmc/tarjeta-busqueda-cmc.component';
+import { TarjetaListadoCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-listado-cmc/tarjeta-listado-cmc.component';
+import { MonederoComponent } from './features/facturacion/monederos/monederos.component';
+import { TarjetaListaMonederosComponent } from  './features/facturacion/monederos/tarjeta-lista-monederos/tarjeta-lista-monederos.component';
+import { TarjetaFiltroMonederosComponent } from './features/facturacion/monederos/tarjeta-filtro-monederos/tarjeta-filtro-monederos.component';
+import { FichaMonederoComponent } from './features/facturacion/monederos/ficha-monedero/ficha-monedero.component';
+import { DatosGeneralesMonederoComponent } from './features/facturacion/monederos/ficha-monedero/datos-generales-monedero/datos-generales-monedero.component';
+import { MovimientosMonederoComponent } from './features/facturacion/monederos/ficha-monedero/movimientos-monedero/movimientos-monedero.component';
+import { ServiciosAsociadosMonederoComponent } from './features/facturacion/monederos/ficha-monedero/servicios-asociados-monedero/servicios-asociados-monedero.component';
+
 enableRipple(true);
 
 @NgModule({
@@ -619,6 +632,9 @@ enableRipple(true);
 
 		//Facturacion
 		MantenimientoSufijosComponent,
+		MonederoComponent,
+		TarjetaListaMonederosComponent,
+        TarjetaFiltroMonederosComponent,
 		FacturaPlantillasComponent,
 		GestionCuentasBancariasComponent,
 		SeriesFacturaComponent,
@@ -646,6 +662,26 @@ enableRipple(true);
 		SolicitudCompraSubscripcionComponent,
 		SolicitudAnulacionComponent,
 		CargaComprasComponent,
+		FichaCompraSuscripcionComponent,
+		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
+		TarjetaSolicitudCompraSuscripcionComponent,
+		CompraProductosComponent,
+		TarjetaFiltroCompraProductosComponent,
+		TarjetaListaCompraProductosComponent,
+		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
+		TarjetaProductosCompraSuscripcionComponent,
+		ConstructorConsultasComponent,
+		TarjetaFacturaCompraSuscripcionComponent,
+		TarjetaDescuentosAnticiposCompraSuscripcionComponent,
+		CuotasSuscripcionesComponent,
+		TarjetaFiltroCuotasSuscripcionesComponent,
+		TarjetaListaCuotasSuscripcionesComponent,
+		TarjetaServiciosCompraSuscripcionComponent,
+		CargasMasivasComprasComponent,
+		TarjetaFicheroModeloCmcComponent,
+		TarjetaSubidaFicheroCmcComponent,
+		TarjetaBusquedaCmcComponent,
+		TarjetaListadoCmcComponent,
 
 		//Expedientes
 		TiposExpedientesComponent,
@@ -992,6 +1028,10 @@ enableRipple(true);
 		TablaFicherosTransferenciasComponent,
 		GestionFicherosTransferenciasComponent,
 		DatosGeneracionFichTransferenciasComponent
+		FichaMonederoComponent,
+		DatosGeneralesMonederoComponent,
+		MovimientosMonederoComponent,
+		ServiciosAsociadosMonederoComponent,
 	],
 	imports: [
 		Paginador3Module,

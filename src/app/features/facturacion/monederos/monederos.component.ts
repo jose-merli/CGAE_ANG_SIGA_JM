@@ -5,11 +5,11 @@ import { Message } from 'primeng/components/common/api';
 import { TarjetaFiltroMonederosComponent } from './tarjeta-filtro-monederos/tarjeta-filtro-monederos.component';
 import { TarjetaListaMonederosComponent } from './tarjeta-lista-monederos/tarjeta-lista-monederos.component';
 import { ListaMonederosItem } from '../../../models/ListaMonederosItem';
-import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../commons/translate';
-import { FiltrosCompraProductosItem } from '../../../models/FiltrosCompraProductosItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
+import { FiltrosMonederoItem } from '../../../models/FiltrosMonederoItem';
+import { ListaMonederosDTO } from '../../../models/ListaMonederosDTO';
 
 
 @Component({
@@ -26,10 +26,10 @@ export class MonederoComponent implements OnInit {
 
   listaMonederos: ListaMonederosItem[];
 
-  muestraTablaCompraProductos: boolean = false;
+  muestraTablaMonederos: boolean = false;
 
-  @ViewChild(TarjetaFiltroMonederosComponent) filtrosBusqueda;
-  @ViewChild(TarjetaListaMonederosComponent) listaBusqueda;
+  @ViewChild(TarjetaFiltroMonederosComponent) filtrosBusqueda : TarjetaFiltroMonederosComponent ;
+  @ViewChild(TarjetaListaMonederosComponent) listaBusqueda : TarjetaListaMonederosComponent;
   
 
   constructor(private commonsService:CommonsService, private sigaServices: SigaServices,
@@ -39,24 +39,21 @@ export class MonederoComponent implements OnInit {
   }
 
 
-  busquedaMonederos(event) {
+  busquedaMonederos() {
     this.progressSpinner = true;
-    let filtrosProductos: FiltrosCompraProductosItem = this.filtrosBusqueda.filtrosCompraProductos;
+    let filtrosMonedero: FiltrosMonederoItem = this.filtrosBusqueda.filtrosMonederoItem;
 
-  //   this.subscriptionProductosBusqueda = this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
-  //     listaCompraProductosDTO => {
+    this.sigaServices.post("monederosBusqueda_searchListadoMonederos", filtrosMonedero).subscribe(
+      listaMonederosDTO => {
 
-
-  //       if (JSON.parse(listaCompraProductosDTO.body).error.code == 500) {
-  //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-  //       } else {
-  //         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
-  //         this.listaMonederos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
-
-  //         this.muestraTablaCompraProductos= true;
-  //         this.listaBusqueda.productsTable.reset();
-  //       }
+        if (JSON.parse(listaMonederosDTO.body).error.code == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.listaMonederos = JSON.parse(listaMonederosDTO.body).monederoItems
+          this.muestraTablaMonederos = true;
+          // this.listaBusqueda.monederosTable.reset();
+        }
 
   //       this.progressSpinner = false;
 
@@ -66,6 +63,15 @@ export class MonederoComponent implements OnInit {
   //     }, () => {
   //       this.progressSpinner = false;
   //     });;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
 

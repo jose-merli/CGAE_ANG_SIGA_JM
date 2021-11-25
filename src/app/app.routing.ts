@@ -71,6 +71,7 @@ import { FicherosTransferenciaComponent } from './features/facturacion/ficheros-
 import { ContabilidadComponent } from './features/facturacion/contabilidad/contabilidad.component';
 import { CobrosRecobrosComponent } from './features/facturacion/cobros-recobros/cobros-recobros.component';
 import { FacturasEmitidasComponent } from './features/facturacion/informes/facturas-emitidas/facturas-emitidas.component';
+import { MonederoComponent} from './features/facturacion/monederos/monederos.component';
 
 //Productos y Servicios
 import { CategoriasProductoComponent } from './features/productosYServicios/categoriasProducto/categoriasProducto.component';
@@ -84,6 +85,8 @@ import { CargaComprasComponent } from './features/productosYServicios/cargaCompr
 import { FichaCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/ficha-compra-suscripcion.component';
 import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
 import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/cuotas-suscripciones.component';
+import { CargasMasivasComprasComponent } from "./features/facturacion/cargas-masivas-compras/cargas-masivas-compras.component";
+import { FichaMonederoComponent } from "./features/facturacion/monederos/ficha-monedero/ficha-monedero.component";
 
 //Modulo de Expedientes
 import { TiposExpedientesComponent } from './features/expedientes/tipos-expedientes/tipos-expedientes.component';
@@ -652,6 +655,11 @@ const appRoutes: Routes = [
 		component: FacturasEmitidasComponent,
 		canActivate: [AuthGuard]
 	},
+	{
+		path: 'busquedaMonedero',
+		component: MonederoComponent,
+		canActivate: [AuthGuard]
+	},
 
 	//Productos y Servicios
 	{
@@ -707,6 +715,16 @@ const appRoutes: Routes = [
 	{
 		path: 'cuotasSuscripciones',
 		component: CuotasSuscripcionesComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'cargasMasivasCompras',
+		component: CargasMasivasComprasComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaMonedero',
+		component: FichaMonederoComponent,
 		canActivate: [AuthGuard]
 	},
 
