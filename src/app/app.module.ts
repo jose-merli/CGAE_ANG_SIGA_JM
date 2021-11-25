@@ -1027,7 +1027,7 @@ enableRipple(true);
 		FiltrosBusquedaTransferenciasComponent,
 		TablaFicherosTransferenciasComponent,
 		GestionFicherosTransferenciasComponent,
-		DatosGeneracionFichTransferenciasComponent
+		DatosGeneracionFichTransferenciasComponent,
 		FichaMonederoComponent,
 		DatosGeneralesMonederoComponent,
 		MovimientosMonederoComponent,

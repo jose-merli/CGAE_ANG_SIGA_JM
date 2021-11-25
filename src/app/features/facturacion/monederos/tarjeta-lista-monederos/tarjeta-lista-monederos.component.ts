@@ -22,7 +22,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
   estadosCompraObject: ComboItem[] = [];
 
   @Output() actualizarLista = new EventEmitter<Boolean>();
-  @Input("listaMonederos") listaMonederos: ListaMonederosItem[];
+  @Input() listaMonederos: ListaMonederosItem[];
   @ViewChild("monederosTable") monederosTable: DataTable;
 
   cols = [
