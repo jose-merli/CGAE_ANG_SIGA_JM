@@ -47,103 +47,120 @@
 
           <div class="form-row">
 		  
-		  
-            
-            <div class="col-lg-2 col-md-2 pl5">
-              <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
-                  translate}}</strong></label>
-              <input type="text" [(ngModel)]="datosFiltro.anioacta" class="form-control" (keypress)="numberOnly($event)"
-                maxLength="4" pInputText [disabled]="disabledAnio">
-            </div>
 
-            <div class="col-log-2 col-md-2 pr5">
-              <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
-                  translate}}</strong></label>
-              <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroacta">
-            </div>
+              <div *ngIf="!editable" class="col-lg-2 col-md-2 pl5">
+                <label><strong>{{ anioNum}}</strong></label>
+                <input type="text" [(ngModel)]="numCompleto" class="form-control"
+                  maxLength="4" pInputText [disabled]="disabledAnio">
+              </div>
+
 
             
-              <div class="form-group col-lg-2 col-md-2">
-                <label>{{ 'justiciaGratuita.ejg.datosGenerales.Sufijo' |
-                  translate}}</label>
+              <div  *ngIf="editable" class="col-md-1 col-md-1 pl5">
+                <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
+                    translate}}</strong></label>
+                <input type="text" [(ngModel)]="datosFiltro.anioacta" class="form-control" (keypress)="numberOnly($event)"
+                  maxLength="4" pInputText [disabled]="disabledAnio">
+              </div>
+
+              <div  *ngIf="editable" class="col-md-1 col-md-1 pr5">
+                <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
+                    translate}}</strong></label>
+                <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroacta">
+              </div>
+
+           
+            
+              <div *ngIf="controlComboSufijo" class="form-group col-lg-2 col-md-2">
+                <label><strong>{{ 'facturacionSJCS.facturacionesYPagos.sufijo' |
+                  translate}}</strong></label>
                 <p-dropdown class="select-form" [(ngModel)]='datosFiltro.sufijo' placeholder="Seleccionar" [options]="comboSufijo"
                 (onChange)="onChangeSufijo()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
                 </p-dropdown>
               </div>
-            </div>
 
-          
-            
-			<div class="form-row">
-			
               <div class="col-lg-2 col-md-2 pl5">
-                <label><strong>{{ anioNum}}</strong></label>
-                <input type="text" [(ngModel)]="datosFiltro.numeroacta" class="form-control"
-                  maxLength="4" pInputText [disabled]="disabledAnio">
+                <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucion' |
+                      translate}}</strong></label>
+                   <app-fecha [(value)]="this.datosFiltro.fecharesolucion" (valueChangeSelected)="fillFechaResolucion($event)"
+                     (valueChangeInput)="fillFechaResolucion($event)">
+                   </app-fecha>
               </div>
-			  
-			     <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucion' |
-                 translate}}</label>
-              <app-fecha [(value)]="this.datosFiltro.fecharesolucion" (valueChangeSelected)="fillFechaResolucion($event)"
-                (valueChangeInput)="fillFechaResolucion($event)">
-              </app-fecha>
-			  
-			  <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label>
-                  <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="inicio">
-				  
-				<label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label>
-                  <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="fin">
-				  
-				               <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
-                translate}}</label>
-              <app-fecha [(value)]="this.datosFiltro.fechareunion" (valueChangeSelected)="fillFechaReunion($event)"
-                (valueChangeInput)="fillFechaReunion($event)">
-              </app-fecha>
-            </div>
 
-    
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ 'justiciaGratuita.ejg.datosGenerales.Presidente' |
-                translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]='datosFiltro.idpresidente' placeholder="Seleccionar" [options]="comboPresidente"
-                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-              </p-dropdown>
-            </div>
-    
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ 'justiciaGratuita.ejg.datosGenerales.Secretario' |
-                translate}}</label>
-              <p-dropdown class="select-form" [(ngModel)]='datosFiltro.idsecretario' placeholder="Seleccionar" [options]="comboSecretario"
-                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-              </p-dropdown>
-            </div>
-
-            <div class="col-log-9 col-md-9 pr5">
-              <label><strong>{{ 'sjcs.actas.miembroscomision' |
-                translate}}</strong></label>
-                  <textarea  class="form-control" maxLength="4000" #inputNumero pInputText [(ngModel)]="datosFiltro.miembroscomision"></textarea>
-            </div>
-
-            <div class="col-log-9 col-md-9 pr5">
-              <label><strong>{{ 'justiciaGratuita.remesasResultados.tabla.observaciones' |
-                translate}}</strong></label>
-                  <textarea  class="form-control" #inputNumero pInputText [(ngModel)]="datosFiltro.observaciones"></textarea>
-            </div>
-
-            <div class="col-log-9 col-md-9 pr5">
-              <label><strong>{{ 'sjcs.actas.expedienteretirado' |
-                translate}}</strong></label>
-                  <textarea  class="form-control" maxLength="4000" #inputNumero pInputText [(ngModel)]="datosFiltro.pendientes"></textarea>
-            </div>
-
-            <div class="col-log-4 col-md-4 pr5">
-              <label><strong>{{ 'sjcs.actas.expedientesacta' |
-                translate}}</strong></label>
-              <input type="text" class="form-control" readonly="readonly" #inputNumero pInputText [(ngModel)]="datosFiltro.usumodificacion">
-            </div>
+          </div>
+       
+          <div class="form-row">
+          
+          <div class="form-group col-lg-2 col-md-2 pl5">
+            <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
+              translate}}</strong></label>
+            <app-fecha [(value)]="this.datosFiltro.fechareunion" (valueChangeSelected)="fillFechaReunion($event)"
+              (valueChangeInput)="fillFechaReunion($event)">
+            </app-fecha>
           </div>
 
-      </div>
+          <div class="col-lg-2 col-md-2 pl5">
+            <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label>
+            <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="inicio">
+          </div>
+
+          <div class="col-lg-2 col-md-2 pl5">
+            <label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label>
+            <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="fin">
+          </div>
+          <br>
+          </div>
+
+          <div class="form-row">
+              <div class="form-group col-md-5 col-md-5">
+                <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.Presidente' |
+                  translate}}</strong></label>
+                <p-dropdown class="select-form" [(ngModel)]='datosFiltro.idpresidente' placeholder="Seleccionar" [options]="comboPresidente"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+                </p-dropdown>
+              </div>
+              <div class="form-group col-md-5 col-md-5">
+                <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.Secretario' |
+                  translate}}</strong></label>
+                <p-dropdown class="select-form" [(ngModel)]='datosFiltro.idsecretario' placeholder="Seleccionar" [options]="comboSecretario"
+                  [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+                </p-dropdown>
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="col-log-10 col-md-10">
+                <label><strong>{{ 'sjcs.actas.miembroscomision' |
+                  translate}}</strong></label>
+                    <textarea  class="form-control" maxLength="4000" #inputNumero pInputText [(ngModel)]="datosFiltro.miembroscomision"></textarea>
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="col-log-10 col-md-10 pr5">
+                <label><strong>{{ 'justiciaGratuita.remesasResultados.tabla.observaciones' |
+                  translate}}</strong></label>
+                    <textarea  class="form-control" #inputNumero pInputText [(ngModel)]="datosFiltro.observaciones"></textarea>
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="col-log-10 col-md-10 pr5">
+                <label><strong>{{ 'sjcs.actas.expedienteretirado' |
+                  translate}}</strong></label>
+                    <textarea  class="form-control" maxLength="4000" #inputNumero pInputText [(ngModel)]="datosFiltro.pendientes"></textarea>
+              </div>
+          </div>
+
+          <div class="form-row">
+              <div class="col-md-2 col-md-2 pr5">
+                <label><strong>{{ 'sjcs.actas.expedientesacta' |
+                  translate}}</strong></label>
+                <input type="text" class="form-control" readonly="readonly" #inputNumero pInputText [(ngModel)]="datosFiltro.usumodificacion">
+              </div>
+            </div>
+
+        </div>
       <br>
     </div>
 

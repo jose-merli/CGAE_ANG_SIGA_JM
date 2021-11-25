@@ -131,6 +131,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
     console.log("Acta en el componente tabla -> ", this.acta);
 
+    this.obligatorioFundamento();
   }
 
 
@@ -196,9 +197,6 @@ export class TablaEjgComisionComponent implements OnInit {
         console.log(err);
       }
     );
-    if(parseInt(this.num) != 0){
-      this.styleObligatorioFundamento(this.valueFundamento);
-    }
   }
 
   muestraCampoObligatorioFundamento() {
@@ -226,16 +224,18 @@ export class TablaEjgComisionComponent implements OnInit {
 
   checkResolucion() {
     console.log("********************************checkResolucion");
-    this.obligatorioFundamento();
-    if (this.valueResolucion != null && this.valueFundamento == null && this.obligatoriedadResolucion != null) {
-      this.muestraCampoObligatorioFundamento();
+    if(parseInt(this.num) != 0){
+      this.styleObligatorioFundamento(this.valueFundamento);
+    }
+    if(this.valueResolucion == null){
+      this.muestraCampoObligatorioResolucion();
     }
   }
 
   checkFundamento() {
     console.log("********************************checkFundamento");
     console.log(this.valueFundamento);
-    if (this.valueFundamento != null && this.valueResolucion == null) {
+    if (this.valueFundamento == null && parseInt(this.num) != 0) {
       this.muestraCampoObligatorioResolucion();
     }
   }
@@ -888,7 +888,7 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   
   
-    if(this.valueResolucion != null || this.valueFundamento != null){
+    if(this.valueResolucion != null && (this.valueFundamento != null || parseInt(this.num) == 0)){
   
       this.selectedDatos.forEach(list => { list.idTipoDictamen = this.valueResolucion;
         list.fundamentoJuridico = this.valueFundamento;})

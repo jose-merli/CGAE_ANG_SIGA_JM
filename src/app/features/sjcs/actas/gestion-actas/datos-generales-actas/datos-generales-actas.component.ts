@@ -89,6 +89,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   controlComboSufijo : boolean = true;
   
   nombrePresidente;
+  numCompleto: String;
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private confirmationService: ConfirmationService,
@@ -101,16 +102,17 @@ export class DatosGeneralesActasComponent implements OnInit {
     if(this.datos.anioacta == null || this.datos.anioacta == undefined ){
       this.datosFiltro.anioacta = this.getAnio();
       this.getNumActa();
+      this.getComboPresidente();
     }else{
       this.editable = false;
+      this.numCompleto= this.datos.numeroacta
+      this.numAnio();
+      this.getActa();
     }
-    this.numAnio();
-    this.getActa();
     this.getComboSufijo();
     this.getComboSecretario();
     this.onDisabledSave();
     this.getFechaActual();
-    //this.getComboPresidente();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos()
 
