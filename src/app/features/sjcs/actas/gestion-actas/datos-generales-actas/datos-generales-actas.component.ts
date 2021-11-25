@@ -89,6 +89,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   controlComboSufijo : boolean = true;
   
   nombrePresidente;
+  numCompleto: String;
 
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private confirmationService: ConfirmationService,
@@ -103,8 +104,10 @@ export class DatosGeneralesActasComponent implements OnInit {
       this.getNumActa();
     }else{
       this.editable = false;
+      this.numCompleto= this.datos.numeroacta
+      this.numAnio();
     }
-    this.numAnio();
+    
     this.getActa();
     this.getComboSufijo();
     this.getComboSecretario();
