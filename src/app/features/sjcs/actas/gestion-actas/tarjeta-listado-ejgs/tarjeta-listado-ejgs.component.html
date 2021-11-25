@@ -34,7 +34,7 @@
   </div>
 
   <div *ngIf="openFicha" class="card-body card-body-ficha">
-    <p-table [value]="datos" [columns]="cols" [first]="page" selectionMode="multiple" [(selection)]="selectedDatos"
+    <p-table [value]="ejgs" [columns]="cols" [first]="page" selectionMode="multiple" [(selection)]="selectedDatos"
       [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem"
       (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
@@ -112,7 +112,7 @@
       <div class="text-right main-button">
   
         <button pButton
-          [disabled]="(selectedDatos == undefined || selectedDatos.length == 0 || selectedDatos.length > 1)"
+          [disabled]="datos.fecharesolucion != undefined"
           (click)="asociarEJG()" type="button" icon="fa fa-plus" iconPos="left"
           label="{{ 'general.boton.asociarEJG' | translate}}">
         </button>

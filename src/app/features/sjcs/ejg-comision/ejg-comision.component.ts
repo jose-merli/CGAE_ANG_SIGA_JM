@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '../../../commons/translate';
 import { SigaServices } from '../../../_services/siga.service';
 import { CommonsService } from '../../../_services/commons.service';
@@ -26,6 +26,8 @@ export class EjgComisionComponent implements OnInit {
   remesa;
 
   permisoEscritura: any;
+
+  acta;
   
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
   // la particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
@@ -69,7 +71,12 @@ export class EjgComisionComponent implements OnInit {
         this.remesa = JSON.parse(sessionStorage.getItem("remesa"));
         sessionStorage.removeItem("remesa");
       }
-        
+       
+      if(sessionStorage.getItem("acta") != null){
+        this.acta = JSON.parse(sessionStorage.getItem("acta"));
+        sessionStorage.removeItem("acta");
+        console.log("El acta es -> ", this.acta);
+      }
         
       
   }

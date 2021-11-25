@@ -66,6 +66,7 @@ export class TablaEjgComisionComponent implements OnInit {
   @Input() datos;
   @Input() filtro;
   @Input() remesa;
+  @Input() acta;
 
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -127,6 +128,8 @@ export class TablaEjgComisionComponent implements OnInit {
     this.getComboResolucion();
     this.getComboRemesa();
     this.getObligatoriedadResolucion();
+
+    console.log("Acta en el componente tabla -> ", this.acta);
 
   }
 
