@@ -89,9 +89,9 @@
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.movimientosVarios.facturacionApInicial' | translate}}</label>
 
-            <p-multiSelect  class="select-form" [(ngModel)]='filtros.idFacturacionApInicial' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
-            [options]="facturacionApInicial" [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} facturaciones seleccionadas'" filterBy="label,labelSinTilde"
-              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idFacturacionApInicial')"> 
+            <p-multiSelect  class="select-form" [(ngModel)]='filtros.idFacturacion' defaultLabel="{{'general.boton.seleccionar' | translate}}" 
+            [options]="facturacion" [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} facturaciones seleccionadas'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idFacturacion')"> 
             </p-multiSelect>
           
           </div>

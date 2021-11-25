@@ -31,12 +31,18 @@ export class FichaMovimientosVariosComponent implements OnInit {
   datosTarjetaClientes;
   datosClientes;
   iconoTarjetaResumen = 'fas fa-clipboard';
-  enlacesTarjetaResumen: any[] = [];
+ 
   msgs;
   datosListadoPagos;
   progressSpinner: boolean = false;
   permisoEscritura: any;
-  manuallyOpened;
+
+  enlacesTarjetaResumen: any[] = [];
+	manuallyOpened:Boolean = false;
+	openDatosCliente: Boolean = false;
+	openDatosGen: Boolean = false;
+	openCriterios: Boolean = false;
+	openListadoPagos: Boolean = false;
 
 
 
@@ -148,6 +154,45 @@ export class FichaMovimientosVariosComponent implements OnInit {
     this.enlacesTarjetaResumen.push(tarjetaListadoPagos);
   }
 
+  isCloseReceive(event) {
+		if (event != undefined) {
+		  	switch (event) {
+				case "tarjetaDatosCliente":
+				this.openDatosCliente = this.manuallyOpened;
+				break;
+				case "tarjetaDatosGenerales":
+				this.openDatosGen = this.manuallyOpened;
+				break;
+				case "tarjetaCriteriosAplicacion":
+				this.openCriterios = this.manuallyOpened;
+				break;
+				case "tarjetaListadoPagos":
+				this.openListadoPagos = this.manuallyOpened;
+				break;
+			}
+		}
+	  }
+	
+	  isOpenReceive(event) {
+		
+		if (event != undefined) {
+		  switch (event) {
+			case "tarjetaDatosCliente":
+			  this.openDatosCliente = true;
+			  break;
+			case "tarjetaDatosGenerales":
+			  this.openDatosGen = true;
+			  break;
+			case "tarjetaCriteriosAplicacion":
+			  this.openCriterios = true;
+			  break;
+			case "tarjetaListadoPagos":
+			  this.openListadoPagos = true;
+			  break;
+		  }
+		}
+	  }
+
 
   getDatosTarjetaClientes(movimiento: any) {
 
@@ -223,10 +268,6 @@ export class FichaMovimientosVariosComponent implements OnInit {
 
   volver() {
     this.location.back();
-  }
-
-  isOpenReceive(event) {
-
   }
 
 }

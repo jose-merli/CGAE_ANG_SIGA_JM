@@ -43,16 +43,18 @@ export class MovimientosVariosComponent implements OnInit {
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaMovimientosVarios).then(respuesta => {
+    // this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaMovimientosVarios).then(respuesta => {
 
-			this.permisoEscritura = respuesta; //true, false, undefined
+		// 	this.permisoEscritura = respuesta; //true, false, undefined
 
-			if (this.permisoEscritura == undefined) {
-				sessionStorage.setItem("codError", "403");
-				sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
-				this.router.navigate(["/errorAcceso"]);
-			}
-		}).catch(error => console.error(error));
+		// 	if (this.permisoEscritura == undefined) {
+		// 		sessionStorage.setItem("codError", "403");
+		// 		sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+		// 		this.router.navigate(["/errorAcceso"]);
+		// 	}
+		// }).catch(error => console.error(error));
+
+    this.permisoEscritura = true;
     
     this.isLetrado = this.sigaStorageService.isLetrado;
     this.buscar = this.filtros.buscar;
@@ -94,14 +96,14 @@ export class MovimientosVariosComponent implements OnInit {
       this.datosFiltros.idConcepto=null;
     }
 
-		if (undefined != this.datosFiltros.idFacturacionApInicial) {
-			if (this.datosFiltros.idFacturacionApInicial.length == 0) {
-				this.datosFiltros.idFacturacionApInicial = undefined;
+		if (undefined != this.datosFiltros.idFacturacion) {
+			if (this.datosFiltros.idFacturacion.length == 0) {
+				this.datosFiltros.idFacturacion = undefined;
 			} else {
-				this.datosFiltros.idFacturacionApInicial = this.datosFiltros.idFacturacionApInicial.toString();
+				this.datosFiltros.idFacturacion = this.datosFiltros.idFacturacion.toString();
 			}
 		}else{
-      this.datosFiltros.idFacturacionApInicial=null;
+      this.datosFiltros.idFacturacion=null;
     }
 
     if (undefined != this.datosFiltros.idGrupoFacturacion) {
@@ -118,8 +120,14 @@ export class MovimientosVariosComponent implements OnInit {
       this.datosFiltros.descripcion=null;
     }
 
-    if(this.datosFiltros.tipo == undefined){
-      this.datosFiltros.tipo = null;
+    if (undefined != this.datosFiltros.tipo) {
+			if (this.datosFiltros.tipo.length == 0) {
+				this.datosFiltros.tipo = undefined;
+			} else {
+				this.datosFiltros.tipo = this.datosFiltros.tipo.toString();
+			}
+		}else{
+      this.datosFiltros.tipo=null;
     }
 
     if(this.datosFiltros.letrado == undefined){
@@ -130,9 +138,6 @@ export class MovimientosVariosComponent implements OnInit {
       this.datosFiltros.ncolegiado = null;
     }
 
-    if(this.datosFiltros.idFacturacion == undefined){
-      this.datosFiltros.idFacturacion = null;
-    }
 
     if(this.datosFiltros.certificacion == undefined){
       this.datosFiltros.certificacion = null;

@@ -6,7 +6,6 @@ export class MovimientosVariosFacturacionItem {
 	idAplicadoEnPago: String;
 	fechaApDesde: Date;
 	fechaApHasta: Date;
-	idFacturacionApInicial: String;
     idConcepto: String;
     idPartidaPresupuestaria: String;
     ncolegiado: String;

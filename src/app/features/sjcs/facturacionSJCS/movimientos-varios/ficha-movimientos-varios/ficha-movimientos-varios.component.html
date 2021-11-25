@@ -15,15 +15,11 @@
       [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-movimientos>
   </div>
   <app-tarjeta-datos-cliente [permisoEscritura]="permisoEscritura"
-    (datosTarjetaResumenEmit)="datosTarjetaResumenEvent($event)" (datosClienteEmit)="datosClienteEvent($event)"
-    (datosColegiadoEmit)="datosColegiadoEvent($event)" (bodyFisicaEmit)="bodyFisicaEvent($event)"
-    [modoEdicion]="modoEdicion" [datos]="datos"></app-tarjeta-datos-cliente>
-  <app-tarjeta-datos-generales-fiMov [permisoEscritura]="permisoEscritura" [modoEdicion]="modoEdicion" [datos]="datos"
-    [datosClientes]="datosClientes"></app-tarjeta-datos-generales-fiMov>
-  <app-tarjeta-criterios-aplicacion [permisoEscritura]="permisoEscritura" [datos]="datos" [modoEdicion]="modoEdicion"
-    [datosClientes]="datosClientes"></app-tarjeta-criterios-aplicacion>
-  <app-tarjeta-listado-pagos [permisoEscritura]="permisoEscritura" [datos]="datos" [datos2]="datosListadoPagos">
-  </app-tarjeta-listado-pagos>
+   (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (datosTarjetaResumenEmit)="datosTarjetaResumenEvent($event)" (datosClienteEmit)="datosClienteEvent($event)"
+    (datosColegiadoEmit)="datosColegiadoEvent($event)" (bodyFisicaEmit)="bodyFisicaEvent($event)" [modoEdicion]="modoEdicion" [datos]="datos" [openDatosCliente]="openDatosCliente"></app-tarjeta-datos-cliente>
+  <app-tarjeta-datos-generales-fiMov (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [permisoEscritura]="permisoEscritura" [modoEdicion]="modoEdicion" [datos]="datos" [datosClientes]="datosClientes" [openDatosGen]="openDatosGen"></app-tarjeta-datos-generales-fiMov>
+  <app-tarjeta-criterios-aplicacion (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [permisoEscritura]="permisoEscritura" [datos]="datos" [modoEdicion]="modoEdicion" [datosClientes]="datosClientes" [openCriterios]="openCriterios"></app-tarjeta-criterios-aplicacion>
+  <app-tarjeta-listado-pagos (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [permisoEscritura]="permisoEscritura" [datos]="datos" [datos2]="datosListadoPagos" [openListadoPagos]="openListadoPagos"> </app-tarjeta-listado-pagos>
 
 
 

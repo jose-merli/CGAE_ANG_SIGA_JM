@@ -23,7 +23,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
   //COMBOS
 	aplicadoEnPago: ComboItem;
 	gruposFacturacion: ComboItem;
-	facturacionApInicial: ComboItem;
+	facturacion: ComboItem;
 	concepto: ComboItem;
 	tipos: ComboItem;
 	partidaPresupuestaria: ComboItem;
@@ -215,8 +215,8 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 
 		this.sigaService.get("combo_comboFactMovimientos").subscribe(
 			data => {
-				this.facturacionApInicial = data.combooItems;
-				this.commonsService.arregloTildesCombo(this.facturacionApInicial);
+				this.facturacion = data.combooItems;
+				this.commonsService.arregloTildesCombo(this.facturacion);
 				this.progressSpinner = false;
 			},
 			err => {
@@ -308,7 +308,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 			(this.filtros.idAplicadoEnPago != null && this.filtros.idAplicadoEnPago != undefined && this.filtros.idAplicadoEnPago != "") ||
 			(this.filtros.fechaApDesde != null && this.filtros.fechaApDesde != undefined) ||
 			(this.filtros.fechaApHasta != null && this.filtros.fechaApHasta != undefined) ||
-			(this.filtros.idFacturacionApInicial != null && this.filtros.idFacturacionApInicial != undefined && this.filtros.idFacturacionApInicial != "") ||
+			(this.filtros.idFacturacion != null && this.filtros.idFacturacion != undefined && this.filtros.idFacturacion != "") ||
 			(this.filtros.idGrupoFacturacion != null && this.filtros.idGrupoFacturacion != undefined && this.filtros.idGrupoFacturacion != "") ||
 			(this.filtros.idConcepto != null && this.filtros.idConcepto != undefined && this.filtros.idConcepto != "") ||
 			(this.filtros.idPartidaPresupuestaria != null && this.filtros.idPartidaPresupuestaria != undefined && this.filtros.idPartidaPresupuestaria != "") || 
@@ -325,7 +325,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 					return true;
 				}
 		} else {
-			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeFiltroVacio"));
 			return false;
 			
 		}

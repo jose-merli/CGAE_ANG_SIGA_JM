@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { ComboItem } from '../../../../../../models/ComboItem';
@@ -17,6 +17,11 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 
 	progressSpinner: boolean = false;
 	showFichaCriteriosAplicacion: boolean = false;
+	@Input() openCriterios;
+
+  	@Output() opened = new EventEmitter<Boolean>();
+  	@Output() idOpened = new EventEmitter();
+
 	datosAux;
 	msgs;
 	gruposFacturacion: ComboItem;
@@ -35,6 +40,14 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 
 	constructor(private persistenceService: PersistenceService, private sigaService: SigaServices,
 		private commonsService: CommonsService, private sigaStorageService: SigaStorageService, private router: Router, private translateService: TranslateService) { }
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (this.openCriterios == true) {
+			if (this.showFichaCriteriosAplicacion == false) {
+			  this.onHideCriteriosAplicacion();
+			}
+		}
+	}
 
 	ngOnInit() {
 
@@ -59,8 +72,14 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 	}
 
 	onHideCriteriosAplicacion() {
+		let key = "tarjetaCriteriosAplicacion";
+
 		this.showFichaCriteriosAplicacion = !this.showFichaCriteriosAplicacion;
+
+		this.opened.emit(this.showFichaCriteriosAplicacion);
+		this.idOpened.emit(key);
 	}
+
 
 	comboPartidasPresupuestarias() {
 		this.progressSpinner = true;
@@ -201,7 +220,6 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 			this.datosCriteriosAplicacion.idAplicadoEnPago = null
 			this.datosCriteriosAplicacion.fechaApDesde = null;
 			this.datosCriteriosAplicacion.fechaApHasta = null;
-			this.datosCriteriosAplicacion.idFacturacionApInicial = null;
 			this.datosCriteriosAplicacion.ncolegiado = null;
 			this.datosCriteriosAplicacion.letrado = null;
 			this.datosCriteriosAplicacion.cantidadAplicada = null;

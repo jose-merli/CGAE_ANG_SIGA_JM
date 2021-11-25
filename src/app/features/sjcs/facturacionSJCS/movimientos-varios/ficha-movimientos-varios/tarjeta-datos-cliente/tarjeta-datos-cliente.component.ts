@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output,ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,SimpleChanges,ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { BusquedaFisicaItem } from '../../../../../../models/BusquedaFisicaItem';
@@ -17,6 +17,11 @@ import { MovimientosVariosFacturacionItem } from '../../MovimientosVariosFactura
 export class TarjetaDatosClienteComponent implements OnInit {
 
   showFichaDatosClientes: boolean = false;
+  @Input() openDatosCliente;
+
+  	@Output() opened = new EventEmitter<Boolean>();
+  	@Output() idOpened = new EventEmitter();
+
   msgs;
   nif: string = "";
   apellido1: string = "";
@@ -55,6 +60,14 @@ export class TarjetaDatosClienteComponent implements OnInit {
   
   constructor(private router: Router, 
     private sigaStorageService: SigaStorageService, private sigaService: SigaServices, private translateService: TranslateService, private persistenceService: PersistenceService,private movimientosVariosService: MovimientosVariosService) { }
+
+    ngOnChanges(changes: SimpleChanges) {
+      if (this.openDatosCliente == true) {
+        if (this.showFichaDatosClientes == false) {
+          this.onHideDatosClientes();
+        }
+      }
+    }
 
 
   ngOnInit() {
@@ -177,7 +190,14 @@ export class TarjetaDatosClienteComponent implements OnInit {
   }
   
   onHideDatosClientes() {
+
+    let key = "tarjetaDatosCliente";
+
     this.showFichaDatosClientes = !this.showFichaDatosClientes;
+
+		this.opened.emit(this.showFichaDatosClientes);
+		this.idOpened.emit(key);
+
   }
 
   showMessage(severity, summary, msg) {
@@ -276,7 +296,6 @@ callSaveService(url) {
     this.datosCliente.idAplicadoEnPago= null
     this.datosCliente.fechaApDesde = null;
     this.datosCliente.fechaApHasta = null;
-    this.datosCliente.idFacturacionApInicial = null;
     this.datosCliente.idConcepto = null;
     this.datosCliente.idPartidaPresupuestaria = null;
     this.datosCliente.ncolegiado = null;

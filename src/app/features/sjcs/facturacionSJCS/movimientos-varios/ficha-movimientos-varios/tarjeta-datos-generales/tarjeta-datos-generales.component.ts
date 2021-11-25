@@ -20,6 +20,11 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   msgs;
   datosAux;
   showFichaDatosGen: boolean = false;
+  @Input() openDatosGen;
+
+  	@Output() opened = new EventEmitter<Boolean>();
+  	@Output() idOpened = new EventEmitter();
+
   progressSpinner: boolean = false;
   tipos: ComboItem;
   partidaPresupuestaria: ComboItem;
@@ -34,6 +39,14 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   @Input() permisoEscritura;
 
   constructor(  private sigaStorageService: SigaStorageService,private persistenceService: PersistenceService, private commonsService: CommonsService, private sigaService: SigaServices, private translateService: TranslateService,private router: Router) { }
+
+  ngOnChanges(changes: SimpleChanges) {
+		if (this.openDatosGen == true) {
+			if (this.showFichaDatosGen == false) {
+			  this.onHideDatosGen();
+			}
+		}
+	}
 
   ngOnInit() {
 
@@ -53,6 +66,8 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     this.comboTipos();
 
   }
+
+  
 
   marcarObligatorio(tipoCampo: string, valor) {
     let resp = false;
@@ -74,7 +89,12 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   }
 
   onHideDatosGen() {
+    let key = "tarjetaDatosGenerales";
     this.showFichaDatosGen = !this.showFichaDatosGen;
+
+    
+		this.opened.emit(this.showFichaDatosGen);
+		this.idOpened.emit(key);
   }
 
 
@@ -167,7 +187,6 @@ callSaveService(url) {
         this.datosGenerales.idAplicadoEnPago= null
         this.datosGenerales.fechaApDesde = null;
         this.datosGenerales.fechaApHasta = null;
-        this.datosGenerales.idFacturacionApInicial = null;
         this.datosGenerales.idConcepto = null;
         this.datosGenerales.idPartidaPresupuestaria = null;
         this.datosGenerales.ncolegiado = null;

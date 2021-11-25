@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges,Output, EventEmitter } from '@angular/core';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { Table } from 'primeng/table';
@@ -11,6 +11,11 @@ import { Table } from 'primeng/table';
 export class TarjetaListadoPagosComponent implements OnInit {
 
   showFichaListadoPagos: boolean = false;
+  @Input() openListadoPagos;
+
+  	@Output() opened = new EventEmitter<Boolean>();
+  	@Output() idOpened = new EventEmitter();
+
   rowsPerPage;
   cols;
   progressSpinner: boolean = false;
@@ -29,6 +34,14 @@ export class TarjetaListadoPagosComponent implements OnInit {
   @Input() datos2;
 
   constructor(private sigaServices: SigaServices, private persistenceService: PersistenceService, private changeDetectorRef: ChangeDetectorRef) { }
+
+  ngOnChanges(changes: SimpleChanges) {
+		if (this.openListadoPagos == true) {
+			if (this.showFichaListadoPagos == false) {
+			  this.onHideListadoPagos();
+			}
+		}
+	}
 
   ngOnInit() {
 
@@ -51,7 +64,13 @@ export class TarjetaListadoPagosComponent implements OnInit {
   }
 
   onHideListadoPagos() {
+    let key = "tarjetaListadoPagos";
+
     this.showFichaListadoPagos = !this.showFichaListadoPagos;
+
+		this.opened.emit(this.showFichaListadoPagos);
+		this.idOpened.emit(key);
+
   }
 
   getCols() {
