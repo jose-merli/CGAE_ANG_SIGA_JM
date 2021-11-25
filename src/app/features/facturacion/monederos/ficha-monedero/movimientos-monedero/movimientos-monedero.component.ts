@@ -257,7 +257,7 @@ export class MovimientosMonederoComponent implements OnInit {
 
     let i = this.movimientosTarjeta.length;
     //Se calcula el importe total despues de todos los movimientos
-    while(i<0) 
+    while(i > 0) 
     {
       impTotal += Number(this.movimientosTarjeta[i-1].impOp);
       this.movimientosTarjeta[i-1].impTotal = impTotal;
