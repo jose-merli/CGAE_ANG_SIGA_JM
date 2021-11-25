@@ -572,7 +572,6 @@ export class DialogoComunicacionesComponent implements OnInit {
 									this.showValores = false;
 									this.progressSpinner = false;
 									this.clearPerenne();
-									this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
 									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
 								}
 							},
@@ -583,7 +582,6 @@ export class DialogoComunicacionesComponent implements OnInit {
 								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
 								sessionStorage.setItem('descargasPendientes', descargasPendientes);
 								this.clearPerenne();
-								this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
 								if (error.message != null && error.message != undefined) {
 									this.showFail(error.message);
 								} else {
@@ -611,7 +609,6 @@ export class DialogoComunicacionesComponent implements OnInit {
 							mensaje = errDTO.message;
 						}
 					}
-					this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
 					this.showFail(mensaje);
 			},
 			() => {
