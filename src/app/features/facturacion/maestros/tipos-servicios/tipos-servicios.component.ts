@@ -44,8 +44,7 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
   subscriptionServicesList: Subscription;
   subscriptionEnableUnableServices: Subscription;
   subscriptionServicesTypeSelectValues: Subscription;
-  subscriptionCreateAService: Subscription;
-  subscriptionEditAService: Subscription;
+  subscriptionCreateEditAService: Subscription;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) {
 
@@ -74,10 +73,8 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
       this.subscriptionEnableUnableServices.unsubscribe();
     if (this.subscriptionServicesTypeSelectValues)
       this.subscriptionServicesTypeSelectValues.unsubscribe();
-    if (this.subscriptionCreateAService)
-      this.subscriptionCreateAService.unsubscribe();
-    if (this.subscriptionEditAService)
-      this.subscriptionEditAService.unsubscribe();
+    if (this.subscriptionCreateEditAService)
+      this.subscriptionCreateEditAService.unsubscribe();
   }
 
   //INICIO METODOS P-TABLE
@@ -233,10 +230,11 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
       descripciontipo: "",
       descripcion: "",
       idtiposervicios: this.comboItem[0].value,
-      nuevo: ""
+      nuevo: true
     };
 
     this.servicesData.unshift(nuevoDato);
+    this.changeTableField(nuevoDato);
   }
 
   //Metodo para eliminar en caso de que sea necesario la fila añadida por newRegister
@@ -253,11 +251,6 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
   emptyDescripcion: boolean;
   changeTableField(row) {
     this.edit = true;
-    if (row.descripcion == "") {
-      this.emptyDescripcion = true;
-    } else {
-      this.emptyDescripcion = false;
-    }
 
     if (this.servicesToEditCreate.length > 0) {
       let indexRow = this.servicesToEditCreate.findIndex(servicio => (servicio.idservicio == row.idservicio && servicio.idtiposervicios == row.idtiposervicios))
@@ -269,6 +262,14 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
     } else if (this.servicesToEditCreate.length == 0) {
       this.servicesToEditCreate.push(row);
     }
+
+    this.emptyDescripcion = false;
+    this.servicesToEditCreate.forEach(servicio => {
+      if(servicio.descripcion == ""){
+        this.emptyDescripcion = true;
+      }
+    });
+    
   }
 
   //Metodo que reestablece la informacion original de la tabla al haber editado algun dato.
@@ -282,11 +283,7 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
   }
 
   guardar() {
-    if (this.nuevo) {
-      this.crearServicio(this.servicesToEditCreate);
-    } else if (!this.nuevo) {
-      this.modificarServicio(this.servicesToEditCreate);
-    }
+    this.crearEditarServicio();
   }
   //FIN METODOS P-TABLE
 
@@ -376,7 +373,7 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
     );
   }
 
-  //Metodo para obtener los valores del combo de tipos de servicios (columna categoria)
+  //Metodo para obtener los valores del combo de categorias de servicios (columna categoria)
   comboObject: ComboObject;
   comboItem: ComboItem[];
   getComboTiposServicios() {
@@ -398,60 +395,21 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
     );
   }
 
-  //Metodo para crear un nuevo registro servicio en bd
-  crearServicio(servicesToEditCreate) {
+  //Metodo para crear/editar un nuevo registro servicio en bd
+  crearEditarServicio() {
     this.progressSpinner = true;
     let tiposServiciosObject = new TiposServiciosObject();
-    tiposServiciosObject.tiposServiciosItems = servicesToEditCreate;
-    this.subscriptionCreateAService = this.sigaServices.post("tiposServicios_crearServicio", tiposServiciosObject).subscribe(
+    tiposServiciosObject.tiposServiciosItems = this.servicesToEditCreate;
+    this.subscriptionCreateEditAService = this.sigaServices.post("tiposServicios_crearEditarServicio", tiposServiciosObject).subscribe(
       response => {
-        if (JSON.parse(response.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
+        if (response.status == 200) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
       },
       err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.historico = false;
-        this.selectMultipleRows = false;
-        this.selectAllRows = false;
-        this.edit = false;
-        this.selectedRows = []
-        this.servicesToEditCreate = [];
-        this.nuevo = false;
-        this.getListaServicios();
-      }
-    );
-  }
-
-  //Metodo para modificar la descripcion de uno o multiples servicios en bd
-  modificarServicio(servicesToEditCreate) {
-    this.progressSpinner = true;
-    let tiposServiciosObject = new TiposServiciosObject();
-    tiposServiciosObject.tiposServiciosItems = servicesToEditCreate;
-    this.subscriptionEditAService = this.sigaServices.post("tiposServicios_modificarServicio", tiposServiciosObject).subscribe(
-      response => {
-        if (JSON.parse(response.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        }
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
+      
         this.progressSpinner = false;
       },
       () => {

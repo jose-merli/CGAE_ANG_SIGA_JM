@@ -448,8 +448,7 @@ export class SigaServices {
     tiposServicios_searchListadoServicios: 'pys/listadoTipoServicio',
     tiposServicios_searchListadoServiciosHistorico: 'pys/listadoTipoServicioHistorico',
     tiposServicios_activarDesactivarServicio: 'pys/activarDesactivarServicio',
-    tiposServicios_crearServicio: 'pys/crearServicio',
-    tiposServicios_modificarServicio: 'pys/modificarServicio',
+    tiposServicios_crearEditarServicio: 'pys/crearEditarServicio',
     tiposServicios_comboServicios: 'combo/tipoServicios',
 
     //PANTALLAS BUSCADOR PRODUCTOS / FICHA PRODUCTOS
