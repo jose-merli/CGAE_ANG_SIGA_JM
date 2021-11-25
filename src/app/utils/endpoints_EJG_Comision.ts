@@ -23,6 +23,7 @@ export let endpoints_EJG_Comision: any = {
     filtrosejgcomision_borrarPonente: "ejgComision/filtros-ejg/borrarPonente",
     filtrosejgcomision_editarActaAnio: "ejgComision/filtros-ejg/editarActaAnio",
     filtrosejgcomision_borrarActaAnio: "ejgComision/filtros-ejg/borrarActaAnio",
+    filtrosejgcomision_obligatorioFundamento: "ejgComision/filtros-ejg/obligatorioFundamento",
     filtrosacta_comboSufijo: "acta/filtros-acta/comboSufijoActa",
     filtrosacta_anadirEJGPendientesCAJG:"acta/filtros-acta/anadirEJGPendientesCAJG",
     filtrosacta_guardarActa:"acta/filtros-acta/guardarActa",
