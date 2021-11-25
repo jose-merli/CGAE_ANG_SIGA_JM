@@ -105,7 +105,7 @@
   <div class="card-footer">
     <div class="text-right main-button">
       <button pButton [disabled]="disabledEliminar() || isLetrado || !permisoEscritura" (click)="confirmDelete()" type="button" 
-      icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button> <!--Falta el !permisos en los botones-->
+      icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button> 
    
       <button *ngIf="!historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-history" iconPos="left"
         label="{{ 'general.message.mostrarHistorico' | translate}}"></button>

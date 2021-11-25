@@ -5,7 +5,6 @@ import { TranslateService } from '../../../../../commons/translate';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { MultiSelect } from 'primeng/multiselect';
 import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.component';
 import {MovimientosVariosFacturacionItem} from '../MovimientosVariosFacturacionItem';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
@@ -57,7 +56,6 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 
   ngOnInit() {
 
-	//this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
 	this.isLetrado = this.sigaStorageService.isLetrado;
     this.progressSpinner = true;
 
@@ -289,8 +287,6 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 	  
 		if (this.checkFilters()) {
 			this.progressSpinner=true;
-			console.log("FILTROS: ",this.filtros);
-
 		
 		    this.historico=false;
 			this.filtros.historico=false;
@@ -355,12 +351,6 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 			this.isBuscar();
 		}
 	}
-
-	// focusInputField(someMultiselect: MultiSelect) {
-	// 	setTimeout(() => {
-	// 		someMultiselect.filterInputChild.nativeElement.focus();
-	// 	}, 300);
-	// }
 
 	onChangeMultiSelectFact(event, filtro) {
 		if (undefined != event.value && event.value.length == 0) {

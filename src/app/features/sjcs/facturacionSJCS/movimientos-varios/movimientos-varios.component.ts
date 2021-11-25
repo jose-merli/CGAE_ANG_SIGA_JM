@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { OldSigaServices } from '../../../../_services/oldSiga.service'
 import { MovimientosVariosFacturacionItem } from './MovimientosVariosFacturacionItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { Router } from '@angular/router';
@@ -38,7 +37,6 @@ export class MovimientosVariosComponent implements OnInit {
   constructor(private translateService: TranslateService,
 		private sigaServices: SigaServices,
 		private commonsService: CommonsService,
-		private persistenceService: PersistenceService,
 		private router: Router, private sigaStorageService: SigaStorageService,
     private movimientosVariosService: MovimientosVariosService) {    
   }

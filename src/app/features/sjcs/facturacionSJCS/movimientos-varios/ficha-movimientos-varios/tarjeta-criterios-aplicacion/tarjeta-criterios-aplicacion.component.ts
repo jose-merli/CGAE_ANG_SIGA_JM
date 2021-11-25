@@ -1,4 +1,3 @@
-import { FileAlreadyExistException } from '@angular-devkit/core';
 import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
@@ -34,18 +33,15 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 	@Input() datosClientes;
 	@Input() permisoEscritura;
 
-  constructor(private persistenceService: PersistenceService,private sigaService: SigaServices,
+  constructor(private sigaService: SigaServices,
 		private commonsService: CommonsService, private sigaStorageService: SigaStorageService, private router: Router, private translateService: TranslateService) { }
 
   ngOnInit() {
 
 	this.isLetrado = this.sigaStorageService.isLetrado;
 	
-	//asegurar de que viene relleno
 	if(this.datos!= null || this.datos != undefined){
-    	// this.datos = this.persistenceService.getDatos();
         this.datosAux = JSON.parse(JSON.stringify(this.datos));
-
 	}else{
 		this.datos = new MovimientosVariosFacturacionItem();
 	}
@@ -154,7 +150,6 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
   
   callSaveService(url) {
 	this.progressSpinner = true;
-	 //reunimos todas esas variables metiéndolas en el item de movimientos varios y según si es modo edicion o nuevo, realizamos un insert o update.
 	 this.datosCriteriosAplicacion=JSON.parse(JSON.stringify(this.datos));
 
 	 if(this.datos.idMovimiento == null || this.datos.idMovimiento == undefined){
@@ -226,10 +221,7 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 
 	this.sigaService.post(url, this.datosCriteriosAplicacion).subscribe(
 	  data => {
-  
-		// RECOGER BOLEANO 
-		console.log(data);
-  
+
 		this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 		this.progressSpinner = false;
 	  },

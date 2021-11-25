@@ -35,46 +35,17 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   constructor(  private sigaStorageService: SigaStorageService,private persistenceService: PersistenceService, private commonsService: CommonsService, private sigaService: SigaServices, private translateService: TranslateService,private router: Router) { }
 
-  // ngOnChanges(changes: SimpleChanges) {
-  //   if (changes.datos != undefined && (changes.datos.currentValue != null || changes.datos.currentValue != undefined)) {
-  //     this.datos = changes.datos.currentValue;
-  //     if (this.datos != undefined) {
-  //       if (this.datos.idturno != undefined) {
-  //         if (this.datos.idMovimiento == undefined) {
-  //           this.modoEdicion = false;
-  //         } else {
-  //           this.modoEdicion = true;
-  //           // this.getCombos();
-  //         }
-  //       }
-  //     } else {
-  //       this.datos = new MovimientosVariosFacturacionItem();
-  //     }
-  //   }
-  // }
-
   ngOnInit() {
 
-
-    console.log("Este es el valor del this.modoEdicion que viene del padre: ",this.modoEdicion);
-    console.log(this.datos);
-    console.log("Datos DEL CLIENTE:",this.datosClientes);
-
     if(this.datos != null || this.datos != undefined){
-      // this.datos = this.persistenceService.getDatos();
       this.datosAux = JSON.parse(JSON.stringify(this.datos));
-      //sessionStorage.removeItem("nuevoMovimientoVarios");
     }else{
       this.datos = new MovimientosVariosFacturacionItem();
       this.datosAux = new MovimientosVariosFacturacionItem();
     }
     this.isLetrado = this.sigaStorageService.isLetrado;
   
-    // if (this.datos.idMovimiento == undefined) {
-    //   this.modoEdicion = false;
-    // } else {
-    //   this.modoEdicion = true;
-    // }
+  
     if(!this.modoEdicion){
       this.showFichaDatosGen=true;
     }
@@ -152,7 +123,6 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
 callSaveService(url) {
   this.progressSpinner = true;
-   //reunimos todas esas variables metiéndolas en el item de movimientos varios y según si es modo edicion o nuevo, realizamos un insert o update.
   
       this.datosGenerales=JSON.parse(JSON.stringify(this.datos));
       
@@ -222,8 +192,7 @@ callSaveService(url) {
   this.sigaService.post(url, this.datosGenerales).subscribe(
     data => {
 
-      // RECOGER BOLEANO 
-      console.log(data);
+      this.datosAux = JSON.parse(JSON.stringify(this.datosGenerales));
 
       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       this.progressSpinner = false;

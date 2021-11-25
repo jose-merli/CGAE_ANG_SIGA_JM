@@ -17,14 +17,12 @@
            <i *ngIf="!showFichaListadoPagos" class="fa fa-angle-down float-right" (click)="onHideListadoPagos()"></i>
          </div>
        <div  class="d-flex justify-content-between">
-         <!-- <div *ngFor="let dato of datos"> -->
            <label *ngIf="datos2 == undefined">{{ "Nº Total de Pagos:" }} 
                <span >{{ "No existen pagos" }}</span> 
           </label>  
           <label *ngIf="datos2 && datos2.length > 0">{{ "Nº Total de Pagos:" }}  
                <span>{{ datos2.length }}</span> 
            </label>                  
-         <!-- </div> -->
        </div>
        </div>
      </div>

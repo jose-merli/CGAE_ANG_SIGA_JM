@@ -1,6 +1,4 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component, EventEmitter, Input, OnInit, Output,ViewChild } from '@angular/core';
-import { throwMatDialogContentAlreadyAttachedError } from '@angular/material';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { BusquedaFisicaItem } from '../../../../../../models/BusquedaFisicaItem';
@@ -27,7 +25,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
   idpersona;
   ncolegiado: string = "";
   progressSpinner: boolean = false;
-  //datosCliente: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
   bodyAux: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
 
   filtros: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
@@ -69,7 +66,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
  
   if( sessionStorage.getItem('datosPersonaFisica') != null && sessionStorage.getItem('datosPersonaFisica') != undefined && sessionStorage.getItem('datosPersonaFisica') != ""){
     this.bodyFisica = JSON.parse(sessionStorage.getItem('datosPersonaFisica'))[0];
-    this.bodyFisicaAux = JSON.parse(JSON.stringify(this.bodyFisica)); //mirar, no funciona el restablecer cuando es nuevo
+    this.bodyFisicaAux = JSON.parse(JSON.stringify(this.bodyFisica));
     this.nif=this.bodyFisica.nif;
     this.apellido1=this.bodyFisica.primerApellido.toString();
     this.apellido2=this.bodyFisica.segundoApellido.toString();
@@ -108,28 +105,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
       this.mandarDatos(this.datosColegiado);
     }
   }
-
- 
-
-  /*if(this.modoEdicion){
-    if(this.bodyFisica != null && this.bodyFisica != undefined){
-      this.recogerDatos(this.bodyFisica);
-    }else{
-      this.recogerDatos(this.datosFicha);
-    }
-  }else{
-    if( this.bodyFisica != null && this.bodyFisica != undefined){
-      this.recogerDatos(this.bodyFisica);
-    }else{
-      this.recogerDatos(this.datosColegiado);
-    }
-  }*/
-
-    /*if(this.nuevo && this.bodyFisica != null && this.bodyFisica != undefined){
-      this.showFichaDatosClientes = true;
-      this.rehacerTarjetaDatosCliente(this.bodyFisica);
-      //this.rehacerTarjetaDatosResumen();
-    }*/
 
     this.actualizarTarjetaResumen();
   
@@ -188,20 +163,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
 
   }
-
-  // rehacerTarjetaDatosResumen(){
-
-  //   this.progressSpinner = true;
-
-  
-	// 	this.datos[0] = {label: "Nº Colegiado: ", value: ""};
-  //   this.datos[1] = {label: "Nombre: ", value: ""};
-	// 	this.datos[2] = {label: "Descripción: ", value:""};
-	// 	this.datos[3] = {label: "Importe: ", value: ""};
-
-  //   this.progressSpinner=false;
-
-  // }
 
   recogerDatos(datos){
     this.nif=datos.nif;
@@ -290,7 +251,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
 callSaveService(url) {
   this.progressSpinner = true;
-   //reunimos todas esas variables metiéndolas en el item de movimientos varios y según si es modo edicion o nuevo, realizamos un insert o update.
   this.datosCliente=JSON.parse(JSON.stringify(this.datosFicha));
   this.datosCliente.nif=this.nif;
   this.datosCliente.apellido1=this.apellido1;
@@ -341,9 +301,6 @@ callSaveService(url) {
     data => {
 
     this.movimientosVariosService.datosColegiadoAux = JSON.parse(JSON.stringify(this.datosColegiado));
-
-      // RECOGER BOLEANO 
-      console.log(data);
 
       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       this.progressSpinner = false;

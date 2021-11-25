@@ -75,12 +75,6 @@ export class FichaMovimientosVariosComponent implements OnInit {
       this.modoEdicion = false;
     }
 
-    //pasar esa variable a todas las tarjetas
-
-    // if(sessionStorage.getItem("nuevoMovimientoVarios")){
-    //   sessionStorage.removeItem("nuevoMovimientoVarios");
-    // }
-
     if(this.modoEdicion){
         this.datos = this.persistenceService.getDatos();
         this.getDatosTarjetaClientes(this.datos); 
@@ -208,11 +202,9 @@ export class FichaMovimientosVariosComponent implements OnInit {
     this.msgs = [];
   }
 
-  //nuevo
   datosTarjetaResumenEvent(event) {
 		if (event != undefined) {
 		  this.datosTarjetaResumen = event;
-      //this.getDatosTarjetaResumen(this.datosTarjetaResumen);
 		}
 	}
 
