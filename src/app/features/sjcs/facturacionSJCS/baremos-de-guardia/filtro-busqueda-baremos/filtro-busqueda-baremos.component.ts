@@ -3,7 +3,6 @@ import { Message, MultiSelect, SelectItem } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { BaremosRequestDTO } from '../../../../../models/sjcs/BaremosRequestDTO';
 import { Router } from '@angular/router';
 import { BaremosGuardiaItem } from '../../../../../models/sjcs/BaremosGuardiaItem';
 

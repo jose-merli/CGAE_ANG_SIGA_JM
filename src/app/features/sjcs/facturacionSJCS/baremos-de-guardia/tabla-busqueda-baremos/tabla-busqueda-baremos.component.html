@@ -28,15 +28,19 @@
           <td *ngFor="let col of columns | slice:0:10">
             <div class="d-flex">
               <a [pRowToggler]="rowData">
-                <div *ngIf="col.field =='idTurno'">
+                <div *ngIf="col.field =='nomTurno'">
                   <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
                   <a><span>{{rowData[col.field]}}</span></a>
                 </div>
               </a>
             </div>
 
-            <div *ngIf="col.field !='idTurno'">
+            <div *ngIf="col.field !='nomTurno'">
               <span>{{rowData[col.field]}}</span>
+            </div>
+
+            <div *ngIf="col.field =='simpleOImporteIndividual'">
+              <span>{{rowData[col.field] | currency: 'EUR' }}</span>
             </div>
 
           </td>
@@ -45,7 +49,7 @@
 
       <ng-template pTemplate="rowexpansion" let-dato let-columns="subCols">
 
-        <tr *ngFor="let guardia of dato.guardias">
+        <tr *ngFor="let guardia of dato.guardiasObj">
           <td *ngFor="let sub of subCols">
             <div [ngClass]="{'displayMargin' : (sub.field == 'idGuardia')}">
               <span>{{ guardia[sub.field] }}</span>

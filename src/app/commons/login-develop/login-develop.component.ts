@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { AuthenticationService } from '../../_services/authentication.service';
 import { SigaServices } from '../../_services/siga.service';
@@ -10,7 +10,7 @@ import { ButtonModule } from 'primeng/button';
 
 
 export enum KEY_CODE {
-  ENTER = 13
+	ENTER = 13
 }
 
 @Component({
@@ -42,7 +42,7 @@ export class LoginDevelopComponent implements OnInit {
 		private service: AuthenticationService,
 		private sigaServices: SigaServices,
 		private router: Router,
-		
+
 
 	) { }
 
@@ -203,7 +203,13 @@ para poder filtrar el dato con o sin estos caracteres*/
 		//});
 	}
 
-	
+	@HostListener("document:keypress", ["$event"])
+	onKeyPress(event: KeyboardEvent) {
+		if (event.keyCode === KEY_CODE.ENTER) {
+			this.submit();
+		}
+	}
+
 	isHabilitadoEntrar() {
 		if (
 			this.form.controls['tmpLoginPerfil'].value == '' ||
