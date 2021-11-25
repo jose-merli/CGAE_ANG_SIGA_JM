@@ -6,7 +6,7 @@
 
 <div class="card mt-3">
   <div class="card-body p-0">
-    <p-table #monederosTable [value]="listaMonederosActivos" [columns]="cols" [(selection)]="selectedRows"
+    <p-table #monederosTable [value]="listaMonederos" [columns]="cols" [(selection)]="selectedRows"
       selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
       (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
       (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
@@ -36,9 +36,9 @@
               <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div> 
             <div *ngIf="col.field !='fecha'" >
-              <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
-              <span *ngIf="col.field == 'descripcion' || col.field == 'nombreCompleto' || col.field == 'nifCif'">{{rowData[col.field]}}</span>
-              <span *ngIf="col.field == 'importe' || col.field == 'importeInicial' || col.field == 'importeRestante'">{{rowData[col.field]}} €</span>
+              <span *ngIf="col.field == 'descripcion'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'nombreCompleto' || col.field == 'nifCif'">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'importeUsado' || col.field == 'importeInicial' || col.field == 'importeRestante'">{{rowData[col.field]}} €</span>
             </div> 
 
           </td>

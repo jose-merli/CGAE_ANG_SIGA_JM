@@ -1,3 +1,5 @@
+import { ListaMovimientosMonederoItem } from "./ListaMovimientosMonederoItem";
+
 export class FichaMonederoItem {
 
     //TARJETA DATOS GENERALES
@@ -7,6 +9,12 @@ export class FichaMonederoItem {
     apellidos: string;
     idtipoidentificacion: string;
     nif: string;
+
+    //TARJETA MOVIMIENTOS
+    movimientos: ListaMovimientosMonederoItem[];
+
+    idLinea: string; //Identificador del monedero
+    anioLinea : string;
     
     constructor() {}
   }
