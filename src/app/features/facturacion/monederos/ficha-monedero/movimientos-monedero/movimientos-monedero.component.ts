@@ -81,7 +81,7 @@ export class MovimientosMonederoComponent implements OnInit {
     //En el caso que la ficha no sea nueva
     if (this.ficha.idLinea != null ) {
       //Se llama al servicio para obtener los movimientos del monedero
-      // this.getProductosCompra();
+      this.getMovimientosMonedero();
     }
   }
 
@@ -94,57 +94,32 @@ export class MovimientosMonederoComponent implements OnInit {
   //INICIO SERVICIOS
 
   
-  // getProductosCompra() {
-  //   this.progressSpinner = true;
+  getMovimientosMonedero() {
+    this.progressSpinner = true;
 
-  //   this.subscriptionProductosBusqueda = this.sigaServices.getParam("PyS_getListaProductosCompra",
-  //     "?idPeticion=" + this.ficha.nSolicitud).subscribe(
-  //       listaProductosCompraDTO => {
+    this.subscriptionMovimientosBusqueda = this.sigaServices.getParam("PyS_getListaMovimientosMonedero",
+      "?idLinea=" + this.ficha.idLinea+"&idPersona="+ this.ficha.idPersona).subscribe(
+        movimientosMonederoDTO => {
 
-  //         this.productosTarjeta = listaProductosCompraDTO.listaProductosCompraItems;
+          if (movimientosMonederoDTO.error == null) {
+            // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.movimientosTarjeta= movimientosMonederoDTO.listaMovimientosMonederoItem;
+            this.ficha.movimientos = this.movimientosTarjeta;
+            
+            this.checkTotal();
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
 
-  //         if (listaProductosCompraDTO.error.code == 200) {
-  //           // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  //         } else {
-  //           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-  //         }
-  //         this.checkTotal();
+          this.progressSpinner = false;
 
-  //         this.productosTarjeta.sort((a, b) => (a.orden > b.orden) ? 1 : -1);
-
-  //         this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
-  //         if (this.ficha.idFormaPagoSeleccionada != null){
-  //           if(this.ficha.productos[0].noFacturable == "1"){
-  //             let noFacturableItem = new ComboItem();
-  //             noFacturableItem.label =this.translateService.instant("facturacion.productos.noFacturable");
-  //             noFacturableItem.value = "-1";
-  //             this.comboComun.push(noFacturableItem);
-  //             this.selectedPago = "-1";
-  //           }
-  //           else{
-  //           this.selectedPago = this.ficha.idFormaPagoSeleccionada.toString();
-  //           this.checkFormasPagoComunes(this.productosTarjeta);
-  //           }
-  //         }
-  //         this.newFormaPagoCabecera();
-
-  //         for(let productoTarj of this.productosTarjeta){
-  //           productoTarj.impNeto = Number(productoTarj.impNeto).toFixed(2);
-  //           productoTarj.precioUnitario = Number(productoTarj.precioUnitario).toFixed(2);
-
-  //         }
-
-  //         this.datosTarjeta = this.ficha;
-
-  //         this.progressSpinner = false;
-
-  //       },
-  //       err => {
-  //         this.progressSpinner = false;
-  //       }, () => {
-  //         this.progressSpinner = false;
-  //       });;
-  // }
+        },
+        err => {
+          this.progressSpinner = false;
+        }, () => {
+          this.progressSpinner = false;
+        });;
+  }
 
   // getComboProductos() {
   //   this.progressSpinner = true;
@@ -279,13 +254,15 @@ export class MovimientosMonederoComponent implements OnInit {
   //En este método se calcula el importe total y se actualiza el valor del importe en todos los movimientos.
   checkTotal() {
     let impTotal = 0;
+
+    let i = this.movimientosTarjeta.length;
     //Se calcula el importe total despues de todos los movimientos
-    this.movimientosTarjeta.forEach(
-      el => {
-        impTotal += Number(el.impOp);
-        el.impTotal = impTotal;
-      }
-    );
+    while(i<0) 
+    {
+      impTotal += Number(this.movimientosTarjeta[i-1].impOp);
+      this.movimientosTarjeta[i-1].impTotal = impTotal;
+      i--;
+    }
   }
 
   anadirMovimiento() {
@@ -306,7 +283,7 @@ export class MovimientosMonederoComponent implements OnInit {
       if(this.movimientosTarjeta.length > 0){
         this.movimientosTarjeta[this.movimientosTarjeta.length-1].nuevo = false;
       }
-      this.movimientosTarjeta.push(newMovimiento);
+      this.movimientosTarjeta.unshift(newMovimiento);
       this.checkTotal();
     }
   }

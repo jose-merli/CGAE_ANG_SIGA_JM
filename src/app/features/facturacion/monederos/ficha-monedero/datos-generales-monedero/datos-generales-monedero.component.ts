@@ -38,8 +38,26 @@ export class DatosGeneralesMonederoComponent implements OnInit {
   ngOnInit() {
 
     this.getTiposIdentificacion();
+
+    if(this.localStorageService.isLetrado){
+      this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
+				n => {
+					let data = JSON.parse(n.body).colegiadoItem;
+					this.ficha.nombre = data.nombre;
+					this.ficha.apellidos = data.apellidos1 + " " + data.apellidos2;
+          this.ficha.nif = data.nif;
+          this.ficha.idInstitucion = data.idInstitucion;
+          this.ficha.idPersona = data.idPersona;
+          
+          this.compruebaDNIInput();
+				},
+				err => {
+					this.progressSpinner = false;
+				}
+      );
+    }
     //Se comprueba si se ha realizado una busqueda y se rellena la tarjeta con los datos extraidos
-    if (sessionStorage.getItem("buscadorColegiados")) {
+    else if (sessionStorage.getItem("buscadorColegiados")) {
       const { nombre, apellidos, nColegiado, idPersona, nif, idInstitucion } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.ficha.nombre = nombre;
       this.ficha.apellidos = idPersona;
@@ -51,14 +69,14 @@ export class DatosGeneralesMonederoComponent implements OnInit {
       this.compruebaDNIInput();
     }
     //Se comprueba si el usuario conectado es un colegiado y se rellena la ficha con su informacion
-    else if(this.localStorageService.isLetrado){
-      this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
+    else if(this.ficha.idPersona != null){
+      this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.ficha.idPersona).subscribe(
 				n => {
 					let data = JSON.parse(n.body).colegiadoItem;
 					this.ficha.nombre = data.nombre;
-					this.ficha.apellidos = data.apellidos;
+					this.ficha.apellidos = data.apellidos1 + " " + data.apellidos2;
           this.ficha.nif = data.nif;
-          this.ficha.idInstitucion = data.nInst;
+          this.ficha.idInstitucion = data.idInstitucion;
           this.ficha.idPersona = data.idPersona;
           
           this.compruebaDNIInput();
@@ -67,18 +85,6 @@ export class DatosGeneralesMonederoComponent implements OnInit {
 					this.progressSpinner = false;
 				}
       );
-
-    }
-    if(sessionStorage.getItem("abogado")){
-      let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
-			sessionStorage.removeItem("abogado");
-			this.ficha.nombre = data.nombre;
-			this.ficha.nif = data.nif;
-			this.ficha.idPersona = data.idPersona;
-      this.ficha.apellidos = data.apellidos;
-      this.ficha.idInstitucion = data.numeroInstitucion;
-      
-      this.compruebaDNIInput();
     }
     
     if(this.ficha.idPersona != null) this.showEnlaceCliente = true;

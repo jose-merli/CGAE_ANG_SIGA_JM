@@ -24,6 +24,7 @@ export class FichaMonederoComponent implements OnInit {
   esColegiado: boolean; // Con esta variable se determina si el usuario conectado es un colegiado o no.
 
   @ViewChild("propietario") tarjProp;
+  @ViewChild("movimientos") tarjMov;
 
   constructor(private location: Location, 
     private sigaServices: SigaServices, private translateService: TranslateService,
@@ -40,9 +41,9 @@ export class FichaMonederoComponent implements OnInit {
 
     sessionStorage.removeItem("origin");
 
-    if(sessionStorage.getItem("FichaCompraSuscripcion")){
-      this.ficha = JSON.parse(sessionStorage.getItem("FichaCompraSuscripcion"));
-      sessionStorage.removeItem("FichaCompraSuscripcion");
+    if(sessionStorage.getItem("FichaMonedero")){
+      this.ficha = JSON.parse(sessionStorage.getItem("FichaMonedero"));
+      sessionStorage.removeItem("FichaMonedero");
     }
   }
 
@@ -74,12 +75,6 @@ export class FichaMonederoComponent implements OnInit {
   scrollToOblig(element : string){
     this.resaltadoDatos = true;
     this.commonsService.scrollTablaFoco(element);
-    if(element == "propietario"){
-      this.tarjProp.showTarjeta = true;
-    }
-    // if(element == "productos"){
-    //   this.tarjProductos.showTarjeta = true;
-    // }
     // if(element == "servicios"){
     //   this.tarjServicios.showTarjeta = true;
     // }

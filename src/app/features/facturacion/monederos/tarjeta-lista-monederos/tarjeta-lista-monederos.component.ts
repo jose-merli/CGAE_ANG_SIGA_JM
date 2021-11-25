@@ -4,6 +4,7 @@ import { Message, SortEvent } from 'primeng/components/common/api';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
+import { FichaMonederoItem } from '../../../../models/FichaMonederoItem';
 import { ListaMonederosItem } from '../../../../models/ListaMonederosItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
@@ -75,24 +76,14 @@ export class TarjetaListaMonederosComponent implements OnInit {
   ngOnInit() {
   }
 
-  ngOnchanges(change: SimpleChanges){
-    this.listaMonederosActivos = this.listaMonederos;
-  }
 
-
-  openTab(rowData) {
-/*     this.progressSpinner = true;
-    let compra = new FichaCompraSuscripcionItem();
-    compra.nSolicitud = rowData.nSolicitud;
-    compra.productos = [];
-    compra.fechaAceptada = rowData.fechaEfectiva;
-    this.sigaServices.post('PyS_getFichaCompraSuscripcion', compra).subscribe(
-      (n) => {
-        this.progressSpinner = false;
-        sessionStorage.setItem("FichaCompraSuscripcion", n.body);
-        this.router.navigate(["/fichaCompraSuscripcion"]);
-      }
-    ); */
+  openTab(rowData: ListaMonederosItem) {
+    this.progressSpinner = true;
+    let monedero = new FichaMonederoItem();
+    monedero.idLinea = rowData.idLinea;
+    monedero.idPersona = rowData.idPersona;
+    sessionStorage.setItem("FichaMonedero", JSON.stringify(monedero));
+    this.router.navigate(["/fichaMonedero"]);
   }
 
   showMessage(severity, summary, msg) {
