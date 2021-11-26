@@ -1,1 +1,5 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtros-facturas></app-filtros-facturas>
+</div>
