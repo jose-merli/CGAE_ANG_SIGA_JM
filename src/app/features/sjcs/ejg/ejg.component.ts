@@ -29,6 +29,7 @@ export class EJGComponent implements OnInit {
   progressSpinner: boolean = false;
   buscar: boolean = false;
   remesa;
+  ejg;
 
   permisoEscritura: any;
 
@@ -72,6 +73,13 @@ export class EJGComponent implements OnInit {
     if (sessionStorage.getItem("remesa") != null) {
       this.remesa = JSON.parse(sessionStorage.getItem("remesa"));
       sessionStorage.removeItem("remesa");
+    }
+
+    if (sessionStorage.getItem("EJG") != null) {
+      this.ejg = JSON.parse(sessionStorage.getItem("EJG"));
+      sessionStorage.removeItem("EJG");
+      sessionStorage.setItem('fichaEJG', JSON.stringify(this.ejg));
+      this.router.navigate(['/gestionEjg']);
     }
   }
 

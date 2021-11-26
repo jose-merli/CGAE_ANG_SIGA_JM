@@ -122,6 +122,13 @@ export class GestionEjgComponent implements OnInit {
         this.body.apellidosYNombre = "";
       }
 
+      if (sessionStorage.getItem("fichaEJG") != null) {
+        this.body = JSON.parse(sessionStorage.getItem("fichaEJG"));
+        sessionStorage.removeItem("fichaEJG");
+        this.persistenceService.setDatos(this.body);
+        this.updateTarjResumen();
+      }
+
       if (sessionStorage.getItem("datosDesdeJusticiable")) {
         this.body = JSON.parse(sessionStorage.getItem("datosDesdeJusticiable"));
         sessionStorage.removeItem("datosDesdeJusticiable");
