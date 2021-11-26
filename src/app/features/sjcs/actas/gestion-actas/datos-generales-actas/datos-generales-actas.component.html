@@ -40,9 +40,9 @@
     </div>
 
     <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <div class="row">
+      <div class="form-row">
 	  
-        <div class="bloque col-lg-9 col-md-9">
+        <div class="col-lg-9 col-md-9">
 
 
           <div class="form-row">
@@ -65,7 +65,7 @@
 
               <div  *ngIf="editable" class="col-md-1 col-md-1 pr5">
                 <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
-                    translate}}</strong></label>
+                    translate}}*</strong></label>
                 <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroacta">
               </div>
 
@@ -93,19 +93,19 @@
           
           <div class="form-group col-lg-2 col-md-2 pl5">
             <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
-              translate}}</strong></label>
+              translate}}*</strong></label>
             <app-fecha [(value)]="this.datosFiltro.fechareunion" (valueChangeSelected)="fillFechaReunion($event)"
               (valueChangeInput)="fillFechaReunion($event)">
             </app-fecha>
           </div>
 
           <div class="col-lg-2 col-md-2 pl5">
-            <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label>
+            <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label><br>
             <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="inicio">
           </div>
 
           <div class="col-lg-2 col-md-2 pl5">
-            <label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label>
+            <label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label><br>
             <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="fin">
           </div>
           <br>

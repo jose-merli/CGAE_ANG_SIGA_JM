@@ -938,7 +938,7 @@ export class TablaEjgComisionComponent implements OnInit {
         }
       );
     }
-  
+    this.showModalEditarSeleccionados = false;
   }
 
 

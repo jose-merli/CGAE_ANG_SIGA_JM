@@ -35,7 +35,7 @@ export class FiltroActasComponent implements OnInit {
   comboPresidente = [];
   comboSecretario = [];
 
-  @Output() searchEmitter = new EventEmitter<boolean>();
+  @Output() searchEmitter = new EventEmitter<ActasItem>();
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private commonServices: CommonsService) { }
@@ -108,14 +108,29 @@ export class FiltroActasComponent implements OnInit {
   }
 
   search() {
-
+console.log(this.datosFiltro)
+    this.limpiezaFiltro(this.datosFiltro);
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.datosFiltro);
-      this.searchEmitter.emit(true);
+      this.searchEmitter.emit(this.datosFiltro);
     }
 
   }
+  limpiezaFiltro(actaItem){
+    if(actaItem.anioacta != undefined){
+      actaItem.anioacta.replace(/ /g, "")
+      if( actaItem.anioacta.length == 0 ){
+        actaItem.anioacta = null;
+      }
+    }
+    if(actaItem.numeroacta != undefined){
+      actaItem.numeroacta.replace(/ /g, "")
+      if(actaItem.numeroacta.length == 0){
+        actaItem.numeroacta = null;
+      }
+    }
 
+  }
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57) {
