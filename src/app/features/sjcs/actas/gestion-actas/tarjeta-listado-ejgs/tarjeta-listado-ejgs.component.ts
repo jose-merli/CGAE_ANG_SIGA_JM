@@ -38,6 +38,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   resaltadoEJGsAsociados: boolean = false;
   modoEdicion: boolean = false;
   ejgTotales;
+  ejgs;
 
   //Resultados de la busqueda
   @Input() datos;
@@ -71,6 +72,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log("this.datos -> ", this.datos);
     this.getAbreviatura();
     this.getCols();
     this.resaltadoEJGsAsociados = true;
@@ -209,18 +211,18 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     this.sigaServices.post("filtrosejgcomision_busquedaEJGComision", this.actaDatosEntradaItem).subscribe(
       n => {
         console.log("Dentro del servicio del padre que llama al getEJGRemesa");
-        this.datos = JSON.parse(n.body).ejgItems;
+        this.ejgs = JSON.parse(n.body).ejgItems;
 
-        this.ejgTotales = this.datos.length;
+        this.ejgTotales = this.ejgs.length;
 
-        this.datos.forEach(element => {
+        this.ejgs.forEach(element => {
           element.numAnnioProcedimiento = this.abreviatura + "-" + element.numAnnioProcedimiento;
         });
 
-        console.log("Contenido de la respuesta del back --> ", this.datos);
+        console.log("Contenido de la respuesta del back --> ", this.ejgs);
         this.progressSpinner = false;
 
-        if (this.datos.length == 200) {
+        if (this.ejgs.length == 200) {
           console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
         }
@@ -238,7 +240,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
 
   asociarEJG() {
     this.router.navigate(["/ejg-comision"]);
-    localStorage.setItem('ejgComision', JSON.stringify(this.selectedDatos));
+    sessionStorage.setItem('acta', JSON.stringify(this.datos));
   }
 
   consultarEditarEJG(){
