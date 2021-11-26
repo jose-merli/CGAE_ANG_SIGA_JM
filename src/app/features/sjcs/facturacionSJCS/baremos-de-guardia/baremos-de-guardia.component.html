@@ -11,7 +11,7 @@
     (mostrarTablaResultadosEvent)="getBaremosGuardias($event)"></app-filtro-busqueda-baremos>
 
   <div *ngIf="mostrarTablaResultados">
-    <app-tabla-busqueda-baremos [datos]="datos" [permisoEscritura]="permisoEscritura"></app-tabla-busqueda-baremos>
+    <app-tabla-busqueda-baremos [datos]="datos" [permisoEscritura]="permisoEscritura" (isHistorico)="mostrarHistorico($event)"></app-tabla-busqueda-baremos>
   </div>
 
 </div>

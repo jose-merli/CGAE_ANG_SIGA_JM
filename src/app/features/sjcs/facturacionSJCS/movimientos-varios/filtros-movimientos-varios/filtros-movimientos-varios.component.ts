@@ -354,10 +354,11 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 		}
 	}
 
-	onChangeMultiSelectFact(event, filtro) {
-		if (undefined != event.value && event.value.length == 0) {
-			this.filtros[filtro] = undefined;
-		}
+	onChangeMultiSelectFact(event) {
+		// if (undefined != event.value && event.value.length == 0) {
+		// 	this.filtros[filtro] = undefined;
+		// }
+		// this.filtros.idAplicadoEnPago = event.value;
 	}
 
 	disabledComponenteLetrado(){

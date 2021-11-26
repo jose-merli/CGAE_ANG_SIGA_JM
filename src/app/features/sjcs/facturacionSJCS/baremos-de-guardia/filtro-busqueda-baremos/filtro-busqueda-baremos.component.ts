@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '@angular/router';
 import { BaremosGuardiaItem } from '../../../../../models/sjcs/BaremosGuardiaItem';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-filtro-busqueda-baremos',
@@ -29,13 +30,23 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
-    private router: Router
+    private router: Router,
+    private persistenceService: PersistenceService
   ) { }
 
   ngOnInit() {
-    this.getComboTurno();
+    if (this.persistenceService.getFiltros() != undefined) {
+      this.filtros = this.persistenceService.getFiltros();
+      
+      this.persistenceService.clearFiltros();
+      this.buscar();
+
+    } else {
+      this.getComboTurno();
     this.getComboFacturacion();
     this.filtros.idFacturaciones = ['0'];
+    }
+    
   }
 
   onHideDatosGenerales() {
@@ -158,6 +169,8 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
   buscar() {
 
     if (this.hayCamposRellenos()) {
+      this.persistenceService.setFiltros(this.filtros);
+      this.filtros.historico = false;
       this.mostrarTablaResultadosEvent.emit(true);
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
