@@ -65,7 +65,7 @@
 
               <div  *ngIf="editable" class="col-md-1 col-md-1 pr5">
                 <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
-                    translate}}</strong></label>
+                    translate}}*</strong></label>
                 <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroacta">
               </div>
 
@@ -93,7 +93,7 @@
           
           <div class="form-group col-lg-2 col-md-2 pl5">
             <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
-              translate}}</strong></label>
+              translate}}*</strong></label>
             <app-fecha [(value)]="this.datosFiltro.fechareunion" (valueChangeSelected)="fillFechaReunion($event)"
               (valueChangeInput)="fillFechaReunion($event)">
             </app-fecha>
