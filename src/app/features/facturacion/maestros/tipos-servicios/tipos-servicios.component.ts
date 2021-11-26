@@ -5,6 +5,8 @@ import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { ComboObject } from '../../../../models/ComboObject';
 import { TiposServiciosObject } from '../../../../models/TiposServiciosObject';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -40,13 +42,17 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
   numSelectedAbleRegisters: number = 0;
   numSelectedDisableRegisters: number = 0;
 
+  //Permisos
+  guardarTiposServicios: boolean;
+  eliminarTiposServicios: boolean;
+
   //Suscripciones
   subscriptionServicesList: Subscription;
   subscriptionEnableUnableServices: Subscription;
   subscriptionServicesTypeSelectValues: Subscription;
   subscriptionCreateEditAService: Subscription;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) {
+  constructor(private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) {
 
   }
 
@@ -59,11 +65,40 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
       this.rowsPerPage = paginacion.selectedItem;
     }
 
+    this.checkPermisos();
+
     this.getListaServicios();
     this.initrowsPerPageSelect();
     this.initColsServices();
     this.getComboTiposServicios();
   }
+
+  //INICIO METODOS PERMISOS
+
+ checkPermisos() {
+    this.getPermisoGuardarTipoServicio();
+    this.getPermisoEliminarTipoServicio(); 
+ }
+
+ getPermisoGuardarTipoServicio() {
+    this.commonsService
+       .checkAcceso(procesos_PyS.guardarTiposServicios)
+        .then((respuesta) => {
+           this.guardarTiposServicios = respuesta;
+        })
+    .catch((error) => console.error(error));
+ }
+
+  getPermisoEliminarTipoServicio() {
+    this.commonsService
+       .checkAcceso(procesos_PyS.eliminarTiposServicios)
+        .then((respuesta) => {
+           this.eliminarTiposServicios = respuesta;
+        })
+    .catch((error) => console.error(error));
+  }
+
+  //FIN METODOS SERVICIOS
 
   //Necesario para liberar memoria
   ngOnDestroy() {
@@ -282,8 +317,24 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
     this.getListaServicios();
   }
 
+  checkPermisoActivarDesactivar(selectedRows){
+    let msg = this.commonsService.checkPermisos(this.eliminarTiposServicios, undefined);
+
+    if (msg != null) {
+       this.msgs = msg;
+    } else {
+       this.activarDesactivar(selectedRows);
+    }
+  }
+
   guardar() {
-    this.crearEditarServicio();
+    let msg = this.commonsService.checkPermisos(this.guardarTiposServicios, undefined);
+
+    if (msg != null) {
+       this.msgs = msg;
+    } else {
+       this.crearEditarServicio();
+    }
   }
   //FIN METODOS P-TABLE
 

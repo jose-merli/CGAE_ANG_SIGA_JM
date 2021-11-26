@@ -5,6 +5,8 @@ import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { ComboObject } from '../../../../models/ComboObject';
 import { TiposProductosObject } from '../../../../models/TiposProductosObject';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../_services/commons.service';
 
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -41,13 +43,17 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
   numSelectedAbleRegisters: number = 0;
   numSelectedDisableRegisters: number = 0;
 
+  //Permisos
+  guardarTiposProductos: boolean;
+  eliminarTiposProductos: boolean;
+
   //Suscripciones
   subscriptionProductsList: Subscription;
   subscriptionEnableUnableProducts: Subscription;
   subscriptionProductTypeSelectValues: Subscription;
   subscriptionCreateEditAProduct: Subscription;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) {
+  constructor(private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService) {
 
   }
 
@@ -60,12 +66,41 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
       this.rowsPerPage = paginacion.selectedItem;
     }
 
+    this.checkPermisos();
+
     this.getListaProductos();
     this.initrowsPerPageSelect();
     this.initColsProducts();
     this.getComboTiposProductos();
   }
 
+  //INICIO METODOS PERMISOS
+
+  checkPermisos() {
+    this.getPermisoGuardarTipoProducto();
+    this.getPermisoEliminarTipoProducto(); 
+  }
+
+  getPermisoGuardarTipoProducto() {
+    this.commonsService
+       .checkAcceso(procesos_PyS.guardarTiposProductos)
+        .then((respuesta) => {
+           this.guardarTiposProductos = respuesta;
+        })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisoEliminarTipoProducto() {
+    this.commonsService
+       .checkAcceso(procesos_PyS.eliminarTiposProductos)
+        .then((respuesta) => {
+           this.eliminarTiposProductos = respuesta;
+        })
+    .catch((error) => console.error(error));
+  }
+
+  //FIN METODOS SERVICIOS
+  
   //Necesario para liberar memoria
   ngOnDestroy() {
     if (this.subscriptionProductsList)
@@ -282,8 +317,24 @@ export class TiposProductosComponent implements OnInit, OnDestroy {
     this.getListaProductos();
   }
 
+  checkPermisoActivarDesactivar(selectedRows){
+    let msg = this.commonsService.checkPermisos(this.eliminarTiposProductos, undefined);
+
+    if (msg != null) {
+       this.msgs = msg;
+    } else {
+       this.activarDesactivar(selectedRows);
+    }
+  }
+
   guardar() {
-    this.crearEditarProducto();
+    let msg = this.commonsService.checkPermisos(this.guardarTiposProductos, undefined);
+
+    if (msg != null) {
+       this.msgs = msg;
+    } else {
+       this.crearEditarProducto();
+    }
   }
   //FIN METODOS P-TABLE
 

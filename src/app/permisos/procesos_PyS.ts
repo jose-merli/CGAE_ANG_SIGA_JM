@@ -9,6 +9,14 @@ export const procesos_PyS: any = {
     anularSuscripcion: "39F",
     solicitarSuscripcion: "39G",
     aprobarSuscripcion: "39H",
-    fichaMonedero: "52"
+    fichaMonedero: "52",
+
+    //PERMISOS MAESTROS --> TIPOS PRODUCTOS Y MAESTROS --> TIPOS SERVICIOS
+    tiposProductos: "400",
+    tiposServicios: "401",
+    guardarTiposProductos: "402",
+    eliminarTiposProductos: "403",
+    guardarTiposServicios: "404",
+    eliminarTiposEliminar: "405"
 
 }

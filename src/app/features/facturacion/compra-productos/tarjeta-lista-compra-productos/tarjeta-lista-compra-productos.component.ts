@@ -59,8 +59,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
       value: 40
     }
   ];
-
-  permisoSolicitarCompra: boolean = false;
+  
   permisoAprobarCompra: boolean = false;
   permisoDenegar: boolean = false;
   permisoAnularCompra: boolean = false;
@@ -125,7 +124,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     this.getPermisoDenegar();
     this.getPermisoAnularCompra();
   }
-
+ 
   checkAprobar() {
     let msg = this.commonsService.checkPermisos(this.permisoAprobarCompra, undefined);
 
