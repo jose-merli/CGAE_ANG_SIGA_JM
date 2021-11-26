@@ -52,6 +52,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   @Input() datos: ActasItem;
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Output() pendienteCAJG = new EventEmitter<any>();
 
   event = new EventEmitter<any>();
 
@@ -245,7 +246,6 @@ export class DatosGeneralesActasComponent implements OnInit {
   }
 
   abrirActaDialogo() {
-
     this.confirmationService.confirm({
       message: '¿Estas seguro que quieres abrir el acta?',
       accept: () => {
@@ -255,8 +255,8 @@ export class DatosGeneralesActasComponent implements OnInit {
       reject: () => {
         console.log("rechazado abrir acta");
       }
-  });
-}
+    });
+  }
 
   abrirActa() {
     this.progressSpinner = true;
@@ -415,6 +415,20 @@ export class DatosGeneralesActasComponent implements OnInit {
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  anadirEJGPendientesCAJGDialogo(){
+    this.confirmationService.confirm({
+      message: 'Se van a añadir los EJG pendientes con resolución Pendiente CAJG o Devuelto Colegio al ' + 
+      'recuadro "Expediente Retirados (Acta)" y desvincularlo del acta, quedando pendientes',
+      accept: () => {
+        console.log("aceptado	Añadir EJG’s Pendientes CAJG");
+        this.anadirEJGPendientesCAJG();
+      },
+      reject: () => {
+        console.log("rechazado Añadir EJG’s Pendientes CAJG");
+      }
+    });
   }
 
   anadirEJGPendientesCAJG() {

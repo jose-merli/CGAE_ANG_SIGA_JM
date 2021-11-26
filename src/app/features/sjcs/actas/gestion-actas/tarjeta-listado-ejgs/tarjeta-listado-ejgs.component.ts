@@ -244,7 +244,8 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   }
 
   consultarEditarEJG(){
-
+    this.router.navigate(["/ejg"]);
+    sessionStorage.setItem('EJG', JSON.stringify(this.selectedDatos));
   }
 
   onChangeRowsPerPages(event) {
