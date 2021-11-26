@@ -9,6 +9,7 @@ import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
+import { ComboItem } from '../../../../models/ComboItem';
 
 
 
@@ -288,6 +289,22 @@ export class TablaEjgComisionComponent implements OnInit {
       n => {
         console.log("******************comboanioacta**********************");
         this.comboAnioActa = n.combooItems;
+
+        if(this.acta != null || this.acta != undefined){
+          let comboItem = this.comboAnioActa.find(anioActa => anioActa.label == this.acta.numeroacta);
+
+          let indice = this.comboAnioActa.indexOf(comboItem);
+
+          if(indice != -1){
+            this.comboAnioActa[0].label = this.comboAnioActa[indice].label;
+            this.comboAnioActa[0].value = this.comboAnioActa[indice].value;
+          }
+          
+          for(; this.comboAnioActa.length > 1;){
+            this.comboAnioActa.pop();
+          }
+        }
+
       },
       err => {
         console.log(err);

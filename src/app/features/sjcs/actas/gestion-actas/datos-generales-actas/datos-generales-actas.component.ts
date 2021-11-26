@@ -97,7 +97,7 @@ export class DatosGeneralesActasComponent implements OnInit {
      }
 
   ngOnInit() {
-    console.log("Este es el objeto que se supone tiene los datos de la tabla" + this.datos);
+    console.log("Este es el objeto que se supone tiene los datos de la tabla", this.datos);
     console.log(this.datos)
     if(this.datos.anioacta == null || this.datos.anioacta == undefined ){
       this.datosFiltro.anioacta = this.getAnio();
@@ -298,8 +298,12 @@ export class DatosGeneralesActasComponent implements OnInit {
 
 
   getActa() {
-    this.sigaServices
-    this.sigaServices.post("filtrosacta_getActa", this.datos).subscribe(
+    let acta = {
+      'anioacta': this.datos.anioacta,
+      'idinstitucion': this.datos.idInstitucion,
+      'idacta': this.datos.idacta
+    };
+    this.sigaServices.post("filtrosacta_getActa", acta).subscribe(
       n => {
           this.datosFiltro = JSON.parse(n.body);
           this.datosFiltro.fechareunion = new Date(JSON.parse(n.body).fechareunion);
@@ -307,7 +311,7 @@ export class DatosGeneralesActasComponent implements OnInit {
             this.datosFiltro.fecharesolucion = null;
           }else{
           this.datosFiltro.fecharesolucion = new Date(JSON.parse(n.body).fecharesolucion);
-          }
+          } 
           this.inicioAux = new Date(JSON.parse(n.body).horainicioreunion);
           this.inicio = this.numero2Cifras(this.inicioAux.getHours()) + ":"+ this.numero2Cifras(this.inicioAux.getMinutes());
           this.finAux = new Date(JSON.parse(n.body).horafinreunion);
