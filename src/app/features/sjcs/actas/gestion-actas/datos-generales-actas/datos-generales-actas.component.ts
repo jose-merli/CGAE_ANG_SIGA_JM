@@ -47,7 +47,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   comboPresidente = [];
   comboSecretario = [];
   comboSufijo = [];
-
+  @Input() expNum;
   //Resultados de la busqueda
   @Input() datos: ActasItem;
   @Input() modoEdicion;

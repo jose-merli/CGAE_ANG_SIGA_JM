@@ -16,13 +16,14 @@ export class GestionActasComponent implements OnInit {
   modoEdicion: boolean = true;
   institucionActual: any;
   actaItem: ActasItem;
-
+  expNum:any;
   constructor(private persistenceService: PersistenceService, private location: Location) { }
 
   ngOnInit() {
   
       this.datos = new ActasItem();
       this.modoEdicion = false;
+
    
     if(localStorage.getItem('actasItem')){
       this.datos = JSON.parse(localStorage.getItem('actasItem'));
@@ -31,7 +32,9 @@ export class GestionActasComponent implements OnInit {
     }
   }
 
-
+  expediente(event :string){
+    this.expNum = event;
+  }
   backTo() {
     this.location.back();
   }
