@@ -1,5 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, Input } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { Table } from 'primeng/table';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 @Component({
   selector: 'app-tabla-busqueda-baremos',
   templateUrl: './tabla-busqueda-baremos.component.html',
@@ -53,20 +55,32 @@ export class TablaBusquedaBaremosComponent implements OnInit {
   rowsPerPage = [];
   selectedItem: number = 10;
   first = 0;
+  selectionMode: String = "single";
+  numSelected = 0;
+  selectMultiple: boolean = false;
+  seleccion: boolean = false;
+  selectAll: boolean = false;
+  historico: boolean = false;
 
-  @Input()datos;
-  @Input()permisoEscritura;
+  @Input() datos;
+  @Input() permisoEscritura;
+  @Output() isHistorico = new EventEmitter<boolean>();
 
 
   @ViewChild("table") tabla: Table;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
+  msgs: any[];
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private persistenceService: PersistenceService,
+    private router: Router) { }
 
   ngOnInit() {
     this.getCols();
-
-    if(this.datos == null || this.datos == undefined){
+    if (this.persistenceService.getHistorico() != undefined) {
+      this.historico = this.persistenceService.getHistorico();
+    }
+    if (this.datos == null || this.datos == undefined) {
       this.datos = this.datosDefecto
     }
   }
@@ -119,10 +133,62 @@ export class TablaBusquedaBaremosComponent implements OnInit {
     ];
   }
 
+  showHistorico() {
+    this.historico = !this.historico;
+    this.persistenceService.setHistorico(this.historico);
+    if (this.historico) {
+
+      this.selectAll = false;
+      this.numSelected = 0;
+    }
+    this.selectMultiple = false;
+    this.selectionMode = "single";
+    this.isHistorico.emit(this.historico);
+  }
+
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.tabla.reset();
   }
 
+  selectDesSelectFila() {
+    this.numSelected = this.selectedDatos.length;
+  }
+
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  setItalic(dato) {
+    if (dato.fechabaja == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  openFichaBaremos() {
+    this.router.navigate(['/fichaBaremosDeGuardia']);
+  }
 }

@@ -40,6 +40,8 @@ export class BaremosDeGuardiaComponent implements OnInit {
 
     }).catch(error => console.error(error));
 
+    
+
   }
 
   getBaremosGuardias(event){
@@ -72,6 +74,18 @@ export class BaremosDeGuardiaComponent implements OnInit {
         }
       )
     }
+    }
+
+    mostrarHistorico(event){
+      let buscar = true;
+      if(event == true){
+        this.filtros.filtros.historico = true;
+        this.getBaremosGuardias(buscar);
+      }else if(event == false){
+        this.filtros.filtros.historico = false;
+        this.getBaremosGuardias(buscar);
+      }
+      
     }
   
 

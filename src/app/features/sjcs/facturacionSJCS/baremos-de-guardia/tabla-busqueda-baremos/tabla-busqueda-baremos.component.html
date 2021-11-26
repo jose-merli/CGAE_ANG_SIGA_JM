@@ -1,9 +1,12 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="card mt-3">
 
   <div class="card-body p-0" #tablaFoco>
 
     <p-table class="tabla-listado" [responsive]="true" #table class="tabla-listado" [paginator]="true" [value]="datos"
-      dataKey="idTurno" [columns]="cols" [rows]="selectedItem" paginatorPosition="both">
+      dataKey="keyForTabla" [columns]="cols" [rows]="selectedItem" paginatorPosition="both" [(selection)]="selectedDatos"
+      [selectionMode]="selectionMode" (onRowSelect)="selectDesSelectFila()" (onRowUnselect)="selectDesSelectFila()"
+      [customSort]="true" [autoLayout]="true">
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -25,22 +28,29 @@
       <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" let-columns="columns">
         <tr>
 
-          <td *ngFor="let col of columns | slice:0:10">
+          <td *ngFor="let col of columns | slice:0:10" class="text-center">
             <div class="d-flex">
               <a [pRowToggler]="rowData">
                 <div *ngIf="col.field =='nomTurno'">
                   <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                  <a><span>{{rowData[col.field]}}</span></a>
+                  <a *ngIf="!setItalic(rowData)" class="enlace" (click)="openFichaBaremos()"> <span >{{rowData[col.field]}}</span></a>
+                  <span *ngIf="setItalic(rowData)"
+                    [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
                 </div>
               </a>
             </div>
 
-            <div *ngIf="col.field !='nomTurno'">
-              <span>{{rowData[col.field]}}</span>
+            <div *ngIf="col.field =='simpleOImporteIndividual'">
+              <span *ngIf="!setItalic(rowData)">{{rowData[col.field] | currency: 'EUR' }}</span>
+              <span *ngIf="setItalic(rowData)"
+                [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]
+                | currency: 'EUR' }}</span>
             </div>
 
-            <div *ngIf="col.field =='simpleOImporteIndividual'">
-              <span>{{rowData[col.field] | currency: 'EUR' }}</span>
+            <div *ngIf="col.field !='nomTurno' && col.field !='simpleOImporteIndividual'">
+              <span *ngIf="!setItalic(rowData)">{{rowData[col.field]}}</span>
+              <span *ngIf="setItalic(rowData)"
+                [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
             </div>
 
           </td>
@@ -50,9 +60,11 @@
       <ng-template pTemplate="rowexpansion" let-dato let-columns="subCols">
 
         <tr *ngFor="let guardia of dato.guardiasObj">
-          <td *ngFor="let sub of subCols">
+          <td *ngFor="let sub of subCols" class="text-center">
             <div [ngClass]="{'displayMargin' : (sub.field == 'idGuardia')}">
-              <span>{{ guardia[sub.field] }}</span>
+              <span *ngIf="!setItalic(guardia)">{{ guardia[sub.field] }}</span>
+              <span *ngIf="setItalic(guardia)"
+                [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ guardia[sub.field] }}</span>
             </div>
           </td>
         </tr>
@@ -84,5 +96,16 @@
     </p-table>
 
   </div>
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button *ngIf="historico" pButton (click)="showHistorico()" [disabled]=" !permisoEscritura" type="button"
+        icon="fa fa-undo" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate}}"></button>
 
+      <button *ngIf="!historico" pButton (click)="showHistorico()" [disabled]=" !permisoEscritura" type="button"
+        icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+    </div>
+  </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

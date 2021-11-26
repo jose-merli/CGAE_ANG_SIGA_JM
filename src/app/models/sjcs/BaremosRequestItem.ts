@@ -14,5 +14,7 @@ export class BaremosRequestItem {
     idGuardia: String;
     nomTurno: String;
     guardias: String;
+    historico;
     guardiasObj: GuardiaItem[];
+    keyForTabla
 }
