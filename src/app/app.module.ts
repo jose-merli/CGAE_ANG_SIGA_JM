@@ -553,6 +553,9 @@ import { ServiciosAsociadosMonederoComponent } from './features/facturacion/mone
 import { TablaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/tabla-ficheros-devoluciones/tabla-ficheros-devoluciones.component';
 import { FiltrosFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/filtros-ficheros-devoluciones/filtros-ficheros-devoluciones.component';
 import { FichaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/ficha-ficheros-devoluciones.component';
+import { FiltrosFacturasComponent } from './features/facturacion/facturas/filtros-facturas/filtros-facturas.component';
+import { TablaFacturasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas.component';
+import { GestionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/gestion-facturas.component';
 
 enableRipple(true);
 
@@ -1038,6 +1041,9 @@ enableRipple(true);
 		TablaFicherosDevolucionesComponent,
 		FiltrosFicherosDevolucionesComponent,
 		FichaFicherosDevolucionesComponent,
+		FiltrosFacturasComponent,
+		TablaFacturasComponent,
+		GestionFacturasComponent,
 	],
 	imports: [
 		Paginador3Module,
