@@ -158,7 +158,7 @@
     <div class="card-footer">
       <div class="text-right main-button">
         <button pButton [disabled]="!permisoEscritura" type="button" icon="fa fa-eraser" iconPos="left" (click)="restablecer()" label="{{ 'general.boton.clear' | translate }}" ></button>
-        <button pButton [disabled]="!permisoEscritura" type="button"  icon="fa fa-search" iconPos="left"  (click)="isBuscar()" label="{{ 'general.boton.search' | translate }}"></button>
+        <button pButton type="button"  icon="fa fa-search" iconPos="left"  (click)="isBuscar()" label="{{ 'general.boton.search' | translate }}"></button>
         <button pButton [disabled]="isLetrado || !permisoEscritura" type="button"  icon="fa fa-plus" iconPos="left" (click)="new()" label="{{ 'general.boton.new' | translate }}"></button>
       </div>
     </div>

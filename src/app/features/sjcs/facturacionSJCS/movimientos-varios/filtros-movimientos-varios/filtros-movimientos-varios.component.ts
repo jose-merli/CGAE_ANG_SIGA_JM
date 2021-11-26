@@ -10,6 +10,7 @@ import {MovimientosVariosFacturacionItem} from '../MovimientosVariosFacturacionI
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { MovimientosVariosService } from '../movimientos-varios.service';
+import { SelectItem } from 'primeng/primeng';
 
 
 
@@ -25,6 +26,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 	gruposFacturacion: ComboItem;
 	facturacion: ComboItem;
 	concepto: ComboItem;
+	
 	tipos: ComboItem;
 	partidaPresupuestaria: ComboItem;
 	msgs: any[];
