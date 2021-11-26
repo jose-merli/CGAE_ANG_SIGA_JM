@@ -306,8 +306,10 @@ export class ResolucionComponent implements OnInit {
 
     //Se debe extraer los valores que necesitamos del id del elemento del combo de actas seleccionado.
     if (this.resolucion.idAnnioActa != null) {
-      this.resolucion.idActa = Number(this.resolucion.idAnnioActa.split(",")[0]);
-      this.resolucion.annioActa = Number(this.resolucion.idAnnioActa.split(",")[1]);
+      //REVISAR POSIBLE MEJORA
+      let annioIdActa = this.resolucion.idAnnioActa.split("-")[0];
+      this.resolucion.idActa = Number(annioIdActa.split("/")[1]);
+      this.resolucion.annioActa = Number(annioIdActa.split("/")[0]);
     }
     else {
       this.resolucion.idActa = null;
@@ -425,11 +427,21 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaPresPonente(event) {
-    if (event != null) this.resolucion.fechaPresentacionPonente = new Date(event);
+    if (event != null){
+      this.resolucion.fechaPresentacionPonente = new Date(event);
+    }
+    else{
+      this.resolucion.fechaPresentacionPonente = null;
+    }
   }
 
   fillFechaResCAJG(event) {
-    if (event != null) this.resolucion.fechaResolucionCAJG = new Date(event);
+    if (event != null){
+       this.resolucion.fechaResolucionCAJG = new Date(event);
+    }
+    else{
+      this.resolucion.fechaResolucionCAJG = null;
+    }
   }
 
   fillFechaResCAJGActa(event) {
@@ -446,11 +458,21 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaNotif(event) {
-    if (event != null) this.resolucion.fechaNotificacion = new Date(event);
+    if (event != null){
+      this.resolucion.fechaNotificacion = new Date(event);
+    }
+    else{
+      this.resolucion.fechaNotificacion = null;
+    }
   }
 
   fillFechaResFirme(event) {
-    if (event != null) this.resolucion.fechaRatificacion = new Date(event);
+    if (event != null) {
+      this.resolucion.fechaRatificacion = new Date(event);
+    }
+    else{
+      this.resolucion.fechaRatificacion = null;
+    }
   }
 
   onChangeCheckT(event) {
