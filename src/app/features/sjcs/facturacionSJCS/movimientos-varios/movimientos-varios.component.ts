@@ -65,112 +65,113 @@ export class MovimientosVariosComponent implements OnInit {
   getFiltrosValues(datosFiltros: MovimientosVariosFacturacionItem){
     this.datosFiltros = datosFiltros;
 		this.progressSpinner = true;
+    let datosFiltrosAux: MovimientosVariosFacturacionItem = Object.assign({}, this.datosFiltros);
 		// Modificaciones para pasar de select a multiselect por usabilidad
 		if (undefined != this.datosFiltros.idAplicadoEnPago) {
 			if (this.datosFiltros.idAplicadoEnPago.length == 0) {
-				this.datosFiltros.idAplicadoEnPago = undefined;
+				datosFiltrosAux.idAplicadoEnPago = undefined;
 			} else {
-				this.datosFiltros.idAplicadoEnPago = this.datosFiltros.idAplicadoEnPago.toString();
+				datosFiltrosAux.idAplicadoEnPago = this.datosFiltros.idAplicadoEnPago.toString();
 			}
 		}else{
-      this.datosFiltros.idAplicadoEnPago=null;
+      datosFiltrosAux.idAplicadoEnPago=null;
     }
 
 		if (undefined != this.datosFiltros.idPartidaPresupuestaria) {
 			if (this.datosFiltros.idPartidaPresupuestaria.length == 0) {
-				this.datosFiltros.idPartidaPresupuestaria = undefined;
+        datosFiltrosAux.idPartidaPresupuestaria = undefined;
 			} else {
-				this.datosFiltros.idPartidaPresupuestaria = this.datosFiltros.idPartidaPresupuestaria.toString();
+				datosFiltrosAux.idPartidaPresupuestaria = this.datosFiltros.idPartidaPresupuestaria.toString();
 			}
 		}else{
-      this.datosFiltros.idPartidaPresupuestaria=null;
+      datosFiltrosAux.idPartidaPresupuestaria=null;
     }
 
 		if (undefined != this.datosFiltros.idConcepto) {
 			if (this.datosFiltros.idConcepto.length == 0) {
-				this.datosFiltros.idConcepto = undefined;
+				datosFiltrosAux.idConcepto = undefined;
 			} else {
-				this.datosFiltros.idConcepto = this.datosFiltros.idConcepto.toString();
+				datosFiltrosAux.idConcepto = this.datosFiltros.idConcepto.toString();
 			}
 		}else{
-      this.datosFiltros.idConcepto=null;
+      datosFiltrosAux.idConcepto=null;
     }
 
 		if (undefined != this.datosFiltros.idFacturacion) {
 			if (this.datosFiltros.idFacturacion.length == 0) {
-				this.datosFiltros.idFacturacion = undefined;
+				datosFiltrosAux.idFacturacion = undefined;
 			} else {
-				this.datosFiltros.idFacturacion = this.datosFiltros.idFacturacion.toString();
+				datosFiltrosAux.idFacturacion = this.datosFiltros.idFacturacion.toString();
 			}
 		}else{
-      this.datosFiltros.idFacturacion=null;
+      datosFiltrosAux.idFacturacion=null;
     }
 
     if (undefined != this.datosFiltros.idGrupoFacturacion) {
 			if (this.datosFiltros.idGrupoFacturacion.length == 0) {
-				this.datosFiltros.idGrupoFacturacion = undefined;
+				datosFiltrosAux.idGrupoFacturacion = undefined;
 			} else {
-				this.datosFiltros.idGrupoFacturacion = this.datosFiltros.idGrupoFacturacion.toString();
+				datosFiltrosAux.idGrupoFacturacion = this.datosFiltros.idGrupoFacturacion.toString();
 			}
 		}else{
-      this.datosFiltros.idGrupoFacturacion=null;
+      datosFiltrosAux.idGrupoFacturacion=null;
     }
 
     if(this.datosFiltros.descripcion == undefined){
-      this.datosFiltros.descripcion=null;
+      datosFiltrosAux.descripcion=null;
     }
 
     if (undefined != this.datosFiltros.tipo) {
 			if (this.datosFiltros.tipo.length == 0) {
-				this.datosFiltros.tipo = undefined;
+				datosFiltrosAux.tipo = undefined;
 			} else {
-				this.datosFiltros.tipo = this.datosFiltros.tipo.toString();
+				datosFiltrosAux.tipo = this.datosFiltros.tipo.toString();
 			}
 		}else{
-      this.datosFiltros.tipo=null;
+      datosFiltrosAux.tipo=null;
     }
 
     if(this.datosFiltros.letrado == undefined){
-      this.datosFiltros.letrado = null;
+      datosFiltrosAux.letrado = null;
     }
 
     if(this.datosFiltros.ncolegiado == undefined){
-      this.datosFiltros.ncolegiado = null;
+      datosFiltrosAux.ncolegiado = null;
     }
 
 
     if(this.datosFiltros.certificacion == undefined){
-      this.datosFiltros.certificacion = null;
+      datosFiltrosAux.certificacion = null;
     }
 
     if(this.datosFiltros.fechaApDesde == undefined){
-      this.datosFiltros.fechaApDesde = null;
+      datosFiltrosAux.fechaApDesde = null;
     }
     
     if(this.datosFiltros.fechaApHasta == undefined){
-      this.datosFiltros.fechaApHasta = null;
+      datosFiltrosAux.fechaApHasta = null;
     }
 
-    this.datosFiltros.idInstitucion=null; 
-    this.datosFiltros.idMovimiento=null;
-    this.datosFiltros.idPersona=null;
-    this.datosFiltros.motivo=null;
-    this.datosFiltros.fechaAlta=null;
-    this.datosFiltros.cantidad=null;
-    this.datosFiltros.fechaModificacion=null;
-    this.datosFiltros.usuModificacion=null;
-    this.datosFiltros.contabilizado=null;
-    this.datosFiltros.cantidadAplicada=null;
-    this.datosFiltros.cantidadRestante=null;
-    this.datosFiltros.nif=null;
-    this.datosFiltros.nombre=null;
-    this.datosFiltros.apellido1=null;
-    this.datosFiltros.apellido2=null;
-    this.datosFiltros.nombrefacturacion=null;
-    this.datosFiltros.nombretipo=null;
-    this.datosFiltros.nombrePago=null;
+    datosFiltrosAux.idInstitucion=null; 
+    datosFiltrosAux.idMovimiento=null;
+    datosFiltrosAux.idPersona=null;
+    datosFiltrosAux.motivo=null;
+    datosFiltrosAux.fechaAlta=null;
+    datosFiltrosAux.cantidad=null;
+    datosFiltrosAux.fechaModificacion=null;
+    datosFiltrosAux.usuModificacion=null;
+    datosFiltrosAux.contabilizado=null;
+    datosFiltrosAux.cantidadAplicada=null;
+    datosFiltrosAux.cantidadRestante=null;
+    datosFiltrosAux.nif=null;
+    datosFiltrosAux.nombre=null;
+    datosFiltrosAux.apellido1=null;
+    datosFiltrosAux.apellido2=null;
+    datosFiltrosAux.nombrefacturacion=null;
+    datosFiltrosAux.nombretipo=null;
+    datosFiltrosAux.nombrePago=null;
    
-    this.sigaServices.post("movimientosVarios_busquedaMovimientosVarios", this.datosFiltros).subscribe(
+    this.sigaServices.post("movimientosVarios_busquedaMovimientosVarios", datosFiltrosAux).subscribe(
       data => {
         this.datos = JSON.parse(data.body).facturacionItem;
         this.buscar = true;
