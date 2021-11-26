@@ -23,12 +23,7 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="col.field == 'fecharesolucion' || col.field == 'fechareunion'">
-              <div>
-                <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
-              </div>
-            </div>
-            <div *ngIf="col.field != 'fecharesolucion' && col.field != 'fechareunion' && col.field != 'numeroacta'">
+            <div *ngIf="col.field != 'numeroacta'">
               <span>{{dato[col.field]}}</span>
             </div>
             <a class="enlace"  (click)="openTab(dato)">

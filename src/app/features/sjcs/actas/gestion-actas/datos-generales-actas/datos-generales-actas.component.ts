@@ -97,7 +97,7 @@ export class DatosGeneralesActasComponent implements OnInit {
      }
 
   ngOnInit() {
-    console.log("Este es el objeto que se supone tiene los datos de la tabla" + this.datos);
+    console.log("Este es el objeto que se supone tiene los datos de la tabla", this.datos);
     console.log(this.datos)
     if(this.datos.anioacta == null || this.datos.anioacta == undefined ){
       this.datosFiltro.anioacta = this.getAnio();
@@ -194,26 +194,47 @@ export class DatosGeneralesActasComponent implements OnInit {
   });
 }
 
+  camposObligatorios(actItem){
+    let mostrar : boolean = true;
+    if(actItem.fechareunion == null) mostrar = false;
+    if(actItem.numeroacta.length == 0) mostrar = false;
+    if(!mostrar) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    return mostrar;
+  }
+
   guardarActa() {
     this.progressSpinner = true;
     this.datosFiltro.horainicio = this.inicio;
     this.datosFiltro.horafin = this.fin;
-    this.sigaServices.post("filtrosacta_guardarActa", this.datosFiltro).subscribe(
-      data => {
-
-        if(JSON.parse(data.body).status == "OK"){
-          this.datosFiltro.idacta = JSON.parse(data.body).error.url;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        }else{
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(data.body).error.description);
+    if(this.camposObligatorios(this.datosFiltro)){
+      this.sigaServices.post("filtrosacta_guardarActa", this.datosFiltro).subscribe(
+        data => {
+          data =JSON.parse(data.body)
+          if(data.status == "OK"){
+            this.datosFiltro.idacta = data.error.url;
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+          else if(data.status == "KO" && data.error.description == "InvalidNumActa"){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.actas.mensajeError.numeroActa"));
+          }
+          else if(data.status == "KO" && data.error.description == "InvalidUpdate"){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.actas.mensajeError.actualizarActa"));
+          }
+          else if(data.status == "KO" && data.error.description == "InvalidInsert"){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.actas.mensajeError.insertarActa"));
+          }
+          else{
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), data.error.description);
+          }
+  
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
         }
-
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+      );
+    }
+    this.progressSpinner = false;
   }
 
 
@@ -298,8 +319,12 @@ export class DatosGeneralesActasComponent implements OnInit {
 
 
   getActa() {
-    this.sigaServices
-    this.sigaServices.post("filtrosacta_getActa", this.datos).subscribe(
+    let acta = {
+      'anioacta': this.datos.anioacta,
+      'idinstitucion': this.datos.idInstitucion,
+      'idacta': this.datos.idacta
+    };
+    this.sigaServices.post("filtrosacta_getActa", acta).subscribe(
       n => {
           this.datosFiltro = JSON.parse(n.body);
           this.datosFiltro.fechareunion = new Date(JSON.parse(n.body).fechareunion);
@@ -307,7 +332,7 @@ export class DatosGeneralesActasComponent implements OnInit {
             this.datosFiltro.fecharesolucion = null;
           }else{
           this.datosFiltro.fecharesolucion = new Date(JSON.parse(n.body).fecharesolucion);
-          }
+          } 
           this.inicioAux = new Date(JSON.parse(n.body).horainicioreunion);
           this.inicio = this.numero2Cifras(this.inicioAux.getHours()) + ":"+ this.numero2Cifras(this.inicioAux.getMinutes());
           this.finAux = new Date(JSON.parse(n.body).horafinreunion);

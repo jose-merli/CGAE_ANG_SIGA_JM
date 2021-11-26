@@ -152,8 +152,8 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.editElementDisabled();
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      this.selectedDatos = this.ejgs;
+      this.numSelected = this.ejgs.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -208,7 +208,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
       'annioActa': acta.anioacta,
       'numActa': numActa[1]
     };
-    this.sigaServices.post("filtrosejgcomision_busquedaEJGComision", this.actaDatosEntradaItem).subscribe(
+    this.sigaServices.post("filtrosejgcomision_busquedaEJGActaComision", this.actaDatosEntradaItem).subscribe(
       n => {
         console.log("Dentro del servicio del padre que llama al getEJGRemesa");
         this.ejgs = JSON.parse(n.body).ejgItems;
@@ -254,7 +254,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   }
 
   editElementDisabled() {
-    this.datos.forEach(element => {
+    this.ejgs.forEach(element => {
       element.editable = false
       element.overlayVisible = false;
     });
