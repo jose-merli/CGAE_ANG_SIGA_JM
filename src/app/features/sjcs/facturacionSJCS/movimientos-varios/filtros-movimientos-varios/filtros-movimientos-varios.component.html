@@ -41,10 +41,11 @@
          <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.movimientosVarios.aplicadoEnPago' | translate}}</label>
 
-            <p-multiSelect [(ngModel)]='filtros.idAplicadoEnPago' class="select-form" defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="aplicadoEnPago" [filter]="true"
-              maxSelectedLabels="10" [selectedItemsLabel]="'{0} seleccionados'" filterBy="label,labelSinTilde"
-              styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event, 'idAplicadoEnPago')"> 
-            </p-multiSelect>
+            <p-multiSelect [(ngModel)]='filtros.idAplicadoEnPago' class="select-form"
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" 
+             [options]="aplicadoEnPago" [filter]="true" selectionLimits="10"
+             maxSelectedLabels="10" [selectedItemsLabel]="'{0} seleccionados'" filterBy="label,labelSinTilde"
+             styleClass="widthAll" (onChange)="onChangeMultiSelectFact($event)"> </p-multiSelect>
           </div>
           <!--APLICADO EN PAGO-->
         </div>
