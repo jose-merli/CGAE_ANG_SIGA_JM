@@ -30,6 +30,7 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
   noAplica: boolean = false;
   finalizado: boolean = false;
   finalizadoError: boolean = false;
+  logDisponible: boolean = false;
 
   constructor(
     private commonsService: CommonsService
@@ -57,6 +58,7 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
     this.noAplica = this.body.idEstadoTraspaso == "22";
     this.finalizado = this.body.idEstadoTraspaso == "23" || this.body.idEstadoTraspaso == "24" || this.body.idEstadoTraspaso == "25" || this.body.idEstadoTraspaso == "26";
     this.finalizadoError = this.body.idEstadoTraspaso == "27";
+    this.logDisponible = this.body.logTraspaso != undefined && this.body.logTraspaso.trim().length != 0;
   }
 
   // Estilo obligatorio

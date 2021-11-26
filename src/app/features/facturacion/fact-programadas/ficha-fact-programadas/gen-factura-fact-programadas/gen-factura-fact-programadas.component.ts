@@ -32,6 +32,7 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   noAplica: boolean = false;
   finalizado: boolean = false;
   finalizadoError: boolean = false;
+  logDisponible:boolean = false;
 
   comboModelosFactura: ComboItem[] = [];
 
@@ -76,6 +77,7 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
     this.noAplica = this.body.idEstadoPDF == "5";
     this.finalizado = this.body.idEstadoPDF == "6" || this.body.idEstadoPDF == "7" || this.body.idEstadoPDF == "8" || this.body.idEstadoPDF == "9";
     this.finalizadoError = this.body.idEstadoPDF == "10";
+    this.logDisponible = true;
   }
 
   // Estilo obligatorio

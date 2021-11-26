@@ -63,7 +63,7 @@
 
     <div *ngIf="esFichaActiva('envio')" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="!(confirmada && finalizado)" pButton (click)="confirmDescargar()"
+        <button [disabled]="!(confirmada && finalizado && logDisponible)" pButton (click)="confirmDescargar()"
           type="button" icon="fa fa-download" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
 
         <button [disabled]="!(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-undo" iconPos="left"

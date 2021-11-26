@@ -32,6 +32,7 @@ export class EnvioFactProgramadasComponent implements OnInit, OnChanges {
   noAplica: boolean = false;
   finalizado: boolean = false;
   finalizadoError: boolean = false;
+  logDisponible: boolean = false;
 
   comboPlantillas: ComboItem[] = [];
 
@@ -78,6 +79,7 @@ export class EnvioFactProgramadasComponent implements OnInit, OnChanges {
     this.noAplica = this.body.idEstadoEnvio == "11";
     this.finalizado = this.body.idEstadoEnvio == "12" || this.body.idEstadoEnvio == "13" || this.body.idEstadoEnvio == "14" || this.body.idEstadoEnvio == "15";
     this.finalizadoError = this.body.idEstadoEnvio == "16";
+    this.logDisponible = true;
   }
 
   // Estilo obligatorio
