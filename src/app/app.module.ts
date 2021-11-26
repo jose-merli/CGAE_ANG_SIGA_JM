@@ -550,6 +550,9 @@ import { FichaMonederoComponent } from './features/facturacion/monederos/ficha-m
 import { DatosGeneralesMonederoComponent } from './features/facturacion/monederos/ficha-monedero/datos-generales-monedero/datos-generales-monedero.component';
 import { MovimientosMonederoComponent } from './features/facturacion/monederos/ficha-monedero/movimientos-monedero/movimientos-monedero.component';
 import { ServiciosAsociadosMonederoComponent } from './features/facturacion/monederos/ficha-monedero/servicios-asociados-monedero/servicios-asociados-monedero.component';
+import { TablaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/tabla-ficheros-devoluciones/tabla-ficheros-devoluciones.component';
+import { FiltrosFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/filtros-ficheros-devoluciones/filtros-ficheros-devoluciones.component';
+import { FichaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/ficha-ficheros-devoluciones.component';
 
 enableRipple(true);
 
@@ -1032,6 +1035,9 @@ enableRipple(true);
 		DatosGeneralesMonederoComponent,
 		MovimientosMonederoComponent,
 		ServiciosAsociadosMonederoComponent,
+		TablaFicherosDevolucionesComponent,
+		FiltrosFicherosDevolucionesComponent,
+		FichaFicherosDevolucionesComponent,
 	],
 	imports: [
 		Paginador3Module,

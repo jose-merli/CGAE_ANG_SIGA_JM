@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/components/common/message';
 import { OldSigaServices } from '../../../../_services/oldSiga.service'
 
 
@@ -10,16 +11,12 @@ import { OldSigaServices } from '../../../../_services/oldSiga.service'
 })
 export class FicherosDevolucionesComponent implements OnInit {
 
-  url;
+  msgs: Message[] = [];
+  progressSpinner: boolean = false;
 
-  constructor(public sigaServices: OldSigaServices) {
-    this.url = sigaServices.getOldSigaUrl("ficherosDevoluciones");
-  }
+  constructor() {  }
 
   ngOnInit() {
   }
-
-
-
 
 }
