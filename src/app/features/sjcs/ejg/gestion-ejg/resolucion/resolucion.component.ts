@@ -268,7 +268,30 @@ export class ResolucionComponent implements OnInit {
       if (this.disabledSave()) {
         this.msgs = this.commonsServices.checkPermisoAccion();
       } else {
-        this.save();
+
+        //Se recupera nuevamenten nuevamente los estados del EJG para asegurarnos de su validez
+        let ejg = this.persistenceService.getDatos();
+        this.progressSpinner = true;
+        this.sigaServices.post("gestionejg_getEstados", ejg).subscribe(
+          n => {
+            let estadosEJG = JSON.parse(n.body).estadoEjgItems;
+
+            //Se comprueba si el ultimo estado introducido tiene "visibilidadcomision" == 1 (visible para comision)
+            //Tener en cuenta que esa propiedad se ha renombrado en el front como "propietario"
+            if(estadosEJG.length > 0 && estadosEJG[0].propietario == 1){
+              this.save();
+            }
+            //REVISAR MENSAJE
+            else{
+              this.showMessage('error', 'Error', "** No se puede realizar esta acción debido a que el ultimo estado del EJG no es propiedad de CAJG.");
+              this.progressSpinner = false;
+            }
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          }
+        );
       }
     }
   }
