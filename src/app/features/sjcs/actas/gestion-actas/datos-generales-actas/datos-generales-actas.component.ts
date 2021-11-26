@@ -106,6 +106,7 @@ export class DatosGeneralesActasComponent implements OnInit {
       this.getComboPresidente();
     }else{
       this.editable = false;
+      this.controlComboSufijo = false;
       this.numCompleto= this.datos.numeroacta
       this.numAnio();
       this.getActa();

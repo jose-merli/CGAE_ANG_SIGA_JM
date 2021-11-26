@@ -48,7 +48,7 @@
           <div class="form-row">
 		  
 
-              <div *ngIf="!editable" class="col-lg-2 col-md-2 pl5">
+              <div *ngIf="!editable" class="form-group col-lg-2 col-md-2 pl5">
                 <label><strong>{{ anioNum}}</strong></label>
                 <input type="text" [(ngModel)]="numCompleto" class="form-control"
                   maxLength="4" pInputText [disabled]="disabledAnio">
@@ -56,14 +56,14 @@
 
 
             
-              <div  *ngIf="editable" class="col-md-1 col-md-1 pl5">
+              <div  *ngIf="editable" class="form-group col-md-1 col-md-1 pl5">
                 <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
                     translate}}</strong></label>
                 <input type="text" [(ngModel)]="datosFiltro.anioacta" class="form-control" (keypress)="numberOnly($event)"
                   maxLength="4" pInputText [disabled]="disabledAnio">
               </div>
 
-              <div  *ngIf="editable" class="col-md-1 col-md-1 pr5">
+              <div  *ngIf="editable" class="form-group col-md-1 col-md-1 pr5">
                 <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
                     translate}}*</strong></label>
                 <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroacta">
