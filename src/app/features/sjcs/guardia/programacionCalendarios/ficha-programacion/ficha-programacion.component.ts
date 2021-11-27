@@ -908,6 +908,11 @@ this.estado = this.datosGeneralesIniciales.estado;
 }
 
 descargarLog(event){
+  let datosCalendariosSeleccionado = {
+    'idCalendarioGuardias': event.idCalendarioGuardias,
+    'idTurno': event.idTurno,
+    'idGuardia': event.idGuardia
+  };
   let estadoNumerico = "0";
   switch (this.datosGenerales.estado) {
     case "Pendiente":
@@ -916,6 +921,9 @@ descargarLog(event){
     case "Programada":
       estadoNumerico = "1";
       break;
+      case "Generada":
+        estadoNumerico = "4";
+        break;
     default:
       estadoNumerico = "0";
       break;
@@ -925,8 +933,8 @@ descargarLog(event){
   let dataToDownload = {
     'turno': this.datosGenerales.turno,
     'guardia': this.datosGenerales.nombre,
-    'idGuardia': this.datosGenerales.idGuardia,
-    'idTurno': this.datosGenerales.idTurno,
+    'idGuardia': datosCalendariosSeleccionado.idGuardia,
+    'idTurno': datosCalendariosSeleccionado.idTurno,
     'observaciones': this.datosGenerales.observaciones,
     'fechaDesde': this.datosGenerales.fechaDesde,
     'fechaHasta': this.datosGenerales.fechaHasta,
@@ -937,7 +945,7 @@ descargarLog(event){
     'idCalG': this.datosGenerales.listaGuarias.value, //conjunto
     'listaGuardias': this.datosGenerales.listaGuarias.label,
     'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
-    'idCalendarioGuardias' : event
+    'idCalendarioGuardias' : datosCalendariosSeleccionado.idCalendarioGuardias
   };
 
   if (event){
@@ -957,6 +965,20 @@ descargarLog(event){
         let blob = new Blob([resHead.response], { type: 'application/octet-stream' });
         saveAs(blob, fileName);
         this.showMessage( 'success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+        switch (estadoNumerico) {
+          case "5":
+            this.datosGenerales.estado = "Pendiente";
+            break;
+          case "1":
+            this.datosGenerales.estado = "Programada";
+            break;
+          case "4":
+            this.datosGenerales.estado = "Generada";
+            break;
+          default:
+            this.datosGenerales.estado = "-";
+            break;
+        }
   },
   err => {
         this.progressSpinner = false;
@@ -970,6 +992,9 @@ descargarLog(event){
             break;
           case "1":
             this.datosGenerales.estado = "Programada";
+            break;
+          case "4":
+            this.datosGenerales.estado = "Generada";
             break;
           default:
             this.datosGenerales.estado = "-";
@@ -985,8 +1010,42 @@ descargarLog(event){
       "guardiaCalendario_generar",  datos).subscribe(
         data => {
           this.progressSpinner = false;
+          this.showMessage('success', 'Calendario generado correctamente', '')
+          setTimeout(() => {
+            let dataToSend = {
+              'duplicar': false,
+              'tabla': [],
+              'turno':this.datosGenerales.turno,
+              'nombre': this.datosGenerales.nombre,
+              'generado': 'Si',
+              'numGuardias': this.datosGenerales.numGuardias,
+              'listaGuarias': this.datosGenerales.listaGuarias,
+              'fechaDesde': this.datosGenerales.fechaDesde,
+              'fechaHasta': this.datosGenerales.fechaHasta,
+              'fechaProgramacion': this.datosGenerales.fechaProgramacion,
+              'estado': "Generada",
+              'observaciones': this.datosGenerales.observaciones,
+              'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
+              'idTurno': this.datosGenerales.idTurno,
+              'idGuardia': this.datosGenerales.idGuardia,
+              'filtrosBusqueda' : this.dataToReceive.filtrosBusqueda
+            }
+              this.persistenceService.setDatos(dataToSend);
+              this.router.navigate(["/fichaProgramacion"]);
+  
+          }, 3000);
+         
+     
         }, err => {
           this.progressSpinner = false;
+          let errorDTO = {'code': 0,'message': '','description':'', 'infoURL':null,'details':[]};
+          let responseDTO = {'status': '', 'id': '', 'error': errorDTO};
+          
+          responseDTO = err.error;
+          responseDTO = JSON.parse(err.error);
+          let mensajeError = responseDTO.error.message;
+          this.showMessage('error', 'Error. No puede generarse el calendario. ' + mensajeError, '')
+          
           console.log(err);
         });
   }
