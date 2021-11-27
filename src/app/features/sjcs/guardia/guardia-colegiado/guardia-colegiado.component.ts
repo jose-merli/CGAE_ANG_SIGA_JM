@@ -156,8 +156,8 @@ export class GuardiaColegiadoComponent implements OnInit {
   checkFilters(){
     if (//(this.filtros.filtros.idTurno != null && this.filtros.filtros.idTurno != undefined && this.filtros.filtros.idTurno.length != 0) ||
         //(this.filtros.filtros.idGuardia != null && this.filtros.filtros.idGuardia != undefined && this.filtros.filtros.idGuardia.length != 0) ||
-        (this.filtros.filtros.fechadesde != null && this.filtros.filtros.fechadesde != undefined && this.filtros.filtros.fechadesde.trim() != "" ) ||
-        (this.filtros.filtros.fechahasta != null && this.filtros.filtros.fechahasta != undefined && this.filtros.filtros.fechahasta.trim() != "" ) //||
+        (this.filtros.filtros.fechadesde != null && this.filtros.filtros.fechadesde != undefined && this.filtros.filtros.fechadesde.toString().trim() != "" ) ||
+        (this.filtros.filtros.fechahasta != null && this.filtros.filtros.fechahasta != undefined && this.filtros.filtros.fechahasta.toString().trim() != "" ) //||
         //(this.filtros.filtros.validada != null && this.filtros.filtros.validada != undefined && this.filtros.filtros.validada.length != 0)
         ){
           return true;

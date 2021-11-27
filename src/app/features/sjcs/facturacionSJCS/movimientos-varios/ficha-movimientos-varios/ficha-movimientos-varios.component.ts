@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, DatePipe } from '@angular/common';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -7,12 +7,12 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { SigaStorageService } from '../../../../../siga-storage.service';
-import { TarjetaDatosClienteComponent } from './tarjeta-datos-cliente/tarjeta-datos-cliente.component';
 import { BusquedaFisicaItem } from '../../../../../models/BusquedaFisicaItem';
 import { ColegiadosSJCSItem } from '../../../../../models/ColegiadosSJCSItem';
 import { MovimientosVariosService } from '../movimientos-varios.service';
 import { MovimientosVariosFacturacionItem } from '../MovimientosVariosFacturacionItem';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
+import { MovimientosVariosFacturacionDTO } from '../../../../../models/sjcs/MovimientosVariosFacturacionDTO';
 
 @Component({
   selector: 'app-ficha-movimientos-varios',
@@ -31,18 +31,20 @@ export class FichaMovimientosVariosComponent implements OnInit {
   datosTarjetaClientes;
   datosClientes;
   iconoTarjetaResumen = 'fas fa-clipboard';
- 
+
   msgs;
   datosListadoPagos;
   progressSpinner: boolean = false;
   permisoEscritura: any;
 
   enlacesTarjetaResumen: any[] = [];
-	manuallyOpened:Boolean = false;
-	openDatosCliente: Boolean = false;
-	openDatosGen: Boolean = false;
-	openCriterios: Boolean = false;
-	openListadoPagos: Boolean = false;
+  manuallyOpened: Boolean = false;
+  openDatosCliente: Boolean = false;
+  openDatosGen: Boolean = false;
+  openCriterios: Boolean = false;
+  openListadoPagos: Boolean = false;
+  // Movimiento vario que viene desde la tarjeta de facturación genérica en modo edición
+  movVarioDesdeTarjFacGeneEdit = null;
 
 
 
@@ -59,7 +61,10 @@ export class FichaMovimientosVariosComponent implements OnInit {
 
 
   ngOnInit() {
+    this.cargaInicial();
+  }
 
+  async cargaInicial() {
     this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaMovimientosVarios).then(respuesta => {
 
       this.permisoEscritura = respuesta; //true, false, undefined
@@ -71,23 +76,53 @@ export class FichaMovimientosVariosComponent implements OnInit {
       }
     }).catch(error => console.error(error));
 
+    // Viene de la tarjeta de facturación genérica nuevo
+    if (sessionStorage.getItem("datosNuevoMovimiento")) {
+      const datos = JSON.parse(sessionStorage.getItem("datosNuevoMovimiento"));
+      sessionStorage.removeItem("datosNuevoMovimiento");
+      console.log("HAN LLEGADO LOS DATOS", datos);
+    }
+
+    // Viene de la tarjeta de facturación genérica edición
+    if (sessionStorage.getItem("datosEdicionMovimiento")) {
+      const datos = JSON.parse(sessionStorage.getItem("datosEdicionMovimiento"));
+      sessionStorage.removeItem("datosEdicionMovimiento");
+      this.movVarioDesdeTarjFacGeneEdit = await this.getMovimientoVarioPorId(datos.idObjeto).then(
+        (data: MovimientosVariosFacturacionDTO) => {
+          let movimiento: MovimientosVariosFacturacionItem = null;
+          if (data.error && data.error != null && data.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(data.error.description.toString()));
+          } else {
+            movimiento = data.facturacionItem[0];
+          }
+
+          return movimiento;
+        }
+      ).catch(err => {
+        console.log(err);
+      });
+    }
+
     this.isLetrado = this.sigaStorageService.isLetrado;
     this.datosTarjetaResumen = [];
     this.datosTarjetaClientes = [];
-    this.datos;
 
-    if (this.movimientosVariosService.modoEdicion) {
+    if (this.movimientosVariosService.modoEdicion || this.movVarioDesdeTarjFacGeneEdit != null) {
       this.modoEdicion = true;
     } else {
       this.modoEdicion = false;
     }
 
-    if(this.modoEdicion){
+    if (this.modoEdicion) {
+      if (this.movVarioDesdeTarjFacGeneEdit != null) {
+        this.datos = JSON.parse(JSON.stringify(this.movVarioDesdeTarjFacGeneEdit));
+      } else {
         this.datos = this.persistenceService.getDatos();
-        this.getDatosTarjetaClientes(this.datos); 
-        this.getDatosTarjetaResumen(this.datos);   
-        this.getPagos(); 
-    }else{
+      }
+      this.getDatosTarjetaClientes(this.datos);
+      this.getDatosTarjetaResumen(this.datos);
+      this.getPagos();
+    } else {
       this.getTarjetaResumen(this.datosColegiado);
       if (sessionStorage.getItem("showDatosClientes")) {
         this.getTarjetaClientes(this.bodyFisica);
@@ -95,7 +130,6 @@ export class FichaMovimientosVariosComponent implements OnInit {
         this.getTarjetaClientes(this.datosColegiado);
       }
     }
-
   }
 
   getPagos() {
@@ -155,43 +189,43 @@ export class FichaMovimientosVariosComponent implements OnInit {
   }
 
   isCloseReceive(event) {
-		if (event != undefined) {
-		  	switch (event) {
-				case "tarjetaDatosCliente":
-				this.openDatosCliente = this.manuallyOpened;
-				break;
-				case "tarjetaDatosGenerales":
-				this.openDatosGen = this.manuallyOpened;
-				break;
-				case "tarjetaCriteriosAplicacion":
-				this.openCriterios = this.manuallyOpened;
-				break;
-				case "tarjetaListadoPagos":
-				this.openListadoPagos = this.manuallyOpened;
-				break;
-			}
-		}
-	  }
-	
-	  isOpenReceive(event) {
-		
-		if (event != undefined) {
-		  switch (event) {
-			case "tarjetaDatosCliente":
-			  this.openDatosCliente = true;
-			  break;
-			case "tarjetaDatosGenerales":
-			  this.openDatosGen = true;
-			  break;
-			case "tarjetaCriteriosAplicacion":
-			  this.openCriterios = true;
-			  break;
-			case "tarjetaListadoPagos":
-			  this.openListadoPagos = true;
-			  break;
-		  }
-		}
-	  }
+    if (event != undefined) {
+      switch (event) {
+        case "tarjetaDatosCliente":
+          this.openDatosCliente = this.manuallyOpened;
+          break;
+        case "tarjetaDatosGenerales":
+          this.openDatosGen = this.manuallyOpened;
+          break;
+        case "tarjetaCriteriosAplicacion":
+          this.openCriterios = this.manuallyOpened;
+          break;
+        case "tarjetaListadoPagos":
+          this.openListadoPagos = this.manuallyOpened;
+          break;
+      }
+    }
+  }
+
+  isOpenReceive(event) {
+
+    if (event != undefined) {
+      switch (event) {
+        case "tarjetaDatosCliente":
+          this.openDatosCliente = true;
+          break;
+        case "tarjetaDatosGenerales":
+          this.openDatosGen = true;
+          break;
+        case "tarjetaCriteriosAplicacion":
+          this.openCriterios = true;
+          break;
+        case "tarjetaListadoPagos":
+          this.openListadoPagos = true;
+          break;
+      }
+    }
+  }
 
 
   getDatosTarjetaClientes(movimiento: any) {
@@ -242,17 +276,24 @@ export class FichaMovimientosVariosComponent implements OnInit {
     this.datosTarjetaResumen = datosResumen;
   }
 
-
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
   clear() {
     this.msgs = [];
   }
 
   datosTarjetaResumenEvent(event) {
-		if (event != undefined) {
-		  this.datosTarjetaResumen = event;
-		}
-	}
+    if (event != undefined) {
+      this.datosTarjetaResumen = event;
+    }
+  }
 
   datosColegiadoEvent(event) {
     this.datosColegiado = event;
@@ -268,6 +309,10 @@ export class FichaMovimientosVariosComponent implements OnInit {
 
   volver() {
     this.location.back();
+  }
+
+  getMovimientoVarioPorId(id: string) {
+    return this.sigaServices.getParam("movimientosVarios_getMovimientoVarioPorId", `?idMovimiento=${id}`).toPromise();
   }
 
 }

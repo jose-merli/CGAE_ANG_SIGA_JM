@@ -76,13 +76,13 @@ export let endpoints_facturacionsjcs: any = {
 
     /*Endpoints impreso 190 */
 
-    impreso190_generar:"facturacionsjcs/impreso190generar",
-    impreso190_searchImpresos:"facturacionsjcs/searchImpreso190",
-    impreso190_descargar:"facturacionsjcs/impreso190descargar",
-    impreso190_eliminar:"facturacionsjcs/deleteImpreso190",
-    impreso190_searchConfImpreso190:"facturacionsjcs/searchConfImpreso190",
+    impreso190_generar: "facturacionsjcs/impreso190generar",
+    impreso190_searchImpresos: "facturacionsjcs/searchImpreso190",
+    impreso190_descargar: "facturacionsjcs/impreso190descargar",
+    impreso190_eliminar: "facturacionsjcs/deleteImpreso190",
+    impreso190_searchConfImpreso190: "facturacionsjcs/searchConfImpreso190",
 
-    /*Endpoints BaremosGuardias*/ 
+    /*Endpoints BaremosGuardias*/
     baremosGuardia_buscar: "baremosGuardia/buscar",
 
     /* Endpoints Tarjeta genérica facturaciones */
@@ -103,5 +103,6 @@ export let endpoints_facturacionsjcs: any = {
     movimientosVarios_updateDatosGenMovimientosVarios: "movimientosVarios/updateDatosGenMovimientosVarios",
     movimientosVarios_saveCriteriosMovimientosVarios: "movimientosVarios/saveCriteriosMovimientosVarios",
     movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios",
+    movimientosVarios_getMovimientoVarioPorId: "movimientosVarios/getMovimientoVarioPorId",
 
 }
