@@ -178,7 +178,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
 
   onChangeMulti(event, rowPosition, cell){
     let deseleccionado;
-   
+    rowPosition = this.from + rowPosition;
+    this.rowGroups[rowPosition].cells[6].value = event.value.join(", ");
     let selected = event.itemValue;
     let arraySelected = event.value;
     let labelSelected;

@@ -40,7 +40,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
   selectedDatosCertificados;
   @Input() tarjetaInteres: string;
   tarjetaInteresNum: string;
-
+  @Input() datosColegiado = new FichaColegialGeneralesItem();
   selectedItemColegiaciones: number = 10;
   tarjetaOtrasColegiaciones: string;
   datosColegiaciones: any[] = [];

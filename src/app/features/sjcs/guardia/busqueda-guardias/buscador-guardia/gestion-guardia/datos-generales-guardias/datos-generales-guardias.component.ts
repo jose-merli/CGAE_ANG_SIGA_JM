@@ -6,6 +6,7 @@ import { CommonsService } from '../../../../../../../_services/commons.service';
 import { endpoints_guardia } from '../../../../../../../utils/endpoints_guardia';
 import { TranslateService } from '../../../../../../../commons/translate';
 import { SigaStorageService } from '../../../../../../../siga-storage.service';
+import { CalendarioProgramadoItem } from '../../../../../../../models/guardia/CalendarioProgramadoItem';
 
 @Component({
   selector: 'app-datos-generales-guardias',
@@ -55,6 +56,13 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
     this.getComboTurno();
     // this.progressSpinner = true;
+    /*if (sessionStorage.getItem("filtrosDatosGeneralesGuardia")) {
+      this.body = new GuardiaItem();
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtrosDatosGeneralesGuardia")
+      );
+    }*/
+
     this.sigaService.datosRedy$.subscribe(
       data => {
         data = JSON.parse(data.body);
@@ -199,12 +207,23 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
 
   callSaveService(url) {
+    let filtros = new GuardiaItem();
+    filtros.idGuardia = this.body.idGuardia;
+    filtros.descripcionFacturacion = this.body.descripcionFacturacion;
+    filtros.descripcion = this.body.descripcion;
+    filtros.descripcionPago = this.body.descripcionPago;
+    filtros.idTipoGuardia = this.body.idTipoGuardia;
+    filtros.idTurno = this.body.idTurno;
+    filtros.nombre = this.body.nombre;
+    filtros.envioCentralita = this.body.envioCentralita;
+    //sessionStorage.setItem('filtrosDatosGeneralesGuardia', JSON.stringify(filtros));
+
     if (this.body.descripcion != undefined) this.body.descripcion = this.body.descripcion.trim();
     if (this.body.nombre != undefined) this.body.nombre = this.body.nombre.trim();
     if (this.body.envioCentralita == undefined) this.body.envioCentralita = false;
     this.sigaService.post(url, this.body).subscribe(
       data => {
-
+        this.body = JSON.parse(data.body);
         if (!this.modoEdicion) {
           this.modoEdicion = true;
           this.getCols();
@@ -269,7 +288,10 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   resumenTipoGuardiaResumen() {
-    this.tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0].label;
+    let i = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0];
+    if (i != undefined){
+      this.tipoGuardiaResumen = i.label;
+    }
   }
 
   clear() {
