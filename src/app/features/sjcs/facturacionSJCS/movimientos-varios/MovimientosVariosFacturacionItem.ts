@@ -6,13 +6,13 @@ export class MovimientosVariosFacturacionItem {
 	idAplicadoEnPago: String;
 	fechaApDesde: Date;
 	fechaApHasta: Date;
-    idConcepto: String;
-    idPartidaPresupuestaria: String;
-    ncolegiado: String;
-    letrado: String; //nombre, apellidos
-    cantidad: number;
-    cantidadAplicada: number;
-    cantidadRestante:number;
+	idConcepto: String;
+	idPartidaPresupuestaria: String;
+	ncolegiado: String;
+	letrado: String; //nombre, apellidos
+	cantidad: number;
+	cantidadAplicada: number;
+	cantidadRestante: number;
 	idInstitucion: String;
 	idMovimiento: String;
 	idPersona: String;
@@ -24,13 +24,13 @@ export class MovimientosVariosFacturacionItem {
 	idFacturacion: String;
 	idGrupoFacturacion: String;
 	historico: Boolean;
-    nif: String;
+	nif: String;
 	apellido1: String;
 	apellido2: String;
 	nombre: String;
 	nombrefacturacion: String;
 	nombretipo: String;
 	nombrePago: String;
-	
+
 	constructor() { }
 }

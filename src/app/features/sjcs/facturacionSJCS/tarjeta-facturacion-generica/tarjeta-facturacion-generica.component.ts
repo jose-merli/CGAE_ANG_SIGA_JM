@@ -10,6 +10,7 @@ import { TarjetaAsistenciaItem } from '../../../../models/guardia/TarjetaAsisten
 import { ActuacionAsistenciaItem } from '../../../../models/guardia/ActuacionAsistenciaItem';
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { GuardiaItem } from '../../../../models/guardia/GuardiaItem';
+import { DatosMovimientoVarioDTO } from '../../../../models/sjcs/DatosMovimientoVarioDTO';
 
 export enum PANTALLAS {
   ACTUACIONDESIGNA = "ACTUACIONDESIGNA",
@@ -454,6 +455,42 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
   eliminar() {
 
+    let deleteList: DatosMovimientoVarioDTO[] = [];
+    let notDeleteList: DatosMovimientoVarioDTO[] = [];
+
+    this.selectedDatos.forEach(el => {
+      if (el.numAplicaciones > 0) {
+        notDeleteList.push(el);
+      } else {
+        deleteList.push(el);
+      }
+    });
+
+    this.callDeleteService(deleteList);
+
+  }
+
+  callDeleteService(deleteList: DatosMovimientoVarioDTO[]) {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("movimientosVarios_eliminarMovimiento", deleteList).subscribe(
+      data => {
+        const error = JSON.parse(data.body).error;
+
+        if (error.status == 'KO' && error != null && error.description != null) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
+          this.getDatos(this.pantalla);
+        }
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        console.log(err);
+      }
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
