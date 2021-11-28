@@ -19,12 +19,14 @@ export class GestionActasComponent implements OnInit {
   actaItem: ActasItem;
   @ViewChild(TarjetaListadoEjgsComponent) tarjetaListado: TarjetaListadoEjgsComponent;
 
+  expNum:any;
   constructor(private persistenceService: PersistenceService, private location: Location) { }
 
   ngOnInit() {
   
       this.datos = new ActasItem();
       this.modoEdicion = false;
+
    
     if(localStorage.getItem('actasItem')){
       this.datos = JSON.parse(localStorage.getItem('actasItem'));
@@ -37,6 +39,9 @@ export class GestionActasComponent implements OnInit {
     this.tarjetaListado.getEJG(this.datos);
   }
 
+  expediente(event :string){
+    this.expNum = event;
+  }
   backTo() {
     this.location.back();
   }
