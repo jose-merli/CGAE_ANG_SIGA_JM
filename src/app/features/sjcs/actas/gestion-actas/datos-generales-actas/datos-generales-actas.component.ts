@@ -444,6 +444,7 @@ export class DatosGeneralesActasComponent implements OnInit {
         }
 
         this.progressSpinner = false;
+        this.pendienteCAJG.emit();
       },
       () => {
         this.progressSpinner = false;

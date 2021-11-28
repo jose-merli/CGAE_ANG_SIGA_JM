@@ -200,7 +200,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     ];
   }
 
-  getEJG(acta, padre?){
+  getEJG(acta){
     this.progressSpinner = true;
     let numActa = acta.numeroacta.split("/");
     this.actaDatosEntradaItem =

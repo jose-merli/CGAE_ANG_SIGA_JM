@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActasItem } from '../../../../models/sjcs/ActasItem';
 import { Location } from '@angular/common';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { TarjetaListadoEjgsComponent } from './tarjeta-listado-ejgs/tarjeta-listado-ejgs.component';
 
 
 @Component({
@@ -16,6 +17,7 @@ export class GestionActasComponent implements OnInit {
   modoEdicion: boolean = true;
   institucionActual: any;
   actaItem: ActasItem;
+  @ViewChild(TarjetaListadoEjgsComponent) tarjetaListado: TarjetaListadoEjgsComponent;
 
   constructor(private persistenceService: PersistenceService, private location: Location) { }
 
@@ -31,6 +33,9 @@ export class GestionActasComponent implements OnInit {
     }
   }
 
+  buscarEJGs(){
+    this.tarjetaListado.getEJG(this.datos);
+  }
 
   backTo() {
     this.location.back();
