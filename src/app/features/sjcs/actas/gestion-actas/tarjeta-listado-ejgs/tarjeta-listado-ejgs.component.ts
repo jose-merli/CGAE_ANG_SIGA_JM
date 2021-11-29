@@ -5,6 +5,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { ConfirmationService, Paginator } from 'primeng/primeng';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { ActasItem } from '../../../../../models/sjcs/ActasItem';
 @Component({
   selector: 'app-tarjeta-listado-ejgs',
   templateUrl: './tarjeta-listado-ejgs.component.html',
@@ -41,7 +42,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   ejgs;
 
   //Resultados de la busqueda
-  @Input() datos;
+  @Input() datos: ActasItem;
 
   @Input() permisos;
 

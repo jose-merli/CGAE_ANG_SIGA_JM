@@ -7,7 +7,7 @@
     <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true"
       #table class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem"
       (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor' : selectMultiple }"
-      selectionMode="multiple" paginatorPosition="both" id="tablaFoco" (onRowSelect)="checkAddRemesa(selectedDatos)">
+      selectionMode="multiple" paginatorPosition="both" id="tablaFoco" (onRowSelect)="actualizaSeleccionados(selectedDatos)">
 
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -30,27 +30,56 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
-            <div *ngIf="col.field == 'fechaApertura'">
-              <div>
-                <!-- [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" -->
-                <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            <!-- En el caso que se este asociando un EJG a un Acta -->
+            <div *ngIf="acta == null">
+              <div *ngIf="col.field == 'fechaApertura'">
+                <div>
+                  <!-- [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" -->
+                  <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+                </div>
+              </div>
+
+              <div *ngIf="col.field != 'fechaApertura'">
+                <div *ngIf="setItalic(dato) && col.field!='numAnnioProcedimiento'">
+                  <span
+                    [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                </div>
+                <div *ngIf="!setItalic(dato) && col.field!='numAnnioProcedimiento'">
+                  <span>{{dato[col.field]}}</span>
+                </div>
+                <div *ngIf="setItalic(dato) && col.field=='numAnnioProcedimiento'">
+                  <span class="enlace" (click)="datosEJG(dato)"
+                    [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                </div>
+                <div *ngIf="!setItalic(dato) && col.field=='numAnnioProcedimiento'">
+                  <span class="enlace" (click)="datosEJG(dato)">{{dato[col.field]}}</span>
+                </div>
               </div>
             </div>
 
-            <div *ngIf="col.field != 'fechaApertura'">
-              <div *ngIf="setItalic(dato) && col.field!='numAnnioProcedimiento'">
-                <span
-                  [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+            <div *ngIf="acta != null">
+              <div *ngIf="col.field == 'fechaApertura'">
+                <div>
+                  <!-- [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" -->
+                  <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+                </div>
               </div>
-              <div *ngIf="!setItalic(dato) && col.field!='numAnnioProcedimiento'">
-                <span>{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="setItalic(dato) && col.field=='numAnnioProcedimiento'">
-                <span class="enlace" (click)="datosEJG(dato)"
-                  [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-              </div>
-              <div *ngIf="!setItalic(dato) && col.field=='numAnnioProcedimiento'">
-                <span class="enlace" (click)="datosEJG(dato)">{{dato[col.field]}}</span>
+
+              <div *ngIf="col.field != 'fechaApertura'">
+                <div *ngIf="setItalic(dato) && col.field!='numAnnioProcedimiento'">
+                  <span
+                    [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                </div>
+                <div *ngIf="!setItalic(dato) && col.field!='numAnnioProcedimiento'">
+                  <span>{{dato[col.field]}}</span>
+                </div>
+                <div *ngIf="setItalic(dato) && col.field=='numAnnioProcedimiento'">
+                  <span class="enlace" 
+                    [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+                </div>
+                <div *ngIf="!setItalic(dato) && col.field=='numAnnioProcedimiento'">
+                  <span class="enlace" >{{dato[col.field]}}</span>
+                </div>
               </div>
             </div>
           </td>
@@ -79,7 +108,7 @@
           <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-          <div class="ml-3 selectAll">
+          <div *ngIf="acta == null" class="ml-3 selectAll">
             <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll"
               binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
           </div>
@@ -203,12 +232,12 @@
 <p-dialog width="1000" responsive="true" modal="modal" [draggable]="false" resizable="false"
   [(visible)]="showModalEditarSeleccionados" (onHide)="cerrarDialog()">
   <p-header class="title">
-    <label>Editar seleccionados</label>
+    <label>**Editar seleccionados</label>
   </p-header>
   <div class="form-row">
     <div class="col-sm">
       <div>
-        <label>Año/Acta</label>
+        <label>**Año/Acta</label>
           <p-dropdown [(ngModel)]='valueAnioActa' class="select-form" (onChange)="checkBotonAnadir()"
           placeholder="Seleccionar" [options]="comboAnioActa" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectAnioActa == true"></p-dropdown>
@@ -222,13 +251,13 @@
     </div>
     <div class="col-sm">
       <div>
-        <label>Ponente</label>
+        <label>**Ponente</label>
         <p-dropdown [(ngModel)]='valuePonente' [ngClass]="styleObligatorioPonente(valuePonente)"  class="select-form" (onChange)="checkPonente()"
           placeholder="Seleccionar" [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectPonente == true"></p-dropdown>
       </div>
       <div>
-        <label>F. presentacion ponente</label>
+        <label>**F. presentacion ponente</label>
         <app-fecha [inputStyleClass]="styleObligatorioFechaPonente(valueFechaPonente)" [(value)]="valueFechaPonente"
           (valueChangeSelected)="fillFechaPrueba($event)" (valueChangeInput)="fillFechaPrueba($event)" [disabled]="selectPonente == true">
         </app-fecha>
@@ -242,13 +271,13 @@
     </div>
     <div class="col-sm">
       <div>
-        <label>Resolucion</label>
+        <label>**Resolucion</label>
         <p-dropdown [(ngModel)]='valueResolucion' class="select-form" (onChange)="checkResolucion()"
           placeholder="Seleccionar" [options]="comboResolucion" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectResolucionFundamento == true" [ngClass]="styleObligatorioResolucion(valueResolucion)"></p-dropdown>
       </div>
       <div>
-        <label>Fundamento</label>
+        <label>**Fundamento</label>
         <p-dropdown [(ngModel)]='valueFundamento' class="select-form" (onChange)="checkFundamento()"
           placeholder="Seleccionar" [options]="comboFundamento" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectResolucionFundamento == true" ></p-dropdown>

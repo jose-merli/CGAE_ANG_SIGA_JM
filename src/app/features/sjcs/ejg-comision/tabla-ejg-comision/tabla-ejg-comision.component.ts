@@ -10,6 +10,8 @@ import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
 import { ComboItem } from '../../../../models/ComboItem';
+import { ActasItem } from '../../../../models/sjcs/ActasItem';
+import { Location } from '@angular/common';
 
 
 
@@ -67,7 +69,7 @@ export class TablaEjgComisionComponent implements OnInit {
   @Input() datos;
   @Input() filtro;
   @Input() remesa;
-  @Input() acta;
+  @Input() acta: ActasItem;
 
   @ViewChild("table") table: DataTable;
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -98,7 +100,7 @@ export class TablaEjgComisionComponent implements OnInit {
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService, private commonServices: CommonsService,
-    private datepipe: DatePipe) {
+    private datepipe: DatePipe, private location: Location) {
 
   }
 
@@ -484,6 +486,36 @@ export class TablaEjgComisionComponent implements OnInit {
     });
   }
 
+  asociarEJGActa(rowData){
+    if(this.acta != null){
+      this.progressSpinner = true;
+
+      let ejgItem: EJGItem = rowData[0];
+
+      ejgItem.numActa = JSON.parse(JSON.stringify(this.acta.idacta)).toString();
+      ejgItem.annioActa = JSON.parse(JSON.stringify(this.acta.anioacta)).toString();
+
+      this.sigaServices.post("busquedaejgcomision_asociarEJGActa", ejgItem).subscribe(
+        n => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          localStorage.setItem('actasItem', JSON.stringify(this.acta));
+          this.location.back();
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        },
+        () => {
+          this.progressSpinner = false;
+          this.showModalCambioEstado = false;
+          this.selectedDatos = [];
+        }
+      );
+    }
+
+  }
+
   actualizarEJGActa() {
     let data = [];
     let ejg: EJGItem;
@@ -815,9 +847,14 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
-    this.seleccion = false;
-    this.checkAddRemesa(selectedDatos);
+    if(this.acta != null){
+      this.asociarEJGActa(selectedDatos);
+    }
+    else{
+      this.numSelected = selectedDatos.length;
+      this.seleccion = false;
+      this.checkAddRemesa(selectedDatos);
+    }
   }
 
   checkAddRemesa(selectedDatos) {

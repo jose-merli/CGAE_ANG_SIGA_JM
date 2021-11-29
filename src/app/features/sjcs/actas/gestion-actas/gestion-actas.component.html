@@ -7,7 +7,7 @@
     </p>
   </div>
   <div>
-    <app-datos-generales-actas [datos]="datos" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-actas>
+    <app-datos-generales-actas [(datos)]="datos" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-actas>
     <app-tarjeta-listado-ejgs [datos]="datos" [permisos]="modoEdicion"></app-tarjeta-listado-ejgs>
   </div>
 </div>
