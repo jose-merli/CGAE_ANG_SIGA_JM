@@ -214,7 +214,8 @@ export class DatosGeneralesActasComponent implements OnInit {
           data =JSON.parse(data.body)
           if(data.status == "OK"){
             this.datosFiltro.idacta = data.error.url;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.datos = JSON.parse(JSON.stringify((this.datosFiltro)));
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
           else if(data.status == "KO" && data.error.description == "InvalidNumActa"){
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.actas.mensajeError.numeroActa"));
@@ -310,6 +311,7 @@ export class DatosGeneralesActasComponent implements OnInit {
         }
 
         this.progressSpinner = false;
+        this.pendienteCAJG.emit();
       },
       () => {
         this.progressSpinner = false;
@@ -406,11 +408,21 @@ export class DatosGeneralesActasComponent implements OnInit {
 
 
   fillFechaResolucion(event) {
+    if(event != null){
       this.datosFiltro.fecharesolucion = this.transformDate(event);
+    }
+    else{
+      this.datosFiltro.fecharesolucion = null;
+    }
   }
 
   fillFechaReunion(event) {
+    if(event != null){
       this.datosFiltro.fechareunion = this.transformDate(event);
+    }
+    else{
+      this.datosFiltro.fechareunion = null;
+    }
   }
 
   onHideDatosGenerales() {
@@ -471,7 +483,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   }
 
   onDisabledSave() {
-    if (this.datos.idacta != undefined && this.datos.idacta != "") {
+    if ((this.datos.idacta != null && this.datos.idacta != undefined) && this.datos.idacta != "") {
       this.disabledSave = false;
     } else {
       this.disabledSave = true;

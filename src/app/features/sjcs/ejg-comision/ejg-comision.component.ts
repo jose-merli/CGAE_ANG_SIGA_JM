@@ -7,6 +7,8 @@ import { Router } from '../../../../../node_modules/@angular/router';
 import { TablaEjgComisionComponent } from './tabla-ejg-comision/tabla-ejg-comision.component';
 import { EjgComisionBusquedaComponent } from './ejg-comision-busqueda/ejg-comision-busqueda.component';
 import { procesos_comision } from '../../../permisos/procesos_comision';
+import { ActasItem } from '../../../models/sjcs/ActasItem';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -27,7 +29,7 @@ export class EjgComisionComponent implements OnInit {
 
   permisoEscritura: any;
 
-  acta;
+  acta: ActasItem = null;
   
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
   // la particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
@@ -43,7 +45,8 @@ export class EjgComisionComponent implements OnInit {
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private persistenceService: PersistenceService,
-    private router: Router) { }
+    private router: Router,
+    private location: Location) { }
 
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_comision.ejgComision)
@@ -130,6 +133,7 @@ export class EjgComisionComponent implements OnInit {
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
         let error = JSON.parse(n.body).error;
+        console.log("Resultados de la busqueda de EJG's Comision -> ", this.datos);
         this.buscar = true;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
@@ -183,5 +187,10 @@ export class EjgComisionComponent implements OnInit {
     if (fecha != undefined)
       fecha = new Date(fecha);
     return fecha;
+  }
+
+  backTo() {
+    localStorage.setItem('actasItem', JSON.stringify(this.acta));
+    this.location.back();
   }
 }
