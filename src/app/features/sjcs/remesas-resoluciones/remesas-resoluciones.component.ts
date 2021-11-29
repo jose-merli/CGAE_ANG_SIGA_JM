@@ -57,7 +57,7 @@ export class RemesasResolucionesComponent implements OnInit {
            private sigaServices: SigaServices, private datepipe: DatePipe,private commonsService: CommonsService,) { }
 
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
+    this.commonsService.checkAcceso(procesos_comision.remesasResoluciones)
     .then(respuesta => {
 
       this.permisoEscritura = respuesta;
@@ -121,6 +121,15 @@ export class RemesasResolucionesComponent implements OnInit {
     return numeroFormateado;
   }
 
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
   search(){
     console.log("QWEQWE");
     console.log(this.buscar);
@@ -140,7 +149,10 @@ export class RemesasResolucionesComponent implements OnInit {
         console.log("Contenido de la respuesta del back --> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
-
+        if (this.datos.length == 200) {
+          console.log("Dentro del if del mensaje con mas de 200 resultados");
+          this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
+        }
         // this.resetSelect();
       },
       err => {

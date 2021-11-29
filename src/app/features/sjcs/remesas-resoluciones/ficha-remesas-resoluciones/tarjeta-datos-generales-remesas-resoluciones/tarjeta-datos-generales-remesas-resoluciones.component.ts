@@ -99,6 +99,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
   rowsPerPage: any = [];
   item;
   @Input() remesaItem: RemesasResolucionItem;
+  remesaResolucionActu : RemesasResolucionItem;
   resultado;
   remesasDatosEntradaItem;
   busquedaActualizaciones: boolean;
@@ -109,6 +110,8 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
   file: File = undefined;
   archivoDisponible: boolean = false;
   nombreFichero: any;
+
+  StringFichero;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -148,10 +151,11 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
     console.log("Empieza;")
     console.log(this.remesaItem)
     console.log("FIN")
+    this.StringFichero = this.translateService.instant("facturacionSJCS.fichaCertificacion.subirFichero")+"*";
     if(this.remesaItem.idRemesaResolucion == null){
       this.getUltimoRegitroRemesa();
       this.remesaItem.fechaCarga = moment(new Date()).format('DD/MM/YYYY');
-
+      this.remesaItem.observaciones = null;
       //this.remesaItem.descripcion = "";
     }
     if(this.remesaItem.nombreFichero.length > 0){
@@ -186,13 +190,12 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
   getUltimoRegitroRemesa() {
     console.log("Dentro del getUltimoRegistroRemesa");
     this.sigaServices
-      .get("remesasResultados_recuperarDatosContador")
+      .get("remesasResoluciones_recuperarDatosContador")
       .subscribe(
         n => {
           console.log("Dentro de la respuesta. Contenido --> ", n.contador);
-          //this.remesaItem.numero = n.contador + 1;
           this.remesaItem.numRemesaPrefijo = n.prefijo;
-          this.remesaItem.numRemesaNumero = n.contador;
+          this.remesaItem.numRemesaNumero = n.contador+1;
         },
         error => { },
         () => { }
@@ -322,55 +325,112 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
     this.msgs.push({ severity: "error", summary: "", detail: mensaje });
   }
   
+
   save(){
-  if(this.remesaItem != null){
-    this.remesaResolucion = {
-      'idRemesaResolucion' : this.remesaItem.idRemesaResolucion,
-      'observaciones' : this.remesaItem.observaciones,
-      'idTipoRemesa' : 1,
-      'nombreFichero' : this.remesaItem.nombreFichero,
-      'fechaResolucion' :  this.datepipe.transform(this.remesaItem.fechaResolucion, 'dd/MM/yyyy'),
-    };
-  }
-  if(this.remesaResolucion.idRemesaResolucion == null ){
-    this.remesaResolucion.idRemesaResolucion = 0;
-  }
-  this.progressSpinner = true;
-  this.sigaServices
-  .postSendContentAndParameter(
-  "remesasResoluciones_guardarRemesaResolucion",
-  "?idRemesaResolucion=" + this.remesaResolucion.idRemesaResolucion +
-  "&observaciones=" + this.remesaResolucion.observaciones + 
-  "&idTipoRemesa=" + 1 + 
-  "&nombreFichero=" + this.remesaResolucion.nombreFichero +
-  "&fechaResolucion=" + this.remesaResolucion.fechaResolucion,
-  this.file)
-  .subscribe(
-    data => {
-      let accion = data.error.description;
-      if(accion == "Insert"){
-        this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.actualizacionCorrecta"));
-      }else if(accion == "Updated"){
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.guardadoCorrecto"));
-      }
-      this.progressSpinner = false;
-    },
-    err => {
-      if (err.error != null && err.error.error != null && err.error.error.code == 400) {
-        if (err.error.error.description != null) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
-          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
+    var camposOblig = document.getElementsByClassName('camposObligatorios');
+    if (camposOblig.length > 0 || this.remesaItem.nombreFichero.length == 0) {
+      this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
+    } else{
+
+        if(this.remesaItem != null){
+          this.remesaResolucion = {
+            'idRemesaResolucion' : this.remesaItem.idRemesaResolucion,
+            'observaciones' : this.remesaItem.observaciones,
+            'idTipoRemesa' : 1,
+            'nombreFichero' : this.remesaItem.nombreFichero,
+            'fechaResolucion' : this.remesaItem.fechaResolucion,
+          };
         }
-      } else {
-        this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
-        console.log(err);
+        if(this.remesaResolucion.idRemesaResolucion == null ){
+          this.remesaResolucion.idRemesaResolucion = 0;
+        }
+        if(this.remesaResolucion.observaciones == null){
+          this.remesaResolucion.observaciones ="";
+        }
+
+        if(this.remesaResolucion.idRemesaResolucion == 0){ 
+        this.progressSpinner = true;
+        this.sigaServices
+        .postSendContentAndParameter(
+        "remesasResoluciones_guardarRemesaResolucion",
+        "?idRemesaResolucion=" + this.remesaResolucion.idRemesaResolucion +
+        "&observaciones=" + this.remesaResolucion.observaciones + 
+        "&idTipoRemesa=" + 1 + 
+        "&nombreFichero=" + this.remesaResolucion.nombreFichero +
+        "&fechaResolucion=" + this.remesaResolucion.fechaResolucion,
+        this.file)
+        .subscribe(
+          data => {
+            let accion = data.error.description;
+            if(accion == "Insert"){
+              this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.actualizacionCorrecta"));
+            }
+            this.progressSpinner = false;
+          },
+          err => {
+            if (err.error != null && err.error.error != null && err.error.error.code == 400) {
+              if (err.error.error.description != null) {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              } else {
+                this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
+              }
+            } else {
+              this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
+              console.log(err);
+            }
+            this.progressSpinner = false;
+          },
+          () => {
+          }
+        );
+        }else{
+          this.actualizar();
+        }
+
+        }
       }
-      this.progressSpinner = false;
-    },
-    () => {
-    }
-  );
+
+  actualizar(){
+ 
+    this.remesaResolucionActu = {
+        "fechaCarga": "",
+        "fechaCargaDesde": "",
+        "fechaCargaHasta": "",
+        "fechaResolucion": "",
+        "fechaResolucionDesde": "",
+        "fechaResolucionHasta": "",
+        "idRemesa": 0,
+        "idRemesaResolucion": this.remesaResolucion.idRemesaResolucion,
+        "idTipoRemesa": 0,
+        "log": 0,
+        "nombreFichero": "string",
+        "numRemesaNumero": "string",
+        "numRemesaPrefijo": "string",
+        "numRemesaSufijo": "string",
+        "observaciones": this.remesaResolucion.observaciones   
+    };
+    this.progressSpinner = true;
+    this.sigaServices.post("remesasResoluciones_actualizarRemesaResolucion", this.remesaResolucionActu).subscribe(
+      data => {
+        data = JSON.parse(data.body);
+        let accion = data.error.description;
+        if(accion == "Updated"){
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.guardadoCorrecto"));
+        }
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err.error != null && err.error.error != null && err.error.error.code == 400) {
+          if (err.error.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } 
+        } 
+        this.progressSpinner = false;
+      },
+      () => {
+      }
+    );
+    
   }
 
 }

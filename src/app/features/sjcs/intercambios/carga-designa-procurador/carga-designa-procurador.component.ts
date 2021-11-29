@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RemesasResolucionItem } from '../../../../models/sjcs/RemesasResolucionItem';
-import { procesos_comision } from '../../../../permisos/procesos_comision';
+import { procesos_intercambios } from '../../../../permisos/procesos_intercambios';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TranslateService } from '../../../../commons/translate';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -25,7 +25,7 @@ export class CargaDesignaProcuradorComponent implements OnInit {
     private sigaServices: SigaServices, private datepipe: DatePipe,private commonsService: CommonsService,) { }
 
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
+    this.commonsService.checkAcceso(procesos_intercambios.cargaDesignasProcurador)
     .then(respuesta => {
 
     this.permisoEscritura = respuesta;

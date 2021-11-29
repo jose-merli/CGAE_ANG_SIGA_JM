@@ -1,17 +1,11 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { DatePipe, Location } from "@angular/common";
-import { Message, ConfirmationService } from "primeng/components/common/api";
-import { Subject } from "rxjs/Subject";
-import { DatosGeneralesConsultaItem } from '../../../../../models/DatosGeneralesConsultaItem';
-import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { PrisionItem } from '../../../../../models/sjcs/PrisionItem';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
-import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { filter } from 'rxjs/operator/filter';
 import { Router } from '@angular/router';
@@ -40,6 +34,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
 
   conFichero : boolean = false;
   remesaResolucion : RemesasResolucionItem = new RemesasResolucionItem();
+  remesaResolucionActu: RemesasResolucionItem = new RemesasResolucionItem();
   datosTarjetaResumen;
   msgs;
   historico;
@@ -105,7 +100,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
   @ViewChild("pUploadFile") pUploadFile;
   isEnabledNuevo: boolean = true;
   
-
+  StringFichero;
   file: File = undefined;
   archivoDisponible: boolean = false;
   nombreFichero: any;
@@ -148,10 +143,11 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     console.log("Empieza;")
     console.log(this.remesaItem)
     console.log("FIN")
+    this.StringFichero = this.translateService.instant("facturacionSJCS.fichaCertificacion.subirFichero")+"*";
     if(this.remesaItem.idRemesa == null){
       this.getUltimoRegitroRemesa();
       this.remesaItem.fechaCargaRemesaResultado = moment(new Date()).format('DD/MM/YYYY');
-
+      this.remesaItem.observacionesRemesaResultado = null;
       //this.remesaItem.descripcion = "";
     }
     if(this.remesaItem.nombreFichero.length > 0){
@@ -187,11 +183,10 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
   getUltimoRegitroRemesa() {
     console.log("Dentro del getUltimoRegistroRemesa");
     this.sigaServices
-      .get("ficharemesas_getUltimoRegistroRemesa")
+      .get("remesasResultados_recuperarDatosContador")
       .subscribe(
         n => {
           console.log("Dentro de la respuesta. Contenido --> ", n.contador);
-          //this.remesaItem.numero = n.contador + 1;
           this.remesaItem.prefijoRemesa = n.prefijo;
           this.remesaItem.numeroRemesa = (n.contador+1);
         },
@@ -204,7 +199,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
 
 
   formatDate(date) {
-    const pattern = 'dd/MM/yyyy HH24:MI:SS';
+    const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);    
   }
 
@@ -272,7 +267,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
 
   fillFechaRemesaDetalle(event){
     if (event != null) {
-      this.remesaItem.fechaResolucionRemesaResultado = event;
+      this.remesaItem.fechaResolucionRemesaResultado = this.formatDate(event);
     }
   }
 
@@ -303,23 +298,32 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
   }
 
   save(){
+    var camposOblig = document.getElementsByClassName('camposObligatorios');
+    if (camposOblig.length > 0 || this.remesaItem.nombreFichero.length == 0) {
+      this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
+    } else{
+
     if(this.remesaItem != null){
       this.remesaResolucion = {
-        'idRemesa' : this.remesaItem.idRemesa,
+        'idRemesaResolucion' : this.remesaItem.idRemesaResultado,
         'observaciones' : this.remesaItem.observacionesRemesaResultado,
         'nombreFichero' : this.remesaItem.nombreFichero,
         'fechaCarga' : this.datepipe.transform(this.remesaItem.fechaCargaRemesaResultado, 'dd/MM/yyyy'),
         'fechaResolucion' :  this.datepipe.transform(this.remesaItem.fechaResolucionRemesaResultado, 'dd/MM/yyyy'),
       };
     }
-    if(this.remesaResolucion.idRemesa == null ){
-      this.remesaResolucion.idRemesa = 0;
+    if(this.remesaResolucion.idRemesaResolucion == null ){
+      this.remesaResolucion.idRemesaResolucion = 0;
     }
+    if(this.remesaResolucion.observaciones == null){
+      this.remesaResolucion.observaciones ="";
+    }
+    if(this.remesaResolucion.idRemesaResolucion == 0){
     this.progressSpinner = true;
     this.sigaServices
     .postSendContentAndParameter(
     "remesasResultados_guardarRemesaResultado",
-    "?idRemesa=" + this.remesaResolucion.idRemesa +
+    "?idRemesaResolucion=" + this.remesaResolucion.idRemesaResolucion +
     "&observaciones=" + this.remesaResolucion.observaciones + 
     "&nombreFichero=" + this.remesaResolucion.nombreFichero +
     "&fechaCarga=" + this.remesaResolucion.fechaCarga +
@@ -330,7 +334,59 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
         let accion = data.error.description;;
         if(accion == "Insert"){
           this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.actualizacionCorrecta"));
-        }else if(accion == "Updated"){
+        }
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err.error != null && err.error.error != null && err.error.error.code == 400) {
+          if (err.error.error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          console.log(err);
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+      }
+    );}
+    else{
+      this.actualizar();
+    }
+    }
+  }
+
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
+
+  actualizar(){
+ 
+    this.remesaResolucionActu = {
+        "fechaCarga": "",
+        "fechaCargaDesde": "",
+        "fechaCargaHasta": "",
+        "fechaResolucion": "",
+        "fechaResolucionDesde": "",
+        "fechaResolucionHasta": "",
+        "idRemesa": 0,
+        "idRemesaResolucion": this.remesaResolucion.idRemesaResolucion,
+        "idTipoRemesa": 0,
+        "log": 0,
+        "nombreFichero": "string",
+        "numRemesaNumero": "string",
+        "numRemesaPrefijo": "string",
+        "numRemesaSufijo": "string",
+        "observaciones": this.remesaResolucion.observaciones   
+    };
+    this.progressSpinner = true;
+    this.sigaServices.post("remesasResoluciones_actualizarRemesaResolucion", this.remesaResolucionActu).subscribe(
+      data => {
+        data = JSON.parse(data.body);
+        let accion = data.error.description;
+        if(accion == "Updated"){
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.guardadoCorrecto"));
         }
         this.progressSpinner = false;
@@ -339,23 +395,14 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
         if (err.error != null && err.error.error != null && err.error.error.code == 400) {
           if (err.error.error.description != null) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          } else {
-            this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.formatoNoPermitido"));
-          }
-        } else {
-          this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
-          console.log(err);
-        }
+          } 
+        } 
         this.progressSpinner = false;
       },
       () => {
       }
     );
-  }
-
-  showFail(mensaje: string) {
-    this.msgs = [];
-    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+    
   }
   
   descargarFicheros(){

@@ -72,16 +72,17 @@
             </div>
     
             <div class="form-group-interlineado col-lg-3 col-md-3">
-              <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaRemesa' | translate }}</label>
+              <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaRemesa' | translate }}*</label>
               <app-fecha [(value)]="remesaItem.fechaResolucion" name="fechaRemesa" (valueChangeInput)=fillFechaResolucion($event)
-              ngDefaultControl (valueChangeSelected)="fillFechaResolucion($event)" [(ngModel)]="remesaItem.fechaResolucion"></app-fecha>
+              ngDefaultControl (valueChangeSelected)="fillFechaResolucion($event)" [(ngModel)]="remesaItem.fechaResolucion"
+              [ngClass]="styleObligatorio('datosGenerales', remesaItem.fechaResolucion)"></app-fecha>
             </div> 
     
             <div class="form-group-interlineado col-lg-3 col-md-3">
               <br>
               <div class="ui-inputgroup" *ngIf="!conFichero">
 
-              <p-fileUpload #pUploadFile name="file" chooseLabel="Subir fichero de carga"
+              <p-fileUpload #pUploadFile name="file" chooseLabel="{{StringFichero}}" 
                 mode="basic" accept=".txt"  class="edit my-0 mx-auto main-button" (onSelect)="getFile($event)" auto="true" ></p-fileUpload>
                 <div *ngIf="archivoDisponible">
                   <input type="text" pInputText disabled="true" [(ngModel)]="nombreFichero" />

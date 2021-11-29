@@ -20,6 +20,7 @@ export class RemesasResultadosComponent implements OnInit {
   buscar: boolean = false;
   progressSpinner: boolean = false;
   datos;
+  msgs;
   permisoEscritura;
   remesasResultadosItem: RemesasResultadoItem = new RemesasResultadoItem(
     {
@@ -79,8 +80,9 @@ export class RemesasResultadosComponent implements OnInit {
   constructor(private persistenceService: PersistenceService,private translateService: TranslateService, private router: Router,
            private sigaServices: SigaServices, private datepipe: DatePipe,private commonsService: CommonsService,) { }
 
+          
   ngOnInit() {
-    this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
+    this.commonsService.checkAcceso(procesos_comision.remesasResultado)
     .then(respuesta => {
 
       this.permisoEscritura = respuesta;
@@ -131,13 +133,17 @@ export class RemesasResultadosComponent implements OnInit {
           element.fechaResolucionRemesaResultado = this.formatDate(element.fechaResolucionRemesaResultado);
           element.fechaCargaRemesaResultado = this.formatDate(element.fechaCargaRemesaResultado);
           element.numRegistroRemesaCompleto = this.formatNumRegistroRemesaCompleto(element);
-          element.numRemesaCompleto = this.formatNumRegistroRemesaCompleto(element);
+          element.numRemesaCompleto = this.formatNumRemesaCompleto(element);
         });
 
         console.log("Contenido de la respuesta del back --> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
-
+        this.progressSpinner = false;
+        if (this.datos.length == 200) {
+          console.log("Dentro del if del mensaje con mas de 200 resultados");
+          this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
+        }
         // this.resetSelect();
       },
       err => {
@@ -150,20 +156,6 @@ export class RemesasResultadosComponent implements OnInit {
 
   formatNumRegistroRemesaCompleto(element){
     let numeroFormateado = ''; 
-    if(element.prefijoRemesa !== null){
-      numeroFormateado += element.prefijoRemesa
-    }
-    if(element.numeroRemesa !== null){
-      numeroFormateado += element.numeroRemesa
-    }
-    if(element.sufijoRemesa !== null){
-      numeroFormateado += element.sufijoRemesa
-    }
-    return numeroFormateado;
-  }
-
-  formatNumRemesaCompleto(element){
-    let numeroFormateado = ''; 
     if(element.numRemesaPrefijo !== null){
       numeroFormateado += element.numRemesaPrefijo
     }
@@ -172,6 +164,29 @@ export class RemesasResultadosComponent implements OnInit {
     }
     if(element.numRemesaSufijo !== null){
       numeroFormateado += element.numRemesaSufijo
+    }
+    return numeroFormateado;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+  formatNumRemesaCompleto(element){
+    // {{dato["prefijoRemesa"]}}{{dato["numeroRemesa"]}}{{dato["sufijoRemesa"]}}
+    let numeroFormateado = ''; 
+    if(element.prefijoRemesa !== null){
+      numeroFormateado += element.prefijoRemesa
+    }
+    if(element.numeroRemesa !== null){
+      numeroFormateado += element.numeroRemesa
+    }
+    if(element.sufijoRemesa !== null){
+      numeroFormateado += element.sufijoRemesa
     }
     return numeroFormateado;
   }

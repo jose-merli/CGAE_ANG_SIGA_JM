@@ -119,9 +119,27 @@ export class FiltroRemesasResolucionesComponent implements OnInit {
       this.search();
     }
   }
+  
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
 
   obtenerResoluciones(){
-//remesasResoluciones_obtenerResoluciones
+    this.sigaServices
+    .post("remesasResoluciones_obtenerResoluciones", null)
+    .subscribe(
+      data => {
+        data = JSON.parse(data.body);
+        if(data.status == "OK" && data.error.code == 200) {
+          this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("message.justiciaGratuita.remesas.resoluciones.obtenerResoluciones"));
+        }else if( data.status == 'KO' && data.error.code == 200) {
+          this.showFail( this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      },
+      error => { },
+      () => { }
+    );
   }
 
   obtenerOperacionTipoAccion(){

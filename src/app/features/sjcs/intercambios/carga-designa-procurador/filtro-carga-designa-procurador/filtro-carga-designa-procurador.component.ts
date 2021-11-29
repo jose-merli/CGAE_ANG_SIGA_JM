@@ -51,7 +51,7 @@ export class FiltroCargaDesignaProcuradorComponent implements OnInit {
     } else {
       this.filtros = new RemesasBusquedaItem();
     }
-
+    this.obtenerOperacionTipoAccion();
 
   }
 
@@ -97,6 +97,10 @@ export class FiltroCargaDesignaProcuradorComponent implements OnInit {
     });
   }
   
+  showFail(mensaje: string) {
+    this.msgs = [];
+    this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+  }
   openTab() {
     this.router.navigate(["/cargaDesignaProcuradorFicha"]);
     localStorage.setItem('fichaCargaDesignaProcurador', "nuevo");
@@ -122,13 +126,30 @@ export class FiltroCargaDesignaProcuradorComponent implements OnInit {
 
 
 
-  obtenerDesignaProcurador(){}
+  obtenerDesignaProcurador(){
+
+    this.sigaServices
+    .post("intercambios_obtenerDesignaProcuradores", null)
+    .subscribe(
+      data => {
+        data = JSON.parse(data.body);
+        if(data.status == "OK" && data.error.code == 200) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("message.justiciaGratuita.intercambios.cargaDesignasProcuradores.obtenerDesignasProcuradores"));
+        }else if( data.status == 'KO' && data.error.code == 200) {
+          this.showFail( this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      },
+      error => { },
+      () => { }
+    );
+
+  }
   
 
 obtenerOperacionTipoAccion(){
 
   this.sigaServices
-  .get("remesasResoluciones_obtenerOperacionTipoAccion")
+  .get("intercambios_obtenerOperacionTipoAccion")
   .subscribe(
     data => {
       console.log(data);
@@ -136,7 +157,6 @@ obtenerOperacionTipoAccion(){
         this.buttonNew = true;
       }else if(data.ecomOperacionTipoaccion[0].idoperacion != null &&  data.error.code == 200) {
         this.buttonNew = false;
-        //this.numOperacion = data.ecomOperacionTipoaccion[0].idoperacion;
       }
     },
     error => { },

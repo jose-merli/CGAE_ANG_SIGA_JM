@@ -32,10 +32,9 @@
 
             <a class="enlace" (click)="openTab(dato)">
               <span *ngIf="col.field == 'numRemesaCompleto'">
-                {{dato["numRemesaSufijo"]}}{{dato["numRemesaPrefijo"]}}{{dato["numRemesaNumero"]}}
+                {{dato["sufijoRemesa"]}} {{dato["prefijoRemesa"]}}{{dato["numeroRemesa"]}}
               </span>
             </a>
-
             <span *ngIf="col.field != 'numRemesaCompleto'">
               {{dato[col.field]}}
             </span>

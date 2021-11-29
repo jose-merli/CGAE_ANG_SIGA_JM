@@ -18,5 +18,7 @@ export let endpoints_remesa: any = {
     remesasResoluciones_obtenerOperacionTipoAccion :"remesasResoluciones/obtenerOperacionTipoAccion",
     remesasResoluciones_descargarRemesasResolucion: "remesasResoluciones/descargarRemesasResolucion",
     remesasResoluciones_obtenerResoluciones : "remesasResoluciones/obtenerResoluciones",
-    remesasResoluciones_guardarRemesaResolucion: "remesasResoluciones/guardarRemesaResolucion"
+    remesasResoluciones_guardarRemesaResolucion: "remesasResoluciones/guardarRemesaResolucion",
+    remesasResoluciones_actualizarRemesaResolucion: "remesasResoluciones/actualizarRemesaResolucion",
+    remesasResoluciones_recuperarDatosContador : "remesasResoluciones/recuperarDatosContador"
 }
