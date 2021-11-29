@@ -43,16 +43,16 @@ export class MovimientosVariosComponent implements OnInit {
 
   ngOnInit() {
 
-    // this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaMovimientosVarios).then(respuesta => {
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaMovimientosVarios).then(respuesta => {
 
-		// 	this.permisoEscritura = respuesta; //true, false, undefined
+			this.permisoEscritura = respuesta; //true, false, undefined
 
-		// 	if (this.permisoEscritura == undefined) {
-		// 		sessionStorage.setItem("codError", "403");
-		// 		sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
-		// 		this.router.navigate(["/errorAcceso"]);
-		// 	}
-		// }).catch(error => console.error(error));
+			if (this.permisoEscritura == undefined) {
+				sessionStorage.setItem("codError", "403");
+				sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+				this.router.navigate(["/errorAcceso"]);
+			}
+		}).catch(error => console.error(error));
 
     this.permisoEscritura = true;
     
