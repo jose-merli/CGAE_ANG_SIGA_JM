@@ -556,6 +556,9 @@ import { FichaFicherosDevolucionesComponent } from './features/facturacion/devol
 import { FiltrosFacturasComponent } from './features/facturacion/facturas/filtros-facturas/filtros-facturas.component';
 import { TablaFacturasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas.component';
 import { GestionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/gestion-facturas.component';
+import { DatosCargaDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/datos-carga-devoluciones/datos-carga-devoluciones.component';
+import { CuentaEntidadDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/cuenta-entidad-devoluciones/cuenta-entidad-devoluciones.component';
+import { FacturasDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/facturas-devoluciones/facturas-devoluciones.component';
 
 enableRipple(true);
 
@@ -1044,6 +1047,9 @@ enableRipple(true);
 		FiltrosFacturasComponent,
 		TablaFacturasComponent,
 		GestionFacturasComponent,
+		DatosCargaDevolucionesComponent,
+		CuentaEntidadDevolucionesComponent,
+		FacturasDevolucionesComponent,
 	],
 	imports: [
 		Paginador3Module,

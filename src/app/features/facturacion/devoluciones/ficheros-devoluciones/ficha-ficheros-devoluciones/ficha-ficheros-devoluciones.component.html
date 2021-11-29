@@ -1,3 +1,29 @@
-<p>
-  ficha-ficheros-devoluciones works!
-</p>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.facturacion" | translate }}
+      <i class="fa fa-angle-right"></i>{{ 'facturacion.factProgramadas.literal.busqueda' | translate }}
+    </p>
+  </div>
+
+  <div>
+    <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+    </app-tarjeta-resumen-fija>
+
+    <app-datos-carga-devoluciones></app-datos-carga-devoluciones>
+    <app-cuenta-entidad-devoluciones></app-cuenta-entidad-devoluciones>
+    <app-facturas-devoluciones></app-facturas-devoluciones>
+  </div>
+</div>
+
+<div class="mt-3 text-right main-button" id="down">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
