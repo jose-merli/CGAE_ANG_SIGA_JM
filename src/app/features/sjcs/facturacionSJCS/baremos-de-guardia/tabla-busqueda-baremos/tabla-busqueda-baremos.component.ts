@@ -79,6 +79,9 @@ export class TablaBusquedaBaremosComponent implements OnInit {
     this.getCols();
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
+      this.persistenceService.clearHistorico();
+    }else{
+      this.historico = false;
     }
     if (this.datos == null || this.datos == undefined) {
       this.datos = this.datosDefecto
