@@ -73,7 +73,7 @@ export class TablaEjgComisionComponent implements OnInit {
   @ViewChild("cd1") cdAnadirRemesa: Dialog;
   @ViewChild("cd2") cdEditarSeleccionados: Dialog;
 
-  showModalCambioEstado = false;
+  
   showModalAnadirRemesa = false;
   showModalEditarSeleccionados = false;
   fechaPrueba: any;
@@ -593,16 +593,8 @@ export class TablaEjgComisionComponent implements OnInit {
 
   }
 
-  changeEstado() {
-    if (this.selectedDatos != null && this.selectedDatos != undefined && this.selectedDatos.length > 0 && this.checkPermisos()) {
-      this.showModalCambioEstado = true;
-    } else {
-      this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUno"));
-    }
-  }
 
   cerrarDialog() {
-    this.showModalCambioEstado = false;
     this.cerrarModalED();
   }
 
