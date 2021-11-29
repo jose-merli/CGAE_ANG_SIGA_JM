@@ -95,8 +95,6 @@ export class TablaMovimientosVariosComponent implements OnInit {
       selectedItem: this.selectedItem
     };
 
-    datos.idConcepto="10";
-    datos.idPartidaPresupuestaria="2";
     this.persistenceService.setPaginacion(paginacion);
     this.persistenceService.setDatos(datos); //devuelve bien los datos para mandarlo a la ficha así
     this.router.navigate(["/fichaMovimientosVarios"]);
@@ -188,7 +186,7 @@ export class TablaMovimientosVariosComponent implements OnInit {
 
   searchHistorical(){
     this.historico = !this.historico;
-    this.datosFiltros = this.persistenceService.getFiltrosAux();
+    this.datosFiltros = this.persistenceService.getFiltros();
     this.datosFiltros.historico=this.historico;
     this.busqueda.emit(this.datosFiltros);
   }

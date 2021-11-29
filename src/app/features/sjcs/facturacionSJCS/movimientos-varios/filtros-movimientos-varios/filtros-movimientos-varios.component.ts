@@ -59,11 +59,16 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
   ngOnInit() {
 
 	this.isLetrado = this.sigaStorageService.isLetrado;
-    this.progressSpinner = true;
 
 	if(this.isLetrado){
 		this.getDataLoggedUser();
 	}
+
+    this.progressSpinner = true;
+	if(this.persistenceService.getFiltros() != undefined){
+		this.filtros = this.persistenceService.getFiltros();
+		this.persistenceService.clearFiltros();
+	}else{
 
 		this.comboAplicadoEnPago();
 		this.comboFacturacionApInicial();
@@ -95,7 +100,11 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 			sessionStorage.removeItem("buscadorColegiados");
 		  }
 
+		}
+		
 		  this.progressSpinner = false;
+
+		  
 }
 	  
 	getDataLoggedUser() {
@@ -292,7 +301,6 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 		
 		    this.historico=false;
 			this.filtros.historico=false;
-			this.persistenceService.setFiltrosAux(this.filtros);
 			this.persistenceService.setFiltros(this.filtros);
 
 			this.busqueda.emit(this.filtros);
