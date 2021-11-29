@@ -85,6 +85,8 @@ export class GestionEjgComponent implements OnInit {
   @ViewChild(ServiciosTramitacionComponent) tramitacion;
   @ViewChild(EstadosComponent) tarjetaEstadosEJG;
 
+  datosEntradaTarjGenerica: any;
+
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private location: Location,

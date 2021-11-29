@@ -81,7 +81,7 @@
                     <i
                       [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
                     <a [ngClass]="{'enlace': rowData['tipo'] == 'Movimiento vario'}"
-                      (click)="openFicha()"><span>{{rowData['nombre']}}</span></a>
+                      (click)="openFicha(rowData)"><span>{{rowData['nombre']}}</span></a>
                   </div>
                 </a>
               </div>

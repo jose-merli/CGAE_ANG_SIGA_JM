@@ -5,5 +5,6 @@ export class DatosMovimientoVarioDTO {
     idMovimiento: string;
     importe: string;
     tipo: string;
+    numAplicaciones: number;
     datosPagoAsuntoDTOList: DatosPagoAsuntoDTO[] = [];
 }
