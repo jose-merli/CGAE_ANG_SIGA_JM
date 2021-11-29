@@ -456,7 +456,6 @@ export class TablaEjgComisionComponent implements OnInit {
         },
         () => {
           this.progressSpinner = false;
-          this.showModalCambioEstado = false;
           this.selectedDatos = [];
         }
       );
