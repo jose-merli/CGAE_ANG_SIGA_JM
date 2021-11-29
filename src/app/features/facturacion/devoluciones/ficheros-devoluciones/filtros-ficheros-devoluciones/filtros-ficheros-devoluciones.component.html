@@ -25,13 +25,13 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Fecha creación desde</label>
           <app-fecha [(value)]="body.fechaCreacionDesde"
-            (valueChangeSelected)="fillFechaPrevistaGeneracionDesde($event)" (valueChangeInput)="fillFechaPrevistaGeneracionDesde($event)">
+            (valueChangeSelected)="fillFechaCreacionDesde($event)" (valueChangeInput)="fillFechaCreacionDesde($event)">
           </app-fecha>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Fecha creación hasta</label>
           <app-fecha [(value)]="body.fechaCreacionHasta"
-            (valueChangeSelected)="fillFechaPrevistaGeneracionDesde($event)" (valueChangeInput)="fillFechaPrevistaGeneracionDesde($event)">
+            (valueChangeSelected)="fillFechaCreacionHasta($event)" (valueChangeInput)="fillFechaCreacionHasta($event)">
           </app-fecha>
         </div>
       </div>
@@ -55,11 +55,11 @@
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Número facturas desde</label>
-          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.numFacturasDesde" maxlength="10" pInputText>
+          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.numRecibosDesde" maxlength="10" pInputText>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>Número facturas hasta</label>
-          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.numFacturasHasta" maxlength="10" pInputText>
+          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.numRecibosHasta" maxlength="10" pInputText>
         </div>
       </div>
     </div>

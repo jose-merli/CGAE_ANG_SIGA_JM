@@ -1,6 +1,7 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/components/common/message';
 import { ComboItem } from '../../../../../models/ComboItem';
+import { FicherosDevolucionesItem } from '../../../../../models/FicherosDevolucionesItem';
 import { CommonsService, KEY_CODE } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -21,15 +22,7 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
   showDatosGenerales: boolean = true;
   showSumatorios: boolean = true;
 
-  body = {
-    bancosCodigo: undefined,
-    fechaCreacionDesde: undefined,
-    fechaCreacionHasta: undefined,
-    importeTotalDesde: undefined,
-    importeTotalHasta: undefined,
-    numFacturasDesde: undefined,
-    numFacturasHasta: undefined
-  };
+  body: FicherosDevolucionesItem = new FicherosDevolucionesItem();
   
   comboCuentasBancarias: ComboItem[] = [];
 
@@ -73,7 +66,7 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
 
   // Clear filters
   clearFilters(): void {
-    //this.body = new FacFacturacionprogramadaItem();
+    this.body = new FicherosDevolucionesItem();
     this.persistenceService.clearFiltros();
 
     this.goTop();
@@ -91,7 +84,9 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
 
   // Buscar ficheros de devoluciones
   searchFicherosDevoluciones(): void {
-
+    console.log(this.body);
+    this.persistenceService.setFiltros(this.body);
+    this.busqueda.emit();
   }
 
   // Nuevo fichero de devolución
@@ -99,6 +94,13 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
     
   }
 
+  fillFechaCreacionDesde(event): void {
+    this.body.fechaCreacionDesde = event;
+  }
+
+  fillFechaCreacionHasta(event): void {
+    this.body.fechaCreacionHasta = event;
+  }
 
   // Funciones de utilidad
 

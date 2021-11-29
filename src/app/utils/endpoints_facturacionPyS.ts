@@ -44,4 +44,5 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_parametrosSEPA: "facturacionPyS/general/parametrosSEPA",
     facturacionPyS_parametrosCONTROL: "facturacionPyS/general/parametrosCONTROL",
     facturacionPyS_archivarFacturacionesProgramadas: "facturacionPyS/archivarFacturaciones",
+    facturacionPyS_getFicherosDevoluciones: "facturacionPyS/getFicherosDevoluciones",
 }
