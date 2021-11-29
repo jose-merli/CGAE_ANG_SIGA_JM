@@ -25,6 +25,7 @@
             <div *ngFor="let cell of row['cells'] | slice:firstColumn:lastColumn; let z = index" class="table-cell p-2 selectedRowClass" [ngStyle]="setMyStyles(cell.size)" [ngClass]="{'borders-child': isPar(row['id']), 'borders-child-last': isLast(i)}" #cellSelected>
                 <div [ngStyle]="setMyStyles(cell.size)" class="cell-wrapper selectedRowClass wrapName2">
                     <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'text' && calendarios">{{cell.value}}</span> 
+                    <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'text' && !calendarios">{{cell.value}}</span> 
                     <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'dateTime' && calendarios" >{{cell.value.label}}</span> 
                     <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'link' && calendarios"  class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
                     <span class="w100 cell-value wrapName2" *ngIf="cell.type == 'date' && calendarios"  class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
@@ -65,7 +66,7 @@
 
                         <p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected" [defaultLabel]="textFilter"
                         [options]="cell.combo" maxSelectedLabels="10"  styleClass="widthAll" [disabled]="cell.disabled"
-                        [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell)" >
+                        [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, i, cell)" >
                         </p-multiSelect>
                     </span>
 

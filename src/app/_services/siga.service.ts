@@ -34,6 +34,7 @@ import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
 import { endpoints_EJG_Comision } from '../utils/endpoints_EJG_Comision';
 import { endpoints_remesa } from '../utils/endpoints_remesa';
 import { endpoints_intercambios } from '../utils/endpoints_intercambios';
+import { NuevaComunicacionItem } from '../models/NuevaComunicacionItem';
 import { DocumentacionAsistenciaItem } from '../models/guardia/DocumentacionAsistenciaItem';
 import { DocumentoAsistenciaItem } from '../models/guardia/DocumentoAsistenciaItem';
 
@@ -546,6 +547,7 @@ export class SigaServices {
 		comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
 		comunicaciones_descargarDocumento: 'comunicaciones/detalle/descargarDocumento',
 		comunicaciones_descargarCertificado: 'comunicaciones/detalle/descargarCertificado',
+		comunicaciones_saveNuevaComm: 'comunicaciones/saveNuevaComm',
 		consultas_search: 'consultas/search',
 		consultas_borrar: 'consultas/borrarConsulta',
 		consultas_listadoPlantillas: 'consultas/plantillasconsulta',
@@ -1050,6 +1052,32 @@ export class SigaServices {
     });
 
     formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+    let headers = new HttpHeaders();
+
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
+  }
+
+  postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {
+    let formData: FormData = new FormData();
+
+	if(documentos.length > 0){
+		documentos.forEach((el, i) => {
+
+			formData.append(`uploadFile${i}`, el, el.name + ';');
+		});
+	}
+
+    formData.append('nuevaComunicacion', JSON.stringify(nuevaComunicacion));
 
     let headers = new HttpHeaders();
 

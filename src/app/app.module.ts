@@ -486,6 +486,7 @@ import { FiltroCargaDesignaProcuradorComponent} from './features/sjcs/intercambi
 import { TablaCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/tabla-carga-designa-procurador/tabla-carga-designa-procurador.component';
 import { FichaCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/ficha-carga-designa-procurador/ficha-carga-designa-procurador.component';
 import { TarjetaDatosCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/ficha-carga-designa-procurador/tarjeta-datos-carga-designa-procurador/tarjeta-datos-carga-designa-procurador.component';
+import { ComunicacionesEntrantesComponent } from './features/informes-comunicaciones/comunicaciones-entrantes/comunicaciones-entrantes.component';
 import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
 import { FichaAsistenciaTarjetaDocumentacionComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-documentacion/ficha-asistencia-tarjeta-documentacion.component';
 import { FichaAsistenciaTarjetaCaracteristicasComponent } from './features/sjcs/guardia/guardias-asistencias/ficha-asistencia/ficha-asistencia-tarjeta-caracteristicas/ficha-asistencia-tarjeta-caracteristicas.component';
@@ -945,9 +946,11 @@ import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
 		FiltroCargaDesignaProcuradorComponent,
 		TablaCargaDesignaProcuradorComponent,
 		FichaCargaDesignaProcuradorComponent,
-		TarjetaDatosCargaDesignaProcuradorComponent
+		TarjetaDatosCargaDesignaProcuradorComponent,
 		DatosGeneralesActasComponent,
 		TarjetaListadoEjgsComponent,
+		ComunicacionesEntrantesComponent,
+
 		PartidosJudicialesComponent,
 		BuscadorSolicitudesCentralitaComponent,
 		ResultadoSolicitudesCentralitaComponent,

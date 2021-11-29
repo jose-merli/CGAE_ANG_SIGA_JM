@@ -39,7 +39,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Output() rest = new EventEmitter<Boolean>();
   @Output() dupli = new EventEmitter<Boolean>();
   @Output() guardarGuardiasEnConjunto = new EventEmitter<any>();
-  @Output() descargaLog = new EventEmitter<String>();
+  @Output() descargaLog = new EventEmitter<{}>();
   @Output() disableGen = new EventEmitter<Boolean>();
   @Output() saveGuardiasEnLista = new EventEmitter<Row[]>();
   @Input() permisosEscritura : boolean = true;
@@ -1222,8 +1222,12 @@ this.totalRegistros = this.rowGroups.length;
     }
   descargarLog(){
     if (this.estado != 'Pendiente'){
-    let idCalendarioGuardias = this.rowwSelected.cells[6].value;
-    this.descargaLog.emit(idCalendarioGuardias);
+    let datosCalendariosSeleccionado = {
+      'idCalendarioGuardias': this.rowwSelected.cells[7].value,
+      'idTurno': this.rowwSelected.cells[6].value,
+      'idGuardia': this.rowwSelected.cells[5].value,
+    };
+    this.descargaLog.emit(datosCalendariosSeleccionado);
     }else{
       this.showMsg('error','Error', 'No existe LOG , ya que no ha comenzado la generación');
     }

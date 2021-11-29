@@ -160,7 +160,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
     //this.isLetrado = this.sigaStorageService.isLetrado;
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
-
+    
     if (sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
       this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
       this.buscarDesdeEnlace();

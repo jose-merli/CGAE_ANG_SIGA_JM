@@ -84,6 +84,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
+    console.log('this.permisos: ', this.permisos)
     if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("FichaInscripciones")!= undefined) {
       this.filtros = this.persistenceService.getFiltros();
       if(this.filtros.afechade!=null && this.filtros.afechade != undefined){
