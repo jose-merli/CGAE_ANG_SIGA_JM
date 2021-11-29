@@ -1,9 +1,10 @@
 import { DatosPagoAsuntoDTO } from "./DatosPagoAsuntoDTO";
 
 export class DatosFacturacionAsuntoDTO {
-    idFacturacion: string;
+    idObjeto: string;
     importe: string;
     nombre: string;
     tipo: string;
+    idPartidaPresupuestaria: string;
     datosPagoAsuntoDTOList: DatosPagoAsuntoDTO[] = [];
 }

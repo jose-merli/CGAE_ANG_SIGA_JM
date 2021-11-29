@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Input, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
 import { Table } from 'primeng/table';
 import { SigaServices } from '../../../../_services/siga.service';
 import { TranslateService } from '../../../../commons/translate/translation.service';
@@ -23,7 +23,7 @@ export enum PANTALLAS {
 export interface DatosParaMovimiento {
   colegiado: string;
   descripcion: string;
-  cantidad: string;
+  cantidad: number;
   criterios: any;
 }
 
@@ -48,10 +48,15 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   totalFacturado: number = 0;
   totalPagado: number = 0;
 
+  readonly TIPOFACTURACION: string = this.translateService.instant("facturacionSJCS.tarjGenFac.facturacion");
+  readonly TIPOPAGO: string = this.translateService.instant("facturacionSJCS.tarjGenFac.pago");
+  readonly TIPOMOVIMIENTO: string = this.translateService.instant("facturacionSJCS.tarjGenFac.movVario");
+
   @ViewChild("table") tabla: Table;
 
   @Input() pantalla: string;
   @Input() datosEntrada: any;
+  @Output() guardarDatos = new EventEmitter<any>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -115,7 +120,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   }
 
   seleccionarFila(event) {
-    if (event.data.tipo != "Movimiento vario") {
+    if (event.data.tipo != this.TIPOMOVIMIENTO) {
       this.selectedDatos.pop();
     }
   }
@@ -343,7 +348,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
       el.id = contador;
       contador++;
       if (el.importe && el.importe.toString().trim().length > 0) {
-        if (el.tipo == 'Facturación') {
+        if (el.tipo == this.TIPOFACTURACION) {
           this.totalFacturado += parseFloat(el.importe);
           if (el.datosPagoAsuntoDTOList && el.datosPagoAsuntoDTOList != null && el.datosPagoAsuntoDTOList.length > 0) {
             el.datosPagoAsuntoDTOList.forEach(el => {
@@ -354,7 +359,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
           }
         }
 
-        if (el.tipo == 'Movimiento vario') {
+        if (el.tipo == this.TIPOMOVIMIENTO) {
           this.totalFacturado += parseFloat(el.importe);
           this.totalPagado += parseFloat(el.importe);
         }
@@ -364,23 +369,46 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   }
 
   openFicha(rowData) {
+    this.guardarDatos.emit(true);
     sessionStorage.setItem("datosEdicionMovimiento", JSON.stringify(rowData));
     this.router.navigate(["/fichaMovimientosVarios"]);
   }
 
-  nuevo() {
+  async nuevo() {
+
+    this.guardarDatos.emit(true);
 
     let datos: DatosParaMovimiento = null;
+    const facturaciones = this.datos.filter(el => el.tipo == this.TIPOFACTURACION);
+    let idPartidaPresupuestaria = "";
+    let idFacturacion = "";
+    let idGrupoFacturacion = "";
+
+    if (facturaciones.length > 0) {
+      idFacturacion = facturaciones[0].idObjeto;
+      if (facturaciones[0].idPartidaPresupuestaria != null) {
+        idPartidaPresupuestaria = facturaciones[0].idPartidaPresupuestaria
+      }
+    }
 
     if (this.pantalla == PANTALLAS.ACTUACIONDESIGNA) {
 
       const actuacionDesigna: Actuacion = JSON.parse(JSON.stringify(this.datosEntrada));
 
+      if (this.checkCampo(actuacionDesigna.actuacion.idTurno)) {
+        idGrupoFacturacion = await this.getAgrupacionTurno(actuacionDesigna.actuacion.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+      }
+
       datos = {
         colegiado: actuacionDesigna.actuacion.idPersonaColegiado,
-        descripcion: `Designación ${actuacionDesigna.actuacion.anio}/${actuacionDesigna.actuacion.numero}/${actuacionDesigna.actuacion.numeroAsunto}-${actuacionDesigna.actuacion.nombreModulo}`,
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
+        descripcion: `Designación ${actuacionDesigna.actuacion.anio}/${actuacionDesigna.actuacion.numero}/${actuacionDesigna.actuacion.numeroAsunto}-${this.checkCampo(actuacionDesigna.actuacion.nombreModulo) ? actuacionDesigna.actuacion.nombreModulo : ''}`,
+        cantidad: (-this.totalFacturado),
+        criterios: {
+          idFacturacion: idFacturacion,
+          idGrupoFacturacion: idGrupoFacturacion,
+          idConcepto: '10',
+          idPartidaPresupuestaria: idPartidaPresupuestaria
+        }
       };
     }
 
@@ -388,11 +416,20 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
       const asistencia: { asistencia: TarjetaAsistenciaItem, isNew: boolean } = JSON.parse(JSON.stringify(this.datosEntrada));
 
+      if (this.checkCampo(asistencia.asistencia.idTurno)) {
+        idGrupoFacturacion = await this.getAgrupacionTurno(asistencia.asistencia.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+      }
+
       datos = {
         colegiado: asistencia.asistencia.idPersonaJg,
         descripcion: `Asistencia ${asistencia.asistencia.anio}/${asistencia.asistencia.numero}`,
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
+        cantidad: (-this.totalFacturado),
+        criterios: {
+          idFacturacion: idFacturacion,
+          idGrupoFacturacion: idGrupoFacturacion,
+          idConcepto: '20',
+          idPartidaPresupuestaria: idPartidaPresupuestaria
+        }
       };
     }
 
@@ -400,11 +437,20 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
       const actuacionAsistencia: { asistencia: TarjetaAsistenciaItem, actuacion: ActuacionAsistenciaItem, isNew: boolean } = JSON.parse(JSON.stringify(this.datosEntrada));
 
+      if (this.checkCampo(actuacionAsistencia.asistencia.idTurno)) {
+        idGrupoFacturacion = await this.getAgrupacionTurno(actuacionAsistencia.asistencia.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+      }
+
       datos = {
         colegiado: actuacionAsistencia.asistencia.idPersonaJg,
         descripcion: `Actuación de asistencia ${actuacionAsistencia.asistencia.anio}/${actuacionAsistencia.asistencia.numero}/${actuacionAsistencia.actuacion.idActuacion}`,
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
+        cantidad: (-this.totalFacturado),
+        criterios: {
+          idFacturacion: idFacturacion,
+          idGrupoFacturacion: idGrupoFacturacion,
+          idConcepto: '20',
+          idPartidaPresupuestaria: idPartidaPresupuestaria
+        }
       };
     }
 
@@ -412,11 +458,20 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
       const guardia: GuardiaItem = JSON.parse(JSON.stringify(this.datosEntrada));
 
+      if (this.checkCampo(guardia.idTurno)) {
+        idGrupoFacturacion = await this.getAgrupacionTurno(guardia.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+      }
+
       datos = {
         colegiado: guardia.idPersona,
         descripcion: `Guardia ${guardia.fechadesde}.${guardia.turno}>${guardia.nombre}`,
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
+        cantidad: (-this.totalFacturado),
+        criterios: {
+          idFacturacion: idFacturacion,
+          idGrupoFacturacion: idGrupoFacturacion,
+          idConcepto: '20',
+          idPartidaPresupuestaria: idPartidaPresupuestaria
+        }
       };
     }
 
@@ -424,16 +479,29 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
       const ejg: { ejg: EJGItem, isNew: boolean } = JSON.parse(JSON.stringify(this.datosEntrada));
 
+      if (this.checkCampo(ejg.ejg.idTurno)) {
+        idGrupoFacturacion = await this.getAgrupacionTurno(ejg.ejg.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+      }
+
       datos = {
         colegiado: ejg.ejg.idPersona,
         descripcion: "",
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
+        cantidad: (-this.totalFacturado),
+        criterios: {
+          idFacturacion: idFacturacion,
+          idGrupoFacturacion: idGrupoFacturacion,
+          idConcepto: '40',
+          idPartidaPresupuestaria: idPartidaPresupuestaria
+        }
       };
     }
 
     sessionStorage.setItem("datosNuevoMovimiento", JSON.stringify(datos));
     this.router.navigate(["/fichaMovimientosVarios"]);
+  }
+
+  getAgrupacionTurno(idTurno: string) {
+    return this.sigaServices.getParam("facturacionsjcs_getAgrupacionDeTurnosPorTurno", `?idTurno=${idTurno}`).toPromise();
   }
 
   comfirmacionEliminar() {
@@ -465,6 +533,10 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         deleteList.push(el);
       }
     });
+
+    if (notDeleteList.length > 0) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.movimientosVarios.errorEliminarMov"));
+    }
 
     this.callDeleteService(deleteList);
 

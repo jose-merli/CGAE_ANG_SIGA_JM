@@ -19,12 +19,12 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
 
   msgs: Message[] = [];
   rutas: string[] = [];
-  progressSpinner : boolean = false;
-  preasistencia : PreAsistenciaItem;
-  asistencia : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
-  visibleTarjetaCaract : boolean = false;
-  editable : boolean = true;
-  nuevaAsistencia : boolean = false;
+  progressSpinner: boolean = false;
+  preasistencia: PreAsistenciaItem;
+  asistencia: TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
+  visibleTarjetaCaract: boolean = false;
+  editable: boolean = true;
+  nuevaAsistencia: boolean = false;
   tarjetaFija = {
     nombre: 'Resumen Asistencia',
     icono: 'fas fa-clipboard',
@@ -34,7 +34,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     enlaces: []
   };
   listaTarjetas = [{
-    id : 'datosgenerales',
+    id: 'datosgenerales',
     nombre: 'Datos Generales',
     icono: 'fa fa-user',
     detalle: true,
@@ -57,7 +57,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     enlaceCardOpen: { href: '/gestionJusticiables', title: this.translateService.instant("justiciaGratuita.justiciables.fichaJusticiable") }
   },
   {
-    id:'contrarios',
+    id: 'contrarios',
     nombre: 'Contrarios',
     icono: 'fa fa-users',
     detalle: true,
@@ -68,7 +68,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     enlaces: [],
   },
   {
-    id:'defensajuridica',
+    id: 'defensajuridica',
     nombre: "Defensa Jurídica",
     imagen: "",
     icono: "fa fa-university",
@@ -79,7 +79,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     campos: []
   },
   {
-    id:'observaciones',
+    id: 'observaciones',
     nombre: "Observaciones",
     imagen: "",
     icono: "fa fa-university",
@@ -90,7 +90,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     campos: []
   },
   {
-    id:'relaciones',
+    id: 'relaciones',
     nombre: "Relaciones",
     imagen: "",
     icono: "fas fa-link icon-ficha",
@@ -101,7 +101,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     campos: []
   },
   {
-    id:'documentacion',
+    id: 'documentacion',
     nombre: "Documentación",
     imagen: "",
     icono: "fa fa-briefcase",
@@ -133,42 +133,44 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     visible: true,
     campos: []
   }];
+  datosTarjetaFacGenerica: string;
 
-  @ViewChild(FichaAsistenciaTarjetaDatosGeneralesComponent) datosGenerales : FichaAsistenciaTarjetaDatosGeneralesComponent;
-  constructor(private location : Location,
-    private translateService : TranslateService,
-    private sigaServices : SigaServices,
-    private router : Router,
-    private datePipe : DatePipe,
-    private commonServices : CommonsService) { }
+  @ViewChild(FichaAsistenciaTarjetaDatosGeneralesComponent) datosGenerales: FichaAsistenciaTarjetaDatosGeneralesComponent;
+  constructor(private location: Location,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private router: Router,
+    private datePipe: DatePipe,
+    private commonServices: CommonsService) { }
 
   ngOnInit() {
 
     this.preasistencia = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
     this.rutas = ['SJCS', this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia")];
-    if(sessionStorage.getItem("nuevaAsistencia")){
+    if (sessionStorage.getItem("nuevaAsistencia")) {
       this.nuevaAsistencia = true;
       sessionStorage.removeItem("nuevaAsistencia");
     }
   }
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
 
     this.goTop();
 
     this.commonServices.checkAcceso(procesos_guardia.tarjeta_caracteristicas_asistencias)
-    .then(respuesta => {
+      .then(respuesta => {
 
-      this.visibleTarjetaCaract = respuesta; //Si es undefined se oculta, si es false la mostramos pero ineditable
-      this.listaTarjetas.find(tarj => tarj.id == 'caracteristicas').visible = this.visibleTarjetaCaract;
-      this.initTarjetas();
-    }).catch(error => console.error(error));
+        this.visibleTarjetaCaract = respuesta; //Si es undefined se oculta, si es false la mostramos pero ineditable
+        this.listaTarjetas.find(tarj => tarj.id == 'caracteristicas').visible = this.visibleTarjetaCaract;
+        this.initTarjetas();
+      }).catch(error => console.error(error));
 
-    if(sessionStorage.getItem("idAsistencia")){
+    if (sessionStorage.getItem("idAsistencia")) {
       this.nuevaAsistencia = false;
       let idAsistencia = sessionStorage.getItem("idAsistencia");
+      this.datosTarjetaFacGenerica = sessionStorage.getItem("idAsistencia");
       this.searchTarjetaAsistencia(idAsistencia);
-    }else if(sessionStorage.getItem("asistenciaAsistido")){
+    } else if (sessionStorage.getItem("asistenciaAsistido")) {
       this.nuevaAsistencia = false;
       let idAsistencia = sessionStorage.getItem("asistenciaAsistido");
       this.searchTarjetaAsistencia(idAsistencia);
@@ -179,7 +181,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     this.msgs = [];
   }
 
-  showMsg(severityParam : string, summaryParam : string, detailParam : string) {
+  showMsg(severityParam: string, summaryParam: string, detailParam: string) {
     this.msgs = [];
     this.msgs.push({
       severity: severityParam,
@@ -188,7 +190,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     });
   }
 
-  initTarjetas(){
+  initTarjetas() {
     //TARJETA FIJA RESUMEN
     let camposResumen = [
       {
@@ -243,13 +245,13 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
       }
     ]
     this.listaTarjetas[0].campos = camposDatosGenerales;
-    if(this.preasistencia || this.nuevaAsistencia){
+    if (this.preasistencia || this.nuevaAsistencia) {
       this.listaTarjetas[0].opened = true;
     }
 
     //TARJETA ASISTIDO
     let camposAsistido = [];
-    if(this.preasistencia || this.nuevaAsistencia){
+    if (this.preasistencia || this.nuevaAsistencia) {
 
       camposAsistido = [
         {
@@ -258,7 +260,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
         }
       ]
 
-    }else{
+    } else {
       camposAsistido = [
         {
           "key": this.translateService.instant("censo.fichaCliente.literal.identificacion"),
@@ -278,7 +280,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
 
     //TARJETA CONTRARIOS
     let camposContrarios = [];
-    if(this.preasistencia || this.nuevaAsistencia){
+    if (this.preasistencia || this.nuevaAsistencia) {
 
       camposContrarios = [
         {
@@ -287,7 +289,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
         }
       ]
 
-    }else{
+    } else {
       camposContrarios = [
         {
           "key": this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.identificadorprimero"),
@@ -310,14 +312,14 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     //Defensa juridica - no tiene campos
 
     //TARJETA Relaciones[5]
-    if(this.preasistencia || this.nuevaAsistencia){
+    if (this.preasistencia || this.nuevaAsistencia) {
       this.listaTarjetas[5].campos = [
         {
           "key": null,
           "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.norelaciones")
         }
       ]
-    }else{
+    } else {
       this.listaTarjetas[5].campos = [
         {
           "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
@@ -343,14 +345,14 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     }
 
     //TARJETA Documentacion
-    if(this.preasistencia || this.nuevaAsistencia){
+    if (this.preasistencia || this.nuevaAsistencia) {
       this.listaTarjetas[6].campos = [
         {
           "key": null,
           "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.nodocumentacion")
         }
       ]
-    }else{
+    } else {
       this.listaTarjetas[6].campos = [
         {
           "key": this.translateService.instant("enviosMasivos.literal.numDocumentos"),
@@ -362,7 +364,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     //TARJETA CARACTERISTICAS - no tiene campos
 
     //TARJETA ACTUACIONES
-    if(this.preasistencia || (this.asistencia && !this.asistencia.numeroActuaciones) || this.nuevaAsistencia){
+    if (this.preasistencia || (this.asistencia && !this.asistencia.numeroActuaciones) || this.nuevaAsistencia) {
 
       this.listaTarjetas[8].campos = [
         {
@@ -371,7 +373,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
         }
       ]
 
-    }else if(this.asistencia.numeroActuaciones == "1" && this.asistencia.actuaciones && this.asistencia.actuaciones.length > 0){
+    } else if (this.asistencia.numeroActuaciones == "1" && this.asistencia.actuaciones && this.asistencia.actuaciones.length > 0) {
 
       this.listaTarjetas[8].campos = [
         {
@@ -388,7 +390,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
         }
       ]
 
-    }else if (Number(this.asistencia.numeroActuaciones) > 1){
+    } else if (Number(this.asistencia.numeroActuaciones) > 1) {
       this.listaTarjetas[8].campos = [
         {
           "key": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.justificadas"),
@@ -410,7 +412,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     }
 
     this.listaTarjetas.forEach(tarj => {
-      if(tarj.visible !== undefined){
+      if (tarj.visible !== undefined) {
         let tarjTmp = {
           id: tarj.id,
           ref: document.getElementById(tarj.id),
@@ -419,29 +421,29 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
 
         this.tarjetaFija.enlaces.push(tarjTmp);
       }
-      if(tarj.nombre != 'Datos Generales'){ //Durante la creacion, deshabilitamos las tarjetas que no sean la de datos generales
+      if (tarj.nombre != 'Datos Generales') { //Durante la creacion, deshabilitamos las tarjetas que no sean la de datos generales
         tarj.detalle = false;
       }
-      if(tarj.nombre == 'Caracteristicas' && tarj.visible){
+      if (tarj.nombre == 'Caracteristicas' && tarj.visible) {
         tarj.opened = false;
       }
     });
   }
 
-  refreshDatosGenerales(event){
+  refreshDatosGenerales(event) {
 
     this.progressSpinner = true;
-    this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero="+event).subscribe(
+    this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero=" + event).subscribe(
       n => {
         this.clear();
-        if(n.error !== null
-          && n.error.code === 500){
+        if (n.error !== null
+          && n.error.code === 500) {
           this.showMsg("error", "Error", n.error.description.toString());
-        }else{
-          let newAsistenciaData : TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
+        } else {
+          let newAsistenciaData: TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
           this.editable = newAsistenciaData.estado == '1';
           this.tarjetaFija.campos[0]["value"] = newAsistenciaData.anioNumero;
-          this.tarjetaFija.campos[1]["value"] = newAsistenciaData.fechaAsistencia.substr(0,11);
+          this.tarjetaFija.campos[1]["value"] = newAsistenciaData.fechaAsistencia.substr(0, 11);
           this.tarjetaFija.campos[2]["value"] = newAsistenciaData.numeroColegiado + " - " + newAsistenciaData.nombreColegiado;
           this.tarjetaFija.campos[3]["value"] = newAsistenciaData.asistido;
           this.tarjetaFija.campos[4]["value"] = newAsistenciaData.descripcionEstado.toUpperCase();
@@ -454,14 +456,14 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[0].campos[3]["value"] = newAsistenciaData.fechaAsistencia;
 
           let camposAsistido = [];
-          if(!newAsistenciaData.idPersonaJg){
-              camposAsistido = [
-                {
-                  "key": null,
-                  "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
-                }
-              ]
-          }else{
+          if (!newAsistenciaData.idPersonaJg) {
+            camposAsistido = [
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
+              }
+            ]
+          } else {
             camposAsistido = [
               {
                 "key": this.translateService.instant("censo.fichaCliente.literal.identificacion"),
@@ -469,7 +471,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
               },
               {
                 "key": this.translateService.instant("gratuita.mantenimientoTablasMaestra.literal.apellidos"),
-                "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2 
+                "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2
               },
               {
                 "key": this.translateService.instant("administracion.parametrosGenerales.literal.nombre"),
@@ -480,8 +482,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[1].campos = camposAsistido;
 
           let camposContrarios = [];
-          if( !newAsistenciaData.numContrarios //Si esta vacio
-            || (newAsistenciaData.numContrarios && newAsistenciaData.numContrarios == '0')){ //O si viene relleno y vale 0
+          if (!newAsistenciaData.numContrarios //Si esta vacio
+            || (newAsistenciaData.numContrarios && newAsistenciaData.numContrarios == '0')) { //O si viene relleno y vale 0
 
             camposContrarios = [
               {
@@ -490,7 +492,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
               }
             ]
 
-          }else{
+          } else {
             camposContrarios = [
               {
                 "key": this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.identificadorprimero"),
@@ -509,26 +511,26 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[2].campos = camposContrarios;
 
           let camposRelaciones = [];
-          if(!newAsistenciaData.primeraRelacion){
+          if (!newAsistenciaData.primeraRelacion) {
             camposRelaciones = [
               {
                 "key": null,
                 "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.norelaciones")
               }
             ]
-          }else{
-            let fechaDictamen : string = '';
-            let fechaResolucion : string = '';
-            if(newAsistenciaData.primeraRelacion.fechadictamen){
+          } else {
+            let fechaDictamen: string = '';
+            let fechaResolucion: string = '';
+            if (newAsistenciaData.primeraRelacion.fechadictamen) {
               fechaDictamen = this.datePipe.transform(newAsistenciaData.primeraRelacion.fechadictamen, 'dd/MM/yyyy');
             }
-            if(newAsistenciaData.primeraRelacion.fecharesolucion){
+            if (newAsistenciaData.primeraRelacion.fecharesolucion) {
               fechaResolucion = this.datePipe.transform(newAsistenciaData.primeraRelacion.fecharesolucion, 'dd/MM/yyyy');
             }
 
-            if(newAsistenciaData.primeraRelacion.sjcs.startsWith("E")){
+            if (newAsistenciaData.primeraRelacion.sjcs.startsWith("E")) {
 
-              camposRelaciones =[
+              camposRelaciones = [
                 {
                   "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
                   "value": newAsistenciaData.primeraRelacion.sjcs
@@ -550,8 +552,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
                   "value": fechaResolucion
                 }
               ]
-            } else if (newAsistenciaData.primeraRelacion.sjcs.startsWith("D")){
-              camposRelaciones =[
+            } else if (newAsistenciaData.primeraRelacion.sjcs.startsWith("D")) {
+              camposRelaciones = [
                 {
                   "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
                   "value": newAsistenciaData.primeraRelacion.sjcs
@@ -569,14 +571,14 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           }
           this.listaTarjetas[5].campos = camposRelaciones;
           let camposDocumentacion = [];
-          if(!newAsistenciaData.numDocumentos){
+          if (!newAsistenciaData.numDocumentos) {
             camposDocumentacion = [
               {
                 "key": null,
                 "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.nodocumentacion")
               }
             ]
-          }else{
+          } else {
             camposDocumentacion = [
               {
                 "key": this.translateService.instant("enviosMasivos.literal.numDocumentos"),
@@ -586,7 +588,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           }
           this.listaTarjetas[6].campos = camposDocumentacion;
 
-          if(!newAsistenciaData.numeroActuaciones || newAsistenciaData.numeroActuaciones == "0"){
+          if (!newAsistenciaData.numeroActuaciones || newAsistenciaData.numeroActuaciones == "0") {
 
             this.listaTarjetas[8].campos = [
               {
@@ -594,9 +596,9 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
                 "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noactuaciones")
               }
             ]
-      
-          }else if(newAsistenciaData.numeroActuaciones == "1" && newAsistenciaData.actuaciones && newAsistenciaData.actuaciones.length > 0){
-      
+
+          } else if (newAsistenciaData.numeroActuaciones == "1" && newAsistenciaData.actuaciones && newAsistenciaData.actuaciones.length > 0) {
+
             this.listaTarjetas[8].campos = [
               {
                 "key": this.translateService.instant("justiciaGratuita.oficio.designas.actuaciones.fechaActuacion"),
@@ -611,8 +613,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
                 "value": newAsistenciaData.actuaciones[0].numeroAsunto
               }
             ]
-      
-          }else if (Number(newAsistenciaData.numeroActuaciones) > 1){
+
+          } else if (Number(newAsistenciaData.numeroActuaciones) > 1) {
             this.listaTarjetas[8].campos = [
               {
                 "key": 'Justificadas',
@@ -634,14 +636,14 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           }
 
           this.listaTarjetas.forEach(tarj => {
-            if(tarj.nombre != 'Datos Generales' && tarj.nombre != 'Caracteristicas'){ //Una vez creada la asistencia, dejamos abrir las demas tarjetas
+            if (tarj.nombre != 'Datos Generales' && tarj.nombre != 'Caracteristicas') { //Una vez creada la asistencia, dejamos abrir las demas tarjetas
               tarj.detalle = true;
             }
-            if(tarj.nombre == 'Caracteristicas' && tarj.visible){
+            if (tarj.nombre == 'Caracteristicas' && tarj.visible) {
               tarj.opened = true;
             }
           });
-          
+
           this.asistencia = newAsistenciaData;
         }
       },
@@ -649,27 +651,27 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
         console.log(err);
         this.progressSpinner = false;
       },
-      () =>{
+      () => {
         this.progressSpinner = false;
       }
     );
 
   }
 
-  searchTarjetaAsistencia(idAsistencia){
+  searchTarjetaAsistencia(idAsistencia) {
 
     this.progressSpinner = true;
-    this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero="+idAsistencia).subscribe(
+    this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero=" + idAsistencia).subscribe(
       n => {
         this.clear();
-        if(n.error !== null
-          && n.error.code === 500){
+        if (n.error !== null
+          && n.error.code === 500) {
           this.showMsg("error", "Error", n.error.description.toString());
-        }else{
-          let newAsistenciaData : TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
+        } else {
+          let newAsistenciaData: TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
           this.editable = newAsistenciaData.estado == '1';
           this.tarjetaFija.campos[0]["value"] = newAsistenciaData.anioNumero;
-          this.tarjetaFija.campos[1]["value"] = newAsistenciaData.fechaAsistencia.substr(0,11);
+          this.tarjetaFija.campos[1]["value"] = newAsistenciaData.fechaAsistencia.substr(0, 11);
           this.tarjetaFija.campos[2]["value"] = newAsistenciaData.numeroColegiado + " - " + newAsistenciaData.nombreColegiado;
           this.tarjetaFija.campos[3]["value"] = newAsistenciaData.asistido;
           this.tarjetaFija.campos[4]["value"] = newAsistenciaData.descripcionEstado.toUpperCase();
@@ -682,14 +684,14 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[0].campos[3]["value"] = newAsistenciaData.fechaAsistencia;
 
           let camposAsistido = [];
-          if(!newAsistenciaData.idPersonaJg){
-              camposAsistido = [
-                {
-                  "key": null,
-                  "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
-                }
-              ]
-          }else{
+          if (!newAsistenciaData.idPersonaJg) {
+            camposAsistido = [
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
+              }
+            ]
+          } else {
             camposAsistido = [
               {
                 "key": this.translateService.instant("censo.fichaCliente.literal.identificacion"),
@@ -697,7 +699,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
               },
               {
                 "key": this.translateService.instant("gratuita.mantenimientoTablasMaestra.literal.apellidos"),
-                "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2 
+                "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2
               },
               {
                 "key": this.translateService.instant("administracion.parametrosGenerales.literal.nombre"),
@@ -708,8 +710,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[1].campos = camposAsistido;
 
           let camposContrarios = [];
-          if( !newAsistenciaData.numContrarios //Si esta vacio
-            || (newAsistenciaData.numContrarios && newAsistenciaData.numContrarios == '0')){ //O si viene relleno y vale 0
+          if (!newAsistenciaData.numContrarios //Si esta vacio
+            || (newAsistenciaData.numContrarios && newAsistenciaData.numContrarios == '0')) { //O si viene relleno y vale 0
 
             camposContrarios = [
               {
@@ -718,7 +720,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
               }
             ]
 
-          }else{
+          } else {
             camposContrarios = [
               {
                 "key": this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.identificadorprimero"),
@@ -737,25 +739,25 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[2].campos = camposContrarios;
 
           let camposRelaciones = [];
-          if(!newAsistenciaData.primeraRelacion){
+          if (!newAsistenciaData.primeraRelacion) {
             camposRelaciones = [
               {
                 "key": null,
                 "value": this.translateService.instant('justiciaGratuita.guardia.fichaasistencia.norelaciones')
               }
             ]
-          }else{
-            let fechaDictamen : string = '';
-            let fechaResolucion : string = '';
-            if(newAsistenciaData.primeraRelacion.fechadictamen){
+          } else {
+            let fechaDictamen: string = '';
+            let fechaResolucion: string = '';
+            if (newAsistenciaData.primeraRelacion.fechadictamen) {
               fechaDictamen = this.datePipe.transform(newAsistenciaData.primeraRelacion.fechadictamen, 'dd/MM/yyyy');
             }
-            if(newAsistenciaData.primeraRelacion.fecharesolucion){
+            if (newAsistenciaData.primeraRelacion.fecharesolucion) {
               fechaResolucion = this.datePipe.transform(newAsistenciaData.primeraRelacion.fecharesolucion, 'dd/MM/yyyy');
             }
-            if(newAsistenciaData.primeraRelacion.sjcs.startsWith("E")){
+            if (newAsistenciaData.primeraRelacion.sjcs.startsWith("E")) {
 
-              camposRelaciones =[
+              camposRelaciones = [
                 {
                   "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
                   "value": newAsistenciaData.primeraRelacion.sjcs
@@ -777,8 +779,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
                   "value": fechaResolucion
                 }
               ]
-            } else if (newAsistenciaData.primeraRelacion.sjcs.startsWith("D")){
-              camposRelaciones =[
+            } else if (newAsistenciaData.primeraRelacion.sjcs.startsWith("D")) {
+              camposRelaciones = [
                 {
                   "key": this.translateService.instant("justiciaGratuita.oficio.designas.interesados.identificador"),
                   "value": newAsistenciaData.primeraRelacion.sjcs
@@ -797,14 +799,14 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[5].campos = camposRelaciones;
 
           let camposDocumentacion = [];
-          if(!newAsistenciaData.numDocumentos){
+          if (!newAsistenciaData.numDocumentos) {
             camposDocumentacion = [
               {
                 "key": null,
                 "value": this.translateService.instant('justiciaGratuita.guardia.fichaasistencia.nodocumentacion')
               }
             ]
-          }else{
+          } else {
             camposDocumentacion = [
               {
                 "key": this.translateService.instant("enviosMasivos.literal.numDocumentos"),
@@ -814,7 +816,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           }
           this.listaTarjetas[6].campos = camposDocumentacion;
 
-          if(!newAsistenciaData.numeroActuaciones || newAsistenciaData.numeroActuaciones == "0"){
+          if (!newAsistenciaData.numeroActuaciones || newAsistenciaData.numeroActuaciones == "0") {
 
             this.listaTarjetas[8].campos = [
               {
@@ -822,9 +824,9 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
                 "value": this.translateService.instant('justiciaGratuita.guardia.fichaasistencia.noactuaciones')
               }
             ]
-      
-          }else if(newAsistenciaData.numeroActuaciones == "1" && newAsistenciaData.actuaciones && newAsistenciaData.actuaciones.length > 0){
-      
+
+          } else if (newAsistenciaData.numeroActuaciones == "1" && newAsistenciaData.actuaciones && newAsistenciaData.actuaciones.length > 0) {
+
             this.listaTarjetas[8].campos = [
               {
                 "key": this.translateService.instant("justiciaGratuita.oficio.designas.actuaciones.fechaActuacion"),
@@ -839,8 +841,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
                 "value": newAsistenciaData.actuaciones[0].numeroAsunto
               }
             ]
-      
-          }else if (Number(newAsistenciaData.numeroActuaciones) > 1){
+
+          } else if (Number(newAsistenciaData.numeroActuaciones) > 1) {
             this.listaTarjetas[8].campos = [
               {
                 "key": 'Justificadas',
@@ -864,10 +866,10 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.asistencia = newAsistenciaData;
 
           this.listaTarjetas.forEach(tarj => {
-            if(tarj.nombre != 'Datos Generales' && tarj.nombre != 'Caracteristicas'){ //Una vez creada la asistencia, dejamos abrir las demas tarjetas
+            if (tarj.nombre != 'Datos Generales' && tarj.nombre != 'Caracteristicas') { //Una vez creada la asistencia, dejamos abrir las demas tarjetas
               tarj.detalle = true;
             }
-            if(tarj.nombre == 'Caracteristicas' && tarj.visible){
+            if (tarj.nombre == 'Caracteristicas' && tarj.visible) {
               tarj.opened = true;
             }
           });
@@ -878,7 +880,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
         console.log(err);
         this.progressSpinner = false;
       },
-      () =>{
+      () => {
         this.progressSpinner = false;
         sessionStorage.removeItem("idAsistencia");
         sessionStorage.removeItem("asistenciaAsistido");
@@ -905,12 +907,16 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     }
   }
 
-  backTo(){
-    if(this.preasistencia){
+  backTo() {
+    if (this.preasistencia) {
       this.router.navigate(['/fichaPreasistencia']);
-    }else{
-      sessionStorage.setItem("volver","true");
+    } else {
+      sessionStorage.setItem("volver", "true");
       this.router.navigate(['/guardiasAsistencias']);
     }
+  }
+
+  guardarDatos() {
+    sessionStorage.setItem("idAsistencia", this.datosTarjetaFacGenerica);
   }
 }

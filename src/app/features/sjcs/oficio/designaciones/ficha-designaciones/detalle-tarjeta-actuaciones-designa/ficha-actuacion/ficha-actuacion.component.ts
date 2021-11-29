@@ -651,4 +651,8 @@ export class FichaActuacionComponent implements OnInit {
 
   }
 
+  guardarDatos() {
+    sessionStorage.setItem("actuacionDesigna", JSON.stringify(this.actuacionDesigna));
+  }
+
 }

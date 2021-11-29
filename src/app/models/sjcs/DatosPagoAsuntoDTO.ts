@@ -1,5 +1,5 @@
 export class DatosPagoAsuntoDTO {
-    idPago: string;
+    idObjeto: string;
     importe: string;
     nombre: string;
     tipo: string;

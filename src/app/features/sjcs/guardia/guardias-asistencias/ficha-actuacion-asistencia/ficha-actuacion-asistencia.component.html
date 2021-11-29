@@ -76,7 +76,7 @@
             </div>
             <app-tarjeta-facturacion-generica
                 [datosEntrada]="{actuacion: actuacion, asistencia: asistencia, isNew: nuevaActuacion }"
-                [pantalla]="'ACTUACIONASISTENCIA'">
+                [pantalla]="'ACTUACIONASISTENCIA'" (guardarDatos)="guardarDatos()">
             </app-tarjeta-facturacion-generica>
         </div>
 
