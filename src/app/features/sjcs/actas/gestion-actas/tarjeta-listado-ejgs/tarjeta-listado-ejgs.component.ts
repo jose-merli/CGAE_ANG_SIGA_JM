@@ -48,7 +48,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   @Input() permisos;
 
   @Output() search = new EventEmitter<boolean>();
-
+  @Output() expedientesEvent = new EventEmitter<string>();
   @ViewChild("tabla") tabla;
   @Input() openGen;
   @Output() opened = new EventEmitter<Boolean>();
@@ -202,7 +202,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     ];
   }
 
-  getEJG(acta, padre?){
+  getEJG(acta){
     this.progressSpinner = true;
     let numActa = acta.numeroacta.split("/");
     this.actaDatosEntradaItem =
@@ -216,7 +216,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
         this.ejgs = JSON.parse(n.body).ejgItems;
 
         this.ejgTotales = this.ejgs.length;
-
+        this.expedientesEvent.emit(this.ejgTotales)
         this.ejgs.forEach(element => {
           element.numAnnioProcedimiento = this.abreviatura + "-" + element.numAnnioProcedimiento;
         });

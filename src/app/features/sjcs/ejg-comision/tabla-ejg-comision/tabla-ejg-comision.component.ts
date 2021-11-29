@@ -53,14 +53,11 @@ export class TablaEjgComisionComponent implements OnInit {
   ejgObject = [];
   datosFamiliares = [];
 
-  comboEstadoEJG = [];
   comboAnioActa = [];
   comboPonente = [];
   comboRemesa = [];
   comboFundamento = [];
   comboResolucion = [];
-  fechaEstado = new Date();
-  valueComboEstado = "";
   valueComboRemesa;
   valueComboAnioRemesa;
   num: string;
@@ -78,8 +75,7 @@ export class TablaEjgComisionComponent implements OnInit {
   @ViewChild("cd1") cdAnadirRemesa: Dialog;
   @ViewChild("cd2") cdEditarSeleccionados: Dialog;
 
-
-  showModalCambioEstado = false;
+  
   showModalAnadirRemesa = false;
   showModalEditarSeleccionados = false;
   fechaPrueba: any;
@@ -111,10 +107,6 @@ export class TablaEjgComisionComponent implements OnInit {
 
     this.selectedDatos = [];
 
-    this.showModalCambioEstado = false;
-    this.fechaEstado = new Date();
-    this.valueComboEstado = "";
-
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 
@@ -122,9 +114,6 @@ export class TablaEjgComisionComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
 
-
-
-    this.getComboEstadoEJG();
     this.getComboAnioActa();
     this.getComboPonente();
     this.getComboFundamento();
@@ -257,18 +246,6 @@ export class TablaEjgComisionComponent implements OnInit {
     this.selectedDatos = [];
   }
 
-  getComboEstadoEJG() {
-    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
-      n => {
-        this.comboEstadoEJG = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
   getObligatoriedadResolucion() {
     this.sigaServices.get("obligatoriedadResolucion").subscribe(
       n => {
@@ -282,7 +259,7 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   cancelarGuardarEditados(){
-    this.showModalEditarSeleccionados = false;
+    this.cerrarModalED();
   }
 
 
@@ -427,38 +404,9 @@ export class TablaEjgComisionComponent implements OnInit {
     ];
   }
 
-  cancelaCambiarEstados() {
-    this.showModalCambioEstado = false;
-  }
-
   cancelaAnadirRemesa() {
     this.showModalAnadirRemesa = false;
   }
-
-  checkCambiarEstados() {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
-    let icon = "fa fa-edit";
-
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.cambiarEstados();
-        this.cdCambioEstado.hide();
-      },
-      reject: () => {
-        this.msgs = [{
-          severity: "info",
-          summary: "Cancel",
-          detail: this.translateService.instant("general.message.accion.cancelada")
-        }];
-
-        this.cancelaCambiarEstados();
-        this.cdCambioEstado.hide();
-      }
-    });
-  }
-
 
   checkEditarSeleccionados() {
     //cambiar
@@ -569,36 +517,6 @@ export class TablaEjgComisionComponent implements OnInit {
     throw new Error('Method not implemented.');
   }
 
-  cambiarEstados() {
-    this.progressSpinner = true;
-    let data = [];
-    let ejg: EJGItem;
-
-    for (let i = 0; this.selectedDatos.length > i; i++) {
-      ejg = this.selectedDatos[i];
-      ejg.fechaEstadoNew = this.fechaEstado;
-      ejg.estadoNew = this.valueComboEstado;
-
-      data.push(ejg);
-    }
-
-    this.sigaServices.post("gestionejg_cambioEstadoMasivo", data).subscribe(
-      n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-      },
-      err => {
-        console.log(err);
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      },
-      () => {
-        this.progressSpinner = false;
-        this.busqueda.emit(false);
-        this.showModalCambioEstado = false;
-        this.selectedDatos = [];
-      }
-    );
-  }
-
   isSelectMultiple() {
     this.selectAll = false;
 
@@ -707,16 +625,9 @@ export class TablaEjgComisionComponent implements OnInit {
 
   }
 
-  changeEstado() {
-    if (this.selectedDatos != null && this.selectedDatos != undefined && this.selectedDatos.length > 0 && this.checkPermisos()) {
-      this.showModalCambioEstado = true;
-    } else {
-      this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("censo.datosBancarios.mensaje.seleccionar.almenosUno"));
-    }
-  }
 
   cerrarDialog() {
-    this.showModalCambioEstado = false;
+    this.cerrarModalED();
   }
 
   downloadEEJ() {
@@ -975,9 +886,19 @@ export class TablaEjgComisionComponent implements OnInit {
         }
       );
     }
-    this.showModalEditarSeleccionados = false;
+    this.cerrarModalED();
   }
-
+cerrarModalED(){
+  this.showModalEditarSeleccionados = false;
+  this.valueAnioActa = null;
+  this.selectAnioActa = false;
+  this.valuePonente = null;
+  this.valueFechaPonente = null;
+  this.selectPonente = false;
+  this.valueResolucion = null;
+  this.valueFundamento = null;
+  this.selectResolucionFundamento = false;
+}
 
 
 }

@@ -124,11 +124,6 @@
         label="{{ 'general.boton.comunicar' | translate}}">
       </button>
 
-      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura"
-        (click)="changeEstado()" type="button" icon="fas fa-exchange-alt" iconPos="left"
-        label="{{'general.boton.cambiarEstado' | translate}}">
-      </button>
-
       <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 1) || !permisoEscritura"
         (click)="downloadEEJ()" type="button" icon="fa fa-download" iconPos="left"
         label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}">
@@ -146,43 +141,6 @@
     </div>
   </div>
 </div>
-
-<!--DIALOG CAMBIA ESTADO-->
-<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false"
-  [(visible)]="showModalCambioEstado" (onHide)="cerrarDialog()">
-  <p-header class="title">
-    <label>{{'general.boton.cambiarEstado' | translate}} </label>
-  </p-header>
-  <div class="form-row">
-    <div class="form-group-interlineado col-lg-12 col-md-12">
-      <label>{{'censo.nuevaSolicitud.fechaEstado' | translate}}</label>
-      <app-fecha [(value)]="fechaEstado"></app-fecha>
-    </div>
-    <div class="form-group-interlineado col-lg-12 col-md-12">
-      <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}</label>
-      <p-dropdown [(ngModel)]='valueComboEstado' class="select-form" placeholder="Seleccionar"
-        [options]="comboEstadoEJG" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
-    </div>
-    <div class="form-group-interlineado col-lg-12 col-md-12">
-      <label>{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
-        {{selectedDatos.length}}</label>
-    </div>
-
-    <div class="main-button col-lg-12 col-md-12">
-      <button (click)="checkCambiarEstados()" pButton type="button" icon="fa fa-edit" iconPos="left"
-        label="{{'general.boton.guardarCerrar' | translate}}"></button>
-      <button (click)="cancelaCambiarEstados()" pButton type="button" icon="fa fa-close" iconPos="left"
-        label="{{'general.boton.cancel' | translate}}"></button>
-    </div>
-  </div>
-</p-dialog>
-
-<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
-  <p-footer>
-    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
-  </p-footer>
-</p-confirmDialog>
 
 <!--DIALOG AÑADIR REMESA-->
 <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd1>

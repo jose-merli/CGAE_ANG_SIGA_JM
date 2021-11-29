@@ -7,8 +7,9 @@
     </p>
   </div>
   <div>
-    <app-datos-generales-actas [(datos)]="datos" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-actas>
-    <app-tarjeta-listado-ejgs [datos]="datos" [permisos]="modoEdicion"></app-tarjeta-listado-ejgs>
+    <app-datos-generales-actas [(datos)]="datos" [modoEdicion]="modoEdicion" (pendienteCAJG)="buscarEJGs()" (modoEdicionSend)="modoEdicionSend($event)" [expNum]="expNum"></app-datos-generales-actas>
+    <app-tarjeta-listado-ejgs [datos]="datos" [permisos]="modoEdicion" (expedientesEvent)="expediente($event)"></app-tarjeta-listado-ejgs>
+    
   </div>
 </div>
 <div class="mt-3 text-right main-button ">

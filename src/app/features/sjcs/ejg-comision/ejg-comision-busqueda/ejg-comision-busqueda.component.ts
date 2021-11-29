@@ -91,6 +91,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     if (this.persistenceService.getFiltros() != undefined) {
       this.body = this.persistenceService.getFiltros();
 
+      this.body.annio = this.persistenceService.getFiltros().anioacta;
       this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
       this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
       this.body.fechaEstadoDesd = this.transformDate(this.body.fechaEstadoDesd);
@@ -109,6 +110,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
     } else {
       this.body = new EJGItem();
+      console.log("Año -> ", new Date().getFullYear().toString());
       this.body.annio = new Date().getFullYear().toString();
     }
 

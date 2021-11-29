@@ -66,22 +66,6 @@ export class TablaActasComponent implements OnInit {
 
   }
 
-
-  isSelectMultiple() {
-    this.selectAll = false;
-    if (this.permisoEscritura) {
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
-  }
-
   openTab(evento) {
 
 
@@ -187,8 +171,27 @@ export class TablaActasComponent implements OnInit {
       }
 
     }
-
   }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.editElementDisabled();
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+    this.selectMultiple = true;
+  }
+
+  editElementDisabled() {
+    this.datos.forEach(element => {
+      element.editable = false
+      element.overlayVisible = false;
+    });
+  }
+
   actualizaSeleccionados(selectedDatos) {
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
