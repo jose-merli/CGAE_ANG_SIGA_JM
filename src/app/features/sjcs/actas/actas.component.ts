@@ -7,6 +7,7 @@ import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { Router } from '../../../../../node_modules/@angular/router';
 import { procesos_comision } from '../../../permisos/procesos_comision';
+import { DatePipe } from '@angular/common';
 
 
 
@@ -33,7 +34,7 @@ export class ActasComponent implements OnInit {
   msgs;
   permisoEscritura;
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private datepipe: DatePipe,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
 
@@ -64,6 +65,12 @@ export class ActasComponent implements OnInit {
       n => {
         this.datos = JSON.parse(n.body).actasItems;
         this.buscar = true;
+
+        this.datos.forEach(element => {
+          element.fecharesolucion = this.formatDate(element.fecharesolucion);
+          element.fechareunion = this.formatDate(element.fechareunion);
+        });
+
         this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
@@ -89,6 +96,12 @@ export class ActasComponent implements OnInit {
 
     }
   }
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);    
+  }
+
   showMessage(event) {
     this.msgs = [];
     this.msgs.push({

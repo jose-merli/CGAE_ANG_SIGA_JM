@@ -47,11 +47,12 @@ export class DatosGeneralesActasComponent implements OnInit {
   comboPresidente = [];
   comboSecretario = [];
   comboSufijo = [];
-
+  @Input() expNum;
   //Resultados de la busqueda
   @Input() datos: ActasItem;
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Output() pendienteCAJG = new EventEmitter<any>();
 
   event = new EventEmitter<any>();
 
@@ -97,7 +98,7 @@ export class DatosGeneralesActasComponent implements OnInit {
      }
 
   ngOnInit() {
-    console.log("Este es el objeto que se supone tiene los datos de la tabla" + this.datos);
+    console.log("Este es el objeto que se supone tiene los datos de la tabla", this.datos);
     console.log(this.datos)
     if(this.datos.anioacta == null || this.datos.anioacta == undefined ){
       this.datosFiltro.anioacta = this.getAnio();
@@ -105,6 +106,7 @@ export class DatosGeneralesActasComponent implements OnInit {
       this.getComboPresidente();
     }else{
       this.editable = false;
+      this.controlComboSufijo = false;
       this.numCompleto= this.datos.numeroacta
       this.numAnio();
       this.getActa();
@@ -244,7 +246,6 @@ export class DatosGeneralesActasComponent implements OnInit {
   }
 
   abrirActaDialogo() {
-
     this.confirmationService.confirm({
       message: '¿Estas seguro que quieres abrir el acta?',
       accept: () => {
@@ -254,8 +255,8 @@ export class DatosGeneralesActasComponent implements OnInit {
       reject: () => {
         console.log("rechazado abrir acta");
       }
-  });
-}
+    });
+  }
 
   abrirActa() {
     this.progressSpinner = true;
@@ -319,8 +320,12 @@ export class DatosGeneralesActasComponent implements OnInit {
 
 
   getActa() {
-    this.sigaServices
-    this.sigaServices.post("filtrosacta_getActa", this.datos).subscribe(
+    let acta = {
+      'anioacta': this.datos.anioacta,
+      'idinstitucion': this.datos.idInstitucion,
+      'idacta': this.datos.idacta
+    };
+    this.sigaServices.post("filtrosacta_getActa", acta).subscribe(
       n => {
           this.datosFiltro = JSON.parse(n.body);
           this.datosFiltro.fechareunion = new Date(JSON.parse(n.body).fechareunion);
@@ -328,7 +333,7 @@ export class DatosGeneralesActasComponent implements OnInit {
             this.datosFiltro.fecharesolucion = null;
           }else{
           this.datosFiltro.fecharesolucion = new Date(JSON.parse(n.body).fecharesolucion);
-          }
+          } 
           this.inicioAux = new Date(JSON.parse(n.body).horainicioreunion);
           this.inicio = this.numero2Cifras(this.inicioAux.getHours()) + ":"+ this.numero2Cifras(this.inicioAux.getMinutes());
           this.finAux = new Date(JSON.parse(n.body).horafinreunion);
@@ -412,6 +417,20 @@ export class DatosGeneralesActasComponent implements OnInit {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
+  anadirEJGPendientesCAJGDialogo(){
+    this.confirmationService.confirm({
+      message: 'Se van a añadir los EJG pendientes con resolución Pendiente CAJG o Devuelto Colegio al ' + 
+      'recuadro "Expediente Retirados (Acta)" y desvincularlo del acta, quedando pendientes',
+      accept: () => {
+        console.log("aceptado	Añadir EJG’s Pendientes CAJG");
+        this.anadirEJGPendientesCAJG();
+      },
+      reject: () => {
+        console.log("rechazado Añadir EJG’s Pendientes CAJG");
+      }
+    });
+  }
+
   anadirEJGPendientesCAJG() {
     this.progressSpinner = true;
     this.sigaServices.post("filtrosacta_anadirEJGPendientesCAJG", this.datosFiltro).subscribe(
@@ -425,6 +444,7 @@ export class DatosGeneralesActasComponent implements OnInit {
         }
 
         this.progressSpinner = false;
+        this.pendienteCAJG.emit();
       },
       () => {
         this.progressSpinner = false;

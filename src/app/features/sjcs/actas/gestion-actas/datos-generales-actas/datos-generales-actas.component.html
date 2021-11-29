@@ -48,7 +48,7 @@
           <div class="form-row">
 		  
 
-              <div *ngIf="!editable" class="col-lg-2 col-md-2 pl5">
+              <div *ngIf="!editable" class="form-group col-lg-2 col-md-2 pl5">
                 <label><strong>{{ anioNum}}</strong></label>
                 <input type="text" [(ngModel)]="numCompleto" class="form-control"
                   maxLength="4" pInputText [disabled]="disabledAnio">
@@ -56,14 +56,14 @@
 
 
             
-              <div  *ngIf="editable" class="col-md-1 col-md-1 pl5">
+              <div  *ngIf="editable" class="form-group col-md-1 col-md-1 pl5">
                 <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
                     translate}}</strong></label>
                 <input type="text" [(ngModel)]="datosFiltro.anioacta" class="form-control" (keypress)="numberOnly($event)"
                   maxLength="4" pInputText [disabled]="disabledAnio">
               </div>
 
-              <div  *ngIf="editable" class="col-md-1 col-md-1 pr5">
+              <div  *ngIf="editable" class="form-group col-md-1 col-md-1 pr5">
                 <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
                     translate}}*</strong></label>
                 <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroacta">
@@ -156,7 +156,7 @@
               <div class="col-md-2 col-md-2 pr5">
                 <label><strong>{{ 'sjcs.actas.expedientesacta' |
                   translate}}</strong></label>
-                <input type="text" class="form-control" readonly="readonly" #inputNumero pInputText [(ngModel)]="datosFiltro.usumodificacion">
+                <input type="text" class="form-control" readonly="readonly" #inputNumero pInputText [(ngModel)]="expNum">
               </div>
             </div>
 
@@ -170,7 +170,7 @@
           label="Guardar"></button>
           <button (click)="restablecer()" pButton type="button" icon="fa fa-eraser" iconPos="left"
           label="Restablecer"></button>
-          <button (click)="anadirEJGPendientesCAJG()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-folder-open" iconPos="left"
+          <button (click)="anadirEJGPendientesCAJGDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-folder-open" iconPos="left"
           label="Añadir EJG`s pendientes de CAJG"></button>
           <button (click)="abrirActaDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-folder-open" iconPos="left"
           label="Abrir Acta"></button>

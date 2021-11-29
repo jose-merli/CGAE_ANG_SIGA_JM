@@ -268,7 +268,30 @@ export class ResolucionComponent implements OnInit {
       if (this.disabledSave()) {
         this.msgs = this.commonsServices.checkPermisoAccion();
       } else {
-        this.save();
+
+        //Se recupera nuevamenten nuevamente los estados del EJG para asegurarnos de su validez
+        let ejg = this.persistenceService.getDatos();
+        this.progressSpinner = true;
+        this.sigaServices.post("gestionejg_getEstados", ejg).subscribe(
+          n => {
+            let estadosEJG = JSON.parse(n.body).estadoEjgItems;
+
+            //Se comprueba si el ultimo estado introducido tiene "visibilidadcomision" == 1 (visible para comision)
+            //Tener en cuenta que esa propiedad se ha renombrado en el front como "propietario"
+            if(estadosEJG.length > 0 && estadosEJG[0].propietario == 1){
+              this.save();
+            }
+            //REVISAR MENSAJE
+            else{
+              this.showMessage('error', 'Error', "** No se puede realizar esta acción debido a que el ultimo estado del EJG no es propiedad de CAJG.");
+              this.progressSpinner = false;
+            }
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          }
+        );
       }
     }
   }
@@ -283,8 +306,10 @@ export class ResolucionComponent implements OnInit {
 
     //Se debe extraer los valores que necesitamos del id del elemento del combo de actas seleccionado.
     if (this.resolucion.idAnnioActa != null) {
-      this.resolucion.idActa = Number(this.resolucion.idAnnioActa.split(",")[0]);
-      this.resolucion.annioActa = Number(this.resolucion.idAnnioActa.split(",")[1]);
+      //REVISAR POSIBLE MEJORA
+      let annioIdActa = this.resolucion.idAnnioActa.split("-")[0];
+      this.resolucion.idActa = Number(annioIdActa.split("/")[1]);
+      this.resolucion.annioActa = Number(annioIdActa.split("/")[0]);
     }
     else {
       this.resolucion.idActa = null;
@@ -402,11 +427,21 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaPresPonente(event) {
-    if (event != null) this.resolucion.fechaPresentacionPonente = new Date(event);
+    if (event != null){
+      this.resolucion.fechaPresentacionPonente = new Date(event);
+    }
+    else{
+      this.resolucion.fechaPresentacionPonente = null;
+    }
   }
 
   fillFechaResCAJG(event) {
-    if (event != null) this.resolucion.fechaResolucionCAJG = new Date(event);
+    if (event != null){
+       this.resolucion.fechaResolucionCAJG = new Date(event);
+    }
+    else{
+      this.resolucion.fechaResolucionCAJG = null;
+    }
   }
 
   fillFechaResCAJGActa(event) {
@@ -423,11 +458,21 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaNotif(event) {
-    if (event != null) this.resolucion.fechaNotificacion = new Date(event);
+    if (event != null){
+      this.resolucion.fechaNotificacion = new Date(event);
+    }
+    else{
+      this.resolucion.fechaNotificacion = null;
+    }
   }
 
   fillFechaResFirme(event) {
-    if (event != null) this.resolucion.fechaRatificacion = new Date(event);
+    if (event != null) {
+      this.resolucion.fechaRatificacion = new Date(event);
+    }
+    else{
+      this.resolucion.fechaRatificacion = null;
+    }
   }
 
   onChangeCheckT(event) {

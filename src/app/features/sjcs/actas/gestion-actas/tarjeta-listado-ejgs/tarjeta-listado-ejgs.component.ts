@@ -46,7 +46,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   @Input() permisos;
 
   @Output() search = new EventEmitter<boolean>();
-
+  @Output() expedientesEvent = new EventEmitter<string>();
   @ViewChild("tabla") tabla;
   @Input() openGen;
   @Output() opened = new EventEmitter<Boolean>();
@@ -152,8 +152,8 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.editElementDisabled();
-      this.selectedDatos = this.datos;
-      this.numSelected = this.datos.length;
+      this.selectedDatos = this.ejgs;
+      this.numSelected = this.ejgs.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -200,7 +200,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     ];
   }
 
-  getEJG(acta, padre?){
+  getEJG(acta){
     this.progressSpinner = true;
     let numActa = acta.numeroacta.split("/");
     this.actaDatosEntradaItem =
@@ -208,13 +208,13 @@ export class TarjetaListadoEjgsComponent implements OnInit {
       'annioActa': acta.anioacta,
       'numActa': numActa[1]
     };
-    this.sigaServices.post("filtrosejgcomision_busquedaEJGComision", this.actaDatosEntradaItem).subscribe(
+    this.sigaServices.post("filtrosejgcomision_busquedaEJGActaComision", this.actaDatosEntradaItem).subscribe(
       n => {
         console.log("Dentro del servicio del padre que llama al getEJGRemesa");
         this.ejgs = JSON.parse(n.body).ejgItems;
 
         this.ejgTotales = this.ejgs.length;
-
+        this.expedientesEvent.emit(this.ejgTotales)
         this.ejgs.forEach(element => {
           element.numAnnioProcedimiento = this.abreviatura + "-" + element.numAnnioProcedimiento;
         });
@@ -244,7 +244,8 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   }
 
   consultarEditarEJG(){
-
+    this.router.navigate(["/ejg"]);
+    sessionStorage.setItem('EJG', JSON.stringify(this.selectedDatos));
   }
 
   onChangeRowsPerPages(event) {
@@ -254,7 +255,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   }
 
   editElementDisabled() {
-    this.datos.forEach(element => {
+    this.ejgs.forEach(element => {
       element.editable = false
       element.overlayVisible = false;
     });

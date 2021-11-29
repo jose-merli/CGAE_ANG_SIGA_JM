@@ -110,6 +110,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
     } else {
       this.body = new EJGItem();
+      console.log("Año -> ", new Date().getFullYear().toString());
       this.body.annio = new Date().getFullYear().toString();
     }
 

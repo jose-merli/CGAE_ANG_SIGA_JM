@@ -9,6 +9,7 @@ import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
+import { ComboItem } from '../../../../models/ComboItem';
 
 
 
@@ -50,14 +51,11 @@ export class TablaEjgComisionComponent implements OnInit {
   ejgObject = [];
   datosFamiliares = [];
 
-  comboEstadoEJG = [];
   comboAnioActa = [];
   comboPonente = [];
   comboRemesa = [];
   comboFundamento = [];
   comboResolucion = [];
-  fechaEstado = new Date();
-  valueComboEstado = "";
   valueComboRemesa;
   valueComboAnioRemesa;
   num: string;
@@ -74,7 +72,6 @@ export class TablaEjgComisionComponent implements OnInit {
   @ViewChild("cd") cdCambioEstado: Dialog;
   @ViewChild("cd1") cdAnadirRemesa: Dialog;
   @ViewChild("cd2") cdEditarSeleccionados: Dialog;
-
 
   showModalCambioEstado = false;
   showModalAnadirRemesa = false;
@@ -108,10 +105,6 @@ export class TablaEjgComisionComponent implements OnInit {
 
     this.selectedDatos = [];
 
-    this.showModalCambioEstado = false;
-    this.fechaEstado = new Date();
-    this.valueComboEstado = "";
-
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 
@@ -119,9 +112,6 @@ export class TablaEjgComisionComponent implements OnInit {
       this.historico = this.persistenceService.getHistorico();
     }
 
-
-
-    this.getComboEstadoEJG();
     this.getComboAnioActa();
     this.getComboPonente();
     this.getComboFundamento();
@@ -254,18 +244,6 @@ export class TablaEjgComisionComponent implements OnInit {
     this.selectedDatos = [];
   }
 
-  getComboEstadoEJG() {
-    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
-      n => {
-        this.comboEstadoEJG = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
   getObligatoriedadResolucion() {
     this.sigaServices.get("obligatoriedadResolucion").subscribe(
       n => {
@@ -288,6 +266,22 @@ export class TablaEjgComisionComponent implements OnInit {
       n => {
         console.log("******************comboanioacta**********************");
         this.comboAnioActa = n.combooItems;
+
+        if(this.acta != null || this.acta != undefined){
+          let comboItem = this.comboAnioActa.find(anioActa => anioActa.label == this.acta.numeroacta);
+
+          let indice = this.comboAnioActa.indexOf(comboItem);
+
+          if(indice != -1){
+            this.comboAnioActa[0].label = this.comboAnioActa[indice].label;
+            this.comboAnioActa[0].value = this.comboAnioActa[indice].value;
+          }
+          
+          for(; this.comboAnioActa.length > 1;){
+            this.comboAnioActa.pop();
+          }
+        }
+
       },
       err => {
         console.log(err);
@@ -408,38 +402,9 @@ export class TablaEjgComisionComponent implements OnInit {
     ];
   }
 
-  cancelaCambiarEstados() {
-    this.showModalCambioEstado = false;
-  }
-
   cancelaAnadirRemesa() {
     this.showModalAnadirRemesa = false;
   }
-
-  checkCambiarEstados() {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
-    let icon = "fa fa-edit";
-
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.cambiarEstados();
-        this.cdCambioEstado.hide();
-      },
-      reject: () => {
-        this.msgs = [{
-          severity: "info",
-          summary: "Cancel",
-          detail: this.translateService.instant("general.message.accion.cancelada")
-        }];
-
-        this.cancelaCambiarEstados();
-        this.cdCambioEstado.hide();
-      }
-    });
-  }
-
 
   checkEditarSeleccionados() {
     //cambiar
@@ -518,36 +483,6 @@ export class TablaEjgComisionComponent implements OnInit {
   }
   deleteAnioActa(data: any[]) {
     throw new Error('Method not implemented.');
-  }
-
-  cambiarEstados() {
-    this.progressSpinner = true;
-    let data = [];
-    let ejg: EJGItem;
-
-    for (let i = 0; this.selectedDatos.length > i; i++) {
-      ejg = this.selectedDatos[i];
-      ejg.fechaEstadoNew = this.fechaEstado;
-      ejg.estadoNew = this.valueComboEstado;
-
-      data.push(ejg);
-    }
-
-    this.sigaServices.post("gestionejg_cambioEstadoMasivo", data).subscribe(
-      n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-      },
-      err => {
-        console.log(err);
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      },
-      () => {
-        this.progressSpinner = false;
-        this.busqueda.emit(false);
-        this.showModalCambioEstado = false;
-        this.selectedDatos = [];
-      }
-    );
   }
 
   isSelectMultiple() {
