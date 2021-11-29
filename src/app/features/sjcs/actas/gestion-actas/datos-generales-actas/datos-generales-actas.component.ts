@@ -466,7 +466,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   }
 
   onDisabledSave() {
-    if (this.datos.idacta != undefined && this.datos.idacta != "") {
+    if ((this.datos.idacta != null && this.datos.idacta != undefined) && this.datos.idacta != "") {
       this.disabledSave = false;
     } else {
       this.disabledSave = true;

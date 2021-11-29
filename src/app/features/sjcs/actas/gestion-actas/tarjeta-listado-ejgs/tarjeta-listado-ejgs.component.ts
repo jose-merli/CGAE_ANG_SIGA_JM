@@ -6,6 +6,7 @@ import { ConfirmationService, Paginator } from 'primeng/primeng';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { ActasItem } from '../../../../../models/sjcs/ActasItem';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 @Component({
   selector: 'app-tarjeta-listado-ejgs',
   templateUrl: './tarjeta-listado-ejgs.component.html',
@@ -25,7 +26,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   openFicha: boolean = false;
   selectedItem: number = 10;
   selectAll: boolean = false;
-  selectedDatos: any[] = [];
+  selectedDatos: EJGItem[] = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
@@ -42,7 +43,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   ejgs;
 
   //Resultados de la busqueda
-  @Input() datos: ActasItem;
+  @Input() datos: ActasItem = new ActasItem();
 
   @Input() permisos;
 
@@ -240,12 +241,46 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   }
 
   asociarEJG() {
-    this.router.navigate(["/ejg-comision"]);
-    sessionStorage.setItem('acta', JSON.stringify(this.datos));
+    if(this.datos.numeroacta != null){
+      sessionStorage.setItem('acta', JSON.stringify(this.datos));
+      this.router.navigate(["/ejg-comision"]);
+    }
+    else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    }
   }
 
   consultarEditarEJG(){
+    this.progressSpinner = true;
+    
+    this.sigaServices.post("gestionejg_datosEJG", this.selectedDatos[0]).subscribe(
+      n => {
+        let ejgObject = JSON.parse(n.body).ejgItems;
+        this.persistenceService.setDatos(ejgObject[0]);
+        this.consultaUnidadFamiliar(this.selectedDatos[0]);
+        this.commonsService.scrollTop();
+      },
+      err => {
+        this.commonsService.scrollTop();
+      }
+    );
+  }
 
+  consultaUnidadFamiliar(selected) {
+    this.progressSpinner = true;
+
+    this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
+      n => {
+        let datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
+        this.persistenceService.setBodyAux(datosFamiliares);
+        localStorage.setItem('actasItem', JSON.stringify(this.datos));
+        this.router.navigate(['/gestionEjg']);
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   onChangeRowsPerPages(event) {
