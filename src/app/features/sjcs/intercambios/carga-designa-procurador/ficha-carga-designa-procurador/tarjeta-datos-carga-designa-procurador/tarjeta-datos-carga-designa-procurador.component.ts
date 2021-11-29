@@ -12,8 +12,7 @@ import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { RemesasResultadoItem } from '../../../../../../models/sjcs/RemesasResultadoItem';
 import { RemesasResolucionItem } from '../../../../../../models/sjcs/RemesasResolucionItem';
 import { saveAs } from "file-saver/FileSaver";
-import moment = require('moment');
-import { a } from '@angular/core/src/render3';
+
 
 @Component({
   selector: 'app-tarjeta-datos-carga-designa-procurador',
@@ -146,7 +145,7 @@ export class TarjetaDatosCargaDesignaProcuradorComponent implements OnInit {
     this.StringFichero = this.translateService.instant("facturacionSJCS.fichaCertificacion.subirFichero")+"*";
     if(this.remesaItem.idRemesaResolucion == null){
       this.getUltimoRegitroRemesa();
-      this.remesaItem.fechaCarga = moment(new Date()).format('DD/MM/YYYY');
+      //sthis.remesaItem.fechaCarga = moment(new Date()).format('DD/MM/YYYY');
       this.remesaItem.observaciones = null;
       //this.remesaItem.descripcion = "";
     }

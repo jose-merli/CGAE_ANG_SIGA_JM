@@ -77,9 +77,8 @@
             <div class="form-group-interlineado col-lg-3 col-md-3">
               <label>{{ 'justiciaGratuita.remesasResultados.tabla.fechaRemesa' | translate }}*</label>
               <app-fecha [(value)]="remesaItem.fechaResolucionRemesaResultado" name="fechaRemesa"
-               ngDefaultControl (valueChangeSelected)="fillFechaRemesaDetalle($event)" 
+               (valueChangeSelected)="fillFechaRemesaDetalle($event)" 
                (valueChangeInput)="fillFechaRemesaDetalle($event)"
-               [(ngModel)]="remesaItem.fechaResolucionRemesaResultado"
                [ngClass]="styleObligatorio('datosGenerales', remesaItem.fechaResolucionRemesaResultado)"></app-fecha>
             </div> 
     
