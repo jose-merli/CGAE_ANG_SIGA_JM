@@ -23,7 +23,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
 
   body;
 
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   selectedItem: number = 10;
   selectAll: boolean = false;
   selectedDatos: EJGItem[] = [];
