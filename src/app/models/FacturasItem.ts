@@ -1,5 +1,3 @@
-import { ComboItem } from "./ComboItem";
-
 export class FacturasItem {
 
     idFactura: string;
