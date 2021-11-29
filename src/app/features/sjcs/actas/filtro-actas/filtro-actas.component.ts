@@ -1,7 +1,6 @@
 import { Component, OnInit, EventEmitter, HostListener, Input, ViewChild, Output } from '@angular/core';
 import { KEY_CODE } from '../../../censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component';
 import { } from '../../../../models/sjcs/ProcedimientoItem';
-import { PretensionItem } from '../../../../models/sjcs/PretensionItem';
 import { Router } from '../../../../../../node_modules/@angular/router';
 import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -25,6 +24,8 @@ export class FiltroActasComponent implements OnInit {
   valueNumero: String;
   valuePresidente: String;
   valueSecretario: String;
+  progressSpinner: boolean = false;
+
 
 
 
@@ -34,7 +35,7 @@ export class FiltroActasComponent implements OnInit {
   comboPresidente = [];
   comboSecretario = [];
 
-  @Output() searchEmitter = new EventEmitter<boolean>();
+  @Output() searchEmitter = new EventEmitter<ActasItem>();
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private commonServices: CommonsService) { }
@@ -50,10 +51,9 @@ export class FiltroActasComponent implements OnInit {
 
   getComboPresidente() {
     this.sigaServices
-      .get("filtrosejg_comboPresidente")
+      .get("filtrosejgcomision_comboPresidente")
       .subscribe(
         n => {
-          console.log("************************************************************************************getComboPresidente**************");
           this.comboPresidente = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboPresidente);
         },
@@ -63,12 +63,19 @@ export class FiltroActasComponent implements OnInit {
       );
   }
 
+  nuevo() {
+
+    this.progressSpinner = true;
+
+    this.router.navigate(["/fichaGestionActas"]);
+  }
+
+
   getComboSecretario() {
     this.sigaServices
-      .get("filtrosejg_comboSecretario")
+      .get("filtrosejgcomision_comboSecretario")
       .subscribe(
         n => {
-          console.log("**************************************************************************************getComboSecretario**************");
           this.comboSecretario = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboSecretario);
         },
@@ -87,15 +94,13 @@ export class FiltroActasComponent implements OnInit {
 
 
   fillFechaResolucion(event) {
-    if (event != null) {
-      this.datosFiltro.fechaResolucion = this.transformDate(event);
-    }
+      this.datosFiltro.fecharesolucion = this.transformDate(event);
+    
   }
 
   fillFechaReunion(event) {
-    if (event != null) {
-      this.datosFiltro.fechaReunion = this.transformDate(event);
-    }
+      this.datosFiltro.fechareunion = this.transformDate(event);
+     
   }
 
   onHideDatosGenerales() {
@@ -103,21 +108,29 @@ export class FiltroActasComponent implements OnInit {
   }
 
   search() {
-
+console.log(this.datosFiltro)
+    this.limpiezaFiltro(this.datosFiltro);
     if (this.checkFilters()) {
-      console.log("Entra en el search y intenta enviar algo")
-      console.log(this.datosFiltro.acta)
-      console.log(this.datosFiltro.anio)
-      console.log(this.datosFiltro.fechaResolucion)
-      console.log(this.datosFiltro.fechaReunion)
-      console.log(this.datosFiltro.presidente)
-      console.log(this.datosFiltro.secretario)
       this.persistenceService.setFiltros(this.datosFiltro);
-      this.searchEmitter.emit(true);
+      this.searchEmitter.emit(this.datosFiltro);
     }
 
   }
+  limpiezaFiltro(actaItem){
+    if(actaItem.anioacta != undefined){
+      actaItem.anioacta.replace(/ /g, "")
+      if( actaItem.anioacta.length == 0 ){
+        actaItem.anioacta = null;
+      }
+    }
+    if(actaItem.numeroacta != undefined){
+      actaItem.numeroacta.replace(/ /g, "")
+      if(actaItem.numeroacta.length == 0){
+        actaItem.numeroacta = null;
+      }
+    }
 
+  }
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57) {
@@ -139,15 +152,6 @@ export class FiltroActasComponent implements OnInit {
 
   clear() {
     this.msgs = [];
-  }
-
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
   }
 
   //búsqueda con enter

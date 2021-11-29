@@ -62,5 +62,6 @@ export class TurnosItems {
   fechabajaguardia: Date;
   fechaActual: Date;
   numeroInscritos;
+  partidoJudicial: string;
   constructor() { }
 }

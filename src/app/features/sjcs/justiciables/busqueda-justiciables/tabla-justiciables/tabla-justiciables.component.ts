@@ -7,6 +7,7 @@ import { DataTable } from 'primeng/primeng';
 import { Router } from '@angular/router';
 import { JusticiableBusquedaObject } from '../../../../../models/sjcs/JusticiableBusquedaObject';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { Location } from '@angular/common';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
@@ -39,6 +40,8 @@ export class TablaJusticiablesComponent implements OnInit {
   @Input() modoRepresentante;
   @Input() nuevoInteresado;
   @Input() nuevoContrario;
+  @Input() nuevoAsistido;
+  @Input() nuevoContrarioAsistencia;
   @Input() nuevaUniFamiliar;
   @Input() nuevoContrarioEJG;
   //searchServiciosTransaccion: boolean = false;
@@ -93,12 +96,21 @@ export class TablaJusticiablesComponent implements OnInit {
       if(this.checkInteresado(evento))      this.insertInteresado(evento);
       else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.interesados.existente"))
       
-    }
-    else if(this.nuevoContrario){
+    } else if(this.nuevoContrario){
       if(this.checkContrario(evento))  this.insertContrario(evento);
       else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
-    }
-    else if(this.nuevoContrarioEJG){
+
+    } else if(this.nuevoAsistido){
+      this.asociarAsistido(evento);
+    }else if(this.nuevoContrarioAsistencia){
+
+      if(this.checkContrario(evento)){
+        this.asociarContrarioAsistencia(evento);
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
+      }
+    
+    } else if(this.nuevoContrarioEJG){
       if(this.checkContrarioEJG(evento))  this.insertContrarioEJG(evento);
       else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
     }
@@ -282,6 +294,69 @@ export class TablaJusticiablesComponent implements OnInit {
       this.progressSpinner = false;
     }
   );
+  }
+
+  asociarAsistido(justiciable : JusticiableItem){
+
+    let idAsistencia = sessionStorage.getItem("asistenciaAsistido");
+    if(idAsistencia){
+
+      this.sigaServices
+      .postPaginado("busquedaGuardias_asociarAsistido", "?anioNumero="+idAsistencia+"&actualizaDatos='S'", justiciable)
+      .subscribe(
+        data => {
+          let result = JSON.parse(data["body"]);
+          if(result.error){
+            this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+          }else{
+            this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
+            this.router.navigate(["/fichaAsistencia"]);
+          }
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+            this.progressSpinner = false;
+          }
+        );
+
+    }
+
+  }
+
+  asociarContrarioAsistencia(justiciable : JusticiableItem){
+
+    let idAsistencia = sessionStorage.getItem("idAsistencia");
+    let justiciables : JusticiableItem [] = []
+    justiciables.push(justiciable);
+    if(idAsistencia){
+
+      this.sigaServices
+      .postPaginado("busquedaGuardias_asociarContrario", "?anioNumero="+idAsistencia, justiciables)
+      .subscribe(
+        data => {
+          let result = JSON.parse(data["body"]);
+          if(result.error){
+            this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+          }else{
+            this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
+            this.router.navigate(["/fichaAsistencia"]);
+          }
+
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+            this.progressSpinner = false;
+        }
+      );
+
+    }
   }
 
   checkContrarioEJG(justiciable){

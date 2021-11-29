@@ -5,13 +5,9 @@
     <!-- TABLA RESULTADOS -->
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true" #table
-      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
-      [ngClass]="{ 'customCursor': selectMultiple}" selectionMode="multiple" paginatorPosition="both">
-      <ng-template pTemplate="colgroup" let-columns>
-        <colgroup>
-          <col *ngFor="let col of cols" [style.width]="col.width">
-        </colgroup>
-      </ng-template>
+      class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+      
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th *ngFor="let col of columns;let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
@@ -27,12 +23,17 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="setItalic(dato)">
-              <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
-            </div>
-            <div *ngIf="!setItalic(dato)">
+            <div *ngIf="col.field != 'numeroacta'">
               <span>{{dato[col.field]}}</span>
             </div>
+            <a class="enlace"  (click)="openTab(dato)">
+
+              <span *ngIf="col.field == 'numeroacta'">
+
+                {{dato[col.field]}}
+
+              </span>
+            </a>
           </td>
 
         </tr>
@@ -60,8 +61,6 @@
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
               name="groupname" [disabled]="!permisoEscritura"></p-checkbox>
           </div>
-          <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
-            <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label>
         </div>
       </ng-template>
     </p-table>
@@ -69,14 +68,8 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button *ngIf="!historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-history" iconPos="left"
-        label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
-      <button *ngIf="historico" (click)="searchHistorical(); selectedDatos=[]" pButton type="button" icon="fa fa-undo" iconPos="left"
-        label="{{'general.message.ocultarHistorico' | translate}}"></button>
-      <button *ngIf="!historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-        (click)="checkPermisosDelete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-      <button *ngIf="historico" pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
-        (click)="checkPermisosActivate()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.activar' | translate}}"></button>
+      <button pButton [disabled]="!permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
+        (click)="delete()" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
     </div>
   </div>
 </div>

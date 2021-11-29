@@ -10,11 +10,14 @@ import { ParametroDto } from '../../models/ParametroDto';
 import { ParametroRequestDto } from '../../models/ParametroRequestDto';
 import { ActuacionDesignaItem } from '../../models/sjcs/ActuacionDesignaItem';
 import { DesignaItem } from '../../models/sjcs/DesignaItem';
+import { JusticiableBusquedaItem } from '../../models/sjcs/JusticiableBusquedaItem';
 import { CommonsService } from '../../_services/commons.service';
 import { SigaServices } from '../../_services/siga.service';
+import { TranslateService } from '../translate';
 import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 import { PersistenceService } from '../../_services/persistence.service';
-import { TranslateService } from '../translate';
+import { FiltroAsistenciaItem } from '../../models/guardia/FiltroAsistenciaItem';
+import { EJGItem } from '../../models/sjcs/EJGItem';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
   templateUrl: './tabla-resultado-desplegable.component.html',
@@ -33,6 +36,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() isLetrado;
   @Input() permisosFichaAct;
   @Input() fechaFiltro;
+  @Input() filtroAsistencia : FiltroAsistenciaItem;
   turnoAllow;  //to do
   justActivarDesigLetrado;
   activarSubidaJustDesig;
@@ -72,6 +76,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   numperPage = 10;
   from = 0;
   to = 10;
+  fromRowGroup = 0;
+  toRowGroup = 9;
   totalRegistros = 0;
   disableDelete = true;
   idTurno = "";
@@ -96,6 +102,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
+  numCell : number;
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe,
@@ -107,6 +114,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     private confirmationService: ConfirmationService
 
   ) {
+
 
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
@@ -127,22 +135,30 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
     if (this.pantalla == 'JE'){
+      this.fromRowGroup = 0;
+      this.toRowGroup = 9;
+      this.numCell = 2;
       this.rowIdsToUpdate = []; //limpiamos
       this.dataToUpdateArr = []; //limpiamos
       this.newActuacionesArr = []; //limpiamos
       this.rowValidadas = [];
-    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
-      this.getParams("JUSTIFICACION_EDITAR_DESIGNA_LETRADOS");
-      this.getParams("CONFIGURAR_COMBO_DESIGNA");
-          }
-    
-    //this.cargaJuzgados.emit(false);
-    if (this.comboModulos != undefined && this.comboModulos != []){
-      this.searchNuevo(this.comboModulos, []);
-    }
+      sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
+        this.getParams("JUSTIFICACION_EDITAR_DESIGNA_LETRADOS");
+        this.getParams("CONFIGURAR_COMBO_DESIGNA");
+            
+      
+      //this.cargaJuzgados.emit(false);
+      if (this.comboModulos != undefined && this.comboModulos !== []){
+        this.searchNuevo(this.comboModulos, []);
+      }
 
-    if (this.comboModulos != undefined && this.comboModulos != [] && this.comboAcreditacion != undefined && this.comboAcreditacion != []){
-      this.searchNuevo(this.comboModulos, this.comboAcreditacion);
+      if (this.comboModulos != undefined && this.comboModulos !== [] && this.comboAcreditacion !== undefined && this.comboAcreditacion !== []){
+        this.searchNuevo(this.comboModulos, this.comboAcreditacion);
+      }
+    }else if(this.pantalla == 'AE'){
+      this.fromRowGroup = 0;
+      this.toRowGroup = 6;
+      this.numCell = 0;
     }
     this.cabeceras.forEach(cab => {
       this.selectedHeader.push(cab);
@@ -300,29 +316,36 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.renderer.addClass(iconDownEl, 'collapse');
 
   }
-  rowGroupArrowClick(rowWrapper, rowGroupId) {
+  rowGroupArrowClick(rowWrapper, rowGroupId, uncollapse? : boolean) {
     this.down = !this.down
     this.RGid = rowGroupId;
     const toggle = rowWrapper;
     for (let i = 0; i < rowWrapper.children.length; i++) {
       if (rowWrapper.children[i].className.includes('child')) {
-        this.modalStateDisplay = false;
-        rowWrapper.children[i].className.includes('collapse')
-          ? this.renderer.removeClass(
-            rowWrapper.children[i],
-            'collapse'
-          )
-          : this.renderer.addClass(
-            rowWrapper.children[i],
-            'collapse'
-          );
+          this.modalStateDisplay = false;
+          if(uncollapse === undefined){
+            rowWrapper.children[i].className.includes('collapse')
+              ? this.renderer.removeClass(
+                rowWrapper.children[i],
+                'collapse'
+              )
+              : this.renderer.addClass(
+                rowWrapper.children[i],
+                'collapse'
+              );
+          } else if (rowWrapper.children[i].className.includes('collapse')){
+            this.renderer.removeClass(
+              rowWrapper.children[i],
+              'collapse'
+            )
+          }
       } else {
         this.modalStateDisplay = true;
       }
     }
   }
   searchChange(j: any) {
-    if (this.pantalla == 'JE') {
+    if (this.pantalla == 'JE' || this.pantalla == 'AE') {
       let isReturn = true;
       let sT;
       let isReturnArr = [];
@@ -420,15 +443,18 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             this.rowIdsToUpdate = []; //limpiamos
           }
         }
-      }else{
+      }else if(this.pantalla == 'JE'){
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
         if (this.sumar){
           this.rowIdsToUpdate.push(rowId);
         }else{
           this.rowIdsToUpdate = []; //limpiamos
         }
+      }else{
+        cell.value = event;
+        this.rowIdsToUpdate.push(rowId);
       }
-    }else{
+    }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
@@ -447,6 +473,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
+    }else{
+      cell.value = event;
+      this.rowIdsToUpdate.push(rowId);
     }
 
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
@@ -745,7 +774,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.rowIdsToUpdate = []; //limpiamos
         }
       }
-    }else{
+    }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
@@ -763,6 +792,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
+    }else{
+      this.rowIdsToUpdate.push(rowId);
     }
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "changeSelect";
@@ -808,7 +839,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.rowIdsToUpdate.push(rowId);
      
       }
-    }else{
+    }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
@@ -826,9 +857,22 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
+    }else{
+      this.rowIdsToUpdate.push(rowId);
     }
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "inputChange";
+  }
+  onChangeSelector(event, row, cell, rowId, rowGroup){
+
+    this.rowIdsToUpdate.push(rowId);
+    if(event){
+      cell.value[5] = event[0];
+    }else{
+      cell.value[5] = 0;
+    }
+    
+    sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
   }
 
   ocultarColumna(event) {
@@ -940,7 +984,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.setTamanios();
+    //this.setTamanios();
     this.tamanioTablaResultados = document.getElementById("tablaResultadoDesplegable").clientWidth;
   }
 
@@ -1694,6 +1738,37 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       });
     });
   }
+
+  onChangeNifJg(value, rowGroupId, row : Row, rowGroup : RowGroup){
+
+    if(value){
+      let justiciableItem : JusticiableBusquedaItem = new JusticiableBusquedaItem();
+      justiciableItem.nif = value;
+
+      this.sigaServices.post("gestionJusticiables_getJusticiableByNif", justiciableItem).subscribe(
+        n => {
+          let justiciableDTO = JSON.parse(n["body"]);
+          let justiciableItem = justiciableDTO.justiciable;
+          if(justiciableItem){
+
+            rowGroup.rows[0].cells[0].value[0] = justiciableItem.nif;
+            rowGroup.rows[0].cells[0].value[1] = justiciableItem.apellido1;
+            rowGroup.rows[0].cells[0].value[2] = justiciableItem.apellido2;
+            rowGroup.rows[0].cells[0].value[3] = justiciableItem.nombre;
+            rowGroup.rows[0].cells[0].value[4] = justiciableItem.sexo;
+
+          }
+        },
+        err => {
+          console.log(err);
+        },
+        () =>{
+          this.progressSpinner = false;
+        }
+      );
+
+    }
+  }
   
     linkFichaActIfPermis(row, rowGroup){
       if (this.pantalla == 'JE'){
@@ -1746,6 +1821,76 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.searchRelaciones(actuacion);
         }
       }
+    }
+
+    
+    linkFichaAsistencia(id){
+      let idAsistencia : string = id;
+      if(this.pantalla == "AE"){
+        sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
+        sessionStorage.setItem("idAsistencia", idAsistencia.substr(1));
+        sessionStorage.setItem("modoBusqueda","b");
+        this.router.navigate(['/fichaAsistencia']);
+      }
+    }
+    linkToFichaEJG(rowGroup : RowGroup, idEJG : string){
+      if(this.pantalla == "AE" && idEJG){
+        idEJG = idEJG.substring(1);
+        sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
+        sessionStorage.setItem("modoBusqueda","b");
+        let ejgItem = new EJGItem();
+        ejgItem.numAnnioProcedimiento = idEJG;
+        ejgItem.annio = idEJG.split("/")[0];
+        ejgItem.numero = idEJG.split("/")[1];
+        ejgItem.tipoEJG = rowGroup.rows[0].cells[6].value;
+        this.progressSpinner = true;
+    
+        this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
+          n => {
+            let ejgObject : any []= JSON.parse(n.body).ejgItems;
+            let datosItem : EJGItem = ejgObject[0];
+            this.persistenceService.setDatos(datosItem);
+            this.consultaUnidadFamiliar(ejgItem);
+            this.commonsService.scrollTop();
+            this.progressSpinner = false;
+          },
+          err => {
+            console.error(err);
+            this.showMsg('error', 'Error al consultar el EJG','');
+            this.progressSpinner = false;
+          },
+          ()=>{
+            this.progressSpinner = false;
+          }
+        );
+
+      }
+    }
+
+    consultaUnidadFamiliar(selected) {
+      this.progressSpinner = true;
+  
+      this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
+        n => {
+          let datosFamiliares : any[] = JSON.parse(n.body).unidadFamiliarEJGItems;
+          this.persistenceService.setBodyAux(datosFamiliares);
+  
+          if(sessionStorage.getItem("EJGItem")){
+            sessionStorage.removeItem("EJGItem");
+          }
+  
+          this.router.navigate(['/gestionEjg']);
+          this.progressSpinner = false;
+          this.commonsService.scrollTop();
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () =>{
+          this.progressSpinner = false;
+        }
+      );
     }
 
     searchRelaciones(actuacion: Actuacion) {
@@ -1806,6 +1951,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     );
   }
+
 
   getDatosComunicarJE(rowGroup,expediente) {
     let datosSeleccionados = [];

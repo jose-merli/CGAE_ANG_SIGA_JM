@@ -7,6 +7,8 @@ import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { datos_combos } from '../../../../utils/datos_combos';
 import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
+import { MultiSelect } from 'primeng/multiselect';
+import { Console } from 'console';
 @Component({
   selector: 'app-ejg-comision-busqueda',
   templateUrl: './ejg-comision-busqueda.component.html',
@@ -82,6 +84,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
   ngOnInit() {
     this.getCombos();
+    
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
@@ -106,6 +109,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
     } else {
       this.body = new EJGItem();
+      console.log("Año -> ", new Date().getFullYear().toString());
       this.body.annio = new Date().getFullYear().toString();
     }
 
@@ -134,6 +138,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     this.getComboPonenteComision();
     this.getComboEstadoEJG();
     this.getComboRol();
+    this.cargarComboComision();
   }
 
   onChangeResolucion() {
@@ -202,7 +207,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
       );
   }
   getComboDictamenComision() {
-    this.sigaServices.getParam("busquedaFundamentosCalificacion_comboDictamenComision", this.body.colegio).subscribe(
+    this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamenComision").subscribe(
       n => {
         this.comboDictamen = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboDictamen);
@@ -262,7 +267,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     );
   }
   getComboResolucionComision() {
-    this.sigaServices.get("filtrosejg_comboResolucionComision").subscribe(
+    this.sigaServices.get("filtrosejg_comboResolucion").subscribe(
       n => {
         this.comboResolucion = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboResolucion);
@@ -276,7 +281,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   getComboFundamentoJuridComision() {
     this.sigaServices
       .getParam(
-        "filtrosejg_comboFundamentoJuridComision","?idTurno=" + this.body.resolucion
+        "filtrosejgcomision_comboFundamentoJuridComision","?resolucion=" + this.body.resolucion
       )
       .subscribe(
         n => {
@@ -312,7 +317,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     );
   }
   getComboPonenteComision() {
-    this.sigaServices.get("filtrosejg_comboPonenteComision").subscribe(
+    this.sigaServices.get("filtrosejgcomision_comboPonenteComision").subscribe(
       n => {
         this.comboPonente = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboPonente);
@@ -348,6 +353,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     );
   }
   getComboTipoEJGColegioComision() {
+    //this.sigaServices.get("filtrosejg_comboTipoEJGColegio").subscribe(
     this.sigaServices.get("filtrosejg_comboTipoEJGColegioComision").subscribe(
       n => {
         this.comboTipoEJGColegio = n.combooItems;
@@ -367,7 +373,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   }
 
   getComboEstadoEJG() {
-    this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
+    this.sigaServices.get("filtrosejgcomision_comboEstadoEJGComision").subscribe(
       n => {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
@@ -382,7 +388,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
     if (this.body.tipoLetrado == "E") {
       this.tipoLetrado = "2";
     } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "1"; }
-    this.sigaServices.getParam("filtrosejg_comboTurnoComision",
+    this.sigaServices.getParam("filtrosejg_comboTurno",
       "?idTurno=" + this.tipoLetrado).subscribe(
         n => {
           this.comboTurno = n.combooItems;
@@ -396,7 +402,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   }
   getComboGuardiaComision() {
     this.sigaServices.getParam(
-      "combo_guardiaPorTurnoComision",
+      "combo_guardiaPorTurno",
       "?idTurno=" + this.body.idTurno
     )
       .subscribe(
@@ -411,7 +417,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   }
 
   getComboJuzgadoComision() {
-    this.sigaServices.get("filtrosejg_comboJuzgadosComision").subscribe(
+    this.sigaServices.get("filtrosejg_comboJuzgados").subscribe(
       n => {
         this.comboJuzgado = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboJuzgado);
@@ -587,7 +593,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
         && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
         this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
       }
-
+      console.log(this.body);
 
       this.busqueda.emit(false);
 
@@ -674,5 +680,11 @@ export class EjgComisionBusquedaComponent implements OnInit {
       fecha = new Date(fecha);
     // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
     return fecha;
+  }
+
+  focusInputField(someMultiselect: MultiSelect) {
+    setTimeout(() => {
+      someMultiselect.filterInputChild.nativeElement.focus();
+    }, 300);
   }
 }

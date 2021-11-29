@@ -11,6 +11,7 @@ import { saveAs } from "file-saver/FileSaver";
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { DatePipe } from '@angular/common';
 import { elementEnd } from '@angular/core/src/render3/instructions';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
   selector: 'app-documentacion',
@@ -473,6 +474,7 @@ export class DocumentacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("formacion.mensaje.extesion.fichero.erronea"));
       }
     );
   }
@@ -692,9 +694,23 @@ export class DocumentacionComponent implements OnInit {
             this.progressSpinner = false;
 
             if (familiares != undefined) {
-              //Se buscan los solicitantes
+              familiares.forEach(element => {
+                //Si se selecciona el valor "Unidad Familiar" en el desplegable "Rol/Solicitante"
+                if (element.uf_solicitante == "0") {
+                  element.uf_enCalidad = "0";
+                }
+                //Si se selecciona el valor "Solicitante" en el desplegable "Rol/Solicitante"
+                if (element.uf_solicitante == "1") {
+                  element.uf_enCalidad = "2";
+                }
+                //Si se selecciona el valor "Solicitante principal" en el desplegable "Rol/Solicitante"
+                if (element.uf_idPersona == element.solicitantePpal) {
+                  element.uf_enCalidad = "1";
+                }
+              });
+              //Se buscan los familiarres
               this.solicitantes = familiares.filter(
-                (dato) => dato.uf_solicitante == "1");
+                (dato) => dato.uf_enCalidad != null);
 
               //Se añaden los solicitantes de la unidad familiar
               this.solicitantes.forEach(element => {
@@ -706,11 +722,23 @@ export class DocumentacionComponent implements OnInit {
                   });
                 }
                 //En el caso que sea el solicitante pprincipal
-                else {
+                else if(element.uf_enCalidad == "1"){
                   this.comboPresentador.push({
                     label: element.pjg_nombrecompleto + " (" + this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal') + ")",
                     value: "S_" + element.uf_idPersona
                   });
+                }else{//En el caso de otro familiar
+                  if(element.pd_descripcion!=null && element.pd_descripcion!=undefined){
+                  this.comboPresentador.push({
+                    label: element.pjg_nombrecompleto + " (" + element.pd_descripcion + ")",
+                    value: "S_" + element.uf_idPersona
+                  });
+                }else{
+                  this.comboPresentador.push({
+                    label: element.pjg_nombrecompleto + " (" + this.translateService.instant('justiciaGratuita.justiciables.rol.unidadFamiliar') + ")",
+                    value: "S_" + element.uf_idPersona
+                  });
+                }
                 }
               })
             }
@@ -828,6 +856,15 @@ export class DocumentacionComponent implements OnInit {
       case ".txt":
         mime = "text/plain";
         break;
+      case ".csv":
+        mime = "text/csv";
+        break;
+      case ".xls":
+          mime = "application/vnd.ms-excel";
+          break;
+      case ".xlsx":
+          mime = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        break;      
     }
 
     return mime;

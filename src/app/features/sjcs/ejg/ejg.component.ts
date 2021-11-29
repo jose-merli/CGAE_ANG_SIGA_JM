@@ -29,6 +29,7 @@ export class EJGComponent implements OnInit {
   progressSpinner: boolean = false;
   buscar: boolean = false;
   remesa;
+  ejg;
 
   permisoEscritura: any;
 
@@ -74,10 +75,17 @@ export class EJGComponent implements OnInit {
       localStorage.removeItem('remesa');
       console.log("Remesa -> ", this.remesa);
     }
+
+    if (sessionStorage.getItem("EJG") != null) {
+      this.ejg = JSON.parse(sessionStorage.getItem("EJG"));
+      sessionStorage.removeItem("EJG");
+      sessionStorage.setItem('fichaEJG', JSON.stringify(this.ejg));
+      this.router.navigate(['/gestionEjg']);
+    }
   }
 
   searchEJGs(event) {
-
+    this.progressSpinner = true;
     // Creamos una copia de los filtros y modificamos los elementos de selección múltiple (cambiamos los arrays por strings separados por ',')
     let filtros = JSON.parse(JSON.stringify(this.filtros.body));
 

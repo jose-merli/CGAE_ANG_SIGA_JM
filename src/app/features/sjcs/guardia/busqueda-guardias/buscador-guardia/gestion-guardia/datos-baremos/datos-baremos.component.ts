@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetect
 import { TreeNode } from '../../../../../../../utils/treenode';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
+import { TranslateService } from '../../../../../../../commons/translate';
 
 @Component({
   selector: 'app-datos-baremos',
@@ -25,7 +26,7 @@ export class DatosBaremosComponent implements OnInit {
   historico: boolean = false;
   message;
   permisos: boolean = false;
-  datos = "";
+  datos = [];
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   //Resultados de la busqueda
@@ -35,7 +36,8 @@ export class DatosBaremosComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
 
@@ -53,13 +55,16 @@ export class DatosBaremosComponent implements OnInit {
   }
 
   getBaremos() {
+    //let idGuardiaProvisional =362; //borrar
     this.sigaServices.post(
+      //"busquedaGuardias_getBaremos", idGuardiaProvisional).subscribe(
       "busquedaGuardias_getBaremos", this.persistenceService.getDatos().idGuardia).subscribe(
         data => {
-          JSON.parse(data.body).combooItems.forEach(it => {
-            this.datos += (it.label + ": " + it.value + "€ , ");
+          let comboItems = JSON.parse(data.body).combooItems;
+          comboItems.forEach(it => {
+             it.value = it.value + "€";
           });
-          this.datos = this.datos.substring(0, this.datos.length - 2);
+          this.datos = comboItems;
 
         },
         err => {
@@ -67,6 +72,21 @@ export class DatosBaremosComponent implements OnInit {
         },
     )
   }
+  goToFichaBaremos(){
+    this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), detail: "Este modulo se encuentra en desarrollo." });
+  }
 
+  showMessage(event) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 
 }

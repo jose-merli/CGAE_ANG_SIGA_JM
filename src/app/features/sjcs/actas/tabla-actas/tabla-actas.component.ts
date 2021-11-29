@@ -35,8 +35,8 @@ export class TablaActasComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-  @Input() permisos;
   @Input() filtro;
+  @Input() permisos;
   @Input() institucionActual;
   @ViewChild("table") table: DataTable;
 
@@ -60,124 +60,42 @@ export class TablaActasComponent implements OnInit {
 
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
     }
 
   }
 
-  checkPermisosDelete() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-
-      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.confirmDelete();
-      }
-    }
-  }
-
-  confirmDelete() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.delete()
-      },
-      reject: () => {
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "Cancelar",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
-  }
-
-  isSelectMultiple() {
-    this.selectAll = false;
-    if (this.permisoEscritura) {
-      this.selectMultiple = !this.selectMultiple;
-      if (!this.selectMultiple) {
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      } else {
-        this.selectAll = false;
-        this.selectedDatos = [];
-        this.numSelected = 0;
-      }
-    }
-  }
-
-  searchHistorical() {
-
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
-    this.searchHistoricalSend.emit(this.historico);
-    this.selectAll = false
-    if (this.selectMultiple) {
-      this.selectMultiple = false;
-    }
-
-  }
-
   openTab(evento) {
 
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
 
-    if (!this.selectAll && !this.selectMultiple) {
-      this.progressSpinner = true;
-      if (evento.data.idInstitucion != this.institucionActual)
-        evento.data.institucionVal = false;
-      this.persistenceService.setDatos(evento.data);
+    console.log("evento -> ", evento);
 
+    this.progressSpinner = true;
 
-      this.router.navigate(["/gestionComisarias"]);
-    } else {
+    this.persistenceService.setDatos(evento);
 
-      if (evento.data.idInstitucion != this.institucionActual) {
-        this.selectedDatos.pop();
-      } else if (evento.data.fechabaja == undefined && this.historico) {
-        this.selectedDatos.pop();
-      }
-    }
+    this.router.navigate(["/fichaGestionActas"]);
+
+    localStorage.setItem('actasItem', JSON.stringify(evento));
+    
   }
 
   delete() {
 
-    let comisariaDelete = new ComisariaObject();
-    comisariaDelete.comisariaItems = this.selectedDatos;
-    this.sigaServices.post("busquedaComisarias_deleteComisarias", comisariaDelete).subscribe(
+    this.sigaServices.post("filtrosacta_borrar", this.selectedDatos).subscribe(
 
       data => {
 
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
 
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        if(JSON.parse(data.body).status == "OK"){
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), JSON.parse(data.body).error.description);
+
         }
+
         this.progressSpinner = false;
       },
       () => {
@@ -185,47 +103,6 @@ export class TablaActasComponent implements OnInit {
       }
     );
   }
-
-  checkPermisosActivate() {
-    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (!this.permisoEscritura || ((!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0)) {
-        this.msgs = this.commonsService.checkPermisoAccion();
-      } else {
-        this.activate();
-      }
-    }
-  }
-
-  activate() {
-    let comisariaActivate = new ComisariaObject();
-    comisariaActivate.comisariaItems = this.selectedDatos;
-    this.sigaServices.post("busquedaComisarias_activateComisarias", comisariaActivate).subscribe(
-      data => {
-
-        this.selectedDatos = [];
-        this.searchHistoricalSend.emit(true);
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  }
-
 
 
   setItalic(dato) {
@@ -236,11 +113,11 @@ export class TablaActasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "acta", header: "sjcs.actas.numeroActa", width: "40%" },
-      { field: "fechaResolucion", header: "sjcs.actas.fechaResolucion", width: "15%" },
-      { field: "fechaReunion", header: "sjcs.actas.fechaReunion", width: "15%" },
-      { field: "presidente", header: "sjcs.actas.presidente", width: "15%" },
-      { field: "secretario", header: "sjcs.actas.secretario", width: "15%" }
+      { field: "numeroacta", header: "sjcs.actas.numeroacta", width: "15%" },
+      { field: "fecharesolucion", header: "justiciaGratuita.ejg.datosGenerales.FechaResolucion", width: "15%" },
+      { field: "fechareunion", header: "justiciaGratuita.ejg.datosGenerales.FechaReunion", width: "15%" },
+      { field: "nombrepresidente", header: "justiciaGratuita.ejg.datosGenerales.Presidente", width: "15%" },
+      { field: "nombresecretario", header: "justiciaGratuita.ejg.datosGenerales.Secretario", width: "15%" }
 
     ];
 
@@ -271,31 +148,48 @@ export class TablaActasComponent implements OnInit {
     this.table.reset();
   }
 
-  onChangeSelectAll() {
-    if (this.permisoEscritura) {
-      this.selectedDatos = this.datos.filter(dato => dato.idInstitucion == this.institucionActual);
-      if (!this.historico) {
-        if (this.selectAll) {
-          this.selectMultiple = true;
-          // this.selectedDatos = this.datos;
-          this.numSelected = this.datos.length;
-        } else {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-          this.selectMultiple = false;
-        }
-      } else {
-        if (this.selectAll) {
-          this.selectMultiple = true;
-          this.selectedDatos = this.selectedDatos.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null)
-          this.numSelected = this.selectedDatos.length;
-        } else {
-          this.selectedDatos = [];
-          this.numSelected = 0;
-          this.selectMultiple = false;
-        }
-      }
+  selectedRow(selectedDatos) {
+
+    if (this.selectedDatos == undefined) {
+
+      this.selectedDatos = []
+
     }
+
+    if (selectedDatos != undefined) {
+
+      this.numSelected = selectedDatos.length;
+
+      if (this.numSelected == 1) {
+
+        this.selectMultiple = false;
+
+      } else {
+
+        this.selectMultiple = true;
+
+      }
+
+    }
+  }
+
+  onChangeSelectAll() {
+    if (this.selectAll === true) {
+      this.editElementDisabled();
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+    }
+    this.selectMultiple = true;
+  }
+
+  editElementDisabled() {
+    this.datos.forEach(element => {
+      element.editable = false
+      element.overlayVisible = false;
+    });
   }
 
   actualizaSeleccionados(selectedDatos) {

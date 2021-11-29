@@ -108,6 +108,7 @@ export class GestionEjgComponent implements OnInit {
       } else {
         //obtiene un EJG desde la tarjeta relaciones de la ficha designacion
         this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
+        this.body.apellidosYNombre = "";
         this.persistenceService.setDatos(this.body);
         this.modoEdicion = true;
         this.updateTarjResumen();
@@ -115,8 +116,18 @@ export class GestionEjgComponent implements OnInit {
 
       sessionStorage.removeItem("EJGItemDesigna");
 
-    } else {
+    }else {
       this.body = this.persistenceService.getDatos();
+      if(this.body){
+        this.body.apellidosYNombre = "";
+      }
+
+      if (sessionStorage.getItem("fichaEJG") != null) {
+        this.body = JSON.parse(sessionStorage.getItem("fichaEJG"));
+        sessionStorage.removeItem("fichaEJG");
+        this.persistenceService.setDatos(this.body);
+        this.updateTarjResumen();
+      }
 
       if (sessionStorage.getItem("datosDesdeJusticiable")) {
         this.body = JSON.parse(sessionStorage.getItem("datosDesdeJusticiable"));
@@ -130,7 +141,8 @@ export class GestionEjgComponent implements OnInit {
         this.updateTarjResumen();
       } else {
         //hemos pulsado nuevo 
-        if (sessionStorage.getItem("Nuevo")) {
+        if(sessionStorage.getItem("Nuevo")){
+          this.nuevo = true;
           sessionStorage.removeItem("Nuevo");
           this.body = new EJGItem();
           this.modoEdicion = false;
@@ -156,9 +168,15 @@ export class GestionEjgComponent implements OnInit {
     this.goTop();
   }
 
-  updateTarjResumen() {
-    this.body = this.persistenceService.getDatos();
+  actualizaLetradoDesignado(event){
+    this.body.apellidosYNombre = event;
+    this.updateTarjResumen();
+  }
 
+  updateTarjResumen() {
+    if(!this.nuevo)
+    //this.body = this.persistenceService.getDatos();
+    
     if(this.body != null && this.body != undefined){
       this.datos = [
         {
@@ -242,6 +260,10 @@ export class GestionEjgComponent implements OnInit {
   }
 
   backTo() {
+    this.persistenceService.clearDatos();
+    if(sessionStorage.getItem("filtroAsistencia")){
+      sessionStorage.setItem("volver","true");
+    }
     this.location.back();
   }
 

@@ -57,9 +57,9 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 	confirmationDisassociate: boolean = false;
 	confirmationCreateRepresentante: boolean = false;
 
-	@ViewChild('cdCreateRepresentante') cdCreateRepresentante: Dialog;
-	@ViewChild('cdRepresentanteAssociate') cdRepresentanteAssociate: Dialog;
-	@ViewChild('cdRepresentanteDisassociate') cdRepresentanteDisassociate: Dialog;
+	@ViewChild('cdCreateProcurador') cdCreateProcurador: Dialog;
+	@ViewChild('cdProcuradorAssociate') cdProcuradorAssociate: Dialog;
+	@ViewChild('cdProcuradorDisassociate') cdProcuradorDisassociate: Dialog;
 
 	@Output() contrario = new EventEmitter<boolean>();
 	@Output() contrarioEJG = new EventEmitter<boolean>();
@@ -110,6 +110,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			if (sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
 			else this.contrario.emit(true);
 			this.permisoEscritura = true;
+			this.Associate();
 		}
 		/* Procede de ficha pre-designacion */
 		// else if (sessionStorage.getItem("procuradorFicha")) {
@@ -383,7 +384,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 	}
 
 	reject() {
-		this.cdCreateRepresentante.hide();
+		this.cdCreateProcurador.hide();
 	}
 
 	rejectAssociate() {

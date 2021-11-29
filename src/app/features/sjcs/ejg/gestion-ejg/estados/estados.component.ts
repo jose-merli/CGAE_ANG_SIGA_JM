@@ -8,6 +8,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
 import { DataTable } from "primeng/datatable";
 import { forEach } from '@angular/router/src/utils/collection';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-estados',
@@ -44,6 +45,7 @@ export class EstadosComponent implements OnInit {
   valueComboEstado: string = "";
   observacionesEstado: string = "";
   fechaEstado: Date = new Date();
+  fechaIni: string = "";
   showModalAnadirEstado: boolean;
 
   datosFamiliares = [];
@@ -80,7 +82,7 @@ export class EstadosComponent implements OnInit {
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private commonsServices: CommonsService,
     private translateService: TranslateService, private confirmationService: ConfirmationService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef, private datepipe: DatePipe) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -326,6 +328,9 @@ export class EstadosComponent implements OnInit {
     this.creaEstado = true;
     this.editaEstado = false;
     this.restablecer = true;
+    this.fechaIni = "";
+    this.valueComboEstado = "";
+    this.observacionesEstado = "";
 
     //this.datosEstados = JSON.parse(JSON.stringify(this.estados));
     let dummy = {
@@ -389,7 +394,8 @@ export class EstadosComponent implements OnInit {
     if (this.creaEstado == true) {
       let estadoNew = new EstadoEJGItem();
 
-      estadoNew.fechaInicio = this.fechaEstado;
+      let fechaAux :number = this.formatDate4(this.formatDate3(this.fechaIni));
+      estadoNew.fechaInicio = new Date(fechaAux);
       estadoNew.idEstadoejg = this.valueComboEstado;
       estadoNew.observaciones = this.observacionesEstado;
 
@@ -405,6 +411,9 @@ export class EstadosComponent implements OnInit {
       this.sigaServices.post("gestionejg_nuevoEstado", estadoNew).subscribe(
         n => {
           this.progressSpinner = false;
+          this.fechaIni = "";
+          this.valueComboEstado = "";
+          this.observacionesEstado = "";
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.getEstados(this.item);
         },
@@ -423,13 +432,17 @@ export class EstadosComponent implements OnInit {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("informesycomunicaciones.consultas.noPuedeEditarConsulta"));
       } else {
-        this.selectedDatos[0].fechaInicio = this.fechaEstado;
+        let fechaAux :number = this.formatDate4(this.formatDate3(this.selectedDatos[0].fechaInicio));
+        this.selectedDatos[0].fechaInicio = fechaAux;
         this.selectedDatos[0].idEstadoejg = this.valueComboEstado;
         this.selectedDatos[0].observaciones = this.observacionesEstado;
 
         this.sigaServices.post("gestionejg_editarEstado", this.selectedDatos[0]).subscribe(
           n => {
             this.progressSpinner = false;
+            this.fechaIni = "";
+            this.valueComboEstado = "";
+            this.observacionesEstado = "";
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.getEstados(this.item);
           },
@@ -521,38 +534,77 @@ export class EstadosComponent implements OnInit {
     }
   }
 
+  formatDate2(date) {
+      const pattern = 'yyyy-MM-dd';
+        return this.datepipe.transform(date, pattern);
+      }
+  formatDate3(date) {
+      //const pattern = 'dd-MM-yyyy';
+      let year = date.substring(6,10)
+      let month = date.substring(3,5)
+      let day = date.substring(0,2)
+      let date2 =  day + '-' + month + '-' + year;
+      return date2; //this.datepipe.transform(date, pattern);
+      } 
+  formatDate4(date) {
+    date = date.split("-");
+    var newDate = new Date( date[2], date[1] - 1, date[0]);
+    return newDate.getTime();
+  } 
+  changeDateFormat(date1){
+        console.log('date1: ', date1)
+        let year = date1.substring(0, 4)
+        let month = date1.substring(5,7)
+        let day = date1.substring(8, 10)
+        let date2 = day + '/' + month + '/' + year;
+        return date2;
+      } 
   
   onRowSelectEstados(i) {
     let indice = parseInt(i);
     this.restablecer = true;
     this.editaEstado = false;
-if(this.datosEstados[0].nuevoRegistro == true){
-  this.creaEstado = true;
-}else if (this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null) {
-      this.estadoAutomatico = false;
-      this.editaEstado = true;
-      this.creaEstado = false;
-      this.guardar = true;
-      for (let j = 0; j < this.datosEstados.length; j++) {
-        if (j == indice) {
-          this.datosEstados[indice].isMod = true;
-          //this.getComboEstado();
-        } else {
-          this.datosEstados[j].isMod = false;
-        }
-      }
-
-
-    } else {
-      this.estadoAutomatico = true;
-      this.datosEstados[indice].isMod = false;
-      this.restablecer = false;
-      this.editaEstado = false;
-      this.guardar = false;
+    if(this.datosEstados[0].nuevoRegistro == true){
       this.creaEstado = true;
-      this.selectedDatos = [];
+    }else if (this.datosEstados[indice] != undefined && this.datosEstados[indice].automatico != 1 && this.datosEstados[indice].fechabaja == null) {
+          this.estadoAutomatico = false;
+          this.editaEstado = true;
+          this.creaEstado = false;
+          this.guardar = true;
+          for (let j = 0; j < this.datosEstados.length; j++) {
+            if (j == indice) {
+              this.datosEstados[indice].isMod = true;
+              //this.getComboEstado();
+            } else {
+              this.datosEstados[j].isMod = false;
+            }
+          }
+
+
+        } else {
+          this.estadoAutomatico = true;
+          this.datosEstados[indice].isMod = false;
+          this.restablecer = false;
+          this.editaEstado = false;
+          this.guardar = false;
+          this.creaEstado = true;
+          this.selectedDatos = [];
 
     }
+
+    //this.fechaIni = this.changeDateFormat(this.formatDate2(this.datosEstados[i].fechaInicio).toString()); 
+    //if(this.editaEstado == true && this.fechaIni != "" && this.datosEstados[i].fechaInicio != this.fechaIni){
+    //  this.datosEstados[i].fechaInicio = this.fechaIni;
+    //}else 
+    if(this.editaEstado == true && this.fechaIni == ""){
+      this.fechaIni = this.changeDateFormat(this.formatDate2(this.datosEstados[i].fechaInicio).toString());
+    }
+    if(this.editaEstado == true && this.valueComboEstado != "" && this.datosEstados[i].idEstadoejg != this.valueComboEstado){
+      this.datosEstados[i].idEstadoejg = this.valueComboEstado;
+    }else if(this.editaEstado == true && this.valueComboEstado == ""){
+      this.valueComboEstado = this.datosEstados[i].idEstadoejg;
+    }
+
 
     /* if (this.datosEstados[0].nuevoRegistro == true) {
       this.creaEstado = true;
@@ -568,10 +620,19 @@ if(this.datosEstados[0].nuevoRegistro == true){
     this.guardar = false;
     this.selectedDatos = [];
     this.getEstados(this.item);
-
+    this.fechaIni = "";
+    this.valueComboEstado = "";
+    this.observacionesEstado = "";
   }
 
   onChangeObservaciones(event) {
     this.observacionesEstado = event.target.value;
+  }
+
+  fillFechaInicio(event, i){
+    this.fechaIni = this.changeDateFormat(this.formatDate2(event).toString());
+    if(i!= undefined){
+      this.datosEstados[i].fechaInicio = this.fechaIni;
+    }
   }
 }

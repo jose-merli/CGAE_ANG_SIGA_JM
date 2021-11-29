@@ -6,6 +6,10 @@ import { DatePipe } from '../../../../../../../../../node_modules/@angular/commo
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { TablaDinamicaColaGuardiaComponent } from '../../../../../../../commons/tabla-dinamica-cola-guardia/tabla-dinamica-cola-guardia.component';
 import { TranslateService } from '../../../../../../../commons/translate';
+import { Row, TablaResultadoOrderCGService } from '../../../../../../../commons/tabla-resultado-order/tabla-resultado-order-cg.service';
+import { TablaResultadoOrderComponent } from '../../../../../../../commons/tabla-resultado-order/tabla-resultado-order.component';
+import { ConfiguracionCola, GlobalGuardiasService } from '../../../../guardiasGlobal.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-datos-cola-guardia',
@@ -15,7 +19,7 @@ import { TranslateService } from '../../../../../../../commons/translate';
 export class DatosColaGuardiaComponent implements OnInit {
 
   msgs = [];
-  openFicha: boolean = false;
+  @Input() openFicha: boolean = false;
   permitirGuardar: boolean = false;
   rowsPerPage;
   cols = [];
@@ -31,21 +35,95 @@ export class DatosColaGuardiaComponent implements OnInit {
   resumenColaGuardia = "";
   botActivos: boolean = true;
   editable: boolean = true;
-
+  rowGroups: Row[];
+  rowGroupsAux: Row[];
+  cabeceras = [
+    /*{
+      id: "ordenCola",
+      name: "dato.jgr.guardia.guardias.ordenCola"
+    },*/
+    {
+      id: "grupo",
+      name: "dato.jgr.guardia.guardias.grupo"
+    },
+    {
+      id: "orden",
+      name: "administracion.informes.literal.orden"
+    },
+    {
+      id: "ncolegiado",
+      name: "censo.busquedaClientesAvanzada.literal.nColegiado"
+    },
+    {
+      id: "apellidosnombre",
+      name: "administracion.parametrosGenerales.literal.nombre.apellidos"
+    },
+    {
+      id: "fechavalidez",
+      name: "dato.jgr.guardia.guardias.fechaValidez"
+    },
+    {
+      id: "fechabaja",
+      name: "dato.jgr.guardia.guardias.fechaBaja"
+    },
+    {
+      id: "compensaciones",
+      name: "justiciaGratuita.oficio.turnos.compensaciones"
+    },
+    {
+      id: "saltos",
+      name: "justiciaGratuita.oficio.turnos.saltos"
+    }
+  ];
+  configuracionCola: ConfiguracionCola = {
+    'manual': true,
+    'porGrupos': true,
+    'idConjuntoGuardia': 0,
+    "fromCombo": false,
+    "minimoLetradosCola": 0
+};
+  allSelected = false;
+  isDisabled = true;
+  seleccionarTodo = false;
+  processedData = [];
+  rowGroupModified:Row[];
+  selectedRow:Row;
+  totalRegistros = 0;
+  suscription: Subscription;
+  porGrupos = false;
   @Input() tarjetaColaGuardia;
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
-  @ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
+  manual: Boolean;
+  minimoLetrado = 0;
+  //@ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
+  @ViewChild(TablaResultadoOrderComponent) tablaOrder;
 
   constructor(private sigaService: SigaServices,
     private persistenceService: PersistenceService,
     public datepipe: DatePipe,
     public commonsService: CommonsService,
-    public translateService: TranslateService) { }
+    public translateService: TranslateService,
+    private trmService: TablaResultadoOrderCGService,
+    private globalGuardiasService: GlobalGuardiasService) { }
 
-  ngOnInit() {
+    ngOnInit(): void {
+      this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
+        this.configuracionCola = confValue;
+        this.manual = confValue.manual;
+        this.porGrupos= confValue.porGrupos;
+        this.minimoLetrado = confValue.minimoLetradosCola
+        console.log("MANUAL: ", this.manual)
+        this.inicio();
+        this.getColaGuardia();
+      });
+  }
+ ngOnDestroy(){
+  this.suscription.unsubscribe();
+ }
+inicio(){
+  this.datos = [];
     this.historico = this.persistenceService.getHistorico();
-
     this.sigaService.datosRedy$.subscribe(
       data => {
         if (data.body)
@@ -62,24 +140,35 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.body.idGrupoUltimo = data.idGrupoUltimo;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
         this.body.letradosIns = new Date();
-
+        
+        if (this.configuracionCola.manual && this.configuracionCola.porGrupos){
+          this.body.porGrupos = true;
+          this.getColaGuardia();
+        } else {
+          this.body.porGrupos = false;
+          this.getColaGuardia();
+        }
         if (this.body.porGrupos) {
           this.body.ordenacionManual = true;
           this.editable = true;
           this.botActivos = true;
-
-          this.getColaGuardia();
-
         }
-        else {
-          this.body.ordenacionManual = false;
-          this.isOrdenacionManual();
-        }
-
       });
 
-  }
 
+}
+  
+    selectedAll(event) {
+      this.seleccionarTodo = event;
+      this.isDisabled = !event;
+    }
+    notifyAnySelected(event) {
+      if (this.seleccionarTodo || event) {
+        this.isDisabled = false;
+      } else {
+        this.isDisabled = true;
+      }
+    }
   abreCierraFicha() {
     if (this.modoEdicion)
       this.openFicha = !this.openFicha
@@ -258,43 +347,57 @@ export class DatosColaGuardiaComponent implements OnInit {
   }
 
   transformDate(fecha) {
-    if (fecha)
-      fecha = new Date(fecha).toLocaleDateString();
-    this.body.letradosIns = this.datepipe.transform(fecha, 'dd/MM/yyyy')
+    this.body.letradosIns = this.datepipe.transform(new Date(fecha), 'dd/MM/yyyy');
+  }
+  setColaGuardia(colaGuardiaModificado){
+    let colaGuardiaModificadoSt = JSON.parse(JSON.stringify(colaGuardiaModificado));
+    this.sigaService.post(
+      "busquedaGuardias_updateColaGuardia", colaGuardiaModificadoSt).subscribe(
+        data => {
+          console.log(data);
+        }, err => {
+          console.log(err);
+        });
   }
 
   getColaGuardia() {
     if (this.body.letradosIns instanceof Date) // Se comprueba si es una fecha por si es necesario cambiar el formato.
       this.transformDate(this.body.letradosIns); // Si no es una fecha es que ya está formateada porque viene del back.
     this.progressSpinner = true;
+    //this.body.idTurno = 802; //borrar
+    //this.body.idGuardia = 1441; //borrar
+    //this.body.letradosIns = '09/12/10';
     this.sigaService.post(
       "busquedaGuardias_getColaGuardia", this.body).subscribe(
         data => {
           this.datos = JSON.parse(data.body).inscripcionesItem;
           this.datos = this.datos.map(it => {
             it.nombreApe = it.apellido1 + " " + it.apellido2 + " " + it.nombre;
-            if (!this.body.porGrupos && !this.body.ordenacionManual) {
+            /*if (!this.body.porGrupos && !this.body.ordenacionManual) {
               it.numeroGrupo = "";
               it.orden = "";
             } else {
               it.numeroGrupo = +it.numeroGrupo
               it.order = +it.order
-            }
+            }*/
             return it;
           });
+          this.transformData();
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           if (this.datos && this.datos.length > 0)
-            this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe;
-          if (this.datosInicial.length > 0)
+            this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe + "..."  + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe;
+          /*if (this.datosInicial.length > 0)
             this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe
-              + " ... " + this.datos.length, " inscritos");
+              + " ... " + this.datos.length, " inscritos");*/
+          if (this.datosInicial.length > 0)
+            this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos.length, " inscritos");
           else
             this.resumenColaGuardia = "0 inscritos";
           if (this.body.idPersonaUltimo && this.datos.length > 0)
             this.body.idGrupoUltimo = this.datos[this.datos.length - 1].idGrupoGuardia;
-          this.rest();
+          //this.rest();
           this.progressSpinner = false;
-
+          
         },
         err => {
           console.log(err);
@@ -302,14 +405,129 @@ export class DatosColaGuardiaComponent implements OnInit {
         }
       );
   }
+  transformData(){
+    let arr = [];
+    let arrLast = [];
+    this.datos.forEach(datoObj =>{
+      let objArr = {cells:[]};
+      let ordenValue = '';
+      if (datoObj.orden != null){
+        ordenValue = datoObj.orden;
+      } else {
+        ordenValue = '';
+      }
+      if (this.configuracionCola.porGrupos == false && this.configuracionCola.porGrupos == false){
+        objArr.cells = [
+          //{ type: 'text', value: datoObj.ordenCola },
+         
+          { type: 'text', value: datoObj.numeroGrupo },
+          { type: 'text', value: datoObj.orden },
+          { type: 'text', value: datoObj.nColegiado },
+          { type: 'text', value: datoObj.apellido1 + ',' + datoObj.apellido2 + ',' + datoObj.nombre},
+          { type: 'text', value: datoObj.fechaValidacion },
+          { type: 'text', value: datoObj.fechabaja },
+          { type: 'text', value: datoObj.compensaciones },
+          { type: 'text', value: datoObj.saltos },
+          { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
+          { type: 'invisible', value: datoObj.ordenCola },
+          { type: 'invisible', value: datoObj.idturno },
+          { type: 'invisible', value: datoObj.idGuardia }
+        ];
+      } else {
+        objArr.cells = [
+          //{ type: 'text', value: datoObj.ordenCola },
+         
+          { type: 'input', value: datoObj.numeroGrupo },
+          { type: 'position', value: datoObj.orden },
+          { type: 'text', value: datoObj.nColegiado },
+          { type: 'text', value: datoObj.apellido1 + ',' + datoObj.apellido2 + ',' + datoObj.nombre},
+          { type: 'text', value: datoObj.fechaValidacion },
+          { type: 'text', value: datoObj.fechabaja },
+          { type: 'text', value: datoObj.compensaciones },
+          { type: 'text', value: datoObj.saltos },
+          { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
+          { type: 'invisible', value: datoObj.ordenCola },
+          { type: 'invisible', value: datoObj.idturno },
+          { type: 'invisible', value: datoObj.idGuardia }
+        ];
+      }
+      if (datoObj.numeroGrupo == null){
+        arrLast.push(objArr);
+      }else{
+        arr.push(objArr);
+      }
+    
+    })
+    for (let i = 0; i < arrLast.length; i++){
+      arr.push(arrLast[i]);
+    }
+    this.processedData = arr;
+    this.rowGroups = this.trmService.getTableData(this.processedData);
+    this.rowGroupsAux = this.trmService.getTableData(this.processedData);
+    this.totalRegistros = this.rowGroups.length;
+  }
 
+  updateColaGuardia(event){
+    let datCopy = {
+      apellido1: "",
+      apellido2: "",
+      compensaciones: "",
+      fechaSuscripcion: '',
+      fechaValidacion: "",
+      fechabaja: null,
+      idGrupoGuardia: "",
+      idGrupoGuardiaColegiado: "",
+      idGuardia: "",
+      idPersona: "",
+      idTurno: "",
+      nColegiado: "",
+      nombre: "",
+      nombreApe: "",
+      numeroGrupo: '',
+      orden: "",
+      ordenCola: "",
+      order: '',
+      saltos: ""
+    };
+    let datosModif = [];
+    this.rowGroupModified = event;
+    this.rowGroupModified.forEach(row => {
+      let ordenCola = row.cells[1];
+      let grupo = row.cells[0];
+      //let orden = row.cells[2];
+      let numCol = row.cells[2];
+      let idGGC = row.cells[8]
+      this.datos.forEach(dat => {
+        if (dat.nColegiado == numCol.value && dat.idGrupoGuardiaColegiado != datCopy.idGrupoGuardiaColegiado && dat.idGrupoGuardiaColegiado == idGGC.value){
+            datCopy = Object.assign({},dat);
+            if (ordenCola.value != null){
+            datCopy.ordenCola = ordenCola.value.toString();
+            datCopy.orden = ordenCola.value.toString();
+            }else{
+              datCopy.ordenCola = null;
+              datCopy.orden = null;
+            }
+            if (grupo != null){
+            datCopy.numeroGrupo = grupo.value;
+            }else{
+              datCopy.numeroGrupo = null;
+            }
+            //datCopy.orden = orden.value.toString();
+         
+        }
+      });
+      datosModif.push(datCopy);
+    })
+    let colaGuardiaUpdated = {"inscripcionesItem": datosModif};
+    this.setColaGuardia(colaGuardiaUpdated);
+  }
   fillFecha(event) {
     this.body.letradosIns = event;
     this.getColaGuardia();
   }
 
   ultimo(selected) {
-    if (this.permisoEscritura && !this.historico && selected.ordenCola > 0) {
+    /*if (this.permisoEscritura && !this.historico && selected.ordenCola > 0) {
       this.progressSpinner = true;
       this.body.idPersonaUltimo = selected.idPersona;
       this.body.idGrupoUltimo = selected.idGrupoUltimo;
@@ -336,7 +554,9 @@ export class DatosColaGuardiaComponent implements OnInit {
             this.progressSpinner = false;
           }
         );
-    }
+    }*/
+  
+
   }
 
   isOrdenacionManual() {
@@ -367,54 +587,52 @@ export class DatosColaGuardiaComponent implements OnInit {
         });
 
   }
-
-  duplicar() {
-    this.tabla.tabla.sortOrder = 0;
-    this.tabla.tabla.sortField = '';
-    this.tabla.tabla.reset();
-    // Creamos uno igual menos porque no tendra idGrupoguardiacolegiado. Eso y que el orden sera
-    // menor o igual que 0 es como se diferencian los duplicados. Al menos hasta que se guarden.
-    this.datos = [JSON.parse(JSON.stringify(this.tabla.selectedDatos)), ...this.datos];
-    this.datos[0].numeroGrupo = "";
-    this.datos[0].orden = "";
-    this.datos[0].idGrupoGuardiaColegiado = "";
-    let menorOrdenCola = 0;
-    this.datos.forEach(element => {
-      if (+element.ordenCola <= menorOrdenCola)
-        menorOrdenCola = +element.ordenCola - 1;
+  checkSelectedRow(selected){
+    this.selectedRow = selected;
+  }
+  duplicar(duplicar) {
+    if (duplicar){
+    let datCopy;
+    this.datos.forEach(dat => {
+      if (dat.nColegiado == this.selectedRow.cells[2].value){
+        datCopy = Object.assign({},dat);
+        datCopy.numeroGrupo = Number(this.selectedRow.cells[0].value);
+        datCopy.orden = "0"; // duplicados se identifican por orden <= 0
+        datCopy.idGrupoGuardiaColegiado = null; // duplicados no tienen idGrupoGuardiaColegiado 
+      } 
     });
-    this.datos[0].ordenCola = menorOrdenCola;
-    this.updateInscripciones.push(this.datos[0]);
-    this.botActivos = false;
+    this.datos.push(datCopy);
+    this.transformData();
+  }
   }
 
-  rest() {
-    if (this.datosInicial && this.datos && this.tabla && this.tabla.tabla) {
+
+  rest(rest) {
+if (rest){
+    if (this.datosInicial && this.datos) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
-      this.tabla.tabla.reset();
-      this.tabla.tabla.sortOrder = 0;
-      this.tabla.tabla.sortField = '';
-      this.tabla.selectedDatos = null;
-      this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+      this.transformData();
+      /*this.tablaOrder.tabla.reset();
+      this.tablaOrder.tabla.sortOrder = 0;
+      this.tablaOrder.tabla.sortField = '';
+      this.tablaOrder.selectedDatos = null;
+      this.tablaOrder.buscadores = this.tablaOrder.buscadores.map(it => it = "");*/
 
       this.updateInscripciones = [];
       // this.tabla.buscadores = this.tabla.buscadores.map(it => it = ""); NO OLVIDAAAAAAAAR!!!!!
     }
   }
+  }
   disabledBotones() {
-    if (!this.botActivos || !this.tabla || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tabla.selectedDatos || this.tabla.selectedDatos.length == 0))
+    if (!this.botActivos || !this.tablaOrder || (!this.updateInscripciones || this.updateInscripciones.length == 0) || (!this.tablaOrder.selectedDatos || this.tablaOrder.selectedDatos.length == 0))
       return false;
     return true;
   }
   duplicarDisabled() {
-    if (this.tabla && this.tabla.selectedDatos && this.updateInscripciones.length == 0 && this.tabla.selectedDatos.length != 0) return false;
-    return true;
+    return this.isDisabled;
   }
   disabledUltimo() {
-    if (!this.historico && this.permisoEscritura && this.tabla && this.tabla.selectedDatos && this.tabla.selectedDatos.length != 0 && this.updateInscripciones.length == 0) {
-      return false;
-    }
-    return true;
+    return this.isDisabled;
   }
 
   clear() {

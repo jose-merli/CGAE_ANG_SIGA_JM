@@ -7,6 +7,9 @@ import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { Router } from '../../../../../node_modules/@angular/router';
 import { procesos_comision } from '../../../permisos/procesos_comision';
+import { DatePipe } from '@angular/common';
+
+
 
 
 @Component({
@@ -23,7 +26,7 @@ export class ActasComponent implements OnInit {
 
   progressSpinner: boolean = false;
 
-  @ViewChild(FiltroActasComponent) filtros;
+  @ViewChild(FiltroActasComponent) filtros : FiltroActasComponent;
   @ViewChild(TablaActasComponent) tabla;
 
   //comboPartidosJudiciales
@@ -31,7 +34,7 @@ export class ActasComponent implements OnInit {
   msgs;
   permisoEscritura;
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private datepipe: DatePipe,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
 
@@ -58,16 +61,20 @@ export class ActasComponent implements OnInit {
 
   search(event) {
     this.progressSpinner = true;
-    this.sigaServices.post("filtrosejg_busquedaActas", this.filtros.datosFiltro).subscribe(
+    this.sigaServices.post("filtrosacta_busquedaActas", this.filtros.datosFiltro).subscribe(
       n => {
-
-        this.datos = JSON.parse(n.body).actasItem;
+        this.datos = JSON.parse(n.body).actasItems;
         this.buscar = true;
+
+        this.datos.forEach(element => {
+          element.fecharesolucion = this.formatDate(element.fecharesolucion);
+          element.fechareunion = this.formatDate(element.fechareunion);
+        });
+
         this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;
         }
-
         this.resetSelect();
       },
       err => {
@@ -82,13 +89,19 @@ export class ActasComponent implements OnInit {
       this.tabla.numSelected = 0;
       this.tabla.selectMultiple = false;
       this.tabla.selectAll = false;
-      this.tabla.tabla.sortOrder = 0;
-      this.tabla.tabla.sortField = '';
-      this.tabla.tabla.reset();
+      this.tabla.table.sortOrder = 0;
+      this.tabla.table.sortField = '';
+      this.tabla.table.reset();
       this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
 
     }
   }
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);    
+  }
+
   showMessage(event) {
     this.msgs = [];
     this.msgs.push({

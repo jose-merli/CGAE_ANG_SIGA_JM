@@ -1,6 +1,9 @@
 export let endpoints_generales: any = {
     combo_turnos: "combo/turnos",
+    combo_turnos_inscritos: "combo/turnosInscritos",
     combo_guardiaPorTurno: "combo/guardias",
+    combo_estadosAsistencia: "combo/comboEstadosAsistencia",
+    combo_guardiaPorTurnoInscritos: "combo/guardiasInscritas",
     componenteGeneralJG_busquedaGeneralSJCS: "componenteGeneralJG/busquedaGeneralSJCS",
     componenteGeneralJG_busquedaColegiadoEJG: "componenteGeneralJG/busquedaColegiadoEJG",
     componenteGeneralJG_comboTurnos:"componenteGeneralJG/comboTurnos",
@@ -12,7 +15,13 @@ export let endpoints_generales: any = {
     combo_comboTipoSOJ: "combo/comboTipoSOJ",
     combo_comboComisaria: "combo/comboComisaria",
     combo_comboJuzgado: "combo/comboJuzgado",
- 
+    combo_comboComisariaCdgoExt: "combo/comboComisariaCdgoExt",
+    combo_comboJuzgadoCdgoExt: "combo/comboJuzgadoCdgoExt",
+    combo_comboTipoDocAsistencia : "combo/comboTipoDocAsistencia",
+    combo_comboAsociadoAsistencia : "combo/comboAsociadoAsistencia",
+    combo_comboOrigenContacto : "combo/comboOrigenContacto",
+    combo_comboTipoActuacion : "combo/comboTipoActuacionAsistencia",
+    combo_comboCosteFijo : "combo/comboCosteFijoActuacionAsistencia",
 
     gestionJusticiables_busquedaClaveAsuntosEJG: "gestionJusticiables/busquedaClaveAsuntosEJG",
     gestionJusticiables_busquedaClaveAsuntosAsistencias: "gestionJusticiables/busquedaClaveAsuntosAsistencias",

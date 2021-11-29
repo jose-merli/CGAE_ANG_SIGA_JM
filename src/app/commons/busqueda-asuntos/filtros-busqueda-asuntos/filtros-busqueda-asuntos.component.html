@@ -33,7 +33,7 @@
                             {{"gratuita.busquedaAsistencias.literal.numero"
                             | translate}}</label>
                         <div>
-                            <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxLength="4"
+                            <input type="number" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxLength="4"
                                 class="form-group-interlineado col-lg-5 col-md-5" [(ngModel)]='filtros.anio' pInputText> /
                             <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxLength="9"
                                 class="form-group-interlineado col-lg-5 col-md-5" [(ngModel)]='filtros.numero' pInputText>
@@ -199,7 +199,7 @@
                     </div>
     
                 </div>
-                <app-busqueda-colegiado-express (idPersona)="getIdPersona($event)" 
+                <app-busqueda-colegiado-express (idPersona)="getIdPersona($event)" (colegiado)="recuperarColegiado($event)"
                 [numColegiado]="usuarioBusquedaExpress.numColegiado"
                 [nombreAp]="usuarioBusquedaExpress.nombreAp"
                 ></app-busqueda-colegiado-express>
