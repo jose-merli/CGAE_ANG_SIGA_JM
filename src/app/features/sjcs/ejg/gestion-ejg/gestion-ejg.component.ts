@@ -219,7 +219,16 @@ export class GestionEjgComponent implements OnInit {
       top.scrollIntoView();
       top = null;
     }
+  }
 
+  goResol(){
+    document.children[document.children.length - 1]
+    let resol = document.getElementById("resol");
+    if (resol) {
+      this.openTarjetaResolucion = true;
+      resol.scrollIntoView();
+      resol = null;
+    }
   }
 
   clear() {
@@ -389,7 +398,9 @@ export class GestionEjgComponent implements OnInit {
   }
 
   enviarEnlacesTarjeta() {
-    this.enlacesTarjetaResumen = []
+    this.goResol();
+
+    this.enlacesTarjetaResumen = [];
 
     let pruebaTarjeta;
 
