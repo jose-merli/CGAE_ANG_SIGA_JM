@@ -279,7 +279,7 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   cancelarGuardarEditados(){
-    this.showModalEditarSeleccionados = false;
+    this.cerrarModalED();
   }
 
 
@@ -668,6 +668,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
   cerrarDialog() {
     this.showModalCambioEstado = false;
+    this.cerrarModalED();
   }
 
   downloadEEJ() {
@@ -921,9 +922,19 @@ export class TablaEjgComisionComponent implements OnInit {
         }
       );
     }
-    this.showModalEditarSeleccionados = false;
+    this.cerrarModalED();
   }
-
+cerrarModalED(){
+  this.showModalEditarSeleccionados = false;
+  this.valueAnioActa = null;
+  this.selectAnioActa = false;
+  this.valuePonente = null;
+  this.valueFechaPonente = null;
+  this.selectPonente = false;
+  this.valueResolucion = null;
+  this.valueFundamento = null;
+  this.selectResolucionFundamento = false;
+}
 
 
 }
