@@ -8,6 +8,7 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { Router } from "@angular/router";
 import { ConfirmationService } from 'primeng/api';
 import { saveAs } from "file-saver/FileSaver";
+import { ActasItem } from '../../../../../models/sjcs/ActasItem';
 
 @Component({
   selector: 'app-resolucion',
