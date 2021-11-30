@@ -250,14 +250,14 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     }
   }
 
-  consultarEditarEJG(){
+  consultarEditarEJG(rowData){
     this.progressSpinner = true;
     
-    this.sigaServices.post("gestionejg_datosEJG", this.selectedDatos[0]).subscribe(
+    this.sigaServices.post("gestionejg_datosEJG", rowData).subscribe(
       n => {
         let ejgObject = JSON.parse(n.body).ejgItems;
         this.persistenceService.setDatos(ejgObject[0]);
-        this.consultaUnidadFamiliar(this.selectedDatos[0]);
+        this.consultaUnidadFamiliar(rowData);
         this.commonsService.scrollTop();
       },
       err => {

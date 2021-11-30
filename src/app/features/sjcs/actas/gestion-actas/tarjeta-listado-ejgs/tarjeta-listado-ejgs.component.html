@@ -65,11 +65,15 @@
 
           <td class="text-center" *ngFor="let col of columns;">
 
+            <span class="enlace" (click)="consultarEditarEJG(dato)" *ngIf="col.field == 'numAnnioProcedimiento'">
+              {{dato[col.field]}}
+            </span>
+
             <span *ngIf="col.field == 'fechaApertura'">
               {{dato[col.field] | date: 'dd/MM/yyyy'}}
             </span>
 
-            <span *ngIf="col.field != 'fechaApertura'">
+            <span *ngIf="col.field != 'fechaApertura' && col.field != 'numAnnioProcedimiento'">
               {{dato[col.field]}}
             </span>
           </td>
@@ -116,11 +120,11 @@
           label="{{ 'general.boton.asociarEJG' | translate}}">
         </button>
         
-        <button pButton
+        <!-- <button pButton
           [disabled]="(selectedDatos == undefined || selectedDatos.length == 0 || selectedDatos.length > 1)"
           (click)="consultarEditarEJG()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.consultarEditarEJG' | translate}}">
-        </button>
+        </button> -->
   
       </div>
     </div>
