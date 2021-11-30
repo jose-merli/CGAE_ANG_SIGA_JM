@@ -18,6 +18,6 @@ export class ActasItem {
 	  horainicio: String;
 	  horafin: String;
 	  usumodificacion: Number;
-	  idInstitucion: String;
+	  idinstitucion: String;
     constructor() { }
 }

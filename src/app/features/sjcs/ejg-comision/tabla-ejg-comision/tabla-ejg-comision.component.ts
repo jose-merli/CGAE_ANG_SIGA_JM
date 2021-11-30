@@ -669,7 +669,7 @@ export class TablaEjgComisionComponent implements OnInit {
     if(this.acta != null){
       //Implementacion actual (30/11/2021) basada en la definicion
       //de la clave del combo comboAnioActa
-      this.valueAnioActa = this.acta.idInstitucion + "," + this.acta.anioacta + "," + this.acta.idacta;
+      this.valueAnioActa = this.acta.idinstitucion + "," + this.acta.anioacta + "," + this.acta.idacta;
     }
   }
 

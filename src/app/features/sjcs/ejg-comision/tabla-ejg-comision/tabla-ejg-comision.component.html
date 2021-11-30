@@ -198,7 +198,7 @@
         <label>{{"justiciaGratuita.maestros.calendarioLaboralAgenda.anio" | translate}}/{{"justiciaGratuita.ejg.datosGenerales.Acta" | translate}}</label>
           <p-dropdown [(ngModel)]='valueAnioActa' class="select-form" (onChange)="checkBotonAnadir()"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboAnioActa" [filter]="true" filterBy="label,labelSinTilde"
-          [showClear]="true" [disabled]="selectAnioActa == true"></p-dropdown>
+          [showClear]="true" [disabled]="selectAnioActa == true || acta != null"></p-dropdown>
       </div>
       <div>
         <p-checkbox (onChange)="onChangeBorrarAnioActa(selectAnioActa?'A':'B')" [(ngModel)]="selectAnioActa"

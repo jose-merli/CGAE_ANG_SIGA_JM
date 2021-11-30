@@ -324,7 +324,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   getActa() {
     let acta = {
       'anioacta': this.datos.anioacta,
-      'idinstitucion': this.datos.idInstitucion,
+      'idinstitucion': this.datos.idinstitucion,
       'idacta': this.datos.idacta
     };
     this.sigaServices.post("filtrosacta_getActa", acta).subscribe(
