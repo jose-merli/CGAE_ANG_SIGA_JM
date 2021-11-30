@@ -123,6 +123,11 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
       }   
   }
 
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }
+
   //Inicializa las propiedades necesarias para el dialogo de confirmacion
   showMessage(severity, summary, msg) {
     this.msgs = [];
