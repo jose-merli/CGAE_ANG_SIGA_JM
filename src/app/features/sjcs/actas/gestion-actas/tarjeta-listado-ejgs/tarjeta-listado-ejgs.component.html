@@ -112,7 +112,7 @@
       <div class="text-right main-button">
         <!-- [disabled]="datos.fecharesolucion != null" -->
         <button pButton
-          (click)="asociarEJG()" type="button" icon="fa fa-plus" iconPos="left"
+          (click)="asociarEJG()" [disabled]="!guardado" type="button" icon="fa fa-plus" iconPos="left"
           label="{{ 'general.boton.asociarEJG' | translate}}">
         </button>
         

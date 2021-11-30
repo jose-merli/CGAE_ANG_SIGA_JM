@@ -30,6 +30,8 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
+  guardado: boolean = false;
+
 
   message;
 
@@ -75,6 +77,9 @@ export class TarjetaListadoEjgsComponent implements OnInit {
 
   ngOnInit() {
     console.log("this.datos -> ", this.datos);
+    if(this.datos.numeroacta != null && this.datos.numeroacta != undefined && (this.datos.fecharesolucion == null || this.datos.fecharesolucion == undefined)){
+      this.guardado = true;
+    }
     this.getAbreviatura();
     this.getCols();
     this.resaltadoEJGsAsociados = true;
@@ -241,13 +246,8 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   }
 
   asociarEJG() {
-    if(this.datos.numeroacta != null){
-      sessionStorage.setItem('acta', JSON.stringify(this.datos));
-      this.router.navigate(["/ejg-comision"]);
-    }
-    else{
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
-    }
+    sessionStorage.setItem('acta', JSON.stringify(this.datos));
+    this.router.navigate(["/ejg-comision"]);
   }
 
   consultarEditarEJG(){

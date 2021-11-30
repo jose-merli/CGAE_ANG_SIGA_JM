@@ -156,6 +156,7 @@ export class FichaRemesasComponent implements OnInit {
         this.datos = JSON.parse(n.body).remesasItems;
 
         this.remesaTabla.incidencias = this.datos[0].incidencias;
+        this.remesaTabla.descripcion = this.datos[0].descripcion;
 
         console.log("Contenido de la respuesta del back --> ", this.datos);
         this.progressSpinner = false;
