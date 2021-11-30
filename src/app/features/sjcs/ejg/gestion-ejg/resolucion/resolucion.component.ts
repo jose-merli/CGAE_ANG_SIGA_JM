@@ -282,9 +282,9 @@ export class ResolucionComponent implements OnInit {
             if(estadosEJG.length > 0 && estadosEJG[0].propietario == 1){
               this.save();
             }
-            //REVISAR MENSAJE
+            
             else{
-              this.showMessage('error', 'Error', "** No se puede realizar esta acción debido a que el ultimo estado del EJG no es propiedad de CAJG.");
+              this.showMessage('error', 'Error', this.translateService.instant("sjcs.actas.ultEstadoNoCajg"));
               this.progressSpinner = false;
             }
           },
