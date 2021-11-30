@@ -193,7 +193,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
 
       })
-      .catch(err => //console.log(err));
+      .catch(err => console.log(err));
   }
 
   cargaInicial() {

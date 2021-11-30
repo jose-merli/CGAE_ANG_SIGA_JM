@@ -169,7 +169,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
         this.showInfo(msg);
       }
       else
-        //console.log(error);
+        console.log(error);
     })
   }
 

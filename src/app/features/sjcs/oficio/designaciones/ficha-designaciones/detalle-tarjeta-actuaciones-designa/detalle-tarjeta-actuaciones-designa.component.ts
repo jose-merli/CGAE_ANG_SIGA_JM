@@ -115,7 +115,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
         this.isLetrado = this.localStorageService.isLetrado;
 
       })
-      .catch(err => //console.log(err));
+      .catch(err => console.log(err));
 
   }
 
