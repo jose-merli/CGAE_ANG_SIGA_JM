@@ -17,6 +17,11 @@ export const procesos_PyS: any = {
     guardarTiposProductos: "402",
     eliminarTiposProductos: "403",
     guardarTiposServicios: "404",
-    eliminarTiposEliminar: "405"
+    eliminarTiposEliminar: "405",
+
+    //PERMISOS PRODUCTOS
+    guardarProductos: "406",
+    eliminarReactivarProductos: "407",
+    guardarFormasPagoProductos: "408"
 
 }

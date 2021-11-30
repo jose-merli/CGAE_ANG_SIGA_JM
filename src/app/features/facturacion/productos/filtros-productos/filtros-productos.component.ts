@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
-import { ComboItem } from '../../../../models/ComboItem';
 import { ComboObject } from '../../../../models/ComboObject';
-import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 import { FiltrosProductos } from '../../../../models/FiltrosProductos';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
@@ -26,15 +26,20 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
   formasPagoObject: ComboObject = new ComboObject();
   @Output() busqueda = new EventEmitter<boolean>();
 
+  //Permisos
+  guardarProductos: boolean;
+
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
   subscriptionTypeSelectValues: Subscription;
   subscriptionIvaTypeSelectValues: Subscription;
   subscriptionPayMethodTypeSelectValues: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
+    this.checkPermisos();
+
     //Restablece los datos de busqueda anteriormente usados si se viene desde el boton volver de la ficha de productos.
     if (sessionStorage.getItem("volver") == 'true' && sessionStorage.getItem('filtrosProductos')) {
       this.filtrosProductos = JSON.parse(sessionStorage.getItem("filtrosProductos"));
@@ -49,6 +54,23 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
     this.getComboTipoIva();
     this.getComboFormaPago();
   }
+
+  //INICIO METODOS PERMISOS
+
+  checkPermisos() {
+    this.getPermisoGuardarProducto();
+  }
+
+  getPermisoGuardarProducto() {
+    this.commonsService
+       .checkAcceso(procesos_PyS.guardarProductos)
+        .then((respuesta) => {
+           this.guardarProductos = respuesta;
+        })
+    .catch((error) => console.error(error));
+  }
+
+  //FIN METODOS SERVICIOS
 
   //Necesario para liberar memoria
   ngOnDestroy() {
@@ -92,42 +114,14 @@ export class FiltrosProductosComponent implements OnInit, OnDestroy {
   }
 
   nuevo() {
-    sessionStorage.removeItem("productoBuscador");
-    this.router.navigate(["/fichaProductos"]);
+    let msg = this.commonsService.checkPermisos(this.guardarProductos, undefined);
+      if (msg != null) {
+        this.msgs = msg;
+      } else {
+        sessionStorage.removeItem("productoBuscador");
+        this.router.navigate(["/fichaProductos"]);
+      }   
   }
-
-  /* checkAccesoFichaProductos() {
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = procesos_oficio.designa;
- 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
-        const permisos = JSON.parse(data.body);
-        const permisosArray = permisos.permisoItems;
-        const derechoAcceso = permisosArray[0].derechoacceso;
- 
-        this.esColegiado = true;
-        if (derechoAcceso == 3) { //es colegio y escritura
-          this.esColegiado = false;
-          this.isColegDesig.emit(false);
-        } else if (derechoAcceso == 2) {//es colegiado y solo lectura
-          this.esColegiado = true;
-          this.isColegDesig.emit(true);
-        } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-        }
-        this.cargaInicial();
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    );
-   } */
 
   //Inicializa las propiedades necesarias para el dialogo de confirmacion
   showMessage(severity, summary, msg) {
