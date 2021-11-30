@@ -25,7 +25,7 @@ export class ResolucionComponent implements OnInit {
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;
-  bodyInicial: EJGItem = new EJGItem();
+  bodyInicial: ResolucionEJGItem = new ResolucionEJGItem();
   resolucion: ResolucionEJGItem;
   msgs;
   comboActaAnnio = [];
@@ -406,20 +406,27 @@ export class ResolucionComponent implements OnInit {
   }
 
   openActa() {
-    if(this.bodyInicial.numActa != null){
+    if(this.bodyInicial.idAnnioActa != null){
       let acta: ActasItem = new ActasItem();
 
       
     //Se escoge la acta guardada, no la que se tenga seleccionada en el desplegable sin guardar.
-      acta.idInstitucion = this.bodyInicial.idInstitucion;
-      acta.idacta = this.bodyInicial.numActa;
-      acta.anioacta = this.bodyInicial.annioActa;
+      this.sigaServices.get("institucionActual").subscribe(n => {
+        acta.idinstitucion = n.value;
 
-      localStorage.setItem('actasItem', JSON.stringify(acta));
-      //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
-      sessionStorage.setItem("EJGItem", JSON.stringify(this.bodyInicial));
+        acta.idacta = this.bodyInicial.idActa.toString();
+        acta.anioacta = this.bodyInicial.annioActa.toString();
+        acta.numeroacta = this.comboActaAnnio.find(
+          el => el.value == this.bodyInicial.idAnnioActa
+        ).label.split(" -")[0];
 
-      this.router.navigate(["/fichaGestionActas"]);
+        localStorage.setItem('actasItem', JSON.stringify(acta));
+        //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
+        sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatos()));
+
+        this.router.navigate(["/fichaGestionActas"]);
+      });
+      
     }
     else{
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.actas.noActa"));
