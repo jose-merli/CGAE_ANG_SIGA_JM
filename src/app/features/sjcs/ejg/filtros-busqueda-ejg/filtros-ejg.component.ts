@@ -83,7 +83,6 @@ export class FiltrosEjgComponent implements OnInit {
   bodyDictamen = [];
   @Input() permisos;
   @Input() remesa;
-  @Input() busquedaActualizaciones;
   /*Éste método es útil cuando queremos qeremos informar de cambios en los datos desde el hijo,
   por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
