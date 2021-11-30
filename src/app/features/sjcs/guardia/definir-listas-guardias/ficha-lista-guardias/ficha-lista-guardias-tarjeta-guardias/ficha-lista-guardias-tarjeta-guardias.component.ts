@@ -88,7 +88,7 @@ export class FichaListaGuardiasTarjetaGuardiasComponent implements OnInit, OnCha
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () =>{
@@ -153,7 +153,7 @@ export class FichaListaGuardiasTarjetaGuardiasComponent implements OnInit, OnCha
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () =>{
           this.progressSpinner = false;
@@ -208,7 +208,7 @@ export class FichaListaGuardiasTarjetaGuardiasComponent implements OnInit, OnCha
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () =>{
           this.progressSpinner = false;

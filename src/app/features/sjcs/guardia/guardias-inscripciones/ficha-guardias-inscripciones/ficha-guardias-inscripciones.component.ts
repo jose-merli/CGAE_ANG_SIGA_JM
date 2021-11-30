@@ -105,7 +105,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 					},
 					err => {
-						console.log(err);
+						//console.log(err);
 					},
 					() => {
 					}
@@ -297,19 +297,19 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			this.sigaServices.post(
 				"guardiasInscripciones_validarInscripciones", objetoValidacion).subscribe(
 					data => {
-						console.log("entra en el data");
+						//console.log("entra en el data");
 						this.progressSpinner = false;
-						console.log(data);
+						//console.log(data);
 						//mensaje de okey
-						console.log("Se ha realizado correctamente");
+						//console.log("Se ha realizado correctamente");
 						this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
 					},
 					err => {
 						this.progressSpinner = false;
-						console.log(err);
+						//console.log(err);
 						//mensaje de error
-						console.log("No se ha podido realizar el servicio de back");
+						//console.log("No se ha podido realizar el servicio de back");
 						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
 					},
@@ -323,7 +323,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			this.sigaServices.post(
 				"guardiasInscripciones_buscarTrabajosSJCS", objetoValidacion).subscribe(
 					data => {
-						console.log("entra en el data");
+						//console.log("entra en el data");
 						this.progressSpinner = false;
 						this.existeTrabajosSJCS = data.body;
 
@@ -487,7 +487,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				},
 				err => {
 					this.progressSpinner = false;
-					console.log(err);
+					//console.log(err);
 					
 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
@@ -555,7 +555,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				},
 				err => {
 					this.progressSpinner = false;
-					console.log(err);
+					//console.log(err);
 			
 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
@@ -571,19 +571,19 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		this.sigaServices.post(
 		  "guardiasInscripciones_denegarInscripciones", this.objetoValidacion).subscribe(
 			data => {
-			  console.log("entra en el data");
+			  //console.log("entra en el data");
 			  this.progressSpinner = false;
-			  console.log(data);
+			  //console.log(data);
 			  //mensaje de okey
-			  console.log("Se ha realizado correctamente");
+			  //console.log("Se ha realizado correctamente");
 			  this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 	
 			},
 			err => {
 			  this.progressSpinner = false;
-			  console.log(err);
+			  //console.log(err);
 			  //mensaje de error
-			  console.log("No se ha podido realizar el servicio de back");
+			  //console.log("No se ha podido realizar el servicio de back");
 			  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 	
 			},
@@ -617,7 +617,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 			},
 			err => {
-				console.log(err);
+				//console.log(err);
 				this.progressSpinner = false;
 			}, () => {
 				this.progressSpinner = false;
@@ -637,7 +637,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 				}
 
-				console.log("this.datos3: ", this.datos3);
+				//console.log("this.datos3: ", this.datos3);
 			}
 		);
 		this.progressSpinner = false;
@@ -748,7 +748,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				},
 				err => {
 					this.progressSpinner = false;
-					console.log(err);
+					//console.log(err);
 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
 				},

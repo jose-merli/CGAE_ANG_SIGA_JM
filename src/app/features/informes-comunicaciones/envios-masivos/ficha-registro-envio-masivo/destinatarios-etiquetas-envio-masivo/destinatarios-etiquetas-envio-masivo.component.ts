@@ -107,7 +107,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
           this.noSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           let i = 0;
@@ -145,7 +145,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
 
           },
@@ -207,7 +207,7 @@ export class DestinatariosEnvioMasivoComponent implements OnInit {
         },
         err => {
           this.showSuccess(this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.error.guardar.etiquetas"));
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         },

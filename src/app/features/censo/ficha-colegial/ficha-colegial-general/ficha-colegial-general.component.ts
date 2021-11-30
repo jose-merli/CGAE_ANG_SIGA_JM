@@ -529,12 +529,12 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     //         this.idPersona = JSON.stringify(colegiadoItem.colegiadoItem[0].idPersona)
     //       },
     //       err => {
-    //         console.log(err);
+    //         //console.log(err);
     //       },
     //      );
     //   },
     //   err => {
-    //     console.log(err);
+    //     //console.log(err);
     //   });
     // }
 
@@ -593,7 +593,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
           this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.OnInit();
         });
@@ -686,7 +686,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -967,7 +967,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
           }
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

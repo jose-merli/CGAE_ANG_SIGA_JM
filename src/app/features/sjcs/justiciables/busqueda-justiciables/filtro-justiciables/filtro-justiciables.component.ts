@@ -94,7 +94,7 @@ export class FiltroJusticiablesComponent implements OnInit {
         this.commonsService.arregloTildesCombo(this.comboRoles);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -106,7 +106,7 @@ export class FiltroJusticiablesComponent implements OnInit {
         this.commonsService.arregloTildesCombo(this.comboProvincias);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

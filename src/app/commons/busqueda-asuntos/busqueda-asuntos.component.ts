@@ -541,7 +541,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               }
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             }, () => {
               this.progressSpinner = false;
@@ -571,7 +571,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               }
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             }, () => {
               this.progressSpinner = false;
@@ -614,7 +614,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -640,7 +640,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           }
         );
@@ -663,7 +663,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -689,7 +689,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {

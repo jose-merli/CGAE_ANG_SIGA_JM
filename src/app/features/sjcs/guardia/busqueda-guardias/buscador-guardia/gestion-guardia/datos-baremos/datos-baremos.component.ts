@@ -68,7 +68,7 @@ export class DatosBaremosComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
     )
   }

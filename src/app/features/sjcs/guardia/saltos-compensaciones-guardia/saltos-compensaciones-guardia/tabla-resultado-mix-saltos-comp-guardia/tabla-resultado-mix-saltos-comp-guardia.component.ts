@@ -483,7 +483,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           this.comboGuardias = comboGuardias;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           row.cells[1].combo = this.comboGuardias;
@@ -515,7 +515,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.rowGroups.find(el => el.id == row.id).cells[2].combo = this.comboColegiados;

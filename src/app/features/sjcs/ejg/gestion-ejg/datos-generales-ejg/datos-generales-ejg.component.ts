@@ -174,7 +174,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboTipoEJG);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -191,7 +191,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -214,7 +214,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.tipoExpedienteDes = tipoExp.label;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -228,7 +228,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.bodyInicial.prestacion = this.body.prestacion;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -444,7 +444,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
                     }
                   },
                   err => {
-                    console.log(err);
+                    //console.log(err);
                     this.progressSpinner = false;
                   }, () => {
                     this.progressSpinner = false;
@@ -577,9 +577,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.progressSpinner=false;
         let datos = JSON.parse(n.body).expInsosItems;
 
-        console.log('valor de n:'+n);
-        console.log('valor de n.body:'+n.body);
-        console.log('valor de datos:'+datos);
+        //console.log('valor de n:'+n);
+        //console.log('valor de n.body:'+n.body);
+        //console.log('valor de datos:'+datos);
 
         if(datos!=null && datos!=undefined){
           sessionStorage.setItem("expedienteInsos", JSON.stringify(datos[0]));
@@ -589,7 +589,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );

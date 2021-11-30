@@ -143,7 +143,7 @@ export class ConsultaComponent implements OnInit {
       this.institucionActual = n.value;
     },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => { this.getDatos(); }
     );
   }
@@ -204,7 +204,7 @@ export class ConsultaComponent implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // if (this.derechoAcceso == 3) {
@@ -247,7 +247,7 @@ export class ConsultaComponent implements OnInit {
       err => {
         let error = JSON.parse(err.error);
         this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.guardarConsulta") + ': ' + error.message);
-        console.log(err);
+        //console.log(err);
       },
       () => {
       }
@@ -268,7 +268,7 @@ export class ConsultaComponent implements OnInit {
 
     this.sigaServices.post("consultas_obtenerCamposDinamicos", consulta)
       .subscribe(data => {
-        console.log(data);
+        //console.log(data);
         this.valores = JSON.parse(data.body).camposDinamicos;
         if (this.valores != undefined && this.valores != null && this.valores.length > 0) {
           this.valores.forEach(element => {
@@ -290,9 +290,9 @@ export class ConsultaComponent implements OnInit {
         } else {
           this.enviar();
         }
-        console.log(this.valores);
+        //console.log(this.valores);
       }, error => {
-        console.log(error);
+        //console.log(error);
         this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.parametrosDinamicos"))
       });
   }
@@ -337,7 +337,7 @@ export class ConsultaComponent implements OnInit {
           saveAs(data, "ResultadoConsulta.xlsx");
         }
       }, error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
         this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
       }, () => {
@@ -450,7 +450,7 @@ export class ConsultaComponent implements OnInit {
         this.router.navigate(["/dialogoComunicaciones"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

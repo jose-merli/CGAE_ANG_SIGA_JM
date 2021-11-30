@@ -180,7 +180,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -193,7 +193,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 

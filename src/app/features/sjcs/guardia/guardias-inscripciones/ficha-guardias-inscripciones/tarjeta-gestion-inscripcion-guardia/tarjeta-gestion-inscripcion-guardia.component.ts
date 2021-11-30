@@ -227,7 +227,7 @@ export class TarjetaGestionInscripcionGuardiaComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.progressSpinner = false;
         }
@@ -599,7 +599,7 @@ export class TarjetaGestionInscripcionGuardiaComponent implements OnInit {
     }
   }
   openMultiSelect(dato) {
-    // console.log(this.multiSelect);
+    // //console.log(this.multiSelect);
     dato.onPanelShow;
     // this.multiSelect.show();
     // dato.overlayVisible = true;

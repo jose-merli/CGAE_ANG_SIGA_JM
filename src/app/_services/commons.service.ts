@@ -148,7 +148,7 @@ export class CommonsService {
           }
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
           reject(undefined);
         }
         );
@@ -171,7 +171,7 @@ export class CommonsService {
           derechoAcceso = permisosArray[0].derechoacceso;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           reject(undefined);
         },
         () => {

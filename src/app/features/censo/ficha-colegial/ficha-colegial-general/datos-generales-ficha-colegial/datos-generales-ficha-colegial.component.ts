@@ -335,7 +335,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
     this.filterLabelsMultiple();
@@ -415,7 +415,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           this.tipoIdentificacion[3].label;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -430,7 +430,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -440,7 +440,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.arregloTildesCombo(this.generalEstadoCivil);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -451,7 +451,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -462,7 +462,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -572,7 +572,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -766,7 +766,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
           },
           error => {
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
             this.activacionGuardarGenerales();
             this.generalError = JSON.parse(error["error"]);
@@ -887,7 +887,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             this.activacionTarjeta = true;
           },
           error => {
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
             this.activacionGuardarGenerales();
             this.generalError = JSON.parse(error["error"]);
@@ -1018,7 +1018,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             this.showSuccess();
           },
           error => {
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
             this.activacionGuardarGenerales();
             this.cerrarAuditoria();
@@ -1124,7 +1124,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   onChangeCalendar(event) {
     this.fechaNacCambiada = true;
     this.fechaNacimientoSelected = true;
-    // console.log(new Date(event));
+    // //console.log(new Date(event));
     var hoy = new Date();
     var cumpleanos = new Date(event); //
 
@@ -1155,7 +1155,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   onWriteCalendar() {
-    // console.log(new Date(event));
+    // //console.log(new Date(event));
     var hoy = new Date();
 
     if (this.fechaNacimiento instanceof Date) {
@@ -1274,7 +1274,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         }
       );
@@ -1298,7 +1298,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           this.activacionGuardarGenerales();
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         }
       );
@@ -1367,7 +1367,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         // }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -1487,7 +1487,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
     
@@ -1661,7 +1661,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           this.sortOptions();
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
     // this.generalBody.etiquetas = new ComboEtiquetasItem();
@@ -1712,7 +1712,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -1770,7 +1770,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
         this.arregloTildesCombo(this.comboTopics);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -2164,7 +2164,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
                       },
                       error => {
-                        console.log(error);
+                        //console.log(error);
                         this.progressSpinner = false;
                         if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
                           let msg = JSON.parse(error.error).error.message;
@@ -2211,7 +2211,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                 }
               },
               error => {
-                console.log(error);
+                //console.log(error);
 
                 if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
                   let msg = JSON.parse(error.error).error.message;
@@ -2232,7 +2232,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             );
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
           this.isCrearColegial = false;
           this.isRestablecer = false;
@@ -2254,7 +2254,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.searchColegiales();
@@ -2323,7 +2323,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
           this.checkDatosColegiales = JSON.parse(JSON.stringify(this.datosColegiales));
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }, () => {
           if (this.generalBody.colegiado) {
             this.sigaServices
@@ -2624,7 +2624,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
           },
           () => {
             if (this.datosDirecciones.length > 0) {

@@ -101,7 +101,7 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
@@ -125,7 +125,7 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
           this.actuaciones = n.actuacionAsistenciaItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
@@ -175,7 +175,7 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;

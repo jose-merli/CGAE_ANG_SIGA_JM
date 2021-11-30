@@ -184,7 +184,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -210,7 +210,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         for (let i = 0; i < this.jurisdicciones.length; i++) {
           if (this.jurisdicciones[i].value == this.turnosItem.idjurisdiccion) {
@@ -229,7 +229,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         if (this.turnosItem.idarea != null) {
 
@@ -284,7 +284,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         for (let i = 0; i < this.tiposturno.length; i++) {
           if (this.tiposturno[i].value == this.turnosItem.idtipoturno) {
@@ -316,7 +316,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         if (this.turnosItem.idzona != null) {
           this.sigaServices
@@ -329,7 +329,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
                 this.partidasJudiciales = n.zonasItems;
               },
               err => {
-                console.log(err);
+                //console.log(err);
 
               }, () => {
                 this.getPartidosJudiciales();
@@ -375,7 +375,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         for (let i = 0; i < this.partidas.length; i++) {
           if (this.partidas[i].value == this.turnosItem.idpartidapresupuestaria) {
@@ -407,7 +407,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.body = this.turnosItem;
         this.bodyInicial = JSON.parse(JSON.stringify(this.turnosItem));
@@ -533,7 +533,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
             this.partidasJudiciales = n.zonasItems;
           },
           err => {
-            console.log(err);
+            //console.log(err);
 
           }, () => {
             this.getPartidosJudiciales();
@@ -587,7 +587,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
     para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         if (this.turnosItem.idarea != null) {
 
@@ -631,7 +631,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         if (this.turnosItem.idzona != null) {
           this.sigaServices
@@ -644,7 +644,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
                 this.partidasJudiciales = n.zonasItems;
               },
               err => {
-                console.log(err);
+                //console.log(err);
 
               }, () => {
                 if (this.turnosItem.idzona != null) {
@@ -727,7 +727,7 @@ export class DatosGeneralesTurnosComponent implements OnInit {
               this.turnosItem2 = JSON.parse(n.body).turnosItem[0];
             },
             err => {
-              console.log(err);
+              //console.log(err);
             }, () => {
               this.persistenceService.setDatos(this.turnosItem2);
               this.modoEdicionSend.emit(send);

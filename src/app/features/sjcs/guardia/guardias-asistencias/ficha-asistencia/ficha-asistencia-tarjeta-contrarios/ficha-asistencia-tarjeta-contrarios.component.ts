@@ -107,7 +107,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
         this.contrarios = n;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -170,7 +170,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
     },
     err => {
       this.progressSpinner = false;
-      console.log(err);
+      //console.log(err);
     });
   }
 
@@ -207,7 +207,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -248,7 +248,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

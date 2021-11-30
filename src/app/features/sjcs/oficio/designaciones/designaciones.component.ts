@@ -353,7 +353,7 @@ export class DesignacionesComponent implements OnInit {
     
     //this.muestraTablaJustificacion = false;
     this.isLetrado = event;
-    console.log('checkRestriccionesasLetrado: ', this.isLetrado)
+    //console.log('checkRestriccionesasLetrado: ', this.isLetrado)
     //this.muestraTablaJustificacion = true;
   }
 }

@@ -120,7 +120,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -139,7 +139,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboEstado);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );*/
   }
@@ -165,7 +165,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
       }
@@ -179,7 +179,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboConjuntoGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -194,7 +194,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboListaGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 

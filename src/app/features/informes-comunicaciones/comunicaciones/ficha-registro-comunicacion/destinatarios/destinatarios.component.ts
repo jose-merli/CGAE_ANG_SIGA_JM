@@ -141,7 +141,7 @@ export class DestinatariosComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.progressSpinner = false;
         }
@@ -158,7 +158,7 @@ export class DestinatariosComponent implements OnInit {
           this.destinatarios = JSON.parse(n["body"]).destinatarios;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
 
     );

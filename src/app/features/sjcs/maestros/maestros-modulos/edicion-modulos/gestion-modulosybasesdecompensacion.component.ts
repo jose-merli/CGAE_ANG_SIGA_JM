@@ -33,7 +33,7 @@ export class GestionModulosYBasesComponent implements OnInit {
     this.route.queryParams
       .subscribe(params => {
         this.idProcedimiento = params.idProcedimiento
-        console.log(params);
+        //console.log(params);
       });
     if (this.idProcedimiento != undefined) {
       this.searchModulos();
@@ -60,7 +60,7 @@ export class GestionModulosYBasesComponent implements OnInit {
         this.modulosItem.buscar = true;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

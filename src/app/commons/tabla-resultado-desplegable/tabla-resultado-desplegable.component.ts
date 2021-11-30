@@ -912,7 +912,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         /*if (event.itemValue.id == "ejgs" || event.itemValue.id == "clientes"){
           event.itemValue.id = "anio";
         }
-        console.log('event.itemValue.id: ', event.itemValue.id)*/
+        //console.log('event.itemValue.id: ', event.itemValue.id)*/
         if (ocultar && event.itemValue.id == "anio"){
           this.ocultarItem("clientes");
           this.ocultarItem("ejgs");
@@ -1184,7 +1184,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   newFromSelected(){
-    console.log('sessionStorage.getItem(rowIdsToUpdate) ', sessionStorage.getItem('rowIdsToUpdate') );
+    //console.log('sessionStorage.getItem(rowIdsToUpdate) ', sessionStorage.getItem('rowIdsToUpdate') );
     if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
         this.confirmationService.confirm({
@@ -1253,7 +1253,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
          
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }
       );
@@ -1408,13 +1408,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           //rowG.rows.splice(this.childNumber, 1);
           if (rowG.rows[this.childNumber + 1].cells[8].value == false){
             //actuacion No Validada
-            console.log("isListreado")
+            //console.log("isListreado")
             if ((this.isLetrado && this.turnoAllow == "1" ) || (!this.isLetrado)){
               if (rowG.rows[this.childNumber + 1].cells[35].value == "1"){
                 this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
                 this.refreshData.emit(true);
               }else{
-                console.log("push del else");
+                //console.log("push del else");
                 deletedAct.push(rowG.rows[this.childNumber + 1].cells)
               }
             }else {
@@ -1655,7 +1655,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         })
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }
       );
@@ -1682,7 +1682,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -1704,7 +1704,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -1760,7 +1760,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () =>{
           this.progressSpinner = false;
@@ -1884,7 +1884,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.commonsService.scrollTop();
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () =>{
@@ -1947,7 +1947,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.keys = JSON.parse(data["body"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

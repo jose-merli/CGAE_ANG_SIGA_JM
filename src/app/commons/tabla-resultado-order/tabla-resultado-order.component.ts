@@ -131,7 +131,7 @@ export class TablaResultadoOrderComponent implements OnInit {
 
   ngOnInit(): void {
     this.ordenarByOrderField();
-    console.log('rowGroups al inicio: ', this.rowGroups)
+    //console.log('rowGroups al inicio: ', this.rowGroups)
     this.selectedArray = [];
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     if(this.rowGroups != undefined){
@@ -171,13 +171,13 @@ export class TablaResultadoOrderComponent implements OnInit {
               },
               err => {
                 this.progressSpinner = false;
-                console.log(err);
+                //console.log(err);
               }
             )
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       );
   
@@ -261,7 +261,7 @@ export class TablaResultadoOrderComponent implements OnInit {
 
   guardar(){
     this.progressSpinner = true;
-    console.log('this.rowGroups: ', this.rowGroups)
+    //console.log('this.rowGroups: ', this.rowGroups)
     if (this.calendarios){
       this.guardiasCalendarioModified.emit(this.rowGroups);
       this.totalRegistros = this.rowGroups.length;
@@ -395,13 +395,13 @@ export class TablaResultadoOrderComponent implements OnInit {
             },
             err => {
               this.progressSpinner = false;
-              console.log(err);
+              //console.log(err);
             }
           )
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -527,7 +527,7 @@ checkLetrados(){
           errorSecuencia = this.isIncreasingSequence(arrNumbers);
           errSeqArr.push(errorSecuencia);
           if (errorSecuencia == true){
-            console.log('error true ' , i)
+            //console.log('error true ' , i)
           }
         } else {
           arrNumbers.push(Number(row.cells[j].value));
@@ -656,13 +656,13 @@ return rowsByGroup;
     this.rowGroups = this.rowGroupsAux.filter((row) => {
         data.push(row);
     });
-    console.log('this.rowGroupsAux: ', this.rowGroupsAux)
-    console.log('data: ', data)
+    //console.log('this.rowGroupsAux: ', this.rowGroupsAux)
+    //console.log('data: ', data)
     this.rowGroups = data.sort((a, b) => {
-      console.log('a.cells[0].value: ', a.cells[0].value)
-      console.log('a.cells[3].value: ', a.cells[3].value)
-      console.log('b.cells[0].value: ', b.cells[0].value)
-      console.log('b.cells[3].value: ', b.cells[3].value)
+      //console.log('a.cells[0].value: ', a.cells[0].value)
+      //console.log('a.cells[3].value: ', a.cells[3].value)
+      //console.log('b.cells[0].value: ', b.cells[0].value)
+      //console.log('b.cells[3].value: ', b.cells[3].value)
       if (a.cells[0].value != null && b.cells[0].value != null){
       let resultado;
       if (this.pantalla == 'colaGuardias'){
@@ -674,10 +674,10 @@ return rowsByGroup;
       }else{
         resultado = compare(Number(a.cells[1].value), Number(b.cells[1].value), true);
       }
-      console.log('resultado: ',resultado)
+      //console.log('resultado: ',resultado)
     return resultado ;
       }else{
-        console.log('resultado 0: ',0)
+        //console.log('resultado 0: ',0)
         return 0;
         /*let last = this.rowGroups[this.rowGroups.length - 1];
         this.rowGroups[this.rowGroups.length - 1] = a;
@@ -700,7 +700,7 @@ return rowsByGroup;
     this.numPage = event;
   }
 valueChange(i, z, $event){
-  console.log('valueChange')
+  //console.log('valueChange')
   if (this.pantalla == 'colaGuardias'){
     let posicion = this.numperPage*(this.numPage) + i
     if ( z == 1){
@@ -1014,7 +1014,7 @@ this.totalRegistros = this.rowGroups.length;
     }
     restablecer(){
       this.disableGen.emit(false);
-      console.log('this.rowGroupsAux: ', this.rowGroupsAux)
+      //console.log('this.rowGroupsAux: ', this.rowGroupsAux)
       this.rowGroups = this.rowGroupsAux;
       this.rest.emit(true);
     }
@@ -1073,7 +1073,7 @@ this.totalRegistros = this.rowGroups.length;
         this.rowGroups[this.rowGroups.length - 1].cells[1].combo = null;
         this.rowGroups[this.rowGroups.length - 1].cells[2].type = 'linkNew';
         this.rowGroups[this.rowGroups.length - 1].cells[2].combo = null;
-        console.log(this.rowGroups)
+        //console.log(this.rowGroups)
         this.disableGen.emit(true);
         this.getComboTurno();
         let newCells: Cell[] = [
@@ -1098,20 +1098,20 @@ this.totalRegistros = this.rowGroups.length;
       n => {
         this.progressSpinner = false;
         this.comboTurno = n.combooItems;
-        console.log('this.comboTurno : ', this.comboTurno )
+        //console.log('this.comboTurno : ', this.comboTurno )
         this.cd.detectChanges();
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
   }
   
   onChangeTurno(idTurno, row : Row) {
     this.getComboGuardia(idTurno);
-    console.log('idTurno: ', idTurno)
+    //console.log('idTurno: ', idTurno)
     this.comboGuardia = [];
     if(this.listaGuardias){
       row.cells[3].value = '';
@@ -1135,7 +1135,7 @@ this.totalRegistros = this.rowGroups.length;
                 this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             ()=>{
@@ -1154,9 +1154,9 @@ this.totalRegistros = this.rowGroups.length;
       row.cells.forEach((cell, c) => {
         if (cell.type == 'selectDependency2'){
           
-          console.log('this.comboGuardia: ', this.comboGuardia)
+          //console.log('this.comboGuardia: ', this.comboGuardia)
           this.rowGroups[r].cells[c].combo = this.comboGuardia;
-          console.log('row.cells: ', row.cells)
+          //console.log('row.cells: ', row.cells)
         }
       })
     })
@@ -1174,14 +1174,14 @@ this.totalRegistros = this.rowGroups.length;
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       )
 
   }
   
   anadirLetrado(){
-    console.log('this.rowwSelected: ', this.rowwSelected)
+    //console.log('this.rowwSelected: ', this.rowwSelected)
     if (this.rowwSelected.length != 0){
       let calendario = {
            'orden': this.rowwSelected.cells[0].value,
@@ -1275,8 +1275,8 @@ this.totalRegistros = this.rowGroups.length;
       rowObject.cells = newCells;
       this.rowGroups.push(rowObject); 
       this.totalRegistros = this.rowGroups.length;
-      console.log('this.rowGroups NUEVO: ', this.rowGroups)
-      console.log('this.totalRegistros NUEVO: ', this.totalRegistros)
+      //console.log('this.rowGroups NUEVO: ', this.rowGroups)
+      //console.log('this.totalRegistros NUEVO: ', this.totalRegistros)
       this.to = this.totalRegistros;
       this.cd.detectChanges();
    }

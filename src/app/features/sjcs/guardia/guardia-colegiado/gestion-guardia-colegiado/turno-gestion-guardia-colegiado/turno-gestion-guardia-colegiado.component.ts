@@ -41,7 +41,7 @@ export class TurnoGestionGuardiaColegiadoComponent implements OnInit {
         this.progressSpinner = false
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }, () => {

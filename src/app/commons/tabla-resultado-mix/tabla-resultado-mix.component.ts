@@ -133,9 +133,9 @@ export class TablaResultadoMixComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log('AÑADIR DATA TO DUPLICATE: ', this.dataToDuplicate)
-console.log('this.rowGroups: tabla ', this.rowGroups)
-console.log("VALOR DE MI INPUT: ",this.inscripciones)
+    //console.log('AÑADIR DATA TO DUPLICATE: ', this.dataToDuplicate)
+//console.log('this.rowGroups: tabla ', this.rowGroups)
+//console.log("VALOR DE MI INPUT: ",this.inscripciones)
     let values = [];
     let labels = [];
     let arrayOfSelected = [];
@@ -169,8 +169,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     this.cabeceras.forEach(cab => {
       this.cabecerasMultiselect.push(cab.name);
     })
-    console.log('this.rowGroups: ', this.rowGroups)
-    console.log('this.totalRegistros: ', this.totalRegistros)
+    //console.log('this.rowGroups: ', this.rowGroups)
+    //console.log('this.totalRegistros: ', this.totalRegistros)
     if(this.incompatibilidades){
       this.getComboTurno();
     }
@@ -219,7 +219,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         this.comboTurnos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.commonsService.arregloTildesCombo(this.comboTurnos);
@@ -249,7 +249,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
           row.cells[1].combo = data.combooItems;    
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         ()=>{
           this.commonsService.arregloTildesCombo(row.cells[1].combo);
@@ -333,7 +333,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     }
   }
   sortData(sort: Sort) {
-    console.log("entro en el método Sort con valor:"+ sort.active+","+sort.direction);
+    //console.log("entro en el método Sort con valor:"+ sort.active+","+sort.direction);
     let data: Row[] = [];
     this.rowGroups = this.rowGroups.filter((row) => {
       data.push(row);
@@ -350,7 +350,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       for (let i = 0; i < this.cabeceras.length; i++) {
         let nombreCabecera = this.cabeceras[i].id;
         if (nombreCabecera == sort.active){
-          console.log("a.cells["+i+"].type:"+a.cells[i].type);
+          //console.log("a.cells["+i+"].type:"+a.cells[i].type);
 
           if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
             return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
@@ -368,7 +368,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
               const dayA = valorA.substr(0, 2) ;
               const monthA = valorA.substr(3, 2);
               const yearA = valorA.substr(6, 10);
-              console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+              //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
               var dt=new Date(yearA, monthA, dayA);
               if(!isNaN(dt.getTime())){ //Checked for date
                 return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
@@ -418,13 +418,13 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       let isReturn = true;
       for(let j=0; j<this.cabeceras.length;j++){
         if (this.searchText[j] != " " &&  this.searchText[j]){
-          console.log('row.cells[j].value: ', row.cells[j].value)
+          //console.log('row.cells[j].value: ', row.cells[j].value)
           if (row.cells[j].value){
-             console.log('row.cells[j].value 2: ', row.cells[j].value)
-            console.log("tipo de celda:"+row.cells[j].type);
+             //console.log('row.cells[j].value 2: ', row.cells[j].value)
+            //console.log("tipo de celda:"+row.cells[j].type);
             if(row.cells[j].type == 'select'){
               let labelCombo = this.getComboLabel(row.cells[j].value);
-              console.log("valor de celda:"+labelCombo);
+              //console.log("valor de celda:"+labelCombo);
               if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
                 isReturn = false;
                 break;
@@ -559,7 +559,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   }
   duplicar2(){
     if (this.selectedRowValue.length != 0){
-      console.log('this.selectedRowValue', this.selectedRowValue)
+      //console.log('this.selectedRowValue', this.selectedRowValue)
     this.enableGuardar = true;
     let row: Row = new Row();
       
@@ -575,7 +575,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       let cell10: Cell = this.selectedRowValue[9];
     
     row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
-    console.log(row)
+    //console.log(row)
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
@@ -636,8 +636,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     /* if (this.persistenceService.getPermisos() != undefined) {
        this.permisoEscritura = this.persistenceService.getPermisos();
      }*/
-     console.log('se envia fecha: ', row.cells[4].value.value)
-     console.log("ROW:",row);
+     //console.log('se envia fecha: ', row.cells[4].value.value)
+     //console.log("ROW:",row);
      let dataToSend = {
       // 'duplicar': false,
       // 'tabla': [],
@@ -712,7 +712,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
    }
 
   duplicar(){
-    console.log('duplicar this.selectedRowValue: ', this.selectedRowValue)
+    //console.log('duplicar this.selectedRowValue: ', this.selectedRowValue)
        /* if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }*/
@@ -880,7 +880,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     this.sigaServices.post(
       "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
-          console.log('data: ', data.body)
+          //console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
           let datos = JSON.parse(data.body);
           if(datos){
@@ -914,7 +914,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
 
         },
         (error)=>{
-          console.log(error);
+          //console.log(error);
         }
       );
 
@@ -1093,9 +1093,9 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
 
   validar(){
     this.infoParaElPadre = [];
-    console.log("entra");
-    console.log("observaciones:",this.observaciones);
-    console.log("fecha:",this.fechaActual);
+    //console.log("entra");
+    //console.log("observaciones:",this.observaciones);
+    //console.log("fecha:",this.fechaActual);
 
     this.selectedArray.forEach(el => {
       let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
@@ -1129,7 +1129,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     this.jsonParaEnviar = 
     {'tipoAccion': "validar",
       'datos': this.infoParaElPadre}
-      console.log(this.jsonParaEnviar);
+      //console.log(this.jsonParaEnviar);
     this.resultado.emit(this.jsonParaEnviar);
   }
 
@@ -1265,7 +1265,7 @@ function compareDateAndTime (date1:  any, date2:  any, isAsc: boolean){
     const hourA = horaA.substr(0, 2);
     const minA = horaA.substr(3, 2);
     const segA = horaA.substr(6, 8);
-    console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
+    //console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
     objDate1= {  day: dayA,month: monthA, year: yearA};
     hour1={ hour: hourA,minute: minA,second: segA};
   }
@@ -1279,12 +1279,12 @@ function compareDateAndTime (date1:  any, date2:  any, isAsc: boolean){
     const hourB = horaB.substr(0, 2);
     const minB = horaB.substr(3, 2);
     const segB = horaB.substr(6, 8);
-    console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
+    //console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
     objDate2= {  day: dayB,month: monthB, year: yearB};
     hour2={ hour: hourB,minute: minB,second: segB};
   }
 
-  console.log("comparacionDate isAsc:"+ isAsc+";");
+  //console.log("comparacionDate isAsc:"+ isAsc+";");
 
   return  compareDateHour(objDate1, hour1, objDate2, hour2, isAsc);
 
@@ -1309,7 +1309,7 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
     const dayA = fechaA.substr(0, 2) ;
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
-    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+    //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
     dateA = new Date(yearA, monthA, dayA);
   }
 
@@ -1317,11 +1317,11 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
     const dayB = fechaB.substr(0, 2) ;
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
-    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+    //console.log("fecha b:"+ yearB+","+monthB+","+dayB);
     dateB = new Date(yearB, monthB, dayB);
   }
 
-  console.log("comparacionDate isAsc:"+ isAsc+";");
+  //console.log("comparacionDate isAsc:"+ isAsc+";");
 
   return compare(dateA, dateB, isAsc);
 
@@ -1329,15 +1329,15 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
 }
 
 function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
-  console.log("comparacion  a:"+ a+"; b:"+ b);
+  //console.log("comparacion  a:"+ a+"; b:"+ b);
 
   if (typeof a === "string" && typeof b === "string") {
-    console.log("comparacion  de cadenas");
+    //console.log("comparacion  de cadenas");
     a = a.toLowerCase();
     b = b.toLowerCase();
   }
 
-  console.log("compare isAsc:"+ isAsc+";");
+  //console.log("compare isAsc:"+ isAsc+";");
 
   if (a==null && b!=null){
     return ( 1 ) * (isAsc ? 1 : -1);

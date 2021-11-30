@@ -178,7 +178,7 @@ export class RelacionesComponent implements OnInit {
         // this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         // this.progressSpinner = false;
         this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
       }
@@ -361,7 +361,7 @@ export class RelacionesComponent implements OnInit {
               this.getRelaciones();
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
               this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
 
@@ -383,7 +383,7 @@ export class RelacionesComponent implements OnInit {
               this.getRelaciones();
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
               this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
 
@@ -410,7 +410,7 @@ export class RelacionesComponent implements OnInit {
               this.getRelaciones();
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
               this.showMessage("error", this.translateServices.instant("general.message.incorrect"), this.translateServices.instant("general.mensaje.error.bbdd"));
 

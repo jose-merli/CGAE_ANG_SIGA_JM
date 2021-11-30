@@ -115,7 +115,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
         this.isLetrado = this.localStorageService.isLetrado;
 
       })
-      .catch(err => console.log(err));
+      .catch(err => //console.log(err));
 
   }
 
@@ -192,7 +192,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -237,7 +237,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -287,7 +287,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -335,7 +335,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
         this.keys = JSON.parse(data["body"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -375,12 +375,12 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
                 this.router.navigate(["/dialogoComunicaciones"]);
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

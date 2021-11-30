@@ -121,7 +121,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
           this.numColegiado = "";
           this.idPersona.emit("");
           this.changeValue();
-          console.log(error);
+          //console.log(error);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
@@ -207,7 +207,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
             this.numColegiado = "";
             this.idPersona.emit("");
             this.changeValue();
-            console.log(error);
+            //console.log(error);
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
         );

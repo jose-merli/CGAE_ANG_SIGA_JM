@@ -84,7 +84,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-    console.log('this.permisos: ', this.permisos)
+    //console.log('this.permisos: ', this.permisos)
     if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("FichaInscripciones")!= undefined) {
       this.filtros = this.persistenceService.getFiltros();
       if(this.filtros.afechade!=null && this.filtros.afechade != undefined){
@@ -216,7 +216,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
         this.commonsService.arregloTildesCombo(this.turnos);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -231,7 +231,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

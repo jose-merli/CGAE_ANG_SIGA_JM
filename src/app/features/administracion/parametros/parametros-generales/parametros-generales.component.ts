@@ -86,7 +86,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
         this.modulos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -146,7 +146,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -183,7 +183,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.buscar = true;
@@ -204,7 +204,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
         this.showSuccessDelete();
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showFail();
       },
       () => {
@@ -254,7 +254,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
           data => {
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.showFail();
           },
           () => {
@@ -300,7 +300,7 @@ export class ParametrosGenerales extends SigaWrapper implements OnInit {
           this.datosHistorico = this.historicoParametros.parametrosItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.buscar = false;

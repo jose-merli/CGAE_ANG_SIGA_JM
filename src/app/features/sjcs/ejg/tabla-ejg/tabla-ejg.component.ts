@@ -148,7 +148,7 @@ export class TablaEjgComponent implements OnInit {
         this.commonServices.scrollTop();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -244,7 +244,7 @@ export class TablaEjgComponent implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       },
       () => {
@@ -397,7 +397,7 @@ export class TablaEjgComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       );
     }
@@ -454,7 +454,7 @@ export class TablaEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboRemesa);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -478,7 +478,7 @@ export class TablaEjgComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );

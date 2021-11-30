@@ -256,7 +256,7 @@ export class FiltrosEjgComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -274,7 +274,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.bodyDictamen.push("-1");
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -285,7 +285,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboRol);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -296,7 +296,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboPerceptivo);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -307,7 +307,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboRenuncia);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -323,7 +323,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboFundamentoCalif);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -334,7 +334,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboResolucion);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -363,7 +363,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.comboImpugnacion.push({ label: "Sin Resolución", value: -2 });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -374,7 +374,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboFundamentoImpug);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -385,7 +385,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboPonente);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -405,7 +405,7 @@ export class FiltrosEjgComponent implements OnInit {
             } else { this.inst2000 = true; }
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
 
@@ -419,7 +419,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoEJG);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -430,7 +430,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoEJGColegio);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -442,7 +442,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -460,7 +460,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboTurno);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -476,7 +476,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -488,7 +488,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboJuzgado);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
