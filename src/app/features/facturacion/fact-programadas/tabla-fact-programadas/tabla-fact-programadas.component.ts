@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataTable, Message } from 'primeng/primeng';
+import { ConfirmationService, DataTable, Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../models/FacFacturacionprogramadaItem';
 import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
@@ -43,7 +43,8 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
     private sigaServices: SigaServices,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -194,10 +195,46 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     return res;
   }
 
+  // Botón de eliminar
   confirmEliminar(): void {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
+    let icon = "fa fa-eraser";
 
+    this.confirmationService.confirm({
+      // key: "confirmEliminar",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.progressSpinner = true;
+        Promise.all(this.selectedDatos.map<Promise<any>>(dato => this.eliminar(dato)))
+          .catch(error => {
+            if (error != undefined) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            }
+          }).then(() => {
+            this.busqueda.emit();
+            this.progressSpinner = false;
+          });
+        
+      },
+      reject: () => {
+        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+      }
+    });
   }
 
+  eliminar(dato: FacFacturacionprogramadaItem): Promise<any> {
+    return this.sigaServices.post("facturacionPyS_eliminarFacturacion", dato).toPromise().then(
+      n => { },
+      err => {
+        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  // Botón para archivar selección
   archivar(): void {
     this.progressSpinner = true;
     this.selectedDatos.forEach((d: FacFacturacionprogramadaItem) => d.archivarFact = true);
@@ -214,6 +251,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     );
   }
 
+  // Botón para desarchivar selección
   desarchivar(): void {
     this.progressSpinner = true;
     this.selectedDatos.forEach((d: FacFacturacionprogramadaItem) => d.archivarFact = false);
@@ -229,6 +267,8 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
       }
     );
   }
+
+  // Funciones de utilidad
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

@@ -57,12 +57,12 @@
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ 'justiciaGratuita.remesas.tabla.FechaGeneracion' | translate }} (*)</label>
-              <app-fecha [(value)]="body.fechaRealGeneracion" [inputStyleClass]="styleFechaGeneracion(body.fechaRealGeneracion)" (valueChangeSelected)="fillFechaRealGeneracion($event)" (valueChangeInput)="fillFechaRealGeneracion($event)" [disabled]="!porProgramar">
+              <app-fecha [(value)]="body.fechaPrevistaGeneracion" [inputStyleClass]="styleFechaGeneracion(body.fechaPrevistaGeneracion)" (valueChangeSelected)="fillFechaRealGeneracion($event)" (valueChangeInput)="fillFechaRealGeneracion($event)" [disabled]="!porProgramar">
               </app-fecha>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ 'facturacion.factProgramadas.fechas.conf' | translate }}</label>
-              <app-fecha [(value)]="body.fechaConfirmacion" [inputStyleClass]="styleFechaConfirmacion(body.fechaConfirmacion)" (valueChangeSelected)="fillFechaConfirmacion($event)" (valueChangeInput)="fillFechaConfirmacion($event)" [disabled]="!(porProgramar || porConfirmarError)">
+              <app-fecha [(value)]="body.fechaPrevistaConfirm" [inputStyleClass]="styleFechaConfirmacion(body.fechaPrevistaConfirm)" (valueChangeSelected)="fillFechaConfirmacion($event)" (valueChangeInput)="fillFechaConfirmacion($event)" [disabled]="!(porProgramar || porConfirmarError)">
               </app-fecha>
             </div>
           </div>
@@ -109,7 +109,7 @@
 
     <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="!(porConfirmarError || confirmada)" pButton (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+        <button [disabled]="!modoEdicion || !(porProgramar || porConfirmarError)" pButton (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
         <button [disabled]="!(porConfirmar || porConfirmarError || confirmada)" pButton (click)="confirmDescargar()"
           type="button" icon="fa fa-download" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
@@ -132,3 +132,4 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+

@@ -19,13 +19,14 @@ export class FichaFactProgramadasComponent implements OnInit {
   progressSpinner: boolean = false;
 
   iconoTarjetaResumen = "clipboard";
-  body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
+  body: FacFacturacionprogramadaItem = undefined;
   serie: SerieFacturacionItem = new SerieFacturacionItem();
   datos = [];
   enlacesTarjetaResumen = [];
 
   modoEdicion: boolean = true;
   controlEmisionFacturasSII: boolean = false;
+  confirmada: boolean = false;
 
   manuallyOpened: boolean;
   openTarjetaDatosGenerales: boolean = true;
@@ -48,11 +49,12 @@ export class FichaFactProgramadasComponent implements OnInit {
     if (sessionStorage.getItem("facturacionProgramadaItem")) {
       this.body = JSON.parse(sessionStorage.getItem("facturacionProgramadaItem"));
       sessionStorage.removeItem("facturacionProgramadaItem");
-    } else if(sessionStorage.getItem("Nuevo")) {
+    } else if (sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
+      this.body = new FacFacturacionprogramadaItem();
       this.modoEdicion = false;
       this.openTarjetaSerieFactura = true;
-    } else {
+    } else if (!this.body) {
       this.progressSpinner = false;
       this.backTo();
     }
@@ -65,6 +67,8 @@ export class FichaFactProgramadasComponent implements OnInit {
     setTimeout(() => {
       this.updateEnlacesTarjetaResumen();
     }, 5);
+
+    this.confirmada = this.body.idEstadoConfirmacion == "3";
 
     this.progressSpinner = false;
     this.goTop();
@@ -170,7 +174,7 @@ export class FichaFactProgramadasComponent implements OnInit {
 
       let minutesToAdd = 5;
       let currentDate = new Date();
-      this.body.fechaRealGeneracion = new Date(currentDate.getTime() + minutesToAdd*60000);
+      this.body.fechaPrevistaGeneracion = new Date(currentDate.getTime() + minutesToAdd*60000);
     }
   }
 
@@ -231,6 +235,79 @@ export class FichaFactProgramadasComponent implements OnInit {
       }
     }
   }
+
+  // Función para guardar o actualizar
+
+  guardadoSend(event: FacFacturacionprogramadaItem) {
+    this.progressSpinner = true;
+
+    let guardado: Promise<any> = undefined;
+    if (this.modoEdicion) {
+      guardado = Promise.reject(undefined);
+    } else {
+      guardado = this.nuevaFacturacionProgramada(event);
+    }
+    
+    if (!this.modoEdicion) {
+      guardado = guardado.then(() => { return this.recuperarFacturacionProgramada().then(() => {
+          this.modoEdicion = true;
+          this.ngOnInit();
+        }); 
+      });
+    }
+
+    guardado = guardado.catch(error => {
+      if (error != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    });
+
+    guardado.then(() => this.progressSpinner = false);
+  }
+
+  nuevaFacturacionProgramada(factPragramada: FacFacturacionprogramadaItem): Promise<any> {
+    return this.sigaServices.post("facturacionPyS_insertarProgramacionFactura", factPragramada)
+      .toPromise()
+      .then(
+        n => {
+          console.log("Nuevo id:", n);
+          let idProgramacion = JSON.parse(n.body).id;
+          this.body.idProgramacion = idProgramacion;
+        },
+        err => {
+          // let error = JSON.parse(err.error).error;
+          
+          return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );      
+  }
+
+  recuperarFacturacionProgramada() {
+    let filtros = {
+      idSerieFacturacion: this.body.idSerieFacturacion,
+      idProgramacion: this.body.idProgramacion
+    };
+
+    return this.sigaServices.post("facturacionPyS_getFacturacionesProgramadas", filtros).toPromise().then(
+      n => {
+        let results: FacFacturacionprogramadaItem[] = JSON.parse(n.body).facturacionprogramadaItems;
+
+        if (results.length != 0) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          this.body = results.find(d => d.idProgramacion == this.body.idProgramacion);
+        } else {
+          return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      },
+      err => {
+        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+      });
+  }
+
+  // Funciones de utilidad
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
