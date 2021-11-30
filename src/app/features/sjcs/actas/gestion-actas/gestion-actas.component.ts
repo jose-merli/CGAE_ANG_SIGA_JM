@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActasItem } from '../../../../models/sjcs/ActasItem';
 import { Location } from '@angular/common';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TarjetaListadoEjgsComponent } from './tarjeta-listado-ejgs/tarjeta-listado-ejgs.component';
+import { ActasItem } from '../../../../models/sjcs/ActasItem';
 
 
 @Component({

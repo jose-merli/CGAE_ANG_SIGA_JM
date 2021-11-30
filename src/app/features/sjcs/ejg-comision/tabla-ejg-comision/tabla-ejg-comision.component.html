@@ -160,7 +160,7 @@
     <div class="form-group-interlineado col-lg-12 col-md-12">
       <label>{{ "justiciaGratuita.ejg.busqueda.Remesas" | translate }}</label>
       <p-dropdown [(ngModel)]='valueComboRemesa' class="select-form" (onChange)="checkBotonAnadir()"
-        placeholder="Seleccionar" [options]="comboRemesa" [filter]="true" filterBy="label,labelSinTilde"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboRemesa" [filter]="true" filterBy="label,labelSinTilde"
         [showClear]="true" [disabled]="remesa != null"></p-dropdown>
 
 
@@ -197,12 +197,12 @@
       <div>
         <label>{{justiciaGratuita.maestros.calendarioLaboralAgenda.anio | translate}}/{{justiciaGratuita.ejg.datosGenerales.Acta | translate}}</label>
           <p-dropdown [(ngModel)]='valueAnioActa' class="select-form" (onChange)="checkBotonAnadir()"
-          placeholder="Seleccionar" [options]="comboAnioActa" [filter]="true" filterBy="label,labelSinTilde"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboAnioActa" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectAnioActa == true"></p-dropdown>
       </div>
       <div>
         <p-checkbox (onChange)="onChangeBorrarAnioActa(selectAnioActa?'A':'B')" [(ngModel)]="selectAnioActa"
-          binary="true" label="Borrar estos campos en los registros seleccionados" name="groupname"
+          binary="true" label="{{'sjcs.actas.borrarCampos' | translate}}" name="groupname"
           [disabled]="!permisoEscritura">
         </p-checkbox>
       </div>
@@ -211,7 +211,7 @@
       <div>
         <label>{{justiciaGratuita.ejg.datosGenerales.Ponente | translate}}</label>
         <p-dropdown [(ngModel)]='valuePonente' [ngClass]="styleObligatorioPonente(valuePonente)"  class="select-form" (onChange)="checkPonente()"
-          placeholder="Seleccionar" [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectPonente == true"></p-dropdown>
       </div>
       <div>
@@ -222,7 +222,7 @@
       </div>
       <div>
         <p-checkbox (onChange)="onChangeBorrarPonenteFecha(selectPonente?'A':'B')" [(ngModel)]="selectPonente"
-          binary="true" label="Borrar estos campos en los registros seleccionados" name="groupname"
+          binary="true" label="{{'sjcs.actas.borrarCampos' | translate}}" name="groupname"
           [disabled]="!permisoEscritura">
         </p-checkbox>
       </div>
@@ -231,19 +231,19 @@
       <div>
         <label>{{justiciaGratuita.maestros.fundamentosResolucion.resolucion | translate}}</label>
         <p-dropdown [(ngModel)]='valueResolucion' class="select-form" (onChange)="checkResolucion()"
-          placeholder="Seleccionar" [options]="comboResolucion" [filter]="true" filterBy="label,labelSinTilde"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboResolucion" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectResolucionFundamento == true" [ngClass]="styleObligatorioResolucion(valueResolucion)"></p-dropdown>
       </div>
       <div>
         <label>{{justiciaGratuita.ejg.datosGenerales.Fundamento | translate}}</label>
         <p-dropdown [(ngModel)]='valueFundamento' class="select-form" (onChange)="checkFundamento()"
-          placeholder="Seleccionar" [options]="comboFundamento" [filter]="true" filterBy="label,labelSinTilde"
+          placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboFundamento" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectResolucionFundamento == true" ></p-dropdown>
       </div>
       <div>
         <p-checkbox (onChange)="onChangeBorrarResolucionFundamento(selectResolucionFundamento?'A':'B')"
           [(ngModel)]="selectResolucionFundamento" binary="true"
-          label="Borrar estos campos en los registros seleccionados" name="groupname" [disabled]="!permisoEscritura">
+          label="{{'sjcs.actas.borrarCampos' | translate}}" name="groupname" [disabled]="!permisoEscritura">
         </p-checkbox>
       </div>
     </div>

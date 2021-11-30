@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, AfterViewInit } from '@angular/core';
-import { ActasItem } from '../../../../../models/sjcs/ActasItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { DatePipe } from '@angular/common';
 import {ConfirmationService} from 'primeng/api';
+import { ActasItem } from '../../../../../models/sjcs/ActasItem';
 
 @Component({
   selector: 'app-datos-generales-actas',
