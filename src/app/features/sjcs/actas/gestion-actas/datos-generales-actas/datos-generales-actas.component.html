@@ -167,19 +167,19 @@
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button ">
         <button (click)="guardarActaDialogo()" pButton type="button" icon="far fa-save" iconPos="left"
-          label="Guardar"></button>
+          label="{{'general.boton.guardar' | translate}}"></button>
           <button (click)="restablecer()" pButton type="button" icon="fa fa-eraser" iconPos="left"
-          label="Restablecer"></button>
+          label="{{'general.boton.restablecer' | translate}}"></button>
           <button (click)="anadirEJGPendientesCAJGDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-folder-open" iconPos="left"
-          label="Añadir EJG`s pendientes de CAJG"></button>
+          label="{{'sjcs.actas.anadirExpPendCAJG' | translate}}"></button>
           <button (click)="abrirActaDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-folder-open" iconPos="left"
-          label="Abrir Acta"></button>
+          label="{{'general.boton.abrirActa' | translate}}"></button>
           <button (click)="cerrarActaDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-times-circle" iconPos="left"
-          label="Cerrar Acta"></button>
-          <p-confirmDialog  header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+          label="{{'general.boton.cerrarActa' | translate}}"></button>
+          <p-confirmDialog  header="{{'general.cabecera.confirmacion' | translate}}" icon="fa fa-question-circle" width="425" #cd>
             <p-footer>
-              <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
-              <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+              <button type="button" pButton icon="fa-check" label="{{'messages.si' | translate}}" (click)="cd.accept()"></button>
+              <button type="button" pButton icon="fa-close" label="{{'general.boton.no' | translate}}" (click)="cd.reject()"></button>
             </p-footer>
           </p-confirmDialog>
       </div>

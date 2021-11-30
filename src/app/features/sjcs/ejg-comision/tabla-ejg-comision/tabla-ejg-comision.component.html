@@ -190,12 +190,12 @@
 <p-dialog width="1000" responsive="true" modal="modal" [draggable]="false" resizable="false"
   [(visible)]="showModalEditarSeleccionados" (onHide)="cerrarDialog()">
   <p-header class="title">
-    <label>{{general.boton.editarSel | translate}}</label>
+    <label>{{"general.boton.editarSel" | translate}}</label>
   </p-header>
   <div class="form-row">
     <div class="col-sm">
       <div>
-        <label>{{justiciaGratuita.maestros.calendarioLaboralAgenda.anio | translate}}/{{justiciaGratuita.ejg.datosGenerales.Acta | translate}}</label>
+        <label>{{"justiciaGratuita.maestros.calendarioLaboralAgenda.anio" | translate}}/{{"justiciaGratuita.ejg.datosGenerales.Acta" | translate}}</label>
           <p-dropdown [(ngModel)]='valueAnioActa' class="select-form" (onChange)="checkBotonAnadir()"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboAnioActa" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectAnioActa == true"></p-dropdown>
@@ -209,13 +209,13 @@
     </div>
     <div class="col-sm">
       <div>
-        <label>{{justiciaGratuita.ejg.datosGenerales.Ponente | translate}}</label>
+        <label>{{"justiciaGratuita.ejg.datosGenerales.Ponente" | translate}}</label>
         <p-dropdown [(ngModel)]='valuePonente' [ngClass]="styleObligatorioPonente(valuePonente)"  class="select-form" (onChange)="checkPonente()"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectPonente == true"></p-dropdown>
       </div>
       <div>
-        <label>{{justiciaGratuita.ejg.datosGenerales.FechaPresPonente | translate}}</label>
+        <label>{{"justiciaGratuita.ejg.datosGenerales.FechaPresPonente" | translate}}</label>
         <app-fecha [inputStyleClass]="styleObligatorioFechaPonente(valueFechaPonente)" [(value)]="valueFechaPonente"
           (valueChangeSelected)="fillFechaPrueba($event)" (valueChangeInput)="fillFechaPrueba($event)" [disabled]="selectPonente == true">
         </app-fecha>
@@ -229,13 +229,13 @@
     </div>
     <div class="col-sm">
       <div>
-        <label>{{justiciaGratuita.maestros.fundamentosResolucion.resolucion | translate}}</label>
+        <label>{{"justiciaGratuita.maestros.fundamentosResolucion.resolucion" | translate}}</label>
         <p-dropdown [(ngModel)]='valueResolucion' class="select-form" (onChange)="checkResolucion()"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboResolucion" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectResolucionFundamento == true" [ngClass]="styleObligatorioResolucion(valueResolucion)"></p-dropdown>
       </div>
       <div>
-        <label>{{justiciaGratuita.ejg.datosGenerales.Fundamento | translate}}</label>
+        <label>{{"justiciaGratuita.ejg.datosGenerales.Fundamento" | translate}}</label>
         <p-dropdown [(ngModel)]='valueFundamento' class="select-form" (onChange)="checkFundamento()"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboFundamento" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectResolucionFundamento == true" ></p-dropdown>
