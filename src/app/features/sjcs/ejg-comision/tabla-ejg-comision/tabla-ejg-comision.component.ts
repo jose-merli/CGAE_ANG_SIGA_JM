@@ -798,6 +798,7 @@ export class TablaEjgComisionComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             finalizado++;
             if(finalizado == 6 && this.acta != null){
+              localStorage.setItem('actasItem', JSON.stringify(this.acta));
               this.location.back();
             }
           }
@@ -819,6 +820,7 @@ export class TablaEjgComisionComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             finalizado++;
             if(finalizado == 6 && this.acta != null){
+              localStorage.setItem('actasItem', JSON.stringify(this.acta));
               this.location.back();
             }
           } 
@@ -834,6 +836,7 @@ export class TablaEjgComisionComponent implements OnInit {
     else{
       finalizado++;
       if(finalizado == 6 && this.acta != null){
+        localStorage.setItem('actasItem', JSON.stringify(this.acta));
         this.location.back();
       }
     }
@@ -850,6 +853,7 @@ export class TablaEjgComisionComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             finalizado++;
             if(finalizado == 6 && this.acta != null){
+              localStorage.setItem('actasItem', JSON.stringify(this.acta));
               this.location.back();
             }
           }
@@ -864,6 +868,7 @@ export class TablaEjgComisionComponent implements OnInit {
     }else{
       finalizado++;
       if(finalizado == 6 && this.acta != null){
+        localStorage.setItem('actasItem', JSON.stringify(this.acta));
         this.location.back();
       }
     }
@@ -876,6 +881,7 @@ export class TablaEjgComisionComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             finalizado++;
             if(finalizado == 6 && this.acta != null){
+              localStorage.setItem('actasItem', JSON.stringify(this.acta));
               this.location.back();
             }
           }
@@ -890,6 +896,7 @@ export class TablaEjgComisionComponent implements OnInit {
     }else{
       finalizado++;
       if(finalizado == 6 && this.acta != null){
+        localStorage.setItem('actasItem', JSON.stringify(this.acta));
         this.location.back();
       }
     }
