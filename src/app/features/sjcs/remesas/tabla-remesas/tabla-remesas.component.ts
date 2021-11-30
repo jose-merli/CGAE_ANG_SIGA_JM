@@ -62,6 +62,8 @@ export class TablaRemesasComponent implements OnInit {
     this.selectedDatos = [];
     this.getCols();
 
+    console.log("Tabla Remesas, this.datos -> ", this.datos);
+
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 

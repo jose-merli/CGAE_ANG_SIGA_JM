@@ -17,7 +17,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 export class TarjetaDatosGeneralesComponent implements OnInit {
 
   // datos;
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   progressSpinner: boolean = false;
   modoEdicion: boolean = false;
   @Input() openGen;

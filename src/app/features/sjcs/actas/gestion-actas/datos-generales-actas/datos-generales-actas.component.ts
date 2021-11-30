@@ -53,6 +53,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   @Input() modoEdicion;
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() pendienteCAJG = new EventEmitter<any>();
+  @Output() actaGuardada = new EventEmitter<any>();
 
   event = new EventEmitter<any>();
 
@@ -231,6 +232,7 @@ export class DatosGeneralesActasComponent implements OnInit {
           }
   
           this.progressSpinner = false;
+          this.actaGuardada.emit(true);
         },
         () => {
           this.progressSpinner = false;
@@ -273,6 +275,7 @@ export class DatosGeneralesActasComponent implements OnInit {
         }
 
         this.progressSpinner = false;
+        this.actaGuardada.emit(true);
       },
       () => {
         this.progressSpinner = false;
@@ -312,6 +315,7 @@ export class DatosGeneralesActasComponent implements OnInit {
 
         this.progressSpinner = false;
         this.pendienteCAJG.emit();
+        this.actaGuardada.emit(false);
       },
       () => {
         this.progressSpinner = false;

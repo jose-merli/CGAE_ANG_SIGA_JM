@@ -26,7 +26,7 @@ export class TarjetaEjgsComponent implements OnInit {
 
   body;
 
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   selectedItem: number = 10;
   selectAll: boolean = false;
   selectedDatos: any[] = [];
@@ -216,7 +216,6 @@ export class TarjetaEjgsComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "identificadorEJG", header: "justiciaGratuita.remesas.ficha.identificadorEJG", display: "table-cell" },
       { field: "turnoGuardiaEJG", header: "justiciaGratuita.remesas.ficha.TurnoGuardiaEJG", display: "table-cell" },
       { field: "anioEJG", header: "justiciaGratuita.oficio.justificacionExpres.anioEJG", display: "table-cell" },
       { field: "numeroEJG", header: "justiciaGratuita.oficio.justificacionExpres.numeroEJG", display: "table-cell" },

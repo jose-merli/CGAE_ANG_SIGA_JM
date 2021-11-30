@@ -57,7 +57,7 @@
 
             <p-dropdown *ngIf="col.header == 'justiciaGratuita.remesas.ficha.EstadoEJGDentroRemesa'" class="select-form"
               [(ngModel)]='estadoRemesaSeleccionado' placeholder="Seleccionar" [options]="estadoRemesa"
-              filterBy="label,labelSinTilde" (onChange)="tabla.filter($event.value, columns[8].field, 'inCollection')"
+              filterBy="label,labelSinTilde" (onChange)="tabla.filter($event.value, columns[7].field, 'inCollection')"
               [showClear]="true">
             </p-dropdown>
 

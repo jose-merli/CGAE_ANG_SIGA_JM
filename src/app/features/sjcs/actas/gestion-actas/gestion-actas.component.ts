@@ -39,6 +39,14 @@ export class GestionActasComponent implements OnInit {
     this.tarjetaListado.getEJG(this.datos);
   }
 
+  actaGuardada(event: Boolean){
+    if(event){
+      this.tarjetaListado.guardado = true;
+    }else{
+      this.tarjetaListado.guardado = false;
+    }
+  }
+
   expediente(event :string){
     this.expNum = event;
   }

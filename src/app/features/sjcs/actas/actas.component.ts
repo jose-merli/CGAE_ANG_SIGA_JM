@@ -71,6 +71,8 @@ export class ActasComponent implements OnInit {
           element.fechareunion = this.formatDate(element.fechareunion);
         });
 
+        console.log("Busqueda Actas -> ", this.datos);
+
         this.progressSpinner = false;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;

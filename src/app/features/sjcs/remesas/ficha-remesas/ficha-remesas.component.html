@@ -17,10 +17,11 @@
     <div id="botonesAccion" class="text-right main-button ">
       <ng-container *ngIf="acciones">
         <button *ngFor="let i of getAccionesRemesas" (click)="ejecutarAccion(i.idTipoAccionRemesa)" pButton type="button" icon="fa fa-check" iconPos="left"
-        [label]= "i.descripcion" [disabled] = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)"></button>
+         [label]= "i.descripcion" [disabled] = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)"></button>
       </ng-container>
       <button (click)="descargarLogErrores()" pButton type="button" icon="fa fa-download" iconPos="left"
-      [disabled] = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)" label="Descargar Log"></button>
+       [disabled] = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)"
+       label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate}}"></button>
       <button (click)="checkPermisosDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [disabled] = "!guardado"
         label="{{ 'general.boton.eliminarRemesa' | translate}}"></button>
       <button (click)="openTab()" pButton type="button"  icon="fa fa-plus"
@@ -28,7 +29,7 @@
       <button (click)="checkPermisosDelete(false)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
         [disabled] = "((!tarjetaEJGs.selectMultiple || !tarjetaEJGs.selectAll) && (tarjetaEJGs.selectedDatos == undefined || tarjetaEJGs.selectedDatos.length == 0))"
         label="{{ 'general.boton.eliminarExpedientes' | translate}}"></button>
-        <button (click)="restablecer() " pButton type="button " icon="fa fa-undo" iconPos="left"
+      <button (click)="restablecer() " pButton type="button " icon="fa fa-undo" iconPos="left"
         label="{{'general.boton.restablecer' | translate}} "></button>
       <button (click)="checkPermisosSave()" pButton type="button" icon="fa fa-save" iconPos="left"
         label="{{ 'general.boton.guardar' | translate}}"></button>
