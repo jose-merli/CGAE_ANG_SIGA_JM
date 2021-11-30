@@ -20,7 +20,6 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 import { RemesasResultadoItem } from '../../../../../models/sjcs/RemesasResultadoItem';
 import { RemesasResolucionItem } from '../../../../../models/sjcs/RemesasResolucionItem';
 import { saveAs } from "file-saver/FileSaver";
-import moment = require('moment');
 
 @Component({
   selector: 'app-tarjeta-datos-generales-remesas-resoluciones',
@@ -154,13 +153,13 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
     this.StringFichero = this.translateService.instant("facturacionSJCS.fichaCertificacion.subirFichero")+"*";
     if(this.remesaItem.idRemesaResolucion == null){
       this.getUltimoRegitroRemesa();
-      this.remesaItem.fechaCarga = moment(new Date()).format('DD/MM/YYYY');
+     // this.remesaItem.fechaCarga = moment(new Date()).format('DD/MM/YYYY');
       this.remesaItem.observaciones = null;
       //this.remesaItem.descripcion = "";
     }
-    if(this.remesaItem.nombreFichero.length > 0){
-        this.conFichero = true;
-        console.log("Tiene fichero")
+    if(this.remesaItem.nombreFichero != undefined && this.remesaItem.nombreFichero.length > 0 ){
+      this.conFichero = true;
+      console.log("Tiene fichero")
     }
     this.resaltadoDatosGenerales = true;
     // this.abreCierraFicha('datosGenerales');

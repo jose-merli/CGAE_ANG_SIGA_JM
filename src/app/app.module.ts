@@ -481,6 +481,7 @@ import { RemesasResolucionesComponent } from './features/sjcs/remesas-resolucion
 import { TablaRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/tabla-remesas-resoluciones/tabla-remesas-resoluciones.component';
 import { FiltroRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/filtro-remesas-resoluciones/filtro-remesas-resoluciones.component';
 import { FichaRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/ficha-remesas-resoluciones.component';
+import {TarjetaRemesasEnvioResolucionesComponent} from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/tarjeta-remesas-envio-resoluciones/tarjeta-remesas-envio-resoluciones.component';
 import { TarjetaDatosGeneralesRemesasResolucionesComponent } from './features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/tarjeta-datos-generales-remesas-resoluciones/tarjeta-datos-generales-remesas-resoluciones.component';
 import { FiltroCargaDesignaProcuradorComponent} from './features/sjcs/intercambios/carga-designa-procurador/filtro-carga-designa-procurador/filtro-carga-designa-procurador.component';
 import { TablaCargaDesignaProcuradorComponent } from './features/sjcs/intercambios/carga-designa-procurador/tabla-carga-designa-procurador/tabla-carga-designa-procurador.component';
@@ -523,6 +524,7 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios.module';
 import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
+
 
 
 @NgModule({
@@ -936,6 +938,7 @@ import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
 		TarjetaRemesasEnvioComponent,
 		RemesasResolucionesComponent,
 		TablaRemesasResolucionesComponent,
+		TarjetaRemesasEnvioResolucionesComponent,
 		FiltroRemesasResolucionesComponent,
 		FichaRemesasResolucionesComponent,
 		TarjetaDatosGeneralesRemesasResolucionesComponent,

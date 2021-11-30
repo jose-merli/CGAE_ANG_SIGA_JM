@@ -50,7 +50,6 @@ export class FichaRemesasResolucionesComponent implements OnInit {
       this.remesaAuxiliar = JSON.parse(this.item);
       this.fichaRemesaResolucion = localStorage.getItem('fichaRemesaResolucion');
     }else if(localStorage.getItem('fichaRemesaResolucion') == "nuevo"){
-      this.recuperarDatosContador();
       this.tarjetaDatosGeneralesRemesasResoluciones.isEnabledNuevo = true;
       this.fichaRemesaResolucion = localStorage.getItem('fichaRemesaResolucion');
     }
@@ -85,29 +84,6 @@ export class FichaRemesasResolucionesComponent implements OnInit {
     this.router.navigate(["/remesasResoluciones"]);
   }
 
-
-  recuperarDatosContador(){
-    console.log("Dentro del recuperarDatosContador");
-    this.sigaServices
-      .get("remesasResultados_recuperarDatosContador")
-      .subscribe(
-        data => {
-          console.log(data);
-          this.rellenarDatosNuevo(data);
-        },
-        error => { },
-        () => { }
-      );
-  }
-
-  rellenarDatosNuevo(datosContador){
-    if(datosContador.prefijo !== null){
-      this.remesaItem.numRemesaPrefijo = datosContador.prefijo;
-    }
-    if(datosContador.sufijo !== null){
-      this.remesaItem.numRemesaSufijo = datosContador.sufijo;
-    }
-  } 
   
   volver(){
     this.tarjetaDatosGeneralesRemesasResoluciones.isEnabledNuevo = false;

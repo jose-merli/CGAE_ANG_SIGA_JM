@@ -14,7 +14,6 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 import { RemesasResultadoItem } from '../../../../../models/sjcs/RemesasResultadoItem';
 import { RemesasResolucionItem } from '../../../../../models/sjcs/RemesasResolucionItem';
 import { saveAs } from "file-saver/FileSaver";
-import moment = require('moment');
 
 @Component({
   selector: 'app-tarjeta-datos-generales-remesas-resultados',
@@ -146,7 +145,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     this.StringFichero = this.translateService.instant("facturacionSJCS.fichaCertificacion.subirFichero")+"*";
     if(this.remesaItem.idRemesa == null){
       this.getUltimoRegitroRemesa();
-      this.remesaItem.fechaCargaRemesaResultado = moment(new Date()).format('DD/MM/YYYY');
+      //this.remesaItem.fechaCargaRemesaResultado = moment(new Date()).format('DD/MM/YYYY');
       this.remesaItem.observacionesRemesaResultado = null;
       //this.remesaItem.descripcion = "";
     }
@@ -308,8 +307,8 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
         'idRemesaResolucion' : this.remesaItem.idRemesaResultado,
         'observaciones' : this.remesaItem.observacionesRemesaResultado,
         'nombreFichero' : this.remesaItem.nombreFichero,
-        'fechaCarga' : this.datepipe.transform(this.remesaItem.fechaCargaRemesaResultado, 'dd/MM/yyyy'),
-        'fechaResolucion' :  this.datepipe.transform(this.remesaItem.fechaResolucionRemesaResultado, 'dd/MM/yyyy'),
+        'fechaCarga' : this.remesaItem.fechaCargaRemesaResultado,
+        'fechaResolucion' :  this.remesaItem.fechaResolucionRemesaResultado,
       };
     }
     if(this.remesaResolucion.idRemesaResolucion == null ){
