@@ -151,7 +151,8 @@ export class ResolucionComponent implements OnInit {
   }
 
   getComboActaAnnio() {
-    this.sigaServices.get("gestionejg_comboActaAnnio").subscribe(
+
+    this.sigaServices.getParam("gestionejg_comboActaAnnio","?idActa="+this.resolucion.idActa+"&anioActa"+this.resolucion.annioActa).subscribe(
       n => {
         this.comboActaAnnio = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboActaAnnio);
