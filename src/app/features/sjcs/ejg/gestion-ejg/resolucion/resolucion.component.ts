@@ -404,22 +404,24 @@ export class ResolucionComponent implements OnInit {
   }
 
   openActa() {
-    //Implmentacion teorica.
-    //Cambiar por acceso implmentado en la pantalla de acceso a actas.
-    //this.router.navigate(["/fichaActa"]);
+    if(this.bodyInicial.numActa != null){
+      let acta: ActasItem = new ActasItem();
+
+      
     //Se escoge la acta guardada, no la que se tenga seleccionada en el desplegable sin guardar.
-    //Los datos a pasar deberan revisarse acordemente.
-    //this.persistenceService.setDatos(this.bodyInicial);
-    //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
-    //El EJG se puede rellenar subiendo los datos a la capa de persistencia o con un item "EJGItem" que tendra prioridad.
-    //sessionStorage.setItem("EJGItem", JSON.stringify(this.bodyInicial));
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Boton no funcional actualmente"
-      }
-    ];
+      acta.idInstitucion = this.bodyInicial.idInstitucion;
+      acta.idacta = this.bodyInicial.numActa;
+      acta.anioacta = this.bodyInicial.annioActa;
+
+      localStorage.setItem('actasItem', JSON.stringify(acta));
+      //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
+      sessionStorage.setItem("EJGItem", JSON.stringify(this.bodyInicial));
+
+      this.router.navigate(["/fichaGestionActas"]);
+    }
+    else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.actas.noActa"));
+    }
   }
 
   clear() {
