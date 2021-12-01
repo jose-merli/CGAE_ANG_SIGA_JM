@@ -27,6 +27,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
 
   @Input() bodyInicial: FacFacturacionprogramadaItem;
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
+  ficherosAdeudos: FicherosAdeudosItem;
 
   resaltadoDatos: boolean = false;
   porProgramar: boolean = true;
@@ -53,8 +54,10 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.bodyInicial != undefined)
+    if (changes.bodyInicial != undefined) {
       this.restablecer();
+      this.getFicheroAdeudos();
+    }
   }
 
   // Restablecer
@@ -85,6 +88,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
 
   checkSave(): void {
     if (this.isValid()) {
+      this.body.esDatosGenerales = false;
       this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
@@ -92,26 +96,33 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
     }
   }
 
-  navigateToFicheroAdeudos() {
-    let filtros = { idprogramacion: this.body.idProgramacion };
+  getFicheroAdeudos() {
+    let filtros = { 
+      idprogramacion: this.body.idProgramacion,
+      idseriefacturacion: this.body.idSerieFacturacion
+    };
 
     this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).subscribe(
       n => {
         let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAdeudosItems;
         if (results != undefined && results.length != 0) {
-          let ficherosAdeudosItem: FicherosAdeudosItem = results[0];
-
-          sessionStorage.setItem("facturacionProgramadaItem", JSON.stringify(this.bodyInicial));
-          sessionStorage.setItem("volver", "true");
-
-          sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficherosAdeudosItem));
-          this.router.navigate(["/gestionAdeudos"]);
+          this.ficherosAdeudos = results[0];
         }
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
+  }
+
+  navigateToFicheroAdeudos() {
+    if (this.ficherosAdeudos) {
+      sessionStorage.setItem("facturacionProgramadaItem", JSON.stringify(this.bodyInicial));
+      sessionStorage.setItem("volver", "true");
+
+      sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(this.ficherosAdeudos));
+      this.router.navigate(["/gestionAdeudos"]);
+    }
   }
 
   parametrosSEPA(idInstitucion){

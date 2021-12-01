@@ -82,6 +82,13 @@ export class EnvioFactProgramadasComponent implements OnInit, OnChanges {
     this.logDisponible = true;
   }
 
+  // Guardar
+
+  checkSave(): void {
+    this.body.esDatosGenerales = false;
+    this.guardadoSend.emit(this.body);
+  }
+
   // Estilo obligatorio
   styleObligatorio(evento: string) {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {

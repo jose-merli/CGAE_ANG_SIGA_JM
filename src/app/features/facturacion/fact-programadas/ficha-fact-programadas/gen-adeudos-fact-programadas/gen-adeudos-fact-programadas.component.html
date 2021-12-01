@@ -14,7 +14,7 @@
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('genAdeudos')">
             <label class="mr-auto title-ficha pointer">{{ 'facturacion.factProgramadas.genAdeudos' | translate }}</label>
 
-            <label class="mr-3">
+            <label *ngIf="ficherosAdeudos" class="mr-3">
               <i (click)="navigateToFicheroAdeudos();$event.stopPropagation();"
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToFicheroAdeudos();$event.stopPropagation();">
@@ -51,7 +51,7 @@
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.factProgramadas.genAdeudos' | translate }}</label>
 
-        <label class="ml-auto mr-3">
+        <label *ngIf="ficherosAdeudos" class="ml-auto mr-3">
           <i (click)="navigateToFicheroAdeudos();$event.stopPropagation();"
             class="fas fa-external-link-alt mr-2"></i>
           <a (click)="navigateToFicheroAdeudos();$event.stopPropagation();">
@@ -97,7 +97,7 @@
 
     <div *ngIf="esFichaActiva('genAdeudos')" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="true" pButton (click)="nuevoFicheroAdeudos()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
+        <button [disabled]="!(confirmada && !ficherosAdeudos)" pButton (click)="nuevoFicheroAdeudos()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
 
         <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>

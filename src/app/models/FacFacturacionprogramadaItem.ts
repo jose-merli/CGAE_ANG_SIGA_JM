@@ -56,6 +56,7 @@ export class FacFacturacionprogramadaItem {
     generaPDF: boolean;
     envio: boolean;
     idTipoPlantillaMail: string;
+    tipoPlantillaMail: string;
     traspasoPlatilla: string;
     traspasoCodAuditoriaDef: string;
 
@@ -69,6 +70,9 @@ export class FacFacturacionprogramadaItem {
     idModeloRectificativa: string;
     modeloFactura: string;
     modeloRectificativa: string;
+
+    // Distingue la ficha de datos generales
+    esDatosGenerales: boolean;
   
     constructor() { }
   }

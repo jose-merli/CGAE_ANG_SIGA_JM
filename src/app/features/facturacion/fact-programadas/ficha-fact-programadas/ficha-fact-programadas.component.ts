@@ -19,7 +19,7 @@ export class FichaFactProgramadasComponent implements OnInit {
   progressSpinner: boolean = false;
 
   iconoTarjetaResumen = "clipboard";
-  body: FacFacturacionprogramadaItem = undefined;
+  body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
   serie: SerieFacturacionItem = new SerieFacturacionItem();
   datos = [];
   enlacesTarjetaResumen = [];
@@ -241,34 +241,23 @@ export class FichaFactProgramadasComponent implements OnInit {
   guardadoSend(event: FacFacturacionprogramadaItem) {
     this.progressSpinner = true;
 
-    let guardado: Promise<any> = undefined;
-    if (this.modoEdicion) {
-      guardado = Promise.reject(undefined);
-    } else {
-      guardado = this.nuevaFacturacionProgramada(event);
-    }
-    
-    if (!this.modoEdicion) {
-      guardado = guardado.then(() => { return this.recuperarFacturacionProgramada().then(() => {
-          this.modoEdicion = true;
-          this.ngOnInit();
-        }); 
-      });
-    }
-
-    guardado = guardado.catch(error => {
+    this.guardarFacturacionProgramada(!this.modoEdicion, event)
+    .then(() => { return this.recuperarFacturacionProgramada().then(() => {
+      this.modoEdicion = true;
+      this.ngOnInit();
+    })}).catch(error => {
       if (error != undefined) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    });
-
-    guardado.then(() => this.progressSpinner = false);
+    }).then(() => this.progressSpinner = false);
+    
   }
 
-  nuevaFacturacionProgramada(factPragramada: FacFacturacionprogramadaItem): Promise<any> {
-    return this.sigaServices.post("facturacionPyS_insertarProgramacionFactura", factPragramada)
+  guardarFacturacionProgramada(nuevo: boolean, factPragramada: FacFacturacionprogramadaItem): Promise<any> {
+    let endpoint = nuevo ? "facturacionPyS_insertarProgramacionFactura" : "facturacionPyS_actualizarProgramacionFactura";
+    return this.sigaServices.post(endpoint, factPragramada)
       .toPromise()
       .then(
         n => {

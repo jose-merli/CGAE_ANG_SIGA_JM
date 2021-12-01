@@ -122,6 +122,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   checkSave(): void {
     if (this.isValid()) {
+      this.body.esDatosGenerales = true;
       this.guardadoSend.emit(this.body);
     } else {
       this.resaltadoDatos = true;

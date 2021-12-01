@@ -61,6 +61,13 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
     this.logDisponible = this.body.logTraspaso != undefined && this.body.logTraspaso.trim().length != 0;
   }
 
+  // Guardar
+
+  checkSave(): void {
+    this.body.esDatosGenerales = false;
+    this.guardadoSend.emit(this.body);
+  }
+
   // Estilo obligatorio
   styleObligatorio(evento: string) {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
