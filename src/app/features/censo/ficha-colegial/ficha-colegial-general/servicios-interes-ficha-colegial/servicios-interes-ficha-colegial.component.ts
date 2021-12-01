@@ -249,13 +249,14 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
   }
 
 
-  retencionesIRPF(){
+  pagos(){
     if(!this.isLetrado){
       sessionStorage.setItem("colegiadoRelleno","true");
       sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
     }
     sessionStorage.setItem("origin","fichaColegial");
-    this.router.navigate(["/retenciones"]);
+    sessionStorage.setItem("apartadoPagos","true");
+    this.router.navigate(["/cartaFacturacionPago"]);
   
   }
 
