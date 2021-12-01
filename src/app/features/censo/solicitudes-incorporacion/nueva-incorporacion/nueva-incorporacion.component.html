@@ -283,7 +283,7 @@
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>{{"censo.consultaDatosColegiacion.literal.numIden" | translate}} (*)</label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.numeroIdentificacion)" [disabled]="consulta"
+                        <input [ngClass]="styleObligatorio(solicitudEditar.numeroIdentificacion)" [disabled]="consulta || !noExistePersona || guardado"
                             type="text" class="form-control" pInputText [(ngModel)]="solicitudEditar.numeroIdentificacion"
                             (ngModelChange)="onChangeNifCif()">
                         <!-- <small class="input-error" *ngIf="!checkIdentificacion(solicitudEditar.numeroIdentificacion) && solicitudEditar.numeroIdentificacion 
@@ -312,46 +312,46 @@
                         <label>
                             {{"administracion.parametrosGenerales.literal.nombre" | translate}} (*)
                         </label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.nombre)" [disabled]="consulta" type="text"
+                        <input [ngClass]="styleObligatorio(solicitudEditar.nombre)" [disabled]="consulta || !noExistePersona || guardado" type="text"
                             class="form-control" pInputText [(ngModel)]="solicitudEditar.nombre">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.busquedaClientes.literal.apellido1" | translate}} (*)</label>
-                        <input [ngClass]="styleObligatorio(solicitudEditar.apellido1)" [disabled]="consulta" type="text"
+                        <input [ngClass]="styleObligatorio(solicitudEditar.apellido1)" [disabled]="consulta || !noExistePersona || guardado" type="text"
                             class="form-control" pInputText [(ngModel)]="solicitudEditar.apellido1">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.busquedaClientes.literal.apellido2" | translate}}</label>
-                        <input [disabled]="consulta" type="text" class="form-control" pInputText
+                        <input [disabled]="consulta || !noExistePersona || guardado" type="text" class="form-control" pInputText
                             [(ngModel)]="solicitudEditar.apellido2">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.busquedaClientesAvanzada.literal.sexo" | translate}}</label>
-                        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta"
+                        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta || !noExistePersona || guardado"
                             class="select-form" [(ngModel)]="sexoSelected" [options]="comboSexo"
                             placeholder="{{'general.boton.seleccionar' | translate}}"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.consultaDatosGenerales.literal.estadoCivil" | translate}}</label>
-                        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta"
+                        <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" [disabled]="consulta || !noExistePersona || guardado"
                             class="select-form" [(ngModel)]="estadoCivilSelected"
                             placeholder="{{'general.boton.seleccionar' | translate}}" [options]="estadoCivil"></p-dropdown>
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
                             {{"censo.SolicitudIncorporacion.literal.naturalDe" | translate}}</label>
-                        <input [disabled]="consulta" type="text" class="form-control" pInputText
+                        <input [disabled]="consulta || !noExistePersona || guardado" type="text" class="form-control" pInputText
                             [(ngModel)]="solicitudEditar.naturalDe">
                     </div>
                     <div class="form-group col-lg-3 col-md-3">
                         <label>
-                            {{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}} (*)</label>
-                        <app-fecha [inputStyleClass]="styleObligatorioAprobar(solicitudEditar.fechaNacimiento)"
-                            [(value)]="solicitudEditar.fechaNacimiento" [disabled]="consulta" [utc]="false"
+                            {{"censo.consultaDatosColegiacion.literal.fechaNac" | translate}} </label>
+                        <app-fecha
+                            [(value)]="solicitudEditar.fechaNacimiento" [disabled]="consulta || !noExistePersona || guardado" [utc]="false"
                             (valueChangeSelected)="fillFechaNacimiento($event)"
                             (valueChangeInput)="fillFechaNacimiento($event)"></app-fecha>
                     </div>

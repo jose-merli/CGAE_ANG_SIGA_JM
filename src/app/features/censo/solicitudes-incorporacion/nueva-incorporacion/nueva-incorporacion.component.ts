@@ -120,6 +120,8 @@ export class NuevaIncorporacionComponent implements OnInit {
   fechaActual: Date = new Date();
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
+  guardado: boolean = false;
+
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
@@ -171,6 +173,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.consulta = false;
 
       if (sessionStorage.getItem("nuevaIncorporacion")) {
+
         let solicitudrecibida = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
@@ -233,6 +236,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         }
 
       } else {
+
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("editedSolicitud")
         );
@@ -1398,6 +1402,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
           this.tratarDatos();
           if (back == true) {
+            this.guardado = true;
             this.progressSpinner = false;
           }
 
@@ -1447,7 +1452,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.bodyInicial = JSON.parse(JSON.stringify(this.solicitudEditar));
           this.tratarDatos();
 
-          if (back == true) {
+          if (back == true) {           
             this.msgs = [
               {
                 severity: "success",
@@ -2123,8 +2128,6 @@ para poder filtrar el dato con o sin estos caracteres*/
               this.solicitudEditar.apellido1 != null &&
               this.solicitudEditar.apellido1 != "" &&
               this.solicitudEditar.apellido1 != undefined &&
-              this.solicitudEditar.fechaNacimiento != null &&
-              this.solicitudEditar.fechaNacimiento != undefined &&
               this.paisSelected != undefined &&
               this.solicitudEditar.domicilio != null &&
               this.solicitudEditar.domicilio != "" &&
