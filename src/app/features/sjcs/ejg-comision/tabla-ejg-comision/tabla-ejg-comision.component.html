@@ -30,8 +30,8 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
-            <!-- En el caso que se este asociando un EJG a un Acta -->
-            <div *ngIf="acta == null">
+            
+            <!-- <div *ngIf="acta == null"> -->
               <div *ngIf="col.field == 'fechaApertura'">
                 <div>
                   <!-- [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" -->
@@ -55,12 +55,11 @@
                   <span class="enlace" (click)="datosEJG(dato)">{{dato[col.field]}}</span>
                 </div>
               </div>
-            </div>
+            <!-- </div> -->
 
-            <div *ngIf="acta != null">
+            <!-- <div *ngIf="acta != null">
               <div *ngIf="col.field == 'fechaApertura'">
                 <div>
-                  <!-- [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}" -->
                   <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
                 </div>
               </div>
@@ -81,7 +80,7 @@
                   <span class="enlace" >{{dato[col.field]}}</span>
                 </div>
               </div>
-            </div>
+            </div> -->
           </td>
         </tr>
       </ng-template>

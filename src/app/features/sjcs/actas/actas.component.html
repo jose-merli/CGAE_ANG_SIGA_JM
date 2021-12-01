@@ -8,7 +8,7 @@
 <div class="busqueda-container">
   <div class="busqueda-container">
     <app-filtro-actas (searchEmitter)="search($event)" [permisoEscritura]="permisoEscritura"></app-filtro-actas>
-    <app-tabla-actas *ngIf="buscar" [datos]="datos" [filtro]="this.filtros.body" [permisos]="permisoEscritura"  (search)="search($event)"></app-tabla-actas>
+    <app-tabla-actas *ngIf="buscar" [datos]="datos" [filtro]="filtros.datosFiltro" [permisos]="permisoEscritura"  (search)="search($event)"></app-tabla-actas>
   </div>
 </div>
 

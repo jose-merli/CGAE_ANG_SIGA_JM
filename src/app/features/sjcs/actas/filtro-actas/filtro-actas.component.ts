@@ -47,6 +47,18 @@ export class FiltroActasComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
+    if(localStorage.getItem("filtrosActa")){
+      this.datosFiltro = JSON.parse(localStorage.getItem("filtrosActa"));
+
+      this.datosFiltro.fecharesolucion = this.transformDate(this.datosFiltro.fecharesolucion);
+      this.datosFiltro.fechareunion = this.transformDate(this.datosFiltro.fechareunion);
+     
+      
+      localStorage.removeItem("filtrosActa");
+      this.searchEmitter.emit(this.datosFiltro);
+
+    }
+
   }
 
   getComboPresidente() {
@@ -66,6 +78,8 @@ export class FiltroActasComponent implements OnInit {
   nuevo() {
 
     this.progressSpinner = true;
+
+    localStorage.removeItem("actasItem");
 
     this.router.navigate(["/fichaGestionActas"]);
   }
