@@ -36,6 +36,8 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   @Output() changeModoBusqueda = new EventEmitter<string>();
 
   @Input() permisoEscritura;
+  @Input() disabledLetradoFicha;
+  @Input() apartado;
 
   constructor(private commonsService: CommonsService, private sigaServices: SigaServices,
     private translateService: TranslateService, private sigaStorageService: SigaStorageService,) { }
@@ -43,6 +45,17 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   ngOnInit() {
 
     this.isLetrado = this.sigaStorageService.isLetrado;
+
+    if(this.apartado != null && this.apartado != undefined){
+      if(this.apartado == "f"){
+        this.modoBusquedaFacturacion = true;
+        this.modoBusqueda = "f";
+      }else{
+        this.modoBusquedaFacturacion = false;
+        this.modoBusqueda = "p";
+      }
+      this.filtros.modoBusqueda = this.modoBusqueda;
+    }
 
     if (sessionStorage.getItem("datosCartasFacturacion")) {
       this.filtros = JSON.parse(sessionStorage.getItem("datosCartasFacturacion"));
@@ -143,7 +156,7 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     if (!this.esColegiado && (
       (this.filtros.idPartidaPresupuestaria == null || this.filtros.idPartidaPresupuestaria == undefined) &&
       (this.filtros.idConcepto == null || this.filtros.idConcepto == undefined) &&
-      (this.filtros.idTurno == null || this.filtros.idTurno == undefined))) {
+      (this.filtros.idTurno == null || this.filtros.idTurno == undefined) && (this.filtros.ncolegiado == null || this.filtros.ncolegiado == undefined))) {
 
 
       if (this.modoBusquedaFacturacion) {
@@ -173,7 +186,8 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     if (!this.esColegiado && (
       (this.filtros.idPartidaPresupuestaria == null || this.filtros.idPartidaPresupuestaria == undefined) &&
       (this.filtros.idConcepto == null || this.filtros.idConcepto == undefined) &&
-      (this.filtros.idTurno == null || this.filtros.idTurno == undefined))) {
+      (this.filtros.idTurno == null || this.filtros.idTurno == undefined) //modificado
+      && (this.filtros.idPersona == null || this.filtros.idPersona == undefined))) {
 
 
       if (this.modoBusquedaFacturacion) {

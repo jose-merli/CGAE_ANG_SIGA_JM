@@ -79,7 +79,7 @@
 
     <div *ngIf="showDatosColegiado" class="module vista-simple">
       <app-busqueda-colegiado-express [numColegiado]="filtros.ncolegiado" [nombreAp]="filtros.apellidosNombre"
-        [disabled]="esColegiado" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)"
+        [disabled]="esColegiado || disabledLetradoFicha" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)"
         [obligatorio]="obligatorio">
       </app-busqueda-colegiado-express>
     </div>

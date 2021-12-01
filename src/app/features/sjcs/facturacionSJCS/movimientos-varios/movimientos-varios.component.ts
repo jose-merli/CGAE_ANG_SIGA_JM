@@ -10,6 +10,7 @@ import { TablaMovimientosVariosComponent } from "./tabla-movimientos-varios/tabl
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { MovimientosVariosService } from './movimientos-varios.service';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-movimientos-varios',
@@ -29,16 +30,19 @@ export class MovimientosVariosComponent implements OnInit {
   buscar: boolean = false;
   isLetrado : boolean = false;
   totalRegistros = 0;
+  disabledLetradoFicha: boolean = false;
 
 	@ViewChild(FiltrosMovimientosVariosComponent) filtros: FiltrosMovimientosVariosComponent;
   @ViewChild(TablaMovimientosVariosComponent) tabla: TablaMovimientosVariosComponent;
   permisoEscritura: any;
+  datosColegiado: any;
 
   constructor(private translateService: TranslateService,
 		private sigaServices: SigaServices,
 		private commonsService: CommonsService,
 		private router: Router, private sigaStorageService: SigaStorageService,
-    private movimientosVariosService: MovimientosVariosService) {    
+    private movimientosVariosService: MovimientosVariosService,
+    private location: Location) {    
   }
 
   ngOnInit() {
@@ -57,6 +61,19 @@ export class MovimientosVariosComponent implements OnInit {
     this.permisoEscritura = true;
     
     this.isLetrado = this.sigaStorageService.isLetrado;
+
+    if (sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
+      this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
+      //this.movimientosVariosService.datosColegiadoFichaColegial = this.datosColegiado;
+      const { numColegiado, nombre } = this.datosColegiado;
+      this.filtros.usuarioBusquedaExpress.numColegiado = numColegiado;
+      this.filtros.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+      this.disabledLetradoFicha = true;
+      this.buscarDesdeEnlace();
+      sessionStorage.removeItem("datosColegiado");
+
+    }
+
     this.buscar = this.filtros.buscar;
     this.movimientosVariosService.modoEdicion = false;
     this.movimientosVariosService.datosColegiadoAux = null;
@@ -218,6 +235,91 @@ export class MovimientosVariosComponent implements OnInit {
     
   }
 
+  buscarDesdeEnlace(){
+
+		this.progressSpinner = true;
+    let datosFiltrosAux: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
+		// Modificaciones para pasar de select a multiselect por usabilidad    
+
+    datosFiltrosAux.ncolegiado = this.datosColegiado.numColegiado.toString();
+  
+    datosFiltrosAux.letrado = null;
+    datosFiltrosAux.idAplicadoEnPago=null;
+    datosFiltrosAux.idPartidaPresupuestaria=null;
+    datosFiltrosAux.idConcepto=null;
+    datosFiltrosAux.idFacturacion=null;
+    datosFiltrosAux.idGrupoFacturacion=null;
+    datosFiltrosAux.descripcion=null;
+    datosFiltrosAux.tipo=null;
+    datosFiltrosAux.certificacion = null;
+    datosFiltrosAux.fechaApDesde = null;
+    datosFiltrosAux.fechaApHasta = null;
+    datosFiltrosAux.idInstitucion=null; 
+    datosFiltrosAux.idMovimiento=null;
+    datosFiltrosAux.idPersona=null;
+    datosFiltrosAux.motivo=null;
+    datosFiltrosAux.fechaAlta=null;
+    datosFiltrosAux.cantidad=null;
+    datosFiltrosAux.fechaModificacion=null;
+    datosFiltrosAux.usuModificacion=null;
+    datosFiltrosAux.contabilizado=null;
+    datosFiltrosAux.cantidadAplicada=null;
+    datosFiltrosAux.cantidadRestante=null;
+    datosFiltrosAux.nif=null;
+    datosFiltrosAux.nombre=null;
+    datosFiltrosAux.apellido1=null;
+    datosFiltrosAux.apellido2=null;
+    datosFiltrosAux.nombrefacturacion=null;
+    datosFiltrosAux.nombretipo=null;
+    datosFiltrosAux.nombrePago=null;
+   
+    this.sigaServices.post("movimientosVarios_busquedaMovimientosVarios", datosFiltrosAux).subscribe(
+      data => {
+        this.datos = JSON.parse(data.body).facturacionItem;
+        this.buscar = true;
+        let error = JSON.parse(data.body).error;
+        this.totalRegistros = this.datos.length;
+
+        if(this.totalRegistros == 200){
+          this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
+        }
+
+        if (error != undefined && error != null && error.description != null) {
+          if (error.code == '200') {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+        this.progressSpinner = false;
+      },
+      err => {
+        if (err.status == '403' || err.status == 403) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        } else {
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        setTimeout(() => {
+          //this.tabla.tablaFoco.nativeElement.scrollIntoView();
+        }, 5);
+      }
+    );
+    
+  }
+
   cambiaBuscar(event) {
 		this.buscar = event;
 	}
@@ -253,6 +355,10 @@ export class MovimientosVariosComponent implements OnInit {
       });
 
     }
+  }
+
+  volver() {
+    this.location.back();
   }
 
   transformaFecha(fecha) {

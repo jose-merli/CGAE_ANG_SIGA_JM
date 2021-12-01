@@ -37,6 +37,8 @@ export class RetencionesComponent implements OnInit, AfterViewChecked {
 
   @ViewChild(TablaBusquedaRetencionesComponent) tablaRetenciones: TablaBusquedaRetencionesComponent;
   @ViewChild(TablaBusquedaRetencionesAplicadasComponent) tablaRetencionesAplicadas: TablaBusquedaRetencionesAplicadasComponent;
+  datosColegiado: any;
+  disabledLetradoFicha: boolean = false;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -63,6 +65,19 @@ export class RetencionesComponent implements OnInit, AfterViewChecked {
       this.retencionesService.retencion = undefined;
 
     }).catch(error => console.error(error));
+
+    if (sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
+      this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
+      const { numColegiado, nombre, idPersona } = this.datosColegiado;
+      this.disabledLetradoFicha = true;
+      this.retencionesService.filtrosRetenciones.ncolegiado = numColegiado;
+      this.retencionesService.filtrosRetenciones.nombreApellidoColegiado =  nombre.replace(/,/g, "");
+      this.retencionesService.filtrosRetenciones.idPersona =  idPersona;
+
+      this.buscarDesdeEnlace();
+      sessionStorage.removeItem("datosColegiado");
+
+    }
 
   }
 
@@ -104,6 +119,43 @@ export class RetencionesComponent implements OnInit, AfterViewChecked {
     if (Array.isArray(this.filtros.tiposRetencion) && this.filtros.tiposRetencion.length > 0) {
       this.filtros.tiposRetencion = (this.filtros.tiposRetencion.map(el => "'" + el + "'")).toString();
     }
+
+    this.progressSpinner = true;
+
+    this.sigaServices.post("retenciones_buscarRetenciones", this.filtros).subscribe(
+      data => {
+        const res: RetencionesObject = JSON.parse(data.body);
+
+        if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "500") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+        } else {
+          if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(res.error.description.toString()));
+          }
+          this.retencionesItemList = res.retencionesItemList;
+          this.mostrarTablaResultados = true;
+        }
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.tablaRetenciones.tablaFoco.nativeElement.scrollIntoView();
+        }, 5);
+      }
+    );
+  }
+
+  buscarDesdeEnlace() {
+
+    this.filtros = new RetencionesRequestDto();
+    this.filtros.ncolegiado = this.retencionesService.filtrosRetenciones.ncolegiado;
+    this.filtros.nombreApellidoColegiado = this.retencionesService.filtrosRetenciones.nombreApellidoColegiado;
+    this.filtros.idPersona = this.retencionesService.filtrosRetenciones.idPersona;
 
     this.progressSpinner = true;
 

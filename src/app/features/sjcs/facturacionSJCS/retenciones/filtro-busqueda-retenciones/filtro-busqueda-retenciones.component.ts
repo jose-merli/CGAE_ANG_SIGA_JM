@@ -33,6 +33,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
   @Input() isLetrado: boolean;
   @Input() permisoEscritura: boolean;
+  @Input() disabledLetradoFicha: boolean;
 
   @Output() buscarRetencionesEvent = new EventEmitter<RetencionesRequestDto>();
   @Output() buscarRetencionesAplicadasEvent = new EventEmitter<RetencionesRequestDto>();
@@ -46,6 +47,13 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
     private retencionesService: RetencionesService) { }
 
   ngOnInit() {
+
+    if(this.retencionesService.filtrosRetenciones != null && this.retencionesService.filtrosRetenciones != undefined){
+      this.filtros.nombreApellidoColegiado = this.retencionesService.filtrosRetenciones.nombreApellidoColegiado;
+      this.filtros.ncolegiado = this.retencionesService.filtrosRetenciones.ncolegiado;
+      this.filtros.idPersona = this.retencionesService.filtrosRetenciones.idPersona;
+      this.showDestinatarios = true;
+    }
 
     if (this.isLetrado) {
 
@@ -77,7 +85,8 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
     }
 
-    if (this.retencionesService.filtrosRetenciones != null) {
+    if (this.retencionesService.filtrosRetenciones && this.retencionesService.filtrosRetenciones != null
+      && Object.keys(this.retencionesService.filtrosRetenciones).length > 0) {
       this.filtros = JSON.parse(JSON.stringify(this.retencionesService.filtrosRetenciones));
 
       if (this.filtros.modoBusqueda && this.filtros.modoBusqueda != null && this.filtros.modoBusqueda.length > 0) {
