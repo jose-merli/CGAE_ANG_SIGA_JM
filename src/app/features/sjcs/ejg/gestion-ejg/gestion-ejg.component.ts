@@ -118,9 +118,9 @@ export class GestionEjgComponent implements OnInit {
 
       sessionStorage.removeItem("EJGItemDesigna");
 
-    }else {
+    } else {
       this.body = this.persistenceService.getDatos();
-      if(this.body){
+      if (this.body) {
         this.body.apellidosYNombre = "";
       }
 
@@ -136,7 +136,7 @@ export class GestionEjgComponent implements OnInit {
         this.updateTarjResumen();
       } else {
         //hemos pulsado nuevo 
-        if(sessionStorage.getItem("Nuevo")){
+        if (sessionStorage.getItem("Nuevo")) {
           this.nuevo = true;
           sessionStorage.removeItem("Nuevo");
           this.body = new EJGItem();
@@ -163,48 +163,48 @@ export class GestionEjgComponent implements OnInit {
     this.goTop();
   }
 
-  actualizaLetradoDesignado(event){
+  actualizaLetradoDesignado(event) {
     this.body.apellidosYNombre = event;
     this.updateTarjResumen();
   }
 
   updateTarjResumen() {
-    if(!this.nuevo)
-    //this.body = this.persistenceService.getDatos();
-    
-    if(this.body != null && this.body != undefined){
-      this.datos = [
-        {
-          label: "Año/Numero EJG",
-          value: this.body.numAnnioProcedimiento
-        },
-        {
-          label: "Solicitante",
-          value: this.body.nombreApeSolicitante
-        },
+    if (!this.nuevo)
+      //this.body = this.persistenceService.getDatos();
 
-        {
-          label: "Estado EJG",
-          value: this.body.estadoEJG
-        },
-        {
-          label: "Designado",
-          value: this.body.apellidosYNombre
-        },
-        {
-          label: "Dictamen",
-          value: this.body.dictamenSing
-        },
-        {
-          label: "CAJG",
-          value: this.body.resolucion
-        },
-        {
-          label: "Impugnación",
-          value: this.body.impugnacionDesc
-        },
-      ];
-    }
+      if (this.body != null && this.body != undefined) {
+        this.datos = [
+          {
+            label: "Año/Numero EJG",
+            value: this.body.numAnnioProcedimiento
+          },
+          {
+            label: "Solicitante",
+            value: this.body.nombreApeSolicitante
+          },
+
+          {
+            label: "Estado EJG",
+            value: this.body.estadoEJG
+          },
+          {
+            label: "Designado",
+            value: this.body.apellidosYNombre
+          },
+          {
+            label: "Dictamen",
+            value: this.body.dictamenSing
+          },
+          {
+            label: "CAJG",
+            value: this.body.resolucion
+          },
+          {
+            label: "Impugnación",
+            value: this.body.impugnacionDesc
+          },
+        ];
+      }
   }
 
   goTop() {
@@ -242,7 +242,7 @@ export class GestionEjgComponent implements OnInit {
     });
   }
 
-  asignNoAsocDes(event){
+  asignNoAsocDes(event) {
     this.noAsocDes = event;
   }
 
@@ -256,8 +256,8 @@ export class GestionEjgComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearDatos();
-    if(sessionStorage.getItem("filtroAsistencia")){
-      sessionStorage.setItem("volver","true");
+    if (sessionStorage.getItem("filtroAsistencia")) {
+      sessionStorage.setItem("volver", "true");
     }
     this.location.back();
   }
@@ -598,6 +598,10 @@ export class GestionEjgComponent implements OnInit {
           break;
       }
     }
+  }
+
+  guardarDatos() {
+    this.persistenceService.setDatos(this.body);
   }
 
 }

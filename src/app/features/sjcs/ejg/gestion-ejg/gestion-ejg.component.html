@@ -96,7 +96,8 @@
             [openTarjetaComunicaciones]="openTarjetaComunicaciones">
         </app-comunicaciones-ejg>
 
-        <app-tarjeta-facturacion-generica [datosEntrada]="datosEntradaTarjGenerica" [pantalla]="'EJG'">
+        <app-tarjeta-facturacion-generica [datosEntrada]="datosEntradaTarjGenerica" [pantalla]="'EJG'"
+            (guardarDatos)="guardarDatos()">
         </app-tarjeta-facturacion-generica>
     </div>
 

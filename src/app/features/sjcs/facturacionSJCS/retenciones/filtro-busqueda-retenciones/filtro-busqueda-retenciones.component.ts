@@ -85,7 +85,8 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
     }
 
-    if (this.retencionesService.filtrosRetenciones != null) {
+    if (this.retencionesService.filtrosRetenciones && this.retencionesService.filtrosRetenciones != null
+      && Object.keys(this.retencionesService.filtrosRetenciones).length > 0) {
       this.filtros = JSON.parse(JSON.stringify(this.retencionesService.filtrosRetenciones));
 
       if (this.filtros.modoBusqueda && this.filtros.modoBusqueda != null && this.filtros.modoBusqueda.length > 0) {

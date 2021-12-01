@@ -45,6 +45,8 @@ export class FichaMovimientosVariosComponent implements OnInit {
   openListadoPagos: Boolean = false;
   // Movimiento vario que viene desde la tarjeta de facturación genérica en modo edición
   movVarioDesdeTarjFacGeneEdit = null;
+  showCards: boolean = false;
+  nuevoMonVarioDesdeTarjFacGene: boolean = false;
 
 
 
@@ -80,7 +82,26 @@ export class FichaMovimientosVariosComponent implements OnInit {
     if (sessionStorage.getItem("datosNuevoMovimiento")) {
       const datos = JSON.parse(sessionStorage.getItem("datosNuevoMovimiento"));
       sessionStorage.removeItem("datosNuevoMovimiento");
-      console.log("HAN LLEGADO LOS DATOS", datos);
+      const letrado = await this.getLetrado(datos.colegiado, this.sigaStorageService.institucionActual).then(data => {
+        const response = JSON.parse(data.body);
+        return response.colegiadoItem[0];
+      }).catch(err => {
+        console.log(err);
+      });
+      this.datos = new MovimientosVariosFacturacionItem();
+      this.datos.nif = letrado.nif;
+      this.datos.apellido1 = letrado.apellidos1;
+      this.datos.apellido2 = letrado.apellidos2;
+      this.datos.nombre = letrado.soloNombre;
+      this.datos.ncolegiado = letrado.numColegiado;
+      this.datos.idPersona = letrado.idPersona;
+      this.datos.descripcion = datos.descripcion;
+      this.datos.cantidad = datos.cantidad;
+      this.datos.idConcepto = datos.criterios.idConcepto;
+      this.datos.idPartidaPresupuestaria = datos.criterios.idPartidaPresupuestaria;
+      this.datos.idGrupoFacturacion = datos.criterios.idGrupoFacturacion;
+      this.datos.idFacturacion = datos.criterios.idFacturacion;
+      this.nuevoMonVarioDesdeTarjFacGene = true;
     }
 
     // Viene de la tarjeta de facturación genérica edición
@@ -130,6 +151,8 @@ export class FichaMovimientosVariosComponent implements OnInit {
         this.getTarjetaClientes(this.datosColegiado);
       }
     }
+
+    this.showCards = true;
   }
 
   getPagos() {
@@ -313,6 +336,14 @@ export class FichaMovimientosVariosComponent implements OnInit {
 
   getMovimientoVarioPorId(id: string) {
     return this.sigaServices.getParam("movimientosVarios_getMovimientoVarioPorId", `?idMovimiento=${id}`).toPromise();
+  }
+
+  getLetrado(idPersona: string, idInstitucion: string) {
+    const payload = {
+      idPersona: idPersona,
+      idInstitucion: idInstitucion
+    };
+    return this.sigaServices.post("busquedaPer_institucion", payload).toPromise();
   }
 
 }

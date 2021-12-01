@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild, Input, SimpleChanges, OnChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild, Input, SimpleChanges, OnChanges, Output, EventEmitter } from '@angular/core';
 import { Table } from 'primeng/table';
 import { SigaServices } from '../../../../_services/siga.service';
 import { TranslateService } from '../../../../commons/translate/translation.service';
@@ -11,6 +11,8 @@ import { ActuacionAsistenciaItem } from '../../../../models/guardia/ActuacionAsi
 import { EJGItem } from '../../../../models/sjcs/EJGItem';
 import { GuardiaItem } from '../../../../models/guardia/GuardiaItem';
 import { DatosMovimientoVarioDTO } from '../../../../models/sjcs/DatosMovimientoVarioDTO';
+import { CommonsService } from '../../../../_services/commons.service';
+import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
 
 export enum PANTALLAS {
   ACTUACIONDESIGNA = "ACTUACIONDESIGNA",
@@ -23,7 +25,7 @@ export enum PANTALLAS {
 export interface DatosParaMovimiento {
   colegiado: string;
   descripcion: string;
-  cantidad: string;
+  cantidad: number;
   criterios: any;
 }
 
@@ -48,19 +50,41 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   totalFacturado: number = 0;
   totalPagado: number = 0;
 
+  permisoEscritura: boolean = false;
+
+  readonly TIPOFACTURACION: string = this.translateService.instant("facturacionSJCS.tarjGenFac.facturacion");
+  readonly TIPOPAGO: string = this.translateService.instant("facturacionSJCS.tarjGenFac.pago");
+  readonly TIPOMOVIMIENTO: string = this.translateService.instant("facturacionSJCS.tarjGenFac.movVario");
+
   @ViewChild("table") tabla: Table;
 
   @Input() pantalla: string;
   @Input() datosEntrada: any;
+  @Input() disableButtons: boolean = false;
+  @Output() guardarDatos = new EventEmitter<any>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
-    private router: Router) { }
+    private router: Router,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
-    this.getCols();
+
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.tarjetaFacFenerica).then(respuesta => {
+
+      this.permisoEscritura = respuesta;
+
+      if (this.permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.getCols();
+    }).catch(error => console.error(error));
+
   }
 
   getCols() {
@@ -115,7 +139,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   }
 
   seleccionarFila(event) {
-    if (event.data.tipo != "Movimiento vario") {
+    if (event.data.tipo != this.TIPOMOVIMIENTO) {
       this.selectedDatos.pop();
     }
   }
@@ -343,7 +367,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
       el.id = contador;
       contador++;
       if (el.importe && el.importe.toString().trim().length > 0) {
-        if (el.tipo == 'Facturación') {
+        if (el.tipo == this.TIPOFACTURACION) {
           this.totalFacturado += parseFloat(el.importe);
           if (el.datosPagoAsuntoDTOList && el.datosPagoAsuntoDTOList != null && el.datosPagoAsuntoDTOList.length > 0) {
             el.datosPagoAsuntoDTOList.forEach(el => {
@@ -354,7 +378,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
           }
         }
 
-        if (el.tipo == 'Movimiento vario') {
+        if (el.tipo == this.TIPOMOVIMIENTO) {
           this.totalFacturado += parseFloat(el.importe);
           this.totalPagado += parseFloat(el.importe);
         }
@@ -364,133 +388,217 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   }
 
   openFicha(rowData) {
+    this.guardarDatos.emit(true);
     sessionStorage.setItem("datosEdicionMovimiento", JSON.stringify(rowData));
     this.router.navigate(["/fichaMovimientosVarios"]);
   }
 
-  nuevo() {
+  async nuevo() {
 
-    let datos: DatosParaMovimiento = null;
+    if (this.permisoEscritura && !this.disableButtons) {
 
-    if (this.pantalla == PANTALLAS.ACTUACIONDESIGNA) {
+      this.guardarDatos.emit(true);
 
-      const actuacionDesigna: Actuacion = JSON.parse(JSON.stringify(this.datosEntrada));
+      let datos: DatosParaMovimiento = null;
+      const facturaciones = this.datos.filter(el => el.tipo == this.TIPOFACTURACION);
+      let idPartidaPresupuestaria = "";
+      let idFacturacion = "";
+      let idGrupoFacturacion = "";
 
-      datos = {
-        colegiado: actuacionDesigna.actuacion.idPersonaColegiado,
-        descripcion: `Designación ${actuacionDesigna.actuacion.anio}/${actuacionDesigna.actuacion.numero}/${actuacionDesigna.actuacion.numeroAsunto}-${actuacionDesigna.actuacion.nombreModulo}`,
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
-      };
+      if (facturaciones.length > 0) {
+        idFacturacion = facturaciones[0].idObjeto;
+        if (facturaciones[0].idPartidaPresupuestaria != null) {
+          idPartidaPresupuestaria = facturaciones[0].idPartidaPresupuestaria
+        }
+      }
+
+      if (this.pantalla == PANTALLAS.ACTUACIONDESIGNA) {
+
+        const actuacionDesigna: Actuacion = JSON.parse(JSON.stringify(this.datosEntrada));
+
+        if (this.checkCampo(actuacionDesigna.actuacion.idTurno)) {
+          idGrupoFacturacion = await this.getAgrupacionTurno(actuacionDesigna.actuacion.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+        }
+
+        datos = {
+          colegiado: actuacionDesigna.actuacion.idPersonaColegiado,
+          descripcion: `Designación ${actuacionDesigna.actuacion.anio}/${actuacionDesigna.actuacion.numero}/${actuacionDesigna.actuacion.numeroAsunto}-${this.checkCampo(actuacionDesigna.actuacion.nombreModulo) ? actuacionDesigna.actuacion.nombreModulo : ''}`,
+          cantidad: (-this.totalFacturado),
+          criterios: {
+            idFacturacion: idFacturacion,
+            idGrupoFacturacion: idGrupoFacturacion,
+            idConcepto: '10',
+            idPartidaPresupuestaria: idPartidaPresupuestaria
+          }
+        };
+      }
+
+      if (this.pantalla == PANTALLAS.ASISTENCIA) {
+
+        const asistencia: { asistencia: TarjetaAsistenciaItem, isNew: boolean } = JSON.parse(JSON.stringify(this.datosEntrada));
+
+        if (this.checkCampo(asistencia.asistencia.idTurno)) {
+          idGrupoFacturacion = await this.getAgrupacionTurno(asistencia.asistencia.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+        }
+
+        datos = {
+          colegiado: asistencia.asistencia.idPersonaJg,
+          descripcion: `Asistencia ${asistencia.asistencia.anio}/${asistencia.asistencia.numero}`,
+          cantidad: (-this.totalFacturado),
+          criterios: {
+            idFacturacion: idFacturacion,
+            idGrupoFacturacion: idGrupoFacturacion,
+            idConcepto: '20',
+            idPartidaPresupuestaria: idPartidaPresupuestaria
+          }
+        };
+      }
+
+      if (this.pantalla == PANTALLAS.ACTUACIONASISTENCIA) {
+
+        const actuacionAsistencia: { asistencia: TarjetaAsistenciaItem, actuacion: ActuacionAsistenciaItem, isNew: boolean } = JSON.parse(JSON.stringify(this.datosEntrada));
+
+        if (this.checkCampo(actuacionAsistencia.asistencia.idTurno)) {
+          idGrupoFacturacion = await this.getAgrupacionTurno(actuacionAsistencia.asistencia.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+        }
+
+        datos = {
+          colegiado: actuacionAsistencia.asistencia.idPersonaJg,
+          descripcion: `Actuación de asistencia ${actuacionAsistencia.asistencia.anio}/${actuacionAsistencia.asistencia.numero}/${actuacionAsistencia.actuacion.idActuacion}`,
+          cantidad: (-this.totalFacturado),
+          criterios: {
+            idFacturacion: idFacturacion,
+            idGrupoFacturacion: idGrupoFacturacion,
+            idConcepto: '20',
+            idPartidaPresupuestaria: idPartidaPresupuestaria
+          }
+        };
+      }
+
+      if (this.pantalla == PANTALLAS.GUARDIA) {
+
+        const guardia: GuardiaItem = JSON.parse(JSON.stringify(this.datosEntrada));
+
+        if (this.checkCampo(guardia.idTurno)) {
+          idGrupoFacturacion = await this.getAgrupacionTurno(guardia.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+        }
+
+        datos = {
+          colegiado: guardia.idPersona,
+          descripcion: `Guardia ${guardia.fechadesde}.${guardia.turno}>${guardia.nombre}`,
+          cantidad: (-this.totalFacturado),
+          criterios: {
+            idFacturacion: idFacturacion,
+            idGrupoFacturacion: idGrupoFacturacion,
+            idConcepto: '20',
+            idPartidaPresupuestaria: idPartidaPresupuestaria
+          }
+        };
+      }
+
+      if (this.pantalla == PANTALLAS.EJG) {
+
+        const ejg: { ejg: EJGItem, isNew: boolean } = JSON.parse(JSON.stringify(this.datosEntrada));
+
+        if (this.checkCampo(ejg.ejg.idTurno)) {
+          idGrupoFacturacion = await this.getAgrupacionTurno(ejg.ejg.idTurno).then(data => data.valor).catch(err => { console.log(err); });
+        }
+
+        datos = {
+          colegiado: ejg.ejg.idPersona,
+          descripcion: "",
+          cantidad: (-this.totalFacturado),
+          criterios: {
+            idFacturacion: idFacturacion,
+            idGrupoFacturacion: idGrupoFacturacion,
+            idConcepto: '40',
+            idPartidaPresupuestaria: idPartidaPresupuestaria
+          }
+        };
+      }
+
+      sessionStorage.setItem("datosNuevoMovimiento", JSON.stringify(datos));
+      this.router.navigate(["/fichaMovimientosVarios"]);
+
     }
+  }
 
-    if (this.pantalla == PANTALLAS.ASISTENCIA) {
-
-      const asistencia: { asistencia: TarjetaAsistenciaItem, isNew: boolean } = JSON.parse(JSON.stringify(this.datosEntrada));
-
-      datos = {
-        colegiado: asistencia.asistencia.idPersonaJg,
-        descripcion: `Asistencia ${asistencia.asistencia.anio}/${asistencia.asistencia.numero}`,
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
-      };
-    }
-
-    if (this.pantalla == PANTALLAS.ACTUACIONASISTENCIA) {
-
-      const actuacionAsistencia: { asistencia: TarjetaAsistenciaItem, actuacion: ActuacionAsistenciaItem, isNew: boolean } = JSON.parse(JSON.stringify(this.datosEntrada));
-
-      datos = {
-        colegiado: actuacionAsistencia.asistencia.idPersonaJg,
-        descripcion: `Actuación de asistencia ${actuacionAsistencia.asistencia.anio}/${actuacionAsistencia.asistencia.numero}/${actuacionAsistencia.actuacion.idActuacion}`,
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
-      };
-    }
-
-    if (this.pantalla == PANTALLAS.GUARDIA) {
-
-      const guardia: GuardiaItem = JSON.parse(JSON.stringify(this.datosEntrada));
-
-      datos = {
-        colegiado: guardia.idPersona,
-        descripcion: `Guardia ${guardia.fechadesde}.${guardia.turno}>${guardia.nombre}`,
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
-      };
-    }
-
-    if (this.pantalla == PANTALLAS.EJG) {
-
-      const ejg: { ejg: EJGItem, isNew: boolean } = JSON.parse(JSON.stringify(this.datosEntrada));
-
-      datos = {
-        colegiado: ejg.ejg.idPersona,
-        descripcion: "",
-        cantidad: (-this.totalFacturado).toString(),
-        criterios: ""
-      };
-    }
-
-    sessionStorage.setItem("datosNuevoMovimiento", JSON.stringify(datos));
-    this.router.navigate(["/fichaMovimientosVarios"]);
+  getAgrupacionTurno(idTurno: string) {
+    return this.sigaServices.getParam("facturacionsjcs_getAgrupacionDeTurnosPorTurno", `?idTurno=${idTurno}`).toPromise();
   }
 
   comfirmacionEliminar() {
-    let mess = this.translateService.instant(
-      "messages.deleteConfirmation"
-    );
-    let icon = "fa fa-edit";
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.eliminar();
-      },
-      reject: () => {
-        this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
-      }
-    });
+
+    if (this.permisoEscritura && !this.disableButtons) {
+
+      let mess = this.translateService.instant(
+        "messages.deleteConfirmation"
+      );
+      let icon = "fa fa-edit";
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.eliminar();
+        },
+        reject: () => {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      });
+    }
   }
 
   eliminar() {
 
-    let deleteList: DatosMovimientoVarioDTO[] = [];
-    let notDeleteList: DatosMovimientoVarioDTO[] = [];
+    if (this.permisoEscritura && !this.disableButtons) {
 
-    this.selectedDatos.forEach(el => {
-      if (el.numAplicaciones > 0) {
-        notDeleteList.push(el);
-      } else {
-        deleteList.push(el);
+      let deleteList: DatosMovimientoVarioDTO[] = [];
+      let notDeleteList: DatosMovimientoVarioDTO[] = [];
+
+      this.selectedDatos.forEach(el => {
+        if (el.numAplicaciones > 0) {
+          notDeleteList.push(el);
+        } else {
+          deleteList.push(el);
+        }
+      });
+
+      if (notDeleteList.length > 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.movimientosVarios.errorEliminarMov"));
       }
-    });
 
-    this.callDeleteService(deleteList);
+      this.callDeleteService(deleteList);
+
+    }
 
   }
 
   callDeleteService(deleteList: DatosMovimientoVarioDTO[]) {
-    this.progressSpinner = true;
 
-    this.sigaServices.post("movimientosVarios_eliminarMovimiento", deleteList).subscribe(
-      data => {
-        const error = JSON.parse(data.body).error;
+    if (this.permisoEscritura && !this.disableButtons) {
 
-        if (error.status == 'KO' && error != null && error.description != null) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
-        } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
-          this.getDatos(this.pantalla);
+      this.progressSpinner = true;
+
+      this.sigaServices.post("movimientosVarios_eliminarMovimiento", deleteList).subscribe(
+        data => {
+          const error = JSON.parse(data.body).error;
+
+          if (error.status == 'KO' && error != null && error.description != null) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
+            this.getDatos(this.pantalla);
+          }
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          console.log(err);
         }
+      );
 
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-        console.log(err);
-      }
-    );
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

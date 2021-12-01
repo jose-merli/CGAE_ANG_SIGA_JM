@@ -110,7 +110,7 @@
                 </div>
             </div>
             <app-tarjeta-facturacion-generica [datosEntrada]="{ asistencia: asistencia, isNew: nuevaAsistencia }"
-                [pantalla]="'ASISTENCIA'">
+                [pantalla]="'ASISTENCIA'" (guardarDatos)="guardarDatos()">
             </app-tarjeta-facturacion-generica>
         </div>
         <div id="down"></div>

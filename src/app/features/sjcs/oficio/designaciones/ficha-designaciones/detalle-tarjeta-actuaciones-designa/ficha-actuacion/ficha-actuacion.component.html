@@ -81,7 +81,8 @@
         </div>
       </div>
 
-      <app-tarjeta-facturacion-generica [datosEntrada]="actuacionDesigna" [pantalla]="'ACTUACIONDESIGNA'">
+      <app-tarjeta-facturacion-generica [datosEntrada]="actuacionDesigna" [pantalla]="'ACTUACIONDESIGNA'"
+        (guardarDatos)="guardarDatos()">
       </app-tarjeta-facturacion-generica>
 
     </div>
