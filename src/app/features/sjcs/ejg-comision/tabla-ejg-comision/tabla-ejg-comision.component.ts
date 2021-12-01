@@ -777,7 +777,7 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   }
 
-  guardarEditados() {
+  async guardarEditados() {
 
     //En caso que se este asociando EJGs desde una ficha de acta
     let finalizado = 0;
@@ -843,12 +843,15 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   
     if(this.valuePonente != null && this.valueFechaPonente != null){
+
+      
+      await this.delay(1200);
   
       this.selectedDatos.forEach(list => { list.ponente = this.valuePonente;
         list.fechaPonenteDesd = this.valueFechaPonente;})
   
-      this.sigaServices.post("filtrosejgcomision_editarPonente", this.selectedDatos).subscribe(
-        n => {
+        this.sigaServices.post("filtrosejgcomision_editarPonente", this.selectedDatos).subscribe(
+         n => {
           this.progressSpinner = false;
           if (JSON.parse(n.body).status == "OK"){
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -875,6 +878,9 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   
     if(this.selectPonente == true){
+
+      await this.delay(1200);
+
       this.sigaServices.post("filtrosejgcomision_borrarPonente", this.selectedDatos).subscribe(
         n => {
           this.progressSpinner = false;
@@ -904,6 +910,8 @@ export class TablaEjgComisionComponent implements OnInit {
   
   
     if(this.valueResolucion != null && (this.valueFundamento != null || parseInt(this.num) == 0)){
+
+      await this.delay(1200);
   
       this.selectedDatos.forEach(list => { list.idTipoDictamen = this.valueResolucion;
         list.fundamentoJuridico = this.valueFundamento;})
@@ -935,6 +943,9 @@ export class TablaEjgComisionComponent implements OnInit {
     }
   
     if(this.selectResolucionFundamento == true){
+
+      await this.delay(1200);
+
       this.sigaServices.post("filtrosejgcomision_borrarResolucionFundamento", this.selectedDatos).subscribe(
         n => {
           this.progressSpinner = false;
@@ -972,6 +983,10 @@ cerrarModalED(){
   this.valueResolucion = null;
   this.valueFundamento = null;
   this.selectResolucionFundamento = false;
+}
+
+delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
 }
 
 
