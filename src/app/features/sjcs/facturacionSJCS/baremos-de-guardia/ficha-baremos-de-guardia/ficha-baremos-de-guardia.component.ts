@@ -1,6 +1,12 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { Location } from '@angular/common';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { BaremosGuardiaItem } from '../../../../../models/sjcs/BaremosGuardiaItem';
+import { FichaBarDatosGeneralesComponent } from './ficha-bar-datos-generales/ficha-bar-datos-generales.component';
+import { FichaBarConfiFacComponent } from './ficha-bar-confi-fac/ficha-bar-confi-fac.component';
+import { FichaBarConfiAdiComponent } from './ficha-bar-confi-adi/ficha-bar-confi-adi.component';
 
 export interface Enlace {
   id: string;
@@ -20,40 +26,62 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     imagen: '',
     detalle: false,
     fixed: true,
-    campos: [
-      // {
-      //   "key": this.translateService.instant('facturacionSJCS.retenciones.nColegiado'),
-      //   "value": ""
-      // }
-    ],
+    
     enlaces: [
-      { id: 'facSJCSFichaBarDatosGen', nombre: this.translateService.instant('facturacionSJCS.baremosDeGuardia.datosGenerales'), ref: null },
-      { id: 'facSJCSFichaBarConfiFac', nombre: this.translateService.instant('facturacionSJCS.baremosDeGuardia.confiFac'), ref: null },
-      { id: 'facSJCSFichaBarConfiAdi', nombre: this.translateService.instant('facturacionSJCS.baremosDeGuardia.confiAdi'), ref: null }
+      { id: 'facSJCSFichaBarDatosGen', nombre: this.translateService.instant('facturacionSJCS.baremosDeGuardia.datosGenerales'), ref: document.getElementById('facSJCSFichaBarDatosGen') },
+      { id: 'facSJCSFichaBarConfiFac', nombre: this.translateService.instant('facturacionSJCS.baremosDeGuardia.confiFac'), ref: document.getElementById('facSJCSFichaBarConfiFac') },
+      { id: 'facSJCSFichaBarConfiAdi', nombre: this.translateService.instant('facturacionSJCS.baremosDeGuardia.confiAdi'), ref: document.getElementById('facSJCSFichaBarConfiAdi') }
     ]
   };
 
+  modoEdicion: boolean;
+  progressSpinner: boolean;
+  datosFichDatGenerales;
+  msgs: any[];
+  tieneDatos: boolean;
+  @ViewChild(FichaBarDatosGeneralesComponent) tarjetaDatosGenerales:FichaBarDatosGeneralesComponent;
+  @ViewChild(FichaBarConfiFacComponent) tarjetaConfigFac:FichaBarConfiFacComponent;
+  @ViewChild(FichaBarConfiAdiComponent) tarjetaConfigAdi:FichaBarConfiAdiComponent;
+
   constructor(private translateService: TranslateService,
-    private location: Location) { }
+    private location: Location,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,) { }
 
   ngOnInit() {
+    
+    if(sessionStorage.getItem('modoEdicionBaremo') != undefined){
+      this.modoEdicion = JSON.parse(sessionStorage.getItem('modoEdicionBaremo'));
+      sessionStorage.removeItem('modoEdicionBaremo')
+    }
+
+    if(this.modoEdicion){
+      if(sessionStorage.getItem('dataBaremoMod')){
+        this.datosFichDatGenerales = JSON.parse(sessionStorage.getItem('dataBaremoMod'));
+        this.tieneDatos = true;
+        sessionStorage.removeItem('dataBaremoMod')
+      }
+    }else{
+      this.getGuardiasByConf(true);
+    }
+   
   }
 
   isOpenReceive(event) {
 
-    // if (this.retencionesService.modoEdicion) {
-
-    //   switch (event) {
-    //     case 'facSJCSFichaRetCol':
-    //       this.tarjetaColegiado.showTarjeta = true;
-    //       break;
-    //     case 'facSJCSFichaRetDatRetJud':
-    //       this.tarjetaDatosRetJud.showTarjeta = true;
-    //       break;
-    //     case 'facSJCSFichaRetAplEnPag':
-    //       this.tarjetaAplEnPag.showTarjeta = true;
-    //       break;
-    //   }
+    
+      switch (event) {
+        case 'facSJCSFichaBarDatosGen':
+          this.tarjetaDatosGenerales.showTarjeta = true;
+          break;
+        case 'facSJCSFichaBarConfiFac':
+          this.tarjetaConfigFac.showTarjeta = true;
+          break;
+        case 'facSJCSFichaBarConfiAdi':
+          this.tarjetaConfigAdi.showTarjeta = true;
+          break;
+      
+    }
 
   }
 
@@ -75,6 +103,51 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
   addEnlace(enlace: Enlace) {
     this.tarjetaFija.enlaces.find(el => el.id == enlace.id).ref = enlace.ref;
+  }
+
+  getGuardiasByConf(event){
+    if(event == true){
+      
+      this.progressSpinner = true;
+      this.sigaServices.get("baremosGuardia_getGuardiasByConf").subscribe(
+        data =>{
+          this.datosFichDatGenerales = data.baremosGuardiaItems;
+          this.tieneDatos = true;
+					let error = JSON.parse(JSON.stringify(data)).error;
+          this.progressSpinner = false;
+
+          if (error != undefined && error != null && error.description != null) {
+						if (error.code == '200') {
+							this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+						} else {
+							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+						}
+					}
+        },
+        err =>{
+          this.progressSpinner = false;
+          if (err != undefined && JSON.parse(JSON.stringify(err)).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.tieneDatos = true;
+        }
+      )
+    }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 
 }

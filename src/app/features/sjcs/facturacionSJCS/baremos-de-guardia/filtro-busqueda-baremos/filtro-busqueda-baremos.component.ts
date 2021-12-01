@@ -163,6 +163,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
   }
 
   nuevo() {
+    sessionStorage.setItem('modoEdicionBaremo',"false");
     this.router.navigate(['/fichaBaremosDeGuardia']);
   }
 

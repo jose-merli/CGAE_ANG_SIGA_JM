@@ -14,4 +14,12 @@ export class BaremosGuardiaItem {
     idGuardias: String[];
     fechabaja: Date;
     historico;
+    precioHito;
+    idInstitucion;
+    idHito;
+    nomturno:any;
+    nomguardia:any;
+    idTurno;
+    idGuardia;
+    idhitoconfiguracion;
 }

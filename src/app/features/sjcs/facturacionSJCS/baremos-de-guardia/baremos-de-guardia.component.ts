@@ -47,7 +47,7 @@ export class BaremosDeGuardiaComponent implements OnInit {
   getBaremosGuardias(event){
     if(event == true){
       
-      console.log(this.filtros.filtros);
+      
       this.progressSpinner = true;
       this.sigaServices.post("baremosGuardia_buscar",this.filtros.filtros).subscribe(
         data =>{

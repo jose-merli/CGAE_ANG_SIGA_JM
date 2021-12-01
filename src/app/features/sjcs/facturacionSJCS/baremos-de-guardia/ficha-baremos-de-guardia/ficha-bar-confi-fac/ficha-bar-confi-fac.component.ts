@@ -8,7 +8,7 @@ import { Enlace } from '../ficha-baremos-de-guardia.component';
 })
 export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
-  showTarjeta: boolean = false;
+  showTarjeta: boolean = true;
 
   @Output() addEnlace = new EventEmitter<Enlace>();
 

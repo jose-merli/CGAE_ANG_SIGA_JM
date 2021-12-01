@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div id="fichaBaremosGuardiaSJCS">
 
   <div>
@@ -33,7 +34,7 @@
 
       </div>
 
-      <app-ficha-bar-datos-generales (addEnlace)="addEnlace($event)"></app-ficha-bar-datos-generales>
+      <app-ficha-bar-datos-generales *ngIf = "tieneDatos"(addEnlace)="addEnlace($event)" (guardiasByConf)="getGuardiasByConf($event)" [datos] = "datosFichDatGenerales" [modoEdicion] = "modoEdicion"></app-ficha-bar-datos-generales>
 
       <app-ficha-bar-confi-fac (addEnlace)="addEnlace($event)"></app-ficha-bar-confi-fac>
 
@@ -52,4 +53,7 @@
 
   </div>
 
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

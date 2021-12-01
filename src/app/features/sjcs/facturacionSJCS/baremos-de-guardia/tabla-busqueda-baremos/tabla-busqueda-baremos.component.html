@@ -33,7 +33,7 @@
               <a [pRowToggler]="rowData">
                 <div *ngIf="col.field =='nomTurno'">
                   <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                  <a *ngIf="!setItalic(rowData)" class="enlace" (click)="openFichaBaremos()"> <span >{{rowData[col.field]}}</span></a>
+                  <a *ngIf="!setItalic(rowData)" class="enlace" (click)="openFichaBaremos(rowData)"> <span >{{rowData[col.field]}}</span></a>
                   <span *ngIf="setItalic(rowData)"
                     [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
                 </div>
