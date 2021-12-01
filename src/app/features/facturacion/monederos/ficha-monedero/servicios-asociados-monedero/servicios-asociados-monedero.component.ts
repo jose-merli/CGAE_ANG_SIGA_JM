@@ -85,6 +85,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
 
   ngOnInit() {
     this.getPermisoActualizarServiciosMonedero();
+    this.getComboServicios();
    
     if (this.ficha.idLinea != null) {
       this.getServiciosMonedero();
@@ -101,62 +102,26 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
   getServiciosMonedero() {
     this.progressSpinner = true;
 
-    // this.subscriptionServiciosBusqueda = this.sigaServices.getParam("PyS_getListaServiciosSuscripcion",
-    //   "?idPeticion=" + this.ficha.nSolicitud+ "&?afechaDe=" + this.ficha.aFechaDeServicio).subscribe(
-    //     listaServiciosSuscripcionDTO => {
+    this.subscriptionServiciosBusqueda = this.sigaServices.getParam("PyS_getListaServiciosMonedero",
+      "?idLinea=" + this.ficha.idLinea+ "&?idPersona=" + this.ficha.idPersona).subscribe(
+        listaServiciosMonederoDTO => {
 
-    //       this.serviciosTarjeta = listaServiciosSuscripcionDTO.listaServiciosSuscripcionItems;
+          this.serviciosTarjeta = listaServiciosMonederoDTO.listaServiciosMonederoItems;
 
-    //       if (listaServiciosSuscripcionDTO.error.code == 200) {
-    //         // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-    //       } else {
-    //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    //       }
+          if (listaServiciosMonederoDTO.error == null) {
+            // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
 
-    //       this.serviciosTarjeta.sort((a, b) => (a.orden > b.orden) ? 1 : -1);
+          this.progressSpinner = false;
 
-    //       this.ficha.servicios = JSON.parse(JSON.stringify(this.serviciosTarjeta));
-    //       if (this.ficha.idFormaPagoSeleccionada != null){
-    //         if(this.ficha.servicios[0].noFacturable == "1"){
-    //           let noFacturableItem = new ComboItem();
-    //           noFacturableItem.label =this.translateService.instant("facturacion.productos.noFacturable");
-    //           noFacturableItem.value = "-1";
-    //           this.comboComun.push(noFacturableItem);
-    //           this.selectedPago = "-1";
-    //         }
-    //         else{
-    //           this.selectedPago = this.ficha.idFormaPagoSeleccionada.toString();
-    //           if(this.comboPagos != undefined && this.comboPagos.length > 0 && this.comboServicios.length > 0 && this.ficha.servicios.length >0){
-    //             this.checkFormasPagoComunes(this.serviciosTarjeta);
-    //           }
-    //         }
-    //       }
-
-    //       for(let servicio of this.serviciosTarjeta){
-    //         //Para incializar los calendarios
-    //         if(servicio.fechaAlta != null){
-    //           servicio.fechaAlta = new Date(servicio.fechaAlta);
-    //         }
-    //         if(servicio.fechaBaja != null){
-    //           servicio.fechaBaja = new Date(servicio.fechaBaja);
-    //         }
-            
-    //         servicio.impNeto = Number(servicio.impNeto).toFixed(2);
-    //         servicio.precioServicioValor = Number(servicio.precioServicioValor).toFixed(2);
-    //       }
-    //       this.newFormaPagoCabecera();
-    //       this.getComboPrecios();
-
-    //       this.datosTarjeta = this.ficha;
-
-    //       this.progressSpinner = false;
-
-    //     },
-    //     err => {
-    //       this.progressSpinner = false;
-    //     }, () => {
-    //       this.progressSpinner = false;
-    //     });;
+        },
+        err => {
+          this.progressSpinner = false;
+        }, () => {
+          this.progressSpinner = false;
+        });;
   }
 
 
