@@ -76,10 +76,12 @@ export class TablaActasComponent implements OnInit {
     this.progressSpinner = true;
 
     this.persistenceService.setDatos(evento);
+    
+    localStorage.setItem('filtrosActa', JSON.stringify(this.filtro));
+    localStorage.setItem('actasItem', JSON.stringify(evento));
 
     this.router.navigate(["/fichaGestionActas"]);
 
-    localStorage.setItem('actasItem', JSON.stringify(evento));
     
   }
 
