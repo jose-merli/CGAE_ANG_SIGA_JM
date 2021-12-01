@@ -26,7 +26,7 @@ export class TarjetaEjgsComponent implements OnInit {
 
   body;
 
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   selectedItem: number = 10;
   selectAll: boolean = false;
   selectedDatos: any[] = [];
