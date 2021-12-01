@@ -108,6 +108,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   openDirec: Boolean = false;
   openBanca: Boolean = false;
   openRegtel: Boolean = false;
+  openExp: Boolean = false;
   colsColegiales: any = [];
   colsColegiaciones: any = [];
   colsCertificados: any = [];
@@ -361,6 +362,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   tarjetaRegtel: string;
   tarjetaMutualidad: string;
   tarjetaAlterMutua: string;
+  tarjetaExpedientes: string;
 
   tarjetaInteresNum: string;
   tarjetaGeneralesNum: string;
@@ -375,6 +377,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   tarjetaRegtelNum: string;
   tarjetaMutualidadNum: string;
   tarjetaAlterMutuaNum: string;
+  tarjetaExpedientesNum: string;
 
   isCrearColegial: boolean = false;
   nuevoEstadoColegial: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -656,7 +659,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   }
   checkAccesos() {
     this.progressSpinner = true;
-    let procesos: any = ["285", "234", "286", "12P", "235", "290", "236", "237", "289", "287", "288", "291", "298", "299"];
+    let procesos: any = ["285", "234", "286", "12P", "235", "290", "236", "237", "289", "287", "288", "291", "298", "299", "127"];
     let proceso;
     procesos = procesos.map(it => {
       proceso = it;
@@ -683,7 +686,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.tarjetaRegtelNum = permisosArray[11].derechoacceso;
         this.tarjetaMutualidadNum = permisosArray[12].derechoacceso;
         this.tarjetaAlterMutuaNum = permisosArray[13].derechoacceso;
-
+        this.tarjetaExpedientesNum = permisosArray[14].derechoacceso;
       },
       err => {
         console.log(err);
@@ -711,6 +714,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     this.tarjetaRegtel = this.tarjetaRegtelNum;
     this.tarjetaMutualidad = this.tarjetaMutualidadNum;
     this.tarjetaAlterMutua = this.tarjetaAlterMutuaNum;
+    this.tarjetaExpedientes = this.tarjetaExpedientesNum;
 
     this.initSpinner = false;
 
@@ -859,6 +863,18 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
       }
     }
+
+    if (this.tarjetaExpedientesNum == "3" || this.tarjetaExpedientesNum == "2") {
+      let pruebaTarjeta = {
+        label: "menu.expedientes",
+        value: document.getElementById("tarjExp"),
+        nombre: "expedientes",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
     
   }
   idPersonaNuevoEvent(event) {
@@ -905,6 +921,9 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         case "regtel":
           this.openRegtel = this.manuallyOpened;
           break;
+        case "expedientes":
+          this.openExp = this.manuallyOpened;
+          break;
       }
     }
   }
@@ -942,6 +961,9 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
           break;
         case "regtel":
           this.openRegtel = true;
+          break;
+        case "expedientes":
+          this.openExp = true;
           break;
       }
     }

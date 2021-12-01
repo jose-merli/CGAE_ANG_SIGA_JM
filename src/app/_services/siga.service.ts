@@ -33,6 +33,7 @@ import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
 import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
 import { DocumentacionAsistenciaItem } from '../models/guardia/DocumentacionAsistenciaItem';
 import { DocumentoAsistenciaItem } from '../models/guardia/DocumentoAsistenciaItem';
+import { endpoints_expedientes } from '../utils/endpoints_expedientes';
 
 @Injectable()
 export class SigaServices {
@@ -628,7 +629,8 @@ export class SigaServices {
         ...endpoints_justiciables,
         ...endpoints_oficio,
         ...endpoints_maestros,
-		...endpoints_guardia
+		...endpoints_guardia,
+		...endpoints_expedientes
     };
 
 	private menuToggled = new Subject<any>();
@@ -692,6 +694,20 @@ export class SigaServices {
     return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
       return response;
     });
+  }
+  getWithAuthHeader(service : string, token : string){
+	let headers = new HttpHeaders({
+		'Authorization': token
+	  });
+	return this.http.get(service,
+		{
+			headers : headers,
+			observe : 'response',
+			responseType : 'text'
+			
+		}).map((response) => {
+		return response;
+	  });
   }
 
   getNewSigaUrl() {
