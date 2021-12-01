@@ -22,8 +22,8 @@ export const procesos_facturacionSJCS: any = {
     cartasFacturacionPago: "620",
 
     //Permiso para movimientos varios
-    busquedaMovimientosVarios:"608",
-    
+    busquedaMovimientosVarios: "608",
+
     //permisos ficha Certificacion
     fichaCertificacion: "624",
 
@@ -39,6 +39,9 @@ export const procesos_facturacionSJCS: any = {
     busquedaBaremosDeGuardia: "618",
 
     //Permiso para generar impreso 190
-    generarImpreso190:'613'
+    generarImpreso190: '613',
+
+    //Permiso para tarjeta de facturación genérica
+    tarjetaFacFenerica: '625',
 
 }
