@@ -67,6 +67,8 @@ export class FiltroActasComponent implements OnInit {
 
     this.progressSpinner = true;
 
+    localStorage.removeItem("actasItem");
+
     this.router.navigate(["/fichaGestionActas"]);
   }
 
