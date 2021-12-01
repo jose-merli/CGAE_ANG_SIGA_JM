@@ -20,7 +20,7 @@ export class TarjetaRemesasEnvioComponent {
     resultado;
     @Input() remesaItem: RemesasResultadoItem ;
     @Input() remesaTabla;
-    remesa: { idRemesa: any; descripcion: string; nRegistro: number;};
+    remesa: { idRemesa: any; nRegistro: number;};
 
     constructor(private router: Router,private sigaServices: SigaServices){}
     nuevo: boolean = false;
@@ -28,6 +28,7 @@ export class TarjetaRemesasEnvioComponent {
     ngOnInit(){
       if(this.remesaItem.idRemesa == null){
         this.nuevo = true;
+        this.remesaItem.fechaResolucionRemesaResultado = null;
       }
     }
 
@@ -50,7 +51,6 @@ export class TarjetaRemesasEnvioComponent {
       {
         this.remesa=  {
           'idRemesa': this.remesaItem.idRemesa,
-          'descripcion': this.remesaItem.descripcionRemesa,
           'nRegistro': this.remesaItem.numRegistroRemesaCompleto,
         }
         this.router.navigate(["/fichaRemesasEnvio"]);

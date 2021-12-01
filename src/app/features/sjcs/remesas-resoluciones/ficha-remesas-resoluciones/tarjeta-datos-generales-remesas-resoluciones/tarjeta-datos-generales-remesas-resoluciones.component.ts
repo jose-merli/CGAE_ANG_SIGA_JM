@@ -127,7 +127,11 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
       }
     }
   }
-
+  transDate() {
+    let fecha = new Date();
+    let ret = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return ret;
+  }
   abreCierraFicha(key) {
     this.resaltadoDatosGenerales = true;
     let fichaPosible = this.getFichaPosibleByKey(key);
@@ -153,7 +157,8 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
     this.StringFichero = this.translateService.instant("facturacionSJCS.fichaCertificacion.subirFichero")+"*";
     if(this.remesaItem.idRemesaResolucion == null){
       this.getUltimoRegitroRemesa();
-     // this.remesaItem.fechaCarga = moment(new Date()).format('DD/MM/YYYY');
+      this.remesaItem.fechaCarga = this.formatDate(new Date());
+      this.remesaItem.fechaResolucion = this.formatDate(new Date())
       this.remesaItem.observaciones = null;
       //this.remesaItem.descripcion = "";
     }
@@ -194,11 +199,23 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
         n => {
           console.log("Dentro de la respuesta. Contenido --> ", n.contador);
           this.remesaItem.numRemesaPrefijo = n.prefijo;
-          this.remesaItem.numRemesaNumero = n.contador+1;
+          let num = (n.contador + 1) +"";
+          this.remesaItem.numRemesaNumero = this.numeroTransform(num);
         },
         error => { },
         () => { }
       );
+  }
+
+  numeroTransform(num){
+    if(num.length < 5){
+      let ceros: string = "";
+      for(;(ceros.length + num.length) < 5;){
+        ceros += "0";
+      }
+      num = ceros + num;
+    }
+    return num
   }
 
   descargarFicheros(){
@@ -221,7 +238,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
             if(blob.size > 50){
               saveAs(blob, "descargaRemesasResolucion.zip");
             } else {
-              this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
+              this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.remesasResoluciones.mensaje.descargaFallida"));
             }
         }
         else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
@@ -246,8 +263,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
 
     if (
       extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      !/\.(txt)$/i.test(extensionArchivo.trim().toUpperCase())
+      extensionArchivo.trim() == "" 
     ) {
       this.file = undefined;
       this.archivoDisponible = false;
@@ -261,7 +277,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
   }
 
   formatDate(date) {
-    const pattern = 'dd/MM/yyyy HH24:MI:SS';
+    const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);    
   }
 
@@ -327,7 +343,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
 
   save(){
     var camposOblig = document.getElementsByClassName('camposObligatorios');
-    if (camposOblig.length > 0 || this.remesaItem.nombreFichero.length == 0) {
+    if (camposOblig.length > 0 || this.remesaItem.nombreFichero != undefined && this.remesaItem.nombreFichero.length == 0) {
       this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
     } else{
 
@@ -361,8 +377,8 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
         .subscribe(
           data => {
             let accion = data.error.description;
-            if(accion == "Insert"){
-              this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.actualizacionCorrecta"));
+            if(accion == "Inserted"){
+              this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResoluciones.mensaje.guardadoCorrecto"));
             }
             this.progressSpinner = false;
           },
@@ -414,7 +430,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
         data = JSON.parse(data.body);
         let accion = data.error.description;
         if(accion == "Updated"){
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.guardadoCorrecto"));
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.remesasResoluciones.mensaje.actualizacionCorrecta"));
         }
         this.progressSpinner = false;
       },
