@@ -88,10 +88,13 @@ export class EjgComisionBusquedaComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.body = this.persistenceService.getFiltros();
+    // if (this.persistenceService.getFiltros() != undefined) {
+    //   this.body = this.persistenceService.getFiltros();
 
-      this.body.annio = this.persistenceService.getFiltros().anioacta;
+    //   this.body.annio = this.persistenceService.getFiltros().anioacta;
+    if(localStorage.getItem("filtrosEJGCom")){
+      this.body = JSON.parse(localStorage.getItem("filtrosEJGCom"));
+
       this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
       this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
       this.body.fechaEstadoDesd = this.transformDate(this.body.fechaEstadoDesd);
@@ -105,7 +108,8 @@ export class EjgComisionBusquedaComponent implements OnInit {
       this.body.fechaPonenteDesd = this.transformDate(this.body.fechaPonenteDesd);
       this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
 
-      this.persistenceService.clearFiltros();
+      // this.persistenceService.clearFiltros();
+      localStorage.removeItem("filtrosEJGCom");
       this.busqueda.emit(this.historico);
 
     } else {
