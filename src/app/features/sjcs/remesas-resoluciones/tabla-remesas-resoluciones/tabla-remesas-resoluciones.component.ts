@@ -219,7 +219,7 @@ export class TablaRemesasResolucionesComponent implements OnInit {
             if(blob.size > 50){
               saveAs(blob, "descargaRemesasResoluciones.zip");
             } else {
-              this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
+              this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.remesasResoluciones.mensaje.descargaFallida"));
             }
         }
         else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));

@@ -145,11 +145,11 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     this.StringFichero = this.translateService.instant("facturacionSJCS.fichaCertificacion.subirFichero")+"*";
     if(this.remesaItem.idRemesa == null){
       this.getUltimoRegitroRemesa();
-      //this.remesaItem.fechaCargaRemesaResultado = moment(new Date()).format('DD/MM/YYYY');
+      this.remesaItem.fechaCargaRemesaResultado = this.formatDate(new Date())
+      this.remesaItem.fechaResolucionRemesaResultado = this.formatDate(new Date())
       this.remesaItem.observacionesRemesaResultado = null;
-      //this.remesaItem.descripcion = "";
     }
-    if(this.remesaItem.nombreFichero.length > 0){
+    if( this.remesaItem.nombreFichero != undefined && this.remesaItem.nombreFichero.length > 0){
         this.conFichero = true;
         console.log("Tiene fichero")
     }
@@ -187,13 +187,24 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
         n => {
           console.log("Dentro de la respuesta. Contenido --> ", n.contador);
           this.remesaItem.prefijoRemesa = n.prefijo;
-          this.remesaItem.numeroRemesa = (n.contador+1);
+          let num:string = (n.contador+1)+"";
+          this.remesaItem.numeroRemesa = this.numeroTransform(num);
         },
         error => { },
         () => { }
       );
   }
 
+  numeroTransform(num){
+    if(num.length < 5){
+      let ceros: string = "";
+      for(;(ceros.length + num.length) < 5;){
+        ceros += "0";
+      }
+      num = ceros + num;
+    }
+    return num
+  }
 
 
 
@@ -298,7 +309,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
 
   save(){
     var camposOblig = document.getElementsByClassName('camposObligatorios');
-    if (camposOblig.length > 0 || this.remesaItem.nombreFichero.length == 0) {
+    if (camposOblig.length > 0 || this.remesaItem.nombreFichero != undefined && this.remesaItem.nombreFichero.length == 0) {
       this.showMessage("error", "Error", this.translateService.instant("general.message.camposObligatorios"));
     } else{
 
@@ -331,8 +342,8 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     .subscribe(
       data => {
         let accion = data.error.description;;
-        if(accion == "Insert"){
-          this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.actualizacionCorrecta"));
+        if(accion == "Inserted"){
+          this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.guardadoCorrecto"));
         }
         this.progressSpinner = false;
       },
@@ -386,7 +397,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
         data = JSON.parse(data.body);
         let accion = data.error.description;
         if(accion == "Updated"){
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.guardadoCorrecto"));
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.actualizacionCorrecta"));
         }
         this.progressSpinner = false;
       },
@@ -446,7 +457,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
             if(blob.size > 50){
               saveAs(blob, "descargaRemesasResultados.zip");
             } else {
-              this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
+              this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.remesasResultados.mensaje.descargaFallida"));
             }
         }
         else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));

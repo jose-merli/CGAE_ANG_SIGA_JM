@@ -219,7 +219,7 @@ export class TablaCargaDesignaProcuradorComponent implements OnInit {
             if(blob.size > 50){
               saveAs(blob, "descargaDesignaProcurador.zip");
             } else {
-              this.showMessage("error", this.translateService.instant("general.message.informacion"), 'No se puede descargar los ficheros de las remesas de resultados seleccionadas');
+              this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.intercambios.cargaDesignasProcuradores.mensaje.descargaFallida"));
             }
         }
         else this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
