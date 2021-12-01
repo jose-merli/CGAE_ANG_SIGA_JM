@@ -559,6 +559,15 @@ import { GestionFacturasComponent } from './features/facturacion/facturas/gestio
 import { DatosCargaDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/datos-carga-devoluciones/datos-carga-devoluciones.component';
 import { CuentaEntidadDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/cuenta-entidad-devoluciones/cuenta-entidad-devoluciones.component';
 import { FacturasDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/facturas-devoluciones/facturas-devoluciones.component';
+import { ObservacionesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/observaciones-facturas/observaciones-facturas.component';
+import { DatosGeneralesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/datos-generales-facturas/datos-generales-facturas.component';
+import { EstadosPagosFacturasComponent } from './features/facturacion/facturas/gestion-facturas/estados-pagos-facturas/estados-pagos-facturas.component';
+import { ObservacionesRectificativaFacturasComponent } from './features/facturacion/facturas/gestion-facturas/observaciones-rectificativa-facturas/observaciones-rectificativa-facturas.component';
+import { LineasFacturasComponent } from './features/facturacion/facturas/gestion-facturas/lineas-facturas/lineas-facturas.component';
+import { ComunicacionesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/comunicaciones-facturas/comunicaciones-facturas.component';
+import { ClienteFacturasComponent } from './features/facturacion/facturas/gestion-facturas/cliente-facturas/cliente-facturas.component';
+import { DeudorFacturasComponent } from './features/facturacion/facturas/gestion-facturas/deudor-facturas/deudor-facturas.component';
+import { FacturacionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/facturacion-facturas/facturacion-facturas.component';
 
 enableRipple(true);
 
@@ -1050,6 +1059,15 @@ enableRipple(true);
 		DatosCargaDevolucionesComponent,
 		CuentaEntidadDevolucionesComponent,
 		FacturasDevolucionesComponent,
+		ObservacionesFacturasComponent,
+		DatosGeneralesFacturasComponent,
+		EstadosPagosFacturasComponent,
+		ObservacionesRectificativaFacturasComponent,
+		LineasFacturasComponent,
+		ComunicacionesFacturasComponent,
+		ClienteFacturasComponent,
+		DeudorFacturasComponent,
+		FacturacionFacturasComponent
 	],
 	imports: [
 		Paginador3Module,

@@ -1,3 +1,33 @@
-<p>
-  gestion-facturas works!
-</p>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.facturacion" | translate }}
+      <i class="fa fa-angle-right"></i>Ficha de Facturas
+    </p>
+  </div>
+
+  <div>
+    <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+    </app-tarjeta-resumen-fija>
+
+    <app-cliente-facturas></app-cliente-facturas>
+    <app-facturacion-facturas></app-facturacion-facturas>
+    <app-deudor-facturas></app-deudor-facturas>
+    <app-datos-generales-facturas></app-datos-generales-facturas>
+    <app-estados-pagos-facturas></app-estados-pagos-facturas>
+    <app-observaciones-facturas></app-observaciones-facturas>
+    <app-observaciones-rectificativa-facturas></app-observaciones-rectificativa-facturas>
+    <app-lineas-facturas></app-lineas-facturas>
+    <app-comunicaciones-facturas></app-comunicaciones-facturas>
+  </div>
+</div>
+
+<div class="mt-3 text-right main-button" id="down">
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

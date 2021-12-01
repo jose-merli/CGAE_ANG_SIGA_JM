@@ -1,0 +1,45 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="deudor">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha pointer">Deudor</label>
+
+            <label class="mr-3">
+              <i (click)="navigateToSociedad();$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2"></i>
+              <a (click)="navigateToSociedad();$event.stopPropagation();">
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  Ficha Sociedad
+                </span>
+              </a>
+            </label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>Identificación: 
+                <span>{{ '' }}</span></label>
+            <label>Descripción: 
+                <span>{{ '' }}</span></label>
+            <label>Abreviatura: 
+              <span>{{ '' }}</span></label>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

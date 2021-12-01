@@ -1,4 +1,7 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Message } from 'primeng/primeng';
+import { FacturasItem } from '../../../../models/FacturasItem';
 
 @Component({
   selector: 'app-gestion-facturas',
@@ -7,9 +10,157 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GestionFacturasComponent implements OnInit {
 
-  constructor() { }
+  msgs: Message[] = [];
+  progressSpinner: boolean = false;
+
+  iconoTarjetaResumen = "clipboard";
+  body: FacturasItem = new FacturasItem();
+  datos = [];
+  enlacesTarjetaResumen = [];
+
+  manuallyOpened: boolean;
+  openTarjetaDatosGenerales: boolean = true;
+  openTarjetaEstadosPagos: boolean = false;
+  openTarjetaObservaciones: boolean = false;
+  openTarjetaObservacionesRectificativa: boolean = false;
+  openTarjetaLineas: boolean = false;
+  openTarjetaComunicaciones: boolean = false;
+
+  constructor(
+    private location: Location
+  ) { }
 
   ngOnInit() {
+    this.progressSpinner = true;
+
+    this.updateTarjetaResumen();
+    setTimeout(() => {
+      this.updateEnlacesTarjetaResumen();
+    }, 5);
+
+    this.goTop();
+    this.progressSpinner = false;
+  }
+
+  // Tarjeta resumen
+
+  updateTarjetaResumen(): void {
+    this.datos = [
+      {
+        label: "Número Factura",
+        value: this.body.numeroFactura
+      },
+      {
+        label: "Fecha Emisión",
+        value: this.body.fechaEmision
+      },
+      {
+        label: "Cliente",
+        value: ""
+      },
+      {
+        label: "Importe Total",
+        value: this.body.importefacturado
+      }
+    ]
+  }
+
+  updateEnlacesTarjetaResumen(): void {
+    this.enlacesTarjetaResumen = [];
+
+    this.enlacesTarjetaResumen.push({
+      label: "general.message.datos.generales",
+      value: document.getElementById("datosGenerales"),
+      nombre: "datosGenerales",
+    });
+
+  }
+
+  // Abrir tarjetas desde enlaces
+  isOpenReceive(event) {
+    if (event != undefined) {
+      switch (event) {
+        case "datosGenerales":
+          this.openTarjetaDatosGenerales = true;
+          break;
+        case "estadosPagos":
+          this.openTarjetaEstadosPagos = true;
+          break;
+        case "observaciones":
+          this.openTarjetaObservaciones = true;
+          break;
+        case "observacionesRectificativa":
+          this.openTarjetaObservacionesRectificativa = true;
+          break;
+        case "lineas":
+          this.openTarjetaLineas = true;
+          break;
+        case "comunicaciones":
+          this.openTarjetaComunicaciones = true;
+          break;
+      }
+    }
+  }
+
+  // Abrir y cerrar manualmente las tarjetas
+  isCloseReceive(event) {
+    if (event != undefined) {
+      switch (event) {
+        case "datosGenerales":
+          this.openTarjetaDatosGenerales = this.manuallyOpened;
+          break;
+        case "estadosPagos":
+          this.openTarjetaEstadosPagos = this.manuallyOpened;
+          break;
+        case "observaciones":
+          this.openTarjetaObservaciones = this.manuallyOpened;
+          break;
+        case "observacionesRectificativa":
+          this.openTarjetaObservacionesRectificativa = this.manuallyOpened;
+          break;
+        case "lineas":
+          this.openTarjetaLineas = this.manuallyOpened;
+          break;
+        case "comunicaciones":
+          this.openTarjetaComunicaciones = this.manuallyOpened;
+          break;
+      }
+    }
+  }
+
+  // Función para guardar o actualizar
+
+  guardadoSend(event: FacturasItem): void {
+
+  }
+
+  // Funciones de utilidad
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  goTop() {
+    document.children[document.children.length - 1]
+    let top = document.getElementById("top");
+    if (top) {
+      top.scrollIntoView();
+      top = null;
+    }
+  }
+
+  backTo() {
+    sessionStorage.setItem("volver", "true");
+    this.location.back();
   }
 
 }

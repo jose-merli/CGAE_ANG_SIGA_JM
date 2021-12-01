@@ -1,0 +1,150 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="datosGenerales">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva('datosGenerales')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
+            <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>Número de factura: 
+                <span>{{ '' }}</span></label>
+            <label>Fecha emisión: 
+                <span>{{ '' }}</span></label>
+            <label>Importe neto: 
+              <span>{{ '' }}</span></label>
+            <label>Importe IVA: 
+              <span>{{ '' }}</span></label>
+            <label>Importe total: 
+              <span>{{ '' }}</span></label>
+            <label>Importe pendiente: 
+              <span>{{ '' }}</span></label>
+            <label>Descripción: 
+              <span>{{ '' }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
+              *ngIf="!esFichaActiva('datosGenerales')"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva('datosGenerales')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('datosGenerales')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva('datosGenerales')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-4 col-md-4">
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px">Inicial</label>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Número de factura</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Fecha emisión</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe neto</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe IVA</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe total</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-4 col-md-4">
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px">Cobros</label>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe anticipado</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe compensado</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe por caja</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe por banco</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe cobrado total</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe pendiente</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-4 col-md-4">
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px">Abonos</label>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe anulado</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+
+            <div class="w-100 d-none d-md-block"></div>
+            
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe por caja</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe por banco</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe abonado total</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>Importe pendiente</label>
+              <input type="text" class="form-control" disabled pInputText>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="comunicar()" label="Comunicar"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
