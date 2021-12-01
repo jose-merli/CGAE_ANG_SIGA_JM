@@ -24,6 +24,9 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
 
   @ViewChild(FiltroCartasFacturacionPagoComponent) filtros: FiltroCartasFacturacionPagoComponent;
   @ViewChild(TablaCartasFacturacionPagoComponent) tabla;
+  datosColegiado: any;
+  disabledLetradoFicha: boolean;
+  apartado: string;
 
   constructor(private commonsService: CommonsService, private persistenceService: PersistenceService,
     private translateService: TranslateService, private router: Router, private sigaServices: SigaServices) { }
@@ -33,7 +36,6 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
       .then(respuesta => {
 
         this.permisoEscritura = respuesta;
-
         this.persistenceService.setPermisos(this.permisoEscritura);
 
         if (this.permisoEscritura == undefined) {
@@ -46,6 +48,36 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
         }
       }
       ).catch(error => console.error(error));
+
+      if(sessionStorage.getItem("apartadoFacturacion")){
+        this.apartado = "f" ;
+        if (sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
+            this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
+            this.filtros.filtros.apellidosNombre = this.datosColegiado.nombre;
+            this.filtros.filtros.ncolegiado = this.datosColegiado.numColegiado;
+            this.filtros.filtros.idPersona = this.datosColegiado.idPersona;
+            this.disabledLetradoFicha = true;
+            sessionStorage.removeItem("datosColegiado");
+        }
+        sessionStorage.removeItem("apartadoFacturacion");
+
+        this.searchFacturacionEnlace();
+      }
+
+      if(sessionStorage.getItem("apartadoPagos")){
+        this.apartado = "p";
+        if (sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
+          this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
+          this.filtros.filtros.apellidosNombre = this.datosColegiado.nombre;
+          this.filtros.filtros.ncolegiado = this.datosColegiado.numColegiado;
+          this.filtros.filtros.idPersona = this.datosColegiado.idPersona;
+          this.disabledLetradoFicha = true;
+          sessionStorage.removeItem("datosColegiado");
+      }
+      sessionStorage.removeItem("apartadoPagos");
+      
+      this.searchPagoEnlace();
+      }
   }
 
   search(event) {
@@ -185,6 +217,103 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
     if (filtersCopy.idFacturacion) {
       delete filtersCopy.idFacturacion;
     }
+
+    this.sigaServices.post("facturacionsjcs_buscarCartaspago", filtersCopy).subscribe(
+      data => {
+        let datos = JSON.parse(data["body"]);
+        let error = JSON.parse(data.body).error;
+        this.datos = datos.cartasFacturacionPagosItems;
+        if (this.tabla != undefined) {
+          this.tabla.tabla.sortOrder = 0;
+          this.tabla.tabla.sortField = '';
+          this.tabla.tabla.reset();
+        }
+        this.progressSpinner = false;
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+
+        this.buscar = true;
+
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+
+      },
+      () => {
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.tabla.tablaFoco.nativeElement.scrollIntoView();
+        }, 5);
+      }
+    );
+
+  }
+
+  searchFacturacionEnlace() {
+
+    this.progressSpinner = true;
+
+    let filtersCopy = JSON.parse(JSON.stringify(this.filtros.filtros));
+      
+    filtersCopy.idFacturacion = null;
+    filtersCopy.idConcepto = null;
+    filtersCopy.idTurno = null;    
+    filtersCopy.idPartidaPresupuestaria = null;
+
+    this.sigaServices.post("facturacionsjcs_buscarCartasfacturacion", filtersCopy).subscribe(
+      data => {
+
+        let datos = JSON.parse(data["body"]);
+        let error = JSON.parse(data.body).error;
+
+        this.datos = datos.cartasFacturacionPagosItems;
+
+        if (this.tabla != undefined) {
+          this.tabla.tabla.sortOrder = 0;
+          this.tabla.tabla.sortField = '';
+          this.tabla.tabla.reset();
+        }
+
+        this.progressSpinner = false;
+
+        if (error != null && error.description != null) {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+        }
+
+        this.buscar = true;
+
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+
+      },
+      () => {
+        this.progressSpinner = false;
+        setTimeout(() => {
+          this.tabla.tablaFoco.nativeElement.scrollIntoView();
+        }, 5);
+      }
+    );
+
+  }
+
+  searchPagoEnlace() {
+
+    this.progressSpinner = true;
+
+    // Hacemos una copia de los filtros para no modificar el original
+    let filtersCopy = JSON.parse(JSON.stringify(this.filtros.filtros));
+
+          
+    filtersCopy.idPago = null;
+    filtersCopy.idConcepto = null;
+    filtersCopy.idTurno = null;    
+    filtersCopy.idPartidaPresupuestaria = null;
+   
 
     this.sigaServices.post("facturacionsjcs_buscarCartaspago", filtersCopy).subscribe(
       data => {

@@ -225,5 +225,48 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     this.router.navigate(["/guardiasSolicitudesCentralita"]);
   }
 
+  facturaciones(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    sessionStorage.setItem("apartadoFacturacion","true");
+    this.router.navigate(["/cartaFacturacionPago"]);
+
+
+  
+  }
+
+  movimientosVarios(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/movimientosVarios"]);
+  
+  }
+
+
+  retencionesIRPF(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/retenciones"]);
+  
+  }
+
+  retencionesJudiciales(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/retenciones"]);
+  
+  }
 
 }

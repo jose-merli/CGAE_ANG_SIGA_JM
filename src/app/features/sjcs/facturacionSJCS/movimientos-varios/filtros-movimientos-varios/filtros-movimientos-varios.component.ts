@@ -26,9 +26,9 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 	gruposFacturacion: ComboItem;
 	facturacion: ComboItem;
 	concepto: ComboItem;
-	
 	tipos: ComboItem;
 	partidaPresupuestaria: ComboItem;
+
 	msgs: any[];
 	buscar: boolean = false;
 	historico: boolean = false;
@@ -46,6 +46,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 
   @Output() busqueda = new EventEmitter<MovimientosVariosFacturacionItem>();
   @Input() permisoEscritura;
+  @Input() disabledLetradoFicha;
 
   filtros: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
 
@@ -75,8 +76,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 		this.comboGruposTurnos();
 		this.comboConcepto();
     	this.comboPartidasPresupuestarias();
-    	this.comboTipos();
-
+    	this.comboTipos();		
 
 		if (sessionStorage.getItem("colegiadoRelleno")) {
 			const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
@@ -98,6 +98,11 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 			this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
 	  
 			sessionStorage.removeItem("buscadorColegiados");
+		  }
+
+		  if(this.usuarioBusquedaExpress.numColegiado != null && this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != ""){
+			this.filtros.ncolegiado =this.usuarioBusquedaExpress.numColegiado;
+			this.filtros.letrado = this.usuarioBusquedaExpress.nombreAp;
 		  }
 
 		}
@@ -301,6 +306,8 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 		
 		    this.historico=false;
 			this.filtros.historico=false;
+			this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
+			this.filtros.letrado = this.usuarioBusquedaExpress.nombreAp;
 			this.persistenceService.setFiltros(this.filtros);
 
 			this.busqueda.emit(this.filtros);
@@ -323,7 +330,9 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 			(this.filtros.idConcepto != null && this.filtros.idConcepto != undefined && this.filtros.idConcepto != "") ||
 			(this.filtros.idPartidaPresupuestaria != null && this.filtros.idPartidaPresupuestaria != undefined && this.filtros.idPartidaPresupuestaria != "") || 
 			(this.filtros.ncolegiado != null &&this.filtros.ncolegiado != undefined && this.filtros.ncolegiado != "") ||
-			(this.filtros.letrado != null && this.filtros.letrado != undefined && this.filtros.letrado != "")) { 
+			(this.filtros.letrado != null && this.filtros.letrado != undefined && this.filtros.letrado != "") || 
+			(this.usuarioBusquedaExpress.numColegiado != null && this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != "") ||
+			(this.usuarioBusquedaExpress.nombreAp != null && this.usuarioBusquedaExpress.nombreAp != undefined && this.usuarioBusquedaExpress.nombreAp != "")){ 
 
 				if ((this.filtros.fechaApDesde != undefined) && (this.filtros.fechaApHasta != undefined)) {
 					if (this.filtros.fechaApDesde <= this.filtros.fechaApHasta) {
@@ -359,21 +368,6 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 	onKeyPress(event: KeyboardEvent) {
 		if (event.keyCode === KEY_CODE.ENTER) {
 			this.isBuscar();
-		}
-	}
-
-	onChangeMultiSelectFact(event) {
-		// if (undefined != event.value && event.value.length == 0) {
-		// 	this.filtros[filtro] = undefined;
-		// }
-		// this.filtros.idAplicadoEnPago = event.value;
-	}
-
-	disabledComponenteLetrado(){
-		if(this.isLetrado){
-			return true;
-		}else{
-			return false;
 		}
 	}
 

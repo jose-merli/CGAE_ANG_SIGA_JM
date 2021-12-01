@@ -6,7 +6,8 @@ export class MovimientosVariosService {
 
   modoEdicion: boolean;
   datosColegiadoAux: ColegiadosSJCSItem = null;
-
+  datosColegiadoFichaColegial;
+  
   constructor() { }
 
 }

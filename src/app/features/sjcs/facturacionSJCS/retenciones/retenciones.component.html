@@ -14,7 +14,7 @@
 
   <app-filtro-busqueda-retenciones (buscarRetencionesEvent)="buscarRetenciones(false, $event)"
     (buscarRetencionesAplicadasEvent)="buscarRetencionesAplicadas(false, $event)"
-    (modoBusquedaEvent)="changeModoBusqueda($event)" [permisoEscritura]="permisoEscritura" [isLetrado]="isLetrado">
+    (modoBusquedaEvent)="changeModoBusqueda($event)" [disabledLetradoFicha]="disabledLetradoFicha" [permisoEscritura]="permisoEscritura" [isLetrado]="isLetrado">
   </app-filtro-busqueda-retenciones>
 
   <app-tabla-busqueda-retenciones *ngIf="mostrarTablaResultados && modoBusqueda == 'r'" [datos]="retencionesItemList"
