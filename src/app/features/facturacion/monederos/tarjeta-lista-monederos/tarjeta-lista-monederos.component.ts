@@ -10,6 +10,7 @@ import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { TarjetaFiltroMonederosComponent } from '../tarjeta-filtro-monederos/tarjeta-filtro-monederos.component';
 
 @Component({
   selector: 'app-tarjeta-lista-monederos',
@@ -24,6 +25,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
 
   @Output() actualizarLista = new EventEmitter<Boolean>();
   @Input("listaMonederos") listaMonederos: ListaMonederosItem[];
+  @Input("filtrosBusqueda") filtrosBusqueda: TarjetaFiltroMonederosComponent;
   @ViewChild("monederosTable") monederosTable: DataTable;
 
   cols = [
@@ -83,6 +85,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
     monedero.idLinea = rowData.idLinea;
     monedero.idPersona = rowData.idPersona;
     sessionStorage.setItem("FichaMonedero", JSON.stringify(monedero));
+    sessionStorage.setItem("filtrosMonedero", JSON.stringify(this.filtrosBusqueda.filtrosMonederoItem));
     this.router.navigate(["/fichaMonedero"]);
   }
 

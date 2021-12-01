@@ -17,7 +17,8 @@
     <!-- Listado de monederos -->
     <div>
       <app-tarjeta-lista-monederos [hidden]="!muestraTablaMonederos" 
-        (actualizarLista)="busquedaMonederos($event)" [listaMonederos]="listaMonederos" id="tablaMonederos">
+        (actualizarLista)="busquedaMonederos($event)" [listaMonederos]="listaMonederos" 
+        [filtrosBusqueda]="filtrosBusqueda" id="tablaMonederos">
       </app-tarjeta-lista-monederos>
     </div>
   </div>
