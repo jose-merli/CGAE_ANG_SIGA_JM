@@ -104,7 +104,7 @@ export class ResolucionComponent implements OnInit {
   }
 
   getResolucion(selected) {
-    //this.progressSpinner = true;
+    this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getResolucion", selected).subscribe(
       n => {
         if (n.body) {
@@ -126,9 +126,10 @@ export class ResolucionComponent implements OnInit {
 
         //Se desbloquea el desplegable de fundamento juridico si hay una resolucion seleccionada al inciar la tarjeta.
         if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) this.isDisabledFundamentosJurid = false;
-        //this.progressSpinner = false;
+        this.progressSpinner = false;
       },
       err => {
+        this.progressSpinner = false;
         console.log(err);
       }
     );
@@ -327,7 +328,8 @@ export class ResolucionComponent implements OnInit {
           this.newEstado.emit(null);
 
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.bodyInicial = JSON.parse(JSON.stringify(this.resolucion));
+          //Para que se actualice la informacion si fuera necesario
+          this.getResolucion(this.persistenceService.getDatos());
           this.setCabecera();
         } else {
           this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
