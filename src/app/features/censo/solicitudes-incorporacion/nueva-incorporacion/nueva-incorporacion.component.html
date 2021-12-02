@@ -173,7 +173,7 @@
                         </app-fecha>
                     </div>
                     <div class="form-group col-lg-3 col-md-4">
-                        <label>{{"censo.nuevaSolicitud.fechaincorporacion" | translate}}</label>
+                        <label>{{"censo.nuevaSolicitud.fechaincorporacion" | translate}} (*)</label>
                         <app-fecha [inputStyleClass]="styleObligatorioAprobar(solicitudEditar.fechaIncorporacion)"
                             [(value)]="solicitudEditar.fechaIncorporacion" [disabled]="consulta" [utc]="false"
                             (valueChangeSelected)="fillFechaIncorporacion($event)"
