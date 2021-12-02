@@ -50,46 +50,8 @@ export class GestionFacturasComponent implements OnInit {
         console.log(this.body);
       }, err => { }
     )*/
-    this.body = {
-      idFactura: "128741",
-      numeroFactura: null,
-      estado: "En revisión",
-      formaCobroFactura: null,
-      formaCobroAbono: null,
-      numeroAbonoSJCS: null,
-      fechaEmision: null,
-      fechaEmisionDesde: null,
-      fechaEmisionHasta: null,
-      importefacturado: "101.58",
-      importefacturadoDesde: null,
-      importefacturadoHasta: null,
-      contabilizado: null,
-      serie: null,
-      facturacion: "CERTIFICADOS NI JULIO 2016",
-      identificadorAdeudos: null,
-      identificadorTransferencia: null,
-      identificadorDevolucion: null,
-      numeroColegiado: null,
-      numeroIdentificacion: null,
-      apellidos: "XTREFNRAPOPEQMYBF IJISDVL",
-      nombre: "JULIAN",
-      facturasPendientesDesde: null,
-      facturasPendientesHasta: null,
-      importeAdeudadoPendiente: "101.58",
-      importeAdeudadoHasta: null,
-      importeAdeudadoDesde: null,
-      comunicacionesFacturas: "0",
-      comunicacionesFacturasHasta: null,
-      comunicacionesFacturasDesde: null,
-      tipo: "FACTURA",
-      ultimaComunicacion: null,
-      nombreInstitucion: null,
-      importePagado: null,
-      observacionesFactura: null,
-      observacionesFicheroFactura: null,
-      observacionesAbono: null,
-      motivosAbono: null
-    };
+    this.body.idFactura = "128741";
+    this.body.tipo = "FACTURA";
 
     
     
