@@ -138,7 +138,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -174,7 +174,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -250,7 +250,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -287,7 +287,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -330,7 +330,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
 

@@ -233,7 +233,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
         err => {
           this.showFail(
             this.translateService.instant("informesYcomunicaciones.enviosMasivos.destinatarioIndv.mensaje.error.borrar.destinatarios"));
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.getResultados();
@@ -272,7 +272,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
       this.selectMultiple = false;
       this.getResultados();
     }, error => {
-      console.log(error);
+      //console.log(error);
     })
   }
 
@@ -286,7 +286,7 @@ export class DestinatarioIndvEnvioMasivoComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => { }

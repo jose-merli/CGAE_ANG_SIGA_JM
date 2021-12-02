@@ -147,7 +147,7 @@ export class SelectorComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(selectorJuzgado.opciones);
@@ -164,7 +164,7 @@ export class SelectorComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(selectorFacturacion.opciones);
@@ -199,7 +199,7 @@ export class SelectorComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.arregloTildesCombo(selectorProcedimiento.opciones);
         this.progressSpinner = false;
@@ -215,7 +215,7 @@ export class SelectorComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(selectorModulo.opciones);
@@ -246,7 +246,7 @@ export class SelectorComponent implements OnInit {
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
         }
@@ -286,7 +286,7 @@ export class SelectorComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.arregloTildesCombo(this.selector[2].opciones);
@@ -303,7 +303,7 @@ export class SelectorComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.arregloTildesCombo(this.selector[2].opciones);
@@ -320,7 +320,7 @@ export class SelectorComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.arregloTildesCombo(this.selector[3].opciones);
@@ -337,7 +337,7 @@ export class SelectorComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.arregloTildesCombo(this.selector[3].opciones);

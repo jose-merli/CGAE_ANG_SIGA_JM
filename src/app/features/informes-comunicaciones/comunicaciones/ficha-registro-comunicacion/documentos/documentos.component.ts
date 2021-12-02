@@ -161,7 +161,7 @@ export class DocumentosComponent implements OnInit {
           this.datos = datos.documentoEnvioItem;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.progressSpinner = false;
@@ -195,7 +195,7 @@ export class DocumentosComponent implements OnInit {
         this.selectedDatos = [];
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste"));
         this.progressSpinner = false;
       }, () =>{
@@ -254,7 +254,7 @@ export class DocumentosComponent implements OnInit {
               "informesycomunicaciones.comunicaciones.mensaje.errorEliminadoEnvio"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.getDocumentos();
@@ -298,7 +298,7 @@ export class DocumentosComponent implements OnInit {
                 "informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"
               )
             );
-            console.log(err);
+            //console.log(err);
           }
           this.progressSpinner = false;
         },
@@ -326,7 +326,7 @@ export class DocumentosComponent implements OnInit {
             "informesycomunicaciones.comunicaciones.mensaje.errorGuardarDocumento"
           )
         );
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.getDatos();

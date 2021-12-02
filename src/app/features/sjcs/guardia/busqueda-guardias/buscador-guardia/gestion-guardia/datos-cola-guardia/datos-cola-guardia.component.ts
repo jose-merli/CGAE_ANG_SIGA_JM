@@ -113,7 +113,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.manual = confValue.manual;
         this.porGrupos= confValue.porGrupos;
         this.minimoLetrado = confValue.minimoLetradosCola
-        console.log("MANUAL: ", this.manual)
+        //console.log("MANUAL: ", this.manual)
         this.inicio();
         this.getColaGuardia();
       });
@@ -288,7 +288,7 @@ inicio(){
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
 
             if (err.error != undefined && JSON.parse(err.error).error.description != "") {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
@@ -354,9 +354,9 @@ inicio(){
     this.sigaService.post(
       "busquedaGuardias_updateColaGuardia", colaGuardiaModificadoSt).subscribe(
         data => {
-          console.log(data);
+          //console.log(data);
         }, err => {
-          console.log(err);
+          //console.log(err);
         });
   }
 
@@ -400,7 +400,7 @@ inicio(){
           
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }
       );
@@ -550,7 +550,7 @@ inicio(){
             this.getColaGuardia();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           }
         );
@@ -582,7 +582,7 @@ inicio(){
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         });
 

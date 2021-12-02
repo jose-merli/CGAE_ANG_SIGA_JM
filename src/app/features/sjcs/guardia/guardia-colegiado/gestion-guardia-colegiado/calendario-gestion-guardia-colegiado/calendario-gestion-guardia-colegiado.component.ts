@@ -61,7 +61,7 @@ comboListaGuardias =[];
           this.progressSpinner = false
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false
         }
       )
@@ -116,7 +116,7 @@ comboListaGuardias =[];
           this.progressSpinner = false
         },
         (error) => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false
         }
       );

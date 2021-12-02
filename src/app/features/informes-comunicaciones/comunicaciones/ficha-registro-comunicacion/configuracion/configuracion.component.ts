@@ -134,7 +134,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -165,7 +165,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => { }
       );
@@ -242,7 +242,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.modelosComunicacion = result.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -270,7 +270,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -295,7 +295,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.enviosMasivos.ficha.envioError"));
-        console.log(err);
+        //console.log(err);
       },
       () => {
 
@@ -358,7 +358,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               "informesycomunicaciones.comunicaciones.mensaje.errorCancelarEnvio"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => { }
       );
@@ -381,7 +381,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         }
       },
         err => {
-          console.log(err);
+          //console.log(err);
           this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
           );
         }, () => {

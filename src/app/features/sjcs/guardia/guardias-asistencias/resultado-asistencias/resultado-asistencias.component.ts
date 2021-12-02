@@ -111,7 +111,7 @@ export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () =>{
@@ -147,7 +147,7 @@ export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () =>{
@@ -172,7 +172,7 @@ export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () =>{

@@ -256,7 +256,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () =>{
           this.progressSpinner = false;
@@ -385,7 +385,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -406,7 +406,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false
       }
     );
@@ -425,7 +425,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         this.getComboJuzgados();
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMsg('error',this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), err);
         this.progressSpinner = false
       }
@@ -505,7 +505,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -639,7 +639,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
             },
             () =>{
               this.progressSpinner = false;

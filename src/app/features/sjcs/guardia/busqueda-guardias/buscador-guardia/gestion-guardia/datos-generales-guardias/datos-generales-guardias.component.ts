@@ -158,7 +158,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -170,7 +170,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -195,7 +195,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -244,7 +244,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
       err => {
 
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          console.log('err.error - ', err.error)
+          //console.log('err.error - ', err.error)
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));

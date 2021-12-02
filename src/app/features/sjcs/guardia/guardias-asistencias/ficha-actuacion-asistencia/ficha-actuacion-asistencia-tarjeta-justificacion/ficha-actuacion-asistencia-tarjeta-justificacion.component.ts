@@ -70,7 +70,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -98,7 +98,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -153,7 +153,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {

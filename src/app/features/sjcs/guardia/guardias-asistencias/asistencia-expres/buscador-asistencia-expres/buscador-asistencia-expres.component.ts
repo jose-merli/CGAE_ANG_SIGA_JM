@@ -136,7 +136,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -185,7 +185,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -210,7 +210,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -229,7 +229,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
     
@@ -245,7 +245,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboTurnos);
@@ -278,7 +278,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
           } 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 

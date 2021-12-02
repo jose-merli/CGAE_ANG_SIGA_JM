@@ -185,7 +185,7 @@ export class ComunicacionesComponent implements OnInit {
         err => {
           let msg = this.translateService.instant("informesYcomunicaciones.comunicaciones.mensaje.error.obtenerPersona");
           this.showFail(msg);
-          console.log(err);
+          //console.log(err);
         },
         () => {
           //this.buscar();
@@ -263,7 +263,7 @@ export class ComunicacionesComponent implements OnInit {
         // this.colegios.unshift({ label: "", value: "" });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -291,7 +291,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -303,7 +303,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         // this.estados.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -331,7 +331,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -693,7 +693,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -780,7 +780,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -842,7 +842,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.cancelar"));
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.buscar();
@@ -873,7 +873,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.programar"));
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.buscar();
@@ -968,7 +968,7 @@ función para que no cargue primero las etiquetas de los idiomas*/
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));
-        console.log(err);
+        //console.log(err);
       }
     );
   }

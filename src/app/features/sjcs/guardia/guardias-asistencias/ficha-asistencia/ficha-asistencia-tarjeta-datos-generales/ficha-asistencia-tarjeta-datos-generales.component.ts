@@ -130,7 +130,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboEstadosAsistencia);
@@ -146,7 +146,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboTurnos);
@@ -168,7 +168,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
             this.comboGuardias = n.combooItems;
           },
           err => {
-            console.log(err);
+            //console.log(err);
     
           }, () => {
             this.commonServices.arregloTildesCombo(this.comboGuardias);
@@ -202,7 +202,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -225,7 +225,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     
             },
             err => {
-              console.log(err);
+              //console.log(err);
             }
           );
     }
@@ -248,7 +248,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           } 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -279,7 +279,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -432,7 +432,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -513,7 +513,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

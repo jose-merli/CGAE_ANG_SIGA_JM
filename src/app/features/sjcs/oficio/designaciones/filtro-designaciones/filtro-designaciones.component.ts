@@ -110,7 +110,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkAccesoFichaActuacion();
     this.getParamsEJG();
 
-    console.log('this.usuarioBusquedaExpressFromFicha*********', this.usuarioBusquedaExpressFromFicha)
+    //console.log('this.usuarioBusquedaExpressFromFicha*********', this.usuarioBusquedaExpressFromFicha)
     if (sessionStorage.getItem("buscadorColegiados")) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;

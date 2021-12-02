@@ -59,7 +59,7 @@ export class CalendariosComponent implements OnInit {
           this.commonsService.arregloTildesCombo(this.comboListaGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -78,7 +78,7 @@ export class CalendariosComponent implements OnInit {
     this.sigaServices.post(
       "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
-          console.log('data: ', data.body)
+          //console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
           let datos = JSON.parse(data.body);
           if(datos){
@@ -112,7 +112,7 @@ export class CalendariosComponent implements OnInit {
 
         },
         (error)=>{
-          console.log(error);
+          //console.log(error);
         }
       );
 
@@ -130,7 +130,7 @@ export class CalendariosComponent implements OnInit {
             this.datos = JSON.parse(data.body);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
   }

@@ -646,7 +646,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () =>{
@@ -875,7 +875,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () =>{

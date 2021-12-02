@@ -16,7 +16,7 @@
 
 //         return this.http.get(this.globals.getNewSigaUrl() + "/siga-web/db")
 //             .map((response) => {
-//                 // console.log(response);
+//                 // //console.log(response);
 //                 return response;
 //             })
 //     }
@@ -25,7 +25,7 @@
 
 //         return this.http.get("http://localhost:7001/siga-cargas/db/" + name)
 //             .map((response: Response) => {
-//                 console.log(response);
+//                 //console.log(response);
 //                 return response;
 //             })
 //     }
@@ -34,7 +34,7 @@
 
 //         return this.http.get("http://localhost:7001/siga-cargas/db/" + name + "/" + lastName + "/" + address)
 //             .map((response: Response) => {
-//                 console.log(response);
+//                 //console.log(response);
 //                 return response;
 //             })
 //     }

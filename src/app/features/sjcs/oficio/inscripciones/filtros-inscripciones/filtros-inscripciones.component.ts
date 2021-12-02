@@ -150,7 +150,7 @@ export class FiltrosInscripciones implements OnInit {
     para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         if (sessionStorage.getItem("idTurno") != undefined) {
           this.filtros.idturno = [JSON.parse(

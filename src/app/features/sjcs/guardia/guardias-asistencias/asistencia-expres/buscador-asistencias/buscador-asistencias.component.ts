@@ -156,7 +156,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboEstado = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboEstado);
@@ -172,7 +172,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
           this.comboTipoActuacion = n.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.commonsService.arregloTildesCombo(this.comboTipoActuacion);
         }
@@ -187,7 +187,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboProcedimientos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboProcedimientos);
@@ -202,7 +202,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboTurnos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboTurnos);
       }
@@ -216,7 +216,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
           this.comboGuardias = n.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
 
         }, () => {
           this.commonsService.arregloTildesCombo(this.comboGuardias);
@@ -237,7 +237,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -269,7 +269,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboTurnos);
@@ -283,7 +283,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboComisarias = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboComisarias);
       }
@@ -296,7 +296,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboJuzgados = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboJuzgados);
@@ -314,7 +314,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboEstadoAsistido.splice(indexUF);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       ()=>{
         this.commonsService.arregloTildesCombo(this.comboEstadoAsistido);

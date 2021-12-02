@@ -180,7 +180,7 @@ export class CertificadosFichaColegialComponent implements OnInit, OnChanges {
           this.datosCertificados = this.certificadosBody.certificadoItem;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.mostrarNumero = true;
         }, () => {

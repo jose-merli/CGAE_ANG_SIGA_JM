@@ -308,7 +308,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(() => { this.commonsService.scrollTablaFoco('tablaFoco'); }, 5);
@@ -404,7 +404,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(() => { this.commonsService.scrollTablaFoco('tablaFoco'); }, 5);
@@ -538,7 +538,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           },
           err => {
             this.progressSpinner = false;
-            console.log(err);
+            //console.log(err);
             
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
@@ -657,7 +657,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
          
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           objetoValidacion = [];
@@ -680,7 +680,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
@@ -696,14 +696,14 @@ export class GuardiasInscripcionesComponent implements OnInit {
     this.sigaServices.post(
       "guardiasInscripciones_cambiarFechaInscripciones", objetoValidacion).subscribe(
         data => {
-          console.log("entra en el data");
+          //console.log("entra en el data");
           this.progressSpinner = false;
          
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
         },
@@ -764,7 +764,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
 
@@ -972,7 +972,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.commonsService.scrollTablaFoco('tablaFoco');

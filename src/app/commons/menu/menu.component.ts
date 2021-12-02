@@ -78,7 +78,7 @@ export class MenuComponent implements OnInit {
   navigateTo(ruta) {
     let keyConfirmation = "confirmacionGuardarJustificacionExpress";
     if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
-      console.log('if')
+      //console.log('if')
       this.confirmationService.confirm({
         key: keyConfirmation,
         message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
@@ -90,7 +90,7 @@ export class MenuComponent implements OnInit {
         }
       });
     }else{
-      console.log('else')
+      //console.log('else')
       this.navigate(ruta);
     }
  

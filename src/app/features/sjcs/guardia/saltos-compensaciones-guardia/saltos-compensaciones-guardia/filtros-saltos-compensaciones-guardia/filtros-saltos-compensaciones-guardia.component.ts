@@ -111,7 +111,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurnos);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -138,7 +138,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

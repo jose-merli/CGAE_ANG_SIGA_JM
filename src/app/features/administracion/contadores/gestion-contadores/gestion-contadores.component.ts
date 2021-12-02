@@ -58,14 +58,14 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
   ngOnInit() {
     this.resaltadoDatos = true;
 
-    console.log(sessionStorage);
+    //console.log(sessionStorage);
     this.checkAcceso();
     this.sigaServices.get("contadores_modo").subscribe(
       n => {
         this.contadores_modo = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -89,7 +89,7 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -213,13 +213,13 @@ export class GestionContadoresComponent extends SigaWrapper implements OnInit {
     this.sigaServices.post("contadores_update", this.body).subscribe(
       data => {
         this.showSuccess();
-        console.log(data);
+        //console.log(data);
         this.correcto = true;
       },
       err => {
         this.showFail();
         this.correcto = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.correcto) {

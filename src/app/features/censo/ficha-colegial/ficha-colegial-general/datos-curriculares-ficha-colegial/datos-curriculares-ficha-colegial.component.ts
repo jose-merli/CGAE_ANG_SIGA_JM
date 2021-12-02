@@ -293,7 +293,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -371,7 +371,7 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
           // this.table.reset();
         },
         err => {
-          //   console.log(err);
+          //   //console.log(err);
           this.progressSpinner = false;
           this.mostrarNumero = true;
         }, () => {

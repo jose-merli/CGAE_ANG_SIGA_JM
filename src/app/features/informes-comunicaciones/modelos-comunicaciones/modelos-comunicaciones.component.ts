@@ -177,7 +177,7 @@ export class ModelosComunicacionesComponent implements OnInit {
         sessionStorage.removeItem("esMenu");
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -204,7 +204,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -310,7 +310,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               "informesycomunicaciones.modelosdecomunicacion.errorResultados"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.progressSpinner = false;
@@ -339,7 +339,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               "informesycomunicaciones.modelosdecomunicacion.errorEnvio"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.progressSpinner = false;
@@ -418,7 +418,7 @@ para poder filtrar el dato con o sin estos caracteres*/
                   "informesycomunicaciones.modelosdecomunicacion.errorDuplicado"
                 )
               );
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -440,7 +440,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             "informesycomunicaciones.modelosdecomunicacion.errorDuplicado"
           )
         );
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -499,7 +499,7 @@ para poder filtrar el dato con o sin estos caracteres*/
                 "informesycomunicaciones.modelosdecomunicacion.errorBorrado"
               )
             );
-            console.log(err);
+            //console.log(err);
           }
         },
         () => {
@@ -563,7 +563,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.showFail(
           this.translateService.instant("general.message.error.rehabilitado")
         );
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.getResultados();
