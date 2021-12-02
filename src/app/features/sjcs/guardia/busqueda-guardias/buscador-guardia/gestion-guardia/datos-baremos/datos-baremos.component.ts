@@ -1,8 +1,9 @@
-import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { TreeNode } from '../../../../../../../utils/treenode';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { TranslateService } from '../../../../../../../commons/translate';
+import { BaremosGuardiaItem } from '../../../../../../../models/sjcs/BaremosGuardiaItem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-baremos',
@@ -33,11 +34,16 @@ export class DatosBaremosComponent implements OnInit {
 
   @Input() tarjetaBaremos;
 
+  @Input() openFicha: boolean = false;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<string>();
+  datosTabla;
+
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private router: Router) { }
 
   ngOnInit() {
 
@@ -45,7 +51,7 @@ export class DatosBaremosComponent implements OnInit {
       data => {
         this.modoEdicion = true;
         this.getBaremos();
-
+        this.getBaremosGuardias();
       });
   }
 
@@ -55,38 +61,81 @@ export class DatosBaremosComponent implements OnInit {
   }
 
   getBaremos() {
-    //let idGuardiaProvisional =362; //borrar
-    this.sigaServices.post(
-      //"busquedaGuardias_getBaremos", idGuardiaProvisional).subscribe(
-      "busquedaGuardias_getBaremos", this.persistenceService.getDatos().idGuardia).subscribe(
-        data => {
-          let comboItems = JSON.parse(data.body).combooItems;
-          comboItems.forEach(it => {
-             it.value = it.value + "€";
-          });
-          this.datos = comboItems;
 
-        },
-        err => {
-          console.log(err);
-        },
+    this.sigaServices.post("busquedaGuardias_getBaremos", this.persistenceService.getDatos().idGuardia).subscribe(
+      data => {
+        let comboItems = JSON.parse(data.body).combooItems;
+        comboItems.forEach(it => {
+          it.value = it.value + "€";
+        });
+        this.datos = comboItems;
+
+      },
+      err => {
+        console.log(err);
+      },
     )
   }
-  goToFichaBaremos(){
-    this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), detail: "Este modulo se encuentra en desarrollo." });
+
+  goToFichaBaremos() {
+    this.persistenceService.clearFiltros();
+    this.persistenceService.clearFiltrosAux();
+    sessionStorage.setItem("tarjetaBaremosFichaGuardia", JSON.stringify(this.persistenceService.getDatos()));
+    this.router.navigate(["/baremosDeGuardia"]);
   }
 
-  showMessage(event) {
+  showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
-      severity: event.severity,
-      summary: event.summary,
-      detail: event.msg
+      severity: severity,
+      summary: summary,
+      detail: msg
     });
   }
 
   clear() {
     this.msgs = [];
+  }
+
+  onHideTarjeta(key: string) {
+    this.openFicha = !this.openFicha;
+
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+  }
+
+  getBaremosGuardias() {
+
+    let filtros: BaremosGuardiaItem = new BaremosGuardiaItem();
+    filtros.historico = false;
+    filtros.idGuardias = [this.persistenceService.getDatos().idGuardia];
+    filtros.idTurnos = [this.persistenceService.getDatos().idTurno];
+
+    this.progressSpinner = true;
+
+    this.sigaServices.post("baremosGuardia_buscar", filtros).subscribe(
+      data => {
+        this.datosTabla = JSON.parse(data.body).baremosRequestItems;
+        let error = JSON.parse(data.body).error;
+        this.progressSpinner = false;
+
+        if (error != undefined && error != null && error.description != null) {
+          if (error.code == '200') {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      }
+    )
   }
 
 }

@@ -36,7 +36,7 @@
       (idOpened)="isCloseReceive($event)" [tarjetaIncompatibilidades]="tarjetaIncompatibilidades"
       *ngIf="permisoEscrituraIncomp != undefined" [modoEdicion]="modoEdicion"></app-datos-incompatibilidades>
 
-    <app-datos-baremos (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
+    <app-datos-baremos [openFicha]="openBaremos" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
       [tarjetaBaremos]="tarjetaBaremos" *ngIf="permisoEscrituraBaremos != undefined" [modoEdicion]="modoEdicion">
     </app-datos-baremos>
 
