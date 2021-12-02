@@ -3,6 +3,7 @@ export class FacturasItem {
     idFactura: string;
     numeroFactura: string;
     estado: string;
+    estados: any[];
     formaCobroFactura: string;
     formaCobroAbono: string;
     numeroAbonoSJCS: string;
