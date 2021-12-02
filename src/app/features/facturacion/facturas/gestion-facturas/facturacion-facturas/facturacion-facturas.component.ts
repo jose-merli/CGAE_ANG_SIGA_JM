@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FacturasItem } from '../../../../../models/FacturasItem';
 
 @Component({
   selector: 'app-facturacion-facturas',
@@ -7,6 +8,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FacturacionFacturasComponent implements OnInit {
 
+  @Input() bodyInicial: FacturasItem;
+  
   constructor() { }
 
   ngOnInit() {

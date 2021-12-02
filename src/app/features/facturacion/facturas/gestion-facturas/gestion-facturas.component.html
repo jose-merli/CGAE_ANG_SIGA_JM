@@ -12,15 +12,15 @@
     <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos" [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
     </app-tarjeta-resumen-fija>
 
-    <app-cliente-facturas></app-cliente-facturas>
-    <app-facturacion-facturas></app-facturacion-facturas>
-    <app-deudor-facturas></app-deudor-facturas>
-    <app-datos-generales-facturas></app-datos-generales-facturas>
-    <app-estados-pagos-facturas></app-estados-pagos-facturas>
-    <app-observaciones-facturas></app-observaciones-facturas>
-    <app-observaciones-rectificativa-facturas></app-observaciones-rectificativa-facturas>
-    <app-lineas-facturas></app-lineas-facturas>
-    <app-comunicaciones-facturas></app-comunicaciones-facturas>
+    <app-cliente-facturas [bodyInicial]="body"></app-cliente-facturas>
+    <app-facturacion-facturas [bodyInicial]="body"></app-facturacion-facturas>
+    <app-deudor-facturas [bodyInicial]="body"></app-deudor-facturas>
+    <app-datos-generales-facturas [bodyInicial]="body"></app-datos-generales-facturas>
+    <app-estados-pagos-facturas [bodyInicial]="body"></app-estados-pagos-facturas>
+    <app-observaciones-facturas [bodyInicial]="body"></app-observaciones-facturas>
+    <app-observaciones-rectificativa-facturas [bodyInicial]="body"></app-observaciones-rectificativa-facturas>
+    <app-lineas-facturas [bodyInicial]="body"></app-lineas-facturas>
+    <app-comunicaciones-facturas [bodyInicial]="body"></app-comunicaciones-facturas>
   </div>
 </div>
 

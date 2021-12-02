@@ -1,7 +1,9 @@
+import { resolve } from '@angular-devkit/core';
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { FacturasItem } from '../../../../models/FacturasItem';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-gestion-facturas',
@@ -27,19 +29,79 @@ export class GestionFacturasComponent implements OnInit {
   openTarjetaComunicaciones: boolean = false;
 
   constructor(
-    private location: Location
+    private location: Location,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
-    this.progressSpinner = true;
+    this.getDatosFactura();
+  }
 
-    this.updateTarjetaResumen();
-    setTimeout(() => {
-      this.updateEnlacesTarjetaResumen();
-    }, 5);
+  getDatosFactura(): void {
+    //this.progressSpinner = true;
 
-    this.goTop();
-    this.progressSpinner = false;
+    let filtros = {};
+
+    /*this.sigaServices.post("facturacionPyS_getFacturas", filtros).toPromise().then(
+      n => {
+        let datos: FacturasItem[] = n.facturaItems;
+        this.body = datos[0];
+
+        console.log(this.body);
+      }, err => { }
+    )*/
+    this.body = {
+      idFactura: "128741",
+      numeroFactura: null,
+      estado: "En revisión",
+      formaCobroFactura: null,
+      formaCobroAbono: null,
+      numeroAbonoSJCS: null,
+      fechaEmision: null,
+      fechaEmisionDesde: null,
+      fechaEmisionHasta: null,
+      importefacturado: "101.58",
+      importefacturadoDesde: null,
+      importefacturadoHasta: null,
+      contabilizado: null,
+      serie: null,
+      facturacion: "CERTIFICADOS NI JULIO 2016",
+      identificadorAdeudos: null,
+      identificadorTransferencia: null,
+      identificadorDevolucion: null,
+      numeroColegiado: null,
+      numeroIdentificacion: null,
+      apellidos: "XTREFNRAPOPEQMYBF IJISDVL",
+      nombre: "JULIAN",
+      facturasPendientesDesde: null,
+      facturasPendientesHasta: null,
+      importeAdeudadoPendiente: "101.58",
+      importeAdeudadoHasta: null,
+      importeAdeudadoDesde: null,
+      comunicacionesFacturas: "0",
+      comunicacionesFacturasHasta: null,
+      comunicacionesFacturasDesde: null,
+      tipo: "FACTURA",
+      ultimaComunicacion: null,
+      nombreInstitucion: null,
+      importePagado: null,
+      observacionesFactura: null,
+      observacionesFicheroFactura: null,
+      observacionesAbono: null,
+      motivosAbono: null
+    };
+
+    
+    
+    /*.then(() => {
+      this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
+
+      this.goTop();
+      this.progressSpinner = false;
+    });*/
   }
 
   // Tarjeta resumen

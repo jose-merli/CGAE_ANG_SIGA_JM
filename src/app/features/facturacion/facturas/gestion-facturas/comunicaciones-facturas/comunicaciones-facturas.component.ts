@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { DataTable, Message } from 'primeng/primeng';
 import { FacturasItem } from '../../../../../models/FacturasItem';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-comunicaciones-facturas',
@@ -31,18 +32,20 @@ export class ComunicacionesFacturasComponent implements OnInit {
   datos: any[] = [];
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
     this.getCols();
+    this.getComunicacionesCobro();
   }
 
   // Definición de las columnas
   getCols() {
     this.cols = [
       { field: "orden", header: "Orden", width: "10%" },
-      { field: "fecha", header: "Fecha", width: "10%" },
+      { field: "fechaEnvio", header: "Fecha", width: "10%" },
       { field: "documento", header: "Documento", width: "80%" }
     ];
 
@@ -65,6 +68,20 @@ export class ComunicacionesFacturasComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  // Obtención de los datos
+
+  getComunicacionesCobro() {
+    this.sigaServices.getParam("facturacionPyS_getComunicacionCobro", "?idFactura=" + "100003" /* this.bodyInicial.idFactura */).subscribe(
+      n => {
+        console.log(n);
+        this.datos = n.comunicacionCobroItems;
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   // Resultados por página
