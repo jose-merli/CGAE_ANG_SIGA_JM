@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { ComisariaObject } from '../../../../models/sjcs/ComisariaObject';
 import { CommonsService } from '../../../../_services/commons.service';
+import { ActasItem } from '../../../../models/sjcs/ActasItem';
 
 @Component({
   selector: 'app-tabla-actas',
@@ -41,6 +42,7 @@ export class TablaActasComponent implements OnInit {
   @ViewChild("table") table: DataTable;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
+  @Output() actaBorrada = new EventEmitter<any>();
 
 
   constructor(private translateService: TranslateService,
@@ -87,7 +89,18 @@ export class TablaActasComponent implements OnInit {
 
   delete() {
 
-    this.sigaServices.post("filtrosacta_borrar", this.selectedDatos).subscribe(
+    let actaItem: any[] = [];
+    let i = 0;
+    this.selectedDatos.forEach(element => {
+      actaItem[i] =
+      {
+        'anioacta': (element.anioacta != null && element.anioacta != undefined) ? element.anioacta.toString() : element.anioacta,
+        'idacta': (element.idacta != null && element.idacta != undefined) ? element.idacta.toString() : element.idacta
+      };
+      i++;
+    });
+
+    this.sigaServices.post("filtrosacta_borrar", actaItem).subscribe(
 
       data => {
 
@@ -101,6 +114,7 @@ export class TablaActasComponent implements OnInit {
         }
 
         this.progressSpinner = false;
+        this.actaBorrada.emit(this.filtro);
       },
       () => {
         this.progressSpinner = false;

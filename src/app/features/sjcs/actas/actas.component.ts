@@ -59,6 +59,10 @@ export class ActasComponent implements OnInit {
       ).catch(error => console.error(error));
   }
 
+  actaBorrada(event){
+    this.search(event);
+  }
+
   search(event) {
     this.progressSpinner = true;
     this.sigaServices.post("filtrosacta_busquedaActas", this.filtros.datosFiltro).subscribe(
