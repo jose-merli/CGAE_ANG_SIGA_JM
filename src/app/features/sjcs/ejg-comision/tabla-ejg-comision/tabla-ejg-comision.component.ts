@@ -843,6 +843,9 @@ export class TablaEjgComisionComponent implements OnInit {
         }
       );
     }else{
+      if((this.valuePonente != null && this.valueFechaPonente == null) || (this.valuePonente == null && this.valueFechaPonente != null)){
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      }
       finalizado++;
       if(finalizado == 6 && this.acta != null){
         localStorage.setItem('actasItem', JSON.stringify(this.acta));
@@ -909,6 +912,9 @@ export class TablaEjgComisionComponent implements OnInit {
       );
     }
     else{
+      if(this.valueResolucion != null && (this.valueFundamento != null || parseInt(this.num) != 0)){
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      }
       finalizado++;
       if(finalizado == 10 && this.acta != null){
         this.location.back();
@@ -939,6 +945,7 @@ export class TablaEjgComisionComponent implements OnInit {
       );
     }
     else{
+      
       finalizado++;
       if(finalizado == 10 && this.acta != null){
         this.location.back();
