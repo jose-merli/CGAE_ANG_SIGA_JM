@@ -10,6 +10,7 @@ export let endpoints_remesa: any = {
     ficharemesas_getAcciones: "remesasEnvio/getAcciones",
     ficharemesa_ejecutaOperacionRemesa: "remesasEnvio/ejecutaOperacionRemesa",
     ficharemesa_descargarLogErrores: "remesasEnvio/descargarLogErrores",
+    ficharemesa_descargar: "remesasEnvio/descargar",
     remesasResultados_buscarRemesasResultados: "remesasResultado/buscarRemesasResultado",
     remesasResultados_descargarFicheros: "remesasResultado/descargarFicheros",
     remesasResultados_recuperarDatosContador: "remesasResultado/recuperarDatosContador",

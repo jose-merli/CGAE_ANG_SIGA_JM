@@ -36,7 +36,7 @@ export class FichaRemesasComponent implements OnInit {
   ejgItem;
   tipoPCAJG;
   remesa: { idRemesa: any; descripcion: string; numero: string; informacionEconomica: boolean; };
-  getAccionesRemesas;
+  getAccionesRemesas: any[];
   acciones: boolean = false;
   estado: boolean = false;
   remesaInformacionEconomica: boolean;
@@ -210,39 +210,85 @@ export class FichaRemesasComponent implements OnInit {
 
   ejecutarAccion(accion){
     let remesaAccion;
+    let aux = this.getAccionesRemesas.find(accionRemesa => accionRemesa.idTipoAccionRemesa == accion);
 
     if (this.remesaTabla != null) {
       remesaAccion = {
         'idRemesa': this.remesaTabla.idRemesa,
         'accion': accion,
-        'descripcion': this.getAccionesRemesas[accion-1].descripcion,
+        'descripcion': aux.descripcion,
         'informacionEconomica': this.remesaInformacionEconomica
       };
     } else if (this.remesaItem != null) {
       remesaAccion = {
         'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
         'accion': accion,
-        'descripcion': this.getAccionesRemesas[accion-1].descripcion,
+        'descripcion': aux.descripcion,
         'informacionEconomica': this.remesaInformacionEconomica
       };
     }
 
     this.progressSpinner = true;
 
-    this.sigaServices.post("ficharemesa_ejecutaOperacionRemesa", remesaAccion).subscribe(
-      data => {
-        this.showMessage("info", this.translateService.instant("general.message.informacion"), JSON.parse(data.body).error.description);
-        this.remesa.idRemesa = JSON.parse(data.body).id;
-        this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa, true);
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
+    if(accion != 8){
+      this.sigaServices.post("ficharemesa_ejecutaOperacionRemesa", remesaAccion).subscribe(
+        data => {
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), JSON.parse(data.body).error.description);
+          this.remesa.idRemesa = JSON.parse(data.body).id;
+          this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa, true);
+
+          /* switch (accion) {
+            case 1: //VALIDAR REMESA
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
+              break;
+            
+            case 2: //VALIDAR Y ENVIAR
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
+              break;
+
+            case 5: //ENVIAR FTP
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
+              break;
+              
+            case 6: //RESPUESTA FTP
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
+              break;
+          
+            default: //VALIDAR Y GENERAR
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
+              break;
+          } */
+
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }else{
+      this.sigaServices.postDownloadFilesWithFileName("ficharemesa_descargar", remesaAccion).subscribe(
+        (response: {file: Blob, filename: string, status: number}) => {
+          // Se comprueba si todos los documentos asociados no tiene ningún fichero 
+          if(response.file.size > 0 && response.status == 200){
+            let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+            saveAs(response.file, filename);
+          }else if(response.status == 204){
+             this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
+          }else{
+            this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.masDe1zip"));
+          }
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }
+    
   }
 
   descargarLogErrores(){

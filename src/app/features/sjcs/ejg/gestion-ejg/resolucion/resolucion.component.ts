@@ -310,9 +310,12 @@ export class ResolucionComponent implements OnInit {
     //Se debe extraer los valores que necesitamos del id del elemento del combo de actas seleccionado.
     if (this.resolucion.idAnnioActa != null) {
       //REVISAR POSIBLE MEJORA
-      let annioIdActa = this.resolucion.idAnnioActa.split("-")[0];
-      this.resolucion.idActa = Number(annioIdActa.split("/")[1]);
-      this.resolucion.annioActa = Number(annioIdActa.split("/")[0]);
+      // let annioIdActa = this.resolucion.idAnnioActa.split("-")[0];
+      // this.resolucion.idActa = Number(annioIdActa.split("/")[1]);
+      // this.resolucion.annioActa = Number(annioIdActa.split("/")[0]);
+      let array = this.resolucion.idAnnioActa.split(',');
+      this.resolucion.annioActa = parseInt(array[1]);
+      this.resolucion.idActa = parseInt(array[0]);
     }
     else {
       this.resolucion.idActa = null;
@@ -457,17 +460,22 @@ export class ResolucionComponent implements OnInit {
     }
   }
 
-  fillFechaResCAJGActa(event) {
+  fillFechaResol(event) {
     let actaannio = this.comboActaAnnio.find(
-      item => item.value == this.resolucion.idTiporatificacionEJG
+      item => item.value == this.resolucion.idAnnioActa
     );
     let fechaActa = actaannio.label.split("-")[1];
 
     //Reasignamos la fecha al traerse del back en formato string
     //No se realiza directamente ya que la conversion de new Date con strings se realiza desde MM/DD/YYYY y se nos devuelve DD/MM/YYY desde el back
-    var dateParts = fechaActa.split("/");
+    if(!(fechaActa.trim() == "")){
+      var dateParts = fechaActa.split("/");
+      // var dateParts = fechaActa.split("/");
 
-    this.resolucion.fechaResolucionCAJG = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+      //Escogemos actualizar esta fecha de resolucion basandonos en el comentario presente en su columna
+      //en la BBDD en la tabla (SCS_EJG_RESOLUCION)
+      this.resolucion.fechaResolucionCAJG = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+    }
   }
 
   fillFechaNotif(event) {
