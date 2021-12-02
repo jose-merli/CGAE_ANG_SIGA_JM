@@ -254,6 +254,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
     );
   }
 
+  //Metodo para guardar el producto (PYS_PRODUCTOSINSTITUCION), en caso de elegir un tipo de certificado tambien creara un registro en ADM_CONTADOR
   guardarProducto() {
     this.progressSpinner = true;
 
@@ -261,12 +262,12 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
       this.subscriptionCrearProductoInstitucion = this.sigaServices.post("fichaProducto_crearProducto", this.producto).subscribe(
         response => {
 
-          if (JSON.parse(response.body).error.code == 500) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          } else {
+          if (response.status == 200) {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.desactivarBotonEliminar = false;
             this.mostrarTarjetaFormaPagos.emit(true);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
 
           this.progressSpinner = false;
@@ -322,12 +323,14 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
 
         this.subscriptionActivarDesactivarProductos = this.sigaServices.post("productosBusqueda_activarDesactivar", listaProductosDTO).subscribe(
           response => {
-            if (JSON.parse(response.body).error.code == 500) {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            } else {
+            
+            if (response.status == 200) {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.desactivarBotonEliminar = false;
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
             }
+
           },
           err => {
             this.progressSpinner = false;

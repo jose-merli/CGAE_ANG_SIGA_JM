@@ -341,15 +341,16 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         let listaProductosDTO = new ListaProductosDTO();
         listaProductosDTO.listaProductosItems = selectedRows
         this.subscriptionActivarDesactivarProductos = this.sigaServices.post("productosBusqueda_activarDesactivar", listaProductosDTO).subscribe(
-          data => {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          },
-          err => {
-            if (err != undefined && JSON.parse(err.error).error.description != "") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          response => {
+            
+            if (response.status == 200) {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
             }
+       
+          },
+          err => {
             this.progressSpinner = false;
           },
           () => {
