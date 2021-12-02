@@ -435,34 +435,7 @@ export class TablaEjgComisionComponent implements OnInit {
     });
   }
 
-  asociarEJGActa(rowData){
-    if(this.acta != null){
-      this.progressSpinner = true;
-
-      let ejgItem: EJGItem = rowData[0];
-
-      ejgItem.numActa = JSON.parse(JSON.stringify(this.acta.idacta)).toString();
-      ejgItem.annioActa = JSON.parse(JSON.stringify(this.acta.anioacta)).toString();
-
-      this.sigaServices.post("busquedaejgcomision_asociarEJGActa", ejgItem).subscribe(
-        n => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          localStorage.setItem('actasItem', JSON.stringify(this.acta));
-          this.location.back();
-        },
-        err => {
-          this.progressSpinner = false;
-          console.log(err);
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        },
-        () => {
-          this.progressSpinner = false;
-          this.selectedDatos = [];
-        }
-      );
-    }
-
-  }
+  
 
   actualizarEJGActa() {
     let data = [];
