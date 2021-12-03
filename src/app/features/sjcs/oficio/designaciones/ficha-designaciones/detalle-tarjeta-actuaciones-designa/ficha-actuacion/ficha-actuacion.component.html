@@ -82,7 +82,8 @@
       </div>
 
       <app-tarjeta-facturacion-generica [datosEntrada]="actuacionDesigna" [pantalla]="'ACTUACIONDESIGNA'"
-        (guardarDatos)="guardarDatos()">
+        (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac"
+        (opened)="openTarjetaFac = $event">
       </app-tarjeta-facturacion-generica>
 
     </div>

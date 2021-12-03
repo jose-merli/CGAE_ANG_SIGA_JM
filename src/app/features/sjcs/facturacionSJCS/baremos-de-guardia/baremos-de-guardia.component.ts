@@ -40,31 +40,31 @@ export class BaremosDeGuardiaComponent implements OnInit {
 
     }).catch(error => console.error(error));
 
-    
+
 
   }
 
-  getBaremosGuardias(event){
-    if(event == true){
-      
-      console.log(this.filtros.filtros);
+  getBaremosGuardias(event) {
+    if (event == true) {
+
+
       this.progressSpinner = true;
-      this.sigaServices.post("baremosGuardia_buscar",this.filtros.filtros).subscribe(
-        data =>{
+      this.sigaServices.post("baremosGuardia_buscar", this.filtros.filtros).subscribe(
+        data => {
           this.datos = JSON.parse(data.body).baremosRequestItems;
           this.mostrarTablaResultados = true;
-					let error = JSON.parse(data.body).error;
+          let error = JSON.parse(data.body).error;
           this.progressSpinner = false;
 
           if (error != undefined && error != null && error.description != null) {
-						if (error.code == '200') {
-							this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
-						} else {
-							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-						}
-					}
+            if (error.code == '200') {
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
+          }
         },
-        err =>{
+        err => {
           this.progressSpinner = false;
           if (err != undefined && JSON.parse(err.error).error.description != "") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
@@ -74,20 +74,20 @@ export class BaremosDeGuardiaComponent implements OnInit {
         }
       )
     }
+  }
+
+  mostrarHistorico(event) {
+    let buscar = true;
+    if (event == true) {
+      this.filtros.filtros.historico = true;
+      this.getBaremosGuardias(buscar);
+    } else if (event == false) {
+      this.filtros.filtros.historico = false;
+      this.getBaremosGuardias(buscar);
     }
 
-    mostrarHistorico(event){
-      let buscar = true;
-      if(event == true){
-        this.filtros.filtros.historico = true;
-        this.getBaremosGuardias(buscar);
-      }else if(event == false){
-        this.filtros.filtros.historico = false;
-        this.getBaremosGuardias(buscar);
-      }
-      
-    }
-  
+  }
+
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

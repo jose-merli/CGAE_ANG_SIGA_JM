@@ -4,7 +4,7 @@
 
         <div class="card-header header-ficha">
 
-            <div *ngIf="!showTarjeta" class="form-row">
+            <!-- <div *ngIf="!showTarjeta" class="form-row">
 
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado" (click)="onHideTarjeta()">
@@ -14,8 +14,8 @@
 
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-start mb-1" (click)="onHideTarjeta()">
-                        <label
-                            class="mr-auto title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.datosGenerales' | translate }}
+                        <label class="mr-auto title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.datosGenerales' |
+                            translate }}
                         </label>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -26,7 +26,7 @@
                     </div>
                 </div>
 
-            </div>
+            </div> -->
 
             <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center"
                 (click)="onHideTarjeta()">
@@ -73,8 +73,32 @@
 
                                 <td class="text-center" *ngFor="let col of columns">
 
-                                    <div>
+                                    <div *ngIf="datos[rowIndex].isCombo != true">
                                         <span>{{dato[col.field]}}</span>
+                                    </div>
+                                    
+                                    <div *ngIf="col.field == 'nomturno' && datos[rowIndex].isCombo == true ">
+                                        <p-multiSelect #multiTurno class="select-form" [(ngModel)]='filtros.idTurnos'
+                                            defaultLabel="{{'general.boton.seleccionar' | translate}}"
+                                            [options]="comboTurno" [filter]="true" maxSelectedLabels="10"
+                                            [selectedItemsLabel]="'{0} turnos seleccionados'"
+                                            filterBy="label,labelSinTilde" styleClass="widthAll"
+                                            (onPanelShow)="focusInputField(multiTurno)"
+                                            (onChange)="onChangeTurno($event)">
+                                        </p-multiSelect>
+                                    </div>
+
+                                    <div *ngIf="col.field == 'nomguardia' && datos[rowIndex].isCombo == true">
+                                        <p-multiSelect #multiGuardia class="select-form"
+                                            [(ngModel)]='filtros.idGuardias'
+                                            defaultLabel="{{'general.boton.seleccionar' | translate}}"
+                                            [options]="comboGuardia" [filter]="true" maxSelectedLabels="10"
+                                            [selectedItemsLabel]="'{0} guardias seleccionadas'"
+                                            filterBy="label,labelSinTilde" styleClass="widthAll"
+                                            (onPanelShow)="focusInputField(multiGuardia)"
+                                            (onPanelHide) = "onChangeGuardia()"
+                                            [disabled]="disabledComboGuardia()">
+                                        </p-multiSelect>
                                     </div>
 
                                 </td>
@@ -91,20 +115,22 @@
 
                         <ng-template pTemplate="paginatorleft">
                             <div class="mostrar d-flex text-right justify-content-end">
-                                <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
-                                translate }}{{table.first + 1}}
+                                <label
+                                    class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros'
+                                    |
+                                    translate }}{{table.first + 1}}
                                     al {{table.first
-                                + table.rows}}
+                                    + table.rows}}
                                     {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
                                     {{table.totalRecords}}</label>
                                 <label class="pr-3 numSeleccionados"
                                     *ngIf="selectedDatos  && selectedDatos.length >= 0">{{
-                                'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+                                    'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
                                     {{selectedDatos.length}}
                                 </label>
                                 <label class="pr-3 numSeleccionados"
                                     *ngIf="selectedDatos && selectedDatos.length == undefined">{{
-                                'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+                                    'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
                                     1
                                 </label>
                                 <label>{{"general.message.mostrar" | translate}}</label>
@@ -131,8 +157,11 @@
 
         <div class="card-footer" *ngIf="showTarjeta">
             <div class="text-right main-button">
-                <button pButton type="button" icon="fa fa-plus" iconPos="left"
+                <button *ngIf="!isNuevo" [disabled]="modoEdicion" pButton type="button" icon="fa fa-plus" iconPos="left" (click)="filaTablaCombos()"
                     label="{{ 'general.boton.new' | translate }}"></button>
+
+                    <button *ngIf="isNuevo" [disabled]="modoEdicion" pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
+                    label="{{ 'general.boton.restablecer' | translate }}"></button>
             </div>
         </div>
 

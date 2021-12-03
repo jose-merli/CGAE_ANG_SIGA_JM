@@ -1,5 +1,11 @@
-import { Component, EventEmitter, OnInit, Output, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, AfterViewInit, ViewChild, Input } from '@angular/core';
+import { MultiSelect, SelectItem } from 'primeng/primeng';
 import { Table } from 'primeng/table';
+import { TranslateService } from '../../../../../../commons/translate';
+import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
+import { CommonsService } from '../../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../../_services/siga.service';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
 
 @Component({
@@ -9,7 +15,7 @@ import { Enlace } from '../ficha-baremos-de-guardia.component';
 })
 export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
 
-  showTarjeta: boolean = false;
+  showTarjeta: boolean = true;
   cols: any[] = [];
   rowsPerPage: any[] = [];
   modoSeleccion = "multiple";
@@ -17,16 +23,30 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
   selectAll: boolean = false;
   selectedDatos: any[] = [];
   numSelected: number = 0;
-  datos: any[] = [];
+  filtros: BaremosGuardiaItem = new BaremosGuardiaItem();
 
   @Output() addEnlace = new EventEmitter<Enlace>();
+  @Output() guardiasByConf = new EventEmitter<boolean>();
+  @Input() datos;
+  @Input() modoEdicion;
 
   @ViewChild("table") tabla: Table;
+  progressSpinner: boolean;
+  comboTurno: SelectItem[] = [];
+  comboGuardia: SelectItem[] = [];
+  isNuevo: boolean;
 
-  constructor() { }
+  constructor( private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private persistenceService:PersistenceService) { }
 
   ngOnInit() {
-    this.getCols();
+      if(this.datos != null || this.datos != undefined){
+        this.datos = JSON.parse(JSON.stringify(this.datos));
+        this.getCols();
+      }
+ 
   }
 
   ngAfterViewInit() {
@@ -39,19 +59,20 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
     this.addEnlace.emit(enlace);
   }
 
-  onHideTarjeta() {
+  /* onHideTarjeta() {
     // if (this.retencionesService.modoEdicion) {
     this.showTarjeta = !this.showTarjeta;
     // } else {
     //   this.showTarjeta = true;
     // }
-  }
+  } */
 
   getCols() {
 
     this.cols = [
-      { field: "ncolegiado", header: "facturacionSJCS.retenciones.nColegiado", width: "50%" },
-      { field: "nombre", header: "facturacionSJCS.retenciones.nombre", width: "50%" }
+      { field: "nomturno", header: "facturacionSJCS.baremosDeGuardia.turno", width: "33%" },
+      { field: "nomguardia", header: 'facturacionSJCS.baremosDeGuardia.guardia', width: "33%" },
+      { field: "baremo", header: 'facturacionSJCS.baremosDeGuardia.tipoBaremo', width: "33%" }
     ];
 
     this.rowsPerPage = [
@@ -87,6 +108,91 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
       this.selectedDatos = [];
       this.numSelected = 0;
     }
+  }
+
+  getComboTurnos(){
+    this.sigaServices.get("baremosGuardia_getTurnoForGuardia").subscribe(
+      data => {
+        this.comboTurno = data.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTurno);
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+  onChangeTurno(event) {
+
+    this.comboGuardia = [];
+
+    if (event.value && event.value.toString().length > 0) {
+      this.getComboGuardias(event.value);
+    }
+
+  }
+
+  getComboGuardias(idTurnos: string[]){
+    this.progressSpinner = true;
+
+    const idTurnosStr = idTurnos.toString();
+
+    this.sigaServices.getParam("combo_guardiaPorTurno", `?idTurno=${idTurnosStr}`).subscribe(
+      data => {
+        this.comboGuardia = data.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboGuardia);
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  onChangeGuardia() {
+
+      if(this.filtros.idGuardias != null && this.filtros.idGuardias.length != 0){
+        this.getGuardiasByConf();
+      }
+   
+  }
+
+  disabledComboGuardia(): boolean {
+
+    if (this.filtros && this.filtros.idTurnos && this.filtros.idTurnos != null && this.filtros.idTurnos.length == 0) {
+      return true;
+    }
+    return false;
+  }
+
+  getGuardiasByConf(){
+    this.guardiasByConf.emit(true);
+  }
+
+  filaTablaCombos(){
+
+    this.isNuevo = true;
+   
+    let dummy = {
+      nomturno: "",
+      nomguardia: "",
+      baremo:"",
+      isCombo: true
+    };
+
+    this.datos = [dummy, ...this.datos];
+  }
+
+  restablecer() {
+    this.isNuevo = false;
+    this.selectedDatos = []
+    this.guardiasByConf.emit(true);
+  }
+
+  focusInputField(someMultiselect: MultiSelect) {
+    setTimeout(() => {
+      someMultiselect.filterInputChild.nativeElement.focus();
+    }, 300);
   }
 
 }

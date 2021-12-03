@@ -97,7 +97,8 @@
         </app-comunicaciones-ejg>
 
         <app-tarjeta-facturacion-generica [datosEntrada]="datosEntradaTarjGenerica" [pantalla]="'EJG'"
-            (guardarDatos)="guardarDatos()">
+            (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac" (opened)="manuallyOpened = $event"
+            (idOpened)="isCloseReceive($event)">
         </app-tarjeta-facturacion-generica>
     </div>
 

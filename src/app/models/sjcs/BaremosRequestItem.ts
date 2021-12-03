@@ -16,5 +16,6 @@ export class BaremosRequestItem {
     guardias: String;
     historico;
     guardiasObj: GuardiaItem[];
-    keyForTabla
+    keyForTabla;
+    idhitoconfiguracion;
 }

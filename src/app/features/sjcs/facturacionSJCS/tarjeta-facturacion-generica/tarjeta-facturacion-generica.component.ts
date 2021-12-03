@@ -38,7 +38,6 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
   msgs: any[] = [];
   progressSpinner: boolean = false;
-  showTarjeta: boolean = false;
   selectedDatos: any[] = [];
   datos: any[] = [];
   cols = [];
@@ -61,7 +60,10 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   @Input() pantalla: string;
   @Input() datosEntrada: any;
   @Input() disableButtons: boolean = false;
+  @Input() showTarjeta: boolean = false;
   @Output() guardarDatos = new EventEmitter<any>();
+  @Output() opened = new EventEmitter<boolean>();
+  @Output() idOpened = new EventEmitter<string>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -123,6 +125,8 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
+    this.opened.emit(this.showTarjeta);
+    this.idOpened.emit('facturaciones');
   }
 
   showMessage(severity, summary, msg) {

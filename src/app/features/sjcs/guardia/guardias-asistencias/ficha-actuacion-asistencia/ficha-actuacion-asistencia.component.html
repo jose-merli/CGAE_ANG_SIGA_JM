@@ -76,7 +76,8 @@
             </div>
             <app-tarjeta-facturacion-generica
                 [datosEntrada]="{actuacion: actuacion, asistencia: asistencia, isNew: nuevaActuacion }"
-                [pantalla]="'ACTUACIONASISTENCIA'" (guardarDatos)="guardarDatos()">
+                [pantalla]="'ACTUACIONASISTENCIA'" (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac"
+                (opened)="openTarjetaFac = $event">
             </app-tarjeta-facturacion-generica>
         </div>
 

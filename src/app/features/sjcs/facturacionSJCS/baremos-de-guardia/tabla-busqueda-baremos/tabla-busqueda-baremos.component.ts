@@ -1,6 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { Table } from 'primeng/table';
+import { BaremosGuardiaItem } from '../../../../../models/sjcs/BaremosGuardiaItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 @Component({
   selector: 'app-tabla-busqueda-baremos',
@@ -48,6 +49,7 @@ export class TablaBusquedaBaremosComponent implements OnInit {
           porDiaGuardia: 'porDiaGuardia2'
         },
       ]
+
     }
   ];
   cols = [];
@@ -65,6 +67,7 @@ export class TablaBusquedaBaremosComponent implements OnInit {
   @Input() datos;
   @Input() permisoEscritura;
   @Output() isHistorico = new EventEmitter<boolean>();
+  @Input() desactivarHistorico: boolean = false;
 
 
   @ViewChild("table") tabla: Table;
@@ -80,7 +83,7 @@ export class TablaBusquedaBaremosComponent implements OnInit {
     if (this.persistenceService.getHistorico() != undefined) {
       this.historico = this.persistenceService.getHistorico();
       this.persistenceService.clearHistorico();
-    }else{
+    } else {
       this.historico = false;
     }
     if (this.datos == null || this.datos == undefined) {
@@ -191,7 +194,21 @@ export class TablaBusquedaBaremosComponent implements OnInit {
     }
   }
 
-  openFichaBaremos() {
-    this.router.navigate(['/fichaBaremosDeGuardia']);
+  openFichaBaremos(rowData) {
+    if (!this.desactivarHistorico) {
+      let baremoGuar = new BaremosGuardiaItem();
+      let arrBaremo: BaremosGuardiaItem[] = [];
+      baremoGuar.idGuardia = rowData.idGuardia;
+      baremoGuar.idTurno = rowData.idTurno;
+      baremoGuar.nomguardia = rowData.guardias;
+      baremoGuar.nomturno = rowData.nomTurno;
+      baremoGuar.baremo = rowData.baremo;
+      baremoGuar.idhitoconfiguracion = rowData.idhitoconfiguracion;
+      arrBaremo.push(baremoGuar)
+      sessionStorage.setItem('modoEdicionBaremo', "true");
+      sessionStorage.setItem('dataBaremoMod', JSON.stringify(arrBaremo));
+      this.router.navigate(['/fichaBaremosDeGuardia']);
+      console.log(rowData);
+    }
   }
 }
