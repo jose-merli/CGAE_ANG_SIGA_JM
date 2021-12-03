@@ -275,6 +275,7 @@ export class DatosGeneralesActasComponent implements OnInit {
         }
 
         this.progressSpinner = false;
+        this.pendienteCAJG.emit();
         this.actaGuardada.emit(true);
       },
       () => {
@@ -286,7 +287,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   cerrarActaDialogo() {
 
     this.confirmationService.confirm({
-      message: '¿Estas seguro que quieres cerrar el acta?',
+      message: 'Si hay algún ejg que no tenga resolución se sacará del acta. ¿Desea continuar?',
       accept: () => {
         console.log("aceptado cerrar acta");
         this.cerrarActa();
