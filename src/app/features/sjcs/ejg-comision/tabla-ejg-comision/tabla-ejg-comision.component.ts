@@ -269,7 +269,7 @@ export class TablaEjgComisionComponent implements OnInit {
         console.log("******************comboanioacta**********************");
         this.comboAnioActa = n.combooItems;
 
-        if(this.acta != null || this.acta != undefined){
+        /*if(this.acta != null || this.acta != undefined){
           let comboItem = this.comboAnioActa.find(anioActa => anioActa.label == this.acta.numeroacta);
 
           let indice = this.comboAnioActa.indexOf(comboItem);
@@ -282,7 +282,7 @@ export class TablaEjgComisionComponent implements OnInit {
           for(; this.comboAnioActa.length > 1;){
             this.comboAnioActa.pop();
           }
-        }
+        }*/
 
       },
       err => {

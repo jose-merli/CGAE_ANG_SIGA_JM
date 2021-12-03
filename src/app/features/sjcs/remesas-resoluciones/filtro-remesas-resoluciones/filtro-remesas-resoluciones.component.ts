@@ -132,7 +132,7 @@ export class FiltroRemesasResolucionesComponent implements OnInit {
       data => {
         data = JSON.parse(data.body);
         if(data.status == "OK" && data.error.code == 200) {
-          this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("message.justiciaGratuita.remesas.resoluciones.obtenerResoluciones"));
+          this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("message.justiciaGratuita.remesas.resoluciones.obtenerResoluciones"));
         }else if( data.status == 'KO' && data.error.code == 200) {
           this.showFail( this.translateService.instant("general.message.error.realiza.accion"));
         }

@@ -45,7 +45,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   ejgs;
 
   //Resultados de la busqueda
-  @Input() datos: ActasItem = new ActasItem();
+  @Input() datos: ActasItem;
 
   @Input() permisos;
 
@@ -207,14 +207,23 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     ];
   }
 
-  getEJG(acta){
+  getEJG(acta:ActasItem){
     this.progressSpinner = true;
-    let numActa = acta.numeroacta.split("/");
-    this.actaDatosEntradaItem =
-    {
-      'annioActa': acta.anioacta,
-      'numActa': numActa[1]
-    };
+    if(acta.numeroacta.toString().includes("/")){
+      let numActa = acta.numeroacta.split("/");
+      this.actaDatosEntradaItem =
+      {
+        'annioActa': acta.anioacta,
+        'numActa': numActa[1]
+      };
+    }
+    else{
+      this.actaDatosEntradaItem =
+      {
+        'annioActa': acta.anioacta,
+        'numActa': acta.numeroacta
+      };
+    }
     this.sigaServices.post("filtrosejgcomision_busquedaEJGActaComision", this.actaDatosEntradaItem).subscribe(
       n => {
         console.log("Dentro del servicio del padre que llama al getEJGRemesa");
@@ -246,7 +255,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   }
 
   asociarEJG() {
-    sessionStorage.setItem('acta', JSON.stringify(this.datos));
+    sessionStorage.setItem('actasItem', JSON.stringify(this.datos));
     this.router.navigate(["/ejg-comision"]);
   }
 

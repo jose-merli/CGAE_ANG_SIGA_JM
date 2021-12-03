@@ -75,9 +75,9 @@ export class EjgComisionComponent implements OnInit {
         sessionStorage.removeItem("remesa");
       }
        
-      if(sessionStorage.getItem("acta") != null){
-        this.acta = JSON.parse(sessionStorage.getItem("acta"));
-        sessionStorage.removeItem("acta");
+      if(sessionStorage.getItem("actasItem") != null){
+        this.acta = JSON.parse(sessionStorage.getItem("actasItem"));
+        sessionStorage.removeItem("actasItem");
         console.log("El acta es -> ", this.acta);
       }
         

@@ -414,7 +414,7 @@ export class TarjetaDatosCargaDesignaProcuradorComponent implements OnInit {
     .subscribe(
       data => {
         let accion = data.error.description;
-        if(accion == "Insert"){
+        if(accion == "Inserted"){
           this.showMessage("success", this.translateService.instant("general.message.correct"),  this.translateService.instant("justiciaGratuita.intercambios.cargaDesignasProcuradores.mensaje.guardadoCorrecto"));
         }
         this.progressSpinner = false;
