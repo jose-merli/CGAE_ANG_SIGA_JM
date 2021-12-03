@@ -3,6 +3,9 @@ import { Location } from '@angular/common';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { TarjetaListadoEjgsComponent } from './tarjeta-listado-ejgs/tarjeta-listado-ejgs.component';
 import { ActasItem } from '../../../../models/sjcs/ActasItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
+import { SigaServices } from '../../../../_services/siga.service';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 
 @Component({
@@ -20,12 +23,18 @@ export class GestionActasComponent implements OnInit {
   @ViewChild(TarjetaListadoEjgsComponent) tarjetaListado: TarjetaListadoEjgsComponent;
 
   expNum:any;
-  constructor(private persistenceService: PersistenceService, private location: Location) { }
+  idInstitucionActual: any;
+  constructor(private persistenceService: PersistenceService, private location: Location,
+    private localStorageService: SigaStorageService, private sigaServices: SigaServices) { }
 
   ngOnInit() {
   
       this.datos = new ActasItem();
       this.modoEdicion = false;
+
+      this.sigaServices.get("institucionActual").subscribe(n => { 
+        this.idInstitucionActual = n.value 
+      });
 
    
     if(localStorage.getItem('actasItem')){
@@ -45,6 +54,11 @@ export class GestionActasComponent implements OnInit {
     }else{
       this.tarjetaListado.guardado = false;
     }
+  }
+
+  datosActa(event: ActasItem){
+    this.datos = event;
+      this.datos.idinstitucion = this.idInstitucionActual;
   }
 
   expediente(event :string){

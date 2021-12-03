@@ -54,6 +54,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() pendienteCAJG = new EventEmitter<any>();
   @Output() actaGuardada = new EventEmitter<any>();
+  @Output() datosActa = new EventEmitter<ActasItem>();
 
   event = new EventEmitter<any>();
 
@@ -205,6 +206,8 @@ export class DatosGeneralesActasComponent implements OnInit {
     return mostrar;
   }
 
+  
+
   guardarActa() {
     this.progressSpinner = true;
     this.datosFiltro.horainicio = this.inicio;
@@ -214,8 +217,9 @@ export class DatosGeneralesActasComponent implements OnInit {
         data => {
           data =JSON.parse(data.body)
           if(data.status == "OK"){
-            this.datosFiltro.idacta = data.error.url;
+            this.datosFiltro.idacta = data.id;
             this.datos = JSON.parse(JSON.stringify((this.datosFiltro)));
+            this.datosActa.emit(this.datos);
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
           else if(data.status == "KO" && data.error.description == "InvalidNumActa"){
