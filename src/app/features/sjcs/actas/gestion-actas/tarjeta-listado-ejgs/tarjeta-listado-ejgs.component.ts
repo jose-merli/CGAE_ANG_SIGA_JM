@@ -207,9 +207,9 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     ];
   }
 
-  getEJG(acta){
+  getEJG(acta:ActasItem){
     this.progressSpinner = true;
-    if(acta.numeroacta.contains("/")){
+    if(acta.numeroacta.toString().includes("/")){
       let numActa = acta.numeroacta.split("/");
       this.actaDatosEntradaItem =
       {
