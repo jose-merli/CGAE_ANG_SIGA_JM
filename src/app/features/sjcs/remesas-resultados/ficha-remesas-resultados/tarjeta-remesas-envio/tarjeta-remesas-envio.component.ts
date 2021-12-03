@@ -12,7 +12,6 @@ import { SigaServices } from '../../../../../_services/siga.service';
 export class TarjetaRemesasEnvioComponent {
     progressSpinner: boolean = false;
     msgs;
-    openFicha: boolean = false;
     datos;
     estado;
     incidencias;

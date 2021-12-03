@@ -8,6 +8,7 @@ import { TranslateService } from '../../../commons/translate';
 import { Router } from '../../../../../node_modules/@angular/router';
 import { FiltroRemesasResultadosComponent } from './filtro-remesas-resultados/filtro-remesas-resultados.component';
 import { PersistenceService } from '../../../_services/persistence.service';
+import { TablaRemesasResultadosComponent } from './tabla-remesas-resultados/tabla-remesas-resultados.component';
 
 
 @Component({
@@ -49,33 +50,9 @@ export class RemesasResultadosComponent implements OnInit {
       }
   );
 
-  filtrosValues: RemesasResultadoItem = new RemesasResultadoItem(
-    {
-      'idRemesaResultado': null,
-      'numRemesaPrefijo': '',
-      'numRemesaNumero': '',
-      'numRemesaSufijo': '',
-      'numRegistroPrefijo': '',
-      'numRegistroNumero': '',
-      'numRegistroSufijo': '',
-      'nombreFichero': '',
-      'fechaRemesaDesde': '',
-      'fechaRemesaHasta': '',
-      'fechaCargaDesde': '',
-      'fechaCargaHasta': '',
-      'observacionesRemesaResultado': '',
-      'fechaCargaRemesaResultado': '',
-      'fechaResolucionRemesaResultado': '',
-      'idRemesa': null,
-      'numeroRemesa': '',
-      'prefijoRemesa': '',
-      'sufijoRemesa': '',
-      'descripcionRemesa': '',
-      'numRegistroRemesaCompleto': '',
-      'numRemesaCompleto': ''
-      }
-  );
-  @ViewChild(FiltroRemesasResultadosComponent) filtros;
+
+  @ViewChild(FiltroRemesasResultadosComponent) filtrosValues;
+  @ViewChild(TablaRemesasResultadosComponent) tabla;
 
   constructor(private persistenceService: PersistenceService,private translateService: TranslateService, private router: Router,
            private sigaServices: SigaServices, private datepipe: DatePipe,private commonsService: CommonsService,) { }
@@ -104,7 +81,7 @@ export class RemesasResultadosComponent implements OnInit {
   getFiltrosValues(event) {
     this.filtrosValues = JSON.parse(JSON.stringify(event));
     this.convertArraysToStrings();
-    this.search();
+    this.search(true);
   }
 
   convertArraysToStrings() {
@@ -122,7 +99,7 @@ export class RemesasResultadosComponent implements OnInit {
     }
   }
 
-  search(){
+  search(event){
     this.progressSpinner = true;
     this.sigaServices.post("remesasResultados_buscarRemesasResultados", this.filtrosValues).subscribe(
       n => {

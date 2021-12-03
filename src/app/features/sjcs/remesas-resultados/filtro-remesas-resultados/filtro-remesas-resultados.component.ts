@@ -6,6 +6,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { RemesasResultadoItem } from '../../../../models/sjcs/RemesasResultadoItem';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-filtro-remesas-resultados',
@@ -74,49 +75,18 @@ export class FiltroRemesasResultadosComponent implements OnInit {
 
   //@Input() permisoEscritura;
   @Output() filtrosValues = new EventEmitter<RemesasResultadoItem>();
-
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
-    private persistenceService: PersistenceService, private commonServices: CommonsService) { }
+    private persistenceService: PersistenceService,  private datepipe: DatePipe, private commonServices: CommonsService) { }
 
   ngOnInit() {
-
-    if (this.persistenceService.getPermisos() != undefined) {
-      // this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-      if (this.persistenceService.getHistorico() != undefined) {
-        this.historico = this.persistenceService.getHistorico();
-      }
-
-    } else {
-      this.filtros = new RemesasResultadoItem(
-        {
-          'idRemesaResultado': null,
-          'numRemesaPrefijo': '',
-          'numRemesaNumero': '',
-          'numRemesaSufijo': '',
-          'numRegistroPrefijo': '',
-          'numRegistroNumero': '',
-          'numRegistroSufijo': '',
-          'nombreFichero': '',
-          'fechaRemesaDesde': '',
-          'fechaRemesaHasta': '',
-          'fechaCargaDesde': '',
-          'fechaCargaHasta': '',
-          'observacionesRemesaResultado': '',
-          'fechaCargaRemesaResultado': '',
-          'fechaResolucionRemesaResultado': '',
-          'idRemesa': null,
-          'numeroRemesa': '',
-          'prefijoRemesa': '',
-          'sufijoRemesa': '',
-          'descripcionRemesa': '',
-          'numRegistroRemesaCompleto': '',
-          'numRemesaCompleto': ''
-          }
-      );
+    if(localStorage.getItem("filtrosRemesa")){
+      this.filtros = JSON.parse(localStorage.getItem("filtrosRemesa"));
+      localStorage.removeItem("filtrosRemesa");
+      this.filtros.fechaCargaDesde = this.transformDate(this.filtros.fechaCargaDesde)
+      this.filtros.fechaCargaHasta = this.transformDate(this.filtros.fechaCargaHasta)
+      this.filtros.fechaRemesaDesde = this.transformDate(this.filtros.fechaRemesaDesde)
+      this.filtros.fechaRemesaHasta = this.transformDate(this.filtros.fechaRemesaHasta)
+      this.filtrosValues.emit(this.filtros);
     }
 
   }
@@ -144,14 +114,16 @@ export class FiltroRemesasResultadosComponent implements OnInit {
       this.filtros.fechaCargaHasta = event;
     }
   }
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    return fecha;
+  }
 
   onHideDatosGenerales() {
     this.showDatosGenerales = !this.showDatosGenerales;
   }
 
-  search() {
-      this.filtrosValues.emit(this.filtros);
-  }
 
   clearFilters() {
     this.filtros = new RemesasResultadoItem(
@@ -194,6 +166,9 @@ export class FiltroRemesasResultadosComponent implements OnInit {
       detail: msg
     });
   }
+  isBuscar(){
+    this.filtrosValues.emit(this.filtros);
+  }
 
   new(){
     localStorage.setItem('fichaRemesaResultado', "nuevo");
@@ -204,9 +179,9 @@ export class FiltroRemesasResultadosComponent implements OnInit {
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.search();
+      this.filtrosValues.emit(this.filtros);
     }
   }
 
-
+  
 }

@@ -9,6 +9,8 @@ import { Router } from '../../../../../node_modules/@angular/router';
 import { PersistenceService } from '../../../_services/persistence.service';
 import { RemesasResolucionItem } from '../../../models/sjcs/RemesasResolucionItem';
 import { element } from 'protractor';
+import { FiltroRemesasResolucionesComponent } from './filtro-remesas-resoluciones/filtro-remesas-resoluciones.component';
+import { TablaRemesasResolucionesComponent } from './tabla-remesas-resoluciones/tabla-remesas-resoluciones.component';
 
 
 @Component({
@@ -49,9 +51,9 @@ export class RemesasResolucionesComponent implements OnInit {
       'numRemesaCompleto': ''
       }
   );
-  filtrosValues: RemesasResolucionItem = new RemesasResolucionItem();
   
-
+  @ViewChild(FiltroRemesasResolucionesComponent) filtrosValues;
+  @ViewChild(TablaRemesasResolucionesComponent) tabla;
 
   constructor(private persistenceService: PersistenceService,private translateService: TranslateService, private router: Router,
            private sigaServices: SigaServices, private datepipe: DatePipe,private commonsService: CommonsService,) { }
@@ -79,7 +81,7 @@ export class RemesasResolucionesComponent implements OnInit {
   getFiltrosValues(event) {
     this.filtrosValues = JSON.parse(JSON.stringify(event));
     this.convertArraysToStrings();
-    this.search();
+    this.search(true);
   }
 
   convertArraysToStrings() {
@@ -130,7 +132,7 @@ export class RemesasResolucionesComponent implements OnInit {
     });
   }
 
-  search(){
+  search(event){
     console.log("QWEQWE");
     console.log(this.buscar);
     this.progressSpinner = true;

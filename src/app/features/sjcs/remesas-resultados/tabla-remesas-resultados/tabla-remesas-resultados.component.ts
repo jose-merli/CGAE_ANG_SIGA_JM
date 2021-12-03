@@ -43,10 +43,8 @@ export class TablaRemesasResultadosComponent implements OnInit {
   buscadores = []
   //Resultados de la busqueda
   @Input() datos;
-
+  @Input() filtrosValues;
   @Input() permisos;
-
-  @Output() search = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
 
@@ -155,6 +153,7 @@ export class TablaRemesasResultadosComponent implements OnInit {
     this.router.navigate(["/remesasResultadoFicha"]);
     localStorage.setItem('remesaItem', JSON.stringify(evento));
     localStorage.setItem('fichaRemesaResultado', "registro");
+    localStorage.setItem('filtrosRemesa', JSON.stringify(this.filtrosValues));
     console.log("123 "+ evento)
     console.log(JSON.stringify(this.selectedDatos))
   }

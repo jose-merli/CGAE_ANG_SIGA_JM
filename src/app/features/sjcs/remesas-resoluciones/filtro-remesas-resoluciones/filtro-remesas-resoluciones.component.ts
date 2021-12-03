@@ -31,31 +31,31 @@ export class FiltroRemesasResolucionesComponent implements OnInit {
 
   comboEstados = [];
 
-  @Output() filtrosValues = new EventEmitter<RemesasBusquedaItem>();
+  @Output() filtrosValues = new EventEmitter<RemesasResolucionItem>();
 
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private commonServices: CommonsService) { }
 
   ngOnInit() {
-
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-      if (this.persistenceService.getHistorico() != undefined) {
-        this.historico = this.persistenceService.getHistorico();
-      }
-
-    } else {
-      this.filtros = new RemesasBusquedaItem();
+    if(localStorage.getItem("filtrosRemesaResolucion")){
+      this.filtros = JSON.parse(localStorage.getItem("filtrosRemesaResolucion"));
+      localStorage.removeItem("filtrosRemesaResolucion");
+      this.filtros.fechaCargaDesde = this.transformDate(this.filtros.fechaCargaDesde)
+      this.filtros.fechaCargaHasta = this.transformDate(this.filtros.fechaCargaHasta)
+      this.filtros.fechaResolucionDesde = this.transformDate(this.filtros.fechaResolucionDesde)
+      this.filtros.fechaResolucionHasta = this.transformDate(this.filtros.fechaResolucionHasta)
+      this.filtrosValues.emit(this.filtros);
     }
     this.obtenerOperacionTipoAccion();
 
   }
 
-
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    return fecha;
+  }
+  
   fillFechaResolucionDesde(event) {
       this.filtros.fechaResolucionDesde = event;
   }

@@ -46,7 +46,7 @@ export class TablaCargaDesignaProcuradorComponent implements OnInit {
   @Input() datos;
 
   @Input() permisos;
-
+  @Input() filtrosValues;
   @Output() search = new EventEmitter<boolean>();
 
   @ViewChild("tabla") tabla;
@@ -154,6 +154,7 @@ export class TablaCargaDesignaProcuradorComponent implements OnInit {
     this.router.navigate(["/cargaDesignaProcuradorFicha"]);
     localStorage.setItem('remesaItem', JSON.stringify(evento));
     localStorage.setItem('fichaCargaDesignaProcurador', "registro");
+    localStorage.setItem('filtrosCargaDesigna',JSON.stringify(this.filtrosValues))
     console.log("123 "+ evento)
     console.log(JSON.stringify(this.selectedDatos))
   }

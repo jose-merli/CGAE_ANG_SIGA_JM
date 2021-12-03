@@ -49,6 +49,8 @@ export class TablaRemesasResolucionesComponent implements OnInit {
 
   @Output() search = new EventEmitter<boolean>();
 
+  @Input() filtrosValues;
+
   @ViewChild("tabla") tabla;
 
   constructor(private translateService: TranslateService,
@@ -154,6 +156,7 @@ export class TablaRemesasResolucionesComponent implements OnInit {
     this.router.navigate(["/remesasResolucionesFicha"]);
     localStorage.setItem('remesaItem', JSON.stringify(evento));
     localStorage.setItem('fichaRemesaResolucion', "registro");
+    localStorage.setItem('filtrosRemesaResolucion', JSON.stringify(this.filtrosValues));
     console.log("123 "+ evento)
     console.log(JSON.stringify(this.selectedDatos))
   }

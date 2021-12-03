@@ -22,7 +22,7 @@ import { saveAs } from "file-saver/FileSaver";
 export class TarjetaDatosCargaDesignaProcuradorComponent implements OnInit {
 
   // datos;
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   body: TurnosItems = new TurnosItems();
   bodyInicial;
   progressSpinner: boolean = false;

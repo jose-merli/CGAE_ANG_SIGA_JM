@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RemesasResolucionItem } from '../../../../models/sjcs/RemesasResolucionItem';
 import { procesos_intercambios } from '../../../../permisos/procesos_intercambios';
 import { PersistenceService } from '../../../../_services/persistence.service';
@@ -7,6 +7,8 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Router, ActivatedRoute } from '../../../../../../node_modules/@angular/router';
 import { DatePipe } from '@angular/common';
+import { FiltroCargaDesignaProcuradorComponent } from './filtro-carga-designa-procurador/filtro-carga-designa-procurador.component';
+import { TablaCargaDesignaProcuradorComponent } from './tabla-carga-designa-procurador/tabla-carga-designa-procurador.component';
 @Component({
   selector: 'app-carga-designa-procurador',
   templateUrl: './carga-designa-procurador.component.html',
@@ -19,7 +21,9 @@ export class CargaDesignaProcuradorComponent implements OnInit {
   datos;
   msgs;
   permisoEscritura;
-  filtrosValues: RemesasResolucionItem = new RemesasResolucionItem();
+
+  @ViewChild(FiltroCargaDesignaProcuradorComponent) filtrosValues;
+  @ViewChild(TablaCargaDesignaProcuradorComponent) tabla;
   
   constructor(private persistenceService: PersistenceService,private translateService: TranslateService, private router: Router,
     private sigaServices: SigaServices, private datepipe: DatePipe,private commonsService: CommonsService,) { }
@@ -47,7 +51,7 @@ export class CargaDesignaProcuradorComponent implements OnInit {
   getFiltrosValues(event) {
     this.filtrosValues = JSON.parse(JSON.stringify(event));
     this.convertArraysToStrings();
-    this.search();
+    this.search(event);
   }
 
   convertArraysToStrings() {
@@ -89,7 +93,7 @@ export class CargaDesignaProcuradorComponent implements OnInit {
     return numeroFormateado;
   }
 
-  search(){
+  search(event){
     console.log("QWEQWE");
     console.log(this.buscar);
     this.progressSpinner = true;

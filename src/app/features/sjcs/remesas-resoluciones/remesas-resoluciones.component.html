@@ -8,7 +8,7 @@
 </div>
 <div class="busqueda-container">
     <app-filtro-remesas-resoluciones (filtrosValues)="getFiltrosValues($event)"></app-filtro-remesas-resoluciones>
-    <app-tabla-remesas-resoluciones *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tabla-remesas-resoluciones>
+    <app-tabla-remesas-resoluciones *ngIf="buscar" [filtrosValues]="this.filtrosValues" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tabla-remesas-resoluciones>
   </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

@@ -31,11 +31,11 @@
           <td class="text-center" *ngFor="let col of columns">
 
             <a class="enlace" (click)="openTab(dato)">
-              <span *ngIf="col.field == 'numRemesaCompleto'">
-                {{dato["sufijoRemesa"]}} {{dato["prefijoRemesa"]}}{{dato["numeroRemesa"]}}
+              <span *ngIf="col.field == 'numRegistroRemesaCompleto'">
+                {{dato[col.field]}}
               </span>
             </a>
-            <span *ngIf="col.field != 'numRemesaCompleto'">
+            <span *ngIf="col.field != 'numRegistroRemesaCompleto'">
               {{dato[col.field]}}
             </span>
 

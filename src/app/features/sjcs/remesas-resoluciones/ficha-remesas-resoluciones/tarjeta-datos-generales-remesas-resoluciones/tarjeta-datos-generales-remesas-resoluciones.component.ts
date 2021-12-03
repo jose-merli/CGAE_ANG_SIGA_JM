@@ -29,7 +29,7 @@ import { saveAs } from "file-saver/FileSaver";
 export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit {
 
   // datos;
-  openFicha: boolean = false;
+  openFicha: boolean = true;
   body: TurnosItems = new TurnosItems();
   bodyInicial;
   progressSpinner: boolean = false;
