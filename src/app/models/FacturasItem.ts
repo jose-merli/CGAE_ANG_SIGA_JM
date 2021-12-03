@@ -41,6 +41,16 @@ export class FacturasItem {
     ultimaComunicacion: Date;
     nombreInstitucion: string;
 
+	importePagado: string;
+
+	//Actualizar observaciones factura
+	observacionesFactura: string;
+	observacionesFicheroFactura: string;
+
+	//Actualizar observaciones abono
+	observacionesAbono: string;
+	motivosAbono: string;
+
 	constructor() { };
 
 }

@@ -16,6 +16,8 @@ export class ObservacionesFacturasComponent implements OnInit {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<FacturasItem>();
+
+  @Input() bodyInicial: FacturasItem;
   
   apiKey: string = "";
   editorConfig: any = {
@@ -37,7 +39,7 @@ export class ObservacionesFacturasComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.progressSpinner = false;
+    this.progressSpinner = true;
 
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");

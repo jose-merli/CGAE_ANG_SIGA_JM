@@ -24,6 +24,7 @@ export class DatosGeneralesFacturasComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
   }
 
   // Abrir y cerrar la ficha

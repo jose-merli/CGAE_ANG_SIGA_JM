@@ -1,13 +1,16 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DataTable, Message } from 'primeng/primeng';
+import { ComboItem } from '../../../../../models/ComboItem';
+import { FacturaLineaItem } from '../../../../../models/FacturaLineaItem';
 import { FacturasItem } from '../../../../../models/FacturasItem';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-lineas-facturas',
   templateUrl: './lineas-facturas.component.html',
   styleUrls: ['./lineas-facturas.component.scss']
 })
-export class LineasFacturasComponent implements OnInit {
+export class LineasFacturasComponent implements OnInit, OnChanges {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -28,28 +31,38 @@ export class LineasFacturasComponent implements OnInit {
   buscadores = [];
   selectAll: boolean;
   selectMultiple: boolean;
-  datos: any[] = [];
+  datos: FacturaLineaItem[] = [];
+  datosInit: FacturaLineaItem[] = [];
+
+  comboTiposIVA: ComboItem[];
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices
   ) { }
 
-  ngOnInit() {
-    this.getCols();
+  ngOnInit() { }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial != undefined) {
+      this.getCols(this.bodyInicial.tipo);
+
+      if (this.bodyInicial.tipo == "FACTURA") {
+        this.getLineasFactura();
+      } else {
+        this.getLineasAbono();
+      }
+    }
+      
   }
 
   // Definición de las columnas
-  getCols() {
-    this.cols = [
-      { field: "descripcion", header: "general.description", width: "30%" },
-      { field: "precioUnitario", header: "Precio Unitario", width: "10%" },
-      { field: "cantidad", header: "Cantidad", width: "10%" },
-      { field: "importeNeto", header: "Importe Neto", width: "10%" }, 
-      { field: "tipoIVA", header: "Tipo IVA", width: "10%" },
-      { field: "importeIVA", header: "Importe IVA", width: "10%" },
-      { field: "importeTotal", header: "Importe Total", width: "10%" },
-      { field: "importeAnticipado", header: "Importe Anticip.", width: "10%" },
-    ];
+  getCols(tipo: string) {
+    if (tipo == "FACTURA") {
+      this.getColsFactura();
+    } else {
+      this.getColsAbono();
+    }
 
     this.cols.forEach(it => this.buscadores.push(""));
     this.rowsPerPage = [
@@ -70,6 +83,95 @@ export class LineasFacturasComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  getColsFactura() {
+    this.cols = [
+      { field: "descripcion", header: "general.description", width: "30%", editable: true },
+      { field: "precioUnitario", header: "Precio Unitario", width: "10%", editable: true },
+      { field: "cantidad", header: "Cantidad", width: "10%", editable: false },
+      { field: "importeNeto", header: "Importe Neto", width: "10%", editable: false }, 
+      { field: "tipoIVA", header: "Tipo IVA", width: "10%", editable: true },
+      { field: "importeIVA", header: "Importe IVA", width: "10%", editable: false },
+      { field: "importeTotal", header: "Importe Total", width: "10%", editable: false },
+      { field: "importeAnticipado", header: "Importe Anticip.", width: "10%", editable: false },
+    ];
+  }
+
+  getColsAbono() {
+    this.cols = [
+      { field: "descripcion", header: "general.description", width: "30%" },
+      { field: "precioUnitario", header: "Precio Unitario", width: "10%" },
+      { field: "cantidad", header: "Cantidad", width: "10%" },
+      { field: "importeNeto", header: "Importe Neto", width: "10%" }, 
+      { field: "tipoIVA", header: "Tipo IVA", width: "10%" },
+      { field: "importeIVA", header: "Importe IVA", width: "10%" },
+      { field: "importeTotal", header: "Importe Total", width: "10%" },
+      { field: "importeAnticipado", header: "Importe Anticip.", width: "10%" },
+    ];
+  }
+
+  // Obtención de los datos
+
+  getLineasFactura() {
+    this.sigaServices.getParam("facturacionPyS_getLineasFactura", "?idFactura=" + this.bodyInicial.idFactura).subscribe(
+      n => {
+        console.log(n);
+        this.datos = n.facturasLineasItems;
+        this.datos.forEach(d => d.modoEdicion = false);
+
+        this.datosInit = JSON.parse(JSON.stringify(this.datos));
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  getLineasAbono() {
+    this.sigaServices.getParam("facturacionPyS_getLineasAbono", "?idAbono=" + this.bodyInicial.idFactura).subscribe(
+      n => {
+        console.log(n);
+        this.datos = n.facturasLineasItems;
+        this.datos.forEach(d => d.modoEdicion = false);
+
+        this.datosInit = JSON.parse(JSON.stringify(this.datos));
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  // Seleccionar fila
+
+  onRowSelect(row: FacturaLineaItem) {
+    for (let dato of this.datos) {
+      if (dato === row) {
+        dato.modoEdicion = true;
+      } else {
+        dato.modoEdicion = false;
+      }
+    }
+  }
+
+  // Calcular propiedades derivadas
+
+  onChangeImportes(row: FacturaLineaItem, index: number) {
+    if (row !== this.datos[index] 
+      && row.precioUnitario != undefined && row.precioUnitario.trim() != ""
+      && row.cantidad != undefined && row.cantidad.trim() != ""
+      && row.idTipoIVA != undefined && row.idTipoIVA.trim() != "") {
+      this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toString();
+      this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * 0.1).toString();
+      this.datos[index].importeTotal = (parseFloat(this.datos[index].importeNeto) * parseFloat(this.datos[index].importeIVA)).toString();
+    }
+  }
+
+  // Restablecer
+
+  restablecer(): void {
+    this.datos =  JSON.parse(JSON.stringify(this.datosInit));
   }
 
   // Resultados por página

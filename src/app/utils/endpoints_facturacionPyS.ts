@@ -49,5 +49,11 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_actualizarProgramacionFactura: "facturacionPyS/actualizarProgramacionFactura",
     facturacionPyS_getFicherosDevoluciones: "facturacionPyS/getFicherosDevoluciones",
     facturacionPyS_comboFacturaciones: "facturacionPyS/general/comboFacturaciones",
+    facturacionPyS_getFacturas: "facturacionPyS/getFacturas",
+    facturacionPyS_getLineasFactura: "facturacionPyS/getLineasFactura",
+    facturacionPyS_guardarLineasFactura: "facturacionPyS/guardarLineasFactura",
+    facturacionPyS_getLineasAbono: "facturacionPyS/getLineasAbono",
+    facturacionPyS_guardarLineasAbono: "facturacionPyS/guardarLineasAbono",
+    facturacionPyS_getComunicacionCobro: "facturacionPyS/getComunicacionCobro",
     facturacionPyS_comboEstadosFacturas: "facturacionPyS/general/comboEstadosFacturas",
 }

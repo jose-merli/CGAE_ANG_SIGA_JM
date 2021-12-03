@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { FacturasItem } from '../../../../../models/FacturasItem';
 
 @Component({
   selector: 'app-deudor-facturas',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./deudor-facturas.component.scss']
 })
 export class DeudorFacturasComponent implements OnInit {
+
+  @Input() bodyInicial: FacturasItem;
 
   constructor() { }
 

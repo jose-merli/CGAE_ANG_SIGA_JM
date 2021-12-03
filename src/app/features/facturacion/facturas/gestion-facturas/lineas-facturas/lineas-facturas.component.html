@@ -50,6 +50,7 @@
       <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
         class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
         selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
+        
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
             <col *ngFor="let col of cols" [style.width]="col.width">
@@ -80,7 +81,14 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span>{{ dato[col.field] }}</span>
+              <div *ngIf="col.field == 'precioUnitario' || col.field == 'importeNeto' || col.field == 'importeNeto' || col.field == 'importeIVA' || col.field == 'importeTotal' || col.field == 'importeAnticipado';else noPrecio">
+                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']">{{ dato[col.field] ? dato[col.field] + " €" : "-" }}</span>
+                <input DigitDecimaNumber *ngIf="col.editable && dato['modoEdicion']" type="text" class="form-control" [(ngModel)]="dato[col.field]" maxlength="10" (change)="onChangeImportes(dato, rowIndex)" pInputText>
+              </div>
+              <ng-template #noPrecio>
+                <span (click)="onRowSelect(dato)" *ngIf="!dato['modoEdicion']">{{ dato[col.field] }}</span>
+                <input *ngIf="col.editable && dato['modoEdicion']" type="text" class="form-control" [(ngModel)]="dato[col.field]" pInputText>
+              </ng-template>
             </td>
           </tr>
         </ng-template>
