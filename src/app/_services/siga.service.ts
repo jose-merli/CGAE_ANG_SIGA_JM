@@ -161,6 +161,7 @@ export class SigaServices {
 		busquedaPerJuridica_downloadFile: 'busquedaPerJuridica/downloadFile',
 		retenciones_tipoRetencion: 'retenciones/tipoRetencion',
 		retenciones_search: 'retenciones/search',
+		retenciones_searchColegiado: 'retenciones/searchRetencionColegiado',
 		retenciones_update: 'retenciones/update',
 		integrantes_search: 'busquedaPerJuridica/datosIntegrantesSearch',
 		integrantes_tipoColegio: 'tarjetaIntegrantes/tipoColegio',

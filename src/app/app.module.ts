@@ -545,6 +545,7 @@ import { TablaResultadoOrderModule } from './commons/tabla-resultado-order/tabla
 import { MovimientosVariosService } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.service';
 import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.module';
 import { TarjetaFacturacionGenericaModule } from './features/sjcs/facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.module';
+import { RetencionesIrpfColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/retenciones-irpf-colegial/retenciones-irpf-colegial.component';
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,
@@ -997,6 +998,7 @@ import { TarjetaFacturacionGenericaModule } from './features/sjcs/facturacionSJC
 		//Impreso 190
 		FiltroGenerarImpreso190Component,
 		TablaGenerarImpreso190Component,
+		RetencionesIrpfColegialComponent,
 
 	],
 	imports: [
