@@ -140,7 +140,7 @@ export class FichaActuacionComponent implements OnInit {
       detalle: true,
       opened: false,
       campos: []
-    },
+    }
   ];
 
   institucionActual: string = '';
@@ -156,6 +156,7 @@ export class FichaActuacionComponent implements OnInit {
   documentos: DocumentoDesignaItem[] = [];
   modoLectura: boolean = false;
   permiteTurno: boolean;
+  openTarjetaFac: Boolean = false;
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
@@ -271,13 +272,25 @@ export class FichaActuacionComponent implements OnInit {
       this.tarjetaFija.enlaces.push(tarjTmp);
     });
 
+    let tarjTmp = {
+      id: 'facSJCSTarjFacGene',
+      ref: document.getElementById('facSJCSTarjFacGene'),
+      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+    };
+
+    this.tarjetaFija.enlaces.push(tarjTmp);
+
   }
 
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
-    if (!this.isNewActDesig && tarjTemp.detalle) {
+    if (!this.isNewActDesig && tarjTemp && tarjTemp.detalle) {
       tarjTemp.opened = true;
+    }
+
+    if (event && event == 'facSJCSTarjFacGene') {
+      this.openTarjetaFac = true;
     }
 
   }

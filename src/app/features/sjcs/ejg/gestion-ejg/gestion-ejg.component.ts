@@ -77,6 +77,7 @@ export class GestionEjgComponent implements OnInit {
   openTarjetaImpugnacion: Boolean = false;
   openTarjetaRegtel: Boolean = false;
   openTarjetaComunicaciones: Boolean = false;
+  openTarjetaFac: Boolean = false;
 
   enlacesTarjetaResumen = [];
 
@@ -509,6 +510,14 @@ export class GestionEjgComponent implements OnInit {
 
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
       }
+
+      pruebaTarjeta = {
+        label: "facturacionSJCS.tarjGenFac.facturaciones",
+        value: document.getElementById("facSJCSTarjFacGene"),
+        nombre: "facturaciones",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
     }, 5)
     this.progressSpinner = false;
   }
@@ -552,6 +561,8 @@ export class GestionEjgComponent implements OnInit {
         case "comunicaciones":
           this.openTarjetaComunicaciones = this.manuallyOpened;
           break;
+        case "facturaciones":
+          this.openTarjetaFac = this.manuallyOpened;
       }
     }
   }
@@ -596,6 +607,8 @@ export class GestionEjgComponent implements OnInit {
         case "comunicaciones":
           this.openTarjetaComunicaciones = true;
           break;
+        case "facturaciones":
+          this.openTarjetaFac = true;
       }
     }
   }

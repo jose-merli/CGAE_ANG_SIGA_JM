@@ -71,7 +71,11 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       campos: []
     }
   ];
+
   @ViewChild(FichaActuacionAsistenciaTarjetaHistoricoComponent) historicoComponent: FichaActuacionAsistenciaTarjetaHistoricoComponent;
+
+  openTarjetaFac: Boolean = false;
+
   constructor(private translateService: TranslateService,
     private router: Router,
     private sigaServices: SigaServices,
@@ -313,6 +317,14 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       this.tarjetaFija.enlaces.push(tarjTmp);
     });
 
+    let tarjTmp = {
+      id: 'facSJCSTarjFacGene',
+      ref: document.getElementById('facSJCSTarjFacGene'),
+      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+    };
+
+    this.tarjetaFija.enlaces.push(tarjTmp);
+
   }
 
   refreshTarjetas(event) {
@@ -355,8 +367,12 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
-    if (tarjTemp.detalle) {
+    if (tarjTemp && tarjTemp.detalle) {
       tarjTemp.opened = true;
+    }
+
+    if (event && event == 'facSJCSTarjFacGene') {
+      this.openTarjetaFac = true;
     }
 
   }
