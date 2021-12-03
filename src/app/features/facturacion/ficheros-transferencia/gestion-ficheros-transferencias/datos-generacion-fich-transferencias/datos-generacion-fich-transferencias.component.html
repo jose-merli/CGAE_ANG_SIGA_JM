@@ -13,7 +13,7 @@
             <label class="mr-auto title-ficha pointer">{{ 'facturacionPyS.ficherosAdeudos.datosGeneracion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>{{ "administracion.grupos.literal.id" | translate }}: <span>{{body.idDisqueteAbonos}}</span></label>
+            <label>{{ "administracion.grupos.literal.id" | translate }}: <span>{{body.idDisqueteAbono}}</span></label>
             <label>{{ "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" | translate }}: <span>{{body.fecha | date: 'dd/MM/yyyy'}}</span></label>
             <i class="fa fa-angle-down float-right ml-auto" (click)="abreCierraFicha('datosGeneracion')"
               *ngIf="!esFichaActiva('datosGeneracion')"></i> 
@@ -35,7 +35,7 @@
         <div class="form-row">
           <!-- <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ ""administracion.grupos.literal.id" | translate }}</label>
-            <input type="text" class="form-control" pInputText [(ngModel)]="body.idDisqueteAbonos" disabled/>
+            <input type="text" class="form-control" pInputText [(ngModel)]="body.idDisqueteAbono" disabled/>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoPrimerosRecibos" | translate }}</label>
