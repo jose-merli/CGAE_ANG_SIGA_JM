@@ -42,6 +42,9 @@ export class GestionFacturasComponent implements OnInit {
     this.body.idFactura = "128741";
     this.body.tipo = "FACTURA";
 
+    //this.body.idFactura = "45020";
+    //this.body.tipo = "ABONO";
+
     this.getDatosFactura(this.body.idFactura, this.body.tipo).then(() => {
       this.updateTarjetaResumen();
       setTimeout(() => {
@@ -90,7 +93,7 @@ export class GestionFacturasComponent implements OnInit {
       },
       {
         label: "Importe Total",
-        value: this.body.importefacturado
+        value: `${this.body.importefacturado} €`
       }
     ]
   }
@@ -167,7 +170,13 @@ export class GestionFacturasComponent implements OnInit {
       n => { }, err => { 
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    ).then(() => { 
+    ).catch(error => {
+      if (error != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    }).then(() => { 
       return this.getDatosFactura(this.body.idFactura, this.body.tipo); 
     }).then(() => this.progressSpinner = false);
   }

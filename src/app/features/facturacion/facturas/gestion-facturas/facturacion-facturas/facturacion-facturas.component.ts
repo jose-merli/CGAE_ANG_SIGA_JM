@@ -33,7 +33,7 @@ export class FacturacionFacturasComponent implements OnInit {
 
     this.sigaServices.post("facturacionPyS_getFacturacionesProgramadas", filtros).toPromise().then(
       n => {
-        let results: FacFacturacionprogramadaItem[] = JSON.parse(n.body).serieFacturacionItems;
+        let results: FacFacturacionprogramadaItem[] = JSON.parse(n.body).facturacionprogramadaItems;
         if (results != undefined && results.length != 0) {
           let facturacionProgramadaItem: FacFacturacionprogramadaItem = results[0];
 

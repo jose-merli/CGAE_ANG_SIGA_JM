@@ -121,14 +121,11 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   getColsAbono() {
     this.cols = [
-      { field: "descripcion", header: "general.description", width: "30%" },
-      { field: "precioUnitario", header: "Precio Unitario", width: "10%" },
-      { field: "cantidad", header: "Cantidad", width: "10%" },
-      { field: "importeNeto", header: "Importe Neto", width: "10%" }, 
-      { field: "tipoIVA", header: "Tipo IVA", width: "10%" },
-      { field: "importeIVA", header: "Importe IVA", width: "10%" },
-      { field: "importeTotal", header: "Importe Total", width: "10%" },
-      { field: "importeAnticipado", header: "Importe Anticip.", width: "10%" },
+      { field: "descripcion", header: "general.description", width: "40%", editable: true },
+      { field: "precioUnitario", header: "Precio Unitario", width: "10%", editable: true },
+      { field: "cantidad", header: "Cantidad", width: "10%", editable: false },
+      { field: "importeNeto", header: "Importe Neto", width: "10%", editable: false }, 
+      { field: "importeTotal", header: "Importe Total", width: "20%", editable: false },
     ];
   }
 

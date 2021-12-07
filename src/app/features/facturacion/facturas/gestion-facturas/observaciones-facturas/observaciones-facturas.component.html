@@ -38,11 +38,11 @@
       <div class="row">
         <div class="form-group w-100">
           <label>{{ 'censo.nuevaSolicitud.observaciones' | translate }}</label>
-          <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.observacionesFactura"></editor>
+          <editor id="observacionesFactura" apiKey="{{apiKey}}" [init]="editorConfig1" [(ngModel)]="body.observacionesFactura"></editor>
         </div>
         <div class="form-group w-100">
           <label>Observaciones para fichero de factura</label>
-          <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.observacionesFicheroFactura"></editor>
+          <editor id="observacionesFicheroFactura" apiKey="{{apiKey}}" [init]="editorConfig2" [(ngModel)]="body.observacionesFicheroFactura"></editor>
         </div>
       </div>
     </div>

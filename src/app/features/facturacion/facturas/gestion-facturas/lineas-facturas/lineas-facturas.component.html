@@ -12,20 +12,21 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('lineas')">
-            <label class="mr-auto title-ficha pointer">Líneas de Factura</label>
+            <label class="mr-auto title-ficha pointer">{{ bodyInicial.tipo == 'FACTURA' ? 'Líneas de Factura' : 'Líneas de Factura Rectificativa' }}</label>
           </div>
           <div class="d-flex justify-content-between default">
             
-            <label>Descripción: 
-                <span>{{ '' }}</span></label>
-            <label>Importe neto: 
-                <span>{{ '' }}</span></label>
-            <label>Importe IVA: 
-              <span>{{ '' }}</span></label>
-            <label>Importe total: 
-              <span>{{ '' }}</span></label>
-            <label>Importe anticipado: 
-              <span>{{ '' }}</span></label>
+              <label>Descripción: 
+                <span *ngIf="datos.length != 0">{{ datos[0].descripcion }}</span></label>
+              <label>Importe neto: 
+                <span *ngIf="datos.length != 0">{{ datos[0].importeNeto + " €" }}</span></label>
+              <label>Importe IVA: 
+                <span *ngIf="datos.length != 0">{{ datos[0].importeIVA + " €" }}</span></label>
+              <label>Importe total: 
+                <span *ngIf="datos.length != 0">{{ datos[0].importeTotal + " €" }}</span></label>
+              <label>Importe anticipado: 
+                <span *ngIf="datos.length != 0">{{ datos[0].importeAnticipado + " €" }}</span></label>
+            
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('lineas')"
               *ngIf="!esFichaActiva('lineas')"></i>
@@ -39,7 +40,7 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Líneas de Factura</label>
+        <label class="title-ficha pointer">{{ bodyInicial.tipo == 'FACTURA' ? 'Líneas de Factura' : 'Líneas de Factura Rectificativa' }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>

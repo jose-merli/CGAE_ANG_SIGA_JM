@@ -37,12 +37,12 @@
     <div [hidden]="!esFichaActiva('observacionesRectificativa')" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-group w-100">
-          <label>Motivos</label>
-          <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.observacionesAbono"></editor>
+          <label>{{ 'dato.jgr.guardia.guardias.motivos' | translate }}</label>
+          <editor id="motivosAbono" apiKey="{{apiKey}}" [init]="editorConfig1" [(ngModel)]="body.motivosAbono"></editor>
         </div>
         <div class="form-group w-100">
           <label>{{ 'censo.nuevaSolicitud.observaciones' | translate }}</label>
-          <editor apiKey="{{apiKey}}" [init]="editorConfig" [(ngModel)]="body.motivosAbono"></editor>
+          <editor id="observacionesAbono" apiKey="{{apiKey}}" [init]="editorConfig2" [(ngModel)]="body.observacionesAbono"></editor>
         </div>
       </div>
     </div>

@@ -19,16 +19,16 @@
             <label>Número de factura: 
                 <span>{{ bodyInicial.numeroFactura }}</span></label>
             <label>Fecha emisión: 
-                <span>{{ bodyInicial.fechaEmision }}</span></label>
-            <label>Importe neto: 
-              <span>{{ bodyInicial.importeNeto }}</span></label>
-            <label>Importe IVA: 
-              <span>{{ bodyInicial.importeIVA }}</span></label>
-            <label>Importe total: 
-              <span>{{ bodyInicial.importefacturado }}</span></label>
-            <label>Importe pendiente: 
+                <span>{{ bodyInicial.fechaEmision | date: "dd/MM/yyyy" }}</span></label>
+            <label>{{ 'facturacion.productos.importeNeto' | translate }}: 
+              <span>{{ bodyInicial.importeNeto + " €" }}</span></label>
+            <label>{{ 'facturacion.productos.importeIva' | translate }}: 
+              <span>{{ bodyInicial.importeIVA + " €" }}</span></label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}: 
+              <span>{{ bodyInicial.importefacturado + " €" }}</span></label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente'}}: 
               <span>{{ bodyInicial.fechaEmision }}</span></label>
-            <label>Descripción: 
+            <label>{{ 'general.description' | translate }}: 
               <span>{{ bodyInicial.fechaEmision }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
@@ -56,23 +56,23 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>Número de factura</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.numeroFactura" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.numeroFactura" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Fecha emisión</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.fechaEmision" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.fechaEmision | date: 'dd/MM/yyyy'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe neto</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeNeto" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeNeto + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe IVA</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeIVA" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeIVA + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe total</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importefacturado" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importefacturado + ' €'" disabled pInputText>
             </div>
           </div>
         </div>
@@ -81,27 +81,27 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe anticipado</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeAnticipado" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeAnticipado + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe compensado</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeCompensado" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeCompensado + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe por caja</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeCaja" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeCaja + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe por banco</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeBanco" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeBanco + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe cobrado total</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importePagado" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importePagado + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe pendiente</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeCompensado" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeCompensado + ' €'" disabled pInputText>
             </div>
           </div>
         </div>
@@ -110,26 +110,26 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe anulado</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeAnulado" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeAnulado + ' €'" disabled pInputText>
             </div>
 
             <div class="w-100 d-none d-md-block"></div>
             
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe por caja</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeCaja" disabled pInputText>
+              <input type="text" class="form-control" defa [value]="bodyInicial.importeCaja + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe por banco</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeBanco" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeBanco + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe abonado total</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importePagado" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importePagado + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>Importe pendiente</label>
-              <input type="text" class="form-control" [(ngModel)]="bodyInicial.importeAdeudadoPendiente" disabled pInputText>
+              <input type="text" class="form-control" [value]="bodyInicial.importeAdeudadoPendiente + ' €'" disabled pInputText>
             </div>
           </div>
         </div>
@@ -139,7 +139,7 @@
     <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-save" iconPos="left"
-          (click)="comunicar()" label="Comunicar"></button>
+          (click)="comunicar()" label="{{ 'general.boton.comunicar' | translate }}"></button>
       </div>
     </div>
   </div>

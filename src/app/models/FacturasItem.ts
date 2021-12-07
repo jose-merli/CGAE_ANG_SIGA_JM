@@ -81,7 +81,7 @@ export class FacturasItem {
 
 	//observaciones abono
 	observacionesAbono: string;
-	MotivosAbono: string;
+	motivosAbono: string;
 
 	constructor() { };
 
