@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input } from '@angular/core';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
 
 @Component({
@@ -11,6 +11,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   showTarjeta: boolean = true;
 
   @Output() addEnlace = new EventEmitter<Enlace>();
+  @Input() datos
 
   constructor() { }
 

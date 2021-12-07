@@ -51,13 +51,13 @@
                             <p-checkbox name="agrupar1" label="Agrupar" class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox name="L" label="L"></p-checkbox>
-                            <p-checkbox name="M" label="M"></p-checkbox>
-                            <p-checkbox name="X" label="X"></p-checkbox>
-                            <p-checkbox name="J" label="J"></p-checkbox>
-                            <p-checkbox name="V" label="V"></p-checkbox>
-                            <p-checkbox name="S" label="S"></p-checkbox>
-                            <p-checkbox name="D" label="D"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasDis" (onChange)="onChangeDias($event,'L')" value="L" name="L" label="L" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasDis" (onChange)="onChangeDias($event,'M')" value="M" name="M" label="M" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasDis" (onChange)="onChangeDias($event,'X')" value="X" name="X" label="X" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasDis" (onChange)="onChangeDias($event,'J')" value="J" name="J" label="J" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasDis" (onChange)="onChangeDias($event,'V')" value="V" name="V" label="V" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasDis" (onChange)="onChangeDias($event,'S')" value="S" name="S" label="S" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasDis" (onChange)="onChangeDias($event,'D')" value="D" name="D" label="D" checked = "false"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <p-radioButton label="Contando Asistencias"></p-radioButton>
@@ -99,13 +99,13 @@
                             <p-checkbox name="agrupar1" label="Agrupar" class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox name="L" label="L"></p-checkbox>
-                            <p-checkbox name="M" label="M"></p-checkbox>
-                            <p-checkbox name="X" label="X"></p-checkbox>
-                            <p-checkbox name="J" label="J"></p-checkbox>
-                            <p-checkbox name="V" label="V"></p-checkbox>
-                            <p-checkbox name="S" label="S"></p-checkbox>
-                            <p-checkbox name="D" label="D"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasAsiAct" (onChange)="onChangeDias($event,'L')" value="L" name="L" label="L" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasAsiAct" (onChange)="onChangeDias($event,'M')" value="M" name="M" label="M" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasAsiAct" (onChange)="onChangeDias($event,'X')" value="X" name="X" label="X" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasAsiAct" (onChange)="onChangeDias($event,'J')" value="J" name="J" label="J" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasAsiAct" (onChange)="onChangeDias($event,'V')" value="V" name="V" label="V" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasAsiAct" (onChange)="onChangeDias($event,'S')" value="S" name="S" label="S" checked = "false"></p-checkbox>
+                            <p-checkbox [(ngModel)]="diasAsiAct" (onChange)="onChangeDias($event,'D')" value="D" name="D" label="D" checked = "false"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <p-radioButton label="Contando Asistencias"></p-radioButton>
