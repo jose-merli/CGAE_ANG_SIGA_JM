@@ -4,6 +4,7 @@ import { RemesasItem } from '../../../../models/sjcs/RemesasItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TarjetaDatosGeneralesRemesasResultadosComponent } from './tarjeta-datos-generales-remesas-resultados/tarjeta-datos-generales-remesas-resultados.component';
 import { RemesasResultadoItem } from '../../../../models/sjcs/RemesasResultadoItem';
@@ -62,6 +63,7 @@ export class FichaRemesasResultadosComponent implements OnInit {
     private persistenceService: PersistenceService,
     private commonsServices: CommonsService,
     private translateService: TranslateService,
+    private location: Location,
     private router: Router,
     private datepipe: DatePipe) { }
 
@@ -139,7 +141,8 @@ export class FichaRemesasResultadosComponent implements OnInit {
   
   volver(){
     this.tarjetaDatosGeneralesRemesasResultados.isEnabledNuevo = false;
-    this.router.navigate(["/remesasResultado"]);
+    // this.router.navigate(["/remesasResultado"]);
+    this.location.back();
   }
 
 
