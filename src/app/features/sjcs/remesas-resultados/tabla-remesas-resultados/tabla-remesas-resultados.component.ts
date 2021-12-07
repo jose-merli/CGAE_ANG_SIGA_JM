@@ -150,7 +150,7 @@ export class TablaRemesasResultadosComponent implements OnInit {
     this.persistenceService.setPaginacion(paginacion);
     this.progressSpinner = true;
     this.persistenceService.setDatos(evento);
-    localStorage.setItem('remesaItem', JSON.stringify(evento));
+    localStorage.setItem('remesaResultadoItem', JSON.stringify(evento));
     localStorage.setItem('fichaRemesaResultado', "registro");
     localStorage.setItem('filtrosRemesaResultado', JSON.stringify(this.filtrosValues));
     console.log("123 "+ evento)

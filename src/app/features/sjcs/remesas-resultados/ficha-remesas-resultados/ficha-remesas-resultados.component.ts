@@ -70,11 +70,11 @@ export class FichaRemesasResultadosComponent implements OnInit {
   ngOnInit() {
     console.log("321: ")
     if(localStorage.getItem('fichaRemesaResultado') == "registro"){
-      this.item = localStorage.getItem('remesaItem');
+      this.item = localStorage.getItem('remesaResultadoItem');
       console.log("Item -> ", this.item);
       this.remesaItem = JSON.parse(this.item);
       console.log(this.remesaItem)
-      localStorage.removeItem('remesaItem');
+      localStorage.removeItem('remesaResultadoItem');
       this.remesaTabla = JSON.parse(this.item);
       console.log("Item en JSON -> ", this.remesaTabla);
       this.remesaAuxiliar = JSON.parse(this.item);
