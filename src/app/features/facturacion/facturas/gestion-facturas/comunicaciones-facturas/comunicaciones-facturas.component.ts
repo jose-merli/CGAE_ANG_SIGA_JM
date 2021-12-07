@@ -73,7 +73,7 @@ export class ComunicacionesFacturasComponent implements OnInit {
   // Obtención de los datos
 
   getComunicacionesCobro() {
-    this.sigaServices.getParam("facturacionPyS_getComunicacionCobro", "?idFactura=" + "100003" /* this.bodyInicial.idFactura */).subscribe(
+    this.sigaServices.getParam("facturacionPyS_getComunicacionCobro", "?idFactura=" + this.bodyInicial.idFactura).subscribe(
       n => {
         console.log(n);
         this.datos = n.comunicacionCobroItems;

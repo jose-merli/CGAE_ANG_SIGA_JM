@@ -15,12 +15,12 @@
     <app-cliente-facturas [bodyInicial]="body"></app-cliente-facturas>
     <app-facturacion-facturas [bodyInicial]="body"></app-facturacion-facturas>
     <app-deudor-facturas [bodyInicial]="body"></app-deudor-facturas>
-    <app-datos-generales-facturas [bodyInicial]="body"></app-datos-generales-facturas>
-    <app-estados-pagos-facturas [bodyInicial]="body"></app-estados-pagos-facturas>
-    <app-observaciones-facturas [bodyInicial]="body"></app-observaciones-facturas>
-    <app-observaciones-rectificativa-facturas [bodyInicial]="body"></app-observaciones-rectificativa-facturas>
-    <app-lineas-facturas [bodyInicial]="body"></app-lineas-facturas>
-    <app-comunicaciones-facturas [bodyInicial]="body"></app-comunicaciones-facturas>
+    <app-datos-generales-facturas [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-datos-generales-facturas>
+    <app-estados-pagos-facturas [openTarjetaEstadosPagos]="openTarjetaEstadosPagos" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-estados-pagos-facturas>
+    <app-observaciones-facturas *ngIf="body.tipo == 'FACTURA'" [openTarjetaObservaciones]="openTarjetaObservaciones" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend($event)"></app-observaciones-facturas>
+    <app-observaciones-rectificativa-facturas *ngIf="body.tipo == 'ABONO'" [openTarjetaObservacionesRectificativa]="openTarjetaObservacionesRectificativa" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="guardadoSend($event)"></app-observaciones-rectificativa-facturas>
+    <app-lineas-facturas [openTarjetaLineas]="openTarjetaLineas" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" (guardadoSend)="refreshData($event)"></app-lineas-facturas>
+    <app-comunicaciones-facturas [openTarjetaComunicaciones]="openTarjetaComunicaciones" [bodyInicial]="body" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-comunicaciones-facturas>
   </div>
 </div>
 

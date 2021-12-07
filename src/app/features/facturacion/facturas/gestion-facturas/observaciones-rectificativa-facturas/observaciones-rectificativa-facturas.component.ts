@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { FacturasItem } from '../../../../../models/FacturasItem';
 
@@ -7,7 +7,7 @@ import { FacturasItem } from '../../../../../models/FacturasItem';
   templateUrl: './observaciones-rectificativa-facturas.component.html',
   styleUrls: ['./observaciones-rectificativa-facturas.component.scss']
 })
-export class ObservacionesRectificativaFacturasComponent implements OnInit {
+export class ObservacionesRectificativaFacturasComponent implements OnInit, OnChanges {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -18,6 +18,7 @@ export class ObservacionesRectificativaFacturasComponent implements OnInit {
   @Output() guardadoSend = new EventEmitter<FacturasItem>();
 
   @Input() bodyInicial: FacturasItem;
+  body: FacturasItem;
   
   apiKey: string = "";
   editorConfig: any = {
@@ -46,6 +47,17 @@ export class ObservacionesRectificativaFacturasComponent implements OnInit {
     }
   
     this.progressSpinner = false;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial != undefined)
+      this.restablecer();
+  }
+
+  // Restablecer
+
+  restablecer(): void {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
   // Abrir y cerrar la ficha

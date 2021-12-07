@@ -1,8 +1,11 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DataTable, Message } from 'primeng/primeng';
+import { format } from 'util';
+import { TranslateService } from '../../../../../commons/translate';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FacturaLineaItem } from '../../../../../models/FacturaLineaItem';
 import { FacturasItem } from '../../../../../models/FacturasItem';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -35,13 +38,18 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   datosInit: FacturaLineaItem[] = [];
 
   comboTiposIVA: ComboItem[];
+  resaltadoDatos: boolean = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private translateService: TranslateService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.getComboTiposIVA();
+   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.bodyInicial != undefined) {
@@ -54,6 +62,19 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       }
     }
       
+  }
+
+  // Combo de tipos IVA
+  getComboTiposIVA() {
+    this.sigaServices.getParam("facturacionPyS_comboTiposIVA", "?codBanco=" + this.bodyInicial.idFactura).subscribe(
+      n => {
+        this.comboTiposIVA = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTiposIVA);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   // Definición de las columnas
@@ -128,6 +149,8 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     );
   }
 
+  // Funciones para el guardado
+
   getLineasAbono() {
     this.sigaServices.getParam("facturacionPyS_getLineasAbono", "?idAbono=" + this.bodyInicial.idFactura).subscribe(
       n => {
@@ -143,6 +166,50 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     );
   }
 
+  guardarLineasFactura(linea: FacturaLineaItem): Promise<any> {
+    return this.sigaServices.post("facturacionPyS_guardarLineasFactura", linea).toPromise().then(
+      n => { },
+      err => {
+        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  guardarLineasAbono(linea: FacturaLineaItem): Promise<any> {
+    return this.sigaServices.post("facturacionPyS_guardarLineasAbono", linea).toPromise().then(
+      n => { },
+      err => {
+        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  // Guardar
+
+  guardarLineas(): void {
+    this.progressSpinner = true;
+
+    let datosToUpdate: FacturaLineaItem[] = this.datos.filter(d1 => 
+      !this.datosInit.some(d2 => d1.descripcion == d2.descripcion 
+      && d1.precioUnitario == d2.precioUnitario && d1.cantidad == d2.cantidad && d1.idTipoIVA == d2.idTipoIVA && d1.importeTotal == d2.importeTotal));
+    console.log(datosToUpdate);
+
+    Promise.all(datosToUpdate.map(d => {
+      if (this.bodyInicial.tipo == "FACTURA") {
+        return this.guardarLineasFactura(d);
+      } else if (this.bodyInicial.tipo == "ABONO") {
+        return this.guardarLineasAbono(d);
+      }
+    })).catch(error => {
+      if (error != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    }).then(() => this.progressSpinner = false);
+  }
+
+
   // Seleccionar fila
 
   onRowSelect(row: FacturaLineaItem) {
@@ -157,14 +224,13 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   // Calcular propiedades derivadas
 
-  onChangeImportes(row: FacturaLineaItem, index: number) {
-    if (row !== this.datos[index] 
-      && row.precioUnitario != undefined && row.precioUnitario.trim() != ""
-      && row.cantidad != undefined && row.cantidad.trim() != ""
-      && row.idTipoIVA != undefined && row.idTipoIVA.trim() != "") {
-      this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toString();
-      this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * 0.1).toString();
-      this.datos[index].importeTotal = (parseFloat(this.datos[index].importeNeto) * parseFloat(this.datos[index].importeIVA)).toString();
+  onChangeImportes(index: number) {
+    if (this.datos[index].precioUnitario != undefined && this.datos[index].precioUnitario.trim() != ""
+      && this.datos[index].cantidad != undefined && this.datos[index].cantidad.trim() != ""
+      && this.datos[index].idTipoIVA != undefined && this.datos[index].idTipoIVA.trim() != "") {
+      this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
+      this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * 0.1).toFixed(2).toString();
+      this.datos[index].importeTotal = (parseFloat(this.datos[index].importeNeto) + parseFloat(this.datos[index].importeIVA)).toFixed(2).toString();
     }
   }
 
@@ -172,6 +238,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   restablecer(): void {
     this.datos =  JSON.parse(JSON.stringify(this.datosInit));
+    this.resaltadoDatos = false;
   }
 
   // Resultados por página
@@ -190,6 +257,13 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
         this.selectedDatos = [];
         this.selectMultiple = false;
       }
+  }
+
+  // Estilo obligatorio
+  styleObligatorio(evento: string) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
   }
 
   // Abrir y cerrar la ficha

@@ -1,7 +1,8 @@
 import { resolve } from '@angular-devkit/core';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/primeng';
+import { TranslateService } from '../../../../commons/translate';
 import { FacturasItem } from '../../../../models/FacturasItem';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -30,32 +31,18 @@ export class GestionFacturasComponent implements OnInit {
 
   constructor(
     private location: Location,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private datepipe: DatePipe
   ) { }
 
   ngOnInit() {
-    this.getDatosFactura();
-  }
+    this.progressSpinner = true;
 
-  getDatosFactura(): void {
-    //this.progressSpinner = true;
-
-    let filtros = {};
-
-    /*this.sigaServices.post("facturacionPyS_getFacturas", filtros).toPromise().then(
-      n => {
-        let datos: FacturasItem[] = n.facturaItems;
-        this.body = datos[0];
-
-        console.log(this.body);
-      }, err => { }
-    )*/
     this.body.idFactura = "128741";
     this.body.tipo = "FACTURA";
 
-    
-    
-    /*.then(() => {
+    this.getDatosFactura(this.body.idFactura, this.body.tipo).then(() => {
       this.updateTarjetaResumen();
       setTimeout(() => {
         this.updateEnlacesTarjetaResumen();
@@ -63,7 +50,26 @@ export class GestionFacturasComponent implements OnInit {
 
       this.goTop();
       this.progressSpinner = false;
-    });*/
+    });
+  }
+
+  getDatosFactura(idFactura: string, tipo: string): Promise<any> {
+    return this.sigaServices.getParam("facturacionPyS_getFactura", `?idFactura=${idFactura}&tipo=${tipo}`).toPromise().then(
+      n => {
+        let datos: FacturasItem[] = n.facturasItems;
+        this.body = datos[0];
+
+        console.log(this.body);
+      }, err => { 
+        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    ).catch(error => {
+      if (error != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    });
   }
 
   // Tarjeta resumen
@@ -76,11 +82,11 @@ export class GestionFacturasComponent implements OnInit {
       },
       {
         label: "Fecha Emisión",
-        value: this.body.fechaEmision
+        value: this.transformDate(this.body.fechaEmision)
       },
       {
         label: "Cliente",
-        value: ""
+        value: `${this.body.nombre} ${this.body.apellidos}`
       },
       {
         label: "Importe Total",
@@ -155,7 +161,31 @@ export class GestionFacturasComponent implements OnInit {
   // Función para guardar o actualizar
 
   guardadoSend(event: FacturasItem): void {
+    this.progressSpinner = true;
 
+    this.sigaServices.post("facturacionPyS_guardaDatosFactura", event).toPromise().then(
+      n => { }, err => { 
+        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    ).then(() => { 
+      return this.getDatosFactura(this.body.idFactura, this.body.tipo); 
+    }).then(() => this.progressSpinner = false);
+  }
+
+  refreshData(): void {
+    this.progressSpinner = true;
+
+    this.getDatosFactura(this.body.idFactura, this.body.tipo).then(() => this.progressSpinner = false);
+  }
+
+  // Transformar fecha
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    else
+      fecha = null;
+    fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
   }
 
   // Funciones de utilidad
