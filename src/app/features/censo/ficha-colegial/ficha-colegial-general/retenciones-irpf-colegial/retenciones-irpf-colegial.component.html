@@ -1,0 +1,113 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+    <!--DATOS REGISTRALES-->
+    <div id="retencionesIRPF">
+        <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
+
+            <div class="card-header header-ficha">
+                <div *ngIf="!openFicha" class="form-row">
+                    <div class="col-lg-1 col-md-2">
+                        <div class="img-colegiado" (click)="abrirFicha()">
+                            <i class="fa fa-dollar icon-ficha"></i>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-11 col-md-10">
+                        <div class="d-flex justify-content-start mb-1 pointer" (click)="abrirFicha()">
+                            <label  class="mr-auto title-ficha">{{"menu.justiciaGratuita.maestros.retenciones" | translate}}</label>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <label>{{"facturacion.seriesFacturacion.literal.fInicio" | translate}}:
+                                <span>{{retencionNow.fechaInicio}}</span>
+                            </label>
+
+                            <label>{{"general.description" | translate}}:
+                                <span>{{retencionNow.descripcionRetencion}}</span>
+                            </label>
+                            <label>{{"FactSJCS.mantRetencionesJ.literal.tramoLec" | translate}}:
+                                <span>{{retencionNow.porcentajeRetencion}} %</span>
+                            </label>
+                            <i (click)="abrirFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="openFicha"  (click)="abrirFicha()" class=" header-ficha-open d-flex justify-content-start align-items-center">
+                    <div class="img-colegiado" (click)="abrirFicha()">
+                        <i class="fa fa-dollar icon-ficha"></i>
+                    </div>
+                    <label (click)="abrirFicha()" class="title-ficha">{{"menu.justiciaGratuita.maestros.retenciones" | translate}}</label>
+                    <i (click)="abrirFicha()" class="fa fa-angle-up ml-auto"></i>
+                </div>
+            </div>
+            <!--cuerpo datos generales-->
+            <div *ngIf="openFicha" class="card-body card-body-ficha">
+                <div class="row">
+                    <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive]="true" #table class="tabla-listado"
+                        [value]="datos" [sortOrder]="0" sortField="fechaInicio" [paginator]="true" paginatorPosition="both" [rows]="selectedItem"
+                        rowHover="true" pageLinks="4" [editable]="true" [sortField]="sortF" [sortOrder]="sortO" (onSort)="changeSort($event)">
+
+                        <p-column field="fechaInicio" filterPlaceholder="{{'general.boton.search' | translate}}" [header]="cols[0].header | translate"
+                            [filter]="true" filterMatchMode="contains">
+                            <ng-template let-col let-car="rowData" pTemplate="body">
+                                <span>{{car[col.field]}} </span>
+                                <app-fecha *ngIf="car[col.field] == ''" [minDate]="fechaMinima" [(value)]="nuevafecha" (valueChangeSelected)="onChangeCalendar($event)"
+                                    (valueChangeInput)="onChangeCalendar($event)"></app-fecha>
+                            </ng-template>
+
+                        </p-column>
+                        <p-column field="fechaFin" [header]="cols[1].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                            filterMatchMode="contains">
+                            <ng-template let-col let-car="rowData" pTemplate="body">
+
+                                <span>{{car[col.field]}}</span>
+
+                            </ng-template>
+                        </p-column>
+                        <p-column field="descripcionRetencion" [header]="cols[2].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                            filterMatchMode="contains">
+                            <ng-template let-col let-car="rowData" pTemplate="body">
+                                <span>{{car[col.field]}}</span>
+                                <p-dropdown *ngIf="car[col.field] == '' " [(ngModel)]="newRetencion.descripcionRetencion" [options]="tiposRetenciones" (onChange)="onChangeDrop($event)"></p-dropdown>
+                            </ng-template>
+                        </p-column>
+                        <p-column field="porcentajeRetencion" [header]="cols[3].header | translate" [filter]="true" filterPlaceholder="{{'general.boton.search' | translate}}"
+                            filterMatchMode="contains">
+                            <ng-template let-col let-car="rowData" pTemplate="body">
+                                <span>{{car[col.field]}}</span>
+
+                            </ng-template>
+                        </p-column>
+
+                        <ng-template pTemplate="paginatorLeft">
+                            <div class="mostrar">
+                                <label class="mt-2 pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
+                                    + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+                                    | translate }} {{table.totalRecords}}</label>
+                                <label>{{ "general.message.mostrar" | translate}}</label>
+                                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
+                                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                            </div>
+                        </ng-template>
+
+                    </p-dataTable>
+                </div>
+
+                <br>
+                <!--FIN DE PRINCIPAL-->
+            </div>
+
+            <div *ngIf="openFicha" class="card-footer">
+              <div class="text-right main-button">
+                  <button (click)="volver()" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                  <button (click)="confirmEdit()" [disabled]="activaGuardar() || tarjeta == '2'" pButton type="button" icon="	far fa-save "
+                      iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+                  <button (click)="confirmarBorrar()" [disabled]="isEliminar || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-trash-alt"
+                      iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
+                  <button (click)="crear()" [disabled]="isCrear || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-plus"
+                      iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+              </div>
+          </div>
+
+        </div>
+    </div>

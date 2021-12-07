@@ -35,18 +35,25 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.persistenceService.getFiltros() != undefined) {
+    if (sessionStorage.getItem("tarjetaBaremosFichaGuardia")) {
+      let datos = JSON.parse(sessionStorage.getItem("tarjetaBaremosFichaGuardia"));
+      sessionStorage.removeItem("tarjetaBaremosFichaGuardia");
+      this.filtros.idTurnos = [datos.idTurno];
+      this.filtros.idGuardias = [datos.idGuardia];
+      this.getComboTurno();
+      this.getComboGuardia([datos.idTurno]);
+      this.buscar();
+    } else if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      
+
       this.persistenceService.clearFiltros();
       this.buscar();
 
     } else {
       this.getComboTurno();
-    this.getComboFacturacion();
-    this.filtros.idFacturaciones = ['0'];
+      this.getComboFacturacion();
+      this.filtros.idFacturaciones = ['0'];
     }
-    
   }
 
   onHideDatosGenerales() {
@@ -163,7 +170,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
   }
 
   nuevo() {
-    sessionStorage.setItem('modoEdicionBaremo',"false");
+    sessionStorage.setItem('modoEdicionBaremo', "false");
     this.router.navigate(['/fichaBaremosDeGuardia']);
   }
 

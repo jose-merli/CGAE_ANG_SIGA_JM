@@ -222,20 +222,16 @@ export class DetalleIntegranteComponent implements OnInit {
       {
         key: "vinculacion",
         activa: this.editar
+      },
+      {
+        key: "historicoLiquidacion",
+        activa: this.editar
       }
     ];
     this.cols = [
-      { field: "nif", header: "administracion.usuarios.literal.NIF" },
-      {
-        field: "nombre",
-        header: "administracion.parametrosGenerales.literal.nombre"
-      },
-      { field: "apellidos", header: "Apellidos" },
-      { field: "fechaInicioCargo", header: "Fecha de alta - fecha de baja" },
-      { field: "cargo", header: "Cargos del integrante" },
-      { field: "liquidacionComoSociedad", header: "Liquidación como sociedad" },
-      { field: "ejerciente", header: "Ejerciente" },
-      { field: "participacion", header: "Participación en la sociedad" }
+      { field: "fecha", header: "facturacionSJCS.facturacionesYPagos.fecha" },
+      { field: "liquidacionSJCS", header: "cen.integrantes.liqSJCS" },
+      { field: "descripcion", header: "general.description" }
     ];
 
     this.rowsPerPage = [

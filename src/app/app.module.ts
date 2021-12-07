@@ -479,7 +479,6 @@ import { TarjetaAplicacionEnPagosComponent } from './features/sjcs/facturacionSJ
 import { RetencionesService } from './features/sjcs/facturacionSJCS/retenciones/retenciones.service';
 import { BaremosDeGuardiaComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/baremos-de-guardia.component';
 import { FiltroBusquedaBaremosComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/filtro-busqueda-baremos/filtro-busqueda-baremos.component';
-import { TablaBusquedaBaremosComponent } from './features/sjcs/facturacionSJCS/baremos-de-guardia/tabla-busqueda-baremos/tabla-busqueda-baremos.component';
 import { CertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/certificacion-fac.component';
 import { FichaCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-certificacion-fac.component';
 import { TablaCertificacionFacComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/tabla-certificacion-fac/tabla-certificacion-fac.component';
@@ -545,6 +544,8 @@ import { TablaResultadoOrderModule } from './commons/tabla-resultado-order/tabla
 import { MovimientosVariosService } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.service';
 import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.module';
 import { TarjetaFacturacionGenericaModule } from './features/sjcs/facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.module';
+import { RetencionesIrpfColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/retenciones-irpf-colegial/retenciones-irpf-colegial.component';
+import { TablaBusquedaBaremosModule } from './features/sjcs/facturacionSJCS/baremos-de-guardia/tabla-busqueda-baremos/tabla-busqueda-baremos.module';
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,
@@ -980,7 +981,6 @@ import { TarjetaFacturacionGenericaModule } from './features/sjcs/facturacionSJC
 		TarjetaAplicacionEnPagosComponent,
 		BaremosDeGuardiaComponent,
 		FiltroBusquedaBaremosComponent,
-		TablaBusquedaBaremosComponent,
 		FichaBaremosDeGuardiaComponent,
 		FichaBarDatosGeneralesComponent,
 		FichaBarConfiFacComponent,
@@ -997,6 +997,7 @@ import { TarjetaFacturacionGenericaModule } from './features/sjcs/facturacionSJC
 		//Impreso 190
 		FiltroGenerarImpreso190Component,
 		TablaGenerarImpreso190Component,
+		RetencionesIrpfColegialComponent,
 
 	],
 	imports: [
@@ -1076,6 +1077,7 @@ import { TarjetaFacturacionGenericaModule } from './features/sjcs/facturacionSJC
 		TablaResultadoOrderModule,
 		MovimientosVariosModule,
 		TarjetaFacturacionGenericaModule,
+		TablaBusquedaBaremosModule
 	],
 
 	exports: [],

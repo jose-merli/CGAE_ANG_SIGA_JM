@@ -108,6 +108,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   openDirec: Boolean = false;
   openBanca: Boolean = false;
   openRegtel: Boolean = false;
+  openRetenciones: Boolean = false;
+
   colsColegiales: any = [];
   colsColegiaciones: any = [];
   colsCertificados: any = [];
@@ -361,6 +363,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   tarjetaRegtel: string;
   tarjetaMutualidad: string;
   tarjetaAlterMutua: string;
+  tarjetaRetencionesIRPF: string;
 
   tarjetaInteresNum: string;
   tarjetaGeneralesNum: string;
@@ -375,6 +378,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   tarjetaRegtelNum: string;
   tarjetaMutualidadNum: string;
   tarjetaAlterMutuaNum: string;
+  tarjetaRetencionesIRPFNum: string;
 
   isCrearColegial: boolean = false;
   nuevoEstadoColegial: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -393,6 +397,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   disabledTarjetaResumen:Boolean = false;
   manuallyOpened:Boolean;
   idManuallyOpened: any;
+  
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -656,7 +661,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   }
   checkAccesos() {
     this.progressSpinner = true;
-    let procesos: any = ["285", "234", "286", "12P", "235", "290", "236", "237", "289", "287", "288", "291", "298", "299"];
+    let procesos: any = ["285", "234", "286", "12P", "235", "290", "236", "237", "289", "287", "288", "291", "298", "299","12J"];
     let proceso;
     procesos = procesos.map(it => {
       proceso = it;
@@ -683,6 +688,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.tarjetaRegtelNum = permisosArray[11].derechoacceso;
         this.tarjetaMutualidadNum = permisosArray[12].derechoacceso;
         this.tarjetaAlterMutuaNum = permisosArray[13].derechoacceso;
+        this.tarjetaRetencionesIRPFNum = permisosArray[14].derechoacceso;
 
       },
       err => {
@@ -711,6 +717,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     this.tarjetaRegtel = this.tarjetaRegtelNum;
     this.tarjetaMutualidad = this.tarjetaMutualidadNum;
     this.tarjetaAlterMutua = this.tarjetaAlterMutuaNum;
+    this.tarjetaRetencionesIRPF = this.tarjetaRetencionesIRPFNum;
 
     this.initSpinner = false;
 
@@ -859,6 +866,19 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
       }
     }
+
+    //preguntar el if, el permiso
+    if (this.tarjetaRetencionesIRPFNum == "3" || this.tarjetaRetencionesIRPFNum == "2") {
+      let pruebaTarjeta = {
+        label: "facturacionSJCS.movimientosVarios.retencionesIRPF",
+        value: document.getElementById("retencionesIRPF"),
+        nombre: "tarjetaRetencionesIRPF",
+      }
+      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
+      if (findDato == undefined) {
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }
     
   }
   idPersonaNuevoEvent(event) {
@@ -905,6 +925,9 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         case "regtel":
           this.openRegtel = this.manuallyOpened;
           break;
+        case "retencionesIRPF":
+          this.openRetenciones = this.manuallyOpened;
+          break;
       }
     }
   }
@@ -943,6 +966,9 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         case "regtel":
           this.openRegtel = true;
           break;
+        case "retencionesIRPF":
+          this.openRetenciones = true;
+        break;
       }
     }
   }
