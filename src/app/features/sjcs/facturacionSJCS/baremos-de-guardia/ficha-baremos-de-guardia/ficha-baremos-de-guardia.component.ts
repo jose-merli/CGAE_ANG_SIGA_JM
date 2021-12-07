@@ -26,7 +26,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     imagen: '',
     detalle: false,
     fixed: true,
-    
+    campos:[],
     enlaces: [
       { id: 'facSJCSFichaBarDatosGen', nombre: this.translateService.instant('facturacionSJCS.baremosDeGuardia.datosGenerales'), ref: document.getElementById('facSJCSFichaBarDatosGen') },
       { id: 'facSJCSFichaBarConfiFac', nombre: this.translateService.instant('facturacionSJCS.baremosDeGuardia.confiFac'), ref: document.getElementById('facSJCSFichaBarConfiFac') },
@@ -37,6 +37,8 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   modoEdicion: boolean;
   progressSpinner: boolean;
   datosFichDatGenerales;
+  datosFichConfiFac;
+  datosFichConfiAdi;
   msgs: any[];
   tieneDatos: boolean;
   @ViewChild(FichaBarDatosGeneralesComponent) tarjetaDatosGenerales:FichaBarDatosGeneralesComponent;
@@ -135,6 +137,10 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         }
       )
     }
+  }
+
+  guardarCerrar(){
+    console.log(`Dias disponibles: ${this.tarjetaConfigFac.diasDis}\r\n Dias actuacion/asistencia: ${this.tarjetaConfigFac.diasAsiAct}`)
   }
 
   showMessage(severity, summary, msg) {
