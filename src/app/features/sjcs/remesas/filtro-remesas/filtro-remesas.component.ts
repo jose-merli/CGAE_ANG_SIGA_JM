@@ -44,8 +44,33 @@ export class FiltroRemesasComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
+    if(localStorage.getItem("filtrosRemesa")){
+      this.filtros = JSON.parse(localStorage.getItem("filtrosRemesa"));
+      localStorage.removeItem("filtrosRemesa");
+
+      if(this.filtros.fechaEnvioDesde != null){
+        this.filtros.fechaEnvioDesde = new Date(this.filtros.fechaEnvioDesde);
+      }
+      if(this.filtros.fechaEnvioHasta != null){
+        this.filtros.fechaEnvioHasta = new Date(this.filtros.fechaEnvioHasta);
+      }
+      
+      if(this.filtros.fechaGeneracionDesde != null){
+        this.filtros.fechaGeneracionDesde = new Date(this.filtros.fechaGeneracionDesde);
+      }
+      if(this.filtros.fechaGeneracionHasta != null){
+        this.filtros.fechaGeneracionHasta = new Date(this.filtros.fechaGeneracionHasta);
+      }
+
+      if(this.filtros.fechaRecepcionDesde != null){
+        this.filtros.fechaRecepcionDesde = new Date(this.filtros.fechaRecepcionDesde);
+      }
+      if(this.filtros.fechaRecepcionHasta != null){
+        this.filtros.fechaRecepcionHasta = new Date(this.filtros.fechaRecepcionHasta);
+      }
+
+      this.filtrosValues.emit(this.filtros);
+
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }

@@ -3,6 +3,7 @@ import { ConfirmationService } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { EJGRemesaItem } from '../../../../models/sjcs/EJGRemesaItem';
 import { RemesasItem } from '../../../../models/sjcs/RemesasItem';
+import { Location } from '@angular/common';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -44,6 +45,7 @@ export class FichaRemesasComponent implements OnInit {
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private commonsService: CommonsService,
+    private location: Location,
     private router: Router,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService) { }
@@ -541,11 +543,12 @@ export class FichaRemesasComponent implements OnInit {
   
   volver(){
     this.progressSpinner = true;
-    if(this.remesaInformacionEconomica){
-      this.router.navigate(["/remesas/1"]);
-    }else{
-      this.router.navigate(["/remesas/0"]);
-    }
+    // if(this.remesaInformacionEconomica){
+    //   this.router.navigate(["/remesas/1"]);
+    // }else{
+    //   this.router.navigate(["/remesas/0"]);
+    // }
+    this.location.back();
   }
 
   restablecer(){

@@ -5,6 +5,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { TarjetaDatosGeneralesRemesasResolucionesComponent } from './tarjeta-datos-generales-remesas-resoluciones/tarjeta-datos-generales-remesas-resoluciones.component';
 import { RemesasResultadoItem } from '../../../../models/sjcs/RemesasResultadoItem';
 import { DatePipe } from '@angular/common';
@@ -34,6 +35,7 @@ export class FichaRemesasResolucionesComponent implements OnInit {
     private persistenceService: PersistenceService,
     private commonsServices: CommonsService,
     private translateService: TranslateService,
+    private location: Location,
     private router: Router,
     private datepipe: DatePipe) { }
 
@@ -81,13 +83,15 @@ export class FichaRemesasResolucionesComponent implements OnInit {
   }
   rest(){
     this.tarjetaDatosGeneralesRemesasResoluciones.isEnabledNuevo = false;
-    this.router.navigate(["/remesasResoluciones"]);
+    // this.router.navigate(["/remesasResoluciones"]);
+    this.location.back();
   }
 
   
   volver(){
     this.tarjetaDatosGeneralesRemesasResoluciones.isEnabledNuevo = false;
-    this.router.navigate(["/remesasResoluciones"]);
+    // this.router.navigate(["/remesasResoluciones"]);
+    this.location.back();
   }
 
 

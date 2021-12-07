@@ -4,6 +4,7 @@ import { RemesasItem } from '../../../../models/sjcs/RemesasItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TarjetaDatosGeneralesRemesasResultadosComponent } from './tarjeta-datos-generales-remesas-resultados/tarjeta-datos-generales-remesas-resultados.component';
 import { RemesasResultadoItem } from '../../../../models/sjcs/RemesasResultadoItem';
@@ -62,17 +63,18 @@ export class FichaRemesasResultadosComponent implements OnInit {
     private persistenceService: PersistenceService,
     private commonsServices: CommonsService,
     private translateService: TranslateService,
+    private location: Location,
     private router: Router,
     private datepipe: DatePipe) { }
 
   ngOnInit() {
     console.log("321: ")
     if(localStorage.getItem('fichaRemesaResultado') == "registro"){
-      this.item = localStorage.getItem('remesaItem');
+      this.item = localStorage.getItem('remesaResultadoItem');
       console.log("Item -> ", this.item);
       this.remesaItem = JSON.parse(this.item);
-      console.log(this.remesaItem)
-      localStorage.removeItem('remesaItem');
+      console.log(this.remesaItem);
+      localStorage.removeItem('remesaResultadoItem');
       this.remesaTabla = JSON.parse(this.item);
       console.log("Item en JSON -> ", this.remesaTabla);
       this.remesaAuxiliar = JSON.parse(this.item);
@@ -139,7 +141,8 @@ export class FichaRemesasResultadosComponent implements OnInit {
   
   volver(){
     this.tarjetaDatosGeneralesRemesasResultados.isEnabledNuevo = false;
-    this.router.navigate(["/remesasResultado"]);
+    // this.router.navigate(["/remesasResultado"]);
+    this.location.back();
   }
 
 

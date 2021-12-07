@@ -54,7 +54,9 @@ export class TarjetaRemesasEnvioComponent {
         }
         this.router.navigate(["/fichaRemesasEnvio"]);
         localStorage.setItem('remesaItem', JSON.stringify(this.remesa));
-        localStorage.setItem('ficha', "registro");
+        localStorage.setItem('ficha', "registro"); 
+        localStorage.setItem('fichaRemesaResultado',"registro");
+        localStorage.setItem("remesaResultadoItem", JSON.stringify(this.remesaItem) );
       }      
 
     }
