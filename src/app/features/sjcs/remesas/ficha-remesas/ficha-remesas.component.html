@@ -10,7 +10,7 @@
 </div>
 
 <div class="busqueda-container">
-  <app-tarjeta-datos-generales [remesaTabla]="remesaTabla" [remesaItem]="remesaItem" (estado) = "getAcciones()"></app-tarjeta-datos-generales>
+  <app-tarjeta-datos-generales [remesaTabla]="remesaTabla" [remesaItem]="remesaItem" (estado) = "getAcciones($event)"></app-tarjeta-datos-generales>
   <app-tarjeta-ejgs [remesaTabla]="remesaTabla" [remesaItem]="remesaItem"></app-tarjeta-ejgs>
 
   <div class="card-footer">

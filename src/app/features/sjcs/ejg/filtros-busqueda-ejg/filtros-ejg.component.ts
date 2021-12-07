@@ -458,10 +458,14 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
 
         if(this.remesaFicha){
-          this.comboEstadoEJG[0] = this.comboEstadoEJG[11];
-          this.comboEstadoEJG[1] = this.comboEstadoEJG[12];
-          for(let i = 0; this.comboEstadoEJG.length > 2 ; i++){
-            this.comboEstadoEJG.pop();
+          let comboItem = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '7');
+          let comboItem2 = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '17');
+
+          this.comboEstadoEJG[0] = comboItem;
+          this.comboEstadoEJG[1] = comboItem2;
+
+          for(; this.comboEstadoEJG.length > 2;){
+              this.comboEstadoEJG.pop();
           }
         }
         console.log("comboEstadoEJG -> ", this.comboEstadoEJG);

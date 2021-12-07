@@ -65,7 +65,7 @@ export class FichaRemesasComponent implements OnInit {
       this.remesaTabla.informacionEconomica = this.remesaInformacionEconomica;
       console.log("Item en JSON -> ", this.remesaTabla);
       this.guardado = true;
-      this.getAcciones();
+      this.getAcciones("");
       this.remesaFromTabla = true;
       this.descripcion = this.remesaTabla.descripcion;
       if(this.remesaTabla.estado == "Iniciada" || this.remesaTabla.estado == "Validada" || this.remesaTabla.estado == "Error envío"){
@@ -170,9 +170,13 @@ export class FichaRemesasComponent implements OnInit {
       });
   }
 
-  getAcciones() {
+  getAcciones(event) {
     console.log("Dentro del getAcciones --> ", this.tarjetaDatosGenerales);
     let remesaGetAcciones;
+
+    if(event != ""){
+      this.remesaTabla.estado = event;
+    }
 
     if (this.remesaTabla != null) {
       remesaGetAcciones =
@@ -180,9 +184,10 @@ export class FichaRemesasComponent implements OnInit {
         'estado': (this.remesaTabla.estado != null && this.remesaTabla.estado != undefined) ? this.remesaTabla.estado.toString() : this.remesaTabla.estado,
       };
     }else if(this.remesaItem != null){
+      let indice = this.tarjetaDatosGenerales.resultado.length - 1;
       remesaGetAcciones =
       {
-        'estado': (this.tarjetaDatosGenerales.resultado[0].estado != null && this.tarjetaDatosGenerales.resultado[0].estado != undefined) ? this.tarjetaDatosGenerales.resultado[0].estado.toString() : this.tarjetaDatosGenerales.resultado[0].estado,
+        'estado': (this.tarjetaDatosGenerales.resultado[indice].estado != null && this.tarjetaDatosGenerales.resultado[indice].estado != undefined) ? this.tarjetaDatosGenerales.resultado[indice].estado.toString() : this.tarjetaDatosGenerales.resultado[indice].estado,
       };
     }
 
@@ -275,10 +280,10 @@ export class FichaRemesasComponent implements OnInit {
           if(response.file.size > 0 && response.status == 200){
             let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
             saveAs(response.file, filename);
-          }else if(response.status == 204){
-             this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
+          }else if(response.status == 206){
+             this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.masDe1zip"));
           }else{
-            this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.masDe1zip"));
+            this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
           }
 
           this.progressSpinner = false;

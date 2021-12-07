@@ -48,7 +48,8 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
   item;
   @Input() remesaTabla;
   @Input() remesaItem: RemesasItem = new RemesasItem();
-  @Output() estado = new EventEmitter<Boolean>();
+  @Output() estado = new EventEmitter<string>();
+
   resultado;
   remesasDatosEntradaItem;
   busquedaActualizaciones: boolean;
@@ -189,7 +190,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
         this.resultado = JSON.parse(n.body).estadoRemesaItem;
 
         if(padre){
-          this.estado.emit(true);
+          this.estado.emit(this.resultado[this.resultado.length-1].estado);
         }
 
         if(this.remesaTabla != null){
