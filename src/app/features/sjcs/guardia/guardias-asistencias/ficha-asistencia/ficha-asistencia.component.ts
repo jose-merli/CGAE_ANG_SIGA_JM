@@ -134,6 +134,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     campos: []
   }];
   datosTarjetaFacGenerica: string;
+  openTarjetaFac: Boolean = false;
 
   @ViewChild(FichaAsistenciaTarjetaDatosGeneralesComponent) datosGenerales: FichaAsistenciaTarjetaDatosGeneralesComponent;
   constructor(private location: Location,
@@ -421,6 +422,15 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
 
         this.tarjetaFija.enlaces.push(tarjTmp);
       }
+
+      let tarjTmp = {
+        id: 'facSJCSTarjFacGene',
+        ref: document.getElementById('facSJCSTarjFacGene'),
+        nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+      };
+
+      this.tarjetaFija.enlaces.push(tarjTmp);
+
       if (tarj.nombre != 'Datos Generales') { //Durante la creacion, deshabilitamos las tarjetas que no sean la de datos generales
         tarj.detalle = false;
       }
@@ -893,8 +903,12 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
-    if (tarjTemp.detalle) {
+    if (tarjTemp && tarjTemp.detalle) {
       tarjTemp.opened = true;
+    }
+
+    if (event && event == 'facSJCSTarjFacGene') {
+      this.openTarjetaFac = true;
     }
 
   }
