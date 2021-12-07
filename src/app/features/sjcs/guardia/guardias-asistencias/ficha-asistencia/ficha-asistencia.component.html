@@ -110,7 +110,8 @@
                 </div>
             </div>
             <app-tarjeta-facturacion-generica [datosEntrada]="{ asistencia: asistencia, isNew: nuevaAsistencia }"
-                [pantalla]="'ASISTENCIA'" (guardarDatos)="guardarDatos()">
+                [pantalla]="'ASISTENCIA'" (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac"
+                (opened)="openTarjetaFac = $event">
             </app-tarjeta-facturacion-generica>
         </div>
         <div id="down"></div>
