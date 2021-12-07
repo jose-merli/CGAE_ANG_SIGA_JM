@@ -23,7 +23,7 @@ export class DatosGeneracionFichTransferenciasComponent implements OnInit {
   resaltadoDatos: boolean = false;
   activacionTarjeta: boolean = true;
 
-  body: FicherosAbonosItem;
+  body: FicherosAbonosItem = new FicherosAbonosItem();
 
   msgs;
 

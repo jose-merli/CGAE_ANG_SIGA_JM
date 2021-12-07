@@ -1,7 +1,8 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="busqueda-container" id="facturacion">
+<div class="ficha-container" id="facturacion">
   <div class="card" id="top">
     <div class="card-header header-ficha">
+
       <div *ngIf="!esFichaActiva('facturas')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('facturas')">
           <div class="img-colegiado">
@@ -9,38 +10,51 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('facturas')">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('facturas')">
             <label class="mr-auto title-ficha pointer">{{ 'menu.facturacion.facturas' | translate }}</label>
+            <div class="d-flex justify-content-between default">
+              <label class="fa fa-angle-down float-right ml-auto" (click)="abreCierraFicha('facturas')" *ngIf="!esFichaActiva('facturas')"></label>
+            </div>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>{{ "menu.facturacion.facturas" | translate }}:  <!--<span>{{body.numFacturas }}</span>--></label> 
-            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total" | translate }}:  <!--<span>{{body.total | number:'':'es-ES'}} €</span>--></label>
-            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente" | translate }}:  <!--<span>{{body.fechaCreacion | number:'':'es-ES'}} €</span>--></label>
-            <label class="float-right ml-12 pointer">
-              <a (click)="ir()">
-                <span style="color: blue; text-decoration: underline">{{ 'menu.justiciaGratuita.informes.fichaFacturacion' | translate }}
+            <label>{{ 'menu.facturacion.facturas' | translate }}: 
+              <span>{{ 'menu.facturacion.facturas' | translate }}</span>
+            </label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total' | translate }}: 
+              <span>{{ 'menu.facturacion.facturas' | translate }}</span>
+            </label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente' | translate }}: 
+              <span>{{ 'menu.facturacion.facturas' | translate }}</span>
+            </label>
+            <label class="mr-3">
+              <i (click)="ir();$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2"></i>
+              <a (click)="ir();$event.stopPropagation();">
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  {{ 'menu.facturacion.facturas' | translate }}
                 </span>
               </a>
             </label>
-            <i class="fa fa-angle-down float-right ml-auto" (click)="abreCierraFicha('facturas')"
-              *ngIf="!esFichaActiva('facturas')"></i> 
           </div>
         </div>
       </div>
-      <div *ngIf="esFichaActiva('facturas')"
-        class=" header-ficha-open d-flex justify-content-start align-items-center"
-        (click)="abreCierraFicha('facturas')">
+
+      <div *ngIf="esFichaActiva('facturas')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('facturas')">
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'menu.facturacion.facturas' | translate }}</label>
-        <label class="float-right ml-auto pointer">
-          <a (click)="ir()">
-            <span style="color: blue; text-decoration: underline">{{ 'menu.justiciaGratuita.informes.fichaFacturacion' | translate }}
+
+        <label class="ml-auto mr-3">
+          <i (click)="ir();$event.stopPropagation();"
+            class="fas fa-external-link-alt mr-2"></i>
+          <a (click)="ir();$event.stopPropagation();">
+            <span style="color: blue; text-decoration: underline;cursor:pointer;">
+              {{ 'menu.facturacion.facturas' | translate }}
             </span>
           </a>
         </label>
-        <i class="fa fa-angle-up ml-auto"></i>
+        <i class="fa fa-angle-up"></i>
       </div>
     </div>
     <div *ngIf="esFichaActiva('facturas')" class="card-body card-body-ficha">
