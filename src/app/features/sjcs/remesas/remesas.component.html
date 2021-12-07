@@ -11,7 +11,7 @@
 
 <div class="busqueda-container">
   <app-filtro-remesas [permisoEscritura]="permisoEscritura" [remesaInformacionEconomica]="remesaInformacionEconomica" (filtrosValues) = "getFiltrosValues($event)"></app-filtro-remesas>
-  <app-tabla-remesas *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" [remesaInformacionEconomica]="remesaInformacionEconomica" (search)="search()"></app-tabla-remesas>
+  <app-tabla-remesas *ngIf="buscar" [permisos]="permisoEscritura" [filtrosValues]="filtrosValues" [datos]="datos" [remesaInformacionEconomica]="remesaInformacionEconomica" (search)="search()"></app-tabla-remesas>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

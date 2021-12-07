@@ -42,6 +42,8 @@ export class TablaRemesasComponent implements OnInit {
   @Input() permisos;
 
   @Output() search = new EventEmitter<boolean>();
+  
+  @Input() filtrosValues;
 
   @Input() remesaInformacionEconomica;
 
@@ -240,14 +242,15 @@ export class TablaRemesasComponent implements OnInit {
     this.persistenceService.setPaginacion(paginacion);
     this.progressSpinner = true;
     this.persistenceService.setDatos(evento);
-    this.router.navigate(["/fichaRemesasEnvio"]);
     localStorage.setItem('remesaItem', JSON.stringify(evento));
     localStorage.setItem('ficha', "registro");
+    localStorage.setItem("filtrosRemesa", JSON.stringify(this.filtrosValues));
     if(this.remesaInformacionEconomica){
       localStorage.setItem('remesaInformacionEconomica', "true");
     }else{
       localStorage.setItem('remesaInformacionEconomica', "false");
     }
+    this.router.navigate(["/fichaRemesasEnvio"]);
   }
 
   onChangeRowsPerPages(event) {

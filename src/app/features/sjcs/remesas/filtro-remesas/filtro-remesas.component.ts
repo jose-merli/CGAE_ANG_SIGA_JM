@@ -44,8 +44,11 @@ export class FiltroRemesasComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
+    if(localStorage.getItem("filtrosRemesa")){
+      this.filtros = JSON.parse(localStorage.getItem("filtrosRemesa"));
+      localStorage.removeItem("filtrosRemesa");
+      this.filtrosValues.emit(this.filtros);
+
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }

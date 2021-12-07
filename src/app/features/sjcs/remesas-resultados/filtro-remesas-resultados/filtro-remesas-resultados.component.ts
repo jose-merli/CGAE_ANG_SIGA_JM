@@ -79,9 +79,9 @@ export class FiltroRemesasResultadosComponent implements OnInit {
     private persistenceService: PersistenceService,  private datepipe: DatePipe, private commonServices: CommonsService) { }
 
   ngOnInit() {
-    if(localStorage.getItem("filtrosRemesa")){
-      this.filtros = JSON.parse(localStorage.getItem("filtrosRemesa"));
-      localStorage.removeItem("filtrosRemesa");
+    if(localStorage.getItem("filtrosRemesaResultado")){
+      this.filtros = JSON.parse(localStorage.getItem("filtrosRemesaResultado"));
+      localStorage.removeItem("filtrosRemesaResultado");
       this.filtros.fechaCargaDesde = this.transformDate(this.filtros.fechaCargaDesde)
       this.filtros.fechaCargaHasta = this.transformDate(this.filtros.fechaCargaHasta)
       this.filtros.fechaRemesaDesde = this.transformDate(this.filtros.fechaRemesaDesde)
