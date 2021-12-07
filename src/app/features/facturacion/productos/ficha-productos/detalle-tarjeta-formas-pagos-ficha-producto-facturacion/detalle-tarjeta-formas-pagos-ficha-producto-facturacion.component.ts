@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { ComboObject } from '../../../../../models/ComboObject';
 import { ProductoDetalleItem } from '../../../../../models/ProductoDetalleItem';
+import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -26,6 +28,9 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   defaultLabelCombosMultiSelect: String = "Seleccionar";
   esColegiado: boolean;
 
+  //Permisos
+  permisoGuardar: boolean;
+
   //Variables control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
   obligatorio: boolean = true; //Usada para establecer como obligatorios o no obligatorios los campos dependiendo de si esta marcado o no el checkbox no facturable
@@ -37,11 +42,13 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   subscriptionCrearFormasDePago: Subscription;
 
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) {
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) {
 
   }
 
   ngOnInit() {
+    this.checkPermisos();
+
     if (sessionStorage.getItem('esColegiado'))
       this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
 
@@ -62,6 +69,21 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
     this.getComboFormasDePagoInternet();
     this.getComboFormasDePagoSecretaria();
   }
+
+  //INICIO METODOS PERMISOS
+  checkPermisos() {
+    this.getPermisoGuardar();
+  }
+    
+  getPermisoGuardar() {
+     this.commonsService
+       .checkAcceso(procesos_PyS.guardarFormasPagoProductos)
+         .then((respuesta) => {
+            this.permisoGuardar= respuesta;
+     })
+      .catch((error) => console.error(error));
+  }
+  //FIN METODOS PERMISOS
 
   //Necesario para liberar memoria
   ngOnDestroy() {
@@ -97,6 +119,16 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
       this.producto.formasdepagosecretaria = this.productoOriginal.formasdepagosecretaria;
 
     }
+  }
+
+  checkGuardar(){
+    let msg = this.commonsService.checkPermisos(this.permisoGuardar, undefined);
+
+	  if (msg != null) {
+	   this.msgs = msg;
+	  } else {
+	   this.guardar();
+	  }
   }
 
   guardar() {

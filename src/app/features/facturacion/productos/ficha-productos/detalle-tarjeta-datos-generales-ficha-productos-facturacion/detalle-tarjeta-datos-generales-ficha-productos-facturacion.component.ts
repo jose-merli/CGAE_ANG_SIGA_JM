@@ -8,6 +8,8 @@ import { ComboObject } from '../../../../../models/ComboObject';
 import { ListaProductosDTO } from '../../../../../models/ListaProductosDTO';
 import { ListaProductosItems } from '../../../../../models/ListaProductosItems';
 import { ProductoDetalleItem } from '../../../../../models/ProductoDetalleItem';
+import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -58,6 +60,10 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
   desactivarBotonEliminar: boolean = false; //Para activar el boton eliminar/reactivar dependiendo de si estamos en edicion o en creacion de un nuevo producto pero ya hemos guardado.
 
+  //Permisos
+  eliminarReactivarPermiso: boolean;
+  guardarPermiso: boolean;
+
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
   subscriptionTypeSelectValues: Subscription;
@@ -66,7 +72,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   subscriptionActivarDesactivarProductos: Subscription;
   subscriptionCodesByInstitution: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) {
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) {
 
   }
 
@@ -97,9 +103,36 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   }
 
   ngOnInit() {
+    this.checkPermisos();
+
     this.getComboCategoria();
     this.obtenerCodigosPorColegio();
   }
+
+  //INICIO METODOS PERMISOS
+  checkPermisos(){
+    this.getPermisosEliminarReactivar();
+    this.getPermisosGuardar();
+  }
+
+  getPermisosEliminarReactivar() {
+        this.commonsService
+          .checkAcceso(procesos_PyS.eliminarReactivarProductos)
+          .then((respuesta) => {
+            this.eliminarReactivarPermiso = respuesta;
+          })
+          .catch((error) => console.error(error));
+  }
+
+  getPermisosGuardar() {
+        this.commonsService
+          .checkAcceso(procesos_PyS.guardarProductos)
+          .then((respuesta) => {
+            this.guardarPermiso = respuesta;
+          })
+          .catch((error) => console.error(error));
+  }
+  //FIN METODOS PERMISOS
 
   //Necesario para liberar memoria
   ngOnDestroy() {
@@ -168,14 +201,24 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
         if (this.listaCodigosPorInstitucionObject.listaCodigosPorColegio.includes(this.producto.codigoext) && this.producto.codigoext != this.productoOriginal.codigoext) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.fichaproductos.datosgenerales.mensajeerrorcodigo"))
         } else {
-          this.guardarProducto();
+          this.checkGuardar();
         }
       } else {
-        this.guardarProducto();
+        this.checkGuardar();
       }
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     }
+  }
+
+  //Comprueba si tienes permisos para guardar un producto.
+  checkGuardar(){
+     let msg = this.commonsService.checkPermisos(this.guardarPermiso, undefined);
+	    if (msg != null) {
+	      this.msgs = msg;
+	    } else {
+	      this.guardarProducto();
+	    }
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
@@ -299,6 +342,16 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
         }
       );
     }
+  }
+
+  //Comprueba si tienes permisos para eliminar o reactivar un producto.
+  checkEliminarReactivar(){
+     let msg = this.commonsService.checkPermisos(this.eliminarReactivarPermiso, undefined);
+	    if (msg != null) {
+	      this.msgs = msg;
+	    } else {
+	      this.eliminarReactivar();
+	    }
   }
 
   //Metodo para activar/desactivar productos mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tengan una transaccion pendiente de compra o compras ya existentes, en caso contrario se hara borrado fisico (DELETE)
