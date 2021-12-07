@@ -73,7 +73,7 @@ export class FichaRemesasResultadosComponent implements OnInit {
       this.item = localStorage.getItem('remesaResultadoItem');
       console.log("Item -> ", this.item);
       this.remesaItem = JSON.parse(this.item);
-      console.log(this.remesaItem)
+      console.log(this.remesaItem);
       localStorage.removeItem('remesaResultadoItem');
       this.remesaTabla = JSON.parse(this.item);
       console.log("Item en JSON -> ", this.remesaTabla);

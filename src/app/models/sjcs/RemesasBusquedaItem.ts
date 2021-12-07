@@ -2,12 +2,12 @@ export class RemesasBusquedaItem {
     annioEJG?: number;
     descripcion?: string;
     estado?: string;
-    fechaEnvioDesde?: string;
-    fechaEnvioHasta?: string;
-    fechaGeneracionDesde?: string;
-    fechaGeneracionHasta?: string;
-    fechaRecepcionDesde?: string;
-    fechaRecepcionHasta?: string;
+    fechaEnvioDesde?: Date;
+    fechaEnvioHasta?: Date;
+    fechaGeneracionDesde?: Date;
+    fechaGeneracionHasta?: Date;
+    fechaRecepcionDesde?: Date;
+    fechaRecepcionHasta?: Date;
     idRemesa?: number;
     numero?: string;
     numeroEJG?: number;
@@ -16,5 +16,5 @@ export class RemesasBusquedaItem {
     ficha?: boolean;
     informacionEconomica?: boolean;
 
-    constructor(){ }
+    constructor(){}
 }

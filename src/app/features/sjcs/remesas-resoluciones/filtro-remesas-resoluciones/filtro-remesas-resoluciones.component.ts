@@ -38,14 +38,20 @@ export class FiltroRemesasResolucionesComponent implements OnInit {
 
   ngOnInit() {
     if(localStorage.getItem("filtrosRemesaResolucion")){
+
       this.filtros = JSON.parse(localStorage.getItem("filtrosRemesaResolucion"));
+
       localStorage.removeItem("filtrosRemesaResolucion");
+
       this.filtros.fechaCargaDesde = this.transformDate(this.filtros.fechaCargaDesde)
       this.filtros.fechaCargaHasta = this.transformDate(this.filtros.fechaCargaHasta)
       this.filtros.fechaResolucionDesde = this.transformDate(this.filtros.fechaResolucionDesde)
       this.filtros.fechaResolucionHasta = this.transformDate(this.filtros.fechaResolucionHasta)
+      
       this.filtrosValues.emit(this.filtros);
+
     }
+
     this.obtenerOperacionTipoAccion();
 
   }
