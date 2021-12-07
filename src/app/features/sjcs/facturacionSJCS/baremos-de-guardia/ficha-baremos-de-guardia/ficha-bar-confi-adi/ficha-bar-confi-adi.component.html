@@ -49,21 +49,21 @@
                                 class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton label="Precio Único"></p-radioButton>
+                            <p-radioButton [(ngModel)]="precioUnico" label="Precio Único"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton label="Precio por tipos"></p-radioButton>
+                            <p-radioButton [(ngModel)]="precioTipos" label="Precio por tipos"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Importe</label>
-                            <input pInputText class="form-control" />
+                            <input type="number"  [(value)]="filtrosAdi.importe" class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6 verticalAlign">
                             <a>Ir a tipos</a>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Máximo</label>
-                            <input pInputText class="form-control" />
+                            <input type="number"  [(value)]="filtrosAdi.importeMax" class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -86,10 +86,10 @@
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton label="Contando Asistencias"></p-radioButton>
+                            <p-radioButton [(ngModel)]="contAsi" label="Contando Asistencias"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton label="Contando Actuaciones"></p-radioButton>
+                            <p-radioButton [(ngModel)]="contAc" label="Contando Actuaciones"></p-radioButton>
                         </div>
                     </div>
                 </div>

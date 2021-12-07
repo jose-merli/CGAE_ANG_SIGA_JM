@@ -1,4 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input } from '@angular/core';
+import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
 
 @Component({
@@ -9,6 +10,12 @@ import { Enlace } from '../ficha-baremos-de-guardia.component';
 export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
 
   showTarjeta: boolean = true;
+
+  precioUnico:boolean = false;
+  precioTipos: boolean = false;
+  filtrosAdi:BaremosGuardiaItem = new BaremosGuardiaItem();
+  contAsi : boolean = false;
+  contAc : boolean = false;
 
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Input() datos

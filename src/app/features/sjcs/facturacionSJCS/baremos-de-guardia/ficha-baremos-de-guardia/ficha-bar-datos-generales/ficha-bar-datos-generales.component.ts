@@ -18,10 +18,10 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
   showTarjeta: boolean = true;
   cols: any[] = [];
   rowsPerPage: any[] = [];
-  modoSeleccion = "multiple";
+  modoSeleccion = "single";
   selectedItem: number = 10;
   selectAll: boolean = false;
-  selectedDatos: any[] = [];
+  selectedDatos = [];
   numSelected: number = 0;
   filtros: BaremosGuardiaItem = new BaremosGuardiaItem();
 

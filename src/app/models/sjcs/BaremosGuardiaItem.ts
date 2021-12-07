@@ -22,4 +22,18 @@ export class BaremosGuardiaItem {
     idTurno;
     idGuardia;
     idhitoconfiguracion;
+    importeDis;
+    dispAsuntos;
+    aPartirDis;
+    importeMaxDis;
+    aPartirMax;
+    asiac;
+    agruparAsAc;
+    contAsiAsAc;
+    contAcAsAc;
+    importeAsAc;
+    importeMinAsAc;
+    importeMaxAsAc;
+    importe;
+    importeMax
 }

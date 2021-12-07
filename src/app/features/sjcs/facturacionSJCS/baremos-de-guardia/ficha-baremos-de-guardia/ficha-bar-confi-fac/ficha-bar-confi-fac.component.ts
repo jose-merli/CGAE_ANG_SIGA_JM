@@ -1,5 +1,6 @@
-import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ChangeDetectorRef } from '@angular/core';
 import { Checkbox } from 'primeng/primeng';
+import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
 
 @Component({
@@ -10,13 +11,47 @@ import { Enlace } from '../ficha-baremos-de-guardia.component';
 export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   showTarjeta: boolean = true;
+  filtrosDis:BaremosGuardiaItem = new BaremosGuardiaItem();
+  filtrosAsAc:BaremosGuardiaItem = new BaremosGuardiaItem();
+  disponibilidad:boolean = false;
+  agruparDis:boolean = false;
+  contAsiDis: boolean = false;
+  contAcDis: boolean = false;
+  asiac:boolean = false;
+  agruparAsAc = false;
+  contAsiAsAc: boolean = false;
+  contAcAsAc: boolean = false;
+  precioUnico:boolean = false;
+  precioTipos: boolean = false;
+
   diasDis:String[]=[];
   diasAsiAct:String[]=[];
+
+  checkAsAcL:boolean = false;
+  checkDisL:boolean = false;
+
+  checkAsAcM:boolean = false;
+  checkDisM:boolean = false;
+
+  checkAsAcX:boolean = false;
+  checkDisX:boolean = false;
+
+  checkAsAcJ:boolean = false;
+  checkDisJ:boolean = false;
+
+  checkAsAcV:boolean = false;
+  checkDisV:boolean = false;
+
+  checkAsAcS:boolean = false;
+  checkDisS:boolean = false;
+
+  checkAsAcD:boolean = false;
+  checkDisD:boolean = false;
 
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Input() datos;
 
-  constructor() { }
+  constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
   }
@@ -38,26 +73,39 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
     //   this.showTarjeta = true;
     // }
   }
-  onChangeDias(event,id){
-    let check = document.getElementsByName(id);
+  onChangeDias(event,dia){
+   switch (dia) {
+     case 'L':
+       if(this.checkDisL){
+         this.checkDisL = false;
+         this.checkAsAcL = true
+       }else{
+        this.checkDisL = true;
+        this.checkAsAcL = false;
+       }
+       break;
+       case 'M':
+       this.checkAsAcM != this.checkDisM
+       break;
+       case 'X':
+       this.checkAsAcX != this.checkDisX
+       break;
+       case 'J':
+       this.checkAsAcJ != this.checkDisJ
+       break;
+       case 'V':
+       this.checkAsAcV != this.checkDisV
+       break;
+       case 'S':
+       this.checkAsAcS != this.checkDisS
+       break;
+       case 'D':
+       this.checkAsAcD != this.checkDisD
+       break;
+       
+   }
+   this.changeDetectorRef.detectChanges();
 
-    let checkDis = check[1];
-    let checkAsAc =check[3];
-    
-    
-      if(checkDis.getAttribute('checked') == 'true'){
-        checkDis.setAttribute('checked','false');
-        checkAsAc.setAttribute('checked','true');
-      }else if(checkAsAc.getAttribute('checked') == 'true'){
-        checkDis.setAttribute('checked','true');
-        checkAsAc.setAttribute('checked','false');
-      }else if(checkDis.getAttribute('checked') == 'false'){
-        checkDis.setAttribute('checked','true');
-        checkAsAc.setAttribute('checked','false');
-      }else if(checkAsAc.getAttribute('checked') == 'false'){
-        checkDis.setAttribute('checked','false');
-        checkAsAc.setAttribute('checked','true');
-      }
     }
     
   

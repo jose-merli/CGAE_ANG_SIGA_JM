@@ -140,7 +140,70 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   }
 
   guardarCerrar(){
-    console.log(`Dias disponibles: ${this.tarjetaConfigFac.diasDis}\r\n Dias actuacion/asistencia: ${this.tarjetaConfigFac.diasAsiAct}`)
+
+    if(this.modoEdicion){
+      let datosUpdate;
+      //en caso de que se entre a la ficha desde la tabla de la busqueda
+     /*  this.sigaServices.post("baremosGuardia_updateBaremo",datosUpdate).subscribe(
+        data =>{
+					let error = JSON.parse(JSON.stringify(data)).error;
+          this.progressSpinner = false;
+
+          if (error != undefined && error != null && error.description != null) {
+						if (error.code == '200') {
+							this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+						} else {
+							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+						}
+					}
+        },
+        err =>{
+          this.progressSpinner = false;
+          if (err != undefined && JSON.parse(JSON.stringify(err)).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+      ) */
+    
+    }else{
+      // en caso de que se entre a la ficha desde el boton de nuevo.
+      let datosInsert
+      let baremoGuardia:BaremosGuardiaItem = JSON.parse(JSON.stringify(this.tarjetaDatosGenerales.selectedDatos));
+
+      //datos de configuracion de baremo
+      this.tarjetaConfigFac.diasAsiAct;
+      this.tarjetaConfigFac.diasDis
+      this.tarjetaConfigFac.filtrosDis;
+      this.tarjetaConfigFac.filtrosAsAc
+      console.log(`Dias disponibles: ${this.tarjetaConfigFac.diasDis}\r\n Dias actuacion/asistencia: ${this.tarjetaConfigFac.diasAsiAct} \r\n Datos generales: ${baremoGuardia}`)
+
+      /* this.sigaServices.post("baremosGuardia_insertBaremo",datosInsert).subscribe(
+        data =>{
+					let error = JSON.parse(JSON.stringify(data)).error;
+          this.progressSpinner = false;
+
+          if (error != undefined && error != null && error.description != null) {
+						if (error.code == '200') {
+							this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+						} else {
+							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+						}
+					}
+        },
+        err =>{
+          this.progressSpinner = false;
+          if (err != undefined && JSON.parse(JSON.stringify(err)).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+      ) */
+    }
+
+   
   }
 
   showMessage(severity, summary, msg) {
