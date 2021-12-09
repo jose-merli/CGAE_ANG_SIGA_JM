@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
-import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -47,7 +46,6 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   }
 
   // Validación del IBAN
-
   removeSpacesFromIBAN(): void {
     this.focusIBAN = true;
     this.body.iban = this.body.iban.replace(/\s/g, "");
@@ -55,17 +53,13 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
 
   addSpacesToIBAN(): void {
     this.focusIBAN = false;
-    this.body.iban = this.body.iban.replace(/\s/g, "").replace(/(.{4})/g,"$1 ").trim();
+    this.body.iban = this.body.iban.replace(/\s/g, "").replace(/(.{4})/g, "$1 ").trim();
   }
-
-  // Comprobar el estado
 
   checkEstado(): void {
-    this.estado = this.body.fechaBaja ? `BAJA DESDE ${this.datePipe.transform(this.body.fechaBaja, 'dd/MM/yyyy')}` : 
-        ( this.body.numUsos != undefined ? (this.body.numUsos > 0 ? "EN USO" : "SIN USO") : "-");
+    this.estado = this.body.fechaBaja ? `BAJA DESDE ${this.datePipe.transform(this.body.fechaBaja, 'dd/MM/yyyy')}` :
+      (this.body.numUsos != undefined ? (this.body.numUsos > 0 ? "EN USO" : "SIN USO") : "-");
   }
-
-  // Restablecer
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
@@ -75,7 +69,6 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   }
 
   // Guadar
-
   isValid(): boolean {
     return this.body.iban != undefined && this.body.iban.trim() != "" && this.body.iban.length == 24;
   }
@@ -90,12 +83,9 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     }
   }
 
-  
-
   // Eliminar cuenta bancaria
-
   confirmEliminar(): void {
-    let mess = "Se va a proceder a dar de baja la cuenta bancaria ¿Desea continuar?";
+    let mess = this.translateService.instant("messages.deleteConfirmation");
     let icon = "fa fa-eraser";
 
     this.confirmationService.confirm({
@@ -116,21 +106,20 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
 
     this.sigaServices.post("facturacionPyS_borrarCuentasBancarias", [this.body]).subscribe(
       data => {
+        this.progressSpinner = false;
         this.body.fechaBaja = new Date();
         this.persistenceService.setDatos(this.body);
         this.guardadoSend.emit();
-        this.showMessage("success", "Eliminar", "La cuenta bancaria ha sido dada de baja con exito.");
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
         console.log(err);
-      },
-      () => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner = false;
       }
     );
   }
 
-  // Estilo obligatorio
   styleObligatorio(evento: string) {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
       return this.commonsService.styleObligatorio(evento);
@@ -143,7 +132,6 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   }
 
   // Abrir y cerrar la ficha
-
   esFichaActiva(): boolean {
     return this.openTarjetaDatosGenerales;
   }
@@ -153,8 +141,6 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     this.opened.emit(this.openTarjetaDatosGenerales);
     this.idOpened.emit(key);
   }
-
-  // Mensajes en pantalla
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -168,6 +154,4 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   clear() {
     this.msgs = [];
   }
-
-
 }
