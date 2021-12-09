@@ -9,6 +9,7 @@ import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { SigaNoInterceptorServices } from '../../../../../_services/sigaNoInterceptor.service';
 
 @Component({
   selector: 'app-expedientes-ficha-colegial',
@@ -60,6 +61,8 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
   openFicha: boolean = false;
   expSIGA : boolean = false;
   expEXEA : boolean = false;
+  numExpSIGA : number = 0;
+  numExpEXEA : number = 0;
   isActivoEXEA : boolean = false;
   generalBody : FichaColegialGeneralesItem;
   msgs : Message [] = [];
@@ -69,6 +72,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
 
   constructor(private changeDetectorRef : ChangeDetectorRef,
     private sigaServices : SigaServices,
+    private sigaNoInterceptorServices : SigaNoInterceptorServices,
     private router : Router,
     private authenticationService : AuthenticationService,
     private sigaStorageService : SigaStorageService) { }
@@ -110,7 +114,11 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
       n => {
         let stringActivoEXEA = n.valor;
 
-        this.isActivoEXEA = stringActivoEXEA == "1" ? true : false;
+        this.isActivoEXEA = (stringActivoEXEA == "1");
+
+        if(this.isActivoEXEA){
+          this.getExpedientesEXEA();
+        }
       },
       err => {
         console.log(err);
@@ -127,6 +135,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
             
             if(!data.error){
               this.expedientesSiga = data.expedienteItem;
+              this.numExpSIGA = this.expedientesSiga.length;
               this.expSIGA = true;
             }else if(data.error.code == 500){
                 this.showMessage('error','Error',data.error.description);
@@ -141,7 +150,6 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   getExpedientesEXEA(){
-    let expedientes;
     if(this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona){
       //Obtenemos token login por SOAP de EXEA y hacemos llamada REST
 
@@ -149,20 +157,39 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
         n => {
           let tokenEXEA : string = n.valor;
   
-          if(tokenEXEA){
+          if(tokenEXEA && tokenEXEA.includes("Bearer")){
             this.getURLExpedientesEXEA(tokenEXEA);
+          }else if (tokenEXEA && tokenEXEA.includes("Error")){
+            this.showMessage('error','Error', tokenEXEA);
           }else{
-            this.showMessage('error','Error','Error al obtener el token de login a EXEA');
+            this.showMessage('error','Error', 'Error al logar en EXEA');
           }
           
         },
-        err => {
+        err => { 
           console.log(err);
-        }
+        } 
       );
       
     }else{
-      //Llamada por jar addin
+      this.sigaServices.getParam(
+        "expedientesEXEA_getExpedientesEXEAColegio", "/"+this.generalBody.nif).subscribe(
+          data => {
+            
+            if(!data.error){
+              this.expedientesEXEA = data.expedienteItem;
+              this.numExpEXEA = this.expedientesEXEA.length;
+              this.expEXEA = true;
+            }else if(data.error.code == 500){
+                this.showMessage('error','Error',data.error.description);
+            }
+  
+          },
+          err => {
+            console.log(err);
+            this.showMessage('error','Error',err);
+          }
+        );
     }
   }
 
@@ -182,10 +209,17 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
         }
 
         if(url){
-          this.sigaServices.getWithAuthHeader(String(url.valor), token).subscribe(
+          this.sigaNoInterceptorServices.getWithAuthHeader(String(url.valor), token).subscribe(
             n => {
-              let expedientesEXEA  = n;
-              
+              let expedientesEXEA : any[]  = n.listaExpedientes;
+
+              if(expedientesEXEA){
+                this.parseJSONToExpedienteItem(expedientesEXEA);
+                this.numExpEXEA = expedientesEXEA.length;
+                this.expEXEA = true;
+              }
+
+              this.expEXEA = true;
             },
             err => {
               console.log(err);
@@ -217,7 +251,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
       { field: "relacion", header: "exp.expedientes.relacion", width: '3%' },
       { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: '3%' }
     ];
-    this.cols.forEach(it => this.buscadoresEXEA.push(""));
+    this.colsEXEA.forEach(it => this.buscadoresEXEA.push(""));
 
     this.rowsPerPage = [
       {
@@ -239,6 +273,26 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
     ];
   }
 
+  parseJSONToExpedienteItem(expedientesEXEA : any [] ){
+
+    expedientesEXEA.forEach(expediente => {
+
+      let expedienteItem : ExpedienteItem = new ExpedienteItem();
+
+      expedienteItem.tipoExpediente = expediente.asunto;
+      expedienteItem.estadoExpediente = expediente.estado.descripcion;
+      expedienteItem.numExpediente = expediente.numero_expediente;
+      expedienteItem.fechaApertura = expediente.fecha_inicio;
+      expedienteItem.relacion = expediente.rol.descripcion;
+      expedienteItem.idExpedienteEXEA = expediente.id;
+      expedienteItem.exea = true;
+
+      this.expedientesEXEA.push(expedienteItem);
+
+    });
+
+  }
+
   openTab(dato : ExpedienteItem){
     let idInstitucion : string = this.authenticationService.getInstitucionSession();
     if(dato.exea){
@@ -246,7 +300,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
     }else{
       let url : string = this.sigaServices.getOldSigaUrl() +
       "/EXP_AuditoriaExpedientes.do?modo=ver&idTipoExpediente=" + dato.idTipoExpediente + "&numExpediente=" + dato.numExpediente + "&anioExpediente=" + dato.anioExpediente
-       + "&idInstitucion=" + idInstitucion + "&idInstitucion_tipoExpediente="+ dato.idInstitucion_tipoExpediente +"&nombreTipoExpediente=" + dato.nombreTipoExpediente;
+       + "&idInstitucion=" + idInstitucion + "&idInstitucion_tipoExpediente="+ dato.idInstitucionTipoExpediente +"&nombreTipoExpediente=" + dato.tipoExpediente;
 
       sessionStorage.setItem("url", JSON.stringify(url));
       sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));

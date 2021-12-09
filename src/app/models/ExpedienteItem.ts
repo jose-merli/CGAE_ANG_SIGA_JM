@@ -1,4 +1,5 @@
 export class ExpedienteItem {
+  idExpedienteEXEA : string;
   idTipoExpediente : string;
   anioExpediente : string;
   tipoExpediente: string;
@@ -6,8 +7,7 @@ export class ExpedienteItem {
   estadoExpediente: string;
   fechaApertura: string;
   relacion: string;
-  idInstitucion_tipoExpediente : string;
-  nombreTipoExpediente : string;
+  idInstitucionTipoExpediente : string;
   exea: boolean;
   constructor(){}
 }

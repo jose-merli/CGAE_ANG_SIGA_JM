@@ -490,6 +490,8 @@ import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
 import { GestionExpedientesExeaComponent } from './features/expedientes-exea/gestion-expedientes-exea/gestion-expedientes-exea.component';
 import { NuevoExpedienteExeaComponent } from './features/expedientes-exea/nuevo-expediente-exea/nuevo-expediente-exea.component';
 import { ExpedientesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/expedientes-ficha-colegial/expedientes-ficha-colegial.component';
+import { SigaNoInterceptorServices } from './_services/sigaNoInterceptor.service';
+import { FichaExpedienteExeaComponent } from './ficha-expediente-exea/ficha-expediente-exea.component';
 
 
 @NgModule({
@@ -912,6 +914,7 @@ import { ExpedientesFichaColegialComponent } from './features/censo/ficha-colegi
 		GestionExpedientesExeaComponent,
 		NuevoExpedienteExeaComponent,
 		ExpedientesFichaColegialComponent,
+		FichaExpedienteExeaComponent,
 	],
 	imports: [
 		SelectorModule,
@@ -1010,7 +1013,7 @@ import { ExpedientesFichaColegialComponent } from './features/censo/ficha-colegi
 		TablaResultadoDesplegableJEService,
 		TablaResultadoDesplegableAEService,
 		TablaResultadoMixDocDesigService,
-
+		SigaNoInterceptorServices,
 		AuthGuard,
 		{
 			provide: APP_BASE_HREF,

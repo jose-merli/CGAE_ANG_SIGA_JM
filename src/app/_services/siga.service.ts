@@ -695,20 +695,6 @@ export class SigaServices {
       return response;
     });
   }
-  getWithAuthHeader(service : string, token : string){
-	let headers = new HttpHeaders({
-		'Authorization': token
-	  });
-	return this.http.get(service,
-		{
-			headers : headers,
-			observe : 'response',
-			responseType : 'text'
-			
-		}).map((response) => {
-		return response;
-	  });
-  }
 
   getNewSigaUrl() {
     return environment.newSigaUrl;
