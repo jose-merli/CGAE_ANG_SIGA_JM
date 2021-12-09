@@ -48,25 +48,27 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 
       this.filtrosMonederoItem = JSON.parse(sessionStorage.getItem("filtrosMonedero"));
 
-      if(this.filtrosMonederoItem.fechaHasta != undefined){
+      if(this.filtrosMonederoItem.fechaHasta != undefined && this.filtrosMonederoItem.fechaHasta != null){
         this.filtrosMonederoItem.fechaHasta = new Date(this.filtrosMonederoItem.fechaHasta);
       }
-      if(this.filtrosMonederoItem.fechaDesde != undefined){
+      if(this.filtrosMonederoItem.fechaDesde != undefined && this.filtrosMonederoItem.fechaDesde != null){
         this.filtrosMonederoItem.fechaDesde = new Date(this.filtrosMonederoItem.fechaDesde);
       }
 
-      this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.filtrosMonederoItem.idPersonaColegiado).subscribe(
-				n => {
-					let data = JSON.parse(n.body).colegiadoItem;
-					this.usuarioBusquedaExpress.nombreAp = data.nombre;
-					this.usuarioBusquedaExpress.numColegiado = data.numColegiado;
+      if(this.filtrosMonederoItem.idPersonaColegiado != null && this.filtrosMonederoItem.idPersonaColegiado != undefined){
+        this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.filtrosMonederoItem.idPersonaColegiado).subscribe(
+          n => {
+            let data = JSON.parse(n.body).colegiadoItem;
+            this.usuarioBusquedaExpress.nombreAp = data.nombre;
+            this.usuarioBusquedaExpress.numColegiado = data.numColegiado;
 
-          this.filtrosMonederoItem.idPersonaColegiado = data.idPersona;
-				},
-				err => {
-					this.progressSpinner = false;
-				}
-      );
+            this.filtrosMonederoItem.idPersonaColegiado = data.idPersona;
+          },
+          err => {
+            this.progressSpinner = false;
+          }
+        );
+      }
 
       sessionStorage.removeItem("filtrosMonedero");
       this.busqueda.emit(true);

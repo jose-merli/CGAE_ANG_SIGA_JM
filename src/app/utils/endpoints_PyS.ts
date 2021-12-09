@@ -33,5 +33,6 @@ export let endpoints_PyS: any = {
     monederosBusqueda_searchListadoMonederos: "pys/getMonederos",
     PyS_updatesMovimientosMonedero: "pys/updateMovimientosMonedero",
     PyS_getListaMovimientosMonedero: "pys/getListaMovimientosMonedero",
+    PyS_updateServiciosMonedero: "pys/updateServiciosMonedero",
     PyS_getListaServiciosMonedero: "pys/getListaServiciosMonedero"
 }

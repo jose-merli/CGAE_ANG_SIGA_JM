@@ -6,6 +6,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { FichaMonederoItem } from '../../../../../models/FichaMonederoItem';
 import { FiltrosServicios } from '../../../../../models/FiltrosServicios';
 import { ListaServiciosItems } from '../../../../../models/ListaServiciosItems';
+import { ListaServiciosMonederoItem } from '../../../../../models/ListaServiciosMonederoItem';
 import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -33,7 +34,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
     { field: "formapago", header: "facturacion.productos.formapago" }
   ];
 
-  serviciosTarjeta: any[] = []; //ListaServiciosMonederoItem
+  serviciosTarjeta: ListaServiciosMonederoItem[] = [];
   comboServicios: ListaServiciosItems[] = [];
 
   cols = [
@@ -65,7 +66,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
   @ViewChild("servicesTable") tablaServicios;
   @ViewChild("servicesMonederoTable") tablaServiciosSuscripcion;
 
-  selectedRows: any[] = []; //ListaServiciosMonederoItem
+  selectedRows: ListaServiciosMonederoItem[] = [];
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
   selectMultipleRows: boolean = true; //Seleccion multiples filas de la tabla
   selectAllRows: boolean = false; //Selecciona todas las filas de la pagina actual de la tabla
@@ -183,9 +184,11 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
   updateServiciosMonedero() {
     this.progressSpinner = true;
 
+    let peticion: FichaMonederoItem = JSON.parse(JSON.stringify(this.ficha));
+
+    peticion.servicios = this.serviciosTarjeta;
     
-    //REVISAR
-    this.sigaServices.post("PyS_updateServiciosPeticion", this.serviciosTarjeta).subscribe(
+    this.sigaServices.post("PyS_updateServiciosMonedero", this.ficha).subscribe(
       n => {
 
         if (n.status == 500) {
@@ -216,23 +219,27 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
     }
   }
 
-  anadirServicio(selectedServicio) {
-    this.showModal = false;
-    let newServicio: any; //ListaServiciosMonederoItem
-    newServicio.cantidad = "1";
-    newServicio.descripcion = selectedServicio.descripcion;
-    newServicio.orden = (this.serviciosTarjeta.length + 1).toString();
-    newServicio.idServicio = selectedServicio.idservicio;
-    newServicio.idTipoServicios = selectedServicio.idtiposervicios;
-    newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
-    newServicio.iva = selectedServicio.iva;
-    newServicio.valorIva = selectedServicio.valorIva;
-    newServicio.idtipoiva = selectedServicio.idtipoiva;
-    newServicio.idLinea = this.ficha.idLinea;
-    newServicio.automatico = selectedServicio.automatico;
-    newServicio.noFacturable = selectedServicio.noFacturable;
-    newServicio.solicitarBaja = selectedServicio.solicitarBaja;
-    this.serviciosTarjeta.push(newServicio);
+  anadirServicio(selectedServicio: ListaServiciosItems) {
+    if(this.serviciosTarjeta.find(el => el.nombre == selectedServicio.descripcion) == undefined){
+      this.showModal = false;
+      let newServicio: ListaServiciosMonederoItem = new ListaServiciosMonederoItem();
+      
+      newServicio.fecha = new Date();
+      newServicio.nombre = selectedServicio.descripcion;
+      newServicio.precioPerio = selectedServicio.precioperiodicidad;
+
+      newServicio.idservicio = selectedServicio.idservicio;
+      newServicio.idserviciosinstitucion = selectedServicio.idserviciosinstitucion;
+      newServicio.idtiposervicios = selectedServicio.idtiposervicios; 
+
+      this.serviciosTarjeta.push(newServicio);
+    }
+    else{
+      this.showMessage("error",
+              this.translateService.instant("facturacion.productos.productoPresenteLista"),
+              this.translateService.instant("facturacion.productos.productoPresenteListaDesc")
+            );
+    }
 
   }
   
