@@ -128,12 +128,6 @@
         label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}">
       </button>
 
-      <button pButton
-        [disabled]="((!selectMultiple || !selectAll) && (selectedDatos.length == 0 || disableAddRemesa)) || !permisoEscritura"
-        (click)="addRemesa()" type="button" icon="fa fa-plus" iconPos="left"
-        label="{{'general.boton.aniadirARemesa' | translate}}">
-      </button>
-
       <button pButton [disabled]="((!selectMultiple || !selectAll) && (selectedDatos.length == 0)) || !permisoEscritura"
         (click)="editarSeleccionados()" type="button" icon="fa fa-plus" iconPos="left" label="Editar seleccionados">
       </button>

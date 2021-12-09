@@ -24,7 +24,7 @@
               <span> {{ this.datosFiltro.fecharesolucion | date: 'dd/MM/yyyy' }}</span>
             </label>
             <label> {{ "justiciaGratuita.ejg.datosGenerales.Presidente" | translate }}
-              <span> {{ nombrePresidente.label }}</span>
+              <span *ngIf = "nombrePresidente != null && nombrePresidente != undefined"> {{ nombrePresidente.label }}</span>
             </label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
           </div>

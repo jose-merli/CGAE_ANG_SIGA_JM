@@ -244,29 +244,6 @@ export class FichaRemesasComponent implements OnInit {
           this.remesa.idRemesa = JSON.parse(data.body).id;
           this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa, true);
           this.search();
-
-          /* switch (accion) {
-            case 1: //VALIDAR REMESA
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
-              break;
-            
-            case 2: //VALIDAR Y ENVIAR
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
-              break;
-
-            case 5: //ENVIAR FTP
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
-              break;
-              
-            case 6: //RESPUESTA FTP
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
-              break;
-          
-            default: //VALIDAR Y GENERAR
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), );
-              break;
-          } */
-
         },
         err => {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
