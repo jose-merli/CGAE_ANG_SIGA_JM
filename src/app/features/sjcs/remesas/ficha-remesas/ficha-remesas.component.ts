@@ -149,7 +149,7 @@ export class FichaRemesasComponent implements OnInit {
     {
       'idRemesa': (this.remesaTabla.idRemesa != null && this.remesaTabla.idRemesa != undefined) ? this.remesaTabla.idRemesa.toString() : this.remesaTabla.idRemesa,
       'descripcion': (this.remesaTabla.descripcion != null && this.remesaTabla.descripcion != undefined) ? this.remesaTabla.descripcion.toString() : this.remesaTabla.descripcion,
-      'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
+      'informacionEconomica': this.remesaInformacionEconomica
       };
     this.progressSpinner = true;
     this.sigaServices.post("filtrosremesas_buscarRemesa", remesasDatosEntradaItem).subscribe(
@@ -243,6 +243,7 @@ export class FichaRemesasComponent implements OnInit {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), JSON.parse(data.body).error.description);
           this.remesa.idRemesa = JSON.parse(data.body).id;
           this.tarjetaDatosGenerales.listadoEstadosRemesa(this.remesa, true);
+          this.search();
 
           /* switch (accion) {
             case 1: //VALIDAR REMESA
