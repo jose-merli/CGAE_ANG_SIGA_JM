@@ -40,6 +40,10 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   comboTiposIVA: ComboItem[];
   resaltadoDatos: boolean = false;
 
+  modificarDescripcion: boolean = false;
+  modificarImporteUnitario: boolean = false;
+  modificarIVA: boolean = false;
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -49,6 +53,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getComboTiposIVA();
+    this.getParametrosFACTURACION();
    }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -108,11 +113,11 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   getColsFactura() {
     this.cols = [
-      { field: "descripcion", header: "general.description", width: "30%", editable: true },
-      { field: "precioUnitario", header: "Precio Unitario", width: "10%", editable: true },
+      { field: "descripcion", header: "general.description", width: "30%", editable: this.modificarDescripcion },
+      { field: "precioUnitario", header: "Precio Unitario", width: "10%", editable: this.modificarImporteUnitario },
       { field: "cantidad", header: "Cantidad", width: "10%", editable: false },
       { field: "importeNeto", header: "Importe Neto", width: "10%", editable: false }, 
-      { field: "tipoIVA", header: "Tipo IVA", width: "10%", editable: true },
+      { field: "tipoIVA", header: "Tipo IVA", width: "10%", editable: this.modificarIVA },
       { field: "importeIVA", header: "Importe IVA", width: "10%", editable: false },
       { field: "importeTotal", header: "Importe Total", width: "10%", editable: false },
       { field: "importeAnticipado", header: "Importe Anticip.", width: "10%", editable: false },
@@ -145,6 +150,31 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       }
     );
   }
+
+    // Obtener parametros de FACTURACION
+    getParametrosFACTURACION(): void {
+      this.sigaServices.getParam("facturacionPyS_parametrosLINEAS", "?idInstitucion=2005").subscribe(
+        n => {
+          let items: ComboItem[] = n.combooItems;
+          console.log(items);
+          
+          let modificarDescripcionItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_DESCRIPCION");
+          let modificarImporteUnitarioItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IMPORTE_UNITARIO");
+          let modificarIVAItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IVA");
+
+          if (modificarDescripcionItem)
+            this.modificarDescripcion = modificarDescripcionItem.value == "1";
+          if (modificarImporteUnitarioItem)
+            this.modificarImporteUnitario = modificarImporteUnitarioItem.value == "1";
+          if (modificarIVAItem)
+            this.modificarIVA = modificarIVAItem.value == "1";
+          
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
 
   // Funciones para el guardado
 
