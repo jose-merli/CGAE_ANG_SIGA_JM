@@ -1,11 +1,14 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { DataTable, Message } from 'primeng/primeng';
 import { from } from 'rxjs/observable/from';
 import { of } from 'rxjs/observable/of';
 import { groupBy, map, mergeMap, reduce, toArray, zip } from 'rxjs/operators';
+import { TranslateService } from '../../../../../commons/translate';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FacturaEstadosPagosItem } from '../../../../../models/FacturaEstadosPagosItem';
 import { FacturasItem } from '../../../../../models/FacturasItem';
+import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -45,7 +48,9 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   constructor(
     private sigaServices: SigaServices,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -196,6 +201,49 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     ).subscribe(grupos => this.grupos = grupos);
 
     this.nuevoEstado = undefined;
+  }
+
+  // Enlace a la factura
+  navigateToFactura(row: FacturaEstadosPagosItem) {
+    let factura: FacturasItem = new FacturasItem();
+    factura.idFactura = row.idFactura;
+    factura.tipo = "FACTURA";
+    this.guardadoSend.emit(factura);
+  }
+
+  // Enlace al abono
+  navigateToAbono(row: FacturaEstadosPagosItem) {
+    let factura: FacturasItem = new FacturasItem();
+    factura.idFactura = row.idFactura;
+    factura.tipo = "ABONO";
+    this.guardadoSend.emit(factura);
+  }
+
+  // Enlace al fichero de adeudos
+  navigateToFicheroAdeudos(row: FacturaEstadosPagosItem) {
+    this.progressSpinner = true;
+    let filtros = { idDisqueteCargos: row.idCargos };
+
+    this.sigaServices.post("facturacionPyS_getFacturacionesProgramadas", filtros).toPromise().then(
+      n => {
+        let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAdeudosItems;
+        if (results != undefined && results.length != 0) {
+          let ficherosAdeudosItem: FicherosAdeudosItem = results[0];
+
+          sessionStorage.setItem("facturaItem", JSON.stringify(this.bodyInicial));
+          sessionStorage.setItem("volver", "true");
+
+          sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficherosAdeudosItem));
+        }
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    ).then(() => this.progressSpinner = false).then(() => {
+      if (sessionStorage.getItem("FicherosAdeudosItem")) {
+        this.router.navigate(["/gestionAdeudos"]);
+      } 
+    });
   }
 
   // Abrir y cerrar un grupo de estados

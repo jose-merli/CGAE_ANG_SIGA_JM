@@ -93,6 +93,12 @@
                   <div *ngSwitchCase="'impTotalPorPagar'">
                     <span>{{ dato[col.field] + ' €' }}</span>
                   </div>
+                  <div *ngSwitchCase="'nota'">
+                    <span *ngIf="dato['idCargos']">Fichero <a class="enlace" (click)="navigateToFicheroAdeudos(dato)">{{ dato['idCargos'] }}</a></span>
+                    <span *ngIf="dato['enlaceFactura']">Factura <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['numeroFactura'] }}</a></span>
+                    <span *ngIf="dato['idSJCS']">Abono <a class="enlace" (click)="navigateToSJCS(dato)">{{ dato['idSJCS'] }}</a></span>
+                    <span *ngIf="dato['enlaceAbono']">Rectif. <a class="enlace" (click)="navigateToAbono(dato)">{{ dato['numeroAbono'] }}</a></span>
+                  </div>
                   <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
                 </div>
               </td>
@@ -112,9 +118,6 @@
                   <div *ngSwitchCase="'iban'">
                     <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.bancosCodigo' placeholder="Seleccionar"  appendTo="body"
                       [options]="comboCuentasBancarias" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
-                  </div>
-                  <div *ngSwitchCase="'nota'">
-                    <input type="text" class="form-control" [(ngModel)]="nuevoEstado.nota" pInputText>
                   </div>
                   <div *ngSwitchCase="'impTotalPagado'">
                     <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPagado" maxlength="10" pInputText>
@@ -154,15 +157,17 @@
 
     <div *ngIf="esFichaActiva('estadosPagos')" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-plus" iconPos="left"
+        <button pButton [disabled]="bodyInicial.tipo != 'ABONO'" type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoAbono()" label="Nuevo Abono"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
           (click)="anular()" label="Anular"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolverConComision()" label="Devolver con Comisión al Cliente"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolver()" label="Devolver"></button>
-        <button pButton type="button" icon="fa fa-plus" iconPos="left"
+        <button pButton type="button" icon="fa fa-trash" iconPos="left"
+          (click)="nuevoCobro()" label="Eliminar"></button>
+        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoCobro()" label="Nuevo Cobro"></button>
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="renegociar()" label="Renegociar"></button>

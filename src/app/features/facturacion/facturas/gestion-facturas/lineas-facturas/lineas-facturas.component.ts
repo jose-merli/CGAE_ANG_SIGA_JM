@@ -37,12 +37,12 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   datos: FacturaLineaItem[] = [];
   datosInit: FacturaLineaItem[] = [];
 
-  comboTiposIVA: ComboItem[];
+  comboTiposIVA: any[];
   resaltadoDatos: boolean = false;
 
-  modificarDescripcion: boolean = false;
-  modificarImporteUnitario: boolean = false;
-  modificarIVA: boolean = false;
+  modificarDescripcion: boolean = true;
+  modificarImporteUnitario: boolean = true;
+  modificarIVA: boolean = true;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -53,7 +53,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getComboTiposIVA();
-    this.getParametrosFACTURACION();
+    // this.getParametrosFACTURACION();
    }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -71,9 +71,11 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   // Combo de tipos IVA
   getComboTiposIVA() {
-    this.sigaServices.getParam("facturacionPyS_comboTiposIVA", "?codBanco=" + this.bodyInicial.idFactura).subscribe(
+    this.sigaServices.getParam("facturacionPyS_comboTiposIVA", "?codBanco=" + this.bodyInicial.bancosCodigo).subscribe(
       n => {
         this.comboTiposIVA = n.combooItems;
+        this.comboTiposIVA.forEach(c => c.label = c.label1);
+        
         this.commonsService.arregloTildesCombo(this.comboTiposIVA);
       },
       err => {
@@ -212,6 +214,26 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   }
 
   // Guardar
+  isValid(): boolean {
+    
+
+    if (!false) {
+      this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
+      return false;
+    }
+
+    return true;
+  }
+
+  
+
+  checkGuardar() {
+    if (this.isValid()) {
+      this.guardarLineas();
+    } else {
+      this.resaltadoDatos = true;
+    }
+  }
 
   guardarLineas(): void {
     this.progressSpinner = true;
@@ -256,7 +278,13 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       && this.datos[index].cantidad != undefined && this.datos[index].cantidad.trim() != ""
       && this.datos[index].idTipoIVA != undefined && this.datos[index].idTipoIVA.trim() != "") {
       this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
-      this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * 0.1).toFixed(2).toString();
+
+      // Obtiene el iva del combo
+      let iva: number = parseFloat(this.comboTiposIVA.find(ti => ti.value === this.datos[index].idTipoIVA).label2);
+      console.log(this.comboTiposIVA);
+      console.log(iva);
+      this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * iva / 100.0).toFixed(2).toString();
+
       this.datos[index].importeTotal = (parseFloat(this.datos[index].importeNeto) + parseFloat(this.datos[index].importeIVA)).toFixed(2).toString();
     }
   }

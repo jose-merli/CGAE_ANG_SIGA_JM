@@ -1,18 +1,29 @@
 export class FacturaEstadosPagosItem {
     
     fechaModificaion: Date;
+
+	idAccion: string;
 	accion: string;
+
+	idEstado: string;
 	estado: string;
+
+	bancosCodigo: string;
 	iban: string;
+
 	impTotalPagado: string;
 	impTotalPorPagar: string;
+
 	IDSJCS: string;
-	numeroFactura: string;
-	idFactura: string;
+	
 	idCargos: string;
 	idDevoluciones: string;
-	numeroAbono: string;
+
+	idFactura: string;
+	numeroFactura: string;
+	
 	idAbono: string;
+	numeroAbono: string;
 
     constructor() {}
 }
