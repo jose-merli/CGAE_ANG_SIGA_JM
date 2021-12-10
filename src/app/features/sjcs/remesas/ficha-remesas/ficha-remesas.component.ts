@@ -67,13 +67,12 @@ export class FichaRemesasComponent implements OnInit {
       this.remesaTabla.informacionEconomica = this.remesaInformacionEconomica;
       console.log("Item en JSON -> ", this.remesaTabla);
       this.guardado = true;
-      this.getAcciones("");
+      this.search();
       this.remesaFromTabla = true;
       this.descripcion = this.remesaTabla.descripcion;
       if(this.remesaTabla.estado == "Iniciada" || this.remesaTabla.estado == "Validada" || this.remesaTabla.estado == "Error envío"){
         this.estado = true;
       }
-      this.search();
     } else if (localStorage.getItem('ficha') == "nuevo") {
       this.remesaItem.descripcion = "";
       this.descripcion = "";
@@ -159,8 +158,12 @@ export class FichaRemesasComponent implements OnInit {
 
         this.remesaTabla.incidencias = this.datos[0].incidencias;
         this.remesaTabla.descripcion = this.datos[0].descripcion;
+        this.remesaTabla.estado = this.datos[0].estado;
 
         console.log("Contenido de la respuesta del back --> ", this.datos);
+
+        this.getAcciones("");
+
         this.progressSpinner = false;
       },
       err => {
