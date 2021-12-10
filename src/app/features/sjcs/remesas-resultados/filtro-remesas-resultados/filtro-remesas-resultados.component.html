@@ -10,7 +10,7 @@
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
-        <div class="form-group-interlineado col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRemesa' | translate }}</label>
           <div class="form-row">
              <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
@@ -29,7 +29,7 @@
           </div>
         </div>
  
-        <div class="form-group-interlineado col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.remesasResultados.filtro.numRegistro' | translate }}</label>
           <div class="form-row">
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
@@ -49,7 +49,7 @@
           </div>
         </div>
 
-        <div class="form-group-interlineado col-lg-4 col-md-4">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.remesasResultados.filtro.nombreFichero' | translate }}</label>
           <input type="text" name="nombreFichero" value="" class="box" class="form-control" [(ngModel)]='filtros.nombreFichero'
             maxLength="200" pInputText>
