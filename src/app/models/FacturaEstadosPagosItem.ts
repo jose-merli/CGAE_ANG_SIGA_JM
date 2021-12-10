@@ -1,6 +1,7 @@
 export class FacturaEstadosPagosItem {
     
     fechaModificaion: Date;
+	fechaMin: Date;
 
 	idAccion: string;
 	accion: string;
@@ -24,6 +25,9 @@ export class FacturaEstadosPagosItem {
 	
 	idAbono: string;
 	numeroAbono: string;
+
+	notaMaxLength: number;
+	nota: string;
 
     constructor() {}
 }

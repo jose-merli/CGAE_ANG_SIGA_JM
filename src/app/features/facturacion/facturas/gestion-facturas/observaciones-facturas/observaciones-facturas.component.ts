@@ -73,6 +73,8 @@ export class ObservacionesFacturasComponent implements OnInit, OnChanges {
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (!this.body.observacionesFactura) this.body.observacionesFactura = "";
+    if (!this.body.observacionesFicheroFactura) this.body.observacionesFicheroFactura = "";
   }
 
   // Guardar

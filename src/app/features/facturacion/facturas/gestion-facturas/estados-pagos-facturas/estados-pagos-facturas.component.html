@@ -104,31 +104,6 @@
               </td>
             </tr>
 
-            <!-- Línea para la inserción de un nuevo estado de factura -->
-            <ng-container *ngIf="bodyInicial.numeroFactura == grupo['key'] && nuevoEstado">
-              <td *ngFor="let col of columns">
-                <div [ngSwitch]="col.field">
-                  <div *ngSwitchCase="'fechaModificaion'">
-                    <app-fecha [(value)]="nuevoEstado.fechaModificaion" [minDate]="nuevoEstado.fechaMin" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"></app-fecha>
-                  </div>
-                  <div *ngSwitchCase="'estado'">
-                    <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.idEstado' placeholder="Seleccionar"  appendTo="body"
-                      [options]="comoEstados" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
-                  </div>
-                  <div *ngSwitchCase="'iban'">
-                    <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.bancosCodigo' placeholder="Seleccionar"  appendTo="body"
-                      [options]="comboCuentasBancarias" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
-                  </div>
-                  <div *ngSwitchCase="'impTotalPagado'">
-                    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPagado" maxlength="10" pInputText>
-                  </div>
-                  <div *ngSwitchCase="'impTotalPorPagar'">
-                    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPorPagar" maxlength="10" pInputText>
-                  </div>
-                  <div *ngSwitchDefault><span>{{ nuevoEstado[col.field] }}</span></div>
-                </div>
-              </td>
-            </ng-container>
           </ng-container>
           
         </ng-template>
@@ -166,15 +141,11 @@
         <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolver()" label="Devolver"></button>
         <button pButton type="button" icon="fa fa-trash" iconPos="left"
-          (click)="nuevoCobro()" label="Eliminar"></button>
+          (click)="eliminar()" label="Eliminar"></button>
         <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoCobro()" label="Nuevo Cobro"></button>
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="renegociar()" label="Renegociar"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="restablecer()" label="Restablecer"></button>
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
-        (click)="descargar()" label="Guardar"></button>
       </div>
     </div>
   </div>
@@ -183,3 +154,47 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<!--DIALOG CAMBIA ESTADO-->
+<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNuevoEstado" (onHide)="cerrarDialog()">
+  <p-header class="title">
+    <label>{{ nuevoEstado.accion }}</label>
+  </p-header>
+  <div class="form-row">
+    <div class="form-group-interlineado col-lg-12 col-md-12" >
+      <label>Fecha</label>
+      <app-fecha [(value)]="nuevoEstado.fechaModificaion" [minDate]="nuevoEstado.fechaMin" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"></app-fecha>
+    </div>
+    <div *ngIf="nuevoEstado.idAccion == '7'" class="form-group-interlineado col-lg-12 col-md-12">
+      <label>Estado</label>
+      <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.idEstado' placeholder="Seleccionar"
+        [options]="comoEstados" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>Nota de acción</label>
+      <input *ngIf="nuevoEstado.idAccion != '6'" type="text" class="form-control" [(ngModel)]="nuevoEstado.nota" maxlength="nuevoEstado.notaMaxLength" pInputText>
+      <p-dropdown *ngIf="nuevoEstado.idAccion == '6'" class="select-form" [(ngModel)]='nuevoEstado.nota' placeholder="Seleccionar"
+        [options]="comboNotas" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>Cuenta bancaria</label>
+      <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.bancosCodigo' placeholder="Seleccionar" [disabled]="!enabledComboCuentasBancarias()"
+        [options]="comboCuentasBancarias" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>Movimiento</label>
+      <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPagado" 
+        maxlength="10" (change)="onChangeImporte()" [disabled]="['6','7','8'].includes(nuevoEstado.idAccion)" pInputText>
+    </div>
+    <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>Importe pendiente</label>
+      <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPorPagar" 
+        maxlength="10" (change)="onChangeImporte()" [disabled]="['4','6','7','8'].includes(nuevoEstado.idAccion)" pInputText>
+    </div>
+
+    <div class="main-button col-lg-12 col-md-12">
+      <button (click)="guardar()" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelar()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+</p-dialog>

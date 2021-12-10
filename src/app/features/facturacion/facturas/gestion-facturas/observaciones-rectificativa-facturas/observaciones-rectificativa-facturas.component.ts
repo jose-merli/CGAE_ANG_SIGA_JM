@@ -73,6 +73,8 @@ export class ObservacionesRectificativaFacturasComponent implements OnInit, OnCh
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    if (!this.body.motivosAbono) this.body.motivosAbono = "";
+    if (!this.body.observacionesAbono) this.body.observacionesAbono = "";
   }
 
   // Guardar
