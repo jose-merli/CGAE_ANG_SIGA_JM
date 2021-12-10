@@ -35,5 +35,6 @@ export class BaremosGuardiaItem {
     importeMinAsAc;
     importeMaxAsAc;
     importe;
-    importeMax
+    importeMax;
+    agrupar;
 }
