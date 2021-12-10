@@ -2,9 +2,13 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
-    <p>{{"menu.justiciaGratuita" | translate}}
-      <i class="fa fa-angle-right"></i>{{ "justiciaGratuita.ejg.datosGenerales.EJG" | translate}}
-    </p>
+    <p>{{"menu.justiciaGratuita" | translate}}</p>
+      <div *ngIf= "acta != null">
+        <p><i class="fa fa-angle-right"></i>{{'menu.sjcs.gestionActas' | translate}}
+        <i class="fa fa-angle-right"></i>{{'justiciaGratuita.ejg.datosGenerales.Acta'|translate}}
+        <i class="fa fa-angle-right"></i>{{ 'general.boton.asociarEJG' | translate}}</p>
+      </div>
+      <p><i class="fa fa-angle-right"></i>{{ "justiciaGratuita.ejg.datosGenerales.EJG" | translate}} </p>
   </div>
 
   <div class="card">

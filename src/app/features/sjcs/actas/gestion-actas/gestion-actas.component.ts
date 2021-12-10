@@ -37,10 +37,10 @@ export class GestionActasComponent implements OnInit {
       });
 
    
-    if(localStorage.getItem('actasItem')){
-      this.datos = JSON.parse(localStorage.getItem('actasItem'));
+    if(sessionStorage.getItem('actasItem')){
+      this.datos = JSON.parse(sessionStorage.getItem('actasItem'));
       console.log(this.actaItem);
-      localStorage.removeItem('actasItem');
+      sessionStorage.removeItem('actasItem');
     }
   }
 

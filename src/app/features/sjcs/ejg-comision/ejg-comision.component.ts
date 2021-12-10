@@ -68,6 +68,8 @@ export class EjgComisionComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
+      sessionStorage.removeItem("actasItemAux");
+
       //Preparacion previa para recibir el valor de remesa si se accede a esta pantalla desde una ficha
       //de remesa.
       if (sessionStorage.getItem("remesa") != null) {
@@ -190,7 +192,7 @@ export class EjgComisionComponent implements OnInit {
   }
 
   backTo() {
-    localStorage.setItem('actasItem', JSON.stringify(this.acta));
+    sessionStorage.setItem('actasItem', JSON.stringify(this.acta));
     this.location.back();
   }
 }

@@ -273,6 +273,12 @@ export class GestionEjgComponent implements OnInit {
     if(sessionStorage.getItem("filtroAsistencia")){
       sessionStorage.setItem("volver","true");
     }
+    //Para evitar complicaciones según se acceda desde la pantalla de busqueda de EJGs de comision o 
+    //desde una ficha de acta directamente
+    if(sessionStorage.getItem("actasItemAux") && sessionStorage.getItem("actasItem") == null){
+      sessionStorage.setItem("actasItem",sessionStorage.getItem("actasItemAux"));
+      sessionStorage.removeItem("actasItemAux");
+    }
     this.location.back();
   }
 

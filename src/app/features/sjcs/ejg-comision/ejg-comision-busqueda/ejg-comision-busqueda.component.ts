@@ -9,6 +9,7 @@ import { datos_combos } from '../../../../utils/datos_combos';
 import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 import { MultiSelect } from 'primeng/multiselect';
 import { Console } from 'console';
+import { ActasItem } from '../../../../models/sjcs/ActasItem';
 @Component({
   selector: 'app-ejg-comision-busqueda',
   templateUrl: './ejg-comision-busqueda.component.html',
@@ -63,6 +64,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
   isDisabledGuardia: boolean = true;
   tipoLetrado;
   @Input() permisos;
+  @Input() acta: ActasItem;
   /*Éste método es útil cuando queremos qeremos informar de cambios en los datos desde el hijo,
   por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -92,8 +94,8 @@ export class EjgComisionBusquedaComponent implements OnInit {
     //   this.body = this.persistenceService.getFiltros();
 
     //   this.body.annio = this.persistenceService.getFiltros().anioacta;
-    if(localStorage.getItem("filtrosEJGCom")){
-      this.body = JSON.parse(localStorage.getItem("filtrosEJGCom"));
+    if(sessionStorage.getItem("filtrosEJGCom")){
+      this.body = JSON.parse(sessionStorage.getItem("filtrosEJGCom"));
 
       this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
       this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
@@ -109,7 +111,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
       this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
 
       // this.persistenceService.clearFiltros();
-      localStorage.removeItem("filtrosEJGCom");
+      sessionStorage.removeItem("filtrosEJGCom");
       this.busqueda.emit(this.historico);
 
     } else {

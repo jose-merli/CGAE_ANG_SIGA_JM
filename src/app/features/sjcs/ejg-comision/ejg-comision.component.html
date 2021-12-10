@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-ejg-comision-busqueda (busqueda)="searchEJGs($event)"></app-ejg-comision-busqueda>
+    <app-ejg-comision-busqueda [acta]="acta" (busqueda)="searchEJGs($event)"></app-ejg-comision-busqueda>
     <app-tabla-ejg-comision *ngIf="buscar" [datos]="datos" [filtro]="this.filtros.body" [remesa]="remesa" [acta]="acta" (busqueda)="searchEJGs($event)" (searchHistoricalSend)="searchEJGs($event)"></app-tabla-ejg-comision>
 </div>
 

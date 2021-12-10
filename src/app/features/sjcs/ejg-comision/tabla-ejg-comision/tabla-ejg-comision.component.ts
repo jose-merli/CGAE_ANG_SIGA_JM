@@ -336,7 +336,7 @@ export class TablaEjgComisionComponent implements OnInit {
         this.datosItem = this.ejgObject[0];
         this.persistenceService.setDatos(this.datosItem);
         // this.persistenceService.setFiltros(this.filtro);
-        localStorage.setItem('filtrosEJGCom', JSON.stringify(this.filtro));
+        sessionStorage.setItem('filtrosEJGCom', JSON.stringify(this.filtro));
         this.ngOnInit();
         this.consultaUnidadFamiliar(selected);
         this.commonServices.scrollTop();
@@ -354,6 +354,13 @@ export class TablaEjgComisionComponent implements OnInit {
       n => {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
         this.persistenceService.setBodyAux(this.datosFamiliares);
+        //En el caso que se proceda de la ficha de acta con la accion "asociar EJGs", 
+        //se guarda el acta por si se quiere volver a la pantalla de busqueda despues de consultar un EJG
+        //No se nombra igual que la variable del sessionStorage del componente padre para evitar que se utilice
+        //al acceder a la pantalla de busqueda de EJGs desde la ficha de EJGs directamente
+        if(this.acta != null){
+          sessionStorage.setItem('actasItemAux', JSON.stringify(this.acta));
+        }
         this.router.navigate(['/gestionEjg']);
         this.progressSpinner = false;
         this.commonServices.scrollTop();
@@ -772,7 +779,7 @@ export class TablaEjgComisionComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             finalizado++;
             if(finalizado == 6 && this.acta != null){
-              localStorage.setItem('actasItem', JSON.stringify(this.acta));
+              sessionStorage.setItem('actasItem', JSON.stringify(this.acta));
               this.location.back();
             }
           }
@@ -794,7 +801,7 @@ export class TablaEjgComisionComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             finalizado++;
             if(finalizado == 6 && this.acta != null){
-              localStorage.setItem('actasItem', JSON.stringify(this.acta));
+              sessionStorage.setItem('actasItem', JSON.stringify(this.acta));
               this.location.back();
             }
           } 
@@ -810,7 +817,7 @@ export class TablaEjgComisionComponent implements OnInit {
     else{
       finalizado++;
       if(finalizado == 6 && this.acta != null){
-        localStorage.setItem('actasItem', JSON.stringify(this.acta));
+        sessionStorage.setItem('actasItem', JSON.stringify(this.acta));
         this.location.back();
       }
     }
@@ -830,7 +837,7 @@ export class TablaEjgComisionComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             finalizado++;
             if(finalizado == 6 && this.acta != null){
-              localStorage.setItem('actasItem', JSON.stringify(this.acta));
+              sessionStorage.setItem('actasItem', JSON.stringify(this.acta));
               this.location.back();
             }
           }
@@ -848,7 +855,7 @@ export class TablaEjgComisionComponent implements OnInit {
       }
       finalizado++;
       if(finalizado == 6 && this.acta != null){
-        localStorage.setItem('actasItem', JSON.stringify(this.acta));
+        sessionStorage.setItem('actasItem', JSON.stringify(this.acta));
         this.location.back();
       }
     }
@@ -864,7 +871,7 @@ export class TablaEjgComisionComponent implements OnInit {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             finalizado++;
             if(finalizado == 6 && this.acta != null){
-              localStorage.setItem('actasItem', JSON.stringify(this.acta));
+              sessionStorage.setItem('actasItem', JSON.stringify(this.acta));
               this.location.back();
             }
           }
@@ -879,7 +886,7 @@ export class TablaEjgComisionComponent implements OnInit {
     }else{
       finalizado++;
       if(finalizado == 6 && this.acta != null){
-        localStorage.setItem('actasItem', JSON.stringify(this.acta));
+        sessionStorage.setItem('actasItem', JSON.stringify(this.acta));
         this.location.back();
       }
     }

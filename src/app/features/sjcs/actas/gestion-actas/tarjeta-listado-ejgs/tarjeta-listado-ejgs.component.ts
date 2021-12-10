@@ -282,7 +282,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
       n => {
         let datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
         this.persistenceService.setBodyAux(datosFamiliares);
-        localStorage.setItem('actasItem', JSON.stringify(this.datos));
+        sessionStorage.setItem('actasItem', JSON.stringify(this.datos));
         this.router.navigate(['/gestionEjg']);
         this.progressSpinner = false;
       },

@@ -79,8 +79,8 @@ export class TablaActasComponent implements OnInit {
 
     this.persistenceService.setDatos(evento);
     
-    localStorage.setItem('filtrosActa', JSON.stringify(this.filtro));
-    localStorage.setItem('actasItem', JSON.stringify(evento));
+    sessionStorage.setItem('filtrosActa', JSON.stringify(this.filtro));
+    sessionStorage.setItem('actasItem', JSON.stringify(evento));
 
     this.router.navigate(["/fichaGestionActas"]);
 
