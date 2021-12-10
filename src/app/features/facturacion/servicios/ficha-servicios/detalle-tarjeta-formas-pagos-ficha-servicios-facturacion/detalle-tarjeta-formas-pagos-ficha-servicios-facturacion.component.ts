@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { ComboObject } from '../../../../../models/ComboObject';
 import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
+import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -32,15 +34,20 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
   obligatorio: boolean = true; //Usada para establecer como obligatorios o no obligatorios los campos dependiendo de si esta marcado o no el checkbox no facturable
 
+  //Permisos
+  permisoGuardarFormasPagoServicios: boolean;
+
   //Suscripciones
   subscriptionIvasNoDerogablesSelectValues: Subscription;
   subscriptionInternetPayMethodsSelectValues: Subscription;
   subscriptionSecretaryPayMethodsSelectValues: Subscription;
   subscriptionCrearFormasDePago: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
+    this.checkPermisos();
+
     if (sessionStorage.getItem('esColegiado'))
       this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
 
@@ -66,6 +73,19 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
     this.getComboTipoIvaNoDerogables();
     this.getComboFormasDePagoInternet();
     this.getComboFormasDePagoSecretaria();
+  }
+
+  checkPermisos(){
+    this.getPermisoGuardarFormasPagoServicios()
+  }
+
+  getPermisoGuardarFormasPagoServicios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.guardarFormasPagoServicios)
+        .then((respuesta) => {
+          this.permisoGuardarFormasPagoServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
   }
 
   //Necesario para liberar memoria
@@ -126,6 +146,17 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
     } else if (this.servicioOriginal.facturacionponderada == "0") {
       this.checkboxFacturacionProporcionalDiasInscripcion = false;
     }
+  }
+
+  checkGuardar(){
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoGuardarFormasPagoServicios, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+	    this.guardar();
+	  }
   }
 
   guardar() {

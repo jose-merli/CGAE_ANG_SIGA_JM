@@ -22,6 +22,14 @@ export const procesos_PyS: any = {
     //PERMISOS PRODUCTOS
     guardarProductos: "406",
     eliminarReactivarProductos: "407",
-    guardarFormasPagoProductos: "408"
+    guardarFormasPagoProductos: "408",
+
+    //PERMISOS SERVICIOS
+    guardarServicios: "409",
+    eliminarReactivarServicios: "410",
+    guardarFormasPagoServicios: "411",
+    nuevaCondicion: "412",
+    guardarPreciosServicios: "413",
+    eliminarPreciosServicios: "414"
 
 }

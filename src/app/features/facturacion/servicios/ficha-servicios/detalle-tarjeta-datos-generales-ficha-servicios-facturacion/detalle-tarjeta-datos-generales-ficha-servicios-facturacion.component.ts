@@ -9,6 +9,8 @@ import { ComboObject } from '../../../../../models/ComboObject';
 import { ListaServiciosDTO } from '../../../../../models/ListaServiciosDTO';
 import { ListaServiciosItems } from '../../../../../models/ListaServiciosItems';
 import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
+import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -40,10 +42,14 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   showModalSuscripcionesBajas = false; //Muestra o no muestra el dialogo de suscripciones o bajas
   checkboxIncluirSolBajasManuales: boolean = false;
 
-
   //variables de control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
   desactivarBotonEliminar: boolean = false; //Para activar el boton eliminar/reactivar dependiendo de si estamos en edicion o en creacion de un nuevo producto pero ya hemos guardado.
+
+  //Permisos
+  permisoGuardarServicios: boolean;
+  permisoEliminarReactivarServicios: boolean;
+  permisoNuevaCondicion: boolean;
 
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
@@ -55,7 +61,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   subscriptionBorrarSuscripcionesBajas: Subscription;
   subscriptionCondicionesSelect: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.servicio.editar) {
@@ -93,9 +99,44 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   }
 
   ngOnInit() {
+    this.checkPermisos();
+
     this.getComboCategoria();
     this.getComboCondicionSuscripcion();
     this.obtenerCodigosPorColegio();
+  }
+
+  checkPermisos(){
+    this.getPermisoGuardarServicios();
+    this.getPermisoEliminarReactivarServicios();
+    this.getPermisoNuevaCondicion();
+  }
+
+  getPermisoGuardarServicios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.guardarServicios)
+        .then((respuesta) => {
+          this.permisoGuardarServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisoEliminarReactivarServicios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.eliminarReactivarServicios)
+        .then((respuesta) => {
+          this.permisoEliminarReactivarServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisoNuevaCondicion() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.nuevaCondicion)
+        .then((respuesta) => {
+          this.permisoNuevaCondicion = respuesta;
+    })
+    .catch((error) => console.error(error));
   }
 
   //Necesario para liberar memoria
@@ -210,6 +251,17 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       this.checkboxAsignacionAutomatica = false;
     }
 
+  }
+
+  checkGuardar(){
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoGuardarServicios, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+	    this.comprobacionPreGuardar();
+	  }
   }
 
   //Si se ha activado el check de Asignación automática, o bien se ha cambiado la condición de suscripción (estando marcado “Asignación automática”):
@@ -357,8 +409,15 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   }
 
   nuevacondicion(){
-    sessionStorage.setItem("servicioDetalle", JSON.stringify(this.servicio));
-    this.router.navigate(["/fichaConsulta"]);
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoNuevaCondicion, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+      sessionStorage.setItem("servicioDetalle", JSON.stringify(this.servicio));
+      this.router.navigate(["/fichaConsulta"]);
+	  }
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
@@ -537,6 +596,17 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
         }
       );
     }
+  }
+
+  checkEliminarReactivar(){
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoEliminarReactivarServicios, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+	    this.eliminarReactivar();
+	  }
   }
 
   //Metodo para activar/desactivar servicios mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tenga alguna solicitud ya existente, en caso contrario se hara borrado fisico (DELETE)

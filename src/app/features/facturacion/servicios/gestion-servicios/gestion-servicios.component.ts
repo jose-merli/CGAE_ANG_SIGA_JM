@@ -7,7 +7,9 @@ import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscri
 import { ListaServiciosDTO } from '../../../../models/ListaServiciosDTO';
 import { ListaServiciosItems } from '../../../../models/ListaServiciosItems';
 import { ListaServiciosSuscripcionItem } from '../../../../models/ListaServiciosSuscripcionItem';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
+import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -44,15 +46,20 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
   numSelectedAbleRegisters: number = 0;
   numSelectedDisableRegisters: number = 0;
 
+  //Permisos
+  permisoEliminarReactivarServicios: boolean;
+
   //Suscripciones
   subscriptionActivarDesactivarServicios: Subscription;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, 
+  constructor(private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, 
     private translateService: TranslateService, private confirmationService: ConfirmationService, 
     private sigaServices: SigaServices, private router: Router,
     private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
+    this.checkPermisos();
+
     if(this.localStorageService.isLetrado){
       this.esColegiado = true;
     }
@@ -71,6 +78,19 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
     this.initrowsPerPageSelect();
     this.initColsServices();
 
+  }
+
+  checkPermisos(){
+	  this.getPermisoEliminarReactivarServicios();
+  }
+
+  getPermisoEliminarReactivarServicios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.eliminarReactivarServicios)
+        .then((respuesta) => {
+          this.permisoEliminarReactivarServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
   }
 
   //Necesario para liberar memoria
@@ -511,6 +531,17 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
   //FIN METODOS COMPONENTE
 
   //INICIO SERVICIOS
+  checkActivarDesactivar(selectedRows){
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoEliminarReactivarServicios, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+	    this.activarDesactivar(selectedRows);
+    }
+  }
+
   //Metodo para activar/desactivar servicios mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tenga alguna solicitud ya existente, en caso contrario se hara borrado fisico (DELETE)
   activarDesactivar(selectedRows) {
     let keyConfirmation = "deletePlantillaDoc";
