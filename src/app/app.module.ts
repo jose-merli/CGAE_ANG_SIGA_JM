@@ -491,7 +491,7 @@ import { GestionExpedientesExeaComponent } from './features/expedientes-exea/ges
 import { NuevoExpedienteExeaComponent } from './features/expedientes-exea/nuevo-expediente-exea/nuevo-expediente-exea.component';
 import { ExpedientesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/expedientes-ficha-colegial/expedientes-ficha-colegial.component';
 import { SigaNoInterceptorServices } from './_services/sigaNoInterceptor.service';
-import { FichaExpedienteExeaComponent } from './ficha-expediente-exea/ficha-expediente-exea.component';
+import { FichaExpedienteExeaComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-expediente-exea.component';
 
 
 @NgModule({
