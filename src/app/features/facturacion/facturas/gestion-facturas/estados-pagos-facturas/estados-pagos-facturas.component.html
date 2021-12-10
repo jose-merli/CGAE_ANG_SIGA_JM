@@ -157,10 +157,10 @@
 
 <!--DIALOG CAMBIA ESTADO-->
 <p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNuevoEstado" (onHide)="cerrarDialog()">
-  <p-header class="title">
+  <p-header *ngIf="nuevoEstado" class="title">
     <label>{{ nuevoEstado.accion }}</label>
   </p-header>
-  <div class="form-row">
+  <div *ngIf="nuevoEstado" class="form-row">
     <div class="form-group-interlineado col-lg-12 col-md-12" >
       <label>Fecha</label>
       <app-fecha [(value)]="nuevoEstado.fechaModificaion" [minDate]="nuevoEstado.fechaMin" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"></app-fecha>

@@ -40,9 +40,9 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   comboTiposIVA: any[];
   resaltadoDatos: boolean = false;
 
-  modificarDescripcion: boolean = true;
-  modificarImporteUnitario: boolean = true;
-  modificarIVA: boolean = true;
+  modificarDescripcion: boolean = false;
+  modificarImporteUnitario: boolean = false;
+  modificarIVA: boolean = false;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -53,7 +53,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getComboTiposIVA();
-    // this.getParametrosFACTURACION();
+    this.getParametrosFACTURACION();
    }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -131,8 +131,8 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       { field: "descripcion", header: "general.description", width: "40%", editable: true },
       { field: "precioUnitario", header: "Precio Unitario", width: "10%", editable: true },
       { field: "cantidad", header: "Cantidad", width: "10%", editable: false },
-      { field: "importeNeto", header: "Importe Neto", width: "10%", editable: false }, 
-      { field: "importeTotal", header: "Importe Total", width: "20%", editable: false },
+      { field: "importeNeto", header: "Importe Neto", width: "10%", editable: false }
+      // { field: "importeTotal", header: "Importe Total", width: "20%", editable: false },
     ];
   }
 

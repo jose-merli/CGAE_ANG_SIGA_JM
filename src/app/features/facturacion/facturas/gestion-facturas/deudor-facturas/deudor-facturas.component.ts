@@ -28,7 +28,7 @@ export class DeudorFacturasComponent implements OnInit {
 
   navigateToSociedad() {
     this.progressSpinner = true;
-
+    
     this.sigaServices.postPaginado(
       "fichaColegialSociedades_searchSocieties",
       "?numPagina=1", this.bodyInicial.idDeudor).toPromise().then(

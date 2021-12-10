@@ -43,7 +43,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   datos: FacturaEstadosPagosItem[] = [];
   datosInit: FacturaEstadosPagosItem[] = [];
 
-  nuevoEstado: FacturaEstadosPagosItem = new FacturaEstadosPagosItem();
+  nuevoEstado: FacturaEstadosPagosItem;
   comboEstados: ComboItem[] = [];
   comboCuentasBancarias: ComboItem[] = [];
   comboNotas: ComboItem[] = [];
