@@ -8,6 +8,8 @@ export class FacturasItem {
 	//datos generales
 	numeroFactura: string;
 	estado: string;
+	estadosFiltroFac: any[];
+	estadosFiltroAb: any[];
 
 	formaCobroFactura: string;
 	formaCobroAbono: string;//Efectivo 'E', Banco 'B', Ambos 'A'

@@ -14,7 +14,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 })
 export class FiltrosFacturasComponent implements OnInit {
 
-  @Output() busqueda = new EventEmitter<boolean>();
+  @Output() buscarFacturas = new EventEmitter<boolean>();
 
   progressSpinner: boolean = false;
 
@@ -29,7 +29,8 @@ export class FiltrosFacturasComponent implements OnInit {
   comboContabilizado: ComboItem[] = [];
   comboFacturaciones: ComboItem[] = [];
   comboFormaCobroAbono: ComboItem[] = [];
-  comboEstadosFacturas: ComboItem[] = [];
+  comboEstadosFacturas: any[];
+  estadosSelect: any[] = [];
 
   msgs: any[] = [];
 
@@ -49,7 +50,16 @@ export class FiltrosFacturasComponent implements OnInit {
   ngOnInit() {
     this.getCombos();
 
-    this.body.fechaEmisionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));
+    if(this.persistenceService.getFiltros() && sessionStorage.getItem("volver")){
+      this.body = this.persistenceService.getFiltros();
+      this.persistenceService.clearFiltros();
+
+      sessionStorage.removeItem("volver");
+
+      this.isBuscar();
+    }else{
+      this.body.fechaEmisionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));
+    }
   }
 
   // Get combos
@@ -69,7 +79,9 @@ export class FiltrosFacturasComponent implements OnInit {
     this.sigaServices.get("facturacionPyS_comboEstadosFacturas").subscribe(
       n => {
         this.comboEstadosFacturas = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboEstadosFacturas);
+        //console.log(this.comboEstadosFacturas);
+
+        //this.commonServices.arregloTildesCombo(this.comboEstadosFacturas);
         this.progressSpinner=false;
       },
       err => {
@@ -81,20 +93,9 @@ export class FiltrosFacturasComponent implements OnInit {
   }
 
   getComboFormaCobroAbono() {
-    this.progressSpinner=true;
-
-    this.sigaServices.get("").subscribe(
-      n => {
-        this.comboFormaCobroAbono = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboFormaCobroAbono);
-        this.progressSpinner=false;
-      },
-      err => {
-        console.log(err);
-        //this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner=false;
-      }
-    );
+    this.comboFormaCobroAbono.push({value: 'E', label: this.translateService.instant('facturacion.facturas.efectivo') , local: undefined});
+    this.comboFormaCobroAbono.push({value: 'B', label: this.translateService.instant('censo.tipoAbono.banco') , local: undefined});
+    this.comboFormaCobroAbono.push({value: 'A', label: this.translateService.instant('fichaEventos.datosRepeticion.tipoDiasRepeticion.ambos') , local: undefined});
   }
 
   getComboSeriesFacturacion() {
@@ -152,6 +153,7 @@ export class FiltrosFacturasComponent implements OnInit {
   }
 
 
+
   // Mostrar u ocultar filtros de distintas secciones
   onHideDatosGenerales(): void {
     this.showDatosGenerales = !this.showDatosGenerales;
@@ -169,12 +171,27 @@ export class FiltrosFacturasComponent implements OnInit {
     this.showComunicacionesCobrosRecobros = !this.showComunicacionesCobrosRecobros;
     }
 
+
   // boton de busqueda
   isBuscar() {
+    //console.log(this.estadosSelect);
+    if(this.estadosSelect.length>0){
+      this.body.estadosFiltroFac = [];
+      this.body.estadosFiltroAb = [];
+      for(let i=0; this.estadosSelect.length>i; i++){
+        if(this.estadosSelect[i].label2=="FACTURA"){
+          this.body.estadosFiltroFac.push(this.estadosSelect[i].value);
+        }else{
+          this.body.estadosFiltroAb.push(this.estadosSelect[i].value);
+        }
+      }
+    }
+
     this.persistenceService.setFiltros(this.body);
-    
+    console.log(this.body.estadosFiltroAb)
+    console.log(this.body.estadosFiltroFac)
     console.log(this.body);
-    this.busqueda.emit();
+    this.buscarFacturas.emit();
 
   }
 
