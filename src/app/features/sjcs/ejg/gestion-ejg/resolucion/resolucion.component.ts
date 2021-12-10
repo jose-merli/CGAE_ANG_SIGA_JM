@@ -26,7 +26,7 @@ export class ResolucionComponent implements OnInit {
   nuevo;
   body: EJGItem;
   bodyInicial: ResolucionEJGItem = new ResolucionEJGItem();
-  resolucion: ResolucionEJGItem;
+  resolucion: ResolucionEJGItem = new ResolucionEJGItem();
   msgs;
   comboActaAnnio = [];
   comboResolucion = [];
@@ -107,10 +107,16 @@ export class ResolucionComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getResolucion", selected).subscribe(
       n => {
-        if (n.body) {
+        if (n.body != "") {
           this.resolucion = JSON.parse(n.body);
           this.bodyInicial = JSON.parse(n.body);
-        } else { this.resolucion = new ResolucionEJGItem(); }
+        } else { 
+          this.resolucion = new ResolucionEJGItem(); 
+          this.resolucion.requiereNotificarProc = true;
+          this.resolucion.turnadoRatificacion = true;
+          this.bodyInicial.requiereNotificarProc = true;
+          this.bodyInicial.turnadoRatificacion = true;
+        }
         if (this.resolucion.fechaPresentacionPonente != undefined)
           this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
         if (this.resolucion.fechaResolucionCAJG != undefined)
