@@ -37,8 +37,12 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   datos: FacturaLineaItem[] = [];
   datosInit: FacturaLineaItem[] = [];
 
-  comboTiposIVA: ComboItem[];
+  comboTiposIVA: any[];
   resaltadoDatos: boolean = false;
+
+  modificarDescripcion: boolean = true;
+  modificarImporteUnitario: boolean = true;
+  modificarIVA: boolean = true;
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -49,6 +53,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getComboTiposIVA();
+    // this.getParametrosFACTURACION();
    }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -66,9 +71,11 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   // Combo de tipos IVA
   getComboTiposIVA() {
-    this.sigaServices.getParam("facturacionPyS_comboTiposIVA", "?codBanco=" + this.bodyInicial.idFactura).subscribe(
+    this.sigaServices.getParam("facturacionPyS_comboTiposIVA", "?codBanco=" + this.bodyInicial.bancosCodigo).subscribe(
       n => {
         this.comboTiposIVA = n.combooItems;
+        this.comboTiposIVA.forEach(c => c.label = c.label1);
+        
         this.commonsService.arregloTildesCombo(this.comboTiposIVA);
       },
       err => {
@@ -108,11 +115,11 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   getColsFactura() {
     this.cols = [
-      { field: "descripcion", header: "general.description", width: "30%", editable: true },
-      { field: "precioUnitario", header: "Precio Unitario", width: "10%", editable: true },
+      { field: "descripcion", header: "general.description", width: "30%", editable: this.modificarDescripcion },
+      { field: "precioUnitario", header: "Precio Unitario", width: "10%", editable: this.modificarImporteUnitario },
       { field: "cantidad", header: "Cantidad", width: "10%", editable: false },
       { field: "importeNeto", header: "Importe Neto", width: "10%", editable: false }, 
-      { field: "tipoIVA", header: "Tipo IVA", width: "10%", editable: true },
+      { field: "tipoIVA", header: "Tipo IVA", width: "10%", editable: this.modificarIVA },
       { field: "importeIVA", header: "Importe IVA", width: "10%", editable: false },
       { field: "importeTotal", header: "Importe Total", width: "10%", editable: false },
       { field: "importeAnticipado", header: "Importe Anticip.", width: "10%", editable: false },
@@ -145,6 +152,31 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       }
     );
   }
+
+    // Obtener parametros de FACTURACION
+    getParametrosFACTURACION(): void {
+      this.sigaServices.getParam("facturacionPyS_parametrosLINEAS", "?idInstitucion=2005").subscribe(
+        n => {
+          let items: ComboItem[] = n.combooItems;
+          console.log(items);
+          
+          let modificarDescripcionItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_DESCRIPCION");
+          let modificarImporteUnitarioItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IMPORTE_UNITARIO");
+          let modificarIVAItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IVA");
+
+          if (modificarDescripcionItem)
+            this.modificarDescripcion = modificarDescripcionItem.value == "1";
+          if (modificarImporteUnitarioItem)
+            this.modificarImporteUnitario = modificarImporteUnitarioItem.value == "1";
+          if (modificarIVAItem)
+            this.modificarIVA = modificarIVAItem.value == "1";
+          
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
 
   // Funciones para el guardado
 
@@ -182,6 +214,26 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   }
 
   // Guardar
+  isValid(): boolean {
+    
+
+    if (!false) {
+      this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
+      return false;
+    }
+
+    return true;
+  }
+
+  
+
+  checkGuardar() {
+    if (this.isValid()) {
+      this.guardarLineas();
+    } else {
+      this.resaltadoDatos = true;
+    }
+  }
 
   guardarLineas(): void {
     this.progressSpinner = true;
@@ -226,7 +278,13 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       && this.datos[index].cantidad != undefined && this.datos[index].cantidad.trim() != ""
       && this.datos[index].idTipoIVA != undefined && this.datos[index].idTipoIVA.trim() != "") {
       this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
-      this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * 0.1).toFixed(2).toString();
+
+      // Obtiene el iva del combo
+      let iva: number = parseFloat(this.comboTiposIVA.find(ti => ti.value === this.datos[index].idTipoIVA).label2);
+      console.log(this.comboTiposIVA);
+      console.log(iva);
+      this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * iva / 100.0).toFixed(2).toString();
+
       this.datos[index].importeTotal = (parseFloat(this.datos[index].importeNeto) + parseFloat(this.datos[index].importeIVA)).toFixed(2).toString();
     }
   }

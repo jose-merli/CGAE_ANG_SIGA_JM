@@ -181,10 +181,10 @@ export class GestionFacturasComponent implements OnInit {
     }).then(() => this.progressSpinner = false);
   }
 
-  refreshData(): void {
+  refreshData(event: FacturasItem): void {
     this.progressSpinner = true;
 
-    this.getDatosFactura(this.body.idFactura, this.body.tipo).then(() => this.progressSpinner = false);
+    this.getDatosFactura(event.idFactura, event.tipo).then(() => this.progressSpinner = false);
   }
 
   // Transformar fecha

@@ -26,21 +26,23 @@ export class FacturasItem {
 	importefacturadoDesde: string;
 	importefacturadoHasta: string;
 
-	//importes ambos
-	importeCaja: string;
-	importeBanco: string;
-	importePagado: string;
-
-	importeAdeudadoPendiente: string;
 	importeAdeudadoHasta: string;
 	importeAdeudadoDesde: string;
 
 	//importes factura
 	importeAnticipado: string;
 	importeCompensado: string;
+	importeCaja: string;
+	importeBanco: string;
+	importePagado: string;
+	importeAdeudadoPendiente: string;
 
-	//importes Abono
-	importeAnulado: string;
+	//importes abono
+	importeAnuladoAb: string;
+	importeCajaAb: string;
+	importeBancoAb: string;
+	importePagadoAb: string;
+	importeAdeudadoPendienteAb: string;
 
 	//facturacion
 	idFacturacion: string;
@@ -82,6 +84,11 @@ export class FacturasItem {
 	//observaciones abono
 	observacionesAbono: string;
 	motivosAbono: string;
+
+	bancosCodigo: string;
+
+	estadosFiltros: string[];
+
 
 	constructor() { };
 

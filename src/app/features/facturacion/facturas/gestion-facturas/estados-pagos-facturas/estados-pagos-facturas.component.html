@@ -36,7 +36,7 @@
     <!-- Cuerpo en ficha abierta -->
     <div *ngIf="esFichaActiva('estadosPagos')" class="card-body card-body-ficha">
       <!-- TABLA RESULTADOS -->
-      <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+      <p-table [autoLayout]="true" [value]="grupos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
         class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
         selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
         <ng-template pTemplate="colgroup" let-columns>
@@ -66,12 +66,71 @@
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
-          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
-            <td class="text-center" *ngFor="let col of columns">
-              <span>{{ dato[col.field] }}</span>
+        <ng-template pTemplate="body" let-grupo let-columns="columns" let-rowIndex="rowIndex">
+
+          <!-- Número de factura -->
+          <tr [pSelectableRow]="grupo" [pSelectableRowIndex]="rowIndex" class="justify-content-start">
+            <td [attr.colspan]="columns.length">
+              <div (click)="toggleGrupo(rowIndex)" class="d-flex justify-content-start align-items-center">
+                <label>{{ grupo['key'] }}</label>
+                <i class="fa fa-{{ grupo['activo'] ? 'angle-up' : 'angle-down' }} ml-auto"></i>
+              </div>
+              
             </td>
           </tr>
+
+          <!-- Columnas -->
+          <ng-container *ngIf="grupo['activo']">
+            <tr *ngFor="let dato of grupo['values']" [pSelectableRow]="grupo" [pSelectableRowIndex]="rowIndex">
+              <td *ngFor="let col of columns">
+                <div [ngSwitch]="col.field">
+                  <div *ngSwitchCase="'fechaModificaion'">
+                    <span>{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
+                  </div>
+                  <div *ngSwitchCase="'impTotalPagado'">
+                    <span>{{ dato[col.field] + ' €' }}</span>
+                  </div>
+                  <div *ngSwitchCase="'impTotalPorPagar'">
+                    <span>{{ dato[col.field] + ' €' }}</span>
+                  </div>
+                  <div *ngSwitchCase="'nota'">
+                    <span *ngIf="dato['idCargos']">Fichero <a class="enlace" (click)="navigateToFicheroAdeudos(dato)">{{ dato['idCargos'] }}</a></span>
+                    <span *ngIf="dato['enlaceFactura']">Factura <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['numeroFactura'] }}</a></span>
+                    <span *ngIf="dato['idSJCS']">Abono <a class="enlace" (click)="navigateToSJCS(dato)">{{ dato['idSJCS'] }}</a></span>
+                    <span *ngIf="dato['enlaceAbono']">Rectif. <a class="enlace" (click)="navigateToAbono(dato)">{{ dato['numeroAbono'] }}</a></span>
+                  </div>
+                  <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Línea para la inserción de un nuevo estado de factura -->
+            <ng-container *ngIf="bodyInicial.numeroFactura == grupo['key'] && nuevoEstado">
+              <td *ngFor="let col of columns">
+                <div [ngSwitch]="col.field">
+                  <div *ngSwitchCase="'fechaModificaion'">
+                    <app-fecha [(value)]="nuevoEstado.fechaModificaion" [minDate]="nuevoEstado.fechaMin" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"></app-fecha>
+                  </div>
+                  <div *ngSwitchCase="'estado'">
+                    <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.idEstado' placeholder="Seleccionar"  appendTo="body"
+                      [options]="comoEstados" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                  </div>
+                  <div *ngSwitchCase="'iban'">
+                    <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.bancosCodigo' placeholder="Seleccionar"  appendTo="body"
+                      [options]="comboCuentasBancarias" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                  </div>
+                  <div *ngSwitchCase="'impTotalPagado'">
+                    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPagado" maxlength="10" pInputText>
+                  </div>
+                  <div *ngSwitchCase="'impTotalPorPagar'">
+                    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPorPagar" maxlength="10" pInputText>
+                  </div>
+                  <div *ngSwitchDefault><span>{{ nuevoEstado[col.field] }}</span></div>
+                </div>
+              </td>
+            </ng-container>
+          </ng-container>
+          
         </ng-template>
 
         <ng-template pTemplate="paginatorleft">
@@ -98,20 +157,22 @@
 
     <div *ngIf="esFichaActiva('estadosPagos')" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-plus" iconPos="left"
-          (click)="comunicar()" label="Nuevo Abono"></button>
+        <button pButton [disabled]="bodyInicial.tipo != 'ABONO'" type="button" icon="fa fa-plus" iconPos="left"
+          (click)="nuevoAbono()" label="Nuevo Abono"></button>
+        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
+          (click)="anular()" label="Anular"></button>
+        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
+          (click)="devolverConComision()" label="Devolver con Comisión al Cliente"></button>
+        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
+          (click)="devolver()" label="Devolver"></button>
+        <button pButton type="button" icon="fa fa-trash" iconPos="left"
+          (click)="nuevoCobro()" label="Eliminar"></button>
+        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-plus" iconPos="left"
+          (click)="nuevoCobro()" label="Nuevo Cobro"></button>
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="comunicar()" label="Anular"></button>
+          (click)="renegociar()" label="Renegociar"></button>
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="comunicar()" label="Devolver con Comisión al Cliente"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="comunicar()" label="Devolver"></button>
-        <button pButton type="button" icon="fa fa-plus" iconPos="left"
-          (click)="comunicar()" label="Nuevo Cobro"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="comunicar()" label="Renegociar"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="comunicar()" label="Restablecer"></button>
+          (click)="restablecer()" label="Restablecer"></button>
         <button pButton type="button" icon="fa fa-save" iconPos="left"
         (click)="descargar()" label="Guardar"></button>
       </div>
