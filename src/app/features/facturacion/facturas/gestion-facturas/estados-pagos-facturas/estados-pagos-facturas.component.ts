@@ -45,9 +45,12 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   nuevoEstado: FacturaEstadosPagosItem;
   comboEstados: ComboItem[] = [];
-  comboCuentasBancarias: ComboItem[] = [];
   comboNotas: ComboItem[] = [];
 
+  resaltadoDatos: boolean = false;
+  resaltadoFecha: boolean = true;
+  resaltadoEstado: boolean = false;
+  resaltadoBanco: boolean = false;
   showModalNuevoEstado: boolean = false;
 
   constructor(
@@ -59,7 +62,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.getComboCuentaBancaria();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -74,7 +76,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     this.cols = [
       { field: "fechaModificaion", header: "facturacionSJCS.facturacionesYPagos.fecha", width: "10%" },
       { field: "accion", header: "facturacion.facturas.estadosPagos.accion", width: "20%" },
-      { field: "nota", header: "facturacion.facturas.estadosPagos.nota", width: "20%" },
+      { field: "comentario", header: "facturacion.facturas.estadosPagos.nota", width: "20%" },
       { field: "estado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "20%" },
       { field: "iban", header: "facturacion.seriesFactura.cuentaBancaria", width: "10%" },
       { field: "impTotalPagado", header: "facturacion.facturas.estadosPagos.movimiento", width: "10%" },
@@ -128,19 +130,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     );
   }
 
-  // Combo de cuentas bancarias
-  getComboCuentaBancaria() {
-    this.sigaServices.get("facturacionPyS_comboCuentaBancaria").subscribe(
-      n => {
-        this.comboCuentasBancarias = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboCuentasBancarias);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
   // Acciones
 
   renegociar(): void {
@@ -150,6 +139,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede renegociar facturas pendientes");
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
+      this.resaltadoEstado = true;
 
       // IdFactura
       this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
@@ -166,13 +156,14 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       // Combo de pago de pago o abono por caja y banco
       if (this.bodyInicial.tipo == "FACTURA") {
         this.comboEstados = [
-          { value: "2", label: this.translateService.instant("general.literal.pendientecobro"), local: undefined },
-          { value: "5", label: this.translateService.instant("general.literal.pendienteBanco"), local: undefined }
+          { value: "2", label: this.translateService.instant("facturacion.facturas.pendienteCobro"), local: undefined },
+          { value: "5", label: this.translateService.instant("facturacion.facturas.pendienteBanco"), local: undefined }
         ];
       } else {
         this.comboEstados = [
-          { value: "5", label: this.translateService.instant("general.literal.pendienteabonobanco"), local: undefined },
-          { value: "6", label: this.translateService.instant("general.literal.pendienteabonocaja"), local: undefined }
+          { value: "6", label: this.translateService.instant("facturacion.facturas.pendienteAbonoCaja"), local: undefined },
+          { value: "5", label: this.translateService.instant("facturacion.facturas.pendienteAbonoBanco"), local: undefined },
+          
         ];
       }
 
@@ -188,10 +179,12 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   enabledComboCuentasBancarias(): boolean {
     if (this.nuevoEstado.idEstado != "5") {
-      this.nuevoEstado.bancosCodigo = undefined;
+      this.nuevoEstado.cuentaBanco = undefined;
+      this.resaltadoBanco = false;
       return false;
     }
 
+    this.resaltadoBanco = true;
     return true;
   }
 
@@ -284,14 +277,14 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
       this.nuevoEstado.fechaModificaion = new Date();
       
-      this.comboNotas = [
-        { value: "Devolver con comisión al cliente", label: "Devolver con comisión al cliente", local: undefined },
-        { value: "Se anula para integrar la comisión bancaria en una nueva factura", label: "Se anula para integrar la comisión bancaria en una nueva factura", local: undefined }
-      ];
+      this.comboNotas = [];
 
       // Acción
       this.nuevoEstado.idAccion = "6";
       this.nuevoEstado.accion = "DEVOLUCIÓN";
+
+      // Cuenta a la que se le pasó el cargo
+      this.nuevoEstado.cuentaBanco = ultimaAccion.cuentaBanco;
 
       this.nuevoEstado.impTotalPagado = "0";
       this.nuevoEstado.impTotalPorPagar = ultimaAccion.impTotalPagado;
@@ -335,11 +328,27 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Eliminar
   eliminar() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    ultimaAccion.idFactura = this.bodyInicial.idFactura;
 
     if (!["4"].includes(ultimaAccion.idAccion)) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede anular facturas no anuladas");
     } else {
-
+      this.progressSpinner = true;
+      this.sigaServices.post("facturacionPyS_eliminarEstadosPagos", ultimaAccion).toPromise()
+        .then(
+          n => { },
+          err => {
+            return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        }).catch(error => {
+          if (error != undefined) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+        }).then(() => {
+          this.progressSpinner = false;
+          this.guardadoSend.emit(this.bodyInicial);
+        });
     }
   }
 
@@ -358,24 +367,60 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     ).subscribe(grupos => this.grupos = grupos);
 
     this.nuevoEstado = undefined;
+
+    this.resaltadoDatos = false;
+    this.resaltadoDatos = false;
+    this.resaltadoEstado = false;
+    this.resaltadoBanco = false;
   }
 
   // Modal para guardar el nuevo estado
 
   isValid(): boolean {
-    return false;
+    let valid: boolean = true;
+
+    if (this.nuevoEstado.idAccion == "7") {
+      valid = this.nuevoEstado && this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.impTotalPagado != undefined && this.nuevoEstado.impTotalPagado.trim().length != 0 && this.nuevoEstado.impTotalPorPagar && this.nuevoEstado.impTotalPorPagar.trim().length != 0
+        && this.nuevoEstado.idEstado != undefined && this.nuevoEstado.idEstado.trim().length != 0 && (this.nuevoEstado.idEstado != "5" || this.nuevoEstado.idEstado == "5" && this.nuevoEstado.cuentaBanco != undefined && this.nuevoEstado.cuentaBanco.trim().length != 0);
+    } else {
+      valid = this.nuevoEstado && this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.impTotalPagado != undefined && this.nuevoEstado.impTotalPagado.trim().length != 0 && this.nuevoEstado.impTotalPorPagar && this.nuevoEstado.impTotalPorPagar.trim().length != 0;
+    }
+    
+    if (!valid) {
+      this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
+    }
+    
+    return valid;
   }
 
   guardar() {
     if (this.isValid()) {
-      
+      this.progressSpinner = true;
+      this.sigaServices.post("facturacionPyS_insertarEstadosPagos", this.nuevoEstado).toPromise()
+        .then(
+          n => { },
+          err => {
+            return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        }).catch(error => {
+          if (error != undefined) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+        }).then(() => {
+          this.progressSpinner = false;
+          this.guardadoSend.emit(this.bodyInicial);
+        });
     } else {
-
+      this.resaltadoDatos = true;
     }
   }
 
   cerrarDialog() {
     this.showModalNuevoEstado = false;
+    this.resaltadoDatos = false;
+    this.resaltadoEstado = false;
+    this.resaltadoBanco = false;
     this.nuevoEstado = undefined;
   }
 
@@ -431,6 +476,19 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Fecha
   fillFecha(event: Date) {
     this.nuevoEstado.fechaModificaion = event;
+  }
+
+  // Estilos obligatorios
+  styleObligatorio(obligatorio: boolean, evento: string) {
+    if (this.resaltadoDatos && obligatorio && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleFechaObligatorio(obligatorio: boolean, evento: Date) {
+    if (this.resaltadoDatos && obligatorio && (evento == undefined || evento == null)) {
+      return this.commonsService.styleObligatorio(evento);
+    }
   }
 
   // Resultados por página

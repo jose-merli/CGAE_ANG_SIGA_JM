@@ -9,7 +9,7 @@ export class FacturaEstadosPagosItem {
 	idEstado: string;
 	estado: string;
 
-	bancosCodigo: string;
+	cuentaBanco: string;
 	iban: string;
 
 	impTotalPagado: string;
@@ -27,7 +27,7 @@ export class FacturaEstadosPagosItem {
 	numeroAbono: string;
 
 	notaMaxLength: number;
-	nota: string;
+	comentario: string;
 
     constructor() {}
 }

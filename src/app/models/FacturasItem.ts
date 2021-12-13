@@ -1,3 +1,5 @@
+import { ComboItem } from "./ComboItem";
+
 export class FacturasItem {
 
     tipo: string;//"FACTURA" o "ABONO"
@@ -90,7 +92,7 @@ export class FacturasItem {
 	bancosCodigo: string;
 
 	estadosFiltros: string[];
-
+	cuentasBanco: ComboItem[];
 
 	constructor() { };
 
