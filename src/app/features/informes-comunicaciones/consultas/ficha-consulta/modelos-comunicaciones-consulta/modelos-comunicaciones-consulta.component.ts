@@ -90,6 +90,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
 
     this.cols = [
       { field: 'nombre', header: 'informesYcomunicaciones.consultas.ficha.modelosComunicacion.modelo' },
+      { field: 'institucion', header: 'censo.busquedaClientesAvanzada.literal.colegio' }
     ]
 
 

@@ -73,6 +73,19 @@ export class DatosGeneralesFichaComponent implements OnInit {
       { label: "Sí", value: 1 }
     ];
 
+    this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
+    if (this.bodyModelo.fechaBaja) {
+      sessionStorage.setItem("soloLectura", "true");
+    } else {
+      sessionStorage.setItem("soloLectura", "false");
+    }
+
+    if (this.bodyModelo.porDefecto == 'SI') {
+      sessionStorage.setItem("esPorDefecto", "SI");
+    } else {
+      sessionStorage.setItem("esPorDefecto", "NO");
+    }
+
     this.getInstitucion();
 
     this.getClasesComunicaciones();
@@ -250,7 +263,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
         this.soloLectura = true;
       } else {
 
-        this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
         if (this.bodyModelo != undefined && this.bodyModelo != null) {
           if (this.bodyModelo.porDefecto == 'SI' && this.institucionActual != '2000') {
             if (

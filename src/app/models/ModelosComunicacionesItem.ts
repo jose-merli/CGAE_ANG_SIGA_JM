@@ -17,5 +17,6 @@ export class ModelosComunicacionesItem {
   plantillas: any;
   generarExcel:number;
   data: boolean;
+  fechaBaja: any;
   constructor() { }
 }
