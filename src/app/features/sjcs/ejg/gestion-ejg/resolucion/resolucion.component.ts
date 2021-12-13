@@ -183,6 +183,7 @@ export class ResolucionComponent implements OnInit {
     this.comboFundamentoJurid = [];
     if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) {
       this.isDisabledFundamentosJurid = false;
+      this.resolucion.idFundamentoJuridico = null;
       this.getComboFundamentoJurid();
     } else {
       this.isDisabledFundamentosJurid = true;
