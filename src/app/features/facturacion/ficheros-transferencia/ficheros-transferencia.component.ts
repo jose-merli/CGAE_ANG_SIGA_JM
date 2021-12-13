@@ -43,7 +43,7 @@ export class FicherosTransferenciaComponent implements OnInit {
       n => {
         this.progressSpinner = false;
 
-        this.datos = JSON.parse(n.body).ficherosTransferenciasItems;
+        this.datos = JSON.parse(n.body).ficherosAbonosItems;
         this.buscar = true;
         let error = JSON.parse(n.body).error;
 

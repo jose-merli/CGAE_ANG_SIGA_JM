@@ -1,5 +1,7 @@
 import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/message';
+import { TranslateService } from '../../../../../commons/translate';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FicherosDevolucionesItem } from '../../../../../models/FicherosDevolucionesItem';
 import { CommonsService, KEY_CODE } from '../../../../../_services/commons.service';
@@ -13,27 +15,30 @@ import { SigaServices } from '../../../../../_services/siga.service';
 })
 export class FiltrosFicherosDevolucionesComponent implements OnInit {
 
-  msgs: Message[] = [];
-  progressSpinner: boolean = false;
-  
   @Output() busqueda = new EventEmitter<boolean>();
+  
   permisoEscritura: boolean;
-
   showDatosGenerales: boolean = true;
   showSumatorios: boolean = true;
+  progressSpinner: boolean = false;  
+  
+  msgs: Message[] = [];
+  comboCuentasBancarias: ComboItem[] = [];
+
+  fechaHoy = new Date();
 
   body: FicherosDevolucionesItem = new FicherosDevolucionesItem();
   
-  comboCuentasBancarias: ComboItem[] = [];
-
   constructor(
     private persistenceService: PersistenceService,
     private sigaServices: SigaServices,
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.progressSpinner = true;
+    this.getComboCuentaBancaria()
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
@@ -45,23 +50,28 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
       this.persistenceService.clearFiltros();
       sessionStorage.removeItem("volver");
 
-      this.busqueda.emit();
+      this.searchFicherosDevoluciones();
+    }else{
+      this.body.fechaCreacionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));
     }
-
-    this.getComboCuentaBancaria().then(() => this.progressSpinner = false);
   }
 
   // Combo de cuentas bancarias
-  getComboCuentaBancaria(): Promise<any> {
-    return this.sigaServices.get("facturacionPyS_comboCuentaBancaria").toPromise()
-      .then(
-        n => {
-          this.comboCuentasBancarias = n.combooItems;
-          this.commonsService.arregloTildesCombo(this.comboCuentasBancarias);
-        },
-        err => {
-          console.log(err);
-        });
+  getComboCuentaBancaria(){
+    this.progressSpinner = true
+
+    this.sigaServices.get("facturacionPyS_comboCuentaBancaria").subscribe(
+      n => {
+        this.comboCuentasBancarias = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboCuentasBancarias);
+        this.progressSpinner = false
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
+        this.progressSpinner = false
+      }
+    );
   }
 
   // Clear filters
@@ -84,26 +94,45 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
 
   // Buscar ficheros de devoluciones
   searchFicherosDevoluciones(): void {
-    console.log(this.body);
-    this.persistenceService.setFiltros(this.body);
-    this.busqueda.emit();
+    if(this.checkFilters()){
+      this.busqueda.emit();
+    }
   }
 
   // Nuevo fichero de devolución
   nuevoFicheroDevolucion(): void {
-    
+    if (sessionStorage.getItem("FicherosAdeudosItem")) {
+      sessionStorage.removeItem("FicherosAdeudosItem");
+    }
+
+    this.persistenceService.clearDatos();
+    sessionStorage.setItem("Nuevo", "true");
+    this.router.navigate(["/fichaFicherosDevoluciones"]);
   }
 
-  fillFechaCreacionDesde(event): void {
-    this.body.fechaCreacionDesde = event;
-  }
+  checkFilters() {
+    if (this.body.facturacion != undefined)
+      this.body.facturacion = this.body.facturacion.trim();
 
-  fillFechaCreacionHasta(event): void {
-    this.body.fechaCreacionHasta = event;
+      
+    if ((this.body.bancosCodigo == null) && (this.body.fechaCreacionDesde == null) &&
+      (this.body.fechaCreacionHasta == null)) {
+      
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      return false;
+    } else {
+      return true;
+    }
+  }
+  
+  fillFecha(event, campo) {
+    if(campo==='creacionDesde')
+      this.body.fechaCreacionDesde = event;
+    else if(campo==='creacionHasta')
+      this.body.fechaCreacionHasta = event;
   }
 
   // Funciones de utilidad
-
   goTop() {
     document.children[document.children.length - 1]
     let top = document.getElementById("top");

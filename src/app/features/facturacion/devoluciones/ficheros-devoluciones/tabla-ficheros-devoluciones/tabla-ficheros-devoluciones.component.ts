@@ -17,6 +17,7 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
 
   //Resultados de la busqueda
   @Input() datos: FicherosDevolucionesItem[];
+  @Input() filtro;
   @Output() busqueda = new EventEmitter<boolean>();
 
   // Elementos para la tabla
@@ -80,9 +81,11 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
   }
 
   // Abrir ficha de fichero de devoluciones
-  openTab(selectedRow) {
-    let ficherosDevolucionesItem: FicherosDevolucionesItem = selectedRow;
-    sessionStorage.setItem("ficherosDevolucionesItem", JSON.stringify(ficherosDevolucionesItem));
+  openTab(dato) {
+
+    sessionStorage.setItem("FicherosDevolucionesItem", JSON.stringify(dato));
+    this.persistenceService.setFiltros(this.filtro);
+
     this.router.navigate(["/fichaFicherosDevoluciones"]);
   }
 

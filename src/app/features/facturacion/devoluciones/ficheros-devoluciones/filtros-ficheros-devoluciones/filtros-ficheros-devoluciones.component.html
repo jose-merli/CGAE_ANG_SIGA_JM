@@ -18,27 +18,25 @@
     <div *ngIf="showDatosGenerales" class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Cuenta Bancaria Entidad</label>
+          <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.bancosCodigo' placeholder="Seleccionar"
             [options]="comboCuentasBancarias" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Fecha creación desde</label>
-          <app-fecha [(value)]="body.fechaCreacionDesde"
-            (valueChangeSelected)="fillFechaCreacionDesde($event)" (valueChangeInput)="fillFechaCreacionDesde($event)">
+          <label>{{ "facturacion.ficherosAdeudos.fechaCreacionDesde" | translate }}</label>
+          <app-fecha [(value)]="body.fechaCreacionDesde" (valueChangeSelected)="fillFecha($event, 'creacionDesde')" (valueChangeInput)="fillFecha($event, 'creacionDesde')" [maxDate]="body.fechaCreacionHasta">
           </app-fecha>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Fecha creación hasta</label>
-          <app-fecha [(value)]="body.fechaCreacionHasta"
-            (valueChangeSelected)="fillFechaCreacionHasta($event)" (valueChangeInput)="fillFechaCreacionHasta($event)">
+          <label>{{ "facturacion.ficherosAdeudos.fechaCreacionHasta" | translate }}</label>
+          <app-fecha [(value)]="body.fechaCreacionHasta" (valueChangeSelected)="fillFecha($event, 'creacionHasta')" (valueChangeInput)="fillFecha($event, 'creacionHasta')" [minDate]="(body.fechaCreacionDesde!=undefined ? body.fechaCreacionDesde : fechaHoy)">
           </app-fecha>
         </div>
       </div>
     </div>
 
     <!-- Sumatorios -->
-    <p class="title-module" (click)="onHideSumatorios()">Sumatorios
+    <p class="title-module" (click)="onHideSumatorios()">{{ 'facturacion.ficherosAdeudos.sumatorio' |translate }}
       <i *ngIf="showSumatorios" class="fa fa-angle-up float-right"></i>
       <i *ngIf="!showSumatorios" class="fa fa-angle-down float-right"></i>
     </p>
@@ -46,20 +44,20 @@
     <div *ngIf="showSumatorios" class="module vista-avanzada">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Importe total desde</label>
-          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeTotalDesde" maxlength="10" pInputText>
+          <label>{{ 'facturacion.ficherosAdeudos.importeTotalDesde' | translate }}</label>
+          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeTotalDesde" pInputText />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Importe total hasta</label>
-          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeTotalHasta" maxlength="10" pInputText>
+          <label>{{ 'facturacion.ficherosAdeudos.importeTotalHasta' | translate }}</label>
+          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeTotalHasta" pInputText />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Número facturas desde</label>
-          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.numRecibosDesde" maxlength="10" pInputText>
+          <label>{{ 'facturacion.ficherosAdeudos.numFacturasDesde' | translate }}</label>
+          <input type="number" class="form-control" [(ngModel)]="body.numRecibosDesde" pInputText />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>Número facturas hasta</label>
-          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.numRecibosHasta" maxlength="10" pInputText>
+          <label>{{ 'facturacion.ficherosAdeudos.numFacturasHasta' | translate }}</label>
+          <input type="number" class="form-control" [(ngModel)]="body.numRecibosHasta" pInputText />
         </div>
       </div>
     </div>
