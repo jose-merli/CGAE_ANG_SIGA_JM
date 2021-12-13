@@ -24,6 +24,8 @@ export class FicherosDevolucionesComponent implements OnInit {
   buscar: boolean = false;
   datos: FicherosDevolucionesItem[] = [];
 
+  filtro;
+
   @ViewChild(FiltrosFicherosDevolucionesComponent) filtros;
   @ViewChild(TablaFicherosDevolucionesComponent) tabla;
 
@@ -35,17 +37,19 @@ export class FicherosDevolucionesComponent implements OnInit {
   ) {  }
 
   ngOnInit() {
+    this.buscar = false;
+    // this.permisoEscritura=true //cambiar cuando se implemente los permisos
   }
 
   searchFicherosDevoluciones() {
-    let filtros = JSON.parse(JSON.stringify(this.filtros.body));
+    this.filtro = JSON.parse(JSON.stringify(this.filtros.body));
     this.progressSpinner = true;
 
-    this.sigaServices.post("facturacionPyS_getFicherosDevoluciones", filtros).subscribe(
+    this.sigaServices.post("facturacionPyS_getFicherosDevoluciones", this.filtro).subscribe(
       n => {
         this.datos = JSON.parse(n.body).ficherosDevolucionesItems;
         let error = JSON.parse(n.body).error;
-        console.log(this.datos);
+        this.progressSpinner = false;
 
         this.datos.forEach(d => {
           d.fechaCreacion = this.transformDate(d.fechaCreacion);

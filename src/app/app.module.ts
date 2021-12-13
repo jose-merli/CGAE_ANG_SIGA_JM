@@ -557,8 +557,6 @@ import { FiltrosFacturasComponent } from './features/facturacion/facturas/filtro
 import { TablaFacturasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas.component';
 import { GestionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/gestion-facturas.component';
 import { DatosCargaDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/datos-carga-devoluciones/datos-carga-devoluciones.component';
-import { CuentaEntidadDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/cuenta-entidad-devoluciones/cuenta-entidad-devoluciones.component';
-import { FacturasDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/facturas-devoluciones/facturas-devoluciones.component';
 import { ObservacionesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/observaciones-facturas/observaciones-facturas.component';
 import { DatosGeneralesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/datos-generales-facturas/datos-generales-facturas.component';
 import { EstadosPagosFacturasComponent } from './features/facturacion/facturas/gestion-facturas/estados-pagos-facturas/estados-pagos-facturas.component';
@@ -1057,8 +1055,6 @@ enableRipple(true);
 		TablaFacturasComponent,
 		GestionFacturasComponent,
 		DatosCargaDevolucionesComponent,
-		CuentaEntidadDevolucionesComponent,
-		FacturasDevolucionesComponent,
 		ObservacionesFacturasComponent,
 		DatosGeneralesFacturasComponent,
 		EstadosPagosFacturasComponent,
