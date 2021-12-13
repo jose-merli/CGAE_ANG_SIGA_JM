@@ -2,9 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { FicherosAbonosItem } from '../../../../../models/sjcs/FicherosAbonosItem';
-import { SigaStorageService } from '../../../../../siga-storage.service';
-import { CommonsService } from '../../../../../_services/commons.service';
-import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-datos-generacion-fich-transferencias',
@@ -14,6 +11,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 export class DatosGeneracionFichTransferenciasComponent implements OnInit {
 
   @Input() openTarjetaDatosGeneracion;
+  @Input() bodyInicial;
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
@@ -32,17 +30,13 @@ export class DatosGeneracionFichTransferenciasComponent implements OnInit {
     activa: true
   }
 
-  constructor(private sigaServices: SigaServices, private confirmationService: ConfirmationService,
-    private commonsServices: CommonsService, private translateService: TranslateService,
-    private localStorageService: SigaStorageService) { }
+  constructor(private confirmationService: ConfirmationService, private translateService: TranslateService) { }
 
   async ngOnInit() {
-    // await this.rest();
+    this.body =  JSON.parse(JSON.stringify(this.bodyInicial));
 
-    // if(this.body.idInstitucion)
-    //   this.cargaDatosSEPA(this.body.idInstitucion);
-    // else 
-    //   this.cargaDatosSEPA(this.localStorageService.institucionActual);
+    if(undefined!=this.body.fechaCreacion)
+      this.body.fechaCreacion= new Date(this.body.fechaCreacion);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

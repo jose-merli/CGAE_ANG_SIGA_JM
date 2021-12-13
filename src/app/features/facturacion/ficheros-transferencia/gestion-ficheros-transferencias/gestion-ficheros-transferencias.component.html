@@ -2,13 +2,13 @@
   <div class="header-title">
       <i class="fa fa-square"></i>
       <p>{{'menu.justiciaGratuita' | translate}}
-          <i class="fa fa-angle-right"></i>{{"menu.facturacion" | translate}}
+          <i class="fa fa-angle-right"></i>{{ 'facturacionPyS.ficherosAdeudos.gestionFicherosTransferencias' | translate}}
   </div>
   <div>
       <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosResumen" [icono]="'clipboard'" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
       </app-tarjeta-resumen-fija>
 
-      <app-datos-generacion-fich-transferencias [openTarjetaDatosGeneracion]="openTarjetaDatosGeneracion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-datos-generacion-fich-transferencias>
+      <app-datos-generacion-fich-transferencias [bodyInicial]="body" [openTarjetaDatosGeneracion]="openTarjetaDatosGeneracion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-datos-generacion-fich-transferencias>
 
       <app-cuenta-entidad-adeudos *ngIf="modoEdicion" [bodyInicial]="body"></app-cuenta-entidad-adeudos>
 

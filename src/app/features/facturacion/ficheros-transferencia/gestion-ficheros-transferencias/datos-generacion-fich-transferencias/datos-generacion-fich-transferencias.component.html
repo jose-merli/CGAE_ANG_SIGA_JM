@@ -1,5 +1,5 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="busqueda-container" id="datosGeneracion">
+<div class="ficha-container" id="datosGeneracion">
   <div class="card" id="top">
     <div class="card-header header-ficha">
       <div *ngIf="!esFichaActiva('datosGeneracion')" class="form-row">
@@ -9,14 +9,19 @@
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
-          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('datosGeneracion')">
-            <label class="mr-auto title-ficha pointer">{{ 'facturacionPyS.ficherosAdeudos.datosGeneracion' | translate }}</label>
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGeneracion')">
+            <label class="mr-auto title-ficha pointer">{{ 'menu.facturacion.facturas' | translate }}</label>
+            <div class="d-flex justify-content-between default">
+              <label class="fa fa-angle-down float-right ml-auto" (click)="abreCierraFicha('datosGeneracion')" *ngIf="!esFichaActiva('datosGeneracion')"></label>
+            </div>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>{{ "administracion.grupos.literal.id" | translate }}: <span>{{body.idDisqueteAbono}}</span></label>
-            <label>{{ "informesycomunicaciones.comunicaciones.busqueda.fechaCreacion" | translate }}: <span>{{body.fecha | date: 'dd/MM/yyyy'}}</span></label>
-            <i class="fa fa-angle-down float-right ml-auto" (click)="abreCierraFicha('datosGeneracion')"
-              *ngIf="!esFichaActiva('datosGeneracion')"></i> 
+            <label>{{ 'administracion.grupos.literal.id' | translate }}: 
+              <span>{{ body.idDisqueteAbono }}</span>
+            </label>
+            <label>{{ 'informesycomunicaciones.enviosMasivos.fechaCreacion' | translate }}: 
+              <span>{{ body.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
+            </label>
           </div>
         </div>
       </div>
@@ -31,33 +36,30 @@
       </div>
     </div>
     <div *ngIf="esFichaActiva('datosGeneracion')" class="card-body card-body-ficha">
-      <div class="row">
-        <div class="form-row">
-          <!-- <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ ""administracion.grupos.literal.id" | translate }}</label>
-            <input type="text" class="form-control" pInputText [(ngModel)]="body.idDisqueteAbono" disabled/>
-          </div>
-          <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoPrimerosRecibos" | translate }}</label>
-            <app-fecha [(value)]="body.fecha" disabled></app-fecha>
-          </div>
-          <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoRecibosRecurrentes" | translate }}</label>
-            <input type="text" class="form-control" pInputText [(ngModel)]="body.idDisqueteCargos" disabled/>
-          </div>
-          <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoRecibosCOR" | translate }}</label>
-            <input type="text" class="form-control" pInputText [(ngModel)]="body.idDisqueteCargos" disabled/>
-          </div> -->
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "administracion.grupos.literal.id" | translate }}</label>
+          <input type="text" class="form-control" pInputText [(ngModel)]="body.idDisqueteAbono" disabled/>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "informesycomunicaciones.enviosMasivos.fechaCreacion" | translate }}</label>
+          <app-fecha [(value)]="body.fechaCreacion" disabled></app-fecha>
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "facturacionPyS.ficherosAdeudos.gestionFicherosTransferencias.propositoSepa" | translate }}</label>
+          <!-- <input type="text" class="form-control" pInputText [(ngModel)]="body.propositoSepa" disabled/> -->
+          <input type="text" class="form-control" pInputText disabled/> 
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ "facturacionPyS.ficherosAdeudos.gestionFicherosTransferencias.propositoOtros" | translate }}</label>
+          <!-- <input type="text" class="form-control" pInputText [(ngModel)]="body.propositoOtros" disabled/> -->
+          <input type="text" class="form-control" pInputText disabled/> 
         </div>
       </div>
     </div>
 
     <div *ngIf="esFichaActiva('datosGeneracion')" class="card-footer">
       <div class="text-right main-button ">
-        <!-- <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion" type="button"
-          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button> -->
-        
         <button pButton type="button" icon="fas fa-download" iconPos="left" (click)="descargarFichero()" label="{{'general.boton.download' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-eraser" iconPos="left" (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
