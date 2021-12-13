@@ -27,7 +27,8 @@ export class DeudorFacturasComponent implements OnInit {
   }
 
   navigateToSociedad() {
-    this.progressSpinner = true;
+    if (this.bodyInicial.idDeudor) {
+      this.progressSpinner = true;
     
     this.sigaServices.postPaginado(
       "fichaColegialSociedades_searchSocieties",
@@ -51,6 +52,7 @@ export class DeudorFacturasComponent implements OnInit {
         this.router.navigate(["/fichaPersonaJuridica"]);
       } 
     });
+    }
   }
 
   // Mensajes en pantalla

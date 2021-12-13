@@ -72,13 +72,13 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Definición de las columnas
   getCols() {
     this.cols = [
-      { field: "fechaModificaion", header: "Fecha", width: "10%" },
-      { field: "accion", header: "Acción Realizada", width: "20%" },
-      { field: "nota", header: "Nota de Acción", width: "20%" },
-      { field: "estado", header: "Estado", width: "20%" },
-      { field: "iban", header: "Cuenta Bancaria", width: "10%" },
-      { field: "impTotalPagado", header: "Movimiento", width: "10%" },
-      { field: "impTotalPorPagar", header: "Importe Pendiente", width: "10%" }
+      { field: "fechaModificaion", header: "facturacionSJCS.facturacionesYPagos.fecha", width: "10%" },
+      { field: "accion", header: "facturacion.facturas.estadosPagos.accion", width: "20%" },
+      { field: "nota", header: "facturacion.facturas.estadosPagos.nota", width: "20%" },
+      { field: "estado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "20%" },
+      { field: "iban", header: "facturacion.seriesFactura.cuentaBancaria", width: "10%" },
+      { field: "impTotalPagado", header: "facturacion.facturas.estadosPagos.movimiento", width: "10%" },
+      { field: "impTotalPorPagar", header: "facturacionSJCS.facturacionesYPagos.importePendiente", width: "10%" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -362,8 +362,21 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   // Modal para guardar el nuevo estado
 
-  cerrarDialog() {
+  isValid(): boolean {
+    return false;
+  }
 
+  guardar() {
+    if (this.isValid()) {
+      
+    } else {
+
+    }
+  }
+
+  cerrarDialog() {
+    this.showModalNuevoEstado = false;
+    this.nuevoEstado = undefined;
   }
 
   // Enlace a la factura

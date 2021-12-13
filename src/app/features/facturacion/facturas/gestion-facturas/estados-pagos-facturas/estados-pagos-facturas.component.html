@@ -12,7 +12,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('estadosPagos')">
-            <label class="mr-auto title-ficha pointer">Estados y Pagos</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.facturas.estadosPagos.literal' | translate }}</label>
           </div>
           <div class="d-flex justify-content-end default">
             
@@ -28,7 +28,7 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Estados y Pagos</label>
+        <label class="title-ficha pointer">{{ 'facturacion.facturas.estadosPagos.literal' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -37,7 +37,7 @@
     <div *ngIf="esFichaActiva('estadosPagos')" class="card-body card-body-ficha">
       <!-- TABLA RESULTADOS -->
       <p-table [autoLayout]="true" [value]="grupos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
-        class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
+        class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
         selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
         <ng-template pTemplate="colgroup" let-columns>
           <colgroup>
@@ -94,8 +94,8 @@
                     <span>{{ dato[col.field] + ' €' }}</span>
                   </div>
                   <div *ngSwitchCase="'nota'">
-                    <span *ngIf="dato['idCargos']">Fichero <a class="enlace" (click)="navigateToFicheroAdeudos(dato)">{{ dato['idCargos'] }}</a></span>
-                    <span *ngIf="dato['enlaceFactura']">Factura <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['numeroFactura'] }}</a></span>
+                    <span *ngIf="dato['idCargos']">{{ 'facturacion.cmc.fichero' | translate }} <a class="enlace" (click)="navigateToFicheroAdeudos(dato)">{{ dato['idCargos'] }}</a></span>
+                    <span *ngIf="dato['enlaceFactura']">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['numeroFactura'] }}</a></span>
                     <span *ngIf="dato['idSJCS']">Abono <a class="enlace" (click)="navigateToSJCS(dato)">{{ dato['idSJCS'] }}</a></span>
                     <span *ngIf="dato['enlaceAbono']">Rectif. <a class="enlace" (click)="navigateToAbono(dato)">{{ dato['numeroAbono'] }}</a></span>
                   </div>
@@ -133,19 +133,19 @@
     <div *ngIf="esFichaActiva('estadosPagos')" class="card-footer">
       <div class="text-right main-button">
         <button pButton [disabled]="bodyInicial.tipo != 'ABONO'" type="button" icon="fa fa-plus" iconPos="left"
-          (click)="nuevoAbono()" label="Nuevo Abono"></button>
+          (click)="nuevoAbono()" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
         <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
-          (click)="anular()" label="Anular"></button>
+          (click)="anular()" label="{{ 'general.boton.anular' | translate }}"></button>
         <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
-          (click)="devolverConComision()" label="Devolver con Comisión al Cliente"></button>
+          (click)="devolverConComision()" label="{{ 'facturacion.facturas.estadosPagos.devolverConComision' | translate }}"></button>
         <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
-          (click)="devolver()" label="Devolver"></button>
+          (click)="devolver()" label="{{ 'facturacion.facturas.estadosPagos.devolver' | translate }}"></button>
         <button pButton type="button" icon="fa fa-trash" iconPos="left"
-          (click)="eliminar()" label="Eliminar"></button>
+          (click)="eliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
         <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoCobro()" label="Nuevo Cobro"></button>
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="renegociar()" label="Renegociar"></button>
+          (click)="renegociar()" label="{{ 'general.boton.renegociar' | translate }}"></button>
       </div>
     </div>
   </div>
@@ -162,32 +162,32 @@
   </p-header>
   <div *ngIf="nuevoEstado" class="form-row">
     <div class="form-group-interlineado col-lg-12 col-md-12" >
-      <label>Fecha</label>
+      <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}</label>
       <app-fecha [(value)]="nuevoEstado.fechaModificaion" [minDate]="nuevoEstado.fechaMin" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"></app-fecha>
     </div>
     <div *ngIf="nuevoEstado.idAccion == '7'" class="form-group-interlineado col-lg-12 col-md-12">
-      <label>Estado</label>
+      <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
       <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.idEstado' placeholder="Seleccionar"
         [options]="comoEstados" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
     </div>
     <div class="form-group-interlineado col-lg-12 col-md-12">
-      <label>Nota de acción</label>
+      <label>{{ 'facturacion.facturas.estadosPagos.nota' | translate }}</label>
       <input *ngIf="nuevoEstado.idAccion != '6'" type="text" class="form-control" [(ngModel)]="nuevoEstado.nota" maxlength="nuevoEstado.notaMaxLength" pInputText>
       <p-dropdown *ngIf="nuevoEstado.idAccion == '6'" class="select-form" [(ngModel)]='nuevoEstado.nota' placeholder="Seleccionar"
         [options]="comboNotas" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
     </div>
     <div class="form-group-interlineado col-lg-12 col-md-12">
-      <label>Cuenta bancaria</label>
+      <label>{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}</label>
       <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.bancosCodigo' placeholder="Seleccionar" [disabled]="!enabledComboCuentasBancarias()"
         [options]="comboCuentasBancarias" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
     </div>
     <div class="form-group-interlineado col-lg-12 col-md-12">
-      <label>Movimiento</label>
+      <label>{{ 'facturacion.facturas.estadosPagos.movimiento' | translate }}</label>
       <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPagado" 
         maxlength="10" (change)="onChangeImporte()" [disabled]="['6','7','8'].includes(nuevoEstado.idAccion)" pInputText>
     </div>
     <div class="form-group-interlineado col-lg-12 col-md-12">
-      <label>Importe pendiente</label>
+      <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}</label>
       <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPorPagar" 
         maxlength="10" (change)="onChangeImporte()" [disabled]="['4','6','7','8'].includes(nuevoEstado.idAccion)" pInputText>
     </div>

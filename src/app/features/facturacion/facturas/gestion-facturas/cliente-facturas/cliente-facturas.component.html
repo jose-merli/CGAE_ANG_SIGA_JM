@@ -12,14 +12,14 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
-            <label class="mr-auto title-ficha pointer">Cliente</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.productos.Cliente' | translate }}</label>
 
             <label class="mr-3">
               <i (click)="navigateToCliente();$event.stopPropagation();"
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToCliente();$event.stopPropagation();">
                 <span style="color: blue; text-decoration: underline;cursor:pointer;">
-                  Ficha Cliente
+                  {{ 'facturacion.facturas.cliente.ficha' | translate }}
                 </span>
               </a>
             </label>

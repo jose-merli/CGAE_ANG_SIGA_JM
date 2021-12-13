@@ -28,7 +28,8 @@ export class FacturacionFacturasComponent implements OnInit {
   }
 
   navigateToFacturacion() {
-    this.progressSpinner = true;
+    if (this.bodyInicial.idFacturacion) {
+      this.progressSpinner = true;
     let filtros = { idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idFacturacion };
 
     this.sigaServices.post("facturacionPyS_getFacturacionesProgramadas", filtros).toPromise().then(
@@ -51,6 +52,7 @@ export class FacturacionFacturasComponent implements OnInit {
         this.router.navigate(["/fichaFactProgramadas"]);
       } 
     });
+    }
   }
 
   // Mensajes en pantalla

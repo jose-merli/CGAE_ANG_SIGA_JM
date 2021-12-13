@@ -44,9 +44,9 @@ export class ComunicacionesFacturasComponent implements OnInit {
   // Definición de las columnas
   getCols() {
     this.cols = [
-      { field: "orden", header: "Orden", width: "10%" },
-      { field: "fechaEnvio", header: "Fecha", width: "10%" },
-      { field: "documento", header: "Documento", width: "80%" }
+      { field: "orden", header: "administracion.informes.literal.orden", width: "10%" },
+      { field: "fechaEnvio", header: "facturacionSJCS.facturacionesYPagos.fecha", width: "10%" },
+      { field: "documento", header: "justiciaGratuita.ejg.documentacion.Documento", width: "80%" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));

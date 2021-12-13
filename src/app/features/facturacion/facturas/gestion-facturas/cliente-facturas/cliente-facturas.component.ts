@@ -28,7 +28,8 @@ export class ClienteFacturasComponent implements OnInit {
   }
 
   navigateToCliente() {
-    this.progressSpinner = true;
+    if (this.bodyInicial.idCliente) {
+      this.progressSpinner = true;
 
     sessionStorage.setItem("consulta", "true");
     let filtros = { idPersona: this.bodyInicial.idCliente };
@@ -58,6 +59,7 @@ export class ClienteFacturasComponent implements OnInit {
         this.router.navigate(["/fichaColegial"]);
       } 
     });
+    }
   }
 
   // Mensajes en pantalla

@@ -12,7 +12,7 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('comunicaciones')">
-            <label class="mr-auto title-ficha pointer">Comunicaciones de Cobros y Recobros</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.facturas.comunicacionesCobrosRecobros' | translate }}</label>
           </div>
           <div class="d-flex justify-content-end default">
             
@@ -28,7 +28,7 @@
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Comunicaciones de Cobros y Recobros</label>
+        <label class="title-ficha pointer">{{ 'facturacion.facturas.comunicacionesCobrosRecobros' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -102,9 +102,9 @@
     <div *ngIf="esFichaActiva('comunicaciones')" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="comunicar()" label="Comunicar recobro"></button>
+          (click)="comunicar()" label="{{ 'facturacion.facturas.comunicaciones.comunicar' | translate }}"></button>
         <button pButton type="button" icon="fa fa-download" iconPos="left"
-        (click)="descargar()" label="Descargar"></button>
+        (click)="descargar()" label="{{ 'general.boton.download' | translate }}"></button>
       </div>
     </div>
   </div>

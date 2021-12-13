@@ -1,4 +1,3 @@
-import { resolve } from '@angular-devkit/core';
 import { DatePipe, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/primeng';
@@ -102,9 +101,59 @@ export class GestionFacturasComponent implements OnInit {
     this.enlacesTarjetaResumen = [];
 
     this.enlacesTarjetaResumen.push({
+      label: "facturacion.productos.Cliente",
+      value: document.getElementById("cliente"),
+      nombre: "cliente",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "facturacionSJCS.tarjGenFac.facturacion",
+      value: document.getElementById("facturacion"),
+      nombre: "facturacion",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.facturas.deudor.literal",
+      value: document.getElementById("deudor"),
+      nombre: "deudor",
+    });
+
+    this.enlacesTarjetaResumen.push({
       label: "general.message.datos.generales",
       value: document.getElementById("datosGenerales"),
       nombre: "datosGenerales",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.facturas.estadosPagos.literal",
+      value: document.getElementById("estadosPagos"),
+      nombre: "estadosPagos",
+    });
+
+    if (this.body.tipo == "FACTURA") {
+      this.enlacesTarjetaResumen.push({
+        label: "facturacion.facturas.observaciones.literal",
+        value: document.getElementById("observaciones"),
+        nombre: "observaciones",
+      });
+    } else {
+      this.enlacesTarjetaResumen.push({
+        label: "facturacion.facturas.observacionesRect.literal",
+        value: document.getElementById("observacionesRectificativa"),
+        nombre: "observacionesRectificativa",
+      });
+    }
+
+    this.enlacesTarjetaResumen.push({
+      label: this.body.tipo == "FACTURA" ? "facturacion.facturas.lineas.literal" : "facturacion.facturas.lineasRect.literal",
+      value: document.getElementById("lineas"),
+      nombre: "lineas",
+    });
+
+    this.enlacesTarjetaResumen.push({
+      label: "facturacion.facturas.comunicacionesCobrosRecobros",
+      value: document.getElementById("comunicaciones"),
+      nombre: "comunicaciones",
     });
 
   }

@@ -53,7 +53,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getComboTiposIVA();
-    this.getParametrosFACTURACION();
+    //this.getParametrosFACTURACION();
    }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -116,22 +116,22 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   getColsFactura() {
     this.cols = [
       { field: "descripcion", header: "general.description", width: "30%", editable: this.modificarDescripcion },
-      { field: "precioUnitario", header: "Precio Unitario", width: "10%", editable: this.modificarImporteUnitario },
-      { field: "cantidad", header: "Cantidad", width: "10%", editable: false },
-      { field: "importeNeto", header: "Importe Neto", width: "10%", editable: false }, 
-      { field: "tipoIVA", header: "Tipo IVA", width: "10%", editable: this.modificarIVA },
-      { field: "importeIVA", header: "Importe IVA", width: "10%", editable: false },
-      { field: "importeTotal", header: "Importe Total", width: "10%", editable: false },
-      { field: "importeAnticipado", header: "Importe Anticip.", width: "10%", editable: false },
+      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.modificarImporteUnitario },
+      { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%", editable: false },
+      { field: "importeNeto", header: "facturacion.productos.importeNeto", width: "10%", editable: false }, 
+      { field: "tipoIVA", header: "facturacion.facturas.lineas.tipoIVA", width: "10%", editable: this.modificarIVA },
+      { field: "importeIVA", header: "facturacion.productos.importeIva", width: "10%", editable: false },
+      { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "10%", editable: false },
+      { field: "importeAnticipado", header: "facturacion.facturas.datosGenerales.impAnticipado", width: "10%", editable: false },
     ];
   }
 
   getColsAbono() {
     this.cols = [
       { field: "descripcion", header: "general.description", width: "40%", editable: true },
-      { field: "precioUnitario", header: "Precio Unitario", width: "10%", editable: true },
-      { field: "cantidad", header: "Cantidad", width: "10%", editable: false },
-      { field: "importeNeto", header: "Importe Neto", width: "10%", editable: false }
+      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: true },
+      { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%", editable: false },
+      { field: "importeNeto", header: "facturacion.productos.importeNeto", width: "10%", editable: false }
       // { field: "importeTotal", header: "Importe Total", width: "20%", editable: false },
     ];
   }
