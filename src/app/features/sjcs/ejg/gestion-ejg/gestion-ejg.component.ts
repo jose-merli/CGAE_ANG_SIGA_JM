@@ -404,7 +404,9 @@ export class GestionEjgComponent implements OnInit {
   }
 
   enviarEnlacesTarjeta() {
-    this.goResol();
+    if(sessionStorage.getItem("actasItem")){
+      this.goResol();
+    }
 
     this.enlacesTarjetaResumen = [];
 
