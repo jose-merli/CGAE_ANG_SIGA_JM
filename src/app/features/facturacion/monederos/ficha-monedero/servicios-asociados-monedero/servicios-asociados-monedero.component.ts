@@ -26,6 +26,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
 
   permisoActualizarServiciosMonedero: boolean = false;
   showModal: boolean = false;
+  deshabilitarGuardar = false;
 
   colsServs = [
     { field: "categoria", header: "facturacion.productos.categoria" },
@@ -104,12 +105,14 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
     this.progressSpinner = true;
 
     this.subscriptionServiciosBusqueda = this.sigaServices.getParam("PyS_getListaServiciosMonedero",
-      "?idLinea=" + this.ficha.idLinea+ "&?idPersona=" + this.ficha.idPersona).subscribe(
+      "?idLinea=" + this.ficha.idLinea+ "&idPersona=" + this.ficha.idPersona).subscribe(
         listaServiciosMonederoDTO => {
 
-          this.serviciosTarjeta = listaServiciosMonederoDTO.listaServiciosMonederoItems;
 
           if (listaServiciosMonederoDTO.error == null) {
+            this.serviciosTarjeta = listaServiciosMonederoDTO.listaServiciosMonederoItems;
+            this.ficha.servicios = JSON.parse(JSON.stringify(listaServiciosMonederoDTO.listaServiciosMonederoItems));
+            this.compareServices();
             // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -188,13 +191,15 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
 
     peticion.servicios = this.serviciosTarjeta;
     
-    this.sigaServices.post("PyS_updateServiciosMonedero", this.ficha).subscribe(
+    this.sigaServices.post("PyS_updateServiciosMonedero", peticion).subscribe(
       n => {
 
         if (n.status == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.ficha.servicios = JSON.parse(JSON.stringify(this.serviciosTarjeta));
+          this.compareServices();
         }
 
         this.progressSpinner = false;
@@ -214,25 +219,41 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
 
     if (msg != null) {
       this.msgs = msg;
-    } else {
+    } 
+    //Las condiciones para deshabilitar el botón "Guardar" para prevenir posibles acciones no autorizadas
+    else if(this.ficha.idLinea == null || this.ficha.servicios == this.serviciosTarjeta){
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
+    }else {
       this.updateServiciosMonedero();
     }
   }
 
   anadirServicio(selectedServicio: ListaServiciosItems) {
-    if(this.serviciosTarjeta.find(el => el.nombre == selectedServicio.descripcion) == undefined){
+    //Se comprueba si el servicio seleccionado ya esta en la tabla
+    if(this.serviciosTarjeta.find(el => el.idServicio == selectedServicio.idservicio && el.idTipoServicios == selectedServicio.idtiposervicios 
+      && el.idServiciosInstitucion == selectedServicio.idserviciosinstitucion) == undefined){
       this.showModal = false;
       let newServicio: ListaServiciosMonederoItem = new ListaServiciosMonederoItem();
       
-      newServicio.fecha = new Date();
+      //Se comprueba si el servicio estaba antes en la tabla
+      if(this.ficha.servicios.find(el => el.idServicio == selectedServicio.idservicio && el.idTipoServicios == selectedServicio.idtiposervicios 
+        && el.idServiciosInstitucion == selectedServicio.idserviciosinstitucion) == undefined){
+          newServicio.fecha = new Date();
+        }
+        else{
+          newServicio.fecha = this.ficha.servicios.find(el => el.idServicio == selectedServicio.idservicio && el.idTipoServicios == selectedServicio.idtiposervicios 
+            && el.idServiciosInstitucion == selectedServicio.idserviciosinstitucion).fecha;
+        }
       newServicio.nombre = selectedServicio.descripcion;
       newServicio.precioPerio = selectedServicio.precioperiodicidad;
 
-      newServicio.idservicio = selectedServicio.idservicio;
-      newServicio.idserviciosinstitucion = selectedServicio.idserviciosinstitucion;
-      newServicio.idtiposervicios = selectedServicio.idtiposervicios; 
+      newServicio.idServicio = selectedServicio.idservicio;
+      newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
+      newServicio.idTipoServicios = selectedServicio.idtiposervicios; 
 
       this.serviciosTarjeta.push(newServicio);
+
+      this.compareServices();
     }
     else{
       this.showMessage("error",
@@ -250,6 +271,18 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
+  }
+
+  borrarServicio(){
+
+    //Se busca cada una de las filas seleccionadas en la tabla y se eliminan
+    for(let row of this.selectedRows){
+      let indx = this.serviciosTarjeta.findIndex(el => el.idServicio == row.idServicio && el.idServiciosInstitucion == row.idServiciosInstitucion && el.idTipoServicios == row.idTipoServicios)
+      this.serviciosTarjeta.splice(indx,1);
+    }
+    this.selectedRows = null;
+    this.numSelectedRows = 0;
+    this.compareServices();
   }
 
   //Inicializa las propiedades necesarias para el dialogo de confirmacion
@@ -333,6 +366,25 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
       return false;
     }
 
+  }
+
+  //TO DO
+  //REVISAR: PENDIENTE DE IMPLEMENTACION
+  compareServices(){
+    this.deshabilitarGuardar = false;
+    // Esto puede ahorrar tiempo
+    // if (this.serviciosTarjeta.length != this.ficha.servicios.length){
+    //     this.deshabilitarGuardar = false;
+    // }
+
+    // if(this.deshabilitarGuardar){
+    //   for (var i = 0, l= this.serviciosTarjeta.length; i < l; i++) {
+    //       if (!this.ficha.servicios.includes(this.serviciosTarjeta[i])) { 
+    //           this.deshabilitarGuardar = false;   
+    //           break;
+    //       }           
+    //   }       
+    // }
   }
 
   //FIN METODOS
