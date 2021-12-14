@@ -78,12 +78,12 @@
         <div class="text-right main-button">
           <!-- Guardar -->
           <button pButton (click)="checkSave()" type="button" icon="far fa-save" iconPos="left"
-            label="{{ 'general.boton.guardar' | translate}}"></button>
+            label="{{ 'general.boton.guardar' | translate}}" [disabled]="ficha.idLinea == null || deshabilitarGuardar"></button>
           <!-- Nuevo -->
           <button pButton (click)="openHideModal()" type="button" icon="fa fa-plus" iconPos="left"
             label="{{ 'general.boton.new' | translate}}"></button>
           <!-- Borrar -->
-          <button pButton (click)="borrarMovimiento()" type="button" icon="fa fa-eraser" iconPos="left"
+          <button pButton (click)="borrarServicio()" type="button" icon="fa fa-eraser" iconPos="left"
             label="{{ 'general.boton.borrar' | translate}}"></button>
         </div>
       </div>
