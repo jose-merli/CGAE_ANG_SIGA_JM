@@ -174,7 +174,7 @@ export class FiltrosFacturasComponent implements OnInit {
 
   // boton de busqueda
   isBuscar() {
-    //console.log(this.estadosSelect);
+    
     if(this.estadosSelect.length>0){
       this.body.estadosFiltroFac = [];
       this.body.estadosFiltroAb = [];
@@ -188,9 +188,6 @@ export class FiltrosFacturasComponent implements OnInit {
     }
 
     this.persistenceService.setFiltros(this.body);
-    console.log(this.body.estadosFiltroAb)
-    console.log(this.body.estadosFiltroFac)
-    console.log(this.body);
     this.buscarFacturas.emit();
 
   }
@@ -201,6 +198,8 @@ export class FiltrosFacturasComponent implements OnInit {
 
   // boton de limpiar
   clearFilters() {
+    
+    this.estadosSelect = [];
     this.body = new FacturasItem();
     this.persistenceService.clearFiltros();
 

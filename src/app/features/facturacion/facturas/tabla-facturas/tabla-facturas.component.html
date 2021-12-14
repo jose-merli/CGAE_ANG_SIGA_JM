@@ -38,28 +38,41 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
+            <div *ngIf="col.field == 'numeroFactura'">
+              <a class="enlace" (click)="openTab(dato)"><span>{{ dato[col.field] }}</span></a>
+            </div>
+
             <div *ngIf="col.field == 'fechaEmision'">
               <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
+            <div *ngIf="col.field == 'numeroColegiado'">
+              <a class="enlace" (click)="navigateToCliente(dato)"><span>{{ dato[col.field] }}</span></a>
+            </div>
+
+            <div *ngIf="col.field == 'nombre'">
+              <a class="enlace" (click)="navigateToCliente(dato)"><span>{{ dato[col.field] }}</span></a>
+            </div>
+
             <div *ngIf="col.field == 'importefacturado' && dato[col.field] != null">
-              <span>{{ dato[col.field] | number:'':'es-ES' }} €</span>
+              <span class="pull-right">{{ dato[col.field] | number:'':'es-ES' }} €</span>
             </div>
 
             <div *ngIf="col.field == 'importeAdeudadoPendiente' && dato[col.field] != null">
-              <span>{{ dato[col.field] | number:'':'es-ES' }} €</span>
+              <span class="pull-right">{{ dato[col.field] | number:'':'es-ES' }} €</span>
             </div>
 
             <div *ngIf="col.field == 'ultimaComunicacion'">
               <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
-            <div *ngIf="col.field != 'importeAdeudadoPendiente' && col.field != 'importefacturado' && col.field != 'fechaEmision' && col.field != 'ultimaComunicacion'">
+            <div *ngIf="col.field != 'numeroFactura' && col.field != 'importeAdeudadoPendiente' && col.field != 'importefacturado' 
+            && col.field != 'fechaEmision' && col.field != 'ultimaComunicacion' && col.field != 'numeroColegiado' && col.field != 'nombre' ">
               <span>{{ dato[col.field] }}</span>
             </div>
 
-            <div *ngIf="col.field === null || col.field === '' ">
-              <span>-</span>
+            <div *ngIf="dato[col.field] == null ">
+              <span class="pull-right">-</span>
             </div>
           </td>
         </tr>
