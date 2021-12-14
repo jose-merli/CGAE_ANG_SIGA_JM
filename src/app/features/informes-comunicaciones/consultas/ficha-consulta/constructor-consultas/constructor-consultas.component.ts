@@ -228,8 +228,7 @@ export class ConstructorConsultasComponent implements OnInit {
 
     this.queryBuilderDTO.consulta = this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules());
     this.queryBuilderDTO.idconsulta = this.consultaBuscador.idConsulta;
-
-    console.log(this.queryBuilderDTO.consulta);
+    
     this.subscriptionGuardarDatosConstructor = this.sigaServices.post("constructorConsultas_guardarDatosConstructor", this.queryBuilderDTO).subscribe(
       response => {
 
