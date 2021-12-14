@@ -15,8 +15,11 @@
           <!--Colegio-->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}}</label>
-            <input class="form-control" type="number" name="anio" min="1900" max="2099" step="1" [(ngModel)]='anio'
-            pInputText />
+            <p-multiSelect class="select-form" [(ngModel)]='anio'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboAnio" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} anios seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll">
+            </p-multiSelect>
           </div>
           
         </div>

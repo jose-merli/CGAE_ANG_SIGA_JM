@@ -82,6 +82,7 @@ export let endpoints_facturacionsjcs: any = {
     impreso190_descargar: "facturacionsjcs/impreso190descargar",
     impreso190_eliminar: "facturacionsjcs/deleteImpreso190",
     impreso190_searchConfImpreso190: "facturacionsjcs/searchConfImpreso190",
+    impreso190_comboAnio: "facturacionsjcs/getComboAnioImpreso190",
 
     /*Endpoints BaremosGuardias*/
     baremosGuardia_buscar: "baremosGuardia/buscar",
