@@ -68,8 +68,6 @@ export class FichaFactProgramadasComponent implements OnInit {
       this.updateEnlacesTarjetaResumen();
     }, 5);
 
-    this.confirmada = this.body.idEstadoConfirmacion == "3";
-
     this.progressSpinner = false;
     this.goTop();
   }

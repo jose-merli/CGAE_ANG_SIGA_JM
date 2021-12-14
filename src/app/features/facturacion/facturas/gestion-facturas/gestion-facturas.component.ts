@@ -38,12 +38,17 @@ export class GestionFacturasComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
 
-    this.body.idFactura = "128741";
-    this.body.tipo = "FACTURA";
-
-    //this.body.idFactura = "45020";
-    //this.body.tipo = "ABONO";
-
+    if (sessionStorage.getItem("facturasItem")) {
+      this.body = JSON.parse(sessionStorage.getItem("facturasItem"));
+      sessionStorage.removeItem("facturasItem");
+    } else if (sessionStorage.getItem("Nuevo")) {
+      sessionStorage.removeItem("Nuevo");
+      this.body = new FacturasItem();
+    } else if (this.body.idFactura == undefined || this.body.tipo) {
+      this.progressSpinner = false;
+      this.location.back();
+    }
+    
     this.getDatosFactura(this.body.idFactura, this.body.tipo).then(() => {
       this.updateTarjetaResumen();
       setTimeout(() => {
@@ -59,6 +64,11 @@ export class GestionFacturasComponent implements OnInit {
     return this.sigaServices.getParam("facturacionPyS_getFactura", `?idFactura=${idFactura}&tipo=${tipo}`).toPromise().then(
       n => {
         let datos: FacturasItem[] = n.facturasItems;
+
+        if (datos == undefined || datos.length == 0) {
+          return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
         this.body = datos[0];
 
         console.log(this.body);
