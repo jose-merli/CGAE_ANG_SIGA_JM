@@ -266,7 +266,7 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
 import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaEtiquetas.component';
 import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
-import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule } from 'primeng/primeng';
+import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule, ScrollPanel, ScrollPanelModule } from 'primeng/primeng';
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
 import { CargasMasivasComponent } from './features/censo/cargas-masivas/cargas-masivas.component';
 import { DatosNotificacionesComponent } from './features/agenda/datos-notificaciones/datos-notificaciones.component';
@@ -546,6 +546,8 @@ import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimie
 import { TarjetaFacturacionGenericaModule } from './features/sjcs/facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.module';
 import { RetencionesIrpfColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/retenciones-irpf-colegial/retenciones-irpf-colegial.component';
 import { TablaBusquedaBaremosModule } from './features/sjcs/facturacionSJCS/baremos-de-guardia/tabla-busqueda-baremos/tabla-busqueda-baremos.module';
+import { TiposAsistenciaComponent } from './features/sjcs/maestros/tiposAsistencia/tiposAsistencia.component';
+import { TiposActuacionComponent } from './features/sjcs/maestros/tiposActuacion/tiposActuacion.component';
 @NgModule({
 	declarations: [
 		TablaResultadoDesplegableComponent,
@@ -998,6 +1000,8 @@ import { TablaBusquedaBaremosModule } from './features/sjcs/facturacionSJCS/bare
 		FiltroGenerarImpreso190Component,
 		TablaGenerarImpreso190Component,
 		RetencionesIrpfColegialComponent,
+		TiposAsistenciaComponent,
+		TiposActuacionComponent
 
 	],
 	imports: [
@@ -1077,7 +1081,8 @@ import { TablaBusquedaBaremosModule } from './features/sjcs/facturacionSJCS/bare
 		TablaResultadoOrderModule,
 		MovimientosVariosModule,
 		TarjetaFacturacionGenericaModule,
-		TablaBusquedaBaremosModule
+		TablaBusquedaBaremosModule,
+		ScrollPanelModule
 	],
 
 	exports: [],

@@ -45,55 +45,67 @@
                 <div class="bloque col-lg-6 col-md-6 col-sm-6 py-2 pl-2">
                     <div class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox name="porDispo" label="Facturar Actuaciones Fuera de Guardia de forma diferente"
+                            <p-checkbox name="facActuaciones" [value]="facActuaciones" (onChange)="onChangeFacActuaciones($event)" label="Facturar Actuaciones Fuera de Guardia de forma diferente"
                                 class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="precioUnico" label="Precio Único"></p-radioButton>
+                            <p-radioButton [disabled]="!disPrecio" (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="unico" label="Precio Único"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="precioTipos" label="Precio por tipos"></p-radioButton>
+                            <p-radioButton [disabled]="!disPrecio" (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="porTipos" label="Precio por tipos"></p-radioButton>
                         </div>
-                        <div class="form-group col-lg-6 col-md-6">
+                        <div  class="form-group col-lg-6 col-md-6">
                             <label>Importe</label>
-                            <input type="number"  [(value)]="filtrosAdi.importe" class="form-control" />
+                            <input [disabled]="!disableImput" type="number"  [(ngModel)]="filtrosAdi.importe" class="form-control" />
                         </div>
-                        <div class="form-group col-lg-6 col-md-6 verticalAlign">
-                            <a>Ir a tipos</a>
+                        <div  class="form-group col-lg-6 col-md-6 verticalAlign">
+                            <a class="enlace" (click)="irAtipos()" *ngIf="modalTipos">Ir a tipos</a>
+                            <a *ngIf="!modalTipos">Ir a tipos</a>
                         </div>
-                        <div class="form-group col-lg-6 col-md-6">
+                        <div  class="form-group col-lg-6 col-md-6">
                             <label>Máximo</label>
-                            <input type="number"  [(value)]="filtrosAdi.importeMax" class="form-control" />
+                            <input type="number" [disabled]="!disableImput" [(ngModel)]="filtrosAdi.importeMax" class="form-control" />
                         </div>
                     </div>
                 </div>
 
                 <div class="bloque col-lg-6 col-md-6 col-sm-6">
-                    <div class="form-row">
+                    <div  class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox name="porDispo" label="Facturar asuntos antiguos con precios de su facturación"
+                            <p-checkbox [disabled]="!disableConfAdi" [value]="facAsuntosAntiguos" name="porDispo" (onChange)="onChangeFacAsuntosAntiguos($event)" label="Facturar asuntos antiguos con precios de su facturación"
                                 class="ml-0">
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox name="porDispo" label="Usar proceso de facturación controlados 2014"
+                            <p-checkbox [disabled]="!disableConfAdi" [value]="procesoFac2014" name="porDispo" (onChange)="onChangeProcesoFac2014($event)" label="Usar proceso de facturación controlados 2014"
                                 class="ml-0">
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox name="porDispo" label="Descontar Guardias que deriven de jucion rápidos"
+                            <p-checkbox [disabled]="!disableConfAdi" [value]="descontar" name="porDispo" (onChange)="onChangeDescontar($event)" label="Descontar Guardias que deriven de jucion rápidos"
                                 class="ml-0">
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="contAsi" label="Contando Asistencias"></p-radioButton>
+                            <p-radioButton [disabled]="!disableConfAdi" value="asi" [(ngModel)]="contAsAc" name="contAsAc"  (click)="changeContAsAc()" label="Contando Asistencias"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="contAc" label="Contando Actuaciones"></p-radioButton>
+                            <p-radioButton [disabled]="!disableConfAdi" value="act" [(ngModel)]="contAsAc" name="contAsAc" (click)="changeContAsAc()" label="Contando Actuaciones"></p-radioButton>
                         </div>
                     </div>
                 </div>
 
+            </div>
+
+            <div class="row">
+                <div class="form-group col-lg-6 col-md-6">
+                    <label>SOJ</label>
+                    <input type="number"  [(ngModel)]="importeSOJ" class="form-control" />
+                </div>
+                <div class="form-group col-lg-6 col-md-6">
+                    <label>EJG</label>
+                    <input type="number"  [(ngModel)]="importeEJG" class="form-control" />
+                </div>
             </div>
 
         </div>
@@ -101,3 +113,12 @@
     </div>
 
 </div>
+<p-dialog width="1300" height ="1200" responsive="true" modal="modal" [draggable]="false" resizable="true" [(visible)]="showModal"
+    (onHide)="cerrarDialog()">
+    <p-scrollPanel width="1300" height ="1200">
+        <app-gestion-tiposasistencia *ngIf="contAsAc == 'asi' && showModal" [origenBaremos]="origenBaremos">
+        </app-gestion-tiposasistencia>
+        <app-gestion-tiposactuacion *ngIf="contAsAc == 'act' && showModal" [origenBaremos]="origenBaremos"></app-gestion-tiposactuacion>
+    </p-scrollPanel>
+    
+</p-dialog>

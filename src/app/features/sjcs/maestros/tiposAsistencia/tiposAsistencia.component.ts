@@ -62,6 +62,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
+  @Input() origenBaremos;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
     private sigaServices: SigaServices, private translateService: TranslateService,
