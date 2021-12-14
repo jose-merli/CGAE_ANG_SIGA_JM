@@ -1,7 +1,11 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataTable } from 'primeng/primeng';
+import { ConfirmationService, DataTable } from 'primeng/primeng';
+import { TranslateService } from '../../../../commons/translate';
+import { DatosColegiadosItem } from '../../../../models/DatosColegiadosItem';
+import { FacturasItem } from '../../../../models/FacturasItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-tabla-facturas',
@@ -9,7 +13,6 @@ import { PersistenceService } from '../../../../_services/persistence.service';
   styleUrls: ['./tabla-facturas.component.scss']
 })
 export class TablaFacturasComponent implements OnInit {
-
   cols;
   msgs;
 
@@ -29,37 +32,80 @@ export class TablaFacturasComponent implements OnInit {
   @Input() datos;
   @Input() filtro;
 
-  // de donde viene este child??
+  @Output() busqueda = new EventEmitter<boolean>();
+
   @ViewChild("table") table: DataTable;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, 
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef, 
+    private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
     private router: Router, 
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
-
     this.selectedDatos = [];
     this.selectAll = false;
 
     this.getCols();
   }
 
-  /*
-  navigateTo(dato){
-    sessionStorage.setItem("FicherosAbonosItem", JSON.stringify(dato));
-    this.persistenceService.setFiltros(this.filtro);
-
-    this.router.navigate(['/gestionFicherosTransferencias']);
+  
+   // Abrir ficha de serie facturación -> tabla series facturacion
+  openTab(selectedRow) {
+    let facturasItem: FacturasItem = selectedRow;
+    sessionStorage.setItem("facturasItem", JSON.stringify(facturasItem));
+    this.router.navigate(["/gestionFacturas"]);
   }
-  */
+
+  navigateToCliente(selectedRow) {
+
+    if (selectedRow.idCliente) {
+      console.log("inside if");
+      this.progressSpinner = true;
+
+      sessionStorage.setItem("consulta", "true");
+      let filtros = { idPersona: selectedRow.idCliente };
+
+      this.sigaServices.postPaginado("busquedaColegiados_searchColegiadoFicha", "?numPagina=1", filtros).toPromise().then(
+        n => {
+          console.log("inside promise");
+          console.log(n)
+          let results: DatosColegiadosItem[] = JSON.parse(n.body).colegiadoItem;
+          console.log(results)
+          if (results != undefined && results.length != 0) {
+            let datosColegiado: DatosColegiadosItem = results[0];
+
+            sessionStorage.setItem("facturaItem", JSON.stringify(selectedRow));
+            sessionStorage.setItem("volver", "true");
+
+            sessionStorage.setItem("personaBody", JSON.stringify(datosColegiado));
+            sessionStorage.setItem("filtrosBusquedaColegiados", JSON.stringify(filtros));
+            sessionStorage.setItem("solicitudAprobada", "true");
+            sessionStorage.setItem("origin", "Cliente");
+          }
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      ).then(() => this.progressSpinner = false).then(() => {
+        if (sessionStorage.getItem("personaBody")) {
+          this.router.navigate(["/fichaColegial"]);
+        } 
+      });
+    }
+    
+  }
+  
 
 getCols() {
   this.cols = [
     { field: "numeroFactura", header: "facturacion.productos.nFactura", width: "9%" }, 
-    { field: "fechaEmision", header: "facturacion.facturas.fechaEmision'", width: "9%" }, 
+    { field: "fechaEmision", header: "facturacion.facturas.fechaEmision", width: "9%" }, 
     { field: "facturacion", header: "menu.facturacion", width: "15%" }, 
     { field: "numeroColegiado", header: "facturacion.facturas.numeroColegiadoIdentificador", width: "9%" }, 
-    { field: "idCiente", header: "facturacion.productos.Cliente", width: "15%" }, 
+    { field: "nombre", header: "facturacion.productos.Cliente", width: "15%" }, 
     { field: "importefacturado", header: "facturacion.facturas.importeTotal", width: "9%" }, 
     { field: "importeAdeudadoPendiente", header: "facturacion.facturas.importePendiente", width: "9%" }, 
     { field: "estado", header: "censo.nuevaSolicitud.estado", width: "9%" }, 
@@ -115,5 +161,49 @@ onChangeSelectAll() {
     this.selectMultiple = true;
   }
 }
+
+/*
+  // Eliminar facturas
+  confirmEliminar(): void {
+    let mess = "Se va a proceder a dar de baja las facturas seleccionadas ¿Desea continuar?";
+    let icon = "fa fa-eraser";
+
+    this.confirmationService.confirm({
+      //key: "asoc",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.progressSpinner = true;
+        this.eliminar();
+      },
+      reject: () => {
+        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+      }
+    });
+  }
+
+  eliminar(): void {
+    this.sigaServices.post("facturacionPyS_eliminaSerieFacturacion", this.selectedDatos).subscribe(
+      data => {
+        //this.busqueda.emit();
+        this.showMessage("success", "Eliminar", "Las series de facturación han sido dadas de baja con exito.");
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
+  }
+  */
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
 }
