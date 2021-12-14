@@ -270,6 +270,8 @@ export class ResolucionComponent implements OnInit {
       }
     }
   }
+
+
   checkPermisosSave() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -279,21 +281,18 @@ export class ResolucionComponent implements OnInit {
         this.msgs = this.commonsServices.checkPermisoAccion();
       } else {
 
-        //Se recupera nuevamenten nuevamente los estados del EJG para asegurarnos de su validez
+        //Se recupera la propiedad "edtablecomision" del ultimo estado del EJG
         let ejg = this.persistenceService.getDatos();
         this.progressSpinner = true;
-        this.sigaServices.post("gestionejg_getEstados", ejg).subscribe(
+        this.sigaServices.post("gestionejg_getEditResolEjg", ejg).subscribe(
           n => {
-            let estadosEJG = JSON.parse(n.body).estadoEjgItems;
-
-            //Se comprueba si el ultimo estado introducido tiene "visibilidadcomision" == 1 (visible para comision)
-            //Tener en cuenta que esa propiedad se ha renombrado en el front como "propietario"
-            if(estadosEJG.length > 0 && estadosEJG[0].propietario == 1){
+            //Se comprueba si el ultimo estado introducido tiene "edtablecomision" == 1 (resolucion editable)
+            if(n.body == "true"){
               this.save();
             }
-            
             else{
-              this.showMessage('error', 'Error', this.translateService.instant("sjcs.actas.ultEstadoNoCajg"));
+              //REVISAR: SUSTITUIR POR ETIQUETA
+              this.showMessage('error', 'Error', "El ultimo estado del EJG no permite editar resoluciones (editableComsion)");
               this.progressSpinner = false;
             }
           },
