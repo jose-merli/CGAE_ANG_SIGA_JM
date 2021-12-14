@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -37,9 +37,11 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit, OnChanges {
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.getComboSufijo();
-    this.restablecer();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+      this.getComboSufijo();
+      this.restablecer();
+    }
   }
 
   // Combo de sufijos

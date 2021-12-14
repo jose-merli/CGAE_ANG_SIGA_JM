@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
@@ -22,6 +22,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<CuentasBancariasItem>();
+  @Output() refreshData = new EventEmitter<void>();
 
   @Input() bodyInicial: CuentasBancariasItem;
   body: CuentasBancariasItem = new CuentasBancariasItem();
@@ -41,46 +42,135 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.restablecer();
+  // Solo se restablecen los datos si el body cambia
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial || changes.modoEdicion) {
+      this.restablecer();
+    }
+    
   }
 
-  // Validación del IBAN
+  // Eliminar espacios del IBAN
   removeSpacesFromIBAN(): void {
     this.focusIBAN = true;
     this.body.iban = this.body.iban.replace(/\s/g, "");
   }
 
+  // Añadir espacios al IBAN
   addSpacesToIBAN(): void {
     this.focusIBAN = false;
-    this.body.iban = this.body.iban.replace(/\s/g, "").replace(/(.{4})/g, "$1 ").trim();
+    
+    if (this.modoEdicion) {
+      this.body.iban = this.body.iban.replace(/\s/g, "").replace(/(.{4})/g, "$1 ").trim();
+    } else if(this.body.iban != undefined && this.body.iban.trim().length != 0) {
+      this.body.iban = this.body.iban.toUpperCase();
+      this.validarIBAN(this.body.iban);
+      this.body.iban = this.body.iban.replace(/\s/g, "").replace(/(.{4})/g, "$1 ").trim();
+    } else {
+      this.body.bic = "";
+      this.body.nombre = "";
+      this.body.descripcion = "";
+    }
+
   }
 
+  // Propiedad derivada: Estado
   checkEstado(): void {
     this.estado = this.body.fechaBaja ? `BAJA DESDE ${this.datePipe.transform(this.body.fechaBaja, 'dd/MM/yyyy')}` :
       (this.body.numUsos != undefined ? (this.body.numUsos > 0 ? "EN USO" : "SIN USO") : "-");
   }
 
+  // Obtener descripción
+
+  calcDescripcion(): void {
+    let abrBanco: string = "";
+
+    if (this.body.nombre.indexOf("~") > 1) {
+      abrBanco = this.body.nombre.substring(0, this.body.nombre.indexOf("~")).trim();
+    } else if (this.body.nombre.indexOf("(") > 0) {
+      abrBanco = this.body.nombre.substring(0, this.body.nombre.indexOf("(")).trim();
+    } else {
+      abrBanco = this.body.nombre;
+    }
+
+    let ibanEnd: string = this.body.iban.slice(-4);
+    this.body.descripcion = `${abrBanco} (...${ibanEnd})`;
+  }
+
+  // Botón de restablecer
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.checkEstado();
     this.addSpacesToIBAN();
+    
     this.resaltadoDatos = false;
   }
 
-  // Guadar
-  isValid(): boolean {
-    return this.body.iban != undefined && this.body.iban.trim() != "" && this.body.iban.length == 24;
+  // Validar IBAN
+  validarIBAN(cuenta: string): void {
+    let esValido = cuenta != undefined && cuenta.length == 24;
+
+    if (!esValido) {
+      this.showMessage("error", "Error", "El IBAN no tiene una longitud válida");
+    } else {
+      esValido = /^\d+$/.test(cuenta.substring(2, 24));
+
+      if (!esValido) {
+        this.showMessage("error", "Error", "El IBAN no tiene un formato válido");
+      } else {
+        this.progressSpinner = true;
+
+        this.validateIBANBackend(cuenta).catch(error => {
+          this.body.bic = "";
+          this.body.nombre = "";
+          this.body.descripcion = "";
+          
+          if (error != undefined) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+        }).then(() => this.progressSpinner = false);
+      }
+    }
+
   }
+
+  // Valida el IBAN en Backend y devuelve información del banco
+  validateIBANBackend(cuenta: string): Promise<any> {
+    return this.sigaServices.post("facturacionPyS_validarIBANCuentaBancaria", {iban: cuenta}).toPromise().then(
+      n => {
+        let datos: CuentasBancariasItem[] =  JSON.parse(n.body).cuentasBancariasITem;
+        
+        if (datos.length != 0) {
+          this.body.bic = datos[0].bic;
+          this.body.nombre = datos[0].nombre;
+
+          this.calcDescripcion();
+        } else {
+          return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      },
+      err => {
+        let error = JSON.parse(err.error).error;
+        if (error != undefined && error.message != undefined) {
+          let translatedError = this.translateService.instant(error.message);
+          if (translatedError && translatedError.trim().length != 0) {
+            return Promise.reject(translatedError);
+          }
+        }
+
+        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  // Guadar si el body ha cambiado y si el iban es valido
 
   checkSave(): void {
     this.removeSpacesFromIBAN();
-    if (this.isValid()) {
-      this.guardadoSend.emit(this.body);
-    } else {
-      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
-      this.resaltadoDatos = true;
-    }
+    this.guardadoSend.emit(this.body);
+    
   }
 
   // Eliminar cuenta bancaria
@@ -107,15 +197,19 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     this.sigaServices.post("facturacionPyS_borrarCuentasBancarias", [this.body]).subscribe(
       data => {
         this.progressSpinner = false;
-        this.body.fechaBaja = new Date();
-        this.persistenceService.setDatos(this.body);
-        this.guardadoSend.emit();
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.refreshData.emit();
       },
       err => {
-        console.log(err);
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
+        let error = JSON.parse(err.error).error;
+        if (error != undefined && error.message != undefined) {
+          let translatedError = this.translateService.instant(error.message);
+          if (translatedError && translatedError.trim().length != 0) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+          }
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
+        
       }
     );
   }
@@ -131,6 +225,11 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     return this.body.fechaBaja == undefined || this.body.fechaBaja == null;
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.iban == undefined || this.body.iban.trim().length == 0 || this.modoEdicion && this.body.asientoContable == this.bodyInicial.asientoContable && this.body.cuentaContableTarjeta == this.bodyInicial.cuentaContableTarjeta;
+  }
+
   // Abrir y cerrar la ficha
   esFichaActiva(): boolean {
     return this.openTarjetaDatosGenerales;
@@ -142,6 +241,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     this.idOpened.emit(key);
   }
 
+  // Funciones de utilidad para los mensajes
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
