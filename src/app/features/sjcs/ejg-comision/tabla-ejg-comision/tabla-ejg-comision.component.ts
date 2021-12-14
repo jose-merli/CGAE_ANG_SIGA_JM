@@ -646,11 +646,28 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   editarSeleccionados() {
-    this.showModalEditarSeleccionados = true;
-    if(this.acta != null){
-      //Implementacion actual (30/11/2021) basada en la definicion
-      //de la clave del combo comboAnioActa
-      this.valueAnioActa = this.acta.idinstitucion + "," + this.acta.anioacta + "," + this.acta.idacta;
+    let ejg: EJGItem;
+    let botonEditar: boolean = true;
+    let i = 0;
+
+    do {
+      ejg = this.selectedDatos[i];
+      console.log("Institucion ejg = " + ejg.idInstitucion + " , numero ejg = " + ejg.numero + " , anio ejg = " + ejg.annio + ", editableComision = " + ejg.editableComision)
+      
+      if(ejg.editableComision != 1){
+        botonEditar = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejgComision.editableComision"));
+      }
+      i++;
+    } while (botonEditar && this.selectedDatos.length > i);
+
+    if(botonEditar){
+      this.showModalEditarSeleccionados = true;
+      if(this.acta != null){
+        //Implementacion actual (30/11/2021) basada en la definicion
+        //de la clave del combo comboAnioActa
+        this.valueAnioActa = this.acta.idinstitucion + "," + this.acta.anioacta + "," + this.acta.idacta;
+      }
     }
   }
 

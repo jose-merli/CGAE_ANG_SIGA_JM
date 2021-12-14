@@ -139,6 +139,7 @@ export class EJGItem {
     ultimoEstado: boolean = true;
 
     informacionEconomica?: boolean;
+    editableComision: number;
 
     constructor() { }
 }
