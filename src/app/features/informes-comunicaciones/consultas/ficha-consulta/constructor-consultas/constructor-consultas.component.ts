@@ -14,8 +14,6 @@ import { ComboObject } from '../../../../../models/ComboObject';
 //Idioma
 setCulture('sigaIdiomas');
 
-
-
 @Component({
   selector: 'app-constructor-consultas',
   templateUrl: './constructor-consultas.component.html',
@@ -32,7 +30,7 @@ export class ConstructorConsultasComponent implements OnInit {
   consultaBuscador;
   datosConstructorConsulta: ConstructorConsultasDTO = new ConstructorConsultasDTO();
  
-   importRules: RuleModel = {
+  importRules: RuleModel = {
     //Inicializa los campos del querybuilder
     
   }; 
@@ -62,7 +60,7 @@ export class ConstructorConsultasComponent implements OnInit {
     L10n.load({
       'sigaIdiomas': {
           'querybuilder': {
-              'AddGroup': 'Nuevo Grupo***',
+              'AddGroup': this.translateService.instant("informesycomunicaciones.consultas.constructor.aniadirgrupo"),
               'AddCondition': this.translateService.instant("informesycomunicaciones.consultas.constructor.nuevacondicionboton"),
               'StartsWith': this.translateService.instant("informesycomunicaciones.consultas.constructor.empiezacon"),
               'EndsWith': this.translateService.instant("informesycomunicaciones.consultas.constructor.terminacon"),
@@ -119,18 +117,13 @@ export class ConstructorConsultasComponent implements OnInit {
 
   //INICIO METODOS TARJETA CONSTRUCTOR DE CONSULTAS
   checkDatos(){
-   console.log(this.constructorConsultas.getRules());
-   console.log(this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules()));
-   //console.log(this.constructorConsultas.getRulesFromSql("SELECT CEN_CLIENTE.IDINSTITUCION, CEN_CLIENTE.IDPERSONA FROM CEN_CLIENTE , CEN_COLEGIADO WHERE CEN_CLIENTE.IDINSTITUCION = 2005 AND CEN_CLIENTE.IDPERSONA = @IDPERSONA@ AND ( F_SIGA_GETTIPOCLIENTE(@IDPERSONA@,2005,@FECHA@) = 20 AND CEN_COLEGIADO.SITUACIONRESIDENTE = '0' ) AND ( CEN_CLIENTE.IDPERSONA = CEN_COLEGIADO.IDPERSONA(+) AND CEN_CLIENTE.IDINSTITUCION = CEN_COLEGIADO.IDINSTITUCION(+) ) "));
-   this.guardarDatosConstructor();
+    this.guardarDatosConstructor();
   }
 
-  
   abreCierraFicha() {
     if (sessionStorage.getItem("crearNuevaConsulta") == null) {
       this.openFicha = !this.openFicha;
     }
-   
   }
 
   clear() {
@@ -157,6 +150,10 @@ export class ConstructorConsultasComponent implements OnInit {
         configColumnasQueryBuilder => {
   
           this.configColumnasDTO = configColumnasQueryBuilder;
+
+          this.configColumnasDTO.configColumnasQueryBuilderItem.forEach(campos => {
+            campos.idcampo = "A" + campos.idcampo;
+          });
         
           this.progressSpinner = false;
         },
@@ -177,7 +174,6 @@ export class ConstructorConsultasComponent implements OnInit {
 
   comboDTOColumnaQueryBuilder: ComboObject = new ComboObject();
   listaCombosObject : Map<string, ComboObject> = new Map<string, ComboObject>();
- 
  
   obtenerCombosQueryBuilder(campo, nombreCampo){
     this.progressSpinner = true;
@@ -201,38 +197,18 @@ export class ConstructorConsultasComponent implements OnInit {
 
   setRules(): void{
     if(this.constructorConsultas != undefined){
-     /*  this.constructorConsultas.setRules({
-          'condition':'and',
-          'rules': [{
-              "label": "TIPO COLEGIADO",
-              "field": "3000",
-              "operator": "equal",
-              "type": "string",
-              "value": "20"
-          },
-          {
-            "label": "RESIDENTE",
-            "field": "226",
-            "operator": "equal",
-            "type": "string",
-            "value": "0"
-        }
-      ]}); */
-      this.constructorConsultas.setRulesFromSql(this.consulta);
-      console.log(this.constructorConsultas.getRulesFromSql(this.consulta));
+      this.constructorConsultas.setRulesFromSql(this.datosConst.consulta);
     }   
   }
 
-
-  consulta;
+  datosConst;
   obtenerDatosConsulta(idConsulta) {
     this.progressSpinner = true;
 
     this.subscriptionDatosConstructorConsulta = this.sigaServices.getParam("constructorConsultas_obtenerDatosConsulta", "?idConsulta=" + idConsulta).subscribe(
       datosConstructorConsulta => {
-        this.consulta = datosConstructorConsulta.consulta;
+        this.datosConst = datosConstructorConsulta;
 
-        
         this.progressSpinner = false;
       },
       err => {
