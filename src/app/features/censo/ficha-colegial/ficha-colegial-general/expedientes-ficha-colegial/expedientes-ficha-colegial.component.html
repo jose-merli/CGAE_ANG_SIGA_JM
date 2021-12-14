@@ -15,8 +15,8 @@
         </div>
         <div class="d-flex justify-content-between">
           <label>Número total: 
-            <span *ngIf="expSIGA && expEXEA">{{numExpSIGA + numExpEXEA}}</span>
-            <span *ngIf="!expSIGA || !expEXEA">{{ "aplicacion.cargando" | translate }}</span>
+            <span *ngIf="(expSIGA && expEXEA) || (expSIGA && !isActivoEXEA)">{{numExpSIGA + numExpEXEA}}</span>
+            <span *ngIf="isActivoEXEA && !expEXEA">{{ "aplicacion.cargando" | translate }}</span>
           </label>
           <i (click)="abreCierraFicha('expedientes')" *ngIf="!esFichaActiva('expedientes')" class="fa fa-angle-down float-right"></i>
         </div>
@@ -139,6 +139,18 @@
                       table.filter($event.target.value, col.field, 'contains')
                     " />
                         </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                      <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                          <td class="text-center" *ngFor="let col of columns">
+                              <div *ngIf = "col.field != 'numExpediente'">
+                                  <label>{{ dato[col.field]}}</label>
+                              </div>
+                              <div *ngIf = "col.field == 'numExpediente'">
+                                <label><a><span (click)="openTab(dato)" style="color: blue; text-decoration: underline; cursor: pointer;">{{dato[col.field]}}</span></a></label>
+                              </div>
+                          </td>
                       </tr>
                     </ng-template>
                     <ng-template pTemplate="emptymessage" let-columns>

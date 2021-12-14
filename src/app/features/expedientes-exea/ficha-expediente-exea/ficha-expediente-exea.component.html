@@ -1,3 +1,54 @@
-<p>
-  ficha-expediente-exea works!
-</p>
+<!-- Alertas -->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<!-- Alertas -->
+<div id="fichaExpedienteEXEA">
+
+    <div>
+        <div id="top"></div>
+        <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+        <div>
+            <div *ngFor="let tarj of listaTarjetas; let i = index;">
+                <div class="card" [id]="tarj.id" *ngIf="tarj.visible != undefined">
+                    <div class="card-body p-0">
+                        <mat-accordion class="example-headers-align" multi>
+                            <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
+                                [disabled]="tarj.fixed || !tarj.detalle" [expanded]="tarj.opened">
+                                <!-- class="h-100" -->
+                                <mat-expansion-panel-header [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                                    <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
+                                        [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
+                                        [fixed]="tarj.fixed" class="w-100" [enlaceCardClosed]="tarj.enlaceCardClosed"
+                                        [datosLetrado]="tarj.letrado" [enlaceCardOpen] = "tarj.enlaceCardOpen">
+                                    </app-tarjeta>
+                                </mat-expansion-panel-header>
+                                <ng-template matExpansionPanelContent>
+                                  <div *ngIf="tarj.nombre == 'Datos Generales Expediente' && tarj.visible != undefined" id="datosGeneralesExpedienteTemplate">
+                                    <app-ficha-exp-exea-datos-generales [expediente]="expedienteEXEA"></app-ficha-exp-exea-datos-generales>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Documentación' && tarj.visible != undefined" id="documentacionTemplate">
+                                    <app-ficha-exp-exea-documentacion [expediente]="expedienteEXEA"></app-ficha-exp-exea-documentacion>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Histórico' && tarj.visible != undefined" id="historicoTemplate">
+                                    <app-ficha-exp-exea-historico [expediente]="expedienteEXEA"></app-ficha-exp-exea-historico>
+                                  </div>
+                                </ng-template>
+                            </mat-expansion-panel>
+                        </mat-accordion>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="down"></div>
+    </div>
+
+</div>
+
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+<!-- Spinner -->
+<div class="mt-3 text-right main-button ">
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
+</div>

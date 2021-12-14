@@ -239,11 +239,27 @@
     </div>
   </div>
   <!--NUEVA TARJETA EXPEDIENTES EXEA SANCION INICIO -->
-  <div id="expEXEA">
+  <div id="expEXEA" *ngIf="!isLetrado && body.numExpediente">
     <div class="card">
       <div class="card-header header-ficha">
         <div class="form-row">
-          
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado">
+              <i class="fa fa-user icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1">
+              <label class="mr-auto title-ficha">{{ "menu.expedientesexea" | translate }}
+              </label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <label>
+                <a>
+                  <span (click)="goToFicha()" style="color: blue; text-decoration: underline; cursor: pointer;">{{ "general.boton.masinformacion" | translate}}</span>
+                </a>
+              </label>
+            </div>
         </div>
       </div>
     </div>

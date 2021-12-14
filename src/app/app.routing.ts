@@ -242,6 +242,7 @@ import { FichaActuacionAsistenciaComponent } from "./features/sjcs/guardia/guard
 import { FichaListaGuardiasComponent } from "./features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias.component";
 import { NuevoExpedienteExeaComponent } from "./features/expedientes-exea/nuevo-expediente-exea/nuevo-expediente-exea.component";
 import { GestionExpedientesExeaComponent } from "./features/expedientes-exea/gestion-expedientes-exea/gestion-expedientes-exea.component";
+import { FichaExpedienteExeaComponent } from "./features/expedientes-exea/ficha-expediente-exea/ficha-expediente-exea.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -1300,6 +1301,12 @@ const appRoutes: Routes = [
 	},
 
 	{
+		path: 'fichaExpedienteEXEA',
+		component: FichaExpedienteExeaComponent,
+		canActivate: [AuthGuard]
+	},
+
+	{
 		path: 'devolucion',
 		component: DevolucionComponent,
 		canActivate: [AuthGuard]
@@ -1337,11 +1344,13 @@ const appRoutes: Routes = [
 	},
 	{
 		path: 'nuevoExpedienteEXEA',
-		component: NuevoExpedienteExeaComponent 
+		component: NuevoExpedienteExeaComponent,
+		canActivate: [AuthGuard]
 	},
 	{
 		path: 'gestionExpedientesEXEA',
-		component: GestionExpedientesExeaComponent
+		component: GestionExpedientesExeaComponent,
+		canActivate: [AuthGuard]
 	},
 
 	{ path: ' ', redirectTo: 'home' }

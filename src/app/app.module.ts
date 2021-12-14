@@ -492,6 +492,9 @@ import { NuevoExpedienteExeaComponent } from './features/expedientes-exea/nuevo-
 import { ExpedientesFichaColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/expedientes-ficha-colegial/expedientes-ficha-colegial.component';
 import { SigaNoInterceptorServices } from './_services/sigaNoInterceptor.service';
 import { FichaExpedienteExeaComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-expediente-exea.component';
+import { FichaExpExeaDatosGeneralesComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-datos-generales/ficha-exp-exea-datos-generales.component';
+import { FichaExpExeaDocumentacionComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-documentacion/ficha-exp-exea-documentacion.component';
+import { FichaExpExeaHistoricoComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-historico/ficha-exp-exea-historico.component';
 
 
 @NgModule({
@@ -915,6 +918,9 @@ import { FichaExpedienteExeaComponent } from './features/expedientes-exea/ficha-
 		NuevoExpedienteExeaComponent,
 		ExpedientesFichaColegialComponent,
 		FichaExpedienteExeaComponent,
+		FichaExpExeaDatosGeneralesComponent,
+		FichaExpExeaDocumentacionComponent,
+		FichaExpExeaHistoricoComponent
 	],
 	imports: [
 		SelectorModule,

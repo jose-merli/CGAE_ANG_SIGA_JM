@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
@@ -75,7 +76,8 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
     private sigaNoInterceptorServices : SigaNoInterceptorServices,
     private router : Router,
     private authenticationService : AuthenticationService,
-    private sigaStorageService : SigaStorageService) { }
+    private sigaStorageService : SigaStorageService,
+    private datePipe : DatePipe) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (this.openExp == true) {
@@ -282,7 +284,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
       expedienteItem.tipoExpediente = expediente.asunto;
       expedienteItem.estadoExpediente = expediente.estado.descripcion;
       expedienteItem.numExpediente = expediente.numero_expediente;
-      expedienteItem.fechaApertura = expediente.fecha_inicio;
+      expedienteItem.fechaApertura = this.datePipe.transform(new Date(expediente.fecha_inicio), "dd/MM/yyyy HH:mm");
       expedienteItem.relacion = expediente.rol.descripcion;
       expedienteItem.idExpedienteEXEA = expediente.id;
       expedienteItem.exea = true;
@@ -297,6 +299,13 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
     let idInstitucion : string = this.authenticationService.getInstitucionSession();
     if(dato.exea){
       //Aqui redirigiriamos a la ficha de expediente de exea
+      sessionStorage.setItem("titular", this.generalBody.nombre.toString());
+      sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));
+      if(this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona){
+        this.router.navigate(["/fichaExpedienteEXEA"], {queryParams : {idExpediente : dato.idExpedienteEXEA}});
+      }else{
+        this.router.navigate(["/fichaExpedienteEXEA"], {queryParams : {idExpediente : dato.numExpediente}});
+      }
     }else{
       let url : string = this.sigaServices.getOldSigaUrl() +
       "/EXP_AuditoriaExpedientes.do?modo=ver&idTipoExpediente=" + dato.idTipoExpediente + "&numExpediente=" + dato.numExpediente + "&anioExpediente=" + dato.anioExpediente
