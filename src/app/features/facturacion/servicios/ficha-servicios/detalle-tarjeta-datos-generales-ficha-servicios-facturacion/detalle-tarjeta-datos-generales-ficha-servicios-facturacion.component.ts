@@ -50,6 +50,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   permisoGuardarServicios: boolean;
   permisoEliminarReactivarServicios: boolean;
   permisoNuevaCondicion: boolean;
+  permisoEliminarSuscripcionBaja: boolean;
 
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
@@ -110,6 +111,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.getPermisoGuardarServicios();
     this.getPermisoEliminarReactivarServicios();
     this.getPermisoNuevaCondicion();
+    this.getPermisosEliminarSuscripcionBaja();
   }
 
   getPermisoGuardarServicios() {
@@ -126,6 +128,15 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       .checkAcceso(procesos_PyS.eliminarReactivarServicios)
         .then((respuesta) => {
           this.permisoEliminarReactivarServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisosEliminarSuscripcionBaja() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.eliminarSuscripcionesBajas)
+        .then((respuesta) => {
+          this.permisoEliminarSuscripcionBaja = respuesta;
     })
     .catch((error) => console.error(error));
   }
@@ -401,7 +412,12 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   }
 
   borrarSuscripcionesBajas() {
-    this.showModalSuscripcionesBajas = true;
+    let msg = this.commonsService.checkPermisos(this.permisoEliminarSuscripcionBaja, undefined);
+	    if (msg != null) {
+	      this.msgs = msg;
+	    } else {
+        this.showModalSuscripcionesBajas = true;
+	    }
   }
 
   cancelarDialogBorrarSuscripcionesBajas() {

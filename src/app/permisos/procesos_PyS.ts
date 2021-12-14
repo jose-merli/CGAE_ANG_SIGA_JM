@@ -30,6 +30,7 @@ export const procesos_PyS: any = {
     guardarFormasPagoServicios: "411",
     nuevaCondicion: "412",
     guardarPreciosServicios: "413",
-    eliminarPreciosServicios: "414"
+    eliminarPreciosServicios: "414",
+    eliminarSuscripcionesBajas: "415"
 
 }
