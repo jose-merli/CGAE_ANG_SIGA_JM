@@ -368,32 +368,23 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
 
   }
 
-  //POSIBLE MEJORA: AHORA ES SENSIBLE AL ORDEN DE LOS ELEMENTOS
-  //LO OPTIMO SERIA QUE NO LO FUERA
+  //TO DO
+  //REVISAR: PENDIENTE DE IMPLEMENTACION
   compareServices(){
     this.deshabilitarGuardar = false;
-    // compare lengths - can save a lot of time 
-    if (this.serviciosTarjeta.length != this.ficha.servicios.length){
-        this.deshabilitarGuardar = false;
-    }
+    // Esto puede ahorrar tiempo
+    // if (this.serviciosTarjeta.length != this.ficha.servicios.length){
+    //     this.deshabilitarGuardar = false;
+    // }
 
-    if(this.deshabilitarGuardar){
-      for (var i = 0, l= this.serviciosTarjeta.length; i < l; i++) {
-          // Check if we have nested arrays
-          if (this.serviciosTarjeta[i] instanceof Array && this.ficha.servicios[i] instanceof Array) {
-              // recurse into the nested arrays
-              if (!(this.serviciosTarjeta[i]==this.ficha.servicios[i])){
-                this.deshabilitarGuardar =  true;   
-                break;    
-              }
-          }           
-          else if (this.serviciosTarjeta[i] != this.ficha.servicios[i]) { 
-              // Warning - two different object instances will never be equal: {x:20} != {x:20}
-              this.deshabilitarGuardar = true;   
-              break;
-          }           
-      }       
-    }
+    // if(this.deshabilitarGuardar){
+    //   for (var i = 0, l= this.serviciosTarjeta.length; i < l; i++) {
+    //       if (!this.ficha.servicios.includes(this.serviciosTarjeta[i])) { 
+    //           this.deshabilitarGuardar = false;   
+    //           break;
+    //       }           
+    //   }       
+    // }
   }
 
   //FIN METODOS
