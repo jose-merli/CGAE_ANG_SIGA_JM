@@ -102,6 +102,12 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
     }
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.comisionImporte == this.bodyInicial.comisionImporte && this.body.comisionDescripcion == this.bodyInicial.comisionDescripcion
+      && (this.body.comisionCuentaContable == this.bodyInicial.comisionCuentaContable || (this.body.comisionCuentaContable == undefined || this.body.comisionCuentaContable.length == 0) && (this.bodyInicial.comisionCuentaContable == undefined || this.bodyInicial.comisionCuentaContable.length == 0));
+  }
+
   // Comprueba si una serie se encuentra de baja o no
   esActivo(): boolean {
     return this.body.fechaBaja == undefined || this.body.fechaBaja == null;

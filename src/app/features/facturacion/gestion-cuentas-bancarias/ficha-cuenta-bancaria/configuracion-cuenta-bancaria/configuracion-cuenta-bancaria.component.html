@@ -15,8 +15,8 @@
             <label class="mr-auto title-ficha pointer">{{ 'facturacion.cuentaBancaria.configuracion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>{{ 'facturacion.cuentaBancaria.fichSecuencia' | translate }}: 
-              <span>{{ findLabelInCombo(comboConfigFicherosSecuencia, body.configFicherosSecuencia) }}</span></label>
+            <label *ngIf="tipoFicheros">{{ 'facturacion.cuentaBancaria.fichSecuencia' | translate }}: 
+              <span *ngIf="tipoFicheros">{{ findLabelInCombo(comboConfigFicherosSecuencia, body.configFicherosSecuencia) }}</span></label>
             <label>{{ 'facturacion.cuentaBancaria.fichEsquema' | translate }}: 
               <span>{{ findLabelInCombo(comboconfigFicherosEsquema, body.configFicherosEsquema) }}</span></label>
             <label>{{ 'facturacion.cuentaBancaria.fichLugar' | translate }}: 
@@ -45,7 +45,7 @@
     <!-- Cuerpo en ficha abierta -->
     <div *ngIf="esFichaActiva('configuracion')" class="card-body card-body-ficha">
       <div class="form-row lg-12 md-12">
-        <div class="form-group col-lg-3 col-md-3">
+        <div *ngIf="tipoFicheros" class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.cuentaBancaria.fichSecuencia' | translate }} (*)</label>
           <p-dropdown class="select-form" [(ngModel)]='body.configFicherosSecuencia' placeholder="Seleccionar"
               [options]="comboConfigFicherosSecuencia" [filter]="true" filterBy="label,labelSinTilde"
@@ -77,7 +77,7 @@
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
           (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

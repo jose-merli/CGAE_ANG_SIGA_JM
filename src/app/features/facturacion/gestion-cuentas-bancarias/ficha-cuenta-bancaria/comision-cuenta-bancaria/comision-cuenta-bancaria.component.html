@@ -35,7 +35,7 @@
       <div *ngIf="esFichaActiva('comision')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('comision')">
         <div class="img-colegiado">
-          <i class=" fa-bank icon-ficha"></i>
+          <i class="fa fa-bank icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.cuentaBancaria.comision' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -61,7 +61,7 @@
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.cuentaBancaria.contable' | translate }}</label>
-          <input type="text" class="form-control" [(ngModel)]="body.asientoContable" maxlength="20" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.comisionCuentaContable" maxlength="20" pInputText>
         </div>
       </div>
     </div>
@@ -71,7 +71,7 @@
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
           (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

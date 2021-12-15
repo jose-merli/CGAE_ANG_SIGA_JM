@@ -22,6 +22,8 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
 
   @Input() bodyInicial: CuentasBancariasItem;
   body: CuentasBancariasItem;
+  
+  tipoFicheros: boolean = false; // SEPA_TIPO_FICHEROS
 
   resaltadoDatos: boolean = false;
 
@@ -42,6 +44,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
 
     this.getCombos();
+    this.cargarParametrosSEPA();
 
     this.progressSpinner = false;
   }
@@ -54,26 +57,51 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
 
   getCombos() {
     this.comboConfigFicherosSecuencia = [
-      { value: "0", label: "Uno para todos los recibos (primeros + recurrentes)" },
-      { value: "1", label: "Uno para primeros recibos y otro para recurrentes" },
-      { value: "2", label: "Todos los recibos se consideran recurrentes" }
+      { value: "0", label: this.translateService.instant("facturacion.cuentaBancaria.configFicherosSecuencia0") },
+      { value: "1", label: this.translateService.instant("facturacion.cuentaBancaria.configFicherosSecuencia1") },
+      { value: "2", label: this.translateService.instant("facturacion.cuentaBancaria.configFicherosSecuencia2") }
     ];
 
     this.comboconfigFicherosEsquema = [
-      { value: "0", label: "Uno para todos los esquemas (CORE+COR1+B2B)" },
-      { value: "1", label: "Uno para CORE+COR1 y otro para B2B" },
-      { value: "2", label: "Uno para cada esquema separados CORE; COR1; B2B" }
+      { value: "0", label: this.translateService.instant("facturacion.cuentaBancaria.configFicherosEsquema0") },
+      { value: "1", label: this.translateService.instant("facturacion.cuentaBancaria.configFicherosEsquema1") },
+      { value: "2", label: this.translateService.instant("facturacion.cuentaBancaria.configFicherosEsquema2") }
     ];
 
     this.comboConfigLugaresQueMasSecuencia = [
-      { value: "0", label: "En el bloque del acreedor (normativa AEB)" },
-      { value: "1", label: "En cada registro individual (normativa UE)" }
+      { value: "0", label: this.translateService.instant("facturacion.cuentaBancaria.configLugaresQueMasSecuencia0") },
+      { value: "1", label: this.translateService.instant("facturacion.cuentaBancaria.configLugaresQueMasSecuencia1") }
     ];
 
     this.comboConfigConceptoAmpliado = [
-      { value: "0", label: "Normal (140 caracteres)" },
-      { value: "1", label: "Ampliado (640 caracteres)" }
+      { value: "0", label: this.translateService.instant("facturacion.cuentaBancaria.configConceptoAmpliado0") },
+      { value: "1", label: this.translateService.instant("facturacion.cuentaBancaria.configConceptoAmpliado1") }
     ];
+  }
+
+  cargarParametrosSEPA(){
+    this.progressSpinner=true;
+    
+    this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
+      n => {
+        let data = n.combooItems;
+        
+        for(let i=0; data.length>i; i++){
+          
+          if(data[i].value=="SEPA_TIPO_FICHEROS"){
+            this.tipoFicheros = data[i].label;
+
+          }
+        }
+
+        this.progressSpinner=false;
+      },
+      err => {
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
+      }
+    );
   }
 
   // Restablecer
@@ -86,7 +114,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
   // Guadar
 
   isValid(): boolean {
-    return this.body.configFicherosSecuencia != undefined && this.body.configFicherosSecuencia.trim() != ""
+    return (!this.tipoFicheros || this.body.configFicherosSecuencia != undefined && this.body.configFicherosSecuencia.trim() != "")
       && this.body.configFicherosEsquema != undefined && this.body.configFicherosEsquema.trim() != ""
       && this.body.configLugaresQueMasSecuencia != undefined && this.body.configLugaresQueMasSecuencia.trim() != ""
       && this.body.configConceptoAmpliado != undefined && this.body.configConceptoAmpliado.trim() != "";
@@ -119,6 +147,14 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.configConceptoAmpliado == this.bodyInicial.configConceptoAmpliado 
+      && this.body.configFicherosEsquema == this.bodyInicial.configFicherosEsquema
+      && this.body.configFicherosSecuencia == this.bodyInicial.configFicherosSecuencia
+      && this.body.configLugaresQueMasSecuencia == this.bodyInicial.configLugaresQueMasSecuencia;
   }
 
   // Label de un combo

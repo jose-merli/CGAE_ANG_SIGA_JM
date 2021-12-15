@@ -17,6 +17,7 @@ export class CuentasBancariasItem{
     comisionImporte: number;
     comisionDescripcion: string;
     idTipoIVA: string;
+    comisionCuentaContable: string;
 
     configFicherosSecuencia: string;
     configFicherosEsquema: string;

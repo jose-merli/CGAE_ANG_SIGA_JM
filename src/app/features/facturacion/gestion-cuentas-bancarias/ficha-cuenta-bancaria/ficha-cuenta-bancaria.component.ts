@@ -142,6 +142,12 @@ export class FichaCuentaBancariaComponent implements OnInit {
           this.modoEdicion = true;
           this.calcDescripcion(); // Propiedad derivada
 
+          // Actualizar la tarjeta resumen
+          this.updateTarjetaResumen();
+          setTimeout(() => {
+            this.updateEnlacesTarjetaResumen();
+          }, 5);
+
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         })}).catch(error => {
       if (error != undefined) {
@@ -161,6 +167,12 @@ export class FichaCuentaBancariaComponent implements OnInit {
     this.recuperarCuentaBancaria().then(() => {
       this.modoEdicion = true;
       this.calcDescripcion(); // Propiedad derivada
+
+      // Actualizar la tarjeta resumen
+      this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
 
       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
     }).catch(error => {

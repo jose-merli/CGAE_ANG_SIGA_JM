@@ -247,12 +247,36 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   // Editar una serie de facturación
   openTab(selectedRow) {
     if (selectedRow.tipo == "SERIE") {
-      let serieFacturacionItem: SerieFacturacionItem = selectedRow;
-      sessionStorage.setItem("cuentaBancariaItem", JSON.stringify(this.body));
-      sessionStorage.setItem("serieFacturacionItem", JSON.stringify(serieFacturacionItem));
-      this.router.navigate(["/datosSeriesFactura"]);
+      this.navigateToSerieFacturacion(selectedRow);
     }
   }
+
+  navigateToSerieFacturacion(selectedRow) {
+    let filtros = { idSerieFacturacion: selectedRow.idSerieFacturacion };
+    this.progressSpinner = true;
+
+    this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
+      n => {
+        this.progressSpinner = false;
+        let results: SerieFacturacionItem[] = JSON.parse(n.body).serieFacturacionItems;
+
+        if (results != undefined && results.length != 0) {
+          let serieFacturacionItem: SerieFacturacionItem = results[0];
+
+          sessionStorage.setItem("cuentaBancariaItem", JSON.stringify(this.body));
+          sessionStorage.setItem("serieFacturacionItem", JSON.stringify(serieFacturacionItem));
+
+          this.router.navigate(["/datosSeriesFactura"]);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  // Funciones de utilidad para mostrar mensajes
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

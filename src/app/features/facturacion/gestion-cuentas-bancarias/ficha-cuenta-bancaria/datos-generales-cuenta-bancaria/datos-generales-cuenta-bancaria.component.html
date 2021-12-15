@@ -48,7 +48,7 @@
       <div class="form-row lg-12 md-12">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'censo.mutualidad.literal.iban' | translate }} (*)</label>
-          <input type="text" [ngClass]="styleObligatorio(body.iban)" class="form-control" [(ngModel)]="body.iban" maxlength="{{ focusIBAN ? 24 : 29 }}" (focus)="removeSpacesFromIBAN()" (blur)="addSpacesToIBAN()" [disabled]="modoEdicion" pInputText>
+          <input type="text" [ngClass]="styleObligatorio(body.iban)" class="form-control" [ngClass]="styleIBANIncorrecto(body.iban)" [(ngModel)]="body.iban" maxlength="{{ focusIBAN ? 24 : 29 }}" (focus)="removeSpacesFromIBAN()" (blur)="addSpacesToIBAN()" [disabled]="modoEdicion" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'general.description' | translate }} (*)</label>
@@ -63,11 +63,11 @@
           <input type="text" class="form-control" [(ngModel)]="body.cuentaContableTarjeta" maxlength="20" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'censo.fichaCliente.datosBancarios.cuentaBancaria.bic' | translate }} (*)</label>
+          <label>{{ 'censo.fichaCliente.datosBancarios.cuentaBancaria.bic' | translate }}</label>
           <input type="text" class="form-control" [(ngModel)]="body.bic" maxlength="11" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>{{ 'censo.tipoAbono.banco' | translate }} (*)</label>
+          <label>{{ 'censo.tipoAbono.banco' | translate }}</label>
           <input type="text" class="form-control" [(ngModel)]="body.nombre" [disabled]="true" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
@@ -83,7 +83,7 @@
 
     <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
       <div class="text-right main-button">
-        <button pButton *ngIf="modoEdicion && esActivo()" (click)="confirmEliminar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+        <button pButton *ngIf="modoEdicion && esActivo()" (click)="confirmEliminar()" type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
         <!--
         <button pButton *ngIf="!esActivo()" (click)="confirmReactivar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
         -->

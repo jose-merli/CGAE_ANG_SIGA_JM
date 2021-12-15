@@ -106,6 +106,11 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit, OnChanges {
     }
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.sjcs == this.bodyInicial.sjcs && this.body.idSufijoSjcs == this.bodyInicial.idSufijoSjcs;
+  }
+
   // Abrir y cerrar la ficha
 
   esFichaActiva(): boolean {

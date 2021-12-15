@@ -29,6 +29,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   estado: string;
 
   resaltadoDatos: boolean = false;
+  resaltadoIBAN: boolean = false;
   focusIBAN: boolean = false; // Para cambiar dinámicamente la restricción de longitud
 
   constructor(
@@ -111,12 +112,14 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     let esValido = cuenta != undefined && cuenta.length == 24;
 
     if (!esValido) {
-      this.showMessage("error", "Error", "El IBAN no tiene una longitud válida");
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.cuentaBancaria.iban.invalid.longitud"));
+      this.resaltadoIBAN = true;
     } else {
       esValido = /^\d+$/.test(cuenta.substring(2, 24));
 
       if (!esValido) {
-        this.showMessage("error", "Error", "El IBAN no tiene un formato válido");
+        this.showMessage("error", "Error", this.translateService.instant("censo.datosBancarios.mensaje.control.ibanIncorrecto"));
+        this.resaltadoIBAN = true;
       } else {
         this.progressSpinner = true;
 
@@ -124,6 +127,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
           this.body.bic = "";
           this.body.nombre = "";
           this.body.descripcion = "";
+          this.resaltadoIBAN = true;
           
           if (error != undefined) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
@@ -143,6 +147,7 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
         let datos: CuentasBancariasItem[] =  JSON.parse(n.body).cuentasBancariasITem;
         
         if (datos.length != 0) {
+          this.resaltadoIBAN = false;
           this.body.bic = datos[0].bic;
           this.body.nombre = datos[0].nombre;
 
@@ -214,6 +219,12 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     );
   }
 
+  styleIBANIncorrecto(evento: string) {
+    if (this.resaltadoIBAN || this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
   styleObligatorio(evento: string) {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
       return this.commonsService.styleObligatorio(evento);
@@ -227,7 +238,9 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return this.body.iban == undefined || this.body.iban.trim().length == 0 || this.modoEdicion && this.body.asientoContable == this.bodyInicial.asientoContable && this.body.cuentaContableTarjeta == this.bodyInicial.cuentaContableTarjeta;
+    return this.body.iban == undefined || this.body.iban.trim().length == 0 || this.modoEdicion 
+      && (this.body.asientoContable == this.bodyInicial.asientoContable || (this.body.asientoContable == undefined || this.body.asientoContable.length == 0) && (this.bodyInicial.asientoContable == undefined || this.bodyInicial.asientoContable.length == 0))
+      && (this.body.cuentaContableTarjeta == this.bodyInicial.cuentaContableTarjeta || (this.body.cuentaContableTarjeta == undefined || this.body.cuentaContableTarjeta.length == 0) && (this.bodyInicial.cuentaContableTarjeta == undefined || this.bodyInicial.cuentaContableTarjeta.length == 0));
   }
 
   // Abrir y cerrar la ficha
