@@ -158,7 +158,7 @@ export class RelacionesComponent implements OnInit {
           //     this.noCreaDes = true;
           //     break;
           // }
-          relacion.idsjcs = "D"+relacion.anio+"/"+relacion.codigo;
+          //relacion.idsjcs = "D"+relacion.anio+"/"+relacion.codigo;
           if(relacion.sjcs == 'DESIGNACIÓN' && resumen == false){
             resumen = true;
             this.actLetradoDesignado.emit(relacion.letrado);
