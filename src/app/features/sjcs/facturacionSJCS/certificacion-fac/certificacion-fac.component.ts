@@ -20,7 +20,6 @@ export class CertificacionFacComponent implements OnInit {
   permisoEscritura;
   buscar;
   datos
-  disableColegio: boolean;
 
   @ViewChild(FiltroCertificacionFacComponent) filtros: FiltroCertificacionFacComponent;
   @ViewChild(TablaCertificacionFacComponent) tabla: TablaCertificacionFacComponent;
@@ -50,15 +49,24 @@ export class CertificacionFacComponent implements OnInit {
 
     this.progressSpinner = false;
 
-    this.isConsejo();
-
-
   }
 
   getCertificaciones(event) {
+
     if (event == true) {
-      this.buscar = true;
-      console.log(this.filtros.filtros)
+
+      this.progressSpinner = true;
+
+      this.sigaServices.post("certificaciones_buscarCertificaciones", this.filtros.filtros).subscribe(
+        data => {
+          const resp = JSON.parse(data.body);
+          console.log(resp);
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
     }
   }
 
@@ -86,27 +94,5 @@ export class CertificacionFacComponent implements OnInit {
 
   clear() {
     this.msgs = [];
-  }
-
-  isConsejo() {
-    let institucion = this.localStorageService.institucionActual;
-
-    switch (institucion) {
-      case "2000":
-      case "3003":
-      case "3004":
-      case "3006":
-      case "3007":
-      case "3008":
-      case "3009":
-      case "3010":
-        this.disableColegio = false;
-        break;
-      default:
-        this.disableColegio = true;
-        this.filtros.filtros.idColegio = this.localStorageService.institucionActual;
-        break;
-
-    }
   }
 }
