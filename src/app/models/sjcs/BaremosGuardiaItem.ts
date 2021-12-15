@@ -39,4 +39,5 @@ export class BaremosGuardiaItem {
     importeMax;
     agrupar;
     dispAsuntosAsAc;
+    fechaMod: Date;
 }

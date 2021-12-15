@@ -446,4 +446,29 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     obj.push(hito);
   }
 
+  getBaremo(obj){
+    this.sigaServices.post("baremosGuardia_getBaremo", obj).subscribe(
+      data => {
+        let error = JSON.parse(data.body).error;
+        this.progressSpinner = false;
+
+        if (error != undefined && error != null && error.description != null) {
+          if (error.code == '200') {
+            this.showMessage("success", this.translateService.instant("general.message.success"), this.translateService.instant(error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        if (err != undefined && JSON.parse(JSON.stringify(err)).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      }
+    )
+  }
+
 }
