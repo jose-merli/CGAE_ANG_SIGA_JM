@@ -97,7 +97,7 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
   }
 
   actualizaSeleccionados() {
-    this.numSelected = this.selectedDatos.length;
+    this.numSelected = 1
   }
 
   onChangeSelectAll() {
