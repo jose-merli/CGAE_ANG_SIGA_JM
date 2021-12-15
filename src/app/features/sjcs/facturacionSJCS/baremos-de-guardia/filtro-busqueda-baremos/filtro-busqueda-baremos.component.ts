@@ -47,6 +47,8 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
       this.filtros = this.persistenceService.getFiltros();
 
       this.persistenceService.clearFiltros();
+      this.getComboTurno();
+      this.getComboFacturacion();
       this.buscar();
 
     } else {
