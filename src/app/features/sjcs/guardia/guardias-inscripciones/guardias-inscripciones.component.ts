@@ -533,6 +533,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           data => {
             this.progressSpinner = false;
            
+            this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           },
@@ -653,6 +654,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           this.progressSpinner = false;
          
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
           objetoValidacion = [];
         },
         err => {
@@ -698,7 +700,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         data => {
           //console.log("entra en el data");
           this.progressSpinner = false;
-         
+          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         },
         err => {
@@ -724,9 +726,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
       accept: () => {
         //permitirá hacer la baja
         this.llamadaBackSolicitarBaja(objetoValidacion);
-        
-
-
       },
       reject: () => {
         this.msgs = [
@@ -758,7 +757,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           }else{
             this.llamadaBackSolicitarBaja(objetoValidacion);
           }
-
+          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
         },
@@ -821,7 +820,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         
         this.llamadaBackValidar(this.objetoValidacion,estado);
         this.objetoValidacion = [];
-        this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
+        
 
       }else{
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La validacion solo se lleva a cabo sobre inscripciones en estado de Pendiente de Alta y Pendiente de Baja.");
@@ -844,7 +843,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
       });
 
       this.llamadaBackDenegar(this.objetoValidacion);
-      this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
 
     } else if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
 
@@ -874,7 +872,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           this.objetoValidacion = [];
 
           //this.llamadaBackSolicitarBaja();
-          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
+          
         }
 
 
@@ -908,13 +906,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
       this.llamadaBackCambiarFecha(this.objetoValidacion);
         this.objetoValidacion = [];
-        this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
-
-
-
-
     }
-  
 
   }
   transformaFecha(fecha) {

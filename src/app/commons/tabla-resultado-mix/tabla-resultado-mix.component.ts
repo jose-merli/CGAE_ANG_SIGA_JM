@@ -1213,41 +1213,52 @@ export class TablaResultadoMixComponent implements OnInit {
 
   cambiarFecha(){
 
-    this.infoParaElPadre = [];
-    
-    this.rowGroups.forEach(el => {
-      let obj = JSON.parse(JSON.stringify(el.cells));
-      this.infoParaElPadre.push( {
-        'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
-        'fechaActual': this.fechaActual,
-        'observaciones': this.observaciones,
-        'id_persona': obj[21].value,
-        'idinstitucion' : obj[9].value,
-        'idturno': obj[10].value,
-        'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFechaSol(obj[4].value),
-        'fechavalidacion': this.transformaFecha(obj[5].value),
-        'fechabaja': this.transformaFecha(obj[12].value),
-        'observacionessolicitud': obj[13].value,
-        'observacionesbaja': obj[14].value,
-        'observacionesvalidacion': obj[15].value,
-        'observacionesdenegacion': obj[16].value,
-        'fechadenegacion': this.transformaFecha(obj[17].value),
-        'observacionesvalbaja': obj[18].value,
-        'fechavaloralta': obj[19].value,
-        'fechavalorbaja': obj[20].value,
-        'validarinscripciones': obj[23].value,
-        'estado': obj[24].value
-
-
+    if(this.fechaActual == null || this.fechaActual== undefined || this.observaciones == null || this.observaciones== "" || this.selectedArray.length==0){
+      this.msgs = [];
+      this.msgs.push({
+        severity: "error",
+        summary: "Incorrecto",
+        detail: "Es necesario seleccionar algún registro y rellenar la fecha y las observaciones"
       });
-      
-    });
+    }else{
 
-    this.jsonParaEnviar = 
-    {'tipoAccion': "cambiarFecha",
-      'datos': this.infoParaElPadre}
-    this.resultado.emit(this.jsonParaEnviar);  
+      this.infoParaElPadre = [];
+      
+      this.rowGroups.forEach(el => {
+        if(this.selectedArray.includes(el.id)){
+          let obj = JSON.parse(JSON.stringify(el.cells));
+          this.infoParaElPadre.push( {
+            'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
+            'fechaActual': this.fechaActual,
+            'observaciones': this.observaciones,
+            'id_persona': obj[21].value,
+            'idinstitucion' : obj[9].value,
+            'idturno': obj[10].value,
+            'idguardia': obj[11].value,
+            'fechasolicitud': this.transformaFechaSol(obj[4].value),
+            'fechavalidacion': this.transformaFecha(obj[5].value),
+            'fechabaja': this.transformaFecha(obj[12].value),
+            'observacionessolicitud': obj[13].value,
+            'observacionesbaja': obj[14].value,
+            'observacionesvalidacion': obj[15].value,
+            'observacionesdenegacion': obj[16].value,
+            'fechadenegacion': this.transformaFecha(obj[17].value),
+            'observacionesvalbaja': obj[18].value,
+            'fechavaloralta': obj[19].value,
+            'fechavalorbaja': obj[20].value,
+            'validarinscripciones': obj[23].value,
+            'estado': obj[24].value
+
+          
+          });
+        }
+      });
+
+      this.jsonParaEnviar = 
+      {'tipoAccion': "cambiarFecha",
+        'datos': this.infoParaElPadre}
+      this.resultado.emit(this.jsonParaEnviar);  
+    }
   }
 }
 
