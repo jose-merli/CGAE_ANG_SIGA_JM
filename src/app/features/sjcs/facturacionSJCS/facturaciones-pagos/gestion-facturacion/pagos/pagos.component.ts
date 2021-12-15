@@ -1,16 +1,17 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ChangeDetectorRef, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { Router } from '@angular/router';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate';
+import { Enlace } from '../gestion-facturacion.component'
 
 @Component({
   selector: 'app-pagos',
   templateUrl: './pagos.component.html',
   styleUrls: ['./pagos.component.scss']
 })
-export class PagosComponent implements OnInit {
+export class PagosComponent implements OnInit, AfterViewInit {
   progressSpinnerPagos: boolean = false;
   cols;
   msgs;
@@ -29,6 +30,8 @@ export class PagosComponent implements OnInit {
   @Input() idFacturacion;
   @Input() idEstadoFacturacion;
   @Input() modoEdicion;
+
+  @Output() addEnlace = new EventEmitter<Enlace>();
 
   @ViewChild("tabla") tabla;
 
@@ -201,5 +204,15 @@ export class PagosComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  ngAfterViewInit() {
+
+    const enlace: Enlace = {
+      id: 'facSJCSFichaFactPagosFac',
+      ref: document.getElementById('facSJCSFichaFactPagosFac')
+    };
+
+    this.addEnlace.emit(enlace);
   }
 }

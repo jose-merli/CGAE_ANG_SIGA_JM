@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
@@ -10,13 +10,14 @@ import { ConfirmationService } from 'primeng/primeng';
 import { Error } from '../../../../../../models/Error';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
+import { Enlace } from '../gestion-facturacion.component'
 
 @Component({
   selector: 'app-conceptos-facturacion',
   templateUrl: './conceptos-facturacion.component.html',
   styleUrls: ['./conceptos-facturacion.component.scss']
 })
-export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit {
+export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit, AfterViewInit {
 
   progressSpinnerConceptos: boolean = false;
   cols;
@@ -51,6 +52,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
   @Output() changeNumCriterios = new EventEmitter<number>();
   @Output() editing = new EventEmitter<boolean>();
+  @Output() addEnlace = new EventEmitter<Enlace>();
 
   @ViewChild("tabla") tabla;
 
@@ -551,6 +553,16 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     }
     this.editing.emit(true);
     return true;
+  }
+
+  ngAfterViewInit() {
+
+    const enlace: Enlace = {
+      id: 'facSJCSFichaFactConceptosFac',
+      ref: document.getElementById('facSJCSFichaFactConceptosFac')
+    };
+
+    this.addEnlace.emit(enlace);
   }
 
 }

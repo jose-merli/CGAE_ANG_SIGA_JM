@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, ViewChild, Input, Output, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewChild, Input, Output, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { FacturacionItem } from '../../../../../../models/sjcs/FacturacionItem';
 import { ComboItem } from '../../../../../../models/ComboItem';
 import { USER_VALIDATIONS } from '../../../../../../properties/val-properties';
@@ -9,13 +9,14 @@ import { ConfirmationService } from 'primeng/primeng';
 import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
+import { Enlace } from '../gestion-facturacion.component'
 
 @Component({
   selector: 'app-datos-facturacion',
   templateUrl: './datos-facturacion.component.html',
   styleUrls: ['./datos-facturacion.component.scss']
 })
-export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
+export class DatosFacturacionComponent extends SigaWrapper implements OnInit, AfterViewInit {
 
   @Input() cerrada;
   @Input() idFacturacion;
@@ -29,6 +30,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
   @Output() changeEstadoFacturacion = new EventEmitter<String>();
   @Output() changeIdFacturacion = new EventEmitter<String>();
   @Output() changeFacturacion = new EventEmitter<boolean>();
+  @Output() addEnlace = new EventEmitter<Enlace>();
 
   permisos;
   showFichaFacturacion: boolean = false;
@@ -655,12 +657,20 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit {
     return resp;
   }
 
-  ngAfterViewInit() {
-    this.changeDetectorRef.detectChanges();
-  }
-
   camposDisabled() {
     return this.idEstadoFacturacion === '50';
+  }
+
+  ngAfterViewInit() {
+
+    this.changeDetectorRef.detectChanges();
+
+    const enlace: Enlace = {
+      id: 'facSJCSFichaFactDatosFac',
+      ref: document.getElementById('facSJCSFichaFactDatosFac')
+    };
+
+    this.addEnlace.emit(enlace);
   }
 
 }

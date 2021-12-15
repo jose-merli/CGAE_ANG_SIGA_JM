@@ -15,6 +15,11 @@ import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
 import { SigaServices } from '../../../../../_services/siga.service';
 
+export interface Enlace {
+  id: string;
+  ref: any;
+}
+
 @Component({
   selector: 'app-gestion-facturacion',
   templateUrl: './gestion-facturacion.component.html',
@@ -60,16 +65,14 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
         "value": ""
       },
     ],
-    enlaces: []
+    enlaces: [
+      { id: 'facSJCSFichaFactDatosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.datosFacturacion'), ref: null },
+      { id: 'facSJCSFichaFactConceptosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.fichaConceptosFacturacion'), ref: null },
+      { id: 'facSJCSFichaFactBaremosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.baremos'), ref: null },
+      { id: 'facSJCSFichaFactPagosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.pagos'), ref: null },
+      { id: 'facSJCSFichaFactCartasFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.cartasFacturacion'), ref: null }
+    ]
   };
-
-  listaTarjetas = [
-    { id: 'facSJCSFichaFactDatosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.datosFacturacion') },
-    { id: 'facSJCSFichaFactConceptosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.fichaConceptosFacturacion') },
-    { id: 'facSJCSFichaFactBaremosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.baremos') },
-    { id: 'facSJCSFichaFactPagosFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.pagos') },
-    { id: 'facSJCSFichaFactCartasFac', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.cartasFacturacion') }
-  ];
 
   facturacion: FacturacionItem;
   visualizarTarjetas: boolean = false;
@@ -212,19 +215,7 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
   }
 
   ngAfterViewInit() {
-
     this.goTop();
-
-    this.listaTarjetas.forEach(tarj => {
-      let tarjTmp = {
-        id: tarj.id,
-        ref: document.getElementById(tarj.id),
-        nombre: tarj.nombre
-      };
-
-      this.tarjetaFija.enlaces.push(tarjTmp);
-    });
-
   }
 
   goTop() {
@@ -251,6 +242,10 @@ export class GestionFacturacionComponent extends SigaWrapper implements OnInit, 
       }
     );
 
+  }
+
+  addEnlace(enlace: Enlace) {
+    this.tarjetaFija.enlaces.find(el => el.id == enlace.id).ref = enlace.ref;
   }
 
 }
