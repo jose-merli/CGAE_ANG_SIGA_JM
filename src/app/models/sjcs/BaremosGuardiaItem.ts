@@ -23,9 +23,10 @@ export class BaremosGuardiaItem {
     idGuardia;
     idhitoconfiguracion;
     importeDis;
-    dispAsuntos;
+    dispAsuntosDis;
     aPartirDis;
     importeMaxDis;
+    importeMinDis;
     aPartirMax;
     asiac;
     agruparAsAc;
@@ -37,4 +38,6 @@ export class BaremosGuardiaItem {
     importe;
     importeMax;
     agrupar;
+    dispAsuntosAsAc;
+    fechaMod: Date;
 }

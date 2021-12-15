@@ -1,5 +1,8 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.component';
+import { ComboItem } from '../../../../../models/ComboItem';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { OficioRoutingModule } from '../../../oficio/oficio-routing.module';
 
 @Component({
   selector: 'app-filtro-generar-impreso190',
@@ -9,19 +12,30 @@ import { KEY_CODE } from '../../../../../commons/login-develop/login-develop.com
 export class FiltroGenerarImpreso190Component implements OnInit {
 
   showDatosGenerales: boolean = true;
-  anio;
-  anioPorDefecto = new Date().getFullYear();
-  msgs = []
+  anio = [];
+  comboAnio: ComboItem;
+  msgs = [];
   @Output() getImpresos = new EventEmitter<boolean>();
   @Input() permisoEscritura;
-  constructor() { }
+  constructor(private sigaService: SigaServices) { }
 
   ngOnInit() {
-    this.anio = this.anioPorDefecto;
+    this.getComboAnio();
+  }
+
+  getComboAnio(){
+		this.sigaService.get("impreso190_comboAnio").subscribe(
+			data => {
+				this.comboAnio = data.combooItems;
+			},
+			err => {
+				console.log(err);
+			}
+		);
   }
 
   restablecer(){
-    this.anio = this.anioPorDefecto;
+    this.anio = undefined;
   }
 
   buscarImpresos(){

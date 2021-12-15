@@ -45,6 +45,7 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
       if(this.datos != null || this.datos != undefined){
         this.datos = JSON.parse(JSON.stringify(this.datos));
         this.getCols();
+        this.getComboTurnos();
       }
  
   }
@@ -126,7 +127,7 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
 
     this.comboGuardia = [];
 
-    if (event.value && event.value.toString().length > 0) {
+    if (event.value != null || event.value != undefined) {
       this.getComboGuardias(event.value);
     }
 
@@ -151,7 +152,7 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
 
   onChangeGuardia() {
 
-      if(this.filtros.idGuardias != null && this.filtros.idGuardias.length != 0){
+      if(this.filtros.idGuardia != null && this.filtros.idGuardia != undefined){
         this.getGuardiasByConf();
       }
    
@@ -159,7 +160,7 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
 
   disabledComboGuardia(): boolean {
 
-    if (this.filtros && this.filtros.idTurnos && this.filtros.idTurnos != null && this.filtros.idTurnos.length == 0) {
+    if (this.filtros.idTurno == null || this.filtros.idTurno == undefined) {
       return true;
     }
     return false;

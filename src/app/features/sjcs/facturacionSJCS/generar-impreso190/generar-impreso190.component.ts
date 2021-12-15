@@ -47,12 +47,22 @@ export class GenerarImpreso190Component implements OnInit {
       }
 
     }).catch(error => console.error(error));
+
+    this.getImpresos(true);
   }
 
   getImpresos(event){
+    let anio = (this.filtros.anio != null && this.filtros.anio != undefined && this.filtros.anio.length != 0) ? this.filtros.anio.toString() : this.filtros.anio;
+
+    if(anio == undefined || anio == null || anio.length == 0){
+      this.showMessage("error", "Incorrecto", this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      event = false;
+    }
+
     if(event == true){
       this.progressSpinner = true;
-      this.sigaServices.post("impreso190_searchImpresos",this.filtros.anio).subscribe(
+
+      this.sigaServices.post("impreso190_searchImpresos", anio).subscribe(
         data =>{
           this.datos = JSON.parse(data.body).impreso190Item;
 					this.buscar = true;
@@ -62,6 +72,7 @@ export class GenerarImpreso190Component implements OnInit {
           if (error != undefined && error != null && error.description != null) {
 						if (error.code == '200') {
 							this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+              this.filtros.getComboAnio();
 						} else {
 							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
 						}

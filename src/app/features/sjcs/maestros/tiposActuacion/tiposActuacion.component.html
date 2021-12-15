@@ -132,7 +132,7 @@
             </p-table>
         </div>
         <div class="card-footer">
-            <div class="text-right main-button">
+            <div class="text-right main-button" *ngIf="origenBaremos != true">
                 <button [disabled]="historico || !permisoEscritura" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo"
                     iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
 

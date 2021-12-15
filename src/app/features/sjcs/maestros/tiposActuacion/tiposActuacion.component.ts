@@ -53,6 +53,7 @@ export class TiposActuacionComponent implements OnInit {
   @ViewChild("importe") importe;
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
+  @Input() origenBaremos;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
     private sigaServices: SigaServices, private translateService: TranslateService,
