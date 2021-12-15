@@ -8,7 +8,7 @@ export class ServicioDetalleItem {
     momentocargo: string;
     permitirbaja: string = "0";
     permitiralta: string = "0";
-    automatico: string; //Tipo Suscripcion
+    automatico: string = "0"; //Tipo Suscripcion
     cuentacontable: string;
     fechabaja: Date;
     idconsulta: number;
@@ -29,7 +29,7 @@ export class ServicioDetalleItem {
 
 
     codigoext;
-    nofacturable;
+    nofacturable: string = "0";
 
 
     constructor() { }

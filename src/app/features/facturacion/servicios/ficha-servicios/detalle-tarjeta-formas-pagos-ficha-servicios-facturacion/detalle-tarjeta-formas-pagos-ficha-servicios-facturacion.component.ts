@@ -136,9 +136,9 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
     if (this.servicioOriginal.nofacturable == "1") {
       this.checkboxNoFacturable = true;
       this.onChangeNoFacturable();
-    } else if (this.servicioOriginal.nofacturable == "0") {
+    } else if (this.servicioOriginal.nofacturable == "0" || this.servicioOriginal.nofacturable == null) {
       this.checkboxNoFacturable = false;
-      this.onChangeNoFacturable;
+      this.onChangeNoFacturable();
     }
 
     if (this.servicioOriginal.facturacionponderada == "1") {

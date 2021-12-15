@@ -67,15 +67,14 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   ngOnChanges(changes: SimpleChanges) {
     if (this.servicio.editar) {
       this.getComboTipo();
-      //this.getComboCondicionSuscripcion();
+   
       this.servicioOriginal = { ...this.servicio };
 
       this.desactivarBotonEliminar = false;
       this.mostrarTarjetaFormaPagos.emit(true);
 
     } else {
-      //this.servicio.idconsulta = 0;
-      //this.getComboCondicionSuscripcion();
+  
       this.mostrarTarjetaFormaPagos.emit(false);
       this.desactivarBotonEliminar = true;
     }
@@ -530,23 +529,6 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       }
     );
   }
-  /* getComboCondicionSuscripcion() {
-    this.progressSpinner = true;
-
-    this.subscriptionTypeSelectValues = this.sigaServices.getParam("fichaServicio_comboCondicionSuscripcion", "?idConsulta=" + this.servicio.idconsulta).subscribe(
-      CondicionSuscripcionValues => {
-        this.condicionesSuscripcionObject = CondicionSuscripcionValues;
-
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  } */
 
   //Metodo para obtener todos los codigos PYS_SERVICIOSINSTITUCION en la institucion actual
   obtenerCodigosPorColegio() {

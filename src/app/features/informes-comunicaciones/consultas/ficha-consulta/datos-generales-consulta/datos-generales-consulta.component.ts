@@ -190,7 +190,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
       this.confirmationService.confirm({
         key: keyConfirmation,
-        message: "Al cambiar al constructor de consultas eliminara la consulta y empezara de cero, ¿esta seguro?",
+        message: this.translateService.instant("informesycomunicaciones.fichaconsultas.datosgenerales.avisoborradoconsulta"),
         icon: "fa fa-trash-alt",
         accept: () => {
           this.progressSpinner = true;
