@@ -454,6 +454,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[0].campos[3]["value"] = newAsistenciaData.fechaAsistencia;
 
           let camposAsistido = [];
+          let asistenciaDuplicada = sessionStorage.getItem("asistenciaCopy");
+          if(asistenciaDuplicada == undefined || asistenciaDuplicada == null){
           if(!newAsistenciaData.idPersonaJg){
               camposAsistido = [
                 {
@@ -477,6 +479,9 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
               }
             ]
           }
+        }else{
+          sessionStorage.removeItem("asistenciaCopy");
+        }
           this.listaTarjetas[1].campos = camposAsistido;
 
           let camposContrarios = [];

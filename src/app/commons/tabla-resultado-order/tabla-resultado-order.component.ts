@@ -36,6 +36,8 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Output() anySelected = new EventEmitter<any>();
   @Output() selectedRow = new EventEmitter<any>();
   @Output() colaGuardiaModified = new EventEmitter<any>();
+  @Output() colaGuardiaOrdenada = new EventEmitter<any>();
+  
   @Output() rest = new EventEmitter<Boolean>();
   @Output() dupli = new EventEmitter<Boolean>();
   @Output() guardarGuardiasEnConjunto = new EventEmitter<any>();
@@ -104,6 +106,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() minimoLetrado;
   @Input() s;
   @Output() linkGuardiaColegiado = new EventEmitter<any>();
+  marcadoultimo = false;
   numPage = 0;
   isLetrado : boolean = false;
   constructor(
@@ -130,6 +133,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.marcadoultimo = false;
     this.ordenarByOrderField();
     //console.log('rowGroups al inicio: ', this.rowGroups)
     this.selectedArray = [];
@@ -259,7 +263,7 @@ export class TablaResultadoOrderComponent implements OnInit {
     
   }
 
-  guardar(){
+  guardar(ultimo){
     this.progressSpinner = true;
     //console.log('this.rowGroups: ', this.rowGroups)
     if (this.calendarios){
@@ -289,7 +293,15 @@ export class TablaResultadoOrderComponent implements OnInit {
     }
     this.totalRegistros = this.rowGroups.length;
     if (!errorVacio && !errorSecuenciaOrden && !errorSecuenciaGrupo){
-      this.updateColaGuardia();
+      if (!ultimo){
+          this.updateColaGuardia();
+      }else{
+          this.updateColaGuardiaSameOrder();
+      }
+    
+        
+
+
       this.showMsg('success', 'Se ha guardado correctamente', '')
       this.progressSpinner = false;
     }else if (errorGrupoNoOrden){
@@ -413,6 +425,10 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
   updateColaGuardia(){
     this.colaGuardiaModified.emit(this.rowGroups);
+    this.totalRegistros = this.rowGroups.length;
+  }
+  updateColaGuardiaSameOrder(){
+    this.colaGuardiaOrdenada.emit(this.rowGroups);
     this.totalRegistros = this.rowGroups.length;
   }
 displayWrongSequence(){
@@ -768,6 +784,8 @@ this.totalRegistros = this.rowGroups.length;
 
   }*/
   moveToLast(){
+    let posicionEntabla = this.from + this.positionSelected;
+    this.marcadoultimo = true;
     let i = 1;
     let lastGroup = this.grupos[this.grupos.length - 1];
     let groupSelected = 0;
@@ -776,7 +794,7 @@ this.totalRegistros = this.rowGroups.length;
       i++;
       lastGroup = this.grupos[this.grupos.length - i];
       }
-      groupSelected = this.rowGroups[this.positionSelected].cells[0].value;
+      groupSelected = this.rowGroups[posicionEntabla].cells[0].value;
        this.rowGroupsAux.forEach((row, index)=> {
       if(groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) == Number(groupSelected)){
         this.rowGroups[index].cells[0].value = lastGroup;
@@ -790,20 +808,29 @@ this.totalRegistros = this.rowGroups.length;
       }
   });
   if (groupSelected == null){
+      let selected = this.rowGroups[posicionEntabla];
+          let ordenColaSeleccionado = selected.cells[12];
+         let ordenColaUltimo = this.rowGroups[this.rowGroups.length - 1].cells[12];
+         let ordenColaPrimero = this.rowGroups[0].cells[12];
         let last = this.rowGroups[this.rowGroups.length - 1];
-        let selected = this.rowGroups[this.positionSelected];
+        
         this.rowGroups.forEach((row, index)=> {
-          if (index != 0  && index <=this.positionSelected){
-          this.rowGroups[index] = this.rowGroups[index - 1];
+          if (index != 0  && index <=posicionEntabla){
+          //this.rowGroups[index] = this.rowGroupsAux[index - 1];
+          this.rowGroups[index].cells[12].value = this.rowGroupsAux[index - 1].cells[12].value;
           }
           });
        
-        this.rowGroups[0] = last;
-         this.rowGroups[this.rowGroups.length - 1] = selected;
+         //this.rowGroups[0] = last;
+         //this.rowGroups[this.rowGroups.length - 1] = selected;
+         this.rowGroups[0].cells[12].value = ordenColaSeleccionado.value;
+         this.rowGroups[posicionEntabla].cells[12].value = ordenColaUltimo.value;
+         this.rowGroups[this.rowGroups.length - 1].cells[12].value = ordenColaPrimero.value;
+         
         
       }
     }else{
-      groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
+      groupSelected = this.rowGroups[posicionEntabla].cells[1].value;
        this.rowGroupsAux.forEach((row, index)=> {
       if(Number(row.cells[1].value) == Number(groupSelected)){
         this.rowGroups[index].cells[1].value = lastGroup;
@@ -816,9 +843,10 @@ this.totalRegistros = this.rowGroups.length;
  
   this.rowGroupsAux = this.rowGroups;
   this.totalRegistros = this.rowGroups.length;
-  this.guardar();
+  this.guardar(true);
   }
   moveRow(movement){
+    let posicionEntabla = this.from + this.positionSelected;
     this.disableGen.emit(true);
     let groupSelected;
     if (this.calendarios){
@@ -854,7 +882,7 @@ this.totalRegistros = this.rowGroups.length;
         this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
       }
       }else if (this.pantalla == "colaGuardias"){
-      groupSelected = this.rowGroups[this.positionSelected].cells[0].value;
+      groupSelected = this.rowGroups[posicionEntabla].cells[0].value;
      
         /*if (movement == 'up'){
           let first = this.rowGroups[this.positionSelected - 1];
@@ -865,18 +893,22 @@ this.totalRegistros = this.rowGroups.length;
           this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
           this.rowGroups[this.positionSelected] = first;
         }*/
+        let y = 0;
+        if (groupSelected == null){
+          y = 12;
+        }
         if (movement == 'up'){
-          let actual = this.rowGroups[this.positionSelected].cells[0].value;
+          let actual = this.rowGroups[posicionEntabla].cells[y].value;
           //actual = anterior
-          this.rowGroups[this.positionSelected].cells[0].value = this.rowGroups[this.positionSelected - 1].cells[0].value;
+          this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla - 1].cells[y].value;
           //anterior = actual
-          this.rowGroups[this.positionSelected - 1].cells[0].value = actual;
+          this.rowGroups[posicionEntabla - 1].cells[y].value = actual;
         } else if (movement == 'down'){
-          let actual = this.rowGroups[this.positionSelected].cells[0].value;
+          let actual = this.rowGroups[posicionEntabla].cells[y].value;
           //actual = siguiente
-          this.rowGroups[this.positionSelected].cells[0].value = this.rowGroups[this.positionSelected + 1].cells[0].value;
+          this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla + 1].cells[y].value;
           //siguiente = actual
-          this.rowGroups[this.positionSelected + 1].cells[0].value = actual;
+          this.rowGroups[posicionEntabla + 1].cells[y].value = actual;
         }
     }else{
       groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
@@ -1323,14 +1355,15 @@ this.totalRegistros = this.rowGroups.length;
   }
 
   nuevoSaltoComp(){
+    let pos = this.from + this.positionSelected;
     let dataFilterFromColaGuardia = { 'turno': 0,
     'guardia': 0,
     'colegiado': 0,
     'grupo': 0};
-    dataFilterFromColaGuardia.turno = this.rowGroups[this.positionSelected].cells[10].value;
-    dataFilterFromColaGuardia.guardia = this.rowGroups[this.positionSelected].cells[11].value;
-    dataFilterFromColaGuardia.colegiado = this.rowGroups[this.positionSelected].cells[2].value;
-    dataFilterFromColaGuardia.grupo = this.rowGroups[this.positionSelected].cells[0].value;
+    dataFilterFromColaGuardia.turno = this.rowGroups[pos].cells[10].value;
+    dataFilterFromColaGuardia.guardia = this.rowGroups[pos].cells[11].value;
+    dataFilterFromColaGuardia.colegiado = this.rowGroups[pos].cells[2].value;
+    dataFilterFromColaGuardia.grupo = this.rowGroups[pos].cells[0].value;
     this.persistenceService.setDatos(dataFilterFromColaGuardia);
     sessionStorage.setItem(
       "itemSaltosCompColaGuardia",

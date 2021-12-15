@@ -875,9 +875,14 @@ this.estado = this.datosGeneralesIniciales.estado;
         data => {
           this.showMessage('info', "Se ha actualizado correctamente", "Se ha actualizado correctamente");
         }, err => {
-          this.showMessage('error', "No se ha actualizado correctamente", "No se ha actualizado correctamente");
+          if(err.status = "409"){
+            this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");
+          }else {
+            this.showMessage('error', "No se ha actualizado correctamente", "No se ha actualizado correctamente");
+          }
           //console.log(err);
         });
+       
   }
 
 

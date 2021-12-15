@@ -97,7 +97,7 @@ export class TablaResultadoMixComponent implements OnInit {
   infoParaElPadre: { fechasolicitudbajaSeleccionada: any; fechaActual: any; observaciones: any; id_persona: any; idturno: any, idinstitucion: any, idguardia: any,  fechasolicitud: any, fechavalidacion: any, fechabaja: any, observacionessolicitud: any, observacionesbaja: any, observacionesvalidacion: any, observacionesdenegacion: any, fechadenegacion: any, observacionesvalbaja: any, fechavaloralta: any, fechavalorbaja: any, validarinscripciones: any, estado: any} [];
   jsonParaEnviar: { tipoAccion:any, datos: any};
   
-  infoHabilitado: { isLetrado: any; validarjustificaciones:any; estadoNombre:any};
+  infoHabilitado: { isLetrado: any; validarInscripciones:any; estadoNombre:any};
   last;
   entra = false;
   comboTurnos = [];
@@ -705,6 +705,7 @@ export class TablaResultadoMixComponent implements OnInit {
      if (!this.seleccionarTodo && this.selectedArray.length <= 1) {
        //this.progressSpinner = true;
        this.persistenceService.setDatos(dataToSend);
+       console.log('dataToSend: ', dataToSend)
        //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
        this.router.navigate(["/fichaInscripcionesGuardia"]);
  
@@ -1054,21 +1055,21 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   HabilitarBotones(){
-    let validarjustificaciones = '';
+    let validarInscripciones = '';
     let estadoNombre = '';
     if (this.selectedRowValue[22] != undefined){
-       validarjustificaciones = this.selectedRowValue[22].value;
+      validarInscripciones = this.selectedRowValue[23].value;
     }
     if (this.selectedRowValue[8] != undefined){
       estadoNombre = this.selectedRowValue[8].value;
     }
     this.infoHabilitado= {
       isLetrado : this.isLetrado,
-      validarjustificaciones: validarjustificaciones,
+      validarInscripciones: validarInscripciones,
       estadoNombre: estadoNombre
  };    
 
-    if(this.infoHabilitado.validarjustificaciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
+    if(this.infoHabilitado.validarInscripciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
       this.habilitadoValidar=false;
     }else{
       this.habilitadoValidar=true;

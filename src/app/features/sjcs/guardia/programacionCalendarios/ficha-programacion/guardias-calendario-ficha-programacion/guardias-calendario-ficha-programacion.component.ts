@@ -615,7 +615,7 @@ setGuardiasCalendario(guardiaCalendario){
 
   saveGuardiasConjunto(lista){
     this.sigaService.postPaginado(
-      "guardiaCalendario_guardarGuardiaConjunto" ,"?idConjuntoGuardia=" + this.idConjuntoGuardiaElegido.toString(), lista).subscribe(
+      "guardiaCalendario_guardarGuardiaConjunto" ,"?idConjuntoGuardia=" + this.idConjuntoGuardiaElegido.toString() + "&fechaDesde=" + this.tarjetaDatosGenerales.fechaDesde + "&fechaHasta=" + this.tarjetaDatosGenerales.fechaHasta + "&idTurno=" + this.tarjetaDatosGenerales.idTurno + "&idGuardia=" + this.tarjetaDatosGenerales.idGuardia, lista, ).subscribe(
         data => {
           this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, true);
         }, err => {

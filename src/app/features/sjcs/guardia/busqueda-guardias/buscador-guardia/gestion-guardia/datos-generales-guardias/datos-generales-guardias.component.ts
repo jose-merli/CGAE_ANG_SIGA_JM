@@ -39,7 +39,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   msgs;
   resaltadoDatos: boolean = false;
   isLetrado : boolean = false;
-
+  @Input() idTurnoFromFichaTurno = null;
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
@@ -71,7 +71,13 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.body.descripcion = data.descripcion;
         this.body.descripcionPago = data.descripcionPago;
         this.body.idTipoGuardia = data.idTipoGuardia;
-        this.body.idTurno = data.idTurno;
+        if (this.idTurnoFromFichaTurno != null){
+          this.body.idTurno =  this.idTurnoFromFichaTurno;
+          this.modoEdicion = false;
+          this.permisoEscritura = true;
+        }else{
+          this.body.idTurno = data.idTurno;
+        }
         this.body.nombre = data.nombre;
         this.body.envioCentralita = data.envioCentralita;
         this.getComboTipoGuardia();

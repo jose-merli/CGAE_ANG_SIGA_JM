@@ -475,6 +475,7 @@ export class TarjetaLetradoComponent implements OnInit {
   }
 
   navigateToFichaColegial(){
+            sessionStorage.setItem("fromTarjetaLetradoInscripciones", JSON.stringify(this.datos));
             this.router.navigate(["/fichaColegial"]);
   }
 

@@ -32,6 +32,7 @@ import { AutoComplete, DataTable, Calendar } from 'primeng/primeng';
 import { DocushareItem } from '../../../../models/DocushareItem';
 import { Dialog } from 'primeng/dialog';
 import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
+import { PersistenceService } from '../../../../_services/persistence.service';
 
 
 
@@ -397,7 +398,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private persistenceService: PersistenceService
   ) { }
 
   ngOnInit() {
@@ -462,6 +464,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     } else if (sessionStorage.getItem("destinatarioCom") != null) {
       this.desactivarVolver = false;
     } else if (sessionStorage.getItem("esNuevoNoColegiado")) {
+      this.desactivarVolver = false;
+    } else if (sessionStorage.getItem("fromTarjetaLetradoInscripciones") != null){
       this.desactivarVolver = false;
     } else {
       //  LLEGA DESDE PUNTO DE MENÚ
@@ -606,6 +610,12 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   }
   // DE MOMENTO VA PERFE 
   backTo() {
+    if (sessionStorage.getItem("fromTarjetaLetradoInscripciones") != null){
+         this.persistenceService.setDatos(sessionStorage.getItem("fromTarjetaLetradoInscripciones"));
+         sessionStorage.removeItem("fromTarjetaLetradoInscripciones");
+         this.router.navigate(["/fichaInscripcionesGuardia"]);
+
+    }else{
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("esNuevoNoColegiado");
     sessionStorage.removeItem("filtrosBusquedaColegiados");
@@ -638,6 +648,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       sessionStorage.removeItem("solicitudAprobada")
       this.location.back();
     }
+  }
   }
   arreglarFecha(fecha) {
 

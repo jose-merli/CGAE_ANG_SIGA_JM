@@ -108,7 +108,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
             this.getTurnosByColegiadoFecha();
             this.onChangeTurno();
             this.onChangeGuardia();
-            sessionStorage.removeItem("asistenciaCopy");
+            
           },
           reject: () =>{
             sessionStorage.removeItem("asistenciaCopy");
@@ -433,6 +433,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
         },
         err => {
           //console.log(err);
+          this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), '');
           this.progressSpinner = false;
         },
         () => {

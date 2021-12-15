@@ -431,7 +431,8 @@ inicio(){
           { type: 'text', value: datoObj.idGrupoGuardiaColegiado},
           { type: 'invisible', value: datoObj.ordenCola },
           { type: 'invisible', value: datoObj.idturno },
-          { type: 'invisible', value: datoObj.idGuardia }
+          { type: 'invisible', value: datoObj.idGuardia },
+          { type: 'invisible', value: datoObj.ordenBD }
         ];
       } else {
         objArr.cells = [
@@ -466,7 +467,11 @@ inicio(){
     this.rowGroupsAux = this.trmService.getTableData(this.processedData);
     this.totalRegistros = this.rowGroups.length;
   }
-
+  colaGuardiaOrdenada(event){
+    this.rowGroupModified = event;
+    let colaGuardiaUpdated = {"inscripcionesItem": this.rowGroupModified};
+    this.setColaGuardia(colaGuardiaUpdated);
+  }
   updateColaGuardia(event){
     let datCopy = {
       apellido1: "",
@@ -487,7 +492,8 @@ inicio(){
       orden: "",
       ordenCola: "",
       order: '',
-      saltos: ""
+      saltos: "",
+      ordenBD: ''
     };
     let datosModif = [];
     this.rowGroupModified = event;
@@ -497,15 +503,19 @@ inicio(){
       //let orden = row.cells[2];
       let numCol = row.cells[2];
       let idGGC = row.cells[8]
-      this.datos.forEach(dat => {
+      let ordenBD = row.cells[12];
+      this.datos.forEach((dat, pos) => {
+        
         if (dat.nColegiado == numCol.value && dat.idGrupoGuardiaColegiado != datCopy.idGrupoGuardiaColegiado && dat.idGrupoGuardiaColegiado == idGGC.value){
             datCopy = Object.assign({},dat);
+            datCopy.ordenBD = this.rowGroupModified[pos].cells[12].value;
             if (ordenCola.value != null){
             datCopy.ordenCola = ordenCola.value.toString();
             datCopy.orden = ordenCola.value.toString();
             }else{
               datCopy.ordenCola = null;
               datCopy.orden = null;
+              
             }
             if (grupo != null){
             datCopy.numeroGrupo = grupo.value;

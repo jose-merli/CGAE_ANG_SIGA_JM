@@ -170,7 +170,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
             this.file)
           .subscribe(
             data => {
-              this.file = undefined;
+             // this.file = undefined;
               this.progressSpinner = false;
               this.uploadFileDisable = true;
               body.errores = data["error"];
@@ -196,7 +196,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
           .postSendContent("cargasMasivasGuardia_uploadFileGC", this.file)
           .subscribe(
             data => {
-              this.file = undefined;
+              //this.file = undefined;
               this.progressSpinner = false;
               this.uploadFileDisable = true;
               body.errores = data["error"];
@@ -227,7 +227,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
         )
           .subscribe(
             data => {
-              this.file = undefined;
+              //this.file = undefined;
               this.progressSpinner = false;
               this.uploadFileDisable = true;
               body.errores = data["error"];

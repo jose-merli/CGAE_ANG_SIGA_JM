@@ -364,8 +364,8 @@ formatDate2(date) {
  
       if (compareDateOk == 1) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Rango de fechas incorrecto. Debe cumplir que la fecha desde sea menor o igual que la fecha hasta");
-      }else if (compareDateFuture1 != -1 || compareDateFuture2 != -1){
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen guardias asociadas a una programación con fechas futuras");
+      //}else if (compareDateFuture1 != -1 || compareDateFuture2 != -1){
+        //this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen guardias asociadas a una programación con fechas futuras");
       }else{
 
 

@@ -157,14 +157,32 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   searchChange(j: any) {
     let isReturn = true;
     this.rowGroups = this.rowGroupsAux.filter((row) => {
-      if (
-        this.searchText[j] != " " &&
-        this.searchText[j] != undefined &&
-        !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
-      ) {
-        isReturn = false;
-      } else {
-        isReturn = true;
+      let value = "";
+      if(row.cells[j].type == 'select'){
+        if (row.cells[j].value.toString() == 'C'){
+          value = "Compensación";
+        }else if (row.cells[j].value.toString() == 'S'){
+          value = "Saltos";
+        }
+        if (
+          this.searchText[j] != " " &&
+          this.searchText[j] != undefined &&
+          !value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
+        ) {
+          isReturn = false;
+        } else {
+          isReturn = true;
+        }
+      }else{
+        if (
+          this.searchText[j] != " " &&
+          this.searchText[j] != undefined &&
+          !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
+        ) {
+          isReturn = false;
+        } else {
+          isReturn = true;
+        }
       }
       if (isReturn) {
         return row;

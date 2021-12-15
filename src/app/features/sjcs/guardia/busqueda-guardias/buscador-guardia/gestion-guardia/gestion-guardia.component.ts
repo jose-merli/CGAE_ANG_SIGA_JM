@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { procesos_guardia } from '../../../../../../permisos/procesos_guarida';
@@ -59,11 +60,12 @@ export class GestionGuardiaComponent implements OnInit {
   persistenciaGuardia: GuardiaItem;
   origenGuarColeg:boolean;
   guardiaCole: any;
-
+  idTurnoFromFichaTurno = null;
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
     private commonService: CommonsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private router : Router) { }
 
 
   ngOnInit() {
@@ -77,12 +79,23 @@ export class GestionGuardiaComponent implements OnInit {
     }
     this.obtenerPermisos();
 
+    if (sessionStorage.getItem("crearGuardiaFromFichaTurno")) {
+     
+      this.persistenciaGuardia = new GuardiaItem();
+      this.persistenciaGuardia = JSON.parse(
+        sessionStorage.getItem("crearGuardiaFromFichaTurno")
+      );
+      this.datos = JSON.parse(JSON.stringify(this.persistenciaGuardia));
+      this.idTurnoFromFichaTurno = this.persistenciaGuardia.idTurno;
+    }
     if (sessionStorage.getItem("filtrosBusquedaGuardias")) {
-      sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
+     
       this.persistenciaGuardia = new GuardiaItem();
       this.persistenciaGuardia = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaGuardias")
       );
+
+      sessionStorage.removeItem("filtrosBusquedaGuardias");
     }
 
     //en caso de que la guardia venga desde Guardias de Colegiado.
@@ -128,7 +141,10 @@ export class GestionGuardiaComponent implements OnInit {
 
 
   backTo() {
-
+    if (sessionStorage.getItem("crearGuardiaFromFichaTurno")) {
+      this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: this.idTurnoFromFichaTurno } });
+      sessionStorage.removeItem("crearGuardiaFromFichaTurno");
+    }else{
     if (this.persistenciaGuardia != undefined) {
       sessionStorage.setItem(
         "filtrosBusquedaGuardiasFichaGuardia",
@@ -156,6 +172,7 @@ export class GestionGuardiaComponent implements OnInit {
         this.persistenceService.setDatos(datosFichaProgramacion);
          //this.router.navigate(["/fichaProgramacion"]);
         this.location.back();
+      }
   }
 
   modoEdicionSend(event) {

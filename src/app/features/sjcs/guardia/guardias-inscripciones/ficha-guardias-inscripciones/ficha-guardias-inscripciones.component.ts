@@ -79,7 +79,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		private localStorageService: SigaStorageService) { }
 
 	ngAfterViewInit(): void {
-		this.enviarEnlacesTarjeta();
+		//this.enviarEnlacesTarjeta();
 		this.goTop();
 	}
 
@@ -144,7 +144,10 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			}).catch(error => console.error(error));
 		//this.turno = JSON.parse(sessionStorage.getItem("turno"));
 		//if (this.persistenceService.getDatos() != undefined) {
-		this.datos = this.persistenceService.getDatos();
+			if (this.persistenceService.getDatos() != undefined && this.persistenceService.getDatos() != null){
+				this.datos = this.persistenceService.getDatos();
+			}
+		
 
 		//Comprueba la procedencia
 		if (sessionStorage.getItem("sesion") == "nuevaInscripcion") {
@@ -199,7 +202,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		//this.actualizarBotones();
 		this.getColaOficio();
 		this.HabilitarBotones();
-
+		this.enviarEnlacesTarjeta();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -237,7 +240,6 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	validar() {
 
 		this.controlarfechas();
-		let estado;
 		let body2 = new ResultadoInscripcionesBotones("");
 		body2 = this.datos;
 
@@ -286,7 +288,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 		this.objetoValidacion.push(objVal);
 
-		this.llamadaBackValidar(this.objetoValidacion, estado);
+		this.llamadaBackValidar(this.objetoValidacion, body2.estado);
 	}
 
 	llamadaBackValidar(objetoValidacion, estado) {
@@ -500,7 +502,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 	controlarfechas() {
 		if (this.datos.fechasolicitud != undefined || this.datos.fechasolicitud != null || this.datos.fechasolicitud != "") {
-			this.datos.fechasolicitud = this.transformaFecha(this.datos.fechasolicitud);
+			this.datos.fechasolicitud = this.datos.fechasolicitud; // ya viene con formato dd/MM/yyyy hh:mm:ss
+			//this.datos.fechasolicitud = this.transformaFecha(this.datos.fechasolicitud);
 		} else {
 			this.datos.fechasolicitud = null;
 		}
@@ -1240,7 +1243,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			'apellidos2': (obj.apellidos2 != null && obj.apellidos2 != undefined) ? obj.apellidos2 : null,
 			'idinstitucion': (obj.idinstitucion != null && obj.idinstitucion != undefined) ? obj.idinstitucion : null,
 			'idpersona': obj.idpersona,
-			'fechasolicitud': (obj['fechasolicitud'] != null && obj['fechasolicitud'] != undefined) ? new Date(this.changeDateFormat(obj['fechasolicitud'])) : null,
+			'fechasolicitud': (obj['fechasolicitud'] != null && obj['fechasolicitud'] != undefined) ? new Date(this.formatDateSol(obj['fechasolicitud'])) : null,
 			'observacionessolicitud': (obj.observacionessolicitud != null && obj.observacionessolicitud != undefined) ? obj.observacionessolicitud : null,
 			'fechavalidacion': (obj['fechavalidacion'] != null && obj['fechavalidacion'] != undefined) ? new Date(this.changeDateFormat(obj['fechavalidacion'])) : null,
 			'observacionesvalidacion': (obj.observacionesvalidacion != null && obj.observacionesvalidacion != undefined) ? obj.observacionesvalidacion : null,
@@ -1261,7 +1264,11 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 		return new ResultadoInscripciones(objeto);
 	}
-
+	formatDateSol(date) {
+		const pattern = 'dd/MM/yyyy hh:mm:ss';
+		return this.datepipe.transform(date, pattern);
+	
+	  }
 	callSaveService(url) {
 
 		let objVal: ResultadoInscripciones = this.rellenarObjetoBack(this.datos);

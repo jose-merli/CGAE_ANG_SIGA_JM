@@ -361,7 +361,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                 'apellidos2': dat.apellidos2,
                 'idinstitucion': dat.idinstitucion,
                 'idpersona': dat.idpersona,
-                'fechasolicitud': this.formatDateSol(dat.fechasolicitud),
+                'fechasolicitud': dat.fechasolicitud,
                 'observacionessolicitud': dat.observacionessolicitud,
                 'fechavalidacion': this.formatDate(dat.fechavalidacion),
                 'fechabaja': this.formatDate(dat.fechabaja),
@@ -432,7 +432,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         { type: 'link', value: res.apellidosnombre },                                                            //1
         { type: 'textToolTip', value: [res.nombre, res.abreviatura] }, //turno                                    //2
         { type: 'textToolTip', value: [res.descripcionGuardia, res.nombreGuardia] },                             //3
-        { type: 'text', value: res.fechasolicitud },                                                             //4
+        { type: 'timestamp', value: res.fechasolicitud },                                                             //4
         { type: 'text', value: res.fechavalidacion },                                                            //5
         { type: 'text', value: res.fechasolicitudbaja },                                                         //6
         { type: 'text', value: res.fechabaja },                                                                  //7

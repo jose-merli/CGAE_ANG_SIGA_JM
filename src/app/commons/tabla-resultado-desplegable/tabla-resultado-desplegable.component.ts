@@ -164,7 +164,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.selectedHeader.push(cab);
       this.cabecerasMultiselect.push(cab.name);
     });
-    this.totalRegistros = this.rowGroups.length;
+    if (this.rowGroups != undefined){
+      this.totalRegistros = this.rowGroups.length;
+    }else{
+      this.totalRegistros = 0;
+    }
+    
     this.selected = false;
     this.selectedArray = [];
     this.selecteChild = [];
@@ -404,6 +409,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   validaCheck(texto) {
     return texto === 'Si';
+  }
+  fillFechaAsist(event, cell, rowId, row, rowGroup, padre, index) {
+    cell.value = event;
+    this.rowIdsToUpdate.push(rowId);
+    if( rowGroup.rows[1].cells[3].type == 'datePickerAct'){
+      rowGroup.rows[1].cells[3].value = event;
+    }
   }
   fillFecha(event, cell, rowId, row, rowGroup, padre, index) {
     if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
@@ -1151,6 +1163,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
 
     this.lastChange = "onChangeMulti";
+
+
+      this.rowIdsToUpdate.push(rowId);
   }
 
   searchNuevo(comboModulos, comboAcreditacion ){
@@ -1923,7 +1938,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           }
         );
     }
-
+    fillRowGroup(event, rowGroup){
+      rowGroup.id = event;
+    }
     navigateComunicarJE(rowGroup, identificador) {
       sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
       if (this.pantalla == 'JE'){

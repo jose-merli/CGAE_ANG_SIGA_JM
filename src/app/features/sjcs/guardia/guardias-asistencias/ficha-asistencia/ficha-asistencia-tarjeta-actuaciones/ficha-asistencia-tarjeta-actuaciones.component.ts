@@ -82,9 +82,12 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
     }else{
       actuaciones.push(this.selectedDatos);
     }
+    if (newEstado == '1'){
+      actuaciones.forEach(act => {
+        act.anulada = '1';
+      })
+    }
     if(actuaciones.length > 0 ){
-      actuaciones.forEach(actuacion => {actuacion.anulada = newEstado;});
-
       this.sigaServices.postPaginado("busquedaGuardias_updateEstadoActuacion","?anioNumero="+this.asistencia.anioNumero, actuaciones).subscribe(
         n => {
 
@@ -106,6 +109,7 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
         }, () => {
           this.progressSpinner = false;
         });
+
     }
   }
 

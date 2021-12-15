@@ -31,9 +31,9 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
   ];
   comboEstado = [];
   comboActuacionesV = [
-    {label:"NO",value:"N"},
-    {label:"SÍ",value:"S"},
-    {label:"SIN ACT.",value:"SA"}
+    {label:"NO",value:"'NO'"},
+    {label:"SÍ",value:"'SI'"},
+    {label:"SIN ACT.",value: "'SA'"}
   ];
   comboEstadoAsistido = [];
   comboJuzgados = [];
@@ -72,7 +72,6 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     }
   }
   ngAfterViewInit(): void {
-
     if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
       this.modoBusqueda = 'a';
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
@@ -197,7 +196,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
   }
 
   getComboTurnos(){
-    this.sigaServices.get("combo_turnos").subscribe(
+    this.sigaServices.get("combo_turnos_designas").subscribe(
       n => {
         this.comboTurnos = n.combooItems;
       },

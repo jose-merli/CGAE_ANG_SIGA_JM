@@ -9,9 +9,9 @@
   <div>
     <app-tarjeta-resumen-fija  class="pb-50" *ngIf="permisoEscrituraResumen != undefined" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="infoResumen" [enlaces]="enlacesTarjetaResumen" icono="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
 
-    <app-datos-generales-guardias [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" *ngIf="permisoEscrituraDatosGenerales != undefined" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-guardias>
+    <app-datos-generales-guardias [idTurnoFromFichaTurno]="idTurnoFromFichaTurno" [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" *ngIf="permisoEscrituraDatosGenerales != undefined" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-guardias>
 
-    <app-datos-calendarios-guardias [openFicha]="openCalendarioGuardia" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaCalendariosGuardias]="tarjetaCalendariosGuardias" *ngIf="permisoEscrituraConfCalen != undefined" [permisoEscritura]="permisoEscrituraConfCalen" [modoEdicion]="modoEdicion"></app-datos-calendarios-guardias>
+    <app-datos-calendarios-guardias  [openFicha]="openCalendarioGuardia" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaCalendariosGuardias]="tarjetaCalendariosGuardias" *ngIf="permisoEscrituraConfCalen != undefined" [permisoEscritura]="permisoEscrituraConfCalen" [modoEdicion]="modoEdicion"></app-datos-calendarios-guardias>
 
     <app-datos-conf-cola [openFicha]="openConfigCola" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaConfigCola]="tarjetaConfigCola" *ngIf="permisoEscrituraConfCola != undefined" [permisoEscritura]="permisoEscrituraConfCola" [modoEdicion]="modoEdicion"
       (modoEdicionSend)="modoEdicionSend($event)" ></app-datos-conf-cola>

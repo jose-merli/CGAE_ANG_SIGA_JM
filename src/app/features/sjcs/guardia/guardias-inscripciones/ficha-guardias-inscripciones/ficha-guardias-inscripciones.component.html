@@ -45,7 +45,7 @@
     <!--<app-tarjeta-cola class="pb-50" *ngIf="permisosTarjetaCola" chincheta="true" icono="far fa-file-alt" 
     titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3"></app-tarjeta-cola>-->
     <app-tarjeta-letrado (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaLetrado]="tarjetaLetrado"  [letradoItem]="letradoItem" 
-      (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'letrado'" [openLetrado]="openLetrado"></app-tarjeta-letrado>
+      (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'letrado'" [openLetrado]="openLetrado" [datos]="datos"></app-tarjeta-letrado>
     <app-tarjeta-inscripcion-guardia [datos]="datos" [idPersona]="idPersona" (seleccionadosSend)="seleccionadosSend($event)"  [modoEdicion]="modoEdicion"
       *ngSwitchCase="'inscripcion'" (resultado)="BotonesInfo($event)"></app-tarjeta-inscripcion-guardia>
     <app-tarjeta-gestion-inscripcion-guardia [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion"
