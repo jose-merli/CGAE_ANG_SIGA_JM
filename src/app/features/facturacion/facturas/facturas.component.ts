@@ -46,7 +46,7 @@ export class FacturasComponent implements OnInit {
 			this.buscar = true;
 			let error = JSON.parse(n.body).error;
 
-			console.log(this.datos);
+			//console.log(this.datos);
 
 			if (this.tabla != null && this.tabla != undefined) {
 			this.tabla.table.sortOrder = 0;
