@@ -241,17 +241,18 @@ this.estado = this.datosGeneralesIniciales.estado;
     if (this.persistenciaGuardia != undefined) {
       this.persistenciaGuardia.volver = true;
       //console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
-      this.filtros = this.dataToReceive.filtrosBusqueda;
-      if (this.filtros.fechaCalendarioDesde == undefined || this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == ''){
-        let AnioAnterior = new Date().getFullYear() - 1;
-        this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
-        }
-      sessionStorage.setItem(
-        "filtrosBusquedaGuardiasFichaGuardia",
-        JSON.stringify(this.filtros)
-      );
+      if(this.dataToReceive.filtrosBusqueda!= null && this.dataToReceive.filtrosBusqueda != undefined){
+        this.filtros = this.dataToReceive.filtrosBusqueda;
+        if (this.filtros.fechaCalendarioDesde == undefined || this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == ''){
+          let AnioAnterior = new Date().getFullYear() - 1;
+          this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
+          }
+        sessionStorage.setItem(
+          "filtrosBusquedaGuardiasFichaGuardia",
+          JSON.stringify(this.filtros)
+        );
+      }
     }
-
     this.location.back();
   }
 
