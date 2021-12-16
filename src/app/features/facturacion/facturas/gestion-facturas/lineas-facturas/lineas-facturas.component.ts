@@ -53,7 +53,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getComboTiposIVA();
-    //this.getParametrosFACTURACION();
+    this.getParametrosFACTURACION();
    }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -153,30 +153,30 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     );
   }
 
-    // Obtener parametros de FACTURACION
-    getParametrosFACTURACION(): void {
-      this.sigaServices.getParam("facturacionPyS_parametrosLINEAS", "?idInstitucion=2005").subscribe(
-        n => {
-          let items: ComboItem[] = n.combooItems;
-          console.log(items);
-          
-          let modificarDescripcionItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_DESCRIPCION");
-          let modificarImporteUnitarioItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IMPORTE_UNITARIO");
-          let modificarIVAItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IVA");
+  // Obtener parametros de FACTURACION
+  getParametrosFACTURACION(): void {
+    this.sigaServices.getParam("facturacionPyS_parametrosLINEAS", "?idInstitucion=2005").subscribe(
+      n => {
+        let items: ComboItem[] = n.combooItems;
+        console.log(items);
+        
+        let modificarDescripcionItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_DESCRIPCION");
+        let modificarImporteUnitarioItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IMPORTE_UNITARIO");
+        let modificarIVAItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IVA");
 
-          if (modificarDescripcionItem)
-            this.modificarDescripcion = modificarDescripcionItem.value == "1";
-          if (modificarImporteUnitarioItem)
-            this.modificarImporteUnitario = modificarImporteUnitarioItem.value == "1";
-          if (modificarIVAItem)
-            this.modificarIVA = modificarIVAItem.value == "1";
-          
-        },
-        err => {
-          console.log(err);
-        }
-      );
-    }
+        if (modificarDescripcionItem)
+          this.modificarDescripcion = modificarDescripcionItem.value == "1";
+        if (modificarImporteUnitarioItem)
+          this.modificarImporteUnitario = modificarImporteUnitarioItem.value == "1";
+        if (modificarIVAItem)
+          this.modificarIVA = modificarIVAItem.value == "1";
+        
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 
   // Funciones para el guardado
 

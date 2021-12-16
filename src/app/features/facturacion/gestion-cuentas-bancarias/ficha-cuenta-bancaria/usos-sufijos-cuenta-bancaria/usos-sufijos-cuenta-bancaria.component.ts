@@ -1,5 +1,5 @@
 import { ThrowStmt } from '@angular/compiler';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
@@ -22,7 +22,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   @Input() openTarjetaUsosSufijos;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<CuentasBancariasItem>();
+  @Output() refreshData = new EventEmitter<void>();
   
   // Tabla
   datos: any[] = [];
@@ -47,7 +47,6 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   comboSeriesFacturacion = [];
 
   constructor(
-    private persistenceService: PersistenceService,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -63,11 +62,13 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
     this.progressSpinner = false;
   }
 
-  ngOnChanges() {
-    this.restablecer();
-    this.getComboSufijo();
-    this.getComboSerieFacturacion();
-    this.getUsosSufijos();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.body) {
+      this.restablecer();
+      this.getComboSufijo();
+      this.getComboSerieFacturacion();
+      this.getUsosSufijos();
+    }
   }
 
   // Combo de sufijos
@@ -219,8 +220,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
     this.sigaServices.post("facturacionPyS_insertaActualizaSerie", this.datos).subscribe(
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.body.numUsos = this.datos.length;
-        this.guardadoSend.emit(this.body);
+        this.refreshData.emit();
 
         this.progressSpinner = false;
       },

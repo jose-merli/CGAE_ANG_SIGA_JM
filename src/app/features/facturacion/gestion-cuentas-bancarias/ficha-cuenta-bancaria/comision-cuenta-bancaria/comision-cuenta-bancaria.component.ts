@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -37,9 +37,11 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.restablecer();
-    this.getComboTiposIVA();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+      this.restablecer();
+      this.getComboTiposIVA();
+    }
   }
 
   // Combo de tipos IVA
@@ -47,6 +49,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
     this.sigaServices.getParam("facturacionPyS_comboTiposIVA", "?codBanco=" + this.body.codBanco).subscribe(
       n => {
         this.comboTiposIVA = n.combooItems;
+        this.comboTiposIVA.forEach(c => c.label = c.label1);
         this.commonsService.arregloTildesCombo(this.comboTiposIVA);
       },
       err => {
