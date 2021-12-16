@@ -608,41 +608,43 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	getColaOficio() {
 		this.datos.historico = this.historico;
 		this.progressSpinner = true;
-		this.sigaServices.post("guardiasInscripciones_TarjetaColaGuardia", this.datos.idguardia).subscribe(
-			n => {
-				// this.datos = n.turnosItem;
-				this.datosColaOficio = JSON.parse(n.body).combooItems;
-				this.datosColaOficio.forEach(element => {
-					element.orden = +element.orden;
-				});
-				
-				this.progressSpinner = false;
+		if(this.datos.idguardia!= null && this.datos.idguardia!= undefined){
+			this.sigaServices.post("guardiasInscripciones_TarjetaColaGuardia", this.datos.idguardia).subscribe(
+				n => {
+					// this.datos = n.turnosItem;
+					this.datosColaOficio = JSON.parse(n.body).combooItems;
+					this.datosColaOficio.forEach(element => {
+						element.orden = +element.orden;
+					});
+					
+					this.progressSpinner = false;
 
-			},
-			err => {
-				//console.log(err);
-				this.progressSpinner = false;
-			}, () => {
-				this.progressSpinner = false;
-				let prueba: String = this.datos.ncolegiado.toString();
-				let findDato = this.datosColaOficio.find(item => item.numerocolegiado == prueba);
-				if (findDato != undefined) {
-					this.datos3 = [
-						{
-							label: "Posición actual en la cola",
-							value: findDato.orden
-						},
-						{
-							label: "Número total de letrados apuntados",
-							value: this.datosColaOficio.length
-						},
-					]
+				},
+				err => {
+					//console.log(err);
+					this.progressSpinner = false;
+				}, () => {
+					this.progressSpinner = false;
+					let prueba: String = this.datos.ncolegiado.toString();
+					let findDato = this.datosColaOficio.find(item => item.numerocolegiado == prueba);
+					if (findDato != undefined) {
+						this.datos3 = [
+							{
+								label: "Posición actual en la cola",
+								value: findDato.orden
+							},
+							{
+								label: "Número total de letrados apuntados",
+								value: this.datosColaOficio.length
+							},
+						]
 
+					}
+
+					//console.log("this.datos3: ", this.datos3);
 				}
-
-				//console.log("this.datos3: ", this.datos3);
-			}
-		);
+			);
+		}
 		this.progressSpinner = false;
 	}
 
@@ -1000,10 +1002,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				data => {
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 					this.progressSpinner = false;
-					//El redireccionamiento es una solucion temporal hasta que se
-					//decida el método de actualización de la ficha.
-					//this.router.navigate(["/inscripciones"]);
-					this.ngOnInit();
+					//Como se puede solicitar el alta para varias guardias no se puede refrescar la pantalla
+					this.location.back;
 				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {

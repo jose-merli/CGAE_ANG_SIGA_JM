@@ -165,7 +165,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
       this.buscarDesdeEnlace();
       this.filtros.usuarioBusquedaExpress.numColegiado = this.datosColegiado.numColegiado;
-
+      sessionStorage.removeItem("datosColegiado");
     }
 
     this.commonsService.checkAcceso(procesos_guardia.inscripciones_guardias)
