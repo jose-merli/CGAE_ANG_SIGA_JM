@@ -556,13 +556,12 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     if (!this.servicio.editar) {
       this.subscriptionCrearServicioInstitucion = this.sigaServices.post("fichaServicio_crearServicio", this.servicio).subscribe(
         response => {
-
-          if (JSON.parse(response.body).error.code == 500) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          } else {
+          if (response.status == 200) {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.desactivarBotonEliminar = false;
             this.mostrarTarjetaFormaPagos.emit(true);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
 
           this.progressSpinner = false;
@@ -629,11 +628,11 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
 
         this.subscriptionActivarDesactivarServicios = this.sigaServices.post("serviciosBusqueda_activarDesactivar", listaServiciosDTO).subscribe(
           response => {
-            if (JSON.parse(response.body).error.code == 500) {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            } else {
+            if (response.status == 200) {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.desactivarBotonEliminar = false;
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
             }
           },
           err => {
