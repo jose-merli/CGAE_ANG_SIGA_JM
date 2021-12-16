@@ -37,8 +37,36 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   modoEdicion: boolean;
   progressSpinner: boolean;
   datosFichDatGenerales;
-  datosFichConfiFac;
-  datosFichConfiAdi;
+  datosFichConfiFac = {
+    diasDis:{
+      lDis: false,
+      mDis: false,
+      xDis: false,
+      jDis: false,
+      vDis: false,
+      sDis: false,
+      dDis: false,
+    },
+    diasAsAc:{
+      lAsAc: false,
+      mAsAc: false,
+      xAsAc: false,
+      jAsAc: false,
+      vAsAc: false,
+      sAsAc: false,
+      dAsAc: false,
+    },
+    
+    agruparDis:false,
+
+    agruparAsAc:false
+  };
+  datosFichConfiAdi = {
+    facActuaciones:false,
+    facAsunAnt: false,
+    proceso2014: false,
+    descontar: false
+  };
   msgs: any[];
   tieneDatos: boolean;
   datos: BaremosGuardiaItem = new BaremosGuardiaItem();
@@ -152,13 +180,422 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   guardarCerrar() {
     this.progressSpinner = true
     let confBaremo: BaremosGuardiaItem[] = [];
+    let turno,guardia
 
-    let turno, guardia;
-    //obtenenos el turno y la guardia (tarjeta datos generales).
-    if ((this.tarjetaDatosGenerales.filtros.idTurno != null || this.tarjetaDatosGenerales.filtros.idTurno != undefined)
+    if(!this.modoEdicion){
+      if ((this.tarjetaDatosGenerales.filtros.idTurno != null || this.tarjetaDatosGenerales.filtros.idTurno != undefined)
       && (this.tarjetaDatosGenerales.filtros.idGuardia != null || this.tarjetaDatosGenerales.filtros.idGuardia != undefined)) {
-      turno = this.tarjetaDatosGenerales.filtros.idTurno;
-      guardia = this.tarjetaDatosGenerales.filtros.idGuardia;
+        turno = this.tarjetaDatosGenerales.filtros.idTurno;
+        guardia = this.tarjetaDatosGenerales.filtros.idGuardia;
+        this.configuracionHito(confBaremo,turno,guardia);
+      }else{
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false
+      }
+    }else if(this.modoEdicion){
+      turno = this.datos.idTurno
+      guardia = this.datos.idGuardia
+      this.configuracionHito(confBaremo,turno,guardia);
+    }
+      this.sigaServices.post("baremosGuardia_saveBaremo", confBaremo).subscribe(
+        data => {
+          let error = JSON.parse(data.body).error;
+          this.progressSpinner = false;
+
+          if (error != undefined && error != null && error.description != null) {
+            if (error.code == '200') {
+              this.showMessage("success", this.translateService.instant("general.message.success"), this.translateService.instant(error.description));
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+          if (err != undefined && JSON.parse(err.body).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.body).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+      )
+    
+
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  getDiasYAgrupar(obj: BaremosGuardiaItem) {
+    let ficha = this.tarjetaConfigFac
+    let diasDis = "";
+    let diasAsAc = "";
+
+    
+      if (ficha.agruparDis == 0) {
+        obj.agrupar = 0
+      } else if (ficha.agruparDis == 1 || ficha.agruparDis == undefined) {
+        obj.agrupar = 1
+      }
+      if (ficha.checkDisL == true) {
+        diasDis += 'L'
+      }
+      if (ficha.checkDisM == true) {
+        diasDis += 'M'
+      }
+      if (ficha.checkDisX == true) {
+        diasDis += 'X'
+      }
+      if (ficha.checkDisJ == true) {
+        diasDis += 'J'
+      }
+      if (ficha.checkDisV == true) {
+        diasDis += 'V'
+      }
+      if (ficha.checkDisS == true) {
+        diasDis += 'S'
+      }
+      if (ficha.checkDisD == true) {
+        diasDis += 'D'
+      }
+
+      obj.dias = diasDis.toString().trim();
+
+    
+    
+      if (ficha.agruparAsAc == 0) {
+        obj.agrupar = 0
+      } else if (ficha.agruparAsAc == 1 || ficha.agruparAsAc == undefined) {
+        obj.agrupar = 1
+      }
+      if (ficha.checkAsAcL == true) {
+        diasAsAc += 'L'
+      }
+      if (ficha.checkAsAcM == true) {
+        diasAsAc += 'M'
+      }
+      if (ficha.checkAsAcX == true) {
+        diasAsAc += 'X'
+      }
+      if (ficha.checkAsAcJ == true) {
+        diasAsAc += 'J'
+      }
+      if (ficha.checkAsAcV == true) {
+        diasAsAc += 'V'
+      }
+      if (ficha.checkAsAcS == true) {
+        diasAsAc += 'S'
+      }
+      if (ficha.checkAsAcD == true) {
+        diasAsAc += 'D'
+      }
+
+      obj.dias = diasAsAc.toString().trim();
+    
+  }
+
+  hito(obj, idHito, turno, guardia, precio) {
+    let hito: BaremosGuardiaItem = new BaremosGuardiaItem()
+    hito.idHito = idHito
+    this.getDiasYAgrupar(hito)
+    hito.idTurno = turno;
+    hito.idGuardia = guardia;
+    hito.precioHito = precio
+    obj.push(hito);
+  }
+
+  getBaremo(obj) {
+    this.progressSpinner = true
+    this.sigaServices.post("baremosGuardia_getBaremo", obj).subscribe(
+      data => {
+        this.datosFichaBaremos = JSON.parse(data.body).baremosGuardiaItems;
+        this.rellenaConfiguracionBaremo(this.datosFichaBaremos);
+        let error = JSON.parse(JSON.stringify(data.body)).error;
+        this.progressSpinner = false;
+
+        if (error != undefined && error != null && error.description != null) {
+          if (error.code == '200') {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        if (err != undefined && JSON.parse(JSON.stringify(err)).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      }
+    )
+  }
+
+  rellenaConfiguracionBaremo(data: BaremosGuardiaItem[]) {
+   let hitosDisponibilidad = [1,2,55,53,45,44,4,56,54,46];
+   let hitosAsAc = [20,5,3,10,22,8,19];
+    let agrupaDis;
+    let diasDis;
+    let agrupaAsAc;
+    let diasAsAc;
+    let event: boolean = false;
+   data.forEach(e =>{
+     if(hitosDisponibilidad.includes(parseInt(e.idHito))){
+      agrupaDis = e.agrupar;
+      diasDis = e.dias
+     }else if(hitosAsAc.includes(parseInt(e.idHito))){
+      agrupaAsAc = e.agrupar
+      diasAsAc = e.dias
+     }
+   })
+
+   if (agrupaAsAc == 0) {
+    this.datosFichConfiFac.agruparAsAc = true
+  } else if(agrupaAsAc == 1){
+    this.datosFichConfiFac.agruparAsAc = false
+  }
+
+  if (agrupaDis == 0) {
+    this.datosFichConfiFac.agruparDis = true
+  } else if(agrupaDis == 1){
+    this.datosFichConfiFac.agruparDis = false
+  }
+
+  
+    
+
+
+    for (let h of data) {
+      let hito = parseInt(h.idHito);
+      let precioHito = parseFloat(h.precioHito);
+
+      switch (hito) {
+        //para hito principal 1.
+        case 1:
+          event = true
+         this.tarjetaConfigFac.disponibilidad = true
+          this.tarjetaConfigFac.onChangeDisponibilidad(event)
+          this.tarjetaConfigFac.contDis = 'asi'
+          this.tarjetaConfigFac.changeContDis()
+          
+          this.tarjetaConfigFac.filtrosDis.importeDis = precioHito
+          break;
+
+
+        case 2:
+          event = true
+          this.tarjetaConfigFac.disponibilidad = true
+          this.tarjetaConfigFac.onChangeDisponibilidad(event)
+          this.tarjetaConfigFac.contDis = 'asi'
+          this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.filtrosDis.importeMaxDis = precioHito
+          break;
+
+
+        case 55:
+          event = true
+          this.tarjetaConfigFac.disponibilidad = true
+          this.tarjetaConfigFac.onChangeDisponibilidad(event)
+          this.tarjetaConfigFac.contDis = 'asi'
+          this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.filtrosDis.importeMinDis = precioHito
+          break;
+
+
+        case 53:
+          event = true
+          this.tarjetaConfigFac.disponibilidad = true
+          this.tarjetaConfigFac.onChangeDisponibilidad(event)
+          this.tarjetaConfigFac.contDis = 'asi'
+          this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.filtrosDis.dispAsuntosDis = precioHito
+          break;
+
+
+        case 45://comprobar hito al que esta asociado 
+        if(data.some(e =>e.idHito === "53" )){
+          this.tarjetaConfigFac.filtrosDis.aPartirDis = precioHito
+        }else if(data.some(e =>e.idHito === "2" )){
+          this.tarjetaConfigFac.filtrosDis.aPartirMax = precioHito
+        }
+
+          break;
+        //para hito principal 44
+
+        case 44:
+          event = true
+          this.tarjetaConfigFac.disponibilidad = true
+          this.tarjetaConfigFac.onChangeDisponibilidad(event)
+          this.tarjetaConfigFac.contDis = 'act'
+          this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.filtrosDis.importeDis = precioHito
+          break;
+
+
+        case 4:
+          event = true
+          this.tarjetaConfigFac.disponibilidad = true
+          this.tarjetaConfigFac.onChangeDisponibilidad(event)
+          this.tarjetaConfigFac.contDis = 'act'
+          this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.filtrosDis.importeMaxDis = precioHito
+          break;
+
+
+        case 56:
+          event = true
+          this.tarjetaConfigFac.disponibilidad = true
+          this.tarjetaConfigFac.onChangeDisponibilidad(event)
+          this.tarjetaConfigFac.contDis = 'act'
+          this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.filtrosDis.importeMinDis = precioHito
+          break;
+
+
+        case 54:
+          event = true
+          this.tarjetaConfigFac.disponibilidad = true
+          this.tarjetaConfigFac.onChangeDisponibilidad(event)
+          this.tarjetaConfigFac.contDis = 'act'
+          this.tarjetaConfigFac.changeContDis()
+          this.tarjetaConfigFac.filtrosDis.dispAsuntosDis = precioHito
+          break;
+
+
+        case 46://comprobar hito al que esta asociado  
+          if(data.some(e =>e.idHito === "54" )){
+            this.tarjetaConfigFac.filtrosDis.aPartirDis = precioHito
+          }else if(data.some(e =>e.idHito === "4" )){
+            this.tarjetaConfigFac.filtrosDis.aPartirMax = precioHito
+          }
+          break;
+        //para hito principal 20 y 5
+
+        case 20:
+          event = true
+          this.tarjetaConfigFac.asiac = true
+          this.tarjetaConfigFac.onChangeAsAc(event);
+          this.tarjetaConfigFac.contAsAc = 'asi'
+          this.tarjetaConfigFac.changeContAsAc()
+          this.tarjetaConfigFac.precio = 'porTipos'
+          this.tarjetaConfigFac.changePrecio()
+          this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
+          break;
+
+
+        case 5:
+          event = true
+          this.tarjetaConfigFac.asiac = true
+          this.tarjetaConfigFac.onChangeAsAc(event);
+          this.tarjetaConfigFac.contAsAc = 'asi'
+          this.tarjetaConfigFac.changeContAsAc()
+          this.tarjetaConfigFac.precio = 'unico'
+          this.tarjetaConfigFac.changePrecio()
+          this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
+          break;
+        case 3: 
+        this.tarjetaConfigFac.filtrosAsAc.importeMaxAsAc = precioHito
+          break;
+
+
+        case 10:
+        this.tarjetaConfigFac.filtrosAsAc.dispAsuntosAsAc = precioHito
+          break;
+
+
+        //para hito principal 9
+        case 9:
+          event = true
+          this.tarjetaConfigAdi.facActuaciones = true
+          this.tarjetaConfigAdi.onChangeFacActuaciones(event)
+          this.tarjetaConfigAdi.precio = 'unico'
+          this.tarjetaConfigAdi.changePrecio() 
+          this.tarjetaConfigAdi.filtrosAdi.importe = precioHito
+          break;
+
+
+        case 6:
+          this.tarjetaConfigAdi.filtrosAdi.importeMax = precioHito
+          break;
+
+        //para hito principal 25
+        case 25:
+          event = true
+          this.tarjetaConfigAdi.facActuaciones = true
+          this.tarjetaConfigAdi.onChangeFacActuaciones(event)
+          this.tarjetaConfigAdi.precio = 'porTipos'
+          this.tarjetaConfigAdi.changePrecio()
+          this.tarjetaConfigAdi.filtrosAdi.importe = precioHito
+          break;
+
+
+        case 24:
+          this.tarjetaConfigAdi.filtrosAdi.importeMax = precioHito
+          break;
+        //para hito principal 7 y 22
+        case 7:
+          event = true
+          this.tarjetaConfigAdi.facActuaciones = true
+          this.tarjetaConfigFac.onChangeAsAc(event)
+          this.tarjetaConfigFac.contAsAc = 'act'
+          this.tarjetaConfigFac.changeContAsAc()
+          this.tarjetaConfigFac.precio = 'unico'
+          this.tarjetaConfigFac.changePrecio()
+          this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
+          break;
+
+
+        case 22:
+          event = true
+          this.tarjetaConfigAdi.facActuaciones = true
+          this.tarjetaConfigFac.onChangeAsAc(true)
+          this.tarjetaConfigFac.contAsAc = 'act'
+          this.tarjetaConfigFac.changeContAsAc()
+          this.tarjetaConfigFac.precio = 'porTipos'
+          this.tarjetaConfigFac.changePrecio()
+          this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
+          break;
+
+
+        case 8: 
+        this.tarjetaConfigFac.filtrosAsAc.importeMaxAsAc = precioHito
+          break;
+
+        case 19:
+          this.tarjetaConfigFac.filtrosAsAc.dispAsuntosAsAc = precioHito
+          break;
+
+        //para hito 12 (SOJ)
+        case 12:
+          this.tarjetaConfigAdi.importeSOJ = precioHito
+          break;
+
+
+        //para hito 13 (EJG)
+        case 13:
+          this.tarjetaConfigAdi.importeEJG = precioHito
+          
+          break;
+
+      }
+    }
+
+  } 
+
+  configuracionHito(confBaremo,turno,guardia){
+    //obtenenos el turno y la guardia (tarjeta datos generales).
+   
 
       //tarjeta configuracion de facturacion.
       //por disponibilidad.
@@ -210,7 +647,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           if ((this.tarjetaConfigFac.filtrosDis.importeMaxDis != undefined || this.tarjetaConfigFac.filtrosDis.importeMaxDis != null)
             && (this.tarjetaConfigFac.filtrosDis.aPartirMax != undefined || this.tarjetaConfigFac.filtrosDis.aPartirMax != null)) {
 
-            //hito 2
+            //hito 4
             this.hito(confBaremo, '4', turno, guardia, this.tarjetaConfigFac.filtrosDis.importeMaxDis)
 
             //hito 46
@@ -334,332 +771,6 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         hito.precioHito = this.tarjetaConfigAdi.importeEJG
         confBaremo.push(hito);
       }
-
-      this.sigaServices.post("baremosGuardia_saveBaremo", confBaremo).subscribe(
-        data => {
-          let error = JSON.parse(data.body).error;
-          this.progressSpinner = false;
-
-          if (error != undefined && error != null && error.description != null) {
-            if (error.code == '200') {
-              this.showMessage("success", this.translateService.instant("general.message.success"), this.translateService.instant(error.description));
-            } else {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            }
-          }
-        },
-        err => {
-          this.progressSpinner = false;
-          if (err != undefined && JSON.parse(JSON.stringify(err)).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-        }
-      )
-    } else {
-      this.progressSpinner = false;
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-
-    }
-
   }
-
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
-  }
-
-  clear() {
-    this.msgs = [];
-  }
-
-  getDiasYAgrupar(obj: BaremosGuardiaItem) {
-    let ficha = this.tarjetaConfigFac
-    let diasDis = "";
-    let diasAsAc = "";
-
-    if (ficha.disponibilidad) {
-      if (ficha.agruparDis == 0) {
-        obj.agrupar = 0
-      } else if (ficha.agruparDis == 1 || ficha.agruparDis == undefined) {
-        obj.agrupar = 1
-      }
-      if (ficha.checkDisL == true) {
-        diasDis += 'L'
-      }
-      if (ficha.checkDisM == true) {
-        diasDis += 'M'
-      }
-      if (ficha.checkDisX == true) {
-        diasDis += 'X'
-      }
-      if (ficha.checkDisJ == true) {
-        diasDis += 'J'
-      }
-      if (ficha.checkDisV == true) {
-        diasDis += 'V'
-      }
-      if (ficha.checkDisS == true) {
-        diasDis += 'S'
-      }
-      if (ficha.checkDisD == true) {
-        diasDis += 'D'
-      }
-
-      obj.dias = diasDis.toString().trim();
-
-    }
-    if (ficha.asiac) {
-      if (ficha.agruparAsAc == 0) {
-        obj.agrupar = 0
-      } else if (ficha.agruparAsAc == 1 || ficha.agruparAsAc == undefined) {
-        obj.agrupar = 1
-      }
-      if (ficha.checkAsAcL == true) {
-        diasAsAc += 'L'
-      }
-      if (ficha.checkAsAcM == true) {
-        diasAsAc += 'M'
-      }
-      if (ficha.checkAsAcX == true) {
-        diasAsAc += 'X'
-      }
-      if (ficha.checkAsAcJ == true) {
-        diasAsAc += 'J'
-      }
-      if (ficha.checkAsAcV == true) {
-        diasAsAc += 'V'
-      }
-      if (ficha.checkAsAcS == true) {
-        diasAsAc += 'S'
-      }
-      if (ficha.checkAsAcD == true) {
-        diasAsAc += 'D'
-      }
-
-      obj.dias = diasAsAc.toString().trim();
-    }
-  }
-
-  hito(obj, idHito, turno, guardia, precio) {
-    let hito: BaremosGuardiaItem = new BaremosGuardiaItem()
-    hito.idHito = idHito
-    this.getDiasYAgrupar(hito)
-    hito.idTurno = turno;
-    hito.idGuardia = guardia;
-    hito.precioHito = precio
-    obj.push(hito);
-  }
-
-  getBaremo(obj) {
-    this.progressSpinner = true
-    this.sigaServices.post("baremosGuardia_getBaremo", obj).subscribe(
-      data => {
-        this.datosFichaBaremos = JSON.parse(data.body).baremosGuardiaItems;
-        this.rellenaConfiguracionBaremo(this.datosFichaBaremos);
-        let error = JSON.parse(JSON.stringify(data.body)).error;
-        this.progressSpinner = false;
-
-        if (error != undefined && error != null && error.description != null) {
-          if (error.code == '200') {
-            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        if (err != undefined && JSON.parse(JSON.stringify(err)).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-      }
-    )
-  }
-
-  rellenaConfiguracionBaremo(data: BaremosGuardiaItem[]) {
-   let hitosDisponibilidad = [1,2,55,53,45,44,4,56,54,46];
-   let hitosAsAc = [20,5,3,10,22,8,19];
-
-   data.forEach(e =>{
-     if(hitosDisponibilidad.includes(parseInt(e.idHito))){
-       this.tarjetaConfigFac.agruparDis = e.porDia
-     }else if(hitosAsAc.includes(parseInt(e.idHito))){
-      this.tarjetaConfigFac.agruparAsAc = e.porDia
-     }
-   })
-    
-
-
-    /* for (let h of data) {
-      let hito = parseInt(h.idHito);
-      let precioHito = parseFloat(h.precioHito);
-
-      switch (hito) {
-        //para hito principal 1.
-        case 1:
-          console.log('hito 1: Precio' + precioHito)
-          this.tarjetaConfigFac.disponibilidad = true
-          this.tarjetaConfigFac.contDis = 'asi'
-          this.tarjetaConfigFac.filtrosDis.importeDis = precioHito
-          break;
-
-
-        case 2:
-          this.tarjetaConfigFac.disponibilidad = true
-          this.tarjetaConfigFac.contDis = 'asi'
-          this.tarjetaConfigFac.filtrosDis.importeMaxDis = precioHito
-          break;
-
-
-        case 55:
-          this.tarjetaConfigFac.disponibilidad = true
-          this.tarjetaConfigFac.contDis = 'asi'
-          this.tarjetaConfigFac.filtrosDis.importeMinDis = precioHito
-          break;
-
-
-        case 53:
-          this.tarjetaConfigFac.disponibilidad = true
-          this.tarjetaConfigFac.contDis = 'asi'
-          this.tarjetaConfigFac.filtrosDis.dispAsuntosDis = precioHito
-          break;
-
-
-        case 45://comprobar hito al que esta asociado 
-          this.tarjetaConfigFac.filtrosDis.aPartirDis = precioHito
-          this.tarjetaConfigFac.filtrosDis.aPartirMax = precioHito
-          break;
-        //para hito principal 44
-
-        case 44:
-          this.tarjetaConfigFac.disponibilidad = true
-          this.tarjetaConfigFac.contDis = 'act'
-          this.tarjetaConfigFac.filtrosDis.importeDis = precioHito
-          break;
-
-
-        case 4:
-          this.tarjetaConfigFac.disponibilidad = true
-          this.tarjetaConfigFac.contDis = 'act'
-          this.tarjetaConfigFac.filtrosDis.importeMaxDis = precioHito
-          break;
-
-
-        case 56:
-          this.tarjetaConfigFac.disponibilidad = true
-          this.tarjetaConfigFac.contDis = 'act'
-          this.tarjetaConfigFac.filtrosDis.importeMinDis = precioHito
-          break;
-
-
-        case 54:
-          this.tarjetaConfigFac.disponibilidad = true
-          this.tarjetaConfigFac.contDis = 'act'
-          this.tarjetaConfigFac.filtrosDis.dispAsuntosDis = precioHito
-          break;
-
-
-        case 46://comprobar hito al que esta asociado 
-          this.tarjetaConfigFac.filtrosDis.aPartirDis = precioHito
-          this.tarjetaConfigFac.filtrosDis.aPartirMax = precioHito
-          break;
-        //para hito principal 20 y 5
-
-        case 20:
-          this.tarjetaConfigFac.asiac = true;
-          this.tarjetaConfigFac.contAsAc = 'asi'
-          this.tarjetaConfigFac.precio = 'porTipos'
-          this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
-          break;
-
-
-        case 5:
-          this.tarjetaConfigFac.asiac = true;
-          this.tarjetaConfigFac.contAsAc = 'asi'
-          this.tarjetaConfigFac.precio = 'unico'
-          this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
-          break;
-        case 3://comprobar hito al que esta asociado 
-        this.tarjetaConfigFac.filtrosAsAc.importeMaxAsAc = precioHito
-          break;
-
-
-        case 10://comprobar hito al que esta asociado 
-        this.tarjetaConfigFac.filtrosAsAc.dispAsuntosAsAc = precioHito
-          break;
-
-
-        //para hito principal 9
-        case 9:
-          this.tarjetaConfigAdi.facActuaciones = true
-          this.tarjetaConfigAdi.precio = 'unico'
-          this.tarjetaConfigAdi.filtrosAdi.importe = precioHito
-          break;
-
-
-        case 6:
-          this.tarjetaConfigAdi.filtrosAdi.importeMax = precioHito
-          break;
-
-        //para hito principal 25
-        case 25:
-          this.tarjetaConfigAdi.facActuaciones = true
-          this.tarjetaConfigAdi.precio = 'porTipos'
-          this.tarjetaConfigAdi.filtrosAdi.importe = precioHito
-          break;
-
-
-        case 24:
-          this.tarjetaConfigAdi.filtrosAdi.importeMax = precioHito
-          break;
-        //para hito principal 7 y 22
-        case 7:
-          this.tarjetaConfigFac.asiac = true;
-          this.tarjetaConfigFac.contAsAc = 'act'
-          this.tarjetaConfigFac.precio = 'unico'
-          this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
-          break;
-
-
-        case 22:
-          this.tarjetaConfigFac.asiac = true;
-          this.tarjetaConfigFac.contAsAc = 'act'
-          this.tarjetaConfigFac.precio = 'porTipos'
-          this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
-          break;
-
-
-        case 8://comprobar hito al que esta asociado 
-        this.tarjetaConfigFac.filtrosAsAc.importeMaxAsAc = precioHito
-          break;
-
-        case 19://comprobar hito al que esta asociado 
-        this.tarjetaConfigFac.filtrosAsAc.dispAsuntosAsAc = precioHito
-          break;
-
-        //para hito 12 (SOJ)
-        case 12:
-          this.tarjetaConfigAdi.importeSOJ = precioHito
-          break;
-
-
-        //para hito 13 (EJG)
-        case 13:
-          this.tarjetaConfigAdi.importeEJG = precioHito
-          
-          break;
-
-      }
-    }*/
-
-  } 
 
 }

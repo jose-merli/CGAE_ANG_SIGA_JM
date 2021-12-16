@@ -97,7 +97,7 @@
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Disponibilidad con asuntos</label>
-                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.dispAsuntos"
+                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.dispAsuntosDis"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
@@ -208,7 +208,7 @@
 
 <p-dialog width="1300" responsive="true" modal="modal" [draggable]="false" resizable="true" [(visible)]="showModal"
     (onHide)="cerrarDialog()">
-    <p-scrollPanel>
+    <p-scrollPanel width="auto" height="auto">
         <app-gestion-tiposasistencia *ngIf="contAsAc == 'asi' && showModal" [origenBaremos]="origenBaremos">
         </app-gestion-tiposasistencia>
         <app-gestion-tiposactuacion *ngIf="contAsAc == 'act' && showModal" [origenBaremos]="origenBaremos"></app-gestion-tiposactuacion>

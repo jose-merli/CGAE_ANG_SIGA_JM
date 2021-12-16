@@ -115,7 +115,7 @@
 </div>
 <p-dialog width="1300" height ="1200" responsive="true" modal="modal" [draggable]="false" resizable="true" [(visible)]="showModal"
     (onHide)="cerrarDialog()">
-    <p-scrollPanel width="1300" height ="1200">
+    <p-scrollPanel width="auto" height="auto">
         <app-gestion-tiposasistencia *ngIf="contAsAc == 'asi' && showModal" [origenBaremos]="origenBaremos">
         </app-gestion-tiposasistencia>
         <app-gestion-tiposactuacion *ngIf="contAsAc == 'act' && showModal" [origenBaremos]="origenBaremos"></app-gestion-tiposactuacion>
