@@ -2,7 +2,7 @@ import { DatePipe, Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
-import { CertificacionFacItem } from '../../../../../models/sjcs/CertificacionFacItem';
+// import { CertificacionFacItem } from '../../../../../models/sjcs/CertificacionesItem';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -20,8 +20,8 @@ import { TarjetaMovimientosVariosAsociadosComponent } from './tarjeta-movimiento
 export class FichaCertificacionFacComponent implements OnInit {
   msgs: any[];
   modoEdicion;
-  certificacion = new CertificacionFacItem;
-  datos:CertificacionFacItem = new CertificacionFacItem();
+  // certificacion = new CertificacionFacItem;
+  // datos:CertificacionFacItem = new CertificacionFacItem();
 
   listaTarjetas = [
     { id: 'fichaCertDatosGenerales', nombre: this.translateService.instant('general.message.datos.generales') },
@@ -61,8 +61,8 @@ export class FichaCertificacionFacComponent implements OnInit {
     }).catch(error => console.error(error));
 
     if(this.persistenceService.getDatos()){
-      this.datos = this.persistenceService.getDatos();
-      this.idCertificacion = this.datos.idCertificacion;
+      // this.datos = this.persistenceService.getDatos();
+      // this.idCertificacion = this.datos.idCertificacion;
       this.getCertificacion();
       this.modoEdicion = true;
     }else{

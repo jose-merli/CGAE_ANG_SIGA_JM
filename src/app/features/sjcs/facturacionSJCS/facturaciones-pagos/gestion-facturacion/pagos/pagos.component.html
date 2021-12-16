@@ -101,7 +101,7 @@
     <div class="card-footer" *ngIf="showFichaPagos">
       <div class="text-right main-button">
         <button (click)="nuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
-          label="{{ 'general.boton.new' | translate }}" [(disabled)]='disabledNuevo() || !permisos'></button>
+          label="{{ 'general.boton.new' | translate }}" [disabled]='disabledNuevo() || !permisos'></button>
       </div>
     </div>
   </div>

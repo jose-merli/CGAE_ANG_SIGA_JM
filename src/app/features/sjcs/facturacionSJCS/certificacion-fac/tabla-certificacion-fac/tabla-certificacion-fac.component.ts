@@ -2,8 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, 
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
-import { CertificacionFacItem } from '../../../../../models/sjcs/CertificacionFacItem';
-import { PersistenceService } from '../../../../../_services/persistence.service';
+import { CertificacionesItem } from '../../../../../models/sjcs/CertificacionesItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -13,64 +12,47 @@ import { SigaServices } from '../../../../../_services/siga.service';
 })
 export class TablaCertificacionFacComponent implements OnInit {
 
-  selectedDatos;
+  selectedDatos: CertificacionesItem[] = [];
   selectedItem: number = 10;
   rowsPerPage: any = [];
-  cols;
-  msgs;
-  selectionMode: String = "multiple";
-  numSelected = 0;
+  cols: any[];
+  msgs: any[];
+  selectionMode: string = "multiple";
+  numSelected: number = 0;
   selectMultiple: boolean = false;
-  seleccion: boolean = false;
   selectAll: boolean = false;
-  first: any;
-  initDatos: any;
-  buscadores = [];
+
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService) { }
 
-  @Input() datos;
-  @Input() permisoEscritura;
-  @Output() delete = new EventEmitter<CertificacionFacItem>();
+  @Input() datos: CertificacionesItem[] = [];
+  @Input() permisoEscritura: boolean = false;
+
+  @Output() delete = new EventEmitter<boolean>();
+
   @ViewChild("tabla") tabla;
   @ViewChild("tablaFoco") tablaFoco: ElementRef;
+
   ngOnInit() {
-    if (this.persistenceService.getPaginacion() != undefined) {
-      let paginacion = this.persistenceService.getPaginacion();
-      this.persistenceService.clearPaginacion();
-
-      this.first = paginacion.paginacion;
-      this.selectedItem = paginacion.selectedItem;
-    }
-
     this.getCols();
-    if(this.datos != null || this.datos != undefined){
-      this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-    }else{
-      
-    }
-    
   }
 
-  getCols(){
-    
-      this.cols = [
-        { field: "periodo", header: "justiciaGratuita.guardia.gestion.periodo", width: "10%" },
-        { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre", width: "10%" },
-        { field: "importeTurno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno", width: "20%" },
-        { field: "importeGuardia", header: "menu.justiciaGratuita.GuardiaMenu", width: "10%" },
-        { field: "importeEjg", header: "justiciaGratuita.ejg.datosGenerales.EJG", width: "10%" },
-        { field: "importeSoj", header: "justiciaGratuita.ejg.busquedaAsuntos.SOJ", width: "10%" },
-        { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "10%" },
-        { field: "estado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "10%" }
-      ];
-     
+  getCols() {
 
-    this.cols.forEach(it => this.buscadores.push(""));
+    this.cols = [
+      { field: "periodo", header: "justiciaGratuita.guardia.gestion.periodo", width: "12,14%" },
+      { field: "nombre", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre", width: "15%" },
+      { field: "turno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno", width: "12,14%" },
+      { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu", width: "12,14%" },
+      { field: "ejg", header: "justiciaGratuita.ejg.datosGenerales.EJG", width: "12,14%" },
+      { field: "soj", header: "justiciaGratuita.ejg.busquedaAsuntos.SOJ", width: "12,14%" },
+      { field: "total", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.total", width: "12,14%" },
+      { field: "estado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "12,14%" }
+    ];
+
     this.rowsPerPage = [
       {
         label: 10,
@@ -91,18 +73,16 @@ export class TablaCertificacionFacComponent implements OnInit {
     ];
   }
 
-  delCert(){
-    if (undefined != this.selectedDatos.idFacturacion || null != this.selectedDatos.idFacturacion) {
+  delCert() {
+    if (!this.disabledEliminar() && this.permisoEscritura) {
 
-      let mess = this.translateService.instant(
-        "messages.deleteConfirmation"
-      );
+      let mess = this.translateService.instant("messages.deleteConfirmation");
       let icon = "fa fa-edit";
       this.confirmationService.confirm({
         message: mess,
         icon: icon,
         accept: () => {
-          this.delete.emit(this.selectedDatos);
+          this.delete.emit(true);
         },
         reject: () => {
           this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
@@ -112,11 +92,11 @@ export class TablaCertificacionFacComponent implements OnInit {
     }
   }
 
-  modificarCert(){
+  modificarCert() {
 
   }
 
-  selectDesSelectFila(){
+  actuDesSeleccionados() {
     this.numSelected = this.selectedDatos.length;
   }
 
@@ -127,9 +107,11 @@ export class TablaCertificacionFacComponent implements OnInit {
   }
 
   onChangeSelectAll() {
+
     if (this.selectAll === true) {
       this.selectedDatos = this.datos;
       this.numSelected = this.datos.length;
+
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -137,12 +119,13 @@ export class TablaCertificacionFacComponent implements OnInit {
   }
 
   disabledEliminar() {
-    if (undefined != this.selectedDatos && this.selectedDatos.length != 1) {
+    if (this.selectedDatos == undefined || this.selectedDatos == null || this.selectedDatos.length == 0) {
       return true;
     } else {
       return false;
     }
   }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

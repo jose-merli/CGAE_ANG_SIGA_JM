@@ -114,4 +114,5 @@ export let endpoints_facturacionsjcs: any = {
     /* Endpoints Certificaciones */
     certificaciones_getComboEstadosCertificaciones: "certificaciones/getComboEstadosCertificaciones",
     certificaciones_buscarCertificaciones: "certificaciones/buscarCertificaciones",
+    certificaciones_eliminarCertificaciones: "certificaciones/eliminarCertificaciones",
 }
