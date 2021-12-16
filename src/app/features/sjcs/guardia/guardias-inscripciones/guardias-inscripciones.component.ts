@@ -676,7 +676,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       "guardiasInscripciones_solicitarBajaInscripciones", objetoValidacion).subscribe(
         data => {
           this.progressSpinner = false;
-         
+          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           
         },
@@ -757,9 +757,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           }else{
             this.llamadaBackSolicitarBaja(objetoValidacion);
           }
-          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+          
         },
         err => {
           this.progressSpinner = false;
@@ -838,11 +836,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
         let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
 
         this.objetoValidacion.push(objVal);
-        this.objetoValidacion = [];
 
       });
 
       this.llamadaBackDenegar(this.objetoValidacion);
+      this.objetoValidacion = [];
 
     } else if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
 
