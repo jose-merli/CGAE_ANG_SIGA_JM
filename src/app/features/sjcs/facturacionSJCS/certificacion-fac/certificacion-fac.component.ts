@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
+import { CertificacionesItem } from '../../../../models/sjcs/CertificacionesItem';
+import { CertificacionesObject } from '../../../../models/sjcs/CertificacionesObject';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
-import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
-import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroCertificacionFacComponent } from './filtro-certificacion-fac/filtro-certificacion-fac.component';
 import { TablaCertificacionFacComponent } from './tabla-certificacion-fac/tabla-certificacion-fac.component';
@@ -17,10 +17,9 @@ import { TablaCertificacionFacComponent } from './tabla-certificacion-fac/tabla-
 export class CertificacionFacComponent implements OnInit {
   msgs: any[];
   progressSpinner: boolean = false;
-  permisoEscritura;
-  buscar;
-  datos
-  disableColegio: boolean;
+  permisoEscritura: boolean = false;
+  mostrarTabla: boolean = false;
+  datos: CertificacionesItem[] = [];
 
   @ViewChild(FiltroCertificacionFacComponent) filtros: FiltroCertificacionFacComponent;
   @ViewChild(TablaCertificacionFacComponent) tabla: TablaCertificacionFacComponent;
@@ -29,9 +28,7 @@ export class CertificacionFacComponent implements OnInit {
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
-    private persistenceService: PersistenceService,
-    private router: Router,
-    private localStorageService: SigaStorageService
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -50,15 +47,64 @@ export class CertificacionFacComponent implements OnInit {
 
     this.progressSpinner = false;
 
-    this.isConsejo();
+  }
 
+  hayCamposRellenos(): boolean {
+    let resultado: boolean = false;
 
+    if (this.filtros && this.filtros.filtros &&
+      (this.filtros.filtros.idInstitucionList && this.filtros.filtros.idInstitucionList != null && this.filtros.filtros.idInstitucionList.length > 0) ||
+      (this.filtros.filtros.idPartidaPresupuestariaList && this.filtros.filtros.idPartidaPresupuestariaList != null && this.filtros.filtros.idPartidaPresupuestariaList.length > 0) ||
+      (this.filtros.filtros.idGrupoFacturacionList && this.filtros.filtros.idGrupoFacturacionList != null && this.filtros.filtros.idGrupoFacturacionList.length > 0) ||
+      (this.filtros.filtros.idHitoGeneralList && this.filtros.filtros.idHitoGeneralList != null && this.filtros.filtros.idHitoGeneralList.length > 0) ||
+      (this.filtros.filtros.idEstadoCertificacionList && this.filtros.filtros.idEstadoCertificacionList != null && this.filtros.filtros.idEstadoCertificacionList.length > 0) ||
+      (this.filtros.filtros.nombre && this.filtros.filtros.nombre != null && this.filtros.filtros.nombre.trim().length > 0) ||
+      (this.filtros.filtros.fechaDesde && this.filtros.filtros.fechaDesde != null) ||
+      (this.filtros.filtros.fechaHasta && this.filtros.filtros.fechaHasta != null)) {
+      resultado = true;
+    }
+
+    return resultado;
   }
 
   getCertificaciones(event) {
+
     if (event == true) {
-      this.buscar = true;
-      console.log(this.filtros.filtros)
+
+      if (this.hayCamposRellenos()) {
+        this.mostrarTabla = false;
+        this.progressSpinner = true;
+
+        this.sigaServices.post("certificaciones_buscarCertificaciones", this.filtros.filtros).subscribe(
+          data => {
+            const resp: CertificacionesObject = JSON.parse(data.body);
+            this.progressSpinner = false;
+
+            if (resp && resp.error && resp.error != null && resp.error.description != null && resp.error.code != null && resp.error.code.toString() == "500") {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
+            } else {
+              if (resp.error != null && resp.error.description != null && resp.error.code != null && resp.error.code.toString() == "200") {
+                this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(resp.error.description.toString()));
+              }
+
+              this.datos = resp.certificacionesItemList;
+              this.mostrarTabla = true;
+            }
+
+          },
+          err => {
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+            setTimeout(() => {
+              this.tabla.tablaFoco.nativeElement.scrollIntoView();
+            }, 5);
+          }
+        );
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+      }
     }
   }
 
@@ -69,8 +115,30 @@ export class CertificacionFacComponent implements OnInit {
   }
 
   deleteCertificacion(event) {
-    if (event != null || event != undefined) {
+    if (event == true) {
+      this.progressSpinner = true;
+      const certificaciones = JSON.parse(JSON.stringify(this.tabla.selectedDatos));
+      this.sigaServices.post("certificaciones_eliminarCertificaciones", certificaciones).subscribe(
+        data => {
+          this.progressSpinner = false;
 
+          const res = JSON.parse(data.body);
+
+          if (res && res.error && res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "500") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+          } else {
+            if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), res.error.description.toString());
+            }
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.getCertificaciones(true);
+        }
+      );
     }
   }
 
@@ -86,27 +154,5 @@ export class CertificacionFacComponent implements OnInit {
 
   clear() {
     this.msgs = [];
-  }
-
-  isConsejo() {
-    let institucion = this.localStorageService.institucionActual;
-
-    switch (institucion) {
-      case "2000":
-      case "3003":
-      case "3004":
-      case "3006":
-      case "3007":
-      case "3008":
-      case "3009":
-      case "3010":
-        this.disableColegio = false;
-        break;
-      default:
-        this.disableColegio = true;
-        this.filtros.filtros.idColegio = this.localStorageService.institucionActual;
-        break;
-
-    }
   }
 }

@@ -13,7 +13,7 @@ export let endpoints_facturacionsjcs: any = {
     combo_comboAgrupacionEnTurnos: "/combo/comboAgrupacionEnTurnos",
     combo_comboTiposMovVarios: "/combo/comboTiposMovimientos",
     combo_comboColegios: "combo/getComboColegios",
-    combo_grupoFacturacionByColegio: "combo/grupoFacturacionByColegio",
+    combo_grupoFacturacionByColegios: "combo/grupoFacturacionByColegios",
 
     /* Endpoints FACTURACIONSJCS */
 
@@ -111,4 +111,8 @@ export let endpoints_facturacionsjcs: any = {
     movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios",
     movimientosVarios_getMovimientoVarioPorId: "movimientosVarios/getMovimientoVarioPorId",
 
+    /* Endpoints Certificaciones */
+    certificaciones_getComboEstadosCertificaciones: "certificaciones/getComboEstadosCertificaciones",
+    certificaciones_buscarCertificaciones: "certificaciones/buscarCertificaciones",
+    certificaciones_eliminarCertificaciones: "certificaciones/eliminarCertificaciones",
 }

@@ -1,11 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
-import { MultiSelect } from 'primeng/multiselect';
-import { TranslateService } from '../../../../../commons/translate';
-import { CertificacionFacItem } from '../../../../../models/sjcs/CertificacionFacItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { MultiSelect } from 'primeng/primeng';
+import { BusquedaRetencionesRequestDTO } from '../../../../../models/sjcs/BusquedaRetencionesRequestDTO';
 
 @Component({
   selector: 'app-filtro-certificacion-fac',
@@ -14,49 +12,38 @@ import { SigaServices } from '../../../../../_services/siga.service';
 })
 export class FiltroCertificacionFacComponent implements OnInit {
 
-  filtros = new CertificacionFacItem;
+  filtros = new BusquedaRetencionesRequestDTO();
   progressSpinnerFiltro: boolean = false;
-  comboEstado=[];
+  comboEstado = [];
   comboColegios = [];
   comboConceptoServicios = [];
-  comboGrupoFacturacion=[];
-  comboPartidaPresupuestaria=[];
+  comboGrupoFacturacion = [];
+  comboPartidaPresupuestaria = [];
   disableComboFact: boolean;
-
-  showDatosJustificacion: boolean = true;
-
+  disableColegio: boolean;
+  showDatosGenerales: boolean = true;
 
   @Output() busqueda = new EventEmitter<boolean>();
   @Output() nuevo = new EventEmitter<boolean>();
-  @Input() permisoEscritura;
-  @Input() disableColegio;
+  @Input() permisoEscritura: boolean;
   msgs: any[];
 
-  constructor(private translateService: TranslateService,
-		private sigaServices: SigaServices,
-		private commonsService: CommonsService,
-		private persistenceService: PersistenceService,
-		private router: Router) { }
+  constructor(private sigaServices: SigaServices,
+    private commonsService: CommonsService,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
 
-    this.progressSpinnerFiltro = true;
-
     this.getComboEstado();
     this.getComboColegios();
+    this.isConsejo();
     this.getComboConceptosServicios();
     this.getComboPartidaPresupuestaria();
 
-    if(this.filtros.idColegio != null || this.filtros.idColegio != undefined){
-      this.selectComboFacturacion(this.filtros.idColegio);
-    }
-
-    this.progressSpinnerFiltro = false;
-    
   }
 
 
-  getComboColegios(){
+  getComboColegios() {
 
     this.progressSpinnerFiltro = true;
 
@@ -64,17 +51,34 @@ export class FiltroCertificacionFacComponent implements OnInit {
       data => {
         this.comboColegios = data.combooItems;
         this.commonsService.arregloTildesCombo(this.comboColegios);
+        this.progressSpinnerFiltro = false;
+      },
+      err => {
+        this.progressSpinnerFiltro = false;
       }
     );
 
-    
-  }
-
-  getComboEstado(){
 
   }
 
-  getComboConceptosServicios(){
+  getComboEstado() {
+
+    this.progressSpinnerFiltro = true;
+
+    this.sigaServices.get("certificaciones_getComboEstadosCertificaciones").subscribe(
+      data => {
+        this.comboEstado = data.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboEstado);
+        this.progressSpinnerFiltro = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinnerFiltro = false;
+      }
+    );
+  }
+
+  getComboConceptosServicios() {
     this.progressSpinnerFiltro = true;
 
     this.sigaServices.get("combo_comboFactConceptos").subscribe(
@@ -91,22 +95,13 @@ export class FiltroCertificacionFacComponent implements OnInit {
 
   }
 
-  selectComboFacturacion(idColegio){
-    if(idColegio != null || idColegio != undefined){
-      this.getComboGrupoFacturacion(idColegio);
-      this.disableComboFact = false
-    }else{
-      this.disableComboFact = true
-    }
-  }
-
-  getComboGrupoFacturacion(idColegio){
+  getComboGrupoFacturacion(idColegioList: string []) {
 
     this.progressSpinnerFiltro = true;
 
-    this.sigaServices.getParam("combo_grupoFacturacionByColegio", "?idColegio=" + idColegio).subscribe(
+    this.sigaServices.post("combo_grupoFacturacionByColegios", idColegioList).subscribe(
       data => {
-        this.comboGrupoFacturacion = data.combooItems;
+        this.comboGrupoFacturacion = JSON.parse(data.body).combooItems;
         this.commonsService.arregloTildesCombo(this.comboGrupoFacturacion);
         this.progressSpinnerFiltro = false;
       },
@@ -117,7 +112,7 @@ export class FiltroCertificacionFacComponent implements OnInit {
     );
   }
 
-  getComboPartidaPresupuestaria(){
+  getComboPartidaPresupuestaria() {
     this.progressSpinnerFiltro = true;
 
     this.sigaServices.get("combo_partidasPresupuestarias").subscribe(
@@ -134,55 +129,94 @@ export class FiltroCertificacionFacComponent implements OnInit {
 
   }
 
-  newCer(){
+  isConsejo() {
+    let institucion = this.localStorageService.institucionActual;
+
+    switch (institucion) {
+      case "2000":
+      case "3003":
+      case "3004":
+      case "3006":
+      case "3007":
+      case "3008":
+      case "3009":
+      case "3010":
+        this.disableColegio = false;
+        this.disableComboFact = true;
+        break;
+      default:
+        this.disableColegio = true;
+        this.filtros.idInstitucionList = [...this.filtros.idInstitucionList, this.localStorageService.institucionActual];
+        this.getComboGrupoFacturacion([this.localStorageService.institucionActual]);
+        this.disableComboFact = false;
+        break;
+
+    }
+  }
+
+  newCer() {
     this.nuevo.emit(true);
   }
 
-  buscarCert(){
+  buscarCert() {
     this.busqueda.emit(true);
   }
 
-  fillFechaHasta(event){
+  fillFechaHasta(event) {
     this.filtros.fechaHasta = event;
   }
 
-  fillFechaDesde(event){
+  fillFechaDesde(event) {
     this.filtros.fechaDesde = event;
-			if (this.filtros.fechaHasta < this.filtros.fechaDesde) {
-				this.filtros.fechaHasta = undefined;
-			}
+    if (this.filtros.fechaHasta < this.filtros.fechaDesde) {
+      this.filtros.fechaHasta = undefined;
+    }
   }
 
-  restablecer(){
-    this.filtros = new CertificacionFacItem;
+  restablecer() {
+    this.filtros = new BusquedaRetencionesRequestDTO();
   }
 
   showMessage(severity, summary, msg) {
-		this.msgs = [];
-		this.msgs.push({
-			severity: severity,
-			summary: summary,
-			detail: msg
-		});
-	}
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
 
-	clear() {
-		this.msgs = [];
-	}
+  clear() {
+    this.msgs = [];
+  }
 
-  onHideDatosJustificacion() {
-		this.showDatosJustificacion = !this.showDatosJustificacion;
-	}
+  onHideDatosGenerales() {
+    this.showDatosGenerales = !this.showDatosGenerales;
+  }
+
+  focusInputField(someMultiselect: MultiSelect) {
+    setTimeout(() => {
+      someMultiselect.filterInputChild.nativeElement.focus();
+    }, 300);
+  }
 
   onChangeMultiSelect(event, filtro) {
-		if (undefined != event.value && event.value.length == 0) {
-			this.filtros[filtro] = undefined;
-		}
-	}
 
-  onChangeColegio(event){
-    this.filtros.idColegio = event.value;
-    this.selectComboFacturacion(this.filtros.idColegio);
+    if (event == undefined || event.value == undefined || event.value == null || event.value.length == 0) {
+      this.filtros[filtro] = [];
+    }
+
+  }
+
+  onChangeColegio(event, filtro) {
+
+    if (event && event.value && event.value != null && event.value.length > 0) {
+      this.getComboGrupoFacturacion(this.filtros[filtro]);
+      this.disableComboFact = false;
+    } else {
+      this.disableComboFact = true;
+    }
+
   }
 }

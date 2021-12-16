@@ -1,44 +1,61 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div *ngIf="progressSpinnerFiltro" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
 <div class="busqueda-container">
   <div class="card">
     <div class="card-body">
       <div class="form-row">
       </div>
-      <p class="title-module" (click)="onHideDatosJustificacion()">
+      <p class="title-module" (click)="onHideDatosGenerales()">
         {{ 'general.message.datos.generales' | translate }}
-        <i *ngIf="showDatosJustificacion" class="fa fa-angle-up float-right"></i>
-        <i *ngIf="!showDatosJustificacion" class="fa fa-angle-down float-right"></i>
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
       </p>
-      <div *ngIf="showDatosJustificacion" class="module vista-avanzada">
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <!--FIla 1-->
         <div class="form-row">
           <!--Colegio-->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.colegio' | translate}}</label>
-            <p-dropdown [disabled]="disableColegio" class="select-form" [(ngModel)]='filtros.idColegio' placeholder="Seleccionar"
-            [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="onChangeColegio($event)">
-            </p-dropdown>
+            <p-multiSelect #multiColegio class="select-form" [(ngModel)]='filtros.idInstitucionList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboColegios" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} colegios seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(multiColegio)"
+              (onChange)="onChangeColegio($event, 'idInstitucionList')" [disabled]="disableColegio">
+            </p-multiSelect>
           </div>
           <!--Partida Presupuestaria-->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "menu.justiciaGratuita.maestros.partidas" | translate }}</label>
-            <p-dropdown class="select-form" [(ngModel)]='filtros.idPartidaPresupuestaria' placeholder="Seleccionar"
-              [options]="comboPartidaPresupuestaria" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-            </p-dropdown>
+            <p-multiSelect #multiPartida class="select-form" [(ngModel)]='filtros.idPartidaPresupuestariaList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboPartidaPresupuestaria"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} partidas seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(multiPartida)"
+              (onChange)="onChangeMultiSelect($event, 'idPartidaPresupuestariaList')">
+            </p-multiSelect>
           </div>
           <!--Grupo de Facturacion-->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "justiciaGratuita.oficio.turnos.grupofacturacion" | translate }}</label>
-            <p-dropdown class="select-form" [(ngModel)]='filtros.idFacturacion' placeholder="Seleccionar"
-              [disabled]="disableComboFact" [options]="comboGrupoFacturacion" [filter]="true"
-              filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            <p-multiSelect #multiGrupoFac class="select-form" [(ngModel)]='filtros.idGrupoFacturacionList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboGrupoFacturacion"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} grupos seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(multiGrupoFac)"
+              (onChange)="onChangeMultiSelect($event, 'idGrupoFacturacionList')" [disabled]="disableComboFact">
+            </p-multiSelect>
           </div>
           <!--Conceptos y servicios-->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.conceptosyservicios" | translate }}</label>
-            <p-dropdown class="select-form" [(ngModel)]='filtros.idConcepto' placeholder="Seleccionar"
-              [options]="comboConceptoServicios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-            </p-dropdown>
+            <p-multiSelect #multiConcep class="select-form" [(ngModel)]='filtros.idHitoGeneralList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboConceptoServicios"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} conceptos seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(multiConcep)"
+              (onChange)="onChangeMultiSelect($event, 'idHitoGeneralList')">
+            </p-multiSelect>
           </div>
         </div>
         <!--FIla 2-->
@@ -52,10 +69,11 @@
           <!--Estado-->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
-            <p-multiSelect class="select-form" [(ngModel)]='filtros.estado'
-              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstado" [filter]="true"
-              maxSelectedLabels="10" filterBy="label,labelSinTilde" styleClass="widthAll"
-              (onPanelShow)="focusInputField(conceptoMultiselect)" (onChange)="onChangeMultiSelect($event, 'estado')">
+            <p-multiSelect #multiEst class="select-form" [(ngModel)]='filtros.idEstadoCertificacionList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstado"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} estados seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(multiEst)"
+              (onChange)="onChangeMultiSelect($event, 'idEstadoCertificacionList')">
             </p-multiSelect>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
