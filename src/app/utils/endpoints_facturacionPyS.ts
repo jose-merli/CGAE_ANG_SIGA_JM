@@ -1,6 +1,7 @@
 export let endpoints_facturacionPyS: any = {
     facturacionPyS_getCuentasBancarias:  "facturacionPyS/getCuentasBancarias",
     facturacionPyS_borrarCuentasBancarias:  "facturacionPyS/borrarCuentasBancarias",
+    facturacionPyS_reactivarCuentasBancarias: "facturacionPyS/reactivarCuentasBancarias",
     facturacionPyS_getSeriesFacturacion:  "facturacionPyS/getSeriesFacturacion",
     facturacionPyS_comboCuentaBancaria: "facturacionPyS/general/comboCuentasBancarias",
     facturacionPyS_comboSufijo: "facturacionPyS/general/comboSufijos",

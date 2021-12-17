@@ -46,7 +46,7 @@
                     }}</span>
                 </div>
                 <div *ngSwitchCase="'sjcs'">
-                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] ? "Sí" : "-" }}</span>
+                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] ? "Sí" : "No" }}</span>
                 </div>
                 <div *ngSwitchCase="'comisionImporte'">
                   <span [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
@@ -99,8 +99,10 @@
         <button *ngIf="historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-history"
           iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-        <button *ngIf="!historico" [disabled]="(selectedDatos.length === 0)" (click)="confirm()" pButton type="button"
+        <button *ngIf="!historico" [disabled]="(selectedDatos.length === 0)" (click)="confirmDelete()" pButton type="button"
           icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+        <button *ngIf="historico" [disabled]="(selectedDatos.length === 0)" (click)="confirmReactivar()" pButton type="button"
+          icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.reactivar' | translate}}"></button>
 
         <button *ngIf="!historico" [disabled]=" !permisoEscritura" (click)="isNuevo()" pButton type="button"
           icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>

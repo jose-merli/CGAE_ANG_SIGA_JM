@@ -84,9 +84,8 @@
     <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
       <div class="text-right main-button">
         <button pButton *ngIf="modoEdicion && esActivo()" (click)="confirmEliminar()" type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
-        <!--
-        <button pButton *ngIf="!esActivo()" (click)="confirmReactivar()" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
-        -->
+        <button pButton *ngIf="modoEdicion && !esActivo()" (click)="confirmReactivar()" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
+        
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 

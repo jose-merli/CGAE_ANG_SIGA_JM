@@ -232,6 +232,60 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     );
   }
 
+  confirmDelete() {
+    let icon = "fa fa-eraser";
+    this.confirmationService.confirm({
+      message: this.translateService.instant("messages.deleteConfirmation"),
+      header: null,
+      icon: icon,
+      accept: async () => {
+        this.delete();
+      }
+    });
+  }
+
+  confirmReactivar() {
+    let icon = "fa fa-undo";
+    this.confirmationService.confirm({
+      message: this.translateService.instant("messages.activateConfirmation"),
+      header: null,
+      icon: icon,
+      accept: async () => {
+        this.reactivar();
+      }
+    });
+  }
+
+  delete() {
+    this.progressSpinner = true;
+    this.sigaServices.post("facturacionPyS_borrarCuentasBancarias", [this.bodyInicial])
+      .subscribe(
+        n => {
+          this.progressSpinner = false;
+          this.refreshData.emit();
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
+  }
+
+  reactivar() {
+    this.progressSpinner = true;
+    this.sigaServices.post("facturacionPyS_reactivarCuentasBancarias", [this.bodyInicial])
+      .subscribe(
+        n => {
+          this.progressSpinner = false;
+          this.refreshData.emit();
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
+  }
+
   styleIBANIncorrecto() {
     if (this.resaltadoIBAN) {
       return 'camposObligatorios';
