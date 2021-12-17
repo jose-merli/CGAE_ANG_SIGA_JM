@@ -149,6 +149,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
           const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
           this.usuarioBusquedaExpress.numColegiado = numColegiado;
           this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+          this.filtros.ncolegiado = numColegiado;
 
           this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
           this.progressSpinner = false;
@@ -360,7 +361,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.isBuscar();
+      setTimeout( () => { this.isBuscar(); }, 2000 );
     }
   }
 

@@ -299,7 +299,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
 
   }
   crearEJG(){
-    if(this.filtro){
+    if(this.filtro && this.tabla.selectedArray.length>0){
       let asistencia : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
       let idAsistencia : string = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[this.tabla.selectedArray.length-1]).id;
       idAsistencia = idAsistencia.substring(1);
@@ -310,6 +310,8 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtro));
       sessionStorage.setItem("Nuevo","true");
       this.router.navigate(["/gestionEjg"]);
+    }else{
+      this.showMsg('error', 'Error. Debe seleccionar un registro para poder crear un EJG' ,'')
     }
   }
   guardar(){
