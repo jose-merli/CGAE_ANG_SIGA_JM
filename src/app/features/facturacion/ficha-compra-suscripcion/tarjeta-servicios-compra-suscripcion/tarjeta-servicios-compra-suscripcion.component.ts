@@ -360,7 +360,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
         }
     })
     //Revision de los campos de forma de pago
-    if(this.selectedPago == null || campoVacio || (this.selectedPago =="80" && this.datosTarjeta.cuentaBancSelecc == null)){
+    if(this.selectedPago == null || campoVacio || ((this.selectedPago =="80" || this.selectedPago == '20') && this.datosTarjeta.cuentaBancSelecc == null)){
       return true;
     }
     return false;
@@ -385,6 +385,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     this.datosTarjeta.totalNeto = totalNeto.toFixed(2);
     this.datosTarjeta.totalIVA = totalIVA.toFixed(2);
     this.datosTarjeta.impTotal = impTotal.toFixed(2);
+    this.ficha.impTotal = impTotal.toFixed(2);
   }
 
   openTab(selectedRow: ListaServiciosSuscripcionItem) {
@@ -675,7 +676,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
   onChangePago(){
     this.newFormaPagoCabecera();
-    if(this.selectedPago == "80" && this.ficha.idPersona == null){
+    if((this.selectedPago == "80" || this.selectedPago == '20')&& this.ficha.idPersona == null){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "** Debe tener un cliente seleccionado para mostrar las cuentas bancarias asociadas");
     }
   }
@@ -809,10 +810,10 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
               this.comboPrecios = [];
               let i = 0;
               serv.idComboPrecio = "0";
-              let total = 1000000;//REVISAR. Solucion temporal no optima.
+              let total = null;
               this.arrayPrecios.forEach(el =>{
                 //Comprobamos la mejor tarifa para la seleccion por defecto
-                if(total > ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100))){
+                if(total == null || total > ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100))){
                   total = ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100));
                   //Se asigna el precio por defecto unicamente cuando no tiene uno ya elegido
                   if(serv.idPrecioServicio == null){

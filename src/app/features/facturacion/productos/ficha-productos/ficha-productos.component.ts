@@ -72,8 +72,12 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
   backTo() {
     sessionStorage.setItem("volver", 'true');
     sessionStorage.removeItem('productoBuscador');
-    if(sessionStorage.getItem("origin") =="Cliente") this.location.back();
-    this.router.navigate(['/productos']);
+    // if(sessionStorage.getItem("origin") =="Compra"){
+      this.location.back();
+    // }
+    // else{
+      // this.router.navigate(['/productos']);
+    // }
   }
   //FIN METODOS APP
 
