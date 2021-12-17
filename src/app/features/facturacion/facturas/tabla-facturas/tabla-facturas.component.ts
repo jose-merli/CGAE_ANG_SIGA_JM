@@ -60,9 +60,9 @@ export class TablaFacturasComponent implements OnInit {
   }
 
   navigateToCliente(selectedRow) {
-
+    
     if (selectedRow.idCliente) {
-      console.log("inside if");
+      
       this.progressSpinner = true;
 
       sessionStorage.setItem("consulta", "true");
@@ -70,10 +70,8 @@ export class TablaFacturasComponent implements OnInit {
 
       this.sigaServices.postPaginado("busquedaColegiados_searchColegiadoFicha", "?numPagina=1", filtros).toPromise().then(
         n => {
-          console.log("inside promise");
-          console.log(n)
           let results: DatosColegiadosItem[] = JSON.parse(n.body).colegiadoItem;
-          console.log(results)
+          
           if (results != undefined && results.length != 0) {
             let datosColegiado: DatosColegiadosItem = results[0];
 
