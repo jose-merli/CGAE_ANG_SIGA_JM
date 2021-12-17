@@ -82,7 +82,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
   openTab(rowData: ListaMonederosItem) {
     this.progressSpinner = true;
     let monedero = new FichaMonederoItem();
-    monedero.idLinea = rowData.idLinea;
+    monedero.idAnticipo = rowData.idAnticipo;
     monedero.idPersona = rowData.idPersona;
     sessionStorage.setItem("FichaMonedero", JSON.stringify(monedero));
     sessionStorage.setItem("filtrosMonedero", JSON.stringify(this.filtrosBusqueda.filtrosMonederoItem));

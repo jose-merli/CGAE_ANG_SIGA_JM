@@ -4,4 +4,5 @@ export class ListaDescuentosPeticionItem{
     desTipo: string;
 	importe: number;
     descripcion: string;
+    idAnticipo: string;
 }

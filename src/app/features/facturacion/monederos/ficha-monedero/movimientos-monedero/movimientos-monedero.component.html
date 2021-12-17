@@ -93,10 +93,10 @@
             label="{{ 'general.boton.guardar' | translate}}"></button>
           <!-- Nuevo -->
           <button pButton (click)="anadirMovimiento()" type="button" icon="fa fa-plus" iconPos="left"
-            label="{{ 'general.boton.new' | translate}}"></button>
+            label="{{ 'general.boton.new' | translate}}" [disabled]="movimientosTarjeta.length != 0"></button>
           <!-- Borrar -->
           <button pButton (click)="borrarMovimiento()" type="button" icon="fa fa-eraser" iconPos="left"
-            label="{{ 'general.boton.borrar' | translate}}"></button>
+            label="{{ 'general.boton.borrar' | translate}}" [disabled]="movimientosTarjeta.length == 0"></button>
         </div>
       </div>
     </div>

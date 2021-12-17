@@ -79,7 +79,7 @@ export class MovimientosMonederoComponent implements OnInit {
     this.getPermisoActualizarMovimientos();
 
     //En el caso que la ficha no sea nueva
-    if (this.ficha.idLinea != null ) {
+    if (this.ficha.idAnticipo != null ) {
       //Se llama al servicio para obtener los movimientos del monedero
       this.getMovimientosMonedero();
     }
@@ -98,7 +98,7 @@ export class MovimientosMonederoComponent implements OnInit {
     this.progressSpinner = true;
 
     this.subscriptionMovimientosBusqueda = this.sigaServices.getParam("PyS_getListaMovimientosMonedero",
-      "?idLinea=" + this.ficha.idLinea+"&idPersona="+ this.ficha.idPersona).subscribe(
+      "?idAnticipo=" + this.ficha.idAnticipo+"&idPersona="+ this.ficha.idPersona).subscribe(
         movimientosMonederoDTO => {
 
           if (movimientosMonederoDTO.error == null) {
@@ -197,6 +197,9 @@ export class MovimientosMonederoComponent implements OnInit {
 
           // this.actualizaFicha.emit();
 
+          //se asigna el valor del anticipo (monedero) para cubrir el caso que se este creando un monedero nuevo
+          this.ficha.idAnticipo = JSON.parse(n.body).error.message;
+
           this.ficha.movimientos = JSON.parse(JSON.stringify(this.movimientosTarjeta));
 
           //Una vez se guarda el movimiento, deja de ser editable.
@@ -266,7 +269,7 @@ export class MovimientosMonederoComponent implements OnInit {
   }
 
   anadirMovimiento() {
-    if(this.movimientosTarjeta.length > 0 && this.checkCamposObligatorios()){
+    if(this.movimientosTarjeta.length != 0){
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
     }
     else{
@@ -276,8 +279,6 @@ export class MovimientosMonederoComponent implements OnInit {
       newMovimiento.impOp = 0;
       newMovimiento.concepto = "";
       newMovimiento.nuevo = true;
-      newMovimiento.liquidacion = "0";
-      newMovimiento.contabilizado = "0";
       
       //Nos aseguramos que el otro movimiento no sea editable
       if(this.movimientosTarjeta.length > 0){

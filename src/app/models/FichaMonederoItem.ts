@@ -17,8 +17,8 @@ export class FichaMonederoItem {
     //TARJETA SERVICIOS
     servicios: ListaServiciosMonederoItem[]; 
 
-    idLinea: string; //Identificador del monedero
-    anioLinea : string;
+    idAnticipo: string; //Identificador del monedero
+    anioAnticipo : string;
     
     constructor() {}
   }

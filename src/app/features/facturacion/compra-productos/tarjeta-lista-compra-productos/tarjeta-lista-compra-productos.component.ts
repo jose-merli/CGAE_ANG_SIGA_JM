@@ -164,7 +164,6 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
         this.selectedRows = this.selectedRows.filter( ( el ) => !compShow.includes( el ) );
       } 
       //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
-      //REVISAR : Cambiar mensaje
       //Este parametro "solicitarBaja" de este objeto tiene una logica distinta a la de los servicios
       if(this.esColegiado && (this.selectedRows.filter(el => el.solicitarBaja != "0") != undefined)){
         compShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
@@ -176,7 +175,6 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 
   confirmAnular(compShow) {
 
-    //REVISAR MENSAJE
     let mess = this.translateService.instant(
       "facturacion.productos.anulConf"
     );

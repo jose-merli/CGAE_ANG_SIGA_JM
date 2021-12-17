@@ -7,5 +7,5 @@ export class ListaMonederosItem {
     importeRestante: number;
     importeUsado: number;
     idPersona: string;
-    idLinea: string;
+    idAnticipo: string;
 }

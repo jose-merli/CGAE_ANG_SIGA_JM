@@ -89,8 +89,11 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
     this.getPermisoActualizarServiciosMonedero();
     this.getComboServicios();
    
-    if (this.ficha.idLinea != null) {
+    if (this.ficha.idAnticipo != null) {
       this.getServiciosMonedero();
+    }
+    else{
+      this.ficha.servicios = [];
     }
   }
 
@@ -105,7 +108,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
     this.progressSpinner = true;
 
     this.subscriptionServiciosBusqueda = this.sigaServices.getParam("PyS_getListaServiciosMonedero",
-      "?idLinea=" + this.ficha.idLinea+ "&idPersona=" + this.ficha.idPersona).subscribe(
+      "?idAnticipo=" + this.ficha.idAnticipo+ "&idPersona=" + this.ficha.idPersona).subscribe(
         listaServiciosMonederoDTO => {
 
 
@@ -198,7 +201,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.ficha.servicios = JSON.parse(JSON.stringify(this.serviciosTarjeta));
+          this.ficha.servicios = {...this.serviciosTarjeta};
           this.compareServices();
         }
 
@@ -221,7 +224,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
       this.msgs = msg;
     } 
     //Las condiciones para deshabilitar el botón "Guardar" para prevenir posibles acciones no autorizadas
-    else if(this.ficha.idLinea == null || this.ficha.servicios == this.serviciosTarjeta){
+    else if(this.ficha.idAnticipo == null || this.ficha.servicios == this.serviciosTarjeta){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.noTienePermisosRealizarAccion"));
     }else {
       this.updateServiciosMonedero();
@@ -371,20 +374,19 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
   //TO DO
   //REVISAR: PENDIENTE DE IMPLEMENTACION
   compareServices(){
-    this.deshabilitarGuardar = false;
+    this.deshabilitarGuardar = true;
     // Esto puede ahorrar tiempo
-    // if (this.serviciosTarjeta.length != this.ficha.servicios.length){
-    //     this.deshabilitarGuardar = false;
-    // }
-
-    // if(this.deshabilitarGuardar){
-    //   for (var i = 0, l= this.serviciosTarjeta.length; i < l; i++) {
-    //       if (!this.ficha.servicios.includes(this.serviciosTarjeta[i])) { 
-    //           this.deshabilitarGuardar = false;   
-    //           break;
-    //       }           
-    //   }       
-    // }
+    if (this.serviciosTarjeta.length != this.ficha.servicios.length){
+        this.deshabilitarGuardar = false;
+    }
+    else{
+      for (var i = 0, l= this.serviciosTarjeta.length; i < l; i++) {
+          if (this.ficha.servicios[i] != this.serviciosTarjeta[i]) { 
+              this.deshabilitarGuardar = false;   
+              break;
+          }           
+      }       
+    }
   }
 
   //FIN METODOS

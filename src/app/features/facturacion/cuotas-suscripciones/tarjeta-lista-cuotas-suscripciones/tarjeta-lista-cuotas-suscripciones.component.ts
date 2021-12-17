@@ -167,14 +167,12 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
         this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
       } 
       //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
-      //REVISAR : Cambiar mensaje
       //Este parametro "solicitarBaja" de este objeto tiene una logica distinta a la de los servicios
       if(this.esColegiado && (this.selectedRows.filter(el => el.solicitarBaja != "0") != undefined)){
         susShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
         this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
       }
       //Se comprueba si hay algún servicio automatico ya que entonces no se puede realizar la accion
-      //REVISAR: Cambiar mensaje.
       if(this.selectedRows.filter(el => el.automatico == "1") != undefined){
         susShow.concat(this.selectedRows.filter(el => el.automatico = "1"));
         this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
@@ -185,12 +183,11 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
 
   confirmAnular(susShow) {
 
-    //REVISAR MENSAJE
     let mess = this.translateService.instant(
       "facturacion.productos.anulConf"
     );
 
-    //REVISAR LOGICA FACTURAS
+    //REVISAR LOGICA FACTURAS EN LA CONSULTA DE SUSCRIPCIONES
     //Se comprueba si alguna solicitud tiene alguna factura asoviada
     if(this.selectedRows.find(el => el.facturas != "0") != undefined) {
       mess = this.translateService.instant("facturacion.productos.factNoAnuladaPet");
