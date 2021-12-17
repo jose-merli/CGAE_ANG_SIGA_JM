@@ -157,8 +157,14 @@ export class MovimientosVariosComponent implements OnInit {
     }
 
 
-    if(this.datosFiltros.certificacion == undefined){
-      datosFiltrosAux.certificacion = null;
+    if (undefined != this.datosFiltros.certificacion) {
+			if (this.datosFiltros.certificacion.length == 0) {
+				datosFiltrosAux.certificacion = undefined;
+			} else {
+				datosFiltrosAux.certificacion = this.datosFiltros.certificacion.toString();
+			}
+		}else{
+      datosFiltrosAux.certificacion=null;
     }
 
     if(this.datosFiltros.fechaApDesde == undefined){

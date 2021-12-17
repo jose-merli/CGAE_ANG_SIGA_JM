@@ -27,6 +27,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   progressSpinner: boolean = false;
   tipos: ComboItem;
+  certificaciones: ComboItem;
   partidaPresupuestaria: ComboItem;
   aplicadoEnPago: ComboItem;
   isLetrado: boolean = false;
@@ -64,6 +65,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     }
 
     this.comboTipos();
+    this.comboCertificaciones();
 
   }
 
@@ -106,6 +108,24 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 			data => {
 				this.tipos = data.combooItems;
 				this.commonsService.arregloTildesCombo(this.tipos);
+				this.progressSpinner = false;
+			},
+			err => {
+				console.log(err);
+				this.progressSpinner = false;
+			}
+		);
+    this.progressSpinner = false;
+  }
+
+  comboCertificaciones(){
+
+    this.progressSpinner = true;
+
+		this.sigaService.get("combo_certificacionSJCS").subscribe(
+			data => {
+				this.certificaciones = data.combooItems;
+				this.commonsService.arregloTildesCombo(this.certificaciones);
 				this.progressSpinner = false;
 			},
 			err => {

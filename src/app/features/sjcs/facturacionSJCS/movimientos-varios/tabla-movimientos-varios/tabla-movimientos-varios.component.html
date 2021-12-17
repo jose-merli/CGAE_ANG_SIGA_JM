@@ -63,10 +63,10 @@
             <div *ngIf="setItalic(dato) && col.field == 'cantidadRestante'">
               <label>{{ dato.cantidadRestante}} €</label>
           </div>
-            <div *ngIf="!setItalic(dato) && col.field == 'idAplicadoEnPago'">
+            <div *ngIf="!setItalic(dato) && col.field == 'nombrePago'">
               <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</label>
             </div>
-            <div *ngIf="setItalic(dato) && col.field == 'idAplicadoEnPago'">
+            <div *ngIf="setItalic(dato) && col.field == 'nombrePago'">
               <label>{{dato[col.field]}}</label>
             </div>
           </td>

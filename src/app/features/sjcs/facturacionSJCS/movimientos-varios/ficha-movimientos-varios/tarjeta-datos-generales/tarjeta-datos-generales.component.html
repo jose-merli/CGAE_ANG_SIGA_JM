@@ -98,7 +98,7 @@
               <label>
                {{ "menu.sjcs.ecom.certificacion" | translate}}
              </label>
-             <p-dropdown [(ngModel)]="datos.certificacion" [disabled]="isLetrado" class="select-form"   placeholder="{{'general.boton.seleccionar' | translate}}">
+             <p-dropdown [(ngModel)]="datos.certificacion"  [options]="certificaciones" [disabled]="isLetrado" class="select-form"   placeholder="{{'general.boton.seleccionar' | translate}}">
            </p-dropdown>  
            </div>
             </div>

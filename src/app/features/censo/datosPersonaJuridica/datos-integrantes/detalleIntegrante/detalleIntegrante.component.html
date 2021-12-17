@@ -193,30 +193,25 @@
 
     <div *ngIf="esFichaActiva('vinculacion')" class="card-body card-body-ficha">
       <div class="d-flex align-items-end form-row">
-        <div class="col-lg-6 col-md-6">
+        <div class="col-lg-5 col-md-5">
           <div class="form-row">
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaComponentesJuridicos.literal.fechaCargo" | translate}}</label>
               <app-fecha [(value)]="fechaCarga" [disabled]="historico || disabledAction" [utc]="false" (valueChangeSelected)="fillFechaCarga($event)"
                 (valueChangeInput)="detectFechaCargaInput($event)"></app-fecha>
             </div>
-            <div class="form-group col-lg-4 col-md-4">
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDatos.literal.fechaFin" | translate}}</label>
               <app-fecha [(value)]="fechaBajaCargo" [disabled]="historico || disabledAction" [utc]="false" (valueChangeSelected)="fillFechaBajaCargo($event)"
                 (valueChangeInput)="detectFechaBajaCargoInput($event)"></app-fecha>
             </div>
-             
-          <div class="form-check col-lg-2 col-md-2">
-            <p-checkbox [(ngModel)]='body.socio' binary="true" [(disabled)]="historico || disabledAction" label="Socio"></p-checkbox>
-          </div>
-          <div class="form-check col-lg-2 col-md-2"> 
-            <!--AÑADIR-->
-            <p-checkbox [(ngModel)]='body.liquidarSJCS' binary="true" label="Liquidar SJCS"></p-checkbox>
-          </div>
           </div>
         </div>
-     
-        
+
+        <div class="form-check col-lg-1 col-md-1">
+            <p-checkbox [(ngModel)]='body.socio' binary="true" [(disabled)]="historico || disabledAction" label="Socio"></p-checkbox>
+        </div>        
+         
         <div class="form-group col-lg-2 col-md-2">
           <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}</label>
           <p-dropdown [(ngModel)]="body.idCargo" (ngModelChange)="actualizarDescripcionCargo()" [(disabled)]="historico || disabledAction"
@@ -279,7 +274,7 @@
 
     <div *ngIf="esFichaActiva('historicoLiquidacion')" class="card-body card-body-ficha">
       <p-table [columns]="cols" [(selection)]="selectedDatos" pageLinks="4" [ngClass]="{ customCursor: selectMultipleDirecciones }"
-      [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datos" (onRowSelect)="clickFilaDirecciones($event)"
+      [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosLiquidacion"
       [paginator]="true" paginatorPosition="both" [rows]="selectedItem" (onRowUnselect)="
       actualizaSeleccionados(selectedDatos)
       ">
@@ -287,14 +282,17 @@
       <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">             
-           <div *ngIf="col.field == 'fecha'">
-              <span>{{ datoH.fechaHistorico}}</span>
+           <div *ngIf="col.field == 'fechaInicio'"  class="text-center">
+              <span>{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+              <app-fecha *ngIf="isCrear" [minDate]="fechaMinima" [(value)]="nuevaFecha" (valueChangeSelected)="onChangeCalendar($event)" (valueChangeInput)="onChangeCalendar($event)" ngDefaultControl></app-fecha>
             </div>      
-            <div *ngIf="col.field == 'liquidacionSJCS'">
-              <a>{{datoH[col.field]}}</a>
+            <div *ngIf="col.field == 'sociedad'" class="text-center">
+
+              <span>{{datoH[col.field]}}</span>
             </div>         
-            <div *ngIf="col.field == 'descripcion'">
-              <a>{{ datoH[col.field] }}</a>
+            <div *ngIf="col.field == 'observaciones'" class="d-block"  class="text-center">
+              <span>{{ datoH[col.field] }}</span>
+              <textarea *ngIf="isCrear" class="form-control" pInputTextarea autoResize="autoResize" [(ngModel)]="observaciones" maxlength="1205" ngDefaultControl></textarea>
             </div>          
           </td>
         </tr>
@@ -350,7 +348,13 @@
 
       <!--END HISTORICO DE LIQUIDACION SJCS-->
     </div>
+    <div *ngIf="esFichaActiva('historicoLiquidacion')" class="mb-3 mr-3 text-right main-button ">
+      <button *ngIf="!isGuardar"  (click)="crear()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button *ngIf="isGuardar"  (click)="guardarLiquidacion()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button (click)="borrar()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
+    </div>
   </div>
+  
   <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
     <button *ngIf="editar" (click)="guardar();" pButton type="button" icon="	fa fa-edit " [(disabled)]="historico || disabledAction"

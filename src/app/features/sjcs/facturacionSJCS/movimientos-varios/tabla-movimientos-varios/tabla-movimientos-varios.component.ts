@@ -160,7 +160,7 @@ export class TablaMovimientosVariosComponent implements OnInit {
         { field: "cantidad", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "10%" },
         { field: "cantidadAplicada", header: "facturacionSJCS.movimientosVarios.importeAplicado", width: "10%" },
         { field: "cantidadRestante", header: "facturacionSJCS.retenciones.importeRestante", width: "10%" },
-        { field: "idAplicadoEnPago", header: "facturacionSJCS.movimientosVarios.aplicadoEnPago", width: "10%" }
+        { field: "nombrePago", header: "facturacionSJCS.movimientosVarios.aplicadoEnPago", width: "10%" }
       ];
     
     this.cols.forEach(it => this.buscadores.push(""));
