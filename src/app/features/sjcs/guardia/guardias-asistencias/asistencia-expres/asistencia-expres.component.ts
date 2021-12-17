@@ -552,6 +552,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           
         },
         err => {
+          if(err.status = "409"){
+            this.showMsg('error', 'El usuario es colegiado y no existe una guardia para la fecha seleccionada. No puede continuar', '');
+          }else{
+            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), '');
+          }
           //console.log(err);
           this.progressSpinner = false;
         },

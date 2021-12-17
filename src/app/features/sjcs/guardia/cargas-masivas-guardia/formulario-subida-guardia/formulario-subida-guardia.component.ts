@@ -100,12 +100,17 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
 
       let body: CargaMasivaItem = new CargaMasivaItem();
       body.tipoCarga = this.tipo;
-
+      body.fechaCarga = this.datePipe.transform(
+        new Date(),
+        "dd/MM/yyyy"
+      );
       if (this.fechaSolicitud != undefined && this.fechaSolicitud != null) {
-        body.fechaCarga = this.datePipe.transform(
+        /*body.fechaCarga = this.datePipe.transform(
           this.fechaSolicitud,
           "dd/MM/yyyy"
-        );
+        );*/
+
+     
        /* }else if (this.fechaDesde != undefined && this.fechaDesde != null){
           body.fechaCarga = this.datePipe.transform(
             this.fechaDesde,

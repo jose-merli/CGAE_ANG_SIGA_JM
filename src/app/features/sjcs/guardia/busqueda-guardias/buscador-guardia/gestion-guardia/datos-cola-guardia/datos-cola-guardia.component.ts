@@ -350,12 +350,16 @@ inicio(){
     this.body.letradosIns = this.datepipe.transform(new Date(fecha), 'dd/MM/yyyy');
   }
   setColaGuardia(colaGuardiaModificado){
+    this.progressSpinner = true;
     let colaGuardiaModificadoSt = JSON.parse(JSON.stringify(colaGuardiaModificado));
     this.sigaService.post(
       "busquedaGuardias_updateColaGuardia", colaGuardiaModificadoSt).subscribe(
         data => {
+          this.getColaGuardia();
+          this.progressSpinner = false;
           //console.log(data);
         }, err => {
+          this.progressSpinner = false;
           //console.log(err);
         });
   }
@@ -432,7 +436,10 @@ inicio(){
           { type: 'invisible', value: datoObj.ordenCola },
           { type: 'invisible', value: datoObj.idturno },
           { type: 'invisible', value: datoObj.idGuardia },
-          { type: 'invisible', value: datoObj.ordenBD }
+          { type: 'invisible', value: datoObj.ordenBD },
+          { type: 'invisible', value: datoObj.fechaSuscripcion },
+          { type: 'invisible', value: datoObj.idGrupoGuardia },
+          { type: 'invisible', value: datoObj.idPersona }
         ];
       } else {
         objArr.cells = [
@@ -468,8 +475,59 @@ inicio(){
     this.totalRegistros = this.rowGroups.length;
   }
   colaGuardiaOrdenada(event){
+    
+    let datosModif = [];
     this.rowGroupModified = event;
-    let colaGuardiaUpdated = {"inscripcionesItem": this.rowGroupModified};
+
+    this.rowGroupModified.forEach(rg => {
+
+      let datCopy = {
+        apellido1: "",
+        apellido2: "",
+        compensaciones: "",
+        fechaSuscripcion: '',
+        fechaValidacion: "",
+        fechabaja: null,
+        idGrupoGuardia: "",
+        idGrupoGuardiaColegiado: "",
+        idGuardia: "",
+        idPersona: "",
+        idTurno: "",
+        nColegiado: "",
+        nombre: "",
+        nombreApe: "",
+        numeroGrupo: '',
+        orden: "",
+        ordenCola: "",
+        order: '',
+        saltos: "",
+        ordenBD: ''
+      };
+      datCopy.apellido1 = rg.cells[3].value.split(",")[0];
+      datCopy.apellido2 = rg.cells[3].value.split(",")[1];
+      datCopy.compensaciones = rg.cells[6].value;
+      datCopy.fechaSuscripcion = rg.cells[13].value;
+      datCopy.fechaValidacion = rg.cells[4].value;
+      datCopy.fechabaja = rg.cells[5].value;
+      datCopy.idGrupoGuardia = rg.cells[14].value;
+      datCopy.idGrupoGuardiaColegiado = rg.cells[8].value;
+      datCopy.idGuardia = rg.cells[11].value;
+      datCopy.idPersona = rg.cells[15].value;
+      datCopy.idTurno = rg.cells[10].value;
+      datCopy.nColegiado = rg.cells[2].value;
+      datCopy.nombre = rg.cells[3].value.split(",")[2];
+      datCopy.nombreApe = rg.cells[3].value;
+      datCopy.numeroGrupo = rg.cells[0].value;
+      datCopy.orden = rg.cells[1].value;
+      datCopy.ordenCola = rg.cells[9].value;
+      //datCopy.order = rg.cells[];
+      datCopy.saltos = rg.cells[7].value;
+      datCopy.ordenBD = rg.cells[12].value;
+
+      datosModif.push(datCopy);
+    });
+    
+    let colaGuardiaUpdated = {"inscripcionesItem": datosModif};
     this.setColaGuardia(colaGuardiaUpdated);
   }
   updateColaGuardia(event){

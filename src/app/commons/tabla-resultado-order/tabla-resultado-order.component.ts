@@ -809,22 +809,19 @@ this.totalRegistros = this.rowGroups.length;
   });
   if (groupSelected == null){
       let selected = this.rowGroups[posicionEntabla];
-          let ordenColaSeleccionado = selected.cells[12];
-         let ordenColaUltimo = this.rowGroups[this.rowGroups.length - 1].cells[12];
-         let ordenColaPrimero = this.rowGroups[0].cells[12];
-        let last = this.rowGroups[this.rowGroups.length - 1];
-        
-        this.rowGroups.forEach((row, index)=> {
-          if (index != 0  && index <=posicionEntabla){
+          let ordenColaSeleccionado = Object.assign({},selected.cells[12]);
+         let ordenColaUltimo = Object.assign({},this.rowGroups[this.rowGroups.length - 1].cells[12]);
+         let ordenColaPrimero = Object.assign({},this.rowGroups[0].cells[12]);
+        let j = 0;
+        while (j < posicionEntabla){
           //this.rowGroups[index] = this.rowGroupsAux[index - 1];
-          this.rowGroups[index].cells[12].value = this.rowGroupsAux[index - 1].cells[12].value;
+          this.rowGroups[j].cells[12].value = this.rowGroupsAux[j+1].cells[12].value;
+          j++;
           }
-          });
        
-         //this.rowGroups[0] = last;
-         //this.rowGroups[this.rowGroups.length - 1] = selected;
-         this.rowGroups[0].cells[12].value = ordenColaSeleccionado.value;
+         //selected = last
          this.rowGroups[posicionEntabla].cells[12].value = ordenColaUltimo.value;
+         //last = first
          this.rowGroups[this.rowGroups.length - 1].cells[12].value = ordenColaPrimero.value;
          
         
@@ -896,31 +893,45 @@ this.totalRegistros = this.rowGroups.length;
         let y = 0;
         if (groupSelected == null){
           y = 12;
-        }
-        if (movement == 'up'){
-          let actual = this.rowGroups[posicionEntabla].cells[y].value;
-          //actual = anterior
-          this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla - 1].cells[y].value;
-          //anterior = actual
-          this.rowGroups[posicionEntabla - 1].cells[y].value = actual;
-        } else if (movement == 'down'){
-          let actual = this.rowGroups[posicionEntabla].cells[y].value;
-          //actual = siguiente
-          this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla + 1].cells[y].value;
-          //siguiente = actual
-          this.rowGroups[posicionEntabla + 1].cells[y].value = actual;
+          if (movement == 'up'){
+            let or = Object.assign({},this.rowGroups[posicionEntabla].cells[12]);
+          this.rowGroups[posicionEntabla].cells[12].value = this.rowGroups[posicionEntabla - 1].cells[12].value;
+          this.rowGroups[posicionEntabla - 1].cells[12].value = or.value;
+          } else if (movement == 'down'){
+            let or = Object.assign({},this.rowGroups[posicionEntabla].cells[12]);
+          this.rowGroups[posicionEntabla].cells[12].value = this.rowGroups[posicionEntabla + 1].cells[12].value;
+          this.rowGroups[posicionEntabla + 1].cells[12].value = or.value;
+          }
+          this.rowGroupsAux = this.rowGroups;
+          this.guardar(true);
+        }else{
+          if (movement == 'up'){
+            let actual = this.rowGroups[posicionEntabla].cells[y].value;
+            //actual = anterior
+            this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla - 1].cells[y].value;
+            //anterior = actual
+            this.rowGroups[posicionEntabla - 1].cells[y].value = actual;
+          } else if (movement == 'down'){
+            let actual = this.rowGroups[posicionEntabla].cells[y].value;
+            //actual = siguiente
+            this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla + 1].cells[y].value;
+            //siguiente = actual
+            this.rowGroups[posicionEntabla + 1].cells[y].value = actual;
+          }
         }
     }else{
       groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
       this.rowGroupsAux.forEach((row, index)=> {
       
         if (movement == 'up'){
+          
           if(Number(row.cells[1].value) == Number(groupSelected)){
             this.rowGroups[index].cells[1].value = (Number(groupSelected) - 1);
           } else if (Number(row.cells[1].value) == Number(groupSelected) - 1){
             this.rowGroups[index].cells[1].value = groupSelected;
           }
         } else if (movement == 'down'){
+          
           if(Number(row.cells[1].value) == Number(groupSelected)){
             this.rowGroups[index].cells[1].value = (Number(groupSelected) + 1);
           } else if (Number(row.cells[1].value) == Number(groupSelected) + 1){
@@ -929,6 +940,7 @@ this.totalRegistros = this.rowGroups.length;
         }
       
       })
+      
     
   }
     this.rowGroupsAux = this.rowGroups;
