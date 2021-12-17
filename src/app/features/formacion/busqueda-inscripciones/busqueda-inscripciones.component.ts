@@ -25,7 +25,7 @@ import { ControlAccesoDto } from "../../../models/ControlAccesoDto";
 import { USER_VALIDATIONS } from "../../../properties/val-properties";
 import { DatosInscripcionObject } from "../../../models/DatosInscripcionObject";
 import { FormadorCursoItem } from "../../../models/FormadorCursoItem";
-import { Location } from "@angular/common";
+import { Location, registerLocaleData } from "@angular/common";
 import { CommonsService } from '../../../_services/commons.service';
 
 export enum KEY_CODE {
@@ -868,6 +868,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   callAction() {
+    let registros = this.selectedDatos;
     this.selectedDatos[0].motivo = this.body.motivo;
     this.progressSpinner = true;
     this.sigaServices
@@ -925,10 +926,29 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
                 // Inscripcion rechazada
                 mensajeAccion = "rechazar";
 
-              mensaje =
-                "Uno o varios cursos no permiten " +
-                mensajeAccion +
-                " inscripciones";
+              let respuesta: string[] = JSON.parse(data.body);
+
+              if(registros.length == 1) {
+                if(registros[0].estadoCurso == "Finalizado"){
+                  mensaje = this.translateService.instant("formacion.cursos.finalizado");
+                }else if(registros[0].estadoCurso == "Impartido"){
+                  mensaje = this.translateService.instant("formacion.cursos.impartido");
+                }else if(registros[0].estadoCurso == "Cancelado"){
+                  mensaje = this.translateService.instant("formacion.cursos.cancelado");
+                }else if(respuesta[1] != null && respuesta[1] == "Sin plazas"){
+                  mensaje = this.translateService.instant("formacion.cursos.sinplazas");
+                }else{
+                  mensaje =
+                  this.translateService.instant("formacion.cursos.unoovarioscursos") +
+                  mensajeAccion +
+                  this.translateService.instant("formacion.cursos.condiciones");
+                }
+              }else if(registros.length > 1){
+                mensaje =
+                  this.translateService.instant("formacion.cursos.unoovarioscursos") +
+                  mensajeAccion +
+                  this.translateService.instant("formacion.cursos.condiciones");
+              }
 
               this.showFail(mensaje);
             }
