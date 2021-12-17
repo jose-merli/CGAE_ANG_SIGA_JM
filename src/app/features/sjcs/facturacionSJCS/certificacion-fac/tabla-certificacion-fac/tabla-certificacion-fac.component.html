@@ -5,8 +5,9 @@
     <!-- TABLA RESULTADOS -->
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
       [responsive]="true" #tabla class="tabla-listado w-100" [paginator]="true" [rows]="selectedItem"
-      (onRowSelect)="selectDesSelectFila()" (onRowUnselect)="selectDesSelectFila()" [first]="first"
-       [customSort]="true" paginatorPosition="both" [autoLayout]="true">
+      (onRowSelect)="actuDesSeleccionados()" (onRowUnselect)="actuDesSeleccionados()" paginatorPosition="both"
+      [autoLayout]="true">
+
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -17,9 +18,8 @@
           <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate}}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
-              *ngSwitchCase="col.field" pInputText type="text"
-              (input)="tabla.filter($event.target.value, col.field, 'contains')" />
+            <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="tabla.filter($event.target.value, col.field, 'contains')" />
           </th>
         </tr>
       </ng-template>
@@ -27,30 +27,8 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="col.field == 'fechaDesde' || col.field == 'fechaHasta'">
-              <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
-            </div>
-            <div
-              *ngIf="col.field != 'periodo' && col.field != 'estado'">
-              <span>{{dato[col.field]}}</span>
-            </div>
-             <div *ngIf="col.field == 'importeTurno'">
-              <label>{{ dato[col.field] | numberPipe}} €</label>
-            </div>
-            <div *ngIf="col.field == 'importeGuardia'">
-              <label>{{ dato[col.field] | numberPipe}} €</label>
-            </div>
-            <div *ngIf="col.field == 'importeEjg'">
-              <label>{{ dato[col.field] | numberPipe}} €</label>
-            </div>
-            <div *ngIf="col.field == 'importeSoj'">
-              <label>{{ dato[col.field] | numberPipe}} €</label>
-            </div>
-            <div *ngIf="col.field == 'importeTotal'">
-              <label>{{ dato[col.field] | numberPipe}} €</label>
-            </div> 
-            <div *ngIf="col.field =='nombre'">
-              <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
+            <div>
+              <label>{{ dato[col.field]}}</label>
             </div>
           </td>
         </tr>
@@ -78,7 +56,8 @@
 
           <div class="ml-3 selectAll">
             <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [(disabled)]='!permisoEscritura'>
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"
+              [(disabled)]='!permisoEscritura'>
             </p-checkbox>
           </div>
         </div>
@@ -87,13 +66,10 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton [disabled]="!permisoEscritura || selectedDatos.length == 0" 
-        (click)="delCert()" type="button" icon="fa fa-trash-alt" iconPos="left"
-        label="{{ 'general.boton.eliminar' | translate}}"></button>
+      <button pButton [disabled]="!permisoEscritura || selectedDatos.length == 0" (click)="delCert()" type="button"
+        icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
       <button pButton disabled type="button" icon="fa fa-comment" iconPos="left"
         label="{{ 'general.boton.comunicar' | translate}}"></button>
-        <button (click)="modificarCert()" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-save"
-          iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
     </div>
   </div>
 </div>

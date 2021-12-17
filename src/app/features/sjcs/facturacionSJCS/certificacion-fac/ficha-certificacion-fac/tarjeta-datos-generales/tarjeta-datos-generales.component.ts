@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { CertificacionFacItem } from '../../../../../../models/sjcs/CertificacionFacItem';
+// import { CertificacionFacItem } from '../../../../../../models/sjcs/CertificacionesItem';
 
 @Component({
   selector: 'app-tarjeta-datos-generales-fiFac',
@@ -9,8 +9,8 @@ import { CertificacionFacItem } from '../../../../../../models/sjcs/Certificacio
 export class TarjetaDatosGeneralesComponent implements OnInit {
   progressSpinner;
   permisos;
-  datos = new CertificacionFacItem;
-  listaEstados = new CertificacionFacItem;
+  // datos = new CertificacionFacItem;
+  // listaEstados = new CertificacionFacItem;
   @Input() idCertificacion;
   @Input() modoEdicion;
   @Output() changeModoEdicion = new EventEmitter<boolean>();
@@ -22,9 +22,9 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   ngOnInit() {
     this.getListEstados();
-    if(this.listaEstados != null || this.listaEstados != undefined){
-      this.getCols();
-    }
+    // if(this.listaEstados != null || this.listaEstados != undefined){
+    //   this.getCols();
+    // }
     
   }
 

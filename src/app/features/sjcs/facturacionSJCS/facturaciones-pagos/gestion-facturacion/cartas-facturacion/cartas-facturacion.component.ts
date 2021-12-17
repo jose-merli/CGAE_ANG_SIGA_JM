@@ -1,19 +1,21 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 import { CartasFacturacionPagosItem } from '../../../../../../models/sjcs/CartasFacturacionPagosItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { Enlace } from '../gestion-facturacion.component'
 
 @Component({
   selector: 'app-cartas-facturacion',
   templateUrl: './cartas-facturacion.component.html',
   styleUrls: ['./cartas-facturacion.component.scss']
 })
-export class CartasFacturacionComponent implements OnInit {
+export class CartasFacturacionComponent implements OnInit, AfterViewInit {
   progressSpinnerCartas: boolean = false;
   numApuntes = 0;
 
   @Input() idFacturacion;
   @Input() idEstadoFacturacion;
+  @Output() addEnlace = new EventEmitter<Enlace>();
 
   constructor(private router: Router, private sigaService: SigaServices) { }
 
@@ -64,5 +66,15 @@ export class CartasFacturacionComponent implements OnInit {
 
       this.router.navigate(["/cartaFacturacionPago"]);
     }
+  }
+
+  ngAfterViewInit() {
+
+    const enlace: Enlace = {
+      id: 'facSJCSFichaFactCartasFac',
+      ref: document.getElementById('facSJCSFichaFactCartasFac')
+    };
+
+    this.addEnlace.emit(enlace);
   }
 }

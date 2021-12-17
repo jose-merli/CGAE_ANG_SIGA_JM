@@ -45,7 +45,7 @@ import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.mo
 
   ],
   declarations: [
-    TiposActuacionComponent
+    //TiposActuacionComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

@@ -45,46 +45,75 @@
                 <div class="bloque col-lg-6 col-md-6 col-sm-6 py-2 pl-2">
                     <div class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox [(ngModel)]="disponibilidad" name="porDispo" label="Por disponibilidad" class="ml-0"></p-checkbox>
+                            <p-checkbox (onChange)="onChangeDisponibilidad($event)" value="disponibilidad"
+                                name="porDispo" label="Por disponibilidad" class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox [(ngModel)]="agruparDis" name="agrupar1" label="Agrupar" class="ml-0"></p-checkbox>
+                            <p-checkbox [disabled]="!disableDis" (onChange)="onChangeAgruparDis($event)" name="agrupar1"
+                                label="Agrupar" class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox [(ngModel)]="checkDisL" (onChange)="onChangeDias($event,'L')" value="L" name="L" #LDis binary = "true" label="L" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkDisM" (onChange)="onChangeDias($event,'M')" value="M" name="M" #MDis binary = "true" label="M" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkDisX" (onChange)="onChangeDias($event,'X')" value="X" name="X" #XDis binary = "true" label="X" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkDisJ" (onChange)="onChangeDias($event,'J')" value="J" name="J" #JDis binary = "true" label="J" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkDisV" (onChange)="onChangeDias($event,'V')" value="V" name="V" #VDis binary = "true" label="V" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkDisS" (onChange)="onChangeDias($event,'S')" value="S" name="S" #SDis binary = "true" label="S" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkDisD" (onChange)="onChangeDias($event,'D')" value="D" name="D" #DDis binary = "true" label="D" checked = "false"></p-checkbox>
+                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisL"
+                                (onChange)="onChangeDiasDis($event,'L')" name="L" #LDis binary="true" label="L">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisM"
+                                (onChange)="onChangeDiasDis($event,'M')" name="M" #MDis binary="true" label="M">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisX"
+                                (onChange)="onChangeDiasDis($event,'X')" name="X" #XDis binary="true" label="X">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisJ"
+                                (onChange)="onChangeDiasDis($event,'J')" name="J" #JDis binary="true" label="J">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisV"
+                                (onChange)="onChangeDiasDis($event,'V')" name="V" #VDis binary="true" label="V">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisS"
+                                (onChange)="onChangeDiasDis($event,'S')" name="S" #SDis binary="true" label="S">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisD"
+                                (onChange)="onChangeDiasDis($event,'D')" name="D" #DDis binary="true" label="D">
+                            </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="contAsiDis" label="Contando Asistencias"></p-radioButton>
+                            <p-radioButton [disabled]="!disableDis" [(ngModel)]="contDis" value="asi"
+                                (click)="changeContDis()" name="contandoDis" label="Contando Asistencias">
+                            </p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="contAcDis" label="Contando Actuaciones"></p-radioButton>
+                            <p-radioButton [disabled]="!disableDis" [(ngModel)]="contDis" value="act"
+                                (click)="changeContDis()" name="contandoDis" label="Contando Actuaciones">
+                            </p-radioButton>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>Mínimo</label>
+                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.importeMinDis"
+                                class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Importe</label>
-                            <input type="number" [(value)]="filtrosDis.importeDis" class="form-control" />
+                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.importeDis"
+                                class="form-control" />
                         </div>
-                        <div class="form-group col-lg-6 col-md-6"></div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Disponibilidad con asuntos</label>
-                            <input type="number"  [(value)]="filtrosDis.dispAsuntos" class="form-control" />
+                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.dispAsuntosDis"
+                                class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>A partir de</label>
-                            <input type="number"  [(value)]="filtrosDis.aPartirDis" class="form-control" />
+                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.aPartirDis"
+                                class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Máximo</label>
-                            <input type="number"  [(value)]="filtrosDis.importeMaxDis" class="form-control" />
+                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.importeMaxDis"
+                                class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>A partir de</label>
-                            <input type="number"  [(value)]="filtrosDis.aPartirMax" class="form-control" />
+                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.aPartirMax"
+                                class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -92,47 +121,79 @@
                 <div class="bloque col-lg-6 col-md-6 col-sm-6">
                     <div class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox name="porAsisActu" [(ngModel)]="asiac" label="Por asistencia / actuaciones" class="ml-0">
+                            <p-checkbox name="porAsisActu" value="asiac" (onChange)="onChangeAsAc($event)"
+                                label="Por asistencia / actuaciones" class="ml-0">
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox [(ngModel)]="agruparAsAc" name="agrupar1" label="Agrupar" class="ml-0"></p-checkbox>
+                            <p-checkbox [disabled]="!disableAsAc" (onChange)="onChangeAgruparAsAc($event)"
+                                name="agrupar1" label="Agrupar" class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox [(ngModel)]="checkAsAcL" (onChange)="onChangeDias($event,'L')" value="L" #LAsAc binary = "true" name="L" label="L" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkAsAcM" (onChange)="onChangeDias($event,'M')" value="M" #MAsAc binary = "true" name="M" label="M" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkAsAcX" (onChange)="onChangeDias($event,'X')" value="X" #XAsAc binary = "true" name="X" label="X" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkAsAcJ" (onChange)="onChangeDias($event,'J')" value="J" #JAsAc binary = "true" name="J" label="J" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkAsAcV" (onChange)="onChangeDias($event,'V')" value="V" #VAsAc binary = "true" name="V" label="V" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkAsAcS" (onChange)="onChangeDias($event,'S')" value="S" #SAsAc binary = "true" name="S" label="S" checked = "false"></p-checkbox>
-                            <p-checkbox [(ngModel)]="checkAsAcD" (onChange)="onChangeDias($event,'D')" value="D" #DAsAc binary = "true" name="D" label="D" checked = "false"></p-checkbox>
+                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcL"
+                                (onChange)="onChangeDiasAsAc($event,'L')" #LAsAc binary="true" name="L" label="L">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcM"
+                                (onChange)="onChangeDiasAsAc($event,'M')" #MAsAc binary="true" name="M" label="M">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcX"
+                                (onChange)="onChangeDiasAsAc($event,'X')" #XAsAc binary="true" name="X" label="X">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcJ"
+                                (onChange)="onChangeDiasAsAc($event,'J')" #JAsAc binary="true" name="J" label="J">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcV"
+                                (onChange)="onChangeDiasAsAc($event,'V')" #VAsAc binary="true" name="V" label="V">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcS"
+                                (onChange)="onChangeDiasAsAc($event,'S')" #SAsAc binary="true" name="S" label="S">
+                            </p-checkbox>
+                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcD"
+                                (onChange)="onChangeDiasAsAc($event,'D')" #DAsAc binary="true" name="D" label="D">
+                            </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="contAsiAsAc" label="Contando Asistencias"></p-radioButton>
+                            <p-radioButton [disabled]="!disableAsAc" [(ngModel)]="contAsAc" value="asi"
+                                (click)="changeContAsAc()" name="contandoAsAc" label="Contando Asistencias">
+                            </p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="contAcAsAc" label="Contando Actuaciones"></p-radioButton>
+                            <p-radioButton [disabled]="!disableAsAc" [(ngModel)]="contAsAc" value="act"
+                                (click)="changeContAsAc()" name="contandoAsAc" label="Contando Actuaciones">
+                            </p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="precioUnico" label="Precio Único"></p-radioButton>
+                            <p-radioButton [disabled]="!disPrecio" [(ngModel)]="precio" value="unico"
+                                (click)="changePrecio()" name="precioAsAc" label="Precio Único"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [(ngModel)]="precioTipos" label="Precio por tipos"></p-radioButton>
+                            <p-radioButton [disabled]="!disPrecio" [(ngModel)]="precio" value="porTipos"
+                                (click)="changePrecio()" name="precioAsAc" label="Precio por tipos"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Importe</label>
-                            <input type="number"  [(value)]="filtrosAsAc.importeAsAc" class="form-control" />
+                            <input type="number" [disabled]="!disableImputAct" [(ngModel)]="filtrosAsAc.importeAsAc"
+                                class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6 verticalAlign">
-                            <a>Ir a tipos</a>
+                            <a class="enlace" (click)="irAtipos()" *ngIf="modalTipos">Ir a tipos</a>
+                            <a *ngIf="!modalTipos">Ir a tipos</a>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
+                            <label>Disponibilidad con asuntos</label>
+                            <input type="number" [disabled]="!disableImputAct" [(ngModel)]="filtrosAsAc.dispAsuntosAsAc"
+                                class="form-control" />
+                        </div>
+
+                        <div class="form-group col-lg-6 col-md-6">
                             <label>Mínimo</label>
-                            <input type="number"  [(value)]="filtrosAsAc.importeMinAsAc" class="form-control" />
+                            <input type="number" [disabled]="!disableImputAct" [(ngModel)]="filtrosAsAc.importeMinAsAc"
+                                class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>Máximo</label>
-                            <input type="number"  [(value)]="filtrosAsAc.importeMaxAsAc" class="form-control" />
+                            <input type="number" [disabled]="!disableImputAct" [(ngModel)]="filtrosAsAc.importeMaxAsAc"
+                                class="form-control" />
                         </div>
                     </div>
                 </div>
@@ -144,3 +205,12 @@
     </div>
 
 </div>
+
+<p-dialog width="1300" responsive="true" modal="modal" [draggable]="false" resizable="true" [(visible)]="showModal"
+    (onHide)="cerrarDialog()">
+    <p-scrollPanel width="auto" height="auto">
+        <app-gestion-tiposasistencia *ngIf="contAsAc == 'asi' && showModal" [origenBaremos]="origenBaremos">
+        </app-gestion-tiposasistencia>
+        <app-gestion-tiposactuacion *ngIf="contAsAc == 'act' && showModal" [origenBaremos]="origenBaremos"></app-gestion-tiposactuacion>
+    </p-scrollPanel>
+</p-dialog>

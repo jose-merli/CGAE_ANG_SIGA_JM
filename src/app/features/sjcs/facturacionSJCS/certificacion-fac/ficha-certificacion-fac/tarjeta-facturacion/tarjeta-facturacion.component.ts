@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, View
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
-import { CertificacionFacItem } from '../../../../../../models/sjcs/CertificacionFacItem';
+// import { CertificacionFacItem } from '../../../../../../models/sjcs/CertificacionesItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
@@ -14,7 +14,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 export class TarjetaFacturacionComponent implements OnInit {
   progressSpinner;
   permisos;
-  datosTablaFact:CertificacionFacItem[];
+  // datosTablaFact:CertificacionFacItem[];
   selectedDatos;
   selectedItem: number = 10;
   rowsPerPage: any = [];
@@ -130,8 +130,8 @@ export class TarjetaFacturacionComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.selectedDatos = this.datosTablaFact;
-      this.numSelected = this.datosTablaFact.length;
+      // this.selectedDatos = this.datosTablaFact;
+      // this.numSelected = this.datosTablaFact.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;

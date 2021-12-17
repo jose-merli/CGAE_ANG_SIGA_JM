@@ -38,22 +38,22 @@
         [idEstadoFacturacion]="idEstadoFacturacion" [editingConceptos]="editingConceptos"
         [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" (changeModoEdicion)="changeModoEdicion($event)"
         (changeEstadoFacturacion)="changeEstadoFacturacion($event)" (changeCerrada)="changeCerrada($event)"
-        (changeIdFacturacion)="changeIdFacturacion($event)" (changeFacturacion)="getFacturacion()">
+        (changeIdFacturacion)="changeIdFacturacion($event)" (changeFacturacion)="getFacturacion()" (addEnlace)="addEnlace($event)">
       </app-datos-facturacion>
 
       <app-conceptos-facturacion *ngIf="visualizarTarjetas" [idEstadoFacturacion]="idEstadoFacturacion"
         [idFacturacion]="idFacturacion" [modoEdicion]="modoEdicion" [cerrada]="cerrada"
-        (changeNumCriterios)="changeNumCriterios($event)" (editing)="changeEditingConceptos($event)">
+        (changeNumCriterios)="changeNumCriterios($event)" (editing)="changeEditingConceptos($event)" (addEnlace)="addEnlace($event)">
       </app-conceptos-facturacion>
 
       <app-baremos *ngIf="visualizarTarjetas" [idFacturacion]="idFacturacion"
-        [idEstadoFacturacion]="idEstadoFacturacion"></app-baremos>
+        [idEstadoFacturacion]="idEstadoFacturacion" (addEnlace)="addEnlace($event)"></app-baremos>
 
       <app-pagos *ngIf="visualizarTarjetas" [idEstadoFacturacion]="idEstadoFacturacion" [idFacturacion]="idFacturacion"
-        [modoEdicion]="modoEdicion" [cerrada]="cerrada"></app-pagos>
+        [modoEdicion]="modoEdicion" [cerrada]="cerrada" (addEnlace)="addEnlace($event)"></app-pagos>
 
       <app-cartas-facturacion *ngIf="visualizarTarjetas" [idFacturacion]="idFacturacion"
-        [idEstadoFacturacion]="idEstadoFacturacion">
+        [idEstadoFacturacion]="idEstadoFacturacion" (addEnlace)="addEnlace($event)">
       </app-cartas-facturacion>
 
       <div class="text-right main-button">

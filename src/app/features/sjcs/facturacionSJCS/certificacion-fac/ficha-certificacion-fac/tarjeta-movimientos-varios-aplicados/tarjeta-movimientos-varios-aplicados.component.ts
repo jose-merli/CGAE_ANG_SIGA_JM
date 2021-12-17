@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, View
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
-import { CertificacionFacItem } from '../../../../../../models/sjcs/CertificacionFacItem';
+// import { CertificacionFacItem } from '../../../../../../models/sjcs/CertificacionesItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
@@ -19,7 +19,7 @@ export class TarjetaMovimientosVariosAplicadosComponent implements OnInit {
   @ViewChild("tabla") tabla;
   progressSpinner;
   permisos;
-  datosTablaMovApli:CertificacionFacItem[];
+  // datosTablaMovApli:CertificacionFacItem[];
   selectedDatos;
   selectedItem: number = 10;
   rowsPerPage: any = [];
@@ -98,8 +98,8 @@ export class TarjetaMovimientosVariosAplicadosComponent implements OnInit {
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
-      this.selectedDatos = this.datosTablaMovApli;
-      this.numSelected = this.datosTablaMovApli.length;
+      // this.selectedDatos = this.datosTablaMovApli;
+      // this.numSelected = this.datosTablaMovApli.length;
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;

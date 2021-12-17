@@ -197,18 +197,16 @@ export class TablaBusquedaBaremosComponent implements OnInit {
   openFichaBaremos(rowData) {
     if (!this.desactivarHistorico) {
       let baremoGuar = new BaremosGuardiaItem();
-      let arrBaremo: BaremosGuardiaItem[] = [];
       baremoGuar.idGuardia = rowData.idGuardia;
       baremoGuar.idTurno = rowData.idTurno;
       baremoGuar.nomguardia = rowData.guardias;
       baremoGuar.nomturno = rowData.nomTurno;
       baremoGuar.baremo = rowData.baremo;
       baremoGuar.idhitoconfiguracion = rowData.idhitoconfiguracion;
-      arrBaremo.push(baremoGuar)
+
       sessionStorage.setItem('modoEdicionBaremo', "true");
-      sessionStorage.setItem('dataBaremoMod', JSON.stringify(arrBaremo));
+      sessionStorage.setItem('dataBaremoMod', JSON.stringify(baremoGuar));
       this.router.navigate(['/fichaBaremosDeGuardia']);
-      console.log(rowData);
     }
   }
 }

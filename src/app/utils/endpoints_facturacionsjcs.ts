@@ -15,6 +15,7 @@ export let endpoints_facturacionsjcs: any = {
     combo_comboColegios: "combo/getComboColegios",
     combo_grupoFacturacionByColegio: "combo/grupoFacturacionByColegio",
     combo_certificacionSJCS: "/combo/comboCertificacionSJCS",
+    combo_grupoFacturacionByColegios: "combo/grupoFacturacionByColegios",
 
     /* Endpoints FACTURACIONSJCS */
 
@@ -90,6 +91,7 @@ export let endpoints_facturacionsjcs: any = {
     baremosGuardia_getTurnoForGuardia: "baremosGuardia/getTurnoForGuardia",
     baremosGuardia_getGuardiasByConf: "baremosGuardia/getGuardiasByConf",
     baremosGuardia_saveBaremo: "baremosGuardia/saveBaremo",
+    baremosGuardia_getBaremo: "baremosGuardia/getBaremo",
 
     /* Endpoints Tarjeta genérica facturaciones */
     tarjGenFac_getFacturacionesPorAsuntoActuacionDesigna: "facturacionsjcs/getFacturacionesPorAsuntoActuacionDesigna",
@@ -111,4 +113,8 @@ export let endpoints_facturacionsjcs: any = {
     movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios",
     movimientosVarios_getMovimientoVarioPorId: "movimientosVarios/getMovimientoVarioPorId",
 
+    /* Endpoints Certificaciones */
+    certificaciones_getComboEstadosCertificaciones: "certificaciones/getComboEstadosCertificaciones",
+    certificaciones_buscarCertificaciones: "certificaciones/buscarCertificaciones",
+    certificaciones_eliminarCertificaciones: "certificaciones/eliminarCertificaciones",
 }

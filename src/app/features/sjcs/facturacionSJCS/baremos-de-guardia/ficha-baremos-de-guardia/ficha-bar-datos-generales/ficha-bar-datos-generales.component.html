@@ -78,27 +78,23 @@
                                     </div>
                                     
                                     <div *ngIf="col.field == 'nomturno' && datos[rowIndex].isCombo == true ">
-                                        <p-multiSelect #multiTurno class="select-form" [(ngModel)]='filtros.idTurnos'
-                                            defaultLabel="{{'general.boton.seleccionar' | translate}}"
-                                            [options]="comboTurno" [filter]="true" maxSelectedLabels="10"
-                                            [selectedItemsLabel]="'{0} turnos seleccionados'"
-                                            filterBy="label,labelSinTilde" styleClass="widthAll"
-                                            (onPanelShow)="focusInputField(multiTurno)"
-                                            (onChange)="onChangeTurno($event)">
-                                        </p-multiSelect>
+                                        <p-dropdown  class="select-form" [(ngModel)]='filtros.idTurno'
+                                        placeholder="{{'general.boton.seleccionar' | translate}}"
+                                            [options]="comboTurno" [filter]="true"
+                                            filterBy="label,labelSinTilde" 
+                                            (onChange)="onChangeTurno($event)"[showClear]="true">
+                                        </p-dropdown>
                                     </div>
 
                                     <div *ngIf="col.field == 'nomguardia' && datos[rowIndex].isCombo == true">
-                                        <p-multiSelect #multiGuardia class="select-form"
-                                            [(ngModel)]='filtros.idGuardias'
-                                            defaultLabel="{{'general.boton.seleccionar' | translate}}"
-                                            [options]="comboGuardia" [filter]="true" maxSelectedLabels="10"
-                                            [selectedItemsLabel]="'{0} guardias seleccionadas'"
-                                            filterBy="label,labelSinTilde" styleClass="widthAll"
-                                            (onPanelShow)="focusInputField(multiGuardia)"
+                                        <p-dropdown class="select-form"
+                                            [(ngModel)]='filtros.idGuardia'
+                                            placeholder="{{'general.boton.seleccionar' | translate}}"
+                                            [options]="comboGuardia" [filter]="true"
+                                            filterBy="label,labelSinTilde" 
                                             (onPanelHide) = "onChangeGuardia()"
-                                            [disabled]="disabledComboGuardia()">
-                                        </p-multiSelect>
+                                            [disabled]="disabledComboGuardia()"[showClear]="true">
+                                        </p-dropdown>
                                     </div>
 
                                 </td>
