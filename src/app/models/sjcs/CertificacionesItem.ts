@@ -12,6 +12,9 @@ export class CertificacionesItem {
     total: string;
     idEstadoCertificacion: string;
     estado: string;
+    idPartidaPresupuestaria: string;
+    nombrePartidaPresupuestaria: string;
+
 
     constructor() { }
 }

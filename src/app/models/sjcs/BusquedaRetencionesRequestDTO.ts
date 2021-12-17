@@ -8,6 +8,7 @@ export class BusquedaRetencionesRequestDTO {
     idEstadoCertificacionList: string [] = [];
     fechaDesde: Date;
     fechaHasta: Date;
+    idCertificacion: string;
 
     constructor(){}
 }

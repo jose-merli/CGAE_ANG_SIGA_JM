@@ -27,9 +27,15 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div>
+
+            <div *ngIf="col.field == 'nombre'">
+              <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
+            </div>
+
+            <div *ngIf="col.field != 'nombre'">
               <label>{{ dato[col.field]}}</label>
             </div>
+
           </td>
         </tr>
       </ng-template>
