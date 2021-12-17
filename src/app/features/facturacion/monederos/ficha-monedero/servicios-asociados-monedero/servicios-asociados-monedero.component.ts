@@ -374,19 +374,19 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
   //TO DO
   //REVISAR: PENDIENTE DE IMPLEMENTACION
   compareServices(){
-    this.deshabilitarGuardar = true;
+    this.deshabilitarGuardar = false;
     // Esto puede ahorrar tiempo
-    if (this.serviciosTarjeta.length != this.ficha.servicios.length){
-        this.deshabilitarGuardar = false;
-    }
-    else{
-      for (var i = 0, l= this.serviciosTarjeta.length; i < l; i++) {
-          if (this.ficha.servicios[i] != this.serviciosTarjeta[i]) { 
-              this.deshabilitarGuardar = false;   
-              break;
-          }           
-      }       
-    }
+    // if (this.serviciosTarjeta.length != this.ficha.servicios.length){
+    //     this.deshabilitarGuardar = false;
+    // }
+    // else{
+    //   for (var i = 0, l= this.serviciosTarjeta.length; i < l; i++) {
+    //       if (this.ficha.servicios[i] != this.serviciosTarjeta[i]) { 
+    //           this.deshabilitarGuardar = false;   
+    //           break;
+    //       }           
+    //   }       
+    // }
   }
 
   //FIN METODOS
