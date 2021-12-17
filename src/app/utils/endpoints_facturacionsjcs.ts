@@ -13,6 +13,8 @@ export let endpoints_facturacionsjcs: any = {
     combo_comboAgrupacionEnTurnos: "/combo/comboAgrupacionEnTurnos",
     combo_comboTiposMovVarios: "/combo/comboTiposMovimientos",
     combo_comboColegios: "combo/getComboColegios",
+    combo_grupoFacturacionByColegio: "combo/grupoFacturacionByColegio",
+    combo_certificacionSJCS: "/combo/comboCertificacionSJCS",
     combo_grupoFacturacionByColegios: "combo/grupoFacturacionByColegios",
 
     /* Endpoints FACTURACIONSJCS */

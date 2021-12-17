@@ -28,6 +28,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 	concepto: ComboItem;
 	tipos: ComboItem;
 	partidaPresupuestaria: ComboItem;
+	certificacion: ComboItem;
 
 	msgs: any[];
 	buscar: boolean = false;
@@ -76,7 +77,8 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 		this.comboGruposTurnos();
 		this.comboConcepto();
     	this.comboPartidasPresupuestarias();
-    	this.comboTipos();		
+    	this.comboTipos();	
+		this.comboCertificacion();	
 
 		if (sessionStorage.getItem("colegiadoRelleno")) {
 			const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
@@ -196,6 +198,23 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 			data => {
 				this.partidaPresupuestaria = data.combooItems;
 				this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
+				this.progressSpinner = false;
+			},
+			err => {
+				console.log(err);
+				this.progressSpinner = false;
+			}
+		);
+    this.progressSpinner = false;
+	}
+
+	comboCertificacion() {
+		this.progressSpinner = true;
+
+		this.sigaService.get("combo_certificacionSJCS").subscribe(
+			data => {
+				this.certificacion = data.combooItems;
+				this.commonsService.arregloTildesCombo(this.certificacion);
 				this.progressSpinner = false;
 			},
 			err => {
@@ -344,7 +363,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 					return true;
 				}
 		} else {
-			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.mensajeFiltroVacio"));
+
 			return false;
 			
 		}
@@ -380,4 +399,9 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 	 this.router.navigate(["/buscadorColegiados"]);
 	}
 	
+	// onChangeMultiSelectFact(event, filtro) {
+	// 	if (undefined != event.value && event.value.length == 0) {
+	// 		this.filtros[filtro] = undefined;
+	// 	}
+	// }
 }

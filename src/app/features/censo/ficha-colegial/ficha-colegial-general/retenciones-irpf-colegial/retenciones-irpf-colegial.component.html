@@ -99,12 +99,12 @@
 
             <div *ngIf="openFicha" class="card-footer">
               <div class="text-right main-button">
-                  <button (click)="volver()" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
-                  <button (click)="confirmEdit()" [disabled]="activaGuardar() || tarjeta == '2'" pButton type="button" icon="	far fa-save "
+                  <button (click)="volver()" [(disabled)]="isVolver || disabled" pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+                  <button (click)="confirmEdit()" [disabled]="activaGuardar() || tarjeta == '2' || disabled" pButton type="button" icon="	far fa-save "
                       iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-                  <button (click)="confirmarBorrar()" [disabled]="isEliminar || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-trash-alt"
+                  <button (click)="confirmarBorrar()" [disabled]="isEliminar || disabledAction || tarjeta == '2' || disabled" pButton type="button" icon="fa fa-trash-alt"
                       iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
-                  <button (click)="crear()" [disabled]="isCrear || disabledAction || tarjeta == '2'" pButton type="button" icon="fa fa-plus"
+                  <button (click)="crear()" [disabled]="isCrear || disabledAction || tarjeta == '2' || disabled" pButton type="button" icon="fa fa-plus"
                       iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
               </div>
           </div>

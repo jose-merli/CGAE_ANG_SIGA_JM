@@ -98,6 +98,8 @@ export class RetencionesIrpfColegialComponent implements OnInit {
 
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
   generalBody: any;
+  liquidacion: DatosRetencionesItem = new DatosRetencionesItem();
+  disabled: boolean = false;
 
 
   constructor( private formBuilder: FormBuilder,
@@ -171,7 +173,7 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     this.getTiposRetenciones();
     
      this.checkStatusInit();
-     this.search();
+     //this.search();
 
      if (sessionStorage.getItem("historicoSociedad") != null) {
        this.camposDesactivados = true;
@@ -187,6 +189,9 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     } else {
       this.disabledAction = false;
     }
+
+    this.searchRetencion();
+
   }
 
    
@@ -461,7 +466,9 @@ export class RetencionesIrpfColegialComponent implements OnInit {
         datosDelete
       )
       .subscribe(
-        data => { },
+        data => { 
+          this.searchRetencion();
+        },
         err => {
           console.log(err);
         },
@@ -472,7 +479,7 @@ export class RetencionesIrpfColegialComponent implements OnInit {
   }
 
   volver() {
-    this.search();
+
     if (this.camposDesactivados == true) {
       this.isVolver = true;
       this.isCrear = true;
@@ -593,48 +600,6 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     }
   }
 
-  search() {
-    this.body.idPersona = this.idPersona;
-    this.body.idInstitucion = "";
-    this.body.idLenguaje = "";
-    if (this.idPersona != undefined && this.idPersona != null) {
-      this.sigaServices
-        .postPaginado("retenciones_searchColegiado", "?numPagina=1", this.body)
-        .subscribe(
-          data => {
-            this.searchRetenciones = JSON.parse(data["body"]);
-            if (this.searchRetenciones.retencionesItemList != null) {
-              this.datos = this.searchRetenciones.retencionesItemList;
-              if (this.datos.length > 1) {
-                this.retencionActiveAnt = this.datos[1];
-              } else {
-                this.retencionActiveAnt = this.datos[0];
-              }
-            } else {
-              this.datos = [];
-            }
-
-            // this.getUltimaFechaInicio()
-          },
-          err => {
-            console.log(err);
-          },
-          () => {
-            if (this.datos.length > 0) {
-              if (this.camposDesactivados != true) {
-                this.isEliminar = false;
-              }
-              this.datos.forEach((value: any, key: number) => {
-                //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
-                if (value.fechaFin == undefined) {
-                  this.retencionNow = this.datos[key];
-                }
-              });
-            }
-          }
-        );
-    }
-  }
   onChangeDrop(event) {
     let dat: any;
     this.newRetencion.descripcionRetencion = "";
@@ -662,30 +627,6 @@ export class RetencionesIrpfColegialComponent implements OnInit {
     this.buscar = true;
   }
 
-  irFichaColegial(id) {
-    // // if (this.selectedDatos[0] == this.datos[0]) {
-    // console.log(this.selectedDatos)
-    // console.log(this.datos[0])
-    // console.log(id[0].fechaInicio);
-    // if (id[0].fechaFin == null && id[0].fechaInicio != "") {
-    //   this.isVolver = false;
-    //   this.isCrear = true;
-    //   this.nuevafecha = id[0].fechaInicio;
-    //   id[0].fechaInicio = "";
-    //   this.newRetencion.descripcionRetencion = id[0].idRetencion;
-    //   // this.onChangeDrop(this.newRetencion.descripcionRetencion);
-    //   id[0].descripcionRetencion = "";
-    // } else {
-    //   this.isVolver = true;
-    // }
-    // } else {
-    //   console.log('no')
-    //   setTimeout(() => {
-    //     this.selectedDatos = [];
-    //     this.selectedDatos = [... this.selectedDatos];
-    //   }, 100);
-    // }
-  }
 
   isSelectMultiple() {
     this.selectMultiple = !this.selectMultiple;
@@ -762,5 +703,69 @@ export class RetencionesIrpfColegialComponent implements OnInit {
 
        }
     );
+
+    }
+
+    searchRetencion(){
+
+      this.progressSpinner = true;
+      this.body.idPersona = this.idPersona;
+
+      this.sigaServices.post("retenciones_searchLiquidacionSociedad",this.body).subscribe(
+        data => {
+          
+          this.searchRetenciones = JSON.parse(data["body"]);
+          if (this.searchRetenciones.retencionesItemList != null) {          
+            this.disabled =  this.searchRetenciones.activo;
+            this.datos = this.searchRetenciones.retencionesItemList;
+            if (this.datos.length > 1) {
+              this.retencionActiveAnt = this.datos[1];
+            } else {
+              this.retencionActiveAnt = this.datos[0];
+            }
+          } else {
+            this.datos = [];
+          }
+
+          this.progressSpinner = false;
+        
+          // this.getUltimaFechaInicio()
+        },
+        err => {
+           this.progressSpinner = false;
+         
+          console.log(err);
+        },
+        () => {
+          if (this.datos.length > 0) {
+            if (this.camposDesactivados != true) {
+              this.isEliminar = false;
+            }
+            this.datos.forEach((value: any, key: number) => {
+              //Si la fecha fin no viene informada, es la que está activa, es la que mostramos con la tarjeta colapsada
+              if (value.fechaFin == undefined) {
+                this.retencionNow = this.datos[key];
+              }
+            });
+          }
+           this.progressSpinner = false;
+        }
+      );
   }
-}
+        
+showMessage(severity, summary, msg) {
+      this.msgs = [];
+      this.msgs.push({
+        severity: severity,
+        summary: summary,
+        detail: msg
+      });
+    }
+  }
+
+
+
+
+
+   
+
