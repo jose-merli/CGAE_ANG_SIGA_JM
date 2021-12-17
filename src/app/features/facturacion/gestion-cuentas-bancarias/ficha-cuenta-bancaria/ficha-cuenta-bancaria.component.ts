@@ -47,7 +47,6 @@ export class FichaCuentaBancariaComponent implements OnInit {
       sessionStorage.removeItem("cuentaBancariaItem");
       
       this.modoEdicion=true;
-      this.calcDescripcion(); // Calcular propiedad derivada
     } else if(sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.modoEdicion = false;
@@ -140,7 +139,6 @@ export class FichaCuentaBancariaComponent implements OnInit {
     guardado.then(() => {
       return this.recuperarCuentaBancaria().then(() => {
           this.modoEdicion = true;
-          this.calcDescripcion(); // Propiedad derivada
 
           // Actualizar la tarjeta resumen
           this.updateTarjetaResumen();
@@ -166,7 +164,6 @@ export class FichaCuentaBancariaComponent implements OnInit {
 
     this.recuperarCuentaBancaria().then(() => {
       this.modoEdicion = true;
-      this.calcDescripcion(); // Propiedad derivada
 
       // Actualizar la tarjeta resumen
       this.updateTarjetaResumen();
@@ -299,23 +296,6 @@ export class FichaCuentaBancariaComponent implements OnInit {
           break;
       }
     }
-  }
-
-  // Obtener descripción
-
-  calcDescripcion(): void {
-    let abrBanco: string = "";
-
-    if (this.body.nombre.indexOf("~") > 1) {
-      abrBanco = this.body.nombre.substring(0, this.body.nombre.indexOf("~")).trim();
-    } else if (this.body.nombre.indexOf("(") > 0) {
-      abrBanco = this.body.nombre.substring(0, this.body.nombre.indexOf("(")).trim();
-    } else {
-      abrBanco = this.body.nombre;
-    }
-
-    let ibanEnd: string = this.body.iban.slice(-4);
-    this.body.descripcion = `${abrBanco} (...${ibanEnd})`;
   }
 
   showMessage(severity, summary, msg) {

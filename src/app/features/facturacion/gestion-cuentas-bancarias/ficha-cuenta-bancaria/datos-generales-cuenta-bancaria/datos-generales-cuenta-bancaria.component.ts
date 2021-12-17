@@ -177,11 +177,18 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
   }
 
   // Guadar si el body ha cambiado y si el iban es valido
+  isValid(): boolean {
+    return this.body.descripcion != undefined && this.body.descripcion.trim() != "";
+  }
 
   checkSave(): void {
-    this.removeSpacesFromIBAN();
-    this.guardadoSend.emit(this.body);
-    
+    if (this.isValid() && !this.deshabilitarGuardado()) {
+      this.removeSpacesFromIBAN();
+      this.guardadoSend.emit(this.body);
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
   }
 
   // Eliminar cuenta bancaria
@@ -244,7 +251,8 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return this.body.iban == undefined || this.body.iban.trim().length == 0 || this.modoEdicion 
+    return this.body.iban == undefined || this.body.iban.trim().length == 0 || this.body.descripcion == undefined || this.modoEdicion 
+      && this.body.descripcion == this.bodyInicial.descripcion
       && (this.body.asientoContable == this.bodyInicial.asientoContable || (this.body.asientoContable == undefined || this.body.asientoContable.length == 0) && (this.bodyInicial.asientoContable == undefined || this.bodyInicial.asientoContable.length == 0))
       && (this.body.cuentaContableTarjeta == this.bodyInicial.cuentaContableTarjeta || (this.body.cuentaContableTarjeta == undefined || this.body.cuentaContableTarjeta.length == 0) && (this.bodyInicial.cuentaContableTarjeta == undefined || this.bodyInicial.cuentaContableTarjeta.length == 0));
   }

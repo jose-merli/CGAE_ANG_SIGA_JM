@@ -52,7 +52,7 @@
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'general.description' | translate }} (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.descripcion" maxlength="40" [disabled]="true" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.descripcion" maxlength="40" [ngClass]="styleObligatorio(body.descripcion)" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.cuentaBancaria.contableBanco' | translate }}</label>

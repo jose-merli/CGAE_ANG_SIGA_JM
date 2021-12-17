@@ -121,7 +121,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
   }
 
   checkSave(): void {
-    if (this.isValid()) {
+    if (this.isValid() && !this.deshabilitarGuardado()) {
       this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
