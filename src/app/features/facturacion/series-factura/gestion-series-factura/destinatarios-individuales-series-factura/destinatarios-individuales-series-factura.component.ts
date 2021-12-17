@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
@@ -37,7 +37,7 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
   @Input() openTarjetaDestinatariosIndividuales;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
+  @Output() refreshData = new EventEmitter<void>();
   
   constructor(
     private sigaServices: SigaServices,
@@ -51,20 +51,20 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
     this.getCols();
   }
 
-  ngOnChanges() {
-    this.progressSpinner = true;
+  ngOnChanges(changes: SimpleChanges) {
 
-    if (sessionStorage.getItem("destinatarioIndv")) {
-      let nuevoDestinatario: any = JSON.parse(sessionStorage.getItem("destinatarioIndv"));
-      this.guardarDestinarariosSerie(nuevoDestinatario);
+    if (changes.body) {
+      if (sessionStorage.getItem("destinatarioIndv")) {
+        let nuevoDestinatario: any = JSON.parse(sessionStorage.getItem("destinatarioIndv"));
+        this.guardarDestinarariosSerie(nuevoDestinatario);
+  
+        sessionStorage.removeItem("destinatarioIndv");
+        sessionStorage.removeItem("AddDestinatarioIndvBack");
+      }
 
-      sessionStorage.removeItem("destinatarioIndv");
-      sessionStorage.removeItem("AddDestinatarioIndvBack");
+      this.getDestinatariosSeries();
     }
-
-    this.getDestinatariosSeries();
-
-    this.progressSpinner = false;
+    
   }
 
   getCols(): void {
@@ -134,20 +134,25 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
     sessionStorage.removeItem("migaPan2");
     sessionStorage.setItem("menuProcede", menuProcede);
 
+    sessionStorage.setItem("serieFacturacionItem", JSON.stringify(this.body));
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 
   guardarDestinarariosSerie(destinatariosSerie: any) {
+    this.progressSpinner = true;
     destinatariosSerie.idSerieFacturacion = this.body.idSerieFacturacion;
 
     console.log(destinatariosSerie);
 
     this.sigaServices.post("facturacionPyS_nuevoDestinatariosSerie", destinatariosSerie).subscribe(
       n => {
-        this.getDestinatariosSeries();
+        this.refreshData.emit();
+        this.progressSpinner = false;
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
       }
     );
   }

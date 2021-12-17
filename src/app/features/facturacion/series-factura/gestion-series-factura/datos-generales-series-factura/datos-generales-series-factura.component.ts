@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { t } from '@angular/core/src/render3';
 import { ConfirmationService } from 'primeng/api';
 import { AutoComplete } from 'primeng/primeng';
@@ -23,6 +24,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
+  @Output() refreshData = new EventEmitter<void>();
 
   @Input() bodyInicial: SerieFacturacionItem;
   body: SerieFacturacionItem = new SerieFacturacionItem();
@@ -54,14 +56,17 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private datepipe: DatePipe
   ) { }
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.restablecer();
-    this.getCombos();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+      this.restablecer();
+      this.getCombos();
+    }
   }
 
   getCombos() {
@@ -206,13 +211,12 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
 
     this.sigaServices.post("facturacionPyS_eliminaSerieFacturacion", [this.body]).subscribe(
       data => {
-        this.body.fechaBaja = new Date();
-        this.persistenceService.setDatos(this.body);
-        this.guardadoSend.emit();
-        this.showMessage("success", "Eliminar", "Las serie de facturación han sido dada de baja con exito.");
+        this.refreshData.emit();
+        // this.showMessage("success", "Eliminar", "Las serie de facturación han sido dada de baja con exito.");
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       },
       () => {
         this.progressSpinner = false;
@@ -244,12 +248,11 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
 
     this.sigaServices.post("facturacionPyS_reactivarSerieFacturacion", [this.body]).subscribe(
       data => {
-        this.body.fechaBaja = null;
-        this.persistenceService.setDatos(this.body);
-        this.guardadoSend.emit();
-        this.showMessage("success", "Reactivar", "Las series de facturación han sido reactivadas con éxito.");
+        this.refreshData.emit();
+        // this.showMessage("success", "Reactivar", "Las series de facturación han sido reactivadas con éxito.");
       },
       err => {
+        this.progressSpinner = false;
         console.log(err);
       },
       () => {
@@ -262,7 +265,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    this.estado = this.esActivo() ? "Alta" : "Baja";
+    this.estado = this.esActivo() ? "Alta" : `Baja desde ${this.datepipe.transform(this.body.fechaBaja, 'dd/MM/yyyy')}`;
 
     if (this.body.tiposProductos != undefined) {
       this.body.tiposProductos.forEach(e => {
@@ -306,6 +309,30 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.abreviatura == this.bodyInicial.abreviatura
+      && this.body.descripcion == this.bodyInicial.descripcion
+      && this.body.idCuentaBancaria == this.bodyInicial.idCuentaBancaria
+      && this.body.idSufijo == this.bodyInicial.idSufijo
+      && this.body.idSerieFacturacionPrevia == this.bodyInicial.idSerieFacturacionPrevia
+      && this.body.serieGenerica == this.bodyInicial.serieGenerica
+      && this.arraysEquals(this.body.tiposProductos, this.bodyInicial.tiposProductos)
+      && this.arraysEquals(this.body.tiposServicios, this.bodyInicial.tiposServicios);
+  }
+
+  arraysEquals(a, b): boolean {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+  
+    for (let i = 0; i < a.length; ++i) {
+      if (a[i].value !== b[i].value) return false;
+    }
+
+    return true;
   }
 
   // Comprueba si una serie se encuentra de baja o no

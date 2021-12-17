@@ -68,7 +68,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
   // Guadar
 
   isValid(): boolean {
-    return this.body.comisionImporte != undefined 
+    return this.body.comisionImporte != undefined
       && this.body.comisionDescripcion != undefined && this.body.comisionDescripcion.trim() != ""
       && this.body.idTipoIVA != undefined && this.body.idTipoIVA.trim() != "";
   }
@@ -104,7 +104,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return this.body.comisionImporte == this.bodyInicial.comisionImporte && this.body.comisionDescripcion == this.bodyInicial.comisionDescripcion
+    return this.body.comisionImporte == this.bodyInicial.comisionImporte && this.body.comisionDescripcion == this.bodyInicial.comisionDescripcion && this.body.idTipoIVA == this.bodyInicial.idTipoIVA
       && (this.body.comisionCuentaContable == this.bodyInicial.comisionCuentaContable || (this.body.comisionCuentaContable == undefined || this.body.comisionCuentaContable.length == 0) && (this.bodyInicial.comisionCuentaContable == undefined || this.bodyInicial.comisionCuentaContable.length == 0));
   }
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -27,7 +27,7 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
   @Input() openTarjetaPagoAutomatico;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
+  @Output() refreshData = new EventEmitter<void>();
   
   constructor(
     private sigaServices: SigaServices,
@@ -38,14 +38,16 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.cargarDatos();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.body) {
+      this.cargarDatos();
+    }
   }
 
   // Obtener todas las etiquetas
 
   cargarDatos() {
-    this.sigaServices.get("facturacionPyS_getFormasPagosDisponiblesSeries").subscribe(
+    this.sigaServices.get("facturacionPyS_comboFormasPagoFactura").subscribe(
       n => {
         this.formasPagosNoSeleccionadas = n.combooItems;
         this.commonsService.arregloTildesCombo(this.formasPagosNoSeleccionadas);
@@ -61,7 +63,7 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
   // Obtener etiquetas seleccionadas
 
   getSeleccionadas() {
-    this.sigaServices.getParam("facturacionPyS_getFormasPagosSerie", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
+    this.sigaServices.getParam("facturacionPyS_comboFormasPagosSerie", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
       n => {
         this.formasPagosSeleccionadas = n.combooItems;
         this.commonsService.arregloTildesCombo(this.formasPagosSeleccionadas);
@@ -97,15 +99,30 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
 
     this.sigaServices.post("facturacionPyS_guardarFormasPagosSerie", objEtiquetas).subscribe(
       n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));        
-        this.formasPagosSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosSeleccionadas));
-        this.formasPagosNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosNoSeleccionadas));
+        this.refreshData.emit();
         this.progressSpinner = false;
       },
       error => {
         console.log(error);
         this.progressSpinner = false;
       });
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.arraysEquals(this.formasPagosSeleccionadas, this.formasPagosSeleccionadasInicial);
+  }
+
+  arraysEquals(a, b): boolean {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+  
+    for (let i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+
+    return true;
   }
 
   clear() {

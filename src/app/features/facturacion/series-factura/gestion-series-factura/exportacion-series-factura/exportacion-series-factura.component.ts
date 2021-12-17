@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -42,8 +42,10 @@ export class ExportacionSeriesFacturaComponent implements OnInit, OnChanges {
     this.progressSpinner = false;
   }
 
-  ngOnChanges() {
-    this.restablecer();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+      this.restablecer();
+    }
   }
 
   // Get combos
@@ -71,6 +73,14 @@ export class ExportacionSeriesFacturaComponent implements OnInit, OnChanges {
 
   guardar(): void {
     this.guardadoSend.emit(this.body);
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.confDeudor == this.bodyInicial.confDeudor
+      && this.body.ctaClientes == this.bodyInicial.ctaClientes
+      && this.body.confIngresos == this.bodyInicial.confIngresos
+      && this.body.ctaIngresos == this.bodyInicial.ctaIngresos;
   }
 
   clear() {

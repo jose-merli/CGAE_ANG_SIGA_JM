@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { ContadorItem } from '../../../../../models/ContadorItem';
@@ -24,6 +24,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
   comboContadorFacturasRectificativas: any[] = [];
   contadorFacturasRectificativasSeleccionado: ContadorSeriesItem = new ContadorSeriesItem();
   nuevo: boolean = false;
+  resaltadoDatos: boolean = false;
 
   contadoresRectificativasSerie: ContadorSeriesItem[] = [];
 
@@ -31,6 +32,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
+  @Output() refreshData = new EventEmitter<void>();
   
   constructor(
     private sigaServices: SigaServices,
@@ -41,10 +43,12 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.getComboContadorFacturasRectificativas();
-    this.getContadoresRectificativasSerie();
-    this.restablecer();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+      this.getComboContadorFacturasRectificativas();
+      this.getContadoresRectificativasSerie();
+      this.restablecer(); 
+    }
   }
 
   // Combo de contador de facturas rectificativas
@@ -117,24 +121,26 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
       this.contadorFacturasRectificativasSeleccionado = new ContadorSeriesItem();
       this.contadorFacturasRectificativasSeleccionado.contador = "1";
     }
+
+    this.resaltadoDatos = false;
   }
 
   // Guardar
+  isValid(): boolean {
+    return !this.nuevo && this.body.idContadorFacturasRectificativas != undefined 
+      || this.nuevo && this.contadorFacturasRectificativasSeleccionado.nombre != undefined && this.contadorFacturasRectificativasSeleccionado.nombre.trim() == ""
+      && this.contadorFacturasRectificativasSeleccionado.contador != undefined && this.contadorFacturasRectificativasSeleccionado.contador.trim() == "";
+  }
 
   guardar(): void {
     this.progressSpinner = true;
 
-    if (this.nuevo) {
+    if (this.nuevo && this.isValid()) {
       this.contadorFacturasRectificativasSeleccionado.facturaRectificativa = true;
       this.contadorFacturasRectificativasSeleccionado.idSerieFacturacion = this.body.idSerieFacturacion;
       this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasRectificativasSeleccionado).subscribe(
         n => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          console.log(n);
-          this.body.idContadorFacturasRectificativas = JSON.parse(n.body).id;
-          this.nuevo = false;
-
-          this.guardadoSend.emit(this.body);
+          this.refreshData.emit();
 
           this.progressSpinner = false;
         },
@@ -143,9 +149,27 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         }
       );
-    } else {
+    } else if (this.isValid()) {
       this.progressSpinner = false;
       this.guardadoSend.emit(this.body);
+    } else {
+      this.progressSpinner = false;
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return !this.nuevo && this.body.idContadorFacturasRectificativas == this.bodyInicial.idContadorFacturasRectificativas 
+      || this.nuevo && this.contadorFacturasRectificativasSeleccionado.nombre == undefined
+      || this.nuevo && this.contadorFacturasRectificativasSeleccionado.contador == undefined;
+  }
+
+  // Estilo obligatorio
+  styleObligatorio(activo, evento: string) {
+    if (this.resaltadoDatos && activo && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
     }
   }
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -37,9 +37,11 @@ export class GeneracionSeriesFacturaComponent implements OnInit, OnChanges {
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.getComboModelosComunicacion();
-    this.restablecer();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+      this.getComboModelosComunicacion();
+      this.restablecer();
+    }
   }
 
   getComboModelosComunicacion() {
@@ -96,6 +98,13 @@ export class GeneracionSeriesFacturaComponent implements OnInit, OnChanges {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.generarPDF == this.bodyInicial.generarPDF
+      && this.body.idModeloFactura == this.bodyInicial.idModeloFactura
+      && this.body.idModeloRectificativa == this.bodyInicial.idModeloRectificativa;
   }
 
   // Label de un combo

@@ -60,6 +60,8 @@ export class GestionSeriesFacturaComponent implements OnInit {
       sessionStorage.removeItem("Nuevo");
       this.body = new SerieFacturacionItem();
       this.modoEdicion = false;
+    } else if (this.modoEdicion && this.body.idSerieFacturacion == undefined) {
+      this.location.back();
     }
 
     if (this.modoEdicion) {
@@ -182,59 +184,87 @@ export class GestionSeriesFacturaComponent implements OnInit {
   guardadoSend(event: SerieFacturacionItem): void {
     this.progressSpinner = true;
 
-    this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", event).subscribe(
+    this.guardarSerieFacturacion(event)
+    .then(() => { return this.recuperarDatosSerieFacuturacion().then(() => {
+      this.modoEdicion = true;
+      this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
+    })}).catch(error => {
+      if (error != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    }).then(() => this.progressSpinner = false);
+    
+  }
+
+  refreshData(): void {
+    this.progressSpinner = true;
+
+    this.recuperarDatosSerieFacuturacion().then(() => {
+      this.modoEdicion = true;
+      this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
+    }).catch(error => {
+      if (error != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    }).then(() => {
+      this.progressSpinner = false;
+      if (this.body == undefined) {
+        this.location.back();
+      }
+    });
+    
+  }
+
+  guardarSerieFacturacion(serie: SerieFacturacionItem): Promise<any> {
+    return this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", serie).toPromise().then(
       n => {
         console.log("Nuevo id:", n);
         let idSerieFacturacion = JSON.parse(n.body).id;
-
-        if (this.modoEdicion) {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.body = JSON.parse(JSON.stringify(event));
-
-          this.modoEdicion = true;
-          this.ngOnInit();
-        } else {
-          this.body.idSerieFacturacion = idSerieFacturacion;
-          this.recuperarDatosSerieFacuturacion();
-        }
-        
-        this.progressSpinner = false;
+        this.body.idSerieFacturacion = idSerieFacturacion;
       },
       err => {
         let error = JSON.parse(err.error).error;
-        if (error != undefined && error.code == 500 && error.message != undefined) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        if (error != undefined && error.message != undefined) {
+          let translatedError = this.translateService.instant(error.message);
+          if (translatedError && translatedError.trim().length != 0) {
+            return Promise.reject(translatedError);
+          }
         }
 
-        this.progressSpinner = false;
+        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
 
-  recuperarDatosSerieFacuturacion(): void {
+  recuperarDatosSerieFacuturacion(): Promise<any> {
     let filtros = new SerieFacturacionItem();
     filtros.idSerieFacturacion = this.body.idSerieFacturacion;
     
-    this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
+    return this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).toPromise().then(
       n => {
         let datos: SerieFacturacionItem[] = JSON.parse(n.body).serieFacturacionItems;
 
         if (datos.length != 0) {
           this.body = datos.find(d => d.idSerieFacturacion == this.body.idSerieFacturacion);
-
-          this.modoEdicion = true;
-          this.ngOnInit();
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          this.modoEdicion = false;
+          this.body = undefined;
+          return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
         }
-        
-        this.progressSpinner = false;
       },
       err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
+        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }

@@ -147,8 +147,8 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   getComboConsultasDestinatarios() {
     this.sigaServices.get("facturacionPyS_comboDestinatarios").subscribe(
       n => {
-        this.comboConsultasDestinatarios = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboConsultasDestinatarios);
+        //this.comboConsultasDestinatarios = n.combooItems;
+        //this.commonServices.arregloTildesCombo(this.comboConsultasDestinatarios);
       },
       err => {
         console.log(err);

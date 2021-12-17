@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -55,8 +55,15 @@ export class ObservacionesSeriesFacturaComponent implements OnInit, OnChanges {
     this.progressSpinner = false;
   }
 
-  ngOnChanges() {
-    this.restablecer();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+      this.restablecer();
+    }
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.observaciones == this.bodyInicial.observaciones || (this.body.observaciones == undefined || this.body.observaciones.trim().length == 0) && (this.bodyInicial.observaciones == undefined || this.bodyInicial.observaciones.trim().length == 0);
   }
 
   // Restablecer

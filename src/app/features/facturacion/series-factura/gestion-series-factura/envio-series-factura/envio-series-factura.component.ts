@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -36,9 +36,11 @@ export class EnvioSeriesFacturaComponent implements OnInit, OnChanges {
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.getComboPlantillasEnvio();
-    this.restablecer();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+      this.getComboPlantillasEnvio();
+      this.restablecer();
+    }
   }
 
   // Combo de plantillas envío masivo
@@ -101,6 +103,12 @@ export class EnvioSeriesFacturaComponent implements OnInit, OnChanges {
     if (this.resaltadoDatos && this.body.envioFacturas && (evento == undefined || evento == null || evento.trim() == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.envioFacturas == this.bodyInicial.envioFacturas
+      && this.body.idPlantillaMail == this.bodyInicial.idPlantillaMail;
   }
 
   // Abrir y cerrar la ficha

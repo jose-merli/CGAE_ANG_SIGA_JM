@@ -40,7 +40,7 @@
         <p-pickList [source]="formasPagosNoSeleccionadas" [target]="formasPagosSeleccionadas"
           sourceHeader="{{ 'facturacion.seriesFactura.pagos.existentes' | translate }}"
           targetHeader="{{ 'facturacion.seriesFactura.pagos.seleccionadas' | translate }}" [responsive]="true"
-          filterBy="label" dragdrop="true" dragdropScope="formasPagosSeleccionadas"
+          dragdrop="true" dragdropScope="formasPagosSeleccionadas"
           sourceFilterPlaceholder="{{'enviosMasivos.literal.buscarEtiqueta' | translate}}"
           targetFilterPlaceholder="{{'enviosMasivos.literal.buscarEtiqueta' | translate}}" [showSourceControls]="false"
           [showTargetControls]="false" [sourceStyle]="{ 'height': '300px'} " [targetStyle]="{ 'height': '300px'}">
@@ -55,7 +55,7 @@
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
           (click)="guardar()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

@@ -68,11 +68,11 @@ export class TablaSeriesFacturaComponent implements OnInit {
   getCols() {
     this.cols = [
       { field: "abreviatura", header: "gratuita.definirTurnosIndex.literal.abreviatura", width: "10%" },
-      { field: "descripcion", header: "enviosMasivos.literal.descripcion", width: "20%" },
-      { field: "cuentaBancaria", header: "facturacion.seriesFactura.cuentaBancaria", width: "10%" },
+      { field: "descripcion", header: "enviosMasivos.literal.descripcion", width: "25%" },
+      { field: "cuentaBancaria", header: "facturacion.seriesFactura.cuentaBancaria", width: "15%" },
       { field: "sufijo", header: "administracion.parametrosGenerales.literal.sufijo", width: "15%" },
       { field: "tiposIncluidos", header: "facturacion.seriesFactura.tipoProductos", width: "25%" },
-      { field: "fasesAutomaticas", header: "facturacion.seriesFactura.fasesAutomaticas", width: "20%" }
+      { field: "fasesAutomaticas", header: "facturacion.seriesFactura.fasesAutomaticas", width: "10%" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));

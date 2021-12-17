@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { ContadorItem } from '../../../../../models/ContadorItem';
@@ -24,6 +24,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
   comboContadorFacturas: any[] = [];
   contadorFacturasSeleccionado: ContadorSeriesItem = new ContadorSeriesItem();
   nuevo: boolean = false;
+  resaltadoDatos: boolean = false;
 
   contadoresSerie: ContadorSeriesItem[] = [];
 
@@ -31,6 +32,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<any>();
+  @Output() refreshData = new EventEmitter<void>();
   
   constructor(
     private sigaServices: SigaServices,
@@ -41,10 +43,12 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.getComboContadorFacturas();
-    this.getContadoresSerie();
-    this.restablecer();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+      this.getComboContadorFacturas();
+      this.getContadoresSerie();
+      this.restablecer();
+    }
   }
 
   // Combo de contador de facturas
@@ -95,6 +99,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
 
   // Nuevo
   nuevoContador() {
+    this.restablecer();
     this.nuevo = true;
     this.contadorFacturasSeleccionado = new ContadorSeriesItem();
     this.contadorFacturasSeleccionado.contador = "1";
@@ -102,6 +107,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
 
   // Back to select
   backToSelect() {
+    this.restablecer();
     this.nuevo = false;
     this.actualizarInputs();
   }
@@ -116,22 +122,25 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
       this.contadorFacturasSeleccionado = new ContadorSeriesItem();
       this.contadorFacturasSeleccionado.contador = "1";
     }
+
+    this.resaltadoDatos = false;
   }
 
   // Guardar
+  isValid(): boolean {
+    return !this.nuevo && this.body.idContadorFacturas != undefined 
+      || this.nuevo && this.contadorFacturasSeleccionado.nombre != undefined && this.contadorFacturasSeleccionado.nombre.trim() == ""
+      && this.contadorFacturasSeleccionado.contador != undefined && this.contadorFacturasSeleccionado.contador.trim() == "";
+  }
 
   guardar(): void {
     this.progressSpinner = true;
 
-    if (this.nuevo) {
+    if (this.nuevo && this.isValid()) {
       this.contadorFacturasSeleccionado.idSerieFacturacion = this.body.idSerieFacturacion;
       this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasSeleccionado).subscribe(
         n => {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.body.idContadorFacturas = JSON.parse(n.body).id;
-          this.nuevo = false;
-
-          this.guardadoSend.emit(this.body);
+          this.refreshData.emit();
 
           this.progressSpinner = false;
         },
@@ -140,9 +149,27 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         }
       );
-    } else {
+    } else if (this.isValid()) {
       this.progressSpinner = false;
       this.guardadoSend.emit(this.body);
+    } else {
+      this.progressSpinner = false;
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return !this.nuevo && this.body.idContadorFacturas == this.bodyInicial.idContadorFacturas 
+      || this.nuevo && this.contadorFacturasSeleccionado.nombre == undefined
+      || this.nuevo && this.contadorFacturasSeleccionado.contador == undefined;
+  }
+
+  // Estilo obligatorio
+  styleObligatorio(activo, evento: string) {
+    if (this.resaltadoDatos && activo && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
     }
   }
 

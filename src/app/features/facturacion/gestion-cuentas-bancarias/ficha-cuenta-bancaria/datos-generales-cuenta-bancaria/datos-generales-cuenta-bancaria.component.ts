@@ -113,12 +113,18 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
 
     if (!esValido) {
       this.showMessage("error", "Error", this.translateService.instant("facturacion.cuentaBancaria.iban.invalid.longitud"));
-      this.resaltadoIBAN = true;
+      this.body.bic = "";
+        this.body.nombre = "";
+        this.body.descripcion = "";
+        this.resaltadoIBAN = true;
     } else {
       esValido = /^\d+$/.test(cuenta.substring(2, 24));
 
       if (!esValido) {
         this.showMessage("error", "Error", this.translateService.instant("censo.datosBancarios.mensaje.control.ibanIncorrecto"));
+        this.body.bic = "";
+        this.body.nombre = "";
+        this.body.descripcion = "";
         this.resaltadoIBAN = true;
       } else {
         this.progressSpinner = true;
@@ -219,9 +225,9 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     );
   }
 
-  styleIBANIncorrecto(evento: string) {
-    if (this.resaltadoIBAN || this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
-      return this.commonsService.styleObligatorio(evento);
+  styleIBANIncorrecto() {
+    if (this.resaltadoIBAN) {
+      return 'camposObligatorios';
     }
   }
 

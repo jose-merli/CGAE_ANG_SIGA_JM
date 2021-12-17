@@ -15,7 +15,7 @@ export class SerieFacturacionItem {
 	sufijo: string;
 
 	idFormaPago: string;
-	formaPago: string;
+	formaPago: boolean;
 
 	generarPDF: boolean;
 	idModeloFactura: string;

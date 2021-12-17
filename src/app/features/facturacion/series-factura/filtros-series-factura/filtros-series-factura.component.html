@@ -42,28 +42,28 @@
           <p-multiSelect #tipoProductos class="select-form" [(ngModel)]='body.idTiposProductos'
             defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboTiposProductos" [filter]="true"
             maxSelectedLabels="10" [selectedItemsLabel]="'{0} tipos seleccionados'" filterBy="label,labelSinTilde"
-            styleClass="widthAll" (onPanelShow)="focusInputField(tiposProductos)"></p-multiSelect>
+            styleClass="widthAll"></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacion.seriesFactura.tipoServicios" | translate }}</label>
           <p-multiSelect #tipoServicios class="select-form" [(ngModel)]='body.idTiposServicios'
             defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboTiposServicios" [filter]="true"
             maxSelectedLabels="10" [selectedItemsLabel]="'{0} tipos seleccionados'" filterBy="label,labelSinTilde"
-            styleClass="widthAll" (onPanelShow)="focusInputField(tiposServicios)"></p-multiSelect>
+            styleClass="widthAll"></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "menu.administracion.gestionMultiidioma.etiquetasSociedad" | translate }}</label>
           <p-multiSelect #etiquetas class="select-form" [(ngModel)]='body.idEtiquetas'
             defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEtiquetas" [filter]="true"
             maxSelectedLabels="10" [selectedItemsLabel]="'{0} etiquetas seleccionadas'" filterBy="label,labelSinTilde"
-            styleClass="widthAll" (onPanelShow)="focusInputField(etiquetas)"></p-multiSelect>
+            styleClass="widthAll"></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacion.seriesFactura.consultasDestinatarios" | translate }}</label>
           <p-multiSelect #etiquetas class="select-form" [(ngModel)]='body.idConsultasDestinatarios'
             defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboConsultasDestinatarios" [filter]="true"
-            maxSelectedLabels="10" [selectedItemsLabel]="'{0} consultas seleccionadas'" filterBy="label,labelSinTilde"
-            styleClass="widthAll" (onPanelShow)="focusInputField(consultasDestinatarios)"></p-multiSelect>
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} consultas seleccionadas'" filterBy="label,labelSinTilde" 
+            styleClass="widthAll"></p-multiSelect>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ "facturacion.seriesFactura.contadorFacturas" | translate }}</label>

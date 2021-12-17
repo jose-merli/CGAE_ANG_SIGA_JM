@@ -47,9 +47,9 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ (!nuevo ? 'facturacion.seriesFactura.cont.seleccion' : 'administracion.parametrosGenerales.literal.nombre') | translate }}</label>
           <p-dropdown *ngIf="!nuevo" class="select-form" [(ngModel)]='body.idContadorFacturas' placeholder="{{'general.boton.seleccionar' | translate}}"
-              [options]="comboContadorFacturas" [filter]="true" filterBy="label,labelSinTilde"
+              [options]="comboContadorFacturas" [filter]="true" filterBy="label,labelSinTilde" [ngClass]="styleObligatorio(!nuevo, body.idContadorFacturas)"
               [showClear]="true" (onChange)="actualizarInputs()"></p-dropdown>
-          <input *ngIf="nuevo" type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.nombre" />
+          <input *ngIf="nuevo" type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.nombre" [ngClass]="styleObligatorio(nuevo, contadorFacturasSeleccionado.nombre)" />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'administracion.parametrosGenerales.literal.prefijo' | translate }}</label>
@@ -57,7 +57,7 @@
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacion.seriesFactura.contador.literal' | translate }}</label>
-          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.contador" [disabled]="!nuevo" maxlength="10" />
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.contador" [ngClass]="styleObligatorio(nuevo, contadorFacturasSeleccionado.contador)" [disabled]="!nuevo" maxlength="10" />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacionSJCS.facturacionesYPagos.sufijo' | translate }}</label>
@@ -77,7 +77,7 @@
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
           (click)="guardar()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

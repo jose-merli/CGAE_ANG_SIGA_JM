@@ -51,7 +51,7 @@ export class FichaCuentaBancariaComponent implements OnInit {
     } else if(sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.modoEdicion = false;
-    }else if (this.modoEdicion && this.body.bancosCodigo == undefined) {
+    } else if (this.modoEdicion && this.body.bancosCodigo == undefined) {
       this.location.back();
     }
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/components/common/message';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -27,7 +27,7 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
   @Input() openTarjetaDestinatariosEtiquetas;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-  @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
+  @Output() refreshData = new EventEmitter<void>();
   
   constructor(
     private sigaServices: SigaServices,
@@ -38,8 +38,10 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
 
   ngOnInit() { }
 
-  ngOnChanges() {
-    this.cargarDatos();
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.body) {
+      this.cargarDatos(); 
+    }
   }
 
   // Obtener todas las etiquetas
@@ -97,9 +99,7 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
 
     this.sigaServices.post("facturacionPyS_guardarEtiquetasSerieFacturacion", objEtiquetas).subscribe(
       n => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.etiquetasSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
-        this.etiquetasNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
+        this.refreshData.emit();
         this.progressSpinner = false;
       },
       error => {
@@ -107,6 +107,25 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
         this.progressSpinner = false;
       });
   }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.arraysEquals(this.etiquetasSeleccionadasInicial, this.etiquetasSeleccionadas);
+  }
+
+  arraysEquals(a, b): boolean {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+  
+    for (let i = 0; i < a.length; ++i) {
+      if (a[i].value !== b[i].value) return false;
+    }
+
+    return true;
+  }
+
+  // Funciones para mostrar mensajes
 
   clear() {
     this.msgs = [];

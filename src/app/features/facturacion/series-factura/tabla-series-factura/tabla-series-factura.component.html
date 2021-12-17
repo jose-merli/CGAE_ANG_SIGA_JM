@@ -52,6 +52,16 @@
               </div>
 
               <div *ngSwitchCase="'fasesAutomaticas'">
+                <span>
+                  <span class="badge badge-{{ dato['formaPago'] ? 'success' : 'light' }}">Pag</span>
+                  <span class="badge badge-{{ dato['generarPDF'] ? 'success' : 'light' }}">PDF</span>
+                  <span class="badge badge-{{ dato['envioFacturas'] ? 'success' : 'light' }}">Env</span>
+                  <span class="badge badge-{{ dato['traspasoFacturas'] ? 'success' : 'light' }}">Tra</span>
+                </span>
+              </div>
+
+              <!--
+              <div *ngSwitchCase="'fasesAutomaticas'">
                 <div class="form-row">
                   <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
                     <label>Pag</label>
@@ -71,6 +81,8 @@
                   </div>
                 </div>
               </div>
+
+              -->
 
               <div *ngSwitchDefault>
                 <a class="enlace" (click)="openTab(dato)"><span [ngClass]="{ historico: isHistorico(dato) }">{{ dato[col.field] }}</span></a>
