@@ -136,9 +136,9 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
     if (this.servicioOriginal.nofacturable == "1") {
       this.checkboxNoFacturable = true;
       this.onChangeNoFacturable();
-    } else if (this.servicioOriginal.nofacturable == "0") {
+    } else if (this.servicioOriginal.nofacturable == "0" || this.servicioOriginal.nofacturable == null) {
       this.checkboxNoFacturable = false;
-      this.onChangeNoFacturable;
+      this.onChangeNoFacturable();
     }
 
     if (this.servicioOriginal.facturacionponderada == "1") {
@@ -265,12 +265,13 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
       response => {
         this.progressSpinner = false;
 
-        if (JSON.parse(response.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
+        if (response.status == 200) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.mostrarTarjetaPrecios.emit(true);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
+        
       },
       err => {
         this.progressSpinner = false;

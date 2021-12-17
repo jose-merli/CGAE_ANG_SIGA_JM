@@ -67,15 +67,14 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   ngOnChanges(changes: SimpleChanges) {
     if (this.servicio.editar) {
       this.getComboTipo();
-      //this.getComboCondicionSuscripcion();
+   
       this.servicioOriginal = { ...this.servicio };
 
       this.desactivarBotonEliminar = false;
       this.mostrarTarjetaFormaPagos.emit(true);
 
     } else {
-      //this.servicio.idconsulta = 0;
-      //this.getComboCondicionSuscripcion();
+  
       this.mostrarTarjetaFormaPagos.emit(false);
       this.desactivarBotonEliminar = true;
     }
@@ -530,23 +529,6 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       }
     );
   }
-  /* getComboCondicionSuscripcion() {
-    this.progressSpinner = true;
-
-    this.subscriptionTypeSelectValues = this.sigaServices.getParam("fichaServicio_comboCondicionSuscripcion", "?idConsulta=" + this.servicio.idconsulta).subscribe(
-      CondicionSuscripcionValues => {
-        this.condicionesSuscripcionObject = CondicionSuscripcionValues;
-
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  } */
 
   //Metodo para obtener todos los codigos PYS_SERVICIOSINSTITUCION en la institucion actual
   obtenerCodigosPorColegio() {
@@ -574,13 +556,12 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     if (!this.servicio.editar) {
       this.subscriptionCrearServicioInstitucion = this.sigaServices.post("fichaServicio_crearServicio", this.servicio).subscribe(
         response => {
-
-          if (JSON.parse(response.body).error.code == 500) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          } else {
+          if (response.status == 200) {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.desactivarBotonEliminar = false;
             this.mostrarTarjetaFormaPagos.emit(true);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
 
           this.progressSpinner = false;
@@ -647,11 +628,11 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
 
         this.subscriptionActivarDesactivarServicios = this.sigaServices.post("serviciosBusqueda_activarDesactivar", listaServiciosDTO).subscribe(
           response => {
-            if (JSON.parse(response.body).error.code == 500) {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            } else {
+            if (response.status == 200) {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.desactivarBotonEliminar = false;
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
             }
           },
           err => {

@@ -583,7 +583,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     if (!hayPrecioPorDefecto) {
       this.eliminar(selectedRows);
     } else if (hayPrecioPorDefecto) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El precio por defecto no puede ser eliminado, por favor deseleccionelo. ***");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.servicios.fichaservicio.avisoeliminacionpreciodefecto"));
     }
   }
 

@@ -561,15 +561,14 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
         let listaServiciosDTO = new ListaServiciosDTO();
         listaServiciosDTO.listaServiciosItems = selectedRows;
         this.subscriptionActivarDesactivarServicios = this.sigaServices.post("serviciosBusqueda_activarDesactivar", listaServiciosDTO).subscribe(
-          data => {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          },
-          err => {
-            if (err != undefined && JSON.parse(err.error).error.description != "") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          response => {
+            if (response.status == 200) {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
             }
+          },
+          err => {
             this.progressSpinner = false;
           },
           () => {

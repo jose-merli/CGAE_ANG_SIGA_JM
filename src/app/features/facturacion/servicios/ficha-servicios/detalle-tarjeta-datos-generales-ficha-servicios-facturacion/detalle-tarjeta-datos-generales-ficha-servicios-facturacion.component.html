@@ -71,7 +71,7 @@
   <!-- Asignacion automatica -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
-      <p-checkbox [disabled]="servicio.idconsulta == null || servicio.idconsulta == undefined" binary="true"
+      <p-checkbox [disabled]="servicio.idconsulta == null || servicio.idconsulta == undefined || servicio.idconsulta == 0" binary="true"
         label="{{'facturacion.fichaservicios.datosgenerales.asignacionautomatica' | translate}}"
         [(ngModel)]="checkboxAsignacionAutomatica" (onChange)="onChangeAsignacionAutomatica()">
       </p-checkbox>
