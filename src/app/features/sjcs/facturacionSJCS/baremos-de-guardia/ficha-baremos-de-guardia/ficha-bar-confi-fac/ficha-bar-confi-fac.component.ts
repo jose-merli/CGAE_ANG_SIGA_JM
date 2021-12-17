@@ -63,6 +63,11 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
+    if(this.datos !=null || this.datos != undefined){
+      this.agruparDis = this.datos.agruparDis;
+      this.agruparAsAc = this.datos.agruparAsAc;
+    }
+
 
   }
 

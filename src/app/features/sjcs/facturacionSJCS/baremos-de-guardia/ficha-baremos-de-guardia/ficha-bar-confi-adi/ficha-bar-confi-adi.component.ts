@@ -13,8 +13,8 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
 
   precio;
   filtrosAdi: BaremosGuardiaItem = new BaremosGuardiaItem();
-  contAsi: boolean = false;
-  contAsAc: boolean = false;
+  contAsi;
+  contAsAc;
   facActuaciones: boolean = false;
   facAsuntosAntiguos: boolean = false;
   procesoFac2014: boolean = false;
