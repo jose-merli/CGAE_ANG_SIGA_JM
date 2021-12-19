@@ -1041,7 +1041,6 @@ export class TablaResultadoMixComponent implements OnInit {
         let [fechaMod,hora] = rawDate.split(" ");
         let arrayDate = fechaMod.split("/")[2] + "-" + fechaMod.split("/")[1] + "-" + fechaMod.split("/")[0];
         fecha = new Date((arrayDate += "T"+hora));
-      
     } else {
       fecha = undefined;
     }
@@ -1112,7 +1111,7 @@ export class TablaResultadoMixComponent implements OnInit {
           'idinstitucion' : obj[9].value,
           'idturno': obj[10].value,
           'idguardia': obj[11].value,
-          'fechasolicitud': this.transformaFechaSol(obj[4].value),
+          'fechasolicitud': obj[4].value,
           'fechavalidacion': this.transformaFecha(obj[5].value),
           'fechabaja': this.transformaFecha(obj[12].value),
           'observacionessolicitud': obj[13].value,
@@ -1156,7 +1155,7 @@ export class TablaResultadoMixComponent implements OnInit {
           'idinstitucion' : obj[9].value,
           'idturno': obj[10].value,
           'idguardia': obj[11].value,
-          'fechasolicitud': this.transformaFechaSol(obj[4].value),
+          'fechasolicitud': obj[4].value,
           'fechavalidacion': this.transformaFecha(obj[5].value),
           'fechabaja': this.transformaFecha(obj[12].value),
           'observacionessolicitud': obj[13].value,
@@ -1205,7 +1204,7 @@ export class TablaResultadoMixComponent implements OnInit {
           'idinstitucion' : obj[9].value,
           'idturno': obj[10].value,
           'idguardia': obj[11].value,
-          'fechasolicitud': this.transformaFechaSol(obj[4].value),
+          'fechasolicitud': obj[4].value,
           'fechavalidacion': this.transformaFecha(obj[5].value),
           'fechabaja': this.transformaFecha(obj[12].value),
           'observacionessolicitud': obj[13].value,
@@ -1251,7 +1250,7 @@ export class TablaResultadoMixComponent implements OnInit {
             'idinstitucion' : obj[9].value,
             'idturno': obj[10].value,
             'idguardia': obj[11].value,
-            'fechasolicitud': this.transformaFechaSol(obj[4].value),
+            'fechasolicitud': obj[4].value,
             'fechavalidacion': this.transformaFecha(obj[5].value),
             'fechabaja': this.transformaFecha(obj[12].value),
             'observacionessolicitud': obj[13].value,

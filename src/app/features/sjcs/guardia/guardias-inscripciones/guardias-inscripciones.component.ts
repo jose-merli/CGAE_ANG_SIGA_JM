@@ -601,7 +601,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                           data => {
                             this.progressSpinner = false;
                             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+                            this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
                           },
                           err => {
                             this.progressSpinner = false;
@@ -614,7 +614,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                           data => {
                             this.progressSpinner = false;
                             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+                            this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
                           },
                           err => {
                             this.progressSpinner = false;
@@ -802,7 +802,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           this.objetoValidacion = []; */
         } else if (el.estado == "2") {//validacion de inscripcion en estado Pendiente de Baja.
           estado = el.estado;
-          el.fechasolicitudbajaNUEVA = el.fechaActual;
+          el.fechabaja = el.fechaActual;
           el.observacionesvalbajaNUEVA = el.observaciones;
 
            objVal = this.rellenarObjetoBack(el);

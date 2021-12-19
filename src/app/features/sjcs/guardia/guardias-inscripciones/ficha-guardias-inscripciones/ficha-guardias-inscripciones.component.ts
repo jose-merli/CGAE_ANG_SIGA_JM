@@ -1146,7 +1146,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		let datosResumen = [];
 		datosResumen[0] = { label: "Turno", value: guardia.nombre_turno };
 		datosResumen[1] = { label: "Guardia", value: guardia.nombre_guardia };
-		datosResumen[2] = { label: "Fecha Sol Alta", value: guardia.fechasolicitud };
+		datosResumen[2] = { label: "Fecha Sol Alta", value: this.formatDateSol2(guardia.fechasolicitud) };
 		datosResumen[3] = { label: "Fecha Efec. Alta", value: guardia.fechavalidacion };
 		datosResumen[4] = { label: "Estado", value: guardia.estadonombre };
 		this.datosTarjetaResumen = datosResumen;
@@ -1269,6 +1269,12 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		return this.datepipe.transform(date, pattern);
 	
 	  }
+
+	formatDateSol2(date) {
+		const pattern = 'dd/MM/yyyy';
+		return this.datepipe.transform(date, pattern);
+	
+	  }
 	callSaveService(url) {
 
 		let objVal: ResultadoInscripciones = this.rellenarObjetoBack(this.datos);
@@ -1307,7 +1313,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			let datosResumen = [];
 			datosResumen[0] = { label: "Turno", value: this.letradoItem.nombre_turno };
 			datosResumen[1] = { label: "Guardia", value: this.letradoItem.nombre_guardia };
-			datosResumen[2] = { label: "Fecha Sol Alta", value: this.letradoItem.fechasolicitud };
+			datosResumen[2] = { label: "Fecha Sol Alta", value: this.formatDateSol2(this.letradoItem.fechasolicitud) };
 			datosResumen[3] = { label: "Fecha Efec. Alta", value: this.letradoItem.fechavalidacion };
 			datosResumen[4] = { label: "Estado", value: this.letradoItem.estadonombre };
 			this.datosTarjetaResumen = datosResumen;
