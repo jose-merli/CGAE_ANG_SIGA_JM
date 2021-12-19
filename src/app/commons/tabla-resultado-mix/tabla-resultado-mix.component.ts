@@ -120,7 +120,7 @@ export class TablaResultadoMixComponent implements OnInit {
     private cd : ChangeDetectorRef
 
   ) {
-    this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
+    /*this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
         if(!event.target.classList.contains("selectedRowClass")){
@@ -128,7 +128,7 @@ export class TablaResultadoMixComponent implements OnInit {
           this.selectedArray = [];
         }
       }
-    });
+    });*/
   }
 
   ngOnInit(): void {
@@ -833,7 +833,7 @@ export class TablaResultadoMixComponent implements OnInit {
     }
     row.id = 0;
     this.rowGroups.map(row => row.id += 1);
-    this.rowGroups.push(row);
+    this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
     
