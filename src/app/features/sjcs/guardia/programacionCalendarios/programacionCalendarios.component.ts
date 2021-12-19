@@ -329,13 +329,16 @@ let datosEntrada =
         });
 }
 formatOfficial(fechaB){
-  const dayB = fechaB.substr(0, 2) ;
-  const monthB = fechaB.substr(3, 2);
-  const yearB = fechaB.substr(6, 4);
-  const hourB = fechaB.substr(11, 2);
-  const minB = fechaB.substr(14, 2);
-  const segB = fechaB.substr(17, 2);
-  return yearB + "-" + monthB + "-" + dayB + "T" + hourB + ":" + minB + ":" + segB;
+  if (fechaB != null && fechaB != undefined){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 4);
+    const hourB = fechaB.substr(11, 2);
+    const minB = fechaB.substr(14, 2);
+    const segB = fechaB.substr(17, 2);
+    return yearB + "-" + monthB + "-" + dayB + "T" + hourB + ":" + minB + ":" + segB;
+  }
+
   //'1968-11-16T00:00:00'
 }
 jsonToRow(){
