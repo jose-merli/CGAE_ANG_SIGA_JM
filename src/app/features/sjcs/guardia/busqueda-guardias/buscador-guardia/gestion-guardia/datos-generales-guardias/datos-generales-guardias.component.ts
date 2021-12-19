@@ -229,13 +229,12 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     if (this.body.envioCentralita == undefined) this.body.envioCentralita = false;
     this.sigaService.post(url, this.body).subscribe(
       data => {
-        this.body = JSON.parse(data.body);
+        let respuesta = JSON.parse(data.body);
         if (!this.modoEdicion) {
           this.modoEdicion = true;
           this.getCols();
-          this.body.idGuardia = JSON.parse(data.body).id;
           this.persistenceService.setDatos({
-            idGuardia: this.body.idGuardia,
+            idGuardia: respuesta.id,
             idTurno: this.body.idTurno
           })
           this.modoEdicionSend.emit(true);
