@@ -202,15 +202,17 @@ export class TablaResultadoOrderComponent implements OnInit {
     })
     if(!this.listaGuardias){
       this.xArr = [];
-      this.rowGroups.forEach((rg, i) =>{
-        if(this.pantalla == 'colaGuardias'){
-          this.grupos.push(rg.cells[0].value);
-        }else{
-        this.grupos.push(rg.cells[1].value);
-        }
-        let x = this.ordenValue(i);
-        this.xArr.push(x);
-      })
+      if (this.rowGroups != undefined){
+        this.rowGroups.forEach((rg, i) =>{
+          if(this.pantalla == 'colaGuardias'){
+            this.grupos.push(rg.cells[0].value);
+          }else{
+          this.grupos.push(rg.cells[1].value);
+          }
+          let x = this.ordenValue(i);
+          this.xArr.push(x);
+        });
+      }
       if (!this.calendarios){
         if (this.grupos.length != 0){
           this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
@@ -330,22 +332,25 @@ export class TablaResultadoOrderComponent implements OnInit {
 
 
   ordenarByOrderField(){
-    let data :Row[] = [];
-    this.rowGroups = this.rowGroupsAux.filter((row) => {
-        data.push(row);
+    if(this.rowGroupsAux != undefined){
+      let data :Row[] = [];
+      this.rowGroups = this.rowGroupsAux.filter((row) => {
+          data.push(row);
+      });
+  
+      this.rowGroups = data.sort((a, b) => {
+        if (a.cells[0].value != null && b.cells[0].value != null){
+        let resultado;
+        resultado = compare(Number(a.cells[0].value), Number(b.cells[0].value), true);
+        return resultado ;
+        }else{
+          return 0;
+        }
     });
+    this.rowGroupsAux = this.rowGroups;
+    this.totalRegistros = this.rowGroups.length;
+    }
 
-    this.rowGroups = data.sort((a, b) => {
-      if (a.cells[0].value != null && b.cells[0].value != null){
-      let resultado;
-      resultado = compare(Number(a.cells[0].value), Number(b.cells[0].value), true);
-      return resultado ;
-      }else{
-        return 0;
-      }
-  });
-  this.rowGroupsAux = this.rowGroups;
-  this.totalRegistros = this.rowGroups.length;
   }
 
   saveCal(){
