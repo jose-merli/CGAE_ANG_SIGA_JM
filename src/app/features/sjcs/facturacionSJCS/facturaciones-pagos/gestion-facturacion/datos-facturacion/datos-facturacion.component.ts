@@ -673,4 +673,28 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
     this.addEnlace.emit(enlace);
   }
 
+  descargarLog(){
+    this.progressSpinnerDatos = true;
+
+    this.sigaService.postDownloadFiles("facturacionsjcs_descargarLogFacturacion", this.body.idFacturacion).subscribe(
+      data => {
+        this.progressSpinnerDatos = false;
+      },
+      err => {
+        this.progressSpinnerDatos = false;
+
+
+          if (null != err.error && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+
+      },
+      () => {
+        this.progressSpinnerDatos = false;
+      }
+    );
+  }
+
 }

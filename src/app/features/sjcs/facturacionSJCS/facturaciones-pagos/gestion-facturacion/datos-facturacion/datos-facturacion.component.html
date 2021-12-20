@@ -140,6 +140,9 @@
     </div>
     <div class="card-footer" *ngIf="showFichaFacturacion">
       <div class="text-right main-button">
+        <button (click)="descargarLog()" [disabled]="!permisos" pButton type="button"
+        icon="fa fa-download" iconPos="left"
+        label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
         <button (click)="simular()" [disabled]="disabledSimular()  || !permisos" pButton type="button"
           icon="fa fa-play-circle" iconPos="left"
           label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}"></button>

@@ -37,6 +37,7 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_datospagos: "facturacionsjcs/datospagos",
     facturacionsjcs_numApuntes: "facturacionsjcs/numApuntes",
     facturacionsjcs_getAgrupacionDeTurnosPorTurno: "facturacionsjcs/getAgrupacionDeTurnosPorTurno",
+    facturacionsjcs_descargarLogFacturacion: "facturacionsjcs/getFicheroErroresFacturacion",
 
     /* Endpoints PAGOSJCS */
 
