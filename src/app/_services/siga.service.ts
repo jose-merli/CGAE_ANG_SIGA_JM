@@ -785,7 +785,7 @@ export class SigaServices {
     //   });
   }
   getDownloadFiles(service: string, body: any): any {
-	  console.log('body: ', body)
+	  //console.log('body: ', body)
       return this.http
       .post(environment.newSigaUrl + this.endpoints[service], body, {observe: 'response', responseType: 'blob'});
   }

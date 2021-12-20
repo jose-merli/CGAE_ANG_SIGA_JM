@@ -69,10 +69,10 @@ export class TarjetaGuardias implements OnInit {
   pesosSeleccionadosTarjeta2;
   updateCombo;
   //Resultados de la busqueda
-  @Input() turnosItem: TurnosItems;
   @Input() modoEdicion;
   @Input() idTurno;
   @Input() tarjetaGuardias: string;
+  @Input() turnosItem: TurnosItems;
   // @Input() pesosSeleccionadosTarjeta;
   //Resultados de la busqueda
   // @Input() modoEdicion: boolean = false;
@@ -610,13 +610,22 @@ export class TarjetaGuardias implements OnInit {
     //   this.permisoEscritura = this.persistenceService.getPermisos();
     // }
     if (!this.selectAll && !this.selectMultiple) {
-      this.progressSpinner = true;
-      let guardiaItem = new GuardiaItem();
-      guardiaItem.idGuardia = evento.idGuardia;
-      guardiaItem.idTurno = evento.idTurno;
-      this.persistenceService.setDatos(guardiaItem);
-      this.persistenceService.setHistorico(evento.fechabaja ? true : false);
-      this.router.navigate(["/gestionGuardias"], { queryParams: { idturno: evento.data.idturno } });
+      if (evento != undefined){
+        this.progressSpinner = true;
+        let guardiaItem = new GuardiaItem();
+        guardiaItem.idGuardia = evento.idGuardia;
+        guardiaItem.idTurno = evento.idTurno;
+        this.persistenceService.setDatos(guardiaItem);
+        this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+        this.progressSpinner = false;
+        if (evento.data != undefined){
+          this.router.navigate(["/gestionGuardias"], { queryParams: { idturno: evento.data.idturno } });
+        }else{
+          this.router.navigate(["/gestionGuardias"], { queryParams: { idturno: evento.idTurno } });
+        }
+      }else{
+        this.showMessage("error", "Error al acceder a la guardia", "Error al acceder a la guardia");
+      }
     } else {
       if (evento.data.fechabaja == undefined && this.historico) {
         this.selectedDatos.pop();
@@ -685,5 +694,19 @@ export class TarjetaGuardias implements OnInit {
     if(event.data && event.data.fechabaja == null && this.historico){
       this.selectedDatos.pop();
     }
+  }
+
+  nuevaGuardia(){
+      this.progressSpinner = true;
+      let datos = new GuardiaItem();
+      datos.idTurno = this.turnosItem.idturno;
+      this.persistenceService.setDatos(datos);
+      sessionStorage.setItem(
+        "crearGuardiaFromFichaTurno",
+        JSON.stringify(datos)
+      );
+      this.persistenceService.setHistorico(this.turnosItem.fechabaja ? true : false);
+      this.router.navigate(["/gestionGuardias"], { queryParams: { idturno: this.turnosItem.idturno } });
+
   }
 }

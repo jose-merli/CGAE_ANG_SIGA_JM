@@ -361,7 +361,7 @@ export class TablaPartidasJudicialesComponent implements OnInit {
       para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
       , () => {
         this.progressSpinner = false;

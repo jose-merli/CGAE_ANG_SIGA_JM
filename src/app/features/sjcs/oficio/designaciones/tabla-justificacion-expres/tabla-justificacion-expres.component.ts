@@ -150,7 +150,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
        
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -163,7 +163,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     this.commonsService.checkAcceso(procesos_oficio.designa)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
-        console.log('JE  this.permisoEscritura: ',  this.permisoEscritura)
+        //console.log('JE  this.permisoEscritura: ',  this.permisoEscritura)
         this.persistenceService.setPermisos(this.permisoEscritura);
  
         if (this.permisoEscritura == undefined) {
@@ -193,7 +193,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         //this.cargaModulosPorJuzgado(this.comboJuzgados[0].value);
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -210,7 +210,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -226,7 +226,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -242,7 +242,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }
       );
@@ -258,14 +258,14 @@ export class TablaJustificacionExpresComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
   }
 
   cargaInicial(){
-    console.log('datosJustificacion', this.datosJustificacion)
+    //console.log('datosJustificacion', this.datosJustificacion)
     this.progressSpinner=true;
     this.dataReady = false;
     let resultModified = {};
@@ -279,7 +279,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let obj1 = {};
     let validada;
     let finalizada;
-    console.log('this.datosJustificacion: ', this.datosJustificacion)
+    //console.log('this.datosJustificacion: ', this.datosJustificacion)
     this.datosJustificacion.forEach((designacion, i) =>{
       
       let letra = (i + 10).toString(36).toUpperCase()
@@ -668,7 +668,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         obj1 = null;
        
      })
-console.log('designacion.actuaciones: ', designacion.actuaciones)
+//console.log('designacion.actuaciones: ', designacion.actuaciones)
     // if (actuacion.permitirAniadirLetrado == "1"){ 
       if (designacion.actuaciones.length != 0){
       let numProcType2 = 'input';
@@ -721,7 +721,7 @@ console.log('designacion.actuaciones: ', designacion.actuaciones)
      this.totalActuaciones = this.totalActuaciones + 1;
      let lastKey = letra + lastNum;
      let objnew =  { [lastKey] : this.arrNuevo, position: 'collapse'};
-     console.log('objnew: ', objnew)
+     //console.log('objnew: ', objnew)
      arr2.push(Object.assign({},objnew));
      objnew = null;
    // }
@@ -736,7 +736,7 @@ console.log('designacion.actuaciones: ', designacion.actuaciones)
     })
 
     resultModified = Object.assign({},{'data': data});
-console.log('resultModified: ', resultModified)
+//console.log('resultModified: ', resultModified)
     this.rowGroups = [];
     this.rowGroups = this.trdService.getTableData(resultModified);
     this.rowGroupsAux = [];

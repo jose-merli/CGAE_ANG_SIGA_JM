@@ -82,9 +82,12 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
     }else{
       actuaciones.push(this.selectedDatos);
     }
+    if (newEstado == '1'){
+      actuaciones.forEach(act => {
+        act.anulada = '1';
+      })
+    }
     if(actuaciones.length > 0 ){
-      actuaciones.forEach(actuacion => {actuacion.anulada = newEstado;});
-
       this.sigaServices.postPaginado("busquedaGuardias_updateEstadoActuacion","?anioNumero="+this.asistencia.anioNumero, actuaciones).subscribe(
         n => {
 
@@ -101,11 +104,12 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
         });
+
     }
   }
 
@@ -125,7 +129,7 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
           this.actuaciones = n.actuacionAsistenciaItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
@@ -175,7 +179,7 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;

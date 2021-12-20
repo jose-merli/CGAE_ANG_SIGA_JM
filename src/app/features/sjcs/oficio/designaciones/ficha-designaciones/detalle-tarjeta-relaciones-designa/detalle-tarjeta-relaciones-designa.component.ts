@@ -218,7 +218,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
               this.selectedDatos = [];
               this.progressSpinner = false;
@@ -239,7 +239,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
               this.selectedDatos = [];
               this.progressSpinner = false;
@@ -324,7 +324,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
           },
           err => {
             this.progressSpinner = false;
-            console.log(err);
+            //console.log(err);
           },
           () => {
             this.router.navigate(["/gestionEjg"]);

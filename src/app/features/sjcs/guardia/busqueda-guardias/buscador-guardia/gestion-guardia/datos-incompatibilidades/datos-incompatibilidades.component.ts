@@ -71,7 +71,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }
       );
@@ -148,7 +148,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           ()=>{

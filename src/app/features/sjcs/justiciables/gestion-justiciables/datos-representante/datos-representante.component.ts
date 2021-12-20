@@ -228,7 +228,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				this.progressSpinner = false;
 			},
 			(err) => {
-				console.log(err);
+				//console.log(err);
 				this.progressSpinner = false;
 			}
 		);

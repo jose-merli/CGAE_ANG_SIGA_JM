@@ -93,7 +93,7 @@ export class BuscadorProcuradoresComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -143,7 +143,7 @@ export class BuscadorProcuradoresComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

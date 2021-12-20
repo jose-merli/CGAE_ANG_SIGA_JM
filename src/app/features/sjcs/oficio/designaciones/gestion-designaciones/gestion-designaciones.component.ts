@@ -170,14 +170,14 @@ export class GestionDesignacionesComponent implements OnInit {
           err => {
             this.progressSpinner = false;
 
-            console.log(err);
+            //console.log(err);
           }, () => {
             this.progressSpinner = false;
           });
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.progressSpinner = false;
       });
@@ -192,7 +192,7 @@ export class GestionDesignacionesComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(this.comboTipoDesigna);
@@ -246,7 +246,7 @@ export class GestionDesignacionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -300,7 +300,7 @@ export class GestionDesignacionesComponent implements OnInit {
   }
 
   delete() {
-    console.log(this.selectedDatos);
+    //console.log(this.selectedDatos);
     let designaToDelete = [];
     let designaToDeleteCompensacion = [];
     let designaToDeleteSinCompensacion = [];
@@ -473,7 +473,7 @@ export class GestionDesignacionesComponent implements OnInit {
         this.keys = JSON.parse(data["body"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -515,12 +515,12 @@ export class GestionDesignacionesComponent implements OnInit {
                 this.router.navigate(["/dialogoComunicaciones"]);
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

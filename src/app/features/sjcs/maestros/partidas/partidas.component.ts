@@ -112,7 +112,7 @@ export class PartidasComponent implements OnInit, AfterViewInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         if (permanencia) {
           this.filtros.filtros.descripcion = descripcion;

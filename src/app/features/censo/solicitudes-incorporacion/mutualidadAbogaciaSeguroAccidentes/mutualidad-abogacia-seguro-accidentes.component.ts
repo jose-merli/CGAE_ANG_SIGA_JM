@@ -184,13 +184,13 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
                   this.solicitud.estadoMutualidad = estadoMut.valorRespuesta;
                 },
                 error => {
-                  console.log(error);
+                  //console.log(error);
                 }
               );
           }
         },
         error => {
-          console.log(error);
+          //console.log(error);
         },
         () => {
           this.solicitud.duplicado = true;
@@ -205,7 +205,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
                 this.progressSpinner = false;
               },
               error => {
-                console.log(error);
+                //console.log(error);
                 this.progressSpinner = false;
               }
             );
@@ -279,7 +279,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
           this.body.capitalObjetivo = prueba.capitalObjetivo;
         },
         error => {
-          console.log(error);
+          //console.log(error);
         },
         () => {
           this.solicitud.sexo = sexo;
@@ -338,7 +338,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
         }
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -347,7 +347,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
         this.estadoCivil = result.combooItems;
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
 
       }
@@ -361,7 +361,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
         );
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
 
       }
@@ -377,7 +377,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
 
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
 
         }
@@ -391,7 +391,7 @@ export class MutualidadAbogaciaSeguroAccidentes implements OnInit {
         );
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
 
       }
@@ -510,7 +510,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         error => {
           this.progressSpinner = false;
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -584,7 +584,7 @@ para poder filtrar el dato con o sin estos caracteres*/
                   this.progressSpinner = false;
                 },
                 error => {
-                  console.log(error);
+                  //console.log(error);
                   this.progressSpinner = false;
                 }
               );
@@ -595,7 +595,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.progressSpinner = false;
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.showFailMensaje(error.valorRespuesta);
           this.progressSpinner = true;
         },

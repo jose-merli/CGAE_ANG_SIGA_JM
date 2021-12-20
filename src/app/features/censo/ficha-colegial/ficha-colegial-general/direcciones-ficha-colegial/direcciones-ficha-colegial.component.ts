@@ -459,7 +459,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.selectMultipleDirecciones = false;
         this.selectAllDirecciones = false;
         this.numSelectedDirecciones = 0;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -516,7 +516,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.mostrarNumero = true;
           },
@@ -749,7 +749,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
           this.tableDirecciones.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

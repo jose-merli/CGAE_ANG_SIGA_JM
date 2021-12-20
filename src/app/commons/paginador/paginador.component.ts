@@ -54,8 +54,8 @@ export class PaginadorComponent implements OnInit {
   ngOnInit(): void {
     this.selectedPerPage = 10;
     this.from = this.pagNumber *this.selectedPerPage + 1;
-    console.log('this.pagNumber ', this.pagNumber)
-    console.log('this.selectedPerPage ', this.selectedPerPage)
+    //console.log('this.pagNumber ', this.pagNumber)
+    //console.log('this.selectedPerPage ', this.selectedPerPage)
     if (this.pagNumber + 1 == this.lastPage){
       this.to = this.totalRegistros;
      } else {
@@ -68,8 +68,8 @@ export class PaginadorComponent implements OnInit {
     this.fromReg.emit(this.from);
     this.toReg.emit(this.to);
 
-    console.log('this.from ', this.from)
-    console.log('this.to ', this.to)
+    //console.log('this.from ', this.from)
+    //console.log('this.to ', this.to)
   }
  
   selectedAll(){

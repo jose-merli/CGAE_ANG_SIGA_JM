@@ -85,7 +85,7 @@ export class PermisosComponent implements OnInit {
 
     this.sigaServices.menuToggled$.subscribe(() => {
       this.isWidthChange = !this.isWidthChange;
-      console.log(this.isWidthChange)
+      //console.log(this.isWidthChange)
     });
   }
 
@@ -103,7 +103,7 @@ export class PermisosComponent implements OnInit {
       n => {
         this.grupos = n.combooItems;
         // this.first = { label: "", value: "" };
-        // console.log(this.first);
+        // //console.log(this.first);
         // this.grupos.unshift(this.first);
 
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
@@ -124,7 +124,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -139,7 +139,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -188,7 +188,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
       );
 
@@ -270,7 +270,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     // });
 
-    // console.log(this.totalPermisos)
+    // //console.log(this.totalPermisos)
   }
 
   expandAll() {
@@ -405,7 +405,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.numCambios = 0;
           },
           err => {
-            console.log(err);
+            //console.log(err);
           },
           () => {
             this.permisosChange.clear();

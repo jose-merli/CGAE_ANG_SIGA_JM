@@ -1,3 +1,4 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 <div class="card" id="calendarios">
   <div class="card-header header-ficha">
     <div *ngIf="!openFicha" class="form-row">
@@ -37,4 +38,7 @@
     </div>
 
   </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

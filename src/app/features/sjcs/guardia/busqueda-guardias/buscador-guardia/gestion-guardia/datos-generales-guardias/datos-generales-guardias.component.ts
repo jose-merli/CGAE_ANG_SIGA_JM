@@ -39,7 +39,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   msgs;
   resaltadoDatos: boolean = false;
   isLetrado : boolean = false;
-
+  @Input() idTurnoFromFichaTurno = null;
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
@@ -71,7 +71,13 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.body.descripcion = data.descripcion;
         this.body.descripcionPago = data.descripcionPago;
         this.body.idTipoGuardia = data.idTipoGuardia;
-        this.body.idTurno = data.idTurno;
+        if (this.idTurnoFromFichaTurno != null){
+          this.body.idTurno =  this.idTurnoFromFichaTurno;
+          this.modoEdicion = false;
+          this.permisoEscritura = true;
+        }else{
+          this.body.idTurno = data.idTurno;
+        }
         this.body.nombre = data.nombre;
         this.body.envioCentralita = data.envioCentralita;
         this.getComboTipoGuardia();
@@ -158,7 +164,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -170,7 +176,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -195,7 +201,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -223,13 +229,12 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     if (this.body.envioCentralita == undefined) this.body.envioCentralita = false;
     this.sigaService.post(url, this.body).subscribe(
       data => {
-        this.body = JSON.parse(data.body);
+        let respuesta = JSON.parse(data.body);
         if (!this.modoEdicion) {
           this.modoEdicion = true;
           this.getCols();
-          this.body.idGuardia = JSON.parse(data.body).id;
           this.persistenceService.setDatos({
-            idGuardia: this.body.idGuardia,
+            idGuardia: respuesta.id,
             idTurno: this.body.idTurno
           })
           this.modoEdicionSend.emit(true);
@@ -244,7 +249,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
       err => {
 
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          console.log('err.error - ', err.error)
+          //console.log('err.error - ', err.error)
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));

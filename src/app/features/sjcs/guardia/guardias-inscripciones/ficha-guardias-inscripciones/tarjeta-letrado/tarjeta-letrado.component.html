@@ -141,7 +141,7 @@
   <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 <div class="busqueda-container" id="datosLetrado">
   <div *ngIf="permisosTarjeta" class="card">
-    <div class="card-header header-ficha">
+    <div class="card-header header-ficha" (click)="abreCierraFicha();abrirFicha('datosLetrado')">
       <div *ngIf="!openFicha" class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
@@ -160,7 +160,7 @@
             </label>
             <div class="d-flex justify-content-between">
               <!-- <i *ngIf="!esFichaActiva('generales')" class="fa fa-angle-down float-right"></i> -->
-              <i (click)="abreCierraFicha('integrantes')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
             </div>
           </div>
         </div>
@@ -184,7 +184,6 @@
             </span>
           </a>
         </label>
-        <i (click)="abreCierraFicha('integrantes')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
       </div>
     </div>
 

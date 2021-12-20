@@ -316,7 +316,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -431,7 +431,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
           },
@@ -492,7 +492,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
         },
@@ -541,7 +541,7 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;

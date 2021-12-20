@@ -69,7 +69,7 @@ export class FormularioBusquedaComponent implements OnInit {
 				}
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },()=>{
         if (sessionStorage.getItem("idTurno") != undefined) {
           this.turnosSelected = JSON.parse(
@@ -100,7 +100,7 @@ export class FormularioBusquedaComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },()=>{
           if (sessionStorage.getItem("idGuardia") != undefined) {
             this.guardiasSelected = JSON.parse(
@@ -180,7 +180,7 @@ export class FormularioBusquedaComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },()=>{
         if (sessionStorage.getItem("idGuardia") != undefined) {
           this.guardiasSelected = JSON.parse(
@@ -224,7 +224,7 @@ export class FormularioBusquedaComponent implements OnInit {
           else saveAs(blob, "PlantillaCargaMasivaDatosBT.xls");
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.progressSpinner = false;

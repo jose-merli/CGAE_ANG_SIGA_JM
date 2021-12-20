@@ -100,12 +100,17 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
 
       let body: CargaMasivaItem = new CargaMasivaItem();
       body.tipoCarga = this.tipo;
-
+      body.fechaCarga = this.datePipe.transform(
+        new Date(),
+        "dd/MM/yyyy"
+      );
       if (this.fechaSolicitud != undefined && this.fechaSolicitud != null) {
-        body.fechaCarga = this.datePipe.transform(
+        /*body.fechaCarga = this.datePipe.transform(
           this.fechaSolicitud,
           "dd/MM/yyyy"
-        );
+        );*/
+
+     
        /* }else if (this.fechaDesde != undefined && this.fechaDesde != null){
           body.fechaCarga = this.datePipe.transform(
             this.fechaDesde,
@@ -170,7 +175,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
             this.file)
           .subscribe(
             data => {
-              this.file = undefined;
+             // this.file = undefined;
               this.progressSpinner = false;
               this.uploadFileDisable = true;
               body.errores = data["error"];
@@ -196,7 +201,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
           .postSendContent("cargasMasivasGuardia_uploadFileGC", this.file)
           .subscribe(
             data => {
-              this.file = undefined;
+              //this.file = undefined;
               this.progressSpinner = false;
               this.uploadFileDisable = true;
               body.errores = data["error"];
@@ -227,7 +232,7 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
         )
           .subscribe(
             data => {
-              this.file = undefined;
+              //this.file = undefined;
               this.progressSpinner = false;
               this.uploadFileDisable = true;
               body.errores = data["error"];

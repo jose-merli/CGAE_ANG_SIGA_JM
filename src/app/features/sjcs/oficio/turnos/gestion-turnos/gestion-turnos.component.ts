@@ -598,7 +598,7 @@ export class TablaTurnosComponent implements OnInit {
         this.keys = JSON.parse(data["body"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -636,12 +636,12 @@ export class TablaTurnosComponent implements OnInit {
                 this.router.navigate(["/dialogoComunicaciones"]);
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

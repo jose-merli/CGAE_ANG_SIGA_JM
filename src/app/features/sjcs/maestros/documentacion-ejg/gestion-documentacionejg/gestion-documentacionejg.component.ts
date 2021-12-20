@@ -92,7 +92,7 @@ export class GestionDocumentacionejgComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

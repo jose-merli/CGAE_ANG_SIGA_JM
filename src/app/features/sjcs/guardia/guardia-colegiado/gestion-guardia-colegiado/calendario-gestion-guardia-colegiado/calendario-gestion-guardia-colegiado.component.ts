@@ -61,7 +61,7 @@ comboListaGuardias =[];
           this.progressSpinner = false
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false
         }
       )
@@ -116,12 +116,20 @@ comboListaGuardias =[];
           this.progressSpinner = false
         },
         (error) => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false
+          this.showMessage("error", "No existen calendarios para esta guardia", "No existen calendarios para esta guardia");
         }
       );
   }
-
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
 
   navigateToFichaGuardia() {
@@ -135,13 +143,5 @@ comboListaGuardias =[];
     this.msgs = []
   }
 
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
-  }
 
 }
