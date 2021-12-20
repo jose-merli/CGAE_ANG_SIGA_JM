@@ -82,15 +82,28 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
   // Combos
 
   getComboPlanificacion() {
-    this.sigaServices.getParam("facturacionPyS_comboPlanificacion", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
-      n => {
-        this.comboPlanificacion = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboPlanificacion);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    if (this.body.idSerieFacturacion != undefined) {
+      this.sigaServices.getParam("facturacionPyS_comboPlanificacion", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
+        n => {
+          this.comboPlanificacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPlanificacion);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    } else {
+      this.sigaServices.get("facturacionPyS_comboPlanificacion").subscribe(
+        n => {
+          this.comboPlanificacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPlanificacion);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+    
   }
 
   getComboCuentaBancaria() {
