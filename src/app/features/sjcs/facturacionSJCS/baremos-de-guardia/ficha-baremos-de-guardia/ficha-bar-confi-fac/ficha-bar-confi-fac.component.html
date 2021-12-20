@@ -45,74 +45,74 @@
                 <div class="bloque col-lg-6 col-md-6 col-sm-6 py-2 pl-2">
                     <div class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox (onChange)="onChangeDisponibilidad($event)" value="disponibilidad"
-                                name="porDispo" label="Por disponibilidad" class="ml-0"></p-checkbox>
+                            <p-checkbox [disabled]="!permisoEscritura" (onChange)="onChangeDisponibilidad($event)" [(ngModel)]="disponibilidad" value="disponibilidad"
+                                name="porDispo" label="{{ 'facturacionSJCS.baremos.disponibilidad' | translate }}" class="ml-0" binary="true"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox [disabled]="!disableDis" (onChange)="onChangeAgruparDis($event)" name="agrupar1"
-                                label="Agrupar" class="ml-0"></p-checkbox>
+                            <p-checkbox [disabled]="!disableDis || !permisoEscritura" (onChange)="onChangeAgruparDis($event)" value = "agruparDis" [(ngModel)]="agruparDis" name="agruparDis"
+                                label="{{ 'facturacionSJCS.baremos.agruparDias' | translate }}" class="ml-0" binary="true"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisL"
+                            <p-checkbox [disabled]="!disableDis || !permisoEscritura" [(ngModel)]="checkDisL"  value = "checkDisL"
                                 (onChange)="onChangeDiasDis($event,'L')" name="L" #LDis binary="true" label="L">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisM"
+                            <p-checkbox [disabled]="!disableDis || !permisoEscritura" [(ngModel)]="checkDisM" value = "checkDisM"
                                 (onChange)="onChangeDiasDis($event,'M')" name="M" #MDis binary="true" label="M">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisX"
+                            <p-checkbox [disabled]="!disableDis || !permisoEscritura" [(ngModel)]="checkDisX" value = "checkDisX"
                                 (onChange)="onChangeDiasDis($event,'X')" name="X" #XDis binary="true" label="X">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisJ"
+                            <p-checkbox [disabled]="!disableDis || !permisoEscritura" [(ngModel)]="checkDisJ" value = "checkDisJ"
                                 (onChange)="onChangeDiasDis($event,'J')" name="J" #JDis binary="true" label="J">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisV"
+                            <p-checkbox [disabled]="!disableDis || !permisoEscritura" [(ngModel)]="checkDisV" value = "checkDisV"
                                 (onChange)="onChangeDiasDis($event,'V')" name="V" #VDis binary="true" label="V">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisS"
+                            <p-checkbox [disabled]="!disableDis || !permisoEscritura" [(ngModel)]="checkDisS" value = "checkDisS"
                                 (onChange)="onChangeDiasDis($event,'S')" name="S" #SDis binary="true" label="S">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableDis" [(ngModel)]="checkDisD"
+                            <p-checkbox [disabled]="!disableDis || !permisoEscritura" [(ngModel)]="checkDisD" value = "checkDisD"
                                 (onChange)="onChangeDiasDis($event,'D')" name="D" #DDis binary="true" label="D">
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableDis" [(ngModel)]="contDis" value="asi"
-                                (click)="changeContDis()" name="contandoDis" label="Contando Asistencias">
+                            <p-radioButton [disabled]="!disableDis || !permisoEscritura" [(ngModel)]="contDis" value="asi"
+                                (click)="changeContDis()" name="contandoDis" label="{{ 'facturacionSJCS.baremos.contAsistencias' | translate }}">
                             </p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableDis" [(ngModel)]="contDis" value="act"
-                                (click)="changeContDis()" name="contandoDis" label="Contando Actuaciones">
+                            <p-radioButton [disabled]="!disableDis || !permisoEscritura" [(ngModel)]="contDis" value="act"
+                                (click)="changeContDis()" name="contandoDis" label="{{ 'facturacionSJCS.baremos.contActuaciones' | translate }}">
                             </p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Mínimo</label>
-                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.importeMinDis"
+                            <label>{{'facturacionSJCS.baremosDeGuardia.minimo' | translate}}</label>
+                            <input type="number" [disabled]="!disableImputDis || !permisoEscritura" (input)="onChangeMinimo($event.target.value)" [(ngModel)]="filtrosDis.importeMinDis"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Importe</label>
-                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.importeDis"
+                            <label>{{'facturacionSJCS.facturacionesYPagos.importe' | translate}}</label>
+                            <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.importeDis"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Disponibilidad con asuntos</label>
-                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.dispAsuntosDis"
+                            <label>{{ 'facturacionSJCS.baremos.dipsAsuntos' | translate }}</label>
+                            <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.dispAsuntosDis"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>A partir de</label>
-                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.aPartirDis"
+                            <label>{{'facturacionSJCS.baremos.aPartir' | translate}}</label>
+                            <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.aPartirDis"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Máximo</label>
-                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.importeMaxDis"
+                            <label>{{'facturacionSJCS.baremosDeGuardia.maximo' | translate}}</label>
+                            <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.importeMaxDis"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>A partir de</label>
-                            <input type="number" [disabled]="!disableImputDis" [(ngModel)]="filtrosDis.aPartirMax"
+                            <label>{{'facturacionSJCS.baremos.aPartir' | translate}}</label>
+                            <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.aPartirMax"
                                 class="form-control" />
                         </div>
                     </div>
@@ -121,78 +121,78 @@
                 <div class="bloque col-lg-6 col-md-6 col-sm-6">
                     <div class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox name="porAsisActu" value="asiac" (onChange)="onChangeAsAc($event)"
+                            <p-checkbox name="porAsisActu" [(ngModel)]="asiac || !permisoEscritura" value="asiac" binary="true" (onChange)="onChangeAsAc($event)"
                                 label="Por asistencia / actuaciones" class="ml-0">
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox [disabled]="!disableAsAc" (onChange)="onChangeAgruparAsAc($event)"
-                                name="agrupar1" label="Agrupar" class="ml-0"></p-checkbox>
+                            <p-checkbox [disabled]="!disableAsAc || !permisoEscritura" (onChange)="onChangeAgruparAsAc($event)" [(ngModel)]="agruparAsAc" binary="true"
+                                name="agruparAsAc" label="Agrupar" class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcL"
+                            <p-checkbox [disabled]="!disableAsAc || !permisoEscritura" [(ngModel)]="checkAsAcL" value = "checkAsAcL"
                                 (onChange)="onChangeDiasAsAc($event,'L')" #LAsAc binary="true" name="L" label="L">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcM"
+                            <p-checkbox [disabled]="!disableAsAc || !permisoEscritura" [(ngModel)]="checkAsAcM" value = "checkAsAcM"
                                 (onChange)="onChangeDiasAsAc($event,'M')" #MAsAc binary="true" name="M" label="M">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcX"
+                            <p-checkbox [disabled]="!disableAsAc || !permisoEscritura" [(ngModel)]="checkAsAcX" value = "checkAsAcX"
                                 (onChange)="onChangeDiasAsAc($event,'X')" #XAsAc binary="true" name="X" label="X">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcJ"
+                            <p-checkbox [disabled]="!disableAsAc || !permisoEscritura" [(ngModel)]="checkAsAcJ" value = "checkAsAcJ"
                                 (onChange)="onChangeDiasAsAc($event,'J')" #JAsAc binary="true" name="J" label="J">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcV"
+                            <p-checkbox [disabled]="!disableAsAc || !permisoEscritura" [(ngModel)]="checkAsAcV" value = "checkAsAcV"
                                 (onChange)="onChangeDiasAsAc($event,'V')" #VAsAc binary="true" name="V" label="V">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcS"
+                            <p-checkbox [disabled]="!disableAsAc || !permisoEscritura" [(ngModel)]="checkAsAcS" value = "checkAsAcS"
                                 (onChange)="onChangeDiasAsAc($event,'S')" #SAsAc binary="true" name="S" label="S">
                             </p-checkbox>
-                            <p-checkbox [disabled]="!disableAsAc" [(ngModel)]="checkAsAcD"
+                            <p-checkbox [disabled]="!disableAsAc || !permisoEscritura" [(ngModel)]="checkAsAcD" value = "checkAsAcD"
                                 (onChange)="onChangeDiasAsAc($event,'D')" #DAsAc binary="true" name="D" label="D">
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableAsAc" [(ngModel)]="contAsAc" value="asi"
+                            <p-radioButton [disabled]="!disableAsAc || !permisoEscritura" [(ngModel)]="contAsAc" value="asi"
                                 (click)="changeContAsAc()" name="contandoAsAc" label="Contando Asistencias">
                             </p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableAsAc" [(ngModel)]="contAsAc" value="act"
+                            <p-radioButton [disabled]="!disableAsAc || !permisoEscritura" [(ngModel)]="contAsAc" value="act"
                                 (click)="changeContAsAc()" name="contandoAsAc" label="Contando Actuaciones">
                             </p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disPrecio" [(ngModel)]="precio" value="unico"
+                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" [(ngModel)]="precio" value="unico"
                                 (click)="changePrecio()" name="precioAsAc" label="Precio Único"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disPrecio" [(ngModel)]="precio" value="porTipos"
+                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" [(ngModel)]="precio" value="porTipos"
                                 (click)="changePrecio()" name="precioAsAc" label="Precio por tipos"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Importe</label>
-                            <input type="number" [disabled]="!disableImputAct" [(ngModel)]="filtrosAsAc.importeAsAc"
+                            <label>{{'facturacionSJCS.facturacionesYPagos.importe' | translate}}</label>
+                            <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.importeAsAc"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6 verticalAlign">
-                            <a class="enlace" (click)="irAtipos()" *ngIf="modalTipos">Ir a tipos</a>
-                            <a *ngIf="!modalTipos">Ir a tipos</a>
+                            <a class="enlace" (click)="irAtipos()" *ngIf="modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
+                            <a *ngIf="!modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Disponibilidad con asuntos</label>
-                            <input type="number" [disabled]="!disableImputAct" [(ngModel)]="filtrosAsAc.dispAsuntosAsAc"
+                            <label>{{ 'facturacionSJCS.baremos.dipsAsuntos' | translate }}</label>
+                            <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.dispAsuntosAsAc"
                                 class="form-control" />
                         </div>
 
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Mínimo</label>
-                            <input type="number" [disabled]="!disableImputAct" [(ngModel)]="filtrosAsAc.importeMinAsAc"
+                            <label>{{'facturacionSJCS.baremosDeGuardia.minimo' | translate}}</label>
+                            <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.importeMinAsAc"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>Máximo</label>
-                            <input type="number" [disabled]="!disableImputAct" [(ngModel)]="filtrosAsAc.importeMaxAsAc"
+                            <label>{{'facturacionSJCS.baremosDeGuardia.maximo' | translate}}</label>
+                            <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.importeMaxAsAc"
                                 class="form-control" />
                         </div>
                     </div>

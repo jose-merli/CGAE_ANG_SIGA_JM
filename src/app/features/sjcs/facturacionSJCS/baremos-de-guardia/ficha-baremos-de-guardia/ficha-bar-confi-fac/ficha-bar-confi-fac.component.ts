@@ -14,10 +14,10 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   filtrosDis: BaremosGuardiaItem = new BaremosGuardiaItem();
   filtrosAsAc: BaremosGuardiaItem = new BaremosGuardiaItem();
   disponibilidad: boolean = false;
-  agruparDis;
+  agruparDis: boolean = false;
   contDis;
   asiac: boolean = false;
-  agruparAsAc;
+  agruparAsAc:boolean = false;
   contAsAc;
   precio
 
@@ -57,17 +57,13 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Input() datos;
+  @Output() disProc2014 = new EventEmitter<boolean>();
+  @Input() permisoEscritura: boolean = false;
   showModal: boolean = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
-
-    if(this.datos !=null || this.datos != undefined){
-      this.agruparDis = this.datos.agruparDis;
-      this.agruparAsAc = this.datos.agruparAsAc;
-    }
-
 
   }
 
@@ -181,6 +177,7 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
     if (this.disableDis) {
       this.contDis
       this.disableImputDis = true;
+
     }
 
   }
@@ -203,16 +200,16 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   onChangeAgruparDis(event) {
     if (event) {
-      this.agruparDis = 0
+      this.agruparDis = true
     } else {
-      this.agruparDis = 1
+      this.agruparDis = false
     }
   }
   onChangeAgruparAsAc(event) {
     if (event) {
-      this.agruparAsAc = 0
+      this.agruparAsAc = false
     } else {
-      this.agruparAsAc = 1
+      this.agruparAsAc = true
     }
 
   }
@@ -223,6 +220,12 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   cerrarDialog() {
     this.showModal = false;
+  }
+
+  onChangeMinimo(value){
+    if((value != null || value != undefined) && this.contDis == 'asi' && this.disponibilidad == true){
+     this.disProc2014.emit(true)
+    }
   }
 
 
