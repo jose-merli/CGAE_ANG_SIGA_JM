@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { t } from '@angular/core/src/render3';
+import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { AutoComplete } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
@@ -57,7 +58,8 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
     private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private router: Router
   ) { }
 
   ngOnInit() { }
@@ -333,6 +335,29 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
     }
 
     return true;
+  }
+
+  // Enlace a la cuenta bancaria
+
+  navigateToCuentaBancaria() {
+    this.progressSpinner=true;
+
+    this.sigaServices.getParam("facturacionPyS_getCuentasBancarias", "?idCuenta=" + this.bodyInicial.idCuentaBancaria).subscribe(
+      data => {
+        this.progressSpinner=false;
+        sessionStorage.setItem("cuentaBancariaItem", JSON.stringify(data.cuentasBancariasITem[0]));
+
+        // Ficha actual
+        sessionStorage.setItem("serieFacturacionItem", JSON.stringify(this.bodyInicial));
+
+        this.router.navigate(["/fichaCuentaBancaria"]);
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      },
+    );
   }
 
   // Comprueba si una serie se encuentra de baja o no
