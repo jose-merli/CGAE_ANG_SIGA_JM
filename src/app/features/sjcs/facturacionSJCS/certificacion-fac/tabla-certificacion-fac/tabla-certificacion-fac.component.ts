@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { CertificacionesItem } from '../../../../../models/sjcs/CertificacionesItem';
-import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-tabla-certificacion-fac',
@@ -25,7 +24,6 @@ export class TablaCertificacionFacComponent implements OnInit {
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
-    private sigaServices: SigaServices,
     private confirmationService: ConfirmationService) { }
 
   @Input() datos: CertificacionesItem[] = [];
@@ -92,8 +90,9 @@ export class TablaCertificacionFacComponent implements OnInit {
     }
   }
 
-  modificarCert() {
-
+  openFicha(dato: CertificacionesItem) {
+    sessionStorage.setItem("edicionDesdeTablaCerti", JSON.stringify(dato));
+    this.router.navigate(['/fichaCertificacionFac']);
   }
 
   actuDesSeleccionados() {

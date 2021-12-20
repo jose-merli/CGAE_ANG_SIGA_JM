@@ -129,6 +129,8 @@ export class CertificacionFacComponent implements OnInit {
           } else {
             if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), res.error.description.toString());
+            } else {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             }
           }
         },
