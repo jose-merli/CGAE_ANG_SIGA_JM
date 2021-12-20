@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
 import { BusquedaRetencionesRequestDTO } from '../../../../models/sjcs/BusquedaRetencionesRequestDTO';
@@ -9,6 +9,10 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroCertificacionFacComponent } from './filtro-certificacion-fac/filtro-certificacion-fac.component';
 import { TablaCertificacionFacComponent } from './tabla-certificacion-fac/tabla-certificacion-fac.component';
+
+export enum KEY_CODE {
+  ENTER = 13
+}
 
 @Component({
   selector: 'app-certificacion-fac',
@@ -160,4 +164,13 @@ export class CertificacionFacComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.getCertificaciones(true);
+    }
+  }
+
 }
