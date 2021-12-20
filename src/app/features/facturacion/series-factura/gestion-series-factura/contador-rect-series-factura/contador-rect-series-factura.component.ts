@@ -128,8 +128,8 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
   // Guardar
   isValid(): boolean {
     return !this.nuevo && this.body.idContadorFacturasRectificativas != undefined 
-      || this.nuevo && this.contadorFacturasRectificativasSeleccionado.nombre != undefined && this.contadorFacturasRectificativasSeleccionado.nombre.trim() == ""
-      && this.contadorFacturasRectificativasSeleccionado.contador != undefined && this.contadorFacturasRectificativasSeleccionado.contador.trim() == "";
+      || this.nuevo && this.contadorFacturasRectificativasSeleccionado.nombre != undefined && this.contadorFacturasRectificativasSeleccionado.nombre.trim() != ""
+      && this.contadorFacturasRectificativasSeleccionado.contador != undefined && this.contadorFacturasRectificativasSeleccionado.contador.trim() != "";
   }
 
   guardar(): void {

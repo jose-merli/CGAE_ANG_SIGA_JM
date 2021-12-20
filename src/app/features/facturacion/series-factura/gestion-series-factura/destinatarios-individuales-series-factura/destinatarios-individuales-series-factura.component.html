@@ -103,7 +103,7 @@
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-plus" iconPos="left" 
           (click)="addDestinatario()" label="{{ 'general.boton.new' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-eraser" iconPos="left" 
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="selectedDatos.length == 0"
           (click)="eliminarDestinarariosSerie()" label="{{ 'general.boton.eliminar' | translate }}"></button>
       </div>
     </div>

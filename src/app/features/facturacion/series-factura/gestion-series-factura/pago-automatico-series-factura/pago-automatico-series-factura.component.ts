@@ -119,7 +119,7 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
     if (a.length !== b.length) return false;
   
     for (let i = 0; i < a.length; ++i) {
-      if (a[i] !== b[i]) return false;
+      if (a[i].value !== b[i].value) return false;
     }
 
     return true;

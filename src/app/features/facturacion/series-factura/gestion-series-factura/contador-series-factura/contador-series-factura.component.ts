@@ -129,8 +129,8 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
   // Guardar
   isValid(): boolean {
     return !this.nuevo && this.body.idContadorFacturas != undefined 
-      || this.nuevo && this.contadorFacturasSeleccionado.nombre != undefined && this.contadorFacturasSeleccionado.nombre.trim() == ""
-      && this.contadorFacturasSeleccionado.contador != undefined && this.contadorFacturasSeleccionado.contador.trim() == "";
+      || this.nuevo && this.contadorFacturasSeleccionado.nombre != undefined && this.contadorFacturasSeleccionado.nombre.trim() != ""
+      && this.contadorFacturasSeleccionado.contador != undefined && this.contadorFacturasSeleccionado.contador.trim() != "";
   }
 
   guardar(): void {
