@@ -13,8 +13,9 @@
           translate}}</p>
       </div>
 
-      <app-tarjeta-datos-generales-fiFac [certificacion]="certificacion" [modoEdicion]="modoEdicion"
-        (guardarEvent)="guardarEvent($event)" (changeModoEdicion)="changeModoEdicion($event)">
+      <app-tarjeta-datos-generales-fiFac *ngIf="showCards" [certificacion]="certificacion" [modoEdicion]="modoEdicion"
+        [estadosCertificacion]="estadosCertificacion" (guardarEvent)="guardarEvent($event)"
+        (getListaEstadosEvent)="getListaEstadosEvent($event)" (changeModoEdicion)="changeModoEdicion($event)">
       </app-tarjeta-datos-generales-fiFac>
 
       <!-- <app-tarjeta-facturacion [modoEdicion]="modoEdicion"

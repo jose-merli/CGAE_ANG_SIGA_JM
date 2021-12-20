@@ -36,9 +36,28 @@ export class FiltroCertificacionFacComponent implements OnInit {
 
     this.getComboEstado();
     this.getComboColegios();
-    this.isConsejo();
     this.getComboConceptosServicios();
     this.getComboPartidaPresupuestaria();
+    this.isConsejo();
+
+    if (sessionStorage.getItem("filtrosBusquedaCerti")) {
+      let filtros = JSON.parse(sessionStorage.getItem("filtrosBusquedaCerti"));
+      sessionStorage.removeItem("filtrosBusquedaCerti");
+
+      if (filtros.fechaDesde && filtros.fechaDesde != null) {
+        filtros.fechaDesde = new Date(filtros.fechaDesde);
+      }
+
+      if (filtros.fechaHasta && filtros.fechaHasta != null) {
+        filtros.fechaHasta = new Date(filtros.fechaHasta);
+      }
+
+      this.filtros = filtros;
+
+      this.isConsejo();
+
+      this.buscarCert();
+    }
 
   }
 
@@ -95,7 +114,7 @@ export class FiltroCertificacionFacComponent implements OnInit {
 
   }
 
-  getComboGrupoFacturacion(idColegioList: string []) {
+  getComboGrupoFacturacion(idColegioList: string[]) {
 
     this.progressSpinnerFiltro = true;
 
@@ -174,7 +193,18 @@ export class FiltroCertificacionFacComponent implements OnInit {
   }
 
   restablecer() {
-    this.filtros = new BusquedaRetencionesRequestDTO();
+
+    if (this.disableColegio) {
+      this.filtros.idPartidaPresupuestariaList = [];
+      this.filtros.idHitoGeneralList = [];
+      this.filtros.idGrupoFacturacionList = [];
+      this.filtros.nombre = undefined;
+      this.filtros.idEstadoCertificacionList = [];
+      this.filtros.fechaDesde = undefined;
+      this.filtros.fechaHasta = undefined;
+    } else {
+      this.filtros = new BusquedaRetencionesRequestDTO();
+    }
   }
 
   showMessage(severity, summary, msg) {

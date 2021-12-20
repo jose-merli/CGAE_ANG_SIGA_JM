@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, 
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
+import { BusquedaRetencionesRequestDTO } from '../../../../../models/sjcs/BusquedaRetencionesRequestDTO';
 import { CertificacionesItem } from '../../../../../models/sjcs/CertificacionesItem';
 
 @Component({
@@ -28,6 +29,7 @@ export class TablaCertificacionFacComponent implements OnInit {
 
   @Input() datos: CertificacionesItem[] = [];
   @Input() permisoEscritura: boolean = false;
+  @Input() filtrosDeBusqueda: BusquedaRetencionesRequestDTO = undefined;
 
   @Output() delete = new EventEmitter<boolean>();
 
@@ -91,6 +93,9 @@ export class TablaCertificacionFacComponent implements OnInit {
   }
 
   openFicha(dato: CertificacionesItem) {
+    if (this.filtrosDeBusqueda) {
+      sessionStorage.setItem("filtrosBusquedaCerti", JSON.stringify(this.filtrosDeBusqueda));
+    }
     sessionStorage.setItem("edicionDesdeTablaCerti", JSON.stringify(dato));
     this.router.navigate(['/fichaCertificacionFac']);
   }

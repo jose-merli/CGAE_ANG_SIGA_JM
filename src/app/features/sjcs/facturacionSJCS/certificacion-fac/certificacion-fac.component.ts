@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
+import { BusquedaRetencionesRequestDTO } from '../../../../models/sjcs/BusquedaRetencionesRequestDTO';
 import { CertificacionesItem } from '../../../../models/sjcs/CertificacionesItem';
 import { CertificacionesObject } from '../../../../models/sjcs/CertificacionesObject';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
@@ -20,6 +21,7 @@ export class CertificacionFacComponent implements OnInit {
   permisoEscritura: boolean = false;
   mostrarTabla: boolean = false;
   datos: CertificacionesItem[] = [];
+  filtrosDeBusqueda: BusquedaRetencionesRequestDTO = undefined;
 
   @ViewChild(FiltroCertificacionFacComponent) filtros: FiltroCertificacionFacComponent;
   @ViewChild(TablaCertificacionFacComponent) tabla: TablaCertificacionFacComponent;
@@ -88,6 +90,7 @@ export class CertificacionFacComponent implements OnInit {
               }
 
               this.datos = resp.certificacionesItemList;
+              this.filtrosDeBusqueda = Object.assign({}, this.filtros.filtros);
               this.mostrarTabla = true;
             }
 
