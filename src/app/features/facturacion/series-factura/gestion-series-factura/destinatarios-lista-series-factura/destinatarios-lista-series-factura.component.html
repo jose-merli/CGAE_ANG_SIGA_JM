@@ -7,7 +7,7 @@
       <div *ngIf="!esFichaActiva('destinatariosLista')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('destinatariosLista')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="far fa-list-alt icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -28,7 +28,7 @@
       <div *ngIf="esFichaActiva('destinatariosLista')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('destinatariosLista')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="far fa-list-alt icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.destLista' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>

@@ -89,23 +89,26 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
   // Guardar
 
   guardar(): void {
-    this.progressSpinner = true;
+    if (!this.deshabilitarGuardado()) {
+      this.progressSpinner = true;
 
-    let objEtiquetas = {
-      idSerieFacturacion: this.body.idSerieFacturacion,
-      seleccionados: this.etiquetasSeleccionadas,
-      noSeleccionados: this.etiquetasNoSeleccionadas
-    };
+      let objEtiquetas = {
+        idSerieFacturacion: this.body.idSerieFacturacion,
+        seleccionados: this.etiquetasSeleccionadas,
+        noSeleccionados: this.etiquetasNoSeleccionadas
+      };
 
-    this.sigaServices.post("facturacionPyS_guardarEtiquetasSerieFacturacion", objEtiquetas).subscribe(
-      n => {
-        this.refreshData.emit();
-        this.progressSpinner = false;
-      },
-      error => {
-        console.log(error);
-        this.progressSpinner = false;
+      this.sigaServices.post("facturacionPyS_guardarEtiquetasSerieFacturacion", objEtiquetas).subscribe(
+        n => {
+          this.refreshData.emit();
+          this.progressSpinner = false;
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
       });
+    }
+    
   }
 
   // Dehabilitar guardado cuando no cambien los campos

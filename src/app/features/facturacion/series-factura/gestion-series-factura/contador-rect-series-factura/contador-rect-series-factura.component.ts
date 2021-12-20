@@ -135,7 +135,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
   guardar(): void {
     this.progressSpinner = true;
 
-    if (this.nuevo && this.isValid()) {
+    if (this.nuevo && this.isValid() && !this.deshabilitarGuardado()) {
       this.contadorFacturasRectificativasSeleccionado.facturaRectificativa = true;
       this.contadorFacturasRectificativasSeleccionado.idSerieFacturacion = this.body.idSerieFacturacion;
       this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasRectificativasSeleccionado).subscribe(
@@ -149,7 +149,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         }
       );
-    } else if (this.isValid()) {
+    } else if (this.isValid() && !this.deshabilitarGuardado()) {
       this.progressSpinner = false;
       this.guardadoSend.emit(this.body);
     } else {

@@ -76,7 +76,9 @@ export class ObservacionesSeriesFacturaComponent implements OnInit, OnChanges {
   // Guadar
 
   save(): void {
-    this.guardadoSend.emit(this.body);
+    if (!this.deshabilitarGuardado()) {
+      this.guardadoSend.emit(this.body);
+    }
   }
 
   showMessage(severity, summary, msg) {

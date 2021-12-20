@@ -136,7 +136,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
   guardar(): void {
     this.progressSpinner = true;
 
-    if (this.nuevo && this.isValid()) {
+    if (this.nuevo && this.isValid() && !this.deshabilitarGuardado()) {
       this.contadorFacturasSeleccionado.idSerieFacturacion = this.body.idSerieFacturacion;
       this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasSeleccionado).subscribe(
         n => {
@@ -149,7 +149,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         }
       );
-    } else if (this.isValid()) {
+    } else if (this.isValid() && !this.deshabilitarGuardado()) {
       this.progressSpinner = false;
       this.guardadoSend.emit(this.body);
     } else {
