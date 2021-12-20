@@ -148,4 +148,8 @@ export class CalendariosComponent implements OnInit {
       )
   }
 
+  clear() {
+    this.msgs = [];
+  }
+  
 }
