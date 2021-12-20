@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input } from '@angular/core';
 import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
 
 @Component({
@@ -18,21 +19,23 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   facActuaciones: boolean = false;
   facAsuntosAntiguos: boolean = false;
   procesoFac2014: boolean = false;
-  descontar: boolean = true;
+  descontar: boolean = false;
 
   disableConfAdi: boolean = false;
   importeSOJ;
   importeEJG;
 
   @Output() addEnlace = new EventEmitter<Enlace>();
-  @Input() datos
+  @Input() disProc2014;
+  @Input() permisoEscritura: boolean = false;
   showModal: boolean = false;
   origenBaremos = true;
   modalTipos = false;
   disPrecio: boolean = false;
   disableImput: boolean = false;
+  disJuiciosRapidos: boolean = false;
 
-  constructor() { }
+  constructor(private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
   }
@@ -57,8 +60,17 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
 
   changeContAsAc() {
     if (this.disableConfAdi) {
+      let institucion = this.localStorageService.institucionActual;
+      let institucionesActuaciones = ['2002','2020','2058','2067','2078','2082'];
       this.contAsAc
-      this.disPrecio = true;
+
+      if(institucion == '2027' && this.contAsAc == 'act'){// se comprueba que se encuentre en la institucion de Gijon.
+          this.disJuiciosRapidos = true
+        }else if(institucionesActuaciones.includes(institucion) && this.contAsAc == 'asi'){
+          this.disJuiciosRapidos = true
+        }else{
+          this.disJuiciosRapidos = false
+        }
     }
 
   }
@@ -78,6 +90,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   onChangeFacActuaciones(event) {
     this.facActuaciones = event
     this.disableConfAdi = event
+    this.disPrecio = true;
   }
 
   onChangeFacAsuntosAntiguos(event) {

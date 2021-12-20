@@ -7,6 +7,10 @@ import { BaremosGuardiaItem } from '../../../../../models/sjcs/BaremosGuardiaIte
 import { FichaBarDatosGeneralesComponent } from './ficha-bar-datos-generales/ficha-bar-datos-generales.component';
 import { FichaBarConfiFacComponent } from './ficha-bar-confi-fac/ficha-bar-confi-fac.component';
 import { FichaBarConfiAdiComponent } from './ficha-bar-confi-adi/ficha-bar-confi-adi.component';
+import { SigaStorageService } from '../../../../../siga-storage.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { Router } from '@angular/router';
+import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 
 export interface Enlace {
   id: string;
@@ -61,16 +65,12 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
     agruparAsAc: false
   };
-  datosFichConfiAdi = {
-    facActuaciones: false,
-    facAsunAnt: false,
-    proceso2014: false,
-    descontar: false
-  };
+  proceso2014:boolean = false;
   msgs: any[];
   tieneDatos: boolean;
   datos: BaremosGuardiaItem = new BaremosGuardiaItem();
   datosFichaBaremos;
+  permisoEscritura;
   @ViewChild(FichaBarDatosGeneralesComponent) tarjetaDatosGenerales: FichaBarDatosGeneralesComponent;
   @ViewChild(FichaBarConfiFacComponent) tarjetaConfigFac: FichaBarConfiFacComponent;
   @ViewChild(FichaBarConfiAdiComponent) tarjetaConfigAdi: FichaBarConfiAdiComponent;
@@ -78,32 +78,63 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   constructor(private translateService: TranslateService,
     private location: Location,
     private sigaServices: SigaServices,
+    private persistenceService: PersistenceService,
+    private localStorageService: SigaStorageService,
+    private router: Router,
     private commonsService: CommonsService,) { }
 
   ngOnInit() {
 
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaBaremosDeGuardia).then(respuesta => {
+
+      this.permisoEscritura = respuesta;
+
+      if (this.permisoEscritura == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+    }).catch(error => console.error(error));
+
     if (sessionStorage.getItem('modoEdicionBaremo') != undefined) {
       this.modoEdicion = JSON.parse(sessionStorage.getItem('modoEdicionBaremo'));
-      sessionStorage.removeItem('modoEdicionBaremo')
     }
 
-    if (this.modoEdicion) {
-      if (sessionStorage.getItem('dataBaremoMod')) {
-        this.datos = JSON.parse(sessionStorage.getItem('dataBaremoMod'))
-        //para pasar los datos de el turno y la guardia a la tabla de datos generales
-        let data = [];
-        data.push(this.datos)
-        this.datosFichDatGenerales = data;
-        this.tieneDatos = true;
-        sessionStorage.removeItem('dataBaremoMod')
-
-        //obtiene la configuracion de los baremos
-        this.getBaremo(this.datos)
-
+    if(this.persistenceService.getDatos() != null || this.persistenceService.getDatos() != undefined){
+      this.datos = this.persistenceService.getDatos()
+      this.persistenceService.clearDatos()
+    //para pasar los datos de el turno y la guardia a la tabla de datos generales
+    let data = [];
+    data.push(this.datos)
+    this.datosFichDatGenerales = data;
+    this.persistenceService.clearDatos();
+    //obtiene la configuracion de los baremos
+    this.getBaremo(this.datos)
+    this.tieneDatos = true;
+    }else{
+      if (this.modoEdicion) {
+        if (sessionStorage.getItem('dataBaremoMod')) {
+            this.datos = JSON.parse(sessionStorage.getItem('dataBaremoMod'))
+            this.persistenceService.clearDatos()
+          //para pasar los datos de el turno y la guardia a la tabla de datos generales
+          let data = [];
+          data.push(this.datos)
+          this.datosFichDatGenerales = data;
+          this.persistenceService.setDatos(this.datos);
+        
+          sessionStorage.removeItem('dataBaremoMod')
+  
+          //obtiene la configuracion de los baremos
+          this.getBaremo(this.datos)
+          this.tieneDatos = true;
+        }
+      } else {
+        this.getGuardiasByConf(true);
       }
-    } else {
-      this.getGuardiasByConf(true);
     }
+
+    
 
   }
 
@@ -138,6 +169,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   }
 
   volver() {
+    sessionStorage.removeItem('modoEdicionBaremo')
     this.location.back();
   }
 
@@ -331,10 +363,12 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     let diasAsAc = "";
 
 
-    if (ficha.agruparDis == 0) {
-      obj.agrupar = 0
-    } else if (ficha.agruparDis == 1 || ficha.agruparDis == undefined) {
+    if (ficha.agruparDis == false) {
       obj.agrupar = 1
+    } else if (ficha.agruparDis == true) {
+      obj.agrupar = 0
+    } else if(ficha.agruparDis == undefined){
+      obj.agrupar = 0
     }
     if (ficha.checkDisL == true) {
       diasDis += 'L'
@@ -362,10 +396,12 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
 
 
-    if (ficha.agruparAsAc == 0) {
-      obj.agrupar = 0
-    } else if (ficha.agruparAsAc == 1 || ficha.agruparAsAc == undefined) {
+    if (ficha.agruparAsAc == false) {
       obj.agrupar = 1
+    } else if (ficha.agruparAsAc == true) {
+      obj.agrupar = 0
+    } else if(ficha.agruparAsAc == undefined){
+      obj.agrupar = 0
     }
     if (ficha.checkAsAcL == true) {
       diasAsAc += 'L'
@@ -451,20 +487,22 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     })
 
     if (agrupaAsAc == 0) {
-      this.datosFichConfiFac.agruparAsAc = true
+      this.tarjetaConfigFac.agruparAsAc = false
+      this.tarjetaConfigFac.onChangeAgruparAsAc(true)
     } else if (agrupaAsAc == 1) {
-      this.datosFichConfiFac.agruparAsAc = false
-    }
+      this.tarjetaConfigFac.agruparAsAc = true
+      this.tarjetaConfigFac.onChangeAgruparAsAc(false)
+    } 
 
     if (agrupaDis == 0) {
-      this.datosFichConfiFac.agruparDis = true
+      this.tarjetaConfigFac.agruparDis = false
+      this.tarjetaConfigFac.onChangeAgruparDis(true)
     } else if (agrupaDis == 1) {
-      this.datosFichConfiFac.agruparDis = false
+      this.tarjetaConfigFac.agruparAsAc = true
+      this.tarjetaConfigFac.onChangeAgruparDis(true)
     }
 
-
-
-
+    this.rellenarDias(diasDis,diasAsAc)
 
     for (let h of data) {
       let hito = parseInt(h.idHito);
@@ -670,6 +708,15 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigAdi.importeEJG = precioHito
 
           break;
+          //para hito 61
+        case 61:
+          this.tarjetaConfigAdi.procesoFac2014 = true
+
+          break;
+          //para hito 62
+        case 62:
+          this.tarjetaConfigAdi.descontar = true
+          break;
 
       }
     }
@@ -679,15 +726,15 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   }
 
   configuracionHito(confBaremo, turno, guardia) {
-    //obtenenos el turno y la guardia (tarjeta datos generales).
-
+    let institucion = this.localStorageService.institucionActual;
+    let institucionesActuaciones = ['2002','2020','2058','2067','2078','2082'];//instituciones para las que se aplican hito 62
     //tarjeta configuracion de facturacion.
     //por disponibilidad.
     if (this.tarjetaConfigFac.disponibilidad == true) {
       if (this.tarjetaConfigFac.contDis == 'asi') {
         //para proceso facturacion controlado 2014
         if (this.tarjetaConfigFac.filtrosAsAc.importeMinAsAc && this.tarjetaConfigAdi.procesoFac2014 == true) {
-          //this.hito(confBaremo,' ',this.tarjetaConfigFac.filtrosDis.importeDis);
+          this.hito(confBaremo,'61',turno, guardia,'0');
         }
         //hito 1
         this.hito(confBaremo, '1', turno, guardia, this.tarjetaConfigFac.filtrosDis.importeDis)
@@ -716,12 +763,21 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         if (this.tarjetaConfigFac.filtrosDis.importeMinDis != undefined || this.tarjetaConfigFac.filtrosDis.importeMinDis != null) {
 
           //hito 55
-          this.hito(confBaremo, '55', turno, guardia, this.tarjetaConfigFac.filtrosDis.importeMinDis)
+          this.hito(confBaremo, '55', turno, guardia, this.tarjetaConfigFac.filtrosDis.importeMinDis);
+
+          if(institucion == '2027'){// se comprueba que se encuentre en la institucion de Gijon.
+          if(this.tarjetaConfigAdi.descontar == true){
+            //hito 62
+            this.hito(confBaremo, '62', turno, guardia, '0');
+            }
+         
+          }
+
         }
 
-        //para proceso facturacion controlado 2014
+        //para 61
         if (this.tarjetaConfigAdi.procesoFac2014 == true) {
-          //this.hito(confBaremo,' ',turno,guardia,valor importe hito 2014);
+          this.hito(confBaremo,'61',turno,guardia,'0');
         }
 
 
@@ -753,6 +809,14 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
           //hito 56
           this.hito(confBaremo, '56', turno, guardia, this.tarjetaConfigFac.filtrosDis.importeMinDis)
+
+          if(institucionesActuaciones.includes(institucion)){// se comprueba si la institucion en la que se encuentra pertenece a alguna de las que aceptan el hito por asistencia
+            if(this.tarjetaConfigAdi.descontar == true){
+              //hito 62
+            this.hito(confBaremo, '62', turno, guardia, "0");
+            }
+          }
+          
         }
 
       }
@@ -775,9 +839,9 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
             //hito 10
             this.hito(confBaremo, '10', turno, guardia, this.tarjetaConfigFac.filtrosAsAc.dispAsuntosAsAc)
           }
-          //para proceso facturacion controlado 2014
+          //para 61
           if (this.tarjetaConfigFac.filtrosAsAc.importeMinAsAc && this.tarjetaConfigAdi.procesoFac2014 == true) {
-            //this.hito(confBaremo,' ',this.tarjetaConfigFac.filtrosAsAc.importeMinAsAc);
+            this.hito(confBaremo,'61',turno, guardia,"0");
           }
         } else if (this.tarjetaConfigFac.precio == 'porTipos') {
           //hito 20
@@ -790,9 +854,9 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
             //hito 10
             this.hito(confBaremo, '10', turno, guardia, this.tarjetaConfigFac.filtrosAsAc.dispAsuntosAsAc)
           }
-          //para proceso facturacion controlado 2014
+          //hito 61
           if (this.tarjetaConfigFac.filtrosAsAc.importeMinAsAc && this.tarjetaConfigAdi.procesoFac2014 == true) {
-            //this.hito(confBaremo,' ',this.tarjetaConfigFac.filtrosAsAc.importeMinAsAc);
+            this.hito(confBaremo,'61',turno, guardia,"0");
           }
         }
 
@@ -873,6 +937,102 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
       hito.precioHito = this.tarjetaConfigAdi.importeEJG
       confBaremo.push(hito);
     }
+  }
+
+  rellenarDias(diasDis,diasAsAc){
+    let arrDis:any[] = diasDis
+    let arrAsAc:any[] = diasAsAc
+    
+    if(diasDis != undefined){
+      arrDis = Array.from(diasDis);
+      for(let dia of arrDis){
+        switch (dia.toString()) {
+          case 'L':
+            this.tarjetaConfigFac.checkDisL = true
+            this.tarjetaConfigFac.checkAsAcL = true
+            this.tarjetaConfigFac.onChangeDiasDis(true,dia)
+            break;
+          case 'M':
+            this.tarjetaConfigFac.checkDisM = true
+            this.tarjetaConfigFac.checkAsAcM = true
+            this.tarjetaConfigFac.onChangeDiasDis(true,dia)
+            break;
+          case 'X':
+            this.tarjetaConfigFac.checkDisX = true
+            this.tarjetaConfigFac.checkAsAcX = true
+            this.tarjetaConfigFac.onChangeDiasDis(true,dia)
+            break;
+          case 'J':
+            this.tarjetaConfigFac.checkDisJ = true
+            this.tarjetaConfigFac.checkAsAcJ = true
+            this.tarjetaConfigFac.onChangeDiasDis(true,dia)
+            break;
+          case 'V':
+            this.tarjetaConfigFac.checkDisV = true
+            this.tarjetaConfigFac.checkAsAcV = true
+            this.tarjetaConfigFac.onChangeDiasDis(true,dia)
+            break;
+          case 'S':
+            this.tarjetaConfigFac.checkDisS = true
+            this.tarjetaConfigFac.checkAsAcS = true
+            this.tarjetaConfigFac.onChangeDiasDis(true,dia)
+            break;
+          case 'D':
+            this.tarjetaConfigFac.checkDisD = true
+            this.tarjetaConfigFac.checkAsAcD = true
+            this.tarjetaConfigFac.onChangeDiasDis(true,dia)
+            break;
+        }   
+      }
+    }
+    if(diasAsAc != undefined){
+      arrAsAc = Array.from(diasAsAc)
+      for(let dia of arrAsAc){
+        switch (dia.toString()) {
+          case 'L':
+            this.tarjetaConfigFac.checkAsAcL = true
+            this.tarjetaConfigFac.checkDisL = false
+            this.tarjetaConfigFac.onChangeDiasAsAc(true,dia)
+            break;
+          case 'M':
+            this.tarjetaConfigFac.checkAsAcM = true
+            this.tarjetaConfigFac.checkDisM = false
+            this.tarjetaConfigFac.onChangeDiasAsAc(true,dia)
+            break;
+          case 'X':
+            this.tarjetaConfigFac.checkAsAcX = true
+            this.tarjetaConfigFac.checkDisX = false
+            this.tarjetaConfigFac.onChangeDiasAsAc(true,dia)
+            break;
+          case 'J':
+            this.tarjetaConfigFac.checkAsAcJ = true
+            this.tarjetaConfigFac.checkDisJ = false
+            this.tarjetaConfigFac.onChangeDiasAsAc(true,dia)
+            break;
+          case 'V':
+            this.tarjetaConfigFac.checkAsAcV = true
+            this.tarjetaConfigFac.checkDisV = false
+            this.tarjetaConfigFac.onChangeDiasAsAc(true,dia)
+            break;
+          case 'S':
+            this.tarjetaConfigFac.checkAsAcS = true
+            this.tarjetaConfigFac.checkDisS = false
+            this.tarjetaConfigFac.onChangeDiasAsAc(true,dia)
+            break;
+          case 'D':
+            this.tarjetaConfigFac.checkAsAcD = true
+            this.tarjetaConfigFac.checkDisD = false
+            this.tarjetaConfigFac.onChangeDiasAsAc(true,dia)
+            break;
+        }   
+      }
+    }
+     
+
+  }
+
+  disProc2014(event){
+    this.proceso2014 = event
   }
 
 }
