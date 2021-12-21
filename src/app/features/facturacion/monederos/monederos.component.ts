@@ -24,12 +24,13 @@ export class MonederoComponent implements OnInit {
   
   progressSpinner: boolean = false;
 
-  listaMonederos: ListaMonederosItem[];
+  listaMonederos: ListaMonederosItem[] = [];
 
   muestraTablaMonederos: boolean = false;
 
   @ViewChild(TarjetaFiltroMonederosComponent) filtrosBusqueda : TarjetaFiltroMonederosComponent ;
   @ViewChild(TarjetaListaMonederosComponent) listaBusqueda : TarjetaListaMonederosComponent;
+  listaMonederosActivos: ListaMonederosItem[] = [];
   
 
   constructor(private commonsService:CommonsService, private sigaServices: SigaServices,
@@ -52,7 +53,12 @@ export class MonederoComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.listaMonederos = JSON.parse(listaMonederosDTO.body).monederoItems
           this.muestraTablaMonederos = true;
-          // this.listaBusqueda.monederosTable.reset();
+
+          if (this.listaMonederos != undefined) {
+            //Se buscan los monederos activos
+            this.listaMonederosActivos = this.listaMonederos.filter(
+              (dato) =>  dato.importeRestante != 0);
+          }
         }
 
         this.progressSpinner = false;

@@ -10,6 +10,11 @@ export const procesos_PyS: any = {
     solicitarSuscripcion: "39G",
     aprobarSuscripcion: "39H",
     fichaMonedero: "52",
+    liquidarMonederos: "52A",
+    actualizacionMovimientosMonedero: "52B",
+    actualizacioServiciosMonedero: "52C",
+
+
 
     //PERMISOS MAESTROS --> TIPOS PRODUCTOS Y MAESTROS --> TIPOS SERVICIOS
     tiposProductos: "400",

@@ -298,7 +298,7 @@ export class MovimientosMonederoComponent implements OnInit {
       this.checkTotal();
       this.tablaMovimientos.reset();
     }
-    else if(this.movimientosTarjeta[0].impOp < 0){
+    else if(this.movimientosTarjeta.length != 1){
       this.showMessage("error", "Error", "** No se puede eliminar un movimiento de cobro");
     }
   }
@@ -320,8 +320,7 @@ export class MovimientosMonederoComponent implements OnInit {
 
   getPermisoActualizarMovimientos() {
     this.commonsService
-      //REVISAR
-      .checkAcceso(procesos_PyS.fichaMonedero)
+      .checkAcceso(procesos_PyS.actualizacionMovimientosMonedero)
       .then((respuesta) => {
         this.permisoActualizarMovimientos = respuesta;
       })

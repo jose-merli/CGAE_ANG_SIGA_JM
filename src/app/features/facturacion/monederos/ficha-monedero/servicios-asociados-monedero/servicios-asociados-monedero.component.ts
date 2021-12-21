@@ -320,8 +320,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
 
   getPermisoActualizarServiciosMonedero() {
     this.commonsService
-    //REVISAR
-      .checkAcceso(procesos_PyS.fichaMonedero)
+    .checkAcceso(procesos_PyS.actualizacionMovimientosMonedero)
       .then((respuesta) => {
         this.permisoActualizarServiciosMonedero = respuesta;
       })

@@ -26,6 +26,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
   @Output() actualizarLista = new EventEmitter<Boolean>();
   @Input("listaMonederos") listaMonederos: ListaMonederosItem[];
   @Input("filtrosBusqueda") filtrosBusqueda: TarjetaFiltroMonederosComponent;
+  @Input("listaMonederosActivos") listaMonederosActivos: ListaMonederosItem[];
   @ViewChild("monederosTable") monederosTable: DataTable;
 
   cols = [
@@ -68,7 +69,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
   progressSpinner: boolean = false;
   esColegiado: boolean = this.localStorageService.isLetrado;
   historico: boolean = false;
-  listaMonederosActivos: ListaMonederosItem[] = [];
+  permisoLiquidarMonederos: boolean = false;
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService,
@@ -76,6 +77,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
     private localStorageService: SigaStorageService,) { }
 
   ngOnInit() {
+    this.getPermisoLiquidarMonederos();
   }
 
 
@@ -120,6 +122,48 @@ export class TarjetaListaMonederosComponent implements OnInit {
         detail: "Boton no funcional actualmente"
       }
     ];
+
+    let msg = this.commonsService.checkPermisos(this.permisoLiquidarMonederos, undefined);
+
+    if (msg != null) {
+      this.msgs = msg;
+    } 
+    else {
+      this.liquidarMonederos();
+    }
+  }
+
+  liquidarMonederos(){
+
+    let peticion : ListaMonederosItem[] = []; 
+
+    //Se envian al back unicamente aquellos monederos que 
+    //todavia tengan saldo
+    this.selectedRows.forEach(el => {
+      if(el.importeRestante != 0){
+        peticion.push(el);
+      }
+    });
+
+    this.sigaServices.post("PyS_liquidarMonederos", peticion).subscribe(
+      n => {
+
+        this.selectedRows = [];
+
+        if (n.status == 500) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+          this.actualizarLista.emit();
+        }
+
+        this.progressSpinner = false;
+
+      },
+      err => {
+        this.progressSpinner = false;
+      });
   }
 
   //Metodo para aplicar logica al deseleccionar filas
@@ -167,5 +211,23 @@ export class TarjetaListaMonederosComponent implements OnInit {
       this.listaMonederosActivos = this.listaMonederos.filter(
         (dato) => dato.importeRestante != 0);
     }
+  }
+
+  isLiquidado(rowData: ListaMonederosItem){
+    if(rowData.importeRestante != 0){
+      return false;
+    }
+    else{
+      return true;
+    }
+  }
+
+  getPermisoLiquidarMonederos() {
+    this.commonsService
+    .checkAcceso(procesos_PyS.liquidarMonederos)
+      .then((respuesta) => {
+        this.permisoLiquidarMonederos = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 }

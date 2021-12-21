@@ -6,7 +6,7 @@
 
 <div class="card mt-3">
   <div class="card-body p-0">
-    <p-table #monederosTable [value]="listaMonederos" [columns]="cols" [(selection)]="selectedRows"
+    <p-table #monederosTable [value]="listaMonederosActivos" [columns]="cols" [(selection)]="selectedRows"
       selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
       (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
       (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
@@ -32,15 +32,26 @@
       <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="col.field =='fecha'" >
-              <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
-            </div> 
-            <div *ngIf="col.field !='fecha'" >
-              <span *ngIf="col.field == 'descripcion'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
-              <span *ngIf="col.field == 'nombreCompleto' || col.field == 'nifCif'">{{rowData[col.field]}}</span>
-              <span *ngIf="col.field == 'importeUsado' || col.field == 'importeInicial' || col.field == 'importeRestante'">{{rowData[col.field]}} €</span>
-            </div> 
-
+            <div *ngIf="!isLiquidado(rowData)">
+              <div *ngIf="col.field =='fecha'" >
+                <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div> 
+              <div *ngIf="col.field !='fecha'" >
+                <span *ngIf="col.field == 'descripcion'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
+                <span *ngIf="col.field == 'nombreCompleto' || col.field == 'nifCif'">{{rowData[col.field]}}</span>
+                <span *ngIf="col.field == 'importeUsado' || col.field == 'importeInicial' || col.field == 'importeRestante'">{{rowData[col.field]}} €</span>
+              </div> 
+            </div>
+            <div *ngIf="isLiquidado(rowData)">
+              <div *ngIf="col.field =='fecha'" >
+                <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
+              </div> 
+              <div *ngIf="col.field !='fecha'" >
+                <span *ngIf="col.field == 'descripcion'" class="enlace" (click)="openTab(rowData)" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
+                <span *ngIf="col.field == 'nombreCompleto' || col.field == 'nifCif'" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
+                <span *ngIf="col.field == 'importeUsado' || col.field == 'importeInicial' || col.field == 'importeRestante'" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}} €</span>
+              </div> 
+            </div>
           </td>
         </tr>
       </ng-template>
