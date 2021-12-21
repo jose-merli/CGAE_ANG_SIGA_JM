@@ -11,6 +11,7 @@ import { ProductoDetalleItem } from '../../../../../models/ProductoDetalleItem';
 import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-productos-facturacion',
@@ -72,7 +73,9 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   subscriptionActivarDesactivarProductos: Subscription;
   subscriptionCodesByInstitution: Subscription;
 
-  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) {
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, 
+    private translateService: TranslateService, private confirmationService: ConfirmationService, 
+    private router: Router, private location: Location) {
 
   }
 
@@ -392,7 +395,8 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
             this.progressSpinner = false;
             sessionStorage.setItem("volver", 'true');
             sessionStorage.removeItem('productoBuscador');
-            this.router.navigate(['/productos']);
+            //this.router.navigate(['/productos']);
+            this.location.back();
           }
         );
       },

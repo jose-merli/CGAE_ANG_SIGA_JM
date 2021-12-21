@@ -7,6 +7,7 @@ import { ProductoDetalleItem } from '../../../../../models/ProductoDetalleItem';
 import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-detalle-tarjeta-formas-pagos-ficha-producto-facturacion',
@@ -42,7 +43,9 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
   subscriptionCrearFormasDePago: Subscription;
 
 
-  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) {
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, 
+    private translateService: TranslateService, private router: Router,
+    private location: Location) {
 
   }
 
@@ -248,7 +251,8 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
       () => {
         sessionStorage.setItem("volver", 'true');
         sessionStorage.removeItem('productoBuscador');
-        this.router.navigate(['/productos']);
+        //this.router.navigate(['/productos']);
+        this.location.back();
         this.progressSpinner = false;
       }
     );

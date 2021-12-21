@@ -547,7 +547,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       });
     });
 
-    if (result.length > 0) {
+    if (result.length > 0 || this.ficha.idFormaPagoSeleccionada != null) {
       //Comprobamos si las formas de pago comunes se corresponden con 
       //las formas de pago permitidas al usuario ( por internet o por secretaria)
       // Personal del colegio = pago por secretaria ("S"), colegiado = formas de pago por internet ("A").
@@ -566,6 +566,14 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
             resultUsu.push(prod.idFormasPago.split(",")[index]);
           }
         }
+      }
+
+      //Se añade la forma de pago seleccionada en el caso que no añadiera anteriormente
+      //Esto para mostrar formas de pago seleccionadas en el pasado o
+      //Para los casos en los que los productos han cambiado sus formas de pago despues de 
+      //definir su compra
+      if(resultUsu.indexOf(this.ficha.idFormaPagoSeleccionada)  == -1){
+        resultUsu.push(this.ficha.idFormaPagoSeleccionada);
       }
 
       if(resultUsu.length > 0){
