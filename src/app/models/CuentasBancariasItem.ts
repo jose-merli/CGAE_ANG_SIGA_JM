@@ -17,6 +17,7 @@ export class CuentasBancariasItem{
     comisionImporte: number;
     comisionDescripcion: string;
     idTipoIVA: string;
+    tipoIVA: string;
     comisionCuentaContable: string;
 
     configFicherosSecuencia: string;
@@ -26,6 +27,7 @@ export class CuentasBancariasItem{
 
     sjcs: boolean;
     idSufijoSjcs: string;
+    sufijoSjcs: string;
     concepto: string;
     
     constructor(){}

@@ -113,12 +113,6 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
     return this.body.fechaBaja == undefined || this.body.fechaBaja == null;
   }
 
-  // Label de un combo
-  findLabelInCombo(combo: any[], value) {
-    let item = combo.find(c => c.value == value);
-    return item ? item.label : "";
-  }
-
   // Abrir y cerrar la ficha
 
   esFichaActiva(): boolean {

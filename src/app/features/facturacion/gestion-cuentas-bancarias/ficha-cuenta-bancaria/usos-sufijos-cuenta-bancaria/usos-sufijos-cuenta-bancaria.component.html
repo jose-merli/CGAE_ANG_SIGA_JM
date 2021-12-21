@@ -119,7 +119,7 @@
     <div *ngIf="esFichaActiva('usosSufijos')" class="card-footer">
       <div class="text-right main-button">
         <button pButton *ngIf="datos.length == 0 || !datos[0].nuevo" [disabled]="body.fechaBaja != undefined" type="button" icon="fa fa-plus" iconPos="left"
-          (click)="addSerie()" label="{{ 'general.boton.relacionar.serie' || translate }}"></button>
+          (click)="addSerie()" label="{{ 'general.boton.relacionar.serie' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>

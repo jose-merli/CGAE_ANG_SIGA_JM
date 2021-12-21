@@ -21,6 +21,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<FacFacturacionprogramadaItem>();
+  @Output() refreshData = new EventEmitter<void>();
 
   @Input() bodyInicial: FacFacturacionprogramadaItem;
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
@@ -67,6 +68,21 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     this.confirmada = this.body.idEstadoConfirmacion == "3";
 
     console.log(this.body);
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.notChangedString(this.body.descripcion, this.bodyInicial.descripcion)
+        && this.body.fechaPrevistaGeneracion == this.bodyInicial.fechaPrevistaGeneracion
+        && this.body.fechaPrevistaConfirm == this.bodyInicial.fechaPrevistaConfirm
+        && this.body.fechaInicioServicios == this.bodyInicial.fechaInicioServicios
+        && this.body.fechaInicioProductos == this.bodyInicial.fechaInicioProductos
+        && this.body.fechaFinServicios == this.bodyInicial.fechaFinServicios
+        && this.body.fechaFinProductos == this.bodyInicial.fechaFinProductos;
+  }
+
+  notChangedString(value1: string, value2: string): boolean {
+    return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
   }
 
   // Guardar
@@ -151,7 +167,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   eliminar() {
     this.sigaServices.post("facturacionPyS_eliminarFacturacion", this.bodyInicial).subscribe(
       n => {
-        this.guardadoSend.emit();
+        this.refreshData.emit();
         this.progressSpinner = false;
       },
       err => {
@@ -168,7 +184,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
     this.sigaServices.post("facturacionPyS_archivarFacturacionesProgramadas", [this.bodyInicial]).subscribe(
       n => {
-        this.guardadoSend.emit();
+        this.refreshData.emit();
         this.progressSpinner = false;
       },
       err => {
@@ -185,7 +201,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
     this.sigaServices.post("facturacionPyS_archivarFacturacionesProgramadas", [this.bodyInicial]).subscribe(
       n => {
-        this.guardadoSend.emit();
+        this.refreshData.emit();
         this.progressSpinner = false;
       },
       err => {

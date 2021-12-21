@@ -134,17 +134,19 @@ export class FichaFactProgramadasComponent implements OnInit {
       nombre: "envio",
     });
 
-    this.enlacesTarjetaResumen.push({
-      label: "facturacion.seriesFactura.traspaso.literal",
-      value: document.getElementById("traspaso"),
-      nombre: "traspaso",
-    });
+    if (this.controlEmisionFacturasSII) {
+      this.enlacesTarjetaResumen.push({
+        label: "facturacion.seriesFactura.traspaso.literal",
+        value: document.getElementById("traspaso"),
+        nombre: "traspaso",
+      });
+    }
 
   }
 
   // Obtener parametros de CONTROL
   getParametrosCONTROL(): void {
-    this.sigaServices.getParam("facturacionPyS_parametrosCONTROL", "?idInstitucion=2005").subscribe(
+    this.sigaServices.get("facturacionPyS_parametrosCONTROL").subscribe(
       n => {
         let items: ComboItem[] = n.combooItems;
         console.log(items);
@@ -242,7 +244,12 @@ export class FichaFactProgramadasComponent implements OnInit {
     this.guardarFacturacionProgramada(!this.modoEdicion, event)
     .then(() => { return this.recuperarFacturacionProgramada().then(() => {
       this.modoEdicion = true;
-      this.ngOnInit();
+
+      // Actualizar tarjetas
+      this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
     })}).catch(error => {
       if (error != undefined) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
@@ -251,6 +258,26 @@ export class FichaFactProgramadasComponent implements OnInit {
       }
     }).then(() => this.progressSpinner = false);
     
+  }
+
+  // Recargar datos
+
+  refreshData() {
+    this.recuperarFacturacionProgramada().then(() => {
+      this.modoEdicion = true;
+
+      // Actualizar tarjetas
+      this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
+    }).catch(error => {
+      if (error != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    }).then(() => this.progressSpinner = false);
   }
 
   guardarFacturacionProgramada(nuevo: boolean, factPragramada: FacFacturacionprogramadaItem): Promise<any> {

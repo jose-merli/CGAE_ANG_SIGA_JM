@@ -50,7 +50,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.parametrosSEPA(this.sigaStorageService.institucionActual);
+    this.parametrosSEPA();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -125,10 +125,10 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
     }
   }
 
-  parametrosSEPA(idInstitucion){
+  parametrosSEPA(){
     this.progressSpinner=true;
     
-    this.sigaServices.getParam("facturacionPyS_parametrosSEPA", "?idInstitucion=" + idInstitucion).subscribe(
+    this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
       n => {
         let data: ComboItem[] = n.combooItems;
 

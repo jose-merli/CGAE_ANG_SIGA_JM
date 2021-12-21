@@ -74,8 +74,12 @@ export class TraspasoSeriesFacturaComponent implements OnInit, OnChanges {
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
     return this.body.traspasoFacturas == this.bodyInicial.traspasoFacturas
-      && this.body.traspasoPlantilla == this.bodyInicial.traspasoPlantilla
-      && this.body.traspasoCodAuditoriaDef == this.bodyInicial.traspasoCodAuditoriaDef;
+      && this.notChangedString(this.body.traspasoPlantilla, this.bodyInicial.traspasoPlantilla)
+      && this.notChangedString(this.body.traspasoCodAuditoriaDef, this.bodyInicial.traspasoCodAuditoriaDef);
+  }
+
+  notChangedString(value1: string, value2: string): boolean {
+    return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
   }
 
   clear() {

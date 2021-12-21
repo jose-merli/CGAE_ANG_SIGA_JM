@@ -140,6 +140,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
       this.contadorFacturasRectificativasSeleccionado.idSerieFacturacion = this.body.idSerieFacturacion;
       this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasRectificativasSeleccionado).subscribe(
         n => {
+          this.nuevo = false;
           this.refreshData.emit();
 
           this.progressSpinner = false;

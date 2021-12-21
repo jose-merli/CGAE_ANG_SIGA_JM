@@ -82,11 +82,19 @@ export class EnvioFactProgramadasComponent implements OnInit, OnChanges {
     this.logDisponible = true;
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.envio == this.bodyInicial.envio
+      && this.body.idTipoPlantillaMail == this.bodyInicial.idTipoPlantillaMail;
+  }
+
   // Guardar
 
   checkSave(): void {
-    this.body.esDatosGenerales = false;
-    this.guardadoSend.emit(this.body);
+    if (!this.deshabilitarGuardado()) {
+      this.body.esDatosGenerales = false;
+      this.guardadoSend.emit(this.body);
+    }
   }
 
   // Estilo obligatorio

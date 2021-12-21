@@ -114,9 +114,9 @@
         <button [disabled]="!(porConfirmar || porConfirmarError || confirmada)" pButton (click)="confirmDescargar()"
           type="button" icon="fa fa-download" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
 
-        <button [disabled]="!((porConfirmarError || confirmada) && !body.archivarFact)" pButton (click)="archivar()"
+        <button *ngIf="(porConfirmarError || confirmada) && !body.archivarFact" pButton (click)="archivar()"
           type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.archivar' | translate }}"></button>
-        <button [disabled]="!((porConfirmarError || confirmada) && body.archivarFact)" pButton (click)="desarchivar()"
+        <button *ngIf="(porConfirmarError || confirmada) && body.archivarFact" pButton (click)="desarchivar()"
           type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'form.busquedaCursos.literal.boton.desarchivar' | translate }}"></button>
 
         <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-undo" iconPos="left"

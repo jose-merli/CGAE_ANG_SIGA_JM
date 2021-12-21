@@ -109,13 +109,13 @@
 
     <div *ngIf="esFichaActiva('destinatariosLista')" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-plus" iconPos="left" 
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" (click)="addConsulta()"
           label="{{ 'general.boton.new' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-eraser" iconPos="left" 
           label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
           label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left"

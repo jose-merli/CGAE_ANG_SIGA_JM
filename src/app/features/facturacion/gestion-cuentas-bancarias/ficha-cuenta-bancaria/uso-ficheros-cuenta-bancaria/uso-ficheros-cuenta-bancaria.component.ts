@@ -93,12 +93,6 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit, OnChanges {
     this.msgs = [];
   }
 
-  // Label de un combo
-  findLabelInCombo(combo: any[], value) {
-    let item = combo.find(c => c.value == value);
-    return item ? item.label : "";
-  }
-
   // Estilo obligatorio
   styleObligatorio(evento: string) {
     if (this.resaltadoDatos && this.body.sjcs && (evento == undefined || evento == null || evento.trim() == "")) {

@@ -57,7 +57,7 @@ export class FacFacturacionprogramadaItem {
     envio: boolean;
     idTipoPlantillaMail: string;
     tipoPlantillaMail: string;
-    traspasoPlatilla: string;
+    traspasoPlantilla: string;
     traspasoCodAuditoriaDef: string;
 
     fechaPresentacion: Date;

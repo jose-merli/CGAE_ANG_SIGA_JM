@@ -80,11 +80,20 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
     this.logDisponible = true;
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.generaPDF == this.bodyInicial.generaPDF
+      && this.body.idModeloFactura == this.bodyInicial.idModeloFactura
+      && this.body.idModeloRectificativa == this.bodyInicial.idModeloRectificativa;
+  }
+
   // Guardar
 
   checkSave(): void {
-    this.body.esDatosGenerales = false;
-    this.guardadoSend.emit(this.body);
+    if (!this.deshabilitarGuardado()) {
+      this.body.esDatosGenerales = false;
+      this.guardadoSend.emit(this.body);
+    }
   }
 
   // Estilo obligatorio
