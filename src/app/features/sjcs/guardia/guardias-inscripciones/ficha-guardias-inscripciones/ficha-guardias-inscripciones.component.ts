@@ -1272,6 +1272,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 	formatDateSol2(date) {
 		const pattern = 'dd/MM/yyyy';
+		if (date != undefined && !date.includes('/'))
 		return this.datepipe.transform(date, pattern);
 	
 	  }
