@@ -37,9 +37,7 @@
                     #rowSelected>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla != 'JE'" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)" class="table-row-header p-2 selectedRowClass mw81"  [ngClass]="{'hoverToClick': rowGroup.rows.length > 1}" [id]="rowGroup.id">
-                        <span *ngIf="rowGroup.id != 'Ayyyy/XXXXX'" class="w100 cell-value enlace"><a (click)="linkFichaAsistencia(rowGroup.id)">{{rowGroup.id}}</a></span>
-                        <span *ngIf="rowGroup.id == 'Ayyyy/XXXXX'" class="w100 cell-value enlace">  <input type="text" class="form-control " pInputText size="10" [value]="rowGroup.id" 
-                            (change)="fillRowGroup($event.target.value, rowGroup)" placeholder =""></span>
+                        <span class="w100 cell-value enlace"><a (click)="linkFichaAsistencia(rowGroup.id)">{{rowGroup.id}}</a></span>
                     </div>
                     <!--<div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id">
                         <span [ngClass]="{'color-red': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'red', 'color-blue': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'blue', 'color-green': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'green', 'color-black': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'black'}">D{{rowGroup.id}} </span>
