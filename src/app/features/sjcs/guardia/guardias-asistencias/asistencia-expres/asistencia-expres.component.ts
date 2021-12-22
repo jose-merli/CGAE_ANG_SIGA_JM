@@ -395,7 +395,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
           this.comboJuzgados = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboJuzgados);
-          this.search()
+          //this.search()
         }
       },
       err => {
