@@ -253,7 +253,7 @@ jsonToRow(){
       st = st + "'" + id + "'" + ", ";
     })*/
     let ArrComboValue = [""] ;
-    let ArrComboValue = arrids;
+    ArrComboValue = arrids;
     let ArrNombresGI = [res.nombreGuardiaIncompatible]
     let objCells = [
     { type: 'text', value: res.nombreTurno },
