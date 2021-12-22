@@ -20,6 +20,9 @@ import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesOb
 import { ComboEtiquetasItem } from '../../../../../models/ComboEtiquetasItem';
 import * as moment from 'moment';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { _createDefaultCookieXSRFStrategy } from '@angular/http/src/http_module';
+import { RevisionAutLetradoItem } from '../../../../../models/RevisionAutLetradoItem';
+import { FilaHistoricoPeticionItem } from '../../../../../models/FilaHistoricoPeticionItem';
 
 @Component({
   selector: 'app-datos-colegiales-ficha-colegial',
@@ -1181,6 +1184,27 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                       data => {
                         this.nuevoEstadoColegial = new FichaColegialColegialesItem;
                         this.activarGuardarColegiales = false;
+                        //Se comprueba si se han realizado cambios en los datos colegiales
+                        if (
+                          this.colegialesBody != this.checkColegialesBody
+                        ){
+                          //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA 
+                          //let peticion = new RevisionAutLetradoItem();
+                          //peticion.idPersona = this.generalBody.idPersona.toString();//Se comprueba si se ha modificado la fecha de incorporacion
+                          //if(this.checkGeneralBody.fechaIncorporacion != (this.generalBody.fechaIncorporacion){
+                          //  peticion.fechaProcesamiento = this.generalBody.fechaIncorporacion;
+                          //}
+                          //Se comprueba si se ha introducido un nuevo estado colegial
+                          //if((this.nuevoEstadoColegial != undefined && this.nuevoEstadoColegial.situacion != "20") || this.datosColegiales[1].idEstado == "20"){
+                          //  if(peticion.fechaProcesamiento == null || (peticion.fechaProcesamiento != null && peticion.fechaProcesamiento < this.datosColegiales[0].fechaEstadoStr)){
+                          //    peticion.fechaProcesamiento = this.datosColegiales[0].fechaEstadoStr;
+                          //  }
+                          //}
+                          //if(peticion.fechaProcesamiento == null) {
+                          //  peticion.fechaProcesamiento = new Date();
+                          //}
+                          //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+                        }
                   this.obtenerEtiquetasPersonaJuridicaConcreta();
                   this.progressSpinner = false;
                   this.isCrearColegial = false;
@@ -1843,6 +1867,12 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           this.filaEditable = false;
           this.isEliminarEstadoColegial = false;
           this.numSelectedColegiales = 0;
+          //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+          //let peticion = new RevisionAutLetradoItem();
+          //peticion.idPersona = this.generalBody.idPersona.toString();
+          //peticion.fechaProcesamiento = this.datosColegiales[1].fechaEstadoStr;
+          //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+          
           this.onInitColegiales();
           if (JSON.parse(data.body).error != null &&
             JSON.parse(data.body).error != undefined &&

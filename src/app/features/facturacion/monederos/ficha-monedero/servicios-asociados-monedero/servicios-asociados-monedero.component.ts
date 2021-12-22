@@ -380,7 +380,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
     // }
     // else{
     //   for (var i = 0, l= this.serviciosTarjeta.length; i < l; i++) {
-    //       if (this.ficha.servicios[i] != this.serviciosTarjeta[i]) { 
+    //       if (JSON.stringify(this.ficha.servicios[i]) != JSON.stringify(this.serviciosTarjeta[i])) { 
     //           this.deshabilitarGuardar = false;   
     //           break;
     //       }           

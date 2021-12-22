@@ -9,6 +9,7 @@ import { FichaColegialColegialesItem } from '../../../../../models/FichaColegial
 import { ControlAccesoDto } from '../../../../../models/ControlAccesoDto';
 import { Table } from 'primeng/table';
 import { EdicionCurricularesComponent } from '../../edicionDatosCurriculares/edicionCurriculares.component';
+import { RevisionAutLetradoItem } from '../../../../../models/RevisionAutLetradoItem';
 
 @Component({
   selector: 'app-datos-curriculares-ficha-colegial',
@@ -290,6 +291,17 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
               )
             );
           }
+
+          //Se comprueba si se han realizado cambios en los datos colegiales
+          if (
+            selectedDatosCurriculares != null
+          ) {
+            //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+            //let peticion = new RevisionAutLetradoItem();
+            //peticion.idPersona = this.generalBody.idPersona.toString();
+            //peticion.fechaProcesamiento = new Date();
+            //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+          }
           this.progressSpinner = false;
         },
         err => {
@@ -368,6 +380,11 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
           this.progressSpinner = false;
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
+          //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+          //let peticion = new RevisionAutLetradoItem();
+          //peticion.idPersona = this.generalBody.idPersona.toString();
+          //peticion.fechaProcesamiento = new Date();
+          //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
           // this.table.reset();
         },
         err => {

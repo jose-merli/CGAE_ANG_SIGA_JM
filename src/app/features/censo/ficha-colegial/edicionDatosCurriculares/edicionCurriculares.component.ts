@@ -11,6 +11,7 @@ import { FichaColegialEdicionCurricularesObject } from "../../../../models/Ficha
 import { TipoCurricularItem } from "../../../../models/TipoCurricularItem";
 import { SubtipoCurricularItem } from "../../../../models/SubtipoCurricularItem";
 import { CommonsService } from '../../../../_services/commons.service';
+import { RevisionAutLetradoItem } from "../../../../models/RevisionAutLetradoItem";
 /*** COMPONENTES ***/
 
 @Component({
@@ -447,6 +448,16 @@ disabledAction:boolean = false;
         .subscribe(
           data => {
             this.progressSpinner = false;
+            //Se comprueba si se han realizado cambios en los datos colegiales
+            if (
+              this.body != this.bodyInicial
+            ){
+              //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+              let peticion = new RevisionAutLetradoItem();
+              peticion.idPersona = this.body.idPersona.toString();
+              peticion.fechaProcesamiento = this.body.dateFechaInicio;
+              //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+            }
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
             this.showSuccess();
@@ -469,6 +480,16 @@ disabledAction:boolean = false;
         .subscribe(
           data => {
             this.progressSpinner = false;
+            //Se comprueba si se han realizado cambios en los datos colegiales
+            if (
+              this.body != this.bodyInicial
+            ){
+              //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+              //let peticion = new RevisionAutLetradoItem();
+              //peticion.idPersona = this.generalBody.idPersona;
+              //peticion.fechaProcesamiento = new Date();
+              //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+            }
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
             this.showSuccess();

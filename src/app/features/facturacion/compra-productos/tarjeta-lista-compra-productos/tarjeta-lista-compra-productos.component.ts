@@ -180,7 +180,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     );
 
     //REVISAR LOGICA FACTURAS
-    //Se comprueba si alguna solicitud tiene alguna factura asoviada
+    //Se comprueba si alguna solicitud tiene alguna factura asociada
     if(this.selectedRows.find(el => el.facturas != "0") != undefined) {
       mess = this.translateService.instant("facturacion.productos.factNoAnuladaPet");
     }
