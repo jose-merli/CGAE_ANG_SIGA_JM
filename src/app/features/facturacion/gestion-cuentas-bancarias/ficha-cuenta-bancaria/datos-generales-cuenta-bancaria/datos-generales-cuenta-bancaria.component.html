@@ -48,11 +48,12 @@
       <div class="form-row lg-12 md-12">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'censo.mutualidad.literal.iban' | translate }} (*)</label>
-          <input type="text" [ngClass]="styleObligatorio(body.iban)" class="form-control" [ngClass]="styleIBANIncorrecto()" [(ngModel)]="body.iban" maxlength="{{ focusIBAN ? 24 : 29 }}" (focus)="removeSpacesFromIBAN()" (blur)="addSpacesToIBAN()" [disabled]="modoEdicion" pInputText>
+          <input type="text" class="form-control" [ngClass]="styleIBAN()" [(ngModel)]="body.iban" maxlength="{{ focusIBAN ? 24 : 29 }}" (focus)="removeSpacesFromIBAN()" (blur)="addSpacesToIBAN()" [disabled]="modoEdicion" pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'general.description' | translate }} (*)</label>
-          <input type="text" class="form-control" [(ngModel)]="body.descripcion" maxlength="40" [ngClass]="styleObligatorio(body.descripcion)" pInputText>
+          <input type="text" class="form-control" [(ngModel)]="body.descripcion" maxlength="40" [ngClass]="styleDescripcion()" pInputText>
+          <small *ngIf="body.descripcionRepetida" class="invalid-feedback">{{ 'facturacion.cuentaBancaria.descripcion.unica' | translate }}.</small>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.cuentaBancaria.contableBanco' | translate }}</label>

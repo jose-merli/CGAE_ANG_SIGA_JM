@@ -92,9 +92,13 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
         this.comboSeriesFacturacion = n.combooItems;
         this.comboSeriesFacturacion = this.comboSeriesFacturacion.filter(item => this.datos.find(item2 => item2.tipo == "SERIE" && item.value == item2.idSerieFacturacion) == undefined);
         this.commonsService.arregloTildesCombo(this.comboSeriesFacturacion);
+
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+
+        this.progressSpinner = false;
       }
     );
   }
@@ -102,6 +106,8 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   // Obtener usos y sufijos
 
   getUsosSufijos() {
+    this.progressSpinner = true;
+
     this.sigaServices.getParam("facturacionPyS_getUsosSufijos", "?codBanco=" + this.body.bancosCodigo).subscribe(
       n => {
         this.datos = n.usosSufijosItems;
@@ -112,6 +118,8 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
       },
       err => {
         console.log(err);
+
+        this.progressSpinner = false;
       }
     );
   }

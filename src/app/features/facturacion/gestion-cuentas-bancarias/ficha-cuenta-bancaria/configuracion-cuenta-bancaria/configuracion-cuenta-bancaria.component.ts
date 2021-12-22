@@ -84,13 +84,13 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
     
     this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
       n => {
-        let data = n.combooItems;
+        let data: any[] = n.combooItems;
+        console.log(data);
         
         for(let i=0; data.length>i; i++){
           
           if(data[i].value=="SEPA_TIPO_FICHEROS"){
             this.tipoFicheros = data[i].label;
-
           }
         }
 

@@ -47,6 +47,8 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
   // Obtener todas las etiquetas
 
   cargarDatos() {
+    this.progressSpinner = true;
+
     this.sigaServices.get("facturacionPyS_comboFormasPagoFactura").subscribe(
       n => {
         this.formasPagosNoSeleccionadas = n.combooItems;
@@ -56,6 +58,8 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
       },
       err => {
         console.log(err);
+
+        this.progressSpinner = false;
       }
     );
   }
@@ -72,9 +76,13 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
 
         this.formasPagosSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosSeleccionadas));
         this.formasPagosNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosNoSeleccionadas));
+
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+
+        this.progressSpinner = true;
       }
     );
   }

@@ -50,9 +50,9 @@ export class GestionCuentasBancariasComponent implements OnInit {
 
   getCols() {
     this.cols = [
-      { field: "nombre", header: "censo.tipoAbono.banco", width: "35%" },
+      { field: "nombre", header: "censo.tipoAbono.banco", width: "25%" },
       { field: "iban", header: "censo.mutualidad.literal.iban", width: "10%" },
-      { field: "comisionDescripcion", header: "general.boton.description", width: "10%" },
+      { field: "descripcion", header: "general.boton.description", width: "20%" },
       { field: "comisionImporte", header: "facturacion.cuentasBancarias.comisionImporte", width: "10%" },
       { field: "sjcs", header: "menu.justiciaGratuita", width: "10%" },
       { field: "numUsos", header: "facturacion.cuentasBancarias.numUsos", width: "10%" },

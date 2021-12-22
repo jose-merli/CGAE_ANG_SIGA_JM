@@ -92,7 +92,7 @@
               </label>
               <label
                 class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
-                {{numSelected}}
+                {{ selectedDatos ? selectedDatos.length : 0 }}
               </label>
               <label>{{"general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
@@ -112,13 +112,13 @@
         <button pButton type="button" icon="fa fa-plus" iconPos="left" (click)="addConsulta()"
           label="{{ 'general.boton.new' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-eraser" iconPos="left" 
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" (click)="eliminar()"
           label="{{ 'general.boton.eliminar' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
           label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" (click)="guardar()"
           label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

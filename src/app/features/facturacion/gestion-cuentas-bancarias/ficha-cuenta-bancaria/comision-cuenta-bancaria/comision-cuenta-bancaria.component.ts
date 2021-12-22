@@ -68,7 +68,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
   // Guadar
 
   isValid(): boolean {
-    return this.body.comisionImporte != undefined
+    return this.body.comisionImporte != undefined && this.body.comisionImporte.trim() != ""
       && this.body.comisionDescripcion != undefined && this.body.comisionDescripcion.trim() != ""
       && this.body.idTipoIVA != undefined && this.body.idTipoIVA.trim() != "";
   }

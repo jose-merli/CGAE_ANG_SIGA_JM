@@ -286,9 +286,21 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
       );
   }
 
-  styleIBANIncorrecto() {
+  styleIBAN() {
+    let styleObligatorio = this.styleObligatorio(this.body.iban);
     if (this.resaltadoIBAN) {
-      return 'camposObligatorios';
+      return 'is-invalid';
+    } else if(styleObligatorio != undefined) {
+      return styleObligatorio;
+    }
+  }
+
+  styleDescripcion() {
+    let styleObligatorio = this.styleObligatorio(this.body.descripcion);
+    if (this.body.descripcionRepetida && this.body.descripcion == this.bodyInicial.descripcion) {
+      return 'is-invalid';
+    } else if (styleObligatorio != undefined) {
+      return styleObligatorio;
     }
   }
 

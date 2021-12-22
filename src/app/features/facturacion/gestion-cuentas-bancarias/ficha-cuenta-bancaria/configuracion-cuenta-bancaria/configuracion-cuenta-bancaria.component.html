@@ -7,7 +7,7 @@
       <div *ngIf="!esFichaActiva('configuracion')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('configuracion')">
           <div class="img-colegiado">
-            <i class="fa fa-file-alt icon-ficha pointer"></i>
+            <i class="fa fa-cog icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -35,7 +35,7 @@
       <div *ngIf="esFichaActiva('configuracion')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('configuracion')">
         <div class="img-colegiado">
-          <i class="fa fa-file-alt icon-ficha"></i>
+          <i class="fa fa-cog icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.cuentaBancaria.configuracion' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>

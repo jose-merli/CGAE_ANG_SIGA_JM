@@ -40,6 +40,7 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<SerieFacturacionItem>();
+  @Output() refreshData = new EventEmitter<void>();
 
   institucionActual: number;
   nuevaConsulta: boolean = false;
@@ -174,36 +175,44 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
 
   guardar(): void {
     if (!this.deshabilitarGuardado()) {
-      /*
       this.progressSpinner = true;
 
-      let objEtiquetas = {
+      let idConsulta = this.datos[this.datos.length - 1].idConsulta;
+      let objNuevo = {
         idSerieFacturacion: this.body.idSerieFacturacion,
-        seleccionados: this.etiquetasSeleccionadas,
-        noSeleccionados: this.etiquetasNoSeleccionadas
+        idConsulta: idConsulta,
+        idInstitucion: this.consultas.find(c => c.value == idConsulta).idInstitucion
       };
 
-      this.sigaServices.post("facturacionPyS_nuevaConsultaSerie", objEtiquetas).subscribe(
+      this.sigaServices.post("facturacionPyS_nuevaConsultaSerie", objNuevo).subscribe(
         n => {
-          this.refreshData.emit();
           this.progressSpinner = false;
+          this.refreshData.emit();
         },
         error => {
-          console.log(error);
           this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       });
-      */
+      
     }
     
   }
 
-  eliminar() {
+  eliminar(): void {
+    this.progressSpinner = true;
 
-    return this.sigaServices.post("facturacionPyS_eliminaConsultasSerie", this.selectedDatos).subscribe(
+    this.selectedDatos.forEach(d => {
+      d.idSerieFacturacion = this.body.idSerieFacturacion
+    });
+
+    this.sigaServices.post("facturacionPyS_eliminaConsultasSerie", this.selectedDatos).subscribe(
       n => {
+        this.progressSpinner = false;
+        this.refreshData.emit();
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
+        this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
