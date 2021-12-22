@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { FacturasIncluidasItem } from '../../../../../models/sjcs/FacturasIncluidasItem';
-import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -33,7 +33,7 @@ export class FacturasAdeudosComponent implements OnInit {
 
   datosFicheros: FacturasIncluidasItem;
 
-
+  idFichero;
   msgs;
   cols;
 
@@ -49,40 +49,42 @@ export class FacturasAdeudosComponent implements OnInit {
   constructor(
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private router: Router
     ) { }
 
   async ngOnInit() {
     this.getCols();
+    this.setIdFichero();
     await this.rest();
     this.cargaInicial();
   }
 
-  cargaInicial(){
-    let idFichero;
-
+  // set idFichero para llamada al servicio en cargaInicial() 
+  setIdFichero() {
     if (this.tipoFichero=='T') {
-      idFichero = this.bodyInicial.idDisqueteAbono;
+      this.idFichero = this.bodyInicial.idDisqueteAbono;
+      //sessionStorage.setItem("identificadorTransferencia", this.idFichero);
     }
     if (this.tipoFichero=='A') {
-      idFichero = this.bodyInicial.idDisqueteCargos;
+      this.idFichero = this.bodyInicial.idDisqueteCargos;
+      //sessionStorage.setItem("identificadorAdeudos", this.idFichero);
     } 
     if (this.tipoFichero=='D') {
-      idFichero = this.bodyInicial.idDisqueteDevoluciones;
+      this.idFichero = this.bodyInicial.idDisqueteDevoluciones;
+      //sessionStorage.setItem("identificadorDevolucion", this.idFichero);
     }
+  }
+
+  cargaInicial(){   
+    this.progressSpinner=true;
     
-    this.sigaServices.getParam("facturacionPyS_getFacturasIncluidas", `?idFichero=${idFichero}&tipoFichero=${this.tipoFichero}`).subscribe(
+    this.sigaServices.getParam("facturacionPyS_getFacturasIncluidas", `?idFichero=${this.idFichero}&tipoFichero=${this.tipoFichero}`).subscribe(
       n => {
         this.progressSpinner = false;
-
         
         this.datosFicheros = n.facturasIncluidasItem;
-        let error = n.error;
-    
-        //comprobamos el mensaje de info de resultados
-        if (error!=undefined && error!=null) {
-        this.showMessage("info",this.translateService.instant("general.message.informacion"), this.translateService.instant(error.message));
-        }
+        //let error = n.error;
   
         this.progressSpinner = false;
       },
@@ -94,6 +96,17 @@ export class FacturasAdeudosComponent implements OnInit {
     );
     
   }
+
+  ir(){
+
+    //this.progressSpinner=true;
+    sessionStorage.setItem("tipoFichero", this.tipoFichero);
+    sessionStorage.setItem("idFichero", this.idFichero);
+
+    this.router.navigate(["/facturas"]);
+  
+  }
+  
   
   ngOnChanges(changes: SimpleChanges): void {
     if (this.openTarjetaFacturas == true) {
