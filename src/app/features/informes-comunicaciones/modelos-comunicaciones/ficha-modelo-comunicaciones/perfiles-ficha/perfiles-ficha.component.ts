@@ -128,7 +128,7 @@ export class PerfilesFichaComponent implements OnInit {
         );
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         let i = 0;
@@ -138,7 +138,7 @@ export class PerfilesFichaComponent implements OnInit {
           perfilesFiltrados.forEach(element => {
             let find = this.perfilesSeleccionados.find(x => x.value == element.value);
             if (find != undefined) {
-              // console.log(perfilesFiltrados[i]);
+              // //console.log(perfilesFiltrados[i]);
             } else {
               this.perfilesNoSeleccionados.push(perfilesFiltrados[i]);
             }
@@ -177,7 +177,7 @@ export class PerfilesFichaComponent implements OnInit {
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
     
@@ -233,7 +233,7 @@ export class PerfilesFichaComponent implements OnInit {
               "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardadoPerfiles"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.progressSpinner = false;

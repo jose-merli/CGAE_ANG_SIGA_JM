@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit {
         this.comboIdiomas = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -87,7 +87,7 @@ export class HeaderComponent implements OnInit {
       this.sigaServices.get("eliminaCookie").subscribe(response => {
         let responseStatus = response[0].status;
         if (responseStatus == 200) {
-          console.log("Cookies eliminadas para cerrar la sesión");
+          //console.log("Cookies eliminadas para cerrar la sesión");
         }
       });
       this.httpExit = this.menuUser[0].rutaLogoutCAS;
@@ -130,7 +130,7 @@ export class HeaderComponent implements OnInit {
       this.translateService.use(this.idiomaSelected);
 
     }, error => {
-      console.log(error);
+      //console.log(error);
     });
     this.showIdioma = false;
     this.translateService.use(this.idiomaSelected);

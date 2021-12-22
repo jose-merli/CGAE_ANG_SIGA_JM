@@ -71,7 +71,7 @@ export class EdicionModulosComponent implements OnInit {
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }, () => {
             if (this.modulosItem.procedimientos != null && this.modulosItem.procedimientos != "") {
               this.modulosItem.procedimientosReal = this.modulosItem.procedimientos.split(",");
@@ -146,7 +146,7 @@ export class EdicionModulosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -187,7 +187,7 @@ export class EdicionModulosComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         if (this.modulosItem.procedimientos != null && this.modulosItem.procedimientos != "") {
           this.modulosItem.procedimientosReal = this.modulosItem.procedimientos.split(",");

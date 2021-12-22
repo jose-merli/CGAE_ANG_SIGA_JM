@@ -1,0 +1,176 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" (click)="abreCierraFicha()">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 ">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label> {{ "justiciaGratuita.ejg.datosGenerales.annioNum" | translate }} {{ "justiciaGratuita.ejg.datosGenerales.Acta" | translate }}
+              <span> {{ datosFiltro.anioacta }}/{{ datosFiltro.numeroacta }}</span>
+            </label>
+            <label> {{ "justiciaGratuita.ejg.datosGenerales.FechaReunion" | translate }}
+              <span> {{ this.datosFiltro.fechareunion | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label> {{ "justiciaGratuita.ejg.datosGenerales.FechaResolucion" | translate }}
+              <span> {{ this.datosFiltro.fecharesolucion | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label> {{ "justiciaGratuita.ejg.datosGenerales.Presidente" | translate }}
+              <span *ngIf = "nombrePresidente != null && nombrePresidente != undefined"> {{ nombrePresidente.label }}</span>
+            </label>
+            <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-body card-body-ficha">
+      <div class="form-row">
+
+          <div *ngIf="!editable" class="form-group col-lg-3 col-md-3">
+            <label><strong>{{ anioNum}}</strong></label>
+            <input type="text" [(ngModel)]="numCompleto" class="form-control"
+              maxLength="4" pInputText [disabled]="disabledAnio">
+          </div>
+
+          <div *ngIf="editable" class="form-group-interlineado col-lg-3 col-md-3">
+            <div class="form-row">
+              <div class="col-md-6 col-md-6">
+                <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
+                    translate}}</strong></label>
+                <input type="text" [(ngModel)]="datosFiltro.anioacta" class="form-control" (keypress)="numberOnly($event)"
+                  maxLength="4" pInputText [disabled]="disabledAnio">
+              </div>
+
+              <div class="col-md-6 col-md-6">
+                <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
+                    translate}}*</strong></label>
+                <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroacta">
+              </div>
+            </div>
+          </div>
+        
+        
+          <div *ngIf="controlComboSufijo" class="form-group col-lg-3 col-md-3">
+            <label><strong>{{ 'facturacionSJCS.facturacionesYPagos.sufijo' |
+              translate}}</strong></label>
+            <p-dropdown class="select-form" [(ngModel)]='datosFiltro.sufijo' placeholder="Seleccionar" [options]="comboSufijo"
+            (onChange)="onChangeSufijo()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+
+          <div class="col-lg-3 col-md-3">
+            <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucion' |
+                  translate}}</strong></label>
+                <app-fecha [(value)]="this.datosFiltro.fecharesolucion" (valueChangeSelected)="fillFechaResolucion($event)"
+                  (valueChangeInput)="fillFechaResolucion($event)">
+                </app-fecha>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+              <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
+                translate}}*</strong></label>
+              <app-fecha [(value)]="this.datosFiltro.fechareunion" (valueChangeSelected)="fillFechaReunion($event)"
+                (valueChangeInput)="fillFechaReunion($event)">
+              </app-fecha>
+            </div>
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+              <div class="form-row">
+                <div class="col-lg-5 col-md-5">
+                  <label><strong>{{ "sjcs.actas.horainicio" | translate }}</strong></label>
+                  <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="inicio">
+                </div>
+
+                <div class="col-lg-5 col-md-5">
+                  <label><strong>{{ "sjcs.actas.horafin" | translate }}</strong></label>
+                  <input type="time" id="appt" name="appt" min="00:00" max="00:59" required [(ngModel)]="fin">
+                </div>
+              </div>
+            </div>
+
+          <div class="form-group col-md-3 col-md-3">
+            <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.Presidente' |
+              translate}}</strong></label>
+            <p-dropdown class="select-form" [(ngModel)]='datosFiltro.idpresidente' placeholder="Seleccionar" [options]="comboPresidente"
+              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+          <div class="form-group col-md-3 col-md-3">
+            <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.Secretario' |
+              translate}}</strong></label>
+            <p-dropdown class="select-form" [(ngModel)]='datosFiltro.idsecretario' placeholder="Seleccionar" [options]="comboSecretario"
+              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+            </p-dropdown>
+          </div>
+
+          
+          <div class="col-log-3 col-md-3">
+            <label><strong>{{ 'sjcs.actas.miembroscomision' | translate}}</strong></label>
+                <textarea  class="form-control" maxLength="4000" #inputNumero pInputText 
+                [(ngModel)]="datosFiltro.miembroscomision"></textarea>
+          </div>
+
+          <div class="col-log-3 col-md-3">
+            <label><strong>{{ 'justiciaGratuita.remesasResultados.tabla.observaciones' |
+              translate}}</strong></label>
+                <textarea  class="form-control" #inputNumero pInputText [(ngModel)]="datosFiltro.observaciones"></textarea>
+          </div>
+
+          <div class="col-log-6 col-md-6">
+            <label><strong>{{ 'sjcs.actas.expedienteretirado' |
+              translate}}</strong></label>
+                <textarea  class="form-control" maxLength="4000" #inputNumero pInputText [(ngModel)]="datosFiltro.pendientes"></textarea>
+          </div>
+
+          <div class="col-md-6 col-md-6">
+            <label><strong>{{ 'sjcs.actas.expedientesacta' |
+              translate}}</strong></label>
+            <input type="text" class="form-control" readonly="readonly" #inputNumero pInputText [(ngModel)]="expNum">
+          </div>
+
+        </div>
+      <br>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button ">
+        <button (click)="guardarActaDialogo()" pButton type="button" icon="far fa-save" iconPos="left"
+          label="{{'general.boton.guardar' | translate}}"></button>
+          <button (click)="restablecer()" pButton type="button" icon="fa fa-eraser" iconPos="left"
+          label="{{'general.boton.restablecer' | translate}}"></button>
+          <button (click)="anadirEJGPendientesCAJGDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-folder-open" iconPos="left"
+          label="{{'sjcs.actas.anadirExpPendCAJG' | translate}}"></button>
+          <button (click)="abrirActaDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-folder-open" iconPos="left"
+          label="{{'general.boton.abrirActa' | translate}}"></button>
+          <button (click)="cerrarActaDialogo()" pButton [(disabled)]="disabledSave" type="button" icon="far fa-times-circle" iconPos="left"
+          label="{{'general.boton.cerrarActa' | translate}}"></button>
+          <p-confirmDialog  header="{{'general.cabecera.confirmacion' | translate}}" icon="fa fa-question-circle" width="425" #cd>
+            <p-footer>
+              <button type="button" pButton icon="fa-check" label="{{'messages.si' | translate}}" (click)="cd.accept()"></button>
+              <button type="button" pButton icon="fa-close" label="{{'general.boton.no' | translate}}" (click)="cd.reject()"></button>
+            </p-footer>
+          </p-confirmDialog>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

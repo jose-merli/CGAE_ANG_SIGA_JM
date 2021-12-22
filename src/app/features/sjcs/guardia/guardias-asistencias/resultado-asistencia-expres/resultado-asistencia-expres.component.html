@@ -18,15 +18,15 @@
             </div>
         </div>
         <div class="right col main-button ">
-            <button [disabled]="isDisabled || disableCrearEJG" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="{{'general.boton.crearEJG' | translate}}"
+            <button [disabled]="disableCrearEJG" pButton type="button"  icon="fa fa-eraser"  iconPos="left" label="{{'general.boton.crearEJG' | translate}}"
                 (click)="crearEJG();"></button>
             <button [disabled]="isDisabled" type="submit" pButton icon="fa fa-plus" iconPos="left"
                 label="{{'justiciaGratuita.guardia.asistenciasexpress.nuevaactuacion' | translate}}" (click)="nuevaActuacion()"></button>
-            <button type="submit" pButton icon="fa fa-plus" iconPos="left" (click)="nuevaAsistencia()" [disabled]="isDisabled"
+            <button type="submit" pButton icon="fa fa-plus" iconPos="left" (click)="nuevaAsistencia()" 
                 label="{{'justiciaGratuita.guardia.asistenciasexpress.nuevaasistencia' | translate}}"></button>
-            <button [disabled]="isDisabled" type="submit" pButton icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
+            <button  type="submit" pButton icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
                 (click)="resetTable(); showMsg('success', 'Se ha restablecido correctamente', '')"></button>
-            <button [disabled]="isDisabled" type="submit" pButton icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
+            <button  type="submit" pButton icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
                 (click)="guardar();"></button>
         </div>
     </div>

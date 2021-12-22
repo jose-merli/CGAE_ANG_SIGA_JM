@@ -124,7 +124,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       for (let i = 0; i < this.cabeceras.length; i++) {
         let nombreCabecera = this.cabeceras[i].id;
         if (nombreCabecera == sort.active){
-          console.log("a.cells["+i+"].type:"+a.cells[i].type);
+          //console.log("a.cells["+i+"].type:"+a.cells[i].type);
 
           if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
             return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
@@ -137,7 +137,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
               const dayA = valorA.substr(0, 2) ;
               const monthA = valorA.substr(3, 2);
               const yearA = valorA.substr(6, 10);
-              console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+              //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
               var dt=new Date(yearA, monthA, dayA);
               if(!isNaN(dt.getTime())){ //Checked for date
                 return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
@@ -174,10 +174,10 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       for(let j=0; j<this.cabeceras.length;j++){
         if (this.searchText[j] != " " &&  this.searchText[j] != undefined){
           if (row.cells[j].value){
-            console.log("tipo de celda:"+row.cells[j].type);
+            //console.log("tipo de celda:"+row.cells[j].type);
             if(row.cells[j].type == 'select'){
               let labelCombo = this.getComboLabel(row.cells[j].value);
-              console.log("valor de celda:"+labelCombo);
+              //console.log("valor de celda:"+labelCombo);
               if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
                 isReturn = false;
                 break;

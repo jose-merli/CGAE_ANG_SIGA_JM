@@ -21,6 +21,7 @@ export class CalendariosComponent implements OnInit {
     fechaHasta: "",
     generado: ""
   };
+   msgs;
   comboEstado = [
     { label: "Pendiente", value: "5" },
     { label: "Programada", value: "1" },
@@ -29,6 +30,7 @@ export class CalendariosComponent implements OnInit {
     { label: "Generada", value: "4" }
   ];
   comboListaGuardias =[];
+  progressSpinner = false;
   
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -59,13 +61,14 @@ export class CalendariosComponent implements OnInit {
           this.commonsService.arregloTildesCombo(this.comboListaGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
   }
 
   goToFichaProgramacion(){
+    this.progressSpinner = true;
     let datosEntrada = 
     { 'idTurno': this.persistenceService.getDatos().idTurno,
       'idConjuntoGuardia': null,
@@ -78,7 +81,7 @@ export class CalendariosComponent implements OnInit {
     this.sigaServices.post(
       "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
-          console.log('data: ', data.body)
+          //console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
           let datos = JSON.parse(data.body);
           if(datos){
@@ -107,18 +110,28 @@ export class CalendariosComponent implements OnInit {
               };
 
               this.persistenceService.setDatos(responseObject);
+              this.progressSpinner = false;
               this.router.navigate(["/fichaProgramacion"]);
           }
 
         },
         (error)=>{
+          this.progressSpinner = false;
+          this.showMessage("error", "No existen calendarios para esta guardia", "No existen calendarios para esta guardia");
           console.log(error);
         }
       );
 
 
   }
-
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
   getDatosCalendario() {
     //let idGuardiaprovisional = 362; //borrar
@@ -130,9 +143,13 @@ export class CalendariosComponent implements OnInit {
             this.datos = JSON.parse(data.body);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
   }
 
+  clear() {
+    this.msgs = [];
+  }
+  
 }

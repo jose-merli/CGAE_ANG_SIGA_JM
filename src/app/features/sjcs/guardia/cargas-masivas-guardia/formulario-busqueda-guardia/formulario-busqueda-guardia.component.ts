@@ -76,7 +76,7 @@ export class FormularioBusquedaGuardiaComponent implements OnInit {
 				}
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },()=>{
         if (sessionStorage.getItem("idTurno") != undefined) {
           this.turnosSelected = JSON.parse(
@@ -107,7 +107,7 @@ export class FormularioBusquedaGuardiaComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },()=>{
           if (sessionStorage.getItem("idGuardia") != undefined) {
             this.guardiasSelected = JSON.parse(
@@ -197,7 +197,7 @@ export class FormularioBusquedaGuardiaComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },()=>{
         if (sessionStorage.getItem("idGuardia") != undefined) {
           this.guardiasSelected = JSON.parse(
@@ -245,7 +245,7 @@ export class FormularioBusquedaGuardiaComponent implements OnInit {
           saveAs(blob, "PlantillaCargaMasivaCalendarios.xls");
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.progressSpinner = false;

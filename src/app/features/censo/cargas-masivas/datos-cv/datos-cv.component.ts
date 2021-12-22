@@ -174,7 +174,7 @@ export class DatosCvComponent implements OnInit {
             }
           },
           error => {
-            console.log(error);
+            //console.log(error);
             this.showFail("Error en la subida del fichero.");
             this.progressSpinner = false;
           },
@@ -223,7 +223,7 @@ export class DatosCvComponent implements OnInit {
           this.numSelected = this.selectedDatos.length;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -253,7 +253,7 @@ export class DatosCvComponent implements OnInit {
           this.progressSpinner = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -284,7 +284,7 @@ export class DatosCvComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -316,7 +316,7 @@ export class DatosCvComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

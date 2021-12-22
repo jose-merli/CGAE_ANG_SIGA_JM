@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common/';
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, EventEmitter } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router, RoutesRecognized } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
@@ -42,6 +42,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   opcionSeleccionado: string = '0';
   verSeleccion: string = '';
   isLetrado : boolean = false;
+  @Output() letradoFillAutomatic = new EventEmitter<boolean>();
+  
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
 
   constructor(private router: Router,
@@ -52,6 +54,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     private translateService: TranslateService) {}
 
   ngOnInit(): void {
+     this.getCombos();
     this.checkLastRoute();
     if(this.sigaStorageService.idPersona
       && this.sigaStorageService.isLetrado){
@@ -108,7 +111,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
     if(event){
       this.filtro.diaGuardia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
-      this.getTurnosByColegiadoFecha();
+      //this.getTurnosByColegiadoFecha();
     }else{
       this.filtro.diaGuardia = '';
       this.comboTurnos = [];
@@ -116,6 +119,32 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     
   }
 
+  getCombos() {
+    this.sigaServices.get("combo_turnos").subscribe(
+      n => {
+        this.comboTurnos = n.combooItems;
+
+        /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+    para poder filtrar el dato con o sin estos caracteres*/
+        this.comboTurnos.map(e => {
+          let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+          let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+          let i;
+          let x;
+          for (i = 0; i < e.label.length; i++) {
+            if ((x = accents.indexOf(e.label[i])) != -1) {
+              e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+              return e.labelSinTilde;
+            }
+          }
+        });
+
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
   getTurnosByColegiadoFecha(){
 
     this.comboTurnos = [];
@@ -136,7 +165,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -185,7 +214,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -210,7 +239,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -224,12 +253,17 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
             if(this.comboLetradosGuardia !== null
               && this.comboLetradosGuardia.length > 0){
                 this.filtro.idLetradoGuardia = this.comboLetradosGuardia[0].value;
+                if (this.filtro.idLetradoGuardia != undefined && this.filtro.idLetradoGuardia != null){
+                  this.letradoFillAutomatic.emit(true);
+                }else{
+                  this.letradoFillAutomatic.emit(false);
+                }
                // this.onChangeLetradoGuardia();
               }
   
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
     
@@ -245,7 +279,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboTurnos);
@@ -278,7 +312,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
           } 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 

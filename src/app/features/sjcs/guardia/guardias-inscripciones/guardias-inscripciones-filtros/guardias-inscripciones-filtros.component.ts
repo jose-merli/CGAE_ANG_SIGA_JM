@@ -84,6 +84,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
+    //console.log('this.permisos: ', this.permisos)
     if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("FichaInscripciones")!= undefined) {
       this.filtros = this.persistenceService.getFiltros();
       if(this.filtros.afechade!=null && this.filtros.afechade != undefined){
@@ -148,6 +149,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
           const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
           this.usuarioBusquedaExpress.numColegiado = numColegiado;
           this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+          this.filtros.ncolegiado = numColegiado;
 
           this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
           this.progressSpinner = false;
@@ -215,7 +217,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
         this.commonsService.arregloTildesCombo(this.turnos);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -230,7 +232,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -359,7 +361,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.isBuscar();
+      setTimeout( () => { this.isBuscar(); }, 2000 );
     }
   }
 

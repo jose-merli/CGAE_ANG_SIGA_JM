@@ -1,4 +1,5 @@
 import { Location } from '@angular/common';
+import { nullSafeIsEquivalent } from '@angular/compiler/src/output/output_ast';
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
@@ -146,7 +147,7 @@ export class DefinirListasGuardiasComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () =>{
         this.progressSpinner = false;
@@ -163,7 +164,7 @@ checkFilters(){
       this.buscador.filtro.idGrupoZona == undefined) &&
     (this.buscador.filtro.idTipo == null ||
       this.buscador.filtro.idTipo == undefined ||
-      this.buscador.filtro.idTipo.trim().length < 3) &&
+      this.buscador.filtro.idTipo == null) &&
     (this.buscador.filtro.idZona == null ||
       this.buscador.filtro.idZona == undefined ||
       this.buscador.filtro.idZona.trim().length < 3) &&

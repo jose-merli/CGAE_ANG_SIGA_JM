@@ -195,7 +195,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorEnvio"));
-          console.log(err);
+          //console.log(err);
         },
         () => {
         }
@@ -210,7 +210,7 @@ export class ProgramacionEnvioMasivoComponent implements OnInit {
         this.estados.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

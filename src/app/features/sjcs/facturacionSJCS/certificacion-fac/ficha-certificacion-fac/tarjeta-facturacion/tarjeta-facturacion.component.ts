@@ -14,7 +14,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 export class TarjetaFacturacionComponent implements OnInit {
   progressSpinner;
   permisos;
-  // datosTablaFact:CertificacionFacItem[];
+  datosTablaFact=[];
   selectedDatos;
   selectedItem: number = 10;
   rowsPerPage: any = [];

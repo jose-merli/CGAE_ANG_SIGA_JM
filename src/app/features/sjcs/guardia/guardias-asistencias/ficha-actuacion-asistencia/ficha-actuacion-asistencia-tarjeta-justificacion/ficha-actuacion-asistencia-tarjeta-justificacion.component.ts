@@ -70,7 +70,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -98,7 +98,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -114,8 +114,12 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
   }
 
   desvalidar(){
+    if(this.actuacion.facturada){
+      this.showMsg('error', 'No se puede desvalidar una actuación ya facturada', '');
+    }else{
     this.datosJustificacion.validada = '0';
     this.updateEstadoActuacion();
+    }
   }
 
   anular(){
@@ -153,7 +157,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {

@@ -25,17 +25,17 @@ export class AddExpedienteComponent implements OnInit {
 
     this.body = JSON.parse (sessionStorage.getItem("expedienteInsos"));
 
-    console.log('numeroEjg esperado 80, llega:'+this.body.numero);
-    console.log('numEJGDisciplinario esperado 20120, llega:'+this.body.numEJG);
-    console.log('idTipoEjg esperado 3, llega:'+this.body.idTipoEJG);
-    console.log('anioEjg esperado 2021, llega:'+this.body.anioEJG);
-    console.log('idInstitucion_TipoExpediente esperado 2005, llega:'+this.body.idInstitucion);
-    console.log('procedimiento esperado 1231, llega:'+this.body.idProcedimiento);
-    console.log('juzgado esperado 114, llega:'+this.body.idJuzgado);
-    console.log('pretension esperado 128, llega:'+this.body.idPretension);
-    console.log('pretensionInstitucion esperado 2005, llega:'+this.body.idInstitucion);
-    console.log('idturnoDesignado esperado 3931, llega:'+this.body.idTurno);
-    console.log('nombreDesignado esperado 2005001421, llega:'+this.body.nombre); 
+    //console.log('numeroEjg esperado 80, llega:'+this.body.numero);
+    //console.log('numEJGDisciplinario esperado 20120, llega:'+this.body.numEJG);
+    //console.log('idTipoEjg esperado 3, llega:'+this.body.idTipoEJG);
+    //console.log('anioEjg esperado 2021, llega:'+this.body.anioEJG);
+    //console.log('idInstitucion_TipoExpediente esperado 2005, llega:'+this.body.idInstitucion);
+    //console.log('procedimiento esperado 1231, llega:'+this.body.idProcedimiento);
+    //console.log('juzgado esperado 114, llega:'+this.body.idJuzgado);
+    //console.log('pretension esperado 128, llega:'+this.body.idPretension);
+    //console.log('pretensionInstitucion esperado 2005, llega:'+this.body.idInstitucion);
+    //console.log('idturnoDesignado esperado 3931, llega:'+this.body.idTurno);
+    //console.log('nombreDesignado esperado 2005001421, llega:'+this.body.nombre); 
  
 
     this.url = oldSigaServices.getOldSigaUrl('expedienteDatAudi');

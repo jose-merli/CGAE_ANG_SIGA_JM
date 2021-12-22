@@ -10,13 +10,10 @@
             [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen"
             (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
         </app-tarjeta-resumen-fija>
-
-        <app-datos-generales-ejg (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaDatosGenerales]="tarjetaDatosGenerales" *ngIf="permisoEscrituraDatosGenerales != undefined"
-            [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraDatosGenerales"
-            (modoEdicionSend)="modoEdicionSend($event)" (guardadoSend)="guardadoSend($event)"
-            [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (newEstado)="newEstado()" [noAsocDes]="noAsocDes"
-            (datosEvent)="datosEntradaTarjGenerica = $event">
+        
+        <app-datos-generales-ejg (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" 
+        *ngIf="permisoEscrituraDatosGenerales != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraDatosGenerales" (modoEdicionSend)="modoEdicionSend($event)" 
+        (guardadoSend)="guardadoSend($event)" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (newEstado)="newEstado()" [noAsocDes]="noAsocDes">
         </app-datos-generales-ejg>
 
         <app-servicios-tramitacion *ngIf="permisoEscrituraServiciosTramitacion != undefined && modoEdicion"
@@ -67,12 +64,9 @@
             [permisoEscritura]="permisoEscrituraInformeCalif" (modoEdicionSend)="modoEdicionSend($event)"
             (newEstado)="newEstado()" [openTarjetaInformeCalificacion]="openTarjetaInformeCalificacion">
         </app-informe-calificacion>
-
-        <app-resolucion *ngIf="permisoEscrituraResolucion != undefined && modoEdicion"
-            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
-            [tarjetaResolucion]="tarjetaResolucion" [modoEdicion]="modoEdicion"
-            [permisoEscritura]="permisoEscrituraResolucion" (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaResolucion]="openTarjetaResolucion" (newEstado)="newEstado()">
+        
+        <app-resolucion id="resol" *ngIf="permisoEscrituraResolucion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaResolucion]="tarjetaResolucion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraResolucion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaResolucion]="openTarjetaResolucion"
+        (newEstado)="newEstado()">
         </app-resolucion>
 
         <app-impugnacion *ngIf="permisoEscrituraImpugnacion != undefined && modoEdicion"

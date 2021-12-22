@@ -40,7 +40,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
   selectedDatosCertificados;
   @Input() tarjetaInteres: string;
   tarjetaInteresNum: string;
-
+  @Input() datosColegiado = new FichaColegialGeneralesItem();
   selectedItemColegiaciones: number = 10;
   tarjetaOtrasColegiaciones: string;
   datosColegiaciones: any[] = [];
@@ -225,49 +225,5 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     this.router.navigate(["/guardiasSolicitudesCentralita"]);
   }
 
-  facturaciones(){
-    if(!this.isLetrado){
-      sessionStorage.setItem("colegiadoRelleno","true");
-      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
-    }
-    sessionStorage.setItem("origin","fichaColegial");
-    sessionStorage.setItem("apartadoFacturacion","true");
-    this.router.navigate(["/cartaFacturacionPago"]);
-
-
-  
-  }
-
-  movimientosVarios(){
-    if(!this.isLetrado){
-      sessionStorage.setItem("colegiadoRelleno","true");
-      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
-    }
-    sessionStorage.setItem("origin","fichaColegial");
-    this.router.navigate(["/movimientosVarios"]);
-  
-  }
-
-
-  pagos(){
-    if(!this.isLetrado){
-      sessionStorage.setItem("colegiadoRelleno","true");
-      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
-    }
-    sessionStorage.setItem("origin","fichaColegial");
-    sessionStorage.setItem("apartadoPagos","true");
-    this.router.navigate(["/cartaFacturacionPago"]);
-  
-  }
-
-  retencionesJudiciales(){
-    if(!this.isLetrado){
-      sessionStorage.setItem("colegiadoRelleno","true");
-      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
-    }
-    sessionStorage.setItem("origin","fichaColegial");
-    this.router.navigate(["/retenciones"]);
-  
-  }
 
 }

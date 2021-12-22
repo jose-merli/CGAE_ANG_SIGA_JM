@@ -88,7 +88,7 @@ export class FichaActuacionAsistenciaTarjetaDocumentacionComponent implements On
         this.documentaciones = n.documentacionAsistenciaItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -103,7 +103,7 @@ export class FichaActuacionAsistenciaTarjetaDocumentacionComponent implements On
         this.comboTipoDoc = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboTipoDoc);
@@ -128,7 +128,7 @@ export class FichaActuacionAsistenciaTarjetaDocumentacionComponent implements On
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
 
         }, () => {
           this.commonServices.arregloTildesCombo(this.comboAsociado);
@@ -158,7 +158,7 @@ export class FichaActuacionAsistenciaTarjetaDocumentacionComponent implements On
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.commonServices.arregloTildesCombo(this.comboAsociado);
@@ -206,7 +206,7 @@ export class FichaActuacionAsistenciaTarjetaDocumentacionComponent implements On
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -255,7 +255,7 @@ export class FichaActuacionAsistenciaTarjetaDocumentacionComponent implements On
         this.disableDelete = true;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {

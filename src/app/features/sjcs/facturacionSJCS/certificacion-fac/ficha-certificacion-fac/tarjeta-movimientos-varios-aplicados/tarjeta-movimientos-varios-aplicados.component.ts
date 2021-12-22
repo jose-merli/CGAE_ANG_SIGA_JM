@@ -19,7 +19,7 @@ export class TarjetaMovimientosVariosAplicadosComponent implements OnInit {
   @ViewChild("tabla") tabla;
   progressSpinner;
   permisos;
-  // datosTablaMovApli:CertificacionFacItem[];
+   datosTablaMovApli=[];
   selectedDatos;
   selectedItem: number = 10;
   rowsPerPage: any = [];

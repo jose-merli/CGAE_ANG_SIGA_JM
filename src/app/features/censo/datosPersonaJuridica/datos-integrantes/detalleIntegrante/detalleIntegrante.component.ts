@@ -5,13 +5,10 @@ import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { DatosIntegrantesItem } from "../../../../../models/DatosIntegrantesItem";
-import { DatosLiquidacionIntegrantesItem } from "../../../../../models/DatosLiquidacionIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../../models/DatosIntegrantesObject";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
 import { ColegiadoObject } from "../../../../../models/ColegiadoObject";
-import { DatePipe } from "@angular/common";
-import { DatosIntegrantesLiquidacionObject } from "../../../../../models/DatosIntegrantesLiquidacionObject";
 
 /*** COMPONENTES ***/
 
@@ -22,15 +19,7 @@ import { DatosIntegrantesLiquidacionObject } from "../../../../../models/DatosIn
 })
 export class DetalleIntegranteComponent implements OnInit {
   cols: any = [];
-  datos: any[] = [];
-  nuevaFecha;
-  sortO: number = 1;
-  sortF: string = "";
-  isVolver: boolean = true;
-  isCrear: boolean = false;
-  isEditar: boolean = true;
-  isEliminar: boolean = true;
-  fechaMinima: Date;
+  datos: any[];
   searchIntegrantes = new DatosIntegrantesObject();
   datosActivos: any[];
   select: any[];
@@ -79,11 +68,8 @@ export class DetalleIntegranteComponent implements OnInit {
   openFicha: boolean = false;
   disabledAction: boolean = false;
   fichasPosibles: any[];
-  Liquidacion: DatosLiquidacionIntegrantesItem;
-  LiquidacionActiveAnt: DatosIntegrantesItem = new DatosIntegrantesItem();
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
-  searchLiquidacion :  DatosIntegrantesLiquidacionObject = new DatosIntegrantesLiquidacionObject();
   fechaCarga: Date;
   fechaBajaCargo: Date;
   columnasTabla: any = [];
@@ -103,16 +89,10 @@ export class DetalleIntegranteComponent implements OnInit {
   @ViewChild("table")
   table;
   selectedDatos;
-  idPersona: any;
-  observaciones: any;
-  isGuardar: boolean = false;
-  registroAnteriorMod: any;
-  datosLiquidacion: DatosLiquidacionIntegrantesItem[];
 
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
-    public datepipe: DatePipe,
     private translateService: TranslateService
   ) { }
 
@@ -152,16 +132,6 @@ export class DetalleIntegranteComponent implements OnInit {
         }
 
       }
-             
-      // CRISTINA
-      // if(this.body.sociedad != undefined && this.body.sociedad !=  null){
-      //   if(this.body.sociedad == "SI"){
-      //     this.checked = false;
-      //   }else{
-      //     this.checked = true;
-      //   }
-      // }
-
       if(this.body.descripcionCargo != undefined && this.body.descripcionCargo !=  null){
             this.body.cargo = this.body.descripcionCargo;
       }
@@ -195,7 +165,7 @@ export class DetalleIntegranteComponent implements OnInit {
             .subscribe(
               n => {
                 this.colegios = JSON.parse(n["body"]).comboColegiadoItems;
-                // console.log("colegiaciones", this.colegios);
+                // //console.log("colegiaciones", this.colegios);
 
                 this.colegios.forEach(element => {
                   this.nColegiado.push({
@@ -223,7 +193,7 @@ export class DetalleIntegranteComponent implements OnInit {
                 }
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         }
@@ -252,16 +222,20 @@ export class DetalleIntegranteComponent implements OnInit {
       {
         key: "vinculacion",
         activa: this.editar
-      },
-      {
-        key: "historicoLiquidacion",
-        activa: this.editar
       }
     ];
     this.cols = [
-      { field: "fechaInicio", header: "facturacionSJCS.facturacionesYPagos.fecha" },
-      { field: "sociedad", header: "cen.integrantes.liqSJCS" },
-      { field: "observaciones", header: "general.description" }
+      { field: "nif", header: "administracion.usuarios.literal.NIF" },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      { field: "apellidos", header: "Apellidos" },
+      { field: "fechaInicioCargo", header: "Fecha de alta - fecha de baja" },
+      { field: "cargo", header: "Cargos del integrante" },
+      { field: "liquidacionComoSociedad", header: "Liquidación como sociedad" },
+      { field: "ejerciente", header: "Ejerciente" },
+      { field: "participacion", header: "Participación en la sociedad" }
     ];
 
     this.rowsPerPage = [
@@ -288,143 +262,6 @@ export class DetalleIntegranteComponent implements OnInit {
     this.getComboProvincias();
     this.getComboTipoColegio();
     this.getComboTiposCargos();
-
-    this.getHistoricoLiquidacion();
-  }
-
-  borrar() {
-    //•	Eliminar: borrará el último registro solo si el colegiado no está en un pago con fecha posterior o igual a la fecha del último registro.
-    //comprobar que el colegiado tiene algún pago con fecha posterior o igual a la fecha de registro --> fecha inicio de la tabla this.datos
-    //si devuelve >0 o true significa que tiene pagos y no se puede eliminar
-    this.sigaServices.postPaginado("integrantes_buscarPagosColegiados","?idPersona=" + this.body.idPersona,this.datosLiquidacion[0]).subscribe(
-      data => { 
-        let ok = data.body;
-        if(ok){
-          this.sigaServices.postPaginado("integrantes_eliminarLiquidacion","?idPersona=" + this.body.idPersona,this.datosLiquidacion[0]).subscribe(
-            data => { 
-              let ok = data.body;
-              if(ok){
-                this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-                this.getHistoricoLiquidacion();
-              }
-            },
-            err => {
-              this.progressSpinner = false;
-              if (null != err.error && JSON.parse(err.error).error.description != "") {
-                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-              } else {
-                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-              }
-            },
-            () => {
-              this.volver();
-            }
-          );
-        }else{
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("No se puede eliminar porque el colegiado tiene pagos con fecha posterior o igual a la fecha del registro"));
-
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        if (null != err.error && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-      },
-      () => {
-        this.volver();
-      }
-    );
-  }
-
-  volver() {
-    this.search();
-      this.isVolver = !this.isVolver;
-      this.isCrear = !this.isCrear;
-      this.isEditar = !this.isEditar;
-      this.isEliminar = !this.isEliminar;
-  }
-
-  showMessage(severity, summary, msg) {
-		this.msgs = [];
-		this.msgs.push({
-			severity: severity,
-			summary: summary,
-			detail: msg
-		});
-	}
-
-  crear() {
-    this.isGuardar = true;
-    this.isCrear = true;
-    this.isEliminar = true;
-   
-     if (this.datosLiquidacion == null ||this.datosLiquidacion == undefined ||this.datosLiquidacion.length == 0) {
-      this.fechaMinima = new Date();
-       this.datosLiquidacion = [];
-       //fecha minima es hoy
-     }else { 
-       //entra por aquí porque en this.datos hay un alta
-      //  this.datosLiquidacion =  JSON.parse(JSON.stringify(this.datos));
-       this.fechaMinima = JSON.parse(JSON.stringify(this.datosLiquidacion[0].fechaInicio));    
-    }
-
-    let nuevaLinea = new DatosLiquidacionIntegrantesItem();
-
-    if(this.body && this.body != null && this.body.sociedad == "SI"){
-      nuevaLinea.sociedad = "Baja";
-    }else{
-      nuevaLinea.sociedad = "Alta";
-    }
-
-    this.datosLiquidacion.unshift(nuevaLinea); 
-
-  }
-
-  // formatDate(date) {
-  //   const pattern = 'dd/MM/yyyy';
-  //   return this.datepipe.transform(date, pattern);
-  // }
-  
-  getHistoricoLiquidacion(){
-    this.Liquidacion = new DatosLiquidacionIntegrantesItem();
-    this.Liquidacion.idComponente = this.body.idComponente;
-    this.Liquidacion.idPersona = this.body.idPersona;
-    this.Liquidacion.idInstitucion = this.body.idInstitucion;
-    this.Liquidacion.sociedad = this.body.sociedad;
-
-
-    this.sigaServices.post("integrantes_listadoHistoricoLiquidacion",this.Liquidacion).subscribe(
-      data => {
-        
-        // this.searchLiquidacion = data.body;
-        this.datosLiquidacion = JSON.parse(data.body).datosLiquidacionItem;
-        
-        this.datosLiquidacion.forEach(element => {
-          element.fechaInicio = new Date(element.fechaInicio); 
-          
-          if(element.sociedad == "1"){
-            element.sociedad = "Alta";
-          }else{
-            element.sociedad = "Baja";
-          }
-
-          element.idPersona = this.body.idPersona;
-          element.idComponente = this.body.idComponente;
-          element.idInstitucion = this.body.idInstitucion;
-        });
-
-        this.progressSpinner = false;       
-      },
-      err => {
-        this.progressSpinner = false;     
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
   }
 
   getComboColegios() {
@@ -434,7 +271,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.arregloTildesCombo(this.colegios);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -479,7 +316,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.actualizarDescripcionProvincia();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -503,11 +340,11 @@ export class DetalleIntegranteComponent implements OnInit {
           }
         }
 
-        console.log(this.colegiosArray);
+        //console.log(this.colegiosArray);
         this.actualizarDescripcionTipoColegio();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -520,7 +357,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.actualizarDescripcionCargo();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -771,7 +608,7 @@ export class DetalleIntegranteComponent implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -789,8 +626,6 @@ export class DetalleIntegranteComponent implements OnInit {
       this.updateIntegrante();
     }
   }
-
-  
 
   showSuccess() {
     this.msgs = [];
@@ -851,14 +686,6 @@ export class DetalleIntegranteComponent implements OnInit {
       }
     }
 
-    // CRISTINA
-    // if (this.checked != undefined && this.checked != null) {
-    //   if(this.checked){
-    //     updateIntegrante.sociedad = "SI";
-    //   }else{
-    //     updateIntegrante.sociedad = "NO";
-    //   }
-    // }
     if (
       this.body.capitalSocial != undefined &&
       this.body.capitalSocial != null
@@ -913,7 +740,7 @@ export class DetalleIntegranteComponent implements OnInit {
             this.showSuccess();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -964,18 +791,6 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.flagSocio = "";
       }
-
-      // CRISTINA
-      // if (this.checked != undefined && this.checked != null) {
-      //   if(this.checked){
-      //     newIntegrante.sociedad = "SI";
-      //   }else{
-      //     newIntegrante.sociedad = "NO";
-      //   }
-      // } else {
-      //   newIntegrante.sociedad = "";
-      // }
-
       if (
         this.body.tipoIdentificacion != undefined &&
         this.body.tipoIdentificacion != null
@@ -1117,7 +932,7 @@ export class DetalleIntegranteComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -1268,7 +1083,7 @@ export class DetalleIntegranteComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -1297,11 +1112,11 @@ export class DetalleIntegranteComponent implements OnInit {
       item => item.value === this.body.idProvincia
     );
 
-    // console.log("dde", this.descripcionProvincia);
+    // //console.log("dde", this.descripcionProvincia);
   }
 
   onChange(event) {
-    // console.log("fo", event.replace(".", ","));
+    // //console.log("fo", event.replace(".", ","));
     this.body.capitalSocial = event.replace(",", ".");
   }
 
@@ -1336,94 +1151,5 @@ export class DetalleIntegranteComponent implements OnInit {
         }
       }
     });
-  }
-
-  //NUEVOOOO
-  onChangeCalendar(event) {
-    this.nuevaFecha = event;
-    this.isVolver = false;
-    // if (this.datos.length > 1) {
-    //   this.datos.forEach((value: any, key: number) => {
-    //     if (
-    //       value.recursoRetencion == this.retencionActiveAnt.recursoRetencion &&
-    //       value.fechaInicio == this.retencionActiveAnt.fechaInicio
-    //     ) {
-    //       this.datos[key].fechaFin = this.datepipe.transform(
-    //         new Date(event - 86400000),
-    //         "dd/MM/yyyy"
-    //       );          
-    //     }
-    //   });
-    // }
-
-    // if //(
-    //   //this.body.descripcionLiquidacion != "" &&
-    //   //this.body.descripcionLiquidacion != undefined
-    // ) {
-    //   this.isEditar = false;
-    //   this.isCrear = true;
-    // }
-
-   
-  }
-
-  guardarLiquidacion(){
-
-    this.registroAnteriorMod = new DatosLiquidacionIntegrantesItem();
-    if (this.datosLiquidacion != null && this.datosLiquidacion != undefined && this.datosLiquidacion.length != 0) {
-    
-      this.registroAnteriorMod = JSON.parse(JSON.stringify(this.datosLiquidacion[0]));
-    }
-    this.registroAnteriorMod.anterior = true;
-
-    this.Liquidacion = new DatosLiquidacionIntegrantesItem();
-    this.Liquidacion.fechaInicio= new Date(this.nuevaFecha);
-    this.Liquidacion.observaciones = this.observaciones;//.toString();
-    this.Liquidacion.idComponente = this.body.idComponente;
-    this.Liquidacion.idPersona = this.body.idPersona;
-    this.Liquidacion.idInstitucion = this.body.idInstitucion;
-
-
-    if(this.datosLiquidacion[0].sociedad == "SI"){
-      this.Liquidacion.sociedad = "1";
-    }else{
-      this.Liquidacion.sociedad = "0";
-    }
-
-     this.Liquidacion.anterior = false;
-    
-    let arr = [];
-    arr.push(this.Liquidacion);
-    arr.push(this.registroAnteriorMod);
-
-    if(this.Liquidacion.fechaInicio != null && this.Liquidacion.fechaInicio != undefined){
-      this.sigaServices.post("integrantes_insertHistoricoLiquidacion",arr).subscribe(
-        data => {
-          let ok = data.body;
-          this.isGuardar = false;
-          this.progressSpinner = false;
-     
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.getHistoricoLiquidacion();
-          
-        },
-        err => {
-          this.progressSpinner = false;
-          if (null != err.error && JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-           this.isGuardar = false;
-        },
-        () => {
-          this.progressSpinner = false;
-           this.isGuardar = false;
-        }
-      );
-    }else{
-      console.log("No está la fecha seleccionada");
-      this.isGuardar = false;
-    }
   }
 }

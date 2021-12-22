@@ -101,7 +101,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboGrupoZona);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -113,7 +113,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboJurisdicciones);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -125,7 +125,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboGrupoFacturacion);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -137,7 +137,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboPartidasPresupuestarias);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -148,7 +148,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -172,7 +172,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
           this.comboGuardias = data.combooItems;    
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         ()=>{
           this.commonServices.arregloTildesCombo(this.comboGuardias);
@@ -188,7 +188,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -199,7 +199,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoGuardia);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -210,7 +210,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -247,7 +247,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }
     )
@@ -266,7 +266,7 @@ export class FiltrosGuardiaIncompatibilidadesComponent implements OnInit {
             this.partidasJudiciales = n.zonasItems;
           },
           err => {
-            console.log(err);
+            //console.log(err);
 
           }, () => {
             this.getPartidosJudiciales();

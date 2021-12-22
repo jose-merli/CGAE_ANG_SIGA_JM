@@ -58,7 +58,7 @@ export class FichaActuacionAsistenciaTarjetaHistoricoComponent implements OnInit
         this.historicoItems = n.historicoActuacionAsistenciaItem;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;

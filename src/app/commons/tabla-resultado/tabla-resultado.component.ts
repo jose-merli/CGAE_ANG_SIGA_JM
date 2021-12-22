@@ -26,7 +26,7 @@ export class TablaResultadoComponent implements OnInit {
   ) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
-        console.log('event.target.classList: ', event.target.classList)
+        //console.log('event.target.classList: ', event.target.classList)
         if (!event.target.classList.contains("selectedRowClass")) {
           this.selectedArray = [];
         }

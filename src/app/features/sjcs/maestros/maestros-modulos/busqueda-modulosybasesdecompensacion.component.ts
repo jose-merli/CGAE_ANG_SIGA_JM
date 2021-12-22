@@ -101,7 +101,7 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       });
   }
 

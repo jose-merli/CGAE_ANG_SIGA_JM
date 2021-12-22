@@ -199,7 +199,7 @@ export class AsistenciasFichaPreasistenciasComponent implements OnInit {
           }    
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         ()=>{
           this.progressSpinner = false;
@@ -234,7 +234,7 @@ export class AsistenciasFichaPreasistenciasComponent implements OnInit {
           }    
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         ()=>{
           this.progressSpinner = false;

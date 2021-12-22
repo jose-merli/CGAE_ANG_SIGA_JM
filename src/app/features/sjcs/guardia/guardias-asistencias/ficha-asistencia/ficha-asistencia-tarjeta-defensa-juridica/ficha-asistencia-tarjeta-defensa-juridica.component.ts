@@ -44,7 +44,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
         this.comboJuzgados = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboJuzgados);
@@ -60,7 +60,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
         this.comboComisarias = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboComisarias);
@@ -79,7 +79,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
         this.comboDelitos = combos.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMsg('error',this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), err);
         this.progressSpinner = false;
       },
@@ -99,7 +99,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
         this.comboProcedimientos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboProcedimientos);
@@ -118,7 +118,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
           this.defensaJuridicaItemAux = Object.assign({},this.defensaJuridicaItem);
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
@@ -147,7 +147,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;

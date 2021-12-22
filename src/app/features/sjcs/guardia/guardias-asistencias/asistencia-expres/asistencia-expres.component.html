@@ -7,7 +7,7 @@
                 name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
         </div>
         <div [hidden]="modoBusqueda != 'b'">
-            <app-buscador-asistencia-expres [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
+            <app-buscador-asistencia-expres (letradoFillAutomatic)="letradoFillAutomatic($event)" [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
         </div>
         <div [hidden]="modoBusqueda != 'a'">
             <app-buscador-asistencias (searchAgain)="searchAsistenciasEvent($event)" [modoBusqueda]="modoBusqueda"></app-buscador-asistencias>
@@ -20,7 +20,7 @@
                 [disabled]="isDisabled()"></button>
             <button type="submit" pButton icon="fa fa-search" iconPos="left"
                 label="{{'general.boton.search' | translate}}"
-                (click)="checkSustitutoCheckBox()"
+                (click)="buscarAE()"
                 [disabled]="isDisabled()"></button>
         </div>
     </div>

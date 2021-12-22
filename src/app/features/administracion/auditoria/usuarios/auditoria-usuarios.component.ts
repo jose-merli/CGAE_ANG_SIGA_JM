@@ -117,7 +117,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.columnasTabla = [
@@ -234,7 +234,7 @@ export class AuditoriaUsuarios extends SigaWrapper implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

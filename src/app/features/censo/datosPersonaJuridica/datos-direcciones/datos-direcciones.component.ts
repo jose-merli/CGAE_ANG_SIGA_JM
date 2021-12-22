@@ -204,7 +204,7 @@ export class DatosDireccionesComponent implements OnInit {
         this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => { 
         if(this.tarjeta == "3" || this.tarjeta == "2"){
@@ -280,7 +280,7 @@ export class DatosDireccionesComponent implements OnInit {
             this.comprobarValidacion();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => { }
@@ -358,7 +358,7 @@ export class DatosDireccionesComponent implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -378,7 +378,7 @@ export class DatosDireccionesComponent implements OnInit {
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
       data => { },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;

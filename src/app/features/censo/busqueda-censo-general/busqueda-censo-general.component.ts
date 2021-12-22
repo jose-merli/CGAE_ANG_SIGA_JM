@@ -96,7 +96,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
         this.colegios = n.combooItems;
       },
             (err) => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -223,7 +223,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
             this.datos = this.bodySearch.busquedaFisicaItems;
           },
                 (err) => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -263,7 +263,7 @@ export class BusquedaCensoGeneralComponent implements OnInit {
           this.datos = this.bodySearch.busquedaFisicaItems;
         },
             (err) => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

@@ -18,7 +18,7 @@ export class TarjetaMovimientosVariosAsociadosComponent implements OnInit {
   @ViewChild("tabla") tabla;
   progressSpinner;
   permisos;
-  // datosTablaMovAso:CertificacionFacItem[];
+   datosTablaMovAso=[];
   selectedDatos;
   selectedItem: number = 10;
   rowsPerPage: any = [];

@@ -9,7 +9,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
   styleUrls: ['./tabla-busqueda-baremos.component.scss']
 })
 export class TablaBusquedaBaremosComponent implements OnInit {
-
+  progressSpinner: boolean = false;
   selectedDatos = [];
   datosDefecto = [
     {
