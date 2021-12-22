@@ -36,7 +36,6 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
   
   constructor(
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
     private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
@@ -68,6 +67,8 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
   // Datos de contadores
 
   getContadoresRectificativasSerie() {
+    this.progressSpinner = true;
+
     this.sigaServices.get("facturacionPyS_getContadoresRectificativasSerie").subscribe(
       n => {
         this.contadoresRectificativasSerie = n.contadorSeriesItems;
@@ -78,9 +79,11 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
           this.body.idContadorFacturas = null;
         }
         this.actualizarInputs();
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }

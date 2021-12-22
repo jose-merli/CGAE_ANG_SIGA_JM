@@ -47,6 +47,8 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
   // Obtener todas las etiquetas
 
   cargarDatos() {
+    this.progressSpinner = true;
+
     this.sigaServices.get("facturacionPyS_comboEtiquetas").subscribe(
       n => {
         this.etiquetasNoSeleccionadas = n.combooItems;
@@ -56,6 +58,7 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -72,9 +75,12 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
 
         this.etiquetasSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasSeleccionadas));
         this.etiquetasNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.etiquetasNoSeleccionadas));
+
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }

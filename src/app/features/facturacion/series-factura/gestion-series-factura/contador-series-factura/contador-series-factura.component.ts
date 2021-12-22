@@ -68,6 +68,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
   // Datos de contadores
 
   getContadoresSerie() {
+    this.progressSpinner = true;
     this.sigaServices.get("facturacionPyS_getContadoresSerie").subscribe(
       n => {
         this.contadoresSerie = n.contadorSeriesItems;
@@ -77,9 +78,11 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
           this.body.idContadorFacturas = null;
         }
         this.actualizarInputs();
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }

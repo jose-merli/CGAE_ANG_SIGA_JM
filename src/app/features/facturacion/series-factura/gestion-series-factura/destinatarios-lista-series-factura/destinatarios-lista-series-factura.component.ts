@@ -23,7 +23,7 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
   selectedConsulta: any;
 
   // Tabla
-  datos: any[];
+  datos: any[] = [];
   datosInit: any[] = [];
   cols: any[];
   first: number = 0;
@@ -44,6 +44,10 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
 
   institucionActual: number;
   nuevaConsulta: boolean = false;
+  resaltadoDatos: boolean = false;
+
+  finalidad: string = "";
+  objetivo: string = "";
   
   constructor(
     private sigaServices: SigaServices,
@@ -58,7 +62,6 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
 
     this.getCols();
     this.getInstitucion();
-    this.getConsultas();
 
     this.progressSpinner = false;
   }
@@ -118,6 +121,8 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
             console.log(data);
             this.consultas = data.consultas;
             this.commonsService.arregloTildesCombo(this.consultas);
+
+            this.progressSpinner = false;
         },
         err => {
             console.log(err);
@@ -128,15 +133,20 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
 
   // Combo de consultas
   getConsultasSerie() {
+    this.progressSpinner = true;
+
     this.sigaServices.getParam("facturacionPyS_getConsultasSerie", `?idSerieFacturacion=${this.body.idSerieFacturacion}`).subscribe(
         data => {
             console.log(data);
             this.datosInit = data.consultaItem;
             this.datosInit.forEach(e => {
+              this.getFinalidad(e.idConsulta);
               e.finalidad = "";
               e.asociada = true;
             });
             this.datos = JSON.parse(JSON.stringify(this.datosInit));
+
+            this.getConsultas();
         },
         err => {
             console.log(err);
@@ -145,12 +155,45 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
     );
   }
 
+  getFinalidad(id) {
+    this.sigaServices.post("plantillasEnvio_finalidadConsulta", id).subscribe(
+        data => {
+            this.progressSpinner = false;
+            this.finalidad = JSON.parse(data["body"]).finalidad;
+            this.objetivo = JSON.parse(data['body']).objetivo;
+            for (let dato of this.datos) {
+                if (!dato.idConsulta && dato.idConsulta == id) {
+                    dato.idConsulta = id;
+                    dato.finalidad = this.finalidad;
+                    dato.objetivo = this.objetivo;
+                } else if (dato.idConsulta && dato.idConsulta == id) {
+                    dato.finalidad = this.finalidad;
+                    dato.objetivo = this.objetivo;
+                }
+            }
+            this.datos = [...this.datos];
+            console.log(this.datos);
+        },
+        err => {
+            console.log(err);
+            this.progressSpinner = false;
+        },
+        () => { }
+    );
+  }
+
+  onChangeConsultas(e) {
+    let id = e.value;
+    this.getFinalidad(id);
+    console.log(id);
+  }
+
   // Nueva consulta
 
   addConsulta(): void {
     this.numSelected = 0;
     let objNewConsulta = {
-        idConsulta: "",
+        idConsulta: undefined,
         nombre: "",
         finalidad: "",
         asociada: false
@@ -162,8 +205,8 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
         this.datos = [];
     }
 
-    this.datos.push(objNewConsulta);
-    this.datos = [...this.datos];
+    this.datos.unshift(objNewConsulta);
+    //this.datos = [...this.datos];
     this.selectedDatos = [];
   }
 
@@ -171,13 +214,20 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
 
   restablecer(): void {
     this.datos = JSON.parse(JSON.stringify(this.datosInit));
+    this.nuevaConsulta = false;
+    this.resaltadoDatos = false;
+  }
+
+  // Guardar
+  isValid(): boolean {
+    return this.nuevaConsulta && this.datos[0].idConsulta != undefined && this.datos[0].idConsulta.trim() != "";
   }
 
   guardar(): void {
-    if (!this.deshabilitarGuardado()) {
+    if (this.isValid() && !this.deshabilitarGuardado()) {
       this.progressSpinner = true;
 
-      let idConsulta = this.datos[this.datos.length - 1].idConsulta;
+      let idConsulta = this.datos[0].idConsulta;
       let objNuevo = {
         idSerieFacturacion: this.body.idSerieFacturacion,
         idConsulta: idConsulta,
@@ -193,7 +243,9 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
           this.progressSpinner = false;
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       });
-      
+    } else if (!this.isValid()) {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
     }
     
   }
@@ -220,7 +272,7 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return false;//this.arraysEquals(this.etiquetasSeleccionadasInicial, this.etiquetasSeleccionadas);
+    return this.datos == undefined || this.datos.length == 0 || this.datos[0].asociada;
   }
 
   // Enlace a la ficha de consultas
@@ -234,6 +286,13 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
         this.router.navigate(["/fichaConsulta"]);
     }
     this.numSelected = this.selectedDatos.length;
+  }
+
+  // Estilo obligatorio
+  styleObligatorio(evento: string) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
   }
 
   showMessage(severity, summary, msg) {

@@ -51,6 +51,8 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
   estado: string = "";
 
   resaltadoDatos: boolean = false;
+  @Input() resaltadoAbreviatura: boolean = false;
+  @Input() resaltadoDescripcion: boolean = false;
   
   constructor(
     private commonsService: CommonsService,
@@ -282,21 +284,17 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.estado = this.esActivo() ? "Alta" : `Baja desde ${this.datepipe.transform(this.body.fechaBaja, 'dd/MM/yyyy')}`;
 
-    if (this.body.tiposProductos != undefined) {
-      this.body.tiposProductos.forEach(e => {
-        if (e.color == undefined) {
-          e.color = "#024eff";
-        }
-      });
-    }
-    
-    if (this.body.tiposServicios != undefined) {
-      this.body.tiposServicios.forEach(e => {
-        if (e.color == undefined) {
-          e.color = "#024eff";
-        }
-      });
-    }
+    this.body.tiposProductos.forEach(e => {
+      if (e.color == undefined) {
+        e.color = "#024eff";
+      }
+    });
+  
+    this.body.tiposServicios.forEach(e => {
+      if (e.color == undefined) {
+        e.color = "#024eff";
+      }
+    });
 
     this.resaltadoDatos = false;
   }
@@ -323,6 +321,24 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
   styleObligatorio(evento: string) {
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
       return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  styleAbreviatura() {
+    let styleObligatorio = this.styleObligatorio(this.body.abreviatura);
+    if (this.resaltadoAbreviatura && this.body.abreviatura != this.bodyInicial.abreviatura) {
+      return 'is-invalid';
+    } else if (styleObligatorio != undefined) {
+      return styleObligatorio;
+    }
+  }
+
+  styleDescripcion() {
+    let styleObligatorio = this.styleObligatorio(this.body.descripcion);
+    if (this.resaltadoDescripcion && this.body.descripcion != this.bodyInicial.descripcion) {
+      return 'is-invalid';
+    } else if (styleObligatorio != undefined) {
+      return styleObligatorio;
     }
   }
 

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
+import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -42,12 +43,14 @@ export class GestionSeriesFacturaComponent implements OnInit {
   enlacesTarjetaResumen = [];
   modoEdicion: boolean = true;
 
+  resaltadoAbreviatura: boolean = false;
+  resaltadoDescripcion: boolean = false;
+
   constructor(
     private translateService: TranslateService,
-    private persistenceService: PersistenceService,
     private location: Location,
-    private router: Router,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -74,6 +77,14 @@ export class GestionSeriesFacturaComponent implements OnInit {
 
     this.progressSpinner = false;
     this.goTop();
+
+    // Scroll a destinatarios individuales
+    if (sessionStorage.getItem("destinatarioIndv")) {
+      this.openTarjetaDestinatariosIndividuales = true;
+      setTimeout(() => {
+        document.getElementById("destinatariosIndividuales").scrollIntoView({ block: "center", behavior: 'smooth',inline: "start" });
+      }, 5);
+    }
   }
 
   // Tarjeta resumen
@@ -231,9 +242,22 @@ export class GestionSeriesFacturaComponent implements OnInit {
         console.log("Nuevo id:", n);
         let idSerieFacturacion = JSON.parse(n.body).id;
         this.body.idSerieFacturacion = idSerieFacturacion;
+
+        this.resaltadoAbreviatura = false;
+        this.resaltadoDescripcion = false;
       },
       err => {
         let error = JSON.parse(err.error).error;
+
+        if (error.message == "facturacion.seriesFactura.abreviatura.unica") {
+          this.resaltadoAbreviatura = true;
+        } else if (error.message == "facturacion.seriesFactura.descripcion.unica") {
+          this.resaltadoDescripcion = true;
+        } else {
+          this.resaltadoAbreviatura = false;
+          this.resaltadoDescripcion = false;
+        }
+
         if (error != undefined && error.message != undefined) {
           let translatedError = this.translateService.instant(error.message);
           if (translatedError && translatedError.trim().length != 0) {
@@ -357,6 +381,10 @@ export class GestionSeriesFacturaComponent implements OnInit {
           break;
       }
     }
+  }
+
+  clear() {
+    this.msgs = [];
   }
   
   showMessage(severity, summary, msg) {

@@ -41,7 +41,6 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
   
   constructor(
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router
@@ -111,14 +110,18 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
   }
   
   getDestinatariosSeries() {
+    this.progressSpinner = true;
+
     this.sigaServices.getParam("facturacionPyS_getDestinatariosSeries", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
       n => {
         this.datos = n.destinatariosSeriesItems;
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
         console.log(n);
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -151,7 +154,17 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
         this.progressSpinner = false;
       },
       err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        let error = JSON.parse(err.error).error;
+
+        let message = this.translateService.instant("general.mensaje.error.bbdd");
+        if (error != undefined && error.message != undefined) {
+          let translatedError = this.translateService.instant(error.message);
+          if (translatedError && translatedError.trim().length != 0) {
+            message = translatedError;
+          }
+        }
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
         this.progressSpinner = false;
       }
     );
