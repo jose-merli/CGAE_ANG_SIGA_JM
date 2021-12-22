@@ -244,6 +244,7 @@ export class ConsultasComponent implements OnInit {
       }
     } else {
       this.bodySearch.generica = "N";
+      this.bodySearch.idClaseComunicacion = "5";
     }
   }
 
