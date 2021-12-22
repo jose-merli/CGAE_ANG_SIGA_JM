@@ -1000,7 +1000,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 			this.sigaServices.post("guardiasInscripciones_insertSolicitarAlta", body).subscribe(
 				data => {
-					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada")
+						+ ". Se ha dado de alta en " + body.inscripcionesItem.length + " guardias");
 					this.progressSpinner = false;
 					//Como se puede solicitar el alta para varias guardias no se puede refrescar la pantalla
 					this.location.back;
