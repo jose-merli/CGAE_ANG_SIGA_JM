@@ -160,41 +160,6 @@ onChangeSelectAll() {
   }
 }
 
-/*
-  // Eliminar facturas
-  confirmEliminar(): void {
-    let mess = "Se va a proceder a dar de baja las facturas seleccionadas ¿Desea continuar?";
-    let icon = "fa fa-eraser";
-
-    this.confirmationService.confirm({
-      //key: "asoc",
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.progressSpinner = true;
-        this.eliminar();
-      },
-      reject: () => {
-        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
-      }
-    });
-  }
-
-  eliminar(): void {
-    this.sigaServices.post("facturacionPyS_eliminaSerieFacturacion", this.selectedDatos).subscribe(
-      data => {
-        //this.busqueda.emit();
-        this.showMessage("success", "Eliminar", "Las series de facturación han sido dadas de baja con exito.");
-        this.progressSpinner = false;
-      },
-      err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        this.progressSpinner = false;
-      }
-    );
-  }
-  */
-
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
