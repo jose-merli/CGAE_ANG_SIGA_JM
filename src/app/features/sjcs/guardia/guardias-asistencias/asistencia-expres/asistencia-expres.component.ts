@@ -315,7 +315,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
 
         fechaActuacionType = 'datePicker';
-        fechaActuacionValue = new Date(Date.parse(actuacion.fechaActuacion));
+        if(actuacion.fechaActuacion!=null){
+          fechaActuacionValue = new Date(Date.parse(actuacion.fechaActuacion));
+        }else{
+          fechaActuacionValue = null;
+        }
 
         let comisariaJuzgado = 'C';
         let idJuzgadoComisaria = '';

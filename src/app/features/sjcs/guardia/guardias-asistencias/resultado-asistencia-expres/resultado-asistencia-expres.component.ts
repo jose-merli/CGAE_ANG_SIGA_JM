@@ -239,7 +239,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     row1.position = 'collapse';
     row2.position = 'collapse';
     rowGroup.rows = [row1, row2];
-    rowGroup.id = 'Ayyyy/XXXXX';
+    rowGroup.id = '';
     if(this.rowGroups){
       this.rowGroups.unshift(rowGroup);
       this.tabla.totalRegistros = this.rowGroups.length;
