@@ -247,7 +247,13 @@ jsonToRow(){
   
   let arr = [];
   this.respuestaIncompatibilidades.forEach((res, i) => {
-    let ArrComboValue = [res.idGuardiaIncompatible];
+    let arrids = res.idGuardiaIncompatible.split(',');
+    let st = "";
+    /*arr.foreach(id =>{
+      st = st + "'" + id + "'" + ", ";
+    })*/
+    let ArrComboValue = [""] ;
+    let ArrComboValue = arrids;
     let ArrNombresGI = [res.nombreGuardiaIncompatible]
     let objCells = [
     { type: 'text', value: res.nombreTurno },
