@@ -4,16 +4,23 @@ import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
 import { BusquedaRetencionesRequestDTO } from '../../../../../models/sjcs/BusquedaRetencionesRequestDTO';
 import { CertificacionesItem } from '../../../../../models/sjcs/CertificacionesItem';
+import { CertificacionesObject } from '../../../../../models/sjcs/CertificacionesObject';
 import { EstadoCertificacionDTO } from '../../../../../models/sjcs/EstadoCertificacionDTO';
 import { EstadoCertificacionItem } from '../../../../../models/sjcs/EstadoCertificacionItem';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { ESTADO_CERTIFICACION } from '../certificacion-fac.component';
 import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjeta-datos-generales.component';
 import { TarjetaFacturacionComponent } from './tarjeta-facturacion/tarjeta-facturacion.component';
 import { TarjetaMovimientosVariosAplicadosComponent } from './tarjeta-movimientos-varios-aplicados/tarjeta-movimientos-varios-aplicados.component';
 import { TarjetaMovimientosVariosAsociadosComponent } from './tarjeta-movimientos-varios-asociados/tarjeta-movimientos-varios-asociados.component';
+
+export interface Enlace {
+  id: string;
+  ref: any;
+}
 
 @Component({
   selector: 'app-ficha-certificacion-fac',
@@ -26,21 +33,29 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
   modoEdicion: boolean = false;
   permisoEscritura: any;
   progressSpinner: boolean = false;
-  certificacion: CertificacionesItem = undefined;
+  certificacion: CertificacionesItem = new CertificacionesItem();
   estadosCertificacion: EstadoCertificacionItem[] = [];
-  listaTarjetas = [
-    { id: 'fichaCertDatosGenerales', nombre: this.translateService.instant('general.message.datos.generales') },
-    { id: 'fichaCertFacturacion', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion') },
-    { id: 'fichaCertMovApli', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosApli') },
-    { id: 'fichaCertMovAso', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosAso') },
-  ];
   showCards: boolean = false;
   filtrosDeBusqueda: BusquedaRetencionesRequestDTO = undefined;
+  tarjetaFija = {
+    nombre: 'facturacionSJCS.facturacionesYPagos.inforesumen',
+    icono: 'fas fa-clipboard',
+    imagen: '',
+    detalle: false,
+    fixed: true,
+    campos: [],
+    enlaces: [
+      { id: 'fichaCertDatosGenerales', nombre: this.translateService.instant('general.message.datos.generales'), ref: null },
+      { id: 'fichaCertFacturacion', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion'), ref: null },
+      { id: 'fichaCertMovApli', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosApli'), ref: null },
+      { id: 'fichaCertMovAso', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosAso'), ref: null }
+    ]
+  };
 
   @ViewChild(TarjetaDatosGeneralesComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesComponent;
-  @ViewChild(TarjetaFacturacionComponent) tarjetaFact;
-  @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli;
-  @ViewChild(TarjetaMovimientosVariosAsociadosComponent) tarjetaMovAso;
+  @ViewChild(TarjetaFacturacionComponent) tarjetaFact: TarjetaFacturacionComponent;
+  @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli: TarjetaMovimientosVariosAplicadosComponent;
+  @ViewChild(TarjetaMovimientosVariosAsociadosComponent) tarjetaMovAso: TarjetaMovimientosVariosAsociadosComponent;
 
   constructor(
     private location: Location,
@@ -83,8 +98,14 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
           this.certificacion.fechaHasta = new Date(this.certificacion.fechaHasta);
         }
 
-        this.showCards = true;
         this.modoEdicion = true;
+        this.showCards = true;
+      }
+
+      if (sessionStorage.getItem("nuevoDesdeTablaCerti")) {
+        sessionStorage.removeItem("nuevoDesdeTablaCerti");
+        this.modoEdicion = false;
+        this.showCards = true;
       }
 
     }).catch(error => console.error(error));
@@ -93,10 +114,6 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
   ngAfterViewChecked(): void {
     this.changeDetectorRef.detectChanges();
-  }
-
-  changeModoEdicion(event) {
-    this.modoEdicion = event;
   }
 
   ngAfterViewInit() {
@@ -133,10 +150,50 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     this.location.back();
   }
 
+  compruebaDatosGeneralesObligatorios(): boolean {
+
+    let res = false;
+
+    if (this.tarjetaDatosGenerales && this.tarjetaDatosGenerales.certificacion && this.tarjetaDatosGenerales.certificacion != null
+      && this.tarjetaDatosGenerales.certificacion.nombre && this.tarjetaDatosGenerales.certificacion.nombre != null &&
+      this.tarjetaDatosGenerales.certificacion.nombre.trim().length > 0) {
+      return true;
+    }
+
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+
+    return res;
+  }
+
   guardarEvent(event: boolean) {
 
-    if (event) {
+    if (event && this.compruebaDatosGeneralesObligatorios()) {
+      this.progressSpinner = true;
 
+      const payload = new CertificacionesItem();
+      payload.nombre = this.tarjetaDatosGenerales.certificacion.nombre;
+
+      if (this.certificacion && this.certificacion.idCertificacion && this.certificacion.idCertificacion != null && this.certificacion.idCertificacion.length > 0) {
+        payload.idCertificacion = this.certificacion.idCertificacion;
+      }
+
+      this.sigaService.post("certificaciones_createOrUpdateCertificacion", payload).subscribe(
+        data => {
+          this.progressSpinner = false;
+          const res = JSON.parse(data.body);
+          if (res.error && res.error != null && res.error.description != null && res.error.description.toString().trim().length > 0 && res.status == 'KO' && (res.error.code == '500' || res.error.code == '400')) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+          } else {
+            this.getCertificacion(res.id);
+            this.getListaEstadosEvent(res.id);
+            this.modoEdicion = true;
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
     }
   }
 
@@ -160,6 +217,86 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         this.progressSpinner = false;
       }
     );
+
+  }
+
+  reabrirEvent(event: boolean) {
+
+    if (event && this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA) {
+      this.progressSpinner = true;
+
+      const payload = new CertificacionesItem();
+      payload.idCertificacion = this.certificacion.idCertificacion;
+
+      this.sigaService.post("certificaciones_reabrirCertificacion", payload).subscribe(
+        data => {
+          this.progressSpinner = false;
+          const res = JSON.parse(data.body);
+          if (res.error && res.error != null && res.error.description != null && res.error.description.toString().trim().length > 0 && res.status == 'KO' && (res.error.code == '500' || res.error.code == '400')) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+          } else {
+            this.getCertificacion(res.id);
+            this.getListaEstadosEvent(res.id);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }
+
+  }
+
+  getCertificacion(idCertificacion: string) {
+
+    this.progressSpinner = true;
+
+    const payload = new BusquedaRetencionesRequestDTO();
+    payload.idCertificacion = idCertificacion;
+
+    this.sigaService.post("certificaciones_buscarCertificaciones", payload).subscribe(
+      data => {
+        const resp: CertificacionesObject = JSON.parse(data.body);
+        this.progressSpinner = false;
+
+        if (resp && resp.error && resp.error != null && resp.error.description != null && resp.error.code != null && resp.error.code.toString() == "500") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
+        } else {
+          this.certificacion = resp.certificacionesItemList[0];
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  addEnlace(enlace: Enlace) {
+    this.tarjetaFija.enlaces.find(el => el.id == enlace.id).ref = enlace.ref;
+  }
+
+  isOpenReceive(event) {
+
+    if (this.modoEdicion) {
+
+      switch (event) {
+        case 'fichaCertDatosGenerales':
+          this.tarjetaDatosGenerales.showDatosGenerales = true;
+          break;
+        case 'fichaCertFacturacion':
+          // this.tarjetaFact.showTarjeta = true;
+          break;
+        case 'fichaCertMovApli':
+          // this.tarjetaMovApli.showTarjeta = true;
+          break;
+        case 'fichaCertMovAso':
+          // this.tarjetaMovAso.showTarjeta = true;
+          break;
+      }
+
+    }
 
   }
 

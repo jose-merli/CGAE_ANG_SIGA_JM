@@ -165,8 +165,8 @@ export class FiltroCertificacionFacComponent implements OnInit {
         break;
       default:
         this.disableColegio = true;
-        this.filtros.idInstitucionList = [...this.filtros.idInstitucionList, this.localStorageService.institucionActual];
-        this.getComboGrupoFacturacion([this.localStorageService.institucionActual]);
+        this.filtros.idInstitucionList = [institucion];
+        this.getComboGrupoFacturacion([institucion]);
         this.disableComboFact = false;
         break;
 

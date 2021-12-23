@@ -14,6 +14,16 @@ export enum KEY_CODE {
   ENTER = 13
 }
 
+export enum ESTADO_CERTIFICACION {
+  ESTADO_CERTIFICACION_ABIERTA = "1",
+  ESTADO_CERTIFICACION_VALIDANDO = "2",
+  ESTADO_CERTIFICACION_NO_VALIDADA = "3",
+  ESTADO_CERTIFICACION_VALIDADA = "4",
+  ESTADO_CERTIFICACION_ENVIANDO = "5",
+  ESTADO_CERTIFICACION_ENVIO_CON_ERRORES = "6",
+  ESTADO_CERTIFICACION_CERRADA = "7"
+}
+
 @Component({
   selector: 'app-certificacion-fac',
   templateUrl: './certificacion-fac.component.html',
@@ -117,6 +127,7 @@ export class CertificacionFacComponent implements OnInit {
 
   newCertificacion(event) {
     if (event == true) {
+      sessionStorage.setItem("nuevoDesdeTablaCerti", "true");
       this.router.navigate(['/fichaCertificacionFac']);
     }
   }
