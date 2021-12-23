@@ -7,5 +7,6 @@ export class ConsultasSearchItem {
     generica: String;
     idInstitucion:String;
     historico: boolean;
+    permisoejecucion: boolean;
     constructor() { }
 }
