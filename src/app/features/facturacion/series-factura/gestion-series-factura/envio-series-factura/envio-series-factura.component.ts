@@ -51,11 +51,9 @@ export class EnvioSeriesFacturaComponent implements OnInit, OnChanges {
       n => {
         this.comboPlantillasEnvio = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboPlantillasEnvio);
-        console.log(n);
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -110,7 +108,7 @@ export class EnvioSeriesFacturaComponent implements OnInit, OnChanges {
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return this.body.envioFacturas == this.bodyInicial.envioFacturas
+    return this.body != undefined && this.bodyInicial != undefined && this.body.envioFacturas == this.bodyInicial.envioFacturas
       && this.body.idPlantillaMail == this.bodyInicial.idPlantillaMail;
   }
 

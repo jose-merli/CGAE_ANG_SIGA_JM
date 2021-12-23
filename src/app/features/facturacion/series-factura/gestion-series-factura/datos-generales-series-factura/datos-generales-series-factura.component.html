@@ -13,7 +13,7 @@
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
             <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
-            <label *ngIf="this.bodyInicial.idCuentaBancaria != undefined" class="mr-3">
+            <label *ngIf="this.bodyInicial && this.bodyInicial.idCuentaBancaria != undefined" class="mr-3">
               <i (click)="navigateToCuentaBancaria();$event.stopPropagation();"
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToCuentaBancaria();$event.stopPropagation();">
@@ -50,7 +50,7 @@
         </div>
         <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
 
-        <label *ngIf="this.bodyInicial.idCuentaBancaria != undefined" class="ml-auto mr-3">
+        <label *ngIf="this.bodyInicial && this.bodyInicial.idCuentaBancaria != undefined" class="ml-auto mr-3">
           <i (click)="navigateToCuentaBancaria();$event.stopPropagation();"
             class="fas fa-external-link-alt mr-2"></i>
           <a (click)="navigateToCuentaBancaria();$event.stopPropagation();">
@@ -60,7 +60,7 @@
           </a>
         </label>
 
-        <i class="fa fa-angle-up{{ this.bodyInicial.idCuentaBancaria == undefined  ? ' ml-auto' : '' }}"></i>
+        <i class="fa fa-angle-up{{ this.bodyInicial && this.bodyInicial.idCuentaBancaria == undefined  ? ' ml-auto' : '' }}"></i>
       </div>
     </div>
 

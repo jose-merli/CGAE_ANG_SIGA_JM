@@ -39,7 +39,7 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
   ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.body) {
+    if (changes.body && this.body.idSerieFacturacion != undefined) {
       this.cargarDatos(); 
     }
   }
@@ -57,7 +57,6 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
         this.getSeleccionadas();
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -79,7 +78,6 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -110,7 +108,6 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
           this.progressSpinner = false;
         },
         error => {
-          console.log(error);
           this.progressSpinner = false;
       });
     }

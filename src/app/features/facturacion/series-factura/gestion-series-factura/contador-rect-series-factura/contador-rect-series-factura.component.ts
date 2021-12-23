@@ -59,7 +59,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboContadorFacturasRectificativas);
       },
       err => {
-        console.log(err);
+
       }
     );
   }
@@ -72,7 +72,6 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
     this.sigaServices.get("facturacionPyS_getContadoresRectificativasSerie").subscribe(
       n => {
         this.contadoresRectificativasSerie = n.contadorSeriesItems;
-        console.log(this.contadoresRectificativasSerie);
 
         if (this.contadoresRectificativasSerie.find(c => c.idContador == this.body.idContadorFacturas)) {
           this.body.idContadorFacturasRectificativas = this.body.idContadorFacturas;
@@ -82,7 +81,6 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -165,7 +163,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return !this.nuevo && this.body.idContadorFacturasRectificativas == this.bodyInicial.idContadorFacturasRectificativas 
+    return !this.nuevo && this.body != undefined && this.body.idContadorFacturasRectificativas == this.bodyInicial.idContadorFacturasRectificativas 
       || this.nuevo && this.contadorFacturasRectificativasSeleccionado.nombre == undefined
       || this.nuevo && this.contadorFacturasRectificativasSeleccionado.contador == undefined;
   }

@@ -230,7 +230,6 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.body);
       
-      console.log(this.body);
       this.busqueda.emit();
     }
   }

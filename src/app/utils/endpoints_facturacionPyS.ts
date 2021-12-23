@@ -22,6 +22,7 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_eliminaDestinatariosSerie:  "facturacionPyS/eliminaDestinatariosSerie",
     facturacionPyS_comboConsultas: "facturacionPyS/general/comboConsultas",
     facturacionPyS_getConsultasSerie: "facturacionPyS/getConsultasSerie",
+    facturacionPyS_getFinalidadConsultasSerie: "facturacionPyS/getFinalidadConsultasSerie",
     facturacionPyS_nuevaConsultaSerie: "facturacionPyS/nuevaConsultaSerie",
     facturacionPyS_eliminaConsultasSerie: "facturacionPyS/eliminaConsultasSerie",
     facturacionPyS_comboPlantillasEnvio: "facturacionPyS/general/comboPlantillasEnvio",

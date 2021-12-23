@@ -52,7 +52,7 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
 
   ngOnChanges(changes: SimpleChanges) {
 
-    if (changes.body) {
+    if (changes.body && this.body.idSerieFacturacion != undefined) {
       if (sessionStorage.getItem("destinatarioIndv")) {
         let nuevoDestinatario: any = JSON.parse(sessionStorage.getItem("destinatarioIndv"));
         this.guardarDestinarariosSerie(nuevoDestinatario);
@@ -116,11 +116,9 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
       n => {
         this.datos = n.destinatariosSeriesItems;
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
-        console.log(n);
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -145,8 +143,6 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
   guardarDestinarariosSerie(destinatariosSerie: any) {
     this.progressSpinner = true;
     destinatariosSerie.idSerieFacturacion = this.body.idSerieFacturacion;
-
-    console.log(destinatariosSerie);
 
     this.sigaServices.post("facturacionPyS_nuevoDestinatariosSerie", destinatariosSerie).subscribe(
       n => {

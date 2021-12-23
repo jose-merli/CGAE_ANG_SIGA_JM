@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
+import { Subject } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../_services/commons.service';
@@ -43,8 +44,8 @@ export class GestionSeriesFacturaComponent implements OnInit {
   enlacesTarjetaResumen = [];
   modoEdicion: boolean = true;
 
-  resaltadoAbreviatura: boolean = false;
-  resaltadoDescripcion: boolean = false;
+  // Evento para resaltar abreviatura o descripción
+  campoResaltado: Subject<string> = new Subject<string>();
 
   constructor(
     private translateService: TranslateService,
@@ -102,7 +103,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
       },
       {
         label: this.translateService.instant("facturacion.seriesFactura.cuentaBancaria"),
-        value: "(..." + this.body.cuentaBancaria.slice(-4) + ")"
+        value: this.body.cuentaBancaria
       },
       {
         label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.sufijo"),
@@ -216,7 +217,13 @@ export class GestionSeriesFacturaComponent implements OnInit {
     this.progressSpinner = true;
 
     this.recuperarDatosSerieFacuturacion().then(() => {
-      this.modoEdicion = true;
+
+      if (this.body.idSerieFacturacion == undefined) {
+        this.modoEdicion = false;
+      } else {
+        this.modoEdicion = true;
+      }
+
       this.updateTarjetaResumen();
       setTimeout(() => {
         this.updateEnlacesTarjetaResumen();
@@ -239,23 +246,20 @@ export class GestionSeriesFacturaComponent implements OnInit {
   guardarSerieFacturacion(serie: SerieFacturacionItem): Promise<any> {
     return this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", serie).toPromise().then(
       n => {
-        console.log("Nuevo id:", n);
         let idSerieFacturacion = JSON.parse(n.body).id;
         this.body.idSerieFacturacion = idSerieFacturacion;
 
-        this.resaltadoAbreviatura = false;
-        this.resaltadoDescripcion = false;
+        this.campoResaltado.next("");
       },
       err => {
         let error = JSON.parse(err.error).error;
 
         if (error.message == "facturacion.seriesFactura.abreviatura.unica") {
-          this.resaltadoAbreviatura = true;
+          this.campoResaltado.next("abreviatura");
         } else if (error.message == "facturacion.seriesFactura.descripcion.unica") {
-          this.resaltadoDescripcion = true;
+          this.campoResaltado.next("descripcion");
         } else {
-          this.resaltadoAbreviatura = false;
-          this.resaltadoDescripcion = false;
+          this.campoResaltado.next("");
         }
 
         if (error != undefined && error.message != undefined) {

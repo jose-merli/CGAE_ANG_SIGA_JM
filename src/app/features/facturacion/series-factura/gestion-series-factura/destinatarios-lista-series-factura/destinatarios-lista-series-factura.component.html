@@ -112,7 +112,7 @@
         <button pButton type="button" icon="fa fa-plus" iconPos="left" (click)="addConsulta()" *ngIf="deshabilitarGuardado()"
           label="{{ 'general.boton.new' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-eraser" iconPos="left" (click)="eliminar()" [disabled]="selectedDatos == undefined || selectedDatos.length == 0"
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" (click)="eliminar()" [disabled]="nuevaConsulta || selectedDatos == undefined || selectedDatos.length == 0"
           label="{{ 'general.boton.eliminar' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"

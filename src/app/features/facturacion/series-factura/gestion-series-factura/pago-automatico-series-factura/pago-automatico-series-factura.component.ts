@@ -39,7 +39,7 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
   ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.body) {
+    if (changes.body && this.body.idSerieFacturacion != undefined) {
       this.cargarDatos();
     }
   }
@@ -80,8 +80,6 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
-
         this.progressSpinner = true;
       }
     );

@@ -53,7 +53,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboTiposIVA);
       },
       err => {
-        console.log(err);
+        
       }
     );
   }

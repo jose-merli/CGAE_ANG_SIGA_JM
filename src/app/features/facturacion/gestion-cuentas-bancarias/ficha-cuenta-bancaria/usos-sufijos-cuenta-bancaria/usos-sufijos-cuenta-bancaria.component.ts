@@ -63,7 +63,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.body) {
+    if (changes.body && changes.body.currentValue != undefined && this.body.bancosCodigo != undefined) {
       this.restablecer();
       this.getComboSufijo();
       this.getUsosSufijos();
@@ -79,7 +79,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboSufijos);
       },
       err => {
-        console.log(err);
+
       }
     );
   }
@@ -96,8 +96,6 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
-
         this.progressSpinner = false;
       }
     );
@@ -117,8 +115,6 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
         this.getComboSerieFacturacion();
       },
       err => {
-        console.log(err);
-
         this.progressSpinner = false;
       }
     );

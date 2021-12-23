@@ -85,7 +85,6 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
     this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
       n => {
         let data: any[] = n.combooItems;
-        console.log(data);
         
         for(let i=0; data.length>i; i++){
           
@@ -99,7 +98,6 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
       err => {
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       }
     );
   }

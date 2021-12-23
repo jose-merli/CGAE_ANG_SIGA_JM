@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { D } from '@angular/core/src/render3';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
@@ -45,9 +46,6 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
   institucionActual: number;
   nuevaConsulta: boolean = false;
   resaltadoDatos: boolean = false;
-
-  finalidad: string = "";
-  objetivo: string = "";
   
   constructor(
     private sigaServices: SigaServices,
@@ -67,7 +65,7 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.body) {
+    if (changes.body && this.body.idSerieFacturacion != undefined) {
       this.getConsultasSerie();
     }
   }
@@ -120,6 +118,12 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
         data => {
             console.log(data);
             this.consultas = data.consultas;
+            this.consultas = this.consultas.filter(c => this.datos.find(d => d.idInstitucion == c.idInstitucion && d.idConsulta == c.value) == undefined);
+
+            if (!this.consultas) {
+              this.consultas = [];
+            }
+
             this.commonsService.arregloTildesCombo(this.consultas);
 
             this.progressSpinner = false;
@@ -140,7 +144,7 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
             console.log(data);
             this.datosInit = data.consultaItem;
             this.datosInit.forEach(e => {
-              this.getFinalidad(e.idConsulta);
+              // this.getFinalidad(e.idConsulta);
               e.finalidad = "";
               e.asociada = true;
             });
@@ -155,24 +159,12 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
     );
   }
 
-  getFinalidad(id) {
-    this.sigaServices.post("plantillasEnvio_finalidadConsulta", id).subscribe(
+  getFinalidad(consultaItem) {
+    this.sigaServices.post("facturacionPyS_getFinalidadConsultasSerie", consultaItem).subscribe(
         data => {
             this.progressSpinner = false;
-            this.finalidad = JSON.parse(data["body"]).finalidad;
-            this.objetivo = JSON.parse(data['body']).objetivo;
-            for (let dato of this.datos) {
-                if (!dato.idConsulta && dato.idConsulta == id) {
-                    dato.idConsulta = id;
-                    dato.finalidad = this.finalidad;
-                    dato.objetivo = this.objetivo;
-                } else if (dato.idConsulta && dato.idConsulta == id) {
-                    dato.finalidad = this.finalidad;
-                    dato.objetivo = this.objetivo;
-                }
-            }
-            this.datos = [...this.datos];
-            console.log(this.datos);
+            let objetivo = JSON.parse(data['body']).objetivo;
+            consultaItem.objetivo = objetivo;
         },
         err => {
             console.log(err);
@@ -183,9 +175,14 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
   }
 
   onChangeConsultas(e) {
-    let id = e.value;
-    this.getFinalidad(id);
-    console.log(id);
+    if (e.value != undefined) {
+      this.datos[0].idConsulta = e.value;
+      this.datos[0].idInstitucion = this.consultas.find(c => c.value == this.datos[0].idConsulta).idInstitucion;
+      this.getFinalidad(this.datos[0]);
+    } else {
+      this.datos[0].objetivo = "";
+    }
+    
   }
 
   // Nueva consulta
@@ -253,11 +250,13 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
   eliminar(): void {
     this.progressSpinner = true;
 
-    this.selectedDatos.forEach(d => {
-      d.idSerieFacturacion = this.body.idSerieFacturacion
+    let deleteRequest = this.selectedDatos.map(d => {
+      d.idConsulta = d.idConsultaAnterior;
+      d.idSerieFacturacion = this.body.idSerieFacturacion;
+      return d;
     });
 
-    this.sigaServices.post("facturacionPyS_eliminaConsultasSerie", this.selectedDatos).subscribe(
+    this.sigaServices.post("facturacionPyS_eliminaConsultasSerie", deleteRequest).subscribe(
       n => {
         this.progressSpinner = false;
         this.refreshData.emit();

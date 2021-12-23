@@ -22,6 +22,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<FacturasItem>();
+  @Output() refreshData = new EventEmitter<void>();
 
   @Input() bodyInicial: FacturasItem;
 
@@ -197,7 +198,8 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   guardarLineasFactura(linea: FacturaLineaItem): Promise<any> {
     return this.sigaServices.post("facturacionPyS_guardarLineasFactura", linea).toPromise().then(
-      n => { },
+      n => { 
+      },
       err => {
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
