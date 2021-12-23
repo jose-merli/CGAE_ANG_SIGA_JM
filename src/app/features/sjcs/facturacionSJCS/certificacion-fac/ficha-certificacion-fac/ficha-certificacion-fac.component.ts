@@ -1,4 +1,4 @@
-import { DatePipe, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
@@ -7,9 +7,13 @@ import { CertificacionesItem } from '../../../../../models/sjcs/CertificacionesI
 import { CertificacionesObject } from '../../../../../models/sjcs/CertificacionesObject';
 import { EstadoCertificacionDTO } from '../../../../../models/sjcs/EstadoCertificacionDTO';
 import { EstadoCertificacionItem } from '../../../../../models/sjcs/EstadoCertificacionItem';
+import { MovimientosVariosApliCerDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerDTO';
+import { MovimientosVariosApliCerItem } from '../../../../../models/sjcs/MovimientosVariosApliCerItem';
+import { MovimientosVariosApliCerRequestDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerRequestDTO';
+import { MovimientosVariosAsoCerDTO } from '../../../../../models/sjcs/MovimientosVariosAsoCerDTO';
+import { MovimientosVariosAsoCerItem } from '../../../../../models/sjcs/MovimientosVariosAsoCerItem';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../_services/commons.service';
-import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { ESTADO_CERTIFICACION } from '../certificacion-fac.component';
 import { TarjetaDatosGeneralesCertificacionComponent } from './tarjeta-datos-generales/tarjeta-datos-generales-certificacion.component';
@@ -37,6 +41,8 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
   estadosCertificacion: EstadoCertificacionItem[] = [];
   showCards: boolean = false;
   filtrosDeBusqueda: BusquedaRetencionesRequestDTO = undefined;
+  movimientosVariosAsoCerItemList: MovimientosVariosAsoCerItem[] = [];
+  movimientosVariosApliCerItemList: MovimientosVariosApliCerItem[] = [];
   tarjetaFija = {
     nombre: 'facturacionSJCS.facturacionesYPagos.inforesumen',
     icono: 'fas fa-clipboard',
@@ -47,8 +53,8 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     enlaces: [
       { id: 'fichaCertDatosGenerales', nombre: this.translateService.instant('general.message.datos.generales'), ref: null },
       { id: 'fichaCertFacturacion', nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion'), ref: null },
-      { id: 'fichaCertMovApli', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosApli'), ref: null },
-      { id: 'fichaCertMovAso', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosAso'), ref: null }
+      { id: 'fichaCertMovAso', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosAso'), ref: null },
+      { id: 'fichaCertMovApli', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosApli'), ref: null }
     ]
   };
 
@@ -59,12 +65,10 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
   constructor(
     private location: Location,
-    private persistenceService: PersistenceService,
     private changeDetectorRef: ChangeDetectorRef,
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private router: Router,
-    private datePipe: DatePipe,
     private sigaService: SigaServices
   ) { }
 
@@ -288,16 +292,68 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         case 'fichaCertFacturacion':
           // this.tarjetaFact.showTarjeta = true;
           break;
-        case 'fichaCertMovApli':
-          // this.tarjetaMovApli.showTarjeta = true;
-          break;
         case 'fichaCertMovAso':
-          // this.tarjetaMovAso.showTarjeta = true;
+          this.tarjetaMovAso.showTarjeta = true;
+          break;
+        case 'fichaCertMovApli':
+          this.tarjetaMovApli.showTarjeta = true;
           break;
       }
 
     }
 
+  }
+
+  getMvariosAsociadosCertificacion(idCertificacion: string) {
+
+    if (idCertificacion && idCertificacion != null && idCertificacion.trim().length > 0) {
+
+      this.progressSpinner = true;
+
+      this.sigaService.getParam("certificaciones_getMvariosAsociadosCertificacion", `?idCertificacion=${idCertificacion}`).subscribe(
+        (resp: MovimientosVariosAsoCerDTO) => {
+          this.progressSpinner = false;
+
+          if (resp && resp.error && resp.error != null && resp.error.description != null && resp.error.code != null && (resp.error.code.toString() == "500" || resp.error.code.toString() == "400")) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
+          } else {
+            this.movimientosVariosAsoCerItemList = resp.movimientosVariosAsoCerItemList;
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }
+  }
+
+  getMvariosAplicadosEnPagosEjecutadosPorPeriodo(payload: MovimientosVariosApliCerRequestDTO) {
+
+    // SON DATOS DE PUREBA, ENTRAR CON LA INSTITUCION 2039 (LAS PALMAS)
+
+    payload.fechaDesde = new Date("2018-12-10");
+    payload.fechaHasta = new Date("2018-12-11");
+
+    if (payload.fechaDesde && payload.fechaDesde != null && payload.fechaHasta && payload.fechaHasta != null) {
+
+      this.progressSpinner = true;
+
+      this.sigaService.post("certificaciones_getMvariosAplicadosEnPagosEjecutadosPorPeriodo", payload).subscribe(
+        data => {
+          this.progressSpinner = false;
+          const resp: MovimientosVariosApliCerDTO = JSON.parse(data.body);
+
+          if (resp && resp.error && resp.error != null && resp.error.description != null && resp.error.code != null && (resp.error.code.toString() == "500" || resp.error.code.toString() == "400")) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
+          } else {
+            this.movimientosVariosApliCerItemList = resp.movimientosVariosApliCerItemList;
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
 
 }
