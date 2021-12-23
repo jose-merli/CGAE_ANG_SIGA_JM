@@ -19,25 +19,27 @@
     (idOpened)="isCloseReceive($event)" (datosTarjetaResumenEmit)="datosTarjetaResumenEvent($event)"
     (datosClienteEmit)="datosClienteEvent($event)" (datosColegiadoEmit)="datosColegiadoEvent($event)"
     (bodyFisicaEmit)="bodyFisicaEvent($event)" [modoEdicion]="modoEdicion" [datos]="datos"
-    [openDatosCliente]="openDatosCliente"></app-tarjeta-datos-cliente>
+    [openDatosCliente]="openDatosCliente" [showCards] = "showCards"></app-tarjeta-datos-cliente>
   <app-tarjeta-datos-generales-fiMov *ngIf="showCards" (opened)="manuallyOpened = $event"
     (idOpened)="isCloseReceive($event)" [permisoEscritura]="permisoEscritura" [modoEdicion]="modoEdicion"
-    [datos]="datos" [datosClientes]="datosClientes" [openDatosGen]="openDatosGen"></app-tarjeta-datos-generales-fiMov>
+    [datos]="datos" [openDatosGen]="openDatosGen" [showCards] = "showCards"></app-tarjeta-datos-generales-fiMov>
   <app-tarjeta-criterios-aplicacion *ngIf="showCards" (opened)="manuallyOpened = $event"
     (idOpened)="isCloseReceive($event)" [permisoEscritura]="permisoEscritura" [datos]="datos"
-    [modoEdicion]="modoEdicion" [datosClientes]="datosClientes" [openCriterios]="openCriterios">
+    [modoEdicion]="modoEdicion" [openCriterios]="openCriterios" [showCards] = "showCards">
   </app-tarjeta-criterios-aplicacion>
   <app-tarjeta-listado-pagos *ngIf="showCards" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
     [permisoEscritura]="permisoEscritura" [datos]="datos" [datos2]="datosListadoPagos"
-    [openListadoPagos]="openListadoPagos"> </app-tarjeta-listado-pagos>
+    [openListadoPagos]="openListadoPagos" [showCards] = "showCards"> </app-tarjeta-listado-pagos>
 
 
 
 </div>
 
 <div class="text-right main-button">
-  <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
-    label="{{ 'general.boton.volver' | translate}}"></button>
+      <button  [disabled]="!permisoEscritura || isLetrado" (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate }}" ></button>
+      <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

@@ -29,6 +29,7 @@ export class TarjetaListadoPagosComponent implements OnInit {
   buscadores: any;
   tamListado;
 
+  @Input() showCards;
   @Input() permisoEscritura;
   @Input() datos;
   @Input() datos2;
@@ -45,6 +46,9 @@ export class TarjetaListadoPagosComponent implements OnInit {
 
   ngOnInit() {
 
+    if(this.showCards){
+      this.showFichaListadoPagos = true;
+    }
 
     this.getCols();
 

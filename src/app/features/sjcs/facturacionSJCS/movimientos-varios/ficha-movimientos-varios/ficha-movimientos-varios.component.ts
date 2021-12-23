@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, DatePipe } from '@angular/common';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -13,6 +13,8 @@ import { MovimientosVariosService } from '../movimientos-varios.service';
 import { MovimientosVariosFacturacionItem } from '../MovimientosVariosFacturacionItem';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { MovimientosVariosFacturacionDTO } from '../../../../../models/sjcs/MovimientosVariosFacturacionDTO';
+import { TarjetaCriteriosAplicacionComponent } from './tarjeta-criterios-aplicacion/tarjeta-criterios-aplicacion.component';
+import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjeta-datos-generales.component';
 
 @Component({
   selector: 'app-ficha-movimientos-varios',
@@ -22,7 +24,7 @@ import { MovimientosVariosFacturacionDTO } from '../../../../../models/sjcs/Movi
 export class FichaMovimientosVariosComponent implements OnInit {
 
   isLetrado: boolean = false;
-  datos;
+  datos: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
   datosAux;
   modoEdicion;
   datosTarjetaResumen;
@@ -30,6 +32,10 @@ export class FichaMovimientosVariosComponent implements OnInit {
   datosColegiado: ColegiadosSJCSItem = new ColegiadosSJCSItem();
   datosTarjetaClientes;
   datosClientes;
+  datosGenerales: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
+  datosCriterios: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
+  datosGuardar: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
+
   iconoTarjetaResumen = 'fas fa-clipboard';
 
   msgs;
@@ -48,13 +54,16 @@ export class FichaMovimientosVariosComponent implements OnInit {
   showCards: boolean = false;
   nuevoMonVarioDesdeTarjFacGene: boolean = false;
 
-
+  @ViewChild(TarjetaCriteriosAplicacionComponent) tarjetaCriterios: TarjetaCriteriosAplicacionComponent;
+  @ViewChild(TarjetaDatosGeneralesComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesComponent;
+  idMov: String;
 
   constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute,
     private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,
     private router: Router, private commonsService: CommonsService, private confirmationService: ConfirmationService,
     private sigaStorageService: SigaStorageService,
-    private movimientosVariosService: MovimientosVariosService) { }
+    private movimientosVariosService: MovimientosVariosService,
+    private sigaService: SigaServices) { }
 
   ngAfterViewInit(): void {
     this.enviarEnlacesTarjeta();
@@ -331,7 +340,9 @@ export class FichaMovimientosVariosComponent implements OnInit {
   }
 
   volver() {
-    this.location.back();
+    //this.location.back();
+    this.router.navigate(["/movimientosVarios"]); //movimientosVarios búsqueda -- filtros
+    this.movimientosVariosService.volverFicha = true; //PREGUNTAR
   }
 
   getMovimientoVarioPorId(id: string) {
@@ -344,6 +355,168 @@ export class FichaMovimientosVariosComponent implements OnInit {
       idInstitucion: idInstitucion
     };
     return this.sigaServices.post("busquedaPer_institucion", payload).toPromise();
+  }
+
+  guardar(){
+
+    this.datosGenerales = this.tarjetaDatosGenerales.datos; //JSON.parse(JSON.stringify(this.datos)); ?¿
+    this.datosCriterios = this.tarjetaCriterios.datos;
+
+    //tenemos que comprobar que los datos del cliente están rellenos
+    if(this.datosClientes != null || this.datosClientes != undefined){
+      //ahora hay que comprobar que los datos de descripcion y cantidad estén rellenos
+      if((this.datosGenerales.descripcion == null || this.datosGenerales.descripcion == undefined || this.datosGenerales.descripcion == "") || 
+         (this.datosGenerales.cantidad == null || this.datosGenerales.cantidad == undefined || this.datosGenerales.cantidad == 0)){
+          
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      }else{ 
+       let url;
+       //según si es modoEdición creará o actualizará
+        if (!this.modoEdicion) {
+          url = "movimientosVarios_saveMovimientosVarios";
+        } else {
+          url = "movimientosVarios_updateMovimientosVarios";
+        }
+        this.callSaveService(url);
+      }
+    }else{
+       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Deben estar los datos del Cliente rellenos");
+   }
+  }
+  
+  callSaveService(url) {
+    this.progressSpinner = true;
+            
+        this.datosGuardar = JSON.parse(JSON.stringify(this.datosGenerales)); 
+        
+        if(this.datosGenerales.tipo == undefined || this.datosGenerales.tipo == null){
+          this.datosGuardar.tipo = null;
+        }else{
+          this.datosGuardar.tipo = this.datosGenerales.tipo;
+        }
+  
+        if(this.datosGenerales.motivo == undefined || this.datosGenerales.motivo == null){
+          this.datosGuardar.motivo = null;
+        }else{
+          this.datosGuardar.motivo = this.datosGenerales.motivo;
+        }
+  
+        if(this.datosGenerales.certificacion == undefined || this.datosGenerales.certificacion == null){
+          this.datosGuardar.certificacion = null;
+        }else{
+          this.datosGuardar.certificacion = this.datos.certificacion;
+        }
+  
+        if(this.datosClientes.idPersona == undefined || this.datosClientes.idPersona == null){
+          this.datosGuardar.idPersona = null;
+        }else{
+          this.datosGuardar.idPersona = this.datosClientes.idPersona;
+        }
+  
+        //datos criterios
+        if(this.datosCriterios.idGrupoFacturacion == undefined || this.datosCriterios.idGrupoFacturacion == null){
+          this.datosGuardar.idGrupoFacturacion = null;
+        }else{
+          this.datosGuardar.idGrupoFacturacion = this.datosCriterios.idGrupoFacturacion;
+        }
+
+        if(this.datosCriterios.idConcepto == undefined || this.datosCriterios.idConcepto == null){
+          this.datosGuardar.idConcepto = null;
+        }else{
+          this.datosGuardar.idConcepto = this.datos.idConcepto;
+        }
+
+        if(this.datosCriterios.idPartidaPresupuestaria == undefined || this.datosCriterios.idPartidaPresupuestaria == null){
+          this.datosGuardar.idPartidaPresupuestaria = null;
+        }else{
+          this.datosGuardar.idPartidaPresupuestaria = this.datosCriterios.idPartidaPresupuestaria;
+        }
+
+        if(this.datosCriterios.idFacturacion == undefined || this.datosCriterios.idFacturacion == null){
+          this.datosGuardar.idFacturacion = null;
+        }else{
+          this.datosGuardar.idFacturacion = this.datosCriterios.idFacturacion;
+        }
+
+        //cambiar por la fecha de hoy
+        this.datosGuardar.fechaAlta=null;
+  
+        if(!this.modoEdicion){
+          this.datosGuardar.nombrefacturacion = null;
+          this.datosGuardar.nombretipo = null;
+          this.datosGuardar.idAplicadoEnPago= null
+          this.datosGuardar.fechaApDesde = null;
+          this.datosGuardar.fechaApHasta = null;
+          this.datosGuardar.ncolegiado = null;
+          this.datosGuardar.letrado = null;
+          this.datosGuardar.cantidadAplicada = null;
+          this.datosGuardar.cantidadRestante = null;
+          this.datosGuardar.idInstitucion = null;
+          this.datosGuardar.idMovimiento = null;
+          this.datosGuardar.fechaModificacion = null;
+          this.datosGuardar.usuModificacion = null;
+          this.datosGuardar.contabilizado = null;
+          this.datosGuardar.historico = null;
+          this.datosGuardar.nif = null;
+          this.datosGuardar.apellido1 = null;
+          this.datosGuardar.apellido2 = null;
+          this.datosGuardar.nombre = null;
+          this.datosGuardar.nombrePago = null;
+        }
+        
+      if(this.idMov != undefined && this.idMov != null){
+        this.datosGuardar.idMovimiento = this.idMov;
+      }
+    
+    this.sigaService.post(url, this.datosGuardar).subscribe(
+      data => {
+  
+        this.datosAux = JSON.parse(JSON.stringify(this.datosGuardar));
+
+        if(!this.modoEdicion){
+          this.datos.idMovimiento = JSON.parse(data.body).id;
+          this.idMov = this.datos.idMovimiento;
+        }
+  
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.progressSpinner = false;
+        this.modoEdicion = true;
+        //this.movimientosVariosService.datosColegiadoFichaColegial(this.datosGenerales);
+        this.datos = this.datosGuardar;
+
+        if(this.datosClientes.nColegiado != null && this.datosClientes.nColegiado != undefined){
+          this.datos.ncolegiado = this.datosClientes.nColegiado;
+          this.datos.letrado = this.datosClientes.letrado;
+        }
+        this.getDatosTarjetaResumen(this.datos);
+        
+        //this.router.navigate(["/fichaMovimientosVarios"]);
+  
+      },
+      err => {
+        this.progressSpinner = false;
+  
+        if (err.status == '403' || err.status == 403) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        } else {
+  
+          if (null != err.error && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+  
+        }
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
 }

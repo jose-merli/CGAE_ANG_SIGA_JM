@@ -110,10 +110,10 @@ export let endpoints_facturacionsjcs: any = {
     movimientosVarios_updateClienteMovimientosVarios: "movimientosVarios/updateClienteMovimientosVarios",
     movimientosVarios_recogerDatosCliente: "movimientosVarios/recogerDatosCliente",
     movimientosVarios_getListadoPagos: "movimientosVarios/getListadoPagos",
-    movimientosVarios_saveDatosGenMovimientosVarios: "movimientosVarios/saveDatosGenMovimientosVarios",
-    movimientosVarios_updateDatosGenMovimientosVarios: "movimientosVarios/updateDatosGenMovimientosVarios",
-    movimientosVarios_saveCriteriosMovimientosVarios: "movimientosVarios/saveCriteriosMovimientosVarios",
-    movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios",
+    movimientosVarios_saveMovimientosVarios: "movimientosVarios/saveMovimientosVarios",
+    movimientosVarios_updateMovimientosVarios: "movimientosVarios/updateMovimientosVarios",
+   // movimientosVarios_saveCriteriosMovimientosVarios: "movimientosVarios/saveCriteriosMovimientosVarios",
+   // movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios",
     movimientosVarios_getMovimientoVarioPorId: "movimientosVarios/getMovimientoVarioPorId",
 
     /* Endpoints Certificaciones */

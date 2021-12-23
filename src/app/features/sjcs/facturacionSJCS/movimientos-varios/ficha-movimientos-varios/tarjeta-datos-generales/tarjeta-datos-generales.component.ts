@@ -7,6 +7,7 @@ import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { MovimientosVariosService } from '../../movimientos-varios.service';
 import { MovimientosVariosFacturacionItem } from '../../MovimientosVariosFacturacionItem';
 import { TarjetaDatosClienteComponent } from '../tarjeta-datos-cliente/tarjeta-datos-cliente.component';
 
@@ -35,11 +36,11 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Input() modoEdicion: boolean;
-  @Input() datosClientes;
   @Input() datos;
   @Input() permisoEscritura;
+  @Input() showCards;
 
-  constructor(  private sigaStorageService: SigaStorageService,private persistenceService: PersistenceService, private commonsService: CommonsService, private sigaService: SigaServices, private translateService: TranslateService,private router: Router) { }
+  constructor( private movimientosVariosService: MovimientosVariosService,  private sigaStorageService: SigaStorageService,private persistenceService: PersistenceService, private commonsService: CommonsService, private sigaService: SigaServices, private translateService: TranslateService,private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges) {
 		if (this.openDatosGen == true) {
@@ -51,6 +52,9 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   ngOnInit() {
 
+    if(this.showCards){
+      this.showFichaDatosGen = true;
+    }
     if(this.datos != null || this.datos != undefined){
       this.datosAux = JSON.parse(JSON.stringify(this.datos));
     }else{
@@ -140,127 +144,131 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     this.datos= JSON.parse(JSON.stringify(this.datosAux));
   }
 
-  guardar(){
+//   guardar(){
 
-  if(this.datosClientes != null || this.datosClientes != undefined){
-    if((this.datos.descripcion == null || this.datos.descripcion == undefined || this.datos.descripcion == "") || 
-       (this.datos.cantidad == null || this.datos.cantidad == undefined || this.datos.cantidad == "")){
+//   if(this.datosClientes != null || this.datosClientes != undefined){
+//     if((this.datos.descripcion == null || this.datos.descripcion == undefined || this.datos.descripcion == "") || 
+//        (this.datos.cantidad == null || this.datos.cantidad == undefined || this.datos.cantidad == "")){
         
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
-    }else{ 
-     let url;
-      if (!this.modoEdicion) {
-        url = "movimientosVarios_saveDatosGenMovimientosVarios";
-      } else {
-        url = "movimientosVarios_updateDatosGenMovimientosVarios";
-      }
-      this.callSaveService(url);
-    }
-  }else{
-     this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Deben estar los datos del Cliente rellenos");
- }
-}
+//         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+//     }else{ 
+//      let url;
+//       if (!this.modoEdicion) {
+//         url = "movimientosVarios_saveDatosGenMovimientosVarios";
+//       } else {
+//         url = "movimientosVarios_updateDatosGenMovimientosVarios";
+//       }
+//       this.callSaveService(url);
+//     }
+//   }else{
+//      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Deben estar los datos del Cliente rellenos");
+//  }
+// }
 
-callSaveService(url) {
-  this.progressSpinner = true;
+// callSaveService(url) {
+//   this.progressSpinner = true;
   
-      this.datosGenerales=JSON.parse(JSON.stringify(this.datos));
+//       this.datosGenerales=JSON.parse(JSON.stringify(this.datos));
       
-      this.datosGenerales.descripcion = this.datos.descripcion;
-      this.datosGenerales.cantidad = this.datos.cantidad;
+//       this.datosGenerales.descripcion = this.datos.descripcion;
+//       this.datosGenerales.cantidad = this.datos.cantidad;
       
-      if(this.datos.tipo == undefined || this.datos.tipo == null){
-        this.datosGenerales.tipo = null;
-      }else{
-        this.datosGenerales.tipo = this.datos.tipo;
-      }
+//       if(this.datos.tipo == undefined || this.datos.tipo == null){
+//         this.datosGenerales.tipo = null;
+//       }else{
+//         this.datosGenerales.tipo = this.datos.tipo;
+//       }
 
-      if(this.datos.idFacturacion == undefined || this.datos.idFacturacion == null){
-        this.datosGenerales.idFacturacion = null;
-      }else{
-        this.datosGenerales.idFacturacion = this.datos.idFacturacion;
-      }
+//       if(this.datos.idFacturacion == undefined || this.datos.idFacturacion == null){
+//         this.datosGenerales.idFacturacion = null;
+//       }else{
+//         this.datosGenerales.idFacturacion = this.datos.idFacturacion;
+//       }
 
-      if(this.datos.motivo == undefined || this.datos.motivo == null){
-        this.datosGenerales.motivo = null;
-      }else{
-        this.datosGenerales.motivo = this.datos.motivo;
-      }
+//       if(this.datos.motivo == undefined || this.datos.motivo == null){
+//         this.datosGenerales.motivo = null;
+//       }else{
+//         this.datosGenerales.motivo = this.datos.motivo;
+//       }
 
-      if(this.datos.certificacion == undefined || this.datos.certificacion == null){
-        this.datosGenerales.certificacion = null;
-      }else{
-        this.datosGenerales.certificacion = this.datos.certificacion;
-      }
+//       if(this.datos.certificacion == undefined || this.datos.certificacion == null){
+//         this.datosGenerales.certificacion = null;
+//       }else{
+//         this.datosGenerales.certificacion = this.datos.certificacion;
+//       }
 
-      if(this.datosClientes.idPersona == undefined || this.datosClientes.idPersona == null){
-        this.datosGenerales.idPersona = null;
-      }else{
-        this.datosGenerales.idPersona = this.datosClientes.idPersona;
-      }
+//       if(this.datosClientes.idPersona == undefined || this.datosClientes.idPersona == null){
+//         this.datosGenerales.idPersona = null;
+//       }else{
+//         this.datosGenerales.idPersona = this.datosClientes.idPersona;
+//       }
 
-      this.datosGenerales.fechaAlta=null;
+//       this.datosGenerales.fechaAlta=null;
 
-      if(!this.modoEdicion){
-        this.datosGenerales.nombrefacturacion = null;
-        this.datosGenerales.nombretipo = null;
-        this.datosGenerales.idAplicadoEnPago= null
-        this.datosGenerales.fechaApDesde = null;
-        this.datosGenerales.fechaApHasta = null;
-        this.datosGenerales.idConcepto = null;
-        this.datosGenerales.idPartidaPresupuestaria = null;
-        this.datosGenerales.ncolegiado = null;
-        this.datosGenerales.letrado = null;
-        this.datosGenerales.cantidadAplicada = null;
-        this.datosGenerales.cantidadRestante = null;
-        this.datosGenerales.idInstitucion = null;
-        this.datosGenerales.idMovimiento = null;
-        this.datosGenerales.fechaModificacion = null;
-        this.datosGenerales.usuModificacion = null;
-        this.datosGenerales.contabilizado = null;
-        this.datosGenerales.idGrupoFacturacion = null;
-        this.datosGenerales.historico = null;
-        this.datosGenerales.nif = null;
-        this.datosGenerales.apellido1 = null;
-        this.datosGenerales.apellido2 = null;
-        this.datosGenerales.nombre = null;
-        this.datosGenerales.nombrePago = null;
-      }
+//       if(!this.modoEdicion){
+//         this.datosGenerales.nombrefacturacion = null;
+//         this.datosGenerales.nombretipo = null;
+//         this.datosGenerales.idAplicadoEnPago= null
+//         this.datosGenerales.fechaApDesde = null;
+//         this.datosGenerales.fechaApHasta = null;
+//         this.datosGenerales.idConcepto = null;
+//         this.datosGenerales.idPartidaPresupuestaria = null;
+//         this.datosGenerales.ncolegiado = null;
+//         this.datosGenerales.letrado = null;
+//         this.datosGenerales.cantidadAplicada = null;
+//         this.datosGenerales.cantidadRestante = null;
+//         this.datosGenerales.idInstitucion = null;
+//         this.datosGenerales.idMovimiento = null;
+//         this.datosGenerales.fechaModificacion = null;
+//         this.datosGenerales.usuModificacion = null;
+//         this.datosGenerales.contabilizado = null;
+//         this.datosGenerales.idGrupoFacturacion = null;
+//         this.datosGenerales.historico = null;
+//         this.datosGenerales.nif = null;
+//         this.datosGenerales.apellido1 = null;
+//         this.datosGenerales.apellido2 = null;
+//         this.datosGenerales.nombre = null;
+//         this.datosGenerales.nombrePago = null;
+//       }
       
   
-  this.sigaService.post(url, this.datosGenerales).subscribe(
-    data => {
+//   this.sigaService.post(url, this.datosGenerales).subscribe(
+//     data => {
 
-      this.datosAux = JSON.parse(JSON.stringify(this.datosGenerales));
+//       this.datosAux = JSON.parse(JSON.stringify(this.datosGenerales));
 
-      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-      this.progressSpinner = false;
-    },
-    err => {
-      this.progressSpinner = false;
+//       this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+//       this.progressSpinner = false;
+//       this.modoEdicion = true;
+//       //this.movimientosVariosService.datosColegiadoFichaColegial(this.datosGenerales);
+//       this.router.navigate(["/fichaMovimientosVarios"]);
 
-      if (err.status == '403' || err.status == 403) {
-        sessionStorage.setItem("codError", "403");
-        sessionStorage.setItem(
-          "descError",
-          this.translateService.instant("generico.error.permiso.denegado")
-        );
-        this.router.navigate(["/errorAcceso"]);
-      } else {
+//     },
+//     err => {
+//       this.progressSpinner = false;
 
-        if (null != err.error && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
+//       if (err.status == '403' || err.status == 403) {
+//         sessionStorage.setItem("codError", "403");
+//         sessionStorage.setItem(
+//           "descError",
+//           this.translateService.instant("generico.error.permiso.denegado")
+//         );
+//         this.router.navigate(["/errorAcceso"]);
+//       } else {
 
-      }
-    },
-    () => {
-      this.progressSpinner = false;
-    }
-  );
-}
+//         if (null != err.error && JSON.parse(err.error).error.description != "") {
+//           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+//         } else {
+//           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+//         }
+
+//       }
+//     },
+//     () => {
+//       this.progressSpinner = false;
+//     }
+//   );
+// }
 
 showMessage(severity, summary, msg) {
   this.msgs = [];

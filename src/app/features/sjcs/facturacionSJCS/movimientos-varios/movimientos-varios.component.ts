@@ -42,7 +42,8 @@ export class MovimientosVariosComponent implements OnInit {
 		private commonsService: CommonsService,
 		private router: Router, private sigaStorageService: SigaStorageService,
     private movimientosVariosService: MovimientosVariosService,
-    private location: Location) {    
+    private location: Location,
+    private persistenceService: PersistenceService) {    
   }
 
   ngOnInit() {
@@ -61,6 +62,12 @@ export class MovimientosVariosComponent implements OnInit {
     this.permisoEscritura = true;
     
     this.isLetrado = this.sigaStorageService.isLetrado;
+
+    if(this.movimientosVariosService.volverFicha){
+      this.datosFiltros = this.persistenceService.getFiltros();
+      this.getFiltrosValues(this.datosFiltros);
+      this.movimientosVariosService.volverFicha = false;
+    }
 
     if (sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
       this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));

@@ -69,7 +69,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
     this.progressSpinner = true;
 	if(this.persistenceService.getFiltros() != undefined){
 		this.filtros = this.persistenceService.getFiltros();
-		this.persistenceService.clearFiltros();
+		this.persistenceService.clearFiltros(); //?¿
 	}else{
 
 		this.comboAplicadoEnPago();
@@ -331,6 +331,8 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 
 			this.busqueda.emit(this.filtros);
 			this.progressSpinner = false;
+		}else{
+			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("oficio.busqueda.error.busquedageneral"));
 		}
 
 	

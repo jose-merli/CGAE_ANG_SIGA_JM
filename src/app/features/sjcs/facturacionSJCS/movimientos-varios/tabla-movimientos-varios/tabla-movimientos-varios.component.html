@@ -34,7 +34,7 @@
               <span>{{dato[col.field]}}</span>
             </div>
             <div *ngIf="setItalic(dato) && col.field =='letrado'">
-              <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
+              <span>{{dato[col.field]}}</span>
             </div>
             <div *ngIf="!setItalic(dato) && col.field =='letrado'">
               <span  [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
@@ -43,7 +43,7 @@
               <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
             </div>
             <div *ngIf="setItalic(dato) && col.field == 'descripcion'">
-              <span>{{dato[col.field]}}</span>
+              <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
             </div>
             <div *ngIf="!setItalic(dato) && col.field == 'cantidad'">
               <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato.cantidad}} €</label>

@@ -232,6 +232,124 @@
 
       <!--END DATOS GENERALES-->
     </div>
+    </div>
+
+    <!--HISTORICO DE LIQUIDACION SJCS-->
+    <div class="card">
+      <div class="card-header header-ficha">
+      <div *ngIf="!esFichaActiva('historicoLiquidacion')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="abrirFicha('historicoLiquidacion')">
+            <i class="fa fa-users icon-ficha"> </i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abrirFicha('historicoLiquidacion')">
+            <label  class="mr-auto title-ficha">{{ "cen.integrantes.liquidacionSJCS" | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{"censo.consultaComponentesJuridicos.literal.fechaCargo" | translate}}
+              <span>{{ body.fechaCargo }}</span>
+            </label>
+            <label>{{"censo.consultaComponentesJuridicos.literal.fechaFinCargo" | translate}}
+              <span>{{ body.fechaBajaCargo }}</span>
+            </label>
+            <label>{{"censo.consultaComponentesJuridicos.literal.cargo" | translate}}
+              <span>{{ descripcionCargo.label }}</span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('historicoLiquidacion')" (click)="abrirFicha('historicoLiquidacion')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abrirFicha('vinculacion')">
+          <i class="fa fa-users icon-ficha"> </i>
+        </div>
+        <label (click)="abrirFicha('historicoLiquidacion')" class="title-ficha">{{ "cen.integrantes.liquidacionSJCS" | translate }}</label>
+        <i (click)="abrirFicha('historicoLiquidacion')" class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+
+    <div *ngIf="esFichaActiva('historicoLiquidacion')" class="card-body card-body-ficha">
+      <p-table [columns]="cols" [(selection)]="selectedDatos" pageLinks="4" [ngClass]="{ customCursor: selectMultipleDirecciones }"
+      [responsive]="true" selectionMode="multiple" #table class="tabla-listado" [value]="datosLiquidacion"
+      [paginator]="true" paginatorPosition="both" [rows]="selectedItem" (onRowUnselect)="
+      actualizaSeleccionados(selectedDatos)
+      ">
+
+      <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">             
+           <div *ngIf="col.field == 'fechaInicio'">
+              <span *ngIf="!datoH.nuevo" class="text-center">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+              <app-fecha *ngIf="datoH.nuevo" [minDate]="fechaMinima" [(value)]="nuevaFecha" (valueChangeSelected)="onChangeCalendar($event)" (valueChangeInput)="onChangeCalendar($event)" [appendTo] = "'body'"></app-fecha>
+            </div>      
+            <div *ngIf="col.field == 'sociedad'" class="text-center">
+              <span>{{datoH[col.field]}}</span>
+            </div>         
+            <div *ngIf="col.field == 'observaciones'" class="d-block"  class="text-center">
+              <span *ngIf="!datoH.nuevo">{{ datoH[col.field] }}</span>
+              <textarea *ngIf="datoH.nuevo" class="form-control" pInputTextarea autoResize="autoResize" [(ngModel)]="observaciones" maxlength="1205" ngDefaultControl></textarea>
+            </div>          
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of columns" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{col.header | translate}}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="table.filter($event.target.value,
+                            col.field, 'contains')">
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{ 'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }} {{table.first
+            + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
+            | translate }} {{table.totalRecords}}
+          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: {{selectedDatos.length}}
+          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}: 0
+          </label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+              name="groupname"></p-checkbox>
+          </div>
+          <!-- <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}" (click)="isSelectMultiple()">
+                <i class="pr-2 fa fa-mouse-pointer"></i>{{"general.message.seleccion.multiple" | translate}}</label> -->
+        </div>
+      </ng-template>
+    </p-table>
+
+  <br>
+
+      <!--END HISTORICO DE LIQUIDACION SJCS-->
+    </div>
+    <div *ngIf="esFichaActiva('historicoLiquidacion')" class="mb-3 mr-3 text-right main-button ">
+      <button *ngIf="!isGuardar"  (click)="crear()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+      <button *ngIf="isGuardar"  (click)="guardarLiquidacion()" pButton type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button (click)="borrar()" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>
+    </div>
   </div>
   <div class="mt-3 text-right main-button ">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>

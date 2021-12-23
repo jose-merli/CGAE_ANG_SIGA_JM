@@ -35,8 +35,8 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 
 	@Input() datos;
 	@Input() modoEdicion: boolean;
-	@Input() datosClientes;
 	@Input() permisoEscritura;
+	@Input() showCards;
 
 	constructor(private persistenceService: PersistenceService, private sigaService: SigaServices,
 		private commonsService: CommonsService, private sigaStorageService: SigaStorageService, private router: Router, private translateService: TranslateService) { }
@@ -51,6 +51,10 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 
 	ngOnInit() {
 
+		if(this.showCards){
+			this.showFichaCriteriosAplicacion = true;
+		}
+		
 		this.isLetrado = this.sigaStorageService.isLetrado;
 
 		if (this.datos != null || this.datos != undefined) {
@@ -155,118 +159,119 @@ export class TarjetaCriteriosAplicacionComponent implements OnInit {
 		this.progressSpinner = false;
 	}
 
-	guardar() {
+	// guardar() {
 
-		let url;
-		if (!this.modoEdicion) {
-			url = "movimientosVarios_saveCriteriosMovimientosVarios";
-		} else {
-			url = "movimientosVarios_updateCriteriosMovimientosVarios";
-		}
-		this.callSaveService(url);
+	// 	let url;
+	// 	if (!this.modoEdicion) {
+	// 		url = "movimientosVarios_saveCriteriosMovimientosVarios";
+	// 	} else {
+	// 		url = "movimientosVarios_updateCriteriosMovimientosVarios";
+	// 	}
+	// 	this.callSaveService(url);
 
-	}
+	// }
 
-	callSaveService(url) {
-		this.progressSpinner = true;
-		this.datosCriteriosAplicacion = JSON.parse(JSON.stringify(this.datos));
+	// callSaveService(url) {
+	// 	this.progressSpinner = true;
+	// 	this.datosCriteriosAplicacion = JSON.parse(JSON.stringify(this.datos));
 
-		if (this.datos.idMovimiento == null || this.datos.idMovimiento == undefined) {
-			this.datosCriteriosAplicacion.idMovimiento = null;
-		} else {
-			this.datosCriteriosAplicacion.idMovimiento = this.datos.idMovimiento;
-		}
+	// 	if (this.datos.idMovimiento == null || this.datos.idMovimiento == undefined) {
+	// 		this.datosCriteriosAplicacion.idMovimiento = null;
+	// 	} else {
+	// 		this.datosCriteriosAplicacion.idMovimiento = this.datos.idMovimiento;
+	// 	}
 
-		if (this.datos.idGrupoFacturacion == null || this.datos.idGrupoFacturacion == undefined) {
-			this.datosCriteriosAplicacion.idGrupoFacturacion = null;
-		} else {
-			this.datosCriteriosAplicacion.idGrupoFacturacion = this.datos.idGrupoFacturacion;
-		}
+	// 	if (this.datos.idGrupoFacturacion == null || this.datos.idGrupoFacturacion == undefined) {
+	// 		this.datosCriteriosAplicacion.idGrupoFacturacion = null;
+	// 	} else {
+	// 		this.datosCriteriosAplicacion.idGrupoFacturacion = this.datos.idGrupoFacturacion;
+	// 	}
 
-		if (this.datos.idFacturacion == undefined || this.datos.idFacturacion == null) {
-			this.datosCriteriosAplicacion.idFacturacion = null;
-		} else {
-			this.datosCriteriosAplicacion.idFacturacion = this.datos.idFacturacion;
-		}
+	// 	if (this.datos.idFacturacion == undefined || this.datos.idFacturacion == null) {
+	// 		this.datosCriteriosAplicacion.idFacturacion = null;
+	// 	} else {
+	// 		this.datosCriteriosAplicacion.idFacturacion = this.datos.idFacturacion;
+	// 	}
 
-		if (this.datos.idConcepto == undefined || this.datos.idConcepto == null) {
-			this.datosCriteriosAplicacion.idConcepto = null;
-		} else {
-			this.datosCriteriosAplicacion.idConcepto = this.datos.idConcepto;
-		}
+	// 	if (this.datos.idConcepto == undefined || this.datos.idConcepto == null) {
+	// 		this.datosCriteriosAplicacion.idConcepto = null;
+	// 	} else {
+	// 		this.datosCriteriosAplicacion.idConcepto = this.datos.idConcepto;
+	// 	}
 
-		if (this.datos.idPartidaPresupuestaria == undefined || this.datos.idPartidaPresupuestaria == null) {
-			this.datosCriteriosAplicacion.idPartidaPresupuestaria = null;
-		} else {
-			this.datosCriteriosAplicacion.idPartidaPresupuestaria = this.datos.idPartidaPresupuestaria;
-		}
-
-
-		if (this.datosClientes.idPersona == undefined || this.datosClientes.idPersona == null) {
-			this.datosCriteriosAplicacion.idPersona = null;
-		} else {
-			this.datosCriteriosAplicacion.idPersona = this.datosClientes.idPersona;
-		}
-
-		if (!this.modoEdicion) {
-			this.datosCriteriosAplicacion.descripcion = null;
-			this.datosCriteriosAplicacion.cantidad = null;
-			this.datosCriteriosAplicacion.tipo = null;
-			this.datosCriteriosAplicacion.motivo = null;
-			this.datosCriteriosAplicacion.certificacion = null;
-			this.datosCriteriosAplicacion.fechaAlta = null;
-			this.datosCriteriosAplicacion.nombrefacturacion = null;
-			this.datosCriteriosAplicacion.nombretipo = null;
-			this.datosCriteriosAplicacion.idAplicadoEnPago = null
-			this.datosCriteriosAplicacion.fechaApDesde = null;
-			this.datosCriteriosAplicacion.fechaApHasta = null;
-			this.datosCriteriosAplicacion.ncolegiado = null;
-			this.datosCriteriosAplicacion.letrado = null;
-			this.datosCriteriosAplicacion.cantidadAplicada = null;
-			this.datosCriteriosAplicacion.cantidadRestante = null;
-			this.datosCriteriosAplicacion.idInstitucion = null;
-			this.datosCriteriosAplicacion.fechaModificacion = null;
-			this.datosCriteriosAplicacion.usuModificacion = null;
-			this.datosCriteriosAplicacion.contabilizado = null;
-			this.datosCriteriosAplicacion.historico = null;
-			this.datosCriteriosAplicacion.nif = null;
-			this.datosCriteriosAplicacion.apellido1 = null;
-			this.datosCriteriosAplicacion.apellido2 = null;
-			this.datosCriteriosAplicacion.nombre = null;
-			this.datosCriteriosAplicacion.nombrePago = null;
-		}
+	// 	if (this.datos.idPartidaPresupuestaria == undefined || this.datos.idPartidaPresupuestaria == null) {
+	// 		this.datosCriteriosAplicacion.idPartidaPresupuestaria = null;
+	// 	} else {
+	// 		this.datosCriteriosAplicacion.idPartidaPresupuestaria = this.datos.idPartidaPresupuestaria;
+	// 	}
 
 
-		this.sigaService.post(url, this.datosCriteriosAplicacion).subscribe(
-			data => {
+	// 	if (this.datosClientes.idPersona == undefined || this.datosClientes.idPersona == null) {
+	// 		this.datosCriteriosAplicacion.idPersona = null;
+	// 	} else {
+	// 		this.datosCriteriosAplicacion.idPersona = this.datosClientes.idPersona;
+	// 	}
 
-				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-				this.progressSpinner = false;
-			},
-			err => {
-				this.progressSpinner = false;
+	// 	if (!this.modoEdicion) {
+	// 		this.datosCriteriosAplicacion.descripcion = null;
+	// 		this.datosCriteriosAplicacion.cantidad = null;
+	// 		this.datosCriteriosAplicacion.tipo = null;
+	// 		this.datosCriteriosAplicacion.motivo = null;
+	// 		this.datosCriteriosAplicacion.certificacion = null;
+	// 		this.datosCriteriosAplicacion.fechaAlta = null;
+	// 		this.datosCriteriosAplicacion.nombrefacturacion = null;
+	// 		this.datosCriteriosAplicacion.nombretipo = null;
+	// 		this.datosCriteriosAplicacion.idAplicadoEnPago = null
+	// 		this.datosCriteriosAplicacion.fechaApDesde = null;
+	// 		this.datosCriteriosAplicacion.fechaApHasta = null;
+	// 		this.datosCriteriosAplicacion.ncolegiado = null;
+	// 		this.datosCriteriosAplicacion.letrado = null;
+	// 		this.datosCriteriosAplicacion.cantidadAplicada = null;
+	// 		this.datosCriteriosAplicacion.cantidadRestante = null;
+	// 		this.datosCriteriosAplicacion.idInstitucion = null;
+	// 		this.datosCriteriosAplicacion.fechaModificacion = null;
+	// 		this.datosCriteriosAplicacion.usuModificacion = null;
+	// 		this.datosCriteriosAplicacion.contabilizado = null;
+	// 		this.datosCriteriosAplicacion.historico = null;
+	// 		this.datosCriteriosAplicacion.nif = null;
+	// 		this.datosCriteriosAplicacion.apellido1 = null;
+	// 		this.datosCriteriosAplicacion.apellido2 = null;
+	// 		this.datosCriteriosAplicacion.nombre = null;
+	// 		this.datosCriteriosAplicacion.nombrePago = null;
+	// 	}
 
-				if (err.status == '403' || err.status == 403) {
-					sessionStorage.setItem("codError", "403");
-					sessionStorage.setItem(
-						"descError",
-						this.translateService.instant("generico.error.permiso.denegado")
-					);
-					this.router.navigate(["/errorAcceso"]);
-				} else {
-					if (null != err.error && JSON.parse(err.error).error.description != "") {
-						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-					} else {
-						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-					}
 
-				}
-			},
-			() => {
-				this.progressSpinner = false;
-			}
-		);
-	}
+	// 	this.sigaService.post(url, this.datosCriteriosAplicacion).subscribe(
+	// 		data => {
+
+	// 			this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+	// 			this.progressSpinner = false;
+	// 			this.modoEdicion = true;
+	// 		},
+	// 		err => {
+	// 			this.progressSpinner = false;
+
+	// 			if (err.status == '403' || err.status == 403) {
+	// 				sessionStorage.setItem("codError", "403");
+	// 				sessionStorage.setItem(
+	// 					"descError",
+	// 					this.translateService.instant("generico.error.permiso.denegado")
+	// 				);
+	// 				this.router.navigate(["/errorAcceso"]);
+	// 			} else {
+	// 				if (null != err.error && JSON.parse(err.error).error.description != "") {
+	// 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+	// 				} else {
+	// 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+	// 				}
+
+	// 			}
+	// 		},
+	// 		() => {
+	// 			this.progressSpinner = false;
+	// 		}
+	// 	);
+	// }
 
 	showMessage(severity, summary, msg) {
 		this.msgs = [];
