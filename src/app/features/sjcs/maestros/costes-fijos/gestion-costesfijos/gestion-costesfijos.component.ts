@@ -96,7 +96,7 @@ export class GestionCostesfijosComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -112,7 +112,7 @@ export class GestionCostesfijosComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -133,7 +133,7 @@ export class GestionCostesfijosComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }
@@ -170,7 +170,7 @@ export class GestionCostesfijosComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }
@@ -436,7 +436,7 @@ export class GestionCostesfijosComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }

@@ -287,7 +287,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         derechoAcceso = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (derechoAcceso == 3) {
@@ -330,7 +330,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         this.arregloTildesCombo(this.comboVisibilidad);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -343,7 +343,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         this.arregloTildesCombo(this.comboColegios);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -356,7 +356,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         this.arregloTildesCombo(this.comboEstadosCursos);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -371,7 +371,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
           this.arregloTildesCombo(this.comboEstadosInscripciones);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -405,7 +405,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
           this.arregloTildesCombo(this.comboCalificacionEmitida);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
     // this.comboCalificacionEmitida = [
@@ -429,7 +429,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
         this.mySelect.ngOnInit();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.mySelect.onFilter = function (event) {
@@ -650,7 +650,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
             this.table.paginator = true;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -938,7 +938,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -1029,7 +1029,7 @@ export class BusquedaInscripcionesComponent extends SigaWrapper
   }
 
   editarCompleto(event, dato) {
-    console.log(event);
+    //console.log(event);
     let data = event;
 
     if (data != null && data != undefined) {

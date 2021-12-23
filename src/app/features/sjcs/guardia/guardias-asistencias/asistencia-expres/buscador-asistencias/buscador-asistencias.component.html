@@ -64,10 +64,9 @@
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                       <label>{{'justiciaGratuita.oficio.justificacionExpres.actuacionesValidadas' | translate}}</label>
-                      <p-dropdown class="select-form" [(ngModel)]="filtro.idActuacionValidada" [ngModelOptions]="{standalone: true}"
-                          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                          [showClear]="true" [options]="comboActuacionesV">
-                      </p-dropdown>
+                      <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idActuacionValidada'
+                                [options]="comboActuacionesV" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                                styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
                     </div>
                   </div>
               </ng-template>

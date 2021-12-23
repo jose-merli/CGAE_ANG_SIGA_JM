@@ -202,7 +202,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
         derechoAcceso = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (derechoAcceso == 3) {
@@ -322,20 +322,23 @@ let datosEntrada =
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => { 
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
         });
 }
 formatOfficial(fechaB){
-  const dayB = fechaB.substr(0, 2) ;
-  const monthB = fechaB.substr(3, 2);
-  const yearB = fechaB.substr(6, 4);
-  const hourB = fechaB.substr(11, 2);
-  const minB = fechaB.substr(14, 2);
-  const segB = fechaB.substr(17, 2);
-  return yearB + "-" + monthB + "-" + dayB + "T" + hourB + ":" + minB + ":" + segB;
+  if (fechaB != null && fechaB != undefined){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 4);
+    const hourB = fechaB.substr(11, 2);
+    const minB = fechaB.substr(14, 2);
+    const segB = fechaB.substr(17, 2);
+    return yearB + "-" + monthB + "-" + dayB + "T" + hourB + ":" + minB + ":" + segB;
+  }
+
   //'1968-11-16T00:00:00'
 }
 jsonToRow(){
@@ -537,7 +540,7 @@ delete(indexToDelete){
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -583,7 +586,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -626,7 +629,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.commonsService.scrollTablaFoco('tablaFoco');
@@ -743,7 +746,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
           saveAs(blob, "GeneracionCalendariosLog_ZIP.zip");
         this.progressSpinner = false;
         }, err => {
-          console.log(err);
+          //console.log(err);
         });
   }*/
 
@@ -767,7 +770,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         this.showMessage({ severity: 'success', summary: 'LOG descargado correctamente', msg: 'LOG descargado correctamente' });
       }, err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
         this.showMessage({ severity: 'error', summary: 'El LOG no pudo descargarse', msg: 'El LOG no pudo descargarse' });
       });
 }

@@ -240,7 +240,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -355,7 +355,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           this.tipoIdentificacion[3].label;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -370,7 +370,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -380,7 +380,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.arregloTildesCombo(this.generalEstadoCivil);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -391,7 +391,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -403,7 +403,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.cambioEstadoResumen();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -667,7 +667,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.searchColegiales();
@@ -752,7 +752,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           this.cambioEstadoResumen();
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }, () => {
           if (this.generalBody.colegiado) {
             this.sigaServices
@@ -1136,7 +1136,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
           },
           () => {
             if (this.datosDirecciones.length > 0) {
@@ -1208,7 +1208,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
  
         },
         error => {
-          console.log(error);
+          //console.log(error);
           
           if (error != null && error != undefined) {
             if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
@@ -1271,7 +1271,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
               }
             },
             err => {
-              console.log(err);
+              //console.log(err);
             }
           );
       }
@@ -1517,7 +1517,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           this.checkGeneralBody.etiquetas = JSON.parse(JSON.stringify(this.etiquetasPersonaJuridicaSelecionados));
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
     // this.generalBody.etiquetas = new ComboEtiquetasItem();
@@ -1855,7 +1855,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           } this.searchDirecciones();
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
           this.isCrearColegial = false;
           this.isRestablecer = false;
@@ -2164,7 +2164,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         this.activateNumColegiado = permisosArray[0].derechoacceso == 3 ? true : false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;

@@ -106,7 +106,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
           this.comboTurnos = n.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
 
         }, () => {
           this.commonServices.arregloTildesCombo(this.comboTurnos);
@@ -118,7 +118,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
           this.comboTurnos = n.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
   
         }, () => {
           this.commonServices.arregloTildesCombo(this.comboTurnos);
@@ -133,7 +133,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
         this.comboComisarias = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboComisarias);
@@ -147,7 +147,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
         this.comboJuzgados = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboJuzgados);
@@ -167,7 +167,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
             this.comboGuardias = n.combooItems;
           },
           err => {
-            console.log(err);
+            //console.log(err);
     
           }, () => {
             this.commonServices.arregloTildesCombo(this.comboGuardias);
@@ -180,7 +180,7 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
             this.comboGuardias = n.combooItems;
           },
           err => {
-            console.log(err);
+            //console.log(err);
     
           }, () => {
             this.commonServices.arregloTildesCombo(this.comboGuardias);

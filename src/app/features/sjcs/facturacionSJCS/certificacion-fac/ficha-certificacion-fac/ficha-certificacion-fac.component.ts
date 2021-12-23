@@ -10,7 +10,7 @@ import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_factu
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
-import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { TarjetaDatosGeneralesCertificacionComponent } from './tarjeta-datos-generales/tarjeta-datos-generales-certificacion.component';
 import { TarjetaFacturacionComponent } from './tarjeta-facturacion/tarjeta-facturacion.component';
 import { TarjetaMovimientosVariosAplicadosComponent } from './tarjeta-movimientos-varios-aplicados/tarjeta-movimientos-varios-aplicados.component';
 import { TarjetaMovimientosVariosAsociadosComponent } from './tarjeta-movimientos-varios-asociados/tarjeta-movimientos-varios-asociados.component';
@@ -37,7 +37,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
   showCards: boolean = false;
   filtrosDeBusqueda: BusquedaRetencionesRequestDTO = undefined;
 
-  @ViewChild(TarjetaDatosGeneralesComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesComponent;
+  @ViewChild(TarjetaDatosGeneralesCertificacionComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesCertificacionComponent;
   @ViewChild(TarjetaFacturacionComponent) tarjetaFact;
   @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli;
   @ViewChild(TarjetaMovimientosVariosAsociadosComponent) tarjetaMovAso;

@@ -711,7 +711,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -723,7 +723,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.comboRepeatEvery = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -735,7 +735,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.comboRepeatOn.push(dom);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -781,7 +781,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.comboCalendars = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -804,7 +804,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.comboCalendars.push(tipoLaboral);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -816,7 +816,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.comboTipoEvento = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -828,7 +828,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.comboPartidoJudicial = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -915,7 +915,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }
@@ -1582,7 +1582,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -1682,7 +1682,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -2061,7 +2061,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.comboNotifyType = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -2074,7 +2074,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.arregloTildesCombo(this.comboTemplates);
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -2089,7 +2089,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.comboMeasureUnit = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -2100,7 +2100,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
         this.comboAfterBefore = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -2155,7 +2155,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -2481,7 +2481,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -2543,7 +2543,7 @@ export class FichaEventosComponent implements OnInit, OnDestroy {
             this.getEntryListCourse();
           },
           error => {
-            console.log(error);
+            //console.log(error);
             this.showMessage("error", "Error", error.error.error.description
             );
             this.progressSpinner = false;

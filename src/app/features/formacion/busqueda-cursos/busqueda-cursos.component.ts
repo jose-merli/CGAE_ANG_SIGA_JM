@@ -181,7 +181,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         derechoAcceso = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (derechoAcceso == 3) {
@@ -320,7 +320,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         this.arregloTildesCombo(this.comboVisibilidad);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -333,7 +333,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         this.arregloTildesCombo(this.comboColegios);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -348,7 +348,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         this.getComboDisponibilidadPlazas(); //Llamado desde aquí para que sea asíncrono y su respectivo select pueda pillar la traducción del placeholder
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -371,7 +371,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
         // this.mySelect.ngOnInit();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.mySelect.onFilter = function (event) {
@@ -449,7 +449,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
             this.table.paginator = true;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -686,7 +686,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -727,7 +727,7 @@ export class BusquedaCursosComponent extends SigaWrapper implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

@@ -124,7 +124,7 @@ export class EstadosComponent implements OnInit {
         //this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     for (let i in this.datosEstados) {
@@ -286,13 +286,13 @@ export class EstadosComponent implements OnInit {
 
     this.sigaServices.post("gestionejg_borrarEstado", this.selectedDatos).subscribe(
       n => {
-        console.log(n);
+        //console.log(n);
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.getEstados(this.item);
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
@@ -310,7 +310,7 @@ export class EstadosComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -418,7 +418,7 @@ export class EstadosComponent implements OnInit {
           this.getEstados(this.item);
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           //this.busqueda.emit(false);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -447,7 +447,7 @@ export class EstadosComponent implements OnInit {
             this.getEstados(this.item);
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             //this.busqueda.emit(false);
             this.selectedDatos = [];
@@ -552,7 +552,7 @@ export class EstadosComponent implements OnInit {
     return newDate.getTime();
   } 
   changeDateFormat(date1){
-        console.log('date1: ', date1)
+        //console.log('date1: ', date1)
         let year = date1.substring(0, 4)
         let month = date1.substring(5,7)
         let day = date1.substring(8, 10)

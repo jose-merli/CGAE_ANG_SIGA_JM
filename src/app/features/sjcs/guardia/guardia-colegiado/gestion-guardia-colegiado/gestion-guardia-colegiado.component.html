@@ -8,30 +8,29 @@
       Guardia de Colegiado
   </div>
   <div>
-    <app-turno-gestion-guardia-colegiado class="pb-50">
-    </app-turno-gestion-guardia-colegiado>
+      <app-turno-gestion-guardia-colegiado class="pb-50">
+      </app-turno-gestion-guardia-colegiado>
+      
+      <app-guardia-gestion-guardia-colegiado class="pb-50" >
+      </app-guardia-gestion-guardia-colegiado>
 
-    <app-guardia-gestion-guardia-colegiado class="pb-50">
-    </app-guardia-gestion-guardia-colegiado>
+      <app-calendario-gestion-guardia-colegiado class="pb-50" >
+      </app-calendario-gestion-guardia-colegiado>
 
-    <app-calendario-gestion-guardia-colegiado class="pb-50">
-    </app-calendario-gestion-guardia-colegiado>
+      <app-colegiado-gestion-guardia-colegiado class="pb-50" >
+      </app-colegiado-gestion-guardia-colegiado>
 
-    <app-colegiado-gestion-guardia-colegiado class="pb-50">
-    </app-colegiado-gestion-guardia-colegiado>
+      <app-datos-generales-gestion-guardia-colegiado class="pb-50" [modificar] = "modificar">
+      </app-datos-generales-gestion-guardia-colegiado>
 
-    <app-datos-generales-gestion-guardia-colegiado class="pb-50" [modificar]="modificar">
-    </app-datos-generales-gestion-guardia-colegiado>
+      <app-sustituciones-gestion-guardia-colegiado class="pb-50" >
+      </app-sustituciones-gestion-guardia-colegiado>
 
-    <app-sustituciones-gestion-guardia-colegiado class="pb-50">
-    </app-sustituciones-gestion-guardia-colegiado>
+      <app-permutas-gestion-guardia-colegiado class="pb-50" >
+      </app-permutas-gestion-guardia-colegiado>
 
-    <app-permutas-gestion-guardia-colegiado class="pb-50">
-    </app-permutas-gestion-guardia-colegiado>
-
-    <app-tarjeta-facturacion-generica [datosEntrada]="guardia" [pantalla]="'GUARDIA'" (guardarDatos)="guardarDatos()">
+ <app-tarjeta-facturacion-generica [datosEntrada]="guardia" [pantalla]="'GUARDIA'" (guardarDatos)="guardarDatos()">
     </app-tarjeta-facturacion-generica>
-
   </div>
 
 </div>

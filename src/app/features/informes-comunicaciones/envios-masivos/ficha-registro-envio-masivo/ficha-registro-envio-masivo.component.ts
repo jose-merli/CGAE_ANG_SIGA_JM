@@ -159,7 +159,7 @@ export class FichaRegistroEnvioMasivoComponent implements OnInit {
               "informesycomunicaciones.enviosMasivos.ficha.envioError"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => {
 

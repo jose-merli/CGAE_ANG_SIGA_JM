@@ -138,7 +138,7 @@
           iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
 
         <button pButton [disabled]="disableAll || selectAll || historico" type="button" icon="fa fa-plus" iconPos="left"
-          label="{{ 'general.boton.new' | translate}}"></button>
+          label="{{ 'general.boton.new' | translate}}" (click)="nuevaGuardia()"></button>
 
       </div>
     </div>

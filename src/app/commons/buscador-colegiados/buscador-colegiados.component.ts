@@ -51,10 +51,10 @@ export class BuscadorColegiadosComponent implements OnInit {
   constructor(private router: Router, private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
-    console.log('sessionStorage.getItem("calendariosProgramados"): ', sessionStorage.getItem("calendariosProgramados"))
+    //console.log('sessionStorage.getItem("calendariosProgramados"): ', sessionStorage.getItem("calendariosProgramados"))
     if(sessionStorage.getItem("calendariosProgramados") == "true"){
       this.calendarioSelected = JSON.parse(sessionStorage.getItem("calendarioSeleccinoado"));
-      console.log('calendarioSelected: ', this.calendarioSelected)
+      //console.log('calendarioSelected: ', this.calendarioSelected)
     }
     if (sessionStorage.getItem('usuarioBusquedaExpress')) {
       sessionStorage.removeItem('usuarioBusquedaExpress')
@@ -148,7 +148,7 @@ export class BuscadorColegiadosComponent implements OnInit {
         },
         error => {
           this.progressSpinner = false;
-          console.log(error);
+          //console.log(error);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
@@ -161,12 +161,6 @@ export class BuscadorColegiadosComponent implements OnInit {
       //sessionStorage.setItem("turno", JSON.stringify(event));
       sessionStorage.setItem("origin","newInscrip");
       this.router.navigate(["/gestionInscripciones"]);
-
-
-    } else if (sessionStorage.getItem("nuevoMovimientoVarios") =="true") {
-        sessionStorage.setItem("datosColegiado", JSON.stringify(event));
-       this.router.navigate(["/fichaMovimientosVarios"]);
-     
 
     } else if(this.nuevaInscripcionGuardia){
       this.persistenceService.setDatos(event);

@@ -71,12 +71,12 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -190,7 +190,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
     }
@@ -213,7 +213,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
           },
           () => {
             // mensaje conjunto

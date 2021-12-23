@@ -198,7 +198,7 @@ export class TarjetaGestionInscripcion implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }, () => {
         }
       );
@@ -271,7 +271,7 @@ export class TarjetaGestionInscripcion implements OnInit {
   //       }
   //     },
   //     err => {
-  //       console.log(err);
+  //       //console.log(err);
   //       this.progressSpinner = false;
   //     }, () => {
   //       this.progressSpinner = false;
@@ -627,7 +627,7 @@ export class TarjetaGestionInscripcion implements OnInit {
     }
   }
   openMultiSelect(dato) {
-    // console.log(this.multiSelect);
+    // //console.log(this.multiSelect);
     dato.onPanelShow;
     // this.multiSelect.show();
     // dato.overlayVisible = true;

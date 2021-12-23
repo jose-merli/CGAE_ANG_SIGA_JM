@@ -128,7 +128,7 @@ export class ResolucionComponent implements OnInit {
         //this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -144,7 +144,7 @@ export class ResolucionComponent implements OnInit {
           this.ResolDesc = resol.label;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -208,7 +208,7 @@ export class ResolucionComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboPonente);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
