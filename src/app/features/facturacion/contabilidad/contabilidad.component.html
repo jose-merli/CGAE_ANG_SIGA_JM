@@ -1,1 +1,9 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtros-exportaciones-contabilidad (busqueda)="searchExportacionesContabilidad()"></app-filtros-exportaciones-contabilidad>
+    <app-tabla-exportaciones-contabilidad *ngIf="buscar" [datos]="datos" [filtro]="filtro" (busqueda)="searchExportacionesContabilidad()"></app-tabla-exportaciones-contabilidad>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

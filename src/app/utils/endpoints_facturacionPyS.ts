@@ -64,4 +64,7 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_getEstadosPagos: "facturacionPyS/getEstadosPagos",
     facturacionPyS_insertarEstadosPagos: "facturacionPyS/insertarEstadosPagos",
     facturacionPyS_eliminarEstadosPagos: "facturacionPyS/eliminarEstadosPagos",
+    facturacionPyS_buscarExportacionContabilidad: "facturacionPyS/searchExportacionContabilidad",
+    facturacionPyS_maxIdContabilidad: "facturacionPyS/maxIdContabilidad",
+    facturacionPyS_guardarRegistroFichConta: "facturacionPyS/guardarRegistroFichConta",
 }

@@ -130,6 +130,7 @@ import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/man
 import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
 import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
 import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
+import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/abonos-sjcs.component';
 import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
 import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component';
@@ -255,6 +256,7 @@ import { FichaFactProgramadasComponent } from "./features/facturacion/fact-progr
 import { GestionFicherosTransferenciasComponent } from "./features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component";
 import { FichaFicherosDevolucionesComponent } from "./features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/ficha-ficheros-devoluciones.component";
 import { GestionFacturasComponent } from "./features/facturacion/facturas/gestion-facturas/gestion-facturas.component";
+import { FichaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/ficha-abonos-sjcs.component';
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -974,6 +976,16 @@ const appRoutes: Routes = [
 	{
 		path: 'tramosLEC',
 		component: TramosLECComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'abonosSJCS',
+		component: AbonosSCJSComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaAbonosSJCS',
+		component: FichaAbonosSCJSComponent,
 		canActivate: [AuthGuard]
 	},
 	{

@@ -163,6 +163,8 @@ import { FicherosTransferenciaComponent } from './features/facturacion/ficheros-
 import { ContabilidadComponent } from './features/facturacion/contabilidad/contabilidad.component';
 import { CobrosRecobrosComponent } from './features/facturacion/cobros-recobros/cobros-recobros.component';
 import { FacturasEmitidasComponent } from './features/facturacion/informes/facturas-emitidas/facturas-emitidas.component';
+import { FiltrosExportacionesContabilidadComponent } from './features/facturacion/contabilidad/filtros-exportaciones-contabilidad/filtros-exportaciones-contabilidad.component';
+
 
 //Modulo de Productos y Servicios
 import { CategoriasProductoComponent } from './features/productosYServicios/categoriasProducto/categoriasProducto.component';
@@ -566,6 +568,11 @@ import { ComunicacionesFacturasComponent } from './features/facturacion/facturas
 import { ClienteFacturasComponent } from './features/facturacion/facturas/gestion-facturas/cliente-facturas/cliente-facturas.component';
 import { DeudorFacturasComponent } from './features/facturacion/facturas/gestion-facturas/deudor-facturas/deudor-facturas.component';
 import { FacturacionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/facturacion-facturas/facturacion-facturas.component';
+import { TablaExportacionesContabilidadComponent} from './features/facturacion/contabilidad/tabla-exportaciones-contabilidad/tabla-exportaciones-contabilidad.component';
+import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/abonos-sjcs.component';
+import { FiltrosAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/filtros-abonos-sjcs/filtros-abonos-sjcs.component';
+import { TablaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-sjcs.component';
+import { FichaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/ficha-abonos-sjcs.component';
 
 enableRipple(true);
 
@@ -769,6 +776,10 @@ enableRipple(true);
 		MantenimientoPagosComponent,
 		MovimientosVariosComponent,
 		TramosLECComponent,
+		AbonosSCJSComponent,
+		FiltrosAbonosSCJSComponent,
+		TablaAbonosSCJSComponent,
+		FichaAbonosSCJSComponent,
 		RetencionesJudicialesComponent,
 		BusquedaRetencionesAplicadasComponent,
 		GenerarImpreso190Component,
@@ -1063,7 +1074,9 @@ enableRipple(true);
 		ComunicacionesFacturasComponent,
 		ClienteFacturasComponent,
 		DeudorFacturasComponent,
-		FacturacionFacturasComponent
+		FacturacionFacturasComponent,
+		FiltrosExportacionesContabilidadComponent,
+		TablaExportacionesContabilidadComponent,
 	],
 	imports: [
 		Paginador3Module,
