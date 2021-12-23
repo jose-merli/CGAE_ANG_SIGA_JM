@@ -125,6 +125,13 @@ export class GestionEjgComponent implements OnInit {
         this.body.apellidosYNombre = "";
       }
 
+      if (sessionStorage.getItem("fichaEJG") != null) {
+        this.body = JSON.parse(sessionStorage.getItem("fichaEJG"));
+        sessionStorage.removeItem("fichaEJG");
+        this.persistenceService.setDatos(this.body);
+        this.updateTarjResumen();
+      }
+
       if (sessionStorage.getItem("datosDesdeJusticiable")) {
         this.body = JSON.parse(sessionStorage.getItem("datosDesdeJusticiable"));
         sessionStorage.removeItem("datosDesdeJusticiable");
@@ -215,7 +222,16 @@ export class GestionEjgComponent implements OnInit {
       top.scrollIntoView();
       top = null;
     }
+  }
 
+  goResol(){
+    document.children[document.children.length - 1]
+    let resol = document.getElementById("resol");
+    if (resol) {
+      this.openTarjetaResolucion = true;
+      resol.scrollIntoView();
+      resol = null;
+    }
   }
 
   clear() {
@@ -257,8 +273,14 @@ export class GestionEjgComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearDatos();
-    if (sessionStorage.getItem("filtroAsistencia")) {
-      sessionStorage.setItem("volver", "true");
+    if(sessionStorage.getItem("filtroAsistencia")){
+      sessionStorage.setItem("volver","true");
+    }
+    //Para evitar complicaciones según se acceda desde la pantalla de busqueda de EJGs de comision o 
+    //desde una ficha de acta directamente
+    if(sessionStorage.getItem("actasItemAux") && sessionStorage.getItem("actasItem") == null){
+      sessionStorage.setItem("actasItem",sessionStorage.getItem("actasItemAux"));
+      sessionStorage.removeItem("actasItemAux");
     }
     this.location.back();
   }
@@ -385,7 +407,11 @@ export class GestionEjgComponent implements OnInit {
   }
 
   enviarEnlacesTarjeta() {
-    this.enlacesTarjetaResumen = []
+    if(sessionStorage.getItem("actasItem")){
+      this.goResol();
+    }
+
+    this.enlacesTarjetaResumen = [];
 
     let pruebaTarjeta;
 

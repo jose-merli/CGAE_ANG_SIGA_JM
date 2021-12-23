@@ -115,7 +115,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.selectedIdiomaBusqueda = this.valorDefecto.value;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -166,7 +166,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -199,7 +199,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         else this.paginacion = true;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
       );
   }
@@ -265,7 +265,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         data => {
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.showFail();
         },
         () => {

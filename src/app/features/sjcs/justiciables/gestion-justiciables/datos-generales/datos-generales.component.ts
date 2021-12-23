@@ -588,7 +588,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     }, error => {
       this.progressSpinner = false;
-      console.log(error);
+      //console.log(error);
     });
   }
 
@@ -680,7 +680,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -702,7 +702,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -721,7 +721,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -780,7 +780,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -797,7 +797,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -814,7 +814,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -831,7 +831,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );

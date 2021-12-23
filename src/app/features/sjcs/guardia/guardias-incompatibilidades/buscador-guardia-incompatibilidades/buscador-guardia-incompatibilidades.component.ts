@@ -163,7 +163,7 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
   },
     err => {
       this.progressSpinner = false;
-      console.log(err);
+      //console.log(err);
     });
 }
   
@@ -236,7 +236,7 @@ this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -494,7 +494,7 @@ delete(indexToDelete){
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -530,7 +530,7 @@ guardarInc(incompArray : SaveIncompatibilidadesDatosEntradaItem []){
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -573,7 +573,7 @@ guardarInc(incompArray : SaveIncompatibilidadesDatosEntradaItem []){
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.commonsService.scrollTablaFoco('tablaFoco');

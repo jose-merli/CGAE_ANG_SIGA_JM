@@ -122,7 +122,7 @@ export class DatosConfColaComponent implements OnInit {
           this.ordenacion = this.ordenacion.substring(0, this.ordenacion.lastIndexOf(","));
       },
         err => {
-          console.log(err);
+          //console.log(err);
         })
   }
 
@@ -280,7 +280,7 @@ export class DatosConfColaComponent implements OnInit {
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }, () => {
             this.getPerfilesExistentes();
 

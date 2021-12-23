@@ -7,25 +7,49 @@
     <div id="top"></div>
 
     <div class="datos-container">
+
       <div class="header-title">
         <i class="fa fa-square"></i>
         <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'menu.sjcs.facturacionSJCS.fichaCertificacion' |
           translate}}</p>
       </div>
 
-      <app-tarjeta-datos-generales-fiFac [idCertificacion]="idCertificacion" [modoEdicion]="modoEdicion"
-        (changeModoEdicion)="changeModoEdicion($event)">
+      <div class="tarjetaFija">
+
+        <div class="card">
+          <div class="card-body p-0">
+            <mat-accordion class="example-headers-align" multi>
+              <mat-expansion-panel [disabled]="true">
+                <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                  <app-tarjeta [image]="tarjetaFija.imagen" cardTitle="{{tarjetaFija.nombre | translate}}"
+                    [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono" [enlaces]="tarjetaFija.enlaces"
+                    [fixed]="tarjetaFija.fixed" class="w-100" (isOpen)="isOpenReceive($event)">
+                  </app-tarjeta>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                </ng-template>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+
+      </div>
+
+      <app-tarjeta-datos-generales-fiFac *ngIf="showCards" [certificacion]="certificacion" [modoEdicion]="modoEdicion"
+        [estadosCertificacion]="estadosCertificacion" (guardarEvent)="guardarEvent($event)"
+        (reabrirEvent)="reabrirEvent($event)" (restablecerEvent)="getCertificacion($event)"
+        (getListaEstadosEvent)="getListaEstadosEvent($event)" (addEnlace)="addEnlace($event)">
       </app-tarjeta-datos-generales-fiFac>
 
-      <app-tarjeta-facturacion [idCertificacion]="idCertificacion" [modoEdicion]="modoEdicion"
+      <app-tarjeta-facturacion *ngIf="showCards" [certificacion]="certificacion"  [modoEdicion]="modoEdicion" [permisos]="permisoEscritura"
         (changeModoEdicion)="changeModoEdicion($event)">
       </app-tarjeta-facturacion>
 
-      <app-tarjeta-movimientos-varios-aplicados [idCertificacion]="idCertificacion" [modoEdicion]="modoEdicion"
+     <!--  <app-tarjeta-movimientos-varios-aplicados [modoEdicion]="modoEdicion"
         (changeModoEdicion)="changeModoEdicion($event)"></app-tarjeta-movimientos-varios-aplicados>
 
-      <app-tarjeta-movimientos-varios-asociados [idCertificacion]="idCertificacion" [modoEdicion]="modoEdicion"
-        (changeModoEdicion)="changeModoEdicion($event)"></app-tarjeta-movimientos-varios-asociados>
+      <app-tarjeta-movimientos-varios-asociados [modoEdicion]="modoEdicion"
+        (changeModoEdicion)="changeModoEdicion($event)"></app-tarjeta-movimientos-varios-asociados> -->
 
 
       <div class="text-right main-button">
@@ -39,6 +63,6 @@
   </div>
 </div>
 
-<div *ngIf="progressSpinner || spinnerGlobal()" class="overlay-spinner">
+<div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>

@@ -16,7 +16,7 @@
         <div class="form-row">
           
           <!-- TABLA RESULTADOS -->
-    <p-table [value]="datosTablaFact" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode"
     [responsive]="true" #tabla class="tabla-listado w-100" [paginator]="true" [rows]="selectedItem"
     (onRowSelect)="selectDesSelectFila()" (onRowUnselect)="selectDesSelectFila()" [first]="first"
      [customSort]="true" paginatorPosition="both" [autoLayout]="true">
@@ -40,14 +40,10 @@
     <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-          <!-- <div *ngIf="col.field == 'fechaDesde' || col.field == 'fechaHasta'">
+          <div *ngIf="col.field == 'fechaDesde' || col.field == 'fechaHasta'">
             <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
           </div>
-          <div
-            *ngIf="col.field != 'periodo' && col.field != 'estado'">
-            <span>{{dato[col.field]}}</span>
-          </div>
-           <div *ngIf="col.field == 'importeTurno'">
+           <div *ngIf="col.field == 'importeOficio'">
             <label>{{ dato[col.field] | numberPipe}} €</label>
           </div>
           <div *ngIf="col.field == 'importeGuardia'">
@@ -62,9 +58,32 @@
           <div *ngIf="col.field == 'importeTotal'">
             <label>{{ dato[col.field] | numberPipe}} €</label>
           </div> 
-          <div *ngIf="col.field =='nombre'">
-            <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
-          </div> -->
+          <div *ngIf="col.field == 'importePendiente'">
+            <label>{{ dato[col.field] | numberPipe}} €</label>
+          </div>
+          <div *ngIf="col.field == 'importePagado'">
+            <label>{{ dato[col.field] | numberPipe}} €</label>
+          </div>
+          <div *ngIf="col.field == 'nombre' && datos[rowIndex].nuevoRegistro">
+            <p-dropdown  class="select-form" [(ngModel)]='idFacturacion'
+                                        placeholder="{{'general.boton.seleccionar' | translate}}"
+                                            [options]="comboFactByPartida" [filter]="true"
+                                            filterBy="label,labelSinTilde" 
+                                            (onChange)="onChangePartida($event)"[showClear]="true">
+                                        </p-dropdown>
+          </div>
+          <div *ngIf="col.field == 'nombre'">
+            <label>{{ dato[col.field]}}</label>
+          </div>
+          <div *ngIf="col.field == 'idGrupo'">
+            <label>{{ dato[col.field]}}</label>
+          </div>
+          <div *ngIf="col.field == 'regularizacion'">
+            <label>{{ dato[col.field]}}</label>
+          </div>
+          <div *ngIf="col.field != 'nombre' && datos[rowIndex].nuevoRegistro">
+            <label></label>
+          </div>
         </td>
       </tr>
     </ng-template>
@@ -108,7 +127,7 @@
         (click)="confirmDelete()" type="button" icon="fa fa-trash-alt" iconPos="left"
         label="{{ 'general.boton.eliminar' | translate}}"></button>
         <!--Reabrir-->
-        <button (click)="reabrir()" [disabled]='!permisos' pButton type="button"
+        <button (click)="reabrir()" [disabled]="!permisos || selectedDatos.length == 0" pButton type="button"
           label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}" icon="fa fa-lock-open"
           iconPos="left"></button>
         
@@ -116,14 +135,15 @@
         <button [disabled]="true" pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"
           icon="fa fa-send" iconPos="left"></button>
           <!--Nuevo-->
-        <button (click)="nuevo()" [disabled]=' !permisos' pButton type="button"
+        <button (click)="nuevo()" [disabled]="isNuevo || !permisos || certificacion.estado !='ABIERTA' || certificacion.estado !='NO VALIDADA' 
+        || certificacion.estado !='ENVÍO CON ERRORES'" pButton type="button"
         label="{{ 'general.boton.new' | translate }}"
         icon="fas fa-plus" iconPos="left"></button>
           <!--Restablecer-->
-        <button (click)="restablecer()" [disabled]="!permisos" pButton type="button"
+        <button (click)="restablecer()" [disabled]="!isNuevo || !permisos" pButton type="button"
         icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
         <!--Guardar-->
-        <button (click)="save()" [disabled]=" !permisos" pButton type="button" icon="fa fa-save"
+        <button (click)="save()" [disabled]="!isNuevo || !permisos" pButton type="button" icon="fa fa-save"
           iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
         
       </div>
@@ -136,3 +156,7 @@
     <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
   </p-footer>
 </p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -23,7 +23,7 @@ export class TarjetaAsistenciaItem{
 	  idGuardia : string;
 	  anioNumero: string;
 	  asistido: string;
-	  idDelito: string;
+	  idDelito = [];
 	  observaciones: string;
 	  ejgNumero: string;
 	  ejgAnio: string;

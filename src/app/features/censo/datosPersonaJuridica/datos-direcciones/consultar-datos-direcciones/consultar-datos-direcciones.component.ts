@@ -282,7 +282,7 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
     this.checkBody = JSON.parse(JSON.stringify(this.body));
@@ -946,7 +946,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           } else {
             this.showGenericFail();
           }
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -984,7 +984,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           } else {
             this.showGenericFail();
           }
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -1016,7 +1016,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       error => {
         this.bodySearch = JSON.parse(error["error"]);
         this.showFail(this.bodySearch.error.message.toString());
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
       }
     );
@@ -1114,7 +1114,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         error => {
           this.bodySearch = JSON.parse(error["error"]);
           this.showGenericFail();
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
           this.displayAuditoria = false;
         }

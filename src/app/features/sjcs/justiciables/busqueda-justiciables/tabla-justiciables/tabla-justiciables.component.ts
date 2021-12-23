@@ -315,7 +315,7 @@ export class TablaJusticiablesComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -348,7 +348,7 @@ export class TablaJusticiablesComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

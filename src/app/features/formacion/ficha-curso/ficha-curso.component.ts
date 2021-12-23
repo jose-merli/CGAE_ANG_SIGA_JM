@@ -574,7 +574,7 @@ export class FichaCursoComponent implements OnInit {
       },
     ];
 
-    console.log(this.editor);
+    //console.log(this.editor);
     this.getNumTutor();
     this.checkAcceso();
     this.focusNombre(this.nombre);
@@ -605,7 +605,7 @@ export class FichaCursoComponent implements OnInit {
         derechoAcceso = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (derechoAcceso == 3) {
@@ -740,7 +740,7 @@ export class FichaCursoComponent implements OnInit {
         this.arregloTildesCombo(this.comboVisibilidad);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -753,7 +753,7 @@ export class FichaCursoComponent implements OnInit {
         this.arregloTildesCombo(this.comboColegios);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -767,7 +767,7 @@ export class FichaCursoComponent implements OnInit {
         this.arregloTildesCombo(this.comboTopics);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -780,7 +780,7 @@ export class FichaCursoComponent implements OnInit {
         this.arregloTildesCombo(this.comboEstados);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -793,7 +793,7 @@ export class FichaCursoComponent implements OnInit {
         this.arregloTildesCombo(this.comboService);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -807,7 +807,7 @@ export class FichaCursoComponent implements OnInit {
           this.curso.codigoCurso = n;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -831,7 +831,7 @@ export class FichaCursoComponent implements OnInit {
   //         this.progressSpinner = false;
   //       },
   //       err => {
-  //         console.log(err);
+  //         //console.log(err);
   //         this.progressSpinner = false;
   //       },
   //       () => {
@@ -859,7 +859,7 @@ export class FichaCursoComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -1900,7 +1900,7 @@ export class FichaCursoComponent implements OnInit {
         this.arregloTildesCombo(this.comboRoles);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -1933,7 +1933,7 @@ export class FichaCursoComponent implements OnInit {
         this.arregloTildesCombo(this.comboTipoCoste);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -2736,7 +2736,7 @@ export class FichaCursoComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -2787,7 +2787,7 @@ export class FichaCursoComponent implements OnInit {
           );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -2822,7 +2822,7 @@ export class FichaCursoComponent implements OnInit {
         this.comboCertificates = n.certificadoCursoItem;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -2835,7 +2835,7 @@ export class FichaCursoComponent implements OnInit {
         this.arregloTildesCombo(this.comboCalificaciones);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -3215,7 +3215,7 @@ export class FichaCursoComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -3245,7 +3245,7 @@ export class FichaCursoComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -3336,7 +3336,7 @@ export class FichaCursoComponent implements OnInit {
             this.getMassiveLoadInscriptions();
           },
           error => {
-            console.log(error);
+            //console.log(error);
             this.showFail(
               this.translateService.instant(
                 "formacion.mensaje.subida.fichero.erronea"

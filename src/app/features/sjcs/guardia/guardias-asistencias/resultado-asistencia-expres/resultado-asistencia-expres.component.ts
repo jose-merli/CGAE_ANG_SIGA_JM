@@ -101,22 +101,22 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       {
         id: "ejg",
         name: "EJG",
-        size: 225.75
+        size: 100
       },
       {
         id: "actuacion",
         name: this.translateService.instant("justiciaGratuita.oficio.designas.actuaciones.fechaActuacion"),
-        size: 225.75
+        size: 200
       },
       {
         id: "lugar",
         name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceralugar"),
-        size: 225.75
+        size: 400
       },
       {
         id: "diligencia",
         name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceradiligencia"),
-        size: 225.75
+        size: 100
       }
     ];
   }
@@ -186,23 +186,23 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
 
     cellEJG.type = 'text';
     cellEJG.value = '';
-    cellEJG.size = 225.75;
+    cellEJG.size = 100;
 
-    cellFechaActuacion.type = 'datePicker';
+    cellFechaActuacion.type = 'datePickerAsist';
     cellFechaActuacion.value = '';
     cellFechaActuacion.showTime = true;
-    cellFechaActuacion.size = 225.75;
+    cellFechaActuacion.size = 200;
 
     cellLugar.type = 'buttomSelect';
     cellLugar.value = ['C / J',this.comboComisarias, this.comboJuzgadosAE
                         , 'C'
                         ,''
                       ];
-    cellLugar.size = 225.75;
+    cellLugar.size = 400;
 
     cellNDiligencia.type = 'input';
     cellNDiligencia.value = '';
-    cellNDiligencia.size = 225.75;
+    cellNDiligencia.size = 100;
 
     cellAsistido2.type = 'invisible';
     cellAsistido2.value = '';
@@ -216,30 +216,30 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
 
     cellEJG2.type = 'invisible';
     cellEJG2.value = '';
-    cellEJG2.size= 225.75;
+    cellEJG2.size= 100;
 
-    cellFechaActuacion2.type = 'datePicker';
+    cellFechaActuacion2.type = 'datePickerAct';
     cellFechaActuacion2.value = '';
     cellFechaActuacion2.showTime = true;
-    cellFechaActuacion2.size = 225.75;
+    cellFechaActuacion2.size = 200;
 
     cellLugar2.type = 'buttomSelect';
     cellLugar2.value = ['C / J',this.comboComisarias, this.comboJuzgadosAE
                         , 'C'
                         ,''
                       ];
-    cellLugar2.size = 225.75;
+    cellLugar2.size = 400;
     
     cellNDiligencia2.type = 'input';
     cellNDiligencia2.value = '';
-    cellNDiligencia2.size = 225.75;
+    cellNDiligencia2.size = 100;
 
     row1.cells = [cellAsistido, cellDelitosObservaciones, cellEJG, cellFechaActuacion, cellLugar, cellNDiligencia];
     row2.cells = [cellAsistido2, cellDelitosObservaciones2, cellEJG2, cellFechaActuacion2, cellLugar2, cellNDiligencia2];
     row1.position = 'collapse';
     row2.position = 'collapse';
     rowGroup.rows = [row1, row2];
-    rowGroup.id = '';
+    rowGroup.id = 'Ayyyy/XXXXX';
     if(this.rowGroups){
       this.rowGroups.unshift(rowGroup);
       this.tabla.totalRegistros = this.rowGroups.length;
@@ -269,23 +269,23 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
 
       cellEJG.type = 'invisible';
       cellEJG.value = '';
-      cellEJG.size = 225.75;
+      cellEJG.size = 100;
 
       cellFechaActuacion.type = 'datePicker';
       cellFechaActuacion.value = '';
       cellFechaActuacion.showTime = true;
-      cellFechaActuacion.size = 225.75;
+      cellFechaActuacion.size = 200;
 
       cellLugar.type = 'buttomSelect';
       cellLugar.value = ['C / J', this.comboComisarias, this.comboJuzgadosAE
                           , 'C'
                           ,''
                         ];
-      cellLugar.size = 225.75;
+      cellLugar.size = 400;
       
       cellNDiligencia.type = 'input';
       cellNDiligencia.value = '';
-      cellNDiligencia.size = 225.75;
+      cellNDiligencia.size = 100;
       //Si es un RowGroup que puede estar colapsado lo comprobamos y si es asi la fila que añadimos tambien lo estara
       /*if(this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.length > 1
           && this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows[1].position == 'collapse'){
@@ -299,7 +299,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
 
   }
   crearEJG(){
-    if(this.filtro){
+    if(this.filtro && this.tabla.selectedArray.length>0){
       let asistencia : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
       let idAsistencia : string = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[this.tabla.selectedArray.length-1]).id;
       idAsistencia = idAsistencia.substring(1);
@@ -310,6 +310,8 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtro));
       sessionStorage.setItem("Nuevo","true");
       this.router.navigate(["/gestionEjg"]);
+    }else{
+      this.showMsg('error', 'Error. Debe seleccionar un registro para poder crear un EJG' ,'')
     }
   }
   guardar(){

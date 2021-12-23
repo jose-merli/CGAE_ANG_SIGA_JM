@@ -29,6 +29,7 @@ export class EJGComponent implements OnInit {
   progressSpinner: boolean = false;
   buscar: boolean = false;
   remesa;
+  ejg;
 
   permisoEscritura: any;
 
@@ -69,9 +70,17 @@ export class EJGComponent implements OnInit {
 
     //Preparacion previa para recibir el valor de remesa si se accede a esta pantalla desde una ficha
     //de remesa.
-    if (sessionStorage.getItem("remesa") != null) {
-      this.remesa = JSON.parse(sessionStorage.getItem("remesa"));
-      sessionStorage.removeItem("remesa");
+    if (localStorage.getItem('remesa') != null) {
+      this.remesa = JSON.parse(localStorage.getItem('remesa'));
+      localStorage.removeItem('remesa');
+      console.log("Remesa -> ", this.remesa);
+    }
+
+    if (sessionStorage.getItem("EJG") != null) {
+      this.ejg = JSON.parse(sessionStorage.getItem("EJG"));
+      sessionStorage.removeItem("EJG");
+      sessionStorage.setItem('fichaEJG', JSON.stringify(this.ejg));
+      this.router.navigate(['/gestionEjg']);
     }
   }
 
@@ -114,8 +123,12 @@ export class EJGComponent implements OnInit {
     if (filtros.estadoEJG) {
       if (filtros.estadoEJG.length > 0) {
         filtros.estadoEJG = filtros.estadoEJG.toString();
-      } else {
-        filtros.estadoEJG = undefined;
+      }else{
+          filtros.estadoEJG = undefined;
+        }
+    }else{
+      if(this.filtros.remesaFicha){
+        filtros.estadoEJG = this.filtros.comboEstadoEJG[0].value.toString() + ", " + this.filtros.comboEstadoEJG[1].value.toString();
       }
     }
 
@@ -139,7 +152,7 @@ export class EJGComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;

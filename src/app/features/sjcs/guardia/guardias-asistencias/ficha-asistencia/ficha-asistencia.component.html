@@ -15,9 +15,8 @@
                             <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
                                 [expandedHeight]="'auto'">
                                 <app-tarjeta [image]="tarjetaFija.imagen" [cardTitle]="tarjetaFija.nombre"
-                                    [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono"
-                                    [enlaces]="tarjetaFija.enlaces" [fixed]="tarjetaFija.fixed" class="w-100"
-                                    (isOpen)="isOpenReceive($event)">
+                                    [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono" [enlaces]="tarjetaFija.enlaces"
+                                    [fixed]="tarjetaFija.fixed" class="w-100" (isOpen)="isOpenReceive($event)">
                                 </app-tarjeta>
                             </mat-expansion-panel-header>
                             <ng-template matExpansionPanelContent>
@@ -45,64 +44,41 @@
                                     </app-tarjeta>
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent>
-                                    <div *ngIf="tarj.nombre == 'Datos Generales' && tarj.visible != undefined"
-                                        id="datosgeneralesTemplate">
-                                        <app-ficha-asistencia-tarjeta-datos-generales [asistencia]="asistencia"
-                                            (refreshDatosGenerales)="refreshDatosGenerales($event);">
-                                        </app-ficha-asistencia-tarjeta-datos-generales>
-                                    </div>
-                                    <div *ngIf="tarj.nombre == 'Asistido' && tarj.visible != undefined"
-                                        id="asistidoTemplate">
-                                        <app-ficha-asistencia-tarjeta-asistido [idAsistencia]="asistencia.anioNumero"
-                                            (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable"
-                                            [idPersonaAsistido]="asistencia.idPersonaJg">
-                                        </app-ficha-asistencia-tarjeta-asistido>
-                                    </div>
-                                    <div *ngIf="tarj.nombre == 'Contrarios' && tarj.visible != undefined"
-                                        id="contrariosTemplate">
-                                        <app-ficha-asistencia-tarjeta-contrarios [idAsistencia]="asistencia.anioNumero"
-                                            (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
-                                        </app-ficha-asistencia-tarjeta-contrarios>
-                                    </div>
-                                    <div *ngIf="tarj.nombre == 'Defensa Jurídica' && tarj.visible != undefined"
-                                        id="defensaJuridicaTemplate">
-                                        <app-ficha-asistencia-tarjeta-defensa-juridica
-                                            [idAsistencia]="asistencia.anioNumero"
-                                            (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
-                                        </app-ficha-asistencia-tarjeta-defensa-juridica>
-                                    </div>
-                                    <div *ngIf="tarj.nombre == 'Observaciones' && tarj.visible != undefined"
-                                        id="observacionesTemplate">
-                                        <app-ficha-asistencia-tarjeta-observaciones
-                                            [idAsistencia]="asistencia.anioNumero" [editable]="editable">
-                                        </app-ficha-asistencia-tarjeta-observaciones>
-                                    </div>
-                                    <div *ngIf="tarj.nombre == 'Relaciones' && tarj.visible != undefined"
-                                        id="relacionesTemplate">
-                                        <app-ficha-asistencia-tarjeta-relaciones [asistencia]="asistencia"
-                                            (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
-                                        </app-ficha-asistencia-tarjeta-relaciones>
-                                    </div>
-                                    <div *ngIf="tarj.nombre == 'Documentación' && tarj.visible != undefined"
-                                        id="documentacionTemplate">
-                                        <app-ficha-asistencia-tarjeta-documentacion
-                                            [idAsistencia]="asistencia.anioNumero"
-                                            (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
-                                        </app-ficha-asistencia-tarjeta-documentacion>
-                                    </div>
-                                    <div *ngIf="tarj.nombre == 'Caracteristicas' && tarj.visible != undefined"
-                                        id="caracteristicasTemplate">
-                                        <app-ficha-asistencia-tarjeta-caracteristicas [asistencia]="asistencia"
-                                            [permisoEscritura]="visibleTarjetaCaract"
-                                            (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
-                                        </app-ficha-asistencia-tarjeta-caracteristicas>
-                                    </div>
-                                    <div *ngIf="tarj.nombre == 'Actuaciones' && tarj.visible != undefined"
-                                        id="actuacionesTemplate">
-                                        <app-ficha-asistencia-tarjeta-actuaciones [asistencia]="asistencia"
-                                            (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
-                                        </app-ficha-asistencia-tarjeta-actuaciones>
-                                    </div>
+                                  <div *ngIf="tarj.nombre == 'Datos Generales' && tarj.visible != undefined" id="datosgeneralesTemplate">
+                                    <app-ficha-asistencia-tarjeta-datos-generales [asistencia]="asistencia" (refreshDatosGenerales)="refreshDatosGenerales($event);">
+                                    </app-ficha-asistencia-tarjeta-datos-generales>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Asistido' && tarj.visible != undefined" id="asistidoTemplate">
+                                    <app-ficha-asistencia-tarjeta-asistido [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable"
+                                    [idPersonaAsistido]="asistencia.idPersonaJg">
+                                    </app-ficha-asistencia-tarjeta-asistido>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Contrarios' && tarj.visible != undefined" id="contrariosTemplate">
+                                    <app-ficha-asistencia-tarjeta-contrarios [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-contrarios>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Defensa Jurídica' && tarj.visible != undefined" id="defensaJuridicaTemplate">
+                                    <app-ficha-asistencia-tarjeta-defensa-juridica [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-defensa-juridica>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Observaciones' && tarj.visible != undefined" id="observacionesTemplate" >
+                                    <app-ficha-asistencia-tarjeta-observaciones [idAsistencia] = "asistencia.anioNumero" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-observaciones>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Relaciones' && tarj.visible != undefined" id="relacionesTemplate">
+                                    <app-ficha-asistencia-tarjeta-relaciones [asistencia] = "asistencia" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-relaciones>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Documentación' && tarj.visible != undefined" id="documentacionTemplate">
+                                    <app-ficha-asistencia-tarjeta-documentacion [idAsistencia] = "asistencia.anioNumero" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                    </app-ficha-asistencia-tarjeta-documentacion>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Caracteristicas' && tarj.visible != undefined" id="caracteristicasTemplate">
+                                      <app-ficha-asistencia-tarjeta-caracteristicas [asistencia] = "asistencia" [permisoEscritura]="visibleTarjetaCaract" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable"></app-ficha-asistencia-tarjeta-caracteristicas>
+                                  </div>
+                                  <div *ngIf="tarj.nombre == 'Actuaciones' && tarj.visible != undefined" id="actuacionesTemplate">
+                                    <app-ficha-asistencia-tarjeta-actuaciones [asistencia] = "asistencia" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable"></app-ficha-asistencia-tarjeta-actuaciones>
+                                  </div>
                                 </ng-template>
                             </mat-expansion-panel>
                         </mat-accordion>

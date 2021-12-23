@@ -29,6 +29,7 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
   @Output() guardiasByConf = new EventEmitter<boolean>();
   @Input() datos;
   @Input() modoEdicion;
+  @Input() permisoEscritura: boolean = false;
 
   @ViewChild("table") tabla: Table;
   progressSpinner: boolean;

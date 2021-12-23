@@ -32,6 +32,7 @@ import { AutoComplete, DataTable, Calendar } from 'primeng/primeng';
 import { DocushareItem } from '../../../../models/DocushareItem';
 import { Dialog } from 'primeng/dialog';
 import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
+import { PersistenceService } from '../../../../_services/persistence.service';
 
 
 
@@ -108,8 +109,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   openDirec: Boolean = false;
   openBanca: Boolean = false;
   openRegtel: Boolean = false;
-  openRetenciones: Boolean = false;
-
   colsColegiales: any = [];
   colsColegiaciones: any = [];
   colsCertificados: any = [];
@@ -363,7 +362,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   tarjetaRegtel: string;
   tarjetaMutualidad: string;
   tarjetaAlterMutua: string;
-  tarjetaRetencionesIRPF: string;
 
   tarjetaInteresNum: string;
   tarjetaGeneralesNum: string;
@@ -378,7 +376,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   tarjetaRegtelNum: string;
   tarjetaMutualidadNum: string;
   tarjetaAlterMutuaNum: string;
-  tarjetaRetencionesIRPFNum: string;
 
   isCrearColegial: boolean = false;
   nuevoEstadoColegial: FichaColegialColegialesItem = new FichaColegialColegialesItem();
@@ -397,12 +394,12 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   disabledTarjetaResumen:Boolean = false;
   manuallyOpened:Boolean;
   idManuallyOpened: any;
-  
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private persistenceService: PersistenceService
   ) { }
 
   ngOnInit() {
@@ -467,6 +464,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     } else if (sessionStorage.getItem("destinatarioCom") != null) {
       this.desactivarVolver = false;
     } else if (sessionStorage.getItem("esNuevoNoColegiado")) {
+      this.desactivarVolver = false;
+    } else if (sessionStorage.getItem("fromTarjetaLetradoInscripciones") != null){
       this.desactivarVolver = false;
     } else {
       //  LLEGA DESDE PUNTO DE MENÚ
@@ -534,12 +533,12 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     //         this.idPersona = JSON.stringify(colegiadoItem.colegiadoItem[0].idPersona)
     //       },
     //       err => {
-    //         console.log(err);
+    //         //console.log(err);
     //       },
     //      );
     //   },
     //   err => {
-    //     console.log(err);
+    //     //console.log(err);
     //   });
     // }
 
@@ -598,7 +597,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
           this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.OnInit();
         });
@@ -611,6 +610,12 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   }
   // DE MOMENTO VA PERFE 
   backTo() {
+    if (sessionStorage.getItem("fromTarjetaLetradoInscripciones") != null){
+         this.persistenceService.setDatos(sessionStorage.getItem("fromTarjetaLetradoInscripciones"));
+         sessionStorage.removeItem("fromTarjetaLetradoInscripciones");
+         this.router.navigate(["/fichaInscripcionesGuardia"]);
+
+    }else{
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("esNuevoNoColegiado");
     sessionStorage.removeItem("filtrosBusquedaColegiados");
@@ -644,6 +649,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.location.back();
     }
   }
+  }
   arreglarFecha(fecha) {
 
     if (fecha != undefined && fecha != null) {
@@ -661,7 +667,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   }
   checkAccesos() {
     this.progressSpinner = true;
-    let procesos: any = ["285", "234", "286", "12P", "235", "290", "236", "237", "289", "287", "288", "291", "298", "299","12J"];
+    let procesos: any = ["285", "234", "286", "12P", "235", "290", "236", "237", "289", "287", "288", "291", "298", "299"];
     let proceso;
     procesos = procesos.map(it => {
       proceso = it;
@@ -688,11 +694,10 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.tarjetaRegtelNum = permisosArray[11].derechoacceso;
         this.tarjetaMutualidadNum = permisosArray[12].derechoacceso;
         this.tarjetaAlterMutuaNum = permisosArray[13].derechoacceso;
-        this.tarjetaRetencionesIRPFNum = permisosArray[14].derechoacceso;
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -717,7 +722,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     this.tarjetaRegtel = this.tarjetaRegtelNum;
     this.tarjetaMutualidad = this.tarjetaMutualidadNum;
     this.tarjetaAlterMutua = this.tarjetaAlterMutuaNum;
-    this.tarjetaRetencionesIRPF = this.tarjetaRetencionesIRPFNum;
 
     this.initSpinner = false;
 
@@ -866,19 +870,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
       }
     }
-
-    //preguntar el if, el permiso
-    if (this.tarjetaRetencionesIRPFNum == "3" || this.tarjetaRetencionesIRPFNum == "2") {
-      let pruebaTarjeta = {
-        label: "facturacionSJCS.movimientosVarios.retencionesIRPF",
-        value: document.getElementById("retencionesIRPF"),
-        nombre: "tarjetaRetencionesIRPF",
-      }
-      let findDato = this.enlacesTarjetaResumen.find(item => item.value == pruebaTarjeta.value);
-      if (findDato == undefined) {
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-    }
     
   }
   idPersonaNuevoEvent(event) {
@@ -925,9 +916,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         case "regtel":
           this.openRegtel = this.manuallyOpened;
           break;
-        case "retencionesIRPF":
-          this.openRetenciones = this.manuallyOpened;
-          break;
       }
     }
   }
@@ -966,9 +954,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
         case "regtel":
           this.openRegtel = true;
           break;
-        case "retencionesIRPF":
-          this.openRetenciones = true;
-        break;
       }
     }
   }
@@ -993,7 +978,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
           }
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

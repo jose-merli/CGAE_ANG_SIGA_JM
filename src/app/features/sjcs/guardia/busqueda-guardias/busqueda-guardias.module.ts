@@ -36,7 +36,6 @@ import { TablaGuardiasComponent } from './buscador-guardia/tabla-guardias/tabla-
 import { DatosIncripcionesGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-incripciones-guardias/datos-incripciones-guardias.component';
 import { DatosTurnoGuardiasComponent } from './buscador-guardia/gestion-guardia/datos-turno-guardias/datos-turno-guardias.component';
 import { TablaResultadoOrderModule } from '../../../../commons/tabla-resultado-order/tabla-resultado-order.module';
-import { TablaBusquedaBaremosModule } from '../../facturacionSJCS/baremos-de-guardia/tabla-busqueda-baremos/tabla-busqueda-baremos.module';
 
 @NgModule({
   imports: [
@@ -61,8 +60,9 @@ import { TablaBusquedaBaremosModule } from '../../facturacionSJCS/baremos-de-gua
     TablaDinamicaColaGuardiaModule,
     ConfirmDialogModule,
     FechaModule,
-    TablaResultadoOrderModule,
-    TablaBusquedaBaremosModule
+    TablaResultadoOrderModule
+
+
   ],
   declarations: [BuscadorGuardiaComponent, FiltrosGuardiaComponent, TablaGuardiasComponent, GestionGuardiaComponent, DatosGeneralesGuardiasComponent, DatosCalendariosGuardiasComponent, DatosBaremosComponent, DatosConfColaComponent, DatosColaGuardiaComponent, DatosIncompatibilidadesComponent, CalendariosComponent, DatosIncripcionesGuardiasComponent, DatosTurnoGuardiasComponent],
   providers: [

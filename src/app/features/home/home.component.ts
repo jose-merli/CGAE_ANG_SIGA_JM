@@ -40,13 +40,13 @@ export class HomeComponent implements OnInit {
 			  }
 			},
 			(err) => {
-			  console.log(err);
+			  //console.log(err);
 			}
 		  );
 		this.getLetrado();
 		this.getColegiadoLogeado();
 		//this.getMantenerSesion();
-		this.oldSigaLogin();
+		//this.oldSigaLogin();
 		this.getDataLoggedUser();
 		this.getInstitucionActual();
 	}
@@ -58,16 +58,16 @@ export class HomeComponent implements OnInit {
 				sessionStorage.setItem('AuthOldSIGA', token.valor);
 				this.authenticationService.oldSigaLogin().subscribe(
 					response => {
-						console.log("Login en SIGA Classique correcto");
+						//console.log("Login en SIGA Classique correcto");
 						},
 						err => {
-						console.log(err);
+						//console.log(err);
 						}
 				);
 			},
 			(err) => {
 				sessionStorage.setItem('isLetrado', 'true');
-				console.log(err);
+				//console.log(err);
 			}
 		);
 		
@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit {
 			},
 			(err) => {
 				sessionStorage.setItem('isLetrado', 'true');
-				console.log(err);
+				//console.log(err);
 			}
 		);
 	}
@@ -111,7 +111,7 @@ export class HomeComponent implements OnInit {
 					}
 				},
 				(err) => {
-					console.log(err);
+					//console.log(err);
 				}
 			);
 	}

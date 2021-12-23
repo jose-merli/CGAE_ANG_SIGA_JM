@@ -883,7 +883,7 @@ export class TablaInscripcionesComponent implements OnInit {
             sessionStorage.setItem("numDespacho", JSON.stringify(contador));
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
         );
@@ -903,7 +903,7 @@ export class TablaInscripcionesComponent implements OnInit {
         this.keys = JSON.parse(data["body"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -951,7 +951,7 @@ compareDate (fechaA:  any, fechaB:  any){
     const dayA = fechaA.substr(0, 2) ;
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
-    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+    //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
     dateA = new Date(yearA, monthA, dayA);
   }
 
@@ -959,7 +959,7 @@ compareDate (fechaA:  any, fechaB:  any){
     const dayB = fechaB.substr(0, 2) ;
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
-    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+    //console.log("fecha b:"+ yearB+","+monthB+","+dayB);
     dateB = new Date(yearB, monthB, dayB);
   }
 
@@ -1003,12 +1003,12 @@ compareDate (fechaA:  any, fechaB:  any){
                 this.router.navigate(["/dialogoComunicaciones"]);
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

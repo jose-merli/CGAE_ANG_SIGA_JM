@@ -148,7 +148,7 @@ export class TablaEjgComponent implements OnInit {
         this.commonServices.scrollTop();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -244,7 +244,7 @@ export class TablaEjgComponent implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       },
       () => {
@@ -397,7 +397,7 @@ export class TablaEjgComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       );
     }
@@ -405,11 +405,11 @@ export class TablaEjgComponent implements OnInit {
 
   addRemesa() {
     this.showModalAnadirRemesa = true;
-
     //Queda pendiente añadir el codigo que gestionaria el desplegable si se accede desde una ficha de remesa.
     //El desplegable tendria que tener el valor de la remesa de la que procede y además deshabilitar el desplegable para que no pueda cambiar de valor.
     if (this.remesa != null) {
-      this.valueComboRemesa = this.remesa.descripcion;
+      this.valueComboRemesa = this.remesa.idRemesa;
+      this.disableBotonAnadir = false;
     }
 
   }
@@ -454,7 +454,7 @@ export class TablaEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboRemesa);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -478,7 +478,7 @@ export class TablaEjgComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
@@ -502,14 +502,14 @@ export class TablaEjgComponent implements OnInit {
       }
     } */
     //Actualmente depende de los valores seleccionados en el filtro. 
-    //Esto se debe cambiar al valor de los datos seleccionados adquiriendo las etiquetas que corresponden a los valores 7 y 8 del combo de estadosEJG.
+    //Esto se debe cambiar al valor de los datos seleccionados adquiriendo las etiquetas que corresponden a los valores 7 y 17 del combo de estadosEJG.
     //Concretamente, se comprobaria si alguno de los ejgs seleccionados tienen un estado ejg distinto a ese y se bloquearia si asi fuera.
 
     this.disableAddRemesa = false;
     let LRC;
     let LRCAD;
 
-    //Buscamos las etiquetas correspondientes a los valores 7 y 8 
+    //Buscamos las etiquetas correspondientes a los valores 7 y 17 
     //que equivaldrian respectivamente a "Listo remitir comisión" y "Listo remitir comisión act. designación" respectivamente 
     this.comboEstadoEJG.forEach(element => {
       if (element.value == "7") LRC = element.label;
@@ -520,7 +520,7 @@ export class TablaEjgComponent implements OnInit {
       if (element.estadoEJG != LRC && element.estadoEJG != LRCAD) this.disableAddRemesa = true;
     });
 
-    /* if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="8"){
+    /* if(this.filtro.estadoEJG=="7" || this.filtro.estadoEJG=="17"){
       this.disableAddRemesa = false;
     }
     else{

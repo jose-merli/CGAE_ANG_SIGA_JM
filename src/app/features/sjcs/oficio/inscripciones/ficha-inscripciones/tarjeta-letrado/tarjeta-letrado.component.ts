@@ -189,7 +189,7 @@ export class TarjetaLetradoComponent implements OnInit {
           
             },
             err => {
-              console.log(err);
+              //console.log(err);
             },
             () => {
             }
@@ -290,14 +290,14 @@ export class TarjetaLetradoComponent implements OnInit {
                     this.progressSpinner = false;
                   },
                   err => {
-                    console.log(err);
+                    //console.log(err);
                     this.progressSpinner = false;
                   },
                 );
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
           },
 
         );
@@ -323,7 +323,7 @@ export class TarjetaLetradoComponent implements OnInit {
           this.partidasJudiciales = n.zonasItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
 
         }, () => {
           this.getPartidosJudiciales();

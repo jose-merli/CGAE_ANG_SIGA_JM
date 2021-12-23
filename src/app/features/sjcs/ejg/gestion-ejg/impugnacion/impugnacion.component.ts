@@ -115,7 +115,7 @@ export class ImpugnacionComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -147,7 +147,7 @@ export class ImpugnacionComponent implements OnInit {
           this.fundImpugnacionDesc = fundImpug.label;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

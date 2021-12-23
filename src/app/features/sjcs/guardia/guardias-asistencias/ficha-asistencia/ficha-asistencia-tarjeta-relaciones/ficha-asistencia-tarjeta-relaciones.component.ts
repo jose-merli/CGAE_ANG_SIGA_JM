@@ -78,7 +78,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
           this.relaciones = n.relacionesItem;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
@@ -186,7 +186,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
         this.commonsService.scrollTop();
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () =>{
@@ -257,7 +257,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
         
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {

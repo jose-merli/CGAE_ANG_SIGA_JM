@@ -5,13 +5,11 @@ import { Router } from "@angular/router";
 import { Message } from "primeng/components/common/api";
 import { ControlAccesoDto } from "./../../../../../../app/models/ControlAccesoDto";
 import { DatosIntegrantesItem } from "../../../../../models/DatosIntegrantesItem";
-import { DatosLiquidacionIntegrantesItem } from "../../../../../models/DatosLiquidacionIntegrantesItem";
 import { DatosIntegrantesObject } from "../../../../../models/DatosIntegrantesObject";
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
 import { ColegiadoObject } from "../../../../../models/ColegiadoObject";
-import { DatePipe } from "@angular/common";
-import { DatosIntegrantesLiquidacionObject } from "../../../../../models/DatosIntegrantesLiquidacionObject";
+import { DatosLiquidacionIntegrantesItem } from "../../../../../models/DatosLiquidacionIntegrantesItem";
 
 /*** COMPONENTES ***/
 
@@ -22,15 +20,7 @@ import { DatosIntegrantesLiquidacionObject } from "../../../../../models/DatosIn
 })
 export class DetalleIntegranteComponent implements OnInit {
   cols: any = [];
-  datos: any[] = [];
-  nuevaFecha;
-  sortO: number = 1;
-  sortF: string = "";
-  isVolver: boolean = true;
-  isCrear: boolean = false;
-  isEditar: boolean = true;
-  isEliminar: boolean = true;
-  fechaMinima: Date;
+  datos: any[];
   searchIntegrantes = new DatosIntegrantesObject();
   datosActivos: any[];
   select: any[];
@@ -79,11 +69,8 @@ export class DetalleIntegranteComponent implements OnInit {
   openFicha: boolean = false;
   disabledAction: boolean = false;
   fichasPosibles: any[];
-  Liquidacion: DatosLiquidacionIntegrantesItem;
-  LiquidacionActiveAnt: DatosIntegrantesItem = new DatosIntegrantesItem();
   body: DatosIntegrantesItem = new DatosIntegrantesItem();
   datosIntegrantes: DatosIntegrantesObject = new DatosIntegrantesObject();
-  searchLiquidacion :  DatosIntegrantesLiquidacionObject = new DatosIntegrantesLiquidacionObject();
   fechaCarga: Date;
   fechaBajaCargo: Date;
   columnasTabla: any = [];
@@ -103,16 +90,21 @@ export class DetalleIntegranteComponent implements OnInit {
   @ViewChild("table")
   table;
   selectedDatos;
-  idPersona: any;
-  observaciones: any;
-  isGuardar: boolean = false;
-  registroAnteriorMod: any;
-  datosLiquidacion: DatosLiquidacionIntegrantesItem[];
+  Liquidacion: DatosLiquidacionIntegrantesItem = new DatosLiquidacionIntegrantesItem();
+  datosLiquidacion: any;
+  isVolver: boolean;
+  isCrear: boolean;
+  isEditar: boolean;
+  isEliminar: boolean;
+  isGuardar: boolean;
+  fechaMinima: Date;
+  nuevaFecha: any;
+  registroAnteriorMod: DatosLiquidacionIntegrantesItem;
+  observaciones: String;
 
   constructor(
     private sigaServices: SigaServices,
     private router: Router,
-    public datepipe: DatePipe,
     private translateService: TranslateService
   ) { }
 
@@ -152,16 +144,6 @@ export class DetalleIntegranteComponent implements OnInit {
         }
 
       }
-             
-      // CRISTINA
-      // if(this.body.sociedad != undefined && this.body.sociedad !=  null){
-      //   if(this.body.sociedad == "SI"){
-      //     this.checked = false;
-      //   }else{
-      //     this.checked = true;
-      //   }
-      // }
-
       if(this.body.descripcionCargo != undefined && this.body.descripcionCargo !=  null){
             this.body.cargo = this.body.descripcionCargo;
       }
@@ -195,7 +177,7 @@ export class DetalleIntegranteComponent implements OnInit {
             .subscribe(
               n => {
                 this.colegios = JSON.parse(n["body"]).comboColegiadoItems;
-                // console.log("colegiaciones", this.colegios);
+                // //console.log("colegiaciones", this.colegios);
 
                 this.colegios.forEach(element => {
                   this.nColegiado.push({
@@ -223,7 +205,7 @@ export class DetalleIntegranteComponent implements OnInit {
                 }
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         }
@@ -252,16 +234,20 @@ export class DetalleIntegranteComponent implements OnInit {
       {
         key: "vinculacion",
         activa: this.editar
-      },
-      {
-        key: "historicoLiquidacion",
-        activa: this.editar
       }
     ];
     this.cols = [
-      { field: "fechaInicio", header: "facturacionSJCS.facturacionesYPagos.fecha" },
-      { field: "sociedad", header: "cen.integrantes.liqSJCS" },
-      { field: "observaciones", header: "general.description" }
+      { field: "nif", header: "administracion.usuarios.literal.NIF" },
+      {
+        field: "nombre",
+        header: "administracion.parametrosGenerales.literal.nombre"
+      },
+      { field: "apellidos", header: "Apellidos" },
+      { field: "fechaInicioCargo", header: "Fecha de alta - fecha de baja" },
+      { field: "cargo", header: "Cargos del integrante" },
+      { field: "liquidacionComoSociedad", header: "Liquidación como sociedad" },
+      { field: "ejerciente", header: "Ejerciente" },
+      { field: "participacion", header: "Participación en la sociedad" }
     ];
 
     this.rowsPerPage = [
@@ -445,7 +431,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.arregloTildesCombo(this.colegios);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -490,7 +476,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.actualizarDescripcionProvincia();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -514,11 +500,11 @@ export class DetalleIntegranteComponent implements OnInit {
           }
         }
 
-        console.log(this.colegiosArray);
+        //console.log(this.colegiosArray);
         this.actualizarDescripcionTipoColegio();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -531,7 +517,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.actualizarDescripcionCargo();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -782,7 +768,7 @@ export class DetalleIntegranteComponent implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -800,8 +786,6 @@ export class DetalleIntegranteComponent implements OnInit {
       this.updateIntegrante();
     }
   }
-
-  
 
   showSuccess() {
     this.msgs = [];
@@ -862,14 +846,6 @@ export class DetalleIntegranteComponent implements OnInit {
       }
     }
 
-    // CRISTINA
-    // if (this.checked != undefined && this.checked != null) {
-    //   if(this.checked){
-    //     updateIntegrante.sociedad = "SI";
-    //   }else{
-    //     updateIntegrante.sociedad = "NO";
-    //   }
-    // }
     if (
       this.body.capitalSocial != undefined &&
       this.body.capitalSocial != null
@@ -924,7 +900,7 @@ export class DetalleIntegranteComponent implements OnInit {
             this.showSuccess();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -975,18 +951,6 @@ export class DetalleIntegranteComponent implements OnInit {
       } else {
         newIntegrante.flagSocio = "";
       }
-
-      // CRISTINA
-      // if (this.checked != undefined && this.checked != null) {
-      //   if(this.checked){
-      //     newIntegrante.sociedad = "SI";
-      //   }else{
-      //     newIntegrante.sociedad = "NO";
-      //   }
-      // } else {
-      //   newIntegrante.sociedad = "";
-      // }
-
       if (
         this.body.tipoIdentificacion != undefined &&
         this.body.tipoIdentificacion != null
@@ -1128,7 +1092,7 @@ export class DetalleIntegranteComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -1279,7 +1243,7 @@ export class DetalleIntegranteComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -1308,11 +1272,11 @@ export class DetalleIntegranteComponent implements OnInit {
       item => item.value === this.body.idProvincia
     );
 
-    // console.log("dde", this.descripcionProvincia);
+    // //console.log("dde", this.descripcionProvincia);
   }
 
   onChange(event) {
-    // console.log("fo", event.replace(".", ","));
+    // //console.log("fo", event.replace(".", ","));
     this.body.capitalSocial = event.replace(",", ".");
   }
 

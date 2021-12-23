@@ -5,6 +5,9 @@ import { Router, RoutesRecognized } from '@angular/router';
 import { ConfirmationService, Message } from 'primeng/api';
 import { BusquedaColegiadoExpressComponent } from '../../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
 import { TranslateService } from '../../../../../../commons/translate';
+import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
+import { FichaColegialGeneralesItem } from '../../../../../../models/FichaColegialGeneralesItem';
+import { ActuacionAsistenciaItem } from '../../../../../../models/guardia/ActuacionAsistenciaItem';
 import { FiltroAsistenciaItem } from '../../../../../../models/guardia/FiltroAsistenciaItem';
 import { PreAsistenciaItem } from '../../../../../../models/guardia/PreAsistenciaItem';
 import { TarjetaAsistenciaItem } from '../../../../../../models/guardia/TarjetaAsistenciaItem';
@@ -32,10 +35,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   comboTipoAsistenciaColegio = [];
   disableDataForEdit : boolean = false;
   comboLetradoGuardia = [];
-  usuarioBusquedaExpress = {
-    numColegiado: '',
-    nombreAp: ''
-  };
+
   ineditable : boolean = false; //Si esta finalizada o anulada no se puede editar ningun campo
   reactivable : boolean = false;
   anulable : boolean = false;
@@ -45,7 +45,15 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   preasistencia : PreAsistenciaItem;
   comboEstadosAsistencia = [];
   idAsistenciaCopy : string;
-
+  generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
+  busqueda;
+  usuarioLogado;
+  persona;
+  actuaciones : ActuacionAsistenciaItem [] = [];
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
   constructor(private datepipe : DatePipe,
     private translateService : TranslateService,
@@ -56,11 +64,9 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     private confirmationService : ConfirmationService) { }
 
   ngOnInit() {
-
+    this.getDataLoggedUser();
     this.checkLastRoute();
-    if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('usuarioBusquedaExpress')) {
-      this.usuarioBusquedaExpress = JSON.parse(sessionStorage.getItem('usuarioBusquedaExpress'));
-    }
+  
 
     this.preasistencia = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
     if(this.preasistencia){
@@ -84,7 +90,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
       this.onChangeLetradoGuardia();
 
       this.checkEstado();
-
+      this.getActuaciones();
     }
 
     this.getComboEstadosAsistencia();
@@ -108,7 +114,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
             this.getTurnosByColegiadoFecha();
             this.onChangeTurno();
             this.onChangeGuardia();
-            sessionStorage.removeItem("asistenciaCopy");
+            
           },
           reject: () =>{
             sessionStorage.removeItem("asistenciaCopy");
@@ -130,7 +136,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboEstadosAsistencia);
@@ -146,7 +152,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboTurnos);
@@ -168,7 +174,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
             this.comboGuardias = n.combooItems;
           },
           err => {
-            console.log(err);
+            //console.log(err);
     
           }, () => {
             this.commonServices.arregloTildesCombo(this.comboGuardias);
@@ -202,7 +208,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -217,44 +223,104 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
               this.comboLetradoGuardia = data.combooItems;
               this.commonServices.arregloTildesCombo(this.comboLetradoGuardia);
   
-              if(this.comboLetradoGuardia !== null
+              /*if(this.comboLetradoGuardia !== null
                 && this.comboLetradoGuardia.length > 0){
+                  this.asistencia.idLetradoGuardia = this.comboLetradoGuardia[0].value;
+                  this.onChangeLetradoGuardia();
+                }*/
+
+                if (this.asistencia.idLetradoGuardia == null || this.asistencia.idLetradoGuardia == undefined){
                   this.asistencia.idLetradoGuardia = this.comboLetradoGuardia[0].value;
                   this.onChangeLetradoGuardia();
                 }
     
             },
             err => {
-              console.log(err);
+              //console.log(err);
             }
           );
     }
   }
 
   onChangeLetradoGuardia(){
-
+    
     if(this.asistencia.idLetradoGuardia){
 
       this.sigaServices
       .post("busquedaPer", this.asistencia.idLetradoGuardia)
       .subscribe(
         n => {
-          let persona = JSON.parse(n["body"]);
-          if (persona && persona.colegiadoItem) {
-            
-            this.usuarioBusquedaExpress.numColegiado = persona.colegiadoItem[0].numColegiado;
-            this.busquedaColegiado.isBuscar(this.usuarioBusquedaExpress);
+          
+           this.persona = JSON.parse(n["body"]);
+          if (this.persona && this.persona.colegiadoItem) {
+          
+            if (this.usuarioLogado != undefined && this.usuarioLogado.numColegiado == this.persona.colegiadoItem[0].numColegiado){
+              this.showMsg("error", "Error", "El usuario es el colegiado, por lo que no puede modificarse");
+            }else{
+              if (this.actuaciones != null && this.actuaciones.length > 0){
+                this.confirmCambioLetradoActuaciones();
+              }
+                    this.usuarioBusquedaExpress.numColegiado = this.persona.colegiadoItem[0].numColegiado;
+                    this.busquedaColegiado.isBuscar(this.usuarioBusquedaExpress);
+            }
+
 
           } 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
     }
+  
+  }
+ 
+  confirmCambioLetradoActuaciones() {
+    let mess = 
+      "¿Desea cambiar el colegiado de las actuaciones al nuevo colegiado seleccionado?";
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      key: 'confirmCambioLetradoActuaciones',
+      accept: () => {
+        this.asignarColegiadoActuaciones()
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
+  asignarColegiadoActuaciones(){
+    this.asistencia.numeroColegiado = this.persona.colegiadoItem[0].numColegiado;
+    this.asistencia.nombreColegiado = this.persona.colegiadoItem[0].nombreColegiado;
+    this.saveAsistencia();
+  }
+	getDataLoggedUser() {
+		this.sigaServices.get("usuario_logeado").subscribe(n => {
+			const usuario = n.usuarioLogeadoItem;
+			const colegiadoItem = new ColegiadoItem();
+			colegiadoItem.nif = usuario[0].dni;
+			this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+				usr => {
+					this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+					if(this.usuarioLogado) {
+						this.sigaStorageService.idPersona = this.usuarioLogado.idPersona;
+						this.sigaStorageService.numColegiado = this.usuarioLogado.numColegiado;
+					}
+				});
+		});
+	}
   getTurnosByColegiadoFecha(){
 
     this.comboTurnos = [];
@@ -279,7 +345,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -400,13 +466,13 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   }
 
   saveAsistencia(){
-
+    let isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     if(this.checkDatosObligatorios()){
       this.progressSpinner = true
       let idAsistencia = this.idAsistenciaCopy ? this.idAsistenciaCopy : '';
       let asistencias : TarjetaAsistenciaItem[] = [this.asistencia];
       this.sigaServices
-      .postPaginado("busquedaGuardias_guardarAsistenciasDatosGenerales","?idAsistenciaCopy="+idAsistencia, asistencias)
+      .postPaginado("busquedaGuardias_guardarAsistenciasDatosGenerales","?idAsistenciaCopy="+idAsistencia + "&isLetrado="+ isLetrado, asistencias)
       .subscribe(
         n => {
           let result = JSON.parse(n["body"]);
@@ -432,7 +498,13 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           
         },
         err => {
-          console.log(err);
+          if(err.status = "409"){
+            this.showMsg('error', 'El usuario es colegiado y no existe una guardia para la fecha seleccionada. No puede continuar', '');
+          }else {
+            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), '');
+          }
+          //console.log(err);
+         
           this.progressSpinner = false;
         },
         () => {
@@ -513,7 +585,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -549,5 +621,27 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     }
 
   }
+  getActuaciones(){
 
+    let mostrarHistorico : string = '';
+    if(this.asistencia){
+        mostrarHistorico = 'N'
+
+
+      this.progressSpinner = true;
+      this.sigaServices.getParam("busquedaGuardias_searchActuaciones","?anioNumero="+this.asistencia.anioNumero+"&mostrarHistorico="+mostrarHistorico).subscribe(
+        n => {
+          this.actuaciones = n.actuacionAsistenciaItems;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.progressSpinner = false;
+        }
+      );
+
+    }
+
+  }
 }

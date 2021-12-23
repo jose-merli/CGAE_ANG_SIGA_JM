@@ -161,7 +161,7 @@ export class SociedadesFichaColegialComponent implements OnInit {
           this.datosSociedades = this.sociedadesBody.busquedaJuridicaItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.mostrarNumero = true;
         }, () => {

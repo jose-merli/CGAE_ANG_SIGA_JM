@@ -26,6 +26,10 @@ export const procesos_facturacionSJCS: any = {
 
     //permisos ficha Certificacion
     fichaCertificacion: "624",
+    fichaCerTarjetaDatosGenerales: "626",
+    fichaCerTarjetaFacturaciones: "627",
+    fichaCerTarjetaMvariosAso: "628",
+    fichaCerTarjetaMvariosApl: "629",
 
     // Permiso para búsqueda de retenciones y ficha de retenciones judiciales
     busquedaRetenciones: "630",

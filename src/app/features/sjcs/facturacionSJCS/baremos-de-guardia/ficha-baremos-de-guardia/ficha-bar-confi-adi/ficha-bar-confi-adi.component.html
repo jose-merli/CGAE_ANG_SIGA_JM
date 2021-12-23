@@ -45,52 +45,52 @@
                 <div class="bloque col-lg-6 col-md-6 col-sm-6 py-2 pl-2">
                     <div class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox name="facActuaciones" [value]="facActuaciones" (onChange)="onChangeFacActuaciones($event)" label="Facturar Actuaciones Fuera de Guardia de forma diferente"
+                            <p-checkbox name="facActuaciones" [disabled]="!permisoEscritura" [(ngModel)]="facActuaciones" value="facActuaciones" (onChange)="onChangeFacActuaciones($event)" binary="true" label="{{'facturacionSJCS.baremos.facActuacionesFuera' | translate}}"
                                 class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disPrecio" (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="unico" label="Precio Único"></p-radioButton>
+                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="unico" label="{{'facturacionSJCS.baremos.precioUnico' | translate}}"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disPrecio" (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="porTipos" label="Precio por tipos"></p-radioButton>
+                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="porTipos" label="{{'facturacionSJCS.baremos.precioTipos' | translate}}"></p-radioButton>
                         </div>
                         <div  class="form-group col-lg-6 col-md-6">
-                            <label>Importe</label>
-                            <input [disabled]="!disableImput" type="number"  [(ngModel)]="filtrosAdi.importe" class="form-control" />
+                            <label>{{'facturacionSJCS.facturacionesYPagos.importe' | translate}}</label>
+                            <input [disabled]="!disableImput || !permisoEscritura" type="number"  [(ngModel)]="filtrosAdi.importe" class="form-control" />
                         </div>
                         <div  class="form-group col-lg-6 col-md-6 verticalAlign">
-                            <a class="enlace" (click)="irAtipos()" *ngIf="modalTipos">Ir a tipos</a>
-                            <a *ngIf="!modalTipos">Ir a tipos</a>
+                            <a class="enlace" (click)="irAtipos()" *ngIf="modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
+                            <a *ngIf="!modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
                         </div>
                         <div  class="form-group col-lg-6 col-md-6">
-                            <label>Máximo</label>
-                            <input type="number" [disabled]="!disableImput" [(ngModel)]="filtrosAdi.importeMax" class="form-control" />
+                            <label>{{'facturacionSJCS.baremosDeGuardia.maximo' | translate}}</label>
+                            <input type="number" [disabled]="!disableImput || !permisoEscritura" [(ngModel)]="filtrosAdi.importeMax" class="form-control" />
                         </div>
                     </div>
                 </div>
 
                 <div class="bloque col-lg-6 col-md-6 col-sm-6">
                     <div  class="form-row">
+                        <!-- <div class="form-group col-lg-12 col-md-12">
+                            <p-checkbox [disabled]="!disableConfAdi" [(ngModel)]="facAsuntosAntiguos" value="facAsuntosAntiguos" name="porDispo" (onChange)="onChangeFacAsuntosAntiguos($event)" binary="true" label="Facturar asuntos antiguos con precios de su facturación"
+                                class="ml-0">
+                            </p-checkbox>
+                        </div> -->
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox [disabled]="!disableConfAdi" [value]="facAsuntosAntiguos" name="porDispo" (onChange)="onChangeFacAsuntosAntiguos($event)" label="Facturar asuntos antiguos con precios de su facturación"
+                            <p-checkbox [disabled]="!disableConfAdi || !permisoEscritura" [(ngModel)]="procesoFac2014" value="procesoFac2014" name="porDispo" (onChange)="onChangeProcesoFac2014($event)" binary="true" label="{{'facturacionSJCS.baremos.procFac2014' | translate}}"
                                 class="ml-0">
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox [disabled]="!disableConfAdi" [value]="procesoFac2014" name="porDispo" (onChange)="onChangeProcesoFac2014($event)" label="Usar proceso de facturación controlados 2014"
-                                class="ml-0">
-                            </p-checkbox>
-                        </div>
-                        <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox [disabled]="!disableConfAdi" [value]="descontar" name="porDispo" (onChange)="onChangeDescontar($event)" label="Descontar Guardias que deriven de jucion rápidos"
+                            <p-checkbox [disabled]="!disableConfAdi || !disJuiciosRapidos || !permisoEscritura" [(ngModel)]="descontar" value="descontar" name="porDispo" (onChange)="onChangeDescontar($event)" binary="true" label="{{'facturacionSJCS.baremos.descontarGuar' | translate}}"
                                 class="ml-0">
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableConfAdi" value="asi" [(ngModel)]="contAsAc" name="contAsAc"  (click)="changeContAsAc()" label="Contando Asistencias"></p-radioButton>
+                            <p-radioButton [disabled]="!disableConfAdi || !permisoEscritura" value="asi" [(ngModel)]="contAsAc" binary="true" name="contAsAc"  (click)="changeContAsAc()" label="{{'facturacionSJCS.baremos.contAsistencias' | translate}}"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableConfAdi" value="act" [(ngModel)]="contAsAc" name="contAsAc" (click)="changeContAsAc()" label="Contando Actuaciones"></p-radioButton>
+                            <p-radioButton [disabled]="!disableConfAdi || !permisoEscritura" value="act" [(ngModel)]="contAsAc" binary="true" name="contAsAc" (click)="changeContAsAc()" label="{{'facturacionSJCS.baremos.contActuaciones' | translate}}"></p-radioButton>
                         </div>
                     </div>
                 </div>
@@ -99,12 +99,12 @@
 
             <div class="row">
                 <div class="form-group col-lg-6 col-md-6">
-                    <label>SOJ</label>
-                    <input type="number"  [(ngModel)]="importeSOJ" class="form-control" />
+                    <label>{{'menu.justiciaGratuita.soj' |translate}}</label>
+                    <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeSOJ" class="form-control" />
                 </div>
                 <div class="form-group col-lg-6 col-md-6">
-                    <label>EJG</label>
-                    <input type="number"  [(ngModel)]="importeEJG" class="form-control" />
+                    <label>{{'menu.justiciaGratuita.ejg' |translate}}</label>
+                    <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeEJG" class="form-control" />
                 </div>
             </div>
 

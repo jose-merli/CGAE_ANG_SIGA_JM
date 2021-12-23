@@ -6,6 +6,7 @@ import { CommonsService } from '../../../../../../../_services/commons.service';
 import { endpoints_guardia } from '../../../../../../../utils/endpoints_guardia';
 import { TranslateService } from '../../../../../../../commons/translate';
 import { SigaStorageService } from '../../../../../../../siga-storage.service';
+import { CalendarioProgramadoItem } from '../../../../../../../models/guardia/CalendarioProgramadoItem';
 
 @Component({
   selector: 'app-datos-generales-guardias',
@@ -38,7 +39,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   msgs;
   resaltadoDatos: boolean = false;
   isLetrado : boolean = false;
-
+  @Input() idTurnoFromFichaTurno = null;
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
@@ -55,6 +56,13 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
     this.getComboTurno();
     // this.progressSpinner = true;
+    /*if (sessionStorage.getItem("filtrosDatosGeneralesGuardia")) {
+      this.body = new GuardiaItem();
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtrosDatosGeneralesGuardia")
+      );
+    }*/
+
     this.sigaService.datosRedy$.subscribe(
       data => {
         data = JSON.parse(data.body);
@@ -63,7 +71,13 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.body.descripcion = data.descripcion;
         this.body.descripcionPago = data.descripcionPago;
         this.body.idTipoGuardia = data.idTipoGuardia;
-        this.body.idTurno = data.idTurno;
+        if (this.idTurnoFromFichaTurno != null){
+          this.body.idTurno =  this.idTurnoFromFichaTurno;
+          this.modoEdicion = false;
+          this.permisoEscritura = true;
+        }else{
+          this.body.idTurno = data.idTurno;
+        }
         this.body.nombre = data.nombre;
         this.body.envioCentralita = data.envioCentralita;
         this.getComboTipoGuardia();
@@ -150,7 +164,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -162,7 +176,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -187,7 +201,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -199,18 +213,28 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
 
   callSaveService(url) {
+    let filtros = new GuardiaItem();
+    filtros.idGuardia = this.body.idGuardia;
+    filtros.descripcionFacturacion = this.body.descripcionFacturacion;
+    filtros.descripcion = this.body.descripcion;
+    filtros.descripcionPago = this.body.descripcionPago;
+    filtros.idTipoGuardia = this.body.idTipoGuardia;
+    filtros.idTurno = this.body.idTurno;
+    filtros.nombre = this.body.nombre;
+    filtros.envioCentralita = this.body.envioCentralita;
+    //sessionStorage.setItem('filtrosDatosGeneralesGuardia', JSON.stringify(filtros));
+
     if (this.body.descripcion != undefined) this.body.descripcion = this.body.descripcion.trim();
     if (this.body.nombre != undefined) this.body.nombre = this.body.nombre.trim();
     if (this.body.envioCentralita == undefined) this.body.envioCentralita = false;
     this.sigaService.post(url, this.body).subscribe(
       data => {
-
+        let respuesta = JSON.parse(data.body);
         if (!this.modoEdicion) {
           this.modoEdicion = true;
           this.getCols();
-          this.body.idGuardia = JSON.parse(data.body).id;
           this.persistenceService.setDatos({
-            idGuardia: this.body.idGuardia,
+            idGuardia: respuesta.id,
             idTurno: this.body.idTurno
           })
           this.modoEdicionSend.emit(true);
@@ -225,7 +249,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
       err => {
 
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          console.log('err.error - ', err.error)
+          //console.log('err.error - ', err.error)
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -269,7 +293,10 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   resumenTipoGuardiaResumen() {
-    this.tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0].label;
+    let i = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0];
+    if (i != undefined){
+      this.tipoGuardiaResumen = i.label;
+    }
   }
 
   clear() {

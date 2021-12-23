@@ -538,7 +538,7 @@ export class UnidadFamiliarComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -560,7 +560,7 @@ export class UnidadFamiliarComponent implements OnInit {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
         this.selectDatos = [];
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));

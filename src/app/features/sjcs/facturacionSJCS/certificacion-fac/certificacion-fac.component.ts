@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../commons/translate';
+import { BusquedaRetencionesRequestDTO } from '../../../../models/sjcs/BusquedaRetencionesRequestDTO';
 import { CertificacionesItem } from '../../../../models/sjcs/CertificacionesItem';
 import { CertificacionesObject } from '../../../../models/sjcs/CertificacionesObject';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
@@ -8,6 +9,20 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroCertificacionFacComponent } from './filtro-certificacion-fac/filtro-certificacion-fac.component';
 import { TablaCertificacionFacComponent } from './tabla-certificacion-fac/tabla-certificacion-fac.component';
+
+export enum KEY_CODE {
+  ENTER = 13
+}
+
+export enum ESTADO_CERTIFICACION {
+  ESTADO_CERTIFICACION_ABIERTA = "1",
+  ESTADO_CERTIFICACION_VALIDANDO = "2",
+  ESTADO_CERTIFICACION_NO_VALIDADA = "3",
+  ESTADO_CERTIFICACION_VALIDADA = "4",
+  ESTADO_CERTIFICACION_ENVIANDO = "5",
+  ESTADO_CERTIFICACION_ENVIO_CON_ERRORES = "6",
+  ESTADO_CERTIFICACION_CERRADA = "7"
+}
 
 @Component({
   selector: 'app-certificacion-fac',
@@ -20,6 +35,7 @@ export class CertificacionFacComponent implements OnInit {
   permisoEscritura: boolean = false;
   mostrarTabla: boolean = false;
   datos: CertificacionesItem[] = [];
+  filtrosDeBusqueda: BusquedaRetencionesRequestDTO = undefined;
 
   @ViewChild(FiltroCertificacionFacComponent) filtros: FiltroCertificacionFacComponent;
   @ViewChild(TablaCertificacionFacComponent) tabla: TablaCertificacionFacComponent;
@@ -88,6 +104,7 @@ export class CertificacionFacComponent implements OnInit {
               }
 
               this.datos = resp.certificacionesItemList;
+              this.filtrosDeBusqueda = Object.assign({}, this.filtros.filtros);
               this.mostrarTabla = true;
             }
 
@@ -110,6 +127,7 @@ export class CertificacionFacComponent implements OnInit {
 
   newCertificacion(event) {
     if (event == true) {
+      sessionStorage.setItem("nuevoDesdeTablaCerti", "true");
       this.router.navigate(['/fichaCertificacionFac']);
     }
   }
@@ -129,6 +147,8 @@ export class CertificacionFacComponent implements OnInit {
           } else {
             if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), res.error.description.toString());
+            } else {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             }
           }
         },
@@ -155,4 +175,13 @@ export class CertificacionFacComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  //búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.getCertificaciones(true);
+    }
+  }
+
 }

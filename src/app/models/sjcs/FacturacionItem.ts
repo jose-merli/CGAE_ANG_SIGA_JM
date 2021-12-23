@@ -23,6 +23,10 @@ export class FacturacionItem {
 	idConceptoOld: String;
 	observaciones: String;
 	nombreUsuModificacion: string;
+	importeOficio: String;
+	importeGuardia: String;
+	importeSoj: String;
+	importeEjg: String;
 
 	constructor() { }
 }

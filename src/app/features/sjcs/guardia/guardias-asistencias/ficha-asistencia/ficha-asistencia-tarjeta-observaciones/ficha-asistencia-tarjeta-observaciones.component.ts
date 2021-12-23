@@ -36,7 +36,7 @@ export class FichaAsistenciaTarjetaObservacionesComponent implements OnInit {
           this.tarjetaObservacionesItemAux = Object.assign({},this.tarjetaObservacionesItem);
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
@@ -64,7 +64,7 @@ export class FichaAsistenciaTarjetaObservacionesComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;

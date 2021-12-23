@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { DataTable } from "primeng/datatable";
-import { Location, UpperCasePipe } from "@angular/common";
+import { DatePipe, Location, UpperCasePipe } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Subject } from "rxjs/Subject";
 import { DatosGeneralesConsultaItem } from '../../../../../../models/DatosGeneralesConsultaItem';
@@ -110,7 +110,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   ];
   constructor(private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService, private datepipe: DatePipe) { }
 
  /*  ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -210,7 +210,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
       'apellidos2': obj.apellidos2,
       'idinstitucion': obj.idinstitucion,
       'idpersona': obj.idpersona,
-      'fechasolicitud': (obj['fechasolicitud'] != null && obj['fechasolicitud'] != undefined) ? new Date(this.changeDateFormat(obj['fechasolicitud'])) : obj['fechasolicitud'],
+      'fechasolicitud': (obj['fechasolicitud'] != null && obj['fechasolicitud'] != undefined) ? new Date(this.formatDateSol(obj['fechasolicitud'])) : obj['fechasolicitud'],
       'observacionessolicitud': obj.observacionessolicitud,
       'fechavalidacion':  (obj['fechavalidacion'] != null && obj['fechavalidacion'] != undefined) ? new Date(this.changeDateFormat(obj['fechavalidacion'])) : obj['fechavalidacion'],
       'observacionesvalidacion': obj.observacionesvalidacion,
@@ -231,7 +231,11 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
 
     return new ResultadoInscripciones(objeto);
   }
-
+	formatDateSol(date) {
+		const pattern = 'dd/MM/yyyy hh:mm:ss';
+		return this.datepipe.transform(date, pattern);
+	
+	  }
   getInscripciones() {
     this.datos.historico = this.historico;
     this.progressSpinner = true;
@@ -282,7 +286,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           }, () => {
             this.progressSpinner = false;
@@ -327,7 +331,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           }, () => {
             this.progressSpinner = false;
@@ -499,7 +503,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
       this.openFicha = !this.openFicha;
   }
   openMultiSelect(dato) {
-    // console.log(this.multiSelect);
+    // //console.log(this.multiSelect);
     dato.onPanelShow;
     // this.multiSelect.show();
     // dato.overlayVisible = true;

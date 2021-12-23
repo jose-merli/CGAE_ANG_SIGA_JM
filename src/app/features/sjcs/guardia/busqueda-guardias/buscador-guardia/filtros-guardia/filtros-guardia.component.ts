@@ -97,7 +97,7 @@ export class FiltrosGuardiaComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboGrupoZona);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -109,7 +109,7 @@ export class FiltrosGuardiaComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboJurisdicciones);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -121,7 +121,7 @@ export class FiltrosGuardiaComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboGrupoFacturacion);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -133,7 +133,7 @@ export class FiltrosGuardiaComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboPartidasPresupuestarias);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -144,7 +144,7 @@ export class FiltrosGuardiaComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -156,7 +156,7 @@ export class FiltrosGuardiaComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -167,7 +167,7 @@ export class FiltrosGuardiaComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoGuardia);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -178,7 +178,7 @@ export class FiltrosGuardiaComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -215,7 +215,7 @@ export class FiltrosGuardiaComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }
     )
@@ -235,7 +235,7 @@ export class FiltrosGuardiaComponent implements OnInit {
             this.partidasJudiciales = n.zonasItems;
           },
           err => {
-            console.log(err);
+            //console.log(err);
 
           }, () => {
             this.getPartidosJudiciales();

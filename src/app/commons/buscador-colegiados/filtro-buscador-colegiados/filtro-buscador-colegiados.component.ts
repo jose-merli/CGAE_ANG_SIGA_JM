@@ -44,7 +44,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   constructor(private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService) { }
 
   ngOnInit() {
-    console.log('this.filtroRecibido: ', this.filtroRecibido)
+    //('this.filtroRecibido: ', this.filtroRecibido)
     if (this.filtroRecibido){
       this.filtro.idGuardia = this.filtroRecibido.idGuardia;
       this.filtro.idTurno = this.filtroRecibido.idTurno;
@@ -100,7 +100,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
@@ -163,7 +163,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
