@@ -219,12 +219,13 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     this.sigaServices.post("PyS_anadirAnticipoCompra",nuevoAnti).subscribe(
       updateResponseDTO => {
 
-        if (updateResponseDTO.status != "OK") {
+        if (updateResponseDTO.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.descuentosTarjeta = [];
           this.selectedRows = [];
+          this.checkTotalAnti();
         }
         this.progressSpinner = false;
 
