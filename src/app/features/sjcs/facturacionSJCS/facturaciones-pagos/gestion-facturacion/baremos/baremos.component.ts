@@ -1,4 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
+import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { Enlace } from '../gestion-facturacion.component'
 
 @Component({
@@ -13,7 +15,7 @@ export class BaremosComponent implements OnInit, AfterViewInit {
   @Input() idEstadoFacturacion;
   @Output() addEnlace = new EventEmitter<Enlace>();
   
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() { 
     this.progressSpinnerBaremos=false;
@@ -36,4 +38,13 @@ export class BaremosComponent implements OnInit, AfterViewInit {
 
     this.addEnlace.emit(enlace);
   }
+
+  goToFichaBaremos(){
+ 
+    sessionStorage.setItem("tarjetaBaremosFacturacion",this.idFacturacion);
+ 
+    this.router.navigate(["/baremosDeGuardia"]);
+ 
+ 
+   }
 }

@@ -25,11 +25,16 @@
     </p>
 
     <!-- INICIO CAMPOS FILTRO DESTINATARIOS -->
-    <div *ngIf="showDestinatarios" class="module vista-simple">
-      <app-busqueda-colegiado-express [numColegiado]="filtros.ncolegiado" [nombreAp]="filtros.nombreApellidoColegiado"
+    <div *ngIf="showDestinatarios && usuarioBusquedaExpress != undefined" class="module vista-simple">
+      <!--<app-busqueda-colegiado-express [numColegiado]="filtros.ncolegiado" [nombreAp]="filtros.nombreApellidoColegiado"
         [disabled]="isLetrado || disabledLetradoFicha" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)"
         [obligatorio]="obligatorio" (botonBuscarEvent)="botonBuscarColegiadoExpress()">
-      </app-busqueda-colegiado-express>
+      </app-busqueda-colegiado-express>-->
+
+      <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
+      [disabled]="isLetrado || disabledLetradoFicha" [obligatorio]="obligatorio" (botonBuscarEvent)="botonBuscarColegiadoExpress()"
+      [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)">
+    </app-busqueda-colegiado-express> 
     </div>
     <!-- FIN CAMPOS FILTRO DESTINATARIOS -->
 

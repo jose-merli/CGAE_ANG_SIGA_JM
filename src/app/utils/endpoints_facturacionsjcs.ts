@@ -128,4 +128,5 @@ export let endpoints_facturacionsjcs: any = {
     certificaciones_reabrirfacturacion: "certificaciones/reabrirfacturacion",
     certificaciones_getMvariosAsociadosCertificacion: "certificaciones/getMvariosAsociadosCertificacion",
     certificaciones_getMvariosAplicadosEnPagosEjecutadosPorPeriodo: "certificaciones/getMvariosAplicadosEnPagosEjecutadosPorPeriodo",
+    certificaciones_saveFactCertificacion: "certificaciones/saveFactCertificacion",
 }
