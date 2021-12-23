@@ -449,7 +449,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
         i++;
       }
       this.checkTotal();
-      this.checkFormasPagoComunes(this.serviciosTarjeta);
+      //this.checkFormasPagoComunes(this.serviciosTarjeta);
       this.getComboPrecios();
     }
 
@@ -539,7 +539,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       });
     });
 
-    if (result.length > 0) {
+    if (result.length > 0 || this.ficha.idFormaPagoSeleccionada != null) {
       //Comprobamos si las formas de pago comunes se corresponden con 
       //las formas de pago permitidas al usuario ( por internet o por secretaria)
       // Personal del colegio = pago por secretaria ("S"), colegiado = formas de pago por internet ("A").
@@ -558,6 +558,14 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
             resultUsu.push(serv.idFormasPago.split(",")[index]);
           }
         }
+      }
+
+      //Se añade la forma de pago seleccionada en el caso que no añadiera anteriormente
+      //Esto para mostrar formas de pago seleccionadas en el pasado o
+      //Para los casos en los que el servicio haya cambiado sus formas de pago despues de 
+      //definir su suscripcion
+      if(resultUsu.indexOf(this.ficha.idFormaPagoSeleccionada)  == -1){
+        resultUsu.push(this.ficha.idFormaPagoSeleccionada);
       }
 
       if(resultUsu.length > 0){
@@ -855,7 +863,12 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
   onChangePrecio(rowData : ListaServiciosSuscripcionItem){
     if(rowData.idComboPrecio != null){
-      rowData.precioServicioDesc = this.arrayPrecios[rowData.idComboPrecio].descripcionprecio.toString(); 
+      if(this.arrayPrecios[rowData.idComboPrecio].descripcionprecio != null){
+        rowData.precioServicioDesc = this.arrayPrecios[rowData.idComboPrecio].descripcionprecio.toString(); 
+      }
+      else{
+        rowData.precioServicioDesc = " ";
+      }
       rowData.idPrecioServicio = this.arrayPrecios[rowData.idComboPrecio].idpreciosservicios.toString();
       rowData.precioServicioValor = this.arrayPrecios[rowData.idComboPrecio].precio;
       rowData.periodicidadValor = this.arrayPrecios[rowData.idComboPrecio].periodicidadValor.toString();
