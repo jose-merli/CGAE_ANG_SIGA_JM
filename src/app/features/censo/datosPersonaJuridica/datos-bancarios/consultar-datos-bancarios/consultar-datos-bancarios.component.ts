@@ -452,6 +452,11 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.sigaServices.post("datosCuentaBancaria_insert", this.body).subscribe(
       data => {
         this.idCuenta = JSON.parse(data["body"]).id;
+        //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+        //let peticion = new RevisionAutLetradoItem();
+        //peticion.idPersona = this.body.idPersona.toString();
+        //peticion.fechaProcesamiento = new Date();
+        //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
         this.showSuccess("Se han guardado correctamente los datos");
         sessionStorage.setItem("editar", "true");
       },
@@ -609,7 +614,13 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             data => {
               this.progressSpinner = false;
               this.body.status = data.status;
-
+              
+            //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+            //let peticion = new RevisionAutLetradoItem();
+            //peticion.idPersona = this.body.idPersona.toString();
+            //peticion.fechaProcesamiento = new Date();
+            //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+              
               this.showSuccess("Se han guardado correctamente los datos");
             },
             error => {
@@ -1605,6 +1616,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       data => {
         this.progressSpinner = false;
         this.bodyDatosMandatos.status = data.status;
+              
+        //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+        //let peticion = new RevisionAutLetradoItem();
+        //peticion.idPersona = this.body.idPersona.toString();
+        //peticion.fechaProcesamiento = new Date();
+        //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
 
         this.showSuccess("Se ha guardado el esquema");
       },
@@ -1804,6 +1821,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodyDatosBancariosAnexo.status = data.status;
           this.bodyDatosBancariosAnexo.id = data.id;
+              
+          //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+          //let peticion = new RevisionAutLetradoItem();
+          //peticion.idPersona = this.body.idPersona.toString();
+          //peticion.fechaProcesamiento = new Date();
+          //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
 
           this.showSuccess("Se han guardado correctamente los datos");
 
@@ -1982,6 +2005,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.progressSpinner = false;
         this.bodyDatosBancariosAnexo.status = data.status;
         this.resaltadoFirma=false;
+              
+        //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+        //let peticion = new RevisionAutLetradoItem();
+        //peticion.idPersona = this.body.idPersona.toString();
+        //peticion.fechaProcesamiento = new Date();
+        //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
 
         if (this.file != undefined) {
           this.progressSpinner = true;

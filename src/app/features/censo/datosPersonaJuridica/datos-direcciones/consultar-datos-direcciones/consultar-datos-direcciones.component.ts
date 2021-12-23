@@ -935,6 +935,11 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.sigaServices.post("direcciones_update", this.body).subscribe(
         data => {
           this.progressSpinner = false;
+          //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+          //let peticion = new RevisionAutLetradoItem();
+          //peticion.idPersona = this.body.idPersona.toString();
+          //peticion.fechaProcesamiento = new Date();
+          //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
           this.body = JSON.parse(data["body"]);
           //this.showSuccessAddress();
         },
@@ -974,6 +979,11 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.sigaServices.post("direcciones_insert", this.body).subscribe(
         data => {
           this.progressSpinner = false;
+          //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+          //let peticion = new RevisionAutLetradoItem();
+          //peticion.idPersona = this.body.idPersona.toString();
+          //peticion.fechaProcesamiento = new Date();
+          //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
           this.body = JSON.parse(data["body"]);
           this.backTo();
         },
