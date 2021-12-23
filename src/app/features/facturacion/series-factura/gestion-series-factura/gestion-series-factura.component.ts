@@ -2,8 +2,10 @@ import { Location } from '@angular/common';
 import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
+import { Subject } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
+import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -42,12 +44,14 @@ export class GestionSeriesFacturaComponent implements OnInit {
   enlacesTarjetaResumen = [];
   modoEdicion: boolean = true;
 
+  // Evento para resaltar abreviatura o descripción
+  campoResaltado: Subject<string> = new Subject<string>();
+
   constructor(
     private translateService: TranslateService,
-    private persistenceService: PersistenceService,
     private location: Location,
-    private router: Router,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -74,6 +78,14 @@ export class GestionSeriesFacturaComponent implements OnInit {
 
     this.progressSpinner = false;
     this.goTop();
+
+    // Scroll a destinatarios individuales
+    if (sessionStorage.getItem("destinatarioIndv")) {
+      this.openTarjetaDestinatariosIndividuales = true;
+      setTimeout(() => {
+        document.getElementById("destinatariosIndividuales").scrollIntoView({ block: "center", behavior: 'smooth',inline: "start" });
+      }, 5);
+    }
   }
 
   // Tarjeta resumen
@@ -91,7 +103,7 @@ export class GestionSeriesFacturaComponent implements OnInit {
       },
       {
         label: this.translateService.instant("facturacion.seriesFactura.cuentaBancaria"),
-        value: "(..." + this.body.cuentaBancaria.slice(-4) + ")"
+        value: this.body.cuentaBancaria
       },
       {
         label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.sufijo"),
@@ -205,7 +217,13 @@ export class GestionSeriesFacturaComponent implements OnInit {
     this.progressSpinner = true;
 
     this.recuperarDatosSerieFacuturacion().then(() => {
-      this.modoEdicion = true;
+
+      if (this.body.idSerieFacturacion == undefined) {
+        this.modoEdicion = false;
+      } else {
+        this.modoEdicion = true;
+      }
+
       this.updateTarjetaResumen();
       setTimeout(() => {
         this.updateEnlacesTarjetaResumen();
@@ -228,12 +246,22 @@ export class GestionSeriesFacturaComponent implements OnInit {
   guardarSerieFacturacion(serie: SerieFacturacionItem): Promise<any> {
     return this.sigaServices.post("facturacionPyS_guardarSerieFacturacion", serie).toPromise().then(
       n => {
-        console.log("Nuevo id:", n);
         let idSerieFacturacion = JSON.parse(n.body).id;
         this.body.idSerieFacturacion = idSerieFacturacion;
+
+        this.campoResaltado.next("");
       },
       err => {
         let error = JSON.parse(err.error).error;
+
+        if (error.message == "facturacion.seriesFactura.abreviatura.unica") {
+          this.campoResaltado.next("abreviatura");
+        } else if (error.message == "facturacion.seriesFactura.descripcion.unica") {
+          this.campoResaltado.next("descripcion");
+        } else {
+          this.campoResaltado.next("");
+        }
+
         if (error != undefined && error.message != undefined) {
           let translatedError = this.translateService.instant(error.message);
           if (translatedError && translatedError.trim().length != 0) {
@@ -357,6 +385,10 @@ export class GestionSeriesFacturaComponent implements OnInit {
           break;
       }
     }
+  }
+
+  clear() {
+    this.msgs = [];
   }
   
   showMessage(severity, summary, msg) {

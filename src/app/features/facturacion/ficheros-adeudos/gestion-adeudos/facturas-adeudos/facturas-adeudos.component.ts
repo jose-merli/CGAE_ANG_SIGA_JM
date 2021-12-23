@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
-import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
+import { FacturasIncluidasItem } from '../../../../../models/sjcs/FacturasIncluidasItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -14,7 +15,8 @@ import { SigaServices } from '../../../../../_services/siga.service';
 })
 export class FacturasAdeudosComponent implements OnInit {
 
-  @Input() bodyInicial: FicherosAdeudosItem;
+  @Input() bodyInicial: any;
+  @Input() tipoFichero: string;
   @Input() modoEdicion;
   @Input() openTarjetaFacturas;
   @Input() permisoEscritura;
@@ -29,10 +31,9 @@ export class FacturasAdeudosComponent implements OnInit {
   progressSpinner: boolean = false;
   activacionTarjeta: boolean = true;
 
-  datosFicheros: FicherosAdeudosItem;
+  datosFicheros: FacturasIncluidasItem;
 
-  
-
+  idFichero;
   msgs;
   cols;
 
@@ -45,15 +46,68 @@ export class FacturasAdeudosComponent implements OnInit {
     activa: false
   }
   
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices,
+    private router: Router
+    ) { }
 
   async ngOnInit() {
-    await this.rest();
-
     this.getCols();
-
+    this.setIdFichero();
+    await this.rest();
+    this.cargaInicial();
   }
 
+  // set idFichero para llamada al servicio en cargaInicial() 
+  setIdFichero() {
+    if (this.tipoFichero=='T') {
+      this.idFichero = this.bodyInicial.idDisqueteAbono;
+      //sessionStorage.setItem("identificadorTransferencia", this.idFichero);
+    }
+    if (this.tipoFichero=='A') {
+      this.idFichero = this.bodyInicial.idDisqueteCargos;
+      //sessionStorage.setItem("identificadorAdeudos", this.idFichero);
+    } 
+    if (this.tipoFichero=='D') {
+      this.idFichero = this.bodyInicial.idDisqueteDevoluciones;
+      //sessionStorage.setItem("identificadorDevolucion", this.idFichero);
+    }
+  }
+
+  cargaInicial(){   
+    this.progressSpinner=true;
+    
+    this.sigaServices.getParam("facturacionPyS_getFacturasIncluidas", `?idFichero=${this.idFichero}&tipoFichero=${this.tipoFichero}`).subscribe(
+      n => {
+        this.progressSpinner = false;
+        
+        this.datosFicheros = n.facturasIncluidasItem;
+        //let error = n.error;
+  
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
+      },
+    );
+    
+  }
+
+  ir(){
+
+    //this.progressSpinner=true;
+    sessionStorage.setItem("tipoFichero", this.tipoFichero);
+    sessionStorage.setItem("idFichero", this.idFichero);
+
+    this.router.navigate(["/facturas"]);
+  
+  }
+  
+  
   ngOnChanges(changes: SimpleChanges): void {
     if (this.openTarjetaFacturas == true) {
       if (this.openFicha == false) {
@@ -73,9 +127,9 @@ export class FacturasAdeudosComponent implements OnInit {
     this.cols = [
       { field: "estado", header: "censo.fichaIntegrantes.literal.estado", width: "20%" },
       { field: "formaPago", header: "facturacion.productos.formapago", width: "20%" },
-      { field: "numFacturas", header: 'menu.facturacion.facturas', width: "10%" },
-      { field: "total", header: 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total', width: "20%" },
-      { field: "totalPendiente", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente", width: "20%" },
+      { field: "numeroFacturas", header: 'menu.facturacion.facturas', width: "10%" },
+      { field: "importeTotal", header: 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total', width: "20%" },
+      { field: "pendienteTotal", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pendiente", width: "20%" },
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));

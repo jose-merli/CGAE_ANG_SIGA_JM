@@ -1,7 +1,7 @@
 <div class="ficha-comunicacion-container" id="top">
   <div class="header-title">
       <i class="fa fa-square"></i>
-      <p>{{'menu.justiciaGratuita' | translate}}
+      <p>{{ 'menu.facturacion' | translate}}
           <i class="fa fa-angle-right"></i>{{ 'facturacionPyS.ficherosAdeudos.gestionFicherosTransferencias' | translate}}
   </div>
   <div>
@@ -12,7 +12,7 @@
 
       <app-cuenta-entidad-adeudos *ngIf="modoEdicion" [bodyInicial]="body"></app-cuenta-entidad-adeudos>
 
-      <app-facturas-adeudos *ngIf="modoEdicion" [bodyInicial]="body" [permisoEscritura]="permisoEscrituraFacturas" [tarjetaFacturas]="tarjetaFacturas" [openTarjetaFacturas]="openTarjetaFacturas" (opened)="manuallyOpened = $event" [modoEdicion]="modoEdicion" (idOpened)="isCloseReceive($event)"></app-facturas-adeudos>
+      <app-facturas-adeudos *ngIf="modoEdicion" [tipoFichero]="'T'" [bodyInicial]="body" [permisoEscritura]="permisoEscrituraFacturas" [tarjetaFacturas]="tarjetaFacturas" [openTarjetaFacturas]="openTarjetaFacturas" (opened)="manuallyOpened = $event" [modoEdicion]="modoEdicion" (idOpened)="isCloseReceive($event)"></app-facturas-adeudos>
   </div>
 </div>
 

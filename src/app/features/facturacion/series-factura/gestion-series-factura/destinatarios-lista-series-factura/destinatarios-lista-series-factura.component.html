@@ -7,7 +7,7 @@
       <div *ngIf="!esFichaActiva('destinatariosLista')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('destinatariosLista')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="far fa-list-alt icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -28,7 +28,7 @@
       <div *ngIf="esFichaActiva('destinatariosLista')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('destinatariosLista')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="far fa-list-alt icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.destLista' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -71,7 +71,7 @@
               <td class="text-center" *ngFor="let col of columns" pEditableColumn>
                 <p-dropdown [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true"
                   filterBy="label,labelSinTilde" *ngIf="col.field=='nombre' && !dato.asociada"
-                  [(ngModel)]="dato.idConsulta" [options]="consultas" class="select-form"
+                  [(ngModel)]="dato.idConsulta" [options]="consultas" class="select-form" [ngClass]="styleObligatorio(dato.idConsulta)"
                   (onChange)="onChangeConsultas($event)" dataKey="label" [emptyFilterMessage]="resultadosConsultas"
                   (input)="buscarConsultas($event)"></p-dropdown>
                 <span *ngIf="col.field=='nombre' && dato.asociada"><a [routerLink]="" class="enlace"
@@ -92,7 +92,7 @@
               </label>
               <label
                 class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
-                {{numSelected}}
+                {{ selectedDatos ? selectedDatos.length : 0 }}
               </label>
               <label>{{"general.message.mostrar" | translate}}</label>
               <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
@@ -109,16 +109,16 @@
 
     <div *ngIf="esFichaActiva('destinatariosLista')" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-plus" iconPos="left" 
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" (click)="addConsulta()" *ngIf="deshabilitarGuardado()"
           label="{{ 'general.boton.new' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-eraser" iconPos="left" 
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" (click)="eliminar()" [disabled]="nuevaConsulta || selectedDatos == undefined || selectedDatos.length == 0"
           label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
           label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" (click)="guardar()" [disabled]="deshabilitarGuardado()"
           label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

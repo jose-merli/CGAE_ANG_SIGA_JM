@@ -73,13 +73,16 @@ export class ComunicacionesFacturasComponent implements OnInit {
   // Obtención de los datos
 
   getComunicacionesCobro() {
+    this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getComunicacionCobro", "?idFactura=" + this.bodyInicial.idFactura).subscribe(
       n => {
         console.log(n);
         this.datos = n.comunicacionCobroItems;
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }

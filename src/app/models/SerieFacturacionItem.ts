@@ -34,9 +34,9 @@ export class SerieFacturacionItem {
 	ctaIngresos: string;
 
 	idTiposProductos: string[];
-	tiposProductos: any[];
+	tiposProductos: any[] = [];
 	idTiposServicios: string[];
-	tiposServicios: any[];
+	tiposServicios: any[] = [];
 	idEtiquetas: string;
 	etiquetas: ComboItem[];
 	idConsultasDestinatarios: string[];

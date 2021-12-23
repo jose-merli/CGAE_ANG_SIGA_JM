@@ -84,13 +84,12 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
     
     this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
       n => {
-        let data = n.combooItems;
+        let data: any[] = n.combooItems;
         
         for(let i=0; data.length>i; i++){
           
           if(data[i].value=="SEPA_TIPO_FICHEROS"){
             this.tipoFicheros = data[i].label;
-
           }
         }
 
@@ -99,7 +98,6 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
       err => {
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       }
     );
   }

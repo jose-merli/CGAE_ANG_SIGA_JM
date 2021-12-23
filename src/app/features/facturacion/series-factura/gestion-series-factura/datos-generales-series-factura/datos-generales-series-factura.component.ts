@@ -1,9 +1,9 @@
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
-import { t } from '@angular/core/src/render3';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { AutoComplete } from 'primeng/primeng';
+import { Observable, Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -15,7 +15,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './datos-generales-series-factura.component.html',
   styleUrls: ['./datos-generales-series-factura.component.scss']
 })
-export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
+export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnDestroy, OnChanges {
 
   msgs;
   progressSpinner: boolean = false;
@@ -51,6 +51,11 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
   estado: string = "";
 
   resaltadoDatos: boolean = false;
+
+  campoResaltadoSubscription: Subscription;
+  @Input() campoResaltado: Observable<string>;
+  resaltadoAbreviatura: boolean = false;
+  resaltadoDescripcion: boolean = false;
   
   constructor(
     private commonsService: CommonsService,
@@ -62,10 +67,27 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
     private router: Router
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.campoResaltadoSubscription = this.campoResaltado.subscribe(campo => {
+      if (campo == "abreviatura") {
+        this.resaltadoAbreviatura = true;
+        this.resaltadoDescripcion = false;
+      } else if (campo == "descripcion") {
+        this.resaltadoAbreviatura = false;
+        this.resaltadoDescripcion = true;
+      } else {
+        this.resaltadoAbreviatura = false;
+        this.resaltadoDescripcion = false;
+      }
+    });
+   }
+
+   ngOnDestroy() {
+     this.campoResaltadoSubscription.unsubscribe();
+   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.bodyInicial) {
+    if (changes.bodyInicial && changes.bodyInicial.currentValue != undefined) {
       this.restablecer();
       this.getCombos();
     }
@@ -82,15 +104,28 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
   // Combos
 
   getComboPlanificacion() {
-    this.sigaServices.getParam("facturacionPyS_comboPlanificacion", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
-      n => {
-        this.comboPlanificacion = n.combooItems;
-        this.commonsService.arregloTildesCombo(this.comboPlanificacion);
-      },
-      err => {
-        console.log(err);
-      }
-    );
+    if (this.body.idSerieFacturacion != undefined) {
+      this.sigaServices.getParam("facturacionPyS_comboPlanificacion", "?idSerieFacturacion=" + this.body.idSerieFacturacion).subscribe(
+        n => {
+          this.comboPlanificacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPlanificacion);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    } else {
+      this.sigaServices.get("facturacionPyS_comboPlanificacion").subscribe(
+        n => {
+          this.comboPlanificacion = n.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboPlanificacion);
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+    
   }
 
   getComboCuentaBancaria() {
@@ -217,7 +252,6 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
         // this.showMessage("success", "Eliminar", "Las serie de facturación han sido dada de baja con exito.");
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -255,7 +289,6 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -269,23 +302,21 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.estado = this.esActivo() ? "Alta" : `Baja desde ${this.datepipe.transform(this.body.fechaBaja, 'dd/MM/yyyy')}`;
 
-    if (this.body.tiposProductos != undefined) {
-      this.body.tiposProductos.forEach(e => {
-        if (e.color == undefined) {
-          e.color = "#024eff";
-        }
-      });
-    }
-    
-    if (this.body.tiposServicios != undefined) {
-      this.body.tiposServicios.forEach(e => {
-        if (e.color == undefined) {
-          e.color = "#024eff";
-        }
-      });
-    }
+    this.body.tiposProductos.forEach(e => {
+      if (e.color == undefined) {
+        e.color = "#024eff";
+      }
+    });
+  
+    this.body.tiposServicios.forEach(e => {
+      if (e.color == undefined) {
+        e.color = "#024eff";
+      }
+    });
 
     this.resaltadoDatos = false;
+    this.resaltadoAbreviatura = false;
+    this.resaltadoDescripcion = false;
   }
 
   // Guadar
@@ -298,7 +329,7 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
   }
 
   checkSave(): void {
-    if (this.isValid()) {
+    if (this.isValid() && !this.deshabilitarGuardado()) {
       this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
@@ -313,9 +344,28 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
     }
   }
 
+  styleAbreviatura() {
+    let styleObligatorio = this.styleObligatorio(this.body.abreviatura);
+    if (this.resaltadoAbreviatura) {
+      return 'is-invalid';
+    } else if (styleObligatorio != undefined) {
+      return styleObligatorio;
+    }
+  }
+
+  styleDescripcion() {
+    let styleObligatorio = this.styleObligatorio(this.body.descripcion);
+    if (this.resaltadoDescripcion) {
+      return 'is-invalid';
+    } else if (styleObligatorio != undefined) {
+      return styleObligatorio;
+    }
+  }
+
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return this.body.abreviatura == this.bodyInicial.abreviatura
+    return this.body != undefined && this.bodyInicial != undefined 
+      && this.body.abreviatura == this.bodyInicial.abreviatura
       && this.body.descripcion == this.bodyInicial.descripcion
       && this.body.idCuentaBancaria == this.bodyInicial.idCuentaBancaria
       && this.body.idSufijo == this.bodyInicial.idSufijo
@@ -353,7 +403,6 @@ export class DatosGeneralesSeriesFacturaComponent implements OnInit, OnChanges {
         this.router.navigate(["/fichaCuentaBancaria"]);
       },
       err => {
-        console.log(err);
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       },

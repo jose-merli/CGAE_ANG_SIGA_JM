@@ -52,11 +52,11 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
   // Definición de las columnas
   getCols() {
     this.cols = [
-      { field: "idDisqueteDevoluciones", header: "Identificador", width: "10%" },
-      { field: "fechaCreacion", header: "F. creación", width: "10%" },
-      { field: "cuentaEntidad", header: "Cuenta Entidad", width: "60%" },
-      { field: "numRecibos", header: "N. facturas", width: "10%" }, 
-      { field: "facturacion", header: "importeTotal", width: "10%" }
+      { field: "idDisqueteDevoluciones", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: "10%" },
+      { field: "fechaCreacion", header: "informesycomunicaciones.enviosMasivos.fechaCreacion", width: "10%" },
+      { field: "cuentaEntidad", header: "facturacion.seriesFactura.bancoEntidad", width: "60%" },
+      { field: "numRecibos", header: "facturacionPyS.ficherosAdeudos.numRecibos", width: "10%" }, 
+      { field: "facturacion", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "10%" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));

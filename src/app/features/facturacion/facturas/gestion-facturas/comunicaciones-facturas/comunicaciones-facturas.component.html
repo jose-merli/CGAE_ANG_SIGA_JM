@@ -103,7 +103,7 @@
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="comunicar()" label="{{ 'facturacion.facturas.comunicaciones.comunicar' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-download" iconPos="left"
+        <button pButton type="button" icon="fa fa-download" iconPos="left" [disabled]="selectedDatos.length == 0"
         (click)="descargar()" label="{{ 'general.boton.download' | translate }}"></button>
       </div>
     </div>

@@ -39,7 +39,7 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
   ngOnInit() { }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.body) {
+    if (changes.body && this.body.idSerieFacturacion != undefined) {
       this.cargarDatos();
     }
   }
@@ -47,6 +47,8 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
   // Obtener todas las etiquetas
 
   cargarDatos() {
+    this.progressSpinner = true;
+
     this.sigaServices.get("facturacionPyS_comboFormasPagoFactura").subscribe(
       n => {
         this.formasPagosNoSeleccionadas = n.combooItems;
@@ -56,6 +58,8 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
       },
       err => {
         console.log(err);
+
+        this.progressSpinner = false;
       }
     );
   }
@@ -72,9 +76,11 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
 
         this.formasPagosSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosSeleccionadas));
         this.formasPagosNoSeleccionadasInicial = JSON.parse(JSON.stringify(this.formasPagosNoSeleccionadas));
+
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        this.progressSpinner = true;
       }
     );
   }
@@ -89,23 +95,25 @@ export class PagoAutomaticoSeriesFacturaComponent implements OnInit, OnChanges {
   // Guardar
 
   guardar() {
-    this.progressSpinner = true;
+    if (!this.deshabilitarGuardado()) {
+      this.progressSpinner = true;
 
-    let objEtiquetas = {
-      idSerieFacturacion: this.body.idSerieFacturacion,
-      seleccionados: this.formasPagosSeleccionadas,
-      noSeleccionados: this.formasPagosNoSeleccionadas
-    };
+      let objEtiquetas = {
+        idSerieFacturacion: this.body.idSerieFacturacion,
+        seleccionados: this.formasPagosSeleccionadas,
+        noSeleccionados: this.formasPagosNoSeleccionadas
+      };
 
-    this.sigaServices.post("facturacionPyS_guardarFormasPagosSerie", objEtiquetas).subscribe(
-      n => {
-        this.refreshData.emit();
-        this.progressSpinner = false;
-      },
-      error => {
-        console.log(error);
-        this.progressSpinner = false;
+      this.sigaServices.post("facturacionPyS_guardarFormasPagosSerie", objEtiquetas).subscribe(
+        n => {
+          this.refreshData.emit();
+          this.progressSpinner = false;
+        },
+        error => {
+          console.log(error);
+          this.progressSpinner = false;
       });
+    }
   }
 
   // Dehabilitar guardado cuando no cambien los campos

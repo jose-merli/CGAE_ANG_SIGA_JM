@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { D } from '@angular/core/src/render3';
 import { DataTable, Message } from 'primeng/primeng';
 import { format } from 'util';
 import { TranslateService } from '../../../../../commons/translate';
@@ -22,6 +23,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() guardadoSend = new EventEmitter<FacturasItem>();
+  @Output() refreshData = new EventEmitter<void>();
 
   @Input() bodyInicial: FacturasItem;
 
@@ -139,6 +141,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   // Obtención de los datos
 
   getLineasFactura() {
+    this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getLineasFactura", "?idFactura=" + this.bodyInicial.idFactura).subscribe(
       n => {
         console.log(n);
@@ -146,9 +149,11 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
         this.datos.forEach(d => d.modoEdicion = false);
 
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -160,9 +165,9 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
         let items: ComboItem[] = n.combooItems;
         console.log(items);
         
-        let modificarDescripcionItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_DESCRIPCION");
-        let modificarImporteUnitarioItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IMPORTE_UNITARIO");
-        let modificarIVAItem: ComboItem = items.find(item => item.label == "FACTURACION_MODIFICAR_IVA");
+        let modificarDescripcionItem: ComboItem = items.find(item => item.label == "MODIFICAR_DESCRIPCION");
+        let modificarImporteUnitarioItem: ComboItem = items.find(item => item.label == "MODIFICAR_IMPORTE_UNITARIO");
+        let modificarIVAItem: ComboItem = items.find(item => item.label == "MODIFICAR_IVA");
 
         if (modificarDescripcionItem)
           this.modificarDescripcion = modificarDescripcionItem.value == "1";
@@ -181,6 +186,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   // Funciones para el guardado
 
   getLineasAbono() {
+    this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getLineasAbono", "?idAbono=" + this.bodyInicial.idFactura).subscribe(
       n => {
         console.log(n);
@@ -188,9 +194,11 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
         this.datos.forEach(d => d.modoEdicion = false);
 
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -213,11 +221,30 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     );
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.arraysEquals(this.datos, this.datosInit);
+  }
+
+  arraysEquals(a, b): boolean {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+  
+    for (let i = 0; i < a.length; ++i) {
+      if (a[i].descripcion !== b[i].descripcion) return false;
+      if (a[i].precioUnitario !== b[i].precioUnitario) return false;
+      if (a[i].idTipoIVA !== b[i].idTipoIVA) return false;
+    }
+
+    return true;
+  }
+
   // Guardar
   isValid(): boolean {
-    
-
-    if (!false) {
+    if (this.datos.some(d => d.descripcion == undefined || d.descripcion.trim().length == 0 
+        || d.precioUnitario == undefined || d.precioUnitario.trim().length == 0
+        || d.idTipoIVA == undefined || d.idTipoIVA.trim().length == 0)) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
       return false;
     }
@@ -228,7 +255,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   
 
   checkGuardar() {
-    if (this.isValid()) {
+    if (this.isValid() && !this.deshabilitarGuardado()) {
       this.guardarLineas();
     } else {
       this.resaltadoDatos = true;
@@ -255,7 +282,10 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    }).then(() => this.progressSpinner = false);
+    }).then(() => {
+      this.progressSpinner = false;
+      this.guardadoSend.emit(this.bodyInicial);
+    });
   }
 
 
@@ -274,19 +304,27 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   // Calcular propiedades derivadas
 
   onChangeImportes(index: number) {
-    if (this.datos[index].precioUnitario != undefined && this.datos[index].precioUnitario.trim() != ""
-      && this.datos[index].cantidad != undefined && this.datos[index].cantidad.trim() != ""
-      && this.datos[index].idTipoIVA != undefined && this.datos[index].idTipoIVA.trim() != "") {
-      this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
+    if (this.bodyInicial.tipo == "FACTURA") {
+      if (this.datos[index].precioUnitario != undefined && this.datos[index].precioUnitario.trim() != ""
+        && this.datos[index].cantidad != undefined && this.datos[index].cantidad.trim() != ""
+        && this.datos[index].idTipoIVA != undefined && this.datos[index].idTipoIVA.trim() != "") {
+        this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
 
-      // Obtiene el iva del combo
-      let iva: number = parseFloat(this.comboTiposIVA.find(ti => ti.value === this.datos[index].idTipoIVA).label2);
-      console.log(this.comboTiposIVA);
-      console.log(iva);
-      this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * iva / 100.0).toFixed(2).toString();
+        // Obtiene el iva del combo
+        let iva: number = parseFloat(this.comboTiposIVA.find(ti => ti.value === this.datos[index].idTipoIVA).label2);
+        console.log(this.comboTiposIVA);
+        console.log(iva);
+        this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * iva / 100.0).toFixed(2).toString();
 
-      this.datos[index].importeTotal = (parseFloat(this.datos[index].importeNeto) + parseFloat(this.datos[index].importeIVA)).toFixed(2).toString();
+        this.datos[index].importeTotal = (parseFloat(this.datos[index].importeNeto) + parseFloat(this.datos[index].importeIVA)).toFixed(2).toString();
+      }
+    } else {
+      if (this.datos[index].precioUnitario != undefined && this.datos[index].precioUnitario.trim() != ""
+        && this.datos[index].cantidad != undefined && this.datos[index].cantidad.trim() != "") {
+        this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
+      }
     }
+    
   }
 
   // Restablecer

@@ -53,7 +53,7 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboSufijos);
       },
       err => {
-        console.log(err);
+        
       }
     );
   }
@@ -91,12 +91,6 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit, OnChanges {
 
   clear() {
     this.msgs = [];
-  }
-
-  // Label de un combo
-  findLabelInCombo(combo: any[], value) {
-    let item = combo.find(c => c.value == value);
-    return item ? item.label : "";
   }
 
   // Estilo obligatorio

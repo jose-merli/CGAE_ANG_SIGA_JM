@@ -72,7 +72,9 @@ export class ExportacionSeriesFacturaComponent implements OnInit, OnChanges {
   // Guardar
 
   guardar(): void {
-    this.guardadoSend.emit(this.body);
+    if (!this.deshabilitarGuardado()) {
+      this.guardadoSend.emit(this.body);
+    }
   }
 
   // Dehabilitar guardado cuando no cambien los campos

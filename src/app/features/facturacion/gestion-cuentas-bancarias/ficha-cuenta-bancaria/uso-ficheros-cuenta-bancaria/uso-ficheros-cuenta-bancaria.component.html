@@ -20,7 +20,7 @@
             <label>{{ 'facturacion.cuentaBancaria.usoFicheros.sjcs' | translate }}: 
               <span>{{ body.sjcs ? "Sí" : "No" }}</span></label>
             <label>{{ 'facturacion.cuentaBancaria.usoFicheros.sufijo' | translate }}: 
-              <span>{{ findLabelInCombo(comboSufijos, body.idSufijoSjcs) }}</span></label>
+              <span>{{ body.sufijoSjcs }}</span></label>
                 
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('usoFicheros')"

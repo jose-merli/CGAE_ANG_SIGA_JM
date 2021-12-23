@@ -61,11 +61,24 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
     this.logDisponible = this.body.logTraspaso != undefined && this.body.logTraspaso.trim().length != 0;
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.body.traspasoFacturas == this.bodyInicial.traspasoFacturas
+        && this.notChangedString(this.body.traspasoPlantilla, this.bodyInicial.traspasoPlantilla)
+        && this.notChangedString(this.body.traspasoCodAuditoriaDef, this.bodyInicial.traspasoCodAuditoriaDef);
+  }
+
+  notChangedString(value1: string, value2: string): boolean {
+    return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
+  }
+
   // Guardar
 
   checkSave(): void {
-    this.body.esDatosGenerales = false;
-    this.guardadoSend.emit(this.body);
+    if (!this.deshabilitarGuardado()) {
+      this.body.esDatosGenerales = false;
+      this.guardadoSend.emit(this.body);
+    }
   }
 
   // Estilo obligatorio

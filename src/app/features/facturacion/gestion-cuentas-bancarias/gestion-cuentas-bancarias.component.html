@@ -41,7 +41,7 @@
                 <div *ngSwitchCase="'iban'">
                   <span [ngClass]="{ historico: historico }">(... {{ dato[col.field] | slice:-4 }} )</span>
                 </div>
-                <div *ngSwitchCase="'comisionDescripcion'">
+                <div *ngSwitchCase="'descripcion'">
                   <span [ngClass]="{ historico: historico }" (click)="openTab(dato)" class="enlace">{{ dato[col.field]
                     }}</span>
                 </div>

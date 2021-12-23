@@ -57,8 +57,19 @@ export class FiltrosFacturasComponent implements OnInit {
       sessionStorage.removeItem("volver");
 
       this.isBuscar();
-    }else{
-      this.body.fechaEmisionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));
+    } else if(!sessionStorage.getItem("idFichero")) {
+        this.body.fechaEmisionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));     
+    } else if(sessionStorage.getItem("idFichero")) {
+      if (sessionStorage.getItem("tipoFichero") =='T') {
+				this.body.identificadorTransferencia = sessionStorage.getItem("idFichero");
+			} else if (sessionStorage.getItem("tipoFichero") =='A') {
+				this.body.identificadorAdeudos = sessionStorage.getItem("idFichero");
+			} else if (sessionStorage.getItem("tipoFichero") =='D') {
+				this.body.identificadorDevolucion = sessionStorage.getItem("idFichero");
+			}
+      sessionStorage.removeItem("idFichero");
+			sessionStorage.removeItem("tipoFichero");
+      this.isBuscar();
     }
   }
 

@@ -60,7 +60,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboContadorFacturas);
       },
       err => {
-        console.log(err);
+
       }
     );
   }
@@ -68,18 +68,19 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
   // Datos de contadores
 
   getContadoresSerie() {
+    this.progressSpinner = true;
     this.sigaServices.get("facturacionPyS_getContadoresSerie").subscribe(
       n => {
         this.contadoresSerie = n.contadorSeriesItems;
-        console.log(this.contadoresSerie);
         
         if (!this.contadoresSerie.find(c => c.idContador == this.body.idContadorFacturas)) {
           this.body.idContadorFacturas = null;
         }
         this.actualizarInputs();
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -136,10 +137,11 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
   guardar(): void {
     this.progressSpinner = true;
 
-    if (this.nuevo && this.isValid()) {
+    if (this.nuevo && this.isValid() && !this.deshabilitarGuardado()) {
       this.contadorFacturasSeleccionado.idSerieFacturacion = this.body.idSerieFacturacion;
       this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasSeleccionado).subscribe(
         n => {
+          this.nuevo = false;
           this.refreshData.emit();
 
           this.progressSpinner = false;
@@ -149,7 +151,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         }
       );
-    } else if (this.isValid()) {
+    } else if (this.isValid() && !this.deshabilitarGuardado()) {
       this.progressSpinner = false;
       this.guardadoSend.emit(this.body);
     } else {
@@ -161,7 +163,7 @@ export class ContadorSeriesFacturaComponent implements OnInit, OnChanges {
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return !this.nuevo && this.body.idContadorFacturas == this.bodyInicial.idContadorFacturas 
+    return !this.nuevo && this.body != undefined && this.body.idContadorFacturas == this.bodyInicial.idContadorFacturas 
       || this.nuevo && this.contadorFacturasSeleccionado.nombre == undefined
       || this.nuevo && this.contadorFacturasSeleccionado.contador == undefined;
   }

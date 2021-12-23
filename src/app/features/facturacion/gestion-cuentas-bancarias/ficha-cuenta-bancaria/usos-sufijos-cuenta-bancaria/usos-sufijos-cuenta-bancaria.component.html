@@ -73,7 +73,8 @@
               <td class="text-center" *ngFor="let col of columns">
                 <div [ngSwitch]="col.field">
                   <div *ngSwitchCase="'abreviatura'">
-                    <span *ngIf="!dato['nuevo']"><a class="enlace" (click)="openTab(dato)">{{ dato[col.field] }}</a></span>
+                    <span *ngIf="!dato['nuevo'] && dato['tipo'] == 'SERIE'"><a class="enlace" (click)="openTab(dato)">{{ dato[col.field] }}</a></span>
+                    <span *ngIf="!dato['nuevo'] && dato['tipo'] != 'SERIE'">{{ dato[col.field] }}</span>
                     <p-dropdown *ngIf="dato['nuevo']" class="select-form" [(ngModel)]="datos[rowIndex].idSerieFacturacion" placeholder="Seleccionar"
                       [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde"
                       [ngClass]="styleObligatorio(datos[rowIndex].idSerieFacturacion)" [showClear]="true"></p-dropdown>
@@ -119,7 +120,7 @@
     <div *ngIf="esFichaActiva('usosSufijos')" class="card-footer">
       <div class="text-right main-button">
         <button pButton *ngIf="datos.length == 0 || !datos[0].nuevo" [disabled]="body.fechaBaja != undefined" type="button" icon="fa fa-plus" iconPos="left"
-          (click)="addSerie()" label="{{ 'general.boton.relacionar.serie' || translate }}"></button>
+          (click)="addSerie()" label="{{ 'general.boton.relacionar.serie' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>

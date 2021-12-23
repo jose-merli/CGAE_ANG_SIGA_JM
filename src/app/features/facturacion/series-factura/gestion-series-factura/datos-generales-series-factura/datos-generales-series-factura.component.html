@@ -13,7 +13,7 @@
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
             <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
-            <label class="mr-3">
+            <label *ngIf="this.bodyInicial && this.bodyInicial.idCuentaBancaria != undefined" class="mr-3">
               <i (click)="navigateToCuentaBancaria();$event.stopPropagation();"
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToCuentaBancaria();$event.stopPropagation();">
@@ -50,7 +50,7 @@
         </div>
         <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
 
-        <label class="ml-auto mr-3">
+        <label *ngIf="this.bodyInicial && this.bodyInicial.idCuentaBancaria != undefined" class="ml-auto mr-3">
           <i (click)="navigateToCuentaBancaria();$event.stopPropagation();"
             class="fas fa-external-link-alt mr-2"></i>
           <a (click)="navigateToCuentaBancaria();$event.stopPropagation();">
@@ -60,7 +60,7 @@
           </a>
         </label>
 
-        <i class="fa fa-angle-up"></i>
+        <i class="fa fa-angle-up{{ this.bodyInicial && this.bodyInicial.idCuentaBancaria == undefined  ? ' ml-auto' : '' }}"></i>
       </div>
     </div>
 
@@ -70,7 +70,7 @@
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-group">
             <label>{{ 'gratuita.definirTurnosIndex.literal.abreviatura' | translate }} (*)</label>
-            <input type="text" [ngClass]="styleObligatorio(body.abreviatura)" id="abreviatura" [(ngModel)]="body.abreviatura" class="form-control" pInputText maxLength="20">
+            <input type="text" [ngClass]="styleAbreviatura(body.abreviatura)" id="abreviatura" [(ngModel)]="body.abreviatura" (change)="resaltadoAbreviatura = false" class="form-control" pInputText maxLength="20">
           </div>
           <div class="form-group">
             <label>{{ 'facturacion.seriesFactura.facturacionPrevia' | translate }}</label>
@@ -91,7 +91,7 @@
         <div class="bloque col-lg-4 col-md-4">
           <div class="form-group">
             <label>{{ 'general.description' | translate }} (*)</label>
-            <input type="text" [ngClass]="styleObligatorio(body.descripcion)" [(ngModel)]="body.descripcion" class="form-control" pInputText maxLength="100">
+            <input type="text" [ngClass]="styleDescripcion()" [(ngModel)]="body.descripcion" (change)="resaltadoDescripcion = false" class="form-control" pInputText maxLength="100">
           </div>
           <div class="form-group">
             <label>{{ 'facturacion.maestros.tiposproductos' | translate }}</label>

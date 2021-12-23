@@ -53,7 +53,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboTiposIVA);
       },
       err => {
-        console.log(err);
+        
       }
     );
   }
@@ -68,7 +68,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
   // Guadar
 
   isValid(): boolean {
-    return this.body.comisionImporte != undefined
+    return this.body.comisionImporte != undefined && this.body.comisionImporte.trim() != ""
       && this.body.comisionDescripcion != undefined && this.body.comisionDescripcion.trim() != ""
       && this.body.idTipoIVA != undefined && this.body.idTipoIVA.trim() != "";
   }
@@ -111,12 +111,6 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
   // Comprueba si una serie se encuentra de baja o no
   esActivo(): boolean {
     return this.body.fechaBaja == undefined || this.body.fechaBaja == null;
-  }
-
-  // Label de un combo
-  findLabelInCombo(combo: any[], value) {
-    let item = combo.find(c => c.value == value);
-    return item ? item.label : "";
   }
 
   // Abrir y cerrar la ficha

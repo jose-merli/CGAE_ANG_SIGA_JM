@@ -36,7 +36,6 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
   
   constructor(
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
     private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
@@ -60,7 +59,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboContadorFacturasRectificativas);
       },
       err => {
-        console.log(err);
+
       }
     );
   }
@@ -68,19 +67,21 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
   // Datos de contadores
 
   getContadoresRectificativasSerie() {
+    this.progressSpinner = true;
+
     this.sigaServices.get("facturacionPyS_getContadoresRectificativasSerie").subscribe(
       n => {
         this.contadoresRectificativasSerie = n.contadorSeriesItems;
-        console.log(this.contadoresRectificativasSerie);
 
         if (this.contadoresRectificativasSerie.find(c => c.idContador == this.body.idContadorFacturas)) {
           this.body.idContadorFacturasRectificativas = this.body.idContadorFacturas;
           this.body.idContadorFacturas = null;
         }
         this.actualizarInputs();
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -135,11 +136,12 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
   guardar(): void {
     this.progressSpinner = true;
 
-    if (this.nuevo && this.isValid()) {
+    if (this.nuevo && this.isValid() && !this.deshabilitarGuardado()) {
       this.contadorFacturasRectificativasSeleccionado.facturaRectificativa = true;
       this.contadorFacturasRectificativasSeleccionado.idSerieFacturacion = this.body.idSerieFacturacion;
       this.sigaServices.post("facturacionPyS_guardarContadorSerie", this.contadorFacturasRectificativasSeleccionado).subscribe(
         n => {
+          this.nuevo = false;
           this.refreshData.emit();
 
           this.progressSpinner = false;
@@ -149,7 +151,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         }
       );
-    } else if (this.isValid()) {
+    } else if (this.isValid() && !this.deshabilitarGuardado()) {
       this.progressSpinner = false;
       this.guardadoSend.emit(this.body);
     } else {
@@ -161,7 +163,7 @@ export class ContadorRectSeriesFacturaComponent implements OnInit, OnChanges {
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return !this.nuevo && this.body.idContadorFacturasRectificativas == this.bodyInicial.idContadorFacturasRectificativas 
+    return !this.nuevo && this.body != undefined && this.body.idContadorFacturasRectificativas == this.bodyInicial.idContadorFacturasRectificativas 
       || this.nuevo && this.contadorFacturasRectificativasSeleccionado.nombre == undefined
       || this.nuevo && this.contadorFacturasRectificativasSeleccionado.contador == undefined;
   }

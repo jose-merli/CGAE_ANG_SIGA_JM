@@ -49,10 +49,9 @@ export class GeneracionSeriesFacturaComponent implements OnInit, OnChanges {
       n => {
         this.comboModeloFactura = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboModeloFactura);
-        console.log(n);
       },
       err => {
-        console.log(err);
+
       }
     );
   }
@@ -102,7 +101,7 @@ export class GeneracionSeriesFacturaComponent implements OnInit, OnChanges {
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return this.body.generarPDF == this.bodyInicial.generarPDF
+    return this.body != undefined && this.body.generarPDF == this.bodyInicial.generarPDF
       && this.body.idModeloFactura == this.bodyInicial.idModeloFactura
       && this.body.idModeloRectificativa == this.bodyInicial.idModeloRectificativa;
   }

@@ -63,10 +63,9 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.body) {
+    if (changes.body && changes.body.currentValue != undefined && this.body.bancosCodigo != undefined) {
       this.restablecer();
       this.getComboSufijo();
-      this.getComboSerieFacturacion();
       this.getUsosSufijos();
     }
   }
@@ -80,7 +79,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboSufijos);
       },
       err => {
-        console.log(err);
+
       }
     );
   }
@@ -91,10 +90,13 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
     this.sigaServices.get("facturacionPyS_comboSeriesFacturacion").subscribe(
       n => {
         this.comboSeriesFacturacion = n.combooItems;
+        this.comboSeriesFacturacion = this.comboSeriesFacturacion.filter(item => this.datos.find(item2 => item2.tipo == "SERIE" && item.value == item2.idSerieFacturacion) == undefined);
         this.commonsService.arregloTildesCombo(this.comboSeriesFacturacion);
+
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -102,13 +104,18 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   // Obtener usos y sufijos
 
   getUsosSufijos() {
+    this.progressSpinner = true;
+
     this.sigaServices.getParam("facturacionPyS_getUsosSufijos", "?codBanco=" + this.body.bancosCodigo).subscribe(
       n => {
         this.datos = n.usosSufijosItems;
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
+
+        // Obtiene las series disponibles despues de comprobar los usos
+        this.getComboSerieFacturacion();
       },
       err => {
-        console.log(err);
+        this.progressSpinner = false;
       }
     );
   }

@@ -24,9 +24,11 @@
                 <span *ngIf="datos.length != 0">{{ datos[0].importeIVA + " €" }}</span></label>
               <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}: 
                 <span *ngIf="datos.length != 0">{{ datos[0].importeTotal + " €" }}</span></label>
-              <label>{{ 'facturacion.facturas.datosGenerales.impAnticipado' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].importeAnticipado + " €" }}</span></label>
-            
+
+              <ng-container *ngIf="bodyInicial.tipo == 'FACTURA'">
+                <label>{{ 'facturacion.facturas.datosGenerales.impAnticipado' | translate }}: 
+                  <span *ngIf="datos.length != 0">{{ datos[0].importeAnticipado + " €" }}</span></label>
+              </ng-container>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('lineas')"
               *ngIf="!esFichaActiva('lineas')"></i>
@@ -191,7 +193,7 @@
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
         (click)="guardarLineas()" label="Guardar"></button>
       </div>
     </div>
