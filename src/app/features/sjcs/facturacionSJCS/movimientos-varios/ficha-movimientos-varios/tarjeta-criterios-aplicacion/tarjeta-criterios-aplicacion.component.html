@@ -87,10 +87,7 @@
   <div class="card-footer" *ngIf="showFichaCriteriosAplicacion">
     <div class="text-right main-button">
       <button  [disabled]="!permisoEscritura || isLetrado" (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
-        label="{{ 'general.boton.restablecer' | translate }}" ></button>
-      <button  [disabled]="!permisoEscritura || isLetrado" (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left"
-        label="{{ 'general.boton.guardar' | translate }}" ></button>
-  
+        label="{{ 'general.boton.restablecer' | translate }}" ></button>  
     </div>
   </div>
 </div>

@@ -282,17 +282,16 @@
       <ng-template pTemplate="body" let-datoH let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="datoH" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">             
-           <div *ngIf="col.field == 'fechaInicio'"  class="text-center">
-              <span>{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
-              <app-fecha *ngIf="isCrear" [minDate]="fechaMinima" [(value)]="nuevaFecha" (valueChangeSelected)="onChangeCalendar($event)" (valueChangeInput)="onChangeCalendar($event)" ngDefaultControl></app-fecha>
+           <div *ngIf="col.field == 'fechaInicio'">
+              <span *ngIf="!datoH.nuevo" class="text-center">{{ datoH[col.field] | date: 'dd/MM/yyyy'}}</span>
+              <app-fecha *ngIf="datoH.nuevo" [minDate]="fechaMinima" [(value)]="nuevaFecha" (valueChangeSelected)="onChangeCalendar($event)" (valueChangeInput)="onChangeCalendar($event)" [appendTo] = "'body'"></app-fecha>
             </div>      
             <div *ngIf="col.field == 'sociedad'" class="text-center">
-
               <span>{{datoH[col.field]}}</span>
             </div>         
             <div *ngIf="col.field == 'observaciones'" class="d-block"  class="text-center">
-              <span>{{ datoH[col.field] }}</span>
-              <textarea *ngIf="isCrear" class="form-control" pInputTextarea autoResize="autoResize" [(ngModel)]="observaciones" maxlength="1205" ngDefaultControl></textarea>
+              <span *ngIf="!datoH.nuevo">{{ datoH[col.field] }}</span>
+              <textarea *ngIf="datoH.nuevo" class="form-control" pInputTextarea autoResize="autoResize" [(ngModel)]="observaciones" maxlength="1205" ngDefaultControl></textarea>
             </div>          
           </td>
         </tr>

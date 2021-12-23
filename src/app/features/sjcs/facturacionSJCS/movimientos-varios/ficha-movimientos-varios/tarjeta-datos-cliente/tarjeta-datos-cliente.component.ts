@@ -51,6 +51,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
   @Output() bodyFisicaEmit = new EventEmitter<any>();
   @Output() datosClienteEmit = new EventEmitter<any>();
 
+  @Input() showCards;
   @Input() datos;
   @Input() permisoEscritura;
   @Input() nuevoMonVarioDesdeTarjFacGene: boolean = false;
@@ -72,6 +73,11 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
 
   ngOnInit() {
+
+    if(this.showCards){
+      this.showFichaDatosClientes = true;
+    }
+    
     this.isLetrado = this.sigaStorageService.isLetrado;
 
     this.bodyAux = new MovimientosVariosFacturacionItem();
@@ -340,6 +346,8 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.modoEdicion = true;
+
       },
       err => {
         this.progressSpinner = false;

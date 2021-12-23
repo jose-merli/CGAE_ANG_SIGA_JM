@@ -293,14 +293,21 @@ export class DetalleIntegranteComponent implements OnInit {
   }
 
   borrar() {
+    let arr = [];
+
+    this.datosLiquidacion[0].anterior = false;
+    this.datosLiquidacion[1].anterior = true;
+
+    arr.push(this.datosLiquidacion[0]); //--último registro de la tabla
+    arr.push(this.datosLiquidacion[1]); //--antepenúltimo registro de la tabla
     //•	Eliminar: borrará el último registro solo si el colegiado no está en un pago con fecha posterior o igual a la fecha del último registro.
     //comprobar que el colegiado tiene algún pago con fecha posterior o igual a la fecha de registro --> fecha inicio de la tabla this.datos
     //si devuelve >0 o true significa que tiene pagos y no se puede eliminar
-    this.sigaServices.postPaginado("integrantes_buscarPagosColegiados","?idPersona=" + this.body.idPersona,this.datosLiquidacion[0]).subscribe(
+    this.sigaServices.post("integrantes_buscarPagosColegiados",arr).subscribe(
       data => { 
         let ok = data.body;
         if(ok){
-          this.sigaServices.postPaginado("integrantes_eliminarLiquidacion","?idPersona=" + this.body.idPersona,this.datosLiquidacion[0]).subscribe(
+          this.sigaServices.post("integrantes_eliminarLiquidacion",this.datosLiquidacion).subscribe(
             data => { 
               let ok = data.body;
               if(ok){
@@ -364,22 +371,25 @@ export class DetalleIntegranteComponent implements OnInit {
      if (this.datosLiquidacion == null ||this.datosLiquidacion == undefined ||this.datosLiquidacion.length == 0) {
       this.fechaMinima = new Date();
        this.datosLiquidacion = [];
-       //fecha minima es hoy
+       this.isCrear = true;
      }else { 
-       //entra por aquí porque en this.datos hay un alta
       //  this.datosLiquidacion =  JSON.parse(JSON.stringify(this.datos));
-       this.fechaMinima = JSON.parse(JSON.stringify(this.datosLiquidacion[0].fechaInicio));    
+     //  this.fechaMinima = JSON.parse(JSON.stringify(this.datosLiquidacion[0].fechaInicio));    
+       this.fechaMinima = new Date(JSON.parse(JSON.stringify(this.datosLiquidacion[0].fechaInicio)));
     }
 
     let nuevaLinea = new DatosLiquidacionIntegrantesItem();
 
-    if(this.body && this.body != null && this.body.sociedad == "SI"){
+    if(this.datosLiquidacion && this.datosLiquidacion[0].sociedad != null && this.datosLiquidacion[0].sociedad  == "Alta"){
       nuevaLinea.sociedad = "Baja";
     }else{
       nuevaLinea.sociedad = "Alta";
     }
 
+    nuevaLinea.nuevo = true;
+
     this.datosLiquidacion.unshift(nuevaLinea); 
+
 
   }
 
@@ -414,6 +424,7 @@ export class DetalleIntegranteComponent implements OnInit {
           element.idPersona = this.body.idPersona;
           element.idComponente = this.body.idComponente;
           element.idInstitucion = this.body.idInstitucion;
+          element.nuevo = false;
         });
 
         this.progressSpinner = false;       
@@ -1372,7 +1383,14 @@ export class DetalleIntegranteComponent implements OnInit {
     this.registroAnteriorMod = new DatosLiquidacionIntegrantesItem();
     if (this.datosLiquidacion != null && this.datosLiquidacion != undefined && this.datosLiquidacion.length != 0) {
     
-      this.registroAnteriorMod = JSON.parse(JSON.stringify(this.datosLiquidacion[0]));
+      this.registroAnteriorMod = JSON.parse(JSON.stringify(this.datosLiquidacion[1]));
+      
+      if(this.datosLiquidacion[1].sociedad == "Alta"){
+        this.registroAnteriorMod.sociedad = "1";
+      }else{
+        this.registroAnteriorMod.sociedad = "0";
+      }
+
     }
     this.registroAnteriorMod.anterior = true;
 
@@ -1384,7 +1402,7 @@ export class DetalleIntegranteComponent implements OnInit {
     this.Liquidacion.idInstitucion = this.body.idInstitucion;
 
 
-    if(this.datosLiquidacion[0].sociedad == "SI"){
+    if(this.datosLiquidacion[0].sociedad == "Alta"){
       this.Liquidacion.sociedad = "1";
     }else{
       this.Liquidacion.sociedad = "0";
@@ -1414,7 +1432,7 @@ export class DetalleIntegranteComponent implements OnInit {
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
-           this.isGuardar = false;
+           this.isGuardar = true;
         },
         () => {
           this.progressSpinner = false;
