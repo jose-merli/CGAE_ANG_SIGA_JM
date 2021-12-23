@@ -16,6 +16,8 @@ export let endpoints_facturacionsjcs: any = {
     combo_grupoFacturacionByColegio: "combo/grupoFacturacionByColegio",
     combo_certificacionSJCS: "/combo/comboCertificacionSJCS",
     combo_grupoFacturacionByColegios: "combo/grupoFacturacionByColegios",
+    combo_factByPartidaPresu: "combo/comboFactByPartidaPresu",
+    combo_factNull: "combo/comboFactNull",
 
     /* Endpoints FACTURACIONSJCS */
 
@@ -119,4 +121,7 @@ export let endpoints_facturacionsjcs: any = {
     certificaciones_buscarCertificaciones: "certificaciones/buscarCertificaciones",
     certificaciones_eliminarCertificaciones: "certificaciones/eliminarCertificaciones",
     certificaciones_getEstadosCertificacion: "certificaciones/getEstadosCertificacion",
+    certificaciones_getFactCertificaciones: "certificaciones/buscarFactCertificaciones",
+    certificaciones_delFactCertificacion: "certificaciones/delFactCertificacion",
+    certificaciones_reabrirfacturacion: "certificaciones/reabrirfacturacion",
 }

@@ -18,11 +18,11 @@
         (getListaEstadosEvent)="getListaEstadosEvent($event)" (changeModoEdicion)="changeModoEdicion($event)">
       </app-tarjeta-datos-generales-fiFac>
 
-      <!-- <app-tarjeta-facturacion [modoEdicion]="modoEdicion"
+      <app-tarjeta-facturacion *ngIf="showCards" [certificacion]="certificacion"  [modoEdicion]="modoEdicion" [permisos]="permisoEscritura"
         (changeModoEdicion)="changeModoEdicion($event)">
       </app-tarjeta-facturacion>
 
-      <app-tarjeta-movimientos-varios-aplicados [modoEdicion]="modoEdicion"
+     <!--  <app-tarjeta-movimientos-varios-aplicados [modoEdicion]="modoEdicion"
         (changeModoEdicion)="changeModoEdicion($event)"></app-tarjeta-movimientos-varios-aplicados>
 
       <app-tarjeta-movimientos-varios-asociados [modoEdicion]="modoEdicion"
