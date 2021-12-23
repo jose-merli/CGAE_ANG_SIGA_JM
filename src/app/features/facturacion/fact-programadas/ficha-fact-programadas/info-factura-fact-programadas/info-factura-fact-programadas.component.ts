@@ -1,8 +1,12 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
+import { TranslateService } from '../../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-info-factura-fact-programadas',
@@ -37,7 +41,9 @@ export class InfoFacturaFactProgramadasComponent implements OnInit {
 
   constructor(
     private commonsService: CommonsService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router,
+    private persistenceService: PersistenceService
   ) { }
 
   ngOnInit() {
@@ -73,6 +79,15 @@ export class InfoFacturaFactProgramadasComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  // ENlace al buscador de facturas
+  navigateToFacturas() {
+    let filtros = { facturacion: this.bodyInicial.idProgramacion };
+    this.persistenceService.setFiltros(filtros);
+    sessionStorage.setItem("volver", JSON.stringify(true));
+
+    this.router.navigate(["/facturas"]);
   }
 
   // Resultados por página

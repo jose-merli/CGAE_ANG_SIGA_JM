@@ -107,6 +107,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Obtención de los datos
 
   getEstadosPagos() {
+    this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getEstadosPagos", "?idFactura=" + this.bodyInicial.idFactura).subscribe(
       n => {
         console.log(n);
@@ -123,9 +124,11 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         ).subscribe(grupos => this.grupos = grupos);
 
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -452,7 +455,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         if (results != undefined && results.length != 0) {
           let ficherosAdeudosItem: FicherosAdeudosItem = results[0];
 
-          sessionStorage.setItem("facturaItem", JSON.stringify(this.bodyInicial));
+          sessionStorage.setItem("facturasItem", JSON.stringify(this.bodyInicial));
           sessionStorage.setItem("volver", "true");
 
           sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficherosAdeudosItem));

@@ -75,13 +75,7 @@ export class GestionFacturasComponent implements OnInit {
       }, err => { 
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    ).catch(error => {
-      if (error != undefined) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
-      } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    });
+    );
   }
 
   // Tarjeta resumen
@@ -229,21 +223,37 @@ export class GestionFacturasComponent implements OnInit {
       n => { }, err => { 
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    ).catch(error => {
+    ).then(() => { 
+      return this.getDatosFactura(this.body.idFactura, this.body.tipo); 
+    }).then(() => {
+      this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
+      
+      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+    }).catch(error => {
       if (error != undefined) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    }).then(() => { 
-      return this.getDatosFactura(this.body.idFactura, this.body.tipo); 
     }).then(() => this.progressSpinner = false);
   }
 
   refreshData(event: FacturasItem): void {
     this.progressSpinner = true;
 
-    this.getDatosFactura(event.idFactura, event.tipo).then(() => this.progressSpinner = false);
+    this.getDatosFactura(event.idFactura, event.tipo).catch(error => {
+      if (error != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    }).then(() => {
+      this.progressSpinner = false;
+      
+    });
   }
 
   // Transformar fecha

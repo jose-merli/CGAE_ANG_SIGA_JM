@@ -42,7 +42,7 @@ export class ClienteFacturasComponent implements OnInit {
         if (results != undefined && results.length != 0) {
           let datosColegiado: DatosColegiadosItem = results[0];
 
-          sessionStorage.setItem("facturaItem", JSON.stringify(this.bodyInicial));
+          sessionStorage.setItem("facturasItem", JSON.stringify(this.bodyInicial));
           sessionStorage.setItem("volver", "true");
 
           sessionStorage.setItem("personaBody", JSON.stringify(datosColegiado));

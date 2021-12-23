@@ -116,7 +116,6 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
   getConsultas() {
     this.sigaServices.get("facturacionPyS_comboConsultas").subscribe(
         data => {
-            console.log(data);
             this.consultas = data.consultas;
             this.consultas = this.consultas.filter(c => this.datos.find(d => d.idInstitucion == c.idInstitucion && d.idConsulta == c.value) == undefined);
 
@@ -129,7 +128,6 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
             this.progressSpinner = false;
         },
         err => {
-            console.log(err);
             this.progressSpinner = false;
         }
     );
@@ -141,7 +139,6 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
 
     this.sigaServices.getParam("facturacionPyS_getConsultasSerie", `?idSerieFacturacion=${this.body.idSerieFacturacion}`).subscribe(
         data => {
-            console.log(data);
             this.datosInit = data.consultaItem;
             this.datosInit.forEach(e => {
               // this.getFinalidad(e.idConsulta);
@@ -153,7 +150,6 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
             this.getConsultas();
         },
         err => {
-            console.log(err);
             this.progressSpinner = false;
         }
     );
@@ -167,7 +163,6 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
             consultaItem.objetivo = objetivo;
         },
         err => {
-            console.log(err);
             this.progressSpinner = false;
         },
         () => { }
