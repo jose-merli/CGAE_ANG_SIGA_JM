@@ -30,7 +30,7 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
   </ng-template>
   <p-footer>
     <div class="text-right main-button">
-      <button (click)="activarSolicitud();" [disabled] = "numSeleccionado == 0 || !activable || !isLetrado || !permisoEscritura" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'justiciaGratuita.guardia.solicitudescentralita.activarsolicitud' | translate}}"></button>
+      <button (click)="activarSolicitud();" [disabled] = "numSeleccionado == 0 || !activable || isLetrado || !permisoEscritura" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'justiciaGratuita.guardia.solicitudescentralita.activarsolicitud' | translate}}"></button>
       <button (click)="confirmDenegarSolicitud();" [disabled] = "numSeleccionado == 0 || !denegable || !permisoEscritura" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.denegarSolicitud' | translate}}"></button>
       <button (click)="confirmConfirmarSolicitud();"pButton type="button" icon="fa fa-send" [disabled] = "numSeleccionado == 0 || !confirmable || !permisoEscritura" iconPos="left" label="{{'justiciaGratuita.guardia.solicitudescentralita.confirmarsolicitud' | translate}}"></button>
     </div>

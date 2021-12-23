@@ -194,7 +194,7 @@ export class OtrasColegiacionesFichaColegialComponent implements OnInit, OnChang
           this.datosColegiaciones = this.otrasColegiacionesBody.colegiadoItem;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.mostrarNumero = true;
         },()=>{

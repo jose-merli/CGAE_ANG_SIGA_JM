@@ -204,7 +204,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -237,7 +237,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           );
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.showFail(
             this.translateService.instant(
               "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"
@@ -275,7 +275,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           );
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.showFail(
             this.translateService.instant(
               "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"

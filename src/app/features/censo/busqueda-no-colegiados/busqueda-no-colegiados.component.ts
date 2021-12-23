@@ -215,7 +215,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -237,7 +237,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         this.arregloTildesCombo(this.comboEstadoCivil);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -258,7 +258,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         this.arregloTildesCombo(this.comboEtiquetas);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -271,7 +271,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         this.arregloTildesCombo(this.comboTipoDireccion);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -292,7 +292,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         this.arregloTildesCombo(this.comboCategoriaCurricular);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -304,7 +304,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
         this.comboProvincias = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -489,7 +489,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
     //   err => {
     //     sessionStorage.setItem("isLetrado", "true");
     //     this.isEditable = true;
-    //     console.log(err);
+    //     //console.log(err);
     //   }
     // );
   }
@@ -539,7 +539,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
             this.table.paginator = true;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -576,7 +576,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -670,7 +670,7 @@ export class BusquedaNoColegiadosComponent implements OnInit {
           }
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -1001,12 +1001,12 @@ export class BusquedaNoColegiadosComponent implements OnInit {
             this.router.navigate(["/dialogoComunicaciones"]);
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

@@ -214,7 +214,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       },
@@ -304,7 +304,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
           this.resetTableProperties();
         } else {
           this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorEliminadoEnvio"));
-          console.log(err);
+          //console.log(err);
         }
 
       },
@@ -400,7 +400,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
           }
         } else {
           this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
-          console.log(err);
+          //console.log(err);
         }
         this.progressSpinner = false;
       },
@@ -427,7 +427,7 @@ export class DocumentosEnvioMasivoComponent implements OnInit {
         this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorGuardarDocumento"));
         this.progressSpinner = false;
 
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.getDatos();

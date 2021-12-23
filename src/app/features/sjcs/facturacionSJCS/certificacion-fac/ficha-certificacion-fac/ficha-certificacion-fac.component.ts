@@ -11,8 +11,12 @@ import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_factu
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+<<<<<<< HEAD
 import { ESTADO_CERTIFICACION } from '../certificacion-fac.component';
 import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjeta-datos-generales.component';
+=======
+import { TarjetaDatosGeneralesCertificacionComponent } from './tarjeta-datos-generales/tarjeta-datos-generales-certificacion.component';
+>>>>>>> b7c99c9632c21f0d1a4ccaeedc7892154914d0a7
 import { TarjetaFacturacionComponent } from './tarjeta-facturacion/tarjeta-facturacion.component';
 import { TarjetaMovimientosVariosAplicadosComponent } from './tarjeta-movimientos-varios-aplicados/tarjeta-movimientos-varios-aplicados.component';
 import { TarjetaMovimientosVariosAsociadosComponent } from './tarjeta-movimientos-varios-asociados/tarjeta-movimientos-varios-asociados.component';
@@ -52,10 +56,17 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     ]
   };
 
+<<<<<<< HEAD
   @ViewChild(TarjetaDatosGeneralesComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesComponent;
   @ViewChild(TarjetaFacturacionComponent) tarjetaFact: TarjetaFacturacionComponent;
   @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli: TarjetaMovimientosVariosAplicadosComponent;
   @ViewChild(TarjetaMovimientosVariosAsociadosComponent) tarjetaMovAso: TarjetaMovimientosVariosAsociadosComponent;
+=======
+  @ViewChild(TarjetaDatosGeneralesCertificacionComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesCertificacionComponent;
+  @ViewChild(TarjetaFacturacionComponent) tarjetaFact;
+  @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli;
+  @ViewChild(TarjetaMovimientosVariosAsociadosComponent) tarjetaMovAso;
+>>>>>>> b7c99c9632c21f0d1a4ccaeedc7892154914d0a7
 
   constructor(
     private location: Location,

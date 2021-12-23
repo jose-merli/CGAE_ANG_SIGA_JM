@@ -340,7 +340,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -356,7 +356,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -366,7 +366,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.arregloTildesCombo(this.tratamientos);
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -376,7 +376,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.arregloTildesCombo(this.estadoCivil);
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -403,7 +403,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -422,7 +422,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.tipoIdentificacion[3].label;
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -432,7 +432,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.arregloTildesCombo(this.tipoColegiacion);
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -444,7 +444,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.arregloTildesCombo(this.modalidadDocumentacion);
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
 
@@ -454,7 +454,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.arregloTildesCombo(this.provincias);
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }, () => {
         this.progressSpinner = false;
       }
@@ -607,10 +607,10 @@ export class NuevaIncorporacionComponent implements OnInit {
       .subscribe(
         result => {
           this.poblaciones = result.combooItems;
-          console.log(this.poblaciones);
+          //console.log(this.poblaciones);
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -1184,7 +1184,7 @@ export class NuevaIncorporacionComponent implements OnInit {
                       this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
                     },
                     error => {
-                      console.log(error);
+                      //console.log(error);
                       this.msgs = [
                         {
                           severity: "error",
@@ -1251,7 +1251,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -1307,7 +1307,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.msgs = [
             {
               severity: "error",
@@ -1907,7 +1907,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -1939,7 +1939,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }

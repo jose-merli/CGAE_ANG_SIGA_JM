@@ -31,6 +31,10 @@ import { endpoints_generales } from "../utils/endpoints_generales";
 import { Documento } from '../features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-doc-ficha-act/tarjeta-doc-ficha-act.component';
 import { ActuacionDesignaItem } from '../models/sjcs/ActuacionDesignaItem';
 import { DocumentoDesignaItem } from '../models/sjcs/DocumentoDesignaItem';
+import { endpoints_EJG_Comision } from '../utils/endpoints_EJG_Comision';
+import { endpoints_remesa } from '../utils/endpoints_remesa';
+import { endpoints_intercambios } from '../utils/endpoints_intercambios';
+import { NuevaComunicacionItem } from '../models/NuevaComunicacionItem';
 import { DocumentacionAsistenciaItem } from '../models/guardia/DocumentacionAsistenciaItem';
 import { DocumentoAsistenciaItem } from '../models/guardia/DocumentoAsistenciaItem';
 import { BehaviorSubject } from 'rxjs';
@@ -551,6 +555,7 @@ export class SigaServices {
 		comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
 		comunicaciones_descargarDocumento: 'comunicaciones/detalle/descargarDocumento',
 		comunicaciones_descargarCertificado: 'comunicaciones/detalle/descargarCertificado',
+		comunicaciones_saveNuevaComm: 'comunicaciones/saveNuevaComm',
 		consultas_search: 'consultas/search',
 		consultas_borrar: 'consultas/borrarConsulta',
 		consultas_listadoPlantillas: 'consultas/plantillasconsulta',
@@ -636,6 +641,9 @@ export class SigaServices {
         ...endpoints_justiciables,
         ...endpoints_oficio,
         ...endpoints_maestros,
+		...endpoints_EJG_Comision,
+		...endpoints_remesa,
+		...endpoints_intercambios,
 		...endpoints_guardia
     };
 
@@ -797,6 +805,30 @@ export class SigaServices {
       return this.http
       .post(environment.newSigaUrl + this.endpoints[service], body, {observe: 'response', responseType: 'blob'});
   }
+
+  postDownloadFilesWithFileName(service: string, body: any): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
+        responseType: 'blob'
+      })
+      .map((response) => {
+		let data = {
+			file: new Blob([response.body], {type: response.headers.get("Content-Type")}),
+			filename: response.headers.get("Content-Disposition"),
+			status: response.status
+		};
+        return data;
+      })
+      .catch((response) => {
+        return this.parseErrorBlob(response);
+      });
+  }
+
   postSendContent(service: string, file: any): Observable<any> {
     let formData: FormData = new FormData();
     if (file != undefined) {
@@ -1036,6 +1068,32 @@ export class SigaServices {
     });
 
     formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+    let headers = new HttpHeaders();
+
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
+  }
+
+  postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {
+    let formData: FormData = new FormData();
+
+	if(documentos.length > 0){
+		documentos.forEach((el, i) => {
+
+			formData.append(`uploadFile${i}`, el, el.name + ';');
+		});
+	}
+
+    formData.append('nuevaComunicacion', JSON.stringify(nuevaComunicacion));
 
     let headers = new HttpHeaders();
 

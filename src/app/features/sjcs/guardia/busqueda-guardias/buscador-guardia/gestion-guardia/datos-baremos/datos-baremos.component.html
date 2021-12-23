@@ -2,56 +2,26 @@
 <div class="busqueda-container" id="baremos">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
+      <div class="form-row">
         <div class="col-lg-1 col-md-2">
-          <div class="img-colegiado" (click)="onHideTarjeta('baremos')">
+          <div class="img-colegiado">
             <i class="fas fa-link icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10 cabeza">
-          <div class="d-flex justify-content-between mb-1" (click)="onHideTarjeta('baremos')">
+          <div class="d-flex justify-content-end mb-1">
             <label class="mr-auto title-ficha">{{'dato.jgr.guardia.guardias.baremos' | translate}}</label>
-            <label>
-              <div class="verticalAlign">
-                <div>
-                  <i class="fas fa-external-link-alt mr-2 icono-enlace" aria-hidden="true"></i>
-                </div>
-                <div *ngIf="modoEdicion">
-                  <a class="enlace"
-                    (click)="goToFichaBaremos()">{{'dato.jgr.guardia.guardias.listado.baremos' | translate}}</a>
-                </div>
-                <div *ngIf="!modoEdicion">
-                  <a>{{'dato.jgr.guardia.guardias.listado.baremos' | translate}}</a>
-                </div>
-              </div>
-            </label>
           </div>
           <div class="d-flex justify-content-between sub">
             <label *ngFor="let dato of datos">
               {{dato.label}}:
               <strong>{{dato.value}}</strong>
             </label>
-            <i *ngIf="!openFicha" class="fa fa-angle-down float-right" (click)="onHideTarjeta('baremos')"></i>
+            <div> </div>
+            <a class="enlace" (click)="goToFichaBaremos()">Listado de baremos</a>
           </div>
         </div>
       </div>
-
-      <div *ngIf="openFicha" class="header-ficha-open d-flex justify-content-start align-items-center"
-        (click)="onHideTarjeta('baremos')">
-        <div class="img-colegiado">
-          <i class="fas fa-link icon-ficha"></i>
-        </div>
-        <label class="title-ficha">{{ 'dato.jgr.guardia.guardias.baremos' | translate }}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
-      </div>
-
     </div>
-
-    <!-- INICIO BODY -->
-    <div *ngIf="openFicha" class="card-body card-body-ficha">
-      <app-tabla-busqueda-baremos [datos]="datosTabla" desactivarHistorico="true">
-      </app-tabla-busqueda-baremos>
-    </div>
-    <!-- FIN BODY -->
   </div>
 </div>

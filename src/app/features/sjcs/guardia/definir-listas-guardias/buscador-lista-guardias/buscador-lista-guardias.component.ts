@@ -45,7 +45,7 @@ export class BuscadorListaGuardiasComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       ()=>{
         this.commonsService.arregloTildesCombo(this.comboGrupoZona);
@@ -73,7 +73,7 @@ export class BuscadorListaGuardiasComponent implements OnInit {
           this.comboZona = n.combooItems;
         },
         err => { 
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.commonsService.arregloTildesCombo(this.comboZona);

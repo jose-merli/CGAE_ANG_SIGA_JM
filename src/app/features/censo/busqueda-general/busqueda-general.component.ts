@@ -257,7 +257,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
         this.colegios_rol = n.combooItems;
       },
       (err) => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // this.sigaServices.get("institucionActual").subscribe(n => {
@@ -378,7 +378,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
           },
           (err) => {
             this.progressSpinner = false;
-            console.log(err);
+            //console.log(err);
           },
           () => {
             // this.sigaServices.get("institucionActual").subscribe(n => {
@@ -389,7 +389,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       },
       (err) => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // this.sigaServices.get("institucionActual").subscribe(n => {
@@ -695,7 +695,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
             }
           },
           (err) => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -823,7 +823,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
               // this.table.paginator = true;
             },
             (err) => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -911,12 +911,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
         this.router.navigate(['fichaPersonaJuridica']);
       }
-      //MODIFICADO POR CRISTINA
-    } else if( sessionStorage.getItem('nuevoMovVarios') == 'true'){
-      sessionStorage.setItem('datosPersonaFisica', JSON.stringify(id));
-      sessionStorage.setItem('showDatosCliente',"true");
-      this.location.back();
-    }
+    } 
     // else if (sessionStorage.getItem('nuevoProcurador')) {
     //   sessionStorage.setItem('datosProcurador', JSON.stringify(id));
     //   this.backTo();
@@ -968,7 +963,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
           this.progressSpinner = false;
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           if (this.continue == true) {
@@ -1046,7 +1041,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
                       this.router.navigate(["/fichaColegial"]);
                     },
                     err => {
-                      console.log(err);
+                      //console.log(err);
                       this.progressSpinner = false;
                     },
                     () => {
@@ -1443,12 +1438,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
             this.router.navigate(['/dialogoComunicaciones']);
           },
           (err) => {
-            console.log(err);
+            //console.log(err);
           }
         );
       },
       (err) => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

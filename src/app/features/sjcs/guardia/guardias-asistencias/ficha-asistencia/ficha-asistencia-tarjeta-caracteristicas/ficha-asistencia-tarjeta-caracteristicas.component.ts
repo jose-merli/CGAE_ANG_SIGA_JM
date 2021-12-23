@@ -81,7 +81,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
@@ -109,7 +109,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           }, () => {
             this.progressSpinner = false;
@@ -138,7 +138,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
         this.comboOrigenContacto = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboOrigenContacto);
@@ -153,7 +153,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
         this.comboProcedimientos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboProcedimientos);

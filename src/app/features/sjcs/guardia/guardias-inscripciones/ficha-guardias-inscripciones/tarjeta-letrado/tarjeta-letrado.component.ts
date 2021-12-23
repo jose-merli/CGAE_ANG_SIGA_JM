@@ -142,7 +142,7 @@
           
 //             },
 //             err => {
-//               console.log(err);
+//               //console.log(err);
 //             },
 //             () => {
 //             }
@@ -227,14 +227,14 @@
 //                     this.progressSpinner = false;
 //                   },
 //                   err => {
-//                     console.log(err);
+//                     //console.log(err);
 //                     this.progressSpinner = false;
 //                   },
 //                 );
 //             }
 //           },
 //           err => {
-//             console.log(err);
+//             //console.log(err);
 //           },
 
 //         );
@@ -475,6 +475,7 @@ export class TarjetaLetradoComponent implements OnInit {
   }
 
   navigateToFichaColegial(){
+            sessionStorage.setItem("fromTarjetaLetradoInscripciones", JSON.stringify(this.datos));
             this.router.navigate(["/fichaColegial"]);
   }
 
@@ -531,7 +532,7 @@ export class TarjetaLetradoComponent implements OnInit {
           
             },
             err => {
-              console.log(err);
+              //console.log(err);
             },
             () => {
             }
@@ -569,7 +570,7 @@ export class TarjetaLetradoComponent implements OnInit {
 
 
       this.colegiadoInscripcion.numColegiado = this.letradoItem.ncolegiado;
-      if(this.letradoItem.ncolegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.nColegiado; //tener cuidado con esa C mayuscula
+      if(this.letradoItem.ncolegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.ncolegiado;
       if(this.letradoItem.numColegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.numColegiado;
       this.colegiadoInscripcion.idPersona = this.letradoItem.idpersona;
       if(this.letradoItem.idPersona != undefined)this.colegiadoInscripcion.idPersona = this.letradoItem.idPersona;
@@ -639,7 +640,7 @@ export class TarjetaLetradoComponent implements OnInit {
                     this.progressSpinner = false;
                   },
                   err => {
-                    console.log(err);
+                    //console.log(err);
                     this.progressSpinner = false;
                   },
                 );
@@ -648,7 +649,7 @@ export class TarjetaLetradoComponent implements OnInit {
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           

@@ -120,7 +120,7 @@ export class DatosGeneralesPrisionComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
       }

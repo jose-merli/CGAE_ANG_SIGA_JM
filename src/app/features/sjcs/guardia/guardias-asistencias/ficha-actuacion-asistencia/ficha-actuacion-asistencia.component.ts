@@ -367,7 +367,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
-    if (tarjTemp && tarjTemp.detalle) {
+    if (tarjTemp.detalle) {
       tarjTemp.opened = true;
     }
 

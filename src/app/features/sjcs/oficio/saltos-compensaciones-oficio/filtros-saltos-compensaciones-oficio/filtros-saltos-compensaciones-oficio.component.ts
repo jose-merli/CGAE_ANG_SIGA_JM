@@ -91,7 +91,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurnos);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

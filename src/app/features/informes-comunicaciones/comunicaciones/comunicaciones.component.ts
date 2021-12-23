@@ -17,6 +17,11 @@ import { esCalendar } from "../../../utils/calendar";
 import { ProgramarItem } from "../../../models/ProgramarItem";
 import { FichaColegialGeneralesItem } from "../../../models/FichaColegialGeneralesItem";
 import { CommonsService } from '../../../_services/commons.service';
+import { NuevaComunicacionItem } from "../../../models/NuevaComunicacionItem";
+import { ComboItem } from "../../../models/ComboItem";
+import { procesos_com } from "../../../permisos/procesos_com";
+import { ParametroRequestDto } from "../../../models/ParametroRequestDto";
+import { Dialog } from "primeng/dialog";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -64,7 +69,26 @@ export class ComunicacionesComponent implements OnInit {
   personaBody: any;
   usuario: any[] = [];
   @ViewChild("table") table: DataTable;
+  @ViewChild("tableDocsNuevaComm") tableNewDocs: DataTable;
   selectedDatos;
+
+  //VARIABLES CREACIÓN NUEVA COMUNICACIÓN
+  showNuevaComm: boolean = false;
+  bodyNuevaComm: NuevaComunicacionItem = new NuevaComunicacionItem();
+  selectedDocsNuevaComm : any [] = [];
+  comboJuzgado: any[] = [];
+  colsDocNuevaComm = [
+    { field: 'name', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
+  ];
+  comboModelos: ComboItem[];
+  permisoNuevaCom: boolean = false;
+  permisoIntPNJ: boolean = false;
+  selectAllNewDocs: boolean = false;
+  selectMultipleNewDocs: boolean = false;
+  numSelectedNewDocs: number = 0;
+  resaltadoDatos: boolean = false;
+  comboPlantillas: any;
+  @ViewChild("nuevaComm") dialogNuevaComm: Dialog;
 
   constructor(
     private sigaServices: SigaServices,
@@ -81,9 +105,14 @@ export class ComunicacionesComponent implements OnInit {
     sessionStorage.removeItem("crearNuevaCom");
 
     this.getComboColegios();
+    this.getComboJuzgado();
     this.getTipoEnvios();
     this.getEstadosEnvios();
     this.getClasesComunicaciones();
+    this.getComboModelos();
+    this.getPlantillasEnvioTelematico();
+    this.getPermisoNuevaCom();
+    this.getPermisoIntegracionPNJ();
 
     let objPersona = null;
 
@@ -156,7 +185,7 @@ export class ComunicacionesComponent implements OnInit {
         err => {
           let msg = this.translateService.instant("informesYcomunicaciones.comunicaciones.mensaje.error.obtenerPersona");
           this.showFail(msg);
-          console.log(err);
+          //console.log(err);
         },
         () => {
           //this.buscar();
@@ -234,7 +263,7 @@ export class ComunicacionesComponent implements OnInit {
         // this.colegios.unshift({ label: "", value: "" });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -262,7 +291,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -274,7 +303,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         // this.estados.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -302,10 +331,399 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
+
+  //MËTODOS NUEVA COMUNICACIÓN
+  checkPermisosNuevaCom(){
+    let msg = this.commonsService.checkPermisos(this.permisoNuevaCom, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } 
+    else if(this.permisoIntPNJ){
+      this.nueva();
+    }
+    else {
+      [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.noAccesoPNJ") }];
+    }
+  }
+
+
+  //Método para mostrar la ventana de creación de comunicación estandar
+  nueva(){
+    this.showNuevaComm = true;
+    //Crear objeto especifico para el formulario de nueva comunicación
+    this.bodyNuevaComm = new NuevaComunicacionItem();
+    this.bodyNuevaComm.fechaEfecto = new Date();
+  }
+
+  cerrarDialogNueva(){
+    this.showNuevaComm = false;
+  }
+
+  seleccionarFichero(event: any) {
+
+    let fileList: FileList = event.files;
+    let ficheroTemporal = fileList[0];
+
+    //Se comprueba si hay ya algún documento con el mismo nombre
+    let sameName = this.bodyNuevaComm.docs.find(el => el.name == ficheroTemporal.name);
+    //Si no encuentra ningún otro documento con el mismo nombre
+    if(sameName == undefined){
+      this.bodyNuevaComm.docs.push(ficheroTemporal);
+      //Para que se actualice el numero de paginas de la tabla adecuadamente
+      this.tableNewDocs.reset();
+    }
+    else{
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('informesycomunicaciones.comunicaciones.yaExisteNombreFichero') }];
+    }
+    
+  }
+
+  checkSaveNuevaComm(){
+    let msg = this.commonsService.checkPermisos(this.permisoNuevaCom, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } 
+    else if(this.validarNProcedimiento(this.bodyNuevaComm.numProcedimiento)
+    && (this.validarNig(this.bodyNuevaComm.nig) || this.bodyNuevaComm.nig == null || this.bodyNuevaComm.nig.trim() =="")){
+      if (this.checkCamposObligatoriosNuevaComm()){
+        if(this.permisoIntPNJ){
+          let tamDocs = 0;
+          for(let doc of this.bodyNuevaComm.docs){
+            tamDocs += doc.size;
+          }
+          //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)
+          if (tamDocs > 5242880)this.msgs = [{ severity: "info", summary: this.translateService.instant("general.message.informacion"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.documentacion.tamMaxFicheros") }];
+          else {
+            this.saveNuevaComm();
+          }
+        }
+        else{
+          this.msgs = [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.noAccesoPNJ") }];
+        }
+      }
+      else {
+        this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+        this.resaltadoDatos = true;
+      }
+    }
+  }
+
+  getPermisoIntegracionPNJ(){
+
+    this.progressSpinner = true;
+
+    let parametro = new ParametroRequestDto();
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      parametro.idInstitucion = n.value;
+      parametro.modulo = "COM";
+      parametro.parametrosGenerales = "INTEGRACIONCONPNJ";
+
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .toPromise().then(
+          data => {
+            this.progressSpinner = false;
+            let searchParametros = JSON.parse(data["body"]);
+            let datosBuscar = searchParametros.parametrosItems;
+            if(datosBuscar.length > 0){
+              let paramInst = datosBuscar.find(el => el.idInstitucion == el.idinstitucionActual || el.idInstitucion == '0');
+              //Si ha encontrado el parametro para la institucion actual
+              if(paramInst != undefined){
+                if(paramInst.valor == "1"){
+                  this.permisoIntPNJ = true;
+                }
+                else{
+                  this.permisoIntPNJ = false;
+                }
+              }
+              else {
+                this.permisoIntPNJ = false;
+              }
+            }
+            else{
+              this.permisoIntPNJ = false;
+            }
+          }).catch(error => {
+            let severity = "error";
+            let summary = this.translateService.instant('general.mensaje.error.bbdd');
+            let detail = "";
+            this.msgs.push({
+              severity,
+              summary,
+              detail
+            });
+          });
+    });
+  }
+
+  checkCamposObligatoriosNuevaComm(){
+    let campoVacio: boolean = false;
+    if(this.bodyNuevaComm.fechaEfecto == null ||
+      this.bodyNuevaComm.asunto == null || this.bodyNuevaComm.asunto.trim() == ""
+      || this.bodyNuevaComm.juzgado == null 
+      || this.bodyNuevaComm.idPlantillaEnvios == null){
+        campoVacio = true;
+    }
+    return !campoVacio;
+  }
+
+  saveNuevaComm(){
+    this.progressSpinner = true;
+
+    let docs = this.bodyNuevaComm.docs;
+    let peticion : NuevaComunicacionItem = JSON.parse(JSON.stringify(this.bodyNuevaComm));
+    peticion.docs= [];
+    peticion.idTipoMensaje = "30";
+    
+    this.sigaServices.postSendFilesAndComunicacion("comunicaciones_saveNuevaComm", docs, peticion).subscribe(
+      data => {
+        this.progressSpinner = false;
+        
+        let resp = data;
+
+        if (resp.status == 'OK') {
+          this.msgs = [{severity:'success', summary: this.translateService.instant('general.message.correct'), detail: this.translateService.instant('general.message.accion.realizada')}];
+          this.dialogNuevaComm.hide();
+        }
+        else{
+          this.msgs = [{severity:'error',summary: 'Error',detail: this.translateService.instant('general.mensaje.error.bbdd')}];
+
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        this.msgs = [{severity:'error',summary: 'Error',detail: this.translateService.instant('general.mensaje.error.bbdd')}];
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  deleteDocumentos(){
+    for(let doc of this.selectedDocsNuevaComm){
+      let indexDoc = this.bodyNuevaComm.docs.findIndex(el => el.name == doc.name);
+      this.bodyNuevaComm.docs.splice(indexDoc, 1);
+    }
+    //Alternativa
+    // let indexesDoc = [];
+    // for(let doc of this.selectedDocsNuevaComm){
+    //   indexesDoc.push(doc.index);
+    //   //
+    // }
+    // this.bodyNuevaComm.docs.filter((doc, index) => !indexesDoc.includes(index));
+    this.selectedDocsNuevaComm = [];
+    //Para que se actualice el numero de paginas adecuadamente
+    this.tableNewDocs.reset();
+  }
+
+  getComboJuzgado() {
+    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+      n => {
+        this.comboJuzgado = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboJuzgado);
+      },
+      err => {
+      }
+    );
+  }
+
+  
+  getComboModelos() {
+    //Se introduce un segundo parametro ya que lo requiere el servicio post per
+    //este body no se tiene en consideracion en el back (modelosClasesComunicacion)
+    this.sigaServices.post("comunicaciones_modelosComunicacion", "").subscribe(
+      n => {
+        this.comboModelos = JSON.parse(n.body).combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModelos);
+      },
+      err => {
+      }
+    );
+  }
+
+  getPermisoNuevaCom(){
+  this.commonsService.checkAcceso(procesos_com.nuevaComPeticionVariada)
+      .then(respuesta => {
+        this.permisoNuevaCom = respuesta;
+    }).catch(error => console.error(error));
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    //Esto es para la validacion de CADENA
+
+    //Obtenemos la institucion actual
+    // let idInstitucion = this.body.idInstitucion;
+
+    //Codigo copiado de la tarjeta detalles de la ficha de designaciones
+    // if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
+    //   idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
+    //   if (nProcedimiento != '') {
+    //     var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+    //     var ret = objRegExp.test(nProcedimiento);
+    //     return ret;
+    //   }
+    //   else
+    //     return true;
+    // } else {
+      // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
+      var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
+      var ret = objRegExp.test(nProcedimiento);
+      if(!ret && this.bodyNuevaComm.numProcedimiento != null && this.bodyNuevaComm.numProcedimiento.trim() != ""){
+        this.msgs = [{severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc")}];
+        return false;
+      }
+      else{
+        return true;
+      }
+    // }
+  }
+
+  //Codigo copiado de la tarjeta detalles de la ficha de designaciones y adaptado. Necesita completarse.
+  validarNig(nig) {
+    let ret = false;
+    let parametro = new ParametroRequestDto();
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      parametro.idInstitucion = n.value;
+      parametro.modulo = "SCS";
+      parametro.parametrosGenerales = "NIG_VALIDADOR";
+      if (nig != null && nig != '') {
+        this.progressSpinner = true;
+        this.sigaServices
+          .postPaginado("parametros_search", "?numPagina=1", parametro)
+          .toPromise().then(
+            data => {
+              let searchParametros = JSON.parse(data["body"]);
+              let datosBuscar = searchParametros.parametrosItems;
+              datosBuscar.forEach(element => {
+                if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+                  let valorParametroNIG: RegExp = new RegExp(element.valor);
+                  if (nig != '') {
+                    ret = valorParametroNIG.test(nig);
+                    if (ret) {
+                      return true;
+                    }
+                    else {
+                      let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+                      return false;
+                    }
+                  }
+                  else {
+                    return true;
+                  }
+                }
+              });
+              this.progressSpinner = false;
+            }).catch(error => {
+              let severity = "error";
+              let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
+              let detail = "";
+              this.msgs.push({
+                severity,
+                summary,
+                detail
+              });
+              return false;
+            });
+        this.progressSpinner = false;
+      }
+    });
+
+    if (!ret) return true;
+  }
+
+  onChangeSelectAllNewDocs(){
+    
+    if (this.selectAllNewDocs === true) {
+      this.selectMultipleNewDocs = false;
+      this.selectedDocsNuevaComm = this.bodyNuevaComm.docs;
+      this.numSelectedNewDocs = this.bodyNuevaComm.docs.length;
+    } else {
+      this.selectedDocsNuevaComm = [];
+      this.numSelectedNewDocs = 0;
+    }
+  }
+
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  getPlantillasEnvioTelematico() {
+
+    this.sigaServices
+      .post("enviosMasivos_plantillas", "6") //Tipo "Envío telemático" en la tabla ENV_TIPOSENVIOS
+      .subscribe(
+        data => {
+          this.progressSpinner = false;
+          let comboPlantillas = JSON.parse(data["body"]);
+          this.comboPlantillas = comboPlantillas.combooItems;
+          
+          this.detallePlantilla();
+
+          // if (this.editar) {
+          //   this.body.idPlantillaEnvios = this.body.idPlantillaEnvios.toString();
+          // }
+          this.comboPlantillas.map(e => {
+            let accents =
+              "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+            let accentsOut =
+              "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+            let i;
+            let x;
+            for (i = 0; i < e.label.length; i++) {
+              if ((x = accents.indexOf(e.label[i])) != -1) {
+                e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+                return e.labelSinTilde;
+              }
+            }
+          });
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => { }
+      );
+
+  }
+
+  detallePlantilla() {
+    // this.body.cuerpo = "";
+
+    let datosPlantilla = {
+      idPlantillaEnvios: this.bodyNuevaComm.idPlantillaEnvios, 
+      idTipoEnvios: "6" //Tipo "Envío telemático" en la tabla ENV_TIPOSENVIOS
+    };
+    this.sigaServices
+      .post("enviosMasivos_detallePlantilla", datosPlantilla)
+      .subscribe(data => {
+        let datos = JSON.parse(data["body"]);
+        this.bodyNuevaComm.asunto = datos.asunto;
+        this.bodyNuevaComm.mensaje = datos.cuerpo;
+      },
+        err => {
+          this.progressSpinner = false;
+        }, () => {
+
+        });
+
+}
+
+  //FIN MÉTODOS NUEVA COMUNICACIÓN
 
   onChangeRowsPerPages(event) {
     this.selectedItem = event.value;
@@ -344,6 +762,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     this.getResultados();
   }
 
+  
+
   getResultados() {
     this.sigaServices
       .postPaginado("comunicaciones_search", "?numPagina=1", this.bodySearch)
@@ -360,7 +780,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -422,7 +842,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.cancelar"));
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.buscar();
@@ -453,7 +873,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.envio.error.programar"));
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.buscar();
@@ -475,6 +895,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.selectedDatos = [];
     }
   }
+
   fila(dato) {
     this.estado = dato[0].idEstado;
   }
@@ -547,7 +968,7 @@ función para que no cargue primero las etiquetas de los idiomas*/
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"));
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -565,5 +986,8 @@ función para que no cargue primero las etiquetas de los idiomas*/
     this.bodyProgramar.fechaProgramada = event;
   }
 
+  fillNuevaFechaEfecto(event) {
+    this.bodyNuevaComm.fechaEfecto = event;
+  }
 
 }

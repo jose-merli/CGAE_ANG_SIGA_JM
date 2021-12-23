@@ -267,7 +267,7 @@ export class FichaInscripcionComponent implements OnInit {
         derechoAcceso = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (derechoAcceso == 3) {
@@ -325,7 +325,7 @@ export class FichaInscripcionComponent implements OnInit {
         }
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
   }
@@ -343,7 +343,7 @@ export class FichaInscripcionComponent implements OnInit {
           }
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -398,7 +398,7 @@ export class FichaInscripcionComponent implements OnInit {
             }
           },
           error => {
-            console.log(error);
+            //console.log(error);
           }
         );
     }
@@ -414,7 +414,7 @@ export class FichaInscripcionComponent implements OnInit {
           this.arregloTildesCombo(this.comboEstados);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -445,7 +445,7 @@ export class FichaInscripcionComponent implements OnInit {
         this.arregloTildesCombo(this.comboModoPago);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -574,7 +574,7 @@ export class FichaInscripcionComponent implements OnInit {
         this.comprobarValidacion();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -599,7 +599,7 @@ export class FichaInscripcionComponent implements OnInit {
       data.map(result => {
         result.cardNotario = this.isValidate;
       });
-      console.log(data);
+      //console.log(data);
     });
   }
 
@@ -848,7 +848,7 @@ export class FichaInscripcionComponent implements OnInit {
             error => {
               this.bodySearch = JSON.parse(error["error"]);
               this.showFail(JSON.stringify(this.bodySearch.error.message));
-              console.log(error);
+              //console.log(error);
 
               this.progressSpinner = false;
             },
@@ -858,7 +858,7 @@ export class FichaInscripcionComponent implements OnInit {
           );
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
       },
       () => {
@@ -912,7 +912,7 @@ export class FichaInscripcionComponent implements OnInit {
           );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -1169,7 +1169,7 @@ export class FichaInscripcionComponent implements OnInit {
                 );
             },
             error => {
-              console.log(error);
+              //console.log(error);
               this.progressSpinner = false;
             },
             () => {
@@ -1280,7 +1280,7 @@ export class FichaInscripcionComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -1413,7 +1413,7 @@ downloadFile(data: Response) {
           filename = a.value + "." + a.label;
         },
         error => {
-          console.log(error);
+          //console.log(error);
         },
         () => {
           this.sigaServices

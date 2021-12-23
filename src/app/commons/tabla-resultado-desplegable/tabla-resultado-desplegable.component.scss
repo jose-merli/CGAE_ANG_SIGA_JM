@@ -558,7 +558,9 @@ color: green;
 .width60{
   width: 60%;
 }
-
+.width70{
+  width: 70%;
+}
 .sameLine{
   position: relative;
     bottom: 46px;
@@ -637,4 +639,14 @@ div.hoverToClick:hover  span{
 .setDiv{
     width: fit-content;
     margin: 0 auto;
+}
+
+::ng-deep {
+  .showFull {
+          label.ui-dropdown-label {
+      white-space: inherit !important;
+      overflow: visible !important;
+
+    }
+  }
 }

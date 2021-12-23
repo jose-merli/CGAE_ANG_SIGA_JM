@@ -1,0 +1,19 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="header-title">
+  <i class="fa fa-square"></i>
+    <p>{{ "menu.justiciaGratuita" | translate}}
+      <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.intercambios' | translate }}
+      <i class="fa fa-angle-right"></i> {{ 'menu.justiciaGratuita.intercambios.cargaDesignasProcuradores' | translate }}
+    </p>
+  
+</div>
+<div class="busqueda-container">
+
+  <app-filtro-carga-designa-procurador (filtrosValues)="getFiltrosValues($event)"></app-filtro-carga-designa-procurador>
+  <app-tabla-carga-designa-procurador *ngIf="buscar" [filtrosValues]="this.filtrosValues" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tabla-carga-designa-procurador>
+  
+</div> 
+  
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

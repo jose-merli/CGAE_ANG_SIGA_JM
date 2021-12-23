@@ -14,6 +14,10 @@ export class CertificacionesItem {
     estado: string;
     idPartidaPresupuestaria: string;
     nombrePartidaPresupuestaria: string;
+    idFacturacion;
+    idInstitucion;
+    fechaModificacion;
+    usuarioModificacion;
 
 
     constructor() { }

@@ -1,0 +1,30 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.remesas' | translate}}
+    <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.remesas.resultado' | translate}}
+  </p>
+</div>
+
+<div class="busqueda-container">
+  <app-tarjeta-datos-generales-remesas-resultados   [remesaItem]="remesaItem"></app-tarjeta-datos-generales-remesas-resultados>
+  <app-tarjeta-remesas-envio [remesaTabla]="remesaTabla"  [remesaItem]="remesaItem" ></app-tarjeta-remesas-envio>
+
+  <div class="card-footer">
+    <div class="text-right main-button ">
+      <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
+      <button (click)="restablecer()" pButton type="button" icon="fa fa-eraser" iconPos="left"
+      label="{{ 'general.boton.restablecer' | translate}}"></button>
+      <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate}}"></button>
+    </div>
+  </div>
+
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

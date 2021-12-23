@@ -63,7 +63,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
       }
       sessionStorage.removeItem("volver");
       this.isBuscar.emit(this.historico)
-
+    }
 
     if (this.dataFilterFromColaGuardia != null){
           if (this.dataFilterFromColaGuardia.turno != 0){
@@ -84,7 +84,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
           }
           this.search();
         }
-      }
+      
 
     if (this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona) {
        this.disabledBusquedaExpress = true;
@@ -111,7 +111,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurnos);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -138,7 +138,7 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

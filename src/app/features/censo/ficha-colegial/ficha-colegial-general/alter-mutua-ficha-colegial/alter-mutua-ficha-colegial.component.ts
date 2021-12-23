@@ -50,7 +50,7 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
     }
@@ -82,7 +82,7 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
           this.router.navigate(["/alterMutuaReta"]);
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -115,7 +115,7 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
           this.router.navigate(["/alterMutuaOfertas"]);
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }

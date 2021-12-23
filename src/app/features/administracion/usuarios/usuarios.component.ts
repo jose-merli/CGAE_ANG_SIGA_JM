@@ -122,7 +122,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.sigaServices.get("usuarios_perfil").subscribe(
@@ -148,7 +148,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -271,7 +271,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.filtrosIniciales.activo = "S";
@@ -299,7 +299,7 @@ para poder filtrar el dato con o sin estos caracteres*/
                 });
               },
               err => {
-                console.log(err);
+                //console.log(err);
                 this.progressSpinner = false;
               }, () => {
                 this.datos.forEach((value2: any, key: number) => {
@@ -370,7 +370,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -407,7 +407,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -539,7 +539,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -755,7 +755,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
         this.showFail();
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.editar = false;
@@ -1005,7 +1005,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         err => {
           this.showFail();
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.selectMultiple = false;

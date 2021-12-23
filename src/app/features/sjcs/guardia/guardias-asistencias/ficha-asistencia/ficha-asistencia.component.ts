@@ -466,14 +466,16 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.listaTarjetas[0].campos[3]["value"] = newAsistenciaData.fechaAsistencia;
 
           let camposAsistido = [];
-          if (!newAsistenciaData.idPersonaJg) {
-            camposAsistido = [
-              {
-                "key": null,
-                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
-              }
-            ]
-          } else {
+          let asistenciaDuplicada = sessionStorage.getItem("asistenciaCopy");
+          if(asistenciaDuplicada == undefined || asistenciaDuplicada == null){
+          if(!newAsistenciaData.idPersonaJg){
+              camposAsistido = [
+                {
+                  "key": null,
+                  "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
+                }
+              ]
+          }else{
             camposAsistido = [
               {
                 "key": this.translateService.instant("censo.fichaCliente.literal.identificacion"),
@@ -489,6 +491,9 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
               }
             ]
           }
+        }else{
+          sessionStorage.removeItem("asistenciaCopy");
+        }
           this.listaTarjetas[1].campos = camposAsistido;
 
           let camposContrarios = [];
@@ -903,7 +908,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
-    if (tarjTemp && tarjTemp.detalle) {
+    if (tarjTemp.detalle) {
       tarjTemp.opened = true;
     }
 

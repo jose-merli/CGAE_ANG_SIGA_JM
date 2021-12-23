@@ -132,7 +132,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // if (this.derechoAcceso == 3) {
@@ -179,7 +179,7 @@ export class ModelosComunicacionesConsultaComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       });
 
   }

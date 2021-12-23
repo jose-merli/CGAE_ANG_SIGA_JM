@@ -63,7 +63,7 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.jueves = true;
 
         }
@@ -145,7 +145,7 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
                     }
                   },
                   error => {
-                    console.log(error);
+                    //console.log(error);
                     this.progressSpinner = false;
 
                   }
@@ -192,14 +192,14 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
                     }
                   },
                   error => {
-                    console.log(error);
+                    //console.log(error);
                     this.progressSpinner = false;
 
                   }
                 );
             }
           }, error => {
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
 
           }
@@ -277,7 +277,7 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
                     }
                   },
                   error => {
-                    console.log(error);
+                    //console.log(error);
                     this.progressSpinner = false;
 
                   }
@@ -324,14 +324,14 @@ export class MutualidadAbogaciaFichaColegialComponent implements OnInit, OnChang
                     }
                   },
                   error => {
-                    console.log(error);
+                    //console.log(error);
                     this.progressSpinner = false;
 
                   }
                 );
             }
           }, error => {
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
 
           }

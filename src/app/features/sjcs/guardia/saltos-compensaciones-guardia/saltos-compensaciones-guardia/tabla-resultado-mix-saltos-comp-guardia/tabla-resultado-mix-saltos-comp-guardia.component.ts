@@ -157,14 +157,32 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   searchChange(j: any) {
     let isReturn = true;
     this.rowGroups = this.rowGroupsAux.filter((row) => {
-      if (
-        this.searchText[j] != " " &&
-        this.searchText[j] != undefined &&
-        !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
-      ) {
-        isReturn = false;
-      } else {
-        isReturn = true;
+      let value = "";
+      if(row.cells[j].type == 'select'){
+        if (row.cells[j].value.toString() == 'C'){
+          value = "Compensación";
+        }else if (row.cells[j].value.toString() == 'S'){
+          value = "Saltos";
+        }
+        if (
+          this.searchText[j] != " " &&
+          this.searchText[j] != undefined &&
+          !value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
+        ) {
+          isReturn = false;
+        } else {
+          isReturn = true;
+        }
+      }else{
+        if (
+          this.searchText[j] != " " &&
+          this.searchText[j] != undefined &&
+          !row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())
+        ) {
+          isReturn = false;
+        } else {
+          isReturn = true;
+        }
       }
       if (isReturn) {
         return row;
@@ -483,7 +501,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           this.comboGuardias = comboGuardias;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           row.cells[1].combo = this.comboGuardias;
@@ -515,7 +533,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.rowGroups.find(el => el.id == row.id).cells[2].combo = this.comboColegiados;

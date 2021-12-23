@@ -31,7 +31,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() guardadoSend = new EventEmitter<any>();
   @Output() newEstado = new EventEmitter();
-  @Output() datosEvent = new EventEmitter<any>();
 
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
@@ -51,7 +50,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   comboTipoExpediente = [];
   tipoExpedienteDes: string;
   showTipoExp: boolean = false;
-  datosAsistencia: TarjetaAsistenciaItem;
+  datosAsistencia : TarjetaAsistenciaItem;
 
   institucionActual;
 
@@ -94,7 +93,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.modoEdicion = true;
       this.nuevo = false;
       this.body = this.persistenceService.getDatos();
-      this.datosEvent.emit({ ejg: JSON.parse(JSON.stringify(this.body)), isNew: this.nuevo })
 
       this.disabledNumEJG = true;
 
@@ -110,7 +108,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.showTipoExp = true;
 
       this.getPrestacionesRechazadasEJG();
-    } else if (sessionStorage.getItem("asistencia")) { //Si hemos pulsado Crear EJG en la ficha de Asistencias en la tarjeta Relaciones o le hemos dado a Crear EJG en la pantalla de asistencias expres
+    }else if(sessionStorage.getItem("asistencia")){ //Si hemos pulsado Crear EJG en la ficha de Asistencias en la tarjeta Relaciones o le hemos dado a Crear EJG en la pantalla de asistencias expres
 
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
       this.disabledNumEJG = true;
@@ -119,7 +117,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.body = new EJGItem();
       this.bodyInicial = new EJGItem();
       this.showTipoExp = false;
-      this.body.fechaApertura = moment(this.datosAsistencia.fechaAsistencia.substr(0, 10), 'DD/MM/YYYY').toDate();
+      this.body.fechaApertura = moment(this.datosAsistencia.fechaAsistencia.substr(0,10), 'DD/MM/YYYY').toDate();
       this.body.creadoDesde = "A";
       this.bodyInicial.creadoDesde = "A";
     } else {
@@ -176,7 +174,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboTipoEJG);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -193,7 +191,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -216,7 +214,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
           this.tipoExpedienteDes = tipoExp.label;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -230,7 +228,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
         this.bodyInicial.prestacion = this.body.prestacion;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -370,9 +368,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
         //si viene de designacion, hay que poner el campo de creado desde
         if (sessionStorage.getItem("Designacion")) {
-          this.body.creadoDesde = 'O';
-        } else if (this.body.creadoDesde == undefined || this.body.creadoDesde == null) {
-          this.body.creadoDesde = 'M'
+          this.body.creadoDesde='O';
+        }else if(this.body.creadoDesde==undefined || this.body.creadoDesde==null){
+          this.body.creadoDesde='M'
         }
 
         this.sigaServices.post("gestionejg_insertaDatosGenerales", JSON.stringify(this.body)).subscribe(
@@ -393,7 +391,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
                 sessionStorage.removeItem("Designacion");
 
                 //El formato de el atributo designa.ano es "D[año]/[numDesigna]"
-                let designaAnio = designa.ano.toString().slice(1, 5);
+                let designaAnio = designa.ano.toString().slice(1,5);
 
                 let numDesigna = designa.ano.toString().split("/")[1];
 
@@ -425,20 +423,20 @@ export class DatosGeneralesEjgComponent implements OnInit {
                   }
                 );
 
-              } else if (this.datosAsistencia) {
+              }else if(this.datosAsistencia){
 
-                let ejgItem: EJGItem = new EJGItem();
+                let ejgItem : EJGItem = new EJGItem();
                 ejgItem.annio = String(datosItem.annio);
                 ejgItem.numero = String(datosItem.numero);
                 ejgItem.tipoEJG = String(datosItem.tipoEJG);
 
-                this.sigaServices.postPaginado("busquedaGuardias_asociarEjg", "?anioNumero=" + this.datosAsistencia.anioNumero + "&copiarDatos=S", ejgItem).subscribe(
+                this.sigaServices.postPaginado("busquedaGuardias_asociarEjg","?anioNumero="+this.datosAsistencia.anioNumero+"&copiarDatos=S", ejgItem).subscribe(
                   n => {
-
+          
                     let error = JSON.parse(n.body).error;
                     this.progressSpinner = false;
                     sessionStorage.removeItem("radioTajertaValue");
-
+          
                     if (error != null && error.description != null) {
                       this.showMessage("error", "Error al asociar el EJG con la Asistencia", error.description);
                     } else {
@@ -446,11 +444,11 @@ export class DatosGeneralesEjgComponent implements OnInit {
                     }
                   },
                   err => {
-                    console.log(err);
+                    //console.log(err);
                     this.progressSpinner = false;
                   }, () => {
                     this.progressSpinner = false;
-                    sessionStorage.setItem("volver", "true");
+                    sessionStorage.setItem("volver","true");
                     sessionStorage.removeItem("asistencia");
                     this.location.back();
                   }
@@ -572,26 +570,26 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
 
   addExp() {
-    this.progressSpinner = true;
+    this.progressSpinner=true;
 
     this.sigaServices.post("gestionejg_getDatosExpInsos", this.body).subscribe(
       n => {
-        this.progressSpinner = false;
+        this.progressSpinner=false;
         let datos = JSON.parse(n.body).expInsosItems;
 
-        console.log('valor de n:' + n);
-        console.log('valor de n.body:' + n.body);
-        console.log('valor de datos:' + datos);
+        //console.log('valor de n:'+n);
+        //console.log('valor de n.body:'+n.body);
+        //console.log('valor de datos:'+datos);
 
-        if (datos != null && datos != undefined) {
+        if(datos!=null && datos!=undefined){
           sessionStorage.setItem("expedienteInsos", JSON.stringify(datos[0]));
           this.router.navigate(["/addExp"]);
-        } else {
+        }else{
           this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
