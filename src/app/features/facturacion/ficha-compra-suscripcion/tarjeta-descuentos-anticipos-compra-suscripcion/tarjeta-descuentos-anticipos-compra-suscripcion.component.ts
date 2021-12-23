@@ -68,7 +68,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
       value: 40
     }
   ];
-  disableBorrar: boolean = true;
+   
   permisoNuevoAnticipo: boolean = false;
   permisoBorrarAnticipo: boolean = false;
   showModal: boolean = false;
@@ -125,6 +125,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
           //Se comprueba si el importe anticipado es mayor que la cuantia a pagar
           if(Number(this.ficha.impTotal) < Number(this.ficha.impAnti)){
             this.ficha.impAnti = Number(this.ficha.impTotal);
+            this.descuentosTarjeta[0].importe = Number(this.ficha.impTotal);
           }
   }
 
@@ -223,6 +224,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.descuentosTarjeta = [];
+          this.selectedRows = [];
         }
         this.progressSpinner = false;
 
@@ -270,15 +272,8 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     }
   }
   
-  onRowSelect(selectedDatos){
-    this.numSelectedRows = selectedDatos.length;
-    let noAnt = this.selectedRows.find(
-      item => item.tipo != "1"
-    );
-    if (noAnt != undefined){
-      this.disableBorrar = true;
-    }
-    else this.disableBorrar = false;
+  onRowSelect(){
+    this.numSelectedRows = this.selectedRows.length;
   }
   
   onHideTarjeta(){
