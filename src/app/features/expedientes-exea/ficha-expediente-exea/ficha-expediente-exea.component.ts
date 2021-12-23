@@ -154,19 +154,19 @@ export class FichaExpedienteExeaComponent implements OnInit {
     let parametro = new ParametroRequestDto();
     parametro.idInstitucion = this.sigaStorageService.institucionActual;
     parametro.modulo = "EXEA";
-    parametro.parametrosGenerales = "URL_EXEA_DETALLE_EXPEDIENTE";
+    parametro.parametrosGenerales = "URL_EXEA_EXPEDIENTES";
 
     this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
       data => {
         let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
-        let url = resp.find(element => element.parametro == "URL_EXEA_DETALLE_EXPEDIENTE" && element.idInstitucion == element.idinstitucionActual);
+        let url = resp.find(element => element.parametro == "URL_EXEA_EXPEDIENTES" && element.idInstitucion == element.idinstitucionActual);
         
         if(!url){
-          url = resp.find(element => element.parametro == "URL_EXEA_DETALLE_EXPEDIENTE" && element.idInstitucion == '0');
+          url = resp.find(element => element.parametro == "URL_EXEA_EXPEDIENTES" && element.idInstitucion == '0');
         }
 
         if(url && this.idExpediente){
-          url.valor += "/"+this.idExpediente;
+          url.valor += "/expediente/"+this.idExpediente;
           this.sigaNoInterceptorServices.getWithAuthHeader(String(url.valor), tokenEXEA).subscribe(
             n => {
               this.fillExpedienteItem(n);
@@ -213,8 +213,9 @@ export class FichaExpedienteExeaComponent implements OnInit {
       if(element.lista_doc && element.lista_doc.length > 0){
         element.lista_doc.forEach(element => {
           let documento : DocumentacionAsistenciaItem = new DocumentacionAsistenciaItem();
-          documento.nombreFichero = element.asunto;
-          documento.descTipoDoc = element.tipo_documento;
+          documento.idDocumentacion = element.id;
+          documento.nombreFichero = element.descripcion;
+          documento.descTipoDoc = element.extension;
           documentos.push(documento);
         });
         this.expedienteEXEA.documentos = documentos;

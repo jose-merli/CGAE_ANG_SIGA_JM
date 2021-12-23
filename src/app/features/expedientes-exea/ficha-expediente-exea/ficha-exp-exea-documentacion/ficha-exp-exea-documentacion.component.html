@@ -1,3 +1,7 @@
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
 <p-table [value]="expediente.documentos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
 [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
   [ngClass]="{ 'customCursor': selectMultiple}"
@@ -22,8 +26,11 @@ paginatorPosition="both">
   <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
     <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-            <div>
+            <div *ngIf="col.field != 'idDocumentacion'">
                 <label>{{ dato[col.field]}}</label>
+            </div>
+            <div *ngIf="col.field == 'idDocumentacion'">
+              <label><a><span (click)="openTab(dato)" style="color: blue; text-decoration: underline; cursor: pointer;">{{dato[col.field]}}</span></a></label>
             </div>
         </td>
     </tr>

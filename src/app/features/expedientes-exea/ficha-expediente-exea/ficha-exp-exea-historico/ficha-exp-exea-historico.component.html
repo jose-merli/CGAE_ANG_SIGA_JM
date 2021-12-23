@@ -22,12 +22,9 @@ paginatorPosition="both">
   <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
     <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-            <div *ngIf="col.field != 'estado'">
+            <div>
                 <label>{{ dato[col.field]}}</label>
             </div>
-            <div *ngIf="col.field == 'estado'">
-              <label>{{ dato[col.field].descripcion}}</label>
-          </div>
         </td>
     </tr>
   </ng-template>

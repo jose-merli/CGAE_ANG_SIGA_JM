@@ -211,7 +211,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
         }
 
         if(url){
-          this.sigaNoInterceptorServices.getWithAuthHeader(String(url.valor), token).subscribe(
+          this.sigaNoInterceptorServices.getWithAuthHeader(String(url.valor) + "/expedientes", token).subscribe(
             n => {
               let expedientesEXEA : any[]  = n.listaExpedientes;
 
@@ -287,6 +287,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
       expedienteItem.fechaApertura = this.datePipe.transform(new Date(expediente.fecha_inicio), "dd/MM/yyyy HH:mm");
       expedienteItem.relacion = expediente.rol.descripcion;
       expedienteItem.idExpedienteEXEA = expediente.id;
+      expedienteItem.titular = String(this.generalBody.nombre);
       expedienteItem.exea = true;
 
       this.expedientesEXEA.push(expedienteItem);
@@ -308,7 +309,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
       }
     }else{
       let url : string = this.sigaServices.getOldSigaUrl() +
-      "/EXP_AuditoriaExpedientes.do?modo=ver&idTipoExpediente=" + dato.idTipoExpediente + "&numExpediente=" + dato.numExpediente + "&anioExpediente=" + dato.anioExpediente
+      "/EXP_AuditoriaExpedientes.do?modo=editar&idTipoExpediente=" + dato.idTipoExpediente + "&numExpediente=" + dato.numExpediente + "&anioExpediente=" + dato.anioExpediente
        + "&idInstitucion=" + idInstitucion + "&idInstitucion_tipoExpediente="+ dato.idInstitucionTipoExpediente +"&nombreTipoExpediente=" + dato.tipoExpediente;
 
       sessionStorage.setItem("url", JSON.stringify(url));
