@@ -121,12 +121,9 @@ export let endpoints_facturacionsjcs: any = {
     certificaciones_buscarCertificaciones: "certificaciones/buscarCertificaciones",
     certificaciones_eliminarCertificaciones: "certificaciones/eliminarCertificaciones",
     certificaciones_getEstadosCertificacion: "certificaciones/getEstadosCertificacion",
-<<<<<<< HEAD
     certificaciones_createOrUpdateCertificacion: "certificaciones/createOrUpdateCertificacion",
     certificaciones_reabrirCertificacion: "certificaciones/reabrirCertificacion",
-=======
     certificaciones_getFactCertificaciones: "certificaciones/buscarFactCertificaciones",
     certificaciones_delFactCertificacion: "certificaciones/delFactCertificacion",
     certificaciones_reabrirfacturacion: "certificaciones/reabrirfacturacion",
->>>>>>> b7c99c9632c21f0d1a4ccaeedc7892154914d0a7
 }

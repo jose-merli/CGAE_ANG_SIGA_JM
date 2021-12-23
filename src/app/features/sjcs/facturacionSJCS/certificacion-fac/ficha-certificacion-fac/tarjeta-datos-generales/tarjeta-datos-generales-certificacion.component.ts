@@ -14,11 +14,7 @@ import { Enlace } from '../ficha-certificacion-fac.component';
   templateUrl: './tarjeta-datos-generales-certificacion.component.html',
   styleUrls: ['./tarjeta-datos-generales-certificacion.component.scss']
 })
-<<<<<<< HEAD:src/app/features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-datos-generales/tarjeta-datos-generales.component.ts
-export class TarjetaDatosGeneralesComponent implements OnInit, OnChanges, AfterViewInit {
-=======
-export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit {
->>>>>>> b7c99c9632c21f0d1a4ccaeedc7892154914d0a7:src/app/features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-datos-generales/tarjeta-datos-generales-certificacion.component.ts
+export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, OnChanges, AfterViewInit {
 
   showDatosGenerales: boolean = true;
   progressSpinner: boolean = false;
