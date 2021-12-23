@@ -19,7 +19,7 @@
               </label>
               <label *ngIf="!disableEnlaceBaremos()">
                 <i class="fas fa-edit icon-enlace"></i>
-                <span style="color: blue; text-decoration: underline; cursor: pointer;">{{
+                <span (click)="goToFichaBaremos()" style="color: blue; text-decoration: underline; cursor: pointer;">{{
                   "facturacionSJCS.facturacionesYPagos.baremos" | translate }}
                 </span>
               </label>

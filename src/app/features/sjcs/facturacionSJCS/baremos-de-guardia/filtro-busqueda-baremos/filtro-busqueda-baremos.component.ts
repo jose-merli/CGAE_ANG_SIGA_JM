@@ -51,7 +51,14 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
       this.getComboFacturacion();
       this.buscar();
 
-    } else {
+    } else if(sessionStorage.getItem("tarjetaBaremosFacturacion")){
+      let idFacturacion = sessionStorage.getItem("tarjetaBaremosFacturacion")
+      sessionStorage.removeItem("tarjetaBaremosFacturacion");
+      this.getComboTurno();
+      this.getComboFacturacion();
+      this.filtros.idFacturaciones = [idFacturacion];
+      this.buscar();
+    }else{
       this.getComboTurno();
       this.getComboFacturacion();
       this.filtros.idFacturaciones = ['0'];
