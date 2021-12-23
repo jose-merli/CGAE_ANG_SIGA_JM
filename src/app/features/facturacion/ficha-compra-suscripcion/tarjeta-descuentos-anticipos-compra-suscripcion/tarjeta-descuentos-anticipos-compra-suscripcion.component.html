@@ -26,7 +26,7 @@
           <div class="row">
             <div class="col-3">
               <label>{{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }}
-                <span>{{ ficha.impTotal - ficha.impAnti }} €</span>
+                <span>{{ ficha.impTotal - ficha.impAnti | number:'.2'}} €</span>
               </label>
             </div>
             <div class="d-flex justify-content-start mb-1 ml-auto">
@@ -68,7 +68,7 @@
                   <span>{{rowData[col.field]}}</span>
                 </div>
                 <div *ngIf="col.field =='importe'">
-                  <span>{{rowData[col.field]}} €</span>
+                  <span>{{rowData[col.field] | number:'.2'}} €</span>
                   <!-- <span *ngIf="!editable" (click)="changeEditable()">{{rowData[col.field]}} €</span>
                   <input *ngIf="editable"
                 pInputText type="text" (input)="checkTotal()" (keypress)="numberOnly($event)" [(ngModel)]="rowData[col.field]" type="number" pInputText step=".01">
