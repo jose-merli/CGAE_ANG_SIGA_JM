@@ -41,16 +41,19 @@
         (getListaEstadosEvent)="getListaEstadosEvent($event)" (addEnlace)="addEnlace($event)">
       </app-tarjeta-datos-generales-fiFac>
 
-      <app-tarjeta-facturacion *ngIf="showCards" [certificacion]="certificacion"  [modoEdicion]="modoEdicion" [permisos]="permisoEscritura"
+      <app-tarjeta-facturacion *ngIf="showCards" [certificacion]="certificacion" [modoEdicion]="modoEdicion"
         (changeModoEdicion)="changeModoEdicion($event)">
       </app-tarjeta-facturacion>
 
-     <!--  <app-tarjeta-movimientos-varios-aplicados [modoEdicion]="modoEdicion"
-        (changeModoEdicion)="changeModoEdicion($event)"></app-tarjeta-movimientos-varios-aplicados>
+      <app-tarjeta-movimientos-varios-asociados *ngIf="showCards" [certificacion]="certificacion"
+        [datos]="movimientosVariosAsoCerItemList" [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)"
+        (getMovimientosAsoEvent)="getMvariosAsociadosCertificacion($event)">
+      </app-tarjeta-movimientos-varios-asociados>
 
-      <app-tarjeta-movimientos-varios-asociados [modoEdicion]="modoEdicion"
-        (changeModoEdicion)="changeModoEdicion($event)"></app-tarjeta-movimientos-varios-asociados> -->
-
+      <app-tarjeta-movimientos-varios-aplicados *ngIf="showCards" [certificacion]="certificacion"
+        [datos]="movimientosVariosApliCerItemList" [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)"
+        (getMovimientosApliEvent)="getMvariosAplicadosEnPagosEjecutadosPorPeriodo($event)">
+      </app-tarjeta-movimientos-varios-aplicados>
 
       <div class="text-right main-button">
         <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"

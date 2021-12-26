@@ -4,6 +4,7 @@ import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
 import { CertificacionesItem } from '../../../../../../models/sjcs/CertificacionesItem';
 import { FacturacionItem } from '../../../../../../models/sjcs/FacturacionItem';
+import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
 // import { CertificacionFacItem } from '../../../../../../models/sjcs/CertificacionesItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
@@ -20,7 +21,7 @@ export class TarjetaFacturacionComponent implements OnInit {
   selectedDatos = [];
   selectedItem: number = 10;
   rowsPerPage: any = [];
-  cols;
+  cols = [];
   msgs;
   selectionMode: String = "multiple";
   numSelected = 0;
@@ -40,7 +41,7 @@ export class TarjetaFacturacionComponent implements OnInit {
   @Input() modoEdicion;
   @Output() changeModoEdicion = new EventEmitter<boolean>();
   @ViewChild("tabla") tabla;
-  @Input() permisos;
+  permisos
   datos;
   comboFactByPartida: any;
   constructor(private translateService: TranslateService,
@@ -52,11 +53,24 @@ export class TarjetaFacturacionComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
-    this.getCols();
-    if (this.modoEdicion && this.certificacion && this.certificacion != null) {
-      this.idCertificacion = this.certificacion.idCertificacion
-      this.getFactCertificaciones(this.idCertificacion);
-    }
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaCerTarjetaFacturaciones).then(respuesta => {
+
+      this.permisos = respuesta;
+
+      if (this.permisos == undefined) {
+        sessionStorage.setItem("codError", "403");
+        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+        this.router.navigate(["/errorAcceso"]);
+      }
+
+      this.getCols();
+      if (this.modoEdicion && this.certificacion && this.certificacion != null) {
+        this.idCertificacion = this.certificacion.idCertificacion
+        this.getFactCertificaciones(this.idCertificacion);
+      }
+
+    }).catch(error => console.error(error));
+
 
   }
 
@@ -100,6 +114,45 @@ export class TarjetaFacturacionComponent implements OnInit {
   }
 
   reabrir() {
+    let reabrir: CertificacionesItem[] = []
+
+    for (let fact of this.selectedDatos) {
+      let estadoFact = fact.idEstado
+      if (this.certificacion.estado == "CERRADA" && estadoFact == "20") {
+        let obj: CertificacionesItem = new CertificacionesItem();
+        obj.idFacturacion = fact.idFacturacion
+        obj.nombre = fact.nombre
+        reabrir.push(obj);
+      }
+    }
+    if (reabrir.length != 0) {
+      this.sigaServices.post("certificaciones_reabrirfacturacion", reabrir).subscribe(
+        data => {
+          let error = JSON.parse(data.body).error;
+          if (error != undefined && error != null && error.description != null) {
+            if (error.code == '200') {
+              this.showMessage("success", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            }
+          }
+          this.restablecer();
+          this.progressSpinner = false;
+        },
+        err => {
+
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.restablecer()
+          this.progressSpinner = false;
+        }
+      )
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+    }
 
   }
 
@@ -143,25 +196,25 @@ export class TarjetaFacturacionComponent implements OnInit {
     this.isNuevo = false;
     this.progressSpinner = true;
 
-    let factCert:CertificacionesItem = new CertificacionesItem();
+    let factCert: CertificacionesItem = new CertificacionesItem();
     factCert.idCertificacion = this.idCertificacion;
     factCert.idFacturacion = this.idFacturacion;
 
-    this.sigaServices.post("certificaciones_saveFactCertificacion",factCert).subscribe(
-      data =>{
+    this.sigaServices.post("certificaciones_saveFactCertificacion", factCert).subscribe(
+      data => {
         let error = JSON.parse(data.body).error;
-					if (error != undefined && error != null && error.description != null) {
-						if (error.code == '200') {
-							this.showMessage("success", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
-						} else {
-							this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-						}
-					}
-          this.restablecer();
-          this.progressSpinner = false;
+        if (error != undefined && error != null && error.description != null) {
+          if (error.code == '200') {
+            this.showMessage("success", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+        this.restablecer();
+        this.progressSpinner = false;
       },
       err => {
-        
+
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
@@ -190,11 +243,11 @@ export class TarjetaFacturacionComponent implements OnInit {
     });
   }
   deleteFacturacion() {
-     if(this.certificacion.idEstadoCertificacion != '5'){
+    if (this.certificacion.idEstadoCertificacion != '5') {
       this.progressSpinner = true;
-      let factCert:CertificacionesItem[]=[];
-      for(let cert of  this.selectedDatos){
-        let certf:CertificacionesItem = new CertificacionesItem();
+      let factCert: CertificacionesItem[] = [];
+      for (let cert of this.selectedDatos) {
+        let certf: CertificacionesItem = new CertificacionesItem();
         certf.idCertificacion = this.idCertificacion;
         certf.idFacturacion = cert.idFacturacion;
         factCert.push(certf)
@@ -208,12 +261,12 @@ export class TarjetaFacturacionComponent implements OnInit {
           this.restablecer()
 
           if (res && res.error && res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "500") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
           } else {
             if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), res.error.description.toString());
+              this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
             } else {
-              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
             }
           }
         },
@@ -224,9 +277,9 @@ export class TarjetaFacturacionComponent implements OnInit {
           this.getFactCertificaciones(this.idCertificacion);
         }
       );
-     }else{
+    } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("fichaCertificacionSJCS.tarjetaFacturacion.errEstadoEnviado"));
-     }
+    }
 
   }
   selectDesSelectFila() {
@@ -267,7 +320,7 @@ export class TarjetaFacturacionComponent implements OnInit {
         this.datos = JSON.parse(data.body).facturacionItem;
         //this.buscar = true;
         this.progressSpinner = false;
-        if(this.datos != null || this.datos!= undefined){
+        if (this.datos.length != 0) {
           this.partidaPresupuestaria = this.datos[0].idPartidaPresupuestaria
         }
         let error = JSON.parse(data.body).error;
@@ -281,7 +334,7 @@ export class TarjetaFacturacionComponent implements OnInit {
         }
 
         //this.resetSelect();
-        
+
       },
       err => {
         if (err.status == '403' || err.status == 403) {
@@ -312,7 +365,7 @@ export class TarjetaFacturacionComponent implements OnInit {
         //llama a servicio para cuando la partida presupuestaria NO sea NULL
         this.progressSpinner = true;
 
-        this.sigaServices.getParam("combo_factByPartidaPresu","?idPartidaPresupuestaria=" + this.partidaPresupuestaria).subscribe(
+        this.sigaServices.getParam("combo_factByPartidaPresu", "?idPartidaPresupuestaria=" + this.partidaPresupuestaria).subscribe(
           data => {
             this.comboFactByPartida = data.combooItems;
             this.commonsService.arregloTildesCombo(this.comboFactByPartida);
@@ -345,25 +398,25 @@ export class TarjetaFacturacionComponent implements OnInit {
       partidaPresupuestaria = "sinPartida"
       this.progressSpinner = true;
 
-        this.sigaServices.getParam("combo_factByPartidaPresu","?idPartidaPresupuestaria=" + partidaPresupuestaria).subscribe(
-          data => {
-            this.comboFactByPartida = data.combooItems;
-            this.commonsService.arregloTildesCombo(this.comboFactByPartida);
-            this.progressSpinner = false;
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          }
-        );
+      this.sigaServices.getParam("combo_factByPartidaPresu", "?idPartidaPresupuestaria=" + partidaPresupuestaria).subscribe(
+        data => {
+          this.comboFactByPartida = data.combooItems;
+          this.commonsService.arregloTildesCombo(this.comboFactByPartida);
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }
+      );
     }
 
 
   }
 
-  onChangePartida(event){
+  onChangePartida(event) {
     this.idFacturacion = event.value
   }
-  
+
 
 }

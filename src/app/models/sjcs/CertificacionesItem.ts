@@ -18,6 +18,7 @@ export class CertificacionesItem {
     idInstitucion;
     fechaModificacion;
     usuarioModificacion;
+    idEstadoFact;
 
 
     constructor() { }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MultiSelect, SelectItem } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { RetencionesRequestDto } from '../../../../../models/sjcs/RetencionesRequestDTO';
@@ -8,6 +8,7 @@ import { TIPOBUSQUEDA } from '../retenciones.component';
 import { Router } from '@angular/router';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { RetencionesService } from '../retenciones.service';
+import { BusquedaColegiadoExpressComponent } from '../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -30,6 +31,10 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   comboTiposRetencion: SelectItem[] = [];
   comboDestinatarios: SelectItem[] = [];
   comboPagos: SelectItem[] = [];
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: ''
+  };
 
   @Input() isLetrado: boolean;
   @Input() permisoEscritura: boolean;
@@ -38,7 +43,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   @Output() buscarRetencionesEvent = new EventEmitter<RetencionesRequestDto>();
   @Output() buscarRetencionesAplicadasEvent = new EventEmitter<RetencionesRequestDto>();
   @Output() modoBusquedaEvent = new EventEmitter<string>();
-
+  @ViewChild(BusquedaColegiadoExpressComponent) buscador : BusquedaColegiadoExpressComponent;
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -47,7 +52,27 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
     private retencionesService: RetencionesService) { }
 
   ngOnInit() {
+    if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('buscadorColegiados')) {
+      const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
 
+      this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
+      this.usuarioBusquedaExpress.numColegiado = nColegiado;
+      this.filtros.ncolegiado = nColegiado;
+      setTimeout(()=>{
+        if(this.buscador){
+          this.buscador.isBuscar(this.usuarioBusquedaExpress);
+        }
+      },500) 
+    }
+
+    if(this.sigaStorageService.idPersona
+      && this.sigaStorageService.isLetrado){
+      this.isLetrado = true;
+      this.filtros.ncolegiado = this.sigaStorageService.numColegiado;
+      this.filtros.nombreApellidoColegiado = this.sigaStorageService.nombreApe;
+      this.usuarioBusquedaExpress.numColegiado = this.filtros.ncolegiado;
+      this.usuarioBusquedaExpress.nombreAp = this.filtros.nombreApellidoColegiado
+    }
     if(this.retencionesService.filtrosRetenciones != null && this.retencionesService.filtrosRetenciones != undefined){
       this.filtros.nombreApellidoColegiado = this.retencionesService.filtrosRetenciones.nombreApellidoColegiado;
       this.filtros.ncolegiado = this.retencionesService.filtrosRetenciones.ncolegiado;
