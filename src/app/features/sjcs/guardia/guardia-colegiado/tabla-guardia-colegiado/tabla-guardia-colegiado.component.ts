@@ -192,7 +192,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         });
     }else{
       this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Guardia ya validada" });
@@ -252,7 +252,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         });
     }else{
       this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "Guardia ya validada" });
@@ -311,7 +311,7 @@ export class TablaGuardiaColegiadoComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       });
    }else{
     this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.incorrect"), msg: "No se puede eliminar una guardia anterior a la fecha actual." });

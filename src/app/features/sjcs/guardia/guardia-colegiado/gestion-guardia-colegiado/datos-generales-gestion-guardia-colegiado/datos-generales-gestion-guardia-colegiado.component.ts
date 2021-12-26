@@ -47,13 +47,13 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
     if(this.body.observacionesAnulacion != undefined || this.body.observacionesAnulacion != ''){
       this.sigaServices.post("guardiasColegiado_updateGuardiaColeg", this.body).subscribe(
         n => {
-          console.log(n);
+          //console.log(n);
           this.progressSpinner = false;
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.body.observacionesAnulacion = "";
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
@@ -68,13 +68,13 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
     
     this.sigaServices.post("guardiasColegiado_insertGuardiaColeg", this.body).subscribe(
       n => {
-        console.log(n);
+        //console.log(n);
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.body.observacionesAnulacion = "";
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }

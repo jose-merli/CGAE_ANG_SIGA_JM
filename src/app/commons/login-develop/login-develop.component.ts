@@ -58,7 +58,7 @@ export class LoginDevelopComponent implements OnInit {
 		this.ocultar = true;
 		this.progressSpinner = true;
 		//Comentar esto para trabajar en local
-		this.sigaServices.getBackend('validaInstitucion').subscribe(
+		 this.sigaServices.getBackend('validaInstitucion').subscribe(
 			(response) => {
 				this.progressSpinner = false;
 				this.ocultar = true;
@@ -84,7 +84,7 @@ export class LoginDevelopComponent implements OnInit {
 			}
 		);
 		//Comentar esto para trabajar en local
-		this.sigaServices.getBackend('validaUsuario').subscribe(
+		 this.sigaServices.getBackend('validaUsuario').subscribe(
 			(response) => {
 				this.progressSpinner = false;
 				this.ocultar = true;

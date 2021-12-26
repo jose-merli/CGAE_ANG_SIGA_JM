@@ -105,7 +105,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }, () => {
@@ -179,7 +179,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
           this.getPermutas();
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }, () => {
@@ -245,7 +245,7 @@ this.permutas = [dummy, ...this.permutas];
     permutaItem.fechainicioSolicitante = this.body.fechadesde;
     permutaItem.idcalendarioguardiasSolicitan = this.body.idCalendarioGuardias;
     
-    console.log(permutaItem);
+    //console.log(permutaItem);
 
      this.progressSpinner = true
     this.sigaServices.post("guardiasColegiado_permutarGuardia", permutaItem).subscribe(
@@ -256,7 +256,7 @@ this.permutas = [dummy, ...this.permutas];
           this.getPermutas();
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }, () => {
@@ -284,7 +284,7 @@ this.permutas = [dummy, ...this.permutas];
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -305,7 +305,7 @@ this.permutas = [dummy, ...this.permutas];
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }
       )

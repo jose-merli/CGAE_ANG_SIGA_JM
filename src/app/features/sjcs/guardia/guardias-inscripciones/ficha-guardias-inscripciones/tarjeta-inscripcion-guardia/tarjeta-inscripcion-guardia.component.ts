@@ -232,7 +232,8 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     return new ResultadoInscripciones(objeto);
   }
 	formatDateSol(date) {
-		const pattern = 'dd/MM/yyyy hh:mm:ss';
+    const pattern = 'dd/MM/yyyy hh:mm:ss';
+    if (date != undefined && !date.includes('/'))
 		return this.datepipe.transform(date, pattern);
 	
 	  }

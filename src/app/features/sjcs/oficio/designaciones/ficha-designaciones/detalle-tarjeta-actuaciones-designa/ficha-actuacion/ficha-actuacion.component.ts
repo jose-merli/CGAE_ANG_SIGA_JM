@@ -206,7 +206,7 @@ export class FichaActuacionComponent implements OnInit {
             }
           },
           (err) => {
-            console.log(err);
+            //console.log(err);
           }
         );
 
@@ -525,7 +525,7 @@ export class FichaActuacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -631,7 +631,7 @@ export class FichaActuacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;

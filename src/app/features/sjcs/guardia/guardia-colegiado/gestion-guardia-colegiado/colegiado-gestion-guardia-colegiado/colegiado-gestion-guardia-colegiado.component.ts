@@ -42,7 +42,7 @@ export class ColegiadoGestionGuardiaColegiadoComponent implements OnInit {
          
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
         }, () => {
         });
 

@@ -187,7 +187,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
       , () => {
         this.progressSpinner = false;
@@ -255,7 +255,7 @@ export class TiposAsistenciaComponent implements OnInit {
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }
@@ -502,7 +502,7 @@ export class TiposAsistenciaComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }

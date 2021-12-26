@@ -353,7 +353,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
           this.initTarjetas();
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
