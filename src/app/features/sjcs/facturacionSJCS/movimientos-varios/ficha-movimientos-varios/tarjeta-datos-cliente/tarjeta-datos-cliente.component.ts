@@ -148,6 +148,8 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
   mandarDatos(datos) {
     this.datosCliente.idPersona = datos.idPersona;
+    this.datosCliente.ncolegiado = datos.nColegiado;
+    this.datosCliente.letrado = datos.nombre + " "+datos.apellidos;
 
     this.datosClienteEmit.emit(this.datosCliente);
   }

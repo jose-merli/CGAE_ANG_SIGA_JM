@@ -484,8 +484,8 @@ export class FichaMovimientosVariosComponent implements OnInit {
         //this.movimientosVariosService.datosColegiadoFichaColegial(this.datosGenerales);
         this.datos = this.datosGuardar;
 
-        if(this.datosClientes.nColegiado != null && this.datosClientes.nColegiado != undefined){
-          this.datos.ncolegiado = this.datosClientes.nColegiado;
+        if(this.datosClientes.idPersona != null && this.datosClientes.idPersona != undefined){
+          this.datos.ncolegiado = this.datosClientes.ncolegiado;
           this.datos.letrado = this.datosClientes.letrado;
         }
         this.getDatosTarjetaResumen(this.datos);

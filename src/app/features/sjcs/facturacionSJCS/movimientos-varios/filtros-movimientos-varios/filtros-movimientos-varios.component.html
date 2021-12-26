@@ -154,7 +154,9 @@
         <i *ngIf="!showDestinatario" class="fa fa-angle-down float-right"></i>
       </p>
        <div *ngIf="showDestinatario" class="module vista-avanzada">
-            <app-busqueda-colegiado-express [disabled]="isLetrado || disabledLetradoFicha" [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
+            <app-busqueda-colegiado-express [disabled]="isLetrado || disabledLetradoFicha"
+             [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp" 
+             (colegiado)="changeColegiado($event)">
 
             </app-busqueda-colegiado-express>
        </div>
