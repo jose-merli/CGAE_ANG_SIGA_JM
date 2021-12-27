@@ -36,6 +36,7 @@ export const procesos_PyS: any = {
     nuevaCondicion: "412",
     guardarPreciosServicios: "413",
     eliminarPreciosServicios: "414",
-    eliminarSuscripcionesBajas: "415"
+    eliminarSuscripcionesBajas: "415",
+    mostrarHistorico: "416",
 
 }
