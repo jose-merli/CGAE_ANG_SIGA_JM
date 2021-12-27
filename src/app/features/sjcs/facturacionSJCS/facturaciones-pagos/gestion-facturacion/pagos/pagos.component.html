@@ -56,6 +56,9 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
+                  <div *ngIf="col.field =='nombre'">
+                    <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
+                  </div>
                   <div *ngIf="col.field == 'importePagado'">
                     {{ dato[getImporteHito(dato.idHitoGeneral)] | number }} €
                   </div>
@@ -69,7 +72,7 @@
                     {{ dato[col.field] }} %
                   </div>
 
-                  <div *ngIf="col.field != 'porcentaje' && col.field!='fechaEstado' && col.field != 'importePagado'">
+                  <div *ngIf="col.field != 'nombre' && col.field != 'porcentaje' && col.field!='fechaEstado' && col.field != 'importePagado'">
                     {{ dato[col.field] }}
                   </div>
 
