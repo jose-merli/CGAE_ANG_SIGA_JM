@@ -40,6 +40,7 @@ export class TarjetaFacturacionComponent implements OnInit {
   @Input() certificacion;
   @Input() modoEdicion;
   @Output() changeModoEdicion = new EventEmitter<boolean>();
+  @Output() saveFact = new EventEmitter<Number>();
   @ViewChild("tabla") tabla;
   permisos
   datos;
@@ -172,13 +173,13 @@ export class TarjetaFacturacionComponent implements OnInit {
       fechaHasta: "",
       nombre: "",
       idGrupo: "",
-      importeOficio: "",
-      importeGuardia: "",
-      importeEjg: "",
-      importeSoj: "",
-      importeTotal: "",
-      importePendiente: "",
-      importePagado: "",
+      importeOficio: 0,
+      importeGuardia: 0,
+      importeEjg: 0,
+      importeSoj: 0,
+      importeTotal: 0,
+      importePendiente: 0,
+      importePagado: 0,
       regularizacion: "",
       nuevoRegistro: true
     };
@@ -195,35 +196,7 @@ export class TarjetaFacturacionComponent implements OnInit {
   save() {
     this.isNuevo = false;
     this.progressSpinner = true;
-
-    let factCert: CertificacionesItem = new CertificacionesItem();
-    factCert.idCertificacion = this.idCertificacion;
-    factCert.idFacturacion = this.idFacturacion;
-
-    this.sigaServices.post("certificaciones_saveFactCertificacion", factCert).subscribe(
-      data => {
-        let error = JSON.parse(data.body).error;
-        if (error != undefined && error != null && error.description != null) {
-          if (error.code == '200') {
-            this.showMessage("success", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
-        }
-        this.restablecer();
-        this.progressSpinner = false;
-      },
-      err => {
-
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        }
-        this.restablecer()
-        this.progressSpinner = false;
-      }
-    )
+    this.saveFact.emit(this.idFacturacion)
   }
 
   confirmDelete() {

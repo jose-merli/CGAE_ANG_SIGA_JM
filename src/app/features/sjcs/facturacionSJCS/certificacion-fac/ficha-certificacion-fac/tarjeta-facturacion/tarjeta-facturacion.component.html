@@ -45,31 +45,31 @@
                     <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
                   </div>
                   <div *ngIf="col.field == 'importeOficio'">
-                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null ">{{ dato[col.field] | numberPipe}} €</label>
+                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null  || dato[col.field] != undefined">{{ dato[col.field] | numberPipe}} €</label>
                   </div>
-                  <div *ngIf="col.field == 'importeGuardia' || dato[col.field] != null">
-                    <label *ngIf="dato[col.field] != ''">{{ dato[col.field] | numberPipe}} €</label>
+                  <div *ngIf="col.field == 'importeGuardia'">
+                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null || dato[col.field] != undefined">{{ dato[col.field] | numberPipe}} €</label>
                   </div>
                   <div *ngIf="col.field == 'importeEjg'">
-                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null">{{ dato[col.field] | numberPipe}} €</label>
+                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null || dato[col.field] != undefined">{{ dato[col.field] | numberPipe}} €</label>
                   </div>
                   <div *ngIf="col.field == 'importeSoj'">
-                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null">{{ dato[col.field] | numberPipe}} €</label>
+                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null || dato[col.field] != undefined">{{ dato[col.field] | numberPipe}} €</label>
                   </div>
                   <div *ngIf="col.field == 'importeTotal'">
-                    <label *ngIf="dato[col.field] != ''  || dato[col.field] != null">{{ dato[col.field] | numberPipe}} €</label>
+                    <label *ngIf="dato[col.field] != ''  || dato[col.field] != null || dato[col.field] != undefined">{{ dato[col.field] | numberPipe}} €</label>
                   </div>
                   <div *ngIf="col.field == 'importePendiente'">
-                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null">{{ dato[col.field] | numberPipe}} €</label>
+                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null || dato[col.field] != undefined">{{ dato[col.field] | numberPipe}} €</label>
                   </div>
                   <div *ngIf="col.field == 'importePagado'">
-                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null">{{ dato[col.field] | numberPipe}} €</label>
+                    <label *ngIf="dato[col.field] != '' || dato[col.field] != null || dato[col.field] != undefined ">{{ dato[col.field] | numberPipe}} €</label>
                   </div>
                   <div *ngIf="col.field == 'nombre' && datos[rowIndex].nuevoRegistro">
                     <p-dropdown class="select-form" [(ngModel)]='idFacturacion'
                       placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboFactByPartida"
                       [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangePartida($event)"
-                      [showClear]="true" appendTo="tabla">
+                      [showClear]="true" appendTo="body">
                     </p-dropdown>
                   </div>
                   <div *ngIf="col.field == 'nombre'">
