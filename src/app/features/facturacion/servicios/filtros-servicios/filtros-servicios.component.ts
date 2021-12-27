@@ -221,6 +221,10 @@ export class FiltrosServiciosComponent implements OnInit, OnDestroy {
     );
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
   //FIN SERVICIOS
 
 }

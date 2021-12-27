@@ -159,4 +159,7 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
     }
   }
 
+  clear() {
+    this.msgs = [];
+  }
 }

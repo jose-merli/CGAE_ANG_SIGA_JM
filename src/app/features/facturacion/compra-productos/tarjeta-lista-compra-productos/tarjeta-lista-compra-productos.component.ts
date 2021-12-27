@@ -441,4 +441,8 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 			})
 			.catch((error) => console.error(error));
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

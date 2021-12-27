@@ -264,4 +264,8 @@ export class FiltrosFactProgramadasComponent implements OnInit {
     }
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
 }

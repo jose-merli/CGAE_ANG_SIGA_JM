@@ -114,4 +114,8 @@ export class TablaAdeudosComponent implements OnInit {
       this.selectMultiple = true;
     }
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

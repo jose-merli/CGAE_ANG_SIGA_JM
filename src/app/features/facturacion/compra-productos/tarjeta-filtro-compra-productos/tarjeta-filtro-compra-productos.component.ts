@@ -332,4 +332,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
     });
   }
 
+  clear() {
+    this.msgs = [];
+  }
 }

@@ -322,7 +322,10 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
 			.catch((error) => console.error(error));
   }
 
-
+  clear() {
+    this.msgs = [];
+  }
+  
   cerrarDialog() {
     this.showModal = false;
   }

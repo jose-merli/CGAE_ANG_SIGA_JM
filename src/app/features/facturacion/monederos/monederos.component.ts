@@ -60,15 +60,6 @@ export class MonederoComponent implements OnInit {
               (dato) =>  dato.importeRestante != 0);
           }
         }
-
-  //       this.progressSpinner = false;
-
-  //     },
-  //     err => {
-  //       this.progressSpinner = false;
-  //     }, () => {
-  //       this.progressSpinner = false;
-  //     });
       });
   }
 
@@ -81,4 +72,9 @@ export class MonederoComponent implements OnInit {
     });
   }
 
+  
+  clear() {
+    this.msgs = [];
+  }
+  
 }
