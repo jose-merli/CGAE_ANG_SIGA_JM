@@ -43,7 +43,7 @@
       </app-tarjeta-datos-generales-fiFac>
 
       <app-tarjeta-facturacion *ngIf="showCards" [certificacion]="certificacion" [modoEdicion]="modoEdicion"
-        (changeModoEdicion)="changeModoEdicion($event)">
+        (changeModoEdicion)="changeModoEdicion($event)" (saveFact) = "saveFactCert($event)">
       </app-tarjeta-facturacion>
 
       <app-tarjeta-movimientos-varios-asociados *ngIf="showCards" [certificacion]="certificacion"
