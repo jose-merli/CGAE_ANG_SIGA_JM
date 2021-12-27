@@ -3,6 +3,14 @@
 </div>
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
+<!-- Ubicacion en la app -->
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p> {{ 'menu.facturacion' | translate}}
+    <i class="fa fa-angle-right"></i>{{ 'menu.facturacion.productos' | translate}}
+  </p>
+</div>
+
 <!-- Pantalla Facturacion > Productos -->
 <div>
   <!-- Buscador de productos -->

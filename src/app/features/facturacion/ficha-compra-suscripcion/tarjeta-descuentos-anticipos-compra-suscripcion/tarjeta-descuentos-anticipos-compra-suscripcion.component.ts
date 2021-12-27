@@ -4,6 +4,7 @@ import { Message, SortEvent } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
+import { FichaMonederoItem } from '../../../../models/FichaMonederoItem';
 import { ListaDescuentosPeticionItem } from '../../../../models/ListaDescuentosPeticionItem';
 import { ListaFacturasPeticionItem } from '../../../../models/ListaFacturasPeticionItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
@@ -23,13 +24,14 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
   showTarjeta: boolean = false;
   editable: boolean = false;
   
-  selectedRows: any[] = [];
+  selectedRows: ListaDescuentosPeticionItem[] = [];
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
   selectMultipleRows: boolean = true; //Seleccion multiples filas de la tabla
   selectAllRows: boolean = false; //Selecciona todas las filas de la pagina actual de la tabla
   rowsPerPage: number = 10; //Define el numero de filas mostradas por pagina
   first = 0;
   buscadores = [];
+  impNewAnti: number = 0;
 
   descuentosTarjeta: ListaDescuentosPeticionItem[] = [];
 
@@ -45,8 +47,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
   colsServ = [
     { field: "tipo", header: "facturacion.productos.tipo" },
     { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-    { field: "importe", header: "facturacionSJCS.facturacionesYPagos.importe" }
-    
+    { field: "importe", header: "facturacion.suscripciones.saldo" }
   ];
 
   rowsPerPageSelectValues = [
@@ -67,9 +68,10 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
       value: 40
     }
   ];
-  disableBorrar: boolean = true;
+   
   permisoNuevoAnticipo: boolean = false;
   permisoBorrarAnticipo: boolean = false;
+  showModal: boolean = false;
 
   constructor(public sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -78,7 +80,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     private router: Router) { }
 
   ngOnInit() {
-    this.ficha.impPagado = 0;
+    this.ficha.impAnti = 0;
     if(this.ficha.fechaAceptada != null){
       this.getDescuentosPeticion();
     }
@@ -99,14 +101,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
         } else {
           // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.descuentosTarjeta = listaDescuentosPeticionDTO.listaDescuentosPeticionItem;
-          for(let descuento of this.descuentosTarjeta){
-            if(descuento.tipo == "1"){
-              descuento.desTipo = this.translateService.instant("facturacion.productos.anticipoTipo");
-            
-            }
-          }
-
-          this.checkTotal();
+          this.checkTotalAnti();
         }
         this.progressSpinner = false;
 
@@ -116,62 +111,86 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
       });
   }
 
+  checkTotalAnti(){
+    this.ficha.impAnti = 0;
+          for(let descuento of this.descuentosTarjeta){
+            if(descuento.tipo == "1"){
+              descuento.desTipo = this.translateService.instant("facturacion.productos.anticipoTipo");
+              this.ficha.impAnti += descuento.importe;
+            }
+            else{
+              descuento.desTipo = this.translateService.instant("facturacion.monederos.Monedero");
+            }
+          }
+          //Se comprueba si el importe anticipado es mayor que la cuantia a pagar
+          if(Number(this.ficha.impTotal) < Number(this.ficha.impAnti)){
+            this.ficha.impAnti = Number(this.ficha.impTotal);
+            this.descuentosTarjeta[0].importe = Number(this.ficha.impTotal);
+          }
+  }
+
   //REVISAR AÑADIR COMPROBACION DEL ESTADO DE LA COMPRA Y SU FACTURACION
   checkNuevoAnticipo(){
     let msg = this.commonsService.checkPermisos(this.permisoNuevoAnticipo, undefined);
 
     if (msg != null) {
       this.msgs = msg;
-    }  else {
-      this.nuevoAnticipo();
+    }  
+    //Se revisa si ya se ha introducido un anticipo
+    else if (this.descuentosTarjeta.length > 0){
+      //REVISAR: CREAR ETIQUETA PARA EL MENSAJE
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "**No se puede asignar más de un anticipo a la compra");
+    }
+    else if(this.ficha.fechaAceptada == null || this.ficha.fechaAnulada != null){
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+    }
+    else if(this.ficha.facturas != null && this.ficha.facturas.length > 0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == "Factura"){
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+    }
+    else {
+      this.showModal = true;
+      this.impNewAnti = 0;
 		}
   }
 
-  nuevoAnticipo(){
-
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Ficha no implementada actualmente"
-      }
-    ];
-    
-    //REVISAR
-    // this.progressSpinner = true;
-    // sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
-    // sessionStorage.setItem("origin", "Compra");
-    //this.router.navigate(["/fichaAnticipo"]); //Cambiar direccion a la ficha de anticipos y añadir item con informacion necesaria para inicializar la ficha
+  openTabMonedero(rowData: ListaDescuentosPeticionItem) {
+    this.progressSpinner = true;
+    let monedero = new FichaMonederoItem();
+    monedero.idAnticipo = rowData.idAnticipo;
+    monedero.idPersona = this.ficha.idPersona;
+    sessionStorage.setItem("FichaMonedero", JSON.stringify(monedero));
+    sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
+    this.router.navigate(["/fichaMonedero"]);
   }
 
 
-  // saveNuevoAnticipo(){
-  //   this.progressSpinner = true;
+  anadirAnticipo(){
+    this.progressSpinner = true;
 
-  //   this.sigaServices.post("PyS_saveAnticipoPeticion",this.selectedRows).subscribe(
-  //     insertResponseDTO => {
+    let nuevoAnti: ListaDescuentosPeticionItem = new ListaDescuentosPeticionItem();
 
-  //       if (insertResponseDTO.status != "OK") {
-  //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-  //       } else {
-  //         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  //       }
-  //       this.progressSpinner = false;
+    nuevoAnti.idPeticion = this.ficha.nSolicitud;
+    nuevoAnti.importe = this.impNewAnti;
+    nuevoAnti.tipo = "1";
+    nuevoAnti.desTipo = this.translateService.instant("facturacion.productos.anticipoTipo");
 
-  //     },
-  //     err => {
-  //       this.progressSpinner = false;
-  //     });
-  // }
+    this.sigaServices.post("PyS_anadirAnticipoCompra",nuevoAnti).subscribe(
+      updateResponseDTO => {
 
-  checkTotal(){
-    let pagado = 0;
+        if (updateResponseDTO.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.descuentosTarjeta = [nuevoAnti];
+          this.showModal = false;
+          this.checkTotalAnti();
+        }
+        this.progressSpinner = false;
 
-    for(let desc of this.descuentosTarjeta){
-      pagado += desc.importe;
-    }
-
-    this.ficha.impPagado = pagado;
+      },
+      err => {
+        this.progressSpinner = false;
+      });
   }
 
   
@@ -188,15 +207,25 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
 
   //REVISAR CAMBIAR EL SERVICIO POR EL SERVICIO QUE SE IMPLEMENTE
   borrarAnticipo(){
-    this.progressSpinner = false;
+    this.progressSpinner = true;
 
-    this.sigaServices.post("PyS_saveAnticipoPeticion",this.selectedRows).subscribe(
-      insertResponseDTO => {
+    let nuevoAnti: ListaDescuentosPeticionItem = new ListaDescuentosPeticionItem();
 
-        if (insertResponseDTO.status != "OK") {
+    nuevoAnti.idPeticion = this.ficha.nSolicitud;
+    nuevoAnti.importe = 0;
+    nuevoAnti.tipo = "1";
+    nuevoAnti.desTipo = this.translateService.instant("facturacion.productos.anticipoTipo");
+
+    this.sigaServices.post("PyS_anadirAnticipoCompra",nuevoAnti).subscribe(
+      updateResponseDTO => {
+
+        if (updateResponseDTO.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.descuentosTarjeta = [];
+          this.selectedRows = [];
+          this.checkTotalAnti();
         }
         this.progressSpinner = false;
 
@@ -204,25 +233,6 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
       err => {
         this.progressSpinner = false;
       });
-
-    for (let row of this.selectedRows) {
-      if(row.tipo == 1){
-        let index = this.descuentosTarjeta.indexOf(row);
-        this.descuentosTarjeta.splice(index, 1);
-      }
-      else{
-        this.msgs = [
-          {
-            severity: "error",
-            summary: "Error",
-            detail: "Solo se pueden eliminar anticipos"
-          }
-        ];
-      }
-    }
-
-    this.selectedRows = [];
-    this.numSelectedRows = 0;
   }
 
   //Se cambia la tabla a su estado editable en todas las columnas 
@@ -263,15 +273,8 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     }
   }
   
-  onRowSelect(selectedDatos){
-    this.numSelectedRows = selectedDatos.length;
-    let noAnt = this.selectedRows.find(
-      item => item.tipo != "1"
-    );
-    if (noAnt != undefined){
-      this.disableBorrar = true;
-    }
-    else this.disableBorrar = false;
+  onRowSelect(){
+    this.numSelectedRows = this.selectedRows.length;
   }
   
   onHideTarjeta(){
@@ -317,5 +320,10 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
 				this.permisoBorrarAnticipo = respuesta;
 			})
 			.catch((error) => console.error(error));
+  }
+
+
+  cerrarDialog() {
+    this.showModal = false;
   }
 }

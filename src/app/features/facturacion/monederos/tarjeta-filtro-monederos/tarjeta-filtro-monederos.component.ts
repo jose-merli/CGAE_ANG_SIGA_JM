@@ -1,8 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Message } from 'primeng/components/common/api';
-import { TranslateService } from '../../../../commons/translate';
 import { FiltrosMonederoItem } from '../../../../models/FiltrosMonederoItem';
+import { TranslateService } from '../../../../commons/translate';
 import { Router } from '@angular/router';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaStorageService } from '../../../../siga-storage.service';
@@ -44,7 +44,36 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
     this.filtrosMonederoItem.fechaDesde.setDate(this.filtrosMonederoItem.fechaDesde.getDate() - (365*2));
     this.filtrosMonederoItem.fechaHasta.setDate(this.filtrosMonederoItem.fechaDesde.getDate());
 
-    if (sessionStorage.getItem("buscadorColegiados")) {
+    if(sessionStorage.getItem("filtrosMonedero")){
+
+      this.filtrosMonederoItem = JSON.parse(sessionStorage.getItem("filtrosMonedero"));
+
+      if(this.filtrosMonederoItem.fechaHasta != undefined && this.filtrosMonederoItem.fechaHasta != null){
+        this.filtrosMonederoItem.fechaHasta = new Date(this.filtrosMonederoItem.fechaHasta);
+      }
+      if(this.filtrosMonederoItem.fechaDesde != undefined && this.filtrosMonederoItem.fechaDesde != null){
+        this.filtrosMonederoItem.fechaDesde = new Date(this.filtrosMonederoItem.fechaDesde);
+      }
+
+      if(this.filtrosMonederoItem.idPersonaColegiado != null && this.filtrosMonederoItem.idPersonaColegiado != undefined){
+        this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.filtrosMonederoItem.idPersonaColegiado).subscribe(
+          n => {
+            let data = JSON.parse(n.body).colegiadoItem;
+            this.usuarioBusquedaExpress.nombreAp = data.nombre;
+            this.usuarioBusquedaExpress.numColegiado = data.numColegiado;
+
+            this.filtrosMonederoItem.idPersonaColegiado = data.idPersona;
+          },
+          err => {
+            this.progressSpinner = false;
+          }
+        );
+      }
+
+      sessionStorage.removeItem("filtrosMonedero");
+      this.busqueda.emit(true);
+    }
+    else if (sessionStorage.getItem("buscadorColegiados")) {
       const { nombre, apellidos, nColegiado, idPersona } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;

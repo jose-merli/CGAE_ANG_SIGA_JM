@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboObject } from '../../../../models/ComboObject';
 import { FiltrosServicios } from '../../../../models/FiltrosServicios';
+import { procesos_PyS } from '../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
@@ -33,15 +35,20 @@ export class FiltrosServiciosComponent implements OnInit, OnDestroy {
   ]
   @Output() busqueda = new EventEmitter<boolean>();
 
+  //Permisos
+  permisoGuardarServicios: boolean;
+
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
   subscriptionTypeSelectValues: Subscription;
   subscriptionIvaTypeSelectValues: Subscription;
   subscriptionPayMethodTypeSelectValues: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
+    this.checkPermisos();
+
     //Restablece los datos de busqueda anteriormente usados si se viene desde el boton volver de la ficha de servicios.
     if (sessionStorage.getItem("volver") == 'true' && sessionStorage.getItem('filtrosServicios')) {
       this.filtrosServicios = JSON.parse(sessionStorage.getItem("filtrosServicios"));
@@ -57,6 +64,19 @@ export class FiltrosServiciosComponent implements OnInit, OnDestroy {
     this.getComboFormaPago();
   }
 
+  checkPermisos(){
+    this.getPermisoGuardarServicios();
+  }
+
+  getPermisoGuardarServicios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.guardarServicios)
+        .then((respuesta) => {
+          this.permisoGuardarServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+  
   //Necesario para liberar memoria
   ngOnDestroy() {
     if (this.subscriptionCategorySelectValues)
@@ -99,8 +119,15 @@ export class FiltrosServiciosComponent implements OnInit, OnDestroy {
   }
 
   nuevo() {
-    sessionStorage.removeItem("servicioBuscador");
-    this.router.navigate(["/fichaServicios"]);
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoGuardarServicios, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+      sessionStorage.removeItem("servicioBuscador");
+      this.router.navigate(["/fichaServicios"]);
+	  }
   }
 
   //Inicializa las propiedades necesarias para el dialogo de confirmacion

@@ -54,18 +54,15 @@ export class CargasMasivasComprasComponent implements OnInit {
   }
 
 	getFiltrosValues() {
-    this.filtrosValues.fechaCargaDesde = new Date(this.filtros.fechaCargaDesde);
-    this.filtrosValues.fechaCargaHasta = new Date(this.filtros.fechaCargaHasta);
-    // this.convertArraysToStrings();
-
-    let msg = this.commonsService.checkPermisos(this.permisoSolicitarCompra, undefined);
-    
-    if (msg != null) {
-      this.msgs = msg;
-    }  
-    else {
-      this.search();
+    if(this.filtrosValues.fechaCargaDesde != null){
+      this.filtrosValues.fechaCargaDesde = new Date(this.filtros.fechaCargaDesde);
     }
+    if(this.filtrosValues.fechaCargaHasta != null){
+      this.filtrosValues.fechaCargaHasta = new Date(this.filtros.fechaCargaHasta);
+    }  
+    
+    this.search();
+    
   }
 
   convertArraysToStrings() {

@@ -9,6 +9,8 @@ import { ComboObject } from '../../../../../models/ComboObject';
 import { ListaServiciosDTO } from '../../../../../models/ListaServiciosDTO';
 import { ListaServiciosItems } from '../../../../../models/ListaServiciosItems';
 import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
+import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -40,10 +42,15 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   showModalSuscripcionesBajas = false; //Muestra o no muestra el dialogo de suscripciones o bajas
   checkboxIncluirSolBajasManuales: boolean = false;
 
-
   //variables de control
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
   desactivarBotonEliminar: boolean = false; //Para activar el boton eliminar/reactivar dependiendo de si estamos en edicion o en creacion de un nuevo producto pero ya hemos guardado.
+
+  //Permisos
+  permisoGuardarServicios: boolean;
+  permisoEliminarReactivarServicios: boolean;
+  permisoNuevaCondicion: boolean;
+  permisoEliminarSuscripcionBaja: boolean;
 
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
@@ -55,20 +62,19 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   subscriptionBorrarSuscripcionesBajas: Subscription;
   subscriptionCondicionesSelect: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnChanges(changes: SimpleChanges) {
     if (this.servicio.editar) {
       this.getComboTipo();
-      //this.getComboCondicionSuscripcion();
+   
       this.servicioOriginal = { ...this.servicio };
 
       this.desactivarBotonEliminar = false;
       this.mostrarTarjetaFormaPagos.emit(true);
 
     } else {
-      //this.servicio.idconsulta = 0;
-      //this.getComboCondicionSuscripcion();
+  
       this.mostrarTarjetaFormaPagos.emit(false);
       this.desactivarBotonEliminar = true;
     }
@@ -93,9 +99,54 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   }
 
   ngOnInit() {
+    this.checkPermisos();
+
     this.getComboCategoria();
     this.getComboCondicionSuscripcion();
     this.obtenerCodigosPorColegio();
+  }
+
+  checkPermisos(){
+    this.getPermisoGuardarServicios();
+    this.getPermisoEliminarReactivarServicios();
+    this.getPermisoNuevaCondicion();
+    this.getPermisosEliminarSuscripcionBaja();
+  }
+
+  getPermisoGuardarServicios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.guardarServicios)
+        .then((respuesta) => {
+          this.permisoGuardarServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisoEliminarReactivarServicios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.eliminarReactivarServicios)
+        .then((respuesta) => {
+          this.permisoEliminarReactivarServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisosEliminarSuscripcionBaja() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.eliminarSuscripcionesBajas)
+        .then((respuesta) => {
+          this.permisoEliminarSuscripcionBaja = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisoNuevaCondicion() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.nuevaCondicion)
+        .then((respuesta) => {
+          this.permisoNuevaCondicion = respuesta;
+    })
+    .catch((error) => console.error(error));
   }
 
   //Necesario para liberar memoria
@@ -210,6 +261,17 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       this.checkboxAsignacionAutomatica = false;
     }
 
+  }
+
+  checkGuardar(){
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoGuardarServicios, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+	    this.comprobacionPreGuardar();
+	  }
   }
 
   //Si se ha activado el check de Asignación automática, o bien se ha cambiado la condición de suscripción (estando marcado “Asignación automática”):
@@ -349,7 +411,12 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   }
 
   borrarSuscripcionesBajas() {
-    this.showModalSuscripcionesBajas = true;
+    let msg = this.commonsService.checkPermisos(this.permisoEliminarSuscripcionBaja, undefined);
+	    if (msg != null) {
+	      this.msgs = msg;
+	    } else {
+        this.showModalSuscripcionesBajas = true;
+	    }
   }
 
   cancelarDialogBorrarSuscripcionesBajas() {
@@ -357,8 +424,15 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   }
 
   nuevacondicion(){
-    sessionStorage.setItem("servicioDetalle", JSON.stringify(this.servicio));
-    this.router.navigate(["/fichaConsulta"]);
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoNuevaCondicion, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+      sessionStorage.setItem("servicioDetalle", JSON.stringify(this.servicio));
+      this.router.navigate(["/fichaConsulta"]);
+	  }
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
@@ -455,23 +529,6 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       }
     );
   }
-  /* getComboCondicionSuscripcion() {
-    this.progressSpinner = true;
-
-    this.subscriptionTypeSelectValues = this.sigaServices.getParam("fichaServicio_comboCondicionSuscripcion", "?idConsulta=" + this.servicio.idconsulta).subscribe(
-      CondicionSuscripcionValues => {
-        this.condicionesSuscripcionObject = CondicionSuscripcionValues;
-
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-  } */
 
   //Metodo para obtener todos los codigos PYS_SERVICIOSINSTITUCION en la institucion actual
   obtenerCodigosPorColegio() {
@@ -499,13 +556,12 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     if (!this.servicio.editar) {
       this.subscriptionCrearServicioInstitucion = this.sigaServices.post("fichaServicio_crearServicio", this.servicio).subscribe(
         response => {
-
-          if (JSON.parse(response.body).error.code == 500) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          } else {
+          if (response.status == 200) {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.desactivarBotonEliminar = false;
             this.mostrarTarjetaFormaPagos.emit(true);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
 
           this.progressSpinner = false;
@@ -539,6 +595,17 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     }
   }
 
+  checkEliminarReactivar(){
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoEliminarReactivarServicios, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+	    this.eliminarReactivar();
+	  }
+  }
+
   //Metodo para activar/desactivar servicios mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tenga alguna solicitud ya existente, en caso contrario se hara borrado fisico (DELETE)
   eliminarReactivar() {
     let keyConfirmation = "deletePlantillaDoc";
@@ -561,11 +628,11 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
 
         this.subscriptionActivarDesactivarServicios = this.sigaServices.post("serviciosBusqueda_activarDesactivar", listaServiciosDTO).subscribe(
           response => {
-            if (JSON.parse(response.body).error.code == 500) {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            } else {
+            if (response.status == 200) {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
               this.desactivarBotonEliminar = false;
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
             }
           },
           err => {

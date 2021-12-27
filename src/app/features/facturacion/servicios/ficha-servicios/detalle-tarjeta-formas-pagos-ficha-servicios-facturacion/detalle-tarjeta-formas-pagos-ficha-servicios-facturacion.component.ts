@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { ComboObject } from '../../../../../models/ComboObject';
 import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
+import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
@@ -32,15 +34,20 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
   aGuardar: boolean = false; //Usada en condiciones que validan la obligatoriedad, definida al hacer click en el boton guardar
   obligatorio: boolean = true; //Usada para establecer como obligatorios o no obligatorios los campos dependiendo de si esta marcado o no el checkbox no facturable
 
+  //Permisos
+  permisoGuardarFormasPagoServicios: boolean;
+
   //Suscripciones
   subscriptionIvasNoDerogablesSelectValues: Subscription;
   subscriptionInternetPayMethodsSelectValues: Subscription;
   subscriptionSecretaryPayMethodsSelectValues: Subscription;
   subscriptionCrearFormasDePago: Subscription;
 
-  constructor(private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
+  constructor(private commonsService: CommonsService, private sigaServices: SigaServices, private translateService: TranslateService, private router: Router) { }
 
   ngOnInit() {
+    this.checkPermisos();
+
     if (sessionStorage.getItem('esColegiado'))
       this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
 
@@ -66,6 +73,19 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
     this.getComboTipoIvaNoDerogables();
     this.getComboFormasDePagoInternet();
     this.getComboFormasDePagoSecretaria();
+  }
+
+  checkPermisos(){
+    this.getPermisoGuardarFormasPagoServicios()
+  }
+
+  getPermisoGuardarFormasPagoServicios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.guardarFormasPagoServicios)
+        .then((respuesta) => {
+          this.permisoGuardarFormasPagoServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
   }
 
   //Necesario para liberar memoria
@@ -116,9 +136,9 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
     if (this.servicioOriginal.nofacturable == "1") {
       this.checkboxNoFacturable = true;
       this.onChangeNoFacturable();
-    } else if (this.servicioOriginal.nofacturable == "0") {
+    } else if (this.servicioOriginal.nofacturable == "0" || this.servicioOriginal.nofacturable == null) {
       this.checkboxNoFacturable = false;
-      this.onChangeNoFacturable;
+      this.onChangeNoFacturable();
     }
 
     if (this.servicioOriginal.facturacionponderada == "1") {
@@ -126,6 +146,17 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
     } else if (this.servicioOriginal.facturacionponderada == "0") {
       this.checkboxFacturacionProporcionalDiasInscripcion = false;
     }
+  }
+
+  checkGuardar(){
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoGuardarFormasPagoServicios, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+	    this.guardar();
+	  }
   }
 
   guardar() {
@@ -234,12 +265,13 @@ export class DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent impleme
       response => {
         this.progressSpinner = false;
 
-        if (JSON.parse(response.body).error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
+        if (response.status == 200) {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.mostrarTarjetaPrecios.emit(true);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
+        
       },
       err => {
         this.progressSpinner = false;

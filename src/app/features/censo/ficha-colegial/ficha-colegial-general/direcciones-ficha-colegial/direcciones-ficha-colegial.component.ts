@@ -445,6 +445,11 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   serviceDeleteDirection(datosDelete, all) {
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
       data => {
+        //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+        //let peticion = new RevisionAutLetradoItem();
+        //peticion.idPersona = this.generalBody.idPersona.toString();
+        //peticion.fechaProcesamiento = new Date();
+        //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
         this.progressSpinner = false;
         this.showSuccess();
 

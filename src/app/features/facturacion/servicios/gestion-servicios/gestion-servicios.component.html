@@ -77,26 +77,32 @@
 
     <p-footer>
       <div class="text-right main-button">
+        <!-- COMUNICAR -->
         <button *ngIf="selectedRows && selectedRows.length > 0" (click)="navigateComunicar(selectedRows)" pButton
           type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
 
+        <!-- SUSCRIBIR -->
         <button *ngIf="selectedRows && selectedRows.length > 0" [disabled]="selectedRows.length != 1" (click)="checkServ()" pButton
           type="button" icon="fa-shopping-basket" iconPos="left"
           label="{{'facturacion.servicios.suscribir' | translate }}"></button>
 
+        <!-- MOSTRAR HISTORICO -->
         <button *ngIf="!historico" (click)="getListaServiciosHistorico(); selectedRows=[]" pButton type="button"
           icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
+        <!-- OCULTAR HISTORICO -->
         <button *ngIf="historico" (click)="getListaServicios(); selectedRows=[]" pButton type="button" icon="fa fa-undo"
           iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
+        <!-- ELIMINAR -->
         <button
           [disabled]="(selectedRows == '') || (numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || newRegisterRow"
           *ngIf="(numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || (numSelectedAbleRegisters >= 0 && numSelectedDisableRegisters == 0)"
-          (click)="activarDesactivar(selectedRows)" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
+          (click)="checkActivarDesactivar(selectedRows)" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
           label="{{'general.boton.eliminar' | translate}}"></button>
 
-        <button [disabled]="(selectedRows == '')" (click)="activarDesactivar(selectedRows)"
+        <!-- REACTIVAR -->
+        <button [disabled]="(selectedRows == '')" (click)="checkActivarDesactivar(selectedRows)"
           *ngIf="numSelectedAbleRegisters == 0 && numSelectedDisableRegisters > 0" pButton type="button"
           icon="fa fa-undo " iconPos="left"
           label="{{'facturacion.maestros.tiposproductosservicios.reactivar' | translate}}"></button>

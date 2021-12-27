@@ -41,12 +41,12 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div *ngIf="col.field == 'descripciontipo'">
-              <label *ngIf="rowData.nuevo == undefined" [ngClass]="{'historico': rowData.fechabaja != null}">{{
+              <label *ngIf="rowData.nuevo == false" [ngClass]="{'historico': rowData.fechabaja != null}">{{
                 rowData[col.field]}}</label>
 
-              <p-dropdown *ngIf="rowData.nuevo != undefined" [ngClass]="{'historico': rowData.fechabaja != null}"
+              <p-dropdown *ngIf="rowData.nuevo == true" [ngClass]="{'historico': rowData.fechabaja != null}"
                 autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="rowData.idtiposervicios"
-                [options]="comboItem" showClear="true" styleClass="widthAll" (keydown)="changeTableField(rowData)">
+                [options]="comboItem" [showClear]="false" styleClass="widthAll" (keydown)="changeTableField(rowData)">
               </p-dropdown>
 
             </div>
@@ -54,9 +54,9 @@
               <label *ngIf="!edit || historico" [ngClass]="{'historico': rowData.fechabaja != null}">{{
                 rowData[col.field]}}</label>
 
-              <input *ngIf="edit && !historico" [ngClass]="{'historico': rowData.fechabaja != null}" type="text"
+              <input *ngIf="edit && !historico" [ngClass]="{'historico': rowData.fechabaja != null, 'camposObligatorios': rowData.descripcion == ''}" type="text"
                 class="form-control mt-2" pInputText [(ngModel)]="rowData[col.field]"
-                (keydown)="changeTableField(rowData)">
+                (keyup)="changeTableField(rowData)">
             </div>
           </td>
         </tr>
@@ -109,10 +109,10 @@
         <button
           [disabled]="(selectedRows == '') || (numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || newRegisterRow"
           *ngIf="(numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || (numSelectedAbleRegisters >= 0 && numSelectedDisableRegisters == 0)"
-          (click)="activarDesactivar(selectedRows)" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
+          (click)="checkPermisoActivarDesactivar(selectedRows)" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
           label="{{'general.boton.eliminar' | translate}}"></button>
 
-        <button [disabled]="(selectedRows == '')" (click)="activarDesactivar(selectedRows)"
+        <button [disabled]="(selectedRows == '')" (click)="checkPermisoActivarDesactivar(selectedRows)"
           *ngIf="numSelectedAbleRegisters == 0 && numSelectedDisableRegisters > 0" pButton type="button"
           icon="fa fa-undo " iconPos="left"
           label="{{'facturacion.maestros.tiposproductosservicios.reactivar' | translate}}"></button>

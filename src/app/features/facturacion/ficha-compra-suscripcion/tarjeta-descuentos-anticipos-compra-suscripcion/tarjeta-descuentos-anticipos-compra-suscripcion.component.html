@@ -26,7 +26,7 @@
           <div class="row">
             <div class="col-3">
               <label>{{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }}
-                <span>{{ ficha.impTotal - ficha.impPagado }} €</span>
+                <span>{{ ficha.impTotal - ficha.impAnti | number:'.2'}} €</span>
               </label>
             </div>
             <div class="d-flex justify-content-start mb-1 ml-auto">
@@ -40,7 +40,7 @@
       <div class="card-body p-0">
         <p-table *ngIf="ficha.productos != null" #descTable [value]="descuentosTarjeta" [columns]="colsProd" [(selection)]="selectedRows"
           selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
-          [first]="first" (onRowSelect)="onRowSelect(selectedDatos)"
+          [first]="first" (onRowSelect)="onRowSelect()"
           (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
 
           <ng-template pTemplate="colgroup" let-columns>
@@ -68,7 +68,7 @@
                   <span>{{rowData[col.field]}}</span>
                 </div>
                 <div *ngIf="col.field =='importe'">
-                  <span>{{rowData[col.field]}} €</span>
+                  <span>{{rowData[col.field] | number:'.2'}} €</span>
                   <!-- <span *ngIf="!editable" (click)="changeEditable()">{{rowData[col.field]}} €</span>
                   <input *ngIf="editable"
                 pInputText type="text" (input)="checkTotal()" (keypress)="numberOnly($event)" [(ngModel)]="rowData[col.field]" type="number" pInputText step=".01">
@@ -122,7 +122,7 @@
 
         <p-table *ngIf="ficha.productos == null" #descTable [value]="descuentosTarjeta" [columns]="colsServ" [(selection)]="selectedRows"
           selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
-          [first]="first" (onRowSelect)="onRowSelect(selectedDatos)"
+          [first]="first" (onRowSelect)="onRowSelect()"
           (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
 
           <ng-template pTemplate="colgroup" let-columns>
@@ -151,10 +151,10 @@
                 </div>
                 <div *ngIf="col.field =='importe'">
                   <span>{{rowData[col.field]}} €</span>
-                  <!-- <span *ngIf="!editable" (click)="changeEditable()">{{rowData[col.field]}} €</span>
-                  <input *ngIf="editable"
-                pInputText type="text" (input)="checkTotal()" (keypress)="numberOnly($event)" [(ngModel)]="rowData[col.field]" type="number" pInputText step=".01">
-               -->
+                </div>
+
+                <div *ngIf="col.field =='descripcion'">
+                  <span class="enlace" (click)="openTabMonedero(rowData)">{{rowData[col.field]}}</span>
                 </div>
                 
                 </td>
@@ -195,18 +195,16 @@
           </ng-template>
         </p-table>
 
-        <p-footer>
+        <!-- Se eliminan los botones de la tabla de suscripciones ya que no se utilizan -->
+        <p-footer *ngIf="ficha.productos != null">
           <div class="text-right main-button">
-            <!-- Nuevo -->
-            <!-- Revisar condicion de no facturado -->
-            <button pButton (click)="nuevoAnticipo()" type="button" icon="fa fa-plus" iconPos="left"
+            <button pButton (click)="checkNuevoAnticipo()" type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"
-              [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.facturas > 0 || (ficha.productos != null && descuentosTarjeta.length > 0)"></button>
-            <!-- Borrar -->
-            <!-- Revisar condicion de no facturado -->
+              [disabled]="ficha.fechaAceptada == null || ficha.fechaDenegada != null || descuentosTarjeta.length != 0 ||
+              (ficha.productos != null  && this.ficha.facturas.length >0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == 'Factura')"></button>
             <button pButton (click)="borrarAnticipo()" type="button" icon="fa fa-eraser" iconPos="left"
               label="{{ 'general.boton.borrar' | translate}}"
-              [disabled]="(ficha.fechaAceptada != null || ficha.fechaDenegada != null) || selectedRows.length == 0 || ficha.facturas > 0 || disableBorrar"></button>
+              [disabled]="selectedRows.length == 0 || (ficha.productos != null  && this.ficha.facturas.length >0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == 'Factura')"></button>
           </div>
         </p-footer>
 
@@ -218,3 +216,17 @@
     <div *ngIf="progressSpinner" class="overlay-spinner">
       <div class="loader"></div>
     </div>
+
+  <p-dialog responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModal"
+    (onHide)="cerrarDialog()">
+
+    <label>{{ "facturacionSJCS.facturacionesYPagos.importe" | translate }}
+    </label>
+    <input [(ngModel)]="impNewAnti" type="number" class="form-control" step=".01" pInputText />
+
+    <!-- Guardar -->
+    <!-- Se permite guardar aunque la peticion ya haya sido aceptada porque en algunos casos se puede modificar la fecha de alta y baja -->
+    <button pButton (click)="anadirAnticipo()" type="button" icon="far fa-save" iconPos="left"
+      label="{{ 'general.boton.guardar' | translate}}"></button>
+            
+  </p-dialog>

@@ -10,7 +10,6 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
-import { ListaProductosCompraItem } from '../../../../models/ListaProductosCompraItem';
 import { SigaStorageService } from '../../../../siga-storage.service';
 
 
@@ -40,6 +39,9 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   first = 0;
   buscadores = [];
 
+  //Permisos
+  eliminarReactivarProductos: boolean;
+
   //Variables control
   historico: boolean = false; //Indica si se estan mostrando historicos o no para por ejemplo ocultar/mostrar los botones de historico.
   //Variables para mostrar boton reactivar o eliminar
@@ -59,6 +61,8 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
+    this.checkPermisos();
+
     if (this.persistenceService.getPaginacion() != undefined) {
       let paginacion = this.persistenceService.getPaginacion();
       this.persistenceService.clearPaginacion();
@@ -77,6 +81,23 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     if (this.subscriptionActivarDesactivarProductos)
       this.subscriptionActivarDesactivarProductos.unsubscribe();
   }
+
+  //INICIO METODOS PERMISOS
+
+  checkPermisos() {
+    this.getPermisoEliminarReactivarProducto(); 
+  }
+
+  getPermisoEliminarReactivarProducto() {
+    this.commonsService
+       .checkAcceso(procesos_PyS.eliminarReactivarProductos)
+        .then((respuesta) => {
+           this.eliminarReactivarProductos = respuesta;
+        })
+    .catch((error) => console.error(error));
+  }
+
+  //FIN METODOS SERVICIOS
 
   //INICIO METODOS P-TABLE
   //Inicializa los valores del combo Mostar X registros
@@ -292,6 +313,15 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   //FIN METODOS COMPONENTE
 
   //INICIO SERVICIOS
+  checkActivarDesactivar(selectedRows){ 
+    let msg = this.commonsService.checkPermisos(this.eliminarReactivarProductos, undefined);
+      if (msg != null) {
+        this.msgs = msg;
+      } else {
+        this.activarDesactivar(selectedRows);
+      }   
+  }
+
   //Metodo para activar/desactivar productos mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tengan una transaccion pendiente de compra o compras ya existentes, en caso contrario se hara borrado fisico (DELETE)
   activarDesactivar(selectedRows) {
     let keyConfirmation = "deletePlantillaDoc";
@@ -311,15 +341,16 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         let listaProductosDTO = new ListaProductosDTO();
         listaProductosDTO.listaProductosItems = selectedRows
         this.subscriptionActivarDesactivarProductos = this.sigaServices.post("productosBusqueda_activarDesactivar", listaProductosDTO).subscribe(
-          data => {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          },
-          err => {
-            if (err != undefined && JSON.parse(err.error).error.description != "") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          response => {
+            
+            if (response.status == 200) {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
             }
+       
+          },
+          err => {
             this.progressSpinner = false;
           },
           () => {

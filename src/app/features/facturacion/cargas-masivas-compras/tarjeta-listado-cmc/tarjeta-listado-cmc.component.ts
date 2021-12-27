@@ -117,7 +117,11 @@ export class TarjetaListadoCmcComponent implements OnInit {
         if(response.file.size > 0 && response.status == 200){
           let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
           saveAs(response.file, filename);
-        }else{
+        }
+        else if(response.status == 204){
+          this.showMessage("error", this.translateService.instant("general.message.informacion"), "**No se ha encontrado el fichero asociado a la carga");
+        }
+        else{
            this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
         }
 

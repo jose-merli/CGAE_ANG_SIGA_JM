@@ -191,7 +191,7 @@
               </div> -->
             </div>
             <!-- Desplegable condicional que solo aparece si la forma de pago seleccionada es "Domiciliación bancaria". corresponde a idformapago = 20 -->
-            <div *ngIf="selectedPago == '80'" class="form-group col-lg-6 col-md-6">
+            <div *ngIf="selectedPago == '80' || selectedPago == '20'" class="form-group col-lg-6 col-md-6">
               <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}
               </label>
               <p-dropdown class="select-form" [options]="cuentasBanc"
@@ -204,7 +204,7 @@
             <!-- Guardar -->
             <button pButton (click)="updateProductosPeticion()" type="button" icon="far fa-save" iconPos="left"
               label="{{ 'general.boton.guardar' | translate}}"
-              [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.fechaPendiente == null"></button>
+              [disabled]="ficha.fechaPendiente == null"></button> <!--  ficha.fechaAceptada != null || ficha.fechaDenegada != null ||  -->
             <!-- Nuevo -->
             <button pButton (click)="openHideModal()" type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"

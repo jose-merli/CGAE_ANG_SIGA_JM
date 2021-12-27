@@ -360,7 +360,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
         }
     })
     //Revision de los campos de forma de pago
-    if(this.selectedPago == null || campoVacio || (this.selectedPago =="80" && this.datosTarjeta.cuentaBancSelecc == null)){
+    if(this.selectedPago == null || campoVacio || ((this.selectedPago =="80" || this.selectedPago == '20') && this.datosTarjeta.cuentaBancSelecc == null)){
       return true;
     }
     return false;
@@ -385,6 +385,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     this.datosTarjeta.totalNeto = totalNeto.toFixed(2);
     this.datosTarjeta.totalIVA = totalIVA.toFixed(2);
     this.datosTarjeta.impTotal = impTotal.toFixed(2);
+    this.ficha.impTotal = impTotal.toFixed(2);
   }
 
   openTab(selectedRow: ListaServiciosSuscripcionItem) {
@@ -448,7 +449,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
         i++;
       }
       this.checkTotal();
-      this.checkFormasPagoComunes(this.serviciosTarjeta);
+      //this.checkFormasPagoComunes(this.serviciosTarjeta);
       this.getComboPrecios();
     }
 
@@ -538,7 +539,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       });
     });
 
-    if (result.length > 0) {
+    if (result.length > 0 || this.ficha.idFormaPagoSeleccionada != null) {
       //Comprobamos si las formas de pago comunes se corresponden con 
       //las formas de pago permitidas al usuario ( por internet o por secretaria)
       // Personal del colegio = pago por secretaria ("S"), colegiado = formas de pago por internet ("A").
@@ -557,6 +558,14 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
             resultUsu.push(serv.idFormasPago.split(",")[index]);
           }
         }
+      }
+
+      //Se añade la forma de pago seleccionada en el caso que no añadiera anteriormente
+      //Esto para mostrar formas de pago seleccionadas en el pasado o
+      //Para los casos en los que el servicio haya cambiado sus formas de pago despues de 
+      //definir su suscripcion
+      if(resultUsu.indexOf(this.ficha.idFormaPagoSeleccionada)  == -1){
+        resultUsu.push(this.ficha.idFormaPagoSeleccionada);
       }
 
       if(resultUsu.length > 0){
@@ -675,7 +684,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
   onChangePago(){
     this.newFormaPagoCabecera();
-    if(this.selectedPago == "80" && this.ficha.idPersona == null){
+    if((this.selectedPago == "80" || this.selectedPago == '20')&& this.ficha.idPersona == null){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "** Debe tener un cliente seleccionado para mostrar las cuentas bancarias asociadas");
     }
   }
@@ -809,10 +818,10 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
               this.comboPrecios = [];
               let i = 0;
               serv.idComboPrecio = "0";
-              let total = 1000000;//REVISAR. Solucion temporal no optima.
+              let total = null;
               this.arrayPrecios.forEach(el =>{
                 //Comprobamos la mejor tarifa para la seleccion por defecto
-                if(total > ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100))){
+                if(total == null || total > ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100))){
                   total = ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100));
                   //Se asigna el precio por defecto unicamente cuando no tiene uno ya elegido
                   if(serv.idPrecioServicio == null){
@@ -854,7 +863,12 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
   onChangePrecio(rowData : ListaServiciosSuscripcionItem){
     if(rowData.idComboPrecio != null){
-      rowData.precioServicioDesc = this.arrayPrecios[rowData.idComboPrecio].descripcionprecio.toString(); 
+      if(this.arrayPrecios[rowData.idComboPrecio].descripcionprecio != null){
+        rowData.precioServicioDesc = this.arrayPrecios[rowData.idComboPrecio].descripcionprecio.toString(); 
+      }
+      else{
+        rowData.precioServicioDesc = " ";
+      }
       rowData.idPrecioServicio = this.arrayPrecios[rowData.idComboPrecio].idpreciosservicios.toString();
       rowData.precioServicioValor = this.arrayPrecios[rowData.idComboPrecio].precio;
       rowData.periodicidadValor = this.arrayPrecios[rowData.idComboPrecio].periodicidadValor.toString();

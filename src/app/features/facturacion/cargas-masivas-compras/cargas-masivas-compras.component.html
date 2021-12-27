@@ -10,7 +10,7 @@
 <app-tarjeta-fichero-modelo-cmc></app-tarjeta-fichero-modelo-cmc> 
 <app-tarjeta-subida-fichero-cmc [permisoEscritura]="permisoEscritura"></app-tarjeta-subida-fichero-cmc>
 
-<app-tarjeta-busqueda-cmc #filtro [permisoEscritura]="permisoEscritura" (filtrosValues) = "getFiltrosValues($event)" (search)="search()"></app-tarjeta-busqueda-cmc>
+<app-tarjeta-busqueda-cmc #filtro [permisoEscritura]="permisoEscritura" (filtrosValues) = "getFiltrosValues()"></app-tarjeta-busqueda-cmc>
 <app-tarjeta-listado-cmc #lista *ngIf="buscar" [permisos]="permisoEscritura" [datos]="datos" (search)="search()"></app-tarjeta-listado-cmc>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

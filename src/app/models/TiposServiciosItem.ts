@@ -4,6 +4,7 @@ export class TiposServiciosItem {
     fechaBaja: Date;
     idservicio: number;
     idTipoServicios: number;
+    nuevo: boolean;
 
     constructor() { }
 }

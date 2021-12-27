@@ -1,4 +1,5 @@
 import { ListaMovimientosMonederoItem } from "./ListaMovimientosMonederoItem";
+import { ListaServiciosMonederoItem } from "./ListaServiciosMonederoItem";
 
 export class FichaMonederoItem {
 
@@ -13,8 +14,11 @@ export class FichaMonederoItem {
     //TARJETA MOVIMIENTOS
     movimientos: ListaMovimientosMonederoItem[];
 
-    idLinea: string; //Identificador del monedero
-    anioLinea : string;
+    //TARJETA SERVICIOS
+    servicios: ListaServiciosMonederoItem[]; 
+
+    idAnticipo: string; //Identificador del monedero
+    anioAnticipo : string;
     
     constructor() {}
   }

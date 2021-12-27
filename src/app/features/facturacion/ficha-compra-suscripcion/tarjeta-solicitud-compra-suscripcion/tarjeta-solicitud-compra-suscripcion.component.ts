@@ -158,7 +158,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     } else if(this.checkProductos()){
       if(this.tarjProductos.productosTarjeta.length == 0){
         this.showMessage("error",
-        this.translateService.instant("facturacion.productos.noBorrarProductos"), //REVISAR
+        this.translateService.instant("general.message.camposObligatorios"), 
         this.translateService.instant("facturacion.productos.prodNecesario")
         );
       }
@@ -314,7 +314,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 		}
   }
 
-  // REVISAR: Añadir comprobación de facturación
+  
   checkAnular(){
     let msg = null;
     if(this.ficha.productos!= null){
@@ -332,7 +332,6 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
 		} 
     //Se comprueba que todos los productos seleccionados tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
-    //REVISAR: Cambiar mensaje
     else if(this.esColegiado && this.ficha.productos != null && (this.ficha.productos.find(el => el.solicitarBaja == "0") != undefined)){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitarBajaProd"), this.translateService.instant("facturacion.productos.solicitarBajaProdDesc"));
     }
@@ -348,9 +347,10 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     }
     //Se comprueba si hay alguna factura asociada cuando el personal del colegio va a anular una petición
     //REVISAR: Revisar concepto de factura anulada y no anulada y su anulación.
-    // else if(!this.esColegiado && this.ficha.facturas != null && this.ficha.facturas.length > 0){
-    //   this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
-    // }
+    //Por ahora, e comprueba si la ultima entrada de la tarjeta facturas es una anulación o una factura
+    else if(!this.esColegiado && this.ficha.facturas != null && this.ficha.facturas.length > 0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == "Factura"){
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+    }
     else{
       this.confirmAnular();
     }
@@ -358,7 +358,6 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   confirmAnular() {
 
-    //REVISAR MENSAJE
     let mess = this.translateService.instant(
       "facturacion.productos.anulConf"
     );

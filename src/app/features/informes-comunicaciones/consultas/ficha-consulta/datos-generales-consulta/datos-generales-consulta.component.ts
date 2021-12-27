@@ -11,6 +11,8 @@ import { ModelosComConsultasItem } from '../../../../../models/ModelosComConsult
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
 import { Router } from '@angular/router';
+import { QueryBuilderDTO } from '../../../../../models/QueryBuilderDTO';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: "app-datos-generales-consulta",
@@ -175,8 +177,58 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     }
   }
 
+  queryBuilderDTO: QueryBuilderDTO = new QueryBuilderDTO();
+  subscriptionGuardarDatosConstructor: Subscription;
+  estabaPulsadoConsultaExperta: boolean;
+  
   emitUsoConstructorConsultaExperta(){
-    this.emitConstructorConsultaExperta.emit(this.constructorConsultaExperta);
+    if(this.estabaPulsadoConsultaExperta == true && this.constructorConsultaExperta == 'constructor'){
+      let keyConfirmation = "deletePlantillaDoc";
+
+      this.queryBuilderDTO.consulta = "";
+      this.queryBuilderDTO.idconsulta = this.body.idConsulta.toString();
+
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant("informesycomunicaciones.fichaconsultas.datosgenerales.avisoborradoconsulta"),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.progressSpinner = true;
+
+          this.subscriptionGuardarDatosConstructor = this.sigaServices.post("constructorConsultas_guardarDatosConstructor", this.queryBuilderDTO).subscribe(
+            response => {
+      
+              if (response.status == 500) {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              } else {
+                this.emitConstructorConsultaExperta.emit(this.constructorConsultaExperta);
+                this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              }
+      
+              this.progressSpinner = false;
+            },
+            err => {
+              this.progressSpinner = false;
+            },
+            () => {}
+          );
+        },
+        reject: () => {
+          this.constructorConsultaExperta = 'consultaExperta';
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+    }else{
+      this.emitConstructorConsultaExperta.emit(this.constructorConsultaExperta);
+    }
   }
 
   // Mensajes
@@ -209,6 +261,16 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  //Inicializa las propiedades necesarias para el dialogo de confirmacion
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   getInstitucion() {

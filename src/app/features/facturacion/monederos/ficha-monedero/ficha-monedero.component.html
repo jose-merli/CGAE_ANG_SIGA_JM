@@ -9,7 +9,7 @@
       </app-datos-generales-monedero>
       <app-movimientos-monedero #movimientos [(ficha)]="ficha" (scrollToOblig)="scrollToOblig($event)" (actualizaFicha)="actualizarFicha()" [resaltadoDatos]="resaltadoDatos" id="movimientos">
       </app-movimientos-monedero>
-      <app-servicios-asociados-monedero> 
+      <app-servicios-asociados-monedero #servicios [(ficha)]="ficha" id="servicios"> 
       </app-servicios-asociados-monedero>
   </div>
 </div>

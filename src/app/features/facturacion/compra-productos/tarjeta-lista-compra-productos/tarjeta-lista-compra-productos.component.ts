@@ -59,8 +59,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
       value: 40
     }
   ];
-
-  permisoSolicitarCompra: boolean = false;
+  
   permisoAprobarCompra: boolean = false;
   permisoDenegar: boolean = false;
   permisoAnularCompra: boolean = false;
@@ -125,7 +124,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     this.getPermisoDenegar();
     this.getPermisoAnularCompra();
   }
-
+ 
   checkAprobar() {
     let msg = this.commonsService.checkPermisos(this.permisoAprobarCompra, undefined);
 
@@ -165,7 +164,6 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
         this.selectedRows = this.selectedRows.filter( ( el ) => !compShow.includes( el ) );
       } 
       //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
-      //REVISAR : Cambiar mensaje
       //Este parametro "solicitarBaja" de este objeto tiene una logica distinta a la de los servicios
       if(this.esColegiado && (this.selectedRows.filter(el => el.solicitarBaja != "0") != undefined)){
         compShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
@@ -177,13 +175,12 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 
   confirmAnular(compShow) {
 
-    //REVISAR MENSAJE
     let mess = this.translateService.instant(
       "facturacion.productos.anulConf"
     );
 
     //REVISAR LOGICA FACTURAS
-    //Se comprueba si alguna solicitud tiene alguna factura asoviada
+    //Se comprueba si alguna solicitud tiene alguna factura asociada
     if(this.selectedRows.find(el => el.facturas != "0") != undefined) {
       mess = this.translateService.instant("facturacion.productos.factNoAnuladaPet");
     }

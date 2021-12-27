@@ -30,7 +30,6 @@ export class FichaCompraSuscripcionItem {
     totalIVA: string;
     impTotal: string;
     pendPago: number;
-    impPagado: number;
     cuentaBancSelecc: string;
     productos: ListaProductosCompraItem[];
 
@@ -39,7 +38,7 @@ export class FichaCompraSuscripcionItem {
     facturas: ListaFacturasPeticionItem[];
 
     //TARJETA DESCUENTOS Y ANTICIPOS
-
+    impAnti: number;
 
     //TARJETA SERVICIOS
     servicios: ListaServiciosSuscripcionItem[]; 

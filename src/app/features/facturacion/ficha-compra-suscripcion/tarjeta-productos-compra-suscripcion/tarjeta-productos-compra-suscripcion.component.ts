@@ -170,8 +170,10 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
               this.selectedPago = "-1";
             }
             else{
-            this.selectedPago = this.ficha.idFormaPagoSeleccionada.toString();
-            this.checkFormasPagoComunes(this.productosTarjeta);
+              this.selectedPago = this.ficha.idFormaPagoSeleccionada.toString();
+              if(this.comboPagos != undefined && this.comboPagos.length > 0 && this.comboProductos.length > 0 && this.ficha.productos.length >0){
+                this.checkFormasPagoComunes(this.productosTarjeta);
+              }
             }
           }
           this.newFormaPagoCabecera();
@@ -216,7 +218,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
         this.comboPagos = comboDTO.combooItems;
         this.progressSpinner = false;
-        if(this.ficha.productos.length >0){
+        if(this.ficha.productos.length >0 && this.comboProductos.length>0 && this.productosTarjeta.length > 0){
           this.checkFormasPagoComunes(this.productosTarjeta);
         }
 
@@ -292,12 +294,15 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.sigaServices.post("PyS_updateProductosPeticion", this.datosTarjeta).subscribe(
       n => {
 
-        if (n.status == 500) {
+        if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           this.checkTotal();
+          if(Number(this.ficha.impTotal)<Number(this.ficha.impAnti)){
+            this.ficha.impAnti = Number(this.ficha.impTotal);
+          }
 
           this.ficha.productos = JSON.parse(JSON.stringify(this.productosTarjeta));
           //this.actualizaFicha.emit();
@@ -361,7 +366,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
           campoVacio = true;
         }
     })
-    if(this.selectedPago == null || campoVacio || (this.selectedPago =="80" && this.datosTarjeta.cuentaBancSelecc == null)){
+    if(this.selectedPago == null || campoVacio || ((this.selectedPago =="80" || this.selectedPago == '20') && this.datosTarjeta.cuentaBancSelecc == null)){
       return true;
     }
     return false;
@@ -387,6 +392,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.datosTarjeta.totalNeto = totalNeto.toFixed(2);
     this.datosTarjeta.totalIVA = totalIVA.toFixed(2);
     this.datosTarjeta.impTotal = impTotal.toFixed(2);
+    this.ficha.impTotal = impTotal.toFixed(2);
   }
 
   //Se cambia la tabla a su estado editable en todas las columnas que se permitan según el estado 
@@ -406,7 +412,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.progressSpinner = true;
     let productoItem: ListaProductosItems = selectedRow;
     sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
-    sessionStorage.setItem("origin", "Compra");
+    // sessionStorage.setItem("origin", "Compra");
     sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
     this.router.navigate(["/fichaProductos"]);
   }
@@ -450,7 +456,10 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
         i++;
       }
       this.checkTotal();
-      this.checkFormasPagoComunes(this.productosTarjeta);
+
+      if(this.comboPagos != undefined && this.comboPagos.length > 0 && this.comboProductos != undefined){
+        this.checkFormasPagoComunes(this.productosTarjeta);
+      }
     }
 
   checkProductoSeleccionado(selectedProducto) {
@@ -538,7 +547,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       });
     });
 
-    if (result.length > 0) {
+    if (result.length > 0 || this.ficha.idFormaPagoSeleccionada != null) {
       //Comprobamos si las formas de pago comunes se corresponden con 
       //las formas de pago permitidas al usuario ( por internet o por secretaria)
       // Personal del colegio = pago por secretaria ("S"), colegiado = formas de pago por internet ("A").
@@ -557,6 +566,14 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
             resultUsu.push(prod.idFormasPago.split(",")[index]);
           }
         }
+      }
+
+      //Se añade la forma de pago seleccionada en el caso que no añadiera anteriormente
+      //Esto para mostrar formas de pago seleccionadas en el pasado o
+      //Para los casos en los que los productos han cambiado sus formas de pago despues de 
+      //definir su compra
+      if(resultUsu.indexOf(this.ficha.idFormaPagoSeleccionada)  == -1){
+        resultUsu.push(this.ficha.idFormaPagoSeleccionada);
       }
 
       if(resultUsu.length > 0){
@@ -677,7 +694,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
   onChangePago(){
     this.newFormaPagoCabecera();
-    if(this.selectedPago == "80" && this.ficha.idPersona == null){
+    if((this.selectedPago == "80" || this.selectedPago == '20') && this.ficha.idPersona == null){
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "** Debe tener un cliente seleccionado para mostrar las cuentas bancarias asociadas");
     }
   }

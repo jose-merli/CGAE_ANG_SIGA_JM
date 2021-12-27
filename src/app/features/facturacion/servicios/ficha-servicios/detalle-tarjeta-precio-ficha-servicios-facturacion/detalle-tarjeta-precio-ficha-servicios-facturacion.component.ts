@@ -6,6 +6,8 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ComboObject } from '../../../../../models/ComboObject';
 import { PreciosServicioObject } from '../../../../../models/PreciosServicioObject';
 import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
+import { procesos_PyS } from '../../../../../permisos/procesos_PyS';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -45,6 +47,11 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   edit: boolean = false; //Usado para ocultar/mostrar en html, etc.
   nuevo: boolean = false; //Usado para ocultar/mostrar en html, etc.
 
+  //Permisos
+  permisoGuardarPreciosServicios: boolean;
+  permisoNuevaCondicion: boolean;
+  permisoEliminarPrecios: boolean;
+
   //Suscripciones
   subscriptionListaPrecios: Subscription;
   subscriptionPeriodicidadList: Subscription;
@@ -52,9 +59,11 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   subscriptionCrearEditarPrecios: Subscription;
   subscriptionEliminarPrecios: Subscription;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
+  constructor(private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
+    this.checkPermisos();
+
     if (this.persistenceService.getPaginacion() != undefined) {
       let paginacion = this.persistenceService.getPaginacion();
       this.persistenceService.clearPaginacion();
@@ -86,6 +95,38 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     }
   }
 
+  checkPermisos(){
+    this.getGuardarPreciosServicios();
+    this.getPermisoNuevaCondicion();
+    this.getPermisoEliminarPrecios();
+  }
+
+  getGuardarPreciosServicios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.guardarPreciosServicios)
+        .then((respuesta) => {
+          this.permisoGuardarPreciosServicios = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisoNuevaCondicion() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.nuevaCondicion)
+        .then((respuesta) => {
+          this.permisoNuevaCondicion = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisoEliminarPrecios() {
+    this.commonsService
+      .checkAcceso(procesos_PyS.eliminarPreciosServicios)
+        .then((respuesta) => {
+          this.permisoEliminarPrecios = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
   //Necesario para liberar memoria
   ngOnDestroy() {
     if (this.subscriptionListaPrecios)
@@ -371,6 +412,17 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     this.getListaPrecios();
   }
 
+  checkGuardar(){
+    let msg = null;
+	  msg = this.commonsService.checkPermisos(this.permisoGuardarPreciosServicios, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+	    this.guardar();
+	  }
+  }
+
   guardar() {
     this.aGuardar = true;
 
@@ -509,6 +561,17 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     );
   }
 
+  checkPermisoEliminar(selectedRows){
+    let msg = null;
+    msg = this.commonsService.checkPermisos(this.permisoEliminarPrecios, undefined);
+  
+    if (msg != null) {
+      this.msgs = msg;
+    } else {
+     this.comprobacionEliminar(selectedRows);
+    }
+  }
+
   comprobacionEliminar(selectedRows) {
     let hayPrecioPorDefecto: boolean = false;
     selectedRows.forEach(precios => {
@@ -520,7 +583,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     if (!hayPrecioPorDefecto) {
       this.eliminar(selectedRows);
     } else if (hayPrecioPorDefecto) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El precio por defecto no puede ser eliminado, por favor deseleccionelo. ***");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.servicios.fichaservicio.avisoeliminacionpreciodefecto"));
     }
   }
 
@@ -581,9 +644,16 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   }
 
   nuevacondicion(){
-    sessionStorage.setItem("servicioDetalle", JSON.stringify(this.servicio));
-    sessionStorage.setItem("precioDetalle", JSON.stringify(this.selectedRows));
-    this.router.navigate(["/fichaConsulta"]);
+    let msg = null;
+      msg = this.commonsService.checkPermisos(this.permisoNuevaCondicion, undefined);
+  
+      if (msg != null) {
+        this.msgs = msg;
+      } else {
+        sessionStorage.setItem("servicioDetalle", JSON.stringify(this.servicio));
+        sessionStorage.setItem("precioDetalle", JSON.stringify(this.selectedRows));
+        this.router.navigate(["/fichaConsulta"]);
+      }
   }
 
   //FIN METODOS SERVICIOS
