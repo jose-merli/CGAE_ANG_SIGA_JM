@@ -7,6 +7,7 @@ import { CertificacionesItem } from '../../../../../models/sjcs/CertificacionesI
 import { CertificacionesObject } from '../../../../../models/sjcs/CertificacionesObject';
 import { EstadoCertificacionDTO } from '../../../../../models/sjcs/EstadoCertificacionDTO';
 import { EstadoCertificacionItem } from '../../../../../models/sjcs/EstadoCertificacionItem';
+import { FacturacionItem } from '../../../../../models/sjcs/FacturacionItem';
 import { MovimientosVariosApliCerDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerDTO';
 import { MovimientosVariosApliCerItem } from '../../../../../models/sjcs/MovimientosVariosApliCerItem';
 import { MovimientosVariosApliCerRequestDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerRequestDTO';
@@ -330,7 +331,6 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
   getMvariosAplicadosEnPagosEjecutadosPorPeriodo(payload: MovimientosVariosApliCerRequestDTO) {
 
     // SON DATOS DE PUREBA, ENTRAR CON LA INSTITUCION 2039 (LAS PALMAS)
-
     payload.fechaDesde = new Date("2018-12-10");
     payload.fechaHasta = new Date("2018-12-11");
 
@@ -354,6 +354,33 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         }
       );
     }
+  }
+
+  cerrarYenviar(event) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
+      this.progressSpinner = true;
+
+      this.sigaService.post("certificaciones_tramitarCertificacion", this.tarjetaFact.datos).subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          const resp = JSON.parse(data.body);
+
+          if (resp && resp.error && resp.error != null && resp.error.description != null && resp.error.code != null && (resp.error.code.toString() == "500" || resp.error.code.toString() == "400")) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
+          } else {
+
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+
+    }
+
   }
 
 }
