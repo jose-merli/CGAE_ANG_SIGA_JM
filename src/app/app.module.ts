@@ -12,7 +12,6 @@ import { CookieService } from 'ngx-cookie-service';
 import { ConfirmationService } from "primeng/api";
 import { AutoCompleteModule } from "primeng/autocomplete";
 import { ButtonModule } from "primeng/button";
-//import { EditorModule } from "primeng/editor";
 import { CalendarModule } from "primeng/calendar";
 import { CheckboxModule } from "primeng/checkbox";
 import { ChipsModule } from "primeng/chips";
@@ -634,6 +633,7 @@ import { ListaArchivosGuardiaComponent } from './features/sjcs/guardia/cargas-ma
 import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios.module';
 import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
+import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
 
 
 @NgModule({
@@ -971,7 +971,7 @@ import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
 		DetallePlantillaEnvioComponent,
 		TarjetaComunicacionesComponent,
 		ConsultasComponent,
-		//FichaConsultaComponent,
+		FichaConsultaComponent,
 		DatosGeneralesConsultaComponent,
 		ModelosComunicacionesConsultaComponent,
 		PlantillasEnviosConsultasComponent,
