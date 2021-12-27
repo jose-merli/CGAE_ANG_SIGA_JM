@@ -104,7 +104,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         this.tipos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.sigaServices.get("busquedaPerJuridica_etiquetas").subscribe(
@@ -120,7 +120,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       }
       ,
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.cols = [
@@ -224,7 +224,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -376,7 +376,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -428,7 +428,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -474,7 +474,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
   }
 
   paginate(event) {
-    console.log(event);
+    //console.log(event);
   }
 
   cancelar() {
@@ -527,7 +527,7 @@ export class BusquedaPersonasJuridicas extends SigaWrapper implements OnInit {
       },
       err => {
         this.showFail();
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.editar = true;

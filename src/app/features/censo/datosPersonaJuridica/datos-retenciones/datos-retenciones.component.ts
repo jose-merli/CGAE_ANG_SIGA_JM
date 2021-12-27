@@ -254,7 +254,7 @@ export class DatosRetencionesComponent implements OnInit {
         this.tiposRetenciones = n.maestroRetencionItem;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -416,7 +416,7 @@ export class DatosRetencionesComponent implements OnInit {
           // this.changeSort(event);
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.showFail();
           let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
@@ -484,7 +484,7 @@ export class DatosRetencionesComponent implements OnInit {
       .subscribe(
         data => { },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.volver();
@@ -572,7 +572,7 @@ export class DatosRetencionesComponent implements OnInit {
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
     }
@@ -602,7 +602,7 @@ export class DatosRetencionesComponent implements OnInit {
             // this.getUltimaFechaInicio()
           },
           err => {
-            console.log(err);
+            //console.log(err);
           },
           () => {
             if (this.datos.length > 0) {
@@ -649,9 +649,9 @@ export class DatosRetencionesComponent implements OnInit {
 
   irFichaColegial(id) {
     // // if (this.selectedDatos[0] == this.datos[0]) {
-    // console.log(this.selectedDatos)
-    // console.log(this.datos[0])
-    // console.log(id[0].fechaInicio);
+    // //console.log(this.selectedDatos)
+    // //console.log(this.datos[0])
+    // //console.log(id[0].fechaInicio);
     // if (id[0].fechaFin == null && id[0].fechaInicio != "") {
     //   this.isVolver = false;
     //   this.isCrear = true;
@@ -664,7 +664,7 @@ export class DatosRetencionesComponent implements OnInit {
     //   this.isVolver = true;
     // }
     // } else {
-    //   console.log('no')
+    //   //console.log('no')
     //   setTimeout(() => {
     //     this.selectedDatos = [];
     //     this.selectedDatos = [... this.selectedDatos];
@@ -737,7 +737,7 @@ export class DatosRetencionesComponent implements OnInit {
         this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if(this.tarjeta == "3" || this.tarjeta == "2"){

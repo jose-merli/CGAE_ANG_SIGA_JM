@@ -48,7 +48,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   isDisabledPoblacion: boolean = true;
   isDisabledProvincia: boolean = true;
   msgs: any;
-
+  esSociedad;
   formBusqueda: FormGroup;
   numSelected: number = 0;
   datos: any[];
@@ -341,7 +341,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         this.comboTipoEjg = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.arregloTildesCombo(this.comboTipoEjg);
@@ -360,7 +360,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
       , () => {
         this.progressSpinner = false;
@@ -375,7 +375,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         this.comboTipoEjgColegio = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.arregloTildesCombo(this.comboTipoEjgColegio);
@@ -388,7 +388,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         this.comboEstadoEjg = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.arregloTildesCombo(this.comboEstadoEjg);
@@ -403,7 +403,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         this.TipoDesignacion = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.arregloTildesCombo(this.TipoDesignacion);
@@ -416,7 +416,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         this.comboTipoSOJ = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.arregloTildesCombo(this.comboTipoSOJ);
@@ -429,7 +429,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         this.comboComisaria = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.arregloTildesCombo(this.comboComisaria);
@@ -442,7 +442,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         this.comboJuzgado = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.arregloTildesCombo(this.comboJuzgado);
@@ -658,7 +658,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
         this.keys = JSON.parse(data["filtros"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -696,12 +696,12 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
                 this.router.navigate(["/dialogoComunicaciones"]);
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -722,5 +722,12 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
     });
   }
 
+  recuperarColegiado(event){
+    if (event != undefined) {
+      this.filtros.nColegiado = event.nColegiado;
+    } else {
+      this.filtros.nColegiado = undefined;
+    }
+  }
 
 }

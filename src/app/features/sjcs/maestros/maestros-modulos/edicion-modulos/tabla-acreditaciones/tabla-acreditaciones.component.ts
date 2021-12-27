@@ -148,7 +148,7 @@ export class TablaAcreditacionesComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -165,7 +165,7 @@ export class TablaAcreditacionesComponent implements OnInit {
           this.comboAcreditacionesNew = res.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -178,7 +178,7 @@ export class TablaAcreditacionesComponent implements OnInit {
           this.comboAcreditaciones = res.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

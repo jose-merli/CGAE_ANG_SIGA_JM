@@ -27,7 +27,7 @@
         
         <app-relaciones *ngIf="permisoEscrituraRelaciones != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" 
         [tarjetaRelaciones]="tarjetaRelaciones" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraRelaciones" (modoEdicionSend)="modoEdicionSend($event)" 
-        [openTarjetaRelaciones]="openTarjetaRelaciones" (noAsocDes)="asignNoAsocDes($event)">
+        [openTarjetaRelaciones]="openTarjetaRelaciones" (noAsocDes)="asignNoAsocDes($event)" (actLetradoDesignado)="actualizaLetradoDesignado($event)">
         </app-relaciones>
         
         <app-estados *ngIf="permisoEscrituraEstados != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" 
@@ -42,7 +42,7 @@
         (newEstado)="newEstado()"  [openTarjetaInformeCalificacion]="openTarjetaInformeCalificacion">
         </app-informe-calificacion>
         
-        <app-resolucion *ngIf="permisoEscrituraResolucion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaResolucion]="tarjetaResolucion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraResolucion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaResolucion]="openTarjetaResolucion"
+        <app-resolucion id="resol" *ngIf="permisoEscrituraResolucion != undefined && modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaResolucion]="tarjetaResolucion" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraResolucion" (modoEdicionSend)="modoEdicionSend($event)" [openTarjetaResolucion]="openTarjetaResolucion"
         (newEstado)="newEstado()">
         </app-resolucion>
         

@@ -207,13 +207,13 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
                   this.solicitud.estadoMutualidad = estadoMut.valorRespuesta;
                 },
                 error => {
-                  console.log(error);
+                  //console.log(error);
                 }
               );
           }
         },
         error => {
-          console.log(error);
+          //console.log(error);
         },
         () => {
           // this.paisSelected = this.solicitud.idPais;
@@ -229,7 +229,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
                 this.progressSpinner = false;
               },
               error => {
-                console.log(error);
+                //console.log(error);
                 this.progressSpinner = false;
               }
             );
@@ -440,7 +440,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
           this.body.capitalObjetivo = prueba.capitalObjetivo;
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -500,7 +500,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         }
       },
       error => {
-        console.log(error);
+        //console.log(error);
       }
     );
 
@@ -509,7 +509,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         this.estadoCivil = result.combooItems;
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
 
       }
@@ -524,7 +524,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         // this.paisSelected = this.body.idpais
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
 
       }
@@ -540,7 +540,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
 
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
 
         }
@@ -554,7 +554,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
         );
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
 
       }
@@ -674,7 +674,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
           this.poblaciones = result.combooItems;
         },
         error => {
-          console.log(error);
+          //console.log(error);
         }
       );
   }
@@ -784,7 +784,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
                   this.progressSpinner = false;
                 },
                 error => {
-                  console.log(error);
+                  //console.log(error);
                   this.progressSpinner = false;
                 }
               );
@@ -795,7 +795,7 @@ export class MutualidadAbogaciaPlanUniversal implements OnInit {
           this.progressSpinner = false;
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.showFailMensaje(error.valorRespuesta);
           this.progressSpinner = true;
         },

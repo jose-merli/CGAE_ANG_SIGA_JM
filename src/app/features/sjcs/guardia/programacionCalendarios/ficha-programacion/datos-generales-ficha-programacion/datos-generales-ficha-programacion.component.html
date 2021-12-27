@@ -1,0 +1,117 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container" id="datosGenerales">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!openFicha" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('generales')">
+          <div class="img-colegiado">
+            <i class="fas fa-user icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10 cabeza">
+          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('generales')">
+            <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between sub">
+            <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}:
+              <strong>{{datosGenerales.nombre}}</strong>
+            </label>
+            <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}:
+              <strong> {{body.descripcion}}</strong>
+            </label>
+            <label>{{'dato.jgr.guardia.guardias.tipoGuardia' | translate}}:
+              <!--<strong>{{tipoGuardiaResumen.label}}</strong>-->
+            </label>
+            <label>{{'justiciaGratuita.guardia.gestion.sincCentralGuardias' | translate}}:
+              <strong *ngIf="!body.sincCentralGuardias">No</strong>
+              <strong *ngIf="body.sincCentralGuardias">Sí</strong>
+            </label>
+            <i (click)="abreCierraFicha('generales')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('generales')">
+        <div class="img-colegiado">
+          <i class="fas fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="openFicha && datosGenerales != undefined" class="card-body card-body-ficha">
+      <div class="row col-12">
+        <div class="form-group col-lg-12 col-md-12">
+          <label>Solo generar vacios</label>
+          <input type="checkbox" id="checkedchecky" name="checkedchecky" checked="checked" />
+        </div>
+
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{ "menu.justiciaGratuita.calendarios.ListaGuardias" | translate }} 
+          </label>
+          <p-dropdown class="select-form"  [filter]="true" [(ngModel)]="datosGenerales.listaGuarias.value"
+          [options]="comboConjuntoGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
+          [showClear]="true" (onChange)="changeListaGuardia($event)">
+        </p-dropdown>
+        </div>
+        <!-- FechaDesde -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{ "justiciaGratuita.Calendarios.FechaDesde" | translate }} (*)
+          </label>
+          <app-fecha required="true" [(value)]="datosGenerales.fechaDesde"  [inputStyleClass]="styleObligatorio(datosGenerales.fechaCalendarioDesde)" 
+            (valueChangeSelected)="fillFechaCalendarioDesde($event)"  (valueChangeInput)="fillFechaCalendarioDesde($event)"></app-fecha>
+        </div>
+
+        <!-- fechsHasta -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"justiciaGratuita.Calendarios.FechaHasta" | translate}} (*)
+          </label>
+          <app-fecha required="true" [(value)]="datosGenerales.fechaHasta" [inputStyleClass]="styleObligatorio(datosGenerales.fechaCalendarioDesde)" 
+            (valueChangeSelected)="fillFechaCalendarioHasta($event)"  (valueChangeInput)="fillFechaCalendarioHasta($event)"></app-fecha>
+        </div>
+
+        <!-- fechaProgramada -->
+        <div class="form-group col-lg-3 col-md-3">
+          <label>
+            {{"justiciaGratuita.Calendarios.FechaProgramada" | translate}}
+          </label>
+          <app-fecha [(value)]="datosGenerales.fechaProgramacion" [showTime]="true"
+          (valueChangeSelected)="fillFechaProgramada($event)"  (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
+        </div>
+        <!-- Estado -->
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{"justiciaGratuita.Calendarios.Estado" | translate}} </label>   
+            <input type="text" name="estado" value="" class="box" class="form-control" [(ngModel)]='datosGenerales.estado' pInputText
+            maxLength="40" disabled pInputText>
+            
+          </div>
+          <!-- Observaciones -->
+          <div class="form-group col-lg-3 col-md-3" id="desFact">
+            <label>
+              {{"justiciaGratuita.Calendarios.Observaciones" | translate}} 
+            </label>
+            <textarea *ngIf="datosGenerales.observaciones != null" [placeholder] = "datosGenerales.observaciones" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+              [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
+              <textarea *ngIf="datosGenerales.observaciones == null"  [placeholder] = "" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
+              [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
+          </div>
+
+      </div>
+    </div>
+
+    <div *ngIf="openFicha" class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
+          label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

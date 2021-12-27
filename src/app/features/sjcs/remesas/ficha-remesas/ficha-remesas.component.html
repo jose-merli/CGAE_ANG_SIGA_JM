@@ -1,0 +1,52 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.remesas' | translate}}
+    <i class="fa fa-angle-right"></i>
+  </p>
+  <p *ngIf="!remesaInformacionEconomica">{{'menu.justiciaGratuita.remesas.envio' | translate}}</p>
+  <p *ngIf="remesaInformacionEconomica">{{'menu.justiciaGratuita.remesas.informacionEconomica' | translate}}</p>
+</div>
+
+<div class="busqueda-container">
+  <app-tarjeta-datos-generales [remesaTabla]="remesaTabla" [remesaItem]="remesaItem" (estado) = "getAcciones($event)"></app-tarjeta-datos-generales>
+  <app-tarjeta-ejgs [remesaTabla]="remesaTabla" [remesaItem]="remesaItem"></app-tarjeta-ejgs>
+
+  <div class="card-footer">
+    <div id="botonesAccion" class="text-right main-button ">
+      <ng-container *ngIf="acciones">
+        <button *ngFor="let i of getAccionesRemesas" (click)="ejecutarAccion(i.idTipoAccionRemesa)" pButton type="button" icon="fa fa-check" iconPos="left"
+         [label]= "i.descripcion" [hidden]  = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)"></button>
+      </ng-container>
+      <button (click)="descargarLogErrores()" pButton type="button" icon="fa fa-download" iconPos="left"
+      [hidden] = "!guardado || (tarjetaEJGs.datos == undefined || tarjetaEJGs.datos.length == 0)"
+       label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate}}"></button>
+      <button (click)="checkPermisosDelete(true)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" [hidden]  = "!guardado"
+        label="{{ 'general.boton.eliminarRemesa' | translate}}"></button>
+      <button (click)="openTab()" pButton type="button"  icon="fa fa-plus"
+       iconPos="left"  label="{{ 'general.boton.aniadirExpedientes' | translate}}" [hidden]  = "!guardado || !estado"></button>
+      <button (click)="checkPermisosDelete(false)" pButton type="button" icon="fa fa-trash-alt" iconPos="left"
+      [hidden]  = "((!tarjetaEJGs.selectMultiple || !tarjetaEJGs.selectAll) && (tarjetaEJGs.selectedDatos == undefined || tarjetaEJGs.selectedDatos.length == 0))"
+        label="{{ 'general.boton.eliminarExpedientes' | translate}}"></button>
+      <button (click)="restablecer() " pButton type="button " icon="fa fa-undo" iconPos="left"
+        label="{{'general.boton.restablecer' | translate}} "></button>
+      <button (click)="checkPermisosSave()" pButton type="button" icon="fa fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate}}"></button>
+      <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
+    </div>
+  </div>
+
+</div>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

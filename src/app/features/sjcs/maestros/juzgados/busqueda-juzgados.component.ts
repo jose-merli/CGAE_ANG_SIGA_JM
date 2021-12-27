@@ -92,7 +92,7 @@ export class BusquedaJuzgadosComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       });
   }
 

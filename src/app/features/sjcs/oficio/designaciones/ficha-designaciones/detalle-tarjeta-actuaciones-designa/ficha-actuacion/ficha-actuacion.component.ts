@@ -189,14 +189,25 @@ export class FichaActuacionComponent implements OnInit {
         //   this.modoLectura = true;
         // }
 
-         this.isColegiado = sessionStorage.getItem('esColegiado');
-         let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
+        this.sigaServices.get('getLetrado').subscribe(
+          (data) => {
+            if (data.value == 'S') {
+              this.isColegiado = true;
+            } else {
+              this.isColegiado = false;
+            }
+            let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
 
-        if (this.isColegiado) {
-          this.usuarioLogado = new UsuarioLogado();
-          this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
-          this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
-        } 
+            if (this.isColegiado) {
+              this.usuarioLogado = new UsuarioLogado();
+              this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
+              this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
+            } 
+          },
+          (err) => {
+            //console.log(err);
+          }
+        );         
 
         this.institucionActual = this.sigaStorageService.institucionActual;
 
@@ -501,7 +512,7 @@ export class FichaActuacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -607,7 +618,7 @@ export class FichaActuacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;

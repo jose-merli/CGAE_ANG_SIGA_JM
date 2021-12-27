@@ -165,7 +165,7 @@ export class DetalleIntegranteComponent implements OnInit {
             .subscribe(
               n => {
                 this.colegios = JSON.parse(n["body"]).comboColegiadoItems;
-                // console.log("colegiaciones", this.colegios);
+                // //console.log("colegiaciones", this.colegios);
 
                 this.colegios.forEach(element => {
                   this.nColegiado.push({
@@ -193,7 +193,7 @@ export class DetalleIntegranteComponent implements OnInit {
                 }
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         }
@@ -271,7 +271,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.arregloTildesCombo(this.colegios);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -316,7 +316,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.actualizarDescripcionProvincia();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -340,11 +340,11 @@ export class DetalleIntegranteComponent implements OnInit {
           }
         }
 
-        console.log(this.colegiosArray);
+        //console.log(this.colegiosArray);
         this.actualizarDescripcionTipoColegio();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -357,7 +357,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.actualizarDescripcionCargo();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -608,7 +608,7 @@ export class DetalleIntegranteComponent implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -740,7 +740,7 @@ export class DetalleIntegranteComponent implements OnInit {
             this.showSuccess();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -932,7 +932,7 @@ export class DetalleIntegranteComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -1083,7 +1083,7 @@ export class DetalleIntegranteComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -1112,11 +1112,11 @@ export class DetalleIntegranteComponent implements OnInit {
       item => item.value === this.body.idProvincia
     );
 
-    // console.log("dde", this.descripcionProvincia);
+    // //console.log("dde", this.descripcionProvincia);
   }
 
   onChange(event) {
-    // console.log("fo", event.replace(".", ","));
+    // //console.log("fo", event.replace(".", ","));
     this.body.capitalSocial = event.replace(",", ".");
   }
 

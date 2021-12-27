@@ -80,9 +80,15 @@ export class RegtelFichaColegialComponent implements OnInit {
     }
 
     if (sessionStorage.getItem('esColegiado')) {
-      this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
+      let colegiadosession = sessionStorage.getItem('esColegiado');
+      if(colegiadosession == 'true'){
+        this.esColegiado = true;
+      }else{
+        this.esColegiado = false;
+      }
+
     } else {
-      this.esColegiado = true;
+      this.esColegiado = false;
     }
        
   }

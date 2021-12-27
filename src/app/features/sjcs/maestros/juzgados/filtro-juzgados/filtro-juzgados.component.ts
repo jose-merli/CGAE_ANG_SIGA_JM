@@ -65,7 +65,7 @@ export class FiltroJuzgadosComponent implements OnInit {
         this.commonsService.arregloTildesCombo(this.comboProvincias);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

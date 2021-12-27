@@ -40,7 +40,8 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   selectAll: boolean = false;
   progressSpinner: boolean = false;
 
-  @Input() permisoEscritura: boolean = true;
+  @Input() permisoEscritura: boolean = false;
+  @Input() permisoContrarios:boolean = false;
 
   @ViewChild("table") tabla;
 
@@ -62,15 +63,25 @@ export class ContrariosPreDesignacionComponent implements OnInit {
 
     this.searchContrariosEJG();
 
-    if(this.permisoEscritura){
+    if(this.permisoEscritura && this.permisoContrarios){
       this.nuevo=true;
-      this.eliminar = true
+      this.eliminar = true;
+    }else{
+      this.nuevo=false;
+      this.eliminar = false;
     }
 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.datos = this.contrariosEJG;
+    if(this.permisoEscritura && this.permisoContrarios){
+      this.nuevo=true;
+      this.eliminar = true;
+    }else{
+      this.nuevo=false;
+      this.eliminar = false;
+    }
   }
 
   onChangeRowsPerPages(event) {
@@ -121,30 +132,44 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   }
 
   Eliminar() {
-    this.progressSpinner = true;
-    let request = [this.selectedDatos.idPersona, this.selectedDatos.anio, this.selectedDatos.numero, this.selectedDatos.idtipoejg]
-    this.sigaServices.post("gestionejg_deleteContrarioEJG", request).subscribe(
-      data => {
-        this.selectedDatos = [];
-        this.searchContrariosEJG();
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        this.progressSpinner = false;
-        this.historicoContrario = false;
-      },
-      err => {
-        if (err != undefined && JSON.parse(err.error).error.description != "") {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+    if (!this.permisoEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoContrarios) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else{
+      this.progressSpinner = true;
+      let request = [this.selectedDatos.idPersona, this.selectedDatos.anio, this.selectedDatos.numero, this.selectedDatos.idtipoejg]
+      this.sigaServices.post("gestionejg_deleteContrarioEJG", request).subscribe(
+        data => {
+          this.selectedDatos = [];
+          this.searchContrariosEJG();
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.progressSpinner = false;
+          this.historicoContrario = false;
+        },
+        err => {
+          if (err != undefined && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          this.selectMultiple = false;
+          this.selectAll = false;
         }
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-        this.selectMultiple = false;
-        this.selectAll = false;
-      }
-    );
+      );
+    }
   }
 
 
@@ -189,12 +214,26 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   }
 
   NewContrario() {
-    sessionStorage.setItem("origin", "newContrarioEJG");
-    sessionStorage.setItem("contrariosEJG", JSON.stringify(this.contrariosEJG));
-    this.ejg = this.persistenceService.getDatos();
-    sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
-    //this.searchContrarios.emit(true);
-    this.router.navigate(["/justiciables"]);
+    if (!this.permisoEscritura) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.existeDesignaAsociado')
+			);
+		}else if (!this.permisoContrarios) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else{
+      sessionStorage.setItem("origin", "newContrarioEJG");
+      sessionStorage.setItem("contrariosEJG", JSON.stringify(this.contrariosEJG));
+      this.ejg = this.persistenceService.getDatos();
+      sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
+      //this.searchContrarios.emit(true);
+      this.router.navigate(["/justiciables"]);
+    }
   }
 
   openTab(evento) {
@@ -241,7 +280,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       });
   }
 
@@ -253,11 +292,18 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   }
 
   searchHistorical() {
-
-    this.historicoContrario = !this.historicoContrario;
-    this.selectAll = false;
-    this.selectedDatos = [];
-    this.searchContrariosEJG();
+    if (!this.permisoContrarios) {
+			this.showMessage(
+				'error',
+				this.translateService.instant('general.message.incorrect'),
+				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
+			);
+		} else{
+      this.historicoContrario = !this.historicoContrario;
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.searchContrariosEJG();
+    }
   }
 
   isEliminado(dato) {

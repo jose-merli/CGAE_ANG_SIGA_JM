@@ -110,34 +110,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkAccesoFichaActuacion();
     this.getParamsEJG();
 
-    if (
-      sessionStorage.getItem("filtroDesignas") != null
-    ) {
-      if (sessionStorage.getItem("volver") == 'true') {
-        this.body = JSON.parse(
-          sessionStorage.getItem("filtroDesignas")
-        );
-
-        if (this.body.fechaEntradaInicio != undefined && this.body.fechaEntradaInicio != null) {
-          this.fechaAperturaDesdeSelect = new Date(this.body.fechaEntradaInicio);
-        }
-        if (this.body.fechaEntradaFin != undefined && this.body.fechaEntradaFin != null) {
-          this.fechaAperturaHastaSelect = new Date(this.body.fechaEntradaFin);
-        }
-        if (this.body.fechaJustificacionDesde != undefined && this.body.fechaJustificacionDesde != null) {
-          this.body.fechaJustificacionDesde = new Date(this.body.fechaJustificacionDesde);
-        }
-        if (this.body.fechaJustificacionHasta != undefined && this.body.fechaJustificacionHasta != null) {
-          this.body.fechaJustificacionHasta = new Date(this.body.fechaJustificacionHasta);
-        }
-        sessionStorage.removeItem("filtroDesignas");
-        this.buscar();
-        sessionStorage.removeItem("volver");
-      } else {
-        this.body = new DesignaItem();
-      }
-    }
-    console.log('this.usuarioBusquedaExpressFromFicha*********', this.usuarioBusquedaExpressFromFicha)
+    //console.log('this.usuarioBusquedaExpressFromFicha*********', this.usuarioBusquedaExpressFromFicha)
     if (sessionStorage.getItem("buscadorColegiados")) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
@@ -380,6 +353,17 @@ export class FiltroDesignacionesComponent implements OnInit {
           this.router.navigate(["/errorAcceso"]);
         }
         this.cargaInicial();
+        if (
+          sessionStorage.getItem("filtroDesignas") != null
+        ) {
+          if (sessionStorage.getItem("volver") != null && sessionStorage.getItem("volver") != undefined && sessionStorage.getItem("volver") == 'true') {
+            this.cargarFiltros();
+            this.buscar();
+            sessionStorage.removeItem("volver");
+          } //else {
+            //this.body = new DesignaItem();
+          //}
+        }
       },
       err => {
         this.progressSpinner = false;
@@ -766,6 +750,102 @@ export class FiltroDesignacionesComponent implements OnInit {
     ];
   }
 
+  guardarFiltros(){
+    let designa = new DesignaItem();
+        designa.ano = this.body.ano;
+        designa.codigo = this.body.codigo;
+        designa.fechaEntradaInicio = this.fechaAperturaDesdeSelect;
+        designa.fechaEntradaFin = this.fechaAperturaHastaSelect;
+        designa.estados = this.body.estados;
+        designa.idTipoDesignaColegios = (this.body.idTipoDesignaColegios);
+        designa.idTurnos = this.body.idTurnos;
+        if (designa.idTurno != null) {
+          designa.nombreTurno = this.comboTurno.find(
+            item => item.value == designa.idTurno
+          ).label;
+        }
+        designa.documentacionActuacion = this.body.documentacionActuacion;
+        designa.idActuacionesV = this.body.idActuacionesV;
+        designa.idArt27 = this.body.idArt27;
+        designa.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+
+        designa.idJuzgados = this.body.idJuzgados;
+        designa.idModulos = this.body.idModulos;
+        designa.idCalidad = this.body.idCalidad;
+        if (this.body.anoProcedimiento != null && this.body.anoProcedimiento != undefined) {
+          designa.numProcedimiento = this.body.anoProcedimiento.toString();
+        }
+        designa.idProcedimientos = this.body.idProcedimientos;
+        designa.nig = this.body.nig;
+        designa.asunto = this.body.asunto;
+
+        designa.idJuzgadoActu = this.body.idJuzgadoActu;
+        // if (designa.idJuzgadoActu != null) {
+        //   designa.nombreJuzgadoActu = this.comboJuzgados.find(
+        //     item => item.value == designa.idJuzgadoActu
+        //   ).label;
+        // }
+        if (this.body.idAcreditacion != undefined) {
+          designa.idAcreditacion = this.body.idAcreditacion;
+        }
+        designa.idOrigen = this.body.idOrigen;
+        designa.fechaJustificacionDesde = this.fechaJustificacionDesdeSelect;
+        designa.fechaJustificacionHasta = this.fechaJustificacionHastaSelect;
+        designa.idModuloActuaciones = this.body.idModuloActuaciones;
+        designa.idProcedimientoActuaciones = this.body.idProcedimientoActuaciones;
+        designa.nif = this.body.nif;
+        designa.apellidosInteresado = this.body.apellidosInteresado;
+        designa.nombreInteresado = this.body.nombreInteresado;
+        designa.rol = this.body.rol;
+
+        sessionStorage.setItem(
+          "filtroDesignas",
+          JSON.stringify(designa));
+  }
+
+  cargarFiltros(){
+    
+    this.body = JSON.parse(
+      sessionStorage.getItem("filtroDesignas")
+    );
+    if (this.body.fechaEntradaInicio != undefined && this.body.fechaEntradaInicio != null) {
+      this.fechaAperturaDesdeSelect = new Date(this.body.fechaEntradaInicio);
+    }
+    if (this.body.fechaEntradaFin != undefined && this.body.fechaEntradaFin != null) {
+      this.fechaAperturaHastaSelect = new Date(this.body.fechaEntradaFin);
+    }
+    if (this.body.fechaJustificacionDesde != undefined && this.body.fechaJustificacionDesde != null) {
+      this.body.fechaJustificacionDesde = new Date(this.body.fechaJustificacionDesde);
+    }
+    if (this.body.fechaJustificacionHasta != undefined && this.body.fechaJustificacionHasta != null) {
+      this.body.fechaJustificacionHasta = new Date(this.body.fechaJustificacionHasta);
+    }
+
+
+      /*  designa.idTurnos = this.body.idTurnos;
+        if (designa.idTurno != null) {
+          designa.nombreTurno = this.comboTurno.find(
+            item => item.value == designa.idTurno
+          ).label;
+        }
+        */
+        if(this.body.numColegiado != undefined && this.body.numColegiado != null){
+        this.usuarioBusquedaExpress.numColegiado = this.body.numColegiado.toString();
+        }
+        
+        if (this.body.numProcedimiento != null && this.body.numProcedimiento != undefined) {
+          this.body.anoProcedimiento = +this.body.numProcedimiento;
+        }
+        
+        // if (designa.idJuzgadoActu != null) {
+        //   designa.nombreJuzgadoActu = this.comboJuzgados.find(
+        //     item => item.value == designa.idJuzgadoActu
+        //   ).label;
+        // }    
+    
+    sessionStorage.removeItem("filtroDesignas");
+  }
+
   buscar() {
     let keyConfirmation = "confirmacionGuardarJustificacionExpress";
     if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
@@ -850,13 +930,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
         sessionStorage.setItem("designaItem", JSON.stringify(designa));
 
-        this.body.fechaEntradaInicio = this.fechaAperturaDesdeSelect;
-        this.body.fechaEntradaFin = this.fechaAperturaHastaSelect;
-
-        sessionStorage.setItem(
-          "filtroDesignas",
-          JSON.stringify(this.body));
-
+        this.guardarFiltros();
         this.progressSpinner = false;
         this.busqueda.emit(false);
       }
@@ -904,6 +978,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.fechaJustificacionDesdeSelect = undefined;
     this.fechaJustificacionHastaSelect = undefined;
     this.getBuscadorDesignas();
+    sessionStorage.removeItem("filtroDesignas");
   }
 
   onChangeCheckMostrarPendientes(event) {

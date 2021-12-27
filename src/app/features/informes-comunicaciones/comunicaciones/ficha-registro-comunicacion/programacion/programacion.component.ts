@@ -195,7 +195,7 @@ export class ProgramacionComponent implements OnInit {
       err => {
         let msg = this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorEnvio");
         this.showFail(msg);
-        console.log(err);
+        //console.log(err);
       },
       () => {
       }
@@ -209,7 +209,7 @@ export class ProgramacionComponent implements OnInit {
         this.estados.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo") , value: '' });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

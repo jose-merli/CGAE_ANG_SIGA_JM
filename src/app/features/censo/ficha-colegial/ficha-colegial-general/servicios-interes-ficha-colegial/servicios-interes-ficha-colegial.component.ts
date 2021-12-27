@@ -40,7 +40,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
   selectedDatosCertificados;
   @Input() tarjetaInteres: string;
   tarjetaInteresNum: string;
-
+  @Input() datosColegiado = new FichaColegialGeneralesItem();
   selectedItemColegiaciones: number = 10;
   tarjetaOtrasColegiaciones: string;
   datosColegiaciones: any[] = [];
@@ -193,4 +193,37 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     }
       this.router.navigate(["/bajasTemporales"]);
   }
+  inscripcionesGuardia(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+      this.router.navigate(["/inscripcionesGuardia"]);
+  }
+  guardiasColegiado(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/guardiasColegiado"]);
+  }
+  asistencias(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/guardiasAsistencias"], { queryParams: { searchMode: 'a' } });
+  }
+  preAsistencia(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/guardiasSolicitudesCentralita"]);
+  }
+
+
 }

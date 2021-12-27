@@ -3,7 +3,7 @@ import { CommonModule, DatePipe, APP_BASE_HREF } from '@angular/common';
 import { BusquedaCalendarioAgendaLaboralComponent } from './busqueda-calendario-agenda-laboral/busqueda-calendario-agenda-laboral.component';
 import { FiltroCalendarioAgendaLaboralComponent } from './busqueda-calendario-agenda-laboral/filtro-calendario-agenda-laboral/filtro-calendario-agenda-laboral.component';
 import { TablaCalendarioAgendaLaboralComponent } from './busqueda-calendario-agenda-laboral/tabla-calendario-agenda-laboral/tabla-calendario-agenda-laboral.component';
-import { PaginatorModule, InputTextModule, ButtonModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmationService } from '../../../../../../node_modules/primeng/primeng';
+import { PaginatorModule, InputTextModule, ButtonModule, DropdownModule, GrowlModule, MenubarModule, CheckboxModule, ConfirmationService, ConfirmDialogModule } from '../../../../../../node_modules/primeng/primeng';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
 import { FormsModule } from '../../../../../../node_modules/@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
@@ -35,7 +35,8 @@ import { CookieService } from '../../../../../../node_modules/ngx-cookie-service
     PipeTranslationModule,
     MenubarModule,
     CheckboxModule,
-    FechaModule
+    FechaModule,
+    ConfirmDialogModule
   ],
   declarations: [
     BusquedaCalendarioAgendaLaboralComponent,

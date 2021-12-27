@@ -1,6 +1,8 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
+import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { procesos_guardia } from '../../../../../../permisos/procesos_guarida';
 import { procesos_maestros } from '../../../../../../permisos/procesos_maestros';
 import { CommonsService } from '../../../../../../_services/commons.service';
@@ -35,8 +37,8 @@ export class GestionGuardiaComponent implements OnInit {
 
   infoResumen = [];
   enlacesTarjetaResumen: any[] = [];
-  manuallyOpened:Boolean;
-  openGen: Boolean = false;
+  manuallyOpened: Boolean;
+  openGen: Boolean = true;
   openCalendarios: Boolean = false;
   openConfigCola: Boolean = false;
   openCola: Boolean = false;
@@ -49,17 +51,21 @@ export class GestionGuardiaComponent implements OnInit {
   tarjetaDatosGenerales: string;
   tarjetaCalendariosGuardias: string;
   tarjetaConfigColatarjetaColaGuardia: string;
-  tarjetaColaGuardia : string;
+  tarjetaColaGuardia: string;
   tarjetaIncompatibilidades: string;
   tarjetaBaremos: string;
-  tarjetaCalendarios: string;  
+  tarjetaCalendarios: string;
   tarjetaInscripcionesGuardias: string;
   tarjetaTurnoGuardias: string;
-
+  persistenciaGuardia: GuardiaItem;
+  origenGuarColeg:boolean;
+  guardiaCole: any;
+  idTurnoFromFichaTurno = null;
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
     private commonService: CommonsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private router : Router) { }
 
 
   ngOnInit() {
@@ -69,17 +75,55 @@ export class GestionGuardiaComponent implements OnInit {
       this.modoEdicion = true;
     } else {
       this.modoEdicion = false;
+      this.openGen = true;
     }
     this.obtenerPermisos();
+
+    if (sessionStorage.getItem("crearGuardiaFromFichaTurno")) {
+     
+      this.persistenciaGuardia = new GuardiaItem();
+      this.persistenciaGuardia = JSON.parse(
+        sessionStorage.getItem("crearGuardiaFromFichaTurno")
+      );
+      this.datos = JSON.parse(JSON.stringify(this.persistenciaGuardia));
+      this.idTurnoFromFichaTurno = this.persistenciaGuardia.idTurno;
+    }
+    if (sessionStorage.getItem("filtrosBusquedaGuardias")) {
+     
+      this.persistenciaGuardia = new GuardiaItem();
+      this.persistenciaGuardia = JSON.parse(
+        sessionStorage.getItem("filtrosBusquedaGuardias")
+      );
+
+      sessionStorage.removeItem("filtrosBusquedaGuardias");
+    }
+
+    //en caso de que la guardia venga desde Guardias de Colegiado.
+    if(sessionStorage.getItem("originGuarCole") == "true"){
+      if(sessionStorage.getItem("datosGuardiaGuardiaColeg")){
+
+        this.guardiaCole = JSON.parse(sessionStorage.getItem("datosGuardiaGuardiaColeg"));
+        this.guardiaCole = true;
+        this.search();
+        sessionStorage.removeItem("datosGuardiaGuardiaColeg");
+      }
+      sessionStorage.removeItem("originGuarCole");
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
     this.enviarEnlacesTarjeta();
   }
-
   search() {
     this.progressSpinner = true;
-    this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
+    if(this.origenGuarColeg){
+      this.datos = JSON.parse(sessionStorage.getItem("datosGuardiaGuardiaColeg"));
+      this.origenGuarColeg = false
+    }else{
+      this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
+    }
+    
     this.sigaServices.post("busquedaGuardias_getGuardia", this.datos).subscribe(
       n => {
         this.datos = JSON.parse(n.body);
@@ -90,14 +134,45 @@ export class GestionGuardiaComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       })
   }
 
 
 
   backTo() {
-    this.location.back();
+    if (sessionStorage.getItem("crearGuardiaFromFichaTurno")) {
+      this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: this.idTurnoFromFichaTurno } });
+      sessionStorage.removeItem("crearGuardiaFromFichaTurno");
+    }else{
+    if (this.persistenciaGuardia != undefined) {
+      sessionStorage.setItem(
+        "filtrosBusquedaGuardiasFichaGuardia",
+        JSON.stringify(this.persistenciaGuardia)
+      );
+    }
+       /*let dataToSend = {
+         'duplicar': false,
+         'tabla': [],
+         'turno':row.cells[0].value,
+         'nombre': row.cells[1].value,
+         'generado': row.cells[8].value,
+         'numGuardias': row.cells[9].value,
+         'listaGuarias': row.cells[5].value,
+         'fechaDesde': row.cells[2].value,
+         'fechaHasta': row.cells[3].value,
+         'fechaProgramacion': row.cells[4].value.value,
+         'estado': row.cells[7].value,
+         'observaciones': row.cells[6].value,
+         'idCalendarioProgramado': row.cells[10].value,
+         'idTurno': row.cells[11].value,
+         'idGuardia': row.cells[12].value
+       }*/
+        let datosFichaProgramacion = this.persistenceService.getDatos();
+        this.persistenceService.setDatos(datosFichaProgramacion);
+         //this.router.navigate(["/fichaProgramacion"]);
+        this.location.back();
+      }
   }
 
   modoEdicionSend(event) {
@@ -332,31 +407,31 @@ export class GestionGuardiaComponent implements OnInit {
         this.progressSpinner = false
       });
 
-      //
-      //PROVISIONAL
-      //cuando se vaya a seguir con el desarrollo de guardias, hay que cambiar esto y la carga de las tarjetas
-      //
-      setTimeout(() => {
-        this.enviarEnlacesTarjeta();
-      }, 2000);
+    //
+    //PROVISIONAL
+    //cuando se vaya a seguir con el desarrollo de guardias, hay que cambiar esto y la carga de las tarjetas
+    //
+    setTimeout(() => {
+      this.enviarEnlacesTarjeta();
+    }, 2000);
   }
 
   enviarEnlacesTarjeta() {
     this.enlacesTarjetaResumen = [];
 
     let pruebaTarjeta = {
-        label: "general.message.datos.generales",
-        value: document.getElementById("datosGenerales"),
-        nombre: "datosGenerales",
-      };
+      label: "general.message.datos.generales",
+      value: document.getElementById("datosGenerales"),
+      nombre: "datosGenerales",
+    };
 
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
     pruebaTarjeta = {
-        label: "justiciaGratuita.guardia.gestion.configuracionCalendarios",
-        value: document.getElementById("calendarioGuardia"),
-        nombre: "calendarioGuardia",
-      };
+      label: "justiciaGratuita.guardia.gestion.configuracionCalendarios",
+      value: document.getElementById("calendarioGuardia"),
+      nombre: "calendarioGuardia",
+    };
 
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
@@ -407,9 +482,9 @@ export class GestionGuardiaComponent implements OnInit {
     };
 
     this.enlacesTarjetaResumen.push(pruebaTarjeta);
-    
+
     pruebaTarjeta = {
-      label: "justiciaGratuita.sjcs.designas.DatosIden.turno",
+      label: "dato.jgr.guardia.guardias.turno",
       value: document.getElementById("turnos"),
       nombre: "turnos",
     };
@@ -420,16 +495,16 @@ export class GestionGuardiaComponent implements OnInit {
   isCloseReceive(event) {
     if (event != undefined) {
       switch (event) {
-        case "generales":
+        case "datosGenerales":
           this.openGen = this.manuallyOpened;
           break;
         case "calendarioGuardia":
           this.openCalendarioGuardia = this.manuallyOpened;
           break;
-        case "configCola":
+        case "configuracionCola":
           this.openConfigCola = this.manuallyOpened;
           break;
-        case "cola":
+        case "colaGuardias":
           this.openCola = this.manuallyOpened;
           break;
         case "incompatibilidades":
@@ -444,7 +519,7 @@ export class GestionGuardiaComponent implements OnInit {
         case "inscripciones":
           this.openInscripciones = this.manuallyOpened;
           break;
-        case "turno":
+        case "turnos":
           this.openTurno = this.manuallyOpened;
           break;
       }
@@ -452,19 +527,18 @@ export class GestionGuardiaComponent implements OnInit {
   }
 
   isOpenReceive(event) {
-
     if (event != undefined) {
       switch (event) {
-        case "generales":
+        case "datosGenerales":
           this.openGen = true;
           break;
         case "calendarioGuardia":
           this.openCalendarioGuardia = true;
           break;
-        case "configCola":
+        case "configuracionCola":
           this.openConfigCola = true;
           break;
-        case "cola":
+        case "colaGuardias":
           this.openCola = true;
           break;
         case "incompatibilidades":

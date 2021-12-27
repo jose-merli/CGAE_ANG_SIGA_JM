@@ -286,7 +286,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       this.habilitarBotones();
     },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -301,7 +301,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
         this.idiomas = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -351,7 +351,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -376,7 +376,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -387,7 +387,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.objetivos = data.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -544,7 +544,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               );
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.showFail(
                 "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
               );
@@ -592,7 +592,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         err => {
           this.showFail(this.translateService.instant('informesycomunicaciones.consultas.ficha.errorGuardadoConsulta'));
-          console.log(err);
+          //console.log(err);
         },
         () => {
           if(sessionStorage.getItem("servicioDetalle") != undefined || sessionStorage.getItem("precioDetalle") != undefined){

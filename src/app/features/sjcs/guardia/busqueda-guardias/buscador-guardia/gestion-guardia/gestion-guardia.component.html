@@ -2,24 +2,24 @@
   <div class="header-title">
     <i class="fa fa-square"></i>
     <p>{{'menu.justiciaGratuita' | translate}}
-      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.maestros' | translate }}
-      <i class="fa fa-angle-right"></i>{{'menu.facturacionSJCS.mantenimientoGestionComisarias'|translate}}
+      <i class="fa fa-angle-right"></i>{{'dato.jgr.guardia.inscripciones.guardia' | translate }}
+      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.guardia.guardias'|translate}}
     </p>
   </div>
   <div>
     <app-tarjeta-resumen-fija  class="pb-50" *ngIf="permisoEscrituraResumen != undefined" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="infoResumen" [enlaces]="enlacesTarjetaResumen" icono="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
 
-    <app-datos-generales-guardias (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" *ngIf="permisoEscrituraDatosGenerales != undefined" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-guardias>
+    <app-datos-generales-guardias [idTurnoFromFichaTurno]="idTurnoFromFichaTurno" [openFicha]="openGen" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" *ngIf="permisoEscrituraDatosGenerales != undefined" [permisoEscritura]="permisoEscrituraDatosGenerales" [modoEdicion]="modoEdicion" (modoEdicionSend)="modoEdicionSend($event)"></app-datos-generales-guardias>
 
-    <app-datos-calendarios-guardias (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaCalendariosGuardias]="tarjetaCalendariosGuardias" *ngIf="permisoEscrituraConfCalen != undefined" [permisoEscritura]="permisoEscrituraConfCalen" [modoEdicion]="modoEdicion"></app-datos-calendarios-guardias>
+    <app-datos-calendarios-guardias  [openFicha]="openCalendarioGuardia" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaCalendariosGuardias]="tarjetaCalendariosGuardias" *ngIf="permisoEscrituraConfCalen != undefined" [permisoEscritura]="permisoEscrituraConfCalen" [modoEdicion]="modoEdicion"></app-datos-calendarios-guardias>
 
-    <app-datos-conf-cola (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaConfigCola]="tarjetaConfigCola" *ngIf="permisoEscrituraConfCola != undefined" [permisoEscritura]="permisoEscrituraConfCola" [modoEdicion]="modoEdicion"
-      (modoEdicionSend)="modoEdicionSend($event)"></app-datos-conf-cola>
+    <app-datos-conf-cola [openFicha]="openConfigCola" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaConfigCola]="tarjetaConfigCola" *ngIf="permisoEscrituraConfCola != undefined" [permisoEscritura]="permisoEscrituraConfCola" [modoEdicion]="modoEdicion"
+      (modoEdicionSend)="modoEdicionSend($event)" ></app-datos-conf-cola>
 
-    <app-datos-cola-guardia (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColaGuardia]="tarjetaColaGuardia" *ngIf="permisoEscrituraColaGuardia != undefined" [permisoEscritura]="permisoEscrituraColaGuardia"
+    <app-datos-cola-guardia [openFicha]="openCola" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColaGuardia]="tarjetaColaGuardia" *ngIf="permisoEscrituraColaGuardia != undefined" [permisoEscritura]="permisoEscrituraColaGuardia"
       [modoEdicion]="modoEdicion"></app-datos-cola-guardia>
 
-    <app-datos-incompatibilidades (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaIncompatibilidades]="tarjetaIncompatibilidades" *ngIf="permisoEscrituraIncomp != undefined" [modoEdicion]="modoEdicion"></app-datos-incompatibilidades>
+    <app-datos-incompatibilidades [openFicha]="openIncompatibilidades" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaIncompatibilidades]="tarjetaIncompatibilidades" *ngIf="permisoEscrituraIncomp != undefined" [modoEdicion]="modoEdicion"></app-datos-incompatibilidades>
 
     <app-datos-baremos (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaBaremos]="tarjetaBaremos" *ngIf="permisoEscrituraBaremos != undefined" [modoEdicion]="modoEdicion"></app-datos-baremos>
 

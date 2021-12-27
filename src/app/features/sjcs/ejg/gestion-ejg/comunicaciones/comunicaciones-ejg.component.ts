@@ -148,8 +148,8 @@ export class ComunicacionesEJGComponent implements OnInit {
     this.estado = dato[0].idEstado;
 
     if (this.estado != 5) {
-      this.router.navigate(["/fichaRegistroComunicacion"]);
       sessionStorage.setItem("comunicacionesSearch",  JSON.stringify(dato[0]));
+      this.router.navigate(["/fichaRegistroComunicacion"]);
       //sessionStorage.setItem("filtrosCom", JSON.stringify(this.bodySearch));
     } else if (this.estado == 5) {
       this.showMessage("error",this.translateService.instant("general.message.incorrect"),this.translateService.instant("informesycomunicaciones.comunicaciones.envioProcess"));
@@ -168,7 +168,7 @@ export class ComunicacionesEJGComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
        // this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         

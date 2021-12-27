@@ -80,7 +80,7 @@ export class DatosGeneralesProcuradoresComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
       }

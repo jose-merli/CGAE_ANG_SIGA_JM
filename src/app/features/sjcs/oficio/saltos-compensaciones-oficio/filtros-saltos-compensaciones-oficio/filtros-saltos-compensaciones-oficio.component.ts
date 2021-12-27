@@ -85,13 +85,13 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
 
   getComboTurno() {
 
-    this.sigaServices.get("busquedaGuardia_turno").subscribe(
+    this.sigaServices.get("inscripciones_comboTurnos").subscribe(
       n => {
         this.comboTurnos = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTurnos);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

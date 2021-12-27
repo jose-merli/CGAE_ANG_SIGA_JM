@@ -72,7 +72,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
           this.usuarios_rol = n.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
     }
@@ -123,7 +123,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       error => {
         this.responsePerfiles = JSON.parse(error["error"]);
         this.showduplicateFail(this.responsePerfiles.error.message.toString());
-        console.log(error);
+        //console.log(error);
       },
       () => {
         this.showSuccess();
@@ -210,7 +210,7 @@ export class EditarPerfilesComponent extends SigaWrapper implements OnInit {
       },
       err => {
         this.showFail();
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.showSuccess();

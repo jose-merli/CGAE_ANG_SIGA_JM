@@ -172,7 +172,7 @@ export class TarjetaInformesComponent implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // if (this.derechoAcceso == 3) {
@@ -247,7 +247,7 @@ export class TarjetaInformesComponent implements OnInit {
         this.datos = JSON.parse(data.body).plantillasModeloDocumentos;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -313,7 +313,7 @@ export class TarjetaInformesComponent implements OnInit {
           );
         else {
           this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorInformeEliminado'));
-          console.log(err);
+          //console.log(err);
         }
 
       },

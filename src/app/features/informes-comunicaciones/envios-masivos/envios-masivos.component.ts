@@ -167,7 +167,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -179,7 +179,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         // this.estados.unshift({ label: "Seleccionar", value: "" });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -289,7 +289,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -316,7 +316,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -436,7 +436,7 @@ para poder filtrar el dato con o sin estos caracteres*/
                 "informesycomunicaciones.enviosMasivos.errorProcesar"
               )
             );
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -486,7 +486,7 @@ para poder filtrar el dato con o sin estos caracteres*/
                 "informesycomunicaciones.comunicaciones.mensaje.errorCancelarEnvio"
               )
             );
-            console.log(err);
+            //console.log(err);
           },
           () => {
             this.buscar();
@@ -555,7 +555,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.router.navigate(["/fichaRegistroEnvioMasivo"]);
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => { }
@@ -605,7 +605,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               "informesycomunicaciones.modelosdecomunicacion.errorEnvio"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.buscar();
@@ -691,7 +691,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             "informesycomunicaciones.comunicaciones.mensaje.errorDuplicarEnvio"
           )
         );
-        console.log(err);
+        //console.log(err);
       }
     );
   }

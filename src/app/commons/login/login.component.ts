@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
             }
           },
           err => {
-            console.log(err);
+            //console.log(err);
             if (err.status == 403) {
               let codError = err.status;
     
