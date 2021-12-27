@@ -147,15 +147,18 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
     this.filtrosMonederoItem.fechaHasta = event;
   }
 
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+  }
+
   limpiar() {
     this.filtrosMonederoItem = new FiltrosMonederoItem();
     this.usuarioBusquedaExpress = {
-      numColegiado: '',
-      nombreAp: ''
+      numColegiado: "",
+      nombreAp: ""
     };
   }
-
-
 
   buscar() {
     this.busqueda.emit(true);
