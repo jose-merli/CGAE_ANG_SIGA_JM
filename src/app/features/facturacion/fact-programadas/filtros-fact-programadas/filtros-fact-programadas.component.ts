@@ -61,7 +61,6 @@ export class FiltrosFactProgramadasComponent implements OnInit {
 
   // Buscar facturaciones
   searchFacturaciones(): void {
-    console.log(this.body);
     this.persistenceService.setFiltros(this.body);
     this.busqueda.emit();
   }
@@ -92,8 +91,6 @@ export class FiltrosFactProgramadasComponent implements OnInit {
       n => {
         this.comboSeriesFacturacion = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboSeriesFacturacion);
-
-        console.log("facturacionPyS_comboSeriesFacturacion", this.comboSeriesFacturacion);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -115,8 +112,6 @@ export class FiltrosFactProgramadasComponent implements OnInit {
       n => {
         this.comboEstadosFacturacion = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadosFacturacion);
-
-        console.log("facturacionPyS_comboEstadosFacturacion", this.comboEstadosFacturacion);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -129,8 +124,6 @@ export class FiltrosFactProgramadasComponent implements OnInit {
       n => {
         this.comboEstadosFicheros = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadosFicheros);
-
-        console.log("facturacionPyS_comboEstadosFicheros", this.comboEstadosFicheros);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -143,8 +136,6 @@ export class FiltrosFactProgramadasComponent implements OnInit {
       n => {
         this.comboEstadosEnvio = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadosEnvio);
-
-        console.log("facturacionPyS_comboEstadosEnvios", this.comboEstadosEnvio);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -157,8 +148,6 @@ export class FiltrosFactProgramadasComponent implements OnInit {
       n => {
         this.comboEstadosTraspaso = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadosTraspaso);
-
-        console.log("facturacionPyS_comboEstadosTraspasos", this.comboEstadosTraspaso);
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
