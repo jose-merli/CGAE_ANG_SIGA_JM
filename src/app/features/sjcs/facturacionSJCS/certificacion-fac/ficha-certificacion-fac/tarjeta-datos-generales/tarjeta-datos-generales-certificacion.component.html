@@ -135,7 +135,7 @@
           iconPos="left"></button>
 
         <!--Cerrar y enviar-->
-        <button (click)="cerrarEnviar()" [disabled]='!permisoEscritura || true' pButton type="button"
+        <button (click)="cerrarEnviar()" [disabled]='!permisoEscritura || disabledCerrar()' pButton type="button"
           label="{{ 'general.boton.close' | translate }} y {{ 'general.boton.enviar' | translate }}" icon="fas fa-share"
           iconPos="left"></button>
 

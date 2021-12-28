@@ -7,6 +7,7 @@ import { CertificacionesItem } from '../../../../../models/sjcs/CertificacionesI
 import { CertificacionesObject } from '../../../../../models/sjcs/CertificacionesObject';
 import { EstadoCertificacionDTO } from '../../../../../models/sjcs/EstadoCertificacionDTO';
 import { EstadoCertificacionItem } from '../../../../../models/sjcs/EstadoCertificacionItem';
+import { FacturacionItem } from '../../../../../models/sjcs/FacturacionItem';
 import { MovimientosVariosApliCerDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerDTO';
 import { MovimientosVariosApliCerItem } from '../../../../../models/sjcs/MovimientosVariosApliCerItem';
 import { MovimientosVariosApliCerRequestDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerRequestDTO';
@@ -58,7 +59,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     ]
   };
 
-  fechasMaxMin:MovimientosVariosApliCerRequestDTO = new MovimientosVariosApliCerRequestDTO();
+  fechasMaxMin: MovimientosVariosApliCerRequestDTO = new MovimientosVariosApliCerRequestDTO();
 
   @ViewChild(TarjetaDatosGeneralesCertificacionComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesCertificacionComponent;
   @ViewChild(TarjetaFacturacionComponent) tarjetaFact: TarjetaFacturacionComponent;
@@ -333,8 +334,8 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
     // SON DATOS DE PUREBA, ENTRAR CON LA INSTITUCION 2039 (LAS PALMAS)
 
-   /*  payload.fechaDesde = new Date("2018-12-10");
-    payload.fechaHasta = new Date("2018-12-11"); */
+    /*  payload.fechaDesde = new Date("2018-12-10");
+     payload.fechaHasta = new Date("2018-12-11"); */
 
     if (payload.fechaDesde && payload.fechaDesde != null && payload.fechaHasta && payload.fechaHasta != null) {
 
@@ -358,7 +359,33 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     }
   }
 
-  saveFactCert(event){
+  cerrarYenviar(event) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
+      this.progressSpinner = true;
+
+      this.sigaService.post("certificaciones_tramitarCertificacion", this.tarjetaFact.datos).subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          const resp = JSON.parse(data.body);
+
+          if (resp && resp.error && resp.error != null && resp.error.description != null && resp.error.code != null && (resp.error.code.toString() == "500" || resp.error.code.toString() == "400")) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
+          } else {
+
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+
+    }
+  }
+
+  saveFactCert(event) {
     let factCert: CertificacionesItem = new CertificacionesItem();
     factCert.idCertificacion = this.certificacion.idCertificacion;
     factCert.idFacturacion = event;
@@ -369,7 +396,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         if (error != undefined && error != null && error.description != null) {
           if (error.code == '200') {
             this.showMessage("success", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
-            
+
             this.getCertificacion(this.certificacion.idCertificacion)
             this.getMvariosAsociadosCertificacion(this.certificacion.idCertificacion)
             this.fechasMaxMin.fechaDesde = this.certificacion.fechaDesde;

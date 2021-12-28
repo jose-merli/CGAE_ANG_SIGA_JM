@@ -14,7 +14,7 @@ import { Enlace } from '../ficha-certificacion-fac.component';
   templateUrl: './tarjeta-datos-generales-certificacion.component.html',
   styleUrls: ['./tarjeta-datos-generales-certificacion.component.scss']
 })
-export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, OnChanges, AfterViewInit {
+export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnChanges, AfterViewInit {
 
   showDatosGenerales: boolean = true;
   progressSpinner: boolean = false;
@@ -31,6 +31,7 @@ export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, 
 
   @Output() guardarEvent = new EventEmitter<boolean>();
   @Output() reabrirEvent = new EventEmitter<boolean>();
+  @Output() cerrarEvent = new EventEmitter<boolean>();
   @Output() restablecerEvent = new EventEmitter<string>();
   @Output() getListaEstadosEvent = new EventEmitter<string>();
   @Output() addEnlace = new EventEmitter<Enlace>();
@@ -144,10 +145,22 @@ export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, 
     }
   }
 
+
+  disabledCerrar(): boolean {
+    let respuesta = false;
+
+    if (!this.permisoEscritura || !this.modoEdicion || !this.isAbierta() || !this.isEnvioConErrores() || !this.isNoValidada()) {
+      respuesta = true;
+    }
+
+    return respuesta;
+
+  }
+
   cerrarEnviar() {
 
-    if (this.permisoEscritura) {
-
+    if (!this.disabledCerrar()) {
+      this.cerrarEvent.emit(true);
     }
   }
 
@@ -205,6 +218,19 @@ export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, 
     }
 
     return resp;
+  }
+
+
+  isAbierta() {
+    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_ABIERTA;
+  }
+
+  isEnvioConErrores() {
+    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_ENVIO_CON_ERRORES;
+  }
+
+  isNoValidada() {
+    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_NO_VALIDADA;
   }
 
   isCerrada() {
