@@ -31,7 +31,18 @@
               *ngIf="datos && datos != null && datos.length > 0">{{ 'facturacionSJCS.tarjGenFac.pagado' | translate }}:
               <span>{{ totalPagado | currency: 'EUR'}}</span>
             </label>
-            <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+            <i *ngIf="!showTarjeta && (datos && datos != null && datos.length > 0)" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+          </div>
+          <div [ngClass]="{'d-flex justify-content-between': (datos == null || datos == undefined || datos.length == 0)}">
+            <label
+              *ngIf="(datos == null || datos == undefined || datos.length == 0)">{{ 'facturacionSJCS.tarjGenFac.total' | translate }}:
+              <span>0</span>
+            </label>
+            <label
+              *ngIf="(datos == null || datos == undefined || datos.length == 0)">{{ 'facturacionSJCS.tarjGenFac.pagado' | translate }}:
+              <span>0</span>
+            </label>
+            <i *ngIf="!showTarjeta && (datos == null || datos == undefined || datos.length == 0)" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
           </div>
         </div>
 

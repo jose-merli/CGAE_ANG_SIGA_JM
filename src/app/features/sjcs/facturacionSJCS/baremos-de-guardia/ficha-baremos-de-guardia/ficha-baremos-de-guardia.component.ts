@@ -130,7 +130,10 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tieneDatos = true;
         }
       } else {
-        this.getGuardiasByConf(true);
+        //this.getGuardiasByConf(true);
+
+        this.datosFichDatGenerales = []
+        this.tieneDatos = true
       }
     }
 
