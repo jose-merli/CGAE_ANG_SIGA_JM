@@ -130,10 +130,10 @@
         <button [disabled]="!permisoEscritura || true" pButton type="button"
           label="{{ 'general.boton.comunicar' | translate }}" icon="fa fa-send" iconPos="left"></button>
         <!--Enviar-->
-        <button (click)="enviar()" [disabled]='!permisoEscritura' pButton type="button"
+        <button (click)="enviar()" [disabled]='!permisoEscritura || isValidando()' pButton type="button"
           label="{{ 'general.boton.enviar' | translate }}" icon="fas fa-share" iconPos="left"></button>
         <!--Descargar Log-->
-        <button (click)="descargarLog()" [disabled]="!permisoEscritura || true" pButton type="button"
+        <button (click)="descargarLog()" [disabled]="!permisoEscritura || isValidando()" pButton type="button"
           icon="fa fa-download" iconPos="left"
           label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
       </div>

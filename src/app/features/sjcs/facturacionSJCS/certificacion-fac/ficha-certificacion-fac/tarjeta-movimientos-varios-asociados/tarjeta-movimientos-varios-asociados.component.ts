@@ -5,6 +5,7 @@ import { CertificacionesItem } from '../../../../../../models/sjcs/Certificacion
 import { MovimientosVariosAsoCerItem } from '../../../../../../models/sjcs/MovimientosVariosAsoCerItem';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { ESTADO_CERTIFICACION } from '../../certificacion-fac.component';
 import { Enlace } from '../ficha-certificacion-fac.component';
 
 @Component({
@@ -146,6 +147,10 @@ export class TarjetaMovimientosVariosAsociadosComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  isValidando() {
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_VALIDANDO;
   }
 
   ngAfterViewInit() {

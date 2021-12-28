@@ -9,6 +9,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 // import { CertificacionFacItem } from '../../../../../../models/sjcs/CertificacionesItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { ESTADO_CERTIFICACION } from '../../certificacion-fac.component';
 
 @Component({
   selector: 'app-tarjeta-facturacion',
@@ -160,7 +161,7 @@ export class TarjetaFacturacionComponent implements OnInit {
   nuevo() {
     this.isNuevo = true;
     this.progressSpinner = true
-    if (this.datos.length == 0) {
+    if (this.datos == undefined || this.datos == null || this.datos.length == 0) {
       this.getComboFact(false);
     } else {
 
@@ -391,5 +392,8 @@ export class TarjetaFacturacionComponent implements OnInit {
     this.idFacturacion = event.value
   }
 
+  isValidando() {
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_VALIDANDO;
+  }
 
 }

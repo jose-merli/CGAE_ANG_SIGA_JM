@@ -13,6 +13,7 @@ import { MovimientosVariosApliCerItem } from '../../../../../models/sjcs/Movimie
 import { MovimientosVariosApliCerRequestDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerRequestDTO';
 import { MovimientosVariosAsoCerDTO } from '../../../../../models/sjcs/MovimientosVariosAsoCerDTO';
 import { MovimientosVariosAsoCerItem } from '../../../../../models/sjcs/MovimientosVariosAsoCerItem';
+import { TramitarCerttificacionRequestDTO } from '../../../../../models/sjcs/TramitarCerttificacionRequestDTO';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -60,7 +61,6 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
   };
 
   fechasMaxMin: MovimientosVariosApliCerRequestDTO = new MovimientosVariosApliCerRequestDTO();
-
   @ViewChild(TarjetaDatosGeneralesCertificacionComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesCertificacionComponent;
   @ViewChild(TarjetaFacturacionComponent) tarjetaFact: TarjetaFacturacionComponent;
   @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli: TarjetaMovimientosVariosAplicadosComponent;
@@ -332,11 +332,6 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
   getMvariosAplicadosEnPagosEjecutadosPorPeriodo(payload: MovimientosVariosApliCerRequestDTO) {
 
-    // SON DATOS DE PUREBA, ENTRAR CON LA INSTITUCION 2039 (LAS PALMAS)
-
-    /*  payload.fechaDesde = new Date("2018-12-10");
-     payload.fechaHasta = new Date("2018-12-11"); */
-
     if (payload.fechaDesde && payload.fechaDesde != null && payload.fechaHasta && payload.fechaHasta != null) {
 
       this.progressSpinner = true;
@@ -365,16 +360,22 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
       this.progressSpinner = true;
 
-      this.sigaService.post("certificaciones_tramitarCertificacion", this.tarjetaFact.datos).subscribe(
+      const payload = new TramitarCerttificacionRequestDTO();
+      payload.idCertificacion = this.certificacion.idCertificacion;
+      payload.facturacionItemList = JSON.parse(JSON.stringify(this.tarjetaFact.datos));
+
+      this.sigaService.post("certificaciones_tramitarCertificacion", payload).subscribe(
         data => {
           this.progressSpinner = false;
 
-          const resp = JSON.parse(data.body);
+          const res = JSON.parse(data.body);
 
-          if (resp && resp.error && resp.error != null && resp.error.description != null && resp.error.code != null && (resp.error.code.toString() == "500" || resp.error.code.toString() == "400")) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
+          if (res.error && res.error != null && res.error.description != null && res.error.description.toString().trim().length > 0 && res.status == 'KO' && (res.error.code == '500' || res.error.code == '400')) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
           } else {
-
+            this.getCertificacion(res.id);
+            this.getListaEstadosEvent(res.id);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
         },
         err => {

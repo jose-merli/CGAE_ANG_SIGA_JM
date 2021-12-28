@@ -140,7 +140,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
 
   reabrir() {
 
-    if (this.permisoEscritura) {
+    if (!this.disabledReabrir() && this.isCerrada()) {
       this.reabrirEvent.emit(true);
     }
   }
@@ -149,7 +149,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   disabledCerrar(): boolean {
     let respuesta = false;
 
-    if (!this.permisoEscritura || !this.modoEdicion || !this.isAbierta() || !this.isEnvioConErrores() || !this.isNoValidada()) {
+    if (!this.permisoEscritura || !this.modoEdicion || (!["1", "3", "6"].includes(this.certificacion.idEstadoCertificacion))) {
       respuesta = true;
     }
 
@@ -167,7 +167,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   disabledSave(): boolean {
     let respuesta = false;
 
-    if (!this.permisoEscritura || this.isCerrada() || this.certificacion.nombre == this.nombreInicial) {
+    if (!this.permisoEscritura || this.certificacion.nombre == this.nombreInicial || ["2", "7"].includes(this.certificacion.idEstadoCertificacion)) {
       respuesta = true;
     }
 
@@ -176,7 +176,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
 
   save() {
 
-    if (this.permisoEscritura) {
+    if (!this.disabledSave()) {
       this.guardarEvent.emit(true);
     }
   }
@@ -184,7 +184,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   disablebRestablecer(): boolean {
     let respuesta = false;
 
-    if (!this.permisoEscritura || !this.modoEdicion || this.isCerrada() || this.certificacion.nombre == this.nombreInicial) {
+    if (!this.permisoEscritura || !this.modoEdicion || this.certificacion.nombre == this.nombreInicial || ["2", "7"].includes(this.certificacion.idEstadoCertificacion)) {
       respuesta = true;
     }
 
@@ -192,7 +192,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   }
 
   restablecer() {
-    if (this.permisoEscritura && this.certificacion && this.certificacion.idCertificacion && this.certificacion.idCertificacion != null && this.certificacion.idCertificacion.trim().length > 0) {
+    if (!this.disablebRestablecer()) {
       this.restablecerEvent.emit(this.certificacion.idCertificacion);
     }
   }
@@ -220,21 +220,12 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
     return resp;
   }
 
-
-  isAbierta() {
-    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_ABIERTA;
-  }
-
-  isEnvioConErrores() {
-    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_ENVIO_CON_ERRORES;
-  }
-
-  isNoValidada() {
-    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_NO_VALIDADA;
-  }
-
   isCerrada() {
-    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA;
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA;
+  }
+
+  isValidando() {
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_VALIDANDO;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

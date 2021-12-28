@@ -10,6 +10,7 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
 import { Enlace } from '../gestion-facturacion.component'
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-datos-facturacion',
@@ -678,7 +679,12 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
 
     this.sigaService.postDownloadFiles("facturacionsjcs_descargarLogFacturacion", this.body.idFacturacion).subscribe(
       data => {
+
         this.progressSpinnerDatos = false;
+
+        let blob = new Blob([data], { type: "text/plain" });
+        saveAs(blob, "log.txt");
+        
       },
       err => {
         this.progressSpinnerDatos = false;
