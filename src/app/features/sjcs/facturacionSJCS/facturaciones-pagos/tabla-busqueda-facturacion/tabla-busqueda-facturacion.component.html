@@ -31,8 +31,11 @@
               <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
             </div>
             <div
-              *ngIf="col.field != 'fechaDesde' && col.field != 'fechaEstado' && col.field != 'fechaHasta' && col.field != 'importeTotal' && col.field != 'importePagado' && col.field != 'importePendiente' && col.field != 'cantidad' && col.field != 'porcentaje' && col.field != 'nombre'">
+              *ngIf="col.field != 'regularizacion' && col.field != 'descGrupo' && col.field != 'fechaDesde' && col.field != 'fechaEstado' && col.field != 'fechaHasta' && col.field != 'importeTotal' && col.field != 'importePagado' && col.field != 'importePendiente' && col.field != 'cantidad' && col.field != 'porcentaje' && col.field != 'nombre'">
               <span>{{dato[col.field]}}</span>
+            </div>
+            <div *ngIf="col.field == 'descGrupo'">
+              <label>{{dato[col.field]}}</label>
             </div>
             <div *ngIf="col.field == 'importeTotal'">
               <label>{{ dato.importeTotalFormat | numberPipe}} €</label>
@@ -51,6 +54,9 @@
             </div>
             <div *ngIf="col.field =='nombre'">
               <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
+            </div>
+            <div *ngIf="col.field == 'regularizacion'">
+              <label>{{dato[col.field]}}</label>
             </div>
           </td>
         </tr>
