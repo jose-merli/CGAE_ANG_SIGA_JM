@@ -1,9 +1,49 @@
 <div class="card">
   <div class="card-body">
-    <p class="title-module">
-      <span >{{ 'oficio.cargasMasivas.ficheroModelo' | translate }}</span>
+    <p class="title-module" (click)="abreCierraTipo()">{{ 'oficio.cargasMasivas.ficheroModelo' | translate }}
+      <i (click)="abreCierraTipo()" *ngIf="!showTipo" class="fa fa-angle-up float-right"></i>
+      <i (click)="abreCierraTipo()" *ngIf="showTipo" class="fa fa-angle-down float-right"></i>
     </p>
   </div>
+  <div *ngIf="showTipo" class="module vista-simple">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 ml-lg-4 ml-md-4">
+        <p>
+          1.	Descargue el Fichero Modelo.***
+          <br>
+          2.	Rellene el fichero descargado siguiendo estas indicaciones:***
+          <br>
+          <span class="subGrupoInstrucciones">
+              2.1.	El Excel modelo dispone de cabeceras en la fila 1, que debe mantenerse.***
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.2.	Si se informa el número de colegiado no es necesario informar su NIF. El NIF sólo es necesario informarlo para los No Colegiados.***
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.3.	El nombre y apellido de las personas o sociedades no es necesario que figuren completos ni exactos, pero debe informarse.***
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.4.	El nombre del producto comprado no es necesario que figure completo ni exacto, pero debe informarse.***
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.5.	Complete todas las líneas sin dejar filas en blanco entre la información registrada.***
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.6.	Guarde el fichero, cárguelo y procese. Si el fichero es correcto se realizarán las compras y quedarán validadas.***
+              <br>
+          </span>
+          3.	Para la forma de pago por domiciliación bancaria, se seleccionará la primera cuenta activa.***
+          <br>
+        </p>
+      </div>
+    </div>
+  </div>
+
   <div class="card-footer">
     <!-- BOTON TARJETA -->
     <div class="text-right main-button">

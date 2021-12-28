@@ -7,12 +7,35 @@
 <div class="card-body">
 
   <div class="form-row">
-    <div class="col-lg-6 col-md-6">    
+    <!-- <div class="col-lg-6 col-md-6">    
       <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'monedero'"
                         [numColegiado]="usuarioBusquedaExpress.numColegiado" (colegiado)="changeColegiado($event)"
                         [nombreAp]="usuarioBusquedaExpress.nombreAp" [disabled]="disabledBusquedaExpress">
                     </app-busqueda-colegiado-express>
+    </div> -->
+
+     <!-- Buscador de Persona -->
+  
+    <div class="col-lg-2 col-md-2">
+      <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}
+      </label>
+      <input [(ngModel)]="usuarioBusquedaExpress.numColegiado" type="text" disabled class="form-control" 
+        pInputText/>
     </div>
+    <div class="col-lg-2 col-md-2">
+      <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+      </label>
+      <input [(ngModel)]="usuarioBusquedaExpress.nombreAp" type="text" disabled class="form-control" 
+        pInputText />
+    </div>
+    <div class="main-button col-lg-2 col-md-2">
+      <button type="submit" [disabled]="localStorageService.isLetrado" pButton icon="fa fa-search"
+        (click)="searchPersona()" iconPos="left"></button>
+      <button pButton type="button" [disabled]="localStorageService.isLetrado" icon="fa fa-eraser" iconPos="left"
+        (click)="limpiarCliente()">
+      </button>
+    </div>
+    
     <!-- Fecha de solicitud -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}

@@ -95,5 +95,16 @@ export class TarjetaBusquedaCmcComponent implements OnInit {
 		this.msgs = [];
   }
 
+  limpiar() {
+    this.fechaCargaDesde = new Date();
+
+    //En la documentación funcional se pide que por defecto aparezca el campo 
+    //con la fecha de dos años antes
+    this.fillFechaCargaDesde(this.fechaCargaDesde.getDate() - (365*2));
+
+    this.fechaCargaHasta = new Date();
+
+  }
+
 
 }

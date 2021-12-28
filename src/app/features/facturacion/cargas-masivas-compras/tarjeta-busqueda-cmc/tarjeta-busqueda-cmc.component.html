@@ -2,7 +2,7 @@
 
 <div class="card">
   <div class="card-body">
-    <p class="title-module" (click)="abreCierraTipo()">{{ 'censo.consultaDatosCV.cabecera' | translate }}
+    <p class="title-module" (click)="abreCierraTipo()">{{ 'facturacion.cargasmasivascompras.titulotarjetabusqueda' | translate }}
       <i (click)="abreCierraTipo()" *ngIf="!showTipo" class="fa fa-angle-up float-right"></i>
       <i (click)="abreCierraTipo()" *ngIf="showTipo" class="fa fa-angle-down float-right"></i>
     </p>
@@ -31,6 +31,11 @@
   <!-- BOTON TARJETA -->
   <div class="card-footer">  
     <div class="text-right main-button">
+      <!-- LIMPIAR -->
+      <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"
+      (click)="limpiar()">
+      </button>
+      <!-- BUSCAR -->
       <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left"
       label="{{ 'general.boton.search' | translate}}"></button>
     </div>

@@ -420,11 +420,6 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   }
 
   checkPermisoComprar() {
-    let msg = this.commonsService.checkPermisos(this.permisoCompra, undefined);
-
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
       let hayInactivo: boolean = false;
       this.selectedRows.forEach(producto => {
         if(producto.fechabaja != null){
@@ -441,7 +436,6 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         this.translateService.instant("general.message.incorrect"),
         this.translateService.instant("facturacion.productos.avisocomprarproductosinactivos"))
       }
-    }
   }
 
   checkProductosCompra() {
