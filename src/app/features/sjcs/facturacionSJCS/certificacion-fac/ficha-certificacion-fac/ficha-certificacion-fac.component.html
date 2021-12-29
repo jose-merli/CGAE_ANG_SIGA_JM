@@ -48,12 +48,12 @@
 
       <app-tarjeta-movimientos-varios-asociados *ngIf="showCards" [certificacion]="certificacion"
         [datos]="movimientosVariosAsoCerItemList" [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)"
+        (descargarLogRX)="descargarLogReintegrosXunta($event)"
         (getMovimientosAsoEvent)="getMvariosAsociadosCertificacion($event)">
       </app-tarjeta-movimientos-varios-asociados>
 
       <app-tarjeta-movimientos-varios-aplicados *ngIf="showCards" [certificacion]="certificacion"
-        [datos]="movimientosVariosApliCerItemList" [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)" 
-        (descargarLogRX)="descargarLogReintegrosXunta($event)"
+        [datos]="movimientosVariosApliCerItemList" [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)"
         (getMovimientosApliEvent)="getMvariosAplicadosEnPagosEjecutadosPorPeriodo($event)">
       </app-tarjeta-movimientos-varios-aplicados>
 
