@@ -131,4 +131,6 @@ export let endpoints_facturacionsjcs: any = {
     certificaciones_getMvariosAplicadosEnPagosEjecutadosPorPeriodo: "certificaciones/getMvariosAplicadosEnPagosEjecutadosPorPeriodo",
     certificaciones_saveFactCertificacion: "certificaciones/saveFactCertificacion",
     certificaciones_tramitarCertificacion: "certificaciones/tramitarCertificacion",
+    certificaciones_descargarLogReintegrosXunta: "certificaciones/descargarLogReintegrosXunta",
+    certificaciones_descargarInformeIncidencias: "certificaciones/descargarInformeIncidencias",
 }
