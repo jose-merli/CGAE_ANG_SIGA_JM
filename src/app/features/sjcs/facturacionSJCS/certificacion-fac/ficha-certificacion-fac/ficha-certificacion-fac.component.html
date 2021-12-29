@@ -36,7 +36,7 @@
       </div>
 
       <app-tarjeta-datos-generales-fiFac *ngIf="showCards" [certificacion]="certificacion" [modoEdicion]="modoEdicion"
-        [estadosCertificacion]="estadosCertificacion" (guardarEvent)="guardarEvent($event)"
+        [estadosCertificacion]="estadosCertificacion" (guardarEvent)="guardarEvent($event)" (descargarLogRX)="descargarLogReintegrosXunta($event)"
         (reabrirEvent)="reabrirEvent($event)" (cerrarEvent)="cerrarYenviar($event)"
         (restablecerEvent)="getCertificacion($event)" (getListaEstadosEvent)="getListaEstadosEvent($event)"
         (addEnlace)="addEnlace($event)">
