@@ -459,5 +459,36 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     }
   }
 
+  descargarLogReintegrosXunta(event) {
+    if (event == true) {
+      this.progressSpinner = true;
+      let idFactsList: string[] = [];
+
+      if (!this.tarjetaFact.datos != null || this.tarjetaFact.datos != undefined || this.tarjetaFact.datos.length != 0) {
+        for (let idFact of this.tarjetaFact.datos) {
+          idFactsList.push(idFact.idFacturacion.toString());
+        }
+
+        this.sigaService.postDownloadFiles("certificaciones_descargarLogReintegrosXunta", idFactsList).subscribe(
+          data => {
+
+            let blob = null;
+
+            blob = new Blob([data], { type: "application/zip" });
+            saveAs(blob, "Reintegros_Xunta_Error_Log.zip");
+
+            this.progressSpinner = false;
+          },
+          err => {
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+      }
+    }
+  }
+
 }
 

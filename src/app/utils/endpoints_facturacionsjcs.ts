@@ -132,4 +132,6 @@ export let endpoints_facturacionsjcs: any = {
     certificaciones_saveFactCertificacion: "certificaciones/saveFactCertificacion",
     certificaciones_tramitarCertificacion: "certificaciones/tramitarCertificacion",
     certificaciones_descargarCertificacionesXunta: "certificaciones/descargarCertificacionesXunta",
+    certificaciones_descargarLogReintegrosXunta: "certificaciones/descargarLogReintegrosXunta",
+    certificaciones_descargarInformeIncidencias: "certificaciones/descargarInformeIncidencias",
 }

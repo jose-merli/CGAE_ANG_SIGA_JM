@@ -113,11 +113,10 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
     }
   }
 
-
   disabledDescargar() {
     let respuesta = false;
 
-    if (!this.permisoEscritura || !this.modoEdicion /*|| !["3", "6", "7"].includes(this.certificacion.idEstadoCertificacion)*/) {
+    if (!this.permisoEscritura || !this.modoEdicion || !["3", "6", "7"].includes(this.certificacion.idEstadoCertificacion)) {
       respuesta = true;
     }
 

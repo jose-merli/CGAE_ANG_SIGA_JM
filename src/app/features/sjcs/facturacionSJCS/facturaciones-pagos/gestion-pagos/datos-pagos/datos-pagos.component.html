@@ -116,7 +116,7 @@
         <button *ngIf="idEstadoPago == '30'" pButton type="button" iconPos="left" icon="fa fa-lock-open"
           [disabled]='disabledDeshacerCierre() || !permisos'
           label="{{ 'facturacionSJCS.facturacionesYPagos.deshacerCierre' | translate }}"
-          (click)="deshacerCierre()"></button>
+          (click)="confirmDeshacerCierre()"></button>
         <button pButton type="button" iconPos="left" icon="fa fa-send" disabled
           label="{{ 'general.boton.comunicar' | translate }}"></button>
         <button pButton type="button" iconPos="left" icon="fa fa-undo" [disabled]="disabledRestablecer() || !permisos"

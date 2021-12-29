@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { RetencionesService } from '../retenciones.service';
 import { BusquedaColegiadoExpressComponent } from '../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
+import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -44,14 +45,19 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   @Output() buscarRetencionesAplicadasEvent = new EventEmitter<RetencionesRequestDto>();
   @Output() modoBusquedaEvent = new EventEmitter<string>();
   @ViewChild(BusquedaColegiadoExpressComponent) buscador : BusquedaColegiadoExpressComponent;
+  usuarioLogado: any;
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private router: Router,
     private sigaStorageService: SigaStorageService,
-    private retencionesService: RetencionesService) { }
+    private retencionesService: RetencionesService,
+    private sigaService: SigaServices) { }
 
   ngOnInit() {
+
+    this.isLetrado = this.sigaStorageService.isLetrado;
+
     if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('buscadorColegiados')) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
 
@@ -82,10 +88,12 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
     if (this.isLetrado) {
 
-      this.filtros.nombreApellidoColegiado = this.sigaStorageService.nombreApe;
-      this.filtros.ncolegiado = this.sigaStorageService.numColegiado;
-      this.filtros.idPersona = this.sigaStorageService.idPersona;
-      this.showDestinatarios = true;
+      // this.filtros.nombreApellidoColegiado = this.sigaStorageService.nombreApe;
+      // this.filtros.ncolegiado = this.sigaStorageService.numColegiado;
+      // this.filtros.idPersona = this.sigaStorageService.idPersona;
+      // this.showDestinatarios = true;
+        this.getDataLoggedUser();
+      
 
     } else {
 
@@ -150,6 +158,41 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
     this.getComboDestinatarios();
     this.getComboPagos();
   }
+
+  getDataLoggedUser() {
+    this.progressSpinner = true;
+  
+    this.sigaService.get("usuario_logeado").subscribe(n => {
+  
+    const usuario = n.usuarioLogeadoItem;
+    const colegiadoItem = new ColegiadoItem();
+    colegiadoItem.nif = usuario[0].dni;
+  
+    this.sigaService.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+      usr => {
+      const { numColegiado, nombre , idPersona} = JSON.parse(usr.body).colegiadoItem[0];
+      this.usuarioBusquedaExpress.numColegiado = numColegiado;
+      this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+      this.filtros.ncolegiado = numColegiado;
+      this.filtros.nombreApellidoColegiado = nombre.replace(/,/g, "");
+      this.filtros.idPersona = idPersona;
+
+      this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+      this.buscar();
+      this.progressSpinner = false;
+      }, err => {
+      this.progressSpinner = false;
+      },
+      () => {
+      this.progressSpinner = false;
+      setTimeout(() => {
+        //this.isBuscar();
+      }, 5);
+      });
+    });
+
+    this.progressSpinner = false;
+}
 
   changeFilters() {
     this.filtros.modoBusqueda = this.modoBusqueda;
