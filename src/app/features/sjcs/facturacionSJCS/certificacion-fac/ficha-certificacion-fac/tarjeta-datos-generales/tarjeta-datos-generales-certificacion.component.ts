@@ -8,6 +8,7 @@ import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_fa
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { Router } from '@angular/router';
 import { Enlace } from '../ficha-certificacion-fac.component';
+import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-tarjeta-datos-generales-fiFac',
@@ -32,6 +33,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   @Output() guardarEvent = new EventEmitter<boolean>();
   @Output() reabrirEvent = new EventEmitter<boolean>();
   @Output() cerrarEvent = new EventEmitter<boolean>();
+  @Output() descargarEvent = new EventEmitter<boolean>();
   @Output() restablecerEvent = new EventEmitter<string>();
   @Output() getListaEstadosEvent = new EventEmitter<string>();
   @Output() addEnlace = new EventEmitter<Enlace>();
@@ -39,7 +41,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   @ViewChild("tabla") tabla: Table;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private commonsService: CommonsService, private translateService: TranslateService,
-    private router: Router) { }
+    private router: Router, private sigaServices: SigaServices) { }
 
   ngOnInit() {
 
@@ -111,10 +113,20 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
     }
   }
 
+  disabledDescargar() {
+    let respuesta = false;
+
+    if (!this.permisoEscritura || !this.modoEdicion || !["3", "6", "7"].includes(this.certificacion.idEstadoCertificacion)) {
+      respuesta = true;
+    }
+
+    return respuesta;
+  }
+
   descargar() {
 
-    if (this.permisoEscritura) {
-
+    if (!this.disabledDescargar()) {
+      this.descargarEvent.emit(true);
     }
 
   }
@@ -140,7 +152,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
 
   reabrir() {
 
-    if (this.permisoEscritura) {
+    if (!this.disabledReabrir() && this.isCerrada()) {
       this.reabrirEvent.emit(true);
     }
   }
@@ -149,7 +161,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   disabledCerrar(): boolean {
     let respuesta = false;
 
-    if (!this.permisoEscritura || !this.modoEdicion || !this.isAbierta() || !this.isEnvioConErrores() || !this.isNoValidada()) {
+    if (!this.permisoEscritura || !this.modoEdicion || (!["1", "3", "6"].includes(this.certificacion.idEstadoCertificacion))) {
       respuesta = true;
     }
 
@@ -167,7 +179,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   disabledSave(): boolean {
     let respuesta = false;
 
-    if (!this.permisoEscritura || this.isCerrada() || this.certificacion.nombre == this.nombreInicial) {
+    if (!this.permisoEscritura || this.certificacion.nombre == this.nombreInicial || ["2", "7"].includes(this.certificacion.idEstadoCertificacion)) {
       respuesta = true;
     }
 
@@ -176,7 +188,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
 
   save() {
 
-    if (this.permisoEscritura) {
+    if (!this.disabledSave()) {
       this.guardarEvent.emit(true);
     }
   }
@@ -184,7 +196,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   disablebRestablecer(): boolean {
     let respuesta = false;
 
-    if (!this.permisoEscritura || !this.modoEdicion || this.isCerrada() || this.certificacion.nombre == this.nombreInicial) {
+    if (!this.permisoEscritura || !this.modoEdicion || this.certificacion.nombre == this.nombreInicial || ["2", "7"].includes(this.certificacion.idEstadoCertificacion)) {
       respuesta = true;
     }
 
@@ -192,7 +204,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   }
 
   restablecer() {
-    if (this.permisoEscritura && this.certificacion && this.certificacion.idCertificacion && this.certificacion.idCertificacion != null && this.certificacion.idCertificacion.trim().length > 0) {
+    if (!this.disablebRestablecer()) {
       this.restablecerEvent.emit(this.certificacion.idCertificacion);
     }
   }
@@ -220,21 +232,12 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
     return resp;
   }
 
-
-  isAbierta() {
-    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_ABIERTA;
-  }
-
-  isEnvioConErrores() {
-    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_ENVIO_CON_ERRORES;
-  }
-
-  isNoValidada() {
-    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_NO_VALIDADA;
-  }
-
   isCerrada() {
-    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA;
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA;
+  }
+
+  isValidando() {
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_VALIDANDO;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

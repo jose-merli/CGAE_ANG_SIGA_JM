@@ -69,6 +69,12 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
     this.progressSpinner = true;
 	if(this.persistenceService.getFiltros() != undefined){
 		this.filtros = this.persistenceService.getFiltros();
+		if(this.filtros.letrado != null && this.filtros.letrado != ""){
+			this.usuarioBusquedaExpress.nombreAp = this.filtros.letrado.toString();
+		}
+		if(this.filtros.ncolegiado != null && this.filtros.ncolegiado != ""){
+			this.usuarioBusquedaExpress.numColegiado = this.filtros.ncolegiado.toString();
+		}
 		this.persistenceService.clearFiltros(); //?¿
 	}else{
 
@@ -174,7 +180,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 
 	changeColegiado(event) {
 		this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
-		this.usuarioBusquedaExpress.numColegiado = event.numColegiado;
+		this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
 		this.filtros.ncolegiado = event.nColegiado;
 		this.filtros.letrado = event.nombreAp; 
 	  }
@@ -325,7 +331,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 		
 		    this.historico=false;
 			this.filtros.historico=false;
-			this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
+			//this.filtros.ncolegiado = this.usuarioBusquedaExpress.nColegiado;
 			this.filtros.letrado = this.usuarioBusquedaExpress.nombreAp;
 			this.persistenceService.setFiltros(this.filtros);
 

@@ -244,7 +244,7 @@ export class TablaMovimientosVariosComponent implements OnInit {
                   if (error.status == 'KO' && error != null && error.description != null) {
                     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
                   } else {
-                    this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
+                    this.showMessage("success", this.translateService.instant("general.message.correct"), (error.description.toString()));
                     this.busqueda.emit(this.datosFiltros);
                   }
         

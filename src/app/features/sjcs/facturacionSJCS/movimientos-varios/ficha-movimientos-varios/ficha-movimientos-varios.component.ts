@@ -340,9 +340,13 @@ export class FichaMovimientosVariosComponent implements OnInit {
   }
 
   volver() {
-    //this.router.navigate(["/movimientosVarios"]); //movimientosVarios búsqueda -- filtros
-    this.movimientosVariosService.volverFicha = true; //PREGUNTAR
-    this.location.back();
+    
+    if(this.movVarioDesdeTarjFacGeneEdit || this.nuevoMonVarioDesdeTarjFacGene){
+      this.location.back();
+    }else{
+      this.router.navigate(["/movimientosVarios"]); //movimientosVarios búsqueda -- filtros
+      this.movimientosVariosService.volverFicha = true; 
+    }
   }
 
   getMovimientoVarioPorId(id: string) {
@@ -389,19 +393,19 @@ export class FichaMovimientosVariosComponent implements OnInit {
             
         this.datosGuardar = JSON.parse(JSON.stringify(this.datosGenerales)); 
         
-        if(this.datosGenerales.tipo == undefined || this.datosGenerales.tipo == null){
+        if(this.datosGenerales.tipo == undefined || this.datosGenerales.tipo == null || this.datosGenerales.tipo == ""){
           this.datosGuardar.tipo = null;
         }else{
           this.datosGuardar.tipo = this.datosGenerales.tipo;
         }
   
-        if(this.datosGenerales.motivo == undefined || this.datosGenerales.motivo == null){
+        if(this.datosGenerales.motivo == undefined || this.datosGenerales.motivo == null || this.datosGenerales.motivo == ""){
           this.datosGuardar.motivo = null;
         }else{
           this.datosGuardar.motivo = this.datosGenerales.motivo;
         }
   
-        if(this.datosGenerales.certificacion == undefined || this.datosGenerales.certificacion == null){
+        if(this.datosGenerales.certificacion == undefined || this.datosGenerales.certificacion == null || this.datosGenerales.certificacion == ""){
           this.datosGuardar.certificacion = null;
         }else{
           this.datosGuardar.certificacion = this.datos.certificacion;
@@ -414,25 +418,25 @@ export class FichaMovimientosVariosComponent implements OnInit {
         }
   
         //datos criterios
-        if(this.datosCriterios.idGrupoFacturacion == undefined || this.datosCriterios.idGrupoFacturacion == null){
+        if(this.datosCriterios.idGrupoFacturacion == undefined || this.datosCriterios.idGrupoFacturacion == null || this.datosGenerales.idGrupoFacturacion == ""){
           this.datosGuardar.idGrupoFacturacion = null;
         }else{
           this.datosGuardar.idGrupoFacturacion = this.datosCriterios.idGrupoFacturacion;
         }
 
-        if(this.datosCriterios.idConcepto == undefined || this.datosCriterios.idConcepto == null){
+        if(this.datosCriterios.idConcepto == undefined || this.datosCriterios.idConcepto == null || this.datosGenerales.idConcepto == ""){
           this.datosGuardar.idConcepto = null;
         }else{
           this.datosGuardar.idConcepto = this.datos.idConcepto;
         }
 
-        if(this.datosCriterios.idPartidaPresupuestaria == undefined || this.datosCriterios.idPartidaPresupuestaria == null){
+        if(this.datosCriterios.idPartidaPresupuestaria == undefined || this.datosCriterios.idPartidaPresupuestaria == null || this.datosGenerales.idPartidaPresupuestaria == ""){
           this.datosGuardar.idPartidaPresupuestaria = null;
         }else{
           this.datosGuardar.idPartidaPresupuestaria = this.datosCriterios.idPartidaPresupuestaria;
         }
 
-        if(this.datosCriterios.idFacturacion == undefined || this.datosCriterios.idFacturacion == null){
+        if(this.datosCriterios.idFacturacion == undefined || this.datosCriterios.idFacturacion == null || this.datosGenerales.idFacturacion == ""){
           this.datosGuardar.idFacturacion = null;
         }else{
           this.datosGuardar.idFacturacion = this.datosCriterios.idFacturacion;

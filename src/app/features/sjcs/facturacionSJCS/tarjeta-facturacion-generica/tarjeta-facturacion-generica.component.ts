@@ -74,7 +74,6 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
-
     this.commonsService.checkAcceso(procesos_facturacionSJCS.tarjetaFacFenerica).then(respuesta => {
 
       this.permisoEscritura = respuesta;
@@ -354,6 +353,18 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
               this.datos = JSON.parse(JSON.stringify(resp.datosMovimientoVarioDTO));
             }
           }
+          resp.datosFacturacionAsuntoDTOList.forEach(el => {
+            if(el.datosPagoAsuntoDTOList != null){
+              el.datosPagoAsuntoDTOList.forEach(pago => {
+                if(pago.tipo == 'Pago'){
+                  var importePago = Number(pago.importe);
+                  var importeFacturacion = Number(el.importe);
+                  pago.nombre = pago.nombre + " - " + (100*importePago)/importeFacturacion +"%";
+                 }
+              });
+             }
+            });
+          this.datos = JSON.parse(JSON.stringify(resp.datosFacturacionAsuntoDTOList));
           this.procesaDatos();
         }
 

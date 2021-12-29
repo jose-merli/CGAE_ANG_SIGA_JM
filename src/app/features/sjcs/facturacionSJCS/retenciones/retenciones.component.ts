@@ -190,21 +190,40 @@ export class RetencionesComponent implements OnInit, AfterViewChecked {
   eliminarRetenciones(event: { retenciones: RetencionesItem[], historico: boolean }) {
 
     this.progressSpinner = true;
-
-    this.sigaServices.post("retenciones_eliminarRetenciones", event.retenciones).subscribe(
-      data => {
-        const res = JSON.parse(data.body);
-        this.progressSpinner = false;
-        if (res.status == 'KO' && res.error != null && res.error.description != null && res.error.code != null && res.error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
-        } else if (res.status == 'OK') {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.buscarRetenciones(event.historico);
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-      });
+    let contadorRetenciones = 0;
+    for (var i = 0; i < event.retenciones.length; i++) {
+      let restantepunto = event.retenciones[i].restante.replace(',', '.');
+      let restante = Number(restantepunto);
+      let importe = Number(event.retenciones[i].importe);
+      console.log(importe > restante);
+      console.log(restante > 0);
+      console.log(restante == 0);
+      if( (importe > restante) && (restante > 0)){
+        contadorRetenciones ++;
+      }else if(restante == 0){
+        contadorRetenciones ++;
+      }
+   }
+    if(contadorRetenciones == 0){
+      this.sigaServices.post("retenciones_eliminarRetenciones", event.retenciones).subscribe(
+        data => {
+          const res = JSON.parse(data.body);
+          this.progressSpinner = false;
+          if (res.status == 'KO' && res.error != null && res.error.description != null && res.error.code != null && res.error.code == 500) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+          } else if (res.status == 'OK') {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.buscarRetenciones(event.historico);
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        });
+    }else{
+      this.progressSpinner = false;
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"),this.translateService.instant("facturacionSJCS.retenciones.error.yaAplicadas"));
+    }
+    
   }
 
   buscarRetencionesAplicadas(historico: boolean, event?: RetencionesRequestDto) {
