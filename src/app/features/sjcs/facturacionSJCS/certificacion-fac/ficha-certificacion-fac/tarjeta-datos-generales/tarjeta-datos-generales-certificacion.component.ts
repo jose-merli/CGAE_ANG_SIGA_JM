@@ -35,6 +35,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   @Output() restablecerEvent = new EventEmitter<string>();
   @Output() getListaEstadosEvent = new EventEmitter<string>();
   @Output() addEnlace = new EventEmitter<Enlace>();
+  
 
   @ViewChild("tabla") tabla: Table;
 
@@ -114,7 +115,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   descargar() {
 
     if (this.permisoEscritura) {
-
+      
     }
 
   }

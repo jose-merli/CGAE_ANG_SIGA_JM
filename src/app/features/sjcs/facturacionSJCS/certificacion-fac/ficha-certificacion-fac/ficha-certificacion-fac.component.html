@@ -36,7 +36,7 @@
       </div>
 
       <app-tarjeta-datos-generales-fiFac *ngIf="showCards" [certificacion]="certificacion" [modoEdicion]="modoEdicion"
-        [estadosCertificacion]="estadosCertificacion" (guardarEvent)="guardarEvent($event)"
+        [estadosCertificacion]="estadosCertificacion" (guardarEvent)="guardarEvent($event)" 
         (reabrirEvent)="reabrirEvent($event)" (cerrarEvent)="cerrarYenviar($event)"
         (restablecerEvent)="getCertificacion($event)" (getListaEstadosEvent)="getListaEstadosEvent($event)"
         (addEnlace)="addEnlace($event)">
@@ -52,7 +52,8 @@
       </app-tarjeta-movimientos-varios-asociados>
 
       <app-tarjeta-movimientos-varios-aplicados *ngIf="showCards" [certificacion]="certificacion"
-        [datos]="movimientosVariosApliCerItemList" [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)"
+        [datos]="movimientosVariosApliCerItemList" [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)" 
+        (descargarLogRX)="descargarLogReintegrosXunta($event)"
         (getMovimientosApliEvent)="getMvariosAplicadosEnPagosEjecutadosPorPeriodo($event)">
       </app-tarjeta-movimientos-varios-aplicados>
 

@@ -34,6 +34,7 @@ export class TarjetaMovimientosVariosAsociadosComponent implements OnInit {
 
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Output() getMovimientosAsoEvent = new EventEmitter<string>();
+  @Output() descargarLogRX = new EventEmitter<boolean>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private commonsService: CommonsService,
     private router: Router, private translateService: TranslateService) { }
@@ -121,7 +122,7 @@ export class TarjetaMovimientosVariosAsociadosComponent implements OnInit {
   }
 
   descargarLog() {
-
+    this.descargarLogRX.emit(true)
   }
 
   onChangeSelectAll() {
