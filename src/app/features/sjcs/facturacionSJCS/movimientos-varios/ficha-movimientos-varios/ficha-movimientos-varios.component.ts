@@ -340,9 +340,9 @@ export class FichaMovimientosVariosComponent implements OnInit {
   }
 
   volver() {
-    //this.location.back();
-    this.router.navigate(["/movimientosVarios"]); //movimientosVarios búsqueda -- filtros
+    //this.router.navigate(["/movimientosVarios"]); //movimientosVarios búsqueda -- filtros
     this.movimientosVariosService.volverFicha = true; //PREGUNTAR
+    this.location.back();
   }
 
   getMovimientoVarioPorId(id: string) {

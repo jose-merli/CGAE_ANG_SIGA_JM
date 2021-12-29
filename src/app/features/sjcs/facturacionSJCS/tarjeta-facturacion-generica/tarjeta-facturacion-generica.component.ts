@@ -13,6 +13,7 @@ import { GuardiaItem } from '../../../../models/guardia/GuardiaItem';
 import { DatosMovimientoVarioDTO } from '../../../../models/sjcs/DatosMovimientoVarioDTO';
 import { CommonsService } from '../../../../_services/commons.service';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
+import { MovimientosVariosFacturacionDTO } from '../../../../models/sjcs/MovimientosVariosFacturacionDTO';
 
 export enum PANTALLAS {
   ACTUACIONDESIGNA = "ACTUACIONDESIGNA",
@@ -391,10 +392,19 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     });
   }
 
-  openFicha(rowData) {
+  async openFicha(rowData) {
     this.guardarDatos.emit(true);
-    sessionStorage.setItem("datosEdicionMovimiento", JSON.stringify(rowData));
-    this.router.navigate(["/fichaMovimientosVarios"]);
+
+    await this.getMovimientoVarioPorId(rowData.idObjeto).then(
+      (data: MovimientosVariosFacturacionDTO) => {
+        if(data.facturacionItem!=null && data.facturacionItem[0]!=null){
+          sessionStorage.setItem("datosEdicionMovimiento", JSON.stringify(rowData));
+          this.router.navigate(["/fichaMovimientosVarios"]);
+        }
+      }
+    ).catch(err => {
+      console.log(err);
+    });
   }
 
   async nuevo() {
@@ -426,7 +436,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
         datos = {
           colegiado: actuacionDesigna.actuacion.idPersonaColegiado,
-          descripcion: `Designación ${actuacionDesigna.actuacion.anio}/${actuacionDesigna.actuacion.numero}/${actuacionDesigna.actuacion.numeroAsunto}-${this.checkCampo(actuacionDesigna.actuacion.nombreModulo) ? actuacionDesigna.actuacion.nombreModulo : ''}`,
+          descripcion: `Designación ${actuacionDesigna.actuacion.anio}/${actuacionDesigna.designaItem.codigo}/${actuacionDesigna.actuacion.numeroAsunto}-${this.checkCampo(actuacionDesigna.actuacion.nombreModulo) ? actuacionDesigna.actuacion.nombreModulo : ''}`,
           cantidad: (-this.totalFacturado),
           criterios: {
             idFacturacion: idFacturacion,
@@ -527,6 +537,25 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     }
   }
 
+  getMovimientoVarioPorId(id: string) {
+    return this.sigaServices.getParam("movimientosVarios_getMovimientoVarioPorId", `?idMovimiento=${id}`).toPromise();
+  }
+
+  /*getMovimientoVarioPorId2(rowData, id :string) {
+    this.sigaServices.get("movimientosVarios_getMovimientoVarioPorId?idMovimiento="+id).subscribe(
+      (data: MovimientosVariosFacturacionDTO) => {
+        if(data.facturacionItem!=null && data.facturacionItem[0]!=null){
+          sessionStorage.setItem("datosEdicionMovimiento", JSON.stringify(rowData));
+          this.router.navigate(["/fichaMovimientosVarios"]);
+        }
+      }
+    ,err => {
+      console.log(err);
+    });
+    
+    return this.sigaServices.getParam("movimientosVarios_getMovimientoVarioPorId", `?idMovimiento=${id}`).toPromise();
+  }*/
+
   getAgrupacionTurno(idTurno: string) {
     return this.sigaServices.getParam("facturacionsjcs_getAgrupacionDeTurnosPorTurno", `?idTurno=${idTurno}`).toPromise();
   }
@@ -563,6 +592,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         if (el.numAplicaciones > 0) {
           notDeleteList.push(el);
         } else {
+          el.idMovimiento = el.idObjeto;
           deleteList.push(el);
         }
       });
@@ -589,6 +619,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
           if (error.status == 'KO' && error != null && error.description != null) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+            this.getDatos(this.pantalla);
           } else {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.deleted.success"));
             this.getDatos(this.pantalla);
@@ -597,6 +628,8 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
           this.progressSpinner = false;
         },
         err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(err.description.toString()));
+          this.getDatos(this.pantalla);
           this.progressSpinner = false;
           console.log(err);
         }
