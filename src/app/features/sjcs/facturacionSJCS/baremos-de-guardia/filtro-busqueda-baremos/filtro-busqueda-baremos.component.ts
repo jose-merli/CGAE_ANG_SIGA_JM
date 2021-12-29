@@ -43,6 +43,13 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
       this.getComboTurno();
       this.getComboGuardia([datos.idTurno]);
       this.buscar();
+    } else if(sessionStorage.getItem("tarjetaBaremosFacturacion")){
+      let idFacturacion:String = sessionStorage.getItem("tarjetaBaremosFacturacion")
+      sessionStorage.removeItem("tarjetaBaremosFacturacion");
+      this.getComboTurno();
+      this.getComboFacturacion();
+      this.filtros.idFacturaciones = [idFacturacion];
+      this.buscar();
     } else if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
 
@@ -51,14 +58,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
       this.getComboFacturacion();
       this.buscar();
 
-    } else if(sessionStorage.getItem("tarjetaBaremosFacturacion")){
-      let idFacturacion = sessionStorage.getItem("tarjetaBaremosFacturacion")
-      sessionStorage.removeItem("tarjetaBaremosFacturacion");
-      this.getComboTurno();
-      this.getComboFacturacion();
-      this.filtros.idFacturaciones = [idFacturacion];
-      this.buscar();
-    }else{
+    } else{
       this.getComboTurno();
       this.getComboFacturacion();
       this.filtros.idFacturaciones = ['0'];
@@ -92,7 +92,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
 
     this.progressSpinner = true;
 
-    this.sigaServices.get("combo_comboFacturaciones").subscribe(
+    this.sigaServices.get("combo_comboFacBaremos").subscribe(
       data => {
         this.comboFacturacion = data.combooItems;
         this.commonsService.arregloTildesCombo(this.comboFacturacion);

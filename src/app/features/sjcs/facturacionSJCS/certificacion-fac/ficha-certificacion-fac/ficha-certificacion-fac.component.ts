@@ -7,11 +7,13 @@ import { CertificacionesItem } from '../../../../../models/sjcs/CertificacionesI
 import { CertificacionesObject } from '../../../../../models/sjcs/CertificacionesObject';
 import { EstadoCertificacionDTO } from '../../../../../models/sjcs/EstadoCertificacionDTO';
 import { EstadoCertificacionItem } from '../../../../../models/sjcs/EstadoCertificacionItem';
+import { FacturacionItem } from '../../../../../models/sjcs/FacturacionItem';
 import { MovimientosVariosApliCerDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerDTO';
 import { MovimientosVariosApliCerItem } from '../../../../../models/sjcs/MovimientosVariosApliCerItem';
 import { MovimientosVariosApliCerRequestDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerRequestDTO';
 import { MovimientosVariosAsoCerDTO } from '../../../../../models/sjcs/MovimientosVariosAsoCerDTO';
 import { MovimientosVariosAsoCerItem } from '../../../../../models/sjcs/MovimientosVariosAsoCerItem';
+import { TramitarCerttificacionRequestDTO } from '../../../../../models/sjcs/TramitarCerttificacionRequestDTO';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -58,6 +60,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     ]
   };
 
+  fechasMaxMin: MovimientosVariosApliCerRequestDTO = new MovimientosVariosApliCerRequestDTO();
   @ViewChild(TarjetaDatosGeneralesCertificacionComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesCertificacionComponent;
   @ViewChild(TarjetaFacturacionComponent) tarjetaFact: TarjetaFacturacionComponent;
   @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli: TarjetaMovimientosVariosAplicadosComponent;
@@ -329,11 +332,6 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
   getMvariosAplicadosEnPagosEjecutadosPorPeriodo(payload: MovimientosVariosApliCerRequestDTO) {
 
-    // SON DATOS DE PUREBA, ENTRAR CON LA INSTITUCION 2039 (LAS PALMAS)
-
-    payload.fechaDesde = new Date("2018-12-10");
-    payload.fechaHasta = new Date("2018-12-11");
-
     if (payload.fechaDesde && payload.fechaDesde != null && payload.fechaHasta && payload.fechaHasta != null) {
 
       this.progressSpinner = true;
@@ -354,6 +352,74 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         }
       );
     }
+  }
+
+  cerrarYenviar(event) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
+      this.progressSpinner = true;
+
+      const payload = new TramitarCerttificacionRequestDTO();
+      payload.idCertificacion = this.certificacion.idCertificacion;
+      payload.facturacionItemList = JSON.parse(JSON.stringify(this.tarjetaFact.datos));
+
+      this.sigaService.post("certificaciones_tramitarCertificacion", payload).subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          const res = JSON.parse(data.body);
+
+          if (res.error && res.error != null && res.error.description != null && res.error.description.toString().trim().length > 0 && res.status == 'KO' && (res.error.code == '500' || res.error.code == '400')) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+          } else {
+            this.getCertificacion(res.id);
+            this.getListaEstadosEvent(res.id);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+
+    }
+  }
+
+  saveFactCert(event) {
+    let factCert: CertificacionesItem = new CertificacionesItem();
+    factCert.idCertificacion = this.certificacion.idCertificacion;
+    factCert.idFacturacion = event;
+
+    this.sigaService.post("certificaciones_saveFactCertificacion", factCert).subscribe(
+      data => {
+        let error = JSON.parse(data.body).error;
+        if (error != undefined && error != null && error.description != null) {
+          if (error.code == '200') {
+            this.showMessage("success", this.translateService.instant("general.message.informacion"), this.translateService.instant(error.description));
+
+            this.getCertificacion(this.certificacion.idCertificacion)
+            this.getMvariosAsociadosCertificacion(this.certificacion.idCertificacion)
+            this.fechasMaxMin.fechaDesde = this.certificacion.fechaDesde;
+            this.fechasMaxMin.fechaHasta = this.certificacion.fechaHasta;
+            this.getMvariosAplicadosEnPagosEjecutadosPorPeriodo(this.fechasMaxMin);
+            this.tarjetaFact.restablecer()
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+        this.progressSpinner = false;
+      },
+      err => {
+
+        if (err != undefined && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+        this.progressSpinner = false;
+      }
+    )
   }
 
 }

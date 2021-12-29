@@ -304,7 +304,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -349,7 +349,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -389,7 +389,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -430,7 +430,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -473,7 +473,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -513,7 +513,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -553,7 +553,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -577,7 +577,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -625,7 +625,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -651,7 +651,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.progressSpinner = false;
@@ -773,7 +773,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
           this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
         },
         () => {
@@ -837,7 +837,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
           this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
         },
         () => {
@@ -978,7 +978,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.progressSpinner = false;
@@ -1155,7 +1155,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -1179,7 +1179,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.keys = JSON.parse(data["body"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -1219,12 +1219,12 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
                 this.router.navigate(["/dialogoComunicaciones"]);
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

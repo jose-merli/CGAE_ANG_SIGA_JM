@@ -14,7 +14,7 @@ import { Enlace } from '../ficha-certificacion-fac.component';
   templateUrl: './tarjeta-datos-generales-certificacion.component.html',
   styleUrls: ['./tarjeta-datos-generales-certificacion.component.scss']
 })
-export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, OnChanges, AfterViewInit {
+export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnChanges, AfterViewInit {
 
   showDatosGenerales: boolean = true;
   progressSpinner: boolean = false;
@@ -31,6 +31,7 @@ export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, 
 
   @Output() guardarEvent = new EventEmitter<boolean>();
   @Output() reabrirEvent = new EventEmitter<boolean>();
+  @Output() cerrarEvent = new EventEmitter<boolean>();
   @Output() restablecerEvent = new EventEmitter<string>();
   @Output() getListaEstadosEvent = new EventEmitter<string>();
   @Output() addEnlace = new EventEmitter<Enlace>();
@@ -139,22 +140,34 @@ export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, 
 
   reabrir() {
 
-    if (this.permisoEscritura) {
+    if (!this.disabledReabrir() && this.isCerrada()) {
       this.reabrirEvent.emit(true);
     }
   }
 
+
+  disabledCerrar(): boolean {
+    let respuesta = false;
+
+    if (!this.permisoEscritura || !this.modoEdicion || (!["1", "3", "6"].includes(this.certificacion.idEstadoCertificacion))) {
+      respuesta = true;
+    }
+
+    return respuesta;
+
+  }
+
   cerrarEnviar() {
 
-    if (this.permisoEscritura) {
-
+    if (!this.disabledCerrar()) {
+      this.cerrarEvent.emit(true);
     }
   }
 
   disabledSave(): boolean {
     let respuesta = false;
 
-    if (!this.permisoEscritura || this.isCerrada() || this.certificacion.nombre == this.nombreInicial) {
+    if (!this.permisoEscritura || this.certificacion.nombre == this.nombreInicial || ["2", "7"].includes(this.certificacion.idEstadoCertificacion)) {
       respuesta = true;
     }
 
@@ -163,7 +176,7 @@ export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, 
 
   save() {
 
-    if (this.permisoEscritura) {
+    if (!this.disabledSave()) {
       this.guardarEvent.emit(true);
     }
   }
@@ -171,7 +184,7 @@ export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, 
   disablebRestablecer(): boolean {
     let respuesta = false;
 
-    if (!this.permisoEscritura || !this.modoEdicion || this.isCerrada() || this.certificacion.nombre == this.nombreInicial) {
+    if (!this.permisoEscritura || !this.modoEdicion || this.certificacion.nombre == this.nombreInicial || ["2", "7"].includes(this.certificacion.idEstadoCertificacion)) {
       respuesta = true;
     }
 
@@ -179,7 +192,7 @@ export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, 
   }
 
   restablecer() {
-    if (this.permisoEscritura && this.certificacion && this.certificacion.idCertificacion && this.certificacion.idCertificacion != null && this.certificacion.idCertificacion.trim().length > 0) {
+    if (!this.disablebRestablecer()) {
       this.restablecerEvent.emit(this.certificacion.idCertificacion);
     }
   }
@@ -208,7 +221,11 @@ export class  TarjetaDatosGeneralesCertificacionComponent  implements OnInit, 
   }
 
   isCerrada() {
-    return this.certificacion.idCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA;
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA;
+  }
+
+  isValidando() {
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_VALIDANDO;
   }
 
   ngOnChanges(changes: SimpleChanges): void {

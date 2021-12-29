@@ -37,12 +37,13 @@
 
       <app-tarjeta-datos-generales-fiFac *ngIf="showCards" [certificacion]="certificacion" [modoEdicion]="modoEdicion"
         [estadosCertificacion]="estadosCertificacion" (guardarEvent)="guardarEvent($event)"
-        (reabrirEvent)="reabrirEvent($event)" (restablecerEvent)="getCertificacion($event)"
-        (getListaEstadosEvent)="getListaEstadosEvent($event)" (addEnlace)="addEnlace($event)">
+        (reabrirEvent)="reabrirEvent($event)" (cerrarEvent)="cerrarYenviar($event)"
+        (restablecerEvent)="getCertificacion($event)" (getListaEstadosEvent)="getListaEstadosEvent($event)"
+        (addEnlace)="addEnlace($event)">
       </app-tarjeta-datos-generales-fiFac>
 
       <app-tarjeta-facturacion *ngIf="showCards" [certificacion]="certificacion" [modoEdicion]="modoEdicion"
-        (changeModoEdicion)="changeModoEdicion($event)">
+        (changeModoEdicion)="changeModoEdicion($event)" (saveFact) = "saveFactCert($event)">
       </app-tarjeta-facturacion>
 
       <app-tarjeta-movimientos-varios-asociados *ngIf="showCards" [certificacion]="certificacion"

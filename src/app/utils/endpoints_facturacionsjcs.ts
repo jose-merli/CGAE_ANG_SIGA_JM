@@ -18,6 +18,7 @@ export let endpoints_facturacionsjcs: any = {
     combo_grupoFacturacionByColegios: "combo/grupoFacturacionByColegios",
     combo_factByPartidaPresu: "combo/comboFactByPartidaPresu",
     combo_factNull: "combo/comboFactNull",
+    combo_comboFacBaremos: "combo/comboFactBaremos",
 
     /* Endpoints FACTURACIONSJCS */
 
@@ -129,4 +130,5 @@ export let endpoints_facturacionsjcs: any = {
     certificaciones_getMvariosAsociadosCertificacion: "certificaciones/getMvariosAsociadosCertificacion",
     certificaciones_getMvariosAplicadosEnPagosEjecutadosPorPeriodo: "certificaciones/getMvariosAplicadosEnPagosEjecutadosPorPeriodo",
     certificaciones_saveFactCertificacion: "certificaciones/saveFactCertificacion",
+    certificaciones_tramitarCertificacion: "certificaciones/tramitarCertificacion",
 }

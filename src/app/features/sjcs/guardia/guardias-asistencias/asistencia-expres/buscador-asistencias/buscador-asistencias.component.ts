@@ -196,16 +196,21 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
   }
 
   getComboTurnos(){
-    this.sigaServices.get("combo_turnos_designas").subscribe(
-      n => {
-        this.comboTurnos = n.combooItems;
-      },
-      err => {
-        //console.log(err);
-      }, () => {
-        this.commonsService.arregloTildesCombo(this.comboTurnos);
-      }
-    );
+    //Tipo letrado designacion
+    let tipoLetrado = "2"; 
+
+    this.sigaServices.getParam("filtrosejg_comboTurno",
+      "?idTurno=" + tipoLetrado).subscribe(
+        n => {
+          this.comboTurnos = n.combooItems;
+        },
+        err => {
+          //console.log(err);
+        },
+        () => {
+          this.commonsService.arregloTildesCombo(this.comboTurnos);
+        }
+      );
   }
 
   getComboGuardias(){

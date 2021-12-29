@@ -122,7 +122,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.progressSpinner = false;
         }
@@ -154,7 +154,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
     desginaAdicionales.idTurno = datosDesigna.idTurno;
     this.sigaServices.post("designaciones_getDatosAdicionales", desginaAdicionales).subscribe(
       n => {
-        console.log(n.body);
+        //console.log(n.body);
         let datosAdicionales = JSON.parse(n.body);
         if (datosAdicionales[0] != null && datosAdicionales[0]!=undefined) {
           this.campos.delitos = datosAdicionales[0].delitos;
@@ -184,7 +184,7 @@ export class DetalleTarjetaDatosAdicionalesFichaDesignacionOficioComponent imple
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.progressSpinner = false;
       }

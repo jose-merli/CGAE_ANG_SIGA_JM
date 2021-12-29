@@ -169,7 +169,7 @@ export class TiposActuacionComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
       , () => {
         this.progressSpinner = false;
@@ -226,7 +226,7 @@ export class TiposActuacionComponent implements OnInit {
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }

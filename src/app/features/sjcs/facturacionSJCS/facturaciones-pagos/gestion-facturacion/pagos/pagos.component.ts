@@ -5,6 +5,7 @@ import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_fa
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Enlace } from '../gestion-facturacion.component'
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-pagos',
@@ -36,7 +37,7 @@ export class PagosComponent implements OnInit, AfterViewInit {
   @ViewChild("tabla") tabla;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    private sigaService: SigaServices, private router: Router, private commonsService: CommonsService, private translateService: TranslateService) { }
+    private sigaService: SigaServices, private router: Router, private persistenceService: PersistenceService, private commonsService: CommonsService, private translateService: TranslateService) { }
 
   ngOnInit() {
 
@@ -214,5 +215,10 @@ export class PagosComponent implements OnInit, AfterViewInit {
     };
 
     this.addEnlace.emit(enlace);
+  }
+
+  openFicha(datos) {
+    this.persistenceService.setDatos(datos);
+    this.router.navigate(["/fichaPagos"]);
   }
 }
