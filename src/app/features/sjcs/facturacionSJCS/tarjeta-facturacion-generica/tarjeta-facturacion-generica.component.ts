@@ -24,7 +24,7 @@ export enum PANTALLAS {
 }
 
 export interface DatosParaMovimiento {
-  colegiado: string;
+  ncolegiado: string;
   descripcion: string;
   cantidad: number;
   criterios: any;
@@ -435,7 +435,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         }
 
         datos = {
-          colegiado: actuacionDesigna.actuacion.idPersonaColegiado,
+          ncolegiado: actuacionDesigna.actuacion.idPersonaColegiado,
           descripcion: `Designación ${actuacionDesigna.actuacion.anio}/${actuacionDesigna.designaItem.codigo}/${actuacionDesigna.actuacion.numeroAsunto}-${this.checkCampo(actuacionDesigna.actuacion.nombreModulo) ? actuacionDesigna.actuacion.nombreModulo : ''}`,
           cantidad: (-this.totalFacturado),
           criterios: {
@@ -456,7 +456,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         }
 
         datos = {
-          colegiado: asistencia.asistencia.idLetradoGuardia,
+          ncolegiado: asistencia.asistencia.idLetradoGuardia,
           descripcion: `Asistencia ${asistencia.asistencia.anio}/${asistencia.asistencia.numero}`,
           cantidad: (-this.totalFacturado),
           criterios: {
@@ -477,7 +477,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         }
 
         datos = {
-          colegiado: actuacionAsistencia.asistencia.idPersonaJg,
+          ncolegiado: actuacionAsistencia.asistencia.idPersonaJg,
           descripcion: `Actuación de asistencia ${actuacionAsistencia.asistencia.anio}/${actuacionAsistencia.asistencia.numero}/${actuacionAsistencia.actuacion.idActuacion}`,
           cantidad: (-this.totalFacturado),
           criterios: {
@@ -498,7 +498,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         }
 
         datos = {
-          colegiado: guardia.idPersona,
+          ncolegiado: guardia.idPersona,
           descripcion: `Guardia ${guardia.fechadesde}.${guardia.turno}>${guardia.nombre}`,
           cantidad: (-this.totalFacturado),
           criterios: {
@@ -519,7 +519,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         }
 
         datos = {
-          colegiado: ejg.ejg.idPersona,
+          ncolegiado: ejg.ejg.idPersona,
           descripcion: "",
           cantidad: (-this.totalFacturado),
           criterios: {
