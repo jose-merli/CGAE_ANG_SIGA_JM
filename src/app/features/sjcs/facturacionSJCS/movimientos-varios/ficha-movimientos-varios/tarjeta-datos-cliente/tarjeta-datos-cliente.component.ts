@@ -122,8 +122,9 @@ export class TarjetaDatosClienteComponent implements OnInit {
       this.ncolegiado = this.datos.ncolegiado;
       this.idpersona = this.datos.idPersona;
       this.datosColegiado = new ColegiadosSJCSItem();
-      this.datosColegiado.nif = this.nif;
+      this.datosColegiado.idPersona = this.datos.idPersona;
       this.datosColegiado.apellidos = `${this.apellido1} ${this.apellido2}`;
+      this.datosColegiado.nColegiado = this.ncolegiado;
       this.datosColegiado.nombre = this.nombre;
       this.ncolegiado = this.ncolegiado;
       this.datosColegiadoEmit.emit(this.datosColegiado);
