@@ -55,6 +55,8 @@ export class FichaConsultaComponent implements OnInit {
 		let filtros = JSON.parse(sessionStorage.getItem("filtrosConsultaConsulta"));
 		sessionStorage.setItem("filtrosConsulta", JSON.stringify(filtros));
 		sessionStorage.removeItem("filtrosConsultaConsulta");
+		sessionStorage.removeItem("constructorDeConsultasGuardado");
+		sessionStorage.removeItem("copiaCambiosConstructor");
 		this.location.back();
 	}
 }

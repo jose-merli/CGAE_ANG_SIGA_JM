@@ -182,7 +182,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   estabaPulsadoConsultaExperta: boolean;
   
   emitUsoConstructorConsultaExperta(){
-    if(this.estabaPulsadoConsultaExperta == true && this.constructorConsultaExperta == 'constructor'){
+    if(this.estabaPulsadoConsultaExperta == true && this.constructorConsultaExperta == 'constructor' && sessionStorage.getItem("constructorDeConsultasGuardado") == "true"){
       let keyConfirmation = "deletePlantillaDoc";
 
       this.queryBuilderDTO.consulta = "";

@@ -81,6 +81,7 @@ export class ConstructorConsultasComponent implements OnInit {
       this.consultaBuscador = JSON.parse(sessionStorage.getItem("consultasSearch"));
       this.obtenerDatosConsulta(this.consultaBuscador.idConsulta);    
     }
+
   }
 
   //Necesario para liberar memoria
@@ -93,6 +94,13 @@ export class ConstructorConsultasComponent implements OnInit {
       this.subscriptionObtenerConfigColumnas.unsubscribe();
     if (this.subscriptionObtenerCombo)
       this.subscriptionObtenerCombo.unsubscribe();
+
+    //Copia necesaria para conservar la informacion cuando se selecciona consulta experta en el radio button sin haber guardado el constructor y 
+    //se vuelve ya que en ese caso se ha de conservar lo modificado.
+    if(this.datosConst.consulta != this.constructorConsultas.getSqlFromRules() && sessionStorage.getItem("constructorDeConsultasGuardado") == undefined){
+      sessionStorage.setItem("copiaCambiosConstructor", this.constructorConsultas.getSqlFromRules());
+    }
+
   }
 
   fieldChange(e: any): void {
@@ -206,7 +214,11 @@ export class ConstructorConsultasComponent implements OnInit {
   setRules(): void{
     if(this.constructorConsultas != undefined){
       this.constructorConsultas.setRulesFromSql(this.datosConst.consulta);
-    }   
+    }
+    
+    if(sessionStorage.getItem("constructorDeConsultasGuardado") == undefined){
+      this.constructorConsultas.setRulesFromSql(sessionStorage.getItem("copiaCambiosConstructor"));
+    }
   }
 
   datosConst;
@@ -244,6 +256,7 @@ export class ConstructorConsultasComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          sessionStorage.setItem("constructorDeConsultasGuardado","true");
         }
 
         this.progressSpinner = false;
