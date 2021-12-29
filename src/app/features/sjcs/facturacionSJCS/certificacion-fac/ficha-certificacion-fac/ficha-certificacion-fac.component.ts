@@ -5,9 +5,9 @@ import { TranslateService } from '../../../../../commons/translate';
 import { BusquedaRetencionesRequestDTO } from '../../../../../models/sjcs/BusquedaRetencionesRequestDTO';
 import { CertificacionesItem } from '../../../../../models/sjcs/CertificacionesItem';
 import { CertificacionesObject } from '../../../../../models/sjcs/CertificacionesObject';
+import { DescargaCertificacionesXuntaItem } from '../../../../../models/sjcs/DescargaCertificacionesXuntaItem';
 import { EstadoCertificacionDTO } from '../../../../../models/sjcs/EstadoCertificacionDTO';
 import { EstadoCertificacionItem } from '../../../../../models/sjcs/EstadoCertificacionItem';
-import { FacturacionItem } from '../../../../../models/sjcs/FacturacionItem';
 import { MovimientosVariosApliCerDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerDTO';
 import { MovimientosVariosApliCerItem } from '../../../../../models/sjcs/MovimientosVariosApliCerItem';
 import { MovimientosVariosApliCerRequestDTO } from '../../../../../models/sjcs/MovimientosVariosApliCerRequestDTO';
@@ -22,6 +22,8 @@ import { TarjetaDatosGeneralesCertificacionComponent } from './tarjeta-datos-gen
 import { TarjetaFacturacionComponent } from './tarjeta-facturacion/tarjeta-facturacion.component';
 import { TarjetaMovimientosVariosAplicadosComponent } from './tarjeta-movimientos-varios-aplicados/tarjeta-movimientos-varios-aplicados.component';
 import { TarjetaMovimientosVariosAsociadosComponent } from './tarjeta-movimientos-varios-asociados/tarjeta-movimientos-varios-asociados.component';
+import { saveAs } from "file-saver/FileSaver";
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 export interface Enlace {
   id: string;
@@ -72,7 +74,8 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private router: Router,
-    private sigaService: SigaServices
+    private sigaService: SigaServices,
+    private sigaStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
@@ -422,4 +425,39 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     )
   }
 
+  descargar(event: boolean) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
+      this.progressSpinner = true;
+
+      let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+
+      const payload = new DescargaCertificacionesXuntaItem();
+      payload.idEstadoCertificacion = this.certificacion.idEstadoCertificacion;
+      payload.idInstitucion = Number(this.sigaStorageService.institucionActual);
+      payload.listaIdFacturaciones = listaIds.length > 0 ? listaIds : [];
+
+      this.sigaService.postDownloadFilesWithFileName2("certificaciones_descargarCertificacionesXunta", payload).subscribe(
+        (data: { file: Blob, filename: string, status: number }) => {
+          this.progressSpinner = false;
+
+          let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+          saveAs(data.file, filename);
+        },
+        err => {
+          this.progressSpinner = false;
+
+          if (null != err.error && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+        }
+      );
+
+    }
+  }
+
 }
+

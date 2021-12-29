@@ -8,6 +8,7 @@ import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_fa
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
 import { Router } from '@angular/router';
 import { Enlace } from '../ficha-certificacion-fac.component';
+import { SigaServices } from '../../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-tarjeta-datos-generales-fiFac',
@@ -32,6 +33,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   @Output() guardarEvent = new EventEmitter<boolean>();
   @Output() reabrirEvent = new EventEmitter<boolean>();
   @Output() cerrarEvent = new EventEmitter<boolean>();
+  @Output() descargarEvent = new EventEmitter<boolean>();
   @Output() restablecerEvent = new EventEmitter<string>();
   @Output() getListaEstadosEvent = new EventEmitter<string>();
   @Output() addEnlace = new EventEmitter<Enlace>();
@@ -39,7 +41,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   @ViewChild("tabla") tabla: Table;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private commonsService: CommonsService, private translateService: TranslateService,
-    private router: Router) { }
+    private router: Router, private sigaServices: SigaServices) { }
 
   ngOnInit() {
 
@@ -111,10 +113,21 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
     }
   }
 
+
+  disabledDescargar() {
+    let respuesta = false;
+
+    if (!this.permisoEscritura || !this.modoEdicion /*|| !["3", "6", "7"].includes(this.certificacion.idEstadoCertificacion)*/) {
+      respuesta = true;
+    }
+
+    return respuesta;
+  }
+
   descargar() {
 
-    if (this.permisoEscritura) {
-
+    if (!this.disabledDescargar()) {
+      this.descargarEvent.emit(true);
     }
 
   }
