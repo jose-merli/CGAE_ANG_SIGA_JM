@@ -90,7 +90,7 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <!-- Nueva Condicion -->
-    <button (click)="nuevacondicion()" pButton type="button" icon="fa fa-database" iconPos="left"
+    <button (click)="nuevacondicion()" [disabled]="desactivarBotonEliminar" pButton type="button" icon="fa fa-database" iconPos="left"
       label="{{'informesycomunicaciones.consultas.constructor.nuevacondicionboton' | translate}}"></button>
 
     <!-- Restablecer -->
@@ -196,6 +196,38 @@
       <button (click)="guardarDialogBorrarSuscripcionesBajas()" pButton type="button" icon="fa fa-edit" iconPos="left"
         label="{{'general.boton.guardarCerrar' | translate}}"></button>
       <button (click)="cancelarDialogBorrarSuscripcionesBajas()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+
+</p-dialog>
+
+<!-- DIALOG SERVICIO AUTOMATICO A MANUAL -->
+<p-dialog width="auto" height="auto" responsive="true" modal="modal" [draggable]="false" resizable="false"
+  [(visible)]="showModalServicioAutomaticoAManual" (onHide)="cancelarDialogBorrarSuscripcionesBajas()">
+  <p-header class="title">
+    <label>{{ "facturacion.servicios.fichaservicio.titulobajasaltasdialog" | translate}}</label>
+  </p-header>
+  <div class="form-row">
+
+    <!-- Dar de baja a todas las personas ya suscritas -->
+    <div class="form-group-interlineado col-lg-12 col-md-12 pb-lg-2 pb-md-2">
+      <div class="d-flex justify-content-between">
+        <p-checkbox binary="true"
+          label="¿Desea dar de baja a todas las personas suscritas?" 
+          [(ngModel)]="checkboxDialogServicioAutomaticoAManual" (onChange)="onChangeDialogServicioAutomaticoAManual()">
+        </p-checkbox>
+        <!-- label="{{ 'facturacion.productosYServicios.fichaservicios.dialogbajasuscriptores' | translate}}" -->
+      </div>
+    </div>
+
+  </div>
+
+  <div class="paddingDialogBorrarSuscripcionesBajasButtons">
+    <div class="text-right main-button">
+      <button (click)="checkGuardarDialogBorrarSuscripcionesBajas()" pButton type="button" icon="fa fa-edit" iconPos="left"
+        label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelarDialogServicioAutomaticoAManual()" pButton type="button" icon="fa fa-close" iconPos="left"
         label="{{'general.boton.cancel' | translate}}"></button>
     </div>
   </div>

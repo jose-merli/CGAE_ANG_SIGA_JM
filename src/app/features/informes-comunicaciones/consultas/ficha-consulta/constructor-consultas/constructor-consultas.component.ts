@@ -129,6 +129,14 @@ export class ConstructorConsultasComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  resetToOriginalData(){
+    if(sessionStorage.getItem("consultasSearch")){
+      this.constructorConsultas.setRulesFromSql(this.datosConst.consulta);
+    }else{
+      this.constructorConsultas.setRulesFromSql("");
+    }
+  }
   
   //Inicializa las propiedades necesarias para el dialogo de confirmacion
   showMessage(severity, summary, msg) {

@@ -57,15 +57,31 @@ export class DatosGeneralesMonederoComponent implements OnInit {
       );
     }
     //Se comprueba si se ha realizado una busqueda y se rellena la tarjeta con los datos extraidos
-    else if (sessionStorage.getItem("buscadorColegiados")) {
-      const { nombre, apellidos, nColegiado, idPersona, nif, idInstitucion } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+    else if (sessionStorage.getItem("abogado")) {
+      /* const { nombre, apellidos, nColegiado, idPersona, nif, idInstitucion } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.ficha.nombre = nombre;
       this.ficha.apellidos = idPersona;
       this.ficha.nif = nif;
       this.ficha.idInstitucion = idInstitucion;
-      this.ficha.idPersona = idPersona;
+      this.ficha.idPersona = idPersona; */
 
-      sessionStorage.removeItem("buscadorColegiados");
+      let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
+  
+      if (isNaN(data.nif.charAt(0))) {
+        this.ficha.nombre = data.denominacion;
+        this.ficha.apellidos = "";
+      }
+      if (!isNaN(data.nif.charAt(0))) {
+        this.ficha.nombre = data.nombre;
+        this.ficha.apellidos = data.apellidos;
+      }
+
+      this.ficha.nif = data.nif;
+      this.ficha.idInstitucion = data.idInstitucion;
+      this.ficha.idPersona = data.idPersona;
+      
+
+      sessionStorage.removeItem("abogado");
       this.compruebaDNIInput();
     }
     //Se comprueba si el usuario conectado es un colegiado y se rellena la ficha con su informacion
@@ -109,7 +125,9 @@ export class DatosGeneralesMonederoComponent implements OnInit {
     //   this.msgs = msg;
     // }  else {
       sessionStorage.setItem("FichaMonedero", JSON.stringify(this.ficha));
-			this.router.navigate(["/buscadorColegiados"]);
+      sessionStorage.setItem("origin", "newCliente");
+      this.router.navigate(['/busquedaGeneral']);
+			//this.router.navigate(["/buscadorColegiados"]);
 		// }
   }
 
