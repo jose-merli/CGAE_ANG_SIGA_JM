@@ -162,7 +162,7 @@
           [disabled]="selectedDatos == undefined || selectedDatos == null || selectedDatos.length == 0 || !permisoEscritura || disableButtons"
           (click)="comfirmacionEliminar()"></button>
         <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
-          (click)="nuevo()" [disabled]="!permisoEscritura || disableButtons"></button>
+          (click)="nuevo()" [disabled]="!permisoEscritura || disableButtons  || datos == null || datos == undefined || datos.length == 0"></button>
       </div>
     </div>
 
