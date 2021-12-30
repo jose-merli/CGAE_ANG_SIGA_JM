@@ -87,9 +87,10 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
   comprobarCantidad(event){
 
-    let pattern=/^(-?\d{0,10})?([.]?\d{1,2})?$/;
-
-    if (!pattern.test(event)) {
+    let pattern=/^(-?\d{0,10})?([,]?\d{1,2}) ?€?/;
+    let cadena :string = event;
+    this.datos.cantidad = cadena.substr(0,cadena.indexOf(" "));
+    if (!pattern.test(this.datos.cantidad)) {
         this.datos.cantidad="";
       }
   }

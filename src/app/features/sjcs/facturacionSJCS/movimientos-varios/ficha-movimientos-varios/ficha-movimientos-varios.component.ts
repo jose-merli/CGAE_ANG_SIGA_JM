@@ -341,12 +341,13 @@ export class FichaMovimientosVariosComponent implements OnInit {
 
   volver() {
     
-    if(this.movVarioDesdeTarjFacGeneEdit || this.nuevoMonVarioDesdeTarjFacGene){
+    //if(this.movVarioDesdeTarjFacGeneEdit || this.nuevoMonVarioDesdeTarjFacGene){
       this.location.back();
-    }else{
+      this.movimientosVariosService.volverFicha = true;
+    /*}else{
       this.router.navigate(["/movimientosVarios"]); //movimientosVarios búsqueda -- filtros
       this.movimientosVariosService.volverFicha = true; 
-    }
+    }*/
   }
 
   getMovimientoVarioPorId(id: string) {
