@@ -2,8 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, O
 import { Router } from '@angular/router';
 import { DataTable, Message } from 'primeng/primeng';
 import { from } from 'rxjs/observable/from';
-import { of } from 'rxjs/observable/of';
-import { groupBy, map, mergeMap, reduce, toArray, zip } from 'rxjs/operators';
+import { groupBy, mergeMap, toArray } from 'rxjs/operators';
 import { TranslateService } from '../../../../../commons/translate';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FacturaEstadosPagosItem } from '../../../../../models/FacturaEstadosPagosItem';
@@ -110,7 +109,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getEstadosPagos", "?idFactura=" + this.bodyInicial.idFactura).subscribe(
       n => {
-        console.log(n);
         this.datos = n.estadosPagosItems;
 
         from(this.datos).pipe(
@@ -450,7 +448,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
     this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).toPromise().then(
       n => {
-        console.log(n)
         let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAdeudosItems;
         if (results != undefined && results.length != 0) {
           let ficherosAdeudosItem: FicherosAdeudosItem = results[0];
@@ -462,6 +459,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         }
       },
       err => {
+        console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     ).then(() => this.progressSpinner = false).then(() => {
