@@ -61,7 +61,7 @@
               <label>
                 {{ "formacion.fichaCurso.tarjetaPrecios.importe" | translate }} (*)
               </label>
-              <input  [disabled]="isLetrado" [(ngModel)]="datos.cantidad" type="text" class="form-control"
+              <input  [disabled]="isLetrado" [ngModel]="datos.cantidad | currency: 'EUR' " (ngModelChange)="datos.cantidad=$event" type="text" class="form-control"
               [ngClass]="{'camposObligatorios': marcarObligatorio('input', datos.cantidad)}" (blur)="comprobarCantidad($event.target.value)" pInputText >
             </div>
 

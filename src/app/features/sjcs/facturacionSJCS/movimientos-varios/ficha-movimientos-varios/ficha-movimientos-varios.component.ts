@@ -91,7 +91,7 @@ export class FichaMovimientosVariosComponent implements OnInit {
     if (sessionStorage.getItem("datosNuevoMovimiento")) {
       const datos = JSON.parse(sessionStorage.getItem("datosNuevoMovimiento"));
       sessionStorage.removeItem("datosNuevoMovimiento");
-      const letrado = await this.getLetrado(datos.colegiado, this.sigaStorageService.institucionActual).then(data => {
+      const letrado = await this.getLetrado(datos.ncolegiado, this.sigaStorageService.institucionActual).then(data => {
         const response = JSON.parse(data.body);
         return response.colegiadoItem[0];
       }).catch(err => {
@@ -341,12 +341,13 @@ export class FichaMovimientosVariosComponent implements OnInit {
 
   volver() {
     
-    if(this.movVarioDesdeTarjFacGeneEdit || this.nuevoMonVarioDesdeTarjFacGene){
+    //if(this.movVarioDesdeTarjFacGeneEdit || this.nuevoMonVarioDesdeTarjFacGene){
       this.location.back();
-    }else{
+      this.movimientosVariosService.volverFicha = true;
+    /*}else{
       this.router.navigate(["/movimientosVarios"]); //movimientosVarios búsqueda -- filtros
       this.movimientosVariosService.volverFicha = true; 
-    }
+    }*/
   }
 
   getMovimientoVarioPorId(id: string) {
@@ -415,6 +416,12 @@ export class FichaMovimientosVariosComponent implements OnInit {
           this.datosGuardar.idPersona = null;
         }else{
           this.datosGuardar.idPersona = this.datosClientes.idPersona;
+        }
+
+        if(this.datos.ncolegiado == undefined || this.datos.ncolegiado == null){
+          this.datosGuardar.ncolegiado = null;
+        }else{
+          this.datosGuardar.ncolegiado = this.datos.ncolegiado;
         }
   
         //datos criterios

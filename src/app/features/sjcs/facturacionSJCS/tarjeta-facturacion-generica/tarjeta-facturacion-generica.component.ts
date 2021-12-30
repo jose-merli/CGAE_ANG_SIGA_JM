@@ -14,6 +14,7 @@ import { DatosMovimientoVarioDTO } from '../../../../models/sjcs/DatosMovimiento
 import { CommonsService } from '../../../../_services/commons.service';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
 import { MovimientosVariosFacturacionDTO } from '../../../../models/sjcs/MovimientosVariosFacturacionDTO';
+import { DatePipe } from '@angular/common';
 
 export enum PANTALLAS {
   ACTUACIONDESIGNA = "ACTUACIONDESIGNA",
@@ -71,7 +72,8 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private router: Router,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private datepipe: DatePipe,) { }
 
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_facturacionSJCS.tarjetaFacFenerica).then(respuesta => {
@@ -344,6 +346,17 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
         } else {
           if (resp.datosFacturacionAsuntoDTOList.length > 0) {
+            resp.datosFacturacionAsuntoDTOList.forEach(el => {
+              if(el.datosPagoAsuntoDTOList != null){
+                el.datosPagoAsuntoDTOList.forEach(pago => {
+                  if(pago.tipo == 'Pago'){
+                    var importePago = Number(pago.importe);
+                    var importeFacturacion = Number(el.importe);
+                    pago.nombre = pago.nombre + " - " + (100*importePago)/importeFacturacion +"%";
+                   }
+                });
+               }
+              });
             this.datos = JSON.parse(JSON.stringify(resp.datosFacturacionAsuntoDTOList));
           }
           if (resp.datosMovimientoVarioDTO != null) {
@@ -353,18 +366,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
               this.datos = JSON.parse(JSON.stringify(resp.datosMovimientoVarioDTO));
             }
           }
-          resp.datosFacturacionAsuntoDTOList.forEach(el => {
-            if(el.datosPagoAsuntoDTOList != null){
-              el.datosPagoAsuntoDTOList.forEach(pago => {
-                if(pago.tipo == 'Pago'){
-                  var importePago = Number(pago.importe);
-                  var importeFacturacion = Number(el.importe);
-                  pago.nombre = pago.nombre + " - " + (100*importePago)/importeFacturacion +"%";
-                 }
-              });
-             }
-            });
-          this.datos = JSON.parse(JSON.stringify(resp.datosFacturacionAsuntoDTOList));
+          
           this.procesaDatos();
         }
 
@@ -488,7 +490,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         }
 
         datos = {
-          ncolegiado: actuacionAsistencia.asistencia.idPersonaJg,
+          ncolegiado: actuacionAsistencia.asistencia.idLetradoGuardia,
           descripcion: `Actuación de asistencia ${actuacionAsistencia.asistencia.anio}/${actuacionAsistencia.asistencia.numero}/${actuacionAsistencia.actuacion.idActuacion}`,
           cantidad: (-this.totalFacturado),
           criterios: {
@@ -508,9 +510,11 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
           idGrupoFacturacion = await this.getAgrupacionTurno(guardia.idTurno).then(data => data.valor).catch(err => { console.log(err); });
         }
 
+        let fechaFormar = this.formatDate(guardia.fechadesde)
+
         datos = {
           ncolegiado: guardia.idPersona,
-          descripcion: `Guardia ${guardia.fechadesde}.${guardia.turno}>${guardia.nombre}`,
+          descripcion: `Guardia ${fechaFormar}.${guardia.tipoTurno}>${guardia.tipoGuardia}`,
           cantidad: (-this.totalFacturado),
           criterios: {
             idFacturacion: idFacturacion,
@@ -542,6 +546,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         };
       }
 
+      sessionStorage.setItem("datosEntrada",JSON.stringify(this.datosEntrada));
       sessionStorage.setItem("datosNuevoMovimiento", JSON.stringify(datos));
       this.router.navigate(["/fichaMovimientosVarios"]);
 
@@ -651,9 +656,21 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
 
+    if(this.datosEntrada==undefined || this.datosEntrada == null){
+      if (sessionStorage.getItem("datosEntrada")) {
+        this.datosEntrada = JSON.parse(sessionStorage.getItem("datosEntrada"));
+        sessionStorage.removeItem("datosEntrada");
+        this.getDatos(this.pantalla);
+      }
+    }
     if (changes.datosEntrada != undefined && changes.datosEntrada.currentValue /*&& !this.ejecutado*/) {
       this.getDatos(this.pantalla);
     }
+  }
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
   }
 
 }
