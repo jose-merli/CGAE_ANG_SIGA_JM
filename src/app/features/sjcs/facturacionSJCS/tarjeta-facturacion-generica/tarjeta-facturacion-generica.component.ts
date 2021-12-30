@@ -14,6 +14,7 @@ import { DatosMovimientoVarioDTO } from '../../../../models/sjcs/DatosMovimiento
 import { CommonsService } from '../../../../_services/commons.service';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
 import { MovimientosVariosFacturacionDTO } from '../../../../models/sjcs/MovimientosVariosFacturacionDTO';
+import { DatePipe } from '@angular/common';
 
 export enum PANTALLAS {
   ACTUACIONDESIGNA = "ACTUACIONDESIGNA",
@@ -71,7 +72,8 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private router: Router,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private datepipe: DatePipe,) { }
 
   ngOnInit() {
     this.commonsService.checkAcceso(procesos_facturacionSJCS.tarjetaFacFenerica).then(respuesta => {
@@ -508,9 +510,11 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
           idGrupoFacturacion = await this.getAgrupacionTurno(guardia.idTurno).then(data => data.valor).catch(err => { console.log(err); });
         }
 
+        let fechaFormar = this.formatDate(guardia.fechadesde)
+
         datos = {
           ncolegiado: guardia.idPersona,
-          descripcion: `Guardia ${guardia.fechadesde}.${guardia.turno}>${guardia.nombre}`,
+          descripcion: `Guardia ${fechaFormar}. ${guardia.turno} > ${guardia.nombre}`,
           cantidad: (-this.totalFacturado),
           criterios: {
             idFacturacion: idFacturacion,
@@ -654,6 +658,11 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     if (changes.datosEntrada != undefined && changes.datosEntrada.currentValue /*&& !this.ejecutado*/) {
       this.getDatos(this.pantalla);
     }
+  }
+
+  formatDate(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
   }
 
 }
