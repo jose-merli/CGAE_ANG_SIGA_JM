@@ -510,7 +510,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
         datos = {
           ncolegiado: guardia.idPersona,
-          descripcion: `Guardia ${guardia.fechadesde}.${guardia.turno}>${guardia.nombre}`,
+          descripcion: `Guardia ${guardia.fechadesde}.${guardia.tipoTurno}>${guardia.tipoGuardia}`,
           cantidad: (-this.totalFacturado),
           criterios: {
             idFacturacion: idFacturacion,

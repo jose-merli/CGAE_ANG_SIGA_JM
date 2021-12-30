@@ -416,6 +416,12 @@ export class FichaMovimientosVariosComponent implements OnInit {
         }else{
           this.datosGuardar.idPersona = this.datosClientes.idPersona;
         }
+
+        if(this.datos.ncolegiado == undefined || this.datos.ncolegiado == null){
+          this.datosGuardar.ncolegiado = null;
+        }else{
+          this.datosGuardar.ncolegiado = this.datos.ncolegiado;
+        }
   
         //datos criterios
         if(this.datosCriterios.idGrupoFacturacion == undefined || this.datosCriterios.idGrupoFacturacion == null || this.datosGenerales.idGrupoFacturacion == ""){
