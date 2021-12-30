@@ -1,16 +1,15 @@
-import { Component, OnInit, HostListener } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
-import { AuthenticationService } from '../../_services/authentication.service';
-import { SigaServices } from '../../_services/siga.service';
-import { Router } from '@angular/router';
-import { LoginCombo } from './login-develop.combo';
-import { ListboxModule } from 'primeng/listbox';
-import { ButtonModule } from 'primeng/button';
-
-
+import { Component, OnInit, HostListener } from "@angular/core";
+import { FormGroup, FormBuilder, FormControl } from "@angular/forms";
+import { AuthenticationService } from "../../_services/authentication.service";
+import { SigaServices } from "../../_services/siga.service";
+import { Router } from "@angular/router";
+import { LoginCombo } from "./login-develop.combo";
+import { ListboxModule } from "primeng/listbox";
+import { ButtonModule } from "primeng/button";
+import { SigaStorageService } from "../../siga-storage.service";
 
 export enum KEY_CODE {
-	ENTER = 13
+  ENTER = 13
 }
 
 @Component({
@@ -18,7 +17,6 @@ export enum KEY_CODE {
 	templateUrl: './login-develop.component.html',
 	styleUrls: ['./login-develop.component.scss']
 })
-
 export class LoginDevelopComponent implements OnInit {
 	form: FormGroup;
 
@@ -33,7 +31,7 @@ export class LoginDevelopComponent implements OnInit {
 	// value=N selected="">NO, no soy Letrado</option>
 	//                   <option value=S>SÍ, soy Letrado</option>
 	environment: string = "";
-	sigaFrontVersion: string = "";
+	sigaFrontVersion: string = this.localStorageService.version;
 	sigaWebVersion: string = "";
 
 	letrado: any[] = [{ label: 'No, no soy Letrado', value: 'N' }, { label: 'Sí, soy Letrado', value: 'S' }];
@@ -42,7 +40,7 @@ export class LoginDevelopComponent implements OnInit {
 		private service: AuthenticationService,
 		private sigaServices: SigaServices,
 		private router: Router,
-
+		private localStorageService: SigaStorageService
 
 	) { }
 
@@ -51,14 +49,14 @@ export class LoginDevelopComponent implements OnInit {
 	ngOnInit() {
 		this.sigaServices.getBackend("environmentInfo").subscribe(n => {
 			this.environment = n.environment;
-			this.sigaFrontVersion = n.sigaFrontVersion;
+			//this.sigaFrontVersion = n.sigaFrontVersion;
 			this.sigaWebVersion = n.sigaWebVersion;
 		});
 		sessionStorage.removeItem('authenticated');
 		this.ocultar = true;
 		this.progressSpinner = true;
 		//Comentar esto para trabajar en local
-		 this.sigaServices.getBackend('validaInstitucion').subscribe(
+		this.sigaServices.getBackend('validaInstitucion').subscribe(
 			(response) => {
 				this.progressSpinner = false;
 				this.ocultar = true;
@@ -84,7 +82,7 @@ export class LoginDevelopComponent implements OnInit {
 			}
 		);
 		//Comentar esto para trabajar en local
-		 this.sigaServices.getBackend('validaUsuario').subscribe(
+		this.sigaServices.getBackend('validaUsuario').subscribe(
 			(response) => {
 				this.progressSpinner = false;
 				this.ocultar = true;
@@ -204,11 +202,11 @@ para poder filtrar el dato con o sin estos caracteres*/
 	}
 
 	@HostListener("document:keypress", ["$event"])
-	onKeyPress(event: KeyboardEvent) {
-		if (event.keyCode === KEY_CODE.ENTER) {
-			this.submit();
-		}
-	}
+  	onKeyPress(event: KeyboardEvent) {
+    	if (event.keyCode === KEY_CODE.ENTER) {
+      		this.submit();
+    	}
+  	}
 
 	isHabilitadoEntrar() {
 		if (
