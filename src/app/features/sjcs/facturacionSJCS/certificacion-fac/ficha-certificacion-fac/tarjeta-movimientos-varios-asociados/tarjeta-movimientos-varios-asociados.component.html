@@ -72,11 +72,11 @@
                       <span>{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
                     </div>
 
-                    <div *ngIf="col.field == 'importeAplicado'">
+                    <div *ngIf="col.field == 'importe'">
                       <span>{{ dato[col.field] | currency: 'EUR' }}</span>
                     </div>
 
-                    <div *ngIf="col.field != 'fechaAlta' && col.field != 'importeAplicado'">
+                    <div *ngIf="col.field != 'fechaAlta' && col.field != 'importe'">
                       <span>{{ dato[col.field] }}</span>
                     </div>
 
