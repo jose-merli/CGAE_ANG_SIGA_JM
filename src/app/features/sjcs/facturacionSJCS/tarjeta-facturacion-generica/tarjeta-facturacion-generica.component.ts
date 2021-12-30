@@ -346,6 +346,17 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
         } else {
           if (resp.datosFacturacionAsuntoDTOList.length > 0) {
+            resp.datosFacturacionAsuntoDTOList.forEach(el => {
+              if(el.datosPagoAsuntoDTOList != null){
+                el.datosPagoAsuntoDTOList.forEach(pago => {
+                  if(pago.tipo == 'Pago'){
+                    var importePago = Number(pago.importe);
+                    var importeFacturacion = Number(el.importe);
+                    pago.nombre = pago.nombre + " - " + (100*importePago)/importeFacturacion +"%";
+                   }
+                });
+               }
+              });
             this.datos = JSON.parse(JSON.stringify(resp.datosFacturacionAsuntoDTOList));
           }
           if (resp.datosMovimientoVarioDTO != null) {
@@ -355,18 +366,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
               this.datos = JSON.parse(JSON.stringify(resp.datosMovimientoVarioDTO));
             }
           }
-          resp.datosFacturacionAsuntoDTOList.forEach(el => {
-            if(el.datosPagoAsuntoDTOList != null){
-              el.datosPagoAsuntoDTOList.forEach(pago => {
-                if(pago.tipo == 'Pago'){
-                  var importePago = Number(pago.importe);
-                  var importeFacturacion = Number(el.importe);
-                  pago.nombre = pago.nombre + " - " + (100*importePago)/importeFacturacion +"%";
-                 }
-              });
-             }
-            });
-          this.datos = JSON.parse(JSON.stringify(resp.datosFacturacionAsuntoDTOList));
+          
           this.procesaDatos();
         }
 
@@ -546,6 +546,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         };
       }
 
+      sessionStorage.setItem("datosEntrada",JSON.stringify(this.datosEntrada));
       sessionStorage.setItem("datosNuevoMovimiento", JSON.stringify(datos));
       this.router.navigate(["/fichaMovimientosVarios"]);
 
@@ -655,6 +656,13 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
 
+    if(this.datosEntrada==undefined || this.datosEntrada == null){
+      if (sessionStorage.getItem("datosEntrada")) {
+        this.datosEntrada = JSON.parse(sessionStorage.getItem("datosEntrada"));
+        sessionStorage.removeItem("datosEntrada");
+        this.getDatos(this.pantalla);
+      }
+    }
     if (changes.datosEntrada != undefined && changes.datosEntrada.currentValue /*&& !this.ejecutado*/) {
       this.getDatos(this.pantalla);
     }
