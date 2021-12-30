@@ -91,7 +91,7 @@ export class FichaMovimientosVariosComponent implements OnInit {
     if (sessionStorage.getItem("datosNuevoMovimiento")) {
       const datos = JSON.parse(sessionStorage.getItem("datosNuevoMovimiento"));
       sessionStorage.removeItem("datosNuevoMovimiento");
-      const letrado = await this.getLetrado(datos.colegiado, this.sigaStorageService.institucionActual).then(data => {
+      const letrado = await this.getLetrado(datos.ncolegiado, this.sigaStorageService.institucionActual).then(data => {
         const response = JSON.parse(data.body);
         return response.colegiadoItem[0];
       }).catch(err => {
