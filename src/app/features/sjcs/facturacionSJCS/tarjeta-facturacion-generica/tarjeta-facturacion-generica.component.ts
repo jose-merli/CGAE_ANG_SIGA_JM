@@ -490,7 +490,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         }
 
         datos = {
-          ncolegiado: actuacionAsistencia.asistencia.idPersonaJg,
+          ncolegiado: actuacionAsistencia.asistencia.idLetradoGuardia,
           descripcion: `Actuación de asistencia ${actuacionAsistencia.asistencia.anio}/${actuacionAsistencia.asistencia.numero}/${actuacionAsistencia.actuacion.idActuacion}`,
           cantidad: (-this.totalFacturado),
           criterios: {
