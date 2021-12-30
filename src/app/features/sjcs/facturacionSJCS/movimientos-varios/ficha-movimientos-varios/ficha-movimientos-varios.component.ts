@@ -15,6 +15,7 @@ import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_factu
 import { MovimientosVariosFacturacionDTO } from '../../../../../models/sjcs/MovimientosVariosFacturacionDTO';
 import { TarjetaCriteriosAplicacionComponent } from './tarjeta-criterios-aplicacion/tarjeta-criterios-aplicacion.component';
 import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjeta-datos-generales.component';
+import { error } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-ficha-movimientos-varios',
@@ -515,9 +516,13 @@ export class FichaMovimientosVariosComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         } else {
-  
-          if (null != err.error && JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          if(err.error!=null && JSON.parse(err.error).error.description != ""){
+            let e :string = JSON.parse(err.error).error.description;
+            if(e.includes("ya tiene un movimiento vario asociado")){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), e);
+            }else{
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+            }
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }

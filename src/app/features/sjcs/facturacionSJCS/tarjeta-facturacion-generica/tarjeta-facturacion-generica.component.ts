@@ -47,6 +47,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   selectedItem: number = 10;
   selectionMode: string = "multiple";
   ejecutado: boolean = false;
+  hayMV = false;
 
   totalFacturado: number = 0;
   totalPagado: number = 0;
@@ -360,11 +361,14 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
             this.datos = JSON.parse(JSON.stringify(resp.datosFacturacionAsuntoDTOList));
           }
           if (resp.datosMovimientoVarioDTO != null) {
+            this.hayMV = true;
             if (resp.datosFacturacionAsuntoDTOList.length > 0) {
               this.datos = this.datos.concat(JSON.parse(JSON.stringify(resp.datosMovimientoVarioDTO)));
             } else {
               this.datos = JSON.parse(JSON.stringify(resp.datosMovimientoVarioDTO));
             }
+          }else{
+            this.hayMV=false;
           }
           
           this.procesaDatos();
@@ -617,8 +621,9 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.movimientosVarios.errorEliminarMov"));
       }
 
-      this.callDeleteService(deleteList);
-
+      if(deleteList.length > 0){
+        this.callDeleteService(deleteList);
+      }
     }
 
   }
