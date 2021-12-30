@@ -674,27 +674,25 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
     this.addEnlace.emit(enlace);
   }
 
-  descargarLog(){
+  descargarLog() {
     this.progressSpinnerDatos = true;
 
-    this.sigaService.postDownloadFiles("facturacionsjcs_descargarLogFacturacion", this.body.idFacturacion).subscribe(
-      data => {
+    this.sigaService.postDownloadFilesWithFileName2("facturacionsjcs_descargarLogFacturacion", this.body.idFacturacion).subscribe(
+      (data: { file: Blob, filename: string, status: number }) => {
 
         this.progressSpinnerDatos = false;
+        saveAs(data.file, "log.txt");
 
-        let blob = new Blob([data], { type: "text/plain" });
-        saveAs(blob, "log.txt");
-        
       },
       err => {
         this.progressSpinnerDatos = false;
 
 
-          if (null != err.error && JSON.parse(err.error).error.description != "") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          }
+        if (null != err.error && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
 
       },
       () => {

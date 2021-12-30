@@ -48,7 +48,7 @@
 
       <app-tarjeta-movimientos-varios-asociados *ngIf="showCards" [certificacion]="certificacion"
         [datos]="movimientosVariosAsoCerItemList" [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)"
-        (descargarLogRX)="descargarLogReintegrosXunta($event)"
+        (descargarLogRX)="descargarLogReintegrosXunta($event)" (enviarReintegrosEvent)="enviarReintegros($event)"
         (getMovimientosAsoEvent)="getMvariosAsociadosCertificacion($event)">
       </app-tarjeta-movimientos-varios-asociados>
 

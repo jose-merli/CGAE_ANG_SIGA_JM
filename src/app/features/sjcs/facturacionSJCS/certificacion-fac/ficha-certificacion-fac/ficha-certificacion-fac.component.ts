@@ -24,11 +24,14 @@ import { TarjetaMovimientosVariosAplicadosComponent } from './tarjeta-movimiento
 import { TarjetaMovimientosVariosAsociadosComponent } from './tarjeta-movimientos-varios-asociados/tarjeta-movimientos-varios-asociados.component';
 import { saveAs } from "file-saver/FileSaver";
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { EnvioXuntaItem } from '../../../../../models/sjcs/EnvioXuntaItem';
 
 export interface Enlace {
   id: string;
   ref: any;
 }
+
+export const OPERACION_REINTEGROS = 28;
 
 @Component({
   selector: 'app-ficha-certificacion-fac',
@@ -488,6 +491,40 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         );
       }
     }
+  }
+
+  enviarReintegros(event: boolean) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
+      this.progressSpinner = true;
+
+      let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+
+      const payload = new EnvioXuntaItem();
+      payload.idInstitucion = Number(this.sigaStorageService.institucionActual);
+      payload.listaIdFacturaciones = listaIds.length > 0 ? listaIds : [];
+      payload.codigoOperacion = OPERACION_REINTEGROS;
+
+      this.sigaService.post("certificaciones_accionXuntaEnvios", payload).subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          const res = JSON.parse(data.body);
+
+          if (res.error && res.error != null && res.error.description != null && res.error.description.toString().trim().length > 0 && res.status == 'KO' && (res.error.code == '500' || res.error.code == '400')) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+
+    }
+
   }
 
 }
