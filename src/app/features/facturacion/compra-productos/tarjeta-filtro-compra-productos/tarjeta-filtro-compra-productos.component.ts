@@ -101,6 +101,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
           let data = JSON.parse(n.body).colegiadoItem;
           this.nombreCliente = data.nombre;
           this.nifCifCliente = data.nif;
+          this.filtrosCompraProductos.idpersona = this.localStorageService.idPersona;
         },
         err => {
           this.progressSpinner = false;
