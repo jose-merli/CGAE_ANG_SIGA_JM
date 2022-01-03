@@ -13,7 +13,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './info-factura-fact-programadas.component.html',
   styleUrls: ['./info-factura-fact-programadas.component.scss']
 })
-export class InfoFacturaFactProgramadasComponent implements OnInit {
+export class InfoFacturaFactProgramadasComponent implements OnInit, OnChanges {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
@@ -50,6 +50,11 @@ export class InfoFacturaFactProgramadasComponent implements OnInit {
     this.getCols();
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial) {
+    }
+  }
+
   // Definición de las columnas
   getCols() {
     this.cols = [
@@ -83,7 +88,7 @@ export class InfoFacturaFactProgramadasComponent implements OnInit {
 
   // ENlace al buscador de facturas
   navigateToFacturas() {
-    let filtros = { facturacion: this.bodyInicial.idProgramacion };
+    let filtros = { serie: this.bodyInicial.idSerieFacturacion, facturacion: `${this.bodyInicial.idProgramacion}-${this.bodyInicial.idSerieFacturacion}` };
     this.persistenceService.setFiltros(filtros);
     sessionStorage.setItem("volver", JSON.stringify(true));
 

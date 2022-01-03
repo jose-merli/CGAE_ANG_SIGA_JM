@@ -73,7 +73,7 @@ export class FiltrosFactProgramadasComponent implements OnInit {
 
     this.persistenceService.clearDatos();
     sessionStorage.setItem("Nuevo", "true");
-    this.router.navigate(["/fichaFactProgramadas"]);
+    this.router.navigate(["/fichaFacturaciones"]);
   }
 
   // Combos

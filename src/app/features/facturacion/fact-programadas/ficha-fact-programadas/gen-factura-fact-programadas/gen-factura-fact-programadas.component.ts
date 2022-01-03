@@ -46,19 +46,22 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.bodyInicial != undefined)
+    if (changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined)
       this.restablecer();
   }
 
   getComboModelosComunicacion() {
+    this.progressSpinner = true;
     this.sigaServices.get("facturacionPyS_comboModelosComunicacion").subscribe(
       n => {
         this.comboModelosFactura = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboModelosFactura);
-        console.log(n);
+
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }

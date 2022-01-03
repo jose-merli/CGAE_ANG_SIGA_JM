@@ -145,7 +145,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   openTab(selectedRow) {
     let facturacionProgramadaItem: FacFacturacionprogramadaItem = selectedRow;
     sessionStorage.setItem("facturacionProgramadaItem", JSON.stringify(facturacionProgramadaItem));
-    this.router.navigate(["/fichaFactProgramadas"]);
+    this.router.navigate(["/fichaFacturaciones"]);
   }
 
   // Badges para la columna 'estado'

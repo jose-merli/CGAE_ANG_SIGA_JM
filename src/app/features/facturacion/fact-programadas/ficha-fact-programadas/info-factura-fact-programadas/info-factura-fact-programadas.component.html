@@ -7,7 +7,7 @@
       <div *ngIf="!esFichaActiva('infoFactura')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('infoFactura')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="fas fa-chart-bar icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -43,7 +43,7 @@
       <div *ngIf="esFichaActiva('infoFactura')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('infoFactura')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="fas fa-chart-bar icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.factProgramadas.infoFactura' | translate }}</label>
 
@@ -125,7 +125,7 @@
 
     <div *ngIf="esFichaActiva('infoFactura')" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton type="button" icon="fa fa-comment" iconPos="left"
           (click)="comunicar()" label="{{ 'general.boton.comunicar' | translate }}"></button>
       </div>
     </div>

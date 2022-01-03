@@ -44,7 +44,6 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     if (changes.bodyInicial != undefined)
       this.restablecer();
   }
@@ -109,7 +108,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       return false;
     }
 
-    let intervaloProductos: boolean = this.serie.tiposProductos != undefined && this.serie.tiposProductos.length > 0 && this.body.fechaInicioProductos != undefined && this.body.fechaFinProductos != undefined;
+    let intervaloProductos: boolean = this.body.fechaInicioProductos != undefined || this.body.fechaFinProductos != undefined;
     if (intervaloProductos) {
       let intervalo: boolean = this.body.fechaInicioProductos < this.body.fechaFinProductos;
       if (!intervalo) {
@@ -121,7 +120,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       return false;
     }
 
-    let intervaloServicios: boolean = this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0 && this.body.fechaInicioServicios != undefined && this.body.fechaFinServicios != undefined;
+    let intervaloServicios: boolean = this.body.fechaInicioServicios != undefined || this.body.fechaFinServicios != undefined;
     if (intervaloServicios) {
       let intervalo: boolean = this.body.fechaInicioServicios < this.body.fechaFinServicios;
       if (!intervalo) {
@@ -133,11 +132,16 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       return false;
     }
 
+    if (!intervaloProductos && !intervaloServicios) {
+      this.showMessage("error", "Error", "Se debe rellenar al menos uno de los dos periodos");
+      return false;
+    }
+
     return  true;
   }
 
   checkSave(): void {
-    if (this.isValid()) {
+    if (this.isValid() && !this.deshabilitarGuardado()) {
       this.body.esDatosGenerales = true;
       this.guardadoSend.emit(this.body);
     } else {

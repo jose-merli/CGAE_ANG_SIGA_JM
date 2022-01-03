@@ -145,7 +145,9 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
               e.finalidad = "";
               e.asociada = true;
             });
+            
             this.datos = JSON.parse(JSON.stringify(this.datosInit));
+            this.nuevaConsulta = false;
 
             this.getConsultas();
         },
@@ -255,7 +257,8 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
       n => {
         this.progressSpinner = false;
         this.refreshData.emit();
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+        this.selectedDatos = [];
       },
       err => {
         this.progressSpinner = false;
@@ -270,16 +273,15 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
   }
 
   // Enlace a la ficha de consultas
-  navigateTo() {
-    if (!this.selectMultiple && !this.nuevaConsulta) {
-        if (this.institucionActual == 2000) {
-            sessionStorage.setItem("consultaEditable", "S");
-        } else {
-            sessionStorage.setItem("consultaEditable", "N");
-        }
-        this.router.navigate(["/fichaConsulta"]);
+  navigateTo(dato) {
+    if (dato != undefined) {
+      sessionStorage.setItem("consultasSearch", JSON.stringify(dato));
+
+      // Ficha actual
+      sessionStorage.setItem("serieFacturacionItem", JSON.stringify(this.body));
+
+      this.router.navigate(["/fichaConsulta"]);
     }
-    this.numSelected = this.selectedDatos.length;
   }
 
   // Estilo obligatorio

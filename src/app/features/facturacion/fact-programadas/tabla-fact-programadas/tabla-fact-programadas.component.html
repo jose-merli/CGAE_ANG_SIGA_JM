@@ -58,7 +58,7 @@
                 </div>
 
                 <div *ngSwitchCase="'importe'">
-                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
+                  <span *ngIf="dato[col.field] != undefined" [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
                 </div>
 
                 <div *ngSwitchCase="'estado'">

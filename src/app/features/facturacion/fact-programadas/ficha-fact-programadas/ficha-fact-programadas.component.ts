@@ -19,14 +19,13 @@ export class FichaFactProgramadasComponent implements OnInit {
   progressSpinner: boolean = false;
 
   iconoTarjetaResumen = "clipboard";
-  body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
+  body: FacFacturacionprogramadaItem;
   serie: SerieFacturacionItem = new SerieFacturacionItem();
   datos = [];
   enlacesTarjetaResumen = [];
 
-  modoEdicion: boolean = true;
+  modoEdicion: boolean = false;
   controlEmisionFacturasSII: boolean = false;
-  confirmada: boolean = false;
 
   manuallyOpened: boolean;
   openTarjetaDatosGenerales: boolean = true;
@@ -49,10 +48,11 @@ export class FichaFactProgramadasComponent implements OnInit {
     if (sessionStorage.getItem("facturacionProgramadaItem")) {
       this.body = JSON.parse(sessionStorage.getItem("facturacionProgramadaItem"));
       sessionStorage.removeItem("facturacionProgramadaItem");
+
+      this.modoEdicion = true;
     } else if (sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.body = new FacFacturacionprogramadaItem();
-      this.modoEdicion = false;
       this.openTarjetaSerieFactura = true;
     } else if (!this.body) {
       this.progressSpinner = false;

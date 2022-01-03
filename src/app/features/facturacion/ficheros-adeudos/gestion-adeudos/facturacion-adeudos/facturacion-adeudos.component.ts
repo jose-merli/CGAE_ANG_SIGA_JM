@@ -53,7 +53,7 @@ export class FacturacionAdeudosComponent implements OnInit {
         }
       ).then(() => this.progressSpinner = false).then(() => {
         if (sessionStorage.getItem("facturacionProgramadaItem")) {
-          this.router.navigate(["/fichaFactProgramadas"]);
+          this.router.navigate(["/fichaFacturaciones"]);
         }
       });
     }
