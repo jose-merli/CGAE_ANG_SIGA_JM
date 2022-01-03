@@ -279,7 +279,7 @@ import { DatosCvComponent } from './features/censo/cargas-masivas/datos-cv/datos
 import { CargaEtiquetasComponent2 } from './features/censo/cargaEtiquetas/cargaEtiquetas.component';
 import { DatosCVComponent2 } from './features/censo/datosCV/datosCV.component';
 import { AgendaComponent } from './features/agenda/agenda.component';
-import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule } from 'primeng/primeng';
+import { SelectButtonModule, ColorPickerModule, OverlayPanelModule, PaginatorModule, SliderModule } from 'primeng/primeng';
 import { FichaCalendarioComponent } from './features/agenda/ficha-calendario/ficha-calendario.component';
 import { CargasMasivasComponent } from './features/censo/cargas-masivas/cargas-masivas.component';
 import { DatosNotificacionesComponent } from './features/agenda/datos-notificaciones/datos-notificaciones.component';
@@ -478,22 +478,66 @@ import { FichaServiciosComponent } from './features/facturacion/servicios/ficha-
 import { DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-datos-generales-ficha-servicios-facturacion/detalle-tarjeta-datos-generales-ficha-servicios-facturacion.component';
 import { DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion.component';
 import { TarjetaSolicitudCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-solicitud-compra-suscripcion/tarjeta-solicitud-compra-suscripcion.component';
+import { FichaCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component';
+import { FiltrosSeriesFacturaComponent } from './features/facturacion/series-factura/filtros-series-factura/filtros-series-factura.component';
+import { TablaSeriesFacturaComponent } from './features/facturacion/series-factura/tabla-series-factura/tabla-series-factura.component';
+import { GestionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component';
 import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
 import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
 import { TarjetaListaCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
 import { DetalleTarjetaPrecioFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-precio-ficha-servicios-facturacion/detalle-tarjeta-precio-ficha-servicios-facturacion.component';
 import { TarjetaProductosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
-import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
 import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-factura-compra-suscripcion/tarjeta-factura-compra-suscripcion.component';
 import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
 import { enableRipple } from '@syncfusion/ej2-base';
+import { MatSlideToggleModule } from '@angular/material';
+import { DatosGeneralesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/datos-generales-series-factura/datos-generales-series-factura.component';
+import { DestinatariosIndividualesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-individuales-series-factura/destinatarios-individuales-series-factura.component';
+import { DestinatariosEtiquetasSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-etiquetas-series-factura/destinatarios-etiquetas-series-factura.component';
+import { ObservacionesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/observaciones-series-factura/observaciones-series-factura.component';
+import { DestinatariosListaSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-lista-series-factura/destinatarios-lista-series-factura.component';
+import { PagoAutomaticoSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/pago-automatico-series-factura/pago-automatico-series-factura.component';
+import { ExportacionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/exportacion-series-factura/exportacion-series-factura.component';
+import { TraspasoSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/traspaso-series-factura/traspaso-series-factura.component';
+import { ContadorSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/contador-series-factura/contador-series-factura.component';
+import { ContadorRectSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/contador-rect-series-factura/contador-rect-series-factura.component';
+import { GeneracionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/generacion-series-factura/generacion-series-factura.component';
+import { EnvioSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/envio-series-factura/envio-series-factura.component';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { RadioButtonModule as RadioButtonEJSModule} from '@syncfusion/ej2-angular-buttons';
 import { TarjetaDescuentosAnticiposCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion.component';
+import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
+import { FiltrosBusquedaAdeudosComponent } from './features/facturacion/ficheros-adeudos/filtros-busqueda-adeudos/filtros-busqueda-adeudos.component';
+import { TablaAdeudosComponent } from './features/facturacion/ficheros-adeudos/tabla-adeudos/tabla-adeudos.component';
+import { GestionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/gestion-adeudos.component';
+import { DatosGeneralesCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/datos-generales-cuenta-bancaria/datos-generales-cuenta-bancaria.component';
+import { ComisionCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/comision-cuenta-bancaria/comision-cuenta-bancaria.component';
+import { ConfiguracionCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/configuracion-cuenta-bancaria/configuracion-cuenta-bancaria.component';
+import { UsoFicherosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/uso-ficheros-cuenta-bancaria/uso-ficheros-cuenta-bancaria.component';
+import { UsosSufijosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/usos-sufijos-cuenta-bancaria/usos-sufijos-cuenta-bancaria.component';
+import { DatosGeneracionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/datos-generacion-adeudos/datos-generacion-adeudos.component';
+import { CuentaEntidadAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/cuenta-entidad-adeudos/cuenta-entidad-adeudos.component';
+import { FacturasAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturas-adeudos/facturas-adeudos.component';
+import { FacturacionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturacion-adeudos/facturacion-adeudos.component';
 import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/cuotas-suscripciones.component';
 import { TarjetaFiltroCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones.component';
 import { TarjetaListaCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones.component';
 import { TarjetaServiciosCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-servicios-compra-suscripcion/tarjeta-servicios-compra-suscripcion.component';
+import { FactProgramadasComponent } from './features/facturacion/fact-programadas/fact-programadas.component';
+import { FiltrosFactProgramadasComponent } from './features/facturacion/fact-programadas/filtros-fact-programadas/filtros-fact-programadas.component';
+import { TablaFactProgramadasComponent } from './features/facturacion/fact-programadas/tabla-fact-programadas/tabla-fact-programadas.component';
+import { FichaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/ficha-fact-programadas.component';
+import { DatosGeneralesFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/datos-generales-fact-programadas/datos-generales-fact-programadas.component';
+import { GenAdeudosFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/gen-adeudos-fact-programadas/gen-adeudos-fact-programadas.component';
+import { GenFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/gen-factura-fact-programadas/gen-factura-fact-programadas.component';
+import { EnvioFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/envio-fact-programadas/envio-fact-programadas.component';
+import { TraspasoFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/traspaso-fact-programadas/traspaso-fact-programadas.component';
+import { SerieFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/serie-factura-fact-programadas/serie-factura-fact-programadas.component';
+import { InfoFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/info-factura-fact-programadas/info-factura-fact-programadas.component';
+import { FiltrosBusquedaTransferenciasComponent } from './features/facturacion/ficheros-transferencia/filtros-busqueda-transferencias/filtros-busqueda-transferencias.component';
+import { TablaFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/tabla-ficheros-transferencias/tabla-ficheros-transferencias.component';
+import { GestionFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component';
+import { DatosGeneracionFichTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/datos-generacion-fich-transferencias/datos-generacion-fich-transferencias.component';
 import { CargasMasivasComprasComponent } from './features/facturacion/cargas-masivas-compras/cargas-masivas-compras.component';
 import { TarjetaFicheroModeloCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-fichero-modelo-cmc/tarjeta-fichero-modelo-cmc.component';
 import { TarjetaSubidaFicheroCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-subida-fichero-cmc/tarjeta-subida-fichero-cmc.component';
@@ -506,6 +550,22 @@ import { FichaMonederoComponent } from './features/facturacion/monederos/ficha-m
 import { DatosGeneralesMonederoComponent } from './features/facturacion/monederos/ficha-monedero/datos-generales-monedero/datos-generales-monedero.component';
 import { MovimientosMonederoComponent } from './features/facturacion/monederos/ficha-monedero/movimientos-monedero/movimientos-monedero.component';
 import { ServiciosAsociadosMonederoComponent } from './features/facturacion/monederos/ficha-monedero/servicios-asociados-monedero/servicios-asociados-monedero.component';
+import { TablaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/tabla-ficheros-devoluciones/tabla-ficheros-devoluciones.component';
+import { FiltrosFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/filtros-ficheros-devoluciones/filtros-ficheros-devoluciones.component';
+import { FichaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/ficha-ficheros-devoluciones.component';
+import { FiltrosFacturasComponent } from './features/facturacion/facturas/filtros-facturas/filtros-facturas.component';
+import { TablaFacturasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas.component';
+import { GestionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/gestion-facturas.component';
+import { DatosCargaDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/datos-carga-devoluciones/datos-carga-devoluciones.component';
+import { ObservacionesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/observaciones-facturas/observaciones-facturas.component';
+import { DatosGeneralesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/datos-generales-facturas/datos-generales-facturas.component';
+import { EstadosPagosFacturasComponent } from './features/facturacion/facturas/gestion-facturas/estados-pagos-facturas/estados-pagos-facturas.component';
+import { ObservacionesRectificativaFacturasComponent } from './features/facturacion/facturas/gestion-facturas/observaciones-rectificativa-facturas/observaciones-rectificativa-facturas.component';
+import { LineasFacturasComponent } from './features/facturacion/facturas/gestion-facturas/lineas-facturas/lineas-facturas.component';
+import { ComunicacionesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/comunicaciones-facturas/comunicaciones-facturas.component';
+import { ClienteFacturasComponent } from './features/facturacion/facturas/gestion-facturas/cliente-facturas/cliente-facturas.component';
+import { DeudorFacturasComponent } from './features/facturacion/facturas/gestion-facturas/deudor-facturas/deudor-facturas.component';
+import { FacturacionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/facturacion-facturas/facturacion-facturas.component';
 
 enableRipple(true);
 
@@ -825,7 +885,7 @@ enableRipple(true);
 		DetallePlantillaEnvioComponent,
 		TarjetaComunicacionesComponent,
 		ConsultasComponent,
-		FichaConsultaComponent,
+		//FichaConsultaComponent,
 		DatosGeneralesConsultaComponent,
 		ModelosComunicacionesConsultaComponent,
 		PlantillasEnviosConsultasComponent,
@@ -925,10 +985,85 @@ enableRipple(true);
 		TarjetaClienteCompraSuscripcionComponent,
 		FichaServiciosComponent,
 		DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent,
+		FichaCompraSuscripcionComponent,
+		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
+		TarjetaSolicitudCompraSuscripcionComponent,
+		FichaCuentaBancariaComponent,
+		FiltrosSeriesFacturaComponent,
+		TablaSeriesFacturaComponent,
+		GestionSeriesFacturaComponent,
+		CompraProductosComponent,
+		TarjetaFiltroCompraProductosComponent,
+		TarjetaListaCompraProductosComponent,
+		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
+		TarjetaProductosCompraSuscripcionComponent,
+		TarjetaFacturaCompraSuscripcionComponent,
+		DatosGeneralesSeriesFacturaComponent,
+		ObservacionesSeriesFacturaComponent,
+		DestinatariosIndividualesSeriesFacturaComponent,
+		DestinatariosEtiquetasSeriesFacturaComponent,
+		DestinatariosListaSeriesFacturaComponent,
+		PagoAutomaticoSeriesFacturaComponent,
+		ExportacionSeriesFacturaComponent,
+		TraspasoSeriesFacturaComponent,
+		ContadorSeriesFacturaComponent,
+		ContadorRectSeriesFacturaComponent,
+		GeneracionSeriesFacturaComponent,
+		EnvioSeriesFacturaComponent,
+		ConstructorConsultasComponent,
+		TarjetaFacturaCompraSuscripcionComponent,
+		TarjetaDescuentosAnticiposCompraSuscripcionComponent,
+		FiltrosBusquedaAdeudosComponent,
+		TablaAdeudosComponent,
+		GestionAdeudosComponent,
+		DatosGeneralesCuentaBancariaComponent,
+		ComisionCuentaBancariaComponent,
+		ConfiguracionCuentaBancariaComponent,
+		UsoFicherosCuentaBancariaComponent,
+		UsosSufijosCuentaBancariaComponent,
+		DatosGeneracionAdeudosComponent,
+		CuentaEntidadAdeudosComponent,
+		FacturasAdeudosComponent,
+		FacturacionAdeudosComponent,
+		FactProgramadasComponent,
+		FiltrosFactProgramadasComponent,
+		TablaFactProgramadasComponent,
+		FichaFactProgramadasComponent,
+		CuotasSuscripcionesComponent,
+		TarjetaFiltroCuotasSuscripcionesComponent,
+		TarjetaListaCuotasSuscripcionesComponent,
+		TarjetaServiciosCompraSuscripcionComponent,
+		DatosGeneralesFactProgramadasComponent,
+		GenAdeudosFactProgramadasComponent,
+		GenFacturaFactProgramadasComponent,
+		EnvioFactProgramadasComponent,
+		TraspasoFactProgramadasComponent,
+		SerieFacturaFactProgramadasComponent,
+		InfoFacturaFactProgramadasComponent,
+		FiltrosBusquedaTransferenciasComponent,
+		TablaFicherosTransferenciasComponent,
+		GestionFicherosTransferenciasComponent,
+		DatosGeneracionFichTransferenciasComponent,
 		FichaMonederoComponent,
 		DatosGeneralesMonederoComponent,
 		MovimientosMonederoComponent,
 		ServiciosAsociadosMonederoComponent,
+		TablaFicherosDevolucionesComponent,
+		FiltrosFicherosDevolucionesComponent,
+		FichaFicherosDevolucionesComponent,
+		FiltrosFacturasComponent,
+		TablaFacturasComponent,
+		GestionFacturasComponent,
+		DatosCargaDevolucionesComponent,
+		ObservacionesFacturasComponent,
+		DatosGeneralesFacturasComponent,
+		EstadosPagosFacturasComponent,
+		ObservacionesRectificativaFacturasComponent,
+		LineasFacturasComponent,
+		ComunicacionesFacturasComponent,
+		ClienteFacturasComponent,
+		DeudorFacturasComponent,
+		FacturacionFacturasComponent
 	],
 	imports: [
 		Paginador3Module,
@@ -993,6 +1128,7 @@ enableRipple(true);
 		MatPaginatorModule,
 		MatDatepickerModule,
 		MatNativeDateModule,
+		MatSlideToggleModule,
 		PaginatorModule,
 		GuardiaModule,
 		SjcsModule,
@@ -1001,6 +1137,7 @@ enableRipple(true);
 		Paginador2Module,
 		QueryBuilderModule,
 		OrderListModule,
+		SliderModule,
 		DropDownListModule,
 		RadioButtonEJSModule
 	],

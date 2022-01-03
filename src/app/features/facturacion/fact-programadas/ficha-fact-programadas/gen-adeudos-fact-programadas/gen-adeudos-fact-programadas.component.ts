@@ -1,0 +1,233 @@
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
+import { Message } from 'primeng/api';
+import { TranslateService } from '../../../../../commons/translate';
+import { ComboItem } from '../../../../../models/ComboItem';
+import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
+import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../_services/siga.service';
+
+@Component({
+  selector: 'app-gen-adeudos-fact-programadas',
+  templateUrl: './gen-adeudos-fact-programadas.component.html',
+  styleUrls: ['./gen-adeudos-fact-programadas.component.scss']
+})
+export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
+
+  msgs: Message[] = [];
+  progressSpinner: boolean = false;
+
+  @Input() modoEdicion: boolean;
+  @Input() openTarjetaGenAdeudos;
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+  @Output() guardadoSend = new EventEmitter<FacFacturacionprogramadaItem>();
+
+  @Input() bodyInicial: FacFacturacionprogramadaItem;
+  body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
+  ficherosAdeudos: FicherosAdeudosItem;
+
+  resaltadoDatos: boolean = false;
+  porProgramar: boolean = true;
+  porConfirmar: boolean = false;
+  porConfirmarError: boolean = false;
+  confirmada: boolean = false;
+
+  fechaHoy = new Date();
+  minDateRecibos = new Date();
+  minDateRecurrentes = new Date();
+  minDateCOR = new Date();
+  minDateB2B = new Date();
+
+  constructor(
+    private commonsService: CommonsService,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private router: Router,
+    private sigaStorageService: SigaStorageService
+  ) { }
+
+  ngOnInit() {
+    this.parametrosSEPA();
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial != undefined) {
+      this.restablecer();
+      this.getFicheroAdeudos();
+    }
+  }
+
+  // Restablecer
+
+  restablecer(): void {
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body.fechaPresentacion = this.transformDate(this.body.fechaPresentacion);
+    this.body.fechaRecibosPrimeros = this.transformDate(this.body.fechaRecibosPrimeros);
+    this.body.fechaRecibosRecurrentes = this.transformDate(this.body.fechaRecibosRecurrentes);
+    this.body.fechaRecibosCOR1 = this.transformDate(this.body.fechaRecibosCOR1);
+    this.body.fechaRecibosB2B = this.transformDate(this.body.fechaRecibosB2B);
+    this.resaltadoDatos = false;
+
+    this.porProgramar = this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
+    this.porConfirmar = this.body.idEstadoConfirmacion == "18" || this.body.idEstadoConfirmacion == "19" || this.body.idEstadoConfirmacion == "1" || this.body.idEstadoConfirmacion == "17";
+    this.porConfirmarError = this.body.idEstadoConfirmacion == "21";
+    this.confirmada = this.body.idEstadoConfirmacion == "3";
+
+  }
+
+  // Guardar
+  
+  isValid(): boolean {
+    return this.body.fechaPresentacion != undefined && this.body.fechaRecibosPrimeros != undefined
+        && this.body.fechaRecibosRecurrentes != undefined && this.body.fechaRecibosCOR1 != undefined
+        && this.body.fechaRecibosB2B != undefined;
+  }
+
+  checkSave(): void {
+    if (this.isValid()) {
+      this.body.esDatosGenerales = false;
+      this.guardadoSend.emit(this.body);
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+  }
+
+  getFicheroAdeudos() {
+    let filtros = { 
+      idprogramacion: this.body.idProgramacion,
+      idseriefacturacion: this.body.idSerieFacturacion
+    };
+
+    this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).subscribe(
+      n => {
+        let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAdeudosItems;
+        if (results != undefined && results.length != 0) {
+          this.ficherosAdeudos = results[0];
+        }
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  navigateToFicheroAdeudos() {
+    if (this.ficherosAdeudos) {
+      sessionStorage.setItem("facturacionProgramadaItem", JSON.stringify(this.bodyInicial));
+      sessionStorage.setItem("volver", "true");
+
+      sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(this.ficherosAdeudos));
+      this.router.navigate(["/gestionAdeudos"]);
+    }
+  }
+
+  parametrosSEPA(){
+    this.progressSpinner=true;
+    
+    this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
+      n => {
+        let data: ComboItem[] = n.combooItems;
+
+        data.forEach(element => {
+          let value: number = +element.value;
+          switch (element.label) {
+            case "SEPA_DIAS_HABILES_PRIMEROS_RECIBOS":
+              this.minDateRecibos = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
+              break;
+
+            case "SEPA_DIAS_HABILES_RECIBOS_RECURRENTES":
+              this.minDateRecurrentes = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
+              break;
+
+            case "SEPA_DIAS_HABILES_RECIBOS_COR1":
+              this.minDateCOR = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
+              break;
+
+            case "SEPA_DIAS_HABILES_RECIBOS_B2B":
+              this.minDateB2B = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
+              break;
+          }
+        });
+
+        this.progressSpinner=false;
+      },
+      err => {
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        console.log(err);
+      }
+    );
+  }
+
+  // OnChange de las fechas
+
+  fillFechaPresentacion(event) {
+    this.body.fechaPresentacion = event;
+  }
+
+  fillFechaRecibosPrimeros(event) {
+    this.body.fechaRecibosPrimeros = event;
+  }
+  
+  fillFechaRecibosRecurrentes(event) {
+    this.body.fechaRecibosRecurrentes = event;
+  }
+  
+  fillFechaRecibosCOR1(event) {
+    this.body.fechaRecibosCOR1 = event;
+  }
+
+  fillFechaRecibosB2B(event) {
+    this.body.fechaRecibosB2B = event;
+  }
+  
+
+  // Transformar fecha
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    else
+      fecha = null;
+    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
+  }
+
+  // Estilo obligatorio
+  styleObligatorio(evento: Date) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null)) {
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  // Abrir y cerrar la ficha
+
+  esFichaActiva(): boolean {
+    return this.openTarjetaGenAdeudos;
+  }
+
+  abreCierraFicha(key): void {
+    this.openTarjetaGenAdeudos = !this.openTarjetaGenAdeudos;
+    this.opened.emit(this.openTarjetaGenAdeudos);
+    this.idOpened.emit(key);
+  }
+
+  // Mensajes en pantalla
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+}

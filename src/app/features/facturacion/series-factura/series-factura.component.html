@@ -1,1 +1,13 @@
+<!--
 <app-my-iframe url="{{ url }}"></app-my-iframe>
+-->
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtros-series-factura (busqueda)="searchSeriesFacturas()" [permisoEscritura] = "this.permisoEscritura"></app-filtros-series-factura>
+    <app-tabla-series-factura *ngIf="buscar" [datos]="datos" (busqueda)="searchSeriesFacturas()"></app-tabla-series-factura>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+    <div class="loader"></div>
+</div>

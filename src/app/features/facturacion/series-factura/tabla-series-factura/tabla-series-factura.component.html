@@ -1,0 +1,129 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card mt-3">
+  <div class="card-body p-0">
+
+    <!-- TABLA RESULTADOS -->
+    <p-table [autoLayout]="true" [value]="datosMostrados" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
+      selectionMode="multiple" paginatorPosition="both" (onRowSelect)="selectFila($event)" (onRowUnselect)="unselectFila($event)" id="tablaFoco">
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="
+                table.filter($event.target.value, col.field, 'contains')
+              " placeholder="{{'general.boton.search' | translate}}" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'justiciaGratuita.maestros.fundamentosCalificacion.tabla.sinResultados'|translate}}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+
+            <div [ngSwitch]="col.field">
+              <div *ngSwitchCase="'cuentaBancaria'">
+                <span [ngClass]="{ historico: isHistorico(dato) }">(...{{ dato[col.field] | slice:-4 }})</span>
+              </div>
+
+              <div *ngSwitchCase="'sufijo'">
+                <span [ngClass]="{ historico: isHistorico(dato) }">{{ dato[col.field] }}</span>
+              </div>
+
+              <div *ngSwitchCase="'tiposIncluidos'">
+                <span [ngClass]="{ historico: isHistorico(dato) }">{{ collapseTiposIncluidos(dato[col.field]) }}</span>
+              </div>
+
+              <div *ngSwitchCase="'fasesAutomaticas'">
+                <span>
+                  <span class="badge badge-{{ dato['formaPago'] ? 'success' : 'light' }}">Pag</span>
+                  <span class="badge badge-{{ dato['generarPDF'] ? 'success' : 'light' }}">PDF</span>
+                  <span class="badge badge-{{ dato['envioFacturas'] ? 'success' : 'light' }}">Env</span>
+                  <span class="badge badge-{{ dato['traspasoFacturas'] ? 'success' : 'light' }}">Tra</span>
+                </span>
+              </div>
+
+              <!--
+              <div *ngSwitchCase="'fasesAutomaticas'">
+                <div class="form-row">
+                  <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                    <label>Pag</label>
+                    <p-slider [(ngModel)]="dato['formaPago']" min="0" max="1" step="1"></p-slider>
+                  </div>
+                  <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                    <label>PDF</label>
+                    <p-slider [(ngModel)]="dato['generarPDF']" min="0" max="1" step="1"></p-slider>
+                  </div>
+                  <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                    <label>Env</label>
+                    <p-slider [(ngModel)]="dato['envioFacturas']" min="0" max="1" step="1"></p-slider>
+                  </div>
+                  <div class="form-group-interlineado col-lg-3 col-md-3 mx-3">
+                    <label>Tra</label>
+                    <p-slider [(ngModel)]="dato['traspasoFacturas']" min="0" max="1" step="1"></p-slider>
+                  </div>
+                </div>
+              </div>
+
+              -->
+
+              <div *ngSwitchDefault>
+                <a class="enlace" (click)="openTab(dato)"><span [ngClass]="{ historico: isHistorico(dato) }">{{ dato[col.field] }}</span></a>
+              </div>
+            </div>
+            
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+            + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+          </label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+              name="groupname"></p-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+    
+  </div>
+
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button pButton *ngIf="historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate }}"></button>
+      <button pButton *ngIf="!historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
+
+      <button pButton *ngIf="!historico" (click)="confirmEliminar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
+      <button pButton *ngIf="historico" (click)="confirmReactivar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>
+    </div>
+  </div>
+
+  <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" width="425"></p-confirmDialog>
+</div>

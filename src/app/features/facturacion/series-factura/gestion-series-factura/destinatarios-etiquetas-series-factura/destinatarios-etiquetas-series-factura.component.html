@@ -1,0 +1,67 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="destinatariosEtiquetas">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva('destinatariosEtiquetas')" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('destinatariosEtiquetas')">
+          <div class="img-colegiado">
+            <i class="fas fa-tags icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('destinatariosEtiquetas')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.destEtiquetas' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>{{'enviosMasivos.literal.etiquetasSeleccionadas' | translate}}: 
+              <span>{{ etiquetasSeleccionadas ? etiquetasSeleccionadas.length : 0 }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('destinatariosEtiquetas')"
+              *ngIf="!esFichaActiva('destinatariosEtiquetas')"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva('destinatariosEtiquetas')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('destinatariosEtiquetas')">
+        <div class="img-colegiado">
+          <i class="fas fa-tags icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.destEtiquetas' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva('destinatariosEtiquetas')" class="card-body card-body-ficha">
+        <p-pickList [source]="etiquetasNoSeleccionadas" [target]="etiquetasSeleccionadas"
+          sourceHeader="{{'enviosMasivos.literal.etiquetasExistentes' | translate}}"
+          targetHeader="{{'enviosMasivos.literal.etiquetasSeleccionadas' | translate}}" [responsive]="true"
+          filterBy="label" dragdrop="true" dragdropScope="etiquetasSeleccionadas"
+          sourceFilterPlaceholder="{{'enviosMasivos.literal.buscarEtiqueta' | translate}}"
+          targetFilterPlaceholder="{{'enviosMasivos.literal.buscarEtiqueta' | translate}}" [showSourceControls]="false"
+          [showTargetControls]="false" [sourceStyle]="{ 'height': '300px'} " [targetStyle]="{ 'height': '300px'}">
+          <ng-template let-item pTemplate="item">
+            <div>{{item.label}}</div>
+          </ng-template>
+        </p-pickList>
+    </div>
+
+    <div *ngIf="esFichaActiva('destinatariosEtiquetas')" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
+          (click)="guardar()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

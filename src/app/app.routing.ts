@@ -55,6 +55,7 @@ import { MantenimientoCertificadosComponent } from './features/certificados/mant
 import { MantenimientoSufijosComponent } from './features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component';
 import { FacturaPlantillasComponent } from './features/facturacion/factura-plantillas/factura-plantillas.component';
 import { GestionCuentasBancariasComponent } from './features/facturacion/gestion-cuentas-bancarias/gestion-cuentas-bancarias.component';
+import { FichaCuentaBancariaComponent } from "./features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component";
 import { SeriesFacturaComponent } from './features/facturacion/series-factura/series-factura.component';
 import { PrevisionesFacturaComponent } from './features/facturacion/previsiones-factura/previsiones-factura.component';
 import { ProgramarFacturaComponent } from './features/facturacion/programar-factura/programar-factura.component';
@@ -230,8 +231,6 @@ import { FichaConsultaComponent } from './features/informes-comunicaciones/consu
 
 import { ComunicacionesComponent } from './features/informes-comunicaciones/comunicaciones/comunicaciones.component';
 
-
-
 import { FichaRegistroComunicacionComponent } from './features/informes-comunicaciones/comunicaciones/ficha-registro-comunicacion/ficha-registro-comunicacion.component';
 import { EnviosMasivosComponent } from './features/informes-comunicaciones/envios-masivos/envios-masivos.component';
 import { FichaRegistroEnvioMasivoComponent } from './features/informes-comunicaciones/envios-masivos/ficha-registro-envio-masivo/ficha-registro-envio-masivo.component';
@@ -249,6 +248,13 @@ import { FichaProductosComponent } from "./features/facturacion/productos/ficha-
 import { ServiciosComponent } from "./features/facturacion/servicios/servicios.component";
 import { FichaServiciosComponent } from "./features/facturacion/servicios/ficha-servicios/ficha-servicios.component";
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
+import { GestionSeriesFacturaComponent } from "./features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component";
+import { GestionAdeudosComponent } from "./features/facturacion/ficheros-adeudos/gestion-adeudos/gestion-adeudos.component";
+import { FactProgramadasComponent } from "./features/facturacion/fact-programadas/fact-programadas.component";
+import { FichaFactProgramadasComponent } from "./features/facturacion/fact-programadas/ficha-fact-programadas/ficha-fact-programadas.component";
+import { GestionFicherosTransferenciasComponent } from "./features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component";
+import { FichaFicherosDevolucionesComponent } from "./features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/ficha-ficheros-devoluciones.component";
+import { GestionFacturasComponent } from "./features/facturacion/facturas/gestion-facturas/gestion-facturas.component";
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -537,8 +543,28 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
+		path: 'fichaCuentaBancaria',
+		component: FichaCuentaBancariaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
 		path: 'seriesFactura',
 		component: SeriesFacturaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'datosSeriesFactura',
+		component: GestionSeriesFacturaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'factProgramadas',
+		component: FactProgramadasComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaFactProgramadas',
+		component: FichaFactProgramadasComponent,
 		canActivate: [AuthGuard]
 	},
 	{
@@ -572,6 +598,11 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
+		path: 'gestionFacturas',
+		component: GestionFacturasComponent,
+		canActivate: [AuthGuard]
+	},
+	{
 		path: 'facturasSociedad',
 		component: FacturacionSociedadesCensoComponent,
 		canActivate: [AuthGuard]
@@ -581,7 +612,11 @@ const appRoutes: Routes = [
 		component: ComunicacionSociedadesComponent,
 		canActivate: [AuthGuard]
 	},
-
+	{
+		path: 'gestionAdeudos',
+		component: GestionAdeudosComponent,
+		canActivate: [AuthGuard]
+	},
 	{
 		path: 'ficherosAdeudos',
 		component: FicherosAdeudosComponent,
@@ -593,6 +628,11 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
+		path: 'fichaFicherosDevoluciones',
+		component: FichaFicherosDevolucionesComponent,
+		canActivate: [AuthGuard]
+	},
+	{
 		path: 'devolucionManual',
 		component: DevolucionManualComponent,
 		canActivate: [AuthGuard]
@@ -600,6 +640,11 @@ const appRoutes: Routes = [
 	{
 		path: 'abonos',
 		component: AbonosComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'gestionFicherosTransferencias',
+		component: GestionFicherosTransferenciasComponent,
 		canActivate: [AuthGuard]
 	},
 	{
@@ -1153,16 +1198,7 @@ const appRoutes: Routes = [
 		component: PlantillaDocumentoComponent,
 		canActivate: [AuthGuard]
 	},
-	{
-		path: 'consultas',
-		component: ConsultasComponent,
-		canActivate: [AuthGuard]
-	},
-	{
-		path: 'fichaConsulta',
-		component: FichaConsultaComponent,
-		canActivate: [AuthGuard]
-	},
+	
 
 	{
 		path: 'comunicaciones',

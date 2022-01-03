@@ -1,0 +1,45 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="facturacion">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacionSJCS.tarjGenFac.facturacion' | translate }}</label>
+
+            <label class="mr-3">
+              <i (click)="navigateToFacturacion();$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2"></i>
+              <a (click)="navigateToFacturacion();$event.stopPropagation();">
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  {{ 'facturacionSJCS.facturacionesYPagos.fichaFacturacion' | translate }}
+                </span>
+              </a>
+            </label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>{{ 'facturacionPyS.ficherosAdeudos.serie' | translate }}: 
+                <span>{{ bodyInicial.serie }}</span></label>
+            <label>{{ 'general.description' | translate }}: 
+                <span>{{ bodyInicial.facturacion }}</span></label>
+            <label>{{ 'informesycomunicaciones.enviosMasivos.fechaCreacion' | translate }}: 
+              <span>{{ bodyInicial.fechaEminionFacturacion | date: "dd/MM/yyyy" }}</span></label>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
