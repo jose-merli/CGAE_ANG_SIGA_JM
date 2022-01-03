@@ -749,11 +749,11 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             if (
               JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody) || this.etiquetasPersonaJuridicaSelecionados != this.generalBody.etiquetas
             ){
-              //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
-              //let peticion = new RevisionAutLetradoItem();
-              //peticion.idPersona = this.generalBody.idPersona.toString();
-              //peticion.fechaProcesamiento = new Date();
-              //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+              //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+              let peticion = new RevisionAutLetradoItem();
+              peticion.idPersona = this.generalBody.idPersona.toString();
+              peticion.fechaProcesamiento = new Date();
+              this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
             }
 
 

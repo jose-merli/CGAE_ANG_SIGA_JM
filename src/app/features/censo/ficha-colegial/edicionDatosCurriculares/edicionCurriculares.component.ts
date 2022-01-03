@@ -452,11 +452,11 @@ disabledAction:boolean = false;
             if (
               this.body != this.bodyInicial
             ){
-              //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+              //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
               let peticion = new RevisionAutLetradoItem();
               peticion.idPersona = this.body.idPersona.toString();
               peticion.fechaProcesamiento = this.body.dateFechaInicio;
-              //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+              this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
             }
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
@@ -484,11 +484,11 @@ disabledAction:boolean = false;
             if (
               this.body != this.bodyInicial
             ){
-              //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
-              //let peticion = new RevisionAutLetradoItem();
-              //peticion.idPersona = this.generalBody.idPersona;
-              //peticion.fechaProcesamiento = new Date();
-              //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+              //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+              let peticion = new RevisionAutLetradoItem();
+              peticion.idPersona = this.body.idPersona.toString();
+              peticion.fechaProcesamiento = new Date();
+              this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
             }
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();

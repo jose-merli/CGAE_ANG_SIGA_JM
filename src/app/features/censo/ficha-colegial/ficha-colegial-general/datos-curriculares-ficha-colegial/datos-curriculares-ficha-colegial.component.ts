@@ -296,11 +296,11 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
           if (
             selectedDatosCurriculares != null
           ) {
-            //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
-            //let peticion = new RevisionAutLetradoItem();
-            //peticion.idPersona = this.generalBody.idPersona.toString();
-            //peticion.fechaProcesamiento = new Date();
-            //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+            //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+            let peticion = new RevisionAutLetradoItem();
+            peticion.idPersona = this.generalBody.idPersona.toString();
+            peticion.fechaProcesamiento = new Date();
+            this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
           }
           this.progressSpinner = false;
         },
@@ -380,11 +380,11 @@ export class DatosCurricularesFichaColegialComponent implements OnInit, OnChange
           this.progressSpinner = false;
           let search = JSON.parse(data["body"]);
           this.datosCurriculares = search.fichaDatosCurricularesItem;
-          //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
-          //let peticion = new RevisionAutLetradoItem();
-          //peticion.idPersona = this.generalBody.idPersona.toString();
-          //peticion.fechaProcesamiento = new Date();
-          //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+          //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+          let peticion = new RevisionAutLetradoItem();
+          peticion.idPersona = this.generalBody.idPersona.toString();
+          peticion.fechaProcesamiento = new Date();
+          this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
           // this.table.reset();
         },
         err => {
