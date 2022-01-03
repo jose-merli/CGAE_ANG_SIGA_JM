@@ -67,6 +67,7 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_getComunicacionCobro: "facturacionPyS/getComunicacionCobro",
     facturacionPyS_comboEstadosFacturas: "facturacionPyS/general/comboEstadosFacturas",
     facturacionPyS_getEstadosPagos: "facturacionPyS/getEstadosPagos",
+    facturacionPyS_comboMotivosDevolucion: "facturacionPyS/general/comboMotivosDevolucion",
     facturacionPyS_insertarEstadosPagos: "facturacionPyS/insertarEstadosPagos",
     facturacionPyS_eliminarEstadosPagos: "facturacionPyS/eliminarEstadosPagos",
     facturacionPyS_maxIdContabilidad: "facturacionPyS/maxIdContabilidad",

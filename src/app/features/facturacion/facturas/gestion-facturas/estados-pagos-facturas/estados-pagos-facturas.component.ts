@@ -66,8 +66,22 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.bodyInicial != undefined) {
       this.getCols();
+      this.getComboMotivosDevolucion();
       this.getEstadosPagos();
     }
+  }
+
+  // Combo de motivos de devolución
+  getComboMotivosDevolucion() {
+    this.sigaServices.get("facturacionPyS_comboMotivosDevolucion").subscribe(
+      n => {
+        this.comboNotas = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboNotas);
+      },
+      err => {
+        console.log(err);
+      }
+    );
   }
 
   // Definición de las columnas
@@ -277,8 +291,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
       this.nuevoEstado.fechaModificaion = new Date();
-      
-      this.comboNotas = [];
 
       // Acción
       this.nuevoEstado.idAccion = "6";
