@@ -74,9 +74,17 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
     if(sessionStorage.getItem("abogado")){
       let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
 			sessionStorage.removeItem("abogado");
-			this.nombreCliente = data.nombre;
+
+      if (isNaN(data.nif.charAt(0))) {
+        this.nombreCliente = data.denominacion;
+        this.apellidosCliente = "";
+      }
+       if (!isNaN(data.nif.charAt(0))) {
+        this.nombreCliente = data.nombre;
+        this.apellidosCliente = data.apellidos;
+      }
+	
 			this.filtrosSuscripciones.idpersona = data.idPersona;
-      this.apellidosCliente = data.apellidos;
 			this.nifCifCliente = data.nif;
     }
     else if(this.localStorageService.isLetrado){

@@ -294,7 +294,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     this.sigaServices.post("PyS_updateProductosPeticion", this.datosTarjeta).subscribe(
       n => {
 
-        if (n.status == 500) {
+        if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));

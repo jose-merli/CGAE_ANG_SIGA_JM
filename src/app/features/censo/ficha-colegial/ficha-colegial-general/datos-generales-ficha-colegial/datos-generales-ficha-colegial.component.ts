@@ -19,6 +19,7 @@ import { Calendar, AutoComplete } from 'primeng/primeng';
 import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../utils/calendar';
 import { MultiSelect } from 'primeng/multiselect';
 import { StringObject } from "../../../../../models/StringObject";
+import { RevisionAutLetradoItem } from '../../../../../models/RevisionAutLetradoItem';
 @Component({
   selector: 'app-datos-generales-ficha-colegial',
   templateUrl: './datos-generales-ficha-colegial.component.html',
@@ -742,6 +743,20 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
               "personaBody",
               JSON.stringify(this.generalBody)
             );
+
+            //Se comprueba si se han realizado cambios en los datos generales o en las etiquetas
+            //para comprobar si cumple condiciones de los distintos servicios
+            if (
+              JSON.stringify(this.checkGeneralBody) != JSON.stringify(this.generalBody) || this.etiquetasPersonaJuridicaSelecionados != this.generalBody.etiquetas
+            ){
+              //REVISAR: INTRODUCIR LLAMADA AL SERVICIO DE PROCESAMIENTO DE SERVICIOS DE PERSONA
+              //let peticion = new RevisionAutLetradoItem();
+              //peticion.idPersona = this.generalBody.idPersona.toString();
+              //peticion.fechaProcesamiento = new Date();
+              //this.sigaServices.post("PyS_actualizacionSuscripcionesPersona", peticion).subscribe();
+            }
+
+
             this.checkGeneralBody = new FichaColegialGeneralesItem();
 
             this.checkGeneralBody = JSON.parse(

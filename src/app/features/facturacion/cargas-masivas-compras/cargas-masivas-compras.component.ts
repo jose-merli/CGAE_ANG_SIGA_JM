@@ -55,10 +55,10 @@ export class CargasMasivasComprasComponent implements OnInit {
 
 	getFiltrosValues() {
     if(this.filtrosValues.fechaCargaDesde != null){
-      this.filtrosValues.fechaCargaDesde = new Date(this.filtros.fechaCargaDesde);
+      this.filtrosValues.fechaCargaDesde = new Date(this.filtros.filtrosBusquedaCargaMasivasCompras.fechaCargaDesde);
     }
     if(this.filtrosValues.fechaCargaHasta != null){
-      this.filtrosValues.fechaCargaHasta = new Date(this.filtros.fechaCargaHasta);
+      this.filtrosValues.fechaCargaHasta = new Date(this.filtros.filtrosBusquedaCargaMasivasCompras.fechaCargaHasta);
     }  
     
     this.search();

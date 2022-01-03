@@ -197,11 +197,11 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
     this.sigaServices.post("PyS_updateServiciosMonedero", peticion).subscribe(
       n => {
 
-        if (n.status == 500) {
+        if (n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.ficha.servicios = {...this.serviciosTarjeta};
+          this.ficha.servicios = JSON.parse(JSON.stringify(this.serviciosTarjeta));
           this.compareServices();
         }
 
@@ -373,19 +373,16 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
   //TO DO
   //REVISAR: PENDIENTE DE IMPLEMENTACION
   compareServices(){
-    this.deshabilitarGuardar = false;
+    this.deshabilitarGuardar = true;
     // Esto puede ahorrar tiempo
-    // if (this.serviciosTarjeta.length != this.ficha.servicios.length){
-    //     this.deshabilitarGuardar = false;
-    // }
-    // else{
-    //   for (var i = 0, l= this.serviciosTarjeta.length; i < l; i++) {
-    //       if (this.ficha.servicios[i] != this.serviciosTarjeta[i]) { 
-    //           this.deshabilitarGuardar = false;   
-    //           break;
-    //       }           
-    //   }       
-    // }
+     if (this.serviciosTarjeta.length != this.ficha.servicios.length){
+         this.deshabilitarGuardar = false;
+     }
+     else{
+       if (JSON.stringify(this.ficha.servicios) != JSON.stringify(this.serviciosTarjeta)) { 
+          this.deshabilitarGuardar = false; 
+       }       
+     }
   }
 
   //FIN METODOS

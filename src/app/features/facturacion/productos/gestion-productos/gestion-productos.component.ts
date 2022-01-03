@@ -41,6 +41,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
 
   //Permisos
   eliminarReactivarProductos: boolean;
+  permisoMostrarHistorico: boolean;
 
   //Variables control
   historico: boolean = false; //Indica si se estan mostrando historicos o no para por ejemplo ocultar/mostrar los botones de historico.
@@ -85,7 +86,8 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   //INICIO METODOS PERMISOS
 
   checkPermisos() {
-    this.getPermisoEliminarReactivarProducto(); 
+    this.getPermisoEliminarReactivarProducto();
+    this.getPermisoMostrarHistorico();
   }
 
   getPermisoEliminarReactivarProducto() {
@@ -93,6 +95,15 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
        .checkAcceso(procesos_PyS.eliminarReactivarProductos)
         .then((respuesta) => {
            this.eliminarReactivarProductos = respuesta;
+        })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisoMostrarHistorico() {
+    this.commonsService
+       .checkAcceso(procesos_PyS.mostrarHistorico)
+        .then((respuesta) => {
+           this.permisoMostrarHistorico = respuesta;
         })
     .catch((error) => console.error(error));
   }
@@ -250,6 +261,28 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
 
 
   //INICIO METODOS COMPONENTE
+  checkMostrarHistorico(){
+    let msg = this.commonsService.checkPermisos(this.permisoMostrarHistorico, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+      this.getListaProductosHistorico();
+      this.selectedRows=[]
+	  }
+  }
+
+  checkOcultarHistorico(){
+    let msg = this.commonsService.checkPermisos(this.permisoMostrarHistorico, undefined);
+
+	  if (msg != null) {
+	    this.msgs = msg;
+	  } else {
+      this.getListaProductos(); 
+      this.selectedRows=[]
+	  } 
+  }
+
   //Metodo para obtener los datos de la tabla productos activos
   getListaProductos() {
     this.numSelectedRows = 0;
@@ -387,19 +420,26 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   }
 
   checkPermisoComprar() {
-    let msg = this.commonsService.checkPermisos(this.permisoCompra, undefined);
+      let hayInactivo: boolean = false;
+      this.selectedRows.forEach(producto => {
+        if(producto.fechabaja != null){
+          hayInactivo = true;
+        }
+      });
 
-    if (msg != undefined) {
-      this.msgs = msg;
-    } else {
-      if (this.checkProductosCompra()) {
-        this.nuevaCompra();
+      if(!hayInactivo){
+        if (this.checkProductosCompra()) {
+          this.nuevaCompra();
+        }
+      }else{
+        this.showMessage("error",
+        this.translateService.instant("general.message.incorrect"),
+        this.translateService.instant("facturacion.productos.avisocomprarproductosinactivos"))
       }
-    }
   }
 
   checkProductosCompra() {
-    //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
+    //Se revisan las formas de pago para añadir los "no facturables" y los "No disponible"
     let productosLista: ListaProductosItems[] = JSON.parse(JSON.stringify(this.selectedRows));
     productosLista.forEach(producto => {
       if (producto.formapago == null || producto.formapago == "") {

@@ -79,10 +79,21 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
     if(sessionStorage.getItem("abogado")){
       let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
       sessionStorage.removeItem("abogado");
+
+       
+    if (isNaN(data.nif.charAt(0))) {
+      this.nombreCliente = data.denominacion;
+      this.apellidosCliente = "";
+    }
+     if (!isNaN(data.nif.charAt(0))) {
       this.nombreCliente = data.nombre;
-      this.filtrosCompraProductos.idpersona = data.idPersona;
       this.apellidosCliente = data.apellidos;
+    }
+
+      this.filtrosCompraProductos.idpersona = data.idPersona;
       this.nifCifCliente = data.nif;
+
+    sessionStorage.removeItem("buscadorColegiados");
     }
     else if(this.localStorageService.isLetrado){
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
@@ -90,6 +101,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
           let data = JSON.parse(n.body).colegiadoItem;
           this.nombreCliente = data.nombre;
           this.nifCifCliente = data.nif;
+          this.filtrosCompraProductos.idpersona = this.localStorageService.idPersona;
         },
         err => {
           this.progressSpinner = false;

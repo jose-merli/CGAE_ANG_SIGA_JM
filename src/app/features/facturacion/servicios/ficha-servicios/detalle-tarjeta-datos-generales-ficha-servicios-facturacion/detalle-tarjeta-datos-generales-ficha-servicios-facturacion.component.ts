@@ -34,6 +34,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   checkBoxPermitirSolicitudPorInternet: boolean = false;
   checkboxPermitirAnulacionPorInternet: boolean = false;
   checkboxAsignacionAutomatica: boolean = false;
+  checkboxDialogServicioAutomaticoAManual: boolean = false;
   listaCodigosPorInstitucionObject: CodigosPorInstitucionObject;
   @Output() mostrarTarjetaFormaPagos = new EventEmitter<boolean>();
 
@@ -215,6 +216,9 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       this.servicio.permitirbaja = '0';
     } else {
       this.servicio.automatico = '0';
+      if(this.servicioOriginal.automatico == '1'){
+        this.modalServicioAutomaticoAManual();
+      }
     }
   }
 
@@ -232,6 +236,14 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     if (event == "0") {
       this.checkboxIncluirSolBajasManuales = false;
       this.onChangeIncluirSolBajasManuales();
+    }
+  }
+
+  onChangeDialogServicioAutomaticoAManual(){
+    if(this.checkboxDialogServicioAutomaticoAManual){
+      this.borrarSuscripcionBajaItem.opcionaltasbajas = "1";
+    }else{
+      this.borrarSuscripcionBajaItem.opcionaltasbajas = "0"
     }
   }
 
@@ -382,6 +394,17 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     }
   }
 
+  checkGuardarDialogBorrarSuscripcionesBajas(){
+    if(this.checkboxDialogServicioAutomaticoAManual == true){
+      this.guardarDialogBorrarSuscripcionesBajas();
+    }else{
+      this.guardar();
+      this.showModalServicioAutomaticoAManual = false;
+    }
+
+    
+  }
+
   guardarDialogBorrarSuscripcionesBajas() {
     this.progressSpinner = true;
 
@@ -396,6 +419,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.showModalSuscripcionesBajas = false;
+          this.showModalServicioAutomaticoAManual = false;
         }
 
 
@@ -405,6 +429,9 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
         this.progressSpinner = false;
       },
       () => {
+        if(this.checkboxDialogServicioAutomaticoAManual == true){
+          this.guardar();
+        }
         this.progressSpinner = false;
       }
     );
@@ -421,6 +448,25 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
 
   cancelarDialogBorrarSuscripcionesBajas() {
     this.showModalSuscripcionesBajas = false;
+  }
+
+  showModalServicioAutomaticoAManual: boolean = false;
+  modalServicioAutomaticoAManual(){
+    let msg = this.commonsService.checkPermisos(this.permisoEliminarSuscripcionBaja, undefined);
+	    if (msg != null) {
+	      this.msgs = msg;
+	    } else {
+        this.showModalServicioAutomaticoAManual = true;;
+	    }
+  }
+
+  cancelarDialogServicioAutomaticoAManual() {
+    this.checkboxDialogServicioAutomaticoAManual = false;
+    this.showModalServicioAutomaticoAManual = false;
+  }
+
+  onChangeDarDeBajaAtodasLasPersonas(){
+    
   }
 
   nuevacondicion(){

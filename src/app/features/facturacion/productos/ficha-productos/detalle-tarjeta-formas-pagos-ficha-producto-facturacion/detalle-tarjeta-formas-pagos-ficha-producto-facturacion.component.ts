@@ -153,6 +153,19 @@ export class DetalleTarjetaFormasPagosFichaProductoFacturacionComponent implemen
     }
   }
 
+  restablecer() {
+    this.producto = { ...this.productoOriginal };
+
+    if (this.productoOriginal.nofacturable == "1") {
+      this.checkboxNoFacturable = true;
+      this.onChangeNoFacturable();
+    } else if (this.productoOriginal.nofacturable == "0" || this.productoOriginal.nofacturable == null) {
+      this.checkboxNoFacturable = false;
+      this.onChangeNoFacturable();
+    }
+    
+  }
+
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
