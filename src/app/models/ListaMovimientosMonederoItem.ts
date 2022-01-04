@@ -4,6 +4,7 @@ export class ListaMovimientosMonederoItem{
     cuentaContable: string;
     impOp: number;
     impTotal: number;
+    idLinea: string;
 
     nuevo: boolean; //Se utiliza para determinar si es editable o no en la tabla de movimiento s de la ficha Monedero
 }
