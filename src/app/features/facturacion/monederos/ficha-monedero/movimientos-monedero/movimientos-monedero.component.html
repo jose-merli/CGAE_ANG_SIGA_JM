@@ -39,16 +39,16 @@
                   <span *ngIf="col.field == 'fecha'">{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
 
                   <span *ngIf="col.field == 'concepto' && !rowData.nuevo">{{rowData[col.field]}}</span>
-                  <input [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'concepto' && rowData.nuevo" pInputText type="text"
-                    [(ngModel)]="rowData[col.field]" type="text" pInputText>
+                  <input [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'concepto' && rowData.nuevo" type="text"
+                    [(ngModel)]="rowData[col.field]" pInputText>
 
-                  <input *ngIf="col.field == 'cuentaContable'" pInputText type="text"
+                  <input *ngIf="col.field == 'cuentaContable'" 
                     [(ngModel)]="rowData[col.field]" type="text" pInputText>
 
                   <span *ngIf="col.field == 'impOp' && !rowData.nuevo">{{rowData[col.field] | number:'.2'}} €</span>
-                  <input [ngClass]="styleObligatorio(rowData[col.field])"
-                    *ngIf="col.field == 'impOp' && rowData.nuevo" (input)="checkTotal()" pInputText
-                    type="text" DigitDecimaNumber [(ngModel)]="rowData[col.field]" type="text" pInputText>
+                  <input [ngClass]="styleObligatorio(rowData[col.field])" step="0.01"
+                    *ngIf="col.field == 'impOp' && rowData.nuevo" (input)="checkTotal()"
+                    type="number" DigitDecimaNumber min="0" [(ngModel)]="rowData[col.field]" pInputText>
       
                   <span *ngIf="col.field == 'impTotal'">{{rowData[col.field] | number:'.2' }} €</span>
                 </td>
