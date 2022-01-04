@@ -61,7 +61,7 @@ export class MonederoComponent implements OnInit {
           }
         }
 
-  //       this.progressSpinner = false;
+         this.progressSpinner = false;
 
   //     },
   //     err => {
