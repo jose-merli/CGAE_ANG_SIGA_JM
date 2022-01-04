@@ -8,7 +8,7 @@
         <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
         <div>
             <div *ngFor="let tarj of listaTarjetas; let i = index;">
-                <div class="card" [id]="tarj.id" *ngIf="tarj.visible != undefined">
+                <div class="card" [id]="tarj.id" *ngIf="tarj.visible">
                     <div class="card-body p-0">
                         <mat-accordion class="example-headers-align" multi>
                             <mat-expansion-panel (opened)="tarj.opened = true" (closed)="tarj.opened = false"
@@ -22,13 +22,13 @@
                                     </app-tarjeta>
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent>
-                                  <div *ngIf="tarj.nombre == 'Datos Generales Expediente' && tarj.visible != undefined" id="datosGeneralesExpedienteTemplate">
+                                  <div *ngIf="tarj.nombre == 'Datos Generales Expediente' && tarj.visible" id="datosGeneralesExpedienteTemplate">
                                     <app-ficha-exp-exea-datos-generales [expediente]="expedienteEXEA"></app-ficha-exp-exea-datos-generales>
                                   </div>
-                                  <div *ngIf="tarj.nombre == 'Documentación' && tarj.visible != undefined" id="documentacionTemplate">
+                                  <div *ngIf="tarj.nombre == 'Documentación' && tarj.visible" id="documentacionTemplate">
                                     <app-ficha-exp-exea-documentacion [expediente]="expedienteEXEA"></app-ficha-exp-exea-documentacion>
                                   </div>
-                                  <div *ngIf="tarj.nombre == 'Histórico' && tarj.visible != undefined" id="historicoTemplate">
+                                  <div *ngIf="tarj.nombre == 'Histórico' && tarj.visible" id="historicoTemplate">
                                     <app-ficha-exp-exea-historico [expediente]="expedienteEXEA"></app-ficha-exp-exea-historico>
                                   </div>
                                 </ng-template>

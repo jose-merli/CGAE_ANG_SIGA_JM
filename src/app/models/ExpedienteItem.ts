@@ -18,6 +18,7 @@ export class ExpedienteItem {
   fechaRegistro : string;
   exea: boolean;
   titular : string;
+  idFase : string;
   constructor(){}
 }
   

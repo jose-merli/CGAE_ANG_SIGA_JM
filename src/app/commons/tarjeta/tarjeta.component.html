@@ -51,7 +51,7 @@
           </a>
 
           <a
-            *ngIf="(enlace.href == undefined || enlace.href == '') && (enlace.params == undefined || enlace.params == '') && !enlace.sede">
+            *ngIf="(enlace.href == undefined || enlace.href == '') && (enlace.params == undefined || enlace.params == '') && !enlace.sede && !enlace.detalle">
             <span class="enlace">
               {{ enlace.texto }}
             </span>
@@ -59,6 +59,13 @@
 
           <a
             *ngIf="enlace.sede" (click)="goToSede(enlace.sede)">
+            <span class="enlace">
+              {{ enlace.texto }}
+            </span>
+          </a>
+
+          <a
+            *ngIf="enlace.detalle" (click)="goToDetalleEXEA(enlace.detalle)">
             <span class="enlace">
               {{ enlace.texto }}
             </span>

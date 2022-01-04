@@ -29,11 +29,13 @@ export class FichaExpExeaHistoricoComponent implements OnInit, OnChanges {
     private datePipe : DatePipe) { }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.expediente.currentValue){
-      this.expediente.hitos.forEach(element => {
-        if(element.fecha){
-          element.fecha = this.datePipe.transform(new Date(element.fecha), 'dd/MM/yyyy HH:mm');
-        }
-      });
+      if(this.expediente.hitos && this.expediente.hitos.length > 0){
+        this.expediente.hitos.forEach(element => {
+          if(element.fecha){
+            element.fecha = this.datePipe.transform(new Date(element.fecha), 'dd/MM/yyyy HH:mm');
+          }
+        });
+      }
     }
   }
 

@@ -182,6 +182,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
               this.expedientesEXEA = data.expedienteItem;
               this.numExpEXEA = this.expedientesEXEA.length;
               this.expEXEA = true;
+              this.expedientesEXEA.forEach(expediente => expediente.exea = true);
             }else if(data.error.code == 500){
                 this.showMessage('error','Error',data.error.description);
             }
@@ -305,6 +306,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
       if(this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona){
         this.router.navigate(["/fichaExpedienteEXEA"], {queryParams : {idExpediente : dato.idExpedienteEXEA}});
       }else{
+        sessionStorage.setItem("infoAdicionalExp", JSON.stringify(dato));
         this.router.navigate(["/fichaExpedienteEXEA"], {queryParams : {idExpediente : dato.numExpediente}});
       }
     }else{

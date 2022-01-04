@@ -135,6 +135,10 @@ export class TarjetaComponent implements OnInit {
     window.open(urlSede, '_blank');
   }
 
+  goToDetalleEXEA(urlDetalle : string){
+    window.open(urlDetalle, '_blank');
+  }
+
   personaBodyFecha(fecha) {
     let f = fecha.substring(0, 10);
     let year = f.substring(0, 4);

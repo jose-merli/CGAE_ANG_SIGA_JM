@@ -24,6 +24,9 @@ export class FichaExpedienteExeaComponent implements OnInit {
   rutas: string[] = [];
   progressSpinner : boolean = false;
   urlSede : string;
+  idExpediente : string;
+  expedienteEXEA : ExpedienteItem;
+  titularExp : string;
 
   listaTarjetas = [{
     id : 'datosgenerales',
@@ -67,12 +70,10 @@ export class FichaExpedienteExeaComponent implements OnInit {
     fixed: false,
     opened: false,
     visible: true,
-    enlaceCardClosed: {} //Enlace a sede electronica
+    enlaces: []
   }];
 
-  idExpediente : string;
-  expedienteEXEA : ExpedienteItem;
-  titularExp : string;
+
   constructor(private route : ActivatedRoute,
     private sigaServices : SigaServices,
     private sigaStorageService : SigaStorageService,
@@ -93,8 +94,10 @@ export class FichaExpedienteExeaComponent implements OnInit {
 				this.idExpediente = params.idExpediente;
         if(this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona){
           this.getDetalleExpediente();
+          this.listaTarjetas[2].visible = true;
         }else{
           this.getDetalleExpedientePersonalColegio();
+          this.listaTarjetas[2].visible = false;
         }
 			});
 
@@ -135,6 +138,15 @@ export class FichaExpedienteExeaComponent implements OnInit {
           if(!data.error){
            this.expedienteEXEA = data.expedienteItem[0];
            this.expedienteEXEA.titular = this.titularExp;
+           let expedienteAux : ExpedienteItem = JSON.parse(sessionStorage.getItem("infoAdicionalExp"));
+           if(expedienteAux){
+             this.expedienteEXEA.descInstitucion = expedienteAux.descInstitucion;
+             this.expedienteEXEA.fechaRegistro = expedienteAux.fechaRegistro;
+             this.expedienteEXEA.numRegistro = expedienteAux.numRegistro;
+             this.expedienteEXEA.estadoExpediente = expedienteAux.estadoExpediente;
+             this.expedienteEXEA.idFase = expedienteAux.idFase;
+             sessionStorage.removeItem("infoAdicionalExp");
+           }
            this.initTarjetas();
           }else if(data.error.code == 500){
               this.showMessage('error','Error',data.error.description);
@@ -268,8 +280,9 @@ export class FichaExpedienteExeaComponent implements OnInit {
         ];
       }
 
+      this.listaTarjetas[1].campos = camposDocumentacion;
+
       if(this.expedienteEXEA.hitos && this.expedienteEXEA.hitos.length > 0){
-        this.listaTarjetas[1].campos = camposDocumentacion;
 
         let camposHistorico = [
           {
@@ -286,7 +299,43 @@ export class FichaExpedienteExeaComponent implements OnInit {
 
       this.getURLSedeElectronica();
 
+      if(this.expedienteEXEA.idFase && !this.sigaStorageService.isLetrado){
+        this.getURLShowExpedienteEXEA();
+      }
     }
+  }
+
+  getURLShowExpedienteEXEA(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.sigaStorageService.institucionActual;
+    parametro.modulo = "EXEA";
+    parametro.parametrosGenerales = "URL_EXEA";
+
+    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+      data => {
+        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+        let url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == element.idinstitucionActual);
+        
+        if(!url){
+          url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == '0');
+        }
+
+        if(url && url.valor != 'NULL'){
+          let urlDetalle : string = String(url.valor) + "showExpedient.do?stageId="+this.expedienteEXEA.idFase;
+          this.listaTarjetas[3].enlaces.push(
+            {
+              texto: 'Abrir expediente en EXEA',
+              detalle : urlDetalle
+            }
+          );
+        }
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {}
+    );
   }
 
   getURLSedeElectronica(){
@@ -307,12 +356,12 @@ export class FichaExpedienteExeaComponent implements OnInit {
 
         if(url && url.valor != 'NULL'){
           this.urlSede = String(url.valor);
-          this.listaTarjetas[3].enlaces= [
+          this.listaTarjetas[3].enlaces.push(
             {
               texto: this.translateService.instant("general.boton.masinformacion"),
               sede : this.urlSede
             }
-          ]
+          );
         }
       },
       err => {
