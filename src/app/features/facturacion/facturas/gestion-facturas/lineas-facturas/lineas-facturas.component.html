@@ -7,7 +7,7 @@
       <div *ngIf="!esFichaActiva('lineas')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('lineas')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="far fa-list-alt icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -40,7 +40,7 @@
       <div *ngIf="esFichaActiva('lineas')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('lineas')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="far fa-list-alt icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ bodyInicial.tipo == 'FACTURA' ? 'Líneas de Factura' : 'Líneas de Factura Rectificativa' }}</label>
         <i class="fa fa-angle-up ml-auto"></i>

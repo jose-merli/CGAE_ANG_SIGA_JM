@@ -33,6 +33,8 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   porConfirmarError: boolean = false;
   confirmada: boolean = false;
 
+  fechaActual: Date;
+
   constructor(
     private commonsService: CommonsService,
     private sigaServices: SigaServices,
@@ -41,6 +43,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   ) { }
 
   ngOnInit() {
+    this.fechaActual = new Date();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -59,6 +62,9 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     this.body.fechaInicioServicios = this.transformDate(this.body.fechaInicioServicios);
     this.body.fechaFinServicios = this.transformDate(this.body.fechaFinServicios);
     this.body.fechaModificacion = this.transformDate(this.body.fechaModificacion);
+
+    this.body.fechaCompraSuscripcionDesde = this.minDate(this.body.fechaInicioServicios, this.body.fechaInicioProductos);
+    this.body.fechaCompraSuscripcionHasta = this.maxDate(this.body.fechaFinServicios, this.body.fechaFinProductos);
     this.resaltadoDatos = false;
 
     this.porProgramar = !this.modoEdicion || this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
@@ -72,16 +78,20 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
     return this.notChangedString(this.body.descripcion, this.bodyInicial.descripcion)
-        && this.body.fechaPrevistaGeneracion == this.bodyInicial.fechaPrevistaGeneracion
-        && this.body.fechaPrevistaConfirm == this.bodyInicial.fechaPrevistaConfirm
-        && this.body.fechaInicioServicios == this.bodyInicial.fechaInicioServicios
-        && this.body.fechaInicioProductos == this.bodyInicial.fechaInicioProductos
-        && this.body.fechaFinServicios == this.bodyInicial.fechaFinServicios
-        && this.body.fechaFinProductos == this.bodyInicial.fechaFinProductos;
+        && this.notChangedDate(this.body.fechaPrevistaGeneracion, this.bodyInicial.fechaPrevistaGeneracion)
+        && this.notChangedDate(this.body.fechaPrevistaConfirm, this.bodyInicial.fechaPrevistaConfirm)
+        && this.notChangedDate(this.body.fechaInicioServicios, this.bodyInicial.fechaInicioServicios)
+        && this.notChangedDate(this.body.fechaInicioProductos, this.bodyInicial.fechaInicioProductos)
+        && this.notChangedDate(this.body.fechaFinServicios, this.bodyInicial.fechaFinServicios)
+        && this.notChangedDate(this.body.fechaFinProductos, this.bodyInicial.fechaFinProductos);
   }
 
   notChangedString(value1: string, value2: string): boolean {
     return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
+  }
+
+  notChangedDate(value1: Date, value2: Date): boolean {
+    return value1 == value2 || value1 == undefined && value2 == undefined || new Date(value1).getTime() == new Date(value2).getTime();
   }
 
   // Guardar
@@ -96,15 +106,15 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       return false;
     }
 
-    let fechaGeneracion: boolean = this.body.fechaPrevistaGeneracion > new Date();
-    if (!fechaGeneracion) {
-      this.showMessage("error", "Error", "La Fecha de generación debe ser posterior a la fecha actual");
+    let fechaGeneracion: boolean = !this.porConfirmarError && this.body.fechaPrevistaGeneracion < new Date();
+    if (fechaGeneracion) {
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.fechaGeneracion.futura"));
       return false;
     }
 
-    let fechaConfirmacion: boolean = this.body.fechaPrevistaConfirm == undefined || this.body.fechaPrevistaConfirm > this.body.fechaRealGeneracion;
+    let fechaConfirmacion: boolean = this.body.fechaPrevistaConfirm == undefined || this.body.fechaPrevistaConfirm > this.body.fechaPrevistaGeneracion;
     if (!fechaConfirmacion) {
-      this.showMessage("error", "Error", "La Fecha de confirmación debe ser posterior a la fecha de generación");
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.fechaConfirmacion.posterior"));
       return false;
     }
 
@@ -112,11 +122,11 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     if (intervaloProductos) {
       let intervalo: boolean = this.body.fechaInicioProductos < this.body.fechaFinProductos;
       if (!intervalo) {
-        this.showMessage("error", "Error", "El intervalo de compras de productos es inválido");
+        this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intevaloCompras.invalido"));
         return false;
       }
     } else if (this.serie.tiposProductos != undefined && this.serie.tiposProductos.length > 0) {
-      this.showMessage("error", "Error", "La serie contiene tipos de productos");
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intevalo.tiposProductos"));
       return false;
     }
 
@@ -124,16 +134,16 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     if (intervaloServicios) {
       let intervalo: boolean = this.body.fechaInicioServicios < this.body.fechaFinServicios;
       if (!intervalo) {
-        this.showMessage("error", "Error", "El intervalo de cuotas y suscripciones es inválido");
+        this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intevaloSuscripciones.invalido"));
         return false;
       }
     } else if (this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0) {
-      this.showMessage("error", "Error", "La serie contiene tipos de servicios");
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intevalo.tiposServicios"));
       return false;
     }
 
     if (!intervaloProductos && !intervaloServicios) {
-      this.showMessage("error", "Error", "Se debe rellenar al menos uno de los dos periodos");
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intervalo.obligatorio"));
       return false;
     }
 
@@ -280,6 +290,34 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   styleFechaServicios(evento) {
     if (this.resaltadoDatos && this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0 && !(this.body.fechaInicioServicios != undefined && this.body.fechaFinServicios != undefined || this.body.fechaInicioServicios < this.body.fechaFinServicios)) {
       return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  // Fecha mínima para la columna 'desde'
+  minDate(d1: Date, d2: Date) {
+    if (d1 == undefined)
+      return d2;
+    if (d2 == undefined)
+      return d1;
+
+    if (d1 < d2) {
+      return d1;
+    } else {
+      return d2;
+    }
+  }
+
+  // Fecha máxima para la columna 'hasta'
+  maxDate(d1: Date, d2: Date) {
+    if (d1 == undefined)
+      return d2;
+    if (d2 == undefined)
+      return d1;
+
+    if (d1 > d2) {
+      return d1;
+    } else {
+      return d2;
     }
   }
 

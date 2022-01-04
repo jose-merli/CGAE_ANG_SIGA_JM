@@ -102,7 +102,7 @@
         <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-save" iconPos="left"
           (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

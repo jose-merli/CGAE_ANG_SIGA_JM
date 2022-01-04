@@ -19,7 +19,7 @@
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToFacturas();$event.stopPropagation();">
                 <span style="color: blue; text-decoration: underline;cursor:pointer;">
-                  Búsqueda Facturas
+                  {{ 'facturacion.factProgramadas.infoFactura.enlace' | translate }}
                 </span>
               </a>
             </label>
@@ -27,11 +27,11 @@
           <div class="d-flex justify-content-between default">
             
             <label>{{ 'facturacion.factProgramadas.serieFactu.numFactu' | translate }}: 
-                <span></span></label>
+                <span *ngIf="numeroFacturasTotal != undefined">{{ numeroFacturasTotal }}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total' | translate }}: 
-                <span></span></label>
+                <span *ngIf="totalActual != undefined">{{ totalActual }} €</span></label>
             <label>{{ 'facturacion.factProgramadas.serieFactu.totalPendiente' | translate }}: 
-              <span></span></label>
+              <span *ngIf="totalPendienteActual != undefined">{{ totalPendienteActual }} €</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('infoFactura')"
               *ngIf="!esFichaActiva('infoFactura')"></i>
@@ -52,7 +52,7 @@
             class="fas fa-external-link-alt mr-2"></i>
           <a (click)="navigateToFacturas();$event.stopPropagation();">
             <span style="color: blue; text-decoration: underline;cursor:pointer;">
-              Búsqueda Facturas
+              {{ 'facturacion.factProgramadas.infoFactura.enlace' | translate }}
             </span>
           </a>
         </label>
@@ -96,7 +96,11 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span>{{ dato[col.field] }}</span>
+              <div [ngSwitch]="col.field">
+                <div *ngSwitchCase="'total'"><span>{{ dato[col.field] }} €</span></div>
+                <div *ngSwitchCase="'totalPendiente'"><span>{{ dato[col.field] }} €</span></div>
+                <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
+              </div>
             </td>
           </tr>
         </ng-template>
@@ -114,7 +118,7 @@
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
           </div>

@@ -154,9 +154,9 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
     switch (estado) {
       case 'fac':
-        if (idEstado == "1" || idEstado == "18" || idEstado == "19") {
+        if (idEstado == "1" || idEstado == "18" || idEstado == "19" || idEstado == "17") {
           res = "warning";
-        } else if(idEstado == "2" || idEstado == "3" || idEstado == "17" ) {
+        } else if(idEstado == "2" || idEstado == "3") {
           res = "success";
         } else if(idEstado == "4" || idEstado == "20" || idEstado == "21") {
           res = "danger";

@@ -26,6 +26,7 @@ export class FichaFactProgramadasComponent implements OnInit {
 
   modoEdicion: boolean = false;
   controlEmisionFacturasSII: boolean = false;
+  visibleInformeFacturacion: boolean = false;
 
   manuallyOpened: boolean;
   openTarjetaDatosGenerales: boolean = true;
@@ -48,7 +49,6 @@ export class FichaFactProgramadasComponent implements OnInit {
     if (sessionStorage.getItem("facturacionProgramadaItem")) {
       this.body = JSON.parse(sessionStorage.getItem("facturacionProgramadaItem"));
       sessionStorage.removeItem("facturacionProgramadaItem");
-
       this.modoEdicion = true;
     } else if (sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
@@ -60,6 +60,7 @@ export class FichaFactProgramadasComponent implements OnInit {
     }
     
     this.getParametrosCONTROL();
+    this.comprobarVisibilidadInformeFacturacion();
     if (this.modoEdicion) {
       this.updateTarjetaResumen();
     }
@@ -116,11 +117,13 @@ export class FichaFactProgramadasComponent implements OnInit {
       nombre: "genAdeudos",
     });
 
-    this.enlacesTarjetaResumen.push({
-      label: "facturacion.factProgramadas.infoFactura",
-      value: document.getElementById("infoFactura"),
-      nombre: "infoFactura",
-    });
+    if (this.visibleInformeFacturacion) {
+      this.enlacesTarjetaResumen.push({
+        label: "facturacion.factProgramadas.infoFactura",
+        value: document.getElementById("infoFactura"),
+        nombre: "infoFactura",
+      });
+    }
 
     this.enlacesTarjetaResumen.push({
       label: "facturacion.seriesFactura.generarPDF.literal",
@@ -246,6 +249,7 @@ export class FichaFactProgramadasComponent implements OnInit {
       this.modoEdicion = true;
 
       // Actualizar tarjetas
+      this.comprobarVisibilidadInformeFacturacion();
       this.updateTarjetaResumen();
       setTimeout(() => {
         this.updateEnlacesTarjetaResumen();
@@ -267,6 +271,7 @@ export class FichaFactProgramadasComponent implements OnInit {
       this.modoEdicion = true;
 
       // Actualizar tarjetas
+      this.comprobarVisibilidadInformeFacturacion();
       this.updateTarjetaResumen();
       setTimeout(() => {
         this.updateEnlacesTarjetaResumen();
@@ -319,6 +324,20 @@ export class FichaFactProgramadasComponent implements OnInit {
       err => {
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       });
+  }
+
+  comprobarVisibilidadInformeFacturacion(): void {
+    this.visibleInformeFacturacion = ["2", "1", "17", "21", "3", "4"].includes(this.body.idEstadoConfirmacion);
+  }
+
+  // Transformar fecha
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    else
+      fecha = null;
+    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
   }
 
   // Funciones de utilidad

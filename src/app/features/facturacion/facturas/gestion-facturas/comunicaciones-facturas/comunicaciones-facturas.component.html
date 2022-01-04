@@ -7,7 +7,7 @@
       <div *ngIf="!esFichaActiva('comunicaciones')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('comunicaciones')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="far fa-comments icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -26,7 +26,7 @@
       <div *ngIf="esFichaActiva('comunicaciones')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('comunicaciones')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="far fa-comments icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.facturas.comunicacionesCobrosRecobros' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
