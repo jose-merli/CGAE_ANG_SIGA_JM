@@ -69,11 +69,10 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
 
     } else {
 
-      this.filtrosCompraProductos.fechaSolicitudDesde = new Date(); 
-
       //En la documentación funcional se pide que por defecto aparezca el campo 
       //con la fecha de dos años antes
-      this.filtrosCompraProductos.fechaSolicitudDesde.setDate(this.filtrosCompraProductos.fechaSolicitudDesde.getDate() - (365*2));
+      let today = new Date();
+      this.filtrosCompraProductos.fechaSolicitudDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
     }
 
     if(sessionStorage.getItem("abogado")){

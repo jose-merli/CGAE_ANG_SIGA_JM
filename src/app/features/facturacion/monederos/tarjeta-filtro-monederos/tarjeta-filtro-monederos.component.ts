@@ -34,15 +34,14 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 
   ngOnInit() {
 
-
-    this.filtrosMonederoItem.fechaDesde = new Date();
     this.filtrosMonederoItem.fechaHasta = new Date(); 
 
     
     //En la documentación funcional se pide que por defecto aparezca el campo 
     //con la fecha de dos años antes
-    this.filtrosMonederoItem.fechaDesde.setDate(this.filtrosMonederoItem.fechaDesde.getDate() - (365*2));
-    this.filtrosMonederoItem.fechaHasta.setDate(this.filtrosMonederoItem.fechaDesde.getDate());
+    let today = new Date();
+    this.filtrosMonederoItem.fechaDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
+    //this.filtrosMonederoItem.fechaDesde = new Date(today.valueOf() - (365 * 2 * 24 * 60 * 60 * 1000));
 
     if(sessionStorage.getItem("filtrosMonedero")){
 

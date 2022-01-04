@@ -22,11 +22,11 @@ export class TarjetaBusquedaCmcComponent implements OnInit {
     private sigaServices: SigaServices) { }
 
   ngOnInit() {
-    this.filtrosBusquedaCargaMasivasCompras.fechaCargaDesde = new Date();
 
     //En la documentación funcional se pide que por defecto aparezca el campo 
     //con la fecha de dos años antes
-    this.filtrosBusquedaCargaMasivasCompras.fechaCargaDesde.setDate(this.filtrosBusquedaCargaMasivasCompras.fechaCargaDesde.getDate() - (365*2));
+    let today = new Date();
+    this.filtrosBusquedaCargaMasivasCompras.fechaCargaDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
   }
 
   
