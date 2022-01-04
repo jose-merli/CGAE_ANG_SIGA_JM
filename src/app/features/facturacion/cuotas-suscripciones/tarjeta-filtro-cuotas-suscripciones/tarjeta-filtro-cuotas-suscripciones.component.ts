@@ -52,6 +52,12 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+
+     //En la documentación funcional se pide que por defecto aparezca el campo 
+    //con la fecha de dos años antes
+    let today = new Date();
+    this.filtrosSuscripciones.fechaSolicitudDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
+
     if (sessionStorage.getItem("filtroBusqSuscripcion")) {
 
       this.filtrosSuscripciones = JSON.parse(sessionStorage.getItem("filtroBusqSuscripcion"));

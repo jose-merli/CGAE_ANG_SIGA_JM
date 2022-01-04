@@ -121,62 +121,6 @@ export class MovimientosMonederoComponent implements OnInit {
         });;
   }
 
-  // getComboProductos() {
-  //   this.progressSpinner = true;
-
-
-  //   let filtrosProductos: FiltrosProductos = new FiltrosProductos();
-  //   this.sigaServices.post("productosBusqueda_busqueda", filtrosProductos).subscribe(
-  //     listaProductosDTO => {
-
-  //       if (JSON.parse(listaProductosDTO.body).error.code == 500) {
-  //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-  //       } else {
-  //         // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  //       }
-
-  //       //Descomentar esto y comentar el codigo de abajo asignando el valor de comboProductos
-  //       //Si se quiere mostrar unicamente productos no derogados
-  //       // JSON.parse(listaProductosDTO.body).listaProductosItems.forEach(producto => {
-  //       //   if (producto.fechabaja == null) {
-  //       //     this.comboProductos.push(producto);
-  //       //   }
-  //       // });
-
-  //       this.comboProductos = JSON.parse(listaProductosDTO.body).listaProductosItems
-
-  //       //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e productos
-  //       this.tablaProductos.reset();
-
-  //       //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
-  //       this.comboProductos.forEach(producto => {
-  //         if (producto.formapago == null || producto.formapago == "") {
-  //           if (producto.noFacturable == "1") {
-  //             producto.formapago = this.translateService.instant("facturacion.productos.noFacturable");
-  //           }
-  //           else {
-  //             producto.formapago = this.translateService.instant("facturacion.productos.pagoNoDisponible");
-  //           }
-  //         }
-  //         else {
-  //           if (producto.noFacturable == "1") {
-  //             producto.formapago += ", "+this.translateService.instant("facturacion.productos.noFacturable");
-  //           }
-  //         }
-  //       });
-
-  //       if(this.ficha.fechaPendiente == null && this.ficha.productos.length > 0){
-  //         this.initProductos();
-  //       }
-
-  //       this.progressSpinner = false;
-
-  //     },
-  //     err => {
-  //       this.progressSpinner = false;
-  //     });
-  // }
-
   updateMovimientosMonedero() {
     this.selectedRows = [];
 
