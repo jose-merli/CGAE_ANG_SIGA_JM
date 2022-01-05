@@ -33,7 +33,7 @@
                 <span>{{ datos[datos.length - 1].impTotalPorPagar + " €" }}</span></label>
             </ng-container>
             
-            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('estadosPagos')"
+            <i class="fa fa-angle-down float-right {{ (datos && datos.length != 0) ? '' : ' ml-auto' }}" (click)="abreCierraFicha('estadosPagos')"
               *ngIf="!esFichaActiva('estadosPagos')"></i>
           </div>
         </div>
@@ -105,10 +105,10 @@
                     <span>{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
                   </div>
                   <div *ngSwitchCase="'impTotalPagado'">
-                    <span>{{ dato[col.field] + ' €' }}</span>
+                    <span class="pull-right">{{ dato[col.field] + ' €' }}</span>
                   </div>
                   <div *ngSwitchCase="'impTotalPorPagar'">
-                    <span>{{ dato[col.field] + ' €' }}</span>
+                    <span class="pull-right">{{ dato[col.field] + ' €' }}</span>
                   </div>
                   <div *ngSwitchCase="'comentario'">
                     <span *ngIf="dato['idCargos']">{{ 'facturacion.cmc.fichero' | translate }} <a class="enlace" (click)="navigateToFicheroAdeudos(dato)">{{ dato['idCargos'] }}</a></span>
@@ -209,7 +209,7 @@
         maxlength="10" (change)="onChangeImporte()" [disabled]="['4','6','7','8'].includes(nuevoEstado.idAccion)" [ngClass]="styleObligatorio(true, nuevoEstado.impTotalPorPagar)" pInputText>
     </div>
 
-    <div class="main-button col-lg-12 col-md-12">
+    <div class="main-button col-lg-12 col-md-12 mt-2">
       <button (click)="guardar()" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{'general.boton.guardarCerrar' | translate}}"></button>
       <button (click)="cerrarDialog()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
     </div>

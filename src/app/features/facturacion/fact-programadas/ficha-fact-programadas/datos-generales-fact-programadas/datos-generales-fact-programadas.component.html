@@ -71,22 +71,22 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.factProgramadas.datosGenerales.prodDesde' | translate }} (*)</label>
-              <app-fecha [(value)]="body.fechaInicioProductos" [maxDate]="body.fechaFinProductos" [inputStyleClass]="styleFechaProductos(body.fechaInicioProductos)" (valueChangeSelected)="fillFechaInicioProductos($event)" (valueChangeInput)="fillFechaInicioProductos($event)" [disabled]="!porProgramar">
+              <app-fecha [(value)]="body.fechaInicioProductos" [maxDate]="body.fechaFinProductos" [inputStyleClass]="styleFechaProductos()" (valueChangeSelected)="fillFechaInicioProductos($event)" (valueChangeInput)="fillFechaInicioProductos($event)" [disabled]="!porProgramar">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.factProgramadas.datosGenerales.prodHasta' | translate }} (*)</label>
-              <app-fecha [(value)]="body.fechaFinProductos" [minDate]="body.fechaInicioProductos" [inputStyleClass]="styleFechaProductos(body.fechaFinProductos)" (valueChangeSelected)="fillFechaFinProductos($event)" (valueChangeInput)="fillFechaFinProductos($event)" [disabled]="!porProgramar">
+              <app-fecha [(value)]="body.fechaFinProductos" [minDate]="body.fechaInicioProductos" [inputStyleClass]="styleFechaProductos()" (valueChangeSelected)="fillFechaFinProductos($event)" (valueChangeInput)="fillFechaFinProductos($event)" [disabled]="!porProgramar">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.factProgramadas.datosGenerales.susDesde' | translate }} (*)</label>
-              <app-fecha [(value)]="body.fechaInicioServicios" [maxDate]="body.fechaFinServicios" [inputStyleClass]="styleFechaServicios(body.fechaInicioServicios)" (valueChangeSelected)="fillFechaInicioServicios($event)" (valueChangeInput)="fillFechaInicioServicios($event)" [disabled]="!porProgramar">
+              <app-fecha [(value)]="body.fechaInicioServicios" [maxDate]="body.fechaFinServicios" [inputStyleClass]="styleFechaServicios()" (valueChangeSelected)="fillFechaInicioServicios($event)" (valueChangeInput)="fillFechaInicioServicios($event)" [disabled]="!porProgramar">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.factProgramadas.datosGenerales.susHasta' | translate }} (*)</label>
-              <app-fecha [(value)]="body.fechaFinServicios" [minDate]="body.fechaInicioServicios" [inputStyleClass]="styleFechaServicios(body.fechaFinServicios)" (valueChangeSelected)="fillFechaFinServicios($event)" (valueChangeInput)="fillFechaFinServicios($event)" [disabled]="!porProgramar">
+              <app-fecha [(value)]="body.fechaFinServicios" [minDate]="body.fechaInicioServicios" [inputStyleClass]="styleFechaServicios()" (valueChangeSelected)="fillFechaFinServicios($event)" (valueChangeInput)="fillFechaFinServicios($event)" [disabled]="!porProgramar">
               </app-fecha>
             </div>
           </div>

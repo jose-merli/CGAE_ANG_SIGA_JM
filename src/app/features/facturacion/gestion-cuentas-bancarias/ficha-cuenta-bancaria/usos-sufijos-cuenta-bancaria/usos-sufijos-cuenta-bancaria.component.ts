@@ -55,11 +55,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.progressSpinner = true;
-
     this.getCols();
-    
-    this.progressSpinner = false;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -116,6 +112,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
       },
       err => {
         this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
@@ -125,26 +122,11 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
     this.selectedDatos = [];
     
     this.cols = [
-      {
-        field: "tipo",
-        header: "facturacion.productos.tipo"
-      },
-      {
-        field: 'abreviatura',
-        header: 'administracion.parametrosGenerales.literal.abreviatura'
-      },
-      {
-        field: 'descripcion',
-        header: 'general.description'
-      },
-      {
-        field: 'numPendientes',
-        header: 'facturacion.cuentaBancaria.numPendientes'
-      },
-      {
-        field: 'sufijo',
-        header: 'facturacionSJCS.facturacionesYPagos.sufijo'
-      }
+      { field: "tipo", header: "facturacion.productos.tipo", width: "10%" },
+      { field: 'abreviatura', header: 'administracion.parametrosGenerales.literal.abreviatura', width: "20%" },
+      { field: 'descripcion', header: 'general.description', width: "40%" },
+      { field: 'numPendientes', header: 'facturacion.cuentaBancaria.numPendientes', width: "10%" },
+      { field: 'sufijo', header: 'facturacionSJCS.facturacionesYPagos.sufijo', width: "20%" }
     ];
 
     this.rowsPerPage = [

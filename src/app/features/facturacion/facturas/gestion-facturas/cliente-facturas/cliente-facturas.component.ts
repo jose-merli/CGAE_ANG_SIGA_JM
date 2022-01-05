@@ -36,9 +36,8 @@ export class ClienteFacturasComponent implements OnInit {
 
     this.sigaServices.postPaginado("busquedaColegiados_searchColegiadoFicha", "?numPagina=1", filtros).toPromise().then(
       n => {
-        console.log(n)
         let results: DatosColegiadosItem[] = JSON.parse(n.body).colegiadoItem;
-        console.log(results)
+        
         if (results != undefined && results.length != 0) {
           let datosColegiado: DatosColegiadosItem = results[0];
 

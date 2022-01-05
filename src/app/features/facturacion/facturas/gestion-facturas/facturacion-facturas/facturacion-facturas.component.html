@@ -14,7 +14,7 @@
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha pointer">{{ 'facturacionSJCS.tarjGenFac.facturacion' | translate }}</label>
 
-            <label class="mr-3">
+            <label *ngIf="bodyInicial && bodyInicial.idFacturacion != undefined" class="mr-3">
               <i (click)="navigateToFacturacion();$event.stopPropagation();"
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToFacturacion();$event.stopPropagation();">
@@ -27,11 +27,11 @@
           <div class="d-flex justify-content-between default">
             
             <label>{{ 'facturacionPyS.ficherosAdeudos.serie' | translate }}: 
-                <span>{{ bodyInicial.serie }}</span></label>
+              <span *ngIf="bodyInicial">{{ bodyInicial.serie }}</span></label>
             <label>{{ 'general.description' | translate }}: 
-                <span>{{ bodyInicial.facturacion }}</span></label>
+              <span *ngIf="bodyInicial">{{ bodyInicial.facturacion }}</span></label>
             <label>{{ 'informesycomunicaciones.enviosMasivos.fechaCreacion' | translate }}: 
-              <span>{{ bodyInicial.fechaEminionFacturacion | date: "dd/MM/yyyy" }}</span></label>
+              <span *ngIf="bodyInicial">{{ bodyInicial.fechaEmisionFacturacion | date: "dd/MM/yyyy" }}</span></label>
 
           </div>
         </div>

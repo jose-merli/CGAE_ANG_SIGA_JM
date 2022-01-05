@@ -54,14 +54,14 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.getComboTiposIVA();
-    this.getParametrosFACTURACION();
+    if (this.bodyInicial != undefined) {
+      this.getComboTiposIVA();
+      this.getParametrosFACTURACION();
+    }
    }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.bodyInicial != undefined) {
-      this.getCols(this.bodyInicial.tipo);
-
+    if (changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined) {
       if (this.bodyInicial.tipo == "FACTURA") {
         this.getLineasFactura();
       } else {
@@ -130,8 +130,8 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   getColsAbono() {
     this.cols = [
-      { field: "descripcion", header: "general.description", width: "40%", editable: true },
-      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: true },
+      { field: "descripcion", header: "general.description", width: "40%", editable: this.modificarDescripcion },
+      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.modificarImporteUnitario },
       { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%", editable: false },
       { field: "importeNeto", header: "facturacion.productos.importeNeto", width: "10%", editable: false }
       // { field: "importeTotal", header: "Importe Total", width: "20%", editable: false },
@@ -144,7 +144,6 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getLineasFactura", "?idFactura=" + this.bodyInicial.idFactura).subscribe(
       n => {
-        console.log(n);
         this.datos = n.facturasLineasItems;
         this.datos.forEach(d => d.modoEdicion = false);
 
@@ -160,10 +159,9 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   // Obtener parametros de FACTURACION
   getParametrosFACTURACION(): void {
-    this.sigaServices.getParam("facturacionPyS_parametrosLINEAS", "?idInstitucion=2005").subscribe(
+    this.sigaServices.get("facturacionPyS_parametrosLINEAS").subscribe(
       n => {
         let items: ComboItem[] = n.combooItems;
-        console.log(items);
         
         let modificarDescripcionItem: ComboItem = items.find(item => item.label == "MODIFICAR_DESCRIPCION");
         let modificarImporteUnitarioItem: ComboItem = items.find(item => item.label == "MODIFICAR_IMPORTE_UNITARIO");
@@ -176,6 +174,8 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
         if (modificarIVAItem)
           this.modificarIVA = modificarIVAItem.value == "1";
         
+        // Obtenemos las columnas despues de comprobar cuales son editables
+        this.getCols(this.bodyInicial.tipo);
       },
       err => {
         console.log(err);
@@ -189,7 +189,6 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getLineasAbono", "?idAbono=" + this.bodyInicial.idFactura).subscribe(
       n => {
-        console.log(n);
         this.datos = n.facturasLineasItems;
         this.datos.forEach(d => d.modoEdicion = false);
 
@@ -268,7 +267,6 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     let datosToUpdate: FacturaLineaItem[] = this.datos.filter(d1 => 
       !this.datosInit.some(d2 => d1.descripcion == d2.descripcion 
       && d1.precioUnitario == d2.precioUnitario && d1.cantidad == d2.cantidad && d1.idTipoIVA == d2.idTipoIVA && d1.importeTotal == d2.importeTotal));
-    console.log(datosToUpdate);
 
     Promise.all(datosToUpdate.map(d => {
       if (this.bodyInicial.tipo == "FACTURA") {
@@ -312,8 +310,6 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
         // Obtiene el iva del combo
         let iva: number = parseFloat(this.comboTiposIVA.find(ti => ti.value === this.datos[index].idTipoIVA).label2);
-        console.log(this.comboTiposIVA);
-        console.log(iva);
         this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * iva / 100.0).toFixed(2).toString();
 
         this.datos[index].importeTotal = (parseFloat(this.datos[index].importeNeto) + parseFloat(this.datos[index].importeIVA)).toFixed(2).toString();

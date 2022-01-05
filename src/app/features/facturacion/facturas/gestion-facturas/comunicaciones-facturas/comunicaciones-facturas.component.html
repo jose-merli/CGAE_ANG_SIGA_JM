@@ -69,10 +69,10 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-
-
+              
+              <span *ngIf="col.field == 'orden'" class="pull-right">{{ dato[col.field] }}</span>
               <span *ngIf="col.field == 'fechaEnvio'">{{ dato[col.field] | date: "dd/MM/yyyy" }}</span>
-              <span *ngIf="col.field != 'fechaEnvio'">{{ dato[col.field] }}</span>
+              <span *ngIf="col.field == 'documento'">{{ dato[col.field] }}</span>
             </td>
           </tr>
         </ng-template>

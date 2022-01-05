@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import moment = require('moment');
 import { ConfirmationService, Message } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
@@ -28,11 +29,14 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   @Input() serie: SerieFacturacionItem;
 
   resaltadoDatos: boolean = false;
+
+  // Estados de confirmación
   porProgramar: boolean = true;
   porConfirmar: boolean = false;
   porConfirmarError: boolean = false;
   confirmada: boolean = false;
 
+  // Fecha para la restricción de fecha de generación
   fechaActual: Date;
 
   constructor(
@@ -42,8 +46,12 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     private confirmationService: ConfirmationService
   ) { }
 
+  // Al inicializar el formulario se inicializa la fecha actual sin el tiempo
+  // para facilitar la validación de la fecha de generación, la fecha de generación
+  // prevista se establece antes de guardar (momento actual + 5 min.)
   ngOnInit() {
     this.fechaActual = new Date();
+    this.fechaActual.setHours(0,0,0,0);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -71,8 +79,6 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     this.porConfirmar = this.body.idEstadoConfirmacion == "18" || this.body.idEstadoConfirmacion == "19" || this.body.idEstadoConfirmacion == "1" || this.body.idEstadoConfirmacion == "17";
     this.porConfirmarError = this.body.idEstadoConfirmacion == "21";
     this.confirmada = this.body.idEstadoConfirmacion == "3";
-
-    console.log(this.body);
   }
 
   // Dehabilitar guardado cuando no cambien los campos
@@ -106,7 +112,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       return false;
     }
 
-    let fechaGeneracion: boolean = !this.porConfirmarError && this.body.fechaPrevistaGeneracion < new Date();
+    let fechaGeneracion: boolean = !this.porConfirmarError && this.body.fechaPrevistaGeneracion < this.fechaActual;
     if (fechaGeneracion) {
       this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.fechaGeneracion.futura"));
       return false;
@@ -153,6 +159,12 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   checkSave(): void {
     if (this.isValid() && !this.deshabilitarGuardado()) {
       this.body.esDatosGenerales = true;
+
+      // Corregir fecha de generación prevista si coincide con la fecha actual
+      if (this.body.fechaPrevistaGeneracion.getTime() == this.fechaActual.getTime()) {
+        this.body.fechaPrevistaGeneracion = moment(new Date()).add(5, 'm').toDate();
+      }
+
       this.guardadoSend.emit(this.body);
     } else {
       this.resaltadoDatos = true;
@@ -270,26 +282,52 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   }
 
   styleFechaGeneracion(evento) {
-    if (this.resaltadoDatos  && (evento == undefined || evento >= new Date())) {
+    if (this.resaltadoDatos  && (evento == undefined || evento >= this.fechaActual)) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
 
   styleFechaConfirmacion(evento) {
     if (this.resaltadoDatos && this.body.fechaPrevistaGeneracion != undefined && evento != undefined && this.body.fechaPrevistaGeneracion >= evento) {
-      return this.commonsService.styleObligatorio(evento);
+      return 'camposObligatorios';
     }
   }
 
-  styleFechaProductos(evento) {
-    if (this.resaltadoDatos && this.serie.tiposProductos != undefined && this.serie.tiposProductos.length > 0 && !(this.body.fechaInicioProductos != undefined && this.body.fechaFinProductos != undefined && this.body.fechaInicioProductos < this.body.fechaFinProductos)) {
-      return this.commonsService.styleObligatorio(evento);
+  styleFechaProductos() {
+    if (this.resaltadoDatos) {
+      let intervaloProductos: boolean = this.body.fechaInicioProductos != undefined || this.body.fechaFinProductos != undefined;
+      if (intervaloProductos) {
+        let intervalo: boolean = this.body.fechaInicioProductos < this.body.fechaFinProductos;
+        if (!intervalo) {
+          return 'camposObligatorios';
+        }
+      } else if (this.serie.tiposProductos != undefined && this.serie.tiposProductos.length > 0) {
+        return 'camposObligatorios';
+      }
+
+      let intervaloServicios: boolean = this.body.fechaInicioServicios != undefined || this.body.fechaFinServicios != undefined;
+      if (!intervaloProductos && !intervaloServicios) {
+        return 'camposObligatorios';
+      }
     }
   }
 
-  styleFechaServicios(evento) {
-    if (this.resaltadoDatos && this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0 && !(this.body.fechaInicioServicios != undefined && this.body.fechaFinServicios != undefined || this.body.fechaInicioServicios < this.body.fechaFinServicios)) {
-      return this.commonsService.styleObligatorio(evento);
+  styleFechaServicios() {
+    if (this.resaltadoDatos) {
+      let intervaloServicios: boolean = this.body.fechaInicioServicios != undefined || this.body.fechaFinServicios != undefined;
+      if (intervaloServicios) {
+        let intervalo: boolean = this.body.fechaInicioServicios < this.body.fechaFinServicios;
+        if (!intervalo) {
+          return 'camposObligatorios';
+        }
+      } else if (this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0) {
+        return 'camposObligatorios';
+      }
+
+      let intervaloProductos: boolean = this.body.fechaInicioProductos != undefined || this.body.fechaFinProductos != undefined;
+      if (!intervaloProductos && !intervaloServicios) {
+        return 'camposObligatorios';
+      }
     }
   }
 

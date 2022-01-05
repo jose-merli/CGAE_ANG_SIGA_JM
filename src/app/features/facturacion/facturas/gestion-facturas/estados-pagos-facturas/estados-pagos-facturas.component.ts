@@ -64,7 +64,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.bodyInicial != undefined) {
+    if (changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined) {
       this.getCols();
       this.getComboMotivosDevolucion();
       this.getEstadosPagos();
@@ -151,7 +151,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
     if (!["2", "4", "5"].includes(ultimaAccion.idEstado)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede renegociar facturas pendientes");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.renegociacion.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
       this.resaltadoEstado = true;
@@ -166,7 +166,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = "7";
-      this.nuevoEstado.accion = "RENEGOCIACIÓN";
+      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.renegociacion");
 
       // Combo de pago de pago o abono por caja y banco
       if (this.bodyInicial.tipo == "FACTURA") {
@@ -207,7 +207,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
     if (this.bodyInicial.tipo != "FACTURA" || !["2"].includes(ultimaAccion.idEstado)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede cobrar facturas pendientes por caja");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.cobroPorCaja.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
@@ -221,7 +221,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = "4";
-      this.nuevoEstado.accion = "COBRO POR CAJA";
+      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.cobroPorCaja");
 
       // El importe pendiente se recalcula
       this.nuevoEstado.impTotalPagado = "0";
@@ -236,7 +236,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
     if (this.bodyInicial.tipo != "ABONO" || !["6"].includes(ultimaAccion.idEstado)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede abonar facturas pendientes por caja");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.abonoPorCaja.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
@@ -250,7 +250,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = "4";
-      this.nuevoEstado.accion = "ABONO POR CAJA";
+      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.abonoPorCaja");
 
       // El importe pendiente se recalcula
       this.nuevoEstado.impTotalPagado = "0";
@@ -281,7 +281,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
     if (this.bodyInicial.tipo != "FACTURA" || !["5"].includes(ultimaAccion.idAccion)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede devolver facturas que se hayan cobrado por banco");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.devolucion.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
@@ -294,7 +294,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = "6";
-      this.nuevoEstado.accion = "DEVOLUCIÓN";
+      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.devolucion");
 
       // Cuenta a la que se le pasó el cargo
       this.nuevoEstado.cuentaBanco = ultimaAccion.cuentaBanco;
@@ -314,8 +314,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   anular() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
-    if (this.bodyInicial.tipo != "FACTURA" || !["7", "8"].includes(ultimaAccion.idEstado)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede anular facturas no anuladas");
+    if (this.bodyInicial.tipo != "FACTURA" || ["7", "8"].includes(ultimaAccion.idEstado)) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.anulacion.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
@@ -328,8 +328,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado.notaMaxLength = 255;
 
       // Acción
-      this.nuevoEstado.idAccion = "6";
-      this.nuevoEstado.accion = "DEVOLUCIÓN";
+      this.nuevoEstado.idAccion = "8";
+      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.anulacion");
 
       this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
       this.nuevoEstado.impTotalPorPagar = "0";
@@ -344,24 +344,24 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     ultimaAccion.idFactura = this.bodyInicial.idFactura;
 
     if (!["4"].includes(ultimaAccion.idAccion)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede anular facturas no anuladas");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.eliminar.error"));
     } else {
       this.progressSpinner = true;
       this.sigaServices.post("facturacionPyS_eliminarEstadosPagos", ultimaAccion).toPromise()
-        .then(
-          n => { },
-          err => {
-            return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
-        }).catch(error => {
-          if (error != undefined) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          }
-        }).then(() => {
-          this.progressSpinner = false;
-          this.guardadoSend.emit(this.bodyInicial);
-        });
+      .then(
+        n => { },
+        err => {
+          return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+      }).catch(error => {
+        if (error != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      }).then(() => {
+        this.progressSpinner = false;
+        this.guardadoSend.emit(this.bodyInicial);
+      });
     }
   }
 
@@ -423,6 +423,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         }).then(() => {
           this.progressSpinner = false;
           this.guardadoSend.emit(this.bodyInicial);
+
+          this.showModalNuevoEstado = false;
         });
     } else {
       this.resaltadoDatos = true;
@@ -435,6 +437,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     this.resaltadoEstado = false;
     this.resaltadoBanco = false;
     this.nuevoEstado = undefined;
+
+    this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
   }
 
   // Enlace a la factura
@@ -442,7 +446,10 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     let factura: FacturasItem = new FacturasItem();
     factura.idFactura = row.idFactura;
     factura.tipo = "FACTURA";
-    this.guardadoSend.emit(factura);
+
+    sessionStorage.setItem("facturasItem", JSON.stringify(factura));
+    sessionStorage.setItem("volver", "true");
+    this.router.navigate(["/gestionFacturas"]);
   }
 
   // Enlace al abono
@@ -450,7 +457,10 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     let factura: FacturasItem = new FacturasItem();
     factura.idFactura = row.idFactura;
     factura.tipo = "ABONO";
-    this.guardadoSend.emit(factura);
+
+    sessionStorage.setItem("facturasItem", JSON.stringify(factura));
+    sessionStorage.setItem("volver", "true");
+    this.router.navigate(["/gestionFacturas"]);
   }
 
   // Enlace al fichero de adeudos
@@ -515,7 +525,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   onChangeSelectAll(): void {
       if (this.selectAll) {
         this.selectMultiple = true;
-        this.selectedDatos = this.datos;
+        this.selectedDatos = this.grupos;
       } else {
         this.selectedDatos = [];
         this.selectMultiple = false;

@@ -98,7 +98,6 @@ export class InfoFacturaFactProgramadasComponent implements OnInit, OnChanges {
     this.sigaServices.getParam("facturacionPyS_getInformeFacturacion", `?idSerieFacturacion=${this.bodyInicial.idSerieFacturacion}&idProgramacion=${this.bodyInicial.idProgramacion}`).subscribe(
       n => {
         this.datos = n.informeFacturacion;
-        console.log(this.datos);
 
         const totalNumero: number = this.datos.filter(d => d.momento == "ACTUAL").map(d => d.numeroFacturas).reduce((a, b) => parseInt(a) + parseInt(b), 0);
         const totalImporte: number = this.datos.filter(d => d.momento == "ACTUAL").map(d => d.total).reduce((a, b) => parseFloat(a) + parseFloat(b), 0);

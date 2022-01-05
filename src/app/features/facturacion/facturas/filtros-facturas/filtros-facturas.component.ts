@@ -56,6 +56,9 @@ export class FiltrosFacturasComponent implements OnInit {
 
       sessionStorage.removeItem("volver");
 
+      this.body.fechaEmisionDesde = this.transformDate(this.body.fechaEmisionDesde);
+      this.body.fechaEmisionHasta = this.transformDate(this.body.fechaEmisionHasta);
+
       this.isBuscar();
     } else if(!sessionStorage.getItem("idFichero")) {
         this.body.fechaEmisionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));     
@@ -201,6 +204,16 @@ export class FiltrosFacturasComponent implements OnInit {
     this.persistenceService.setFiltros(this.body);
     this.buscarFacturas.emit();
 
+  }
+
+  // Transformar fecha
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    else
+      fecha = null;
+    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
   }
 
   clear() { 

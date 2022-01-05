@@ -85,6 +85,9 @@
                       [options]="comboSufijos" [filter]="true" filterBy="label,labelSinTilde"
                       [ngClass]="styleObligatorio(datos[rowIndex].idSufijo)" [showClear]="true"></p-dropdown>
                   </div>
+                  <div *ngSwitchCase="'numPendientes'">
+                    <span class="pull-right">{{ dato[col.field] }}</span>
+                  </div>
                   <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
                 </div>
 

@@ -22,8 +22,8 @@ export class FiltrosFactProgramadasComponent implements OnInit {
   @Output() busqueda = new EventEmitter<boolean>();
 
   showDatosGenerales: boolean = true;
-  showEstados: boolean = false;
-  showFechas: boolean = false;
+  showEstados: boolean = true;
+  showFechas: boolean = true;
 
   body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
 
@@ -52,6 +52,17 @@ export class FiltrosFactProgramadasComponent implements OnInit {
       this.body = this.persistenceService.getFiltros();
       this.persistenceService.clearFiltros();
       sessionStorage.removeItem("volver");
+
+      this.body.fechaCompraSuscripcionDesde = this.transformDate(this.body.fechaCompraSuscripcionDesde);
+      this.body.fechaCompraSuscripcionHasta = this.transformDate(this.body.fechaCompraSuscripcionHasta);
+      this.body.fechaPrevistaGeneracionDesde = this.transformDate(this.body.fechaPrevistaGeneracionDesde);
+      this.body.fechaPrevistaGeneracionHasta = this.transformDate(this.body.fechaPrevistaGeneracionHasta);
+      this.body.fechaPrevistaConfirmDesde = this.transformDate(this.body.fechaPrevistaConfirmDesde);
+      this.body.fechaPrevistaConfirmHasta = this.transformDate(this.body.fechaPrevistaConfirmHasta);
+      this.body.fechaRealGeneracionDesde = this.transformDate(this.body.fechaRealGeneracionDesde);
+      this.body.fechaRealGeneracionHasta = this.transformDate(this.body.fechaRealGeneracionHasta);
+      this.body.fechaConfirmacionDesde = this.transformDate(this.body.fechaConfirmacionDesde);
+      this.body.fechaConfirmacionHasta = this.transformDate(this.body.fechaConfirmacionHasta);
 
       this.busqueda.emit();
     }
@@ -160,10 +171,6 @@ export class FiltrosFactProgramadasComponent implements OnInit {
     this.body = new FacFacturacionprogramadaItem();
     this.persistenceService.clearFiltros();
 
-    this.showDatosGenerales = true;
-    this.showEstados = false;
-    this.showFechas = false;
-
     this.goTop();
   }
 
@@ -224,6 +231,15 @@ export class FiltrosFactProgramadasComponent implements OnInit {
     this.showFechas = !this.showFechas;
   }
 
+  // Transformar fecha
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    else
+      fecha = null;
+    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
+  }
 
   // Funciones de utilidad
 

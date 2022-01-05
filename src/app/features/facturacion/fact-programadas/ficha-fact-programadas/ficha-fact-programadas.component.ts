@@ -49,6 +49,7 @@ export class FichaFactProgramadasComponent implements OnInit {
     if (sessionStorage.getItem("facturacionProgramadaItem")) {
       this.body = JSON.parse(sessionStorage.getItem("facturacionProgramadaItem"));
       sessionStorage.removeItem("facturacionProgramadaItem");
+      this.comprobarVisibilidadInformeFacturacion();
       this.modoEdicion = true;
     } else if (sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
@@ -60,7 +61,6 @@ export class FichaFactProgramadasComponent implements OnInit {
     }
     
     this.getParametrosCONTROL();
-    this.comprobarVisibilidadInformeFacturacion();
     if (this.modoEdicion) {
       this.updateTarjetaResumen();
     }
@@ -152,7 +152,6 @@ export class FichaFactProgramadasComponent implements OnInit {
     this.sigaServices.get("facturacionPyS_parametrosCONTROL").subscribe(
       n => {
         let items: ComboItem[] = n.combooItems;
-        console.log(items);
         
         let controlEmisionItem: ComboItem = items.find(item => item.label == "CONTROL_EMISION_FACTURAS_SII");
 
@@ -168,7 +167,6 @@ export class FichaFactProgramadasComponent implements OnInit {
 
   serieFacturacionChanged(serie: SerieFacturacionItem) {
     this.serie = serie;
-    console.log(serie);
 
     if (!this.modoEdicion) {
       this.body = new FacFacturacionprogramadaItem();
@@ -291,7 +289,6 @@ export class FichaFactProgramadasComponent implements OnInit {
       .toPromise()
       .then(
         n => {
-          console.log("Nuevo id:", n);
           let idProgramacion = JSON.parse(n.body).id;
           this.body.idProgramacion = idProgramacion;
         },
