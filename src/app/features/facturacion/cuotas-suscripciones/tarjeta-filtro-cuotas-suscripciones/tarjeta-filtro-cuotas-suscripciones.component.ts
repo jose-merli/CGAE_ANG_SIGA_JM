@@ -272,7 +272,9 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
   limpiar() {
     this.filtrosSuscripciones = new FiltrosSuscripcionesItem();
-    this.limpiarCliente();
+    if(!this.localStorageService.isLetrado){
+      this.limpiarCliente();
+    }
   }
 
   limpiarCliente(){

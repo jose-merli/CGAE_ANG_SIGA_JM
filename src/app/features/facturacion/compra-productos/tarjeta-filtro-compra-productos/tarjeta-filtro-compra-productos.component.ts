@@ -259,8 +259,11 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
 
   limpiar() {
     this.filtrosCompraProductos = new FiltrosCompraProductosItem();
-    this.nombreCliente = null;
-    this.nifCifCliente = null;
+    if(!this.localStorageService.isLetrado){
+      this.nombreCliente = null;
+      this.nifCifCliente = null;
+      this.filtrosCompraProductos.idpersona = null;
+    }
   }
 
   limpiarCliente(){
