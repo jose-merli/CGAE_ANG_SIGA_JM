@@ -168,7 +168,6 @@ export class MovimientosMonederoComponent implements OnInit {
       this.msgs = msg;
     } else if (this.checkCamposObligatorios()) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
-      
     } 
     //REVISAR MENSAJES
     else if(this.movimientosTarjeta.length == 0){
@@ -183,16 +182,22 @@ export class MovimientosMonederoComponent implements OnInit {
 
   checkCamposObligatorios() {
     //Se comprueba que los campos del utimo movimiento introducido (generalmente uno nuevo) estan rellenados
-    //REVISAR AÑADIR ERROR INDEPENDIENTE PARA CUANDO SE INTRODUCE UN IMPORTE NEGATIVO y  cuando no hay movimientos
-    if(this.movimientosTarjeta.length == 0 || this.movimientosTarjeta[0].concepto == null || this.movimientosTarjeta[0].concepto.trim() == "" ||
-    this.movimientosTarjeta[0].impOp == null || (this.movimientosTarjeta[0].nuevo == true && this.movimientosTarjeta[0].impOp <= 0)) {
+    //REVISAR AÑADIR ERROR INDEPENDIENTE PARA cuando no hay movimientos
+    if(this.movimientosTarjeta.length == 0 || this.movimientosTarjeta[this.movimientosTarjeta.length - 1].concepto == null || this.movimientosTarjeta[this.movimientosTarjeta.length - 1].concepto.trim() == "") {
       this.scrollToOblig.emit("movimientos");
       return true;
     }
-
     if(this.ficha.idPersona == null){
       this.scrollToOblig.emit("propietario");
       return true;
+    }
+    //REVISAR AÑADIR ERROR INDEPENDIENTE PARA cuando hay importes mal introducidos
+    //Se revisa que se hayan asignado valores de importe en todas las filas
+    for(let mov of this.movimientosTarjeta){
+      if(mov.impOp == null || (mov.impOp == 0 && mov.idLinea == null)){
+        this.scrollToOblig.emit("movimientos");
+        return true;
+      }
     }
 
     return false;
@@ -213,9 +218,9 @@ export class MovimientosMonederoComponent implements OnInit {
   }
 
   anadirMovimiento() {
-    if(this.movimientosTarjeta.length != 0){
+    if (this.movimientosTarjeta.length > 0 && this.checkCamposObligatorios()) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
-    }
+    } 
     else{
       let newMovimiento: ListaMovimientosMonederoItem = new ListaMovimientosMonederoItem();
 
