@@ -149,7 +149,13 @@ export class MovimientosMonederoComponent implements OnInit {
           //Una vez se guarda el movimiento, deja de ser editable.
           this.movimientosTarjeta[0].nuevo = false;
 
-          this.getMovimientosMonedero();
+          //this.getMovimientosMonedero();
+
+          if(this.ficha.movimientos.length > 0){
+            for(let mov of this.movimientosTarjeta){
+              mov.cuentaContable = this.ficha.movimientos[this.ficha.movimientos.length-1].cuentaContable;
+            }
+          }
         }
 
         this.progressSpinner = false;
