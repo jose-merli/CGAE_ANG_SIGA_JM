@@ -50,6 +50,9 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
       this.persistenceService.clearFiltros();
       sessionStorage.removeItem("volver");
 
+      this.body.fechaCreacionDesde = this.transformDate(this.body.fechaCreacionDesde);
+      this.body.fechaCreacionHasta = this.transformDate(this.body.fechaCreacionHasta);
+
       this.searchFicherosDevoluciones();
     }else{
       this.body.fechaCreacionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));
@@ -130,6 +133,16 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
       this.body.fechaCreacionDesde = event;
     else if(campo==='creacionHasta')
       this.body.fechaCreacionHasta = event;
+  }
+
+  // Transformar fecha
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    else
+      fecha = null;
+    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
   }
 
   // Funciones de utilidad

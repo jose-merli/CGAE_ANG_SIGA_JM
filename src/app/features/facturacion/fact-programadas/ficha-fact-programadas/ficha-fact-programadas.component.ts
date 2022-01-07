@@ -91,7 +91,7 @@ export class FichaFactProgramadasComponent implements OnInit {
       },
       {
         label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.importe"),
-        value: this.body.importe
+        value: this.body.importe != undefined ? this.body.importe + " €" : ""
       }
     ]
   }

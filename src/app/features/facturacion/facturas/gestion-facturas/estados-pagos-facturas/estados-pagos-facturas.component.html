@@ -173,7 +173,7 @@
 </div>
 
 <!--DIALOG CAMBIA ESTADO-->
-<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNuevoEstado" (onHide)="cerrarDialog()">
+<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNuevoEstado" (onHide)="cerrarDialog(true)">
   <p-header *ngIf="nuevoEstado" class="title">
     <label>{{ nuevoEstado.accion }}</label>
   </p-header>

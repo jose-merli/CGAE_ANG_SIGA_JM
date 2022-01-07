@@ -31,7 +31,7 @@ export class FacturasAdeudosComponent implements OnInit {
   progressSpinner: boolean = false;
   activacionTarjeta: boolean = true;
 
-  datosFicheros: FacturasIncluidasItem;
+  datosFicheros: FacturasIncluidasItem[];
 
   idFichero;
   msgs;
@@ -118,7 +118,7 @@ export class FacturasAdeudosComponent implements OnInit {
   }
 
   rest(){
-    this.datosFicheros =  JSON.parse(JSON.stringify(this.bodyInicial));
+    // this.datosFicheros =  JSON.parse(JSON.stringify(this.bodyInicial));
 
     // this.arreglaFechas();
   }
@@ -174,7 +174,7 @@ export class FacturasAdeudosComponent implements OnInit {
   }
 
   esFichaActiva(key) {
-    return this.fichaPosible.activa;
+    return this.openFicha;
   }
 
   abreCierraFicha(key) {

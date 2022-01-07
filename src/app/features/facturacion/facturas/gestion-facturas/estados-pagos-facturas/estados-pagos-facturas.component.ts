@@ -308,7 +308,35 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   devolverConComision() {
+    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
+    if (this.bodyInicial.tipo != "FACTURA" || !["5"].includes(ultimaAccion.idAccion)) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.devolucion.error"));
+    } else {
+      this.nuevoEstado = new FacturaEstadosPagosItem();
+
+      // IdFactura
+      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+
+      let fechaActual: Date = new Date();
+      this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
+      this.nuevoEstado.fechaModificaion = new Date();
+
+      // Acción
+      this.nuevoEstado.idAccion = "6";
+      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.devolucion");
+
+      // Devolver con comisión al cliente
+      this.nuevoEstado.comision = true;
+
+      // Cuenta a la que se le pasó el cargo
+      this.nuevoEstado.cuentaBanco = ultimaAccion.cuentaBanco;
+
+      this.nuevoEstado.impTotalPagado = "0";
+      this.nuevoEstado.impTotalPorPagar = ultimaAccion.impTotalPagado;
+
+      this.showModalNuevoEstado = true;
+    }
   }
 
   anular() {
@@ -411,7 +439,9 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.progressSpinner = true;
       this.sigaServices.post("facturacionPyS_insertarEstadosPagos", this.nuevoEstado).toPromise()
         .then(
-          n => { },
+          n => {
+            this.guardadoSend.emit(this.bodyInicial);
+           },
           err => {
             return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
         }).catch(error => {
@@ -422,8 +452,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
           }
         }).then(() => {
           this.progressSpinner = false;
-          this.guardadoSend.emit(this.bodyInicial);
-
           this.showModalNuevoEstado = false;
         });
     } else {
@@ -431,14 +459,16 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     }
   }
 
-  cerrarDialog() {
+  cerrarDialog(operacionCancelada: boolean) {
     this.showModalNuevoEstado = false;
     this.resaltadoDatos = false;
     this.resaltadoEstado = false;
     this.resaltadoBanco = false;
     this.nuevoEstado = undefined;
 
-    this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+    if (operacionCancelada) {
+      this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+    }
   }
 
   // Enlace a la factura
