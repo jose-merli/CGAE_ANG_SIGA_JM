@@ -48,6 +48,7 @@ export class DatosGeneralesMonederoComponent implements OnInit {
           this.ficha.nif = data.nif;
           this.ficha.idInstitucion = data.idInstitucion;
           this.ficha.idPersona = data.idPersona;
+          this.ficha.nColegiado = data.numColegiado;
           
           this.compruebaDNIInput();
 				},
@@ -79,6 +80,7 @@ export class DatosGeneralesMonederoComponent implements OnInit {
       this.ficha.nif = data.nif;
       this.ficha.idInstitucion = data.idInstitucion;
       this.ficha.idPersona = data.idPersona;
+      this.ficha.nColegiado = data.numeroColegiado;
       
 
       sessionStorage.removeItem("abogado");
@@ -94,6 +96,7 @@ export class DatosGeneralesMonederoComponent implements OnInit {
           this.ficha.nif = data.nif;
           this.ficha.idInstitucion = data.idInstitucion;
           this.ficha.idPersona = data.idPersona;
+          this.ficha.nColegiado = data.numColegiado;
           
           this.compruebaDNIInput();
 				},
