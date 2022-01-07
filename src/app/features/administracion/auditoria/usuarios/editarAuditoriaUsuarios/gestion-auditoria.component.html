@@ -29,13 +29,13 @@
 
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"gratuita.listarDesignasTurno.literal.fechaEntrada" | translate}} (*)</label>
-            <app-fecha [inputStyleClass]="styleObligatorio(itemBody.fechaEntrada)" [utc]="false" disabled="true" [(value)]="itemBody.fechaEntrada" (valueChangeSelected)="fillFechaEntrada($event)"
+            <app-fecha [inputStyleClass]="styleObligatorio(itemBody.fechaEntrada)" [utc]="false" disabled="true" [showTime]="true" [(value)]="itemBody.fechaEntrada" (valueChangeSelected)="fillFechaEntrada($event)"
               (valueChangeInput)="fillFechaEntrada($event)"></app-fecha>
           </div>
 
           <div class="form-group col-lg-3 col-md-3">
             <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.fechaEfectiva" | translate}} (*)</label>
-            <app-fecha [inputStyleClass]="styleObligatorio(itemBody.fechaEfectiva)" [utc]="false" disabled="true" [(value)]="itemBody.fechaEfectiva" (valueChangeSelected)="fillFechaEfectiva($event)"
+            <app-fecha [inputStyleClass]="styleObligatorio(itemBody.fechaEfectiva)" [utc]="false" disabled="true" [showTime]="true" [(value)]="itemBody.fechaEfectiva" (valueChangeSelected)="fillFechaEfectiva($event)"
               (valueChangeInput)="fillFechaEfectiva($event)"></app-fecha>
           </div>
 
