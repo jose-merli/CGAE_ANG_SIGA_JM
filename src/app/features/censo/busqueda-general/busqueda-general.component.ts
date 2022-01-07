@@ -736,7 +736,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
           }
         );
       }
-    } if (this.persona == 'p') {
+    } else if (this.persona == 'p') {
       if (this.checkFilterProc()) {
         if (this.bodyProc.nombre == undefined) {
           this.bodyFisica.nombre = '';
