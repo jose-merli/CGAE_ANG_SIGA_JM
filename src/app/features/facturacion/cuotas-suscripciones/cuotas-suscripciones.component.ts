@@ -9,6 +9,7 @@ import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { TarjetaFiltroCuotasSuscripcionesComponent } from './tarjeta-filtro-cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones.component';
 import { TarjetaListaCuotasSuscripcionesComponent } from './tarjeta-lista-cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-cuotas-suscripciones',
@@ -24,6 +25,7 @@ export class CuotasSuscripcionesComponent implements OnInit {
   listaSuscripciones: ListaSuscripcionesItem[];
 
   muestraTablaSuscripciones: boolean = false;
+  fromFichaCen: boolean = false;
 
   @ViewChild(TarjetaFiltroCuotasSuscripcionesComponent) filtrosBusqueda;
   @ViewChild(TarjetaListaCuotasSuscripcionesComponent) listaBusqueda;
@@ -32,9 +34,14 @@ export class CuotasSuscripcionesComponent implements OnInit {
   subscriptionSuscripcionesBusqueda: Subscription;
 
   constructor(private commonsService:CommonsService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private persistenceService: PersistenceService) { }
+    private translateService: TranslateService, private persistenceService: PersistenceService,
+    private location: Location) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem("fromFichaCen")){
+      this.fromFichaCen = true;
+      sessionStorage.removeItem("fromFichaCen");
+    }
   }
 
   
@@ -92,5 +99,9 @@ export class CuotasSuscripcionesComponent implements OnInit {
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
+  }
+
+  backTo(){
+    this.location.back();
   }
 }

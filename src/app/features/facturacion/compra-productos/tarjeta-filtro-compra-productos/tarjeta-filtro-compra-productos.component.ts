@@ -75,24 +75,35 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
       this.filtrosCompraProductos.fechaSolicitudDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
     }
 
-    if(sessionStorage.getItem("abogado")){
+    if (sessionStorage.getItem("abogado")) {
       let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
+      //Si viene de una ficha de censo
+      if (data == undefined) {
+        let data = JSON.parse(sessionStorage.getItem("abogado"));
+        this.filtrosCompraProductos.idpersona = data.idPersona;
+        if (data.nombre.includes(",")) {
+          this.apellidosCliente = data.nombre.split(",")[1];
+        }
+        this.nifCifCliente = data.nif;
+        this.nombreCliente = data.soloNombre;
+
+      }
+      else {
+        if (isNaN(data.nif.charAt(0))) {
+          this.nombreCliente = data.denominacion;
+          this.apellidosCliente = "";
+        }
+        if (!isNaN(data.nif.charAt(0))) {
+          this.nombreCliente = data.nombre;
+          this.apellidosCliente = data.apellidos;
+        }
+
+        this.filtrosCompraProductos.idpersona = data.idPersona;
+        this.nifCifCliente = data.nif;
+      }
       sessionStorage.removeItem("abogado");
+      sessionStorage.removeItem("buscadorColegiados");
 
-       
-    if (isNaN(data.nif.charAt(0))) {
-      this.nombreCliente = data.denominacion;
-      this.apellidosCliente = "";
-    }
-     if (!isNaN(data.nif.charAt(0))) {
-      this.nombreCliente = data.nombre;
-      this.apellidosCliente = data.apellidos;
-    }
-
-      this.filtrosCompraProductos.idpersona = data.idPersona;
-      this.nifCifCliente = data.nif;
-
-    sessionStorage.removeItem("buscadorColegiados");
     }
     else if(this.localStorageService.isLetrado){
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(

@@ -9,7 +9,7 @@ import { TranslateService } from '../../../commons/translate';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { FiltrosMonederoItem } from '../../../models/FiltrosMonederoItem';
-import { ListaMonederosDTO } from '../../../models/ListaMonederosDTO';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -27,6 +27,7 @@ export class MonederoComponent implements OnInit {
   listaMonederos: ListaMonederosItem[] = [];
 
   muestraTablaMonederos: boolean = false;
+  fromFichaCen: boolean = false;
 
   @ViewChild(TarjetaFiltroMonederosComponent) filtrosBusqueda : TarjetaFiltroMonederosComponent ;
   @ViewChild(TarjetaListaMonederosComponent) listaBusqueda : TarjetaListaMonederosComponent;
@@ -34,9 +35,14 @@ export class MonederoComponent implements OnInit {
   
 
   constructor(private commonsService:CommonsService, private sigaServices: SigaServices,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private location: Location) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem("fromFichaCen")){
+      this.fromFichaCen = true;
+      sessionStorage.removeItem("fromFichaCen");
+    }
   }
 
 
@@ -79,6 +85,10 @@ export class MonederoComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  backTo(){
+    this.location.back();
   }
 
 }

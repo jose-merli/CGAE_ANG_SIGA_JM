@@ -79,17 +79,27 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
       this.filtrosMonederoItem.idPersonaColegiado = idPersona; */
 
     let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
-    sessionStorage.removeItem("abogado");
-    if (isNaN(data.nif.charAt(0))) {
-      this.usuarioBusquedaExpress.nombreAp = data.denominacion;
-    }
-     if (!isNaN(data.nif.charAt(0))) {
-      this.usuarioBusquedaExpress.nombreAp = data.nombre + ", " + data.apellidos;
-    }
-      
-    this.filtrosMonederoItem.idPersonaColegiado = data.idPersona;
-    this.usuarioBusquedaExpress.numColegiado = data.nif;
 
+    //Si viene de una ficha de censo
+    if(data==undefined){
+      let data = JSON.parse(sessionStorage.getItem("abogado"));
+      this.filtrosMonederoItem.idPersonaColegiado = data.idPersona;
+      this.usuarioBusquedaExpress.numColegiado = data.nif;
+      this.usuarioBusquedaExpress.nombreAp = data.nombre;
+
+    }
+    else{
+      sessionStorage.removeItem("abogado");
+      if (isNaN(data.nif.charAt(0))) {
+        this.usuarioBusquedaExpress.nombreAp = data.denominacion;
+      }
+      if (!isNaN(data.nif.charAt(0))) {
+        this.usuarioBusquedaExpress.nombreAp = data.nombre + ", " + data.apellidos;
+      }
+        
+      this.filtrosMonederoItem.idPersonaColegiado = data.idPersona;
+      this.usuarioBusquedaExpress.numColegiado = data.nif;
+    }
     sessionStorage.removeItem("buscadorColegiados");
   }
     else if(this.localStorageService.isLetrado){

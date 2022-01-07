@@ -9,6 +9,7 @@ import { PersistenceService } from '../../../_services/persistence.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { TarjetaFiltroCompraProductosComponent } from './tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
 import { TarjetaListaCompraProductosComponent } from './tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-compra-productos',
@@ -23,6 +24,7 @@ export class CompraProductosComponent implements OnInit {
   listaCompraProductos: ListaComprasProductosItem[];
 
   muestraTablaCompraProductos: boolean = false;
+  fromFichaCen: boolean = false;
 
   @ViewChild(TarjetaFiltroCompraProductosComponent) filtrosBusqueda;
   @ViewChild(TarjetaListaCompraProductosComponent) listaBusqueda;
@@ -31,9 +33,14 @@ export class CompraProductosComponent implements OnInit {
   subscriptionProductosBusqueda: Subscription;
 
   constructor(private commonsService:CommonsService, private sigaServices: SigaServices,
-    private translateService: TranslateService, private persistenceService: PersistenceService) { }
+    private translateService: TranslateService, private persistenceService: PersistenceService,
+    private location: Location) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem("fromFichaCen")){
+      this.fromFichaCen = true;
+      sessionStorage.removeItem("fromFichaCen");
+    }
   }
 
   ngOnDestroy() {
@@ -89,5 +96,9 @@ export class CompraProductosComponent implements OnInit {
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
+  }
+
+  backTo(){
+    this.location.back();
   }
 }

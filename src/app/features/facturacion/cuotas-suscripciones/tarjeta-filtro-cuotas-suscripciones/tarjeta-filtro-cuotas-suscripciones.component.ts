@@ -79,19 +79,34 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
     if(sessionStorage.getItem("abogado")){
       let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
+      //Si viene de una ficha de censo
+      if(data==undefined){
+        let data = JSON.parse(sessionStorage.getItem("abogado"));
+        this.filtrosSuscripciones.idpersona = data.idPersona;
+        if(data.nombre.includes(",")){
+          this.apellidosCliente = data.nombre.split(",")[1];
+        }
+        this.nifCifCliente = data.nif;
+        this.nombreCliente = data.soloNombre;
+
+      }
+      else{
+        if (isNaN(data.nif.charAt(0))) {
+          this.nombreCliente = data.denominacion;
+          this.apellidosCliente = "";
+        }
+         if (!isNaN(data.nif.charAt(0))) {
+          this.nombreCliente = data.nombre;
+          this.apellidosCliente = data.apellidos;
+        }
+    
+        this.filtrosSuscripciones.idpersona = data.idPersona;
+        this.nifCifCliente = data.nif;
+
+      }
 			sessionStorage.removeItem("abogado");
 
-      if (isNaN(data.nif.charAt(0))) {
-        this.nombreCliente = data.denominacion;
-        this.apellidosCliente = "";
-      }
-       if (!isNaN(data.nif.charAt(0))) {
-        this.nombreCliente = data.nombre;
-        this.apellidosCliente = data.apellidos;
-      }
-	
-			this.filtrosSuscripciones.idpersona = data.idPersona;
-			this.nifCifCliente = data.nif;
+      
     }
     else if(this.localStorageService.isLetrado){
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
