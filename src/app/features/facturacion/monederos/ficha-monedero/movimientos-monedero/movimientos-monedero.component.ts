@@ -148,6 +148,8 @@ export class MovimientosMonederoComponent implements OnInit {
 
           //Una vez se guarda el movimiento, deja de ser editable.
           this.movimientosTarjeta[0].nuevo = false;
+
+          this.getMovimientosMonedero();
         }
 
         this.progressSpinner = false;
@@ -155,6 +157,7 @@ export class MovimientosMonederoComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
       });
   }
   //FIN SERVICIOS
@@ -239,17 +242,45 @@ export class MovimientosMonederoComponent implements OnInit {
   }
 
   borrarMovimiento() {
-    if(this.movimientosTarjeta[0].impOp > 0 || this.movimientosTarjeta[0].nuevo){
-      this.movimientosTarjeta.splice(0, 1);
-    
-      this.selectedRows = [];
-      this.numSelectedRows = 0;
-      this.checkTotal();
-      this.tablaMovimientos.reset();
+    for(let mov of this.selectedRows){
+
+      //Solo se permite borrar el primero por indicacion de la prueba SPP-2070
+      //Tambien se realiza con seleccion porque lo indica la prueba
+
+      //Se comprueba que la fila seleccionada es posterior al ultimo gasto
+      let indx = this.movimientosTarjeta.indexOf(mov);
+      if(indx != 0){
+        this.showMessage("error", "Error", "** Solo se permite borrar el primer movimiento");
+      }
+      else{
+        //Se comprueba que alguna fila seleccionada sea un ingreso
+        if(mov.impOp >= 0){
+
+          let i = indx -1;
+          while(i > 0){
+
+            if(this.movimientosTarjeta[i].impOp < 0){
+              break;
+            }
+            i--;
+          }
+          if(i == -1){
+            this.movimientosTarjeta.splice(indx, 1);
+          }
+          else{
+            this.showMessage("error", "Error", "** No se puede eliminar un movimiento de ingreso anterior a uno de cobro");
+          }
+        }
+        else if(mov.impOp < 0){
+          this.showMessage("error", "Error", "** No se puede eliminar un movimiento de cobro");
+        }
+      }
     }
-    else if(this.movimientosTarjeta.length != 1){
-      this.showMessage("error", "Error", "** No se puede eliminar un movimiento de cobro");
-    }
+
+    this.selectedRows = [];
+    this.numSelectedRows = 0;
+    this.checkTotal();
+    this.tablaMovimientos.reset();
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
