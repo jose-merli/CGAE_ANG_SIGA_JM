@@ -151,7 +151,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
     if(peticion.length > 1){
       mensaje = this.translateService.instant("facturacion.productosyservicios.monedero.dialogconfirmarliquidacionvarios");
     }else if(peticion.length == 1){
-      mensaje = this.translateService.instant("facturacion.productosyservicios.monedero.dialogconfirmarliquidacionunico") + peticion[0].importeRestante + "€";
+      mensaje = this.translateService.instant("facturacion.productosyservicios.monedero.dialogconfirmarliquidacionunico") + peticion[0].importeRestante + "€ ?";
     }
 
     this.confirmationService.confirm({
