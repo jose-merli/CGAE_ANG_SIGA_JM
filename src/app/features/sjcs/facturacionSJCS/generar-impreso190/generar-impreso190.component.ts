@@ -52,12 +52,7 @@ export class GenerarImpreso190Component implements OnInit {
   }
 
   getImpresos(event){
-    let anio = (this.filtros.anio != null && this.filtros.anio != undefined && this.filtros.anio.length != 0) ? this.filtros.anio.toString() : this.filtros.anio;
-
-    if(anio == undefined || anio == null || anio.length == 0){
-      this.showMessage("error", "Incorrecto", this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      event = false;
-    }
+    let anio = this.filtros.anio 
 
     if(event == true){
       this.progressSpinner = true;
