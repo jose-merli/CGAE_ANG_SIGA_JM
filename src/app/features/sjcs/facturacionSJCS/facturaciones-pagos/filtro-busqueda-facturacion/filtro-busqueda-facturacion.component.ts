@@ -337,7 +337,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
 	isBuscar() {
-		if (this.checkFilters()) {
+		//if (this.checkFilters()) {
 			let filtros;
 
 			if (this.selectedValue == "facturacion") {
@@ -351,7 +351,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			this.persistenceService.setFiltros(filtros);
 
 			this.busqueda.emit(this.selectedValue);
-		}
+		//}
 	}
 
 	checkFilters() {
