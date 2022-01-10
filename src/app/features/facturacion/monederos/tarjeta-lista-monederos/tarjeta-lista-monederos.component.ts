@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Message, SortEvent } from 'primeng/components/common/api';
+import { ConfirmationService, Message, SortEvent } from 'primeng/components/common/api';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
@@ -74,7 +74,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService,
     private commonsService: CommonsService, private router: Router,
-    private localStorageService: SigaStorageService,) { }
+    private localStorageService: SigaStorageService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
     this.getPermisoLiquidarMonederos();
@@ -115,14 +115,14 @@ export class TarjetaListaMonederosComponent implements OnInit {
   }
 
   checkLiquidar(){
-    this.msgs = [
+    /* this.msgs = [
       {
         severity: "info",
         summary: "En proceso",
         detail: "Boton no funcional actualmente"
       }
-    ];
-
+    ]; */
+     
     let msg = this.commonsService.checkPermisos(this.permisoLiquidarMonederos, undefined);
 
     if (msg != null) {
@@ -145,25 +145,52 @@ export class TarjetaListaMonederosComponent implements OnInit {
       }
     });
 
-    this.sigaServices.post("PyS_liquidarMonederos", peticion).subscribe(
-      n => {
+    let keyConfirmation = "deletePlantillaDoc";
+    let mensaje;
+  
+    if(peticion.length > 1){
+      mensaje = this.translateService.instant("facturacion.productosyservicios.monedero.dialogconfirmarliquidacionvarios");
+    }else if(peticion.length == 1){
+      mensaje = this.translateService.instant("facturacion.productosyservicios.monedero.dialogconfirmarliquidacionunico") + peticion[0].importeRestante + "€ ?";
+    }
 
-        this.selectedRows = [];
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: mensaje,
+      icon: "fa fa-trash-alt",
+      accept: () => {
+        this.sigaServices.post("PyS_liquidarMonederos", peticion).subscribe(
+          n => {
 
-        if (n.status == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.selectedRows = [];
 
-          this.actualizarLista.emit();
-        }
+            if (n.status == 500) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            } else {
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
-        this.progressSpinner = false;
+              this.actualizarLista.emit();
+            }
 
+            this.progressSpinner = false;
+
+          },
+          err => {
+            this.progressSpinner = false;
+          });
       },
-      err => {
-        this.progressSpinner = false;
-      });
+      reject: () => {
+        this.msgs = [
+          {
+            severity: "info",
+            summary: "info",
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   //Metodo para aplicar logica al deseleccionar filas

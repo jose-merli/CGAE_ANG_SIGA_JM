@@ -369,9 +369,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
     }
 
   }
-
-  //TO DO
-  //REVISAR: PENDIENTE DE IMPLEMENTACION
+  
   compareServices(){
     this.deshabilitarGuardar = true;
     // Esto puede ahorrar tiempo

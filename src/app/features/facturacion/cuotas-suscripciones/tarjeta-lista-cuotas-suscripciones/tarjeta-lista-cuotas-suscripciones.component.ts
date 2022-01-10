@@ -361,6 +361,10 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
         this.progressSpinner = false;
         sessionStorage.setItem("FichaCompraSuscripcion", n.body);
         this.router.navigate(["/fichaCompraSuscripcion"]);
+      },
+      (err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
       }
     );
   }

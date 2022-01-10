@@ -1,9 +1,49 @@
 <div class="card">
   <div class="card-body">
-    <p class="title-module">
-      <span >{{ 'oficio.cargasMasivas.ficheroModelo' | translate }}</span>
+    <p class="title-module" (click)="abreCierraTipo()">{{ 'oficio.cargasMasivas.ficheroModelo' | translate }}
+      <i (click)="abreCierraTipo()" *ngIf="!showTipo" class="fa fa-angle-up float-right"></i>
+      <i (click)="abreCierraTipo()" *ngIf="showTipo" class="fa fa-angle-down float-right"></i>
     </p>
   </div>
+  <div *ngIf="showTipo" class="module vista-simple">
+    <div class="row">
+      <div class="col-lg-10 col-md-10 ml-lg-4 ml-md-4">
+        <p>
+          1. {{ "facturacion.cargasmasivascompras.instrucciones1" | translate }}
+          <br>
+          2.	{{ "facturacion.cargasmasivascompras.instrucciones2" | translate }} 
+          <br>
+          <span class="subGrupoInstrucciones">
+              2.1.	{{ "facturacion.cargasmasivascompras.instrucciones2coma1" | translate }} 
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.2.	{{ "facturacion.cargasmasivascompras.instrucciones2coma2" | translate }} 
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.3.	{{ "facturacion.cargasmasivascompras.instrucciones2coma3" | translate }} 
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.4.	{{ "facturacion.cargasmasivascompras.instrucciones2coma4" | translate }} 
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.5.	{{ "facturacion.cargasmasivascompras.instrucciones2coma5" | translate }} 
+              <br>
+          </span>
+          <span class="subGrupoInstrucciones">
+              2.6.	{{ "facturacion.cargasmasivascompras.instrucciones2coma6" | translate }} 
+              <br>
+          </span>
+          3.	{{ "facturacion.cargasmasivascompras.instrucciones3" | translate }} 
+          <br>
+        </p>
+      </div>
+    </div>
+  </div>
+
   <div class="card-footer">
     <!-- BOTON TARJETA -->
     <div class="text-right main-button">

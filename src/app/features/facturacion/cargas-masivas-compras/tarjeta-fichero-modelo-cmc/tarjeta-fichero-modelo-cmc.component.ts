@@ -15,6 +15,7 @@ export class TarjetaFicheroModeloCmcComponent implements OnInit {
   progressSpinner: boolean = false;
 
   showCuerpoFicheroModelo: boolean = false;
+  showTipo: boolean = false;
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices) { }
@@ -45,4 +46,7 @@ export class TarjetaFicheroModeloCmcComponent implements OnInit {
       this.progressSpinner = false;
   }
 
+  abreCierraTipo(){
+    this.showTipo=!this.showTipo;
+  }
 }

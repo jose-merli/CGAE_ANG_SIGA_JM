@@ -279,6 +279,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
       solicitud.nSolicitud = row.nSolicitud;
       solicitud.fechaAceptada = row.fechaEfectiva;
       solicitud.fechaDenegada = row.fechaDenegada;
+      solicitud.idFormaPagoSeleccionada = row.idFormaPago;
       peticion.push(solicitud);
     });
     this.sigaServices.post('PyS_aprobarCompraMultiple', peticion).subscribe(

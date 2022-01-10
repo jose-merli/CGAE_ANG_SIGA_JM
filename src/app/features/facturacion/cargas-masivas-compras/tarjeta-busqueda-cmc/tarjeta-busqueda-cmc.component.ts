@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { TranslateService } from '../../../../commons/translate';
 import { CargaMasivaItem } from '../../../../models/CargaMasivaItem';
+import { FiltrosBusquedaCargasMasivasComprasItem } from '../../../../models/FiltrosBusquedaCargasMasivasComprasItem';
 import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
@@ -12,8 +13,7 @@ export class TarjetaBusquedaCmcComponent implements OnInit {
 
   
   msgs: any[];
-  fechaCargaDesde: Date;
-  fechaCargaHasta: Date;
+  filtrosBusquedaCargaMasivasCompras: FiltrosBusquedaCargasMasivasComprasItem = new FiltrosBusquedaCargasMasivasComprasItem(); //Guarda los valores seleccionados/escritos en los campos
   @Output() filtrosValues = new EventEmitter<CargaMasivaItem>();
   showTipo: boolean = false;
   @Input("permisoEscritura") permisoEscrituta;
@@ -22,21 +22,25 @@ export class TarjetaBusquedaCmcComponent implements OnInit {
     private sigaServices: SigaServices) { }
 
   ngOnInit() {
-    
-    this.fechaCargaDesde = new Date(); 
 
     //En la documentación funcional se pide que por defecto aparezca el campo 
     //con la fecha de dos años antes
-    this.fechaCargaDesde.setDate(this.fechaCargaDesde.getDate() - (365*2));
+    let today = new Date();
+    this.filtrosBusquedaCargaMasivasCompras.fechaCargaDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
   }
 
   
   fillFechaCargaDesde(event) {
-    this.fechaCargaDesde = event;
+    this.filtrosBusquedaCargaMasivasCompras.fechaCargaDesde = event;
   }
 
   fillFechaCargaHasta(event) {
-    this.fechaCargaHasta = event;
+    this.filtrosBusquedaCargaMasivasCompras.fechaCargaHasta = event;
+  }
+
+  limpiar() {
+    this.filtrosBusquedaCargaMasivasCompras = new FiltrosBusquedaCargasMasivasComprasItem();
+
   }
 
   // Control de fechas

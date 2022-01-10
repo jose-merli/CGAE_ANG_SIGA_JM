@@ -78,21 +78,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     this.getComboPeriodicidad();
     this.getComboCondicionSuscripcion();
 
-    //Si hemos pulsado en el boton nueva condicion nos habra llevado a la ficha consultas en la cual habremos creado una nueva consulta y al darle a guardar tendra en cuenta que veniamos de fichaServicios
-    //Y nos traera de vuelta con el combo de condiciones fijado a la recien creada consulta
-    if(sessionStorage.getItem("vieneDeNuevaCondicion") == "true"){
-      let maxId;
-      maxId = Math.max.apply(Math, this.condicionesSuscripcionObject.combooItems.map(function(o) { return o.value; }))
-      let precioDetalle = JSON.parse(sessionStorage.getItem("precioDetalle"));
-      //Recorremos los precios para cambiarle el idconsulta al precio el cual seleccionamos previamente a la hora de crear nueva condicion
-      this.preciosDatos.forEach(precio => {
-        //Comprobamos usando la pk el precio correcto
-        if(precioDetalle.idtiposervicios == precio.idtiposervicios && precioDetalle.idservicio == precio.idservicio && precioDetalle.idserviciosinstitucion == precio.idserviciosinstitucion 
-          && precioDetalle.idperiodicidad == precio.idperiodicidad && precioDetalle.idpreciosservicios == precio.idpreciosservicios){
-            precio.idconsulta = maxId;
-          }
-      });  
-    }
+    
   }
 
   checkPermisos(){
@@ -522,7 +508,26 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
         this.progressSpinner = false;
       },
       () => {
+        //Si hemos pulsado en el boton nueva condicion nos habra llevado a la ficha consultas en la cual habremos creado una nueva consulta y al darle a guardar tendra en cuenta que veniamos de fichaServicios
+        //Y nos traera de vuelta con el combo de condiciones fijado a la recien creada consulta
+        if(sessionStorage.getItem("vieneDeNuevaCondicion") == "true"){
+          let maxId;
+          maxId = Math.max.apply(Math, this.condicionesSuscripcionObject.combooItems.map(function(o) { return o.value; }))
+          let precioDetalle = JSON.parse(sessionStorage.getItem("precioDetalle"));
+          //Recorremos los precios para cambiarle el idconsulta al precio el cual seleccionamos previamente a la hora de crear nueva condicion
+          this.preciosDatos.forEach(precio => {
+            //Comprobamos usando la pk el precio correcto
+            if(precioDetalle[0].idtiposervicios == precio.idtiposervicios && precioDetalle[0].idservicio == precio.idservicio && precioDetalle[0].idserviciosinstitucion == precio.idserviciosinstitucion 
+              && precioDetalle[0].idperiodicidad == precio.idperiodicidad && precioDetalle[0].idpreciosservicios == precio.idpreciosservicios){
+                precio.idcondicion = maxId;
+                precio.descripcionconsulta = sessionStorage.getItem("nombreConsulta");
+                this.changeTableField(precio);
+              }
+          });  
+        }
         this.progressSpinner = false;
+        sessionStorage.removeItem("vieneDeNuevaCondicion");
+        sessionStorage.removeItem("nombreConsulta");
       }
     );
   }

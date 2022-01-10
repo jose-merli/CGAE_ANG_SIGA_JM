@@ -39,6 +39,11 @@
               </label>
               <input [ngClass]="styleObligatorio(ficha.idPersona)" [(ngModel)]="ficha.nif" type="text" class="form-control" disabled pInputText/>
             </div>
+            <div *ngIf="ficha.nColegiado != null" class="form-group col-lg-3 col-md-3">
+              <label >{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
+              </label>
+              <input [(ngModel)]="ficha.nColegiado" type="text" class="form-control" disabled pInputText/>
+            </div>
           </div>
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">

@@ -77,25 +77,31 @@
 
     <p-footer>
       <div class="text-right main-button">
+        <!-- COMUNICAR -->
         <button *ngIf="selectedRows && selectedRows.length > 0" (click)="navigateComunicar(selectedRows)" pButton
           type="button" icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
 
+        <!-- COMPRAR -->
         <button *ngIf="selectedRows && selectedRows.length > 0" (click)="checkPermisoComprar()" pButton
           type="button" icon="fa-shopping-basket" iconPos="left"
           label="{{'facturacion.productos.comprar' | translate }}"></button>
 
-        <button *ngIf="!historico" (click)="getListaProductosHistorico(); selectedRows=[]" pButton type="button"
+        <!-- MOSTRAR HISTORICO -->
+        <button *ngIf="!historico" (click)="checkMostrarHistorico()" pButton type="button"
           icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
-        <button *ngIf="historico" (click)="getListaProductos(); selectedRows=[]" pButton type="button" icon="fa fa-undo"
+        <!-- OCULTAR HISTORICO -->
+        <button *ngIf="historico" (click)="checkOcultarHistorico()" pButton type="button" icon="fa fa-undo"
           iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
+        <!-- ELIMINAR PRODUCTO -->
         <button
           [disabled]="(selectedRows == '') || (numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || newRegisterRow"
           *ngIf="(numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || (numSelectedAbleRegisters >= 0 && numSelectedDisableRegisters == 0)"
           (click)="checkActivarDesactivar(selectedRows)" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
           label="{{'general.boton.eliminar' | translate}}"></button>
 
+        <!-- REACTIVAR PRODUCTO -->
         <button [disabled]="(selectedRows == '')" (click)="checkActivarDesactivar(selectedRows)"
           *ngIf="numSelectedAbleRegisters == 0 && numSelectedDisableRegisters > 0" pButton type="button"
           icon="fa fa-undo " iconPos="left"
