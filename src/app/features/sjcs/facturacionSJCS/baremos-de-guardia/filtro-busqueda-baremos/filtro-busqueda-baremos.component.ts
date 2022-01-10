@@ -42,6 +42,8 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
       this.filtros.idGuardias = [datos.idGuardia];
       this.getComboTurno();
       this.getComboGuardia([datos.idTurno]);
+      this.getComboFacturacion();
+      this.filtros.idFacturaciones = ['0'];
       this.buscar();
     } else if(sessionStorage.getItem("tarjetaBaremosFacturacion")){
       let idFacturacion:String = sessionStorage.getItem("tarjetaBaremosFacturacion")
@@ -62,6 +64,7 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
       this.getComboTurno();
       this.getComboFacturacion();
       this.filtros.idFacturaciones = ['0'];
+      this.buscar();
     }
   }
 
@@ -162,10 +165,17 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
 
   hayCamposRellenos(): boolean {
 
-    if (this.filtros && (
+   /*  if (this.filtros && (
       (this.filtros.idFacturaciones && this.filtros.idFacturaciones.length > 0) ||
       (this.filtros.idTurnos && this.filtros.idTurnos.length > 0) ||
       (this.filtros.idGuardias && this.filtros.idGuardias.length > 0)
+    )) {
+      return true;
+    }
+
+    return false; */
+    if (this.filtros && (
+      (this.filtros.idFacturaciones && this.filtros.idFacturaciones.length > 0)
     )) {
       return true;
     }
