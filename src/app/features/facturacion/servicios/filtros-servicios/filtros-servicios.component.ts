@@ -37,6 +37,7 @@ export class FiltrosServiciosComponent implements OnInit, OnDestroy {
 
   //Permisos
   permisoGuardarServicios: boolean;
+  isLetrado: boolean;
 
   //Suscripciones
   subscriptionCategorySelectValues: Subscription;
@@ -57,6 +58,12 @@ export class FiltrosServiciosComponent implements OnInit, OnDestroy {
       this.buscar();
     } else {
       this.filtrosServicios = new FiltrosServicios();
+    }
+
+    if(sessionStorage.getItem("isLetrado") == "false"){
+      this.isLetrado = false;
+    }else{
+      this.isLetrado = true;
     }
 
     this.getComboCategoria();

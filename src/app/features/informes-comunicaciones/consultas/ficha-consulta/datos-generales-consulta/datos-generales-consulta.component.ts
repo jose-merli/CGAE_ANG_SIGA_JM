@@ -104,7 +104,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     if(sessionStorage.getItem("servicioDetalle") != undefined){
       this.servicioDetalle = JSON.parse(sessionStorage.getItem("servicioDetalle"));
       this.body.nombre = this.servicioDetalle.descripcion;
-      this.body.idModulo = "3";//PONGO CENSO PROVISIONAL COMO MODULO
+      this.body.idModulo = "3";
       this.body.idObjetivo = "3";
       this.cargaComboClaseCom("3");
       this.body.idClaseComunicacion = "1";
@@ -112,7 +112,11 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
       if(sessionStorage.getItem("precioDetalle") != undefined){
         let precioDetalle = JSON.parse(sessionStorage.getItem("precioDetalle"));
-        this.body.nombre = this.servicioDetalle.descripcion + " " + precioDetalle.descripcionprecio;
+        if(precioDetalle[0].descripcionprecio != undefined && precioDetalle[0].descripcionprecio != ""){
+          this.body.nombre = this.servicioDetalle.descripcion + " " + precioDetalle[0].descripcionprecio;
+        }else{
+          this.body.nombre = this.servicioDetalle.descripcion;
+        }
       }
 
     }
@@ -182,7 +186,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   estabaPulsadoConsultaExperta: boolean;
   
   emitUsoConstructorConsultaExperta(){
-    if(this.estabaPulsadoConsultaExperta == true && this.constructorConsultaExperta == 'constructor'){
+    if(this.estabaPulsadoConsultaExperta == true && this.constructorConsultaExperta == 'constructor' && sessionStorage.getItem("constructorDeConsultasGuardado") == "true"){
       let keyConfirmation = "deletePlantillaDoc";
 
       this.queryBuilderDTO.consulta = "";
@@ -597,6 +601,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         () => {
           if(sessionStorage.getItem("servicioDetalle") != undefined || sessionStorage.getItem("precioDetalle") != undefined){
             sessionStorage.setItem("vieneDeNuevaCondicion", "true");
+            sessionStorage.setItem("nombreConsulta", this.body.nombre.toString());
             this.router.navigate(["/fichaServicios"]);
           }
           this.progressSpinner = false;

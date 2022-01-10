@@ -564,7 +564,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       //Esto para mostrar formas de pago seleccionadas en el pasado o
       //Para los casos en los que el servicio haya cambiado sus formas de pago despues de 
       //definir su suscripcion
-      if(resultUsu.indexOf(this.ficha.idFormaPagoSeleccionada)  == -1){
+      if(this.ficha.idFormaPagoSeleccionada != null && resultUsu.indexOf(this.ficha.idFormaPagoSeleccionada)  == -1){
         resultUsu.push(this.ficha.idFormaPagoSeleccionada);
       }
 

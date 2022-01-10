@@ -34,15 +34,14 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 
   ngOnInit() {
 
-
-    this.filtrosMonederoItem.fechaDesde = new Date();
     this.filtrosMonederoItem.fechaHasta = new Date(); 
 
     
     //En la documentación funcional se pide que por defecto aparezca el campo 
     //con la fecha de dos años antes
-    this.filtrosMonederoItem.fechaDesde.setDate(this.filtrosMonederoItem.fechaDesde.getDate() - (365*2));
-    this.filtrosMonederoItem.fechaHasta.setDate(this.filtrosMonederoItem.fechaDesde.getDate());
+    let today = new Date();
+    this.filtrosMonederoItem.fechaDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
+    //this.filtrosMonederoItem.fechaDesde = new Date(today.valueOf() - (365 * 2 * 24 * 60 * 60 * 1000));
 
     if(sessionStorage.getItem("filtrosMonedero")){
 
@@ -73,14 +72,36 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
       sessionStorage.removeItem("filtrosMonedero");
       this.busqueda.emit(true);
     }
-    else if (sessionStorage.getItem("buscadorColegiados")) {
-      const { nombre, apellidos, nColegiado, idPersona } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+    else if (sessionStorage.getItem("abogado")) {
+     /*  const { nombre, apellidos, nColegiado, idPersona } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
-      this.filtrosMonederoItem.idPersonaColegiado = idPersona;
+      this.filtrosMonederoItem.idPersonaColegiado = idPersona; */
 
-      sessionStorage.removeItem("buscadorColegiados");
+    let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
+
+    //Si viene de una ficha de censo
+    if(data==undefined){
+      let data = JSON.parse(sessionStorage.getItem("abogado"));
+      this.filtrosMonederoItem.idPersonaColegiado = data.idPersona;
+      this.usuarioBusquedaExpress.numColegiado = data.nif;
+      this.usuarioBusquedaExpress.nombreAp = data.nombre;
+
     }
+    else{
+      sessionStorage.removeItem("abogado");
+      if (isNaN(data.nif.charAt(0))) {
+        this.usuarioBusquedaExpress.nombreAp = data.denominacion;
+      }
+      if (!isNaN(data.nif.charAt(0))) {
+        this.usuarioBusquedaExpress.nombreAp = data.nombre + ", " + data.apellidos;
+      }
+        
+      this.filtrosMonederoItem.idPersonaColegiado = data.idPersona;
+      this.usuarioBusquedaExpress.numColegiado = data.nif;
+    }
+    sessionStorage.removeItem("buscadorColegiados");
+  }
     else if(this.localStorageService.isLetrado){
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
 				n => {
@@ -101,8 +122,16 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 
   }
 
+  searchPersona(){
+    sessionStorage.setItem("origin", "newCliente");
+    this.router.navigate(['/busquedaGeneral']);
+  }
   
-
+  limpiarCliente(){
+    this.usuarioBusquedaExpress.numColegiado = null;
+    this.usuarioBusquedaExpress.nombreAp = null;
+    this.filtrosMonederoItem.idPersonaColegiado = null;
+  }
 
   // Control de fechas
   getFechaHastaCalendar(fechaInputDesde : Date, fechainputHasta : Date) : Date{
@@ -147,15 +176,18 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
     this.filtrosMonederoItem.fechaHasta = event;
   }
 
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+  }
+
   limpiar() {
     this.filtrosMonederoItem = new FiltrosMonederoItem();
     this.usuarioBusquedaExpress = {
-      numColegiado: '',
-      nombreAp: ''
+      numColegiado: "",
+      nombreAp: ""
     };
   }
-
-
 
   buscar() {
     this.busqueda.emit(true);

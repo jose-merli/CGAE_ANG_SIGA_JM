@@ -69,20 +69,41 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
 
     } else {
 
-      this.filtrosCompraProductos.fechaSolicitudDesde = new Date(); 
-
       //En la documentación funcional se pide que por defecto aparezca el campo 
       //con la fecha de dos años antes
-      this.filtrosCompraProductos.fechaSolicitudDesde.setDate(this.filtrosCompraProductos.fechaSolicitudDesde.getDate() - (365*2));
+      let today = new Date();
+      this.filtrosCompraProductos.fechaSolicitudDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
     }
 
-    if(sessionStorage.getItem("abogado")){
+    if (sessionStorage.getItem("abogado")) {
       let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
+      //Si viene de una ficha de censo
+      if (data == undefined) {
+        let data = JSON.parse(sessionStorage.getItem("abogado"));
+        this.filtrosCompraProductos.idpersona = data.idPersona;
+        if (data.nombre.includes(",")) {
+          this.apellidosCliente = data.nombre.split(",")[1];
+        }
+        this.nifCifCliente = data.nif;
+        this.nombreCliente = data.soloNombre;
+
+      }
+      else {
+        if (isNaN(data.nif.charAt(0))) {
+          this.nombreCliente = data.denominacion;
+          this.apellidosCliente = "";
+        }
+        if (!isNaN(data.nif.charAt(0))) {
+          this.nombreCliente = data.nombre;
+          this.apellidosCliente = data.apellidos;
+        }
+
+        this.filtrosCompraProductos.idpersona = data.idPersona;
+        this.nifCifCliente = data.nif;
+      }
       sessionStorage.removeItem("abogado");
-      this.nombreCliente = data.nombre;
-      this.filtrosCompraProductos.idpersona = data.idPersona;
-      this.apellidosCliente = data.apellidos;
-      this.nifCifCliente = data.nif;
+      sessionStorage.removeItem("buscadorColegiados");
+
     }
     else if(this.localStorageService.isLetrado){
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
@@ -90,6 +111,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
           let data = JSON.parse(n.body).colegiadoItem;
           this.nombreCliente = data.nombre;
           this.nifCifCliente = data.nif;
+          this.filtrosCompraProductos.idpersona = this.localStorageService.idPersona;
         },
         err => {
           this.progressSpinner = false;
@@ -248,8 +270,11 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
 
   limpiar() {
     this.filtrosCompraProductos = new FiltrosCompraProductosItem();
-    this.nombreCliente = null;
-    this.nifCifCliente = null;
+    if(!this.localStorageService.isLetrado){
+      this.nombreCliente = null;
+      this.nifCifCliente = null;
+      this.filtrosCompraProductos.idpersona = null;
+    }
   }
 
   limpiarCliente(){

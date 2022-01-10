@@ -94,23 +94,23 @@
       <div class="text-right main-button">
         <!-- Mostrar/Ocultar Historico -->
         <button *ngIf="!historico" (click)="searchHistorical()" pButton type="button" iconPos="left"
-          label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+          label="{{ 'general.message.mostrarHistorico' | translate}}" icon="fa fa-history"></button>
         <button *ngIf="historico" (click)="searchHistorical()" pButton type="button"
           icon="fa fa-history" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
         <!-- Liquidar -->
         <!-- REVISAR pendiente de introducir etiquete e implementacion -->
             <button pButton  (click)="checkLiquidar()" type="button" icon="fa fa-search" iconPos="left"
-            label="** LIQUIDAR" [disabled]="selectedRows.length == 0"></button>
+            label="{{'facturacion.productosyservicios.monedero.botonliquidar' | translate}}" [disabled]="selectedRows.length == 0"></button>
         </div>
     </p-footer>
 
   </div>
 </div>
 
-<!-- <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
   width="425" #deletePlantillaDoc>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
   </p-footer>
-</p-confirmDialog> -->
+</p-confirmDialog>

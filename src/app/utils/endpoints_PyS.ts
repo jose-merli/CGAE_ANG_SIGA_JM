@@ -37,5 +37,5 @@ export let endpoints_PyS: any = {
     PyS_getListaServiciosMonedero: "pys/getListaServiciosMonedero", 
     PyS_anadirAnticipoCompra: "pys/anadirAnticipoCompra",
     PyS_liquidarMonederos: "pys/liquidarMonederos",
-    PyS_actualizacionSuscripcionesPersona: "pys/actualizacionSuscripcionesPersona",
+    PyS_actualizacionColaSuscripcionesPersona: "pys/actualizacionColaSuscripcionesPersona",
 }

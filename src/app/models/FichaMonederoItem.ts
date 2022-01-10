@@ -10,6 +10,7 @@ export class FichaMonederoItem {
     apellidos: string;
     idtipoidentificacion: string;
     nif: string;
+    nColegiado: string;
 
     //TARJETA MOVIMIENTOS
     movimientos: ListaMovimientosMonederoItem[];

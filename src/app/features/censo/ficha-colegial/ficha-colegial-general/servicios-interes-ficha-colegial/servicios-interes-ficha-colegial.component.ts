@@ -193,6 +193,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     }
       this.router.navigate(["/bajasTemporales"]);
   }
+
   inscripcionesGuardia(){
     if(!this.isLetrado){
       sessionStorage.setItem("colegiadoRelleno","true");
@@ -224,6 +225,28 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     sessionStorage.setItem("origin","fichaColegial");
     this.router.navigate(["/guardiasSolicitudesCentralita"]);
   }
+  
+  comprasProductos(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("abogado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("fromFichaCen","true");
+    this.router.navigate(["/compraProductos"]);
+  }
 
+  cuotasSuscripciones(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("abogado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("fromFichaCen","true");
+    this.router.navigate(["/cuotasSuscripciones"]);
+  }
 
+  monederos(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("abogado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("fromFichaCen","true");
+    this.router.navigate(["/busquedaMonedero"]);
+  }
 }

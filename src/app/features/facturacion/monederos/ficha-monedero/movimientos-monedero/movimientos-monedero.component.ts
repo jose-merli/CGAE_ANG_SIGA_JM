@@ -121,62 +121,6 @@ export class MovimientosMonederoComponent implements OnInit {
         });;
   }
 
-  // getComboProductos() {
-  //   this.progressSpinner = true;
-
-
-  //   let filtrosProductos: FiltrosProductos = new FiltrosProductos();
-  //   this.sigaServices.post("productosBusqueda_busqueda", filtrosProductos).subscribe(
-  //     listaProductosDTO => {
-
-  //       if (JSON.parse(listaProductosDTO.body).error.code == 500) {
-  //         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-  //       } else {
-  //         // this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  //       }
-
-  //       //Descomentar esto y comentar el codigo de abajo asignando el valor de comboProductos
-  //       //Si se quiere mostrar unicamente productos no derogados
-  //       // JSON.parse(listaProductosDTO.body).listaProductosItems.forEach(producto => {
-  //       //   if (producto.fechabaja == null) {
-  //       //     this.comboProductos.push(producto);
-  //       //   }
-  //       // });
-
-  //       this.comboProductos = JSON.parse(listaProductosDTO.body).listaProductosItems
-
-  //       //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e productos
-  //       this.tablaProductos.reset();
-
-  //       //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
-  //       this.comboProductos.forEach(producto => {
-  //         if (producto.formapago == null || producto.formapago == "") {
-  //           if (producto.noFacturable == "1") {
-  //             producto.formapago = this.translateService.instant("facturacion.productos.noFacturable");
-  //           }
-  //           else {
-  //             producto.formapago = this.translateService.instant("facturacion.productos.pagoNoDisponible");
-  //           }
-  //         }
-  //         else {
-  //           if (producto.noFacturable == "1") {
-  //             producto.formapago += ", "+this.translateService.instant("facturacion.productos.noFacturable");
-  //           }
-  //         }
-  //       });
-
-  //       if(this.ficha.fechaPendiente == null && this.ficha.productos.length > 0){
-  //         this.initProductos();
-  //       }
-
-  //       this.progressSpinner = false;
-
-  //     },
-  //     err => {
-  //       this.progressSpinner = false;
-  //     });
-  // }
-
   updateMovimientosMonedero() {
     this.selectedRows = [];
 
@@ -204,6 +148,14 @@ export class MovimientosMonederoComponent implements OnInit {
 
           //Una vez se guarda el movimiento, deja de ser editable.
           this.movimientosTarjeta[0].nuevo = false;
+
+          //this.getMovimientosMonedero();
+
+          if(this.ficha.movimientos.length > 0){
+            for(let mov of this.movimientosTarjeta){
+              mov.cuentaContable = this.ficha.movimientos[this.ficha.movimientos.length-1].cuentaContable;
+            }
+          }
         }
 
         this.progressSpinner = false;
@@ -211,6 +163,7 @@ export class MovimientosMonederoComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
       });
   }
   //FIN SERVICIOS
@@ -224,7 +177,6 @@ export class MovimientosMonederoComponent implements OnInit {
       this.msgs = msg;
     } else if (this.checkCamposObligatorios()) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
-      
     } 
     //REVISAR MENSAJES
     else if(this.movimientosTarjeta.length == 0){
@@ -239,16 +191,22 @@ export class MovimientosMonederoComponent implements OnInit {
 
   checkCamposObligatorios() {
     //Se comprueba que los campos del utimo movimiento introducido (generalmente uno nuevo) estan rellenados
-    //REVISAR AÑADIR ERROR INDEPENDIENTE PARA CUANDO SE INTRODUCE UN IMPORTE NEGATIVO y  cuando no hay movimientos
-    if(this.movimientosTarjeta.length == 0 || this.movimientosTarjeta[0].concepto == null || this.movimientosTarjeta[0].concepto.trim() == "" ||
-    this.movimientosTarjeta[0].impOp == null || (this.movimientosTarjeta[0].nuevo == true && this.movimientosTarjeta[0].impOp <= 0)) {
+    //REVISAR AÑADIR ERROR INDEPENDIENTE PARA cuando no hay movimientos
+    if(this.movimientosTarjeta.length == 0 || this.movimientosTarjeta[this.movimientosTarjeta.length - 1].concepto == null || this.movimientosTarjeta[this.movimientosTarjeta.length - 1].concepto.trim() == "") {
       this.scrollToOblig.emit("movimientos");
       return true;
     }
-
     if(this.ficha.idPersona == null){
       this.scrollToOblig.emit("propietario");
       return true;
+    }
+    //REVISAR AÑADIR ERROR INDEPENDIENTE PARA cuando hay importes mal introducidos
+    //Se revisa que se hayan asignado valores de importe en todas las filas
+    for(let mov of this.movimientosTarjeta){
+      if(mov.impOp == null || (mov.impOp == 0 && mov.idLinea == null)){
+        this.scrollToOblig.emit("movimientos");
+        return true;
+      }
     }
 
     return false;
@@ -269,9 +227,9 @@ export class MovimientosMonederoComponent implements OnInit {
   }
 
   anadirMovimiento() {
-    if(this.movimientosTarjeta.length != 0){
+    if (this.movimientosTarjeta.length > 0 && this.checkCamposObligatorios()) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
-    }
+    } 
     else{
       let newMovimiento: ListaMovimientosMonederoItem = new ListaMovimientosMonederoItem();
 
@@ -290,17 +248,45 @@ export class MovimientosMonederoComponent implements OnInit {
   }
 
   borrarMovimiento() {
-    if(this.movimientosTarjeta[0].impOp > 0 || this.movimientosTarjeta[0].nuevo){
-      this.movimientosTarjeta.splice(0, 1);
-    
-      this.selectedRows = [];
-      this.numSelectedRows = 0;
-      this.checkTotal();
-      this.tablaMovimientos.reset();
+    for(let mov of this.selectedRows){
+
+      //Solo se permite borrar el primero por indicacion de la prueba SPP-2070
+      //Tambien se realiza con seleccion porque lo indica la prueba
+
+      //Se comprueba que la fila seleccionada es posterior al ultimo gasto
+      let indx = this.movimientosTarjeta.indexOf(mov);
+      if(indx != 0){
+        this.showMessage("error", "Error", "** Solo se permite borrar el primer movimiento");
+      }
+      else{
+        //Se comprueba que alguna fila seleccionada sea un ingreso
+        if(mov.impOp >= 0){
+
+          let i = indx -1;
+          while(i > 0){
+
+            if(this.movimientosTarjeta[i].impOp < 0){
+              break;
+            }
+            i--;
+          }
+          if(i == -1){
+            this.movimientosTarjeta.splice(indx, 1);
+          }
+          else{
+            this.showMessage("error", "Error", "** No se puede eliminar un movimiento de ingreso anterior a uno de cobro");
+          }
+        }
+        else if(mov.impOp < 0){
+          this.showMessage("error", "Error", "** No se puede eliminar un movimiento de cobro");
+        }
+      }
     }
-    else if(this.movimientosTarjeta.length != 1){
-      this.showMessage("error", "Error", "** No se puede eliminar un movimiento de cobro");
-    }
+
+    this.selectedRows = [];
+    this.numSelectedRows = 0;
+    this.checkTotal();
+    this.tablaMovimientos.reset();
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
