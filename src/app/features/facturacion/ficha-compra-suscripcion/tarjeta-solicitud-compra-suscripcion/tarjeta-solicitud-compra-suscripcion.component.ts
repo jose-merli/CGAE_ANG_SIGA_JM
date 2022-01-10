@@ -191,8 +191,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     } else if(this.checkServicios()){
       if(this.tarjServicios.serviciosTarjeta.length == 0){
         this.showMessage("error",
-        this.translateService.instant("** No hay servicio asociado"),
-        this.translateService.instant("** Es necesario tener un servicio asociado para procesar una solicitud de suscripcion")
+        this.translateService.instant("facturacion.suscripcion.noServicioAsociado"),
+        this.translateService.instant("facturacion.suscripcion.servicioNecesario")
         );
       }
       else {
@@ -287,8 +287,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       else if (this.checkServicios()) {
         if (this.tarjServicios.serviciosTarjeta.length == 0) {
           this.showMessage("error",
-            this.translateService.instant("** No hay servicio asociado"),
-            this.translateService.instant("** Es necesario tener un servicio asociado para procesar una solicitud de suscripcion")
+            this.translateService.instant("facturacion.suscripcion.noServicioAsociado"),
+            this.translateService.instant("facturacion.suscripcion.servicioNecesario")
           );
         }
         else {

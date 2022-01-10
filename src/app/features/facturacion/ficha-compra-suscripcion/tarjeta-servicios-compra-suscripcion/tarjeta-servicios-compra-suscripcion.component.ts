@@ -403,8 +403,8 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   anadirServicio(selectedServicio) {
     if(this.serviciosTarjeta.length==1){
       this.showMessage("error",
-              "** Limite de servicios por suscripcion",
-              "** Solo se admite un servicio por suscripcion"
+      this.translateService.instant("facturacion.suscripcion.limiteServicios"),
+      this.translateService.instant("facturacion.suscripcion.unServicioSuscripcion")
             );
     }
     else if (this.checkServicioSeleccionado(selectedServicio)) {
@@ -685,7 +685,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   onChangePago(){
     this.newFormaPagoCabecera();
     if((this.selectedPago == "80" || this.selectedPago == '20')&& this.ficha.idPersona == null){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "** Debe tener un cliente seleccionado para mostrar las cuentas bancarias asociadas");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.compra.noClientoCB"));
     }
   }
   newFormaPagoCabecera(){
