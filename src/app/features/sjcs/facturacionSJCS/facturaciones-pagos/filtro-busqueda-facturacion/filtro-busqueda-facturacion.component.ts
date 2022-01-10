@@ -174,6 +174,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 		/* this.filtrosFacturacion = new FacturacionItem();
 		this.filtrosPagos = new PagosjgItem(); */
 		this.cambiaBuscar.emit(false);
+		this.isBuscar()
 
 		/* this.persistenceService.clearFiltros();
 		this.persistenceService.clearFiltrosAux(); */
