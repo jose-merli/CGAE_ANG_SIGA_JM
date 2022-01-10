@@ -38,6 +38,7 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
   comboContadorFacturas: ComboItem[] = [];
   comboContadorFacturasRectificativas: ComboItem[] = [];
 
+  showDatosGenerales: boolean = true;
   
   body: SerieFacturacionItem = new SerieFacturacionItem();
 
@@ -178,6 +179,11 @@ export class FiltrosSeriesFacturaComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  // Mostrar u ocultar filtros de datos generales
+  onHideDatosGenerales(): void {
+    this.showDatosGenerales = !this.showDatosGenerales;
   }
 
   // Buttons

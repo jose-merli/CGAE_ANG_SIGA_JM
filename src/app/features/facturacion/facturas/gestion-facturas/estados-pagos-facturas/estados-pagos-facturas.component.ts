@@ -452,7 +452,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
           }
         }).then(() => {
           this.progressSpinner = false;
-          this.showModalNuevoEstado = false;
+          this.cerrarDialog(false);
         });
     } else {
       this.resaltadoDatos = true;
@@ -465,6 +465,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     this.resaltadoEstado = false;
     this.resaltadoBanco = false;
     this.nuevoEstado = undefined;
+
+    this.changeDetectorRef.detectChanges();
 
     if (operacionCancelada) {
       this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));

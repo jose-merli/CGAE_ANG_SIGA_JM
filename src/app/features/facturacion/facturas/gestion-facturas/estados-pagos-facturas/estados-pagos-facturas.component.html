@@ -173,7 +173,7 @@
 </div>
 
 <!--DIALOG CAMBIA ESTADO-->
-<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNuevoEstado" (onHide)="cerrarDialog(true)">
+<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNuevoEstado">
   <p-header *ngIf="nuevoEstado" class="title">
     <label>{{ nuevoEstado.accion }}</label>
   </p-header>
@@ -211,7 +211,7 @@
 
     <div class="main-button col-lg-12 col-md-12 mt-2">
       <button (click)="guardar()" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{'general.boton.guardarCerrar' | translate}}"></button>
-      <button (click)="cerrarDialog()" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+      <button (click)="cerrarDialog(true)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
     </div>
   </div>
 </p-dialog>
