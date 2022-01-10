@@ -94,7 +94,12 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges){
-    this.currentDate = this.filtrosSuscripciones.aFechaDe;
+    if(this.filtrosSuscripciones.aFechaDe != null){
+      this.currentDate = this.filtrosSuscripciones.aFechaDe;
+    }
+    else {
+      this.currentDate = new Date();
+    }
   }
 
   initComboEstadoSuscripcion() {
