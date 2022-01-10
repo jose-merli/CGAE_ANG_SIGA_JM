@@ -235,12 +235,12 @@ export class MovimientosMonederoComponent implements OnInit {
 
       newMovimiento.fecha = new Date();
       newMovimiento.impOp = 0;
-      newMovimiento.concepto = "";
+      newMovimiento.concepto = "Ingreso";
       newMovimiento.nuevo = true;
       
       //Nos aseguramos que el otro movimiento no sea editable
       if(this.movimientosTarjeta.length > 0){
-        this.movimientosTarjeta[this.movimientosTarjeta.length-1].nuevo = false;
+        this.movimientosTarjeta[0].nuevo = false;
       }
       this.movimientosTarjeta.unshift(newMovimiento);
       this.checkTotal();
