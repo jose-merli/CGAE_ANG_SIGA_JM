@@ -126,7 +126,6 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			this.filtrosPagos = new PagosjgItem();
 		}
 	}
-
 	nuevo() {
 		let datos;
 
@@ -172,12 +171,12 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	}
 
 	cambiaFiltro() {
-		this.filtrosFacturacion = new FacturacionItem();
-		this.filtrosPagos = new PagosjgItem();
+		/* this.filtrosFacturacion = new FacturacionItem();
+		this.filtrosPagos = new PagosjgItem(); */
 		this.cambiaBuscar.emit(false);
 
-		this.persistenceService.clearFiltros();
-		this.persistenceService.clearFiltrosAux();
+		/* this.persistenceService.clearFiltros();
+		this.persistenceService.clearFiltrosAux(); */
 	}
 
 	comboFactEstados() {
