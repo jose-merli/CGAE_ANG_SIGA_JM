@@ -206,7 +206,14 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
     newServicio.iva = this.selectedRows[0].iva;
     newServicio.valorIva = this.selectedRows[0].valorIva;
     newServicio.idtipoiva = this.selectedRows[0].idtipoiva;
-    newServicio.automatico = this.selectedRows[0].automatico;
+    //PRECAUCION: SI SE CAMBIA LA OBTENCION DE LA CARACTERISTICA DE AUTOMATICO,
+    //SE DEBERA REVISAR ESTOS CONDICIONALES
+    if(this.selectedRows[0].automatico == "Manual"){
+      newServicio.automatico = "0";
+    }
+    else{
+      newServicio.automatico = "1";
+    }
     newServicio.noFacturable = this.selectedRows[0].noFacturable;
     newServicio.solicitarBaja = this.selectedRows[0].solicitarBaja;
 

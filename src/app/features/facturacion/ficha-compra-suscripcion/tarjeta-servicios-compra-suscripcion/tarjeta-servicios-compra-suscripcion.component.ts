@@ -420,7 +420,14 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       newServicio.valorIva = selectedServicio.valorIva;
       newServicio.idtipoiva = selectedServicio.idtipoiva;
       newServicio.idPeticion = this.ficha.nSolicitud;
-      newServicio.automatico = selectedServicio.automatico;
+      //PRECAUCION: SI SE CAMBIA LA OBTENCION DE LA CARACTERISTICA DE AUTOMATICO,
+      //SE DEBERA REVISAR ESTOS CONDICIONALES
+      if(selectedServicio.automatico == "Manual"){
+        newServicio.automatico = "0";
+      }
+      else{
+        newServicio.automatico = "1";
+      }
       newServicio.noFacturable = selectedServicio.noFacturable;
       newServicio.solicitarBaja = selectedServicio.solicitarBaja;
       this.serviciosTarjeta.push(newServicio);
