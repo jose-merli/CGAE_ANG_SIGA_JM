@@ -1,0 +1,96 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="row w-100 m-0">
+    <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+        <div class="text-center my-0 mx-auto image-wrapper">
+            <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
+        </div>
+        <!-- <img [src]="imagen"> -->
+    </div>
+    <div class="col-lg-10 col-md-9">
+
+        <form>
+            <div class="form-row">
+                <div class="form-group col-lg-3 col-md-6 inline">
+                    <div class="w-100">
+                        <label>{{'censo.fichaCliente.literal.identificacion' | translate}} (*)</label>
+                        <input type="text" [(ngModel)]="asistido.nif" class="form-control" pInputText [disabled] = "!editable"
+                        [ngClass]="styleObligatorio(asistido.nif)" [ngModelOptions]="{standalone: true}">
+                    </div>
+                    <div class="toBottom ml-3">
+                        <i class="toBottom fa fa-search icon-search" (click)="onClickSearch();"></i>
+                    </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-6 inline">
+                  <div class="w-100">
+                      <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
+                      <input type="text" [(ngModel)]="asistido.nombre" class="form-control" pInputText [disabled] = "!editable"
+                      [ngModelOptions]="{standalone: true}">
+                  </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-6 inline">
+                  <div class="w-100">
+                      <label>{{'censo.busquedaClientes.literal.apellido1' | translate}}</label>
+                      <input type="text" [(ngModel)]="asistido.apellido1" class="form-control" pInputText [disabled] = "!editable"
+                      [ngModelOptions]="{standalone: true}">
+                  </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-6 inline">
+                  <div class="w-100">
+                      <label>{{'censo.busquedaClientes.literal.apellido2' | translate}}</label>
+                      <input type="text" [(ngModel)]="asistido.apellido2" class="form-control" pInputText [disabled] = "!editable"
+                      [ngModelOptions]="{standalone: true}">
+                  </div>
+                </div>
+                <div class="form-group col-lg-3 col-md-6 inline">
+                  <div class="w-100">
+                      <label>{{'dato.jgr.guardia.saltcomp.tipo' | translate}} (*)</label>
+                      <p-dropdown class="select-form"
+                        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled] = "!editable"
+                        [showClear]="true" [(ngModel)]="asistido.tipopersonajg"
+                        [ngModelOptions]="{standalone: true}" [options]="comboTipoPersona"
+                         [ngClass]="styleObligatorio(asistido.tipopersonajg)">
+                    </p-dropdown>
+                  </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="w-100" style="padding-top: 0.6rem;"></div>
+</div>
+
+<div class="card-footer">
+    <div class="text-right main-button">
+        <button pButton type="button"  icon="fa fa-undo" iconPos="left" label="{{'censo.tipoCuenta.cargo.desasociar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"
+            (click)="desasociarJusticiable();"></button>
+        <button pButton type="button"  icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"
+            (click)="searchJusticiable();" ></button>
+        <button pButton type="button"  icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"
+            (click)="guardarJusticiable();"></button>
+    </div>
+</div>
+
+<p-dialog [(visible)]="showJusticiableDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+    <p-header>
+        <label>Confirmación</label>
+    </p-header>
+    <div class="row">
+        <div class="form-group col-lg-8 col-md-8">
+        <!--{{mensajeSustitutoDialog}}-->
+        {{'gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos' | translate}}
+        </div>
+    </div>
+    <p-footer>
+        <div class="text-right main-button ">
+        <button (click)="asociarJusticiable(false)" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.no' | translate}}"></button>
+        <button (click)="asociarJusticiable(true)" type="button" icon="fa fa-check" iconPos="left" label="{{'messages.si' | translate}}" pButton></button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmNewJusticiable" width="425"
+  #confirmNewJusticiable>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmNewJusticiable.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmNewJusticiable.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

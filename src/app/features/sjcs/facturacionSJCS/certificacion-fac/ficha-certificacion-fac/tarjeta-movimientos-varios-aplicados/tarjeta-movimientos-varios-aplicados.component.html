@@ -1,0 +1,129 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div id="fichaCertMovApli">
+
+  <div class="card">
+
+    <div class="card-header header-ficha">
+
+      <div *ngIf="!showTarjeta" class="form-row">
+
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="onHideTarjeta()">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="onHideTarjeta()">
+            <label
+              class="mr-auto title-ficha">{{ 'facturacionSJCS.fichaCertificacion.movVariosApli' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <div></div>
+            <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="onHideTarjeta()">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'facturacionSJCS.fichaCertificacion.movVariosApli' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+
+    </div>
+
+    <div *ngIf="showTarjeta" class="card-body">
+
+      <div class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-12 col-md-12">
+            <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="modoSeleccion"
+              [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+              paginatorPosition="both" (onRowSelect)="actualizaSeleccionados($event)"
+              (onRowUnselect)="actualizaDesSeleccionados()">
+
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of cols" [style.width]="col.width">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate }}
+                    <p-sortIcon [field]="col.field"></p-sortIcon>
+                    <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                      type="text" (input)="table.filter($event.target.value, col.field, 'contains')" />
+                  </th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+
+                  <td class="text-center" *ngFor="let col of columns">
+
+                    <div *ngIf="col.field == 'fechaAlta'">
+                      <span>{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
+                    </div>
+
+                    <div *ngIf="col.field == 'importeAplicado'">
+                      <span>{{ dato[col.field] | currency: 'EUR' }}</span>
+                    </div>
+
+                    <div *ngIf="col.field != 'fechaAlta' && col.field != 'importeAplicado'">
+                      <span>{{ dato[col.field] }}</span>
+                    </div>
+
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+                     translate }}{{table.first + 1}}
+                    al {{table.first
+                     + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                    {{table.totalRecords}}</label>
+                  <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length >= 0">{{
+                     'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+                    {{selectedDatos.length}}
+                  </label>
+                  <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length == undefined">{{
+                     'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+                    1
+                  </label>
+                  <label>{{"general.message.mostrar" | translate}}</label>
+                  <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                    (onChange)="onChangeRowsPerPages($event)">
+                  </p-dropdown>
+                  <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                  <div class="ml-3 selectAll">
+                    <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                      label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+                  </div>
+                </div>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

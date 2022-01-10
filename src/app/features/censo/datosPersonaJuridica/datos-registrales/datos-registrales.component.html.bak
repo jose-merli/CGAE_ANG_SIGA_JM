@@ -1,0 +1,179 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="sregistrales">
+<div class="busqueda-container">
+  <!--DATOS REGISTRALES-->
+  <div *ngIf="tarjeta == '3' || tarjeta == '2'" class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!esFichaActiva('registrales')" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="abreCierraFicha('registrales')">
+            <i class="far fa-address-book icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('registrales')">
+            <label  class="mr-auto title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{"censo.general.literal.FechaConstitucion" | translate}}:
+              <span>{{body.fechaConstitucion}}</span>
+            </label>
+            <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}}:
+              <span>{{body.resena}}</span>
+            </label>
+            <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}}:
+              <span>{{body.objetoSocial}}</span>
+            </label>
+
+            <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}}:
+              <!--<span>{{body.numRegistro}}</span>-->
+              <span>{{body.prefijoNumsspp}} {{body.contadorNumsspp}} {{body.sufijoNumsspp}}</span>
+            </label>
+            <i (click)="abreCierraFicha('registrales')" *ngIf="!esFichaActiva('registrales')" class="fa fa-angle-down float-right"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="esFichaActiva('registrales')" (click)="abreCierraFicha('registrales')" class=" header-ficha-open d-flex justify-content-start align-items-center">
+        <div class="img-colegiado" (click)="abreCierraFicha('registrales')">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label (click)="abreCierraFicha('registrales')" class="title-ficha">{{"pestana.fichaCliente.datosRegistrales" | translate}}</label>
+        <i (click)="abreCierraFicha('registrales')" class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <!--cuerpo datos colegiales-->
+
+    <div *ngIf="esFichaActiva('registrales')" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-6 col-md-6">
+          <label class="title-ficha mb-2 ml-1">
+            <strong>Datos Registro Civil</strong>
+          </label>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatosRegistrales.literal.objSocial" | translate}} (*)</label>
+              <input [ngClass]="styleObligatorio(body.objetoSocial)" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" 
+              [(ngModel)]="body.objetoSocial" type="text" class="form-control" (ngModelChange)="desactivadoGuardar()"
+                pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatosRegistrales.literal.Resenia" | translate}} (*)</label>
+              <input [ngClass]="styleObligatorio(body.resena)" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.resena"
+                type="text" class="form-control" (ngModelChange)="desactivadoGuardar()" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatosRegistrales.literal.numPoliza" | translate}} </label>
+              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.numeroPoliza" type="text" [maxLength]="20"
+                class="form-control" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatosRegistrales.literal.Compania" | translate}}</label>
+              <input [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.companiaAseg" type="text" class="form-control"
+                pInputText>
+            </div>
+
+
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
+              <label>{{"censo.general.literal.FechaConstitucion" | translate}} (*)</label>
+              <app-fecha [inputStyleClass]="styleObligatorio(fechaConstitucion)" [(value)]="fechaConstitucion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaConstitucion($event)"
+                (valueChangeInput)="fillFechaConstitucion($event)" (ngModelChange)="desactivadoGuardar()"></app-fecha>
+              <div *ngIf="fechaCorrecta == false">
+                <label class="labelError">La fecha no puede ser superior a la actual</label>
+              </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
+              <label>{{"censo.consultaDatos.literal.fechaFin" | translate}}</label>
+              <app-fecha [(value)]="fechaFin" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaFin($event)"
+                (valueChangeInput)="fillFechaFin($event)"></app-fecha>
+              <div *ngIf="fechaFinCorrecta == false">
+                <label class="labelError">La fecha de fin no puede ser anterior a la fecha de constitución</label>
+              </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.fichaCliente.literal.actprofesional" | translate}} </label>
+              <br>
+              <p-multiSelect #someDropdown [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [defaultLabel]="textFilter" styleClass="widthAll"
+                [(ngModel)]='selectActividad' [options]="actividadesDisponibles" optionLabel="label" [selectedItemsLabel]="textSelected"
+                maxSelectedLabels="10" [panelStyle]="{width:'100%'}" (onPanelShow)="focusInputField()"></p-multiSelect>
+            </div>
+          </div>
+        </div>
+
+        <div class="bloque col-lg-6 col-md-6">
+          <label class="title-ficha mb-2 ml-1">
+            <strong>Datos Registro Mercantil</strong>
+          </label>
+          <!-- nuevo nº registro -->
+
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.mercantil" | translate}} (*)</label>
+              <input [ngClass]="styleObligatorio(body.numRegistro)" [(ngModel)]="body.numRegistro"
+               [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" type="text" class="form-control" (ngModelChange)="desactivadoGuardar()"
+                 [maxLength]="20" pInputText>
+            </div>
+            <div class="form-row p-1 col-lg-6 col-md-6">
+              <div *ngIf="!sociedadProfesional" class="col-lg-12 col-md-12">
+                <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}}</label>
+              </div>
+              <div *ngIf="sociedadProfesional" class="col-lg-12 col-md-12">
+                <label>{{"censo.consultaDatosRegistrales.literal.numRegistro.siga" | translate}} (*)</label>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
+                <input [ngClass]="styleObligatorio(body.prefijoNumsspp)" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.prefijoNumsspp"
+                  type="text" maxlength="8" class="form-control" pInputText>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
+                <input [ngClass]="styleObligatorio(body.contadorNumsspp)" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.contadorNumsspp"
+                  type="text" class="form-control" (ngModelChange)="compruebaRegistro()" [maxlength]="longitudcontador"
+                  pInputText>
+                <div *ngIf="contadorNoCorrecto == true">
+                  <label class="labelError">{{"censo.ws.literal.soloNumeros" | translate}}</label>
+                </div>
+              </div>
+              <div class="form-group col-lg-4 col-md-4">
+                <input [ngClass]="styleObligatorio(body.sufijoNumsspp)" (ngModelChange)="desactivadoGuardar()" [disabled]="noEditable || !sociedadProfesional || camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.sufijoNumsspp"
+                  type="text" maxlength="8" class="form-control" pInputText>
+              </div>
+            </div>
+
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"censo.consultaDatosRegistrales.literal.idRegProv" | translate}} (*)</label>
+              <input [ngClass]="styleObligatorio(body.identificacionReg)" (ngModelChange)="desactivadoGuardar()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" [(ngModel)]="body.identificacionReg" type="text"
+                class="form-control" [maxLength]="10" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
+              <label>{{"censo.consultaDatosRegistrales.literal.fechaRegistro" | translate}} (*)</label>
+              <app-fecha [inputStyleClass]="styleObligatorio(fechaInscripcion)" (ngModelChange)="desactivadoGuardar()" [(value)]="fechaInscripcion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaInscripcion($event)"
+                (valueChangeInput)="fillFechaInscripcion($event)"></app-fecha>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 form-group-date">
+              <label>{{"censo.consultaDatosRegistrales.literal.fechaCancelacion" | translate}}</label>
+              <app-fecha [(value)]="fechaCancelacion" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" (valueChangeSelected)="fillFechaCancelacion($event)"
+                (valueChangeInput)="fillFechaCancelacion($event)"></app-fecha>
+            </div>
+
+            <div class="form-check col-lg-6 col-md-6">
+              <br>
+              <label class="form-group-label">{{"censo.busquedaClientes.noColegiados.sociedadProfesional" | translate}}</label> &nbsp;&nbsp;
+              <p-checkbox [(ngModel)]='sociedadProfesional' binary="true" (onChange)="onChangeSociedadProfesional()" [disabled]="tarjeta == '2'"></p-checkbox>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('registrales')" class="card-footer">
+      <div class="text-right main-button ">
+
+        <button (click)="search()" [disabled]="camposDesactivados || disabledAction || tarjeta == '2'" pButton type="button " icon="fa fa-undo "
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="guardar()" pButton type="button " icon="far fa-save "
+          iconPos="left" [disabled]="tarjeta == '2'" label="{{ 'general.boton.guardar' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

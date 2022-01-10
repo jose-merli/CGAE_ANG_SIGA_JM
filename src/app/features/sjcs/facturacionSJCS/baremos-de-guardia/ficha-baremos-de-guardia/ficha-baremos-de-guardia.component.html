@@ -1,0 +1,59 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="fichaBaremosGuardiaSJCS">
+
+  <div>
+
+    <div id="top"></div>
+
+    <div class="datos-container">
+
+      <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'menu.facturacionSJCS.baremosDeGuardia' |
+            translate}}</p>
+      </div>
+
+      <div class="tarjetaFija">
+
+        <div class="card">
+          <div class="card-body p-0">
+            <mat-accordion class="example-headers-align" multi>
+              <mat-expansion-panel [disabled]="true">
+                <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                  <app-tarjeta [image]="tarjetaFija.imagen" cardTitle="{{tarjetaFija.nombre | translate}}"
+                    [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono" [enlaces]="tarjetaFija.enlaces"
+                    [fixed]="tarjetaFija.fixed" class="w-100" (isOpen)="isOpenReceive($event)">
+                  </app-tarjeta>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                </ng-template>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+
+      </div>
+
+      <app-ficha-bar-datos-generales *ngIf = "tieneDatos" [permisoEscritura] = "permisoEscritura" (addEnlace)="addEnlace($event)" (guardiasByConf)="getGuardiasByConf($event)" [datos] = "datosFichDatGenerales" (disProc2014)="disProc2014($event)" [modoEdicion] = "modoEdicion"></app-ficha-bar-datos-generales>
+
+      <app-ficha-bar-confi-fac *ngIf = "tieneDatos" [permisoEscritura] = "permisoEscritura" (addEnlace)="addEnlace($event)" [datos] = "datosFichConfiFac"></app-ficha-bar-confi-fac>
+
+      <app-ficha-bar-confi-adi *ngIf = "tieneDatos" [permisoEscritura] = "permisoEscritura" (addEnlace)="addEnlace($event)" [disProc2014]="proceso2014"></app-ficha-bar-confi-adi>
+
+      <div class="text-right main-button">
+        <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+          label="{{ 'general.boton.volver' | translate}}"></button>
+        <button pButton type="button" [disabled]="!permisoEscritura" icon="fa fa-edit" iconPos="left" (click)="guardarCerrar()"
+          label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+      </div>
+
+    </div>
+
+    <div id="down"></div>
+
+  </div>
+
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

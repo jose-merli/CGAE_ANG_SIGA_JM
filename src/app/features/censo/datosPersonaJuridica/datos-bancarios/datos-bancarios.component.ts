@@ -186,7 +186,7 @@ export class DatosBancariosComponent implements OnInit {
         this.tarjeta = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.tarjeta == "3" || this.tarjeta == "2") {
@@ -222,7 +222,7 @@ export class DatosBancariosComponent implements OnInit {
         error => {
           this.bodySearch = JSON.parse(error["error"]);
           this.showFail(JSON.stringify(this.bodySearch.error.description));
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         }
       );
@@ -368,7 +368,7 @@ export class DatosBancariosComponent implements OnInit {
         }
       },
       error => {
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
       },
       () => {

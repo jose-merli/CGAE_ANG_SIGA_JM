@@ -1,0 +1,113 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000">
+</p-growl>
+
+<div class="card mt-3">
+  <div class="card-body p-0">
+
+    <p-table [value]="datos" [columns]="cols" [first]="page" selectionMode="multiple" [(selection)]="selectedDatos"
+      [responsive]="true" #tabla class="tabla-listado" [paginator]="true" [rows]="selectedItem" id="tablaRemesa"
+      (onRowSelect)="selectedRow(selectedDatos)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both">
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input *ngIf="col.field != 'fechaGeneracion' && col.field != 'fechaEnvio' && col.field != 'fechaRecepcion'"
+              pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" pInputText type="text"
+              (input)="
+                tabla.filter($event.target.value, col.field, 'contains')
+              " />
+
+            <input *ngIf="col.field == 'fechaGeneracion' || col.field == 'fechaEnvio' || col.field == 'fechaRecepcion'"
+              pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" pInputText type="text"
+              (input)="
+                tabla.filter($event.target.value, col.field, 'inCollection')
+              " />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+
+          <td class="text-center" *ngFor="let col of columns">
+
+            <span
+              *ngIf="col.field != 'fechaGeneracion' && col.field != 'fechaEnvio' && col.field != 'fechaRecepcion' && col.field != 'nRegistro'">
+              {{dato[col.field]}}
+            </span>
+
+            <span *ngIf="col.field == 'fechaGeneracion' || col.field == 'fechaEnvio' || col.field == 'fechaRecepcion'">
+              {{dato[col.field] | date: 'dd/MM/yyyy'}}
+            </span>
+
+            <a class="enlace" (click)="openTab(dato)">
+              <span *ngIf="col.field == 'nRegistro'">
+                {{dato[col.field]}}
+              </span>
+            </a>
+          </td>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+            translate }}{{tabla.first + 1}} al {{tabla.first
+            + tabla.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+            {{tabla.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{
+            'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+          </label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+              label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname" [disabled]="!permisos">
+            </p-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+
+
+
+  </div>
+  <div class="card-footer">
+    <div class="text-right main-button">
+
+      <button pButton
+        [disabled]="((!selectMultiple || !selectAll) && (selectedDatos == undefined || selectedDatos.length == 0)) || !permisos"
+        (click)="checkPermisosDelete()" type="button" icon="fa fa-trash-alt" iconPos="left"
+        label="{{ 'general.boton.eliminar' | translate}}"></button>
+
+    </div>
+  </div>
+</div>
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

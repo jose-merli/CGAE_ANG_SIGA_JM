@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { datos_combos } from '../../../../utils/datos_combos';
 import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 import { MultiSelect } from 'primeng/multiselect';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-filtros-ejg',
@@ -81,10 +82,13 @@ export class FiltrosEjgComponent implements OnInit {
 
   bodyDictamen = [];
   @Input() permisos;
+  @Input() remesa;
   /*Éste método es útil cuando queremos qeremos informar de cambios en los datos desde el hijo,
   por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
   @Input() permisoEscritura;
+
+  remesaFicha: boolean = false;
 
 
   @ViewChild('inputNumero') inputNumero: ElementRef;
@@ -105,6 +109,15 @@ export class FiltrosEjgComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     this.getCombos();
+
+    if(this.remesa != null || this.remesa != undefined){
+      this.remesaFicha = true;
+      this.body.informacionEconomica = this.remesa.informacionEconomica;
+    }
+
+    console.log("Viene de la ficha de una remesa? -> ", this.remesaFicha);
+    console.log("Remesa -> ", this.remesa);
+
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
@@ -131,6 +144,9 @@ export class FiltrosEjgComponent implements OnInit {
     } else {
       this.body = new EJGItem();
       this.body.annio = new Date().getFullYear().toString();
+      if(this.remesa != null || this.remesa != undefined){
+        this.body.informacionEconomica = this.remesa.informacionEconomica;
+      }
     }
 
 
@@ -230,6 +246,22 @@ export class FiltrosEjgComponent implements OnInit {
     }
   }
 
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
+      && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
+      this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+      this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
+    }else{
+      this.usuarioBusquedaExpress.numColegiado = " ";
+      this.body.numColegiado = "";
+      this.body.idPersona = "";
+      sessionStorage.removeItem("numColegiado");
+      this.numColegiadoRelleno=false;
+    }
+  }
+
   getComboProcedimiento() {
     this.sigaServices
       .get("busquedaProcedimientos_procedimientos")
@@ -240,19 +272,25 @@ export class FiltrosEjgComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
   getComboDictamen() {
     this.sigaServices.get("busquedaFundamentosCalificacion_comboDictamen").subscribe(
       n => {
-        this.comboDictamen = n.combooItems;
-        this.commonServices.arregloTildesCombo(this.comboDictamen);
         this.comboDictamen.push({ label: "Indiferente", value: "-1" });
+        this.comboDictamen.push({ label: "Sin dictamen", value: "0" });
+        if(n.combooItems!=null && n.combooItems != undefined){
+          n.combooItems.forEach(element => {
+            this.comboDictamen.push(element);
+          });
+          this.commonServices.arregloTildesCombo(this.comboDictamen);
+        }
+        this.bodyDictamen.push("-1");
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -263,7 +301,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboRol);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -274,7 +312,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboPerceptivo);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -285,7 +323,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboRenuncia);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -301,7 +339,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboFundamentoCalif);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -312,7 +350,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboResolucion);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -341,7 +379,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.comboImpugnacion.push({ label: "Sin Resolución", value: -2 });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -352,7 +390,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboFundamentoImpug);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -363,7 +401,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboPonente);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -383,7 +421,7 @@ export class FiltrosEjgComponent implements OnInit {
             } else { this.inst2000 = true; }
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
 
@@ -397,7 +435,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoEJG);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -408,7 +446,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoEJGColegio);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -418,17 +456,32 @@ export class FiltrosEjgComponent implements OnInit {
       n => {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
+
+        if(this.remesaFicha){
+          let comboItem = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '7');
+          let comboItem2 = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '17');
+
+          this.comboEstadoEJG[0] = comboItem;
+          this.comboEstadoEJG[1] = comboItem2;
+
+          for(; this.comboEstadoEJG.length > 2;){
+              this.comboEstadoEJG.pop();
+          }
+        }
+        console.log("comboEstadoEJG -> ", this.comboEstadoEJG);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
 
   getComboTurno() {
     if (this.body.tipoLetrado == "E") {
-      this.tipoLetrado = "2";
-    } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") { this.tipoLetrado = "1"; }
+      this.tipoLetrado = "1";
+    } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") {
+      this.tipoLetrado = "2"; 
+    }
     this.sigaServices.getParam("filtrosejg_comboTurno",
       "?idTurno=" + this.tipoLetrado).subscribe(
         n => {
@@ -436,7 +489,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboTurno);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -452,7 +505,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -464,7 +517,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboJuzgado);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -571,8 +624,8 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   checkFilters() {
-    if (this.body.annio != undefined)
-      this.body.annio = this.body.annio.trim();
+    //if (this.body.annio != undefined)
+    //  this.body.annio = this.body.annio.trim();
     if (this.body.numero != undefined)
       this.body.numero = this.body.numero.trim();
     if (this.body.asunto != undefined)
@@ -603,7 +656,7 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.nombre = this.body.nombre.trim();
 
     if (
-      (this.body.annio == null || this.body.annio.trim() == "" || this.body.annio.trim().length < 3) &&
+      (this.body.annio == null || this.body.annio == "" || this.body.annio.length < 3) &&
       (this.body.numero == null || this.body.numero.trim() == "" || this.body.numero.trim().length < 3) &&
       (this.body.numAnnioProcedimiento == null || this.body.numAnnioProcedimiento.trim() == "" || this.body.numAnnioProcedimiento.trim().length < 3) &&
       (this.body.nig == null || this.body.nig.trim() == "" || this.body.nig.trim().length < 3) &&
@@ -635,8 +688,6 @@ export class FiltrosEjgComponent implements OnInit {
         } else {
           this.muestraCamposObligatorios();
         }
-
-
       } else {
         if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
           && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
@@ -644,16 +695,21 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
         }
 
+        if(sessionStorage.getItem("numColegiado") != undefined && sessionStorage.getItem("numColegiado") != null 
+          && sessionStorage.getItem("numColegiado").trim() != ""){
+            this.body.numColegiado = sessionStorage.getItem("numColegiado");
+        }
+
         if (this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != "") {
           this.body.dictamen = this.bodyDictamen.toString()
         }
 
         this.busqueda.emit(false);
-        this.body.dictamen = ""
+        this.body.dictamen = "";
       }
-
     }
   }
+  
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -668,6 +724,7 @@ export class FiltrosEjgComponent implements OnInit {
     this.body.numColegiado = "";
     this.body.apellidosYNombre = "";
     this.body.tipoLetrado = "";
+    sessionStorage.removeItem("numColegiado")
   }
   clearFilters() {
     this.body = new EJGItem();
@@ -675,7 +732,14 @@ export class FiltrosEjgComponent implements OnInit {
     this.inputNumero.nativeElement.focus();
     this.body.annio = new Date().getFullYear().toString();
 
+    this.bodyDictamen = [];
+
+    this.clearFiltersTramitador();
     this.getComboColegio();
+
+    if(this.remesa != null || this.remesa != undefined){
+      this.body.informacionEconomica = this.remesa.informacionEconomica;
+    }
 
     this.showdatosIdentificacion = true;
     this.showDatosGeneralesEJG = false;

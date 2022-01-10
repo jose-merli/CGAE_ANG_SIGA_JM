@@ -76,7 +76,8 @@ export class TablaTurnosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.currentRoute = this.router.url;
+    
+     this.currentRoute = this.router.url;
     this.selectedDatos = [];
     this.getCols();
     this.historico = this.persistenceService.getHistorico();
@@ -86,7 +87,7 @@ export class TablaTurnosComponent implements OnInit {
       let paginacion = this.persistenceService.getPaginacion();
       this.first = paginacion.paginacion;
       this.selectedItem = paginacion.selectedItem;
-    }
+    } 
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -597,7 +598,7 @@ export class TablaTurnosComponent implements OnInit {
         this.keys = JSON.parse(data["body"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -635,12 +636,12 @@ export class TablaTurnosComponent implements OnInit {
                 this.router.navigate(["/dialogoComunicaciones"]);
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

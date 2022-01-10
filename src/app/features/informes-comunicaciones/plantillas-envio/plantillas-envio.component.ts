@@ -126,7 +126,7 @@ export class PlantillasEnvioComponent implements OnInit {
 				this.datos = this.searchPlantillasEnvio.plantillasItem;
 			},
 			(err) => {
-				console.log(err);
+				//console.log(err);
 				this.progressSpinner = false;
 			},
 			() => { 
@@ -286,7 +286,7 @@ export class PlantillasEnvioComponent implements OnInit {
 				});
 			},
 			(err) => {
-				console.log(err);
+				//console.log(err);
 			}
 		);
 	}
@@ -347,7 +347,7 @@ función para que no cargue primero las etiquetas de los idiomas*/
 				} else {
 					this.showFail(this.translateService.instant('informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado'));
 				}
-				console.log(err);
+				//console.log(err);
 			},
 			() => {
 				this.buscar();

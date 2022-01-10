@@ -1,0 +1,31 @@
+export class Impreso190Item {
+    anio: String;
+    telefonoContacto: Number;
+    nombreContacto: String;
+    apellido1Contacto: String;
+    apellido2Contacto: String;
+    telefono: Number;
+    nombrePersona: String;
+    nombre: String;
+    apellidos1: String;
+    apellidos2: String;
+    soporte: String;
+    nomFicheroOriginal: String;
+    nomFicheroCompleto: String;
+    totalImporteIrpf: String;
+    totalImportePagado: String;
+    importePagado: String;
+    claveM190: String;
+    idPersonaImpreso: String;
+    idInstitucion: String;
+    nombreInstitucion: String;
+    idinstitucion: String;
+    usuarioModificacion: String;
+    codigoProvincia: String;
+    nomFichero: String;
+    nifcif: String;
+    idtipoidentificacion: String;
+    extension: String;
+    idFichero: String;
+    fechageneracion:Date;
+}

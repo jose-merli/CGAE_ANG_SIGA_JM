@@ -1,0 +1,263 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <div class="card">
+        <!-- Tarjetas Fijas -->
+        <!-- Datos generales -->
+        <div class="card-body">
+            <div class="form-row">
+                <div class="col-12">
+                    <p-radioButton value="ejg" name="tarj" (click)="changeFilters()" label="{{ 'justiciaGratuita.ejg.datosGenerales.EJG' | translate}}"
+                        [(ngModel)]='radioTarjeta'></p-radioButton>
+                    <p-radioButton value="des" name="tarj" (click)="changeFilters()"  label="{{'menu.justiciaGratuita.designas' | translate}}"
+                        [(ngModel)]='radioTarjeta'></p-radioButton>
+                    <p-radioButton value="soj" name="tarj" label="SOJ" [(ngModel)]='radioTarjeta' (click)="changeFilters()"></p-radioButton>
+                    <p-radioButton value="asi" name="tarj" (click)="changeFilters()" label="{{'menu.justiciaGratuita.asistencia' | translate}}"
+                        [(ngModel)]='radioTarjeta'></p-radioButton>
+                </div>
+            </div>
+            <p (click)="onHideDatosGenerales()" class="title-module">{{ "censo.consultaDatosGenerales.cabecera" | translate}}
+                <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+            </p>
+            <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+                <div class="form-row">
+
+                    <div class="form-group col-lg-6 col-md-6">
+                        <label>{{"justiciaGratuita.maestros.calendarioLaboralAgenda.anio" | translate}} / {{"gratuita.busquedaAsistencias.literal.numero"
+                            | translate}}</label>
+                        <div>
+                            <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxLength="4" class="form-group col-lg-5 col-md-5"
+                                [(ngModel)]='filtros.anio' pInputText> /
+                            <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxLength="9" class="form-group col-lg-6 col-md-6"
+                                [(ngModel)]='filtros.numero' pInputText>
+                        </div>
+
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6">
+                        <label>{{"gratuita.busquedaEJG.literal.fechaAperturaDesde" | translate}} / {{"gratuita.busquedaEJG.literal.fechaAperturaHasta"
+                            | translate}}</label>
+                        <div class="row">
+                            <div class="col-lg-5 col-md-5">
+                                <app-fecha [(value)]='filtros.fechaAperturaDesde' (valueChangeSelected)="fillFechaAperturaDesde($event)" (valueChangeInput)="fillFechaAperturaDesde($event)"></app-fecha>
+                            </div> /
+                            <div class="col-lg-6 col-md-6">
+                                <app-fecha [minDate]="filtros.fechaAperturaDesde" [(value)]='filtros.fechaAperturaHasta' (valueChangeSelected)="fillFechaAperturaHasta($event)"
+                                    (valueChangeInput)="fillFechaAperturaHasta($event)"></app-fecha>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{ 'dato.jgr.guardia.guardias.turno' | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTurno' (onChange)="filtros.idGuardia = undefined; getComboguardiaPorTurno($event)"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTurno" [filter]="true"
+                            filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idGuardia' [disabled]="comboguardiaPorTurno.length == 0 || radioTarjeta == 'des'"
+                            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboguardiaPorTurno" [filter]="true"
+                            filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Colegiado -->
+            <p (click)="onHideDatosColegiales()" class="title-module">{{ "censo.busquedaClientes.Colegiados.titulo" | translate}}
+                <i *ngIf="showDatosColegiales" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showDatosColegiales" class="fa fa-angle-down float-right"></i>
+            </p>
+
+            <div *ngIf="showDatosColegiales" class="module vista-avanzada">
+                <app-busqueda-colegiado-express (idPersona)="getIdPersona($event)"></app-busqueda-colegiado-express>
+            </div>
+
+
+            <!-- Justiciable -->
+            <p (click)="onHideJusticiable()" class="title-module">{{"menu.justiciaGratuita.justiciables" | translate}}
+                <i *ngIf="showJusticiable" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showJusticiable" class="fa fa-angle-down float-right"></i>
+            </p>
+
+            <div *ngIf="showJusticiable" class="module vista-avanzada">
+                <div class="form-row">
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
+                        <input type="text" maxlength="20" name="nif" class="form-control" [(ngModel)]='filtros.nif' pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}</label>
+                        <input type="text" maxlength="100" name="apellidos" class="form-control" [(ngModel)]='filtros.apellidos' pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+                        <input type="text" maxlength="100" name="nombre" class="form-control" [(ngModel)]='filtros.nombre' pInputText>
+                    </div>
+                </div>
+            </div>
+            <!-- OPCIONALES RADIOBUTTON -->
+
+            <!-- EJG -->
+            <p *ngIf="radioTarjeta == 'ejg'" (click)="onHideEJG()" class="title-module">{{ "justiciaGratuita.ejg.datosGenerales.EJG" | translate}}
+                <i *ngIf="showEJG" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showEJG" class="fa fa-angle-down float-right"></i>
+            </p>
+            <div *ngIf="showEJG && radioTarjeta == 'ejg'" class="module vista-avanzada">
+                <div class="form-row">
+
+                    <!-- <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"censo.busquedaClientesAvanzada.literal.cp" | translate}}</label>
+                        <input type="text" name="codigoPostal" class="form-control" [maxLength]="5" [(ngModel)]='codigoPostal' pInputText (input)="onChangeCodigoPostal($event)">
+                    </div> -->
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoEjg' placeholder="{{'general.boton.seleccionar' | translate}}"
+                            [options]="comboTipoEjg" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoEjColegio' [filter]="true" filterMatchMode="contains" [options]="comboTipoEjgColegio"
+                            (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
+                            [showClear]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idEstadoPorEjg' placeholder="{{'general.boton.seleccionar' | translate}}"
+                            [options]="comboEstadoEjg" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Designaciones -->
+            <p *ngIf="radioTarjeta == 'des'" (click)="onHideDesignacion()" class="title-module">{{ "menu.justiciaGratuita.designas" | translate}}
+                <i *ngIf="showDesignacion" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showDesignacion" class="fa fa-angle-down float-right"></i>
+            </p>
+            <div *ngIf="showDesignacion && radioTarjeta == 'des'" class="module vista-avanzada">
+                <div class="form-row">
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.busquedaDesignas.literal.tipoDesigna" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoDesigna' placeholder="{{'general.boton.seleccionar' | translate}}"
+                            [options]="TipoDesignacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.busquedaDesignas.literal.estadoDesigna" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idEstadoDesigna' [filter]="true" filterMatchMode="contains" [options]="comboEstadoDesignacion"
+                            (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}" emptyFilterMessage="{{'resultadosPoblaciones' | translate}}"
+                            [showClear]="true">
+                        </p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.busquedaDesignas.literal.numProcedimiento" | translate}}</label>
+                        <input type="text" class="form-control" maxlength="9" [(ngModel)]='filtros.numProcedimiento' pInputText>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"justiciaGratuita.ejg.datosGenerales.Juzgado" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idJuzgado' placeholder="{{'general.boton.seleccionar' | translate}}"
+                            [options]="comboJuzgado" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>NIG</label>
+                        <input maxlength="50" type="text" class="form-control" [maxLength]="5" [(ngModel)]='filtros.nig' pInputText>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SOJ -->
+            <p *ngIf="radioTarjeta == 'soj'" (click)="onHideSOJ()" class="title-module">SOJ
+                <i *ngIf="showSOJ" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showSOJ" class="fa fa-angle-down float-right"></i>
+            </p>
+            <div *ngIf="showSOJ && radioTarjeta == 'soj'" class="module vista-avanzada">
+                <div class="form-row">
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.busquedaDesignas.literal.tipoSOJ" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoSoj' placeholder="{{'general.boton.seleccionar' | translate}}"
+                            [options]="comboTipoSOJ" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Asistencias -->
+            <p *ngIf="radioTarjeta == 'asi'" (click)="onHideAsistencias()" class="title-module">{{"menu.justiciaGratuita.asistencia" |translate}}
+                <i *ngIf="showAsistencias" class="fa fa-angle-up float-right"></i>
+                <i *ngIf="!showAsistencias" class="fa fa-angle-down float-right"></i>
+            </p>
+            <div *ngIf="showAsistencias && radioTarjeta == 'asi'" class="module vista-avanzada">
+                <div class="form-row">
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"menu.justiciaGratuita.tipoAsistencia" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idTipoAsistencia' placeholder="{{'general.boton.seleccionar' | translate}}"
+                            [options]="comboTiposAsitencia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.busquedaDesignas.literal.numProcedimiento" | translate}}</label>
+                        <input type="text" class="form-control" maxlength="9" [(ngModel)]='filtros.numProcedimiento' pInputText>
+
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"justiciaGratuita.ejg.datosGenerales.Juzgado" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.idJuzgado' placeholder="{{'general.boton.seleccionar' | translate}}"
+                            [options]="comboJuzgado" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+
+
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.mantAsistencias.literal.numeroDiligenciasolo" | translate}}</label>
+                        <!-- / {{"gratuita.mantActuacion.literal.nasunto"
+                        | translate}} -->
+                        <input type="text" class="form-control" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" maxlength="20" [(ngModel)]='filtros.numeroDiligencia'
+                            pInputText>
+                        <!-- / <input type="text" oninput="this.value=this.value.replace(/(?![0-9])./gmi,'')" class="form-group col-lg-6 col-md-6" [(ngModel)]='filtros.asunto'
+                                pInputText> -->
+                    </div>
+                    <div class="form-group col-lg-3 col-md-3">
+                        <label>{{"gratuita.volantesExpres.literal.centroDetencion" | translate}}</label>
+                        <p-dropdown class="select-form" [(ngModel)]='filtros.comisaria' placeholder="{{'general.boton.seleccionar' | translate}}"
+                            [options]="comboComisaria" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer">
+            <div class="text-right main-button">
+                <button (click)="isLimpiar()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"  label="{{ 'general.boton.clear' | translate}}"></button>
+                <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"></button>
+
+            </div>
+        </div>
+    </div>
+    <!--FIN CARD-->
+    <div *ngIf="buscar == true" class="card mt-3">
+        <div class="card-body p-0">
+            <!-- TABLE -->
+        </div>
+
+        <div *ngIf="buscar == true" class="card-footer">
+            <div class="text-right main-button ">
+                <!-- <button (click)="isCancelar()" [disabled]="!isEditable" pButton type="button" icon="fa fa-close" iconPos="left" label="{{ 'general.boton.cancel' | translate}}"></button> -->
+                <!--<button (click)="confirmarBorrar(selectedDatos)" pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate }}"
+                    disabled></button>-->
+                <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
+                <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" pButton type="button"
+                    icon="fa fa-comment" iconPos="left" label="{{'general.boton.comunicar' | translate }}"></button>
+
+            </div>
+        </div>
+
+    </div>
+    <!--FIN DE PRINCIPAL-->
+    <!-- <app-dialog></app-dialog> -->
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

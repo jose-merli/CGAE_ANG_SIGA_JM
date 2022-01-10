@@ -1,0 +1,71 @@
+<div id="buscadorColegiados">
+  <mat-accordion class="example-headers-align" multi>
+    <mat-expansion-panel class="my-1 padding-interior" [expanded]="expanded">
+      <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+        <div class="w100 font-weight-bold">
+          <p class="w100">Búsqueda-SJCS</p>
+        </div>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
+            <input type="text" class="form-control" maxLength="20" [(ngModel)]="filtro.nif" pInputText>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
+            <input type="text" class="form-control" maxLength="99" [(ngModel)]="filtro.apellidos" pInputText>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
+            <input type="text" class="form-control" maxLength="99" [(ngModel)]="filtro.nombre" pInputText>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'censo.resultadosSolicitudesModificacion.literal.nColegiado' | translate }}</label>
+            <input type="text" class="form-control" maxLength="10" [(ngModel)]="filtro.nColegiado" pInputText>
+          </div>
+          <div class="form-group-interlineado col-lg-1 col-md-1">
+            <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]="filtro.idInstitucion"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="institucionActual!=2000"
+              [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" (onChange)="getComboTurno()">
+            </p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.sjcs.designas.DatosIden.turno" | translate }}</label>
+            <p-multiSelect class="select-form" [(ngModel)]='filtro.idTurno' placeholder="Seleccionar" [options]="comboTurno"
+            [filter]="true" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+            defaultLabel="{{ 'general.boton.seleccionar' | translate}}" (onChange)="getComboguardiaPorTurno($event)" [disabled]="fixedTurn"></p-multiSelect>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{"menu.justiciaGratuita.GuardiaMenu" | translate}}</label>
+            <p-multiSelect class="select-form" [(ngModel)]='filtro.idGuardia' placeholder="Seleccionar" [options]="comboguardiaPorTurno"
+              [filter]="true" maxSelectedLabels="10" [disabled]="filtro.idTurno==undefined || filtro.idTurno=='' || fixedGuard" filterBy="label,labelSinTilde" selectionLimit="10" defaultLabel="{{ 'general.boton.seleccionar' | translate}}" styleClass="widthAll"></p-multiSelect>
+          </div>
+          <div class="form-group col-lg-3 col-md-3">
+            <label>{{ 'menu.justiciaGratuita.componentes.estadoColegial' | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='filtro.idEstado' [disabled]="disabledEstado" placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboEstadoColegial" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-2 col-md-2">
+          <label>Fecha Estado</label>
+        <app-fecha [(value)]="filtro.fechaestado" (valueChangeSelected)="fillFechaEstado($event)"
+        (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
+        </div>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
+
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="Limpiar"
+        (click)="clearFilters()"></button>
+      <button type="button" pButton icon="fa fa-search" iconPos="left" label="Buscar"
+        (click)="busquedaColegiado()"></button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

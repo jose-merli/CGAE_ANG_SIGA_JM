@@ -1,0 +1,156 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div id="fichaCertDatosGenerales">
+  <div class="card">
+
+    <div class="card-header header-ficha">
+
+      <div *ngIf="!showDatosGenerales" class="form-row">
+
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="onHideDatosGenerales()">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="onHideDatosGenerales()">
+            <label class="mr-auto title-ficha">{{ 'general.message.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right" (click)="onHideDatosGenerales()"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <div *ngIf="showDatosGenerales" class="header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="onHideDatosGenerales()">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'general.message.datos.generales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+
+    </div>
+
+    <div *ngIf="showDatosGenerales" class="card-body">
+      <div class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-6 col-md-6">
+            <div class="form-row mx-0 px-0">
+              <div class="form-group col-lg-12 col-md-12 mx-0 px-0">
+                <label>{{ 'facturacionSJCS.retenciones.nombre' | translate }} (*)</label>
+                <input type="text" name="nombre" class="form-control" pInputText [(ngModel)]="certificacion.nombre"
+                  [ngClass]="{'camposObligatorios': marcarObligatorio('input', certificacion.nombre)}"
+                  [disabled]="!permisoEscritura || isCerrada() || isValidando()" />
+              </div>
+              <div class="form-group col-lg-6 col-md-6 mx-0 px-0">
+                <label>{{ 'justiciaGratuita.guardia.gestion.periodo' | translate }}</label>
+                <div>
+                  <span>{{ certificacion.periodo }}</span>
+                </div>
+              </div>
+              <div class="form-group col-lg-6 col-md-6 mx-0 px-0">
+                <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate }}</label>
+                <div>
+                  <span>{{ certificacion.nombrePartidaPresupuestaria }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <p-table [value]="estadosCertificacion" [columns]="cols" [responsive]="true" #tabla class="tabla-listado"
+              [paginator]="true" [rows]="selectedItem" paginatorPosition="both">
+
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of cols">
+                </colgroup>
+              </ng-template>
+
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate}}</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                  <td class="text-center" *ngFor="let col of columns">
+                    <div *ngIf="col.field == 'fechaEstado'">
+                      <span>{{dato[col.field] | date: 'dd/MM/yyyy HH:mm:ss' }}</span>
+                    </div>
+
+                    <div *ngIf="col.field != 'fechaEstado'">
+                      <span>{{dato[col.field]}}</span>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="paginatorleft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al
+                    {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
+
+                  <label>{{"general.message.mostrar" | translate}}</label>
+                  <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                    (onChange)="onChangeRowsPerPages($event)">
+                  </p-dropdown>
+                  <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                </div>
+              </ng-template>
+
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer" *ngIf="showDatosGenerales">
+      <div class="text-right main-button">
+        <!--Descargar-->
+        <button (click)="descargar()" [disabled]="!permisoEscritura || disabledDescargar()" pButton type="button"
+          icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}"></button>
+
+        <!--Subir Fiechero-->
+        <button (click)="subirFichero()" [disabled]='!permisoEscritura || true' pButton type="button"
+          icon="fa fa-upload" iconPos="left"
+          label="{{ 'facturacionSJCS.fichaCertificacion.subirFichero' | translate }}"></button>
+
+        <!--Reabrir-->
+        <button (click)="reabrir()" [disabled]='!permisoEscritura || disabledReabrir()' pButton type="button"
+          label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}" icon="fa fa-lock-open"
+          iconPos="left"></button>
+
+        <!--Cerrar y enviar-->
+        <button (click)="cerrarEnviar()" [disabled]='!permisoEscritura || disabledCerrar()' pButton type="button"
+          label="{{ 'general.boton.close' | translate }} y {{ 'general.boton.enviar' | translate }}" icon="fas fa-share"
+          iconPos="left"></button>
+
+        <!--Comunicar-->
+        <button [disabled]="!permisoEscritura || true" pButton type="button"
+          label="{{ 'general.boton.comunicar' | translate }}" icon="fa fa-send" iconPos="left"></button>
+
+        <!--Guardar-->
+        <button (click)="save()" [disabled]=" !permisoEscritura || disabledSave()" pButton type="button"
+          icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+
+        <!--Restablecer-->
+        <button (click)="restablecer()" [disabled]="!permisoEscritura || disablebRestablecer()" pButton type="button"
+          icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>

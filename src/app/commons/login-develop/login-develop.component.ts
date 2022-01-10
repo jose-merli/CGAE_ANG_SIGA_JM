@@ -6,7 +6,7 @@ import { Router } from "@angular/router";
 import { LoginCombo } from "./login-develop.combo";
 import { ListboxModule } from "primeng/listbox";
 import { ButtonModule } from "primeng/button";
-
+import { SigaStorageService } from "../../siga-storage.service";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -31,7 +31,7 @@ export class LoginDevelopComponent implements OnInit {
 	// value=N selected="">NO, no soy Letrado</option>
 	//                   <option value=S>SÍ, soy Letrado</option>
 	environment: string = "";
-	sigaFrontVersion: string = "1.0.73_1";
+	sigaFrontVersion: string = this.localStorageService.version;
 	sigaWebVersion: string = "";
 
 	letrado: any[] = [{ label: 'No, no soy Letrado', value: 'N' }, { label: 'Sí, soy Letrado', value: 'S' }];
@@ -40,7 +40,7 @@ export class LoginDevelopComponent implements OnInit {
 		private service: AuthenticationService,
 		private sigaServices: SigaServices,
 		private router: Router,
-		
+		private localStorageService: SigaStorageService
 
 	) { }
 

@@ -767,7 +767,7 @@ export class TarjetaColaGuardias implements OnInit {
   } 
 
   openMultiSelect(dato) {
-    // console.log(this.multiSelect);
+    // //console.log(this.multiSelect);
     dato.onPanelShow;
     // this.multiSelect.show();
     // dato.overlayVisible = true;

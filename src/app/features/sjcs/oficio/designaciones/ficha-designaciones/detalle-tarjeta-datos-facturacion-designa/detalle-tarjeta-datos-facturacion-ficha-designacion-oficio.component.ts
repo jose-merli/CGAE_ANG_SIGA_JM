@@ -69,7 +69,7 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.progressSpinner = false;
         this.getIdPartidaPresupuestaria(this.campos);
@@ -99,7 +99,7 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.progressSpinner = false;
       }
@@ -143,7 +143,7 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.progressSpinner = false;
       }

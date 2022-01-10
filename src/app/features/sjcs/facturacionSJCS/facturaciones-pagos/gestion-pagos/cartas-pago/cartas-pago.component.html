@@ -1,0 +1,39 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="detalle-container">
+  <div id="facSJCSFichaPagosDetaPago">
+    <div class="card">
+      <div class="card-header header-ficha">
+        <div class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado">
+              <i class="fas fa-dollar icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1">
+              <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.detallePago" | translate }}
+              </label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <label>{{ "facturacionSJCS.facturacionesYPagos.numeroPagos" | translate }}:
+                <span>{{ numApuntes }}</span>
+              </label>
+              <label>
+                <i class="fas fa-edit icon-enlace"></i>
+                <span (click)="linkCartasPago()" [ngClass]="{'enlace-activado': modoEdicion && idEstadoPago == '30', 'enlace-desactivado':!modoEdicion}">{{
+                  "facturacionSJCS.facturacionesYPagos.cartaPago" | translate }}
+                </span>
+              </label>
+              <i class="float-right"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -93,6 +93,38 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   searchTramitacionEJG(form) {
     if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
       this.progressSpinner = true;
+
+
+      this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + form.numColegiado).subscribe(
+        data => {
+          this.progressSpinner = false;
+
+          if (data.colegiadoJGItem.length == 1) {
+            this.apellidosNombre = data.colegiadoJGItem[0].nombre;
+            this.idPersona.emit(data.colegiadoJGItem[0].idPersona);
+            this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
+          } else {
+            this.apellidosNombre = "";
+            this.numColegiado = ""
+            form.numColegiado = "";
+            this.idPersona.emit("");
+
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
+          }
+          this.changeValue();
+  
+        },
+        error => {
+          this.progressSpinner = false;
+          this.apellidosNombre = "";
+          form.numColegiado = "";
+          this.numColegiado = "";
+          this.idPersona.emit("");
+          this.changeValue();
+          //console.log(error);
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      );
       //Si se a introducido un num de colegiado y se activo art 27. 
       //Al revisar que la busqueda express se realiza con limitacion de colegio
       //ya que los numeros de colegiado no son unicos, se decide devolver un mensaje de negativa.
@@ -175,7 +207,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
             this.numColegiado = "";
             this.idPersona.emit("");
             this.changeValue();
-            console.log(error);
+            //console.log(error);
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
         );

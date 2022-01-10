@@ -146,7 +146,7 @@ export class TablaMateriasComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -189,7 +189,7 @@ export class TablaMateriasComponent implements OnInit {
           this.getJurisdicciones();
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }
@@ -692,7 +692,7 @@ export class TablaMateriasComponent implements OnInit {
   }
 
   openMultiSelect(dato) {
-    // console.log(this.multiSelect);
+    // //console.log(this.multiSelect);
     dato.onPanelShow;
     // this.multiSelect.show();
     // dato.overlayVisible = true;

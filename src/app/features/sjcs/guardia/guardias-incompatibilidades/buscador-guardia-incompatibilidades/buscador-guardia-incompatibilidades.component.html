@@ -1,0 +1,20 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.justiciaGratuita' | translate}}
+      <i class="fa fa-angle-right"></i>{{ 'menu.justiciaGratuita.GuardiaMenu' | translate }}
+      <i class="fa fa-angle-right"></i>{{'menu.justiciaGratuita.guardia.incompatibilidades' | translate}}
+    </p>
+  </div>
+
+  <div class="busqueda-container">
+    <app-filtros-guardia-incompatibilidades [permisoEscritura]="permisoEscritura" (isOpen)="isOpenReceive($event)" (filtrosValues)="getFiltrosValues($event)"></app-filtros-guardia-incompatibilidades>
+    <app-tabla-resultado-mix *ngIf="buscar" [permisoTotal]="permisoEscritura" [incompatibilidades]="true" [firstColumn]="0" [lastColumn]="5" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
+    [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardiasIncompatibles]="comboGuardiasIncompatibles" [isLetrado]="isLetrado"
+    (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (save)="save($event)"  (delete)="delete($event)" (deleteFromCombo)="deleteFromCombo($event)"></app-tabla-resultado-mix>
+  </div>
+
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

@@ -62,6 +62,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
   @ViewChild("table") table;
   @ViewChild("multiSelectPJ") multiSelect: MultiSelect;
+  @Input() origenBaremos;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
     private sigaServices: SigaServices, private translateService: TranslateService,
@@ -186,7 +187,7 @@ export class TiposAsistenciaComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
       , () => {
         this.progressSpinner = false;
@@ -254,7 +255,7 @@ export class TiposAsistenciaComponent implements OnInit {
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }
@@ -501,7 +502,7 @@ export class TiposAsistenciaComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }

@@ -116,7 +116,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.body.idmodulo = this.idModulo;
@@ -256,7 +256,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.table.reset();
           },
           err => {
-            console.log(err);
+            //console.log(err);
           },
           () => {
             if (sessionStorage.getItem("first") != null) {
