@@ -288,6 +288,8 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else if(JSON.parse(n.body).error.description!=""){
           this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description);
+          //Se actualiza la información de la ficha
+          this.actualizarLista.emit(true);
         }else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Se actualiza la información de la ficha

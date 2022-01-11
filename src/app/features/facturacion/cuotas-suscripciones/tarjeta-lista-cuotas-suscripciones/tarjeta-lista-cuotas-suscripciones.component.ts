@@ -287,6 +287,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
       solicitud.nSolicitud = row.nSolicitud;
       solicitud.fechaAceptada = row.fechaEfectiva;
       solicitud.fechaDenegada = row.fechaDenegada;
+      solicitud.idFormaPagoSeleccionada = row.idFormaPago;
       peticion.push(solicitud);
     });
     this.sigaServices.post('PyS_aprobarSuscripcionMultiple', peticion).subscribe(
@@ -295,6 +296,8 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else if(JSON.parse(n.body).error.description!=""){
           this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description);
+          //Se actualiza la información de la ficha
+          this.actualizarLista.emit(true);
         }else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Se actualiza la información de la ficha
