@@ -77,10 +77,22 @@ export class ObservacionesFacturasComponent implements OnInit, OnChanges {
     if (!this.body.observacionesFicheroFactura) this.body.observacionesFicheroFactura = "";
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.notChangedString(this.body.observacionesFactura, this.bodyInicial.observacionesFactura)
+      && this.notChangedString(this.body.observacionesFicheroFactura, this.bodyInicial.observacionesFicheroFactura);
+  }
+
+  notChangedString(value1: string, value2: string): boolean {
+    return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
+  }
+
   // Guardar
 
   save(): void {
-    this.guardadoSend.emit(this.body);
+    if (!this.deshabilitarGuardado()) {
+      this.guardadoSend.emit(this.body);
+    }
   }
 
   // Abrir y cerrar la ficha

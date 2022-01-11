@@ -7,14 +7,14 @@
       <div class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="far fa-user icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha pointer">{{ 'facturacion.productos.Cliente' | translate }}</label>
 
-            <label class="mr-3">
+            <label *ngIf="bodyInicial && bodyInicial.idCliente" class="mr-3">
               <i (click)="navigateToCliente();$event.stopPropagation();"
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToCliente();$event.stopPropagation();">
@@ -27,13 +27,13 @@
           <div class="d-flex justify-content-between default">
             
             <label>{{ 'censo.fichaCliente.literal.identificacion' | translate }}: 
-                <span>{{ bodyInicial.numeroIdentificacion }}</span></label>
+                <span *ngIf="bodyInicial">{{ bodyInicial.numeroIdentificacion }}</span></label>
             <label>{{ 'censo.busquedaClientesAvanzada.literal.nColegiado' | translate }}: 
-                <span>{{ bodyInicial.numeroColegiado }}</span></label>
+                <span *ngIf="bodyInicial">{{ bodyInicial.numeroColegiado }}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.apellidos' | translate }}: 
-              <span>{{ bodyInicial.apellidos }}</span></label>
+              <span *ngIf="bodyInicial">{{ bodyInicial.apellidos }}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate }}: 
-              <span>{{ bodyInicial.nombre }}</span></label>
+              <span *ngIf="bodyInicial">{{ bodyInicial.nombre }}</span></label>
 
           </div>
         </div>

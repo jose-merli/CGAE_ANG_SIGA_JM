@@ -49,4 +49,8 @@ export class CuentaEntidadAdeudosComponent implements OnInit {
       detail: msg
     });
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

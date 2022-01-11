@@ -55,15 +55,11 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.progressSpinner = true;
-
     this.getCols();
-    
-    this.progressSpinner = false;
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.body) {
+    if (changes.body && changes.body.currentValue != undefined && this.body.bancosCodigo != undefined) {
       this.restablecer();
       this.getComboSufijo();
       this.getUsosSufijos();
@@ -79,7 +75,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboSufijos);
       },
       err => {
-        console.log(err);
+
       }
     );
   }
@@ -92,9 +88,11 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
         this.comboSeriesFacturacion = n.combooItems;
         this.comboSeriesFacturacion = this.comboSeriesFacturacion.filter(item => this.datos.find(item2 => item2.tipo == "SERIE" && item.value == item2.idSerieFacturacion) == undefined);
         this.commonsService.arregloTildesCombo(this.comboSeriesFacturacion);
+
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -102,6 +100,8 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   // Obtener usos y sufijos
 
   getUsosSufijos() {
+    this.progressSpinner = true;
+
     this.sigaServices.getParam("facturacionPyS_getUsosSufijos", "?codBanco=" + this.body.bancosCodigo).subscribe(
       n => {
         this.datos = n.usosSufijosItems;
@@ -111,7 +111,8 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
         this.getComboSerieFacturacion();
       },
       err => {
-        console.log(err);
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
@@ -121,26 +122,11 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
     this.selectedDatos = [];
     
     this.cols = [
-      {
-        field: "tipo",
-        header: "facturacion.productos.tipo"
-      },
-      {
-        field: 'abreviatura',
-        header: 'administracion.parametrosGenerales.literal.abreviatura'
-      },
-      {
-        field: 'descripcion',
-        header: 'general.description'
-      },
-      {
-        field: 'numPendientes',
-        header: 'facturacion.cuentaBancaria.numPendientes'
-      },
-      {
-        field: 'sufijo',
-        header: 'facturacionSJCS.facturacionesYPagos.sufijo'
-      }
+      { field: "tipo", header: "facturacion.productos.tipo", width: "10%" },
+      { field: 'abreviatura', header: 'administracion.parametrosGenerales.literal.abreviatura', width: "20%" },
+      { field: 'descripcion', header: 'general.description', width: "40%" },
+      { field: 'numPendientes', header: 'facturacion.cuentaBancaria.numPendientes', width: "10%" },
+      { field: 'sufijo', header: 'facturacionSJCS.facturacionesYPagos.sufijo', width: "20%" }
     ];
 
     this.rowsPerPage = [

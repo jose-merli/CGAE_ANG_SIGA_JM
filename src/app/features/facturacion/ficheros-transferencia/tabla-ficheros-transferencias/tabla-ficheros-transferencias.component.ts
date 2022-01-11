@@ -111,4 +111,8 @@ export class TablaFicherosTransferenciasComponent implements OnInit {
       this.selectMultiple = true;
     }
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

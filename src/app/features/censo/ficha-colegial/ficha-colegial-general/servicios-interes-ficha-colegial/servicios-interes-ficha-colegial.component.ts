@@ -217,6 +217,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     sessionStorage.setItem("fromFichaCen","true");
     this.router.navigate(["/busquedaMonedero"]);
   }
+
   inscripcionesGuardia(){
     if(!this.isLetrado){
       sessionStorage.setItem("colegiadoRelleno","true");
@@ -248,6 +249,5 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     sessionStorage.setItem("origin","fichaColegial");
     this.router.navigate(["/guardiasSolicitudesCentralita"]);
   }
-
 
 }

@@ -66,8 +66,12 @@
               <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
+            <div *ngIf="col.field == 'comunicacionesFacturas'">
+              <span class="pull-right">{{ dato[col.field] }}</span>
+            </div>
+
             <div *ngIf="col.field != 'numeroFactura' && col.field != 'importeAdeudadoPendiente' && col.field != 'importefacturado' 
-            && col.field != 'fechaEmision' && col.field != 'ultimaComunicacion' && col.field != 'numeroColegiado' && col.field != 'nombre' ">
+            && col.field != 'fechaEmision' && col.field != 'ultimaComunicacion' && col.field != 'comunicacionesFacturas' && col.field != 'numeroColegiado' && col.field != 'nombre' ">
               <span>{{ dato[col.field] }}</span>
             </div>
 

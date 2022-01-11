@@ -50,6 +50,9 @@ export class FiltrosBusquedaTransferenciasComponent implements OnInit {
 
       sessionStorage.removeItem("volver");
 
+      this.body.fechaCreacionDesde = this.transformDate(this.body.fechaCreacionDesde);
+      this.body.fechaCreacionHasta = this.transformDate(this.body.fechaCreacionHasta);
+
       this.buscar();
     }else{
       this.body.fechaCreacionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));

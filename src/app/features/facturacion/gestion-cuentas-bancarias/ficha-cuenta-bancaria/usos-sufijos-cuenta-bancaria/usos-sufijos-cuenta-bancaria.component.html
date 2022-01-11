@@ -73,7 +73,8 @@
               <td class="text-center" *ngFor="let col of columns">
                 <div [ngSwitch]="col.field">
                   <div *ngSwitchCase="'abreviatura'">
-                    <span *ngIf="!dato['nuevo']"><a class="enlace" (click)="openTab(dato)">{{ dato[col.field] }}</a></span>
+                    <span *ngIf="!dato['nuevo'] && dato['tipo'] == 'SERIE'"><a class="enlace" (click)="openTab(dato)">{{ dato[col.field] }}</a></span>
+                    <span *ngIf="!dato['nuevo'] && dato['tipo'] != 'SERIE'">{{ dato[col.field] }}</span>
                     <p-dropdown *ngIf="dato['nuevo']" class="select-form" [(ngModel)]="datos[rowIndex].idSerieFacturacion" placeholder="Seleccionar"
                       [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde"
                       [ngClass]="styleObligatorio(datos[rowIndex].idSerieFacturacion)" [showClear]="true"></p-dropdown>
@@ -83,6 +84,9 @@
                     <p-dropdown *ngIf="dato['nuevo']" class="select-form" [(ngModel)]="datos[rowIndex].idSufijo" placeholder="Seleccionar"
                       [options]="comboSufijos" [filter]="true" filterBy="label,labelSinTilde"
                       [ngClass]="styleObligatorio(datos[rowIndex].idSufijo)" [showClear]="true"></p-dropdown>
+                  </div>
+                  <div *ngSwitchCase="'numPendientes'">
+                    <span class="pull-right">{{ dato[col.field] }}</span>
                   </div>
                   <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
                 </div>

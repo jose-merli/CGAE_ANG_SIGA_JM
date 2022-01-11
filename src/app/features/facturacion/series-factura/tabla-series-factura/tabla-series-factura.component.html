@@ -40,7 +40,7 @@
 
             <div [ngSwitch]="col.field">
               <div *ngSwitchCase="'cuentaBancaria'">
-                <span [ngClass]="{ historico: isHistorico(dato) }">(...{{ dato[col.field] | slice:-4 }})</span>
+                <span [ngClass]="{ historico: isHistorico(dato) }">{{ dato[col.field] }}</span>
               </div>
 
               <div *ngSwitchCase="'sufijo'">

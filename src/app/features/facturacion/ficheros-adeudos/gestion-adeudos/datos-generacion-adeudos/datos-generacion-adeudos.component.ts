@@ -57,10 +57,7 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   async ngOnInit() {
     await this.rest();
 
-    if(this.body.idInstitucion)
-      this.cargaDatosSEPA(this.body.idInstitucion);
-    else 
-      this.cargaDatosSEPA(this.localStorageService.institucionActual);
+    this.cargaDatosSEPA(this.body.idInstitucion);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -154,7 +151,7 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   cargaDatosSEPA(idInstitucion){
     this.progressSpinner=true;
     
-    this.sigaServices.getParam("facturacionPyS_parametrosSEPA", "?idInstitucion=" + idInstitucion).subscribe(
+    this.sigaServices.getParam("facturacionPyS_parametrosSEPA", idInstitucion ? `?idInstitucion=${idInstitucion}` : "").subscribe(
       n => {
         let data = n.combooItems;
         

@@ -73,14 +73,26 @@ export class ObservacionesRectificativaFacturasComponent implements OnInit, OnCh
 
   restablecer(): void {
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
-    if (!this.body.motivosAbono) this.body.motivosAbono = "";
-    if (!this.body.observacionesAbono) this.body.observacionesAbono = "";
+    if (this.body.motivosAbono == undefined) this.body.motivosAbono = "";
+    if (this.body.observacionesAbono == undefined) this.body.observacionesAbono = "";
+  }
+
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.notChangedString(this.body.motivosAbono, this.bodyInicial.motivosAbono)
+      && this.notChangedString(this.body.observacionesAbono, this.bodyInicial.observacionesAbono);
+  }
+
+  notChangedString(value1: string, value2: string): boolean {
+    return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
   }
 
   // Guardar
 
   save(): void {
-    this.guardadoSend.emit(this.body);
+    if (!this.deshabilitarGuardado()) {
+      this.guardadoSend.emit(this.body);
+    }
   }
 
   // Abrir y cerrar la ficha

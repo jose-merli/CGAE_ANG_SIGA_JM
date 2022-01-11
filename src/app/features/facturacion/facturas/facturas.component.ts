@@ -65,7 +65,6 @@ export class FacturasComponent implements OnInit {
 		err => {
 			this.progressSpinner = false;
 			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-			console.log(err);
 		},
 		() => {
 			this.progressSpinner = false;

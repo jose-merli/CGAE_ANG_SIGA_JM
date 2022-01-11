@@ -29,7 +29,6 @@ export class EnvioSeriesFacturaComponent implements OnInit, OnChanges {
   
   constructor(
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
     private commonsService: CommonsService,
     private translateService: TranslateService
   ) { }
@@ -46,14 +45,16 @@ export class EnvioSeriesFacturaComponent implements OnInit, OnChanges {
   // Combo de plantillas envío masivo
 
   getComboPlantillasEnvio() {
+    this.progressSpinner = true;
+
     this.sigaServices.get("facturacionPyS_comboPlantillasEnvio").subscribe(
       n => {
         this.comboPlantillasEnvio = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboPlantillasEnvio);
-        console.log(n);
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -107,7 +108,7 @@ export class EnvioSeriesFacturaComponent implements OnInit, OnChanges {
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
-    return this.body.envioFacturas == this.bodyInicial.envioFacturas
+    return this.body != undefined && this.bodyInicial != undefined && this.body.envioFacturas == this.bodyInicial.envioFacturas
       && this.body.idPlantillaMail == this.bodyInicial.idPlantillaMail;
   }
 

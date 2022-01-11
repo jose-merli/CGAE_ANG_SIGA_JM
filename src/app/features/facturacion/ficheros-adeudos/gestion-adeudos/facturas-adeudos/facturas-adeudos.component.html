@@ -1,12 +1,12 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
-<div class="ficha-container" id="facturacion">
+<div class="ficha-container" id="facturas">
   <div class="card" id="top">
     <div class="card-header header-ficha">
 
       <div *ngIf="!esFichaActiva('facturas')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('facturas')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="fas fa-dollar icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -41,7 +41,7 @@
 
       <div *ngIf="esFichaActiva('facturas')" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('facturas')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="fas fa-dollar icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'menu.facturacion.facturas' | translate }}</label>
 
@@ -80,12 +80,16 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <div *ngIf="col.field != 'totalPendiente' && col.field != 'total'">
+              <div *ngIf="col.field != 'pendienteTotal' && col.field != 'importeTotal' && col.field != 'numeroFacturas'">
                 <span>{{dato[col.field]}}</span>
               </div>
+
+              <div *ngIf="col.field == 'numeroFacturas'">
+                <span class="pull-right">{{ dato[col.field] | number:'':'es-ES' }}</span>
+              </div>
   
-              <div *ngIf="col.field == 'totalPendiente' || col.field == 'total'">
-                <span>{{ dato[col.field] | number:'':'es-ES' }} €</span>
+              <div *ngIf="col.field == 'pendienteTotal' || col.field == 'importeTotal'">
+                <span class="pull-right">{{ dato[col.field] | number:'':'es-ES' }} €</span>
               </div>
             </td>
           </tr>

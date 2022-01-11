@@ -46,14 +46,17 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
 
   // Combo de tipos IVA
   getComboTiposIVA() {
+    this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_comboTiposIVA", "?codBanco=" + this.body.codBanco).subscribe(
       n => {
         this.comboTiposIVA = n.combooItems;
         this.comboTiposIVA.forEach(c => c.label = c.label1);
         this.commonsService.arregloTildesCombo(this.comboTiposIVA);
+
+        this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -68,7 +71,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
   // Guadar
 
   isValid(): boolean {
-    return this.body.comisionImporte != undefined
+    return this.body.comisionImporte != undefined && this.body.comisionImporte.trim() != ""
       && this.body.comisionDescripcion != undefined && this.body.comisionDescripcion.trim() != ""
       && this.body.idTipoIVA != undefined && this.body.idTipoIVA.trim() != "";
   }

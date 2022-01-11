@@ -44,19 +44,25 @@ export class SerieFacturaFactProgramadasComponent implements OnInit {
 
   ngOnInit() {
     this.getComboSerieFacturacion();
-    this.restablecer();
+
+    if (this.bodyInicial)
+      this.restablecer();
   }
 
   // Combo de Series de Facturación
 
   getComboSerieFacturacion() {
+    this.progressSpinner = true;
     this.sigaServices.get("facturacionPyS_comboSeriesFacturacion").subscribe(
       n => {
         this.comboSeriesFacturacion = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboSeriesFacturacion);
+
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }
@@ -75,6 +81,7 @@ export class SerieFacturaFactProgramadasComponent implements OnInit {
   }
 
   navigateToSerieFacturacion() {
+    this.progressSpinner = true;
     let filtros = { idSerieFacturacion: this.body.idSerieFacturacion };
 
     this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
@@ -88,15 +95,19 @@ export class SerieFacturaFactProgramadasComponent implements OnInit {
 
           sessionStorage.setItem("serieFacturacionItem", JSON.stringify(serieFacturacionItem));
           this.router.navigate(["/datosSeriesFactura"]);
+
+          this.progressSpinner = false;
         }
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
       }
     );
   }
 
   searchSeriesFacturas(): void {
+    this.progressSpinner = true;
     let filtros = { idSerieFacturacion: this.body.idSerieFacturacion };
 
     this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
@@ -106,12 +117,13 @@ export class SerieFacturaFactProgramadasComponent implements OnInit {
           this.serieFacturacionSeleccionada = results[0];
           this.tiposProductos = this.collapseTiposIncluidos(this.serieFacturacionSeleccionada.tiposProductos.map(t => t.label));
           this.tiposServicios = this.collapseTiposIncluidos(this.serieFacturacionSeleccionada.tiposServicios.map(t => t.label));
-          console.log(this.serieFacturacionSeleccionada);
 
           this.serieFacturacionChanged.emit(this.serieFacturacionSeleccionada);
+          this.progressSpinner = false;
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
       }
     );
   }

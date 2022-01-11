@@ -39,7 +39,7 @@
           <td class="text-center" *ngFor="let col of columns">
 
             <div *ngIf="(col.field == 'fechaCompraSuscripcionDesde' || col.field == 'fechaCompraSuscripcionHasta' || col.field == 'fechaPrevistaGeneracion' || col.field == 'fechaConfirmacion');else noDate">
-              <span [ngClass]="{ historico: historico }">{{ dato[col.field] | date: "dd/MM/yyyy" }}</span>
+              <span [ngClass]="{ historico: historico }">{{dato[col.field] != undefined ? (dato[col.field] | date: "dd/MM/yyyy") : '-' }}</span>
             </div>
 
             <ng-template #noDate>
@@ -58,7 +58,8 @@
                 </div>
 
                 <div *ngSwitchCase="'importe'">
-                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
+                  <span *ngIf="dato[col.field] != undefined" class="pull-right" [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
+                  <span *ngIf="dato[col.field] == undefined" class="pull-right">-</span>
                 </div>
 
                 <div *ngSwitchCase="'estado'">
@@ -92,7 +93,7 @@
           </p-dropdown>
           <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
           <div class="ml-3 selectAll">
-            <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
               name="groupname"></p-checkbox>
           </div>
         </div>
@@ -106,8 +107,8 @@
       <button pButton *ngIf="historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate }}"></button>
       <button pButton *ngIf="!historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
 
-      <button pButton *ngIf="!historico" (click)="archivar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.archivar' | translate }}"></button>
-      <button pButton *ngIf="historico" (click)="desarchivar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'form.busquedaCursos.literal.boton.desarchivar' | translate }}"></button>
+      <button pButton *ngIf="!historico" (click)="archivar()" [disabled]="selectedDatos.length == 0" type="button" icon="fas fa-archive" iconPos="left" label="{{ 'general.boton.archivar' | translate }}"></button>
+      <button pButton *ngIf="historico" (click)="desarchivar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-undo" iconPos="left" label="{{ 'form.busquedaCursos.literal.boton.desarchivar' | translate }}"></button>
 
       <button pButton (click)="confirmEliminar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
 

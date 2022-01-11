@@ -39,7 +39,8 @@
           <td class="text-center" *ngFor="let col of columns">
             <div [ngSwitch]="col.field">
               <div *ngSwitchCase="'idDisqueteDevoluciones'"><a class="enlace" (click)="openTab(dato)"><span>{{ dato[col.field] }}</span></a></div>
-              <div *ngSwitchCase="'facturacion'"><span>{{ dato[col.field] }} €</span></div>
+              <div *ngSwitchCase="'numRecibos'"><span class="pull-right">{{ dato[col.field] }}</span></div>
+              <div *ngSwitchCase="'facturacion'"><span class="pull-right">{{ dato[col.field] }} €</span></div>
               <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
             </div>
           </td>

@@ -7,7 +7,7 @@
       <div *ngIf="!esFichaActiva('contadorFacturas')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('contadorFacturas')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="fas fa-sort-numeric-down icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -34,7 +34,7 @@
       <div *ngIf="esFichaActiva('contadorFacturas')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('contadorFacturas')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="fas fa-sort-numeric-down icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.contFact.literal' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
