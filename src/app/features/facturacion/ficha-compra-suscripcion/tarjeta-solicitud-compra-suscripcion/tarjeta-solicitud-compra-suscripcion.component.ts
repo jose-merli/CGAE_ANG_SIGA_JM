@@ -171,7 +171,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       this.scrollToOblig.emit("productos");
     }
     //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
-    else if((this.tarjProductos.selectedPago == "80" || this.tarjServicios.selectedPago == "20")&& this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
+    else if((this.tarjProductos.selectedPago == "80" || this.tarjProductos.selectedPago == "20")&& this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
       this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
       this.scrollToOblig.emit("productos");
     }
@@ -240,7 +240,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
         this.scrollToOblig.emit("productos");
       }
       //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
-      else if ((this.tarjProductos.selectedPago == "80" || this.tarjServicios.selectedPago == "20") && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null) {
+      else if ((this.tarjProductos.selectedPago == "80" || this.tarjProductos.selectedPago == "20") && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null) {
         this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
         this.scrollToOblig.emit("productos");
       }
