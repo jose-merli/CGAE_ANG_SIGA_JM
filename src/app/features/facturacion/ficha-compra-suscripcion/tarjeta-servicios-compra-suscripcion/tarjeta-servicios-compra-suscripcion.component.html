@@ -222,7 +222,8 @@
             <!-- Se permite guardar aunque la peticion ya haya sido aceptada porque en algunos casos se puede modificar la fecha de alta y baja -->
             <button pButton (click)="checkSave()" type="button" icon="far fa-save" iconPos="left"
               label="{{ 'general.boton.guardar' | translate}}"
-              [disabled]="ficha.fechaPendiente == null || (!(!esColegiado  && (ficha.facturas == null || ficha.facturas.length == 0) && ficha.fechaAceptada != null) && ficha.fechaAnulada == null) "></button>
+              [disabled]="ficha.fechaPendiente == null || (!(!esColegiado  && (ficha.facturas == null || ficha.facturas.length == 0) && ficha.fechaAceptada != null) && ficha.fechaAnulada == null) 
+              || !permisoActualizarServicioSuscripcion"></button>
             <!-- Nuevo -->
             <button pButton (click)="openHideModal()" type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"
