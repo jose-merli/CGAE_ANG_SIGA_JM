@@ -369,6 +369,11 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     });
   }
 
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }
+
   getPermisoAprobarCompra() {
     this.commonsService
       .checkAcceso(procesos_PyS.aprobarCompra)

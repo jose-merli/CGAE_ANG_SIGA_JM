@@ -29,9 +29,9 @@
         pInputText />
     </div>
     <div class="main-button btnBuscadorPersonas col-lg-2 col-md-2">
-      <button type="submit" [disabled]="localStorageService.isLetrado" pButton icon="fa fa-search"
+      <button type="submit" [disabled]="esColegiado" pButton icon="fa fa-search"
         (click)="searchPersona()" iconPos="left"></button>
-      <button pButton type="button" [disabled]="localStorageService.isLetrado" icon="fa fa-eraser" iconPos="left"
+      <button pButton type="button" [disabled]="esColegiado" icon="fa fa-eraser" iconPos="left"
         (click)="limpiarCliente()">
       </button>
     </div>
