@@ -211,8 +211,4 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
   onHideTarjeta(){
     this.showTarjeta = !this.showTarjeta;
   }
-
-  clear() {
-    this.msgs = [];
-  }
 }
