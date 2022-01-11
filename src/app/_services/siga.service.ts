@@ -164,12 +164,12 @@ export class SigaServices {
 		dialogo_nombredoc: 'dialogoComunicacion/nombredoc',
 		busquedaPerJuridica_downloadFile: 'busquedaPerJuridica/downloadFile',
 		retenciones_searchLiquidacionSociedad: 'retenciones/searchLiquidacionSociedad',
-		retenciones_searchSociedadColegiado:'retenciones/selectRetencionesColegialYSociedades',
+		retenciones_searchSociedadColegiado: 'retenciones/selectRetencionesColegialYSociedades',
 		retenciones_tipoRetencion: 'retenciones/tipoRetencion',
 		retenciones_search: 'retenciones/search',
 		retenciones_searchColegiado: 'retenciones/searchRetencionColegiado',
 		retenciones_update: 'retenciones/update',
-		integrantes_buscarPagosColegiados:'tarjetaIntegrantes/buscarPagosColegiados',
+		integrantes_buscarPagosColegiados: 'tarjetaIntegrantes/buscarPagosColegiados',
 		integrantes_search: 'busquedaPerJuridica/datosIntegrantesSearch',
 		integrantes_tipoColegio: 'tarjetaIntegrantes/tipoColegio',
 		integrantes_provincias: 'tarjetaIntegrantes/provincias',
@@ -497,7 +497,7 @@ export class SigaServices {
 		busquedaPerJuridica_datosBancariosInsert: 'busquedaPerJuridica/datosBancariosInsert',
 		busquedaPerJuridica_solicitudInsertBanksData: 'busquedaPerJuridica/solicitudInsertBanksData',
 		fichaDatosColegiales_datosColegialesUpdate: '/fichaDatosColegiales/datosColegialesUpdate',
-		fichaDatosColegiales_datosColegialesUpdateMasivo:'/fichaDatosColegiales/datosColegialesUpdateMasivo',
+		fichaDatosColegiales_datosColegialesUpdateMasivo: '/fichaDatosColegiales/datosColegialesUpdateMasivo',
 		fichaDatosColegiales_datosColegialesInsertEstado: '/fichaDatosColegiales/datosColegialesInsertEstado',
 		fichaDatosColegiales_datosColegialesUpdateEstados: '/fichaDatosColegiales/datosColegialesUpdateEstados',
 		fichaDatosColegiales_datosColegialesDeleteEstado: '/fichaDatosColegiales/datosColegialesDeleteEstado',
@@ -618,7 +618,7 @@ export class SigaServices {
 		plantillasDoc_plantillas_borrar: 'plantillasDoc/borrar',
 		plantillasDoc_descargarPlantilla: 'plantillasDoc/descargarPlantilla',
 
-        //Diálogo comunicación
+		//Diálogo comunicación
 		dialogo_claseComunicaciones: 'dialogoComunicacion/clasesComunicacion',
 		dialogo_claseComunicacion: 'dialogoComunicacion/claseComunicacion',
 		dialogo_fechaProgramada: 'dialogoComunicacion/fechaProgramada',
@@ -631,672 +631,702 @@ export class SigaServices {
 		dialogo_keys: 'dialogoComunicacion/keys',
 		dialogo_obtenerCamposDinamicos: 'dialogoComunicacion/obtenerCamposDinamicos',
 		dialogo_envioTest: 'dialogoComunicacion/envioTest',
-        dialogo_maxModelos: 'dialogoComunicacion/maxModelos',
+		dialogo_maxModelos: 'dialogoComunicacion/maxModelos',
 
-        //endpoints
-        ...endpoints_EJG,
-        ...endpoints_facturacionsjcs,
-        ...endpoints_componentes,
-         ...endpoints_generales,
-        ...endpoints_justiciables,
-        ...endpoints_oficio,
-        ...endpoints_maestros,
+		//endpoints
+		...endpoints_EJG,
+		...endpoints_facturacionsjcs,
+		...endpoints_componentes,
+		...endpoints_generales,
+		...endpoints_justiciables,
+		...endpoints_oficio,
+		...endpoints_maestros,
 		...endpoints_EJG_Comision,
 		...endpoints_remesa,
 		...endpoints_intercambios,
 		...endpoints_guardia
-    };
+	};
 
 	private menuToggled = new Subject<any>();
 	private iframeRemove = new Subject<any>();
 	private consultasRefresh = new Subject<any>();
-  private updateCombo = new Subject<any>();
-  private newIdOrdenacion = new Subject<any>();
-  private deshabilitarEditar = new Subject<any>();
-  private perfilesRefresh = new Subject<any>();
-  private modelosRefresh = new Subject<any>();
-  private habilitarDocs = new Subject<any>();
-  private desHabilitarDocs = new Subject<any>();
-  private sendFechaBaja = new Subject<any>();
-  private sendSelectedDatos = new Subject<any>();
-  private sendDatosRedy = new Subject<any>();
-
-  menuToggled$ = this.menuToggled.asObservable();
-  iframeRemove$ = this.iframeRemove.asObservable();
-  consultasRefresh$ = this.consultasRefresh.asObservable();
-  updateCombo$ = this.updateCombo.asObservable();
-  sendSelectedDatos$ = this.sendSelectedDatos.asObservable();
-  newIdOrdenacion$ = this.newIdOrdenacion.asObservable();
-  deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
-  perfilesRefresh$ = this.perfilesRefresh.asObservable();
-  modelosRefresh$ = this.modelosRefresh.asObservable();
-  habilitarDocs$ = this.habilitarDocs.asObservable();
-  desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
-
-  sendFechaBaja$ = this.sendFechaBaja.asObservable();
-  datosRedy$ = this.sendDatosRedy.asObservable();
-
-  private guardarDatosGeneralesJusticiable = new Subject<any>();
-  guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
-
-  private guardarDatosGeneralesRepresentante = new Subject<any>();
-  guardarDatosGeneralesRepresentante$ = this.guardarDatosGeneralesRepresentante.asObservable();
-
-  private guardarDatosSolicitudJusticiable = new Subject<any>();
-  guardarDatosSolicitudJusticiable$ = this.guardarDatosSolicitudJusticiable.asObservable();
-
-  private createJusticiable = new Subject<any>();
-  createJusticiable$ = this.createJusticiable.asObservable();
-
-  private rutaMenu = new BehaviorSubject<string>('');
-
-  rutaMenu$ = this.rutaMenu.asObservable();
-
-  setRutaMenu(ruta: string) {
-
-      this.rutaMenu.next(ruta);
-
-  }
-
-  constructor(private http: HttpClient, handler: HttpBackend, private httpbackend: HttpClient) {
-    this.httpbackend = new HttpClient(handler);
-  }
-
-  get(service: string): Observable<any> {
-    return this.http.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
-      return response;
-    });
-  }
-
-  getParam(service: string, body: any): Observable<any> {
-    return this.http.get(environment.newSigaUrl + this.endpoints[service] + body).map((response) => {
-      return response;
-    });
-  }
-
-  getBackend(service: string): Observable<any> {
-    return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
-      return response;
-    });
-  }
-
-  getNewSigaUrl() {
-    return environment.newSigaUrl;
-  }
-
-  getOldSigaUrl() {
-    return environment.oldSigaUrl;
-  }
-
-  getServucePath(service: string) {
-    return this.endpoints[service];
-  }
-
-  getPerfil(service: string, institucion: string): Observable<any> {
-    return this.httpbackend
-      .get(environment.newSigaUrl + this.endpoints[service] + '?institucion=' + institucion)
-      .map((response) => {
-        return response;
-      });
-  }
-
-  postBackend(service: string, body: any): Observable<any> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.httpbackend
-      .post(environment.newSigaUrl + this.endpoints[service], body, {
-        headers: headers,
-        observe: 'response',
-        responseType: 'text'
-      })
-      .map((response) => {
-        return response;
-      });
-  }
-
-  
-
-  post(service: string, body: any): Observable<any> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], body, {
-        headers: headers,
-        observe: 'response',
-        responseType: 'text'
-      })
-      .map((response) => {
-        return response;
-      });
-  }
-
-  parseErrorBlob(err: HttpErrorResponse): Observable<any> {
-    const reader: FileReader = new FileReader();
-
-    const obs = Observable.create((observer: any) => {
-      reader.onloadend = (e) => {
-        observer.error(JSON.parse(reader.result as string));
-        observer.complete();
-      };
-    });
-    reader.readAsText(err.error);
-    return obs;
-  }
-
-  postDownloadFiles(service: string, body: any): Observable<any> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], body, {
-        headers: headers,
-        observe: 'body', // si observe: "response" no sirve. Si se quita el observe sirve
-        responseType: 'blob'
-      })
-      .map((response) => {
-        return response;
-      });
-    //   .catch((response) => {
-    //     return this.parseErrorBlob(response);
-    //   });
-  }
-  getDownloadFiles(service: string, body: any): any {
-	  //console.log('body: ', body)
-      return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], body, {observe: 'response', responseType: 'blob'});
-  }
-
-  postDownloadFilesWithFileName(service: string, body: any): Observable<any> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], body, {
-        headers: headers,
-        observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
-        responseType: 'blob'
-      })
-      .map((response) => {
-		let data = {
-			file: new Blob([response.body], {type: response.headers.get("Content-Type")}),
-			filename: response.headers.get("Content-Disposition"),
-			status: response.status
-		};
-        return data;
-      })
-      .catch((response) => {
-        return this.parseErrorBlob(response);
-      });
-  }
-
-  postDownloadFilesWithFileName2(service: string, body: any): Observable<any> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], body, {
-        headers: headers,
-        observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
-        responseType: 'blob'
-      })
-      .map((response) => {
-		let data = {
-			file: new Blob([response.body], {type: response.headers.get("Content-Type")}),
-			filename: response.headers.get("Content-Disposition"),
-			status: response.status
-		};
-        return data;
-      })
-      .catch((response) => {
-        return response;
-      });
-  }
-
-  postSendContent(service: string, file: any): Observable<any> {
-    let formData: FormData = new FormData();
-    if (file != undefined) {
-      formData.append('uploadFile', file, file.name);
-    }
-    let headers = new HttpHeaders();
-
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
-
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
-
-  postSendContentParams(service: string, params: any): Observable<any> {
-	let formData: FormData = new FormData();
-	let file = params[0];
-    if (file != undefined) {
-	  formData.append('uploadFile', file, file.name);
-	  formData.append('fechaDesde', params[1]);
-	  formData.append('fechaHasta', params[2]);
-	  formData.append('observaciones', params[3]);
-    }
-    let headers = new HttpHeaders();
-
-    headers.append('Content-Type', 'application/json');
-    headers.append('Accept', 'application/json');
-
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
-
-  postSendFileAndParameters(service: string, file: any, idPersona: any): Observable<any> {
-    let formData: FormData = new FormData();
-    if (file != undefined) {
-      formData.append('uploadFile', file, file.name);
-    }
-
-    // pasar parametros por la request
-    formData.append('idPersona', idPersona);
-
-    let headers = new HttpHeaders();
-
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
-
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
-
-  postSendFileAndParametersArr(service: string, file: any, params: any): Observable<any> {
-    let formData: FormData = new FormData();
-    if (file != undefined) {
-      formData.append('uploadFile', file, file.name);
-    }
-
-    // pasar parametros por la request
-	formData.append('fechaDesde', params[0]);
-	formData.append('fechaHasta', params[1]);
-	formData.append('observaciones', params[2]);
-
-    let headers = new HttpHeaders();
-
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
-
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
-
-  postSendFileAndBody(service: string, file: any, idPersona: any, motivo: any): Observable<any> {
-    let formData: FormData = new FormData();
-    if (file != undefined) {
-      formData.append('uploadFile', file, file.name);
-    }
-
-    // pasar parametros por la request
-    formData.append('idPersona', idPersona);
-
-    formData.append('motivo', motivo);
-
-    let headers = new HttpHeaders();
-
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
-
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
-
-  postSendFileAndActuacion(service: string, documentos: Documento[], actuacion: ActuacionDesignaItem): Observable<any> {
-    let formData: FormData = new FormData();
-
-    let documentosActualizar = [];
-
-    documentos.forEach((el, i) => {
-
-      if (el.file != undefined && el.file != null) {
-        let doc = new DocumentoDesignaItem();
-
-        doc.anio = el.anio;
-        doc.numero = el.numero;
-        doc.idTurno = el.idTurno;
-        doc.idActuacion = el.idActuacion;
-        doc.observaciones = el.observaciones;
-        doc.idTipodocumento = '1';
-		doc.usuModificacion = el.usuModificacion;
-
-        formData.append(`uploadFile${i}`, el.file, el.file.name + ';' + JSON.stringify(doc));
-      } else {
-        let doc = new DocumentoDesignaItem();
-
-        doc.idDocumentaciondes = el.idDocumentaciondes;
-        doc.idTipodocumento = '1';
-        doc.idFichero = el.idFichero;
-        doc.idInstitucion = el.idInstitucion;
-        doc.anio = el.anio;
-        doc.numero = el.numero;
-        doc.idTurno = el.idTurno;
-        doc.idActuacion = el.idActuacion;
-        doc.observaciones = el.observaciones;
-		doc.usuModificacion = el.usuModificacion;
-        documentosActualizar.push(doc);
-      }
-    });
-
-    formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
-
-    let headers = new HttpHeaders();
-
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
-
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
-
-  postSendFileAndIdAsistencia(service: string, documentos: DocumentacionAsistenciaItem[], anioNumero: string): Observable<any>{
-	let formData: FormData = new FormData();
-	let documentosActualizar : DocumentoAsistenciaItem[] = [];
-	documentos.forEach((documento, i )=>{
-
-		let documentoJSON : DocumentoAsistenciaItem = new DocumentoAsistenciaItem();
-		documentoJSON.asociado = documento.asociado;
-		documentoJSON.descAsociado = documento.descAsociado;
-		documentoJSON.descTipoDoc = documento.descTipoDoc;
-		documentoJSON.idDocumentacion = documento.idDocumentacion;
-		documentoJSON.fechaEntrada = documento.fechaEntrada;
-		documentoJSON.idFichero  = documento.idFichero;
-		documentoJSON.idTipoDoc = documento.idTipoDoc;
-		documentoJSON.nombreFichero = documento.nombreFichero;
-		documentoJSON.observaciones = documento.observaciones
-
-		if(!documento.idDocumentacion && documento.fileData){
-			formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
-		}else{
-			documentosActualizar.push(documentoJSON);
-		}
-
-	});
-
-	formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
-
-    let headers = new HttpHeaders();
-
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
-
-	formData.append('anioNumero', anioNumero);
-
-	return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-
-  }
-
-  postSendFileAndDesigna(service: string, documentos: any[], designa: any): Observable<any> {
-    let formData: FormData = new FormData();
-
-    let documentosActualizar = [];
-
-    documentos.forEach((el, i) => {
-
-      if (el.cells[5].value && el.cells[3].value != undefined && el.cells[3].value != null) {
-        let doc = new DocumentoDesignaItem();
-        doc.anio = designa.ano;
-        doc.numero = designa.numero;
-        doc.idTurno = designa.idTurno;
-        doc.idActuacion = el.cells[1].value == '0' ? null : el.cells[1].value;
-        doc.observaciones = el.cells[4].value;
-        doc.idTipodocumento = el.cells[2].value;
-
-        formData.append(`uploadFile${i}`, el.cells[3].value, el.cells[3].value.name + ';' + JSON.stringify(doc));
-      } else {
-        let doc = new DocumentoDesignaItem();
-        doc.anio = designa.ano;
-        doc.numero = designa.numero;
-        doc.idTurno = designa.idTurno;
-        doc.observaciones = el.cells[4].value;
-        doc.idDocumentaciondes = el.cells[6].value;
-        documentosActualizar.push(doc);
-      }
-    });
-
-    formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
-
-    let headers = new HttpHeaders();
-
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
-
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
-
-  postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {
-    let formData: FormData = new FormData();
-
-	if(documentos.length > 0){
-		documentos.forEach((el, i) => {
-
-			formData.append(`uploadFile${i}`, el, el.name + ';');
+	private updateCombo = new Subject<any>();
+	private newIdOrdenacion = new Subject<any>();
+	private deshabilitarEditar = new Subject<any>();
+	private perfilesRefresh = new Subject<any>();
+	private modelosRefresh = new Subject<any>();
+	private habilitarDocs = new Subject<any>();
+	private desHabilitarDocs = new Subject<any>();
+	private sendFechaBaja = new Subject<any>();
+	private sendSelectedDatos = new Subject<any>();
+	private sendDatosRedy = new Subject<any>();
+
+	menuToggled$ = this.menuToggled.asObservable();
+	iframeRemove$ = this.iframeRemove.asObservable();
+	consultasRefresh$ = this.consultasRefresh.asObservable();
+	updateCombo$ = this.updateCombo.asObservable();
+	sendSelectedDatos$ = this.sendSelectedDatos.asObservable();
+	newIdOrdenacion$ = this.newIdOrdenacion.asObservable();
+	deshabilitarEditar$ = this.deshabilitarEditar.asObservable();
+	perfilesRefresh$ = this.perfilesRefresh.asObservable();
+	modelosRefresh$ = this.modelosRefresh.asObservable();
+	habilitarDocs$ = this.habilitarDocs.asObservable();
+	desHabilitarDocs$ = this.desHabilitarDocs.asObservable();
+
+	sendFechaBaja$ = this.sendFechaBaja.asObservable();
+	datosRedy$ = this.sendDatosRedy.asObservable();
+
+	private guardarDatosGeneralesJusticiable = new Subject<any>();
+	guardarDatosGeneralesJusticiable$ = this.guardarDatosGeneralesJusticiable.asObservable();
+
+	private guardarDatosGeneralesRepresentante = new Subject<any>();
+	guardarDatosGeneralesRepresentante$ = this.guardarDatosGeneralesRepresentante.asObservable();
+
+	private guardarDatosSolicitudJusticiable = new Subject<any>();
+	guardarDatosSolicitudJusticiable$ = this.guardarDatosSolicitudJusticiable.asObservable();
+
+	private createJusticiable = new Subject<any>();
+	createJusticiable$ = this.createJusticiable.asObservable();
+
+	private rutaMenu = new BehaviorSubject<string>('');
+
+	rutaMenu$ = this.rutaMenu.asObservable();
+
+	setRutaMenu(ruta: string) {
+
+		this.rutaMenu.next(ruta);
+
+	}
+
+	constructor(private http: HttpClient, handler: HttpBackend, private httpbackend: HttpClient) {
+		this.httpbackend = new HttpClient(handler);
+	}
+
+	get(service: string): Observable<any> {
+		return this.http.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
+			return response;
 		});
 	}
 
-    formData.append('nuevaComunicacion', JSON.stringify(nuevaComunicacion));
+	getParam(service: string, body: any): Observable<any> {
+		return this.http.get(environment.newSigaUrl + this.endpoints[service] + body).map((response) => {
+			return response;
+		});
+	}
 
-    let headers = new HttpHeaders();
+	getBackend(service: string): Observable<any> {
+		return this.httpbackend.get(environment.newSigaUrl + this.endpoints[service]).map((response) => {
+			return response;
+		});
+	}
 
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
+	getNewSigaUrl() {
+		return environment.newSigaUrl;
+	}
 
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
+	getOldSigaUrl() {
+		return environment.oldSigaUrl;
+	}
 
-  postSendFileAndParametersDataBank(
-    service: string,
-    file: any,
-    idPersona: any,
-    idCuenta: any,
-    idMandato: any,
-    idAnexo: any,
-    tipoMandato: any
-  ): Observable<any> {
-    let formData: FormData = new FormData();
-    if (file != undefined) {
-      formData.append('uploadFile', file, file.name);
-    }
+	getServucePath(service: string) {
+		return this.endpoints[service];
+	}
 
-    // pasar parametros por la request
-    formData.append('idPersona', idPersona);
-    formData.append('idCuenta', idCuenta);
-    formData.append('idMandato', idMandato);
-    formData.append('idAnexo', idAnexo);
-    formData.append('tipoMandato', tipoMandato);
+	getPerfil(service: string, institucion: string): Observable<any> {
+		return this.httpbackend
+			.get(environment.newSigaUrl + this.endpoints[service] + '?institucion=' + institucion)
+			.map((response) => {
+				return response;
+			});
+	}
 
-    let headers = new HttpHeaders();
+	postBackend(service: string, body: any): Observable<any> {
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+		return this.httpbackend
+			.post(environment.newSigaUrl + this.endpoints[service], body, {
+				headers: headers,
+				observe: 'response',
+				responseType: 'text'
+			})
+			.map((response) => {
+				return response;
+			});
+	}
 
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
 
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
 
-  postSendFileAndParametersComprobantePago(
-    service: string,
-    file: any,
-    idPersona: any,
-    idInscripcion: any
-  ): Observable<any> {
-    let formData: FormData = new FormData();
-    if (file != undefined) {
-      formData.append('uploadFile', file, file.name);
-    }
+	post(service: string, body: any): Observable<any> {
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], body, {
+				headers: headers,
+				observe: 'response',
+				responseType: 'text'
+			})
+			.map((response) => {
+				return response;
+			});
+	}
 
-    // pasar parametros por la request
-    formData.append('idPersona', idPersona);
-    formData.append('idInscripcion', idInscripcion);
+	parseErrorBlob(err: HttpErrorResponse): Observable<any> {
+		const reader: FileReader = new FileReader();
 
-    let headers = new HttpHeaders();
+		const obs = Observable.create((observer: any) => {
+			reader.onloadend = (e) => {
+				observer.error(JSON.parse(reader.result as string));
+				observer.complete();
+			};
+		});
+		reader.readAsText(err.error);
+		return obs;
+	}
 
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
+	postDownloadFiles(service: string, body: any): Observable<any> {
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], body, {
+				headers: headers,
+				observe: 'body', // si observe: "response" no sirve. Si se quita el observe sirve
+				responseType: 'blob'
+			})
+			.map((response) => {
+				return response;
+			});
+		//   .catch((response) => {
+		//     return this.parseErrorBlob(response);
+		//   });
+	}
+	getDownloadFiles(service: string, body: any): any {
+		//console.log('body: ', body)
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], body, { observe: 'response', responseType: 'blob' });
+	}
 
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service], formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
+	postDownloadFilesWithFileName(service: string, body: any): Observable<any> {
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], body, {
+				headers: headers,
+				observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
+				responseType: 'blob'
+			})
+			.map((response) => {
+				let data = {
+					file: new Blob([response.body], { type: response.headers.get("Content-Type") }),
+					filename: response.headers.get("Content-Disposition"),
+					status: response.status
+				};
+				return data;
+			})
+			.catch((response) => {
+				return this.parseErrorBlob(response);
+			});
+	}
 
-  postPaginado(service: string, param: string, body: any): Observable<any> {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service] + param, body, {
-        headers: headers,
-        observe: 'response',
-        responseType: 'text'
-      })
-      .map((response) => {
-        return response;
-      });
-  }
+	postDownloadFilesWithFileName2(service: string, body: any): Observable<any> {
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], body, {
+				headers: headers,
+				observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
+				responseType: 'blob'
+			})
+			.map((response) => {
+				let data = {
+					file: new Blob([response.body], { type: response.headers.get("Content-Type") }),
+					filename: response.headers.get("Content-Disposition"),
+					status: response.status
+				};
+				return data;
+			})
+			.catch((response) => {
+				return response;
+			});
+	}
 
-  notifyMenuToggled() {
-    this.menuToggled.next();
-  }
+	postSendContent(service: string, file: any): Observable<any> {
+		let formData: FormData = new FormData();
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
+		let headers = new HttpHeaders();
 
-  notifyRefreshConsulta() {
-    this.consultasRefresh.next();
-  }
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
 
-  notifyupdateCombo(send) {
-    this.updateCombo.next(send);
-  }
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
 
-  notifynewIdOrdenacion(send) {
-    this.newIdOrdenacion.next(send);
-  }
+	postSendContentParams(service: string, params: any): Observable<any> {
+		let formData: FormData = new FormData();
+		let file = params[0];
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+			formData.append('fechaDesde', params[1]);
+			formData.append('fechaHasta', params[2]);
+			formData.append('observaciones', params[3]);
+		}
+		let headers = new HttpHeaders();
 
-  notifysendSelectedDatos(send) {
-    this.sendSelectedDatos.next(send);
-  }
+		headers.append('Content-Type', 'application/json');
+		headers.append('Accept', 'application/json');
 
-  notifyRefreshModelos() {
-    this.modelosRefresh.next();
-  }
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
 
-  notifyRefreshEditar() {
-    this.deshabilitarEditar.next();
-  }
+	postSendFileAndParameters(service: string, file: any, idPersona: any): Observable<any> {
+		let formData: FormData = new FormData();
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
 
-  notifyRefreshPerfiles() {
-    this.perfilesRefresh.next();
-  }
+		// pasar parametros por la request
+		formData.append('idPersona', idPersona);
 
-  notifyHabilitarDocumentos() {
-    this.habilitarDocs.next();
-  }
+		let headers = new HttpHeaders();
 
-  notifyDesHabilitarDocumentos() {
-    this.desHabilitarDocs.next();
-  }
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
 
-  notifyGuardarDatosGeneralesRepresentante(data) {
-    this.guardarDatosGeneralesRepresentante.next(data);
-  }
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
 
-  notifyGuardarDatosGeneralesJusticiable(data) {
-    this.guardarDatosGeneralesJusticiable.next(data);
-  }
+	postSendFileAndParametersArr(service: string, file: any, params: any): Observable<any> {
+		let formData: FormData = new FormData();
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
 
-  notifyGuardarDatosSolicitudJusticiable(data) {
-    this.guardarDatosSolicitudJusticiable.next(data);
-  }
+		// pasar parametros por la request
+		formData.append('fechaDesde', params[0]);
+		formData.append('fechaHasta', params[1]);
+		formData.append('observaciones', params[2]);
 
-  notifyCreateJusticiable(data) {
-    this.createJusticiable.next(data);
-  }
+		let headers = new HttpHeaders();
 
-  notifysendFechaBaja(fecha) {
-    this.sendFechaBaja.next(fecha);
-  }
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
 
-  notifysendDatosRedy(datos) {
-    this.sendDatosRedy.next(datos);
-  }
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
 
-  postSendContentAndParameter(
-    service: string,
-    param: string,
-    file: any
-  ): Observable<any> {
-    let formData: FormData = new FormData();
-    if (file != undefined) {
-      formData.append('uploadFile', file, file.name);
-    }
-    let headers = new HttpHeaders();
+	postSendFileAndBody(service: string, file: any, idPersona: any, motivo: any): Observable<any> {
+		let formData: FormData = new FormData();
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
 
-    headers.append('Content-Type', 'multipart/form-data');
-    headers.append('Accept', 'application/json');
+		// pasar parametros por la request
+		formData.append('idPersona', idPersona);
 
-    return this.http
-      .post(environment.newSigaUrl + this.endpoints[service] + param, formData, {
-        headers: headers
-      })
-      .map((response) => {
-        return response;
-      });
-  }
+		formData.append('motivo', motivo);
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFileAndActuacion(service: string, documentos: Documento[], actuacion: ActuacionDesignaItem): Observable<any> {
+		let formData: FormData = new FormData();
+
+		let documentosActualizar = [];
+
+		documentos.forEach((el, i) => {
+
+			if (el.file != undefined && el.file != null) {
+				let doc = new DocumentoDesignaItem();
+
+				doc.anio = el.anio;
+				doc.numero = el.numero;
+				doc.idTurno = el.idTurno;
+				doc.idActuacion = el.idActuacion;
+				doc.observaciones = el.observaciones;
+				doc.idTipodocumento = '1';
+				doc.usuModificacion = el.usuModificacion;
+
+				formData.append(`uploadFile${i}`, el.file, el.file.name + ';' + JSON.stringify(doc));
+			} else {
+				let doc = new DocumentoDesignaItem();
+
+				doc.idDocumentaciondes = el.idDocumentaciondes;
+				doc.idTipodocumento = '1';
+				doc.idFichero = el.idFichero;
+				doc.idInstitucion = el.idInstitucion;
+				doc.anio = el.anio;
+				doc.numero = el.numero;
+				doc.idTurno = el.idTurno;
+				doc.idActuacion = el.idActuacion;
+				doc.observaciones = el.observaciones;
+				doc.usuModificacion = el.usuModificacion;
+				documentosActualizar.push(doc);
+			}
+		});
+
+		formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFileAndIdAsistencia(service: string, documentos: DocumentacionAsistenciaItem[], anioNumero: string): Observable<any> {
+		let formData: FormData = new FormData();
+		let documentosActualizar: DocumentoAsistenciaItem[] = [];
+		documentos.forEach((documento, i) => {
+
+			let documentoJSON: DocumentoAsistenciaItem = new DocumentoAsistenciaItem();
+			documentoJSON.asociado = documento.asociado;
+			documentoJSON.descAsociado = documento.descAsociado;
+			documentoJSON.descTipoDoc = documento.descTipoDoc;
+			documentoJSON.idDocumentacion = documento.idDocumentacion;
+			documentoJSON.fechaEntrada = documento.fechaEntrada;
+			documentoJSON.idFichero = documento.idFichero;
+			documentoJSON.idTipoDoc = documento.idTipoDoc;
+			documentoJSON.nombreFichero = documento.nombreFichero;
+			documentoJSON.observaciones = documento.observaciones
+
+			if (!documento.idDocumentacion && documento.fileData) {
+				formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
+			} else {
+				documentosActualizar.push(documentoJSON);
+			}
+
+		});
+
+		formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		formData.append('anioNumero', anioNumero);
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+
+	}
+
+	postSendFileAndDesigna(service: string, documentos: any[], designa: any): Observable<any> {
+		let formData: FormData = new FormData();
+
+		let documentosActualizar = [];
+
+		documentos.forEach((el, i) => {
+
+			if (el.cells[5].value && el.cells[3].value != undefined && el.cells[3].value != null) {
+				let doc = new DocumentoDesignaItem();
+				doc.anio = designa.ano;
+				doc.numero = designa.numero;
+				doc.idTurno = designa.idTurno;
+				doc.idActuacion = el.cells[1].value == '0' ? null : el.cells[1].value;
+				doc.observaciones = el.cells[4].value;
+				doc.idTipodocumento = el.cells[2].value;
+
+				formData.append(`uploadFile${i}`, el.cells[3].value, el.cells[3].value.name + ';' + JSON.stringify(doc));
+			} else {
+				let doc = new DocumentoDesignaItem();
+				doc.anio = designa.ano;
+				doc.numero = designa.numero;
+				doc.idTurno = designa.idTurno;
+				doc.observaciones = el.cells[4].value;
+				doc.idDocumentaciondes = el.cells[6].value;
+				documentosActualizar.push(doc);
+			}
+		});
+
+		formData.append('documentosActualizar', JSON.stringify(documentosActualizar));
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {
+		let formData: FormData = new FormData();
+
+		if (documentos.length > 0) {
+			documentos.forEach((el, i) => {
+
+				formData.append(`uploadFile${i}`, el, el.name + ';');
+			});
+		}
+
+		formData.append('nuevaComunicacion', JSON.stringify(nuevaComunicacion));
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFileAndParametersDataBank(
+		service: string,
+		file: any,
+		idPersona: any,
+		idCuenta: any,
+		idMandato: any,
+		idAnexo: any,
+		tipoMandato: any
+	): Observable<any> {
+		let formData: FormData = new FormData();
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
+
+		// pasar parametros por la request
+		formData.append('idPersona', idPersona);
+		formData.append('idCuenta', idCuenta);
+		formData.append('idMandato', idMandato);
+		formData.append('idAnexo', idAnexo);
+		formData.append('tipoMandato', tipoMandato);
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFileAndParametersComprobantePago(
+		service: string,
+		file: any,
+		idPersona: any,
+		idInscripcion: any
+	): Observable<any> {
+		let formData: FormData = new FormData();
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
+
+		// pasar parametros por la request
+		formData.append('idPersona', idPersona);
+		formData.append('idInscripcion', idInscripcion);
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postPaginado(service: string, param: string, body: any): Observable<any> {
+		let headers = new HttpHeaders({
+			'Content-Type': 'application/json'
+		});
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service] + param, body, {
+				headers: headers,
+				observe: 'response',
+				responseType: 'text'
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	notifyMenuToggled() {
+		this.menuToggled.next();
+	}
+
+	notifyRefreshConsulta() {
+		this.consultasRefresh.next();
+	}
+
+	notifyupdateCombo(send) {
+		this.updateCombo.next(send);
+	}
+
+	notifynewIdOrdenacion(send) {
+		this.newIdOrdenacion.next(send);
+	}
+
+	notifysendSelectedDatos(send) {
+		this.sendSelectedDatos.next(send);
+	}
+
+	notifyRefreshModelos() {
+		this.modelosRefresh.next();
+	}
+
+	notifyRefreshEditar() {
+		this.deshabilitarEditar.next();
+	}
+
+	notifyRefreshPerfiles() {
+		this.perfilesRefresh.next();
+	}
+
+	notifyHabilitarDocumentos() {
+		this.habilitarDocs.next();
+	}
+
+	notifyDesHabilitarDocumentos() {
+		this.desHabilitarDocs.next();
+	}
+
+	notifyGuardarDatosGeneralesRepresentante(data) {
+		this.guardarDatosGeneralesRepresentante.next(data);
+	}
+
+	notifyGuardarDatosGeneralesJusticiable(data) {
+		this.guardarDatosGeneralesJusticiable.next(data);
+	}
+
+	notifyGuardarDatosSolicitudJusticiable(data) {
+		this.guardarDatosSolicitudJusticiable.next(data);
+	}
+
+	notifyCreateJusticiable(data) {
+		this.createJusticiable.next(data);
+	}
+
+	notifysendFechaBaja(fecha) {
+		this.sendFechaBaja.next(fecha);
+	}
+
+	notifysendDatosRedy(datos) {
+		this.sendDatosRedy.next(datos);
+	}
+
+	postSendContentAndParameter(
+		service: string,
+		param: string,
+		file: any
+	): Observable<any> {
+		let formData: FormData = new FormData();
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service] + param, formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
+	postSendFileAndParameters2(service: string, file: File, params: any): Observable<any> {
+
+		let formData: FormData = new FormData();
+
+		if (file != undefined) {
+			formData.append('uploadFile', file, file.name);
+		}
+
+		let objectKeys = Object.keys(params);
+
+		// pasamos parametros por la request
+		objectKeys.forEach(el => {
+			formData.append(el, params[el]);
+		});
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
 }

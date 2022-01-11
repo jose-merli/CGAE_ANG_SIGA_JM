@@ -39,7 +39,7 @@
         [estadosCertificacion]="estadosCertificacion" (guardarEvent)="guardarEvent($event)"
         (reabrirEvent)="reabrirEvent($event)" (cerrarEvent)="cerrarYenviar($event)" (descargarEvent)="descargar($event)"
         (restablecerEvent)="getCertificacion($event)" (getListaEstadosEvent)="getListaEstadosEvent($event)"
-        (addEnlace)="addEnlace($event)">
+        (subirFicheroCAMEvent)="subirFicheroCAM($event)" (addEnlace)="addEnlace($event)">
       </app-tarjeta-datos-generales-fiFac>
 
       <app-tarjeta-facturacion *ngIf="showCards" [certificacion]="certificacion" [modoEdicion]="modoEdicion"

@@ -9,6 +9,7 @@ import { TranslateService } from '../../../../../../commons/translate/translatio
 import { Router } from '@angular/router';
 import { Enlace } from '../ficha-certificacion-fac.component';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { FileUpload } from 'primeng/primeng';
 
 @Component({
   selector: 'app-tarjeta-datos-generales-fiFac',
@@ -25,6 +26,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   rowsPerPage: any = [];
   cols: any[] = [];
   nombreInicial: string;
+  file: File = undefined;
 
   @Input() modoEdicion: boolean = false;
   @Input() certificacion: CertificacionesItem = new CertificacionesItem();
@@ -36,9 +38,11 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   @Output() descargarEvent = new EventEmitter<boolean>();
   @Output() restablecerEvent = new EventEmitter<string>();
   @Output() getListaEstadosEvent = new EventEmitter<string>();
+  @Output() subirFicheroCAMEvent = new EventEmitter<File>();
   @Output() addEnlace = new EventEmitter<Enlace>();
 
   @ViewChild("tabla") tabla: Table;
+  @ViewChild("pUploadFile") pUploadFile: FileUpload;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private commonsService: CommonsService, private translateService: TranslateService,
     private router: Router, private sigaServices: SigaServices) { }
@@ -131,9 +135,30 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
 
   }
 
-  subirFichero() {
+  uploadFile(event: any) {
 
     if (this.permisoEscritura) {
+
+      // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
+      let fileList: FileList = event.files;
+
+      let nombreCompletoArchivo = fileList[0].name;
+      let extensionArchivo = nombreCompletoArchivo.substring(
+        nombreCompletoArchivo.lastIndexOf("."),
+        nombreCompletoArchivo.length
+      );
+
+      if (extensionArchivo == null) {
+        // Mensaje de error de formato de imagen y deshabilitar boton guardar
+        this.file = undefined;
+
+        // this.showFailUploadedImage();
+      } else {
+        // se almacena el archivo para habilitar boton guardar
+        this.file = fileList[0];
+        this.subirFicheroCAMEvent.emit(this.file);
+        this.pUploadFile.clear();
+      }
 
     }
 

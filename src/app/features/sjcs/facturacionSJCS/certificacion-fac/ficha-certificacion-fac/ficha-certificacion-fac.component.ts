@@ -527,5 +527,38 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
   }
 
+  subirFicheroCAM(event: File) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
+      this.progressSpinner = true;
+
+      let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+
+      this.sigaService.postSendFileAndParameters2("certificaciones_subirFicheroCAM", event, {
+        listaIdFacturaciones: listaIds.length > 0 ? listaIds : []
+      }).subscribe(
+        data => {
+
+          this.progressSpinner = false;
+
+          const res = data;
+
+          if (res.error && res.error != null && res.error.description != null && res.error.description.toString().trim().length > 0 && res.status == 'KO' && (res.error.code == '500' || res.error.code == '400')) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+
+    }
+
+  }
+
 }
 
