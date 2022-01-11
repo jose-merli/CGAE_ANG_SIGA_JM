@@ -173,7 +173,7 @@ export class TranslateService {
         this.service.get("menu").subscribe(res => {
           resolve(res.menuItems);
         }, err =>{
-          console.log(err);
+          //console.log(err);
         });
 
       });

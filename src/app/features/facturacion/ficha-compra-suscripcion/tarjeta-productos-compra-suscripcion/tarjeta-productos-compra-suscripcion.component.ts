@@ -695,7 +695,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   onChangePago(){
     this.newFormaPagoCabecera();
     if((this.selectedPago == "80" || this.selectedPago == '20') && this.ficha.idPersona == null){
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "** Debe tener un cliente seleccionado para mostrar las cuentas bancarias asociadas");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.incorrect"));
     }
   }
   newFormaPagoCabecera(){

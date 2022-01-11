@@ -536,7 +536,7 @@ export class DatosPersonalesComponent implements OnInit {
 
     }, error => {
       this.progressSpinner = false;
-      console.log(error);
+      //console.log(error);
     });
   }
 
@@ -629,7 +629,7 @@ export class DatosPersonalesComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -651,7 +651,7 @@ export class DatosPersonalesComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -670,7 +670,7 @@ export class DatosPersonalesComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -729,7 +729,7 @@ export class DatosPersonalesComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -746,7 +746,7 @@ export class DatosPersonalesComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -763,7 +763,7 @@ export class DatosPersonalesComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -780,7 +780,7 @@ export class DatosPersonalesComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );

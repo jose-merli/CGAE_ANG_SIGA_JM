@@ -77,6 +77,7 @@ export class GestionEjgComponent implements OnInit {
   openTarjetaImpugnacion: Boolean = false;
   openTarjetaRegtel: Boolean = false;
   openTarjetaComunicaciones: Boolean = false;
+  openTarjetaFac: Boolean = false;
 
   enlacesTarjetaResumen = [];
 
@@ -84,6 +85,8 @@ export class GestionEjgComponent implements OnInit {
 
   @ViewChild(ServiciosTramitacionComponent) tramitacion;
   @ViewChild(EstadosComponent) tarjetaEstadosEJG;
+
+  datosEntradaTarjGenerica: any;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -108,6 +111,7 @@ export class GestionEjgComponent implements OnInit {
       } else {
         //obtiene un EJG desde la tarjeta relaciones de la ficha designacion
         this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
+        this.body.apellidosYNombre = "";
         this.persistenceService.setDatos(this.body);
         this.modoEdicion = true;
         this.updateTarjResumen();
@@ -117,6 +121,16 @@ export class GestionEjgComponent implements OnInit {
 
     } else {
       this.body = this.persistenceService.getDatos();
+      if (this.body) {
+        this.body.apellidosYNombre = "";
+      }
+
+      if (sessionStorage.getItem("fichaEJG") != null) {
+        this.body = JSON.parse(sessionStorage.getItem("fichaEJG"));
+        sessionStorage.removeItem("fichaEJG");
+        this.persistenceService.setDatos(this.body);
+        this.updateTarjResumen();
+      }
 
       if (sessionStorage.getItem("datosDesdeJusticiable")) {
         this.body = JSON.parse(sessionStorage.getItem("datosDesdeJusticiable"));
@@ -131,6 +145,7 @@ export class GestionEjgComponent implements OnInit {
       } else {
         //hemos pulsado nuevo 
         if (sessionStorage.getItem("Nuevo")) {
+          this.nuevo = true;
           sessionStorage.removeItem("Nuevo");
           this.body = new EJGItem();
           this.modoEdicion = false;
@@ -156,40 +171,48 @@ export class GestionEjgComponent implements OnInit {
     this.goTop();
   }
 
+  actualizaLetradoDesignado(event) {
+    this.body.apellidosYNombre = event;
+    this.updateTarjResumen();
+  }
+
   updateTarjResumen() {
-    this.body = this.persistenceService.getDatos();
+    if (!this.nuevo)
+      //this.body = this.persistenceService.getDatos();
 
-    this.datos = [
-      {
-        label: "Año/Numero EJG",
-        value: this.body.numAnnioProcedimiento
-      },
-      {
-        label: "Solicitante",
-        value: this.body.nombreApeSolicitante
-      },
+      if (this.body != null && this.body != undefined) {
+        this.datos = [
+          {
+            label: "Año/Numero EJG",
+            value: this.body.numAnnioProcedimiento
+          },
+          {
+            label: "Solicitante",
+            value: this.body.nombreApeSolicitante
+          },
 
-      {
-        label: "Estado EJG",
-        value: this.body.estadoEJG
-      },
-      {
-        label: "Designado",
-        value: this.body.apellidosYNombre
-      },
-      {
-        label: "Dictamen",
-        value: this.body.dictamenSing
-      },
-      {
-        label: "CAJG",
-        value: this.body.resolucion
-      },
-      {
-        label: "Impugnación",
-        value: this.body.impugnacionDesc
-      },
-    ];
+          {
+            label: "Estado EJG",
+            value: this.body.estadoEJG
+          },
+          {
+            label: "Designado",
+            value: this.body.apellidosYNombre
+          },
+          {
+            label: "Dictamen",
+            value: this.body.dictamenSing
+          },
+          {
+            label: "CAJG",
+            value: this.body.resolucion
+          },
+          {
+            label: "Impugnación",
+            value: this.body.impugnacionDesc
+          },
+        ];
+      }
   }
 
   goTop() {
@@ -199,7 +222,16 @@ export class GestionEjgComponent implements OnInit {
       top.scrollIntoView();
       top = null;
     }
+  }
 
+  goResol(){
+    document.children[document.children.length - 1]
+    let resol = document.getElementById("resol");
+    if (resol) {
+      this.openTarjetaResolucion = true;
+      resol.scrollIntoView();
+      resol = null;
+    }
   }
 
   clear() {
@@ -227,7 +259,7 @@ export class GestionEjgComponent implements OnInit {
     });
   }
 
-  asignNoAsocDes(event){
+  asignNoAsocDes(event) {
     this.noAsocDes = event;
   }
 
@@ -240,6 +272,16 @@ export class GestionEjgComponent implements OnInit {
   }
 
   backTo() {
+    this.persistenceService.clearDatos();
+    if(sessionStorage.getItem("filtroAsistencia")){
+      sessionStorage.setItem("volver","true");
+    }
+    //Para evitar complicaciones según se acceda desde la pantalla de busqueda de EJGs de comision o 
+    //desde una ficha de acta directamente
+    if(sessionStorage.getItem("actasItemAux") && sessionStorage.getItem("actasItem") == null){
+      sessionStorage.setItem("actasItem",sessionStorage.getItem("actasItemAux"));
+      sessionStorage.removeItem("actasItemAux");
+    }
     this.location.back();
   }
 
@@ -365,7 +407,11 @@ export class GestionEjgComponent implements OnInit {
   }
 
   enviarEnlacesTarjeta() {
-    this.enlacesTarjetaResumen = []
+    if(sessionStorage.getItem("actasItem")){
+      this.goResol();
+    }
+
+    this.enlacesTarjetaResumen = [];
 
     let pruebaTarjeta;
 
@@ -490,6 +536,14 @@ export class GestionEjgComponent implements OnInit {
 
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
       }
+
+      pruebaTarjeta = {
+        label: "facturacionSJCS.tarjGenFac.facturaciones",
+        value: document.getElementById("facSJCSTarjFacGene"),
+        nombre: "facturaciones",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
     }, 5)
     this.progressSpinner = false;
   }
@@ -533,6 +587,8 @@ export class GestionEjgComponent implements OnInit {
         case "comunicaciones":
           this.openTarjetaComunicaciones = this.manuallyOpened;
           break;
+        case "facturaciones":
+          this.openTarjetaFac = this.manuallyOpened;
       }
     }
   }
@@ -577,8 +633,14 @@ export class GestionEjgComponent implements OnInit {
         case "comunicaciones":
           this.openTarjetaComunicaciones = true;
           break;
+        case "facturaciones":
+          this.openTarjetaFac = true;
       }
     }
+  }
+
+  guardarDatos() {
+    this.persistenceService.setDatos(this.body);
   }
 
 }

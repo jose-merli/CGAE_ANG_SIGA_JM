@@ -9,6 +9,7 @@ import { DatosIntegrantesObject } from "../../../../../models/DatosIntegrantesOb
 import { TranslateService } from "./../../../../../commons/translate/translation.service";
 import { ColegiadoItem } from "../../../../../models/ColegiadoItem";
 import { ColegiadoObject } from "../../../../../models/ColegiadoObject";
+import { DatosLiquidacionIntegrantesItem } from "../../../../../models/DatosLiquidacionIntegrantesItem";
 
 /*** COMPONENTES ***/
 
@@ -89,6 +90,17 @@ export class DetalleIntegranteComponent implements OnInit {
   @ViewChild("table")
   table;
   selectedDatos;
+  Liquidacion: DatosLiquidacionIntegrantesItem = new DatosLiquidacionIntegrantesItem();
+  datosLiquidacion: any;
+  isVolver: boolean;
+  isCrear: boolean;
+  isEditar: boolean;
+  isEliminar: boolean;
+  isGuardar: boolean;
+  fechaMinima: Date;
+  nuevaFecha: any;
+  registroAnteriorMod: DatosLiquidacionIntegrantesItem;
+  observaciones: String;
 
   constructor(
     private sigaServices: SigaServices,
@@ -165,7 +177,7 @@ export class DetalleIntegranteComponent implements OnInit {
             .subscribe(
               n => {
                 this.colegios = JSON.parse(n["body"]).comboColegiadoItems;
-                // console.log("colegiaciones", this.colegios);
+                // //console.log("colegiaciones", this.colegios);
 
                 this.colegios.forEach(element => {
                   this.nColegiado.push({
@@ -193,7 +205,7 @@ export class DetalleIntegranteComponent implements OnInit {
                 }
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         }
@@ -262,6 +274,154 @@ export class DetalleIntegranteComponent implements OnInit {
     this.getComboProvincias();
     this.getComboTipoColegio();
     this.getComboTiposCargos();
+
+    this.getHistoricoLiquidacion();
+  }
+
+  borrar() {
+    let arr = [];
+
+    this.datosLiquidacion[0].anterior = false;
+    this.datosLiquidacion[1].anterior = true;
+
+    arr.push(this.datosLiquidacion[0]); //--último registro de la tabla
+    arr.push(this.datosLiquidacion[1]); //--antepenúltimo registro de la tabla
+    //•	Eliminar: borrará el último registro solo si el colegiado no está en un pago con fecha posterior o igual a la fecha del último registro.
+    //comprobar que el colegiado tiene algún pago con fecha posterior o igual a la fecha de registro --> fecha inicio de la tabla this.datos
+    //si devuelve >0 o true significa que tiene pagos y no se puede eliminar
+    this.sigaServices.post("integrantes_buscarPagosColegiados",arr).subscribe(
+      data => { 
+        let ok = data.body;
+        if(ok){
+          this.sigaServices.post("integrantes_eliminarLiquidacion",this.datosLiquidacion).subscribe(
+            data => { 
+              let ok = data.body;
+              if(ok){
+                this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                this.getHistoricoLiquidacion();
+              }
+            },
+            err => {
+              this.progressSpinner = false;
+              if (null != err.error && JSON.parse(err.error).error.description != "") {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+              } else {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              }
+            },
+            () => {
+              this.volver();
+            }
+          );
+        }else{
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("No se puede eliminar porque el colegiado tiene pagos con fecha posterior o igual a la fecha del registro"));
+
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        if (null != err.error && JSON.parse(err.error).error.description != "") {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        }
+      },
+      () => {
+        this.volver();
+      }
+    );
+  }
+
+  volver() {
+    this.search();
+      this.isVolver = !this.isVolver;
+      this.isCrear = !this.isCrear;
+      this.isEditar = !this.isEditar;
+      this.isEliminar = !this.isEliminar;
+  }
+
+  showMessage(severity, summary, msg) {
+		this.msgs = [];
+		this.msgs.push({
+			severity: severity,
+			summary: summary,
+			detail: msg
+		});
+	}
+
+  crear() {
+    this.isGuardar = true;
+    this.isCrear = true;
+    this.isEliminar = true;
+   
+     if (this.datosLiquidacion == null ||this.datosLiquidacion == undefined ||this.datosLiquidacion.length == 0) {
+      this.fechaMinima = new Date();
+       this.datosLiquidacion = [];
+       this.isCrear = true;
+     }else { 
+      //  this.datosLiquidacion =  JSON.parse(JSON.stringify(this.datos));
+     //  this.fechaMinima = JSON.parse(JSON.stringify(this.datosLiquidacion[0].fechaInicio));    
+       this.fechaMinima = new Date(JSON.parse(JSON.stringify(this.datosLiquidacion[0].fechaInicio)));
+    }
+
+    let nuevaLinea = new DatosLiquidacionIntegrantesItem();
+
+    if(this.datosLiquidacion && this.datosLiquidacion[0].sociedad != null && this.datosLiquidacion[0].sociedad  == "Alta"){
+      nuevaLinea.sociedad = "Baja";
+    }else{
+      nuevaLinea.sociedad = "Alta";
+    }
+
+    nuevaLinea.nuevo = true;
+
+    this.datosLiquidacion.unshift(nuevaLinea); 
+
+
+  }
+
+  // formatDate(date) {
+  //   const pattern = 'dd/MM/yyyy';
+  //   return this.datepipe.transform(date, pattern);
+  // }
+  
+  getHistoricoLiquidacion(){
+    this.Liquidacion = new DatosLiquidacionIntegrantesItem();
+    this.Liquidacion.idComponente = this.body.idComponente;
+    this.Liquidacion.idPersona = this.body.idPersona;
+    this.Liquidacion.idInstitucion = this.body.idInstitucion;
+    this.Liquidacion.sociedad = this.body.sociedad;
+
+
+    this.sigaServices.post("integrantes_listadoHistoricoLiquidacion",this.Liquidacion).subscribe(
+      data => {
+        
+        // this.searchLiquidacion = data.body;
+        this.datosLiquidacion = JSON.parse(data.body).datosLiquidacionItem;
+        
+        this.datosLiquidacion.forEach(element => {
+          element.fechaInicio = new Date(element.fechaInicio); 
+          
+          if(element.sociedad == "1"){
+            element.sociedad = "Alta";
+          }else{
+            element.sociedad = "Baja";
+          }
+
+          element.idPersona = this.body.idPersona;
+          element.idComponente = this.body.idComponente;
+          element.idInstitucion = this.body.idInstitucion;
+          element.nuevo = false;
+        });
+
+        this.progressSpinner = false;       
+      },
+      err => {
+        this.progressSpinner = false;     
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   getComboColegios() {
@@ -271,7 +431,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.arregloTildesCombo(this.colegios);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -316,7 +476,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.actualizarDescripcionProvincia();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -340,11 +500,11 @@ export class DetalleIntegranteComponent implements OnInit {
           }
         }
 
-        console.log(this.colegiosArray);
+        //console.log(this.colegiosArray);
         this.actualizarDescripcionTipoColegio();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -357,7 +517,7 @@ export class DetalleIntegranteComponent implements OnInit {
         this.actualizarDescripcionCargo();
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -608,7 +768,7 @@ export class DetalleIntegranteComponent implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -740,7 +900,7 @@ export class DetalleIntegranteComponent implements OnInit {
             this.showSuccess();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -932,7 +1092,7 @@ export class DetalleIntegranteComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -1083,7 +1243,7 @@ export class DetalleIntegranteComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -1112,11 +1272,11 @@ export class DetalleIntegranteComponent implements OnInit {
       item => item.value === this.body.idProvincia
     );
 
-    // console.log("dde", this.descripcionProvincia);
+    // //console.log("dde", this.descripcionProvincia);
   }
 
   onChange(event) {
-    // console.log("fo", event.replace(".", ","));
+    // //console.log("fo", event.replace(".", ","));
     this.body.capitalSocial = event.replace(",", ".");
   }
 
@@ -1151,5 +1311,101 @@ export class DetalleIntegranteComponent implements OnInit {
         }
       }
     });
+  }
+
+  //NUEVOOOO
+  onChangeCalendar(event) {
+    this.nuevaFecha = event;
+    this.isVolver = false;
+    // if (this.datos.length > 1) {
+    //   this.datos.forEach((value: any, key: number) => {
+    //     if (
+    //       value.recursoRetencion == this.retencionActiveAnt.recursoRetencion &&
+    //       value.fechaInicio == this.retencionActiveAnt.fechaInicio
+    //     ) {
+    //       this.datos[key].fechaFin = this.datepipe.transform(
+    //         new Date(event - 86400000),
+    //         "dd/MM/yyyy"
+    //       );          
+    //     }
+    //   });
+    // }
+
+    // if //(
+    //   //this.body.descripcionLiquidacion != "" &&
+    //   //this.body.descripcionLiquidacion != undefined
+    // ) {
+    //   this.isEditar = false;
+    //   this.isCrear = true;
+    // }
+
+   
+  }
+
+  guardarLiquidacion(){
+
+    this.registroAnteriorMod = new DatosLiquidacionIntegrantesItem();
+    if (this.datosLiquidacion != null && this.datosLiquidacion != undefined && this.datosLiquidacion.length != 0) {
+    
+      this.registroAnteriorMod = JSON.parse(JSON.stringify(this.datosLiquidacion[1]));
+      
+      if(this.datosLiquidacion[1].sociedad == "Alta"){
+        this.registroAnteriorMod.sociedad = "1";
+      }else{
+        this.registroAnteriorMod.sociedad = "0";
+      }
+
+    }
+    this.registroAnteriorMod.anterior = true;
+
+    this.Liquidacion = new DatosLiquidacionIntegrantesItem();
+    this.Liquidacion.fechaInicio= new Date(this.nuevaFecha);
+    this.Liquidacion.observaciones = this.observaciones;//.toString();
+    this.Liquidacion.idComponente = this.body.idComponente;
+    this.Liquidacion.idPersona = this.body.idPersona;
+    this.Liquidacion.idInstitucion = this.body.idInstitucion;
+
+
+    if(this.datosLiquidacion[0].sociedad == "Alta"){
+      this.Liquidacion.sociedad = "1";
+    }else{
+      this.Liquidacion.sociedad = "0";
+    }
+
+     this.Liquidacion.anterior = false;
+    
+    let arr = [];
+    arr.push(this.Liquidacion);
+    arr.push(this.registroAnteriorMod);
+
+    if(this.Liquidacion.fechaInicio != null && this.Liquidacion.fechaInicio != undefined){
+      this.sigaServices.post("integrantes_insertHistoricoLiquidacion",arr).subscribe(
+        data => {
+          let ok = data.body;
+          this.isGuardar = false;
+          this.progressSpinner = false;
+     
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.getHistoricoLiquidacion();
+          
+        },
+        err => {
+          this.progressSpinner = false;
+          if (null != err.error && JSON.parse(err.error).error.description != "") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          }
+           this.isGuardar = true;
+        },
+        () => {
+          this.progressSpinner = false;
+           this.isGuardar = false;
+        }
+      );
+    }else{
+      console.log("No está la fecha seleccionada");
+      this.isGuardar = false;
+    }
   }
 }

@@ -91,7 +91,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			
 			  },
 			  err => {
-				console.log(err);
+				//console.log(err);
 			  },
 			  () => {
 			  }
@@ -162,6 +162,10 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.datos.observaciones = "";
 		
 		this.fichasPosibles = [
+			{
+				key: 'cola',
+				activa: true
+			},
 			{
 				key: 'letrado',
 				activa: true
@@ -354,6 +358,7 @@ export class FichaInscripcionesComponent implements OnInit {
 	getColaOficio() {
 		this.datos.historico = this.historico;
 		this.progressSpinner = true;
+		if(this.datos.idturno != undefined && this.datos.idturno != null){
 		this.sigaServices.post("inscripciones_TarjetaColaOficio", this.datos).subscribe(
 		  n => {
 			// this.datos = n.turnosItem;
@@ -366,7 +371,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			// }
 		  },
 		  err => {
-			console.log(err);
+			//console.log(err);
 			this.progressSpinner = false;
 		  }, () => {
 			this.progressSpinner = false;
@@ -386,7 +391,8 @@ export class FichaInscripcionesComponent implements OnInit {
 			}
 		  }
 		);
-	  }
+	}
+  }
 
 	solicitarBaja(access=2) {
 		this.progressSpinner = true;
@@ -428,12 +434,19 @@ export class FichaInscripcionesComponent implements OnInit {
 		}
 	}
 
+	changeDateFormat(date1){
+		// date1 dd/MM/yyyy
+		let date1C = date1.split("/").reverse().join("-")
+		return date1C;
+	  }
+
 	cambiarFecha() {
 		this.progressSpinner = true;
 		let body = new InscripcionesObject();
 		body.inscripcionesItem[0] = this.datos;
       	body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
 		body.inscripcionesItem[0].observaciones = this.datos.observaciones;
+		
 		this.sigaServices.post("inscripciones_updateCambiarFecha", body).subscribe(
 			data => {
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));

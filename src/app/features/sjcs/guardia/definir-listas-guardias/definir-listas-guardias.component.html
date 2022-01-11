@@ -1,1 +1,31 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+<div class="card">
+    <div class="card-body">
+        <div>
+            <app-buscador-lista-guardias></app-buscador-lista-guardias>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="text-right main-button">
+            <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+                label="{{ 'general.boton.clear' | translate}}" (click)="reset()"></button>
+            <button type="submit" pButton icon="fa fa-search" iconPos="left"
+                label="{{'general.boton.search' | translate}}" (click)="search()"></button>
+            <button type="button" pButton icon="fa fa-plus" iconPos="left"
+                label="{{'general.boton.new' | translate}}" (click)="nuevaLista()" [disabled]="!permisosEscritura"></button>
+        </div>
+    </div>
+</div>
+<div *ngIf="show">
+    <div class="card mt-3">
+        <div class="card-body p-0" id="tablaFoco">
+            <app-resultado-lista-guardias [listas]="listas" [filtro]="buscador.filtro" [permisosEscritura]="permisosEscritura"></app-resultado-lista-guardias>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

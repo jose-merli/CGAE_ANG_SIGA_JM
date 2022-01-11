@@ -195,7 +195,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.idiomas = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -433,7 +433,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.formatos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -446,7 +446,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.sufijosInicial = JSON.parse(JSON.stringify(this.sufijos));
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -475,7 +475,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         },
         err => {
           this.showFail("Error al cargar las consultas");
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -494,7 +494,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       },
       err => {
         this.showFail("Error al cargar las consultas");
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.progressSpinner = false;
       }
@@ -656,7 +656,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       },
       err => {
         this.showFail(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargaConsulta"));
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -740,7 +740,7 @@ export class PlantillaDocumentoComponent implements OnInit {
             }
           } else {
             this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
-            console.log(err);
+            //console.log(err);
           }
         },
         () => {
@@ -799,7 +799,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         },
         err => {
           this.showFail("Error guardar datos Salida");
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         },
@@ -912,7 +912,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       },
       err => {
         this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"));
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -940,7 +940,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         err => {
           this.progressSpinner = false;
           this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -989,7 +989,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.consultas.ficha.errorGuardadoConsulta"));
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.progressSpinner = false;
@@ -1046,7 +1046,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.datos = [...this.datos];
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => { }
@@ -1146,7 +1146,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.consultas.errorEliminarConsulta"));
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.getResultados();
@@ -1221,7 +1221,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         },
         err => {
           this.showFail(this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaEliminado"));
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.selectAllDocs = false;
@@ -1257,7 +1257,7 @@ export class PlantillaDocumentoComponent implements OnInit {
       perfilesFiltrados.forEach(element => {
         let find = this.selectedSufijos.find(x => x.idSufijo == element.idSufijo);
         if (find != undefined) {
-          // console.log(perfilesFiltrados[i]);
+          // //console.log(perfilesFiltrados[i]);
         } else {
           this.sufijos.push(perfilesFiltrados[i]);
         }
@@ -1402,7 +1402,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         },
         err => {
           this.showFail("Error al ir a la consulta");
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.progressSpinner = false;
@@ -1464,7 +1464,7 @@ export class PlantillaDocumentoComponent implements OnInit {
         this.numSelected = 0;
       },
         err => {
-          console.log(err);
+          //console.log(err);
           this.showFail(this.translateService.instant("messages.general.error.ficheroNoExiste")
           );
         }, () => {

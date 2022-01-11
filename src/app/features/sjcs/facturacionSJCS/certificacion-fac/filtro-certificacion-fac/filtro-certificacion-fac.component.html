@@ -1,0 +1,104 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div *ngIf="progressSpinnerFiltro" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-body">
+      <div class="form-row">
+      </div>
+      <p class="title-module" (click)="onHideDatosGenerales()">
+        {{ 'general.message.datos.generales' | translate }}
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      </p>
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+        <!--FIla 1-->
+        <div class="form-row">
+          <!--Colegio-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.colegio' | translate}}</label>
+            <p-multiSelect #multiColegio class="select-form" [(ngModel)]='filtros.idInstitucionList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboColegios" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} colegios seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(multiColegio)"
+              (onChange)="onChangeColegio($event, 'idInstitucionList')" [disabled]="disableColegio">
+            </p-multiSelect>
+          </div>
+          <!--Partida Presupuestaria-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "menu.justiciaGratuita.maestros.partidas" | translate }}</label>
+            <p-multiSelect #multiPartida class="select-form" [(ngModel)]='filtros.idPartidaPresupuestariaList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboPartidaPresupuestaria"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} partidas seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(multiPartida)"
+              (onChange)="onChangeMultiSelect($event, 'idPartidaPresupuestariaList')">
+            </p-multiSelect>
+          </div>
+          <!--Grupo de Facturacion-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "justiciaGratuita.oficio.turnos.grupofacturacion" | translate }}</label>
+            <p-multiSelect #multiGrupoFac class="select-form" [(ngModel)]='filtros.idGrupoFacturacionList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboGrupoFacturacion"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} grupos seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(multiGrupoFac)"
+              (onChange)="onChangeMultiSelect($event, 'idGrupoFacturacionList')" [disabled]="disableComboFact">
+            </p-multiSelect>
+          </div>
+          <!--Conceptos y servicios-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.conceptosyservicios" | translate }}</label>
+            <p-multiSelect #multiConcep class="select-form" [(ngModel)]='filtros.idHitoGeneralList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboConceptoServicios"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} conceptos seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(multiConcep)"
+              (onChange)="onChangeMultiSelect($event, 'idHitoGeneralList')">
+            </p-multiSelect>
+          </div>
+        </div>
+        <!--FIla 2-->
+        <div class="form-row">
+          <!--Nombre-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}}</label>
+            <input type="text" maxlength="95" name="nombre" class="form-control" [(ngModel)]='filtros.nombre'
+              pInputText />
+          </div>
+          <!--Estado-->
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
+            <p-multiSelect #multiEst class="select-form" [(ngModel)]='filtros.idEstadoCertificacionList'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstado"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} estados seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(multiEst)"
+              (onChange)="onChangeMultiSelect($event, 'idEstadoCertificacionList')">
+            </p-multiSelect>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}}</label>
+            <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDesde($event)"
+              (valueChangeInput)="fillFechaDesde($event)" [(value)]="filtros.fechaDesde"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'gratuita.personaJG.literal.hasta' | translate}}</label>
+            <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event)"
+              (valueChangeInput)="fillFechaHasta($event)" [(value)]="filtros.fechaHasta" [minDate]="filtros.fechaDesde">
+            </app-fecha>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"
+          (click)="restablecer()"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.search' | translate }}" (click)="buscarCert()"></button>
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
+          [disabled]="!permisoEscritura" (click)="newCer()"></button>
+      </div>
+    </div>
+  </div>
+</div>

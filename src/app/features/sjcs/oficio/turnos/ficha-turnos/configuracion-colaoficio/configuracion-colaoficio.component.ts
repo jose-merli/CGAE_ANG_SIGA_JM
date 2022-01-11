@@ -242,7 +242,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
             );
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }, () => {
             this.getPerfilesExtistentes();
           } 
@@ -366,11 +366,11 @@ export class ConfiguracionColaOficioComponent implements OnInit {
     let array: any[] = [];
     let arrayNoSel: any[] = [];
     this.pesosSeleccionados.forEach(element => {
-      console.log("Seleccionados"+element.por_filas);
+      //console.log("Seleccionados"+element.por_filas);
       array.push(element);
     });
     this.pesosExistentes.forEach(element => {
-      console.log("No seleccionados"+element.por_filas);
+      //console.log("No seleccionados"+element.por_filas);
       arrayNoSel.push(element);
     });
     array.forEach(element => {
@@ -409,7 +409,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
               // }
             },
             err => {
-              console.log(err);
+              //console.log(err);
             }, () => {
               this.persistenceService.setDatos(this.turnosItem2);
               let send = {
@@ -421,7 +421,7 @@ export class ConfiguracionColaOficioComponent implements OnInit {
         },
         err => {
           this.showFail(this.translateService.instant("justiciaGratuita.oficio.turnos.errorguardadopesos"));
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         },

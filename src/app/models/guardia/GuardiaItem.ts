@@ -51,7 +51,20 @@ export class GuardiaItem {
     historico: boolean;
     idGrupoUltimo;
     idGrupoGuardia;
-
+    volver;
+    numColegiado;
+    fechadesde;
+    fechahasta;
+    fechaBaja;
+    validada;
+    ordenGrupo;
+    idPersona;
+    fechaValidacion;
+    idCalendarioGuardias;
+    orden : string;
+    idListaGuardia : string;
+    tipoGuardia;
+    idConjuntoGuardia;
 
     constructor() { }
 

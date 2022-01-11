@@ -110,7 +110,7 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
         this.comboNotifyType = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -121,7 +121,7 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
         this.comboMeasureUnit = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -132,7 +132,7 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
         this.comboAfterBefore = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -154,7 +154,7 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -215,7 +215,7 @@ export class DatosNotificacionesComponent implements OnInit, OnDestroy {
           this.notification.tipoEnvio = typeSend[0].label;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

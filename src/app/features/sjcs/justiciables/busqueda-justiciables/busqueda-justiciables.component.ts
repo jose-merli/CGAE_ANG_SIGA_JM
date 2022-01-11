@@ -72,6 +72,8 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
   searchJusticiable: boolean = false;
   nuevoInteresado: boolean = false;
   nuevoContrario: boolean = false;
+  nuevoAsistido: boolean = false;
+  nuevoContrarioAsistencia: boolean = false;
   nuevaUniFamiliar: boolean = false;
   nuevoContrarioEJG: boolean = false;
 
@@ -100,6 +102,15 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       this.nuevoContrario=true;
     }
 
+    if(sessionStorage.getItem("origin")=="newAsistido"){
+      sessionStorage.removeItem('origin');
+      this.nuevoAsistido=true;
+    }
+
+    if(sessionStorage.getItem("origin")=="newContrarioAsistencia"){
+      sessionStorage.removeItem('origin');
+      this.nuevoContrarioAsistencia=true;
+    }
     if(sessionStorage.getItem("origin")=="UnidadFamiliar"){
       this.nuevaUniFamiliar=true;
       sessionStorage.removeItem("origin");
@@ -169,7 +180,7 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       });
   }
 

@@ -86,7 +86,7 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.sigaServices.get("busquedaColegiados_situacion").subscribe(
@@ -110,7 +110,7 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -128,7 +128,7 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           }
         );
@@ -178,7 +178,7 @@ export class FiltrosGeneralSJCSComponent implements OnInit {
             });
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           }
         );

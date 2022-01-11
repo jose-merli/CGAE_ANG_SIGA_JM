@@ -1,0 +1,47 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="consultas-container" id="top">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>SJCS
+      <i class="fa fa-angle-right"></i>{{ 'facturacionSJCS.movimientosVarios.fichaTitulo' | translate }}
+    </p>
+  </div>
+
+  <div id="fijo">
+    <app-tarjeta-resumen-movimientos *ngIf="showCards" class="pb-50" [chincheta]="true" icono="far fa-file-alt"
+      [enlaces]="enlacesTarjetaResumen" titulo="justiciaGratuita.oficio.turnos.inforesumen"
+      [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" (isOpen)="isOpenReceive($event)"
+      [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-movimientos>
+  </div>
+  <app-tarjeta-datos-cliente *ngIf="showCards" [permisoEscritura]="permisoEscritura"
+    [nuevoMonVarioDesdeTarjFacGene]="nuevoMonVarioDesdeTarjFacGene" (opened)="manuallyOpened = $event"
+    (idOpened)="isCloseReceive($event)" (datosTarjetaResumenEmit)="datosTarjetaResumenEvent($event)"
+    (datosClienteEmit)="datosClienteEvent($event)" (datosColegiadoEmit)="datosColegiadoEvent($event)"
+    (bodyFisicaEmit)="bodyFisicaEvent($event)" [modoEdicion]="modoEdicion" [datos]="datos"
+    [openDatosCliente]="openDatosCliente" [showCards] = "showCards"></app-tarjeta-datos-cliente>
+  <app-tarjeta-datos-generales-fiMov *ngIf="showCards" (opened)="manuallyOpened = $event"
+    (idOpened)="isCloseReceive($event)" [permisoEscritura]="permisoEscritura" [modoEdicion]="modoEdicion"
+    [datos]="datos" [openDatosGen]="openDatosGen" [showCards] = "showCards"></app-tarjeta-datos-generales-fiMov>
+  <app-tarjeta-criterios-aplicacion *ngIf="showCards" (opened)="manuallyOpened = $event"
+    (idOpened)="isCloseReceive($event)" [permisoEscritura]="permisoEscritura" [datos]="datos"
+    [modoEdicion]="modoEdicion" [openCriterios]="openCriterios" [showCards] = "showCards">
+  </app-tarjeta-criterios-aplicacion>
+  <app-tarjeta-listado-pagos *ngIf="showCards" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
+    [permisoEscritura]="permisoEscritura" [datos]="datos" [datos2]="datosListadoPagos"
+    [openListadoPagos]="openListadoPagos" [showCards] = "showCards"> </app-tarjeta-listado-pagos>
+
+
+
+</div>
+
+<div class="text-right main-button">
+      <button  [disabled]="!permisoEscritura || isLetrado" (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left"
+        label="{{ 'general.boton.guardar' | translate }}" ></button>
+      <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

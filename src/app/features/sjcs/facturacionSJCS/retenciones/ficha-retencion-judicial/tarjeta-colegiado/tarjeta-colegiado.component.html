@@ -1,0 +1,95 @@
+<div id="facSJCSFichaRetCol">
+
+  <div class="card">
+
+    <div class="card-header header-ficha">
+
+      <div *ngIf="!showTarjeta" class="form-row">
+
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="onHideTarjeta()">
+            <i class="fa fa-user icon-ficha"></i>
+          </div>
+        </div>
+
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="onHideTarjeta()">
+            <label class="mr-auto title-ficha">{{ 'facturacionSJCS.retenciones.ficha.colegiado' | translate }}
+            </label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{ 'facturacionSJCS.retenciones.apellidos2' | translate }}:
+              <span>{{ body.apellidos2 }}</span></label>
+            <label>{{ 'facturacionSJCS.retenciones.apellidos1' | translate }}:
+              <span>{{ body.apellidos1 }}</span></label>
+            <label>{{ 'facturacionSJCS.retenciones.nombre' | translate }}: <span>{{ body.nombre }}</span></label>
+            <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="onHideTarjeta()">
+        <div class="img-colegiado">
+          <i class="fa fa-user icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'facturacionSJCS.retenciones.ficha.colegiado' | translate }} </label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+
+    </div>
+
+    <div *ngIf="showTarjeta" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-2 col-md-3 col-sm-3 p-2">
+          <div class="img-colegiado text-center my-0 mx-auto">
+            <i class="fa fa-user" style="font-size:6.5rem;color:grey"></i>
+          </div>
+        </div>
+        <div class="bloque col-lg-10 col-md-9 col-sm-9">
+          <div class="form-row">
+            <div class="form-group col-lg-4 col-md-4">
+              <label>{{ 'facturacionSJCS.retenciones.nombre' | translate }} (*)</label>
+              <input pInputText class="form-control" type="text" [(ngModel)]="body.nombre" (blur)="trim('nombre')"
+                #nombre (change)="setDisabled()"
+                [ngClass]="{'camposObligatorios': (body.nombre == undefined || body.nombre.length == 0)}" disabled />
+            </div>
+            <div class="form-group col-lg-4 col-md-4">
+              <label>{{ 'facturacionSJCS.retenciones.apellidos1' | translate }} (*)</label>
+              <input pInputText class="form-control" type="text" [(ngModel)]="body.apellidos1"
+                (blur)="trim('apellidos1')" #apellidos1 (change)="setDisabled()"
+                [ngClass]="{'camposObligatorios': (body.apellidos1 == undefined || body.apellidos1.length == 0)}"
+                disabled />
+            </div>
+            <div class="form-group col-lg-4 col-md-4">
+              <label>{{ 'facturacionSJCS.retenciones.apellidos2' | translate }} (*)</label>
+              <input pInputText class="form-control" type="text" [(ngModel)]="body.apellidos2"
+                (blur)="trim('apellidos2')" #apellidos2 (change)="setDisabled()"
+                [ngClass]="{'camposObligatorios': (body.apellidos2 == undefined || body.apellidos2.length == 0)}"
+                disabled />
+            </div>
+            <div class="form-group col-lg-4 col-md-4">
+              <label>{{ 'facturacionSJCS.retenciones.nif' | translate }} (*)</label>
+              <input pInputText class="form-control" type="text" [(ngModel)]="body.nif" (blur)="trim('nif')" #nif
+                (change)="setDisabled()"
+                [ngClass]="{'camposObligatorios': (body.nif == undefined || body.nif.length == 0)}" disabled />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer" *ngIf="showTarjeta">
+      <div class="text-right main-button">
+        <button pButton type="button" iconPos="left" icon="fa fa-undo"
+          label="{{ 'general.boton.restablecer' | translate }}" (click)="restablecer()"
+          [disabled]="isDisabledRestablecer() || !permisoEscritura"></button>
+        <button pButton type="button" iconPos="left" icon="fa fa-search"
+          label="{{ 'general.boton.search' | translate }}" (click)="buscar()" [disabled]="!permisoEscritura"></button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

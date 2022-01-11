@@ -32,6 +32,7 @@ import { AutoComplete, DataTable, Calendar } from 'primeng/primeng';
 import { DocushareItem } from '../../../../models/DocushareItem';
 import { Dialog } from 'primeng/dialog';
 import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
+import { PersistenceService } from '../../../../_services/persistence.service';
 
 
 
@@ -397,7 +398,8 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private router: Router,
-    private location: Location
+    private location: Location,
+    private persistenceService: PersistenceService
   ) { }
 
   ngOnInit() {
@@ -463,10 +465,13 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.desactivarVolver = false;
     } else if (sessionStorage.getItem("esNuevoNoColegiado")) {
       this.desactivarVolver = false;
+
     } //Si viene de la ficha de compra/suscripcion
     else if(sessionStorage.getItem("origin")=="Cliente"){
       this.desactivarVolver = false;
-    }else {
+    } else if (sessionStorage.getItem("fromTarjetaLetradoInscripciones") != null){
+      this.desactivarVolver = false;
+    } else {
       //  LLEGA DESDE PUNTO DE MENÚ
       this.emptyLoadFichaColegial = JSON.parse(
         sessionStorage.getItem("emptyLoadFichaColegial")
@@ -532,12 +537,12 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     //         this.idPersona = JSON.stringify(colegiadoItem.colegiadoItem[0].idPersona)
     //       },
     //       err => {
-    //         console.log(err);
+    //         //console.log(err);
     //       },
     //      );
     //   },
     //   err => {
-    //     console.log(err);
+    //     //console.log(err);
     //   });
     // }
 
@@ -596,7 +601,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
           this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.OnInit();
         });
@@ -609,6 +614,12 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   }
   // DE MOMENTO VA PERFE 
   backTo() {
+    if (sessionStorage.getItem("fromTarjetaLetradoInscripciones") != null){
+         this.persistenceService.setDatos(sessionStorage.getItem("fromTarjetaLetradoInscripciones"));
+         sessionStorage.removeItem("fromTarjetaLetradoInscripciones");
+         this.router.navigate(["/fichaInscripcionesGuardia"]);
+
+    }else{
     sessionStorage.removeItem("personaBody");
     sessionStorage.removeItem("esNuevoNoColegiado");
     sessionStorage.removeItem("filtrosBusquedaColegiados");
@@ -634,10 +645,14 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.router.navigate(["/busquedaNoColegiados"]);
     } else if (sessionStorage.getItem("esColegiado") == "true" && sessionStorage.getItem("solicitudAprobada") != "true" && sessionStorage.getItem("origin")!="Cliente") {
       this.router.navigate(["/busquedaColegiados"]);
-    } else {
+    } else if(sessionStorage.getItem("originGuardiaColeg") == "true"){
+      sessionStorage.removeItem("originGuardiaColeg")
+      this.router.navigate(["/gestionGuardiaColegiado"]);
+    } else{
       sessionStorage.removeItem("solicitudAprobada")
       this.location.back();
     }
+  }
   }
   arreglarFecha(fecha) {
 
@@ -686,7 +701,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -967,7 +982,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
           }
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

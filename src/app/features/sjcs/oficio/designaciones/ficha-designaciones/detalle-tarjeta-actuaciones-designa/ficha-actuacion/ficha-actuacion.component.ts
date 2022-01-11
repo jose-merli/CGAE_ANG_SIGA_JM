@@ -140,7 +140,7 @@ export class FichaActuacionComponent implements OnInit {
       detalle: true,
       opened: false,
       campos: []
-    },
+    }
   ];
 
   institucionActual: string = '';
@@ -156,6 +156,7 @@ export class FichaActuacionComponent implements OnInit {
   documentos: DocumentoDesignaItem[] = [];
   modoLectura: boolean = false;
   permiteTurno: boolean;
+  openTarjetaFac: Boolean = false;
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
@@ -178,10 +179,10 @@ export class FichaActuacionComponent implements OnInit {
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
-        }else if(permisoEscritura == true){
-          
+        } else if (permisoEscritura == true) {
+
           this.modoLectura = false;
-        }else{
+        } else {
           this.modoLectura = true;
         }
 
@@ -189,14 +190,25 @@ export class FichaActuacionComponent implements OnInit {
         //   this.modoLectura = true;
         // }
 
-         this.isColegiado = sessionStorage.getItem('esColegiado');
-         let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
+        this.sigaServices.get('getLetrado').subscribe(
+          (data) => {
+            if (data.value == 'S') {
+              this.isColegiado = true;
+            } else {
+              this.isColegiado = false;
+            }
+            let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
 
-        if (this.isColegiado) {
-          this.usuarioLogado = new UsuarioLogado();
-          this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
-          this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
-        } 
+            if (this.isColegiado) {
+              this.usuarioLogado = new UsuarioLogado();
+              this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
+              this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
+            }
+          },
+          (err) => {
+            //console.log(err);
+          }
+        );
 
         this.institucionActual = this.sigaStorageService.institucionActual;
 
@@ -260,13 +272,25 @@ export class FichaActuacionComponent implements OnInit {
       this.tarjetaFija.enlaces.push(tarjTmp);
     });
 
+    let tarjTmp = {
+      id: 'facSJCSTarjFacGene',
+      ref: document.getElementById('facSJCSTarjFacGene'),
+      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+    };
+
+    this.tarjetaFija.enlaces.push(tarjTmp);
+
   }
 
   isOpenReceive(event) {
     let tarjTemp = this.listaTarjetas.find(tarj => tarj.id == event);
 
-    if (!this.isNewActDesig && tarjTemp.detalle) {
+    if (!this.isNewActDesig && tarjTemp && tarjTemp.detalle) {
       tarjTemp.opened = true;
+    }
+
+    if (event && event == 'facSJCSTarjFacGene') {
+      this.openTarjetaFac = true;
     }
 
   }
@@ -501,7 +525,7 @@ export class FichaActuacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -607,7 +631,7 @@ export class FichaActuacionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -638,6 +662,10 @@ export class FichaActuacionComponent implements OnInit {
       }
     );
 
+  }
+
+  guardarDatos() {
+    sessionStorage.setItem("actuacionDesigna", JSON.stringify(this.actuacionDesigna));
   }
 
 }

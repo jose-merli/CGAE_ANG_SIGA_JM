@@ -121,7 +121,7 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // if (this.derechoAcceso == 3) {
@@ -168,7 +168,7 @@ export class PlantillasEnviosConsultasComponent implements OnInit {
         this.body = this.datos[0];
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

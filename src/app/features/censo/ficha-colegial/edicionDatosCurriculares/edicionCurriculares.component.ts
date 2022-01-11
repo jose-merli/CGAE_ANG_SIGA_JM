@@ -124,7 +124,7 @@ disabledAction:boolean = false;
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -246,7 +246,7 @@ disabledAction:boolean = false;
           this.backTo();
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.showFail();
         },
@@ -279,7 +279,7 @@ disabledAction:boolean = false;
   //       this.isLetrado = data;
   //     },
   //     err => {
-  //       console.log(err);
+  //       //console.log(err);
   //     }
   //   );
   // }
@@ -378,7 +378,7 @@ disabledAction:boolean = false;
             this.backTo();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.showFail();
           },
@@ -404,7 +404,7 @@ disabledAction:boolean = false;
             this.backTo();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.showFail();
           },
@@ -464,7 +464,7 @@ disabledAction:boolean = false;
             this.backTo();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.showFail();
           },
@@ -496,7 +496,7 @@ disabledAction:boolean = false;
             this.backTo();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.showFail();
           },
@@ -730,7 +730,7 @@ disabledAction:boolean = false;
           this.body.idTipoCvSubtipo2 = "";
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -745,7 +745,7 @@ disabledAction:boolean = false;
           this.subtipoCurricularCombo = JSON.parse(data.body).combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

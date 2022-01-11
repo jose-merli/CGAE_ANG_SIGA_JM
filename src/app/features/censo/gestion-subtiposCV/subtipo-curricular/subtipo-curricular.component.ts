@@ -86,7 +86,7 @@ export class SubtipoCurricularComponent implements OnInit {
         this.categoriaCurricular = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -169,7 +169,7 @@ export class SubtipoCurricularComponent implements OnInit {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -442,7 +442,7 @@ export class SubtipoCurricularComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.editar = false;
@@ -731,7 +731,7 @@ export class SubtipoCurricularComponent implements OnInit {
           this.datos = this.bodySearch.subtipoCurricularItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 

@@ -179,7 +179,7 @@ export class AgendaComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -209,7 +209,7 @@ export class AgendaComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }
       );

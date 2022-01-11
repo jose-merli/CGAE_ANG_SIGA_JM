@@ -19,7 +19,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
 
   institucionActual;
   msgs;
-
+  @Input() filtroRecibido;
   filtro: ColegiadosSJCSItem = new ColegiadosSJCSItem();
   datosDesgina: any;
   expanded: boolean = true;
@@ -44,6 +44,11 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
   constructor(private translateService: TranslateService, private sigaServices: SigaServices, private commonsService: CommonsService) { }
 
   ngOnInit() {
+    //('this.filtroRecibido: ', this.filtroRecibido)
+    if (this.filtroRecibido){
+      this.filtro.idGuardia = this.filtroRecibido.idGuardia;
+      this.filtro.idTurno = this.filtroRecibido.idTurno;
+    }
     this.progressSpinner = true;
     this.institucionGeneral = false;
 
@@ -76,6 +81,8 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
           }
         }
 
+        this.progressSpinner = false;
+
   }
 
   getComboColegios() {
@@ -93,7 +100,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
@@ -156,7 +163,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );

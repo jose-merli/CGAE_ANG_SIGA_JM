@@ -217,7 +217,7 @@ export class ConsultasPlantillasComponent implements OnInit {
 
   navigateTo(dato) {
     let idConsulta = dato.idConsulta;
-    console.log(dato);
+    //console.log(dato);
     if (!this.selectMultiple && idConsulta && !this.nuevaConsulta) {
       if (
         dato.generica == "No" ||
@@ -318,7 +318,7 @@ export class ConsultasPlantillasComponent implements OnInit {
         this.consultas = [];
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {}
@@ -336,10 +336,10 @@ export class ConsultasPlantillasComponent implements OnInit {
             this.consultas[i].label
           );
         }
-        console.log(this.consultas);
+        //console.log(this.consultas);
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {}
@@ -367,10 +367,10 @@ export class ConsultasPlantillasComponent implements OnInit {
               );
             } 
           }
-          console.log(this.consultas);
+          //console.log(this.consultas);
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {}
@@ -397,7 +397,7 @@ export class ConsultasPlantillasComponent implements OnInit {
     let id = e.value;
     this.getFinalidad(id);
     this.getConsultaInstitucion(id);
-    console.log(id);
+    //console.log(id);
   }
 
   getConsultaInstitucion(id) {
@@ -460,7 +460,7 @@ export class ConsultasPlantillasComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
           if (
@@ -484,9 +484,6 @@ export class ConsultasPlantillasComponent implements OnInit {
         }
       );
 
-    console.log("selectedDatos", this.selectedDatos);
-    console.log("nuevaConsulta", this.nuevaConsulta);
-    console.log("soloLectura", this.soloLectura);
   }
 
   desasociar(dato) {
@@ -557,7 +554,7 @@ export class ConsultasPlantillasComponent implements OnInit {
               "informesycomunicaciones.plantillasenvio.ficha.errorDesasociar"
             )
           );
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.getResultados();
@@ -592,10 +589,9 @@ export class ConsultasPlantillasComponent implements OnInit {
           }
         }
         this.datos = [...this.datos];
-        console.log(this.datos);
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {}

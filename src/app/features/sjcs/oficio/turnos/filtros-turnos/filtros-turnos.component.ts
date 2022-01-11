@@ -91,7 +91,7 @@ export class FiltrosTurnos implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -116,7 +116,7 @@ export class FiltrosTurnos implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -128,7 +128,7 @@ export class FiltrosTurnos implements OnInit {
     para poder filtrar el dato con o sin estos caracteres*/
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -153,7 +153,7 @@ export class FiltrosTurnos implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -178,7 +178,7 @@ export class FiltrosTurnos implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -203,7 +203,7 @@ export class FiltrosTurnos implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -228,7 +228,7 @@ export class FiltrosTurnos implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.partidoJudicial = "";
@@ -335,7 +335,7 @@ export class FiltrosTurnos implements OnInit {
             this.partidasJudiciales = n.zonasItems;
           },
           err => {
-            console.log(err);
+            //console.log(err);
 
           }, () => {
             this.getPartidosJudiciales();

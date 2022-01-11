@@ -310,7 +310,7 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
           this.getComboPoblacionInicial(filtro);
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -358,7 +358,7 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
           // this.direcciones = this.remitente.direccion;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => { }
@@ -450,7 +450,7 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
         this.comboProvincia = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -530,7 +530,7 @@ export class RemitentePlantillaComponent implements OnInit, OnDestroy {
           this.direccionesInicial = JSON.parse(JSON.stringify(this.direccion));
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.showFail(
             this.translateService.instant(
               "informesycomunicaciones.modelosdecomunicacion.ficha.errorPlantillaGuardada"

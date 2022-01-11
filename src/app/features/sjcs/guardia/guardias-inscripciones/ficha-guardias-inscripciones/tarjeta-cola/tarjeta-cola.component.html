@@ -1,0 +1,33 @@
+<div class="card" id="colaFijaInscripcion">
+  <div class="card-header header-ficha">
+    <div class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado">
+          <i [class]="iconClass"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10 ">
+        <div class="d-flex justify-content-end mb-1">
+          <label class="mr-auto title-ficha">{{titulo | translate}}</label>
+        </div>
+        <div class="d-flex justify-content-between" *ngIf="chincheta">
+          <br>
+          <i ngClass="fas fa-thumbtack"></i>
+        </div>
+      </div>
+      <div class="col-1"></div>
+      <div class="col-11">
+        <div class="form-row">
+          <div class="d-flex flex-wrap" *ngFor="let dato of datos">
+            <label *ngIf="datos != undefined" name>
+              <b>{{dato.label}}: </b>{{dato.value}}</label>             
+          </div>
+          <div class="d-flex flex-wrap">
+            <label *ngIf="datos == undefined" name>
+              <b>{{dato.label}}</b></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

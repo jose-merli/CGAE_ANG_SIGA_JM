@@ -12,7 +12,7 @@ export class InputDivididoComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.anio);
+    //console.log(this.anio);
   }
 
 }

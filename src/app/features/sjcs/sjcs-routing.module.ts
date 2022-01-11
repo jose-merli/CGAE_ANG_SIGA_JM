@@ -5,6 +5,15 @@ import { AuthGuard } from '../../_guards/auth.guards';
 import{ AddExpedienteComponent } from './ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
 
 const routesSjcs: Routes = [
+
+	{
+		path: 'facturacionesYPagos',
+		loadChildren: './facturacionSJCS/facturacionsjcs.module#FacturacionSJCSModule'
+	},
+	{
+		path: 'cartaFacturacionPago',
+		loadChildren: './facturacionSJCS/facturacionsjcs.module#FacturacionSJCSModule'
+	},
 	{
 		path: 'zonasYsubzonas',
 		loadChildren: './maestros/maestros.module#MaestrosModule'

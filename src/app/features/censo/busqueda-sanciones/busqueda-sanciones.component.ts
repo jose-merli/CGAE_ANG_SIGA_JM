@@ -139,7 +139,7 @@ export class BusquedaSancionesComponent implements OnInit {
         this.tipo = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -170,7 +170,7 @@ export class BusquedaSancionesComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (sessionStorage.getItem("back") == "true") {
@@ -573,12 +573,12 @@ export class BusquedaSancionesComponent implements OnInit {
             this.router.navigate(["/dialogoComunicaciones"]);
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

@@ -2,6 +2,9 @@ import { Component, OnInit, Input, Output, ViewChild, EventEmitter, ChangeDetect
 import { TreeNode } from '../../../../../../../utils/treenode';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
+import { TranslateService } from '../../../../../../../commons/translate';
+import { BaremosGuardiaItem } from '../../../../../../../models/sjcs/BaremosGuardiaItem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-baremos',
@@ -25,7 +28,7 @@ export class DatosBaremosComponent implements OnInit {
   historico: boolean = false;
   message;
   permisos: boolean = false;
-  datos = "";
+  datos;
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   //Resultados de la busqueda
@@ -35,14 +38,19 @@ export class DatosBaremosComponent implements OnInit {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private translateService: TranslateService,
+    private router: Router) { }
 
   ngOnInit() {
 
     this.sigaServices.datosRedy$.subscribe(
       data => {
         this.modoEdicion = true;
-        this.getBaremos();
+        //this.getBaremos();
+        if(this.persistenceService.getDatos() != null || this.persistenceService.getDatos() != undefined){
+          this.datos = this.persistenceService.getDatos();
+        }
 
       });
   }
@@ -52,21 +60,48 @@ export class DatosBaremosComponent implements OnInit {
     else return true;
   }
 
-  getBaremos() {
+  /* getBaremos() {
+    //let idGuardiaProvisional =362; //borrar
     this.sigaServices.post(
+      //"busquedaGuardias_getBaremos", idGuardiaProvisional).subscribe(
       "busquedaGuardias_getBaremos", this.persistenceService.getDatos().idGuardia).subscribe(
         data => {
-          JSON.parse(data.body).combooItems.forEach(it => {
-            this.datos += (it.label + ": " + it.value + "€ , ");
+          let comboItems = JSON.parse(data.body).combooItems;
+          comboItems.forEach(it => {
+             it.value = it.value + "€";
           });
-          this.datos = this.datos.substring(0, this.datos.length - 2);
+          this.datos = comboItems;
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
     )
+  } */
+  goToFichaBaremos(){
+   
+   let goBaremos:BaremosGuardiaItem = new BaremosGuardiaItem();
+   goBaremos.idTurno = this.datos.idTurno;
+   goBaremos.idGuardia = this.datos.idGuardia;
+
+   sessionStorage.setItem("tarjetaBaremosFichaGuardia",JSON.stringify(goBaremos));
+
+   this.router.navigate(["/baremosDeGuardia"]);
+
+
   }
 
+  showMessage(event) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: event.severity,
+      summary: event.summary,
+      detail: event.msg
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
 
 }

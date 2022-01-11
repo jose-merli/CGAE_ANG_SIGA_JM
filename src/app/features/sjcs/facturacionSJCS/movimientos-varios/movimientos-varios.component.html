@@ -1,1 +1,22 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>SJCS
+      <i class="fa fa-angle-right"></i>{{ 'facturacionSJCS.movimientosVarios.buscarMovimientos.titulo' | translate }}
+    </p>
+  </div>
+
+<div class="busqueda-container">
+    <app-filtros-movimientos-varios [permisoEscritura]="permisoEscritura" [disabledLetradoFicha]="disabledLetradoFicha" (busqueda)="getFiltrosValues($event)"></app-filtros-movimientos-varios>
+    <app-tabla-movimientos-varios  *ngIf="buscar" [permisoEscritura]="permisoEscritura" [datos]="datos"  (delete)="delete($event)" (busqueda)="getFiltrosValues($event)" ></app-tabla-movimientos-varios>
+</div>
+
+<div class="text-right main-button">
+  <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+    label="{{ 'general.boton.volver' | translate}}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

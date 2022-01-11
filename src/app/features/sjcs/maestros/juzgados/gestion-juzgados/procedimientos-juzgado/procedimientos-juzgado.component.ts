@@ -80,7 +80,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
       n => {
         // this.procedimientosElegir = n.procedimientosItems;
         n.procedimientosItems.forEach(element => {
-          // console.log(this.procedimientos.indexOf(element));
+          // //console.log(this.procedimientos.indexOf(element));
           // if (this.procedimientos.indexOf(element) == -1) {
           this.procedimientosElegir.push({ label: element.nombre, value: element.idProcedimiento });
           // }
@@ -88,7 +88,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
         this.procItems = n.procedimientosItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -107,7 +107,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

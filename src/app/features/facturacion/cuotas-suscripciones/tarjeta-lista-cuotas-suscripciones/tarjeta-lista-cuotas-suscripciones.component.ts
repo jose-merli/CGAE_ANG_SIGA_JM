@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message, SortEvent } from 'primeng/api';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
+import { FiltrosSuscripcionesItem } from '../../../../models/FiltrosSuscripcionesItem';
 import { ListaSuscripcionesItem } from '../../../../models/ListaSuscripcionesItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
@@ -24,6 +25,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
 
   @Output() actualizarLista = new EventEmitter<Boolean>();
   @Input() listaSuscripciones: ListaSuscripcionesItem[];
+  @Input() filtrosSuscripciones: FiltrosSuscripcionesItem;
   @ViewChild("suscripcionesTable") suscripcionesTable: DataTable;
 
   cols = [
@@ -89,6 +91,15 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
     }
     this.checkPermisos();
     this.initComboEstadoSuscripcion();
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    if(this.filtrosSuscripciones.aFechaDe != null){
+      this.currentDate = this.filtrosSuscripciones.aFechaDe;
+    }
+    else {
+      this.currentDate = new Date();
+    }
   }
 
   initComboEstadoSuscripcion() {

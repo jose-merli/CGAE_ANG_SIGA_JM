@@ -6,6 +6,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { GuardiaItem } from '../../../../../models/guardia/GuardiaItem';
 
 @Component({
 	selector: 'app-ficha-turnos',
@@ -29,6 +30,7 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	permisosTarjetaResumen: boolean = true;
 	datosTarjetaResumen;
 	iconoTarjetaResumen = "clipboard";
+	idGuardia : string;
 
 	enlacesTarjetaResumen: any[] = [];
 	manuallyOpened:Boolean = false;
@@ -48,8 +50,9 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	tarjetaColaGuardias: string;
 	tarjetaInscripciones: string;
 	newTurno: boolean = true;
+	origenGuarColeg:boolean;
 
-	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef) { }
+	constructor(private route: ActivatedRoute, private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private router : Router) { }
 
 	ngAfterViewChecked() {
 		this.changeDetectorRef.detectChanges();
@@ -74,6 +77,10 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 			
 				if (this.idTurno != undefined) {
 					this.newTurno = false;
+					if(sessionStorage.getItem("idGuardiaFromFichaGuardia")){
+						this.idGuardia = sessionStorage.getItem("idGuardiaFromFichaGuardia");
+						sessionStorage.removeItem("idGuardiaFromFichaGuardia");
+					}
 					this.searchTurnos();
 				}
 			});
@@ -108,6 +115,7 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 			},
 
 		];
+	
 
 		//
       	//PROVISIONAL
@@ -135,8 +143,13 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 		// this.filtros.filtros.historico = event;
 		this.progressSpinner = true;
 		let filtros: TurnosItems = new TurnosItems;
+
 		filtros.idturno = this.idTurno;
 		filtros.historico = false;
+		
+		/* let filtros: TurnosItems = new TurnosItems;
+		filtros.idturno = this.idTurno;
+		filtros.historico = false; */
 		if (this.persistenceService.getHistorico() != undefined) {
 			filtros.historico = this.persistenceService.getHistorico();
 		}
@@ -172,6 +185,14 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	}
 
 	backTo() {
+
+		if(this.idGuardia){
+			let guardia = new GuardiaItem();
+			guardia.idGuardia = this.idGuardia;
+			guardia.idTurno = this.idTurno;
+			this.persistenceService.setDatos(guardia);
+			this.router.navigate(["/gestionGuardias"]);
+		}
 		sessionStorage.setItem("volver", 'true');
 		this.location.back();
 	}

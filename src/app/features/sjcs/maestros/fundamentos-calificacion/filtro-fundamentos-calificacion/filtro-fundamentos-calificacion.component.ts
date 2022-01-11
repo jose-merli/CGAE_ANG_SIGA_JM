@@ -56,7 +56,7 @@ export class FiltroFundamentosCalificacionComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboDictamen);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

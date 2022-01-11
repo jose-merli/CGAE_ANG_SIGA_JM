@@ -79,7 +79,7 @@ export class TarjetaDatosFactFichaActComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.progressSpinner = false;
         this.selector.value = this.actuacionDesigna.actuacion.idPartidaPresupuestaria;
@@ -116,7 +116,7 @@ export class TarjetaDatosFactFichaActComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.progressSpinner = false;
       }

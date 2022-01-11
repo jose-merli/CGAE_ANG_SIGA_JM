@@ -1,10 +1,12 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { endpoints_guardia } from '../../../../../../../utils/endpoints_guardia';
 import { TranslateService } from '../../../../../../../commons/translate';
+import { SigaStorageService } from '../../../../../../../siga-storage.service';
+import { CalendarioProgramadoItem } from '../../../../../../../models/guardia/CalendarioProgramadoItem';
 
 @Component({
   selector: 'app-datos-generales-guardias',
@@ -24,11 +26,8 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
 
-  tipoGuardiaResumen = {
-    label: "",
-    value: "",
-  };
-  openFicha: boolean = true;
+  tipoGuardiaResumen : string = '';
+  @Input() openFicha: boolean = true;
   historico: boolean = false;
   isDisabledGuardia: boolean = true;
   datos = [];
@@ -39,23 +38,31 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   progressSpinner;
   msgs;
   resaltadoDatos: boolean = false;
-
+  isLetrado : boolean = false;
+  @Input() idTurnoFromFichaTurno = null;
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private sigaStorageService : SigaStorageService) { }
 
 
   ngOnInit() {
     this.resaltadoDatos=true;
-
+    this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     this.getCols();
     this.historico = this.persistenceService.getHistorico()
     this.getComboTipoGuardia();
 
     this.getComboTurno();
-
     // this.progressSpinner = true;
+    /*if (sessionStorage.getItem("filtrosDatosGeneralesGuardia")) {
+      this.body = new GuardiaItem();
+      this.body = JSON.parse(
+        sessionStorage.getItem("filtrosDatosGeneralesGuardia")
+      );
+    }*/
+
     this.sigaService.datosRedy$.subscribe(
       data => {
         data = JSON.parse(data.body);
@@ -64,9 +71,18 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.body.descripcion = data.descripcion;
         this.body.descripcionPago = data.descripcionPago;
         this.body.idTipoGuardia = data.idTipoGuardia;
-        this.body.idTurno = data.idTurno;
+        if (this.idTurnoFromFichaTurno != null){
+          this.body.idTurno =  this.idTurnoFromFichaTurno;
+          this.modoEdicion = false;
+          this.permisoEscritura = true;
+        }else{
+          this.body.idTurno = data.idTurno;
+        }
         this.body.nombre = data.nombre;
         this.body.envioCentralita = data.envioCentralita;
+        this.getComboTipoGuardia();
+
+        this.getComboTurno();
         //Informamos de la guardia de la que hereda si existe.
         if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
           this.datos.push({
@@ -82,6 +98,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           });
           this.datos.pop()
         }
+       
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.progressSpinner = false;
       });
@@ -94,7 +111,8 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   muestraCamposObligatorios(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
+    let msg = this.translateService.instant('general.message.camposObligatorios');
+    this.msgs = [{severity: "error", summary: "Error", detail: msg}];
     this.resaltadoDatos=true;
   }
 
@@ -107,12 +125,16 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
 
   disabledSave() {
-    if (this.permisoEscritura)
-      if (!this.historico && (this.body.nombre && this.body.nombre.trim())
+    if (this.permisoEscritura){
+      /*if (!this.historico && (this.body.nombre && this.body.nombre.trim())
         && (this.body.descripcion && this.body.descripcion.trim()) && !(this.body.idTurnoPrincipal && !this.body.idGuardiaPrincipal)
-        && (this.body.idTurno) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {
+        && (this.body.idTurno) && (JSON.stringify(this.body) != JSON.stringify(this.bodyInicial))) {*/
+          if (!this.historico && (this.body.nombre && this.body.nombre.trim())
+        && (this.body.descripcion && this.body.descripcion.trim()) && !(this.body.idTurnoPrincipal && !this.body.idGuardiaPrincipal)
+        && (this.body.idTurno)) {
         return false;
       } else return true;
+    }
     else
       return true;
   }
@@ -120,13 +142,13 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   getCols() {
     if (!this.modoEdicion)
       this.cols = [
-        { field: "turno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
+        { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
         { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu" },
       ];
     else
       this.cols = [
         { field: "vinculacion", header: "justiciaGratuita.guardia.gestion.vinculacion" },
-        { field: "turno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
+        { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
         { field: "guardia", header: "menu.justiciaGratuita.GuardiaMenu" },
       ];
   }
@@ -142,7 +164,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -154,7 +176,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -179,7 +201,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -191,18 +213,28 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
 
 
   callSaveService(url) {
+    let filtros = new GuardiaItem();
+    filtros.idGuardia = this.body.idGuardia;
+    filtros.descripcionFacturacion = this.body.descripcionFacturacion;
+    filtros.descripcion = this.body.descripcion;
+    filtros.descripcionPago = this.body.descripcionPago;
+    filtros.idTipoGuardia = this.body.idTipoGuardia;
+    filtros.idTurno = this.body.idTurno;
+    filtros.nombre = this.body.nombre;
+    filtros.envioCentralita = this.body.envioCentralita;
+    //sessionStorage.setItem('filtrosDatosGeneralesGuardia', JSON.stringify(filtros));
+
     if (this.body.descripcion != undefined) this.body.descripcion = this.body.descripcion.trim();
     if (this.body.nombre != undefined) this.body.nombre = this.body.nombre.trim();
     if (this.body.envioCentralita == undefined) this.body.envioCentralita = false;
     this.sigaService.post(url, this.body).subscribe(
       data => {
-
+        let respuesta = JSON.parse(data.body);
         if (!this.modoEdicion) {
           this.modoEdicion = true;
           this.getCols();
-          this.body.idGuardia = JSON.parse(data.body).id;
           this.persistenceService.setDatos({
-            idGuardia: this.body.idGuardia,
+            idGuardia: respuesta.id,
             idTurno: this.body.idTurno
           })
           this.modoEdicionSend.emit(true);
@@ -217,6 +249,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
       err => {
 
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+          //console.log('err.error - ', err.error)
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -260,7 +293,10 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   }
 
   resumenTipoGuardiaResumen() {
-    this.tipoGuardiaResumen = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0]
+    let i = this.comboTipoGuardia.filter(it => it.value == this.body.idTipoGuardia)[0];
+    if (i != undefined){
+      this.tipoGuardiaResumen = i.label;
+    }
   }
 
   clear() {

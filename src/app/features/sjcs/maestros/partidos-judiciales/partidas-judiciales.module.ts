@@ -47,7 +47,6 @@ import { TablaPartidasJudicialesComponent } from './gestion-modulos/gestion-part
 
     ],
     declarations: [
-        PartidosJudicialesComponent,
         FiltrosPartidasJudiciales,
         TablaPartidasJudicialesComponent
     ],
@@ -79,4 +78,4 @@ import { TablaPartidasJudicialesComponent } from './gestion-modulos/gestion-part
         { provide: LOCALE_ID, useValue: 'es-ES' }
     ]
 })
-export class GestionPartidasJudicialesComponent { }
+export class GestionPartidasJudicialesModule { }
