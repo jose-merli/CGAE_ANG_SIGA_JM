@@ -1,4 +1,4 @@
-
+@import "sass/variables.scss";
 //ESTILOS CONSTRUCTOR DE CONSULTAS
 @import "../node_modules/@syncfusion/ej2-base/styles/material.css";
 
@@ -33,7 +33,7 @@
 @font-face {
   font-family: abogacia;
   src: url("./assets/fonts/Servicios-REDABOGACIA-Regular.eot");
-  src: url("./assets/fonts/Servicios-REDABOGACIA-Regular.eot?#iefix")      format("embedded-opentype"),
+	src: url("./assets/fonts/Servicios-REDABOGACIA-Regular.eot?#iefix") format("embedded-opentype"),
     url("./assets/fonts/Servicios-REDABOGACIA-Regular.woff") format("woff"),
     url("./assets/fonts/Servicios-REDABOGACIA-Regular.ttf") format("truetype");
 }
@@ -41,14 +41,14 @@
 @font-face {
   font-family: OpenSansCondensedBold;
   src: url("./assets/fonts/OpenSansCondensedBold.eot");
-  src: url("./assets/fonts/OpenSansCondensedBold.eot?#iefix")      format("embedded-opentype"),
+	src: url("./assets/fonts/OpenSansCondensedBold.eot?#iefix") format("embedded-opentype"),
     url("./assets/fonts/OpenSansCondensedBold.woff") format("woff"),
     url("./assets/fonts/OpenSansCondensedBold.ttf") format("truetype");
 }
 @font-face {
   font-family: OpenSansCondensedLight;
   src: url("./assets/fonts/OpenSansCondensedLight.eot");
-  src: url("./assets/fonts/OpenSansCondensedLight.eot?#iefix")      format("embedded-opentype"),
+	src: url("./assets/fonts/OpenSansCondensedLight.eot?#iefix") format("embedded-opentype"),
     url("./assets/fonts/OpenSansCondensedLight.woff") format("woff"),
     url("./assets/fonts/OpenSansCondensedLight.ttf") format("truetype");
 }
@@ -62,7 +62,7 @@
 
 @keyframes load8 {
   // 0% {
-  //     stroke: ;// $secondary-color;
+  //     stroke: $secondary-color;
   // }
   // 100%{
   //     stroke: $primary-color;
@@ -73,9 +73,9 @@
     transform: rotate(0deg);
   }
   50% {
-    border-top: 0.4em solid; // $primary-color;
-    border-right: 0.4em solid;// $primary-color;
-    border-bottom: 0.4em solid;// $primary-color;
+    border-top: 0.4em solid $primary-color;
+    border-right: 0.4em solid $primary-color;
+    border-bottom: 0.4em solid $primary-color;
   }
   100% {
     -webkit-transform: rotate(360deg);
@@ -92,8 +92,8 @@
 html,
 body {
   width: 100%;
-  color: grey;
-  //font-family: $general-font;
+  color: $grey1;
+  font-family: $general-font;
 }
 
 body {
@@ -101,12 +101,12 @@ body {
 }
 
 h2 {
-  //font-family: $title-fontLight;
+  font-family: $title-fontLight;
   font-size: 1.82rem;
 }
 
 h3 {
-  //font-family: $title-fontBold;
+  font-family: $title-fontBold;
   font-size: 1.5rem;
 }
 
@@ -130,15 +130,15 @@ label {
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
-  border-bottom: 1px dashed ;// $secondary-color;
+  border-bottom: 1px dashed $secondary-color;
 
   i {
     margin-right: 0.5rem;
     font-size: 0.6rem;
-    //color: $secondary-color;
+    color: $secondary-color;
   }
   p {
-    //color: $secondary-color;
+    color: $secondary-color;
     font-size: 0.9rem;
   }
 }
@@ -150,21 +150,21 @@ label {
   }
 
   .desplegar-todo {
-    //color: $primary-color;
+    color: $primary-color;
     cursor: pointer;
   }
 }
 
 .card {
-  box-shadow: 0 0 2px grey;
+  box-shadow: 0 0 2px $grey4;
   border: none;
   margin-bottom: 0.5rem;
-  border-bottom: 2px solid grey;
+  border-bottom: 2px solid $grey4;
   .card-header {
     background-color: white;
     font-weight: bold;
     padding: 0.33rem 1.25rem;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid $lightGrey;
     cursor: pointer;
     .ui-radiobutton-label {
       font-weight: normal;
@@ -181,7 +181,7 @@ label {
 
     .icon-ficha {
       font-size: 2.5rem;
-      color: grey;
+      color: $grey4;
       cursor: inherit;
     }
     .img-colegiado,
@@ -194,21 +194,21 @@ label {
       }
     }
     .title-ficha {
-      color: grey;
+      color: $grey1;
       font-size: 0.9rem;
       font-weight: bold;
     }
     .registros-ficha {
-      color: grey;
+      color: $grey3;
       padding-right: 0;
     }
     label {
-      color: grey;
+      color: $grey3;
       text-overflow: ellipsis;
       white-space: nowrap;
       overflow: hidden;
       span {
-        color: grey;
+        color: $grey1;
       }
     }
     i {
@@ -237,7 +237,7 @@ label {
     padding: 0.6rem 1.25rem;
     .title-module {
       margin: 0.5rem 0;
-      border-bottom: 1px solid grey;
+      border-bottom: 1px solid $grey1;
       font-weight: bold;
       &:first-child {
         margin-top: 0;
@@ -248,13 +248,13 @@ label {
     }
 
     .seleccion-multiple {
-      color: orange;
+      color: $lightOrange;
     }
   }
 
   .card-body-ficha {
     .bloque {
-      border-right: 1px solid grey;
+      border-right: 1px solid $grey4;
       padding: 0.5rem 2rem;
       &:last-child {
         border-right: none;
@@ -304,11 +304,11 @@ label {
   }
 
   .card-footer {
-    border-top: 1px solid grey;
+    border-top: 1px solid $lightGrey;
     background: #f5f5f5;
   }
   .subtitulo-form {
-    border-bottom: 1px solid blue;
+    border-bottom: 1px solid $blue3;
     padding-bottom: 0.33rem;
     i {
       cursor: pointer;
@@ -325,7 +325,7 @@ label {
 .form-group {
   margin-bottom: 1.5rem;
   .icon-incidencia {
-    color: orange;
+    color: $lightOrange;
     padding-right: 0.33em;
   }
 
@@ -368,11 +368,11 @@ label {
   .ui-datatable th.ui-state-default,
   .ui-table th.ui-state-default,
   .ui-table .ui-table-thead > tr > th {
-    background: blue !important;
+    background: $blue3 !important;
     text-align: center;
-    color: grey !important;
+    color: $grey1 !important;
     padding: 0.5rem;
-    border: 1px solid blue !important;
+    border: 1px solid $blue3 !important;
     font-weight: normal;
     .ui-sortable-column-icon {
       font-size: 0.85rem;
@@ -382,14 +382,14 @@ label {
   .ui-datatable .ui-datatable-tfoot > tr > td,
   .ui-datatable .ui-datatable-data > tr > td,
   .ui-table .ui-table-tbody > tr > td {
-    color: grey;
+    color: $grey1;
     padding: 0.5rem;
     font-size: 0.8rem;
   }
 
   .ui-table .ui-table-tbody > tr.ui-state-highlight,
-  .ui-table.ui-table-hoverable-rows    .ui-table-tbody    > tr:not(.ui-state-highlight):hover {
-    //background: $secondary-color;
+	.ui-table.ui-table-hoverable-rows .ui-table-tbody > tr:not(.ui-state-highlight):hover {
+    background: $secondary-color;
     td {
       color: white;
     }
@@ -408,11 +408,11 @@ label {
   }
 
   tr:nth-child(even) {
-    background: blue;
+    background: $lightBlue3;
   }
 
   .ui-column-filter {
-    //font-family: $general-font;
+    font-family: $general-font;
     text-align: left;
     padding-left: 0.5rem;
   }
@@ -428,7 +428,7 @@ label {
     }
   }
   .ui-paginator-page.ui-state-active {
-    //color: $secondary-color;
+    color: $secondary-color;
     background: none;
   }
   .ui-paginator-top {
@@ -448,14 +448,17 @@ label {
   .ui-datatable-footer {
     padding: 0.75rem 1.25rem;
   }
-  .ui-datatable    .ui-datatable-data    > tr    > td.ui-editable-column.ui-cell-editing {
+  .ui-datatable
+    .ui-datatable-data
+    > tr
+    > td.ui-editable-column.ui-cell-editing {
     padding: 0.5rem;
   }
 }
 
 .main-button {
   .ui-button {
-    background: blue !important;
+    background: $gradientBlue !important;
     font-size: 0.9rem;
     padding: 0.2rem;
     border: none !important;
@@ -466,7 +469,7 @@ label {
 }
 
 .upload-button .ui-button {
-  background: grey !important;
+  background: $grey2 !important;
   font-size: 0.8rem;
   padding: 0.2rem;
   border: none !important;
@@ -484,14 +487,14 @@ label {
 }
 
 .ui-dropdown-filter-container {
-  color: grey;
+  color: $grey1;
 }
 
 .customCursor td {
   cursor: copy;
 }
 .input-error {
-  color: red;
+  color: $error;
   font-size: 0.7rem;
 }
 
@@ -507,8 +510,8 @@ label {
   right: 0;
   padding: 0.55rem;
   padding-right: 3.5rem;
-  border: 1px solid grey;
-  box-shadow: 0 -5px 5px -5px grey;
+  border: 1px solid $lightGrey;
+  box-shadow: 0 -5px 5px -5px $grey4;
   padding-left: 24rem;
   .title {
     font-weight: bold;
@@ -521,7 +524,7 @@ label {
     width: 152px;
     padding: 0 1.5rem;
     margin-right: 0.4rem;
-    box-shadow: 0 0 2px grey;
+    box-shadow: 0 0 2px $grey4;
     cursor: pointer;
     p {
       text-align: center;
@@ -543,14 +546,14 @@ label {
     background: #f2994a;
   }
   .sin-asignar {
-    background: grey;
+    background: $grey4;
   }
 }
 
 .scroll-arrow {
   padding: 0.5rem;
   font-size: 0.8rem;
-  background: grey;
+  background: $grey1;
   color: white;
   bottom: 1rem;
   right: 1rem;
@@ -560,36 +563,36 @@ label {
 /*MODIFICACIONES DE PRIMENG*/
 
 .ui-widget {
-  //font-family: $general-font;
+  font-family: $general-font;
 }
 .ui-widget-content .ui-inputtext {
-  color: grey;
+  color: $grey1;
   // padding: 0 .25em;
   text-overflow: ellipsis;
 }
 
 .ui-inputtext {
   text-overflow: ellipsis;
-  color: grey;
+  color: $grey1;
   font-size: 0.8rem;
 }
 
 .ui-state-highlight {
   background: none;
-  //color: $secondary-color;
+  color: $secondary-color;
 }
 
 .loginSiga .ui-listbox-list .ui-state-highlight {
-  //background: $secondary-color;
+  background: $secondary-color;
   color: white;
 }
 
 .ui-button,
 .ui-widget.ui-button,
 .ui-button {
-  background-color: blue;
-  border: 1px solid grey;
-  color: grey;
+  background-color: $blue3;
+  border: 1px solid $grey4;
+  color: $grey1;
   border-left: none;
 }
 
@@ -597,10 +600,10 @@ label {
 .ui-button:enabled:hover,
 .ui-widget.ui-button:enabled:hover,
 .ui-button:enabled:hover {
-  background-color: blue;
-  border: 1px solid grey;
-  color: grey;
-  border: 1px solid grey;
+  background-color: $blue3;
+  border: 1px solid $grey4;
+  color: $grey1;
+  border: 1px solid $grey4;
   border-left: none;
 }
 
@@ -609,28 +612,28 @@ label {
 }
 
 .ui-calendar .ui-widget.ui-button:focus {
-  background: blue;
-  color: grey;
+  background: $blue3;
+  color: $grey1;
   border: 1px solid #c6c7c8;
   border-left: none;
 }
 
 p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
-  box-shadow: 0 0 2px red;
-  border-bottom-color: grey;
+  box-shadow: 0 0 2px $error;
+  border-bottom-color: $grey4;
 }
 .ui-calendar.ui-calendar-w-btn input {
   width: calc(100% - 2em);
 }
 
 .ui-state-default {
-  border: 1px solid grey;
+  border: 1px solid $grey4;
 }
 
 .ui-dropdown.ui-state-focus,
 .ui-inputtext.ui-state-focus,
 .ui-inputtext:focus {
-  box-shadow: 0 0 2px;// $primary-color;
+  box-shadow: 0 0 2px $primary-color;
 }
 
 .ui-dropdown-panel .ui-dropdown-items-wrapper {
@@ -641,34 +644,34 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 .ui-radiobutton-box.ui-state-active,
 .ui-chkbox-box.ui-state-focus,
 .ui-chkbox-box.ui-state-focus.ui-state-active {
-  //color: $primary-color;
+  color: $primary-color;
   box-shadow: none;
-  border: 1px solid grey;
+  border: 1px solid $grey4;
   background: white;
 }
 
 .ui-radiobutton-box.ui-state-active {
-  //background: $primary-color;
+  background: $primary-color;
 }
 
 .ui-dialog .ui-dialog-titlebar {
   background: none;
-  border-bottom: 1px solid grey;
+  border-bottom: 1px solid $grey4;
 }
 
 .ui-dialog .ui-dialog-titlebar-icon {
-  color: grey;
+  color: $grey4;
 
   &:hover,
   &:focus {
     background: none;
-    color: grey;
+    color: $grey4;
     border-color: white;
   }
 }
 
 .ui-dialog .ui-dialog-footer {
-  border-top: 1px solid grey;
+  border-top: 1px solid $grey4;
 }
 
 .ui-dialog .ui-dialog-footer .ui-button {
@@ -685,21 +688,23 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 }
 
 .ui-datatable tbody > tr.ui-widget-content.ui-state-highlight {
-  //background: $secondary-color;
+  background: $secondary-color;
   td {
     color: white;
   }
 }
 
-.ui-datatable  tbody.ui-datatable-hoverable-rows  > tr.ui-widget-content:not(.ui-state-highlight):hover {
-  //background: $secondary-color;
+.ui-datatable
+  tbody.ui-datatable-hoverable-rows
+  > tr.ui-widget-content:not(.ui-state-highlight):hover {
+  background: $secondary-color;
   td {
     color: white;
   }
 }
 
 .ui-confirmdialog .ui-button {
-  //background: $primary-color !important;
+  background: $primary-color !important;
   color: white;
   border: none;
   &:hover {
@@ -723,14 +728,14 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 .ui-tooltip {
   .ui-tooltip-text {
     background: white;
-    color: grey;
+    color: $grey1;
     font-size: 0.8rem;
   }
 }
 
 .ui-tooltip-left .ui-tooltip-arrow,
 .ui-tooltip-right .ui-tooltip-arrow {
-  border-left-color: blue;
+  border-left-color: $blue3;
 }
 
 .ui-tooltip .ui-tooltip-text {
@@ -754,8 +759,8 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 }
 
 .ql-toolbar.ql-snow {
-  background: blue;
-  border: 1px solid grey;
+  background: $blue3;
+  border: 1px solid $grey4;
 }
 
 .ql-container.ql-snow {
@@ -763,24 +768,26 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 }
 
 .ui-progressbar.ui-progressbar-indeterminate {
-  //background: $secondary-color;
+  background: $secondary-color;
   .ui-progressbar-value {
-    //background: $primary-color;
+    background: $primary-color;
   }
 }
 .ql-snow .ql-picker {
-  color: grey;
+  color: $grey1;
 }
 
 .ql-snow .ql-stroke {
-  stroke: grey;
+  stroke: $grey1;
 }
 
 //tree permisos
 
 .permisos-tree {
   padding-bottom: 1rem; // había 4rem
-  .ui-tree .ui-treenode-content.ui-treenode-selectable .ui-treenode-label:not(.ui-state-highlight):hover {
+  .ui-tree
+    .ui-treenode-content.ui-treenode-selectable
+    .ui-treenode-label:not(.ui-state-highlight):hover {
     background: none;
   }
   .ui-tree {
@@ -790,15 +797,15 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
       position: relative;
       background: white;
       border-radius: 3px;
-      border-bottom: 2px solid grey;
-      box-shadow: 0 0 2px grey;
+      border-bottom: 2px solid $grey4;
+      box-shadow: 0 0 2px $grey4;
       margin-bottom: 0.4rem;
 
       .ui-treenode-content {
         padding: 0.5rem 1rem 0.5rem 2.5rem;
-        border-bottom: 1px solid grey;
+        border-bottom: 1px solid $lightGrey;
         .ui-treenode-label {
-          color: grey !important;
+          color: $grey1 !important;
           background: none;
         }
         .ui-tree-toggler {
@@ -806,7 +813,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
           line-height: 1.5rem;
           width: 100%;
           text-align: right;
-          // border-bottom: 1px solid grey;
+          // border-bottom: 1px solid $lightGrey;
         }
 
         .fa-caret-right:before {
@@ -829,7 +836,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
             padding: 0.7rem 1rem 0rem 2.5rem;
             border-bottom: 0;
             .ui-tree-toggler {
-              border-bottom: 1px solid grey;
+              border-bottom: 1px solid $lightGrey;
             }
             &:first-child {
               border: none;
@@ -849,7 +856,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
     left: 0;
     padding-left: 1rem;
     line-height: 1.3rem;
-    text-shadow: 0px 0px 3px grey;
+    text-shadow: 0px 0px 3px $lightGrey;
     color: transparent;
     text-shadow: none;
   }
@@ -896,9 +903,9 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
     margin-left: -50px;
     left: 50%;
     position: absolute;
-    border-top: 0.4em solid ;// $secondary-color;
-    border-right: 0.4em solid ;// $secondary-color;
-    border-bottom: 0.4em solid ;// $secondary-color;
+    border-top: 0.4em solid $secondary-color;
+    border-right: 0.4em solid $secondary-color;
+    border-bottom: 0.4em solid $secondary-color;
     border-left: 0.4em solid transparent;
     -webkit-transform: translateZ(0);
     -ms-transform: translateZ(0);
@@ -942,7 +949,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
   margin-left: -412px;
   // right: 2rem;
   // .notice-item-wrapper {
-  //   background: ;// $secondary-color;
+  //   background: $secondary-color;
   //   padding: 1rem;
   // }
 
@@ -984,9 +991,9 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 
 .input-ayuda .ayuda-btn {
   border-radius: 3px;
-  background: blue;
+  background: $blue3;
   border: 1px solid #c6c7c8;
-  color: grey;
+  color: $grey1;
   padding: 0.25rem 0.6rem;
   cursor: pointer;
 }
@@ -1051,7 +1058,7 @@ p-calendar.ng-dirty.ng-invalid > .ui-calendar > .ui-inputtext {
 }
 
 .info-limit {
-  //background: $secondary-color;
+  background: $secondary-color;
   color: white;
   padding: 0.5em 0.75em;
   margin-bottom: 2px;
@@ -1100,7 +1107,7 @@ p-footer .main-button {
   width: 100%;
   max-height: 300px;
   overflow-y: auto;
-  //background: $secondary-color;
+  background: $secondary-color;
   padding: 1.5rem;
   color: white;
   margin-bottom: 1rem;
@@ -1117,7 +1124,7 @@ p-footer .main-button {
 }
 
 .subir-plantilla .fa-plus {
-  color: grey !important;
+  color: $grey1 !important;
   text-align: center;
   width: 100%;
 }
@@ -1167,16 +1174,16 @@ p-footer .main-button {
 
 .ui-steps .ui-steps-number {
   background-color: white;
-  color: grey;
+  color: $grey1;
   display: inline-block;
   width: 36px;
-  border: 1px solid grey;
+  border: 1px solid $grey4;
   border-radius: 50%;
   margin-top: -14px;
   margin-bottom: 10px;
   font-size: 150%;
   &:hover {
-    //background-color: $secondary-color;
+    background-color: $secondary-color;
     color: white;
   }
 }
@@ -1195,19 +1202,20 @@ p-footer .main-button {
 }
 
 .ui-steps.steps-custom .ui-steps-item .ui-steps-title {
-  color: grey;
+  color: $grey1;
 }
 
 .ui-steps .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-steps-title {
-  color: grey;
+  color: $grey1;
 }
 
 .ui-steps .ui-steps-item.ui-state-highlight .ui-menuitem-link .ui-steps-number {
-  //background-color: $secondary-color;
+  background-color: $secondary-color;
   color: white;
 }
 
-.ui-steps  .ui-steps-item:not(.ui-state-highlight):not(.ui-state-disabled):hover {
+.ui-steps
+  .ui-steps-item:not(.ui-state-highlight):not(.ui-state-disabled):hover {
   background: none;
   border-color: none;
 }
@@ -1240,8 +1248,8 @@ p-footer .main-button {
 
   .ui-dialog .ui-state-default,
   .ui-dialog .ui-widget-content .ui-state-default {
-    background-color: blue;
-    color: grey;
+    background-color: $blue3;
+    color: $grey1;
     border: 1px solid #c6c7c8;
     border-left: none;
   }
@@ -1371,7 +1379,7 @@ p-footer .main-button {
 }
 
 .ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
-  //background: $secondary-color;
+  background: $secondary-color;
 }
 
 #datepicker-change-year {
@@ -1442,7 +1450,7 @@ p-footer .main-button {
 .form-group-interlineado {
   margin-bottom: 0.3rem;
   .icon-incidencia {
-    color: orange;
+    color: $lightOrange;
     padding-right: 0.33em;
   }
 
@@ -1538,11 +1546,12 @@ tr:hover {
 	div {
 		cursor: default;
 	}
-  div > label,  div > label > span {
+	  
+	div > label, div > label > span {
     cursor: text;
   }
 
-  div > label > a,  div > i,  div > label.title-ficha {
+	div > label > a, div > i, div > label.title-ficha {
     cursor: pointer !important;
   }
 }
