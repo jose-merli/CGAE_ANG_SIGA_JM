@@ -265,10 +265,9 @@
 
 
   <p-dialog responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModal"
-    (onHide)="cerrarDialog()">
-
-
-    <p-table #servicesTable [value]="comboServicios" [columns]="colsServs" class="tabla-listado" [paginator]="true"
+    (onHide)="cerrarDialog()" header="**Servicios Manuales">
+    
+    <p-table #servicesTable [value]="comboServiciosManuales" [columns]="colsServs" class="tabla-listado" [paginator]="true"
       [rows]="10" [first]="first" [responsive]="true" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>

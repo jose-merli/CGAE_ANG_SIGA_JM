@@ -110,6 +110,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   subscriptionListaPrecios: Subscription;
   comboPrecios: ComboItem[];
   arrayPrecios: FichaTarjetaPreciosItem[];
+  comboServiciosManuales: ListaServiciosItems[];
   // tiposObject: ComboItem[];
   // subscriptionTypeSelectValues: Subscription;
 
@@ -268,7 +269,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
           this.comboServicios = JSON.parse(listaServiciosDTO.body).listaServiciosItems
 
-          //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e servicios
+          //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera pagina de servicios
           this.tablaServicios.reset();
 
           //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
@@ -287,6 +288,8 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
               }
             }
           });
+
+          this.comboServiciosManuales = this.comboServicios.filter(el => el.automatico == "Manual");
 
           if(this.ficha.fechaPendiente == null && this.ficha.servicios.length > 0){
             this.initServicios();
@@ -464,32 +467,43 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     if (selectedServicio.formapago != this.translateService.instant("facturacion.productos.pagoNoDisponible")) {
       
       if (selectedServicio.fechaBajaIva == null) {
-        let serviciosLista : ListaServiciosSuscripcionItem[] = JSON.parse(JSON.stringify(this.serviciosTarjeta));
 
-        let newServicio = new ListaServiciosSuscripcionItem();
-        newServicio.idServicio = selectedServicio.idservicio;
-        newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
-        newServicio.idTipoServicios = selectedServicio.idtiposervicios;
-        newServicio.noFacturable = selectedServicio.noFacturable;
-        newServicio.descripcion = selectedServicio.descripcion;
+        //Comprueba si el servicio es automatico
+        if (selectedServicio.automatico == "Manual") {
 
-        serviciosLista.push(newServicio);
+          let serviciosLista : ListaServiciosSuscripcionItem[] = JSON.parse(JSON.stringify(this.serviciosTarjeta));
 
-        if (this.checkFormasPagoComunes(serviciosLista)) {
-          let found = this.serviciosTarjeta.find(serv =>
-            serv.idServicio == selectedServicio.idservicio && serv.idTipoServicios == selectedServicio.idtiposervicios && serv.idServiciosInstitucion == selectedServicio.idserviciosinstitucion
-          )
-          if (found == undefined) {
-            return true;
-          } else {
-            this.showMessage("error",
-              this.translateService.instant("facturacion.productos.productoPresenteLista"),
-              this.translateService.instant("facturacion.productos.productoPresenteListaDesc")
-            );
+          let newServicio = new ListaServiciosSuscripcionItem();
+          newServicio.idServicio = selectedServicio.idservicio;
+          newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
+          newServicio.idTipoServicios = selectedServicio.idtiposervicios;
+          newServicio.noFacturable = selectedServicio.noFacturable;
+          newServicio.descripcion = selectedServicio.descripcion;
+
+          serviciosLista.push(newServicio);
+
+          if (this.checkFormasPagoComunes(serviciosLista)) {
+            let found = this.serviciosTarjeta.find(serv =>
+              serv.idServicio == selectedServicio.idservicio && serv.idTipoServicios == selectedServicio.idtiposervicios && serv.idServiciosInstitucion == selectedServicio.idserviciosinstitucion
+            )
+            if (found == undefined) {
+              return true;
+            } else {
+              this.showMessage("error",
+                this.translateService.instant("facturacion.productos.productoPresenteLista"),
+                this.translateService.instant("facturacion.productos.productoPresenteListaDesc")
+              );
+              return false;
+            }
+          }
+          else{
             return false;
           }
         }
-        else{
+        else {
+          this.showMessage("error",
+            "**Servicio no valido",
+            "**No se puede realizar la suscripción a servicios automaticos");
           return false;
         }
       }

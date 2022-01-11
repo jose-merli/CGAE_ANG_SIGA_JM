@@ -249,21 +249,31 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
     if (selectedServicio.formapago != this.translateService.instant("facturacion.productos.pagoNoDisponible")) {
       
       if (selectedServicio.fechaBajaIva == null) {
-        let serviciosLista : ListaServiciosSuscripcionItem[] = [];
 
-        let newServicio = new ListaServiciosSuscripcionItem();
-        newServicio.idServicio = selectedServicio.idservicio;
-        newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
-        newServicio.idTipoServicios = selectedServicio.idtiposervicios;
-        newServicio.noFacturable = selectedServicio.noFacturable;
-        newServicio.descripcion = selectedServicio.descripcion;
+        //Comprueba si el servicio es automatico
+        if (selectedServicio.automatico == "Manual") {
+          let serviciosLista : ListaServiciosSuscripcionItem[] = [];
 
-        serviciosLista.push(newServicio);
+          let newServicio = new ListaServiciosSuscripcionItem();
+          newServicio.idServicio = selectedServicio.idservicio;
+          newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
+          newServicio.idTipoServicios = selectedServicio.idtiposervicios;
+          newServicio.noFacturable = selectedServicio.noFacturable;
+          newServicio.descripcion = selectedServicio.descripcion;
 
-        if (this.checkFormasPagoComunes(serviciosLista)) {
-          return true;
+          serviciosLista.push(newServicio);
+
+          if (this.checkFormasPagoComunes(serviciosLista)) {
+            return true;
+          }
+          else{
+            return false;
+          }
         }
-        else{
+        else {
+          this.showMessage("error",
+            "**Servicio no valido",
+            "**No se puede realizar la suscripción a servicios automaticos");
           return false;
         }
       }
