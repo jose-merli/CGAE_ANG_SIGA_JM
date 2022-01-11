@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import moment = require('moment');
+//import moment = require('moment');
 import { ConfirmationService, Message } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
