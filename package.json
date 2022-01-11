@@ -36,6 +36,7 @@
 		"@syncfusion/ej2-angular-buttons": "^19.3.44",
 		"@syncfusion/ej2-angular-dropdowns": "^19.3.45",
 		"@syncfusion/ej2-angular-querybuilder": "^19.3.53",
+		"@syncfusion/ej2-base": "^19.3.57",
 		"@tinymce/tinymce-angular": "^3.0.0",
 		"@types/jquery": "^3.5.6",
 		"@types/jwt-decode": "^2.2.1",
