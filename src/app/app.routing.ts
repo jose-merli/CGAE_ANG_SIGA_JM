@@ -123,8 +123,6 @@ import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { EJGComponent } from './features/sjcs/ejg/ejg.component';
 import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
 
-import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
-import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/abonos-sjcs.component';
 import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
@@ -997,6 +995,7 @@ const appRoutes: Routes = [
 		component: GestionActasComponent,
 		canActivate: [AuthGuard]
 	},
+
 	{
 		path: 'ejg',
 		component: EJGComponent,
@@ -1013,11 +1012,6 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'tramosLEC',
-		component: TramosLECComponent,
-		canActivate: [AuthGuard]
-	},
-	{
 		path: 'abonosSJCS',
 		component: AbonosSCJSComponent,
 		canActivate: [AuthGuard]
@@ -1025,11 +1019,6 @@ const appRoutes: Routes = [
 	{
 		path: 'fichaAbonosSJCS',
 		component: FichaAbonosSCJSComponent,
-		canActivate: [AuthGuard]
-	},
-	{
-		path: 'retencionesJudiciales',
-		component: RetencionesJudicialesComponent,
 		canActivate: [AuthGuard]
 	},
 	{
