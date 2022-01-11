@@ -378,7 +378,6 @@ import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
-import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
 
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
@@ -708,6 +707,7 @@ import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-j
 import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 import { TablaResultadoOrderModule } from './commons/tabla-resultado-order/tabla-resultado-order.module';
 import { MovimientosVariosService } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.service';
+import { MovimientosVariosModule } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.module';
 import { TarjetaFacturacionGenericaModule } from './features/sjcs/facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.module';
 import { RetencionesIrpfColegialComponent } from './features/censo/ficha-colegial/ficha-colegial-general/retenciones-irpf-colegial/retenciones-irpf-colegial.component';
 import { TablaBusquedaBaremosModule } from './features/sjcs/facturacionSJCS/baremos-de-guardia/tabla-busqueda-baremos/tabla-busqueda-baremos.module';
@@ -1400,7 +1400,6 @@ import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-rete
 		RegtelEjgComponent,
 		
 		GestionActasComponent,
-		MovimientosVariosComponent,
 		AbonosSCJSComponent,
 		FiltrosAbonosSCJSComponent,
 		TablaAbonosSCJSComponent,
@@ -1955,6 +1954,7 @@ import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-rete
 		RadioButtonEJSModule,
 		TarjetaModule,
 		TablaResultadoOrderModule,
+		MovimientosVariosModule,
 		TarjetaFacturacionGenericaModule,
 		TablaBusquedaBaremosModule,
 		ScrollPanelModule,
