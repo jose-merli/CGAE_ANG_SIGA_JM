@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-filtros-facturas (buscarFacturas)="buscarFacturas($event)" ></app-filtros-facturas>
+    <app-filtros-facturas (buscarFacturas)="buscarFacturas()" ></app-filtros-facturas>
     <app-tabla-facturas *ngIf="buscar" [filtro]="filtro" [datos]="datos"></app-tabla-facturas> 
 </div>
 

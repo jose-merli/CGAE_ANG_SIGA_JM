@@ -41,8 +41,6 @@ export class FactProgramadasComponent implements OnInit {
         this.datos = JSON.parse(n.body).facturacionprogramadaItems;
         let error = JSON.parse(n.body).error;
 
-        console.log(this.datos);
-
         this.datos.forEach(d => {
           d.compraSuscripcion = this.calcCompraSuscripcion(d);
           d.fechaCompraSuscripcionDesde = this.minDate(d.fechaInicioServicios, d.fechaInicioProductos);

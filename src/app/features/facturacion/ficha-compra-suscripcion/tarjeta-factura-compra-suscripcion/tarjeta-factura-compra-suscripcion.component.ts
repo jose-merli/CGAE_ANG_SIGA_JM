@@ -187,4 +187,8 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
       detail: msg
     });
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

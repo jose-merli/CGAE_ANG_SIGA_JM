@@ -7,7 +7,7 @@
       <div *ngIf="!esFichaActiva('comunicaciones')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('comunicaciones')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="far fa-comments icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -26,7 +26,7 @@
       <div *ngIf="esFichaActiva('comunicaciones')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('comunicaciones')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="far fa-comments icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.facturas.comunicacionesCobrosRecobros' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -69,10 +69,10 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-
-
+              
+              <span *ngIf="col.field == 'orden'" class="pull-right">{{ dato[col.field] }}</span>
               <span *ngIf="col.field == 'fechaEnvio'">{{ dato[col.field] | date: "dd/MM/yyyy" }}</span>
-              <span *ngIf="col.field != 'fechaEnvio'">{{ dato[col.field] }}</span>
+              <span *ngIf="col.field == 'documento'">{{ dato[col.field] }}</span>
             </td>
           </tr>
         </ng-template>
@@ -103,7 +103,7 @@
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="comunicar()" label="{{ 'facturacion.facturas.comunicaciones.comunicar' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-download" iconPos="left"
+        <button pButton type="button" icon="fa fa-download" iconPos="left" [disabled]="selectedDatos.length == 0"
         (click)="descargar()" label="{{ 'general.boton.download' | translate }}"></button>
       </div>
     </div>

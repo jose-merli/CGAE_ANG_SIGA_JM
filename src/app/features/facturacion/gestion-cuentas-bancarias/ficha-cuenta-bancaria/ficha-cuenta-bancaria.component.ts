@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
+import { Subject } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../models/CuentasBancariasItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
@@ -30,6 +31,9 @@ export class FichaCuentaBancariaComponent implements OnInit {
   openTarjetaUsosSufijos: boolean = false;
 
   modoEdicion: boolean = true;
+  
+  // Evento para resaltar descripción
+  campoResaltado: Subject<string> = new Subject<string>();
 
   constructor(
     private location: Location,
@@ -126,7 +130,6 @@ export class FichaCuentaBancariaComponent implements OnInit {
 
   guardadoSend(event: CuentasBancariasItem): void {
     this.progressSpinner = true;
-    console.log(event);
 
     let guardado: Promise<any>;
 
@@ -191,12 +194,21 @@ export class FichaCuentaBancariaComponent implements OnInit {
   insertarCuentaBancaria(bodyToInsert: CuentasBancariasItem): Promise<any> {
     return this.sigaServices.post("facturacionPyS_insertaCuentaBancaria", bodyToInsert).toPromise().then(
       n => {
-        console.log("Nuevo id:", n);
         let bancosCodigo = JSON.parse(n.body).id;
         this.body.bancosCodigo = bancosCodigo;
+
+        // Valor vacio cuando el campo de descripcion es válido
+        this.campoResaltado.next("");
       },
       err => {
         let error = JSON.parse(err.error).error;
+
+        if (error != undefined && error.message != undefined && error.message == "facturacion.cuentaBancaria.descripcion.unica") {
+          this.campoResaltado.next("descripcion");
+        } else {
+          this.campoResaltado.next("");
+        }
+
         if (error != undefined && error.message != undefined) {
           let translatedError = this.translateService.instant(error.message);
           if (translatedError && translatedError.trim().length != 0) {
@@ -211,9 +223,19 @@ export class FichaCuentaBancariaComponent implements OnInit {
 
   actualizarCuentaBancaria(bodyToUpdate: CuentasBancariasItem): Promise<any> {
     return this.sigaServices.post("facturacionPyS_actualizaCuentaBancaria", bodyToUpdate).toPromise().then(
-      n => { },
+      n => { 
+        // Valor vacio cuando el campo de descripcion es válido
+        this.campoResaltado.next("");
+      },
       err => {
         let error = JSON.parse(err.error).error;
+
+        if (error != undefined && error.message != undefined && error.message == "facturacion.cuentaBancaria.descripcion.unica") {
+          this.campoResaltado.next("descripcion");
+        } else {
+          this.campoResaltado.next("");
+        }
+
         if (error != undefined && error.message != undefined) {
           let translatedError = this.translateService.instant(error.message);
           if (translatedError && translatedError.trim().length != 0) {

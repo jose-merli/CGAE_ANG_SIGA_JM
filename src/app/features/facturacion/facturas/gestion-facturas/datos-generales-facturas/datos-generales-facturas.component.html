@@ -27,7 +27,7 @@
             <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}: 
               <span>{{ bodyInicial.importefacturado + " €" }}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
-              <span>{{ bodyInicial.importeAdeudadoPendiente + " €" }}</span></label>
+              <span>{{ (bodyInicial.tipo == "FACTURA" ? bodyInicial.importeAdeudadoPendiente : bodyInicial.importeAdeudadoPendienteAb) + " €" }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
               *ngIf="!esFichaActiva('datosGenerales')"></i>
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div [hidden]="!esFichaActiva('datosGenerales')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva('datosGenerales')" *ngIf="bodyInicial" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-4 col-md-4">
           <label style="text-align:center; font-weight: bold; padding-bottom: 10px">{{ 'justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.inicial' | translate }}</label>

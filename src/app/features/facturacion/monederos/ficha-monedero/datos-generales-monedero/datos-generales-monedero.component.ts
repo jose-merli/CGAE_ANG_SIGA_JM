@@ -260,4 +260,8 @@ export class DatosGeneralesMonederoComponent implements OnInit {
     this.showTarjeta = !this.showTarjeta;
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
 }

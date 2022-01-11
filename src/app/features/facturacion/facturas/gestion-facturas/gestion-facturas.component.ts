@@ -16,7 +16,7 @@ export class GestionFacturasComponent implements OnInit {
   progressSpinner: boolean = false;
 
   iconoTarjetaResumen = "clipboard";
-  body: FacturasItem = new FacturasItem();
+  body: FacturasItem;
   datos = [];
   enlacesTarjetaResumen = [];
 
@@ -44,20 +44,28 @@ export class GestionFacturasComponent implements OnInit {
     } else if (sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.body = new FacturasItem();
-    } else if (this.body.idFactura == undefined || this.body.tipo) {
+    } else if (this.body == undefined || this.body.idFactura == undefined || this.body.tipo == undefined) {
       this.progressSpinner = false;
       this.location.back();
     }
     
-    this.getDatosFactura(this.body.idFactura, this.body.tipo).then(() => {
-      this.updateTarjetaResumen();
-      setTimeout(() => {
-        this.updateEnlacesTarjetaResumen();
-      }, 5);
-
-      this.goTop();
-      this.progressSpinner = false;
-    });
+    if (this.body != undefined) {
+      this.getDatosFactura(this.body.idFactura, this.body.tipo).catch(error => {
+        if (error != undefined) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      }).then(() => {
+        this.updateTarjetaResumen();
+        setTimeout(() => {
+          this.updateEnlacesTarjetaResumen();
+        }, 5);
+  
+        this.goTop();
+        this.progressSpinner = false;
+      });
+    }
   }
 
   getDatosFactura(idFactura: string, tipo: string): Promise<any> {
@@ -70,18 +78,10 @@ export class GestionFacturasComponent implements OnInit {
         }
 
         this.body = datos[0];
-
-        console.log(this.body);
       }, err => { 
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    ).catch(error => {
-      if (error != undefined) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
-      } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    });
+    );
   }
 
   // Tarjeta resumen
@@ -229,21 +229,43 @@ export class GestionFacturasComponent implements OnInit {
       n => { }, err => { 
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    ).catch(error => {
+    ).then(() => { 
+      return this.getDatosFactura(this.body.idFactura, this.body.tipo); 
+    }).then(() => {
+      this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
+      
+      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+    }).catch(error => {
       if (error != undefined) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
-    }).then(() => { 
-      return this.getDatosFactura(this.body.idFactura, this.body.tipo); 
     }).then(() => this.progressSpinner = false);
   }
 
   refreshData(event: FacturasItem): void {
     this.progressSpinner = true;
 
-    this.getDatosFactura(event.idFactura, event.tipo).then(() => this.progressSpinner = false);
+    this.getDatosFactura(event.idFactura, event.tipo).catch(error => {
+      if (error != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    }).then(() => {
+      this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
+      
+      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      this.progressSpinner = false;
+      
+    });
   }
 
   // Transformar fecha

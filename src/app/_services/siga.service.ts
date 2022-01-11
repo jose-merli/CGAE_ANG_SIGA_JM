@@ -1,24 +1,14 @@
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
-  HttpResponse,
-  HttpParams,
-  HttpResponseBase,
   HttpHeaders,
   HttpBackend,
   HttpErrorResponse
 } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
-import { Router } from '@angular/router';
 import 'rxjs/add/operator/map';
 import { environment } from '../../environments/environment';
 import { MenuItem } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
-import { RequestOptions, Headers, ResponseContentType } from '@angular/http';
 import { Subject } from 'rxjs/Subject';
 import { endpoints_maestros } from "../utils/endpoints_maestros";
 import { endpoints_justiciables } from "../utils/endpoints_justiciables";
@@ -617,7 +607,7 @@ export class SigaServices {
     comunicaciones_destinatarios: 'comunicaciones/detalle/destinatarios',
     comunicaciones_descargarDocumento: 'comunicaciones/detalle/descargarDocumento',
     comunicaciones_descargarCertificado: 'comunicaciones/detalle/descargarCertificado',
-		comunicaciones_saveNuevaComm: 'comunicaciones/saveNuevaComm',
+    comunicaciones_saveNuevaComm: 'comunicaciones/saveNuevaComm',
     consultas_search: 'consultas/search',
     consultas_borrar: 'consultas/borrarConsulta',
     consultas_listadoPlantillas: 'consultas/plantillasconsulta',
@@ -703,18 +693,18 @@ export class SigaServices {
     ...endpoints_justiciables,
     ...endpoints_oficio,
     ...endpoints_maestros,
-		...endpoints_EJG_Comision,
+
+    ...endpoints_facturacionPyS,
+    ...endpoints_PyS,
+    ...endpoints_EJG_Comision,
 		...endpoints_remesa,
 		...endpoints_intercambios,
-    ...endpoints_guardia,
-    ...endpoints_facturacionPyS,
-    ...endpoints_PyS
+		...endpoints_guardia
   };
 
   private menuToggled = new Subject<any>();
   private iframeRemove = new Subject<any>();
   private consultasRefresh = new Subject<any>();
-
   private updateCombo = new Subject<any>();
   private newIdOrdenacion = new Subject<any>();
   private deshabilitarEditar = new Subject<any>();

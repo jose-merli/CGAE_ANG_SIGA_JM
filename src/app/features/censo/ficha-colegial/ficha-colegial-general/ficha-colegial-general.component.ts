@@ -1,12 +1,8 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, OnDestroy, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SigaServices } from '../../../../_services/siga.service';
-import { ConfirmationService, Message } from "primeng/components/common/api";
-import { AuthenticationService } from '../../../../_services/authentication.service';
+import { Message } from "primeng/components/common/api";
 import { TranslateService } from '../../../../commons/translate/translation.service';
-// import { DomSanitizer } from '@angular/platform-browser/src/platform-browser';
 import { Router } from '@angular/router';
-import { DatePipe } from '@angular/common';
-import { cardService } from "./../../../../_services/cardSearch.service";
 import { DatosColegiadosItem } from '../../../../models/DatosColegiadosItem';
 import { NoColegiadoItem } from '../../../../models/NoColegiadoItem';
 import { Location } from "@angular/common";
@@ -33,8 +29,6 @@ import { DocushareItem } from '../../../../models/DocushareItem';
 import { Dialog } from 'primeng/dialog';
 import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
 import { PersistenceService } from '../../../../_services/persistence.service';
-
-
 
 
 @Component({
@@ -465,7 +459,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.desactivarVolver = false;
     } else if (sessionStorage.getItem("esNuevoNoColegiado")) {
       this.desactivarVolver = false;
-
     } //Si viene de la ficha de compra/suscripcion
     else if(sessionStorage.getItem("origin")=="Cliente"){
       this.desactivarVolver = false;
@@ -526,25 +519,6 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.tipoCambioAuditoria = null;
 
     }
-
-    // if(!this.idPersona){
-    //   this.sigaServices.get("usuario_logeado").subscribe(n => {
-    //     let usuario = n.usuarioLogeadoItem;
-    //     this.sigaServices
-    //      .post("busquedaColegiados_searchColegiado", usuario[0].dni).subscribe(
-    //       data => {
-    //         let colegiadoItem = JSON.parse(data.body);
-    //         this.idPersona = JSON.stringify(colegiadoItem.colegiadoItem[0].idPersona)
-    //       },
-    //       err => {
-    //         //console.log(err);
-    //       },
-    //      );
-    //   },
-    //   err => {
-    //     //console.log(err);
-    //   });
-    // }
 
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.generalBody.idTipoIdentificacion = "10";

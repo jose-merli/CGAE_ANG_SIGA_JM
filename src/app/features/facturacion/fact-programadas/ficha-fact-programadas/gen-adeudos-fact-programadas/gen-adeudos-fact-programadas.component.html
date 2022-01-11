@@ -7,7 +7,7 @@
       <div *ngIf="!esFichaActiva('genAdeudos')" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('genAdeudos')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="fas fa-dollar icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -47,7 +47,7 @@
       <div *ngIf="esFichaActiva('genAdeudos')" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('genAdeudos')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="fas fa-dollar icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.factProgramadas.genAdeudos' | translate }}</label>
 
@@ -60,7 +60,7 @@
             </span>
           </a>
         </label>
-        <i class="fa fa-angle-up"></i>
+        <i class="fa fa-angle-up{{ ficherosAdeudos ? '' : ' ml-auto' }}"></i>
       </div>
     </div>
 
@@ -102,7 +102,7 @@
         <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-save" iconPos="left"
           (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

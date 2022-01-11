@@ -616,4 +616,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 			})
 			.catch((error) => console.error(error));
   }
+
+  clear() {
+    this.msgs = [];
+  }
 }

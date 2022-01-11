@@ -50,7 +50,6 @@ export class SeriesFacturaComponent implements OnInit {
   searchSeriesFacturas(): void {
     let filtros = JSON.parse(JSON.stringify(this.filtros.body));
     this.progressSpinner = true;
-    console.log(filtros);
 
     this.sigaServices.post("facturacionPyS_getSeriesFacturacion", filtros).subscribe(
       n => {
@@ -64,8 +63,6 @@ export class SeriesFacturaComponent implements OnInit {
         });
 
         let error = JSON.parse(n.body).error;
-
-        console.log(this.datos);
 
         this.buscar = true;
         

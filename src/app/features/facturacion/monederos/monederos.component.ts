@@ -87,6 +87,11 @@ export class MonederoComponent implements OnInit {
     });
   }
 
+  
+  clear() {
+    this.msgs = [];
+  }
+  
   backTo(){
     this.location.back();
   }

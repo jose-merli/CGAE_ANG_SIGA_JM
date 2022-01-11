@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import moment = require('moment');
 import { ConfirmationService, Message } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
@@ -28,10 +29,15 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   @Input() serie: SerieFacturacionItem;
 
   resaltadoDatos: boolean = false;
+
+  // Estados de confirmación
   porProgramar: boolean = true;
   porConfirmar: boolean = false;
   porConfirmarError: boolean = false;
   confirmada: boolean = false;
+
+  // Fecha para la restricción de fecha de generación
+  fechaActual: Date;
 
   constructor(
     private commonsService: CommonsService,
@@ -40,11 +46,15 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     private confirmationService: ConfirmationService
   ) { }
 
+  // Al inicializar el formulario se inicializa la fecha actual sin el tiempo
+  // para facilitar la validación de la fecha de generación, la fecha de generación
+  // prevista se establece antes de guardar (momento actual + 5 min.)
   ngOnInit() {
+    this.fechaActual = new Date();
+    this.fechaActual.setHours(0,0,0,0);
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
     if (changes.bodyInicial != undefined)
       this.restablecer();
   }
@@ -60,29 +70,34 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     this.body.fechaInicioServicios = this.transformDate(this.body.fechaInicioServicios);
     this.body.fechaFinServicios = this.transformDate(this.body.fechaFinServicios);
     this.body.fechaModificacion = this.transformDate(this.body.fechaModificacion);
+
+    this.body.fechaCompraSuscripcionDesde = this.minDate(this.body.fechaInicioServicios, this.body.fechaInicioProductos);
+    this.body.fechaCompraSuscripcionHasta = this.maxDate(this.body.fechaFinServicios, this.body.fechaFinProductos);
     this.resaltadoDatos = false;
 
     this.porProgramar = !this.modoEdicion || this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
     this.porConfirmar = this.body.idEstadoConfirmacion == "18" || this.body.idEstadoConfirmacion == "19" || this.body.idEstadoConfirmacion == "1" || this.body.idEstadoConfirmacion == "17";
     this.porConfirmarError = this.body.idEstadoConfirmacion == "21";
     this.confirmada = this.body.idEstadoConfirmacion == "3";
-
-    console.log(this.body);
   }
 
   // Dehabilitar guardado cuando no cambien los campos
   deshabilitarGuardado(): boolean {
     return this.notChangedString(this.body.descripcion, this.bodyInicial.descripcion)
-        && this.body.fechaPrevistaGeneracion == this.bodyInicial.fechaPrevistaGeneracion
-        && this.body.fechaPrevistaConfirm == this.bodyInicial.fechaPrevistaConfirm
-        && this.body.fechaInicioServicios == this.bodyInicial.fechaInicioServicios
-        && this.body.fechaInicioProductos == this.bodyInicial.fechaInicioProductos
-        && this.body.fechaFinServicios == this.bodyInicial.fechaFinServicios
-        && this.body.fechaFinProductos == this.bodyInicial.fechaFinProductos;
+        && this.notChangedDate(this.body.fechaPrevistaGeneracion, this.bodyInicial.fechaPrevistaGeneracion)
+        && this.notChangedDate(this.body.fechaPrevistaConfirm, this.bodyInicial.fechaPrevistaConfirm)
+        && this.notChangedDate(this.body.fechaInicioServicios, this.bodyInicial.fechaInicioServicios)
+        && this.notChangedDate(this.body.fechaInicioProductos, this.bodyInicial.fechaInicioProductos)
+        && this.notChangedDate(this.body.fechaFinServicios, this.bodyInicial.fechaFinServicios)
+        && this.notChangedDate(this.body.fechaFinProductos, this.bodyInicial.fechaFinProductos);
   }
 
   notChangedString(value1: string, value2: string): boolean {
     return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
+  }
+
+  notChangedDate(value1: Date, value2: Date): boolean {
+    return value1 == value2 || value1 == undefined && value2 == undefined || new Date(value1).getTime() == new Date(value2).getTime();
   }
 
   // Guardar
@@ -97,39 +112,44 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       return false;
     }
 
-    let fechaGeneracion: boolean = this.body.fechaPrevistaGeneracion > new Date();
-    if (!fechaGeneracion) {
-      this.showMessage("error", "Error", "La Fecha de generación debe ser posterior a la fecha actual");
+    let fechaGeneracion: boolean = !this.porConfirmarError && this.body.fechaPrevistaGeneracion < this.fechaActual;
+    if (fechaGeneracion) {
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.fechaGeneracion.futura"));
       return false;
     }
 
-    let fechaConfirmacion: boolean = this.body.fechaPrevistaConfirm == undefined || this.body.fechaPrevistaConfirm > this.body.fechaRealGeneracion;
+    let fechaConfirmacion: boolean = this.body.fechaPrevistaConfirm == undefined || this.body.fechaPrevistaConfirm > this.body.fechaPrevistaGeneracion;
     if (!fechaConfirmacion) {
-      this.showMessage("error", "Error", "La Fecha de confirmación debe ser posterior a la fecha de generación");
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.fechaConfirmacion.posterior"));
       return false;
     }
 
-    let intervaloProductos: boolean = this.serie.tiposProductos != undefined && this.serie.tiposProductos.length > 0 && this.body.fechaInicioProductos != undefined && this.body.fechaFinProductos != undefined;
+    let intervaloProductos: boolean = this.body.fechaInicioProductos != undefined || this.body.fechaFinProductos != undefined;
     if (intervaloProductos) {
       let intervalo: boolean = this.body.fechaInicioProductos < this.body.fechaFinProductos;
       if (!intervalo) {
-        this.showMessage("error", "Error", "El intervalo de compras de productos es inválido");
+        this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intevaloCompras.invalido"));
         return false;
       }
     } else if (this.serie.tiposProductos != undefined && this.serie.tiposProductos.length > 0) {
-      this.showMessage("error", "Error", "La serie contiene tipos de productos");
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intevalo.tiposProductos"));
       return false;
     }
 
-    let intervaloServicios: boolean = this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0 && this.body.fechaInicioServicios != undefined && this.body.fechaFinServicios != undefined;
+    let intervaloServicios: boolean = this.body.fechaInicioServicios != undefined || this.body.fechaFinServicios != undefined;
     if (intervaloServicios) {
       let intervalo: boolean = this.body.fechaInicioServicios < this.body.fechaFinServicios;
       if (!intervalo) {
-        this.showMessage("error", "Error", "El intervalo de cuotas y suscripciones es inválido");
+        this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intevaloSuscripciones.invalido"));
         return false;
       }
     } else if (this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0) {
-      this.showMessage("error", "Error", "La serie contiene tipos de servicios");
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intevalo.tiposServicios"));
+      return false;
+    }
+
+    if (!intervaloProductos && !intervaloServicios) {
+      this.showMessage("error", "Error", this.translateService.instant("facturacion.factProgramadas.intervalo.obligatorio"));
       return false;
     }
 
@@ -137,8 +157,14 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   }
 
   checkSave(): void {
-    if (this.isValid()) {
+    if (this.isValid() && !this.deshabilitarGuardado()) {
       this.body.esDatosGenerales = true;
+
+      // Corregir fecha de generación prevista si coincide con la fecha actual
+      if (this.body.fechaPrevistaGeneracion.getTime() == this.fechaActual.getTime()) {
+        this.body.fechaPrevistaGeneracion = moment(new Date()).add(5, 'm').toDate();
+      }
+
       this.guardadoSend.emit(this.body);
     } else {
       this.resaltadoDatos = true;
@@ -256,26 +282,80 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   }
 
   styleFechaGeneracion(evento) {
-    if (this.resaltadoDatos  && (evento == undefined || evento >= new Date())) {
+    if (this.resaltadoDatos  && (evento == undefined || evento >= this.fechaActual)) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
 
   styleFechaConfirmacion(evento) {
     if (this.resaltadoDatos && this.body.fechaPrevistaGeneracion != undefined && evento != undefined && this.body.fechaPrevistaGeneracion >= evento) {
-      return this.commonsService.styleObligatorio(evento);
+      return 'camposObligatorios';
     }
   }
 
-  styleFechaProductos(evento) {
-    if (this.resaltadoDatos && this.serie.tiposProductos != undefined && this.serie.tiposProductos.length > 0 && !(this.body.fechaInicioProductos != undefined && this.body.fechaFinProductos != undefined && this.body.fechaInicioProductos < this.body.fechaFinProductos)) {
-      return this.commonsService.styleObligatorio(evento);
+  styleFechaProductos() {
+    if (this.resaltadoDatos) {
+      let intervaloProductos: boolean = this.body.fechaInicioProductos != undefined || this.body.fechaFinProductos != undefined;
+      if (intervaloProductos) {
+        let intervalo: boolean = this.body.fechaInicioProductos < this.body.fechaFinProductos;
+        if (!intervalo) {
+          return 'camposObligatorios';
+        }
+      } else if (this.serie.tiposProductos != undefined && this.serie.tiposProductos.length > 0) {
+        return 'camposObligatorios';
+      }
+
+      let intervaloServicios: boolean = this.body.fechaInicioServicios != undefined || this.body.fechaFinServicios != undefined;
+      if (!intervaloProductos && !intervaloServicios) {
+        return 'camposObligatorios';
+      }
     }
   }
 
-  styleFechaServicios(evento) {
-    if (this.resaltadoDatos && this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0 && !(this.body.fechaInicioServicios != undefined && this.body.fechaFinServicios != undefined || this.body.fechaInicioServicios < this.body.fechaFinServicios)) {
-      return this.commonsService.styleObligatorio(evento);
+  styleFechaServicios() {
+    if (this.resaltadoDatos) {
+      let intervaloServicios: boolean = this.body.fechaInicioServicios != undefined || this.body.fechaFinServicios != undefined;
+      if (intervaloServicios) {
+        let intervalo: boolean = this.body.fechaInicioServicios < this.body.fechaFinServicios;
+        if (!intervalo) {
+          return 'camposObligatorios';
+        }
+      } else if (this.serie.tiposServicios != undefined && this.serie.tiposServicios.length > 0) {
+        return 'camposObligatorios';
+      }
+
+      let intervaloProductos: boolean = this.body.fechaInicioProductos != undefined || this.body.fechaFinProductos != undefined;
+      if (!intervaloProductos && !intervaloServicios) {
+        return 'camposObligatorios';
+      }
+    }
+  }
+
+  // Fecha mínima para la columna 'desde'
+  minDate(d1: Date, d2: Date) {
+    if (d1 == undefined)
+      return d2;
+    if (d2 == undefined)
+      return d1;
+
+    if (d1 < d2) {
+      return d1;
+    } else {
+      return d2;
+    }
+  }
+
+  // Fecha máxima para la columna 'hasta'
+  maxDate(d1: Date, d2: Date) {
+    if (d1 == undefined)
+      return d2;
+    if (d2 == undefined)
+      return d1;
+
+    if (d1 > d2) {
+      return d1;
+    } else {
+      return d2;
     }
   }
 

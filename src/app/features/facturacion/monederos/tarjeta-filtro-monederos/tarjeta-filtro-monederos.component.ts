@@ -212,4 +212,8 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
     });
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
 }

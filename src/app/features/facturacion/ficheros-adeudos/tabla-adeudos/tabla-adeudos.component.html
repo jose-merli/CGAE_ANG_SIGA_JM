@@ -31,12 +31,16 @@
                 <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
-            <div *ngIf="col.field != 'fechaCreacion' && col.field != 'totalRemesa' && col.field != 'idDisqueteCargos'">
+            <div *ngIf="col.field != 'fechaCreacion' && col.field != 'numRecibos' && col.field != 'totalRemesa' && col.field != 'idDisqueteCargos'">
               <span>{{dato[col.field]}}</span>
             </div>
 
+            <div *ngIf="col.field == 'numRecibos'">
+              <span class="pull-right">{{ dato[col.field] }}</span>
+            </div>
+
             <div *ngIf="col.field == 'totalRemesa'">
-              <span>{{ dato[col.field] | number:'':'es-ES' }} €</span>
+              <span class="pull-right">{{ dato[col.field] | number:'':'es-ES' }} €</span>
             </div>
 
             <div *ngIf="col.field == 'idDisqueteCargos'">
@@ -56,7 +60,7 @@
         <div class="mostrar d-flex text-right justify-content-end">
           <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
             + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
-          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
           </label>
           <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
           </label>

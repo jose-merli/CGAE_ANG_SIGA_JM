@@ -78,6 +78,23 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
 
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.notChangedDate(this.body.fechaPresentacion, this.bodyInicial.fechaPresentacion)
+        && this.notChangedDate(this.body.fechaRecibosPrimeros, this.bodyInicial.fechaRecibosPrimeros)
+        && this.notChangedDate(this.body.fechaRecibosRecurrentes, this.bodyInicial.fechaRecibosRecurrentes)
+        && this.notChangedDate(this.body.fechaRecibosCOR1, this.bodyInicial.fechaRecibosCOR1)
+        && this.notChangedDate(this.body.fechaRecibosB2B, this.bodyInicial.fechaRecibosB2B);
+  }
+
+  notChangedString(value1: string, value2: string): boolean {
+    return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
+  }
+
+  notChangedDate(value1: Date, value2: Date): boolean {
+    return value1 == value2 || value1 == undefined && value2 == undefined || new Date(value1).getTime() == new Date(value2).getTime();
+  }
+
   // Guardar
   
   isValid(): boolean {
@@ -87,7 +104,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   checkSave(): void {
-    if (this.isValid()) {
+    if (this.isValid() && !this.deshabilitarGuardado()) {
       this.body.esDatosGenerales = false;
       this.guardadoSend.emit(this.body);
     } else {
