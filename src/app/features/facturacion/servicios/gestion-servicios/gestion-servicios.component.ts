@@ -51,6 +51,7 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
 
   //Suscripciones
   subscriptionActivarDesactivarServicios: Subscription;
+  permisoSuscripcion: boolean = false;
 
   constructor(private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, 
     private translateService: TranslateService, private confirmationService: ConfirmationService, 
@@ -155,7 +156,12 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
   }
 
   checkServ(){
-    if(this.selectedRows.length != 1){
+    let msg = this.commonsService.checkPermisos(this.permisoSuscripcion, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    }
+    else if(this.selectedRows.length != 1){
       this.showMessage("error",
       this.translateService.instant("Limite de servicios por suscripcion"),
       this.translateService.instant("facturacion.suscripcion.unServicioSuscripcion")
@@ -600,6 +606,15 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
         ];
       }
     });
+  }
+
+  getPermisoSuscribir(){
+    this.commonsService
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+			.then((respuesta) => {
+				this.permisoSuscripcion = respuesta;
+			})
+			.catch((error) => console.error(error));
   }
 
   //FIN SERVICIOS
