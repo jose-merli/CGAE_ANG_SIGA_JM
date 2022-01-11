@@ -57,6 +57,9 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
     //con la fecha de dos años antes
     let today = new Date();
     this.filtrosSuscripciones.fechaSolicitudDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
+    // Se rellena este campo por el correo enviado por Adrian Ayala Gomez
+    // el día 11/01/22
+    this.filtrosSuscripciones.aFechaDe = new Date();
 
     if (sessionStorage.getItem("filtroBusqSuscripcion")) {
 
@@ -287,6 +290,9 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
   limpiar() {
     this.filtrosSuscripciones = new FiltrosSuscripcionesItem();
+    //Se rellena este campo por el correo enviado por Adrian Ayala Gomez
+    // el día 11/01/22
+    this.filtrosSuscripciones.aFechaDe = new Date();
     if(!this.localStorageService.isLetrado){
       this.limpiarCliente();
     }
