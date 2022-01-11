@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('contadorFacturasRectificativas')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('contadorFacturasRectificativas')">
           <div class="img-colegiado">
             <i class="fas fa-sort-numeric-down icon-ficha pointer"></i>
@@ -25,13 +25,13 @@
               <span>{{ contadorFacturasRectificativasSeleccionado.sufijo }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('contadorFacturasRectificativas')"
-              *ngIf="!esFichaActiva('contadorFacturasRectificativas')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('contadorFacturasRectificativas')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('contadorFacturasRectificativas')">
         <div class="img-colegiado">
           <i class="fas fa-sort-numeric-down icon-ficha"></i>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div [hidden]="!esFichaActiva('contadorFacturasRectificativas')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ (!nuevo ? 'facturacion.seriesFactura.cont.seleccion' : 'administracion.parametrosGenerales.literal.nombre') | translate }}</label>
@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <div *ngIf="esFichaActiva('contadorFacturasRectificativas')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button *ngIf="nuevo" (click)="backToSelect()" pButton type="button" icon="fa fa-angle-left" 
           iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
