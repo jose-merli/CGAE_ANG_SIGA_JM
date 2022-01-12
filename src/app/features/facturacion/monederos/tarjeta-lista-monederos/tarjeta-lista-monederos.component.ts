@@ -258,6 +258,7 @@ export class TarjetaListaMonederosComponent implements OnInit {
       .catch((error) => console.error(error));
   }
   
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
   }

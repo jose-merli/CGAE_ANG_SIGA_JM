@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('exportacionContabilidad')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('exportacionContabilidad')">
           <div class="img-colegiado">
             <i class="fas fa-calculator icon-ficha pointer"></i>
@@ -25,13 +25,13 @@
               <span>{{ body.ctaIngresos }}</span></label>
 
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('exportacionContabilidad')"
-              *ngIf="!esFichaActiva('exportacionContabilidad')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('exportacionContabilidad')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('exportacionContabilidad')">
         <div class="img-colegiado">
           <i class="fas fa-calculator icon-ficha"></i>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('exportacionContabilidad')" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacion.seriesFactura.export.confCliente' | translate }}</label>
@@ -67,7 +67,7 @@
       </div>
     </div>
 
-    <div *ngIf="esFichaActiva('exportacionContabilidad')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>

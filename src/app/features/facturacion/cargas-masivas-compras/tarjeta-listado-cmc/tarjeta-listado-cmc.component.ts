@@ -119,7 +119,7 @@ export class TarjetaListadoCmcComponent implements OnInit {
           saveAs(response.file, filename);
         }
         else if(response.status == 204){
-          this.showMessage("error", this.translateService.instant("general.message.informacion"), "**No se ha encontrado el fichero asociado a la carga");
+          this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
         }
         else{
            this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));

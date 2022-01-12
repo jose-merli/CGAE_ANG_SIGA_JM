@@ -88,8 +88,8 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
   backTo() {
     sessionStorage.setItem("volver", 'true');
     sessionStorage.removeItem('servicioBuscador');
-    this.router.navigate(['/servicios']);
-    //this.location.back(); REVISAR POR GUILLERMO
+    //this.router.navigate(['/servicios']);
+    this.location.back(); 
   }
   //FIN METODOS APP
 

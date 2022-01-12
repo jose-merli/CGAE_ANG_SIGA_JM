@@ -8,7 +8,7 @@
       <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosResumen" [icono]="'clipboard'" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
       </app-tarjeta-resumen-fija>
 
-      <app-datos-generacion-adeudos [bodyInicial]="body" [permisoEscritura]="permisoEscrituraDatosGeneracion" [tarjetaDatosGeneracion]="tarjetaDatosGeneracion" [openTarjetaDatosGeneracion]="openTarjetaDatosGeneracion" (opened)="manuallyOpened = $event" [modoEdicion]="modoEdicion" (idOpened)="isCloseReceive($event)"></app-datos-generacion-adeudos>
+      <app-datos-generacion-adeudos [bodyInicial]="body" [permisoEscritura]="permisoEscrituraDatosGeneracion" [openTarjetaDatosGeneracion]="openTarjetaDatosGeneracion" (opened)="manuallyOpened = $event" [modoEdicion]="modoEdicion" (idOpened)="isCloseReceive($event)"></app-datos-generacion-adeudos>
 
       <app-facturacion-adeudos *ngIf="modoEdicion && muestraFacturacion" [bodyInicial]="body"></app-facturacion-adeudos>
 

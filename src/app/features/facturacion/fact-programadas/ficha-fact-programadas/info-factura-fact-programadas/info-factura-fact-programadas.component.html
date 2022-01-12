@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('infoFactura')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('infoFactura')">
           <div class="img-colegiado">
             <i class="fas fa-chart-bar icon-ficha pointer"></i>
@@ -34,13 +34,13 @@
               <span *ngIf="totalPendienteActual != undefined">{{ totalPendienteActual }} €</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('infoFactura')"
-              *ngIf="!esFichaActiva('infoFactura')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('infoFactura')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('infoFactura')">
         <div class="img-colegiado">
           <i class="fas fa-chart-bar icon-ficha"></i>
@@ -61,7 +61,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('infoFactura')" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
       <!-- TABLA RESULTADOS -->
       <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
         class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
@@ -127,7 +127,7 @@
       </p-table>
     </div>
 
-    <div *ngIf="esFichaActiva('infoFactura')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-comment" iconPos="left"
           (click)="comunicar()" label="{{ 'general.boton.comunicar' | translate }}"></button>
