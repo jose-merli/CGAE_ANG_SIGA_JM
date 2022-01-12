@@ -7,6 +7,7 @@ import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-tabla-fact-programadas',
@@ -266,6 +267,32 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       }
     );
+  }
+
+  // Descargar LOG
+  descargarLog(): void {
+    let resHead = { 'response' : null, 'header': null };
+    this.progressSpinner = true;
+
+    let downloadBody = this.selectedDatos.map(d => {
+      return { idSerieFacturacion: d.idSerieFacturacion, idProgramacion: d.idProgramacion };
+    });
+
+    let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFichaFacturacion", downloadBody);
+    descarga.subscribe(response => {
+      this.progressSpinner = false;
+
+      const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
+			let filename: string = response.headers.get("Content-Disposition");
+      filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+
+      saveAs(file, filename);
+      this.showMessage( 'success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+    },
+    err => {
+      this.progressSpinner = false;
+      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+    });
   }
 
   // Funciones de utilidad

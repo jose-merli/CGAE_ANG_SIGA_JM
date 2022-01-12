@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { MultiSelect } from 'primeng/multiselect';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
@@ -6,6 +6,7 @@ import { FacturasItem } from '../../../../models/FacturasItem';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { KEY_CODE } from '../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 
 @Component({
   selector: 'app-filtros-facturas',
@@ -273,6 +274,14 @@ export class FiltrosFacturasComponent implements OnInit {
     sessionStorage.removeItem("numColegiado");
 
     this.goTop();
+  }
+
+  // Búsqueda con enter
+  @HostListener("document:keypress", ["$event"])
+  onKeyPress(event: KeyboardEvent) {
+    if (event.keyCode === KEY_CODE.ENTER) {
+      this.isBuscar();
+    }
   }
 
   goTop() {

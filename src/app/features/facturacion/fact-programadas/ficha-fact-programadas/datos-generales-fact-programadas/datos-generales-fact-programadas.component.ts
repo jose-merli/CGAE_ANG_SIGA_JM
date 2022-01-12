@@ -6,6 +6,7 @@ import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturaci
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-datos-generales-fact-programadas',
@@ -235,6 +236,24 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
         this.progressSpinner = false;
       }
     );
+  }
+
+  // Descargar LOG
+  descargarLog(){
+    let resHead ={ 'response' : null, 'header': null };
+    this.progressSpinner = true;
+    let descarga =  this.sigaServices.postDownloadFilesWithFileName("facturacionPyS_descargarFichaFacturacion", [{ idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idProgramacion }]);
+    descarga.subscribe((data: {file: Blob, filename: string}) => {
+      this.progressSpinner = false;
+      console.log(data);
+      let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+      saveAs(data.file, filename);
+      this.showMessage( 'success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+    },
+    err => {
+      this.progressSpinner = false;
+      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+    });
   }
 
   // Cambios en fechas
