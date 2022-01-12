@@ -33,7 +33,8 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div *ngIf="col.field !='fechaSolicitud' && col.field != 'fechaEfectiva'" >
-              <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}} (a {{currentDate | date: 'dd/MM/yyyy'}}) </span>
+              <span *ngIf="col.field == 'concepto' && rowData['idEstadoSolicitud'] != 5" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}} (a {{currentDate | date: 'dd/MM/yyyy'}}) </span>
+              <span *ngIf="col.field == 'concepto' && rowData['idEstadoSolicitud'] == 5" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
               <span *ngIf="col.field == 'idEstadoSolicitud'">{{estadosSuscripcionObject[rowData[col.field]-1].label}}</span>
               <span *ngIf="col.field != 'concepto' && col.field != 'idEstadoSolicitud'">{{rowData[col.field]}}</span>
             </div>

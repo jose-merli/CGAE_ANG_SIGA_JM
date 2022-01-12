@@ -1,0 +1,26 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>SJCS&nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.baremos.buscar.titulo' | translate}}
+  </p>
+</div>
+
+<div class="busqueda-container">
+
+  <app-filtro-busqueda-baremos [permisoEscritura]="permisoEscritura"
+    (mostrarTablaResultadosEvent)="getBaremosGuardias($event)"></app-filtro-busqueda-baremos>
+
+  <div *ngIf="mostrarTablaResultados">
+    <div class="card mt-3">
+      <div class="card-body p-0">
+        <app-tabla-busqueda-baremos [datos]="datos" [permisoEscritura]="permisoEscritura"
+          (isHistorico)="mostrarHistorico($event)"></app-tabla-busqueda-baremos>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -1,5 +1,4 @@
 @import "sass/variables.scss";
-
 //ESTILOS CONSTRUCTOR DE CONSULTAS
 @import "../node_modules/@syncfusion/ej2-base/styles/material.css";
 
@@ -34,8 +33,7 @@
 @font-face {
   font-family: abogacia;
   src: url("./assets/fonts/Servicios-REDABOGACIA-Regular.eot");
-  src: url("./assets/fonts/Servicios-REDABOGACIA-Regular.eot?#iefix")
-      format("embedded-opentype"),
+	src: url("./assets/fonts/Servicios-REDABOGACIA-Regular.eot?#iefix") format("embedded-opentype"),
     url("./assets/fonts/Servicios-REDABOGACIA-Regular.woff") format("woff"),
     url("./assets/fonts/Servicios-REDABOGACIA-Regular.ttf") format("truetype");
 }
@@ -43,16 +41,14 @@
 @font-face {
   font-family: OpenSansCondensedBold;
   src: url("./assets/fonts/OpenSansCondensedBold.eot");
-  src: url("./assets/fonts/OpenSansCondensedBold.eot?#iefix")
-      format("embedded-opentype"),
+	src: url("./assets/fonts/OpenSansCondensedBold.eot?#iefix") format("embedded-opentype"),
     url("./assets/fonts/OpenSansCondensedBold.woff") format("woff"),
     url("./assets/fonts/OpenSansCondensedBold.ttf") format("truetype");
 }
 @font-face {
   font-family: OpenSansCondensedLight;
   src: url("./assets/fonts/OpenSansCondensedLight.eot");
-  src: url("./assets/fonts/OpenSansCondensedLight.eot?#iefix")
-      format("embedded-opentype"),
+	src: url("./assets/fonts/OpenSansCondensedLight.eot?#iefix") format("embedded-opentype"),
     url("./assets/fonts/OpenSansCondensedLight.woff") format("woff"),
     url("./assets/fonts/OpenSansCondensedLight.ttf") format("truetype");
 }
@@ -392,9 +388,7 @@ label {
   }
 
   .ui-table .ui-table-tbody > tr.ui-state-highlight,
-  .ui-table.ui-table-hoverable-rows
-    .ui-table-tbody
-    > tr:not(.ui-state-highlight):hover {
+	.ui-table.ui-table-hoverable-rows .ui-table-tbody > tr:not(.ui-state-highlight):hover {
     background: $secondary-color;
     td {
       color: white;
@@ -1521,22 +1515,13 @@ tr:hover {
   cursor: default !important;
 }
 
-#cabeza,
-#sInteres,
-#alterMutua,
-#mutualidad,
-#nueIncoDatosAltMut,
-#nueIncoMutAbo,
-#detaSanDatosGene,
-#inscripciones,
-#formaFichInsDatosCur {
-  div {
+#cabeza,#sInteres,#alterMutua,#mutualidad,#nueIncoDatosAltMut,#nueIncoMutAbo,#detaSanDatosGene,#inscripciones,#formaFichInsDatosCur {
+
+ div {
     cursor: default;
   }
 
-  div > label,
-  div > label > b,
-  div > span {
+  div > label,  div > label > b,  div > span {
     cursor: text;
   }
 
@@ -1545,72 +1530,28 @@ tr:hover {
   }
 }
 
-#datosGen,
-#datosCol,
-#otrasColegiaciones,
-#certif,
-#sancio,
-#socied,
-#datosCurriculares,
-#direcciones,
-#datosBanc,
-#regtel,
-#sregistrales,
-#snotario,
-#sintegrantes,
-#sdatosBancarios,
-#sretenciones,
-#sdirecciones,
-#nueIncoDatosSoli,
-#nueIncoDatosCole,
-#nueIncoDatosPer,
-#nueIncoDatosDir,
-#nueIncoDatosBan,
-#descripcion,
-#precios,
-#formadores,
-#certificados,
-#sesiones,
-#carga,
-#formaFichInsDatosIns,
-#formaFichInsDatosPer,
-#formaFichInsDatosCer,
-#infoYComuModeComuFicMolComDatosGenr,
-#infoYComuModeComuFicMolComConfPer,
-#infoYComuModeComuFicMolComPlaDoc,
-#infoYComuPlaEnvFicPlaEnvDatosGen,
-#infoYComuPlaEnvFicPlaEnvCueMsg,
-#infoYComuPlaEnvFicPlaEnvCons,
-#infoYComuPlaEnvFicPlaEnvRemi,
-#infoYComuConFicConDatosGen,
-#infoYComuConFicConConsul,
-#infoYComuConFicConModCom,
-#infoYComuConFicConPlaEnv,
-#infoYComuComuFichaComuConfComu,
-#infoYComuComuFichaComuDest,
-#infoYComuComuFichaComuProg,
-#infoYComuComuFichaComuDocs,
-#infoYComuEnvMasFichEnvMasConfCom,
-#infoYComuEnvMasFichEnvMasProg,
-#infoYComuEnvMasFichEnvMasDesInd,
-#infoYComuEnvMasFichEnvMasListDes,
-#infoYComuEnvMasFichEnvMasEtiq,
-#infoYComuEnvMasFichEnvMasDocs,
-#infoYComuModeComuFicPlaDocDocumentos,
-#infoYComuModeComuFicPlaDocDatSal,
-#infoYComuModeComuFicPlaDocConsul {
-  div {
-    cursor: default;
-  }
+#datosGen, #datosCol, #otrasColegiaciones, #certif, #sancio, #socied, #datosCurriculares, #direcciones, #datosBanc, #regtel, #sregistrales, 
+#snotario, #sintegrantes, #sdatosBancarios, #sretenciones, #sdirecciones, #nueIncoDatosSoli, #nueIncoDatosCole, #nueIncoDatosPer, #nueIncoDatosDir, 
+#nueIncoDatosBan, #descripcion, #precios, #formadores, #certificados, #sesiones, #carga, #formaFichInsDatosIns, #formaFichInsDatosPer, #formaFichInsDatosCer, 
+#infoYComuModeComuFicMolComDatosGenr, #infoYComuModeComuFicMolComConfPer, #infoYComuModeComuFicMolComPlaDoc, #infoYComuPlaEnvFicPlaEnvDatosGen, 
+#infoYComuPlaEnvFicPlaEnvCueMsg, #infoYComuPlaEnvFicPlaEnvCons, #infoYComuPlaEnvFicPlaEnvRemi, #infoYComuConFicConDatosGen, #infoYComuConFicConConsul, 
+#infoYComuConFicConModCom, #infoYComuConFicConPlaEnv, #infoYComuComuFichaComuConfComu, #infoYComuComuFichaComuDest, #infoYComuComuFichaComuProg, 
+#infoYComuComuFichaComuDocs, #infoYComuEnvMasFichEnvMasConfCom, #infoYComuEnvMasFichEnvMasProg, #infoYComuEnvMasFichEnvMasDesInd, #infoYComuEnvMasFichEnvMasListDes, 
+#infoYComuEnvMasFichEnvMasEtiq, #infoYComuEnvMasFichEnvMasDocs, #infoYComuModeComuFicPlaDocDocumentos, #infoYComuModeComuFicPlaDocDatSal, #infoYComuModeComuFicPlaDocConsul,
+#facSJCSFichaFactDatosFac, #facSJCSFichaFactConceptosFac, #facSJCSFichaFactPagosFac, #facSJCSFichaFactBaremosFac, #facSJCSFichaFactCartasFac, #facSJCSFichaPagosDatosGen,
+#facSJCSFichaPagosConcep, #facSJCSFichaPagosConfigFich, #facSJCSFichaPagosDetaPago, #facSJCSFichaPagosCompFac, #facSJCSFichaRetCol, #facSJCSFichaRetDatRetJud,
+#facSJCSFichaRetAplEnPag, #facSJCSFichaBarDatosGen, #facSJCSFichaBarConfiFac, #facSJCSFichaBarConfiAdi, #facSJCSTarjFacGene, #fichaCertDatosGenerales,
+#fichaCertFacturacion, #fichaCertMovAso, #fichaCertMovApli {
 
-  div > label,
-  div > label > span {
+	div {
+		cursor: default;
+	}
+	  
+	div > label, div > label > span {
     cursor: text;
   }
 
-  div > label > a,
-  div > i,
-  div > label.title-ficha {
+	div > label > a, div > i, div > label.title-ficha {
     cursor: pointer !important;
   }
 }

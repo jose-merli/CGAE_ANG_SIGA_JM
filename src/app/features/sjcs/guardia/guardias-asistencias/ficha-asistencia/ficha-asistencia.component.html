@@ -6,7 +6,7 @@
     <div>
         <div id="top"></div>
         <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
-        
+
         <div class="tarjetaFija" *ngIf="tarjetaFija !== null">
             <div class="card" style="z-index: 2;">
                 <div class="card-body p-0">
@@ -40,7 +40,7 @@
                                     <app-tarjeta [image]="tarj.imagen" [cardTitle]="tarj.nombre" [campos]="tarj.campos"
                                         [icon]="tarj.icono" [enlaces]="tarj.enlaces" [cardOpenState]="tarj.opened"
                                         [fixed]="tarj.fixed" class="w-100" [enlaceCardClosed]="tarj.enlaceCardClosed"
-                                        [datosLetrado]="tarj.letrado" [enlaceCardOpen] = "tarj.enlaceCardOpen">
+                                        [datosLetrado]="tarj.letrado" [enlaceCardOpen]="tarj.enlaceCardOpen">
                                     </app-tarjeta>
                                 </mat-expansion-panel-header>
                                 <ng-template matExpansionPanelContent>
@@ -85,6 +85,10 @@
                     </div>
                 </div>
             </div>
+            <app-tarjeta-facturacion-generica [datosEntrada]="{ asistencia: asistencia, isNew: nuevaAsistencia }"
+                [pantalla]="'ASISTENCIA'" (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac"
+                (opened)="openTarjetaFac = $event">
+            </app-tarjeta-facturacion-generica>
         </div>
         <div id="down"></div>
     </div>

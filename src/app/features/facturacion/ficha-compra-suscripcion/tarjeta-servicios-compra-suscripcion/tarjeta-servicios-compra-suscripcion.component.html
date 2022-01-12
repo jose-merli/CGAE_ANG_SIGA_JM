@@ -211,7 +211,7 @@
             <div *ngIf="selectedPago == '80' || selectedPago == '20'" class="form-group col-lg-6 col-md-6">
               <label>{{ "facturacion.seriesFactura.cuentaBancaria" | translate }}
               </label>
-              <p-dropdown class="select-form" [options]="cuentasBanc"
+              <p-dropdown [ngClass]="styleObligatorio(datosTarjeta.cuentaBancSelecc)" class="select-form" [options]="cuentasBanc"
               [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || ficha.idPersona == null"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="datosTarjeta.cuentaBancSelecc"
                 showClear="true"></p-dropdown>

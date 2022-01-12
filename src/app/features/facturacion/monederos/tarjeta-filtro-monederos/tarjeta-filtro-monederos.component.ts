@@ -16,6 +16,7 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 
   msgs: Message[] = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false;
+  esColegiado: boolean;
 
   usuarioBusquedaExpress = {
     numColegiado: '',
@@ -36,6 +37,12 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
 
     this.filtrosMonederoItem.fechaHasta = new Date(); 
 
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
     
     //En la documentación funcional se pide que por defecto aparezca el campo 
     //con la fecha de dos años antes
@@ -102,7 +109,7 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
     }
     sessionStorage.removeItem("buscadorColegiados");
   }
-    else if(this.localStorageService.isLetrado){
+    else if(this.esColegiado){
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
 				n => {
 					let data = JSON.parse(n.body).colegiadoItem;
@@ -212,6 +219,7 @@ export class TarjetaFiltroMonederosComponent implements OnInit {
     });
   }
 
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
   }

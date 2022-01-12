@@ -1,0 +1,70 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class=" busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{'menu.administracion.auditoria' | translate}}
+      <i class="fa fa-angle-right"></i> {{"administracion.usuarios.edicion.usuarios" | translate}}</p>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <p class="title-module">
+        <span (click)="onHideDatosGenerales()">{{"administracion.usuarios.literal.datos" | translate}}</span>
+        <i (click)="onHideDatosGenerales()" *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i (click)="onHideDatosGenerales()" *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      </p>
+
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+        <div class="form-row">
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label class="d-block pb-2">{{"censo.consultaHistorico.literal.nombreUsu" | translate}}</label>
+            <label class="d-block pb-2">{{itemBody.persona}}</label>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.tipoAccion" | translate}}</label>
+            <label class="d-block pb-2">{{itemBody.descTipoCambio}}</label>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label class="d-block pb-2">{{"gratuita.listarDesignasTurno.literal.fechaEntrada" | translate}} (*)</label>
+            <app-fecha [inputStyleClass]="styleObligatorio(itemBody.fechaEntrada)" [utc]="false" disabled="true" [(value)]="itemBody.fechaEntrada" (valueChangeSelected)="fillFechaEntrada($event)"
+              (valueChangeInput)="fillFechaEntrada($event)"></app-fecha>
+          </div>
+
+          <div class="form-group col-lg-3 col-md-3">
+            <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.fechaEfectiva" | translate}} (*)</label>
+            <app-fecha [inputStyleClass]="styleObligatorio(itemBody.fechaEfectiva)" [utc]="false" disabled="true" [(value)]="itemBody.fechaEfectiva" (valueChangeSelected)="fillFechaEfectiva($event)"
+              (valueChangeInput)="fillFechaEfectiva($event)"></app-fecha>
+          </div>
+
+          <div class="form-group col-lg-6 col-md-6">
+            <label class="d-block pb-2">{{"administracion.auditoriaUsuarios.literal.motivo" | translate}} (*)</label>
+
+            <textarea [ngClass]="styleObligatorio(itemBody.motivo)" [(disabled)]="!activacionEditar" name="prefijo" class="form-control" pInputTextarea [(ngModel)]="itemBody.motivo"
+              autoResize="autoResize" (ngModelChange)="actualizarBotonGuardarCerrar()"></textarea>
+          </div>
+
+          <div class="form-group col-lg-6 col-md-6">
+            <label class="d-block pb-2">{{"general.description" | translate}}</label>
+
+            <textarea name="descripcion" disabled="true" class="form-control ui-inputtext" pInputTextarea [(ngModel)]="itemBody.descripcion"
+              autoResize="autoResize"></textarea>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="checkDatos()" pButton type="button" icon="fa fa-edit" iconPos="left"
+          label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
+
+        <button (click)="volver();" pButton type="button" icon="fa fa-close" iconPos="left" label="{{
+  'general.boton.cancel' | translate}}"></button>
+      </div>
+    </div>
+    <app-dialog></app-dialog>
+  </div>

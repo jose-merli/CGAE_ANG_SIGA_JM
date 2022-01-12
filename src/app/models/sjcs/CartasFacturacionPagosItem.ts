@@ -1,8 +1,8 @@
 export class CartasFacturacionPagosItem {
 	idInstitucion: string;
 	idTurno: string;
-	idPago: string;
-	idFacturacion: string;
+	idPago: string | string[];
+	idFacturacion: string | string[];
 	idConcepto: string;
 	fechaDesde: Date;
 	fechaHasta: Date;
@@ -21,7 +21,7 @@ export class CartasFacturacionPagosItem {
 	ncolegiado: string;
 	idPersona: string;
 
-	modoBusqueda:string;
+	modoBusqueda: string;
 
 	constructor() { }
-}  
+}

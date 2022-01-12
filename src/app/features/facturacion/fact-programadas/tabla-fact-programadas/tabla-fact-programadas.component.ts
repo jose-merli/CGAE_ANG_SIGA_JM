@@ -235,6 +235,18 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     );
   }
 
+  confirmDescargar(){
+
+  }
+
+  confirmComunicar(){
+
+  }
+
+  nuevoFicheroAdeudos(){
+    
+  }
+
   // Botón para archivar selección
   archivar(): void {
     this.progressSpinner = true;

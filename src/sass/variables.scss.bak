@@ -1,0 +1,32 @@
+/* Tipografías */
+$title-fontBold: 'OpenSansCondensedBold';
+$title-fontLight: 'OpenSansCondensedLight';
+$general-font: 'Ubuntu';
+
+
+/* Colores */
+$primary-color: #004375;
+$primary-color-op:  rgba(0, 67, 117, 0.6);
+$secondary-color: #8da3c1;
+
+//variaciones de azules
+$blue1: #b1c6d4;
+$blue2: #cbd8e2;
+$blue3: #e6ecf1;
+$lightBlue3: rgba(230,236,242,.3);
+$gradientBlue: linear-gradient(to top, rgba(0,67,117,.9) 0%, rgba(0,67,117,1) 100%);
+
+//grises
+$lightGrey: #E3E9F6;
+$grey1: #595959;;
+$grey2: #7b7c7e;
+$grey3: #a7b8aa;
+$grey4: #c6c7c8;
+$grey5: #d9dadb;
+
+//complementarios
+$darkOrange: #c54613;
+$purple: #933588;
+$lightOrange: #f6af81;
+$green: #aab42a;
+$error:#E82C0C

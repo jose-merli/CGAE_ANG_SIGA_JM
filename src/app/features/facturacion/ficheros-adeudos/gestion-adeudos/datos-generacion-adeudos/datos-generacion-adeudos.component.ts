@@ -19,7 +19,6 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   @Input() modoEdicion;
   @Input() openTarjetaDatosGeneracion;
   @Input() permisoEscritura;
-  @Input() tarjetaDatosGeneracion: string;
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();

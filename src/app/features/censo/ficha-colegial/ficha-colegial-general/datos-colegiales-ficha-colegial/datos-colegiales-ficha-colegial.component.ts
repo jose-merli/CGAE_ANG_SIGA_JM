@@ -1234,8 +1234,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
         },
         error => {
-          console.log(error);
-
+          //console.log(error);
           if (error != null && error != undefined) {
             if (JSON.parse(error.error).error != null && JSON.parse(error.error).error != "" && JSON.parse(error.error).error != undefined) {
               let msg = JSON.parse(error.error).error.message;

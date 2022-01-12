@@ -139,7 +139,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     //Se revisa si ya se ha introducido un anticipo
     else if (this.descuentosTarjeta.length > 0){
       //REVISAR: CREAR ETIQUETA PARA EL MENSAJE
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "**No se puede asignar más de un anticipo a la compra");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.compra.unAnticipoCompra"));
     }
     else if(this.ficha.fechaAceptada == null || this.ficha.fechaAnulada != null){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
@@ -290,6 +290,11 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     });
   }
 
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }   
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
 
@@ -320,10 +325,6 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
 				this.permisoBorrarAnticipo = respuesta;
 			})
 			.catch((error) => console.error(error));
-  }
-
-  clear() {
-    this.msgs = [];
   }
   
   cerrarDialog() {

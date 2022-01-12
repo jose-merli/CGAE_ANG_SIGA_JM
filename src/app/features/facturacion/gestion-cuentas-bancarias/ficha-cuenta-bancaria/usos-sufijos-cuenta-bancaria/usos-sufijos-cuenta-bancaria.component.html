@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('usosSufijos')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('usosSufijos')">
           <div class="img-colegiado">
             <i class="far fa-address-book icon-ficha pointer"></i>
@@ -21,13 +21,13 @@
                 
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('usosSufijos')"
-              *ngIf="!esFichaActiva('usosSufijos')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('usosSufijos')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('usosSufijos')">
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
@@ -38,7 +38,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('usosSufijos')" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
           class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
           [ngClass]="{ 'customCursor': selectMultiple }" paginatorPosition="both" selectionMode="multiple">
@@ -120,12 +120,12 @@
       </p-table>
     </div>
 
-    <div *ngIf="esFichaActiva('usosSufijos')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button pButton *ngIf="datos.length == 0 || !datos[0].nuevo" [disabled]="body.fechaBaja != undefined" type="button" icon="fa fa-plus" iconPos="left"
           (click)="addSerie()" label="{{ 'general.boton.relacionar.serie' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="datos.length == 0 || !datos[0].nuevo"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left"

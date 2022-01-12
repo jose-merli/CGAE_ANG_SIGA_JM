@@ -166,6 +166,11 @@ export class BuscadorColegiadosComponent implements OnInit {
       this.persistenceService.setDatos(event);
       sessionStorage.setItem("sesion","nuevaInscripcion");
       this.router.navigate(["/fichaInscripcionesGuardia"]);
+    
+      //ir a la ficha de movimientos varios
+    }else if(sessionStorage.getItem("nuevoMovimientoVarios") =="true") {
+        sessionStorage.setItem("datosColegiado",JSON.stringify(event));
+        this.router.navigate(["/fichaMovimientosVarios"]);
       
     }else{
       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
