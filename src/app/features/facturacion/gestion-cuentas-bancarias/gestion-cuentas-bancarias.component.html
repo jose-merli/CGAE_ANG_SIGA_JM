@@ -98,8 +98,8 @@
       </p-table>
     </div>
     <div class="card-footer">
-      <div class="text-right main-button">
-        <button *ngIf="!historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-history"
+      <div class="text-right main-button">     
+        <button *ngIf="!historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-history" [disabled]="allCuentasBancarias==undefined || allCuentasBancarias.length==0"
           iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
         <button *ngIf="historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-history"

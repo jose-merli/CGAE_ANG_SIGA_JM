@@ -115,7 +115,7 @@
         <button pButton type="button" icon="fa fa-eraser" iconPos="left" (click)="eliminar()" [disabled]="nuevaConsulta || selectedDatos == undefined || selectedDatos.length == 0"
           label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()" [disabled]="deshabilitarGuardado()"
           label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left" (click)="guardar()" [disabled]="deshabilitarGuardado()"
