@@ -49,9 +49,9 @@ export class TablaFicherosTransferenciasComponent implements OnInit {
     this.router.navigate(['/gestionFicherosTransferencias']);
   }
   
-  // descargarFicheroAdeudo(){
+  descargarFicheroAdeudo(){
 
-  // }
+  }
   
   getCols() {
     this.cols = [
