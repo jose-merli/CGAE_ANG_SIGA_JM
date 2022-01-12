@@ -717,7 +717,6 @@ import { PaginadorModule } from './commons/paginador/paginador.module';
 import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
 import { TarjetaDatosGeneralesCertificacionComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/tarjeta-datos-generales/tarjeta-datos-generales-certificacion.component';
 import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
-import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
 import { DatosGeneralesAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/datos-generales-abonos-sjcs/datos-generales-abonos-sjcs.component';
 import { SociedadAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/socidad-abonos-sjcs/sociedad-abonos-sjcs.component';
 import { PagoAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/pago-abonos-sjcs/pago-abonos-sjcs.component';
