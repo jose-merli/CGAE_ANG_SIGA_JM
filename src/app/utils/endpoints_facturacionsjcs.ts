@@ -5,6 +5,8 @@ export let endpoints_facturacionsjcs: any = {
     combo_comboFactConceptos: "combo/comboFactConceptos",
     combo_comboFactColegio: "combo/comboFactColegio",
     combo_comboPagosColegio: "combo/comboPagosColegio",
+    combo_comboEstadosAbono: "combo/estadoAbonos",
+    combo_comboGrupoFacturacion: "combo/grupoFacturacion",
     facturacionsjcs_buscarfacturaciones: "facturacionsjcs/buscarfacturaciones",
     facturacionsjcs_eliminarFacturacion: "facturacionsjcs/eliminarFacturacion",
     facturacionsjcs_datosfacturacion: "facturacionsjcs/datosfacturacion",
@@ -21,5 +23,7 @@ export let endpoints_facturacionsjcs: any = {
     facturacionsjcs_updateConceptosFac: "facturacionsjcs/updateConceptosFac",
     facturacionsjcs_deleteConceptosFac: "facturacionsjcs/deleteConceptosFac",
     facturacionsjcs_datospagos: "facturacionsjcs/datospagos",
-    facturacionsjcs_numApuntes: "facturacionsjcs/numApuntes"
+    facturacionsjcs_numApuntes: "facturacionsjcs/numApuntes",
+    factuarcionsjscs_buscarAbonos : "facturacionsjcs/buscarAbonosSJCS",
+
 }

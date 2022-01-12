@@ -634,6 +634,10 @@ import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios.module';
 import { MaestrosModule } from './features/sjcs/maestros/maestros.module';
 import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
+import { DatosGeneralesAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/datos-generales-abonos-sjcs/datos-generales-abonos-sjcs.component';
+import { SociedadAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/socidad-abonos-sjcs/sociedad-abonos-sjcs.component';
+import { PagoAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/pago-abonos-sjcs/pago-abonos-sjcs.component';
+import { ColegiadoAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/colegiado-abonos-sjcs/colegiado-abonos-sjcs.component';
 
 
 @NgModule({
@@ -1214,6 +1218,11 @@ import { FichaConsultaComponent } from './features/informes-comunicaciones/consu
 		FichaListaGuardiasComponent,
 		FichaListaGuardiasTarjetaDatosGeneralesComponent,
 		FichaListaGuardiasTarjetaGuardiasComponent,
+		DatosGeneralesAbonosSJCSComponent,
+		SociedadAbonosSJCSComponent,
+		PagoAbonosSJCSComponent,
+		ColegiadoAbonosSJCSComponent,
+		
 	],
 	imports: [
 		SelectorModule,
@@ -1297,6 +1306,7 @@ import { FichaConsultaComponent } from './features/informes-comunicaciones/consu
 		TarjetaModule,
 		DestinatariosModule,
 		MaestrosModule
+		
 	],
 
 	exports: [DigitDecimaNumberDirective],

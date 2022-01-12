@@ -1,0 +1,63 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-header header-ficha" >
+      <div  class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-2">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha"><strong>{{'facturacionSJCS.retenciones.ficha.colegiado' | translate}}</strong></label>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-2">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{ "censo.fichaCliente.literal.identificacion" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto "> {{ this.datos.numeroAbono }}</label>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-2">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{ "facturacionSJCS.tarjeta.abonosSJCS.numCol" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto "> {{ this.datos.ncolident }}</label>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-2">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.apellidos" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto "> {{ this.datos.apellidosGeneral }}</label>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-2">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha">{{ "facturacionSJCS.retenciones.nombre" | translate}}</label>
+          </div>
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto "> {{ this.datos.nombreGeneral }}</label>
+          </div>
+        </div>
+        <div class="col-lg-1 col-md-1">
+          <div class="d-flex justify-content-end mb-1">
+            <label class="mr-auto title-ficha"><strong>{{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate}}</strong></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
