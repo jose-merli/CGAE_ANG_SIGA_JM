@@ -19,7 +19,6 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   @Input() modoEdicion;
   @Input() openTarjetaDatosGeneracion;
   @Input() permisoEscritura;
-  @Input() tarjetaDatosGeneracion: string;
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
@@ -55,18 +54,49 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     private localStorageService: SigaStorageService) { }
 
   async ngOnInit() {
-    await this.rest();
-
     this.cargaDatosSEPA(this.body.idInstitucion);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.openTarjetaDatosGeneracion == true) {
-      if (this.openFicha == false) {
-        this.fichaPosible.activa = !this.fichaPosible.activa;
-        this.openFicha = !this.openFicha;
-      }
+    if (changes.bodyInicial && changes.bodyInicial.currentValue) {
+      this.rest();
     }
+  }
+
+  cargaDatosSEPA(idInstitucion){
+    this.progressSpinner=true;
+    
+    this.sigaServices.getParam("facturacionPyS_parametrosSEPA", idInstitucion ? `?idInstitucion=${idInstitucion}` : "").subscribe(
+      n => {
+        let data = n.combooItems;
+        
+        for(let i=0; data.length>i; i++){
+          
+          if(data[i].value=="SEPA_DIAS_HABILES_PRIMEROS_RECIBOS"){
+            this.primerosRecibosSEPA=data[i].label;
+            this.minDateRecibos = new Date(this.fechaHoy.getTime()+(this.primerosRecibosSEPA*24*60*60*1000));
+
+          }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_RECURRENTES"){
+            this.recibosRecurrentesSEPA=data[i].label;
+            this.minDateRecurrentes = new Date(this.fechaHoy.getTime()+(this.recibosRecurrentesSEPA*24*60*60*1000));
+
+          }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_COR1"){
+            this.recibosCORSEPA=data[i].label;
+            this.minDateCOR = new Date(this.fechaHoy.getTime()+(this.recibosCORSEPA*24*60*60*1000));
+
+          }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_B2B"){
+            this.recibosB2BSEPA=data[i].label;
+            this.minDateB2B = new Date(this.fechaHoy.getTime()+(this.recibosB2BSEPA*24*60*60*1000));
+          }
+        }
+
+        this.progressSpinner=false;
+      },
+      err => {
+        this.progressSpinner=false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
   }
 
   descargarFicheroAdeudo(){
@@ -147,44 +177,10 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
       this.resaltadoDatos = true;
     }
   }
-
-  cargaDatosSEPA(idInstitucion){
-    this.progressSpinner=true;
-    
-    this.sigaServices.getParam("facturacionPyS_parametrosSEPA", idInstitucion ? `?idInstitucion=${idInstitucion}` : "").subscribe(
-      n => {
-        let data = n.combooItems;
-        
-        for(let i=0; data.length>i; i++){
-          
-          if(data[i].value=="SEPA_DIAS_HABILES_PRIMEROS_RECIBOS"){
-            this.primerosRecibosSEPA=data[i].label;
-            this.minDateRecibos = new Date(this.fechaHoy.getTime()+(this.primerosRecibosSEPA*24*60*60*1000));
-
-          }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_RECURRENTES"){
-            this.recibosRecurrentesSEPA=data[i].label;
-            this.minDateRecurrentes = new Date(this.fechaHoy.getTime()+(this.recibosRecurrentesSEPA*24*60*60*1000));
-
-          }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_COR1"){
-            this.recibosCORSEPA=data[i].label;
-            this.minDateCOR = new Date(this.fechaHoy.getTime()+(this.recibosCORSEPA*24*60*60*1000));
-
-          }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_B2B"){
-            this.recibosB2BSEPA=data[i].label;
-            this.minDateB2B = new Date(this.fechaHoy.getTime()+(this.recibosB2BSEPA*24*60*60*1000));
-          }
-        }
-
-        this.progressSpinner=false;
-      },
-      err => {
-        this.progressSpinner=false;
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
-      }
-    );
-  }
-
+/*
+  facturacionPyS_nuevoFicheroAdeudos:  "facturacionPyS/nuevoFicheroAdeudos",
+    facturacionPyS_actualizarFicheroAdeudos:  "facturacionPyS/actualizarFicheroAdeudos",
+*/
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

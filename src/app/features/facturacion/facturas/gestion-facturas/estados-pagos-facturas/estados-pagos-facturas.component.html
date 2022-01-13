@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('estadosPagos')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('estadosPagos')">
           <div class="img-colegiado">
             <i class="fas fa-archive icon-ficha pointer"></i>
@@ -34,13 +34,13 @@
             </ng-container>
             
             <i class="fa fa-angle-down float-right {{ (datos && datos.length != 0) ? '' : ' ml-auto' }}" (click)="abreCierraFicha('estadosPagos')"
-              *ngIf="!esFichaActiva('estadosPagos')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('estadosPagos')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('estadosPagos')">
         <div class="img-colegiado">
           <i class="fas fa-archive icon-ficha"></i>
@@ -51,7 +51,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('estadosPagos')" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
       <!-- TABLA RESULTADOS -->
       <p-table [autoLayout]="true" [value]="grupos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
         class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
@@ -147,7 +147,7 @@
       </p-table>
     </div>
 
-    <div *ngIf="esFichaActiva('estadosPagos')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button pButton [disabled]="bodyInicial.tipo != 'ABONO'" type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoAbono()" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>

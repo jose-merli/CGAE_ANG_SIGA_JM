@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
 import { Message } from 'primeng/components/common/message';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { saveAs } from "file-saver/FileSaver";
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-traspaso-fact-programadas',
@@ -33,7 +35,8 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
   logDisponible: boolean = false;
 
   constructor(
-    private commonsService: CommonsService
+    private commonsService: CommonsService,
+    private sigaServices: SigaServices
   ) { }
 
   ngOnInit() {
@@ -79,6 +82,24 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
       this.body.esDatosGenerales = false;
       this.guardadoSend.emit(this.body);
     }
+  }
+
+  // Descargar LOG
+  descargarLog(){
+    let resHead ={ 'response' : null, 'header': null };
+    this.progressSpinner = true;
+    let descarga =  this.sigaServices.postDownloadFilesWithFileName("facturacionPyS_descargarFichaFacturacion", [{ idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idProgramacion }]);
+    descarga.subscribe((data: {file: Blob, filename: string}) => {
+      this.progressSpinner = false;
+      console.log(data);
+      let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+      saveAs(data.file, filename);
+      this.showMessage( 'success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+    },
+    err => {
+      this.progressSpinner = false;
+      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+    });
   }
 
   // Estilo obligatorio

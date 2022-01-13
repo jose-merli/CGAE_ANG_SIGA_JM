@@ -80,6 +80,10 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
     ];
   }
 
+  confirmDescargar(){
+    
+  }
+
   // Abrir ficha de fichero de devoluciones
   openTab(dato) {
 

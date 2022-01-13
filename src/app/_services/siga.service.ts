@@ -30,6 +30,7 @@ import { endpoints_intercambios } from '../utils/endpoints_intercambios';
 import { NuevaComunicacionItem } from '../models/NuevaComunicacionItem';
 import { DocumentacionAsistenciaItem } from '../models/guardia/DocumentacionAsistenciaItem';
 import { DocumentoAsistenciaItem } from '../models/guardia/DocumentoAsistenciaItem';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class SigaServices {
@@ -155,14 +156,21 @@ export class SigaServices {
     busquedaPerJuridica_fileDownloadInformation: 'busquedaPerJuridica/fileDownloadInformation',
     dialogo_nombredoc: 'dialogoComunicacion/nombredoc',
     busquedaPerJuridica_downloadFile: 'busquedaPerJuridica/downloadFile',
+		retenciones_searchLiquidacionSociedad: 'retenciones/searchLiquidacionSociedad',
+		retenciones_searchSociedadColegiado:'retenciones/selectRetencionesColegialYSociedades',
     retenciones_tipoRetencion: 'retenciones/tipoRetencion',
     retenciones_search: 'retenciones/search',
+		retenciones_searchColegiado: 'retenciones/searchRetencionColegiado',
     retenciones_update: 'retenciones/update',
+		integrantes_buscarPagosColegiados:'tarjetaIntegrantes/buscarPagosColegiados',
     integrantes_search: 'busquedaPerJuridica/datosIntegrantesSearch',
     integrantes_tipoColegio: 'tarjetaIntegrantes/tipoColegio',
     integrantes_provincias: 'tarjetaIntegrantes/provincias',
     integrantes_provinciaColegio: 'tarjetaIntegrantes/provinciaColegio',
     integrantes_cargos: 'tarjetaIntegrantes/cargos',
+		integrantes_listadoHistoricoLiquidacion: 'tarjetaIntegrantes/listadoHistoricoLiquidacion',
+		integrantes_eliminarLiquidacion: 'tarjetaIntegrantes/eliminarLiquidacion',
+		integrantes_insertHistoricoLiquidacion: 'tarjetaIntegrantes/insertHistoricoLiquidacion',
     direcciones_search: 'busquedaPerJuridica/datosDireccionesSearch',
     direcciones_update: 'tarjetaDirecciones/update',
     direcciones_insert: 'tarjetaDirecciones/create',
@@ -531,7 +539,7 @@ export class SigaServices {
     busquedaSanciones_updateSanction: 'busquedaSanciones/updateSanction',
     busquedaSanciones_insertSanction: 'busquedaSanciones/insertSanction',
     fichaDatosGenerales_etiquetasPersona: 'fichaDatosGenerales/etiquetasPersona',
-    getLetrado: '/getLetrado',
+		getLetrado: 'getLetrado',
     fichaDatosCurriculares_solicitudUpdate: 'fichaDatosCurriculares/solicitudUpdate',
     fichaDatosDirecciones_solicitudCreate: 'fichaDatosDirecciones/solicitudCreate',
     fichaDatosDirecciones_solicitudUpdate: 'fichaDatosDirecciones/solicitudUpdate',
@@ -685,6 +693,7 @@ export class SigaServices {
     ...endpoints_justiciables,
     ...endpoints_oficio,
     ...endpoints_maestros,
+
     ...endpoints_facturacionPyS,
     ...endpoints_PyS,
     ...endpoints_EJG_Comision,
@@ -733,6 +742,16 @@ export class SigaServices {
 
   private createJusticiable = new Subject<any>();
   createJusticiable$ = this.createJusticiable.asObservable();
+
+  private rutaMenu = new BehaviorSubject<string>('');
+
+  rutaMenu$ = this.rutaMenu.asObservable();
+
+  setRutaMenu(ruta: string) {
+
+      this.rutaMenu.next(ruta);
+
+  }
 
   constructor(private http: HttpClient, handler: HttpBackend, private httpbackend: HttpClient) {
     this.httpbackend = new HttpClient(handler);
@@ -864,6 +883,29 @@ export class SigaServices {
       })
       .catch((response) => {
         return this.parseErrorBlob(response);
+      });
+  }
+
+  postDownloadFilesWithFileName2(service: string, body: any): Observable<any> {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], body, {
+        headers: headers,
+        observe: 'response', // si observe: "response" no sirve. Si se quita el observe sirve
+        responseType: 'blob'
+      })
+      .map((response) => {
+		let data = {
+			file: new Blob([response.body], {type: response.headers.get("Content-Type")}),
+			filename: response.headers.get("Content-Disposition"),
+			status: response.status
+		};
+        return data;
+      })
+      .catch((response) => {
+        return response;
       });
   }
 

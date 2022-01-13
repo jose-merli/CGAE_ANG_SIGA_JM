@@ -19,6 +19,7 @@ export class FichaCompraSuscripcionItem {
     fechaPendiente: Date;
     fechaDenegada: Date;
     fechaAceptada: Date;
+    fechaSolicitada: Date;
     fechaSolicitadaAnulacion: Date;
     fechaAnulada: Date;
 

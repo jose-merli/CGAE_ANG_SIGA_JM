@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('traspasoFacturas')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('traspasoFacturas')">
           <div class="img-colegiado">
             <i class="fas fa-exchange-alt icon-ficha pointer"></i>
@@ -23,13 +23,13 @@
               <span>{{ body.traspasoCodAuditoriaDef }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('traspasoFacturas')"
-              *ngIf="!esFichaActiva('traspasoFacturas')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('traspasoFacturas')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('traspasoFacturas')">
         <div class="img-colegiado">
           <i class="fas fa-exchange-alt icon-ficha"></i>
@@ -40,7 +40,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('traspasoFacturas')" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-row w-100">
           <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -59,9 +59,9 @@
       </div>
     </div>
 
-    <div *ngIf="esFichaActiva('traspasoFacturas')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="deshabilitarGuardado()"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"

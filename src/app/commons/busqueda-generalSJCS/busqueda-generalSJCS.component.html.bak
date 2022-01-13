@@ -1,0 +1,19 @@
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{'menu.justiciaGratuita' | translate}}
+    <i class="fa fa-angle-right"></i>{{"menu.busquedaGeneral" | translate}} {{"menu.justiciaGratuita" | translate}}
+  </p>
+</div>
+
+<div class="busqueda-container">
+  <app-filtros-generalSJCS (isOpen)="isOpenReceive($event)"></app-filtros-generalSJCS>
+  <app-tabla-generalSJCS *ngIf="buscar" [datos]="datos" [institucionActual]="institucionActual" (searchHistoricalSend)="search($event)"></app-tabla-generalSJCS>
+  <div class="mt-3 text-right main-button ">
+
+    <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

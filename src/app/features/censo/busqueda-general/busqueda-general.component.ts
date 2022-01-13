@@ -916,7 +916,11 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
         this.router.navigate(['fichaPersonaJuridica']);
       }
-    } 
+    } else if( sessionStorage.getItem('nuevoMovVarios') == 'true'){
+      sessionStorage.setItem('datosPersonaFisica',JSON.stringify(id));
+      sessionStorage.setItem('showDatosCliente',"true");
+      this.location.back();
+    }
     // else if (sessionStorage.getItem('nuevoProcurador')) {
     //   sessionStorage.setItem('datosProcurador', JSON.stringify(id));
     //   this.backTo();

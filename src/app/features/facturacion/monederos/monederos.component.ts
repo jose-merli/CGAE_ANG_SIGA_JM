@@ -87,11 +87,11 @@ export class MonederoComponent implements OnInit {
     });
   }
 
-  
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
   }
-  
+
   backTo(){
     this.location.back();
   }

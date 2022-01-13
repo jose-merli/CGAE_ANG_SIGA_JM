@@ -17,7 +17,8 @@ import { TableModule } from "primeng/table";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { PipeTranslationModule } from "../../../commons/translate/pipe-translation.module";
-import {CheckboxModule} from 'primeng/primeng';
+import { CheckboxModule } from 'primeng/primeng';
+import { TarjetaFacturacionGenericaModule } from "../facturacionSJCS/tarjeta-facturacion-generica/tarjeta-facturacion-generica.module";
 
 
 @NgModule({
@@ -45,7 +46,8 @@ import {CheckboxModule} from 'primeng/primeng';
         ConfirmDialogModule,
         TableModule,
         DropdownModule,
-        CheckboxModule
+        CheckboxModule,
+        TarjetaFacturacionGenericaModule
     ],
 
     providers: [

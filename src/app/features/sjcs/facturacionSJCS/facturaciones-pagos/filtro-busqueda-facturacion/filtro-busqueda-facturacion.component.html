@@ -1,0 +1,146 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="card">
+    <div class="card-body">
+      <div class="form-row">
+        <div class="col-4">
+          <p-radioButton name="filtroBusquedaFacturacion" value="facturacion"
+            label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.facturacion' | translate}}"
+            [(ngModel)]="selectedValue" (click)="cambiaFiltro()"></p-radioButton>
+          <p-radioButton name="filtroBusquedaPagos" (click)="cambiaFiltro()" value="pagos"
+            label="{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago' | translate}}"
+            [(ngModel)]="selectedValue"></p-radioButton>
+        </div>
+      </div>
+      <p class="title-module" (click)="onHideDatosGenerales()">
+        {{ 'general.message.datos.generales' | translate }}
+        <i *ngIf="showFicha" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showFicha" class="fa fa-angle-down float-right"></i>
+      </p>
+      <div *ngIf="showFicha" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-6 col-md-6">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}}</label>
+
+            <input type="text" maxlength="95" name="nombre" class="form-control" [(ngModel)]='filtrosFacturacion.nombre'
+              *ngIf="selectedValue=='facturacion'" pInputText />
+
+            <input type="text" maxlength="95" name="nombre" class="form-control" [(ngModel)]='filtrosPagos.nombre'
+              *ngIf="selectedValue=='pagos'" pInputText />
+          </div>
+
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate}}</label>
+
+            <p-multiSelect #estadoMultiselect class="select-form" [(ngModel)]='filtrosFacturacion.idEstado'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="estadoFacturas" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} estados seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(estadoMultiselect)"
+              *ngIf="selectedValue=='facturacion'" (onChange)="onChangeMultiSelectFact($event, 'idEstado')">
+            </p-multiSelect>
+
+            <p-multiSelect #estadoPagosMultiselect class="select-form" [(ngModel)]='filtrosPagos.idEstado'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="estadoPagos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} estados seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(estadoPagosMultiselect)"
+              *ngIf="selectedValue=='pagos'" (onChange)="onChangeMultiSelectPagos($event, 'idEstado')">
+            </p-multiSelect>
+          </div>
+
+          <div class="form-row col-lg-3 col-md-3">
+            <div class="form-group-interlineado col-lg-6 col-md-6">
+              <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}}</label>
+
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDesde($event)"
+                (valueChangeInput)="fillFechaDesde($event)" [(value)]="filtrosFacturacion.fechaDesde"
+                *ngIf="selectedValue=='facturacion'"></app-fecha>
+
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDesde($event)"
+                (valueChangeInput)="fillFechaDesde($event)" [(value)]="filtrosPagos.fechaDesde"
+                *ngIf="selectedValue=='pagos'"></app-fecha>
+            </div>
+            <div class="form-group-interlineado col-lg-6 col-md-6">
+              <label>{{'gratuita.personaJG.literal.hasta' | translate}}</label>
+
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event)"
+                (valueChangeInput)="fillFechaHasta($event)" [(value)]="filtrosFacturacion.fechaHasta"
+                [minDate]="filtrosFacturacion.fechaDesde" *ngIf="selectedValue=='facturacion'"></app-fecha>
+
+              <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event)"
+                (valueChangeInput)="fillFechaHasta($event)" [(value)]="filtrosPagos.fechaHasta"
+                [minDate]="filtrosPagos.fechaDesde" *ngIf="selectedValue=='pagos'"></app-fecha>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.conceptosyservicios' | translate}}</label>
+
+            <p-multiSelect #conceptoMultiselect class="select-form" [(ngModel)]='filtrosFacturacion.idConcepto'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="conceptos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} conceptos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(conceptoMultiselect)"
+              *ngIf="selectedValue=='facturacion'" (onChange)="onChangeMultiSelectFact($event, 'idConcepto')">
+            </p-multiSelect>
+
+            <p-multiSelect #conceptoPagosMultiselect class="select-form" [(ngModel)]='filtrosPagos.idConcepto'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="conceptos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} conceptos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(conceptoPagosMultiselect)"
+              *ngIf="selectedValue=='pagos'" (onChange)="onChangeMultiSelectPagos($event, 'idConcepto')">
+            </p-multiSelect>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos' | translate}}</label>
+
+            <p-multiSelect #facturacionMultiselect class="select-form" [(ngModel)]='filtrosFacturacion.idFacturacion'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="grupoTurnos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} grupos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(facturacionMultiselect)"
+              *ngIf="selectedValue=='facturacion'" (onChange)="onChangeMultiSelectFact($event, 'idFacturacion')">
+            </p-multiSelect>
+
+            <p-multiSelect #facturacionPagosMultiselect class="select-form" [(ngModel)]='filtrosPagos.idFacturacion'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="grupoTurnos" [filter]="true"
+              maxSelectedLabels="10" [selectedItemsLabel]="'{0} grupos seleccionados'" filterBy="label,labelSinTilde"
+              styleClass="widthAll" (onPanelShow)="focusInputField(facturacionPagosMultiselect)"
+              *ngIf="selectedValue=='pagos'" (onChange)="onChangeMultiSelectPagos($event, 'idFacturacion')">
+            </p-multiSelect>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}</label>
+
+            <p-multiSelect #partidaMultiselect class="select-form"
+              [(ngModel)]='filtrosFacturacion.idPartidaPresupuestaria'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="partidaPresupuestaria"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} partidas seleccionadas'"
+              filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(partidaMultiselect)"
+              *ngIf="selectedValue=='facturacion'"
+              (onChange)="onChangeMultiSelectFact($event, 'idPartidaPresupuestaria')">
+            </p-multiSelect>
+
+            <p-multiSelect #partidanPagosMultiselect class="select-form"
+              [(ngModel)]='filtrosPagos.idPartidaPresupuestaria'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="partidaPresupuestaria"
+              [filter]="true" maxSelectedLabels="10" [selectedItemsLabel]="'{0} partidas seleccionados'"
+              filterBy="label,labelSinTilde" styleClass="widthAll"
+              (onPanelShow)="focusInputField(partidanPagosMultiselect)" *ngIf="selectedValue=='pagos'"
+              (onChange)="onChangeMultiSelectPagos($event, 'idPartidaPresupuestaria')">
+            </p-multiSelect>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"
+          (click)="restablecer()"></button>
+        <button pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.search' | translate }}" (click)="isBuscar()"></button>
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
+          [disabled]="disabledNuevo()" (click)="nuevo()"></button>
+      </div>
+    </div>
+  </div>
+</div>

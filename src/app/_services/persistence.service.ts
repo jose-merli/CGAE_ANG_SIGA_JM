@@ -162,6 +162,7 @@ export class PersistenceService {
     }
 
 
+
     clearPersistence() {
         this.clearFiltros();
         this.clearHistorico();

@@ -118,7 +118,7 @@
   <div class="card-footer">
     <div class="text-right main-button">
       <button pButton *ngIf="historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.ocultarHistorico' | translate }}"></button>
-      <button pButton *ngIf="!historico" (click)="toggleHistorico()" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
+      <button pButton *ngIf="!historico" (click)="toggleHistorico()" [disabled]="datos==undefined || datos.length == 0" type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
 
       <button pButton *ngIf="!historico" (click)="confirmEliminar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
       <button pButton *ngIf="historico" (click)="confirmReactivar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.reactivar' | translate }}"></button>

@@ -4,5 +4,6 @@ export class DatosRetencionesObject {
   error: ErrorItem;
   idPersona: String;
   retencionesItemList: DatosRetencionesItem[] = [];
+  activo: boolean;
   constructor() {}
 }
