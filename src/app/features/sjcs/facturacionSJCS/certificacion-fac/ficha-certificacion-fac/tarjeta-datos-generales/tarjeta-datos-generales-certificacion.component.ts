@@ -31,6 +31,8 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   @Input() modoEdicion: boolean = false;
   @Input() certificacion: CertificacionesItem = new CertificacionesItem();
   @Input() estadosCertificacion: EstadoCertificacionItem[] = [];
+  @Input() esCAM: boolean = false;
+  @Input() esXunta: boolean = false;
 
   @Output() guardarEvent = new EventEmitter<boolean>();
   @Output() reabrirEvent = new EventEmitter<boolean>();
@@ -137,7 +139,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
 
   uploadFile(event: any) {
 
-    if (this.permisoEscritura) {
+    if (this.permisoEscritura && this.esCAM) {
 
       // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
       let fileList: FileList = event.files;
@@ -151,8 +153,6 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
       if (extensionArchivo == null) {
         // Mensaje de error de formato de imagen y deshabilitar boton guardar
         this.file = undefined;
-
-        // this.showFailUploadedImage();
       } else {
         // se almacena el archivo para habilitar boton guardar
         this.file = fileList[0];

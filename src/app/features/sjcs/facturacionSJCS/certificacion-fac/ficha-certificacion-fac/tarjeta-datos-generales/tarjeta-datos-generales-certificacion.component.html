@@ -125,7 +125,7 @@
           icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}"></button>
 
         <!--Subir Fiechero-->
-        <p-fileUpload #pUploadFile [disabled]='!permisoEscritura' name="file" mode="basic"
+        <p-fileUpload #pUploadFile [disabled]='!permisoEscritura || !esCAM' name="file" mode="basic"
           chooseLabel="{{ 'facturacionSJCS.fichaCertificacion.subirFichero' | translate }}"
           class="edit my-0 mx-auto main-button" (onSelect)="uploadFile($event)" auto="true">
         </p-fileUpload>

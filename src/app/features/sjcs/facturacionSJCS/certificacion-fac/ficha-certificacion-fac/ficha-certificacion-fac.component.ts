@@ -25,6 +25,7 @@ import { TarjetaMovimientosVariosAsociadosComponent } from './tarjeta-movimiento
 import { saveAs } from "file-saver/FileSaver";
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { EnvioXuntaItem } from '../../../../../models/sjcs/EnvioXuntaItem';
+import { DescargaInfomreCAMItem } from '../../../../../models/sjcs/DescargaInfomreCAMItem';
 
 export interface Enlace {
   id: string;
@@ -64,8 +65,11 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
       { id: 'fichaCertMovApli', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosApli'), ref: null }
     ]
   };
-
   fechasMaxMin: MovimientosVariosApliCerRequestDTO = new MovimientosVariosApliCerRequestDTO();
+  esCAM: boolean = false;
+  esXunta: boolean = false;
+
+
   @ViewChild(TarjetaDatosGeneralesCertificacionComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesCertificacionComponent;
   @ViewChild(TarjetaFacturacionComponent) tarjetaFact: TarjetaFacturacionComponent;
   @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli: TarjetaMovimientosVariosAplicadosComponent;
@@ -93,6 +97,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         this.router.navigate(["/errorAcceso"]);
       }
 
+      this.comprobacionesIniciales();
 
       if (sessionStorage.getItem("filtrosBusquedaCerti")) {
         this.filtrosDeBusqueda = JSON.parse(sessionStorage.getItem("filtrosBusquedaCerti"));
@@ -123,6 +128,27 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
     }).catch(error => console.error(error));
 
+  }
+
+  async comprobacionesIniciales() {
+
+    this.progressSpinner = true;
+
+    await this.esInsticucionCAMoXunta().then((data: { valor: string }) => {
+      this.progressSpinner = false;
+
+      if (data.valor == 'CAM') {
+        this.esCAM = true;
+      }
+
+      if (data.valor == 'XUNTA') {
+        this.esXunta = true;
+      }
+
+    }).catch(err => {
+      this.progressSpinner = false;
+      if (err) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.mensaje.error.bbdd'));
+    });
   }
 
   ngAfterViewChecked(): void {
@@ -430,18 +456,26 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
   descargar(event: boolean) {
 
+    let url = "certificaciones_descargarCertificacionesXunta";
+
+    if (this.esCAM) {
+      url = "certificaciones_descargaInformeCAM";
+    }
+
+
     if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
 
       this.progressSpinner = true;
 
       let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
 
-      const payload = new DescargaCertificacionesXuntaItem();
+      const payload = this.esCAM ? new DescargaInfomreCAMItem() : new DescargaCertificacionesXuntaItem();
       payload.idEstadoCertificacion = this.certificacion.idEstadoCertificacion;
       payload.idInstitucion = Number(this.sigaStorageService.institucionActual);
-      payload.listaIdFacturaciones = listaIds.length > 0 ? listaIds : [];
+      payload.listaIdFacturaciones = listaIdsSinRepetidos.length > 0 ? listaIdsSinRepetidos : [];
 
-      this.sigaService.postDownloadFilesWithFileName2("certificaciones_descargarCertificacionesXunta", payload).subscribe(
+      this.sigaService.postDownloadFilesWithFileName2(url, payload).subscribe(
         (data: { file: Blob, filename: string, status: number }) => {
           this.progressSpinner = false;
 
@@ -500,10 +534,11 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
       this.progressSpinner = true;
 
       let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
 
       const payload = new EnvioXuntaItem();
       payload.idInstitucion = Number(this.sigaStorageService.institucionActual);
-      payload.listaIdFacturaciones = listaIds.length > 0 ? listaIds : [];
+      payload.listaIdFacturaciones = listaIdsSinRepetidos.length > 0 ? listaIdsSinRepetidos : [];
       payload.codigoOperacion = OPERACION_REINTEGROS;
 
       this.sigaService.post("certificaciones_accionXuntaEnvios", payload).subscribe(
@@ -534,9 +569,10 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
       this.progressSpinner = true;
 
       let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
 
       this.sigaService.postSendFileAndParameters2("certificaciones_subirFicheroCAM", event, {
-        listaIdFacturaciones: listaIds.length > 0 ? listaIds : []
+        listaIdFacturaciones: listaIdsSinRepetidos.length > 0 ? listaIdsSinRepetidos : []
       }).subscribe(
         data => {
 
@@ -558,6 +594,10 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
     }
 
+  }
+
+  esInsticucionCAMoXunta() {
+    return this.sigaService.get("certificaciones_perteneceInstitucionCAMoXunta").toPromise();
   }
 
 }

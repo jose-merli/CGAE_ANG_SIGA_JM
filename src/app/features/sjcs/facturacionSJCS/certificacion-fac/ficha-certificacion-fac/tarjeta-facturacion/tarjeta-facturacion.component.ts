@@ -44,7 +44,7 @@ export class TarjetaFacturacionComponent implements OnInit {
   @Output() saveFact = new EventEmitter<Number>();
   @ViewChild("tabla") tabla;
   permisos
-  datos;
+  datos = [];
   comboFactByPartida: any;
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -170,8 +170,8 @@ export class TarjetaFacturacionComponent implements OnInit {
 
     this.progressSpinner = false;
     let dummy = {
-      fechaDesde: "",
-      fechaHasta: "",
+      fechaDesde: undefined,
+      fechaHasta: undefined,
       nombre: "",
       idGrupo: "",
       importeOficio: 0,
@@ -191,7 +191,13 @@ export class TarjetaFacturacionComponent implements OnInit {
   restablecer() {
     this.isNuevo = false;
     this.selectedDatos = []
-    this.getFactCertificaciones(this.idCertificacion)
+
+    if (this.idCertificacion && this.idCertificacion != null && this.idCertificacion != '') {
+      this.getFactCertificaciones(this.idCertificacion);
+    } else if (this.modoEdicion && this.certificacion && this.certificacion != null) {
+      this.getFactCertificaciones(this.certificacion.idCertificacion);
+    }
+
   }
 
   save() {
