@@ -6,6 +6,7 @@ import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-tabla-adeudos',
@@ -26,7 +27,7 @@ export class TablaAdeudosComponent implements OnInit {
   selectMultiple: boolean = false;
   selectAll: boolean = false;
   historico: boolean = false;
-  permisoEscritura: boolean = false;
+  permisoEscritura: boolean = true;
   progressSpinner: boolean = false;
 
   @Input() datos;
@@ -34,7 +35,7 @@ export class TablaAdeudosComponent implements OnInit {
 
   @ViewChild("table") table: DataTable;
 
-  constructor( private changeDetectorRef: ChangeDetectorRef, private router: Router, private persistenceService: PersistenceService) { }
+  constructor( private changeDetectorRef: ChangeDetectorRef, private router: Router, private persistenceService: PersistenceService, private sigaServices: SigaServices) { }
 
   ngOnInit() {
     this.selectedDatos = [];
@@ -88,6 +89,32 @@ export class TablaAdeudosComponent implements OnInit {
     ];
   }
 
+  // Descargar LOG
+  descargarLog(){
+    let resHead ={ 'response' : null, 'header': null };
+
+    if (this.selectedDatos && this.selectedDatos.length != 0) {
+      this.progressSpinner = true;
+      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFicheroAdeudos", this.selectedDatos);
+      descarga.subscribe(response => {
+        this.progressSpinner = false;
+
+        const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
+        let filename: string = response.headers.get("Content-Disposition");
+        filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+
+        saveAs(file, filename);
+        this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+      });
+    } else {
+      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+    }
+  }
+
   selectFila(event) {
     this.numSelected = event.length;
   }
@@ -113,6 +140,15 @@ export class TablaAdeudosComponent implements OnInit {
       this.numSelected = 0;
       this.selectMultiple = true;
     }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   clear() {

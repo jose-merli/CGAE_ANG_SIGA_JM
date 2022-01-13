@@ -36,6 +36,8 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_getFicherosAdeudos:  "facturacionPyS/getFicherosAdeudos",
     facturacionPyS_nuevoFicheroAdeudos:  "facturacionPyS/nuevoFicheroAdeudos",
     facturacionPyS_actualizarFicheroAdeudos:  "facturacionPyS/actualizarFicheroAdeudos",
+    facturacionPyS_descargarFicheroAdeudos: "facturacionPyS/descargarFicheroAdeudos",
+    facturacionPyS_eliminarFicheroAdeudos: "facturacionPyS_eliminarFicheroAdeudos",
     facturacionPyS_getFicherosTransferencias:  "facturacionPyS/getFicherosTransferencias",
     facturacionPyS_getUsosSufijos: "facturacionPyS/getUsosSufijos",
     facturacionPyS_comboTiposIVA: "facturacionPyS/general/comboTiposIVA",

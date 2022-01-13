@@ -79,7 +79,7 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="descargarFicheroAdeudo()" type="button" icon="fas fa-download" iconPos="left" label="{{'general.boton.download' | translate }}">
+      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="descargarLog()" type="button" icon="fas fa-download" iconPos="left" label="{{'general.boton.download' | translate }}">
       </button>
     </div>
   </div>

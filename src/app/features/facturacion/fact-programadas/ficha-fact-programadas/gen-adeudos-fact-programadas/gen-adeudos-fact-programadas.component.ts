@@ -132,6 +132,44 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
     );
   }
 
+  generarFicheroAdeudos(): void {
+    if (this.isValid()) {
+      let ficheroAdeudos = new FicherosAdeudosItem();
+      ficheroAdeudos.idseriefacturacion = this.bodyInicial.idSerieFacturacion;
+      ficheroAdeudos.idprogramacion = this.bodyInicial.idProgramacion;
+      ficheroAdeudos.fechaPresentacion = this.bodyInicial.fechaPresentacion;
+      ficheroAdeudos.fechaRecibosPrimeros = this.bodyInicial.fechaRecibosPrimeros;
+      ficheroAdeudos.fechaRecibosRecurrentes = this.bodyInicial.fechaRecibosRecurrentes;
+      ficheroAdeudos.fechaRecibosCOR = this.bodyInicial.fechaRecibosCOR1;
+      ficheroAdeudos.fechaRecibosB2B = this.bodyInicial.fechaRecibosB2B;
+
+      this.sigaServices.post("facturacionPyS_nuevoFicheroAdeudos", ficheroAdeudos)
+        .toPromise()
+        .then(
+          n => {
+            if (!this.modoEdicion) {
+              let numFicheros = JSON.parse(n.body).id;
+              this.showMessage("info", "Información", `Se han generado ${numFicheros} ficheros`);
+            }
+          },
+          err => {
+            if (err && err.message) {
+              let message = this.translateService.instant(err.message);
+              if (message && message.trim().length != 0) {
+                Promise.reject({ descripcion: message });
+              }
+            }
+            return Promise.reject({ descripcion: this.translateService.instant("general.mensaje.error.bbdd") });
+          }
+        );      
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+
+    
+  }
+
   navigateToFicheroAdeudos() {
     if (this.ficherosAdeudos) {
       sessionStorage.setItem("facturacionProgramadaItem", JSON.stringify(this.bodyInicial));
