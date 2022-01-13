@@ -173,6 +173,19 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 	cambiaFiltro() {
 		/* this.filtrosFacturacion = new FacturacionItem();
 		this.filtrosPagos = new PagosjgItem(); */
+		if(this.selectedValue == "pagos"){
+			this.filtrosPagos.fechaDesde = this.filtrosFacturacion.fechaDesde;
+			this.filtrosPagos.fechaHasta = this.filtrosFacturacion.fechaHasta;
+			this.filtrosPagos.idFacturacion = this.filtrosFacturacion.idFacturacion
+			this.filtrosPagos.idConcepto = this.filtrosFacturacion.idConcepto
+			this.filtrosPagos.idPartidaPresupuestaria = this.filtrosFacturacion.idPartidaPresupuestaria
+		}else if(this.selectedValue == "facturacion"){
+			this.filtrosFacturacion.fechaDesde = this.filtrosPagos.fechaDesde;
+			this.filtrosFacturacion.fechaHasta = this.filtrosPagos.fechaHasta;
+			this.filtrosFacturacion.idFacturacion = this.filtrosPagos.idFacturacion
+			this.filtrosFacturacion.idConcepto = this.filtrosPagos.idConcepto
+			this.filtrosFacturacion.idPartidaPresupuestaria = this.filtrosPagos.idPartidaPresupuestaria
+		}
 		this.cambiaBuscar.emit(false);
 		this.isBuscar()
 

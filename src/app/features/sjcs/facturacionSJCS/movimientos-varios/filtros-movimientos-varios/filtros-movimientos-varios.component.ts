@@ -122,7 +122,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 		  }
 
 		}
-		
+		  this.isBuscar();
 		  this.progressSpinner = false;
 
 		  
