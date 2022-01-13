@@ -23,7 +23,7 @@
 
     <app-tarjeta-resumen-fija class="pb-50"  [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" *ngIf="idPersona != undefined" [chincheta]="true" [datos]="datosTarjetaResumen" [enlaces] = "enlacesTarjetaResumen" [icono]="iconoTarjetaResumen"
         (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened] = "manuallyOpened"></app-tarjeta-resumen-fija>
-    <app-servicios-interes-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaInteres]="tarjetaInteres" [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
+    <app-servicios-interes-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [datosColegiado]="generalBody" [tarjetaInteres]="tarjetaInteres" [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
           
     <app-datos-generales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaGenerales]="tarjetaGenerales" 
       [esColegiado]="esColegiado" (datosTarjetaResumenEmit)= "datosTarjetaResumenEvent($event)" (idPersonaNuevo)="idPersonaNuevoEvent($event)" (aparecerLOPD)="aparecerLOPDEvent($event)" [openGen]="openGen"></app-datos-generales-ficha-colegial>

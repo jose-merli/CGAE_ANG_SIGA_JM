@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('destinatariosIndividuales')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('destinatariosIndividuales')">
           <div class="img-colegiado">
             <i class="far fa-user icon-ficha pointer"></i>
@@ -15,17 +15,17 @@
             <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.destIndividuales' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>Número de destinatarios individuales: 
+            <label>Nº {{ 'facturacion.seriesFactura.destIndividuales' | translate }}: 
               <span>{{ datos ? datos.length : 0 }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('destinatariosIndividuales')"
-              *ngIf="!esFichaActiva('destinatariosIndividuales')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('destinatariosIndividuales')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('destinatariosIndividuales')">
         <div class="img-colegiado">
           <i class="far fa-user icon-ficha"></i>
@@ -36,7 +36,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('destinatariosIndividuales')" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
           class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
           [ngClass]="{ 'customCursor': selectMultiple }" paginatorPosition="both" selectionMode="multiple">
@@ -99,7 +99,7 @@
       </p-table>
     </div>
 
-    <div *ngIf="esFichaActiva('destinatariosIndividuales')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-plus" iconPos="left" 
           (click)="addDestinatario()" label="{{ 'general.boton.new' | translate }}"></button>

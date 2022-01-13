@@ -41,7 +41,7 @@
                 <div *ngSwitchCase="'iban'">
                   <span [ngClass]="{ historico: historico }">(... {{ dato[col.field] | slice:-4 }} )</span>
                 </div>
-                <div *ngSwitchCase="'comisionDescripcion'">
+                <div *ngSwitchCase="'descripcion'">
                   <span [ngClass]="{ historico: historico }" (click)="openTab(dato)" class="enlace">{{ dato[col.field]
                     }}</span>
                 </div>
@@ -49,7 +49,13 @@
                   <span [ngClass]="{ historico: historico }">{{ dato[col.field] ? "Sí" : "No" }}</span>
                 </div>
                 <div *ngSwitchCase="'comisionImporte'">
-                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
+                  <span class="pull-right" [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
+                </div>
+                <div *ngSwitchCase="'numUsos'">
+                  <span class="pull-right" [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span>
+                </div>
+                <div *ngSwitchCase="'numFicheros'">
+                  <span class="pull-right" [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span>
                 </div>
                 <div *ngSwitchDefault>
                   <span [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span>

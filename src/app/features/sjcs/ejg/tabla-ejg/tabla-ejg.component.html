@@ -146,8 +146,10 @@
   <div class="form-row">
     <div class="form-group-interlineado col-lg-12 col-md-12">
       <label>{{ "justiciaGratuita.ejg.busqueda.Remesas" | translate }}</label>
-      <p-dropdown  [(ngModel)]='valueComboRemesa' class="select-form" (onChange)="checkBotonAnadir()" placeholder="Seleccionar" 
-      [options]="comboRemesa" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="remesa != null"></p-dropdown>
+      <p-dropdown *ngIf = "remesa == null" [(ngModel)]='valueComboRemesa' class="select-form" (onChange)="checkBotonAnadir()" placeholder="Seleccionar" 
+      [options]="comboRemesa" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+      <p-dropdown *ngIf = "remesa != null" [(ngModel)]='valueComboRemesa' class="select-form" [placeholder] = "remesa.descripcion"
+      [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled] = "true"></p-dropdown>
     </div>
     <div class="form-group-interlineado col-lg-12 col-md-12">
       <label>{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}</label>

@@ -38,7 +38,7 @@ export class FacturacionFacturasComponent implements OnInit {
         if (results != undefined && results.length != 0) {
           let facturacionProgramadaItem: FacFacturacionprogramadaItem = results[0];
 
-          sessionStorage.setItem("facturaItem", JSON.stringify(this.bodyInicial));
+          sessionStorage.setItem("facturasItem", JSON.stringify(this.bodyInicial));
           sessionStorage.setItem("volver", "true");
 
           sessionStorage.setItem("facturacionProgramadaItem", JSON.stringify(facturacionProgramadaItem));
@@ -49,7 +49,7 @@ export class FacturacionFacturasComponent implements OnInit {
       }
     ).then(() => this.progressSpinner = false).then(() => {
       if (sessionStorage.getItem("facturacionProgramadaItem")) {
-        this.router.navigate(["/fichaFactProgramadas"]);
+        this.router.navigate(["/fichaFacturaciones"]);
       } 
     });
     }

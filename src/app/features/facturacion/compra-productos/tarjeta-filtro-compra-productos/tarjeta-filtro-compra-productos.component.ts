@@ -22,6 +22,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
 
   msgs: Message[] = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false;
+  esColegiado: boolean;
 
   //Variables buscador
   filtrosCompraProductos: FiltrosCompraProductosItem = new FiltrosCompraProductosItem(); //Guarda los valores seleccionados/escritos en los campos
@@ -52,6 +53,13 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
 
     if (sessionStorage.getItem("filtroBusqCompra")) {
 
@@ -105,7 +113,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
       sessionStorage.removeItem("buscadorColegiados");
 
     }
-    else if(this.localStorageService.isLetrado){
+    else if(this.esColegiado){
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
         n => {
           let data = JSON.parse(n.body).colegiadoItem;
@@ -270,7 +278,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
 
   limpiar() {
     this.filtrosCompraProductos = new FiltrosCompraProductosItem();
-    if(!this.localStorageService.isLetrado){
+    if(!this.esColegiado){
       this.nombreCliente = null;
       this.nifCifCliente = null;
       this.filtrosCompraProductos.idpersona = null;
@@ -357,6 +365,11 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
   }
 
 }

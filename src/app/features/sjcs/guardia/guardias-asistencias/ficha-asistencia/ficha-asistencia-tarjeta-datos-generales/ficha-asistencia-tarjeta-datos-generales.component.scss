@@ -1,0 +1,42 @@
+.camposObligatorios{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > div{
+    border-color: red !important;
+  }
+
+  
+  .camposObligatorios div{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > input{
+    border-color: red !important;
+  }
+
+  .camposObligatorios > div .ui-multiselect{
+    border: 1px solid red !important;
+  }
+
+  .ui-inputtext .camposObligatorios{
+    border: 1px solid red !important;
+  }
+  .padding-interior {
+    padding-right: 1.25rem !important;
+    padding-left: 1.25rem !important;
+}
+
+.title-section {
+    color: #595959;
+	font-size: 0.9rem;
+	font-weight: bold;
+}
+.inline{
+    display: inline-flex
+}
+.toBottom{
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}

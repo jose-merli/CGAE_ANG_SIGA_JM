@@ -8,13 +8,14 @@ export class CuentasBancariasItem{
     iban: string = "";
     nombre: string;
     descripcion: string;
+    descripcionRepetida: boolean;
     asientoContable: string;
     cuentaContableTarjeta: string;
     bic: string;
     numUsos: number;
     numFicheros: string;
 
-    comisionImporte: number;
+    comisionImporte: string;
     comisionDescripcion: string;
     idTipoIVA: string;
     tipoIVA: string;

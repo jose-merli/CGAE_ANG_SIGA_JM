@@ -113,9 +113,11 @@
 
       <div *ngIf="showCliente" class="module vista-avanzada">
         <div class="form-row">
-          <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>Colegio</label>
-            <input type="text" class="form-control"/>
+          <div class="form-group-interlineado col-lg-12 col-md-12">
+            <app-busqueda-colegiado-express [pantalla]="'ejg'"
+                [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"
+                (colegiado)="changeColegiado($event)">
+            </app-busqueda-colegiado-express>
           </div>
         </div>
       </div>

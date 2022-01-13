@@ -53,7 +53,7 @@ export class UsoFicherosCuentaBancariaComponent implements OnInit, OnChanges {
         this.commonsService.arregloTildesCombo(this.comboSufijos);
       },
       err => {
-        console.log(err);
+        
       }
     );
   }

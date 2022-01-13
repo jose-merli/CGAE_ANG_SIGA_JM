@@ -1,0 +1,48 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="row w-100 m-0 padding-interior">
+
+  <div class="col-lg-12 col-md-12">
+
+    <div class="form-row">
+
+      <div class="form-group col-lg-3 col-md-3 w-100 mb-3">
+        <label>Estado Validación</label>
+        <input type="text" class="form-control" pInputText [(ngModel)]="datosJustificacion.estado" [ngModelOptions]="{standalone: true}" disabled>
+      </div>
+      <div class="form-group col-lg-3 col-md-3 w-100 mb-3">
+        <label>{{'justiciaGratuita.oficio.designas.actuaciones.fechaJustificacion' | translate}}</label>
+        <app-fecha [(value)]="datosJustificacion.fechaJustificacion" (valueChangeSelected)="fillFechaJustificacion($event)"
+        (valueChangeInput)="fillFechaJustificacion($event)" [disabled]="isLetrado"></app-fecha>
+      </div>
+      <div class="form-group col-lg-6 col-md-6 w-100 mb-6">
+        <label>{{'censo.nuevaSolicitud.observaciones' | translate}}</label>
+        <textarea class="form-control" pInputTextarea [(ngModel)]="datosJustificacion.observaciones" [ngModelOptions]="{standalone: true}"></textarea>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button *ngIf="!reactivable" pButton type="button" icon="" iconPos="left" label="{{'general.boton.anular' | translate}}"
+      (click)="anular()" [disabled]="!editable"></button>
+    <button *ngIf="reactivable" pButton type="button" icon="" iconPos="left" label="{{'general.boton.reactivar' | translate}}"
+      (click)="reactivar();"></button>
+    <button pButton type="button" icon="" iconPos="left" label="Desvalidar" [disabled]="(!validada  && isLetrado) || isLetrado"
+      (click)="desvalidar()"></button>
+    <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.validar' | translate}}"
+      (click)="validar()" [disabled] = "(validada && isLetrado) || !editable || isLetrado" ></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
+      (click)="restablecer()" [disabled]="!editable"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
+      (click)="save()" [disabled]="!editable"></button>
+  </div>
+</div>

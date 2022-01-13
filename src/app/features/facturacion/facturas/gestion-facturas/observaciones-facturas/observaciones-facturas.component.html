@@ -4,10 +4,10 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('observaciones')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('observaciones')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="far fa-comment icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -17,16 +17,16 @@
           <div class="d-flex justify-content-end default">
 
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('observaciones')"
-              *ngIf="!esFichaActiva('observaciones')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('observaciones')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('observaciones')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="far fa-comment icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.facturas.observaciones.literal' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -34,7 +34,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div [hidden]="!esFichaActiva('observaciones')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
       <div class="row">
         <div class="form-group w-100">
           <label>{{ 'censo.nuevaSolicitud.observaciones' | translate }}</label>
@@ -47,12 +47,12 @@
       </div>
     </div>
 
-    <div *ngIf="esFichaActiva('observaciones')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
           (click)="save()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

@@ -4,10 +4,10 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('genAdeudos')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('genAdeudos')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="fas fa-dollar icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -38,16 +38,16 @@
               <span>{{ body.fechaRecibosB2B | date: 'dd/MM/yyyy' }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('genAdeudos')"
-              *ngIf="!esFichaActiva('genAdeudos')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('genAdeudos')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('genAdeudos')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="fas fa-dollar icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.factProgramadas.genAdeudos' | translate }}</label>
 
@@ -60,12 +60,12 @@
             </span>
           </a>
         </label>
-        <i class="fa fa-angle-up"></i>
+        <i class="fa fa-angle-up{{ ficherosAdeudos ? '' : ' ml-auto' }}"></i>
       </div>
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div [hidden]="!esFichaActiva('genAdeudos')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos' | translate }} (*)</label>
@@ -95,14 +95,14 @@
       </div>
     </div>
 
-    <div *ngIf="esFichaActiva('genAdeudos')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button [disabled]="!(confirmada && !ficherosAdeudos)" pButton (click)="nuevoFicheroAdeudos()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
 
         <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-save" iconPos="left"
           (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

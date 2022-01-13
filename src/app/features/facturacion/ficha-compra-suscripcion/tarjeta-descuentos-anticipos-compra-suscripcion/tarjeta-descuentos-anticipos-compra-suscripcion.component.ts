@@ -290,6 +290,11 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     });
   }
 
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }   
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
 
@@ -321,8 +326,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
 			})
 			.catch((error) => console.error(error));
   }
-
-
+  
   cerrarDialog() {
     this.showModal = false;
   }

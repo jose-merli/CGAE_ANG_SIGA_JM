@@ -146,6 +146,11 @@ export class FiltrosServiciosComponent implements OnInit, OnDestroy {
       detail: msg
     });
   }
+
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }
   //FIN METODOS BUSCADOR
 
   //INICIO SERVICIOS

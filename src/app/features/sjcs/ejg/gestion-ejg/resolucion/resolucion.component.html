@@ -37,7 +37,7 @@
     </div>
 
     <div *ngIf="esFichaActiva('resolucion')" class="card-body card-body-ficha">
-      <div class="row">
+      <div *ngIf = "resolucion != undefined" class="row">
         <div class="form-group col-lg-4 col-md-4">
           <label style="font-weight: bold; padding-bottom: 5px"> {{
             "justiciaGratuita.ejg.gestionejg.DatosResolucion" | translate}} </label>
@@ -47,7 +47,7 @@
                 "justiciaGratuita.ejg.datosGenerales.FechaResolucion" | translate }}</label>
               <p-dropdown class="select-form" [(ngModel)]='resolucion.idAnnioActa' placeholder="Seleccionar"
                 [options]="comboActaAnnio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"
-                [disabled]="!habilitarActas" (onChange)="fillFechaResCAJGActa($event)">
+                [disabled]="!habilitarActas" (onChange)="fillFechaResol($event)">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">

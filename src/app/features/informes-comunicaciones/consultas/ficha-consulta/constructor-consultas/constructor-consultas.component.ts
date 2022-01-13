@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Message } from "primeng/components/common/api";
-import { RuleModel } from '@syncfusion/ej2-querybuilder';
+import { RuleModel } from '@syncfusion/ej2-angular-querybuilder';
 import { QueryBuilderComponent } from '@syncfusion/ej2-angular-querybuilder';
 import { Subscription } from 'rxjs';
 import { SigaServices } from '../../../../../_services/siga.service';

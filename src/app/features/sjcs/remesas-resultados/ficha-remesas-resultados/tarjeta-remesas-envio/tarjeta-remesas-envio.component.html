@@ -1,0 +1,39 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000">
+</p-growl>
+<div class="card">
+  <div class="header-ficha">
+    <div  class="form-row">
+      <div class="col-lg-1 col-md-2" >
+        <div class="img-colegiado">
+          <i class='fa fa-address-book icon-ficha'></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10 ">
+        <div class="d-flex justify-content-start mb-1">
+          <label class="mr-auto title-ficha" >{{ "menu.justiciaGratuita.remesas.envio"
+            | translate }}
+          </label>
+        </div>
+        <div class="d-flex justify-content-between" style="cursor:default">
+          <label >{{ "censo.consultaDatosRegistrales.literal.numRegistro" | translate }}
+            <a ><span class="enlace" (click)="RemesaEnvio()" *ngIf="remesaItem != null"> {{ remesaItem.numRegistroRemesaCompleto }}</span></a>
+          </label>
+          
+          <label>{{"administracion.parametrosGenerales.literal.descripcion" | translate}}
+            <span *ngIf="remesaItem != null"> {{ remesaItem.descripcionRemesa }}</span>
+          </label>
+          
+          <label>{{ "justiciaGratuita.remesas.tabla.FechaEnvio" | translate }}
+            <span *ngIf="remesaItem != null"> {{ remesaItem.fechaResolucionRemesaResultado }}</span>
+          </label>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>
+</div>

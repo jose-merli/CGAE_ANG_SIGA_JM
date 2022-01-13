@@ -260,4 +260,9 @@ export class DatosGeneralesMonederoComponent implements OnInit {
     this.showTarjeta = !this.showTarjeta;
   }
 
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }
+
 }

@@ -186,8 +186,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		if (
 			this.body != undefined &&
 			this.body.idrepresentantejg != undefined &&
-			this.body.idrepresentantejg != null &&
-			this.body.idrepresentantejg != ''
+			this.body.idrepresentantejg != null
 		) {
 			this.showEnlaceRepresentante = true;
 		} else {
@@ -204,7 +203,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	searchJusticiable() {
 		this.progressSpinner = true;
 		let bodyBusqueda = new JusticiableBusquedaItem();
-		bodyBusqueda.idpersona = this.body.idrepresentantejg;
+		bodyBusqueda.idpersona = this.body.idrepresentantejg.toString();
 		bodyBusqueda.idinstitucion = this.body.idinstitucion;
 
 		this.sigaServices.post('gestionJusticiables_searchJusticiable', bodyBusqueda).subscribe(
@@ -229,7 +228,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				this.progressSpinner = false;
 			},
 			(err) => {
-				console.log(err);
+				//console.log(err);
 				this.progressSpinner = false;
 			}
 		);
@@ -438,7 +437,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 					);
 					this.representanteValido = false;
 				} else {
-					this.body.idrepresentantejg = this.generalBody.idpersona;
+					this.body.idrepresentantejg = Number(this.generalBody.idpersona);
 					this.callServiceAssociate();
 				}
 			}
@@ -488,7 +487,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		}
 		else if (this.fromContrarioEJG) {
 			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.apellidos.concat(",", this.generalBody.nombre)]
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.apellidos.concat(",", this.generalBody.nombre), this.generalBody.idpersona]
 			this.sigaServices.post('gestionejg_updateRepresentanteContrarioEJG', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -607,7 +606,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		}
 		else if (this.fromContrarioEJG) {
 			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
-			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, ""]
+			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, "", null]
 			this.sigaServices.post('gestionejg_updateRepresentanteContrarioEJG', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -623,6 +622,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 					this.translateService.instant('general.message.error.realiza.accion');
 				}
 			);
+			this.body.idrepresentantejg = undefined;
+			this.rest();
 		}
 		else {
 			this.sigaServices.post('gestionJusticiables_disassociateRepresentante', this.body).subscribe(
@@ -686,7 +687,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 							);
 							this.representanteValido = false;
 						} else {
-							this.body.idrepresentantejg = this.generalBody.idpersona;
+							this.body.idrepresentantejg = Number(this.generalBody.idpersona);
 							this.callServiceAssociate();
 						}
 
@@ -704,7 +705,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	rejectAssociate() {
 		this.cdRepresentanteAssociate.hide();
 		this.progressSpinner = true;
-		this.body.idrepresentantejg = this.generalBody.idpersona;
+		this.body.idrepresentantejg = Number(this.generalBody.idpersona);
 		this.body.validacionRepeticion = true;
 		this.body.asociarRepresentante = true;
 		let url = 'gestionJusticiables_createJusticiable';

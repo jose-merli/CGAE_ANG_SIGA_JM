@@ -53,14 +53,17 @@ export class EnvioFactProgramadasComponent implements OnInit, OnChanges {
   // Combo de plantillas envío masivo
 
   getComboPlantillasEnvio() {
+    this.progressSpinner = true;
     this.sigaServices.get("facturacionPyS_comboPlantillasEnvio").subscribe(
       n => {
         this.comboPlantillas = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboPlantillas);
-        console.log(n);
+
+        this.progressSpinner = false;
       },
       err => {
         console.log(err);
+        this.progressSpinner = false;
       }
     );
   }

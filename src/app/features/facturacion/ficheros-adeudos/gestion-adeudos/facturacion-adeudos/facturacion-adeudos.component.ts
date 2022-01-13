@@ -20,45 +20,43 @@ export class FacturacionAdeudosComponent implements OnInit {
   msgs;
 
   constructor(
-    private sigaServices: SigaServices, 
+    private sigaServices: SigaServices,
     private translateService: TranslateService,
     private router: Router) { }
 
   ngOnInit() {
-    this.body =  JSON.parse(JSON.stringify(this.bodyInicial));
+    this.body = JSON.parse(JSON.stringify(this.bodyInicial));
   }
 
-  ir(){
-  //   sessionStorage.setItem("idInstitucionFichaColegial", idInstitucion.toString());
-  //   this.router.navigate(["/turnoOficioCenso"]);
+  ir() {
+    //   sessionStorage.setItem("idInstitucionFichaColegial", idInstitucion.toString());
+    //   this.router.navigate(["/turnoOficioCenso"]);
 
-  if (this.bodyInicial.idprogramacion) {
-    this.progressSpinner = true;
-  let filtros = { idSerieFacturacion: this.bodyInicial.idseriefacturacion, idProgramacion: this.bodyInicial.idprogramacion };
+    if (this.bodyInicial.idprogramacion) {
+      this.progressSpinner = true;
+      let filtros = { idSerieFacturacion: this.bodyInicial.idseriefacturacion, idProgramacion: this.bodyInicial.idprogramacion };
 
-  this.sigaServices.post("facturacionPyS_getFacturacionesProgramadas", filtros).toPromise().then(
-    n => {
-      let results: FacFacturacionprogramadaItem[] = JSON.parse(n.body).facturacionprogramadaItems;
-      if (results != undefined && results.length != 0) {
-        let facturacionProgramadaItem: FacFacturacionprogramadaItem = results[0];
+      this.sigaServices.post("facturacionPyS_getFacturacionesProgramadas", filtros).toPromise().then(
+        n => {
+          let results: FacFacturacionprogramadaItem[] = JSON.parse(n.body).facturacionprogramadaItems;
+          if (results != undefined && results.length != 0) {
+            let facturacionProgramadaItem: FacFacturacionprogramadaItem = results[0];
 
-        sessionStorage.setItem("facturaItem", JSON.stringify(this.bodyInicial));
-        sessionStorage.setItem("volver", "true");
+            sessionStorage.setItem("facturaItem", JSON.stringify(this.bodyInicial));
+            sessionStorage.setItem("volver", "true");
 
-        sessionStorage.setItem("facturacionProgramadaItem", JSON.stringify(facturacionProgramadaItem));
-      }
-    },
-    err => {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            sessionStorage.setItem("facturacionProgramadaItem", JSON.stringify(facturacionProgramadaItem));
+          }
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      ).then(() => this.progressSpinner = false).then(() => {
+        if (sessionStorage.getItem("facturacionProgramadaItem")) {
+          this.router.navigate(["/fichaFacturaciones"]);
+        }
+      });
     }
-  ).then(() => this.progressSpinner = false).then(() => {
-    if (sessionStorage.getItem("facturacionProgramadaItem")) {
-      this.router.navigate(["/fichaFactProgramadas"]);
-    } 
-  });
-  }
-  
-
   }
 
   showMessage(severity, summary, msg) {
@@ -68,5 +66,9 @@ export class FacturacionAdeudosComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }

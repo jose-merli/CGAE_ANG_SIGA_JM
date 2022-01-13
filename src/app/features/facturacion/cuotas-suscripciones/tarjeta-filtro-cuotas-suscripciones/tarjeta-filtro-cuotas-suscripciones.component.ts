@@ -22,6 +22,7 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
   msgs: Message[] = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false;
+  esColegiado: boolean;
 
   //Variables buscador
   filtrosSuscripciones: FiltrosSuscripcionesItem = new FiltrosSuscripcionesItem(); //Guarda los valores seleccionados/escritos en los campos
@@ -60,6 +61,13 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
     // Se rellena este campo por el correo enviado por Adrian Ayala Gomez
     // el día 11/01/22
     this.filtrosSuscripciones.aFechaDe = new Date();
+
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    }
+    else{
+      this.esColegiado = false;
+    }
 
     if (sessionStorage.getItem("filtroBusqSuscripcion")) {
 
@@ -111,7 +119,7 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
       
     }
-    else if(this.localStorageService.isLetrado){
+    else if(this.esColegiado){
       this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.localStorageService.idPersona).subscribe(
 				n => {
 					let data = JSON.parse(n.body).colegiadoItem;
@@ -293,7 +301,7 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
     //Se rellena este campo por el correo enviado por Adrian Ayala Gomez
     // el día 11/01/22
     this.filtrosSuscripciones.aFechaDe = new Date();
-    if(!this.localStorageService.isLetrado){
+    if(!this.esColegiado){
       this.limpiarCliente();
     }
   }

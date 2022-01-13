@@ -29,5 +29,7 @@ export class FacturaEstadosPagosItem {
 	notaMaxLength: number;
 	comentario: string;
 
+	comision: boolean;
+
     constructor() {}
 }

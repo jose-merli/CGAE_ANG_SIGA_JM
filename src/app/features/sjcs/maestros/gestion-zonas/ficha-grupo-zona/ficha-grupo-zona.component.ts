@@ -27,7 +27,7 @@ export class FichaGrupoZonaComponent implements OnInit {
     this.route.queryParams
       .subscribe(params => {
         this.idZona = params.idZona
-        console.log(params);
+        //console.log(params);
       });
 
   }

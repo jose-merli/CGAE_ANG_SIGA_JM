@@ -1,0 +1,38 @@
+::ng-deep {
+
+    #facSJCSFichaBarConfiFac {
+
+        .camposObligatorios {
+            border-color: red !important;
+        }
+
+        .camposObligatorios>div {
+            border-color: red !important;
+        }
+
+        .camposObligatorios>input {
+            border-color: red !important;
+        }
+
+        .camposObligatorios>div .ui-multiselect {
+            border: 1px solid red !important;
+        }
+
+        .ui-inputtext .camposObligatorios {
+            border: 1px solid red !important;
+        }
+
+        .verticalAlign{
+            display: flex;
+            align-items: end;
+        }
+
+    }
+
+}
+
+.enlace {
+    color: #0000EE !important;
+    text-decoration: underline;
+    cursor: pointer !important;
+}

@@ -1,5 +1,5 @@
 export class FacturacionItem {
-  	idInstitucion: String;
+	idInstitucion: String;
 	abreviatura: String;
 	idFacturacion: String;
 	idConcepto: String;
@@ -22,6 +22,11 @@ export class FacturacionItem {
 	idGrupoOld: String;
 	idConceptoOld: String;
 	observaciones: String;
-	
-  	constructor() {}
-}  
+	nombreUsuModificacion: string;
+	importeOficio: String;
+	importeGuardia: String;
+	importeSoj: String;
+	importeEjg: String;
+
+	constructor() { }
+}

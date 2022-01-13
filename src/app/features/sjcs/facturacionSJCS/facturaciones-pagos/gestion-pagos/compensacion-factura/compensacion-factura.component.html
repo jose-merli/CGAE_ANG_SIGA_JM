@@ -1,0 +1,128 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div id="facSJCSFichaPagosCompFac">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!showFicha" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="onHideFicha()">
+            <i class="fas fa-dollar icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="onHideFicha()">
+            <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.compensacionFactura" | translate
+              }}
+            </label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>Número de Compensaciones:
+              <span>{{ nCompensaciones }}</span>
+            </label>
+            <i *ngIf="!showFicha" class="fa fa-angle-down float-right" (click)="onHideFicha()"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showFicha" class="header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="onHideFicha()">
+        <div class="img-colegiado">
+          <i class="fas fa-dollar icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ "facturacionSJCS.facturacionesYPagos.compensacionFactura" | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="showFicha" class="card-body">
+      <div class="module vista-avanzada">
+        <div class="form-row">
+          <p-table [value]="compensaciones" [columns]="cols" [(selection)]="selectedDatos"
+            [selectionMode]="selectionMode" [responsive]="true" #tabla class="tabla-listado" [paginator]="true"
+            [rows]="selectedItem" (onRowSelect)="seleccionaFila()" (onRowUnselect)="seleccionaFila()"
+            paginatorPosition="both">
+            <ng-template pTemplate="colgroup" let-columns>
+              <colgroup>
+                <col *ngFor="let col of cols" [style.width]="col.width">
+              </colgroup>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                  {{ col.header | translate}}
+                  <p-sortIcon [field]="col.field"></p-sortIcon>
+                  <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+                    *ngSwitchCase="col.field" pInputText type="text"
+                    (input)="tabla.filter($event.target.value, col.field, 'contains')" />
+                </th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+              <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                <td class="text-center" *ngFor="let col of columns">
+                  <div *ngIf="col.field == 'compensar'">
+                    {{ dato[col.field] | siNo }}
+                  </div>
+                  <div *ngIf="col.field == 'fechaFactura'">
+                    {{ dato[col.field] | date: 'dd/MM/yyyy' }}
+                  </div>
+                  <div
+                    *ngIf="col.field == 'importeTotalFactura' || col.field == 'importePendienteFactura' || col.field == 'importeCompensado' || col.field == 'importePagado'">
+                    {{ dato[col.field] | currency:'EUR' }}
+                  </div>
+                  <div *ngIf="col.field == 'numColegiado' || col.field == 'nombre' || col.field == 'numeroFactura'">
+                    {{ dato[col.field] }}
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="columns.length">
+                  {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="paginatorleft">
+              <div class="mostrar d-flex text-right justify-content-end">
+                <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al {{tabla.first +
+                  tabla.rows}} de un total de {{tabla.totalRecords}}</label>
+                <label class="pr-3 numSeleccionados"
+                  *ngIf="selectedDatos != null && selectedDatos != undefined && selectedDatos.length >= 0">{{
+                  'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+                  {{selectedDatos.length}}
+                </label>
+                <label class="pr-3 numSeleccionados"
+                  *ngIf="selectedDatos == null || selectedDatos == undefined || selectedDatos.length == undefined">{{
+                  'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+                </label>
+                <label>{{"general.message.mostrar" | translate}}</label>
+                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                  (onChange)="onChangeRowsPerPages($event)">
+                </p-dropdown>
+                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+
+                <div class="ml-3 selectAll">
+                  <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                    label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"
+                    [(disabled)]='!permisos'></p-checkbox>
+                </div>
+
+              </div>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="showFicha">
+      <div class="text-right main-button">
+        <button (click)="marcar()" pButton type="button" label="{{ 'facturacionSJCS.boton.marcar' | translate }}"
+          [disabled]="!permisos || paramDeducirCobroAutom.valor == '1' || compensaciones == undefined || isPagoCerrado()"></button>
+        <button (click)="desmarcar()" pButton type="button" label="{{ 'facturacionSJCS.boton.desmarcar' | translate }}"
+          [disabled]="!permisos || paramDeducirCobroAutom.valor == '1' || compensaciones == undefined || isPagoCerrado()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -202,6 +202,11 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
       return this.commonsService.styleObligatorio(evento);
     }
   }
+
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
+  clear() {
+    this.msgs = [];
+  }
   
   onHideTarjeta(){
     this.showTarjeta = !this.showTarjeta;

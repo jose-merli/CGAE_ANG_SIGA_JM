@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('datosGenerales')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
           <div class="img-colegiado">
             <i class="far fa-address-book icon-ficha pointer"></i>
@@ -27,16 +27,16 @@
             <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}: 
               <span>{{ bodyInicial.importefacturado + " €" }}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
-              <span>{{ bodyInicial.importeAdeudadoPendiente + " €" }}</span></label>
+              <span>{{ (bodyInicial.tipo == "FACTURA" ? bodyInicial.importeAdeudadoPendiente : bodyInicial.importeAdeudadoPendienteAb) + " €" }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
-              *ngIf="!esFichaActiva('datosGenerales')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('datosGenerales')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('datosGenerales')">
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
@@ -47,7 +47,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div [hidden]="!esFichaActiva('datosGenerales')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva()" *ngIf="bodyInicial" class="card-body card-body-ficha">
       <div class="row">
         <div class="bloque col-lg-4 col-md-4">
           <label style="text-align:center; font-weight: bold; padding-bottom: 10px">{{ 'justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.inicial' | translate }}</label>
@@ -134,7 +134,7 @@
       </div>
     </div>
 
-    <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-save" iconPos="left"
           (click)="comunicar()" label="{{ 'general.boton.comunicar' | translate }}"></button>

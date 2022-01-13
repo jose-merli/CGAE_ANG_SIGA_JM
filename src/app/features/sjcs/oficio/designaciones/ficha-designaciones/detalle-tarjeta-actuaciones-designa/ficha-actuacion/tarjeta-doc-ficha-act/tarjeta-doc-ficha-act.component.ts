@@ -195,7 +195,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
         },
@@ -268,7 +268,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -315,7 +315,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
         this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
       },
@@ -445,7 +445,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
         this.permiteSubidDescargaFicheros = resp.find(el => el.parametro == "ACTIVAR_SUBIDA_JUSTIFICACION_DESIGNA" && (el.idInstitucion == '0' || el.idInstitucion == el.idinstitucionActual)).valor == "1";
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {

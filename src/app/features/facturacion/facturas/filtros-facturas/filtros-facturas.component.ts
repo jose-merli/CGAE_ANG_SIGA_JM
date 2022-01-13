@@ -39,6 +39,13 @@ export class FiltrosFacturasComponent implements OnInit {
   // crear un body con el item (después de haber creado el item)
   body: FacturasItem = new FacturasItem();
 
+  // Busqueda de colegiado
+  usuarioBusquedaExpress = {
+    numColegiado: '',
+    nombreAp: '',
+    idPersona:''
+  };
+
   constructor(
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
@@ -56,9 +63,34 @@ export class FiltrosFacturasComponent implements OnInit {
 
       sessionStorage.removeItem("volver");
 
+      this.body.fechaEmisionDesde = this.transformDate(this.body.fechaEmisionDesde);
+      this.body.fechaEmisionHasta = this.transformDate(this.body.fechaEmisionHasta);
+
+      this.changeColegiado({ nColegiado: this.body.numeroColegiado });
+
       this.isBuscar();
-    }else{
-      this.body.fechaEmisionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));
+    } else if(!sessionStorage.getItem("idFichero")) {
+        this.body.fechaEmisionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));     
+    } else if(sessionStorage.getItem("idFichero")) {
+      if (sessionStorage.getItem("tipoFichero") =='T') {
+				this.body.identificadorTransferencia = sessionStorage.getItem("idFichero");
+			} else if (sessionStorage.getItem("tipoFichero") =='A') {
+				this.body.identificadorAdeudos = sessionStorage.getItem("idFichero");
+			} else if (sessionStorage.getItem("tipoFichero") =='D') {
+				this.body.identificadorDevolucion = sessionStorage.getItem("idFichero");
+			}
+      sessionStorage.removeItem("idFichero");
+			sessionStorage.removeItem("tipoFichero");
+      this.isBuscar();
+    }
+
+    if (sessionStorage.getItem("buscadorColegiados")) {
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      sessionStorage.removeItem("buscadorColegiados");
+
+      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+      this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
     }
   }
 
@@ -169,8 +201,22 @@ export class FiltrosFacturasComponent implements OnInit {
 
   onShowComunicacionesCobrosRecobros(): void {
     this.showComunicacionesCobrosRecobros = !this.showComunicacionesCobrosRecobros;
-    }
+  }
 
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
+      && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
+      this.body.numeroColegiado = this.usuarioBusquedaExpress.numColegiado;
+      this.body.idCliente = this.usuarioBusquedaExpress.idPersona;
+    }else{
+      this.usuarioBusquedaExpress.numColegiado = " ";
+      this.body.numeroColegiado = undefined;
+      this.body.idCliente = undefined;
+      sessionStorage.removeItem("numColegiado");
+    }
+  }
 
   // boton de busqueda
   isBuscar() {
@@ -192,6 +238,16 @@ export class FiltrosFacturasComponent implements OnInit {
 
   }
 
+  // Transformar fecha
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    else
+      fecha = null;
+    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
+  }
+
   clear() { 
     this.msgs = [];
   }
@@ -207,6 +263,14 @@ export class FiltrosFacturasComponent implements OnInit {
     this.showDatosAgrupacion = true;
     this.showCliente = true;
     this.showComunicacionesCobrosRecobros = true;
+
+    // Filtro de colegiado
+    this.usuarioBusquedaExpress = {
+      numColegiado: '',
+      nombreAp: '',
+      idPersona:''
+    };
+    sessionStorage.removeItem("numColegiado");
 
     this.goTop();
   }

@@ -57,7 +57,6 @@ export class TablaRetencionesIrpfComponent implements OnInit {
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService
   ) { }

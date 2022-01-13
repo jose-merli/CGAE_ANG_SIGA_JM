@@ -7,14 +7,14 @@
       <div class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="far fa-user icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1">
             <label class="mr-auto title-ficha pointer">{{ 'facturacion.facturas.deudor.literal' | translate }}</label>
 
-            <label class="mr-3">
+            <label *ngIf="bodyInicial && bodyInicial.idDeudor" class="mr-3">
               <i (click)="navigateToSociedad();$event.stopPropagation();"
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToSociedad();$event.stopPropagation();">
@@ -27,11 +27,11 @@
           <div class="d-flex justify-content-between default">
             
             <label>{{ 'justiciaGratuita.oficio.designas.interesados.identificador' | translate }}: 
-                <span>{{ bodyInicial.identificacionDeudor }}</span></label>
+                <span *ngIf="bodyInicial">{{ bodyInicial.identificacionDeudor }}</span></label>
             <label>{{ 'general.description' | translate }}: 
-                <span>{{ bodyInicial.descripcionDeudor }}</span></label>
+                <span *ngIf="bodyInicial">{{ bodyInicial.descripcionDeudor }}</span></label>
             <label>{{ 'administracion.parametrosGenerales.literal.abreviatura' | translate }}: 
-              <span>{{ bodyInicial.abreviaturaDeudor }}</span></label>
+              <span *ngIf="bodyInicial">{{ bodyInicial.abreviaturaDeudor }}</span></label>
 
           </div>
         </div>

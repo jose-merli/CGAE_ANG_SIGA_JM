@@ -169,4 +169,8 @@ onChangeSelectAll() {
     });
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
 }

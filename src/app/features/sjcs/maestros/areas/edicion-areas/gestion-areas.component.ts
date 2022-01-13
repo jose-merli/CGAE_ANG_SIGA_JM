@@ -35,7 +35,7 @@ export class GestionAreasComponent implements OnInit {
     this.route.queryParams
       .subscribe(params => {
         this.idArea = params.idArea
-        console.log(params);
+        //console.log(params);
       });
     if (this.idArea != undefined) {
       this.searchAreas();
@@ -63,7 +63,7 @@ export class GestionAreasComponent implements OnInit {
         this.buscar = true;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

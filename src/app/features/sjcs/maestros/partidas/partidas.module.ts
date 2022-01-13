@@ -82,4 +82,4 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
         { provide: LOCALE_ID, useValue: 'es-ES' }
     ]
 })
-export class GestionPartidasComponent { }
+export class PartidasModule { }

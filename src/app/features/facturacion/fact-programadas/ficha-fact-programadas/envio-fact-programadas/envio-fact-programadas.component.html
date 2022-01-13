@@ -4,10 +4,10 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('envio')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('envio')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="far fa-paper-plane icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -24,16 +24,16 @@
               <span>{{body.estadoEnvio }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('envio')"
-              *ngIf="!esFichaActiva('envio')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('envio')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('envio')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="far fa-paper-plane icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.envioFact.literal' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div [hidden]="!esFichaActiva('envio')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-check col-lg-3 col-md-3 align-self-center d-flex justify-content-between">
           <label class="form-group-label">{{ 'facturacion.seriesFactura.envioFact.auto' | translate }}</label>
@@ -61,7 +61,7 @@
       </div>
     </div>
 
-    <div *ngIf="esFichaActiva('envio')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button [disabled]="!(confirmada && finalizado && logDisponible)" pButton (click)="confirmDescargar()"
           type="button" icon="fa fa-download" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>

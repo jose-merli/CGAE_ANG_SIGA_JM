@@ -19,14 +19,14 @@ export class FichaFactProgramadasComponent implements OnInit {
   progressSpinner: boolean = false;
 
   iconoTarjetaResumen = "clipboard";
-  body: FacFacturacionprogramadaItem = new FacFacturacionprogramadaItem();
+  body: FacFacturacionprogramadaItem;
   serie: SerieFacturacionItem = new SerieFacturacionItem();
   datos = [];
   enlacesTarjetaResumen = [];
 
-  modoEdicion: boolean = true;
+  modoEdicion: boolean = false;
   controlEmisionFacturasSII: boolean = false;
-  confirmada: boolean = false;
+  visibleInformeFacturacion: boolean = false;
 
   manuallyOpened: boolean;
   openTarjetaDatosGenerales: boolean = true;
@@ -49,10 +49,11 @@ export class FichaFactProgramadasComponent implements OnInit {
     if (sessionStorage.getItem("facturacionProgramadaItem")) {
       this.body = JSON.parse(sessionStorage.getItem("facturacionProgramadaItem"));
       sessionStorage.removeItem("facturacionProgramadaItem");
+      this.comprobarVisibilidadInformeFacturacion();
+      this.modoEdicion = true;
     } else if (sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.body = new FacFacturacionprogramadaItem();
-      this.modoEdicion = false;
       this.openTarjetaSerieFactura = true;
     } else if (!this.body) {
       this.progressSpinner = false;
@@ -90,7 +91,7 @@ export class FichaFactProgramadasComponent implements OnInit {
       },
       {
         label: this.translateService.instant("facturacionSJCS.facturacionesYPagos.importe"),
-        value: this.body.importe
+        value: this.body.importe != undefined ? this.body.importe + " €" : ""
       }
     ]
   }
@@ -116,11 +117,13 @@ export class FichaFactProgramadasComponent implements OnInit {
       nombre: "genAdeudos",
     });
 
-    this.enlacesTarjetaResumen.push({
-      label: "facturacion.factProgramadas.infoFactura",
-      value: document.getElementById("infoFactura"),
-      nombre: "infoFactura",
-    });
+    if (this.visibleInformeFacturacion) {
+      this.enlacesTarjetaResumen.push({
+        label: "facturacion.factProgramadas.infoFactura",
+        value: document.getElementById("infoFactura"),
+        nombre: "infoFactura",
+      });
+    }
 
     this.enlacesTarjetaResumen.push({
       label: "facturacion.seriesFactura.generarPDF.literal",
@@ -149,7 +152,6 @@ export class FichaFactProgramadasComponent implements OnInit {
     this.sigaServices.get("facturacionPyS_parametrosCONTROL").subscribe(
       n => {
         let items: ComboItem[] = n.combooItems;
-        console.log(items);
         
         let controlEmisionItem: ComboItem = items.find(item => item.label == "CONTROL_EMISION_FACTURAS_SII");
 
@@ -165,7 +167,6 @@ export class FichaFactProgramadasComponent implements OnInit {
 
   serieFacturacionChanged(serie: SerieFacturacionItem) {
     this.serie = serie;
-    console.log(serie);
 
     if (!this.modoEdicion) {
       this.body = new FacFacturacionprogramadaItem();
@@ -246,6 +247,7 @@ export class FichaFactProgramadasComponent implements OnInit {
       this.modoEdicion = true;
 
       // Actualizar tarjetas
+      this.comprobarVisibilidadInformeFacturacion();
       this.updateTarjetaResumen();
       setTimeout(() => {
         this.updateEnlacesTarjetaResumen();
@@ -267,6 +269,7 @@ export class FichaFactProgramadasComponent implements OnInit {
       this.modoEdicion = true;
 
       // Actualizar tarjetas
+      this.comprobarVisibilidadInformeFacturacion();
       this.updateTarjetaResumen();
       setTimeout(() => {
         this.updateEnlacesTarjetaResumen();
@@ -286,7 +289,6 @@ export class FichaFactProgramadasComponent implements OnInit {
       .toPromise()
       .then(
         n => {
-          console.log("Nuevo id:", n);
           let idProgramacion = JSON.parse(n.body).id;
           this.body.idProgramacion = idProgramacion;
         },
@@ -319,6 +321,20 @@ export class FichaFactProgramadasComponent implements OnInit {
       err => {
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       });
+  }
+
+  comprobarVisibilidadInformeFacturacion(): void {
+    this.visibleInformeFacturacion = ["2", "1", "17", "21", "3", "4"].includes(this.body.idEstadoConfirmacion);
+  }
+
+  // Transformar fecha
+  transformDate(fecha) {
+    if (fecha != undefined)
+      fecha = new Date(fecha);
+    else
+      fecha = null;
+    // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+    return fecha;
   }
 
   // Funciones de utilidad

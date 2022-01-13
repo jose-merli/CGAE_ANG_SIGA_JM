@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
+import { Observable, Subscription } from 'rxjs';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -12,7 +13,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './datos-generales-cuenta-bancaria.component.html',
   styleUrls: ['./datos-generales-cuenta-bancaria.component.scss']
 })
-export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges {
+export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnDestroy, OnChanges {
 
   msgs;
   progressSpinner: boolean = false;
@@ -30,6 +31,10 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
 
   resaltadoDatos: boolean = false;
   resaltadoIBAN: boolean = false;
+
+  campoResaltadoSubscription: Subscription;
+  @Input() campoResaltado: Observable<string>;
+  resaltadoDescripcion: boolean = false;
   focusIBAN: boolean = false; // Para cambiar dinámicamente la restricción de longitud
 
   constructor(
@@ -41,7 +46,19 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     private datePipe: DatePipe
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.campoResaltadoSubscription = this.campoResaltado.subscribe(campo => {
+      if (campo == "descripcion") {
+        this.resaltadoDescripcion = true;
+      } else {
+        this.resaltadoDescripcion = false;
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.campoResaltadoSubscription.unsubscribe();
+  }
 
   // Solo se restablecen los datos si el body cambia
   ngOnChanges(changes: SimpleChanges) {
@@ -103,6 +120,10 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.checkEstado();
     this.addSpacesToIBAN();
+
+    if (!this.body.descripcionRepetida) {
+      this.resaltadoDescripcion = false;
+    }
     
     this.resaltadoDatos = false;
   }
@@ -286,9 +307,21 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnChanges 
       );
   }
 
-  styleIBANIncorrecto() {
+  styleIBAN() {
+    let styleObligatorio = this.styleObligatorio(this.body.iban);
     if (this.resaltadoIBAN) {
-      return 'camposObligatorios';
+      return 'is-invalid';
+    } else if(styleObligatorio != undefined) {
+      return styleObligatorio;
+    }
+  }
+
+  styleDescripcion() {
+    let styleObligatorio = this.styleObligatorio(this.body.descripcion);
+    if (this.body.descripcionRepetida && this.body.descripcion == this.bodyInicial.descripcion || this.resaltadoDescripcion) {
+      return 'is-invalid';
+    } else if (styleObligatorio != undefined) {
+      return styleObligatorio;
     }
   }
 

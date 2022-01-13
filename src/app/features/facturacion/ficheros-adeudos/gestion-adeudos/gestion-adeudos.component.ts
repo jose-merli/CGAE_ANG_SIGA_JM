@@ -179,8 +179,8 @@ export class GestionAdeudosComponent implements OnInit {
 
     this.enlacesTarjetaResumen.push({
       label: "facturacion.seriesFactura.bancoEntidad",
-      value: document.getElementById("cuentaEntidad"),
-      nombre: "cuentaEntidad",
+      value: document.getElementById("cuentaEntidadAdeudos"),
+      nombre: "cuentaEntidadAdeudos",
     });
 
     this.enlacesTarjetaResumen.push({

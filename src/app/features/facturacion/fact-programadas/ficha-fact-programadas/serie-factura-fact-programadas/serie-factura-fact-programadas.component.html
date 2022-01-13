@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('serieFactura')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('serieFactura')">
           <div class="img-colegiado">
             <i class="far fa-address-book icon-ficha pointer"></i>
@@ -14,7 +14,7 @@
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('serieFactura')">
             <label class="mr-auto title-ficha pointer">{{ 'facturacion.factProgramadas.serieFactu' | translate }}</label>
 
-            <label class="mr-3">
+            <label *ngIf="modoEdicion" class="mr-3">
               <i (click)="navigateToSerieFacturacion();$event.stopPropagation();"
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToSerieFacturacion();$event.stopPropagation();">
@@ -36,20 +36,20 @@
               <span>{{ tiposServicios }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('serieFactura')"
-              *ngIf="!esFichaActiva('serieFactura')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('serieFactura')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('serieFactura')">
         <div class="img-colegiado">
           <i class="far fa-address-book icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.factProgramadas.serieFactu' | translate }}</label>
 
-        <label class="ml-auto mr-3">
+        <label *ngIf="modoEdicion" class="ml-auto mr-3">
           <i (click)="navigateToSerieFacturacion();$event.stopPropagation();"
             class="fas fa-external-link-alt mr-2"></i>
           <a (click)="navigateToSerieFacturacion();$event.stopPropagation();">
@@ -58,12 +58,12 @@
             </span>
           </a>
         </label>
-        <i class="fa fa-angle-up"></i>
+        <i class="fa fa-angle-up{{ !modoEdicion  ? ' ml-auto' : '' }}"></i>
       </div>
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div [hidden]="!esFichaActiva('serieFactura')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.serieFactu' | translate }} (*)</label>
@@ -85,17 +85,6 @@
         </div>
       </div>
     </div>
-
-    <!--
-    <div *ngIf="esFichaActiva('serieFactura')" class="card-footer">
-      <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
-
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
-          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
-      </div>
-    </div>-->
   </div>
 </div>
 

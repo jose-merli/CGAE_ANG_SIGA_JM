@@ -4,10 +4,10 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('infoFactura')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('infoFactura')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="fas fa-chart-bar icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -19,7 +19,7 @@
                 class="fas fa-external-link-alt mr-2"></i>
               <a (click)="navigateToFacturas();$event.stopPropagation();">
                 <span style="color: blue; text-decoration: underline;cursor:pointer;">
-                  Búsqueda Facturas
+                  {{ 'facturacion.factProgramadas.infoFactura.enlace' | translate }}
                 </span>
               </a>
             </label>
@@ -27,23 +27,23 @@
           <div class="d-flex justify-content-between default">
             
             <label>{{ 'facturacion.factProgramadas.serieFactu.numFactu' | translate }}: 
-                <span></span></label>
+                <span *ngIf="numeroFacturasTotal != undefined">{{ numeroFacturasTotal }}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total' | translate }}: 
-                <span></span></label>
+                <span *ngIf="totalActual != undefined">{{ totalActual }} €</span></label>
             <label>{{ 'facturacion.factProgramadas.serieFactu.totalPendiente' | translate }}: 
-              <span></span></label>
+              <span *ngIf="totalPendienteActual != undefined">{{ totalPendienteActual }} €</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('infoFactura')"
-              *ngIf="!esFichaActiva('infoFactura')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('infoFactura')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('infoFactura')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="fas fa-chart-bar icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.factProgramadas.infoFactura' | translate }}</label>
 
@@ -52,7 +52,7 @@
             class="fas fa-external-link-alt mr-2"></i>
           <a (click)="navigateToFacturas();$event.stopPropagation();">
             <span style="color: blue; text-decoration: underline;cursor:pointer;">
-              Búsqueda Facturas
+              {{ 'facturacion.factProgramadas.infoFactura.enlace' | translate }}
             </span>
           </a>
         </label>
@@ -61,7 +61,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('infoFactura')" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
       <!-- TABLA RESULTADOS -->
       <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
         class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
@@ -96,7 +96,11 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <span>{{ dato[col.field] }}</span>
+              <div [ngSwitch]="col.field">
+                <div *ngSwitchCase="'total'"><span>{{ dato[col.field] }} €</span></div>
+                <div *ngSwitchCase="'totalPendiente'"><span>{{ dato[col.field] }} €</span></div>
+                <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
+              </div>
             </td>
           </tr>
         </ng-template>
@@ -114,7 +118,7 @@
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [disabled]="!permisoEscritura" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
                 name="groupname"></p-checkbox>
             </div>
           </div>
@@ -123,9 +127,9 @@
       </p-table>
     </div>
 
-    <div *ngIf="esFichaActiva('infoFactura')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton type="button" icon="fa fa-comment" iconPos="left"
           (click)="comunicar()" label="{{ 'general.boton.comunicar' | translate }}"></button>
       </div>
     </div>

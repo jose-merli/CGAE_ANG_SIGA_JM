@@ -4,10 +4,10 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('contadorFacturas')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('contadorFacturas')">
           <div class="img-colegiado">
-            <i class="far fa-address-book icon-ficha pointer"></i>
+            <i class="fas fa-sort-numeric-down icon-ficha pointer"></i>
           </div>
         </div>
         <div class="col-lg-11 col-md-10">
@@ -25,16 +25,16 @@
               <span>{{ contadorFacturasSeleccionado.sufijo }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('contadorFacturas')"
-              *ngIf="!esFichaActiva('contadorFacturas')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('contadorFacturas')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('contadorFacturas')">
         <div class="img-colegiado">
-          <i class="far fa-address-book icon-ficha"></i>
+          <i class="fas fa-sort-numeric-down icon-ficha"></i>
         </div>
         <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.contFact.literal' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
@@ -42,7 +42,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div [hidden]="!esFichaActiva('contadorFacturas')" class="card-body card-body-ficha">
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ (!nuevo ? 'facturacion.seriesFactura.cont.seleccion' : 'administracion.parametrosGenerales.literal.nombre') | translate }}</label>
@@ -66,7 +66,7 @@
       </div>
     </div>
 
-    <div *ngIf="esFichaActiva('contadorFacturas')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button *ngIf="nuevo" (click)="backToSelect()" pButton type="button" icon="fa fa-angle-left" 
           iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
