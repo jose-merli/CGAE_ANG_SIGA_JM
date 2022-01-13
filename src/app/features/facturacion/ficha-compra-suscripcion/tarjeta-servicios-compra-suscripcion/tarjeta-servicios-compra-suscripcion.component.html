@@ -108,10 +108,9 @@
                     <span *ngIf="col.field == 'automatico' && rowData[col.field] != '1'" >{{'facturacion.servicios.manual' | translate}}</span>
 
                     <span *ngIf="col.field == 'precioServicioDesc' && (ficha.fechaAceptada != null || (ficha.fechaAceptada == null && rowData['automatico'] == '1'))">{{rowData[col.field]}}</span>
-                    <p-dropdown [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'precioServicioDesc' && ficha.fechaAceptada == null && rowData['automatico'] != '1'" [filter]="true" styleClass="widthAll" [showClear]="true"
-                    placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='rowData.idComboPrecio'
-                    [options]="comboPrecios" (onChange)="onChangePrecio(rowData)" (input)="checkTotal()"
-                    [ngClass]="{'camposObligatorios': aGuardar && rowData.idperiodicidad == null}">
+                    <p-dropdown  *ngIf="col.field == 'precioServicioDesc' && ficha.fechaAceptada == null && rowData['automatico'] != '1'" [filter]="true" styleClass="widthAll" [showClear]="true"
+                    placeholder="{{ 'facturacion.seriesFactura.pagos.literal' | translate }}" [(ngModel)]='rowData.idComboPrecio' [disabled]="comboPrecios.length == 0"
+                    [options]="comboPrecios" (onChange)="onChangePrecio(rowData)" (input)="checkTotal()"> <!-- [ngClass]="styleObligatorio(rowData[col.field])"-->
                     </p-dropdown>
 
                     <span *ngIf="col.field == 'periodicidadDesc'">{{rowData[col.field]}}</span>
@@ -265,7 +264,7 @@
 
 
   <p-dialog responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModal"
-    (onHide)="cerrarDialog()" header="**Servicios Manuales">
+    (onHide)="cerrarDialog()" header="{{ 'facturacion.servicios.serviciosManuales' | translate}}">
     
     <p-table #servicesTable [value]="comboServiciosManuales" [columns]="colsServs" class="tabla-listado" [paginator]="true"
       [rows]="10" [first]="first" [responsive]="true" paginatorPosition="both">

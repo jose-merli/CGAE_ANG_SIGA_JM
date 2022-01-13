@@ -83,6 +83,7 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
 
   checkPermisos(){
 	  this.getPermisoEliminarReactivarServicios();
+    this.getPermisoSuscribir();
   }
 
   getPermisoEliminarReactivarServicios() {
@@ -272,8 +273,8 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
         }
         else {
           this.showMessage("error",
-            "**Servicio no valido",
-            "**No se puede realizar la suscripción a servicios automaticos");
+          this.translateService.instant("facturacion.servicios.noValido"),
+          this.translateService.instant("facturacion.servicios.noValidoDesc"));
           return false;
         }
       }

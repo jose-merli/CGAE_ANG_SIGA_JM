@@ -132,7 +132,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     let campoVacio = false;
     //Comprobacion de campos obligatorios de los servicios
     this.tarjServicios.serviciosTarjeta.forEach(el => {
-      if (el.idPrecioServicio == null ||
+      if (//el.idPrecioServicio == null ||
         (el.fechaAlta == null && this.ficha.fechaAceptada!= null) ||
         (el.fechaBaja == null && this.ficha.fechaAnulada!= null)) {
           campoVacio = true;
