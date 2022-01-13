@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { DatosColegiadosItem } from '../../../../../models/DatosColegiadosItem';
 
 
 @Component({
@@ -122,6 +123,44 @@ export class TablaAbonosSCJSComponent implements OnInit {
     this.router.navigate(["/fichaAbonosSJCS"]);
 
 
+  }
+
+  navigateToCliente(selectedRow:FacAbonoItem) {
+    
+    if (selectedRow.ncolident) {
+      
+      this.progressSpinner = true;
+
+      sessionStorage.setItem("consulta", "true");
+      let filtros = { idPersona: selectedRow.idPersona };
+
+      this.sigaServices.postPaginado("busquedaColegiados_searchColegiadoFicha", "?numPagina=1", filtros).toPromise().then(
+        n => {
+          let results: DatosColegiadosItem[] = JSON.parse(n.body).colegiadoItem;
+          
+          if (results != undefined && results.length != 0) {
+            let datosColegiado: DatosColegiadosItem = results[0];
+
+            
+            sessionStorage.setItem("abonosSJCSItem", JSON.stringify(selectedRow));
+            sessionStorage.setItem("volver", "true");
+
+            sessionStorage.setItem("personaBody", JSON.stringify(datosColegiado));
+            sessionStorage.setItem("filtrosAbonosSJCS", JSON.stringify(filtros));
+            sessionStorage.setItem("solicitudAprobada", "true");
+            sessionStorage.setItem("origin", "Cliente");
+          }
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      ).then(() => this.progressSpinner = false).then(() => {
+        if (sessionStorage.getItem("personaBody")) {
+          this.router.navigate(["/fichaColegial"]);
+        } 
+      });
+    }
+    
   }
 
   // Resultados por página
