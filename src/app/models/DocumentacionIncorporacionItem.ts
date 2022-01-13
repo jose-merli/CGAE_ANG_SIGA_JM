@@ -9,6 +9,9 @@ export class DocumentacionIncorporacionItem {
     nuevoRegistro : boolean;
     tipoSolicitud : string;
     tipoColegiacion : string;
+    idModalidad : string;
+    idFichero : string;
+    idDocumentacion : string;
 
     constructor() { }
   }
