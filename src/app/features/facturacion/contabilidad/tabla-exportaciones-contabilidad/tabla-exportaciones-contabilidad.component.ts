@@ -63,7 +63,6 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
   // Se actualiza cada vez que cambien los inputs
   ngOnChanges() {
     this.selectedDatos = [];
-    console.log("CA")
   }
 
   // Definición de las columnas
@@ -156,8 +155,8 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-  confirmDescargar(){
-
+  restablecer(){
+    this.busqueda.emit()
   }
 
   new(idNew:FacRegistroFichContaItem){
@@ -181,7 +180,7 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_guardarRegistroFichConta", this.newRegister).subscribe(
       n => {
         if(n.status == 200)
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("Actualizado Correctamente"));
+          this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("Actualizado Correctamente"));
         if(n.status == 400)
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 

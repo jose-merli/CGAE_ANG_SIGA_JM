@@ -102,7 +102,7 @@
       <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
       -->
       <button pButton (click)="getNewFacRegistroFichConta()" [disabled]="disabledNuevo" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.new' | translate }}"></button>
-      <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+      <button pButton (click)="restablecer()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
       <button pButton (click)="guardar()" [disabled]="!enabledSave" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
     </div>
   </div>

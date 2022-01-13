@@ -1,5 +1,5 @@
 export class FacAbonoItem {
-    idAdono:number;
+    idAbono:number;
     motivos: String;
     fechaEmision:Date;
     fechaEmisionDesde:Date;
@@ -52,6 +52,9 @@ export class FacAbonoItem {
     nombreGeneral:String;
     apellidosGeneral:String;
     ncolident:String;
+
+    //Aux
+    nombrePago:String;
     constructor() {}
   }
   

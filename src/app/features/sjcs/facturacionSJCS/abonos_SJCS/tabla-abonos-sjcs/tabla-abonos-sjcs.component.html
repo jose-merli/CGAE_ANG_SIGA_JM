@@ -43,6 +43,23 @@
                   {{dato[col.field]}}
                 </a>
               </div>
+              <div *ngSwitchCase ="'ncolident'">
+                <a class="enlace"  (click)="navigateToCliente(dato)">
+                  {{dato[col.field]}}
+                </a>
+              </div>
+              <div *ngSwitchCase ="'importeTotal'">
+                {{ dato[col.field] | number:'':'es-ES' }} €
+              </div>
+              <div *ngSwitchCase ="'importePendientePorAbonar'">
+                {{ dato[col.field] | number:'':'es-ES' }} €
+              </div>
+              <div *ngSwitchCase ="'nombreCompleto'">
+                <a class="enlace"  (click)="navigateToCliente(dato)">
+                  {{dato[col.field]}}
+                </a>
+              </div>
+
               <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
             </div>
 
