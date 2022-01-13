@@ -5,6 +5,7 @@ import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
+import { PagosjgDTO } from '../../../../../models/sjcs/PagosjgDTO';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -49,6 +50,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
+    private persistenceService: PersistenceService,
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private router: Router
@@ -237,10 +239,12 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   openTab(selectedRow) {
     if (selectedRow.tipo == "SERIE") {
       this.navigateToSerieFacturacion(selectedRow);
+    } else {
+      this.navigateToPagoSJCS(selectedRow);
     }
   }
 
-  navigateToSerieFacturacion(selectedRow) {
+  navigateToSerieFacturacion(selectedRow): void {
     let filtros = { idSerieFacturacion: selectedRow.idSerieFacturacion };
     this.progressSpinner = true;
 
@@ -261,6 +265,30 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
       err => {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
+  navigateToPagoSJCS(selectedRow): void {
+    this.sigaServices.getParam("pagosjcs_getPago", "?idPago=" + selectedRow.idSerieFacturacion).subscribe(
+      (data: PagosjgDTO) => {
+
+        const resp = data.pagosjgItem[0];
+        const error = data.error;
+
+        if (error && null != error && null != error.description) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
+        } else {
+          sessionStorage.setItem("cuentaBancariaItem", JSON.stringify(this.body));
+          this.persistenceService.setDatos(resp);
+
+          this.router.navigate(["/fichaPagos"]);
+        }
+      },
+      err => {
+        if (null != err.error) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.mensaje.error.bbdd'));
+        }
       }
     );
   }
