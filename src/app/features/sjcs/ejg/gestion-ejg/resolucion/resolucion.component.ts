@@ -7,6 +7,7 @@ import { ResolucionEJGItem } from '../../../../../models/sjcs/ResolucionEJGItem'
 import { TranslateService } from '../../../../../commons/translate/translation.service';
 import { Router } from "@angular/router";
 import { ConfirmationService } from 'primeng/api';
+import { ActasItem } from '../../../../../models/sjcs/ActasItem'
 import { saveAs } from "file-saver/FileSaver";
 
 @Component({
@@ -103,7 +104,7 @@ export class ResolucionComponent implements OnInit {
   }
 
   getResolucion(selected) {
-    //this.progressSpinner = true;
+    this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getResolucion", selected).subscribe(
       n => {
         if (n.body) {
@@ -125,7 +126,7 @@ export class ResolucionComponent implements OnInit {
 
         //Se desbloquea el desplegable de fundamento juridico si hay una resolucion seleccionada al inciar la tarjeta.
         if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) this.isDisabledFundamentosJurid = false;
-        //this.progressSpinner = false;
+        this.progressSpinner = false;
       },
       err => {
         //console.log(err);
@@ -379,22 +380,30 @@ export class ResolucionComponent implements OnInit {
   }
 
   openActa() {
-    //Implmentacion teorica.
-    //Cambiar por acceso implmentado en la pantalla de acceso a actas.
-    //this.router.navigate(["/fichaActa"]);
+    if(this.resolucion.idAnnioActa != null){
+      let acta: ActasItem = new ActasItem();
+      
     //Se escoge la acta guardada, no la que se tenga seleccionada en el desplegable sin guardar.
-    //Los datos a pasar deberan revisarse acordemente.
-    //this.persistenceService.setDatos(this.bodyInicial);
-    //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
-    //El EJG se puede rellenar subiendo los datos a la capa de persistencia o con un item "EJGItem" que tendra prioridad.
-    //sessionStorage.setItem("EJGItem", JSON.stringify(this.bodyInicial));
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Boton no funcional actualmente"
-      }
-    ];
+      this.sigaServices.get("institucionActual").subscribe(n => {
+        acta.idinstitucion = n.value;
+
+        acta.idacta = this.resolucion.idActa.toString();
+        acta.anioacta = this.resolucion.annioActa.toString();
+        acta.numeroacta = this.comboActaAnnio.find(
+          el => el.value == this.resolucion.idAnnioActa
+        ).label.split(" -")[0];
+
+        localStorage.setItem('actasItem', JSON.stringify(acta));
+        //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
+        sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatos()));
+
+        this.router.navigate(["/fichaGestionActas"]);
+      });
+      
+    }
+    else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.actas.noActa"));
+    }
   }
 
   clear() {
