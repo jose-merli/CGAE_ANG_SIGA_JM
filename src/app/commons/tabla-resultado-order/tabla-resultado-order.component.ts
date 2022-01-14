@@ -790,6 +790,24 @@ this.totalRegistros = this.rowGroups.length;
   }*/
   moveToLast(){
     let posicionEntabla = this.from + this.positionSelected;
+    this.rowGroups.forEach((rG, i) => {
+      if (this.rowGroups[posicionEntabla].cells[12] != undefined){
+        if (i == posicionEntabla){
+          this.rowGroups[posicionEntabla].cells[12].value = 1;
+        }else{
+          this.rowGroups[i].cells[12].value = 0;
+        }
+      }else if (this.rowGroups[posicionEntabla].cells[16] != undefined){
+        if (i == posicionEntabla){
+          this.rowGroups[posicionEntabla].cells[16].value = 1;
+        }else{
+          this.rowGroups[i].cells[16].value = 0;
+        }
+      }
+
+    })
+    this.rowGroupsAux = this.rowGroups;
+
     this.marcadoultimo = true;
     let i = 1;
     let lastGroup = this.grupos[this.grupos.length - 1];

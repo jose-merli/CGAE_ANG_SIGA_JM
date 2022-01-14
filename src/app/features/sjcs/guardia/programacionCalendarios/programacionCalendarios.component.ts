@@ -109,11 +109,11 @@ export class ProgramacionCalendariosComponent implements OnInit {
   ];
 
   comboEstados = [
-    { label: "Pendiente", value: "5" },
-    { label: "Programada", value: "1" },
-    { label: "En proceso", value: "2" },
-    { label: "Procesada con Errores", value: "3" },
-    { label: "Generada", value: "4" }
+    { label: "Pendiente", value: "4" },
+    { label: "Programada", value: "0" },
+    { label: "En proceso", value: "1" },
+    { label: "Procesada con Errores", value: "2" },
+    { label: "Generada", value: "3" }
   ];
   @ViewChild(FiltrosGuardiaCalendarioComponent) filtros;
   //@ViewChild(TablaGuardiasComponent) tabla;
@@ -689,22 +689,22 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         let estadoNumerico = "0";
         switch (event.estado) {
           case "Pendiente":
-            estadoNumerico = "5";
-            break;
-          case "Programada":
-            estadoNumerico = "1";
-            break;
-          case "En proceso":
-            estadoNumerico = "2";
-            break;
-          case "Procesada con Errores":
-            estadoNumerico = "3";
-            break;
-          case "Generada":
             estadoNumerico = "4";
             break;
-          default:
+          case "Programada":
             estadoNumerico = "0";
+            break;
+          case "En proceso":
+            estadoNumerico = "1";
+            break;
+          case "Procesada con Errores":
+            estadoNumerico = "2";
+            break;
+          case "Generada":
+            estadoNumerico = "3";
+            break;
+          default:
+            estadoNumerico = "4";
             break;
         }
         let dataToZip = {
