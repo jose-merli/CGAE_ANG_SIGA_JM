@@ -59,7 +59,7 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.seriesFactura.generarPDF.modFactRect' | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idModeloRectificativa' placeholder="Seleccionar"
-              [options]="comboModelosFactura" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)"
+              [options]="comboModelosFacturaRectificativa" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)"
               [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
@@ -74,7 +74,7 @@
         <button [disabled]="!(confirmada && finalizado && logDisponible)" pButton (click)="confirmDescargar()"
           type="button" icon="fa fa-download" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
 
-        <button [disabled]="!(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button [disabled]="deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button [disabled]="deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-save" iconPos="left"

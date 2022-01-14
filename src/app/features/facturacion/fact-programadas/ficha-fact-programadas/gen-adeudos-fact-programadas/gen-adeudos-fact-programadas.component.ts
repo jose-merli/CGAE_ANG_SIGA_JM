@@ -119,15 +119,19 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
       idseriefacturacion: this.body.idSerieFacturacion
     };
 
+    this.progressSpinner = true;
     this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).subscribe(
       n => {
         let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAdeudosItems;
         if (results != undefined && results.length != 0) {
           this.ficherosAdeudos = results[0];
         }
+
+        this.progressSpinner = false;
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
       }
     );
   }
@@ -143,6 +147,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
       ficheroAdeudos.fechaRecibosCOR = this.bodyInicial.fechaRecibosCOR1;
       ficheroAdeudos.fechaRecibosB2B = this.bodyInicial.fechaRecibosB2B;
 
+      this.progressSpinner = true;
       this.sigaServices.post("facturacionPyS_nuevoFicheroAdeudos", ficheroAdeudos)
         .toPromise()
         .then(
@@ -150,16 +155,22 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
             if (!this.modoEdicion) {
               let numFicheros = JSON.parse(n.body).id;
               this.showMessage("info", "Información", `Se han generado ${numFicheros} ficheros`);
+              this.getFicheroAdeudos();
             }
           },
           err => {
             if (err && err.message) {
               let message = this.translateService.instant(err.message);
               if (message && message.trim().length != 0) {
-                Promise.reject({ descripcion: message });
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(message));
+              } else {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
               }
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
-            return Promise.reject({ descripcion: this.translateService.instant("general.mensaje.error.bbdd") });
+
+            this.progressSpinner = false;
           }
         );      
     } else {

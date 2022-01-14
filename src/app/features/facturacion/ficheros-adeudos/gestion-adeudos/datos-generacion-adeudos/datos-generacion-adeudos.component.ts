@@ -216,14 +216,6 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     }
   }
 
-  nuevoFicheroAdeudos(): void {
-
-  }
-
-  actualizarFicheroAdeudos(): void {
-
-  }
-
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

@@ -36,6 +36,7 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   logDisponible:boolean = false;
 
   comboModelosFactura: ComboItem[] = [];
+  comboModelosFacturaRectificativa: ComboItem[] = [];
 
   constructor(
     private commonsService: CommonsService,
@@ -43,7 +44,13 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.getComboModelosComunicacion();
+    this.progressSpinner = true;
+
+    Promise.all([
+      this.getComboModelosComunicacion(),
+      this.getComboModelosComunicacionRectificativa()
+    ]).then(() => this.progressSpinner = false);
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -52,17 +59,25 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   getComboModelosComunicacion() {
-    this.progressSpinner = true;
-    this.sigaServices.get("facturacionPyS_comboModelosComunicacion").subscribe(
+    return this.sigaServices.get("facturacionPyS_comboModelosComunicacion").toPromise().then(
       n => {
         this.comboModelosFactura = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboModelosFactura);
-
-        this.progressSpinner = false;
       },
       err => {
         console.log(err);
-        this.progressSpinner = false;
+      }
+    );
+  }
+
+  getComboModelosComunicacionRectificativa() {
+    return this.sigaServices.getParam("facturacionPyS_comboModelosComunicacion", "?esRectificativa=true").toPromise().then(
+      n => {
+        this.comboModelosFacturaRectificativa = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModelosFacturaRectificativa);
+      },
+      err => {
+        console.log(err);
       }
     );
   }
