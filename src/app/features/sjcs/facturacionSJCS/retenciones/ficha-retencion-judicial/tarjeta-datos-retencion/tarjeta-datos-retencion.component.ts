@@ -38,6 +38,8 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   @Output() showMessage = new EventEmitter<any>();
   @Output() retencionEvent = new EventEmitter<RetencionItem>();
 
+  disableEliminar:boolean = false;
+  
   constructor(private sigaServices: SigaServices,
     private retencionesService: RetencionesService,
     private translateService: TranslateService,
@@ -129,6 +131,10 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
             this.disabledImporte = false;
           } else {
             this.disabledImporte = true;
+          }
+
+          if(this.body.fechafin && (Date.now() >= Number(this.body.fechafin))) {
+            this.disableEliminar = true;
           }
         }
       },
