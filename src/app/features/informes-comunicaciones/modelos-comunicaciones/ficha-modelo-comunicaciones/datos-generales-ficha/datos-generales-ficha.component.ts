@@ -74,16 +74,18 @@ export class DatosGeneralesFichaComponent implements OnInit {
     ];
 
     this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
-    if (this.bodyModelo.fechaBaja) {
-      sessionStorage.setItem("soloLectura", "true");
-    } else {
-      sessionStorage.setItem("soloLectura", "false");
-    }
-
-    if (this.bodyModelo.porDefecto == 'SI') {
-      sessionStorage.setItem("esPorDefecto", "SI");
-    } else {
-      sessionStorage.setItem("esPorDefecto", "NO");
+    if (this.bodyModelo) {
+      if (this.bodyModelo.fechaBaja != null && this.bodyModelo.fechaBaja != "") {
+        sessionStorage.setItem("soloLectura", "true");
+      } else {
+        sessionStorage.setItem("soloLectura", "false");
+      }
+  
+      if (this.bodyModelo.porDefecto == 'SI') {
+        sessionStorage.setItem("esPorDefecto", "SI");
+      } else {
+        sessionStorage.setItem("esPorDefecto", "NO");
+      }
     }
 
     this.getInstitucion();
