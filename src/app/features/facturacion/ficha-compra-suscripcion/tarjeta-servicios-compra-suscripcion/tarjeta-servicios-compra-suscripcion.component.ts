@@ -896,7 +896,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
                   let comb = new ComboItem();
                   comb.label = el.descripcionprecio;
                   comb.value = i.toString();
-                  if(el.valido == "1" || el.idpreciosservicios.toString() == serv.idPrecioServicio.toString()){
+                  if(el.valido == "1" || (serv.idPrecioServicio != undefined && serv.idPrecioServicio != null && el.idpreciosservicios.toString() == serv.idPrecioServicio.toString())){
                     this.comboPrecios.push(comb);
                   }
                   i++;

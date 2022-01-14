@@ -94,7 +94,11 @@ export class FichaCompraSuscripcionComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.ficha = JSON.parse(n.body);
+
+          let newF:FichaCompraSuscripcionItem = JSON.parse(n.body);
+          newF.facturas= this.ficha.facturas;
+
+          this.ficha = newF;
 
           if(this.ficha.servicios != null){
             this.tarjServicios.getServiciosSuscripcion();
