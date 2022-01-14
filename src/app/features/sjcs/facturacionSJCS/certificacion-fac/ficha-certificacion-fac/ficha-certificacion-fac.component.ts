@@ -26,6 +26,7 @@ import { saveAs } from "file-saver/FileSaver";
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { EnvioXuntaItem } from '../../../../../models/sjcs/EnvioXuntaItem';
 import { DescargaInfomreCAMItem } from '../../../../../models/sjcs/DescargaInfomreCAMItem';
+import { DescargaReintegrosXuntaDTO } from '../../../../../models/sjcs/DescargaReintegrosXuntaDTO';
 
 export interface Enlace {
   id: string;
@@ -497,33 +498,67 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
   }
 
   descargarLogReintegrosXunta(event) {
-    if (event == true) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
       this.progressSpinner = true;
-      let idFactsList: string[] = [];
 
-      if (!this.tarjetaFact.datos != null || this.tarjetaFact.datos != undefined || this.tarjetaFact.datos.length != 0) {
-        for (let idFact of this.tarjetaFact.datos) {
-          idFactsList.push(idFact.idFacturacion.toString());
+      let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
+
+      const payload = new DescargaReintegrosXuntaDTO();
+      payload.idFactsList = listaIdsSinRepetidos;
+
+      this.sigaService.postDownloadFiles("certificaciones_descargarLogReintegrosXunta", payload).subscribe(
+        data => {
+
+          let blob = null;
+
+          blob = new Blob([data], { type: "application/zip" });
+          saveAs(blob, "Reintegros_Xunta_Error_Log.zip");
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          this.descargarInformeIncidenciasXunta(true);
         }
+      );
+    }
+  }
 
-        this.sigaService.postDownloadFiles("certificaciones_descargarLogReintegrosXunta", idFactsList).subscribe(
-          data => {
+  descargarInformeIncidenciasXunta(event) {
 
-            let blob = null;
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
 
-            blob = new Blob([data], { type: "application/zip" });
-            saveAs(blob, "Reintegros_Xunta_Error_Log.zip");
+      this.progressSpinner = true;
 
-            this.progressSpinner = false;
-          },
-          err => {
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-          }
-        );
-      }
+      let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
+
+      const payload = new DescargaReintegrosXuntaDTO();
+      payload.idFactsList = listaIdsSinRepetidos;
+
+      this.sigaService.postDownloadFiles("certificaciones_descargarInformeIncidencias", payload).subscribe(
+        data => {
+
+          let blob = null;
+
+          blob = new Blob([data], { type: "application/zip" });
+          saveAs(blob, "Informe_Incidencias.zip");
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
     }
   }
 

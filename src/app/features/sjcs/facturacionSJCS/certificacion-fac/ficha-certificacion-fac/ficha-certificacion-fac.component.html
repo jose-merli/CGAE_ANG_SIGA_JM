@@ -49,8 +49,10 @@
 
       <app-tarjeta-movimientos-varios-asociados *ngIf="showCards" [certificacion]="certificacion"
         [datos]="movimientosVariosAsoCerItemList" [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)"
-        (descargarLogRX)="descargarLogReintegrosXunta($event)" (enviarReintegrosEvent)="enviarReintegros($event)"
-        (getMovimientosAsoEvent)="getMvariosAsociadosCertificacion($event)">
+        (descargarLogRX)="descargarLogReintegrosXunta($event)"
+        (descargarInformeIncidenciasXuntaEvent)="descargarInformeIncidenciasXunta($event)"
+        (enviarReintegrosEvent)="enviarReintegros($event)"
+        (getMovimientosAsoEvent)="getMvariosAsociadosCertificacion($event)" [esXunta]="esXunta">
       </app-tarjeta-movimientos-varios-asociados>
 
       <app-tarjeta-movimientos-varios-aplicados *ngIf="showCards" [certificacion]="certificacion"

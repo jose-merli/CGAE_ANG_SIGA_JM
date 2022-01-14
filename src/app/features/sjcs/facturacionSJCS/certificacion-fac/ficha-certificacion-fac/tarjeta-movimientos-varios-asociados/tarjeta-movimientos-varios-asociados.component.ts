@@ -31,10 +31,12 @@ export class TarjetaMovimientosVariosAsociadosComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() certificacion: CertificacionesItem = new CertificacionesItem();
   @Input() datos: MovimientosVariosAsoCerItem[] = [];
+  @Input() esXunta: boolean = false;
 
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Output() getMovimientosAsoEvent = new EventEmitter<string>();
   @Output() descargarLogRX = new EventEmitter<boolean>();
+  @Output() descargarInformeIncidenciasXuntaEvent = new EventEmitter<boolean>();
   @Output() enviarReintegrosEvent = new EventEmitter<boolean>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private commonsService: CommonsService,
@@ -121,7 +123,7 @@ export class TarjetaMovimientosVariosAsociadosComponent implements OnInit {
   disabledEnviar(): boolean {
     let respuesta = false;
 
-    if (!this.permisoEscritura || !this.modoEdicion || this.isValidando()) {
+    if (!this.permisoEscritura || !this.modoEdicion || this.isValidando() || !this.esXunta) {
       respuesta = true;
     }
 
@@ -130,13 +132,27 @@ export class TarjetaMovimientosVariosAsociadosComponent implements OnInit {
 
   enviar() {
 
-    if (!this.disabledEnviar()) {
+    if (!this.disabledEnviar() && this.esXunta) {
       this.enviarReintegrosEvent.emit(true);
     }
   }
 
+  disabledDescargarLog(): boolean {
+    let respuesta = false;
+
+    if (!this.permisoEscritura || !this.modoEdicion || this.isValidando() || !this.esXunta) {
+      respuesta = true;
+    }
+
+    return respuesta;
+  }
+
   descargarLog() {
-    this.descargarLogRX.emit(true)
+
+    if (!this.disabledDescargarLog() && this.esXunta) {
+      this.descargarLogRX.emit(true);
+      // this.descargarInformeIncidenciasXuntaEvent.emit(true);
+    }
   }
 
   onChangeSelectAll() {
