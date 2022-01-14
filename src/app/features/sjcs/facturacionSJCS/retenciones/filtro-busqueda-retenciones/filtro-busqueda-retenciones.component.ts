@@ -355,6 +355,10 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
   limpiar() {
     this.filtros = new RetencionesRequestDto();
+    this.usuarioBusquedaExpress = {
+      numColegiado: '',
+      nombreAp: ''
+    };
   }
 
   botonBuscarColegiadoExpress() {
