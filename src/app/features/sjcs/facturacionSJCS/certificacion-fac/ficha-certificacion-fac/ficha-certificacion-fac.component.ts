@@ -304,6 +304,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
         } else {
           this.certificacion = resp.certificacionesItemList[0];
+          this.tarjetaFact.idCertificacion = this.certificacion.idCertificacion;
         }
 
       },

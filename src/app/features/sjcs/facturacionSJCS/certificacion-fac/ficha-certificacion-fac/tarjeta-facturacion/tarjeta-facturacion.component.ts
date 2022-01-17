@@ -244,7 +244,7 @@ export class TarjetaFacturacionComponent implements OnInit {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
           } else {
             if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
-              this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant(res.error.description));
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
             }
