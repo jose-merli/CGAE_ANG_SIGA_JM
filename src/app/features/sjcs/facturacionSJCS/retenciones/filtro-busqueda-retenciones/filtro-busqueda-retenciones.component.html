@@ -129,7 +129,7 @@
       <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"
         (click)="buscar()"></button>
       <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
-        [disabled]="!permisoEscritura" (click)="nuevo()"></button>
+        [disabled]="!permisoEscritura || isLetrado" (click)="nuevo()"></button>
     </div>
   </div>
 

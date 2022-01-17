@@ -69,22 +69,30 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
     this.progressSpinner = true;
 	if(this.persistenceService.getFiltros() != undefined){
 		this.filtros = this.persistenceService.getFiltros();
+		this.persistenceService.clearFiltros();
+		if(this.filtros.fechaApDesde != null || this.filtros.fechaApDesde != undefined){
+			this.filtros.fechaApDesde = new Date(this.filtros.fechaApDesde);
+		}
+		if(this.filtros.fechaApHasta != null || this.filtros.fechaApHasta != undefined){
+			this.filtros.fechaApHasta = new Date(this.filtros.fechaApHasta);
+		}
 		if(this.filtros.letrado != null && this.filtros.letrado != ""){
 			this.usuarioBusquedaExpress.nombreAp = this.filtros.letrado.toString();
 		}
 		if(this.filtros.ncolegiado != null && this.filtros.ncolegiado != ""){
 			this.usuarioBusquedaExpress.numColegiado = this.filtros.ncolegiado.toString();
 		}
-		this.persistenceService.clearFiltros(); //?¿
+		this.getCombos()
 	}else{
 
-		this.comboAplicadoEnPago();
+		/* this.comboAplicadoEnPago();
 		this.comboFacturacionApInicial();
 		this.comboGruposTurnos();
 		this.comboConcepto();
     	this.comboPartidasPresupuestarias();
     	this.comboTipos();	
-		this.comboCertificacion();	
+		this.comboCertificacion(); */	
+		this.getCombos()
 
 		if (sessionStorage.getItem("colegiadoRelleno")) {
 			const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
@@ -114,7 +122,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 		  }
 
 		}
-		
+		  this.isBuscar();
 		  this.progressSpinner = false;
 
 		  
@@ -326,7 +334,7 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 
   isBuscar() {
 	  
-		if (this.checkFilters()) {
+		//if (this.checkFilters()) {
 			this.progressSpinner=true;
 		
 		    this.historico=false;
@@ -337,9 +345,9 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 
 			this.busqueda.emit(this.filtros);
 			this.progressSpinner = false;
-		}else{
+		/* }else{
 			this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("oficio.busqueda.error.busquedageneral"));
-		}
+		} */
 
 	
 	}
@@ -406,10 +414,20 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 	 sessionStorage.setItem("nuevoMovimientoVarios", "true");
 	 this.router.navigate(["/buscadorColegiados"]);
 	}
+
+	getCombos(){
+		this.comboAplicadoEnPago();
+		this.comboFacturacionApInicial();
+		this.comboGruposTurnos();
+		this.comboConcepto();
+    	this.comboPartidasPresupuestarias();
+    	this.comboTipos();	
+		this.comboCertificacion();
+	}
 	
-	// onChangeMultiSelectFact(event, filtro) {
-	// 	if (undefined != event.value && event.value.length == 0) {
-	// 		this.filtros[filtro] = undefined;
-	// 	}
-	// }
+	 onChangeMultiSelectFact(event, filtro) {
+	 	if (undefined != event.value && event.value.length == 0) {
+	 		this.filtros[filtro] = undefined;
+	 	}
+	 }
 }
