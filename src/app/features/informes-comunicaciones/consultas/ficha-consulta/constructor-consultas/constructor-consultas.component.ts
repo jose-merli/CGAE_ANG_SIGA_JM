@@ -97,8 +97,10 @@ export class ConstructorConsultasComponent implements OnInit {
 
     //Copia necesaria para conservar la informacion cuando se selecciona consulta experta en el radio button sin haber guardado el constructor y 
     //se vuelve ya que en ese caso se ha de conservar lo modificado.
-    if(this.datosConst.consulta != this.constructorConsultas.getSqlFromRules() && sessionStorage.getItem("constructorDeConsultasGuardado") == undefined){
-      sessionStorage.setItem("copiaCambiosConstructor", this.constructorConsultas.getSqlFromRules());
+    if(this.constructorConsultas.getSqlFromRules != undefined ){
+      if(this.datosConst.consulta != this.constructorConsultas.getSqlFromRules() && sessionStorage.getItem("constructorDeConsultasGuardado") == undefined){
+        sessionStorage.setItem("copiaCambiosConstructor", this.constructorConsultas.getSqlFromRules());
+      }
     }
 
   }

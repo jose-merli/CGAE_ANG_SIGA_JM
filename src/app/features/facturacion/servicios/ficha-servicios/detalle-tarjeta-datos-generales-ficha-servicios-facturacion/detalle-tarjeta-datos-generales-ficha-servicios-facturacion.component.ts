@@ -107,7 +107,6 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.obtenerCodigosPorColegio();
 
     sessionStorage.removeItem("servicioDetalle");
-    sessionStorage.removeItem("precioDetalle");
   }
 
   checkPermisos(){

@@ -528,6 +528,7 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
         this.progressSpinner = false;
         sessionStorage.removeItem("vieneDeNuevaCondicion");
         sessionStorage.removeItem("nombreConsulta");
+        sessionStorage.removeItem("precioDetalle");
       }
     );
   }
