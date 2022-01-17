@@ -602,6 +602,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           if(sessionStorage.getItem("servicioDetalle") != undefined || sessionStorage.getItem("precioDetalle") != undefined){
             sessionStorage.setItem("vieneDeNuevaCondicion", "true");
             sessionStorage.setItem("nombreConsulta", this.body.nombre.toString());
+            sessionStorage.removeItem("consultasSearch");
             this.location.back();
           }
           this.progressSpinner = false;
