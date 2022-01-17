@@ -764,7 +764,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       //Si son todos no facturables
       if (i == servicios.length) {
         let noFacturableItem = new ComboItem();
-        noFacturableItem.label = this.translateService.instant("facturacion.servicios.noFacturable");
+        noFacturableItem.label = this.translateService.instant("facturacion.productos.noFacturable");
         noFacturableItem.value = "-1";
         this.comboComun.push(noFacturableItem);
         this.selectedPago = "-1";
