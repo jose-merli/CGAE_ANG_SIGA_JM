@@ -5,6 +5,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { RetencionesItem } from '../../../../../models/sjcs/RetencionesItem';
 import { Router } from '@angular/router';
 import { RetencionesService } from '../retenciones.service';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 @Component({
   selector: 'app-tabla-busqueda-retenciones',
   templateUrl: './tabla-busqueda-retenciones.component.html',
@@ -28,17 +29,20 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
-
+  isLetrado: boolean = false;
   historico: boolean = false;
   disableEliminar: boolean = false;
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
     private router: Router,
-    private retencionesService: RetencionesService) { }
+    private retencionesService: RetencionesService,
+    private sigaStorageService: SigaStorageService
+    ) { }
 
   ngOnInit() {
     this.getCols();
+    this.isLetrado = this.sigaStorageService.isLetrado;
   }
 
   showMessage(severity, summary, msg) {
