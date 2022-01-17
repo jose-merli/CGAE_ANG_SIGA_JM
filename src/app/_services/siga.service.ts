@@ -443,6 +443,64 @@ export class SigaServices {
 		solicitudModificacion_searchSolModifDatosCambiarFotoDetail:
 			'solicitudModificacion/searchSolModifDatosCambiarFotoDetail',
 		solicitudModificacion_searchDatosGeneralesDetail: 'solicitudModificacion/searchDatosGeneralesDetail',
+      
+      	    // Monederos
+    monederosBusqueda_searchListadoMonederos: 'pys/getMonederos',															 
+
+		 //INICIO PRODUCTOS Y SERVICIOS
+  
+    //PANTALLA TIPOS PRODUCTOS
+    tiposProductos_searchListadoProductos: 'pys/listadoTipoProducto',
+    tiposProductos_searchListadoProductosHistorico: 'pys/listadoTipoProductoHistorico',
+    tiposProductos_activarDesactivarProducto: 'pys/activarDesactivarProducto',
+    tiposProductos_crearEditarProducto: 'pys/crearEditarProducto',
+    tiposProductos_comboProducto: 'combo/tipoProductos',
+
+    //PANTALLA TIPOS SERVICIOS
+    tiposServicios_searchListadoServicios: 'pys/listadoTipoServicio',
+    tiposServicios_searchListadoServiciosHistorico: 'pys/listadoTipoServicioHistorico',
+    tiposServicios_activarDesactivarServicio: 'pys/activarDesactivarServicio',
+    tiposServicios_crearEditarServicio: 'pys/crearEditarServicio',
+    tiposServicios_comboServicios: 'combo/tipoServicios',
+
+    //PANTALLAS BUSCADOR PRODUCTOS / FICHA PRODUCTOS
+    productosBusqueda_comboIva: 'combo/tipoIva',
+    productosBusqueda_comboFormaPago: 'combo/tipoFormaPago',
+    productosBusqueda_comboTipos: 'pys/listadoTipoProductoByIdCategoria',
+    productosBusqueda_busqueda: 'pys/buscarProductos',
+    productosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoProductos',
+    fichaProducto_detalleProducto: 'pys/detalleProducto',
+    fichaProducto_crearProducto: 'pys/nuevoProducto',
+    fichaProducto_editarProducto: 'pys/editarProducto',
+    fichaProducto_comboIvaNoDerogados: 'combo/tipoIvaNoDerogados',
+    fichaProducto_comboFormasDePagoInternet: 'combo/pagoInternet',
+    fichaProducto_comboFormasDePagoSecretaria: 'combo/comboPagoSecretaria',
+    fichaProducto_crearFormaDePago: 'pys/formasPagoProducto',
+    fichaProducto_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegio',
+
+    //PANTALLAS BUSCADOR SERVICIOS / FICHA SERVICIOS
+    serviciosBusqueda_busqueda: 'pys/buscarServicios',
+    serviciosBusqueda_comboTipos: 'pys/listadoTipoServicioByIdCategoria',
+    serviciosBusqueda_activarDesactivar: 'pys/reactivarBorradoFisicoLogicoServicios',
+    fichaServicio_detalleServicio: 'pys/detalleServicio',
+    fichaServicio_crearServicio: 'pys/nuevoServicio',
+    fichaServicio_editarServicio: 'pys/editarServicio',
+    fichaServicio_obtenerCodigosPorColegio: '/pys/obtenerCodigosPorColegioServicios',
+    fichaServicio_comboCondicionSuscripcion: 'combo/CondicionSuscripcion',
+    fichaServicio_crearFormaDePago: 'pys/formasPagoServicio',
+    fichaServicio_borrarSuscripcionesBajas: 'pys/borrarSuscripcionesBajas',
+    fichaServicio_obtenerPreciosServicio: 'pys/detalleTarjetaPrecios',
+    fichaServicio_comboPeriodicidad: 'combo/comboPeriodicidad',
+    fichaServicio_crearEditarPrecios: 'pys/crearEditarPrecios',
+    fichaServicio_eliminarPrecios: 'pys/eliminarPrecios',
+    constructorConsultas_obtenerDatosConsulta: 'consultas/pys/obtenerDatosConsulta',
+    constructorConsultas_guardarDatosConstructor: 'consultas/pys/constructorConsultas',
+    constructorConsultas_obtenerConfigColumnasQueryBuilder: 'consultas/pys/obtenerConfigColumnasQueryBuilder',
+    constructorConsultas_obtenerCombosQueryBuilder: 'consultas/pys/obtenerCombosQueryBuilder',
+
+    //FIN PRODUCTOS Y SERVICIOS
+      
+      
 		// FOTO
 		solicitudModificacion_searchSolModifDatosUseFoto: 'solicitudModificacion/searchSolModifDatosUseFoto',
 		solicitudModificacion_searchDatosUseFotoDetail: 'solicitudModificacion/searchDatosUseFotoDetail',

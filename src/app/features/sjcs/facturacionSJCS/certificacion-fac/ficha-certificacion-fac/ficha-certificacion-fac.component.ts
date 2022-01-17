@@ -543,13 +543,11 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
       const payload = new DescargaReintegrosXuntaDTO();
       payload.idFactsList = listaIdsSinRepetidos;
 
-      this.sigaService.postDownloadFiles("certificaciones_descargarInformeIncidencias", payload).subscribe(
-        data => {
+      this.sigaService.postDownloadFilesWithFileName2("certificaciones_descargarInformeIncidencias", payload).subscribe(
+        (data: { file: Blob, filename: string, status: number }) => {
 
-          let blob = null;
-
-          blob = new Blob([data], { type: "application/zip" });
-          saveAs(blob, "Informe_Incidencias.zip");
+          let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+          saveAs(data.file, filename);
 
           this.progressSpinner = false;
         },
