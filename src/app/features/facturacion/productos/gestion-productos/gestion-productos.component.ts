@@ -567,8 +567,8 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
       }
       else {
         this.showMessage("error",
-          this.translateService.instant("menu.facturacion.noCompatiblePorUsuario"),
-          this.translateService.instant("menu.facturacion.noCompatiblePorUsuarioDesc")
+          this.translateService.instant("facturacion.productos.noCompatiblePorUsuario"),
+          this.translateService.instant("facturacion.productos.noCompatiblePorUsuarioDesc")
         );
         return false;
       }

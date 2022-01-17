@@ -30,7 +30,7 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   msgs;
 
   historico: boolean = false;
-
+  disableEliminar: boolean = false;
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private confirmationService: ConfirmationService,
     private translateService: TranslateService,
@@ -120,6 +120,9 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
     if (this.historico && this.isHistorico(event.data)) {
       this.selectedDatos.pop();
     }
+    if(event.data.fechaFin && (Date.now() >= Number(event.data.fechaFin))) {
+      this.disableEliminar = true;
+    }
 
     this.numSelected = this.selectedDatos.length;
   }
@@ -137,7 +140,7 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   }
 
   isHistorico(item: RetencionesItem) {
-    return (item.fechaFin && (null != item.fechaFin || Date.now() >= item.fechaFin.getTime()));
+    return (item.fechaFin && (Date.now() >= Number(item.fechaFin)));
   }
 
   confirmDelete() {
