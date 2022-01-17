@@ -105,6 +105,9 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.getComboCategoria();
     this.getComboCondicionSuscripcion();
     this.obtenerCodigosPorColegio();
+
+    sessionStorage.removeItem("servicioDetalle");
+    sessionStorage.removeItem("precioDetalle");
   }
 
   checkPermisos(){
