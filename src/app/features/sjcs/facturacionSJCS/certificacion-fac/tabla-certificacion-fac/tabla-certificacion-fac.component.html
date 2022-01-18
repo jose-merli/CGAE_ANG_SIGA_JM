@@ -32,7 +32,13 @@
               <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
             </div>
 
-            <div *ngIf="col.field != 'nombre'">
+            <div
+              *ngIf="col.field == 'turno' || col.field == 'guardia' || col.field == 'ejg' || col.field == 'soj' || col.field == 'total'">
+              <label>{{ dato[col.field] | currency: 'EUR'}}</label>
+            </div>
+
+            <div
+              *ngIf="col.field != 'nombre' && col.field != 'turno' && col.field != 'guardia' && col.field != 'ejg' && col.field != 'soj' && col.field != 'total'">
               <label>{{ dato[col.field]}}</label>
             </div>
 
