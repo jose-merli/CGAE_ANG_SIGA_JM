@@ -185,7 +185,6 @@ export class DatosGeneralesActasComponent implements OnInit {
   }
 
   guardarActaDialogo() {
-
     this.confirmationService.confirm({
       message: '¿Estas seguro que quieres guardar el acta?',
       accept: () => {
@@ -220,6 +219,7 @@ export class DatosGeneralesActasComponent implements OnInit {
             this.datosFiltro.idacta = data.id;
             this.datos = JSON.parse(JSON.stringify((this.datosFiltro)));
             this.datosActa.emit(this.datos);
+            this.onDisabledSave();
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           }
           else if(data.status == "KO" && data.error.description == "InvalidNumActa"){
@@ -370,8 +370,6 @@ export class DatosGeneralesActasComponent implements OnInit {
     }
     return n;
   }
-
-
 
   getComboSufijo() {
     this.sigaServices
