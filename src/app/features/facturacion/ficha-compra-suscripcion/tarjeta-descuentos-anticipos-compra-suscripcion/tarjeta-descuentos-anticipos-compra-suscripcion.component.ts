@@ -84,6 +84,8 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     if(this.ficha.fechaAceptada != null){
       this.getDescuentosPeticion();
     }
+    this.getPermisoNuevoAnticipo();
+    this.getPermisoBorrarAnticipo();
   }
 
   ngOnChange(changes: SimpleChanges){

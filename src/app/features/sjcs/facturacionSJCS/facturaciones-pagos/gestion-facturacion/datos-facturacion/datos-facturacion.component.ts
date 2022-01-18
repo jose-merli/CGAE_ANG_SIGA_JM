@@ -691,7 +691,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         if (null != err.error && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          if (err) this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
         }
 
       },

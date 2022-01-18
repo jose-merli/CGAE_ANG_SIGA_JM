@@ -232,6 +232,14 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         }
       );
     }
@@ -282,6 +290,14 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         }
       );
     }
@@ -414,9 +430,19 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         }
       );
 
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
   }
 
@@ -445,13 +471,23 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         this.progressSpinner = false;
       },
       err => {
+        this.progressSpinner = false;
+
+        if (err && (err.status == '403' || err.status == 403)) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        this.progressSpinner = false;
+
       }
     )
   }
@@ -487,6 +523,15 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         err => {
           this.progressSpinner = false;
 
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
+
           if (null != err.error && JSON.parse(err.error).error.description != "") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
@@ -495,6 +540,8 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         }
       );
 
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
   }
 
@@ -520,12 +567,25 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+
+
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
+
           if (err) this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
         },
         () => {
           this.progressSpinner = false;
         }
       );
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
   }
 
@@ -551,12 +611,24 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
+
           if (err) this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
         },
         () => {
           this.progressSpinner = false;
         }
       );
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
   }
 
@@ -588,9 +660,19 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         }
       );
 
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
 
   }
@@ -622,9 +704,19 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         }
       );
 
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
 
   }
