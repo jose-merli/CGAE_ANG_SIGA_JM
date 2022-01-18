@@ -139,8 +139,10 @@ export class GestionAdeudosComponent implements OnInit {
           }
         },
         err => {
-          if (err && err.message) {
-            let message = this.translateService.instant(err.message);
+          let error = JSON.parse(err.error);
+          if (error && error.error && error.error.message) {
+            let message = this.translateService.instant(error.message);
+            console.log(message);
             if (message && message.trim().length != 0) {
               Promise.reject({ descripcion: message });
             }
@@ -167,12 +169,15 @@ export class GestionAdeudosComponent implements OnInit {
           }
         },
         err => {
-          if (err && err.message) {
-            let message = this.translateService.instant(err.message);
+          let error = JSON.parse(err.error);
+          if (error && error.error && error.error.message) {
+            let message = this.translateService.instant(error.message);
+            console.log(message);
             if (message && message.trim().length != 0) {
               Promise.reject({ descripcion: message });
             }
           }
+
           return Promise.reject({ descripcion: this.translateService.instant("general.mensaje.error.bbdd") });
         });
     } else {
@@ -286,8 +291,8 @@ export class GestionAdeudosComponent implements OnInit {
 
     this.enlacesTarjetaResumen.push({
       label: "facturacion.seriesFactura.bancoEntidad",
-      value: document.getElementById("cuentaEntidadAdeudos"),
-      nombre: "cuentaEntidadAdeudos",
+      value: document.getElementById("cuentaEntidad"),
+      nombre: "cuentaEntidad",
     });
 
     this.enlacesTarjetaResumen.push({

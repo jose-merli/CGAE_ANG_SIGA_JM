@@ -32,6 +32,9 @@ export class FacturasAdeudosComponent implements OnInit {
   activacionTarjeta: boolean = true;
 
   datosFicheros: FacturasIncluidasItem[];
+  totalFacturas: string;
+  totalImporte: string;
+  totalPendiente: string;
 
   idFichero;
   msgs;
@@ -84,7 +87,9 @@ export class FacturasAdeudosComponent implements OnInit {
         this.progressSpinner = false;
         
         this.datosFicheros = n.facturasIncluidasItem;
-        //let error = n.error;
+        this.totalFacturas = this.datosFicheros.map(d => d.numeroFacturas ? parseInt(d.numeroFacturas): 0).reduce((d1, d2) => d1 + d2, 0).toFixed(0);
+        this.totalImporte = this.datosFicheros.map(d => d.importeTotal ? parseFloat(d.importeTotal) : 0).reduce((d1, d2) => d1 + d2, 0).toFixed(2);
+        this.totalPendiente = this.datosFicheros.map(d => d.pendienteTotal ? parseFloat(d.pendienteTotal) : 0).reduce((d1, d2) => d1 + d2, 0).toFixed(2);
   
         this.progressSpinner = false;
       },
