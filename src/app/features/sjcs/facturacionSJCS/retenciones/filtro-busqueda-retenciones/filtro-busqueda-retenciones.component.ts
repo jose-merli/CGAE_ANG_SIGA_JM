@@ -83,6 +83,9 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
       this.filtros.nombreApellidoColegiado = this.retencionesService.filtrosRetenciones.nombreApellidoColegiado;
       this.filtros.ncolegiado = this.retencionesService.filtrosRetenciones.ncolegiado;
       this.filtros.idPersona = this.retencionesService.filtrosRetenciones.idPersona;
+      this.usuarioBusquedaExpress.numColegiado = this.retencionesService.filtrosRetenciones.ncolegiado;
+      this.usuarioBusquedaExpress.nombreAp = this.retencionesService.filtrosRetenciones.nombreApellidoColegiado
+      this.retencionesService.filtrosRetenciones = new RetencionesRequestDto();
       this.showDestinatarios = true;
     }
 
@@ -110,6 +113,8 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
           this.filtros.nombreApellidoColegiado = `${apellidos}, ${nombre}`;
           this.filtros.ncolegiado = nColegiado;
           this.filtros.idPersona = idPersona;
+          this.usuarioBusquedaExpress.numColegiado = this.filtros.ncolegiado;
+          this.usuarioBusquedaExpress.nombreAp = this.filtros.nombreApellidoColegiado 
 
           sessionStorage.removeItem('buscadorColegiados');
           this.showDestinatarios = true;
@@ -142,6 +147,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
       if (this.filtros.fechaAplicacionHasta && this.filtros.fechaAplicacionHasta != null) {
         this.filtros.fechaAplicacionHasta = new Date(this.filtros.fechaAplicacionHasta);
       }
+      
 
       if (this.hayDestinatariosRellenos()) {
         this.showDestinatarios = true;
@@ -153,6 +159,11 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
       this.buscar();
     }
+
+    if(this.usuarioBusquedaExpress.numColegiado != null && this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != ""){
+			this.filtros.ncolegiado =this.usuarioBusquedaExpress.numColegiado;
+			this.filtros.nombreApellidoColegiado = this.usuarioBusquedaExpress.nombreAp;
+		  }
 
     this.getComboTiposRetencion();
     this.getComboDestinatarios();
@@ -237,13 +248,17 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   }
 
   recuperarColegiado(event) {
-    if (event != undefined) {
+    /* if (event != undefined) {
       this.filtros.nombreApellidoColegiado = event.nombreAp;
       this.filtros.ncolegiado = event.nColegiado;
     } else {
       this.filtros.nombreApellidoColegiado = undefined;
       this.filtros.ncolegiado = undefined;
-    }
+    } */
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+		this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+		this.filtros.ncolegiado = event.nColegiado;
+		this.filtros.nombreApellidoColegiado = event.nombreAp; 
   }
 
   recuperarIdPersona(event) {
@@ -330,9 +345,9 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
   buscar() {
 
-    if (!this.hayDestinatariosRellenos() && !this.hayDatosGeneralesRellenos()) {
+    /* if (!this.hayDestinatariosRellenos() && !this.hayDatosGeneralesRellenos()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-    } else {
+    } else { */
 
       if (this.modoBusqueda == TIPOBUSQUEDA.RETENCIONES) {
         this.retencionesService.filtrosRetenciones = JSON.parse(JSON.stringify(this.filtros));
@@ -342,7 +357,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
         this.buscarRetencionesAplicadasEvent.emit(this.filtros);
       }
 
-    }
+    //}
   }
 
   //búsqueda con enter
@@ -354,11 +369,20 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   }
 
   limpiar() {
-    this.filtros = new RetencionesRequestDto();
-    this.usuarioBusquedaExpress = {
+    /* this.usuarioBusquedaExpress = {
       numColegiado: '',
       nombreAp: ''
-    };
+    }; */
+    
+    this.retencionesService.filtrosRetenciones = new RetencionesRequestDto();
+    this.filtros  = new RetencionesRequestDto();
+			this.usuarioBusquedaExpress = {
+        numColegiado: "",
+        nombreAp: ""
+      
+		  }
+    
+    
   }
 
   botonBuscarColegiadoExpress() {
