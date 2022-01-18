@@ -87,7 +87,6 @@ export class CertificacionFacComponent implements OnInit {
 
     if (event == true) {
 
-      if (this.hayCamposRellenos()) {
         this.mostrarTabla = false;
         this.progressSpinner = true;
 
@@ -119,9 +118,6 @@ export class CertificacionFacComponent implements OnInit {
             }, 5);
           }
         );
-      } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      }
     }
   }
 

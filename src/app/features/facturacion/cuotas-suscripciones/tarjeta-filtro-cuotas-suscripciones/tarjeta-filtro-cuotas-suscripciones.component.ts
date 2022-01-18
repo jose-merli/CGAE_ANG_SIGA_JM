@@ -69,9 +69,22 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
       this.esColegiado = false;
     }
 
-    if (sessionStorage.getItem("filtroBusqSuscripcion")) {
+    if (sessionStorage.getItem("filtroBusqSuscripcion") && !sessionStorage.getItem("abogado")) {
 
       this.filtrosSuscripciones = JSON.parse(sessionStorage.getItem("filtroBusqSuscripcion"));
+
+      if(this.filtrosSuscripciones.idpersona != null) {
+        this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.filtrosSuscripciones.idpersona).subscribe(
+          n => {
+            let data = JSON.parse(n.body).colegiadoItem;
+            this.nombreCliente = data.nombre;
+            this.nifCifCliente = data.nif;
+            this.filtrosSuscripciones.idpersona = this.localStorageService.idPersona;
+          },
+          err => {
+            this.progressSpinner = false;
+        });
+      } 
 
       if(this.filtrosSuscripciones.fechaSolicitudHasta != undefined){
         this.filtrosSuscripciones.fechaSolicitudHasta = new Date(this.filtrosSuscripciones.fechaSolicitudHasta);
@@ -88,7 +101,7 @@ export class TarjetaFiltroCuotasSuscripcionesComponent implements OnInit {
 
     } 
 
-    if(sessionStorage.getItem("abogado")){
+    else if(sessionStorage.getItem("abogado")){
       let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
       //Si viene de una ficha de censo
       if(data==undefined){

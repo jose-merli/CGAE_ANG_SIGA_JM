@@ -44,7 +44,7 @@ export class TarjetaFacturacionComponent implements OnInit {
   @Output() saveFact = new EventEmitter<Number>();
   @ViewChild("tabla") tabla;
   permisos
-  datos;
+  datos = [];
   comboFactByPartida: any;
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -170,8 +170,8 @@ export class TarjetaFacturacionComponent implements OnInit {
 
     this.progressSpinner = false;
     let dummy = {
-      fechaDesde: "",
-      fechaHasta: "",
+      fechaDesde: undefined,
+      fechaHasta: undefined,
       nombre: "",
       idGrupo: "",
       importeOficio: 0,
@@ -191,7 +191,13 @@ export class TarjetaFacturacionComponent implements OnInit {
   restablecer() {
     this.isNuevo = false;
     this.selectedDatos = []
-    this.getFactCertificaciones(this.idCertificacion)
+
+    if (this.idCertificacion && this.idCertificacion != null && this.idCertificacion != '') {
+      this.getFactCertificaciones(this.idCertificacion);
+    } else if (this.modoEdicion && this.certificacion && this.certificacion != null) {
+      this.getFactCertificaciones(this.certificacion.idCertificacion);
+    }
+
   }
 
   save() {
@@ -238,7 +244,7 @@ export class TarjetaFacturacionComponent implements OnInit {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
           } else {
             if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
-              this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant(res.error.description));
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
             }
@@ -394,6 +400,10 @@ export class TarjetaFacturacionComponent implements OnInit {
 
   isValidando() {
     return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_VALIDANDO;
+  }
+
+  isCerrada() {
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA;
   }
 
 }
