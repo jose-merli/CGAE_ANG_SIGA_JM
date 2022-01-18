@@ -79,7 +79,7 @@ export class ConstructorConsultasComponent implements OnInit {
 
     if(sessionStorage.getItem("consultasSearch")){
       this.consultaBuscador = JSON.parse(sessionStorage.getItem("consultasSearch"));
-      this.obtenerDatosConsulta(this.consultaBuscador.idConsulta);    
+      this.obtenerDatosConsulta(this.consultaBuscador.idConsulta, this.consultaBuscador.idInstitucion);    
     }
 
   }
@@ -97,7 +97,7 @@ export class ConstructorConsultasComponent implements OnInit {
 
     //Copia necesaria para conservar la informacion cuando se selecciona consulta experta en el radio button sin haber guardado el constructor y 
     //se vuelve ya que en ese caso se ha de conservar lo modificado.
-    if(this.constructorConsultas.getSqlFromRules != undefined ){
+    if(this.constructorConsultas != undefined ){
       if(this.datosConst.consulta != this.constructorConsultas.getSqlFromRules() && sessionStorage.getItem("constructorDeConsultasGuardado") == undefined){
         sessionStorage.setItem("copiaCambiosConstructor", this.constructorConsultas.getSqlFromRules());
       }
@@ -224,10 +224,10 @@ export class ConstructorConsultasComponent implements OnInit {
   }
 
   datosConst;
-  obtenerDatosConsulta(idConsulta) {
+  obtenerDatosConsulta(idConsulta, idInstitucion) {
     this.progressSpinner = true;
-
-    this.subscriptionDatosConstructorConsulta = this.sigaServices.getParam("constructorConsultas_obtenerDatosConsulta", "?idConsulta=" + idConsulta).subscribe(
+    
+    this.subscriptionDatosConstructorConsulta = this.sigaServices.getParam("constructorConsultas_obtenerDatosConsulta", "?idConsulta=" + idConsulta + "&idInstitucion=" + idInstitucion).subscribe(
       datosConstructorConsulta => {
         this.datosConst = datosConstructorConsulta;
 
@@ -250,6 +250,7 @@ export class ConstructorConsultasComponent implements OnInit {
 
     this.queryBuilderDTO.consulta = this.constructorConsultas.getSqlFromRules(this.constructorConsultas.getRules());
     this.queryBuilderDTO.idconsulta = this.consultaBuscador.idConsulta;
+    this.queryBuilderDTO.idinstitucion = this.consultaBuscador.idInstitucion;
     
     this.subscriptionGuardarDatosConstructor = this.sigaServices.post("constructorConsultas_guardarDatosConstructor", this.queryBuilderDTO).subscribe(
       response => {
