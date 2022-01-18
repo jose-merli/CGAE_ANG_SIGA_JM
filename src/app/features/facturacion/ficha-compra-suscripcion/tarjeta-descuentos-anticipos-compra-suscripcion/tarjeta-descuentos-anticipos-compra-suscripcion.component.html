@@ -64,7 +64,7 @@
           <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div *ngIf="col.field =='tipo'">
+                <div *ngIf="col.field =='desTipo'">
                   <span>{{rowData[col.field]}}</span>
                 </div>
                 <div *ngIf="col.field =='importe'">
@@ -146,7 +146,7 @@
           <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div *ngIf="col.field =='tipo'">
+                <div *ngIf="col.field =='desTipo'">
                   <span>{{rowData[col.field]}}</span>
                 </div>
                 <div *ngIf="col.field =='importe'">

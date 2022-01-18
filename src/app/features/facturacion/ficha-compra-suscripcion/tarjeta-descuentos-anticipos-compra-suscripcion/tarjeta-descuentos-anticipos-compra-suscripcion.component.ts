@@ -40,12 +40,12 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
 
   
   colsProd = [
-    { field: "tipo", header: "facturacion.productos.tipo" },
+    { field: "desTipo", header: "facturacion.productos.tipo" },
     { field: "importe", header: "facturacionSJCS.facturacionesYPagos.importe" }
   ];
 
   colsServ = [
-    { field: "tipo", header: "facturacion.productos.tipo" },
+    { field: "desTipo", header: "facturacion.productos.tipo" },
     { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
     { field: "importe", header: "facturacion.suscripciones.saldo" }
   ];
@@ -144,7 +144,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     else if(this.ficha.fechaAceptada == null || this.ficha.fechaAnulada != null){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
     }
-    else if(this.ficha.facturas != null && this.ficha.facturas.length > 0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == "Factura"){
+    else if(this.ficha.facturas != null && this.ficha.facturas.length > 0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == "1"){
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
     }
     else {
