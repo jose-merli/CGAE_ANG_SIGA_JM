@@ -32,8 +32,8 @@
       </app-busqueda-colegiado-express>-->
 
       <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
-      [disabled]="isLetrado || disabledLetradoFicha" [obligatorio]="obligatorio" (botonBuscarEvent)="botonBuscarColegiadoExpress()"
-      [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)">
+      [disabled]="isLetrado || disabledLetradoFicha" [obligatorio]="obligatorio" 
+      [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)">
     </app-busqueda-colegiado-express> 
     </div>
     <!-- FIN CAMPOS FILTRO DESTINATARIOS -->

@@ -266,6 +266,11 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   guardar(ultimo){
+      this.rowGroups.forEach(rG=>{
+      if (rG.cells[0].value.toString().startsWith('U')){
+        rG.cells[0].value = rG.cells[0].value.substring(1);
+      }
+    })
     this.progressSpinner = true;
     //console.log('this.rowGroups: ', this.rowGroups)
     if (this.calendarios){
@@ -540,6 +545,9 @@ checkLetrados(){
     let err2 = false;
     let arrNumbers : Number[] = [];
     this.rowGroups.forEach((row, i) => { 
+      if (this.rowGroups[i].cells[j].value.toString().startsWith('U')){
+        this.rowGroups[i].cells[j].value = this.rowGroups[i].cells[j].value.substring(1);
+      }
       if (i < this.rowGroups.length - 1){
         if (this.rowGroups[i].cells[j].value != null && this.rowGroups[i + 1].cells[j].value != null){
         if (this.rowGroups[i].cells[j].value != this.rowGroups[i + 1].cells[j].value){
@@ -789,8 +797,20 @@ this.totalRegistros = this.rowGroups.length;
 
   }*/
   moveToLast(){
+    this.rowGroups.forEach(rG=>{
+      if (rG.cells[0].value.toString().startsWith('U')){
+        rG.cells[0].value = rG.cells[0].value.substring(1);
+      }
+    })
     let posicionEntabla = this.from + this.positionSelected;
-    this.rowGroups.forEach((rG, i) => {
+    if (this.rowGroups[posicionEntabla].cells[16] != undefined){
+      this.rowGroups[posicionEntabla].cells[16].value = 1;
+    }else{
+      this.rowGroups[posicionEntabla].cells[12].value = 1;
+    }
+    
+   
+    /*this.rowGroups.forEach((rG, i) => {
       if (this.rowGroups[posicionEntabla].cells[12] != undefined){
         if (i == posicionEntabla){
           this.rowGroups[posicionEntabla].cells[12].value = 1;
@@ -805,7 +825,7 @@ this.totalRegistros = this.rowGroups.length;
         }
       }
 
-    })
+    })*/
     this.rowGroupsAux = this.rowGroups;
 
     this.marcadoultimo = true;
@@ -866,6 +886,11 @@ this.totalRegistros = this.rowGroups.length;
   this.guardar(true);
   }
   moveRow(movement){
+    this.rowGroups.forEach(rG=>{
+      if (rG.cells[0].value.toString().startsWith('U')){
+        rG.cells[0].value = rG.cells[0].value.substring(1);
+      }
+    })
     let posicionEntabla = this.from + this.positionSelected;
     this.disableGen.emit(true);
     let groupSelected;

@@ -147,6 +147,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
       if (this.filtros.fechaAplicacionHasta && this.filtros.fechaAplicacionHasta != null) {
         this.filtros.fechaAplicacionHasta = new Date(this.filtros.fechaAplicacionHasta);
       }
+      
 
       if (this.hayDestinatariosRellenos()) {
         this.showDestinatarios = true;
@@ -158,6 +159,11 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
       this.buscar();
     }
+
+    if(this.usuarioBusquedaExpress.numColegiado != null && this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != ""){
+			this.filtros.ncolegiado =this.usuarioBusquedaExpress.numColegiado;
+			this.filtros.nombreApellidoColegiado = this.usuarioBusquedaExpress.nombreAp;
+		  }
 
     this.getComboTiposRetencion();
     this.getComboDestinatarios();
@@ -242,13 +248,17 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   }
 
   recuperarColegiado(event) {
-    if (event != undefined) {
+    /* if (event != undefined) {
       this.filtros.nombreApellidoColegiado = event.nombreAp;
       this.filtros.ncolegiado = event.nColegiado;
     } else {
       this.filtros.nombreApellidoColegiado = undefined;
       this.filtros.ncolegiado = undefined;
-    }
+    } */
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+		this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+		this.filtros.ncolegiado = event.nColegiado;
+		this.filtros.nombreApellidoColegiado = event.nombreAp; 
   }
 
   recuperarIdPersona(event) {
@@ -363,10 +373,15 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
       numColegiado: '',
       nombreAp: ''
     }; */
-    this.usuarioBusquedaExpress.nombreAp = '';
-    this.usuarioBusquedaExpress.numColegiado = '';
+    
     this.retencionesService.filtrosRetenciones = new RetencionesRequestDto();
-    this.filtros = new RetencionesRequestDto();
+    this.filtros  = new RetencionesRequestDto();
+			this.usuarioBusquedaExpress = {
+        numColegiado: "",
+        nombreAp: ""
+      
+		  }
+    
     
   }
 
