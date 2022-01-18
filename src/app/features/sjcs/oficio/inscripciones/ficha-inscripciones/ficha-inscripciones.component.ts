@@ -435,9 +435,13 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 
 	changeDateFormat(date1){
-		// date1 dd/MM/yyyy
-		let date1C = date1.split("/").reverse().join("-")
-		return date1C;
+		let date1C = date1;
+    // date1 dd/MM/yyyy
+    if (!isNaN(Number(date1))){
+      date1C = date1.split("/").reverse().join("-");
+    }
+     
+    return date1C;
 	  }
 
 	cambiarFecha() {
