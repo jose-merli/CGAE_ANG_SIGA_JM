@@ -402,4 +402,8 @@ export class TarjetaFacturacionComponent implements OnInit {
     return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_VALIDANDO;
   }
 
+  isCerrada() {
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA;
+  }
+
 }

@@ -151,7 +151,7 @@ export class TarjetaMovimientosVariosAsociadosComponent implements OnInit {
 
     if (!this.disabledDescargarLog() && this.esXunta) {
       this.descargarLogRX.emit(true);
-      // this.descargarInformeIncidenciasXuntaEvent.emit(true);
+      this.descargarInformeIncidenciasXuntaEvent.emit(true);
     }
   }
 
