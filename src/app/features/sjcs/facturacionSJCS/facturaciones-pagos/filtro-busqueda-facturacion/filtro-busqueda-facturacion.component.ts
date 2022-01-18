@@ -125,6 +125,7 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			this.filtrosFacturacion = new FacturacionItem();
 			this.filtrosPagos = new PagosjgItem();
 		}
+		this.isBuscar();
 	}
 	nuevo() {
 		let datos;
