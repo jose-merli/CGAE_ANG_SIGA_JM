@@ -386,8 +386,9 @@ export class ResolucionComponent implements OnInit {
 
   rest() {
     this.resolucion = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.isDisabledFundamentosJurid = (this.resolucion.idTiporatificacionEJG == null);
     if(this.resolucion.idTiporatificacionEJG != null){
-      this.onChangeResolucion();
+      this.getComboFundamentoJurid();
     }
     if (this.resolucion.fechaPresentacionPonente != undefined)
       this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
