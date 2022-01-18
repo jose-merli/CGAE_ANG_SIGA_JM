@@ -254,11 +254,14 @@ export class ConstructorConsultasComponent implements OnInit {
     this.subscriptionGuardarDatosConstructor = this.sigaServices.post("constructorConsultas_guardarDatosConstructor", this.queryBuilderDTO).subscribe(
       response => {
 
+        this.queryBuilderDTO = JSON.parse(response.body);
+
         if (response.status == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           sessionStorage.setItem("constructorDeConsultasGuardado","true");
+          sessionStorage.setItem("nuevaSentencia", this.queryBuilderDTO.sentencia);
         }
 
         this.progressSpinner = false;
