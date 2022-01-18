@@ -490,7 +490,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
           if (null != err.error && JSON.parse(err.error).error.description != "") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
           }
         }
       );
@@ -510,22 +510,20 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
       const payload = new DescargaReintegrosXuntaDTO();
       payload.idFactsList = listaIdsSinRepetidos;
 
-      this.sigaService.postDownloadFiles("certificaciones_descargarLogReintegrosXunta", payload).subscribe(
+      this.sigaService.postDownloadFilesWithFileName2("certificaciones_descargarLogReintegrosXunta", payload).subscribe(
         data => {
 
-          let blob = null;
-
-          blob = new Blob([data], { type: "application/zip" });
-          saveAs(blob, "Reintegros_Xunta_Error_Log.zip");
+          let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+          saveAs(data.file, filename);
 
           this.progressSpinner = false;
         },
         err => {
           this.progressSpinner = false;
+          if (err) this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
         },
         () => {
           this.progressSpinner = false;
-          this.descargarInformeIncidenciasXunta(true);
         }
       );
     }
@@ -553,6 +551,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err) this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
         },
         () => {
           this.progressSpinner = false;

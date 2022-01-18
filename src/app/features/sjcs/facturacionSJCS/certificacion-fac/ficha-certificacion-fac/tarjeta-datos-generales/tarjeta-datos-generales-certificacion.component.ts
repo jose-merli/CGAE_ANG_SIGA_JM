@@ -120,10 +120,18 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   }
 
   disabledDescargar() {
-    let respuesta = false;
+    let respuesta = true;
 
-    if (!this.permisoEscritura || !this.modoEdicion || !["3", "6", "7"].includes(this.certificacion.idEstadoCertificacion)) {
-      respuesta = true;
+    if (this.permisoEscritura && this.modoEdicion) {
+
+      if (this.esXunta && ["7", "3"].includes(this.certificacion.idEstadoCertificacion)) {
+        respuesta = false;
+      }
+
+      if (this.esCAM && ["6"].includes(this.certificacion.idEstadoCertificacion)) {
+        respuesta = false;
+      }
+
     }
 
     return respuesta;

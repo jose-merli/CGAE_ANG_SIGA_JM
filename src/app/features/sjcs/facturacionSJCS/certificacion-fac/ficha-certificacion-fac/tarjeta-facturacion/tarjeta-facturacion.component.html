@@ -158,8 +158,8 @@
           icon="fa fa-send" iconPos="left"></button>
         <!--Nuevo-->
         <button (click)="nuevo()" [disabled]="(isNuevo && (certificacion.estado !='ABIERTA' || certificacion.estado !='NO VALIDADA' 
-        || certificacion.estado !='ENVÍO CON ERRORES')) || isValidando() || !modoEdicion" pButton type="button"
-          label="{{ 'general.boton.new' | translate }}" icon="fas fa-plus" iconPos="left"></button>
+        || certificacion.estado !='ENVÍO CON ERRORES')) || isValidando() || !modoEdicion || isCerrada()" pButton
+          type="button" label="{{ 'general.boton.new' | translate }}" icon="fas fa-plus" iconPos="left"></button>
         <!--Restablecer-->
         <button (click)="restablecer()" [disabled]="!isNuevo || !permisos || isValidando() || !modoEdicion" pButton
           type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
