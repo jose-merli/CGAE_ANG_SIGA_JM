@@ -723,6 +723,8 @@ import { PagoAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_
 import { ColegiadoAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/colegiado-abonos-sjcs/colegiado-abonos-sjcs.component';
 import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-retenciones/destinatarios.module';
 import { LineasAbonosComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/lineas-abonos/lineas-abonos.component';
+import { ObservacionesAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/observaciones-abonos-sjcs/observaciones-abonos-sjcs.component';
+
 
 @NgModule({
 	declarations: [
@@ -1811,7 +1813,9 @@ import { LineasAbonosComponent } from './features/sjcs/facturacionSJCS/abonos_SJ
 		SociedadAbonosSJCSComponent,
 		PagoAbonosSJCSComponent,
 		ColegiadoAbonosSJCSComponent,
-		LineasAbonosComponent
+		LineasAbonosComponent,
+		ObservacionesAbonosSJCSComponent,
+		
 	],
 	imports: [
 

@@ -37,6 +37,13 @@ export class AbonosSCJSComponent implements OnInit {
   }
   ngOnInit() {
     this.buscar = false;
+       //Asociar desde designacion
+       if (sessionStorage.getItem('filtrosAbonosSJCS')) {
+        this.filtro = JSON.parse(sessionStorage.getItem('filtrosAbonosSJCS'));
+        this.filtrosPadre.filtros = this.filtro;
+        sessionStorage.removeItem('filtrosAbonosSJCS');
+        this.searchAbonos();
+      }
   }
 
   clear() {

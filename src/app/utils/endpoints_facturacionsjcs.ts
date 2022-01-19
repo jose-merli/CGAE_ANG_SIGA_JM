@@ -1,6 +1,7 @@
 export let endpoints_facturacionsjcs: any = {
 
     combo_comboFactEstados: "combo/comboFactEstados",
+    combo_comboPagosjg: "combo/comboPagosjg",
     combo_comboPagoEstados: "combo/comboPagoEstados",
     combo_partidasPresupuestarias: "combo/partidasPresupuestarias",
     combo_grupoFacturacion: "combo/grupoFacturacion",

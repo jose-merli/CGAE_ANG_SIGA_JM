@@ -6,6 +6,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { DatePipe } from '@angular/common';
 import {ConfirmationService} from 'primeng/api';
 import { FacAbonoItem } from '../../../../../../models/sjcs/FacAbonoItem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-pago-abonos-sjcs',
@@ -27,13 +28,12 @@ export class PagoAbonosSJCSComponent implements OnInit {
   irpf:number=0;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private confirmationService: ConfirmationService,
-    private translateService: TranslateService, private commonsService: CommonsService) {
+    private translateService: TranslateService, private commonsService: CommonsService, private router: Router) {
      }
 
   ngOnInit() {
-    console.log("si va")
-    console.log(this.datos)
-
+    console.log("si va bn")
+    this.getLineasAbono()
     
    }
    abreCierraFicha(){
@@ -62,5 +62,27 @@ export class PagoAbonosSJCSComponent implements OnInit {
     this.msgs = [];
   }
   comunicar(){}
+
+  toPagoSJCS() {
+		this.persistenceService.clearDatos();
+		this.persistenceService.setDatos(this.datos);
+    sessionStorage.setItem("abonosSJCSItem", JSON.stringify(this.datos));
+    this.router.navigate(['/fichaPagos']);
+  }
+
+  
+  getLineasAbono() {
+    this.progressSpinner = true;
+    this.sigaServices.getParam("facturacionPyS_getLineasAbono", "?idAbono=" + this.datos.idFactura).subscribe(
+      n => {
+        console.log(n)
+        this.progressSpinner = false;
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
+  }
 
  }

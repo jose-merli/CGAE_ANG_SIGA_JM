@@ -24,14 +24,17 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   showDatosAgrupacion: boolean = true;
   showColegiado: boolean = true;
   showSociedad:boolean = true;
+  institucionGeneral:boolean = true;
 
+  comboColegios:ComboItem[] = [];
   comboContabilizado:ComboItem[] = [];
   comboGrupoFacturacion:ComboItem[] = [];
   comboFormaCobroAbono:ComboItem[] = [];
   comboEstados:ComboItem[] = [];
+  comboPago:ComboItem[] = [];
   filtros:FacAbonoItem = new FacAbonoItem(); //Complementar atributos
 
-
+  institucionActual;
   combo;
 
   
@@ -45,15 +48,42 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
     private commonServices: CommonsService) {
    
   }
+  usuarioBusquedaExpress = { 
+
+    numColegiado: '', 
+
+    nombreAp: '', 
+
+    idPersona:'' 
+
+  }; 
 
   ngOnInit() {
     this.getComboContabilizado();
     this.getComboFormaCobroAbono();
     this.getComboGrupoFacturacion();
     this.getComboEstados();
+    this.getComboPago();
+
+    if (sessionStorage.getItem("buscadorColegiados")) {
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      sessionStorage.removeItem("buscadorColegiados");
+
+      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+      this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
+    }
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+      this.getComboColegios();
+    });
+
+
   }
 
-  clear(){}
+  clear(){
+    this.filtros =  new FacAbonoItem(); 
+  }
 
   fillFecha(event, campo) {
     if(campo==='emisionDesde')
@@ -61,6 +91,29 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
     else if(campo==='emisionHasta')
       this.filtros.fechaEmisionHasta = event;
   }
+
+  getComboColegios() {
+    this.progressSpinner = true;
+
+    this.sigaServices.getParam("busquedaCol_colegio", "?idInstitucion=" + this.institucionActual).subscribe(
+      n => {
+        this.comboColegios = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboColegios);
+
+        if (this.institucionActual == "2000") {
+          this.institucionGeneral = true;
+        }
+
+        this.progressSpinner = false;
+      },
+      err => {
+        //console.log(err);
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+  }
+
   getComboContabilizado() {
     this.comboContabilizado.push({value: 'S', label: this.translateService.instant('messages.si') , local: undefined});
     this.comboContabilizado.push({value: 'N', label: this.translateService.instant('general.boton.no') , local: undefined});
@@ -103,6 +156,17 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       }
     );
   }
+  getComboPago() {
+    this.sigaServices.get("combo_comboPagosjg").subscribe(
+      n => {
+        this.comboPago = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboPago);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
 
   getComboEstados() {
     this.sigaServices.get("combo_comboEstadosAbono").subscribe(
@@ -115,5 +179,15 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       }
     );
   }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+  
 
 }
