@@ -113,7 +113,8 @@ export class ProgramacionCalendariosComponent implements OnInit {
     { label: "Programada", value: "0" },
     { label: "En proceso", value: "1" },
     { label: "Procesada con Errores", value: "2" },
-    { label: "Generada", value: "3" }
+    { label: "Generada", value: "3" },
+    { label: "Reprogramada", value: "5" }
   ];
   @ViewChild(FiltrosGuardiaCalendarioComponent) filtros;
   //@ViewChild(TablaGuardiasComponent) tabla;
@@ -703,6 +704,9 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
           case "Generada":
             estadoNumerico = "3";
             break;
+            case "Reprogramada":
+              estadoNumerico = "5";
+              break;
           default:
             estadoNumerico = "4";
             break;

@@ -1238,9 +1238,13 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	}*/
 
 	changeDateFormat(date1) {
-		// date1 dd/MM/yyyy
-		let date1C = date1.split("/").reverse().join("-")
-		return date1C;
+		let date1C = date1;
+    // date1 dd/MM/yyyy
+    if (!isNaN(Number(date1))){
+      date1C = date1.split("/").reverse().join("-");
+    }
+     
+    return date1C;
 	}
 
 	//CAMBIAR ESTA FUNCIÓN, EL OBJETO ES EL MOD CON LAS FECHAS NUEVAS... PARA REUTILIZAR EL CÓDIGO DEL BACK

@@ -568,6 +568,9 @@ this.estado = this.datosGeneralesIniciales.estado;
     case "Generada":
       estadoNumerico = "3";
       break;
+      case "Reprogramada":
+        estadoNumerico = "5";
+        break;
     default:
       estadoNumerico = "4";
       break;
@@ -685,7 +688,10 @@ this.estado = this.datosGeneralesIniciales.estado;
           break;
         case "Generada":
 					estadoNumerico = "3";
-					break;
+          break;
+          case "Reprogramada":
+            estadoNumerico = "5";
+            break;
 				default:
 					estadoNumerico = "4";
 					break;
@@ -888,6 +894,7 @@ this.estado = this.datosGeneralesIniciales.estado;
 
 
   newCalendarProg(datos){
+   
     this.sigaServices.post(
    "guardiaCalendario_newCalendarioProgramado",  datos).subscribe(
      data => {
@@ -899,7 +906,11 @@ this.estado = this.datosGeneralesIniciales.estado;
           JSON.stringify(this.persistenciaGuardia)
         );
       }
+      if (datos.idCalG == null){
+        this.showMessage('info', "Debe asociar alguna guardia", "Debe asociar alguna guardia");
+      }else{
         this.router.navigate(["/programacionCalendarios"]);
+      }
         this.progressSpinner = false;
      }, err => {
       this.progressSpinner = false;

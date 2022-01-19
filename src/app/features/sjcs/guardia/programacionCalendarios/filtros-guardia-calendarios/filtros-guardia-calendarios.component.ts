@@ -109,8 +109,12 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
   }
   changeDateFormat2(date1){
+    let date1C = date1;
     // date1 dd/MM/yyyy
-    let date1C = date1.split("/").reverse().join("-")
+    if (!isNaN(Number(date1))){
+      date1C = date1.split("/").reverse().join("-");
+    }
+     
     return date1C;
   }
   getComboTurno() {
@@ -131,7 +135,8 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       { label: "Programada", value: "0" },
       { label: "En proceso", value: "1" },
       { label: "Procesada con Errores", value: "2" },
-      { label: "Generada", value: "3" }
+      { label: "Generada", value: "3" },
+      { label: "Reprogramada", value: "5" }
     ];
     /*this.sigaServices.get("busquedaGuardia_estado").subscribe(
       n => {
