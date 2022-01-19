@@ -75,42 +75,49 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
   }
 
   updateEstadoActuacion(newEstado : string){
-    this.progressSpinner = true;
-    let actuaciones : ActuacionAsistenciaItem [] = [];
-    if(Array.isArray(this.selectedDatos)){ //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
-      actuaciones = this.selectedDatos;
+   this.selectedDatos.forEach(sD => {
+    if (sD.facturada != null && sD.facturada != undefined){
+      this.showMsg("error", "No se pueden anular actuaciones facturadas.", "No se pueden anular actuaciones facturadas.");
     }else{
-      actuaciones.push(this.selectedDatos);
+      this.progressSpinner = true;
+        let actuaciones : ActuacionAsistenciaItem [] = [];
+        if(Array.isArray(this.selectedDatos)){ //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
+          actuaciones = this.selectedDatos;
+        }else{
+          actuaciones.push(this.selectedDatos);
+        }
+        if (newEstado == '1'){
+          actuaciones.forEach(act => {
+            act.anulada = '1';
+          })
+        }
+        if(actuaciones.length > 0 ){
+          this.sigaServices.postPaginado("busquedaGuardias_updateEstadoActuacion","?anioNumero="+this.asistencia.anioNumero, actuaciones).subscribe(
+            n => {
+
+              let id = JSON.parse(n.body).id;
+              let error = JSON.parse(n.body).error;
+              this.progressSpinner = false;
+
+              if (error != null && error.description != null) {
+                this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
+              } else {
+                this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
+                this.getActuaciones();
+                this.refreshTarjetas.emit(id);
+              }
+            },
+            err => {
+              //console.log(err);
+              this.progressSpinner = false;
+            }, () => {
+              this.progressSpinner = false;
+            });
+
+        }
     }
-    if (newEstado == '1'){
-      actuaciones.forEach(act => {
-        act.anulada = '1';
       })
-    }
-    if(actuaciones.length > 0 ){
-      this.sigaServices.postPaginado("busquedaGuardias_updateEstadoActuacion","?anioNumero="+this.asistencia.anioNumero, actuaciones).subscribe(
-        n => {
-
-          let id = JSON.parse(n.body).id;
-          let error = JSON.parse(n.body).error;
-          this.progressSpinner = false;
-
-          if (error != null && error.description != null) {
-            this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
-          } else {
-            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
-            this.getActuaciones();
-            this.refreshTarjetas.emit(id);
-          }
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        }, () => {
-          this.progressSpinner = false;
-        });
-
-    }
+  
   }
 
   getActuaciones(){

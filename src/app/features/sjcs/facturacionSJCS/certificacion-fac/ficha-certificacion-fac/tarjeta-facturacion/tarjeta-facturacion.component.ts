@@ -44,7 +44,7 @@ export class TarjetaFacturacionComponent implements OnInit {
   @Output() saveFact = new EventEmitter<Number>();
   @ViewChild("tabla") tabla;
   permisos
-  datos;
+  datos = [];
   comboFactByPartida: any;
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
@@ -142,6 +142,16 @@ export class TarjetaFacturacionComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
+          this.progressSpinner = false;
+
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
 
           if (err != undefined && JSON.parse(err.error).error.description != "") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
@@ -149,7 +159,7 @@ export class TarjetaFacturacionComponent implements OnInit {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }
           this.restablecer()
-          this.progressSpinner = false;
+
         }
       )
     } else {
@@ -170,8 +180,8 @@ export class TarjetaFacturacionComponent implements OnInit {
 
     this.progressSpinner = false;
     let dummy = {
-      fechaDesde: "",
-      fechaHasta: "",
+      fechaDesde: undefined,
+      fechaHasta: undefined,
       nombre: "",
       idGrupo: "",
       importeOficio: 0,
@@ -191,7 +201,13 @@ export class TarjetaFacturacionComponent implements OnInit {
   restablecer() {
     this.isNuevo = false;
     this.selectedDatos = []
-    this.getFactCertificaciones(this.idCertificacion)
+
+    if (this.idCertificacion && this.idCertificacion != null && this.idCertificacion != '') {
+      this.getFactCertificaciones(this.idCertificacion);
+    } else if (this.modoEdicion && this.certificacion && this.certificacion != null) {
+      this.getFactCertificaciones(this.certificacion.idCertificacion);
+    }
+
   }
 
   save() {
@@ -238,7 +254,7 @@ export class TarjetaFacturacionComponent implements OnInit {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
           } else {
             if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
-              this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant(res.error.description));
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
             }
@@ -246,6 +262,15 @@ export class TarjetaFacturacionComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
+
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         },
         () => {
           this.getFactCertificaciones(this.idCertificacion);
@@ -394,6 +419,10 @@ export class TarjetaFacturacionComponent implements OnInit {
 
   isValidando() {
     return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_VALIDANDO;
+  }
+
+  isCerrada() {
+    return this.certificacion.idEstadoCertificacion == ESTADO_CERTIFICACION.ESTADO_CERTIFICACION_CERRADA;
   }
 
 }

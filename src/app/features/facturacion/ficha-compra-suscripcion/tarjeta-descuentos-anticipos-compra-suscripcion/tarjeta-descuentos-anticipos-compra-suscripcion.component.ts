@@ -40,12 +40,12 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
 
   
   colsProd = [
-    { field: "tipo", header: "facturacion.productos.tipo" },
+    { field: "desTipo", header: "facturacion.productos.tipo" },
     { field: "importe", header: "facturacionSJCS.facturacionesYPagos.importe" }
   ];
 
   colsServ = [
-    { field: "tipo", header: "facturacion.productos.tipo" },
+    { field: "desTipo", header: "facturacion.productos.tipo" },
     { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
     { field: "importe", header: "facturacion.suscripciones.saldo" }
   ];
@@ -84,6 +84,8 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     if(this.ficha.fechaAceptada != null){
       this.getDescuentosPeticion();
     }
+    this.getPermisoNuevoAnticipo();
+    this.getPermisoBorrarAnticipo();
   }
 
   ngOnChange(changes: SimpleChanges){

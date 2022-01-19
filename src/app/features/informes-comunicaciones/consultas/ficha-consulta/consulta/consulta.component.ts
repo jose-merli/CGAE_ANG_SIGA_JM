@@ -228,6 +228,9 @@ export class ConsultaComponent implements OnInit {
   getDatos() {
     if (sessionStorage.getItem("consultasSearch") != null) {
       this.body = JSON.parse(sessionStorage.getItem("consultasSearch"));
+      if(sessionStorage.getItem("constructorDeConsultasGuardado") == "true"){
+        this.body.sentencia = sessionStorage.getItem("nuevaSentencia");
+      }
       if (this.body.sentencia != 'undefined' && this.body.sentencia != null) {
         // this.body.sentencia = this.body.sentencia.replace(new RegExp(",", "g"), ",\n");
       }

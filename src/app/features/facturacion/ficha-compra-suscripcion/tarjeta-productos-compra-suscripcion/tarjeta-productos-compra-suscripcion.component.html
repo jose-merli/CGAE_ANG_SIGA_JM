@@ -202,9 +202,9 @@
           </div>
           <div class="text-right main-button">
             <!-- Guardar -->
-            <button pButton (click)="updateProductosPeticion()" type="button" icon="far fa-save" iconPos="left"
+            <button pButton (click)="checkSave()" type="button" icon="far fa-save" iconPos="left"
               label="{{ 'general.boton.guardar' | translate}}"
-              [disabled]="ficha.fechaPendiente == null"></button> <!--  ficha.fechaAceptada != null || ficha.fechaDenegada != null ||  -->
+              [disabled]="ficha.fechaPendiente == null || !permisoActualizarProductos "></button> <!--  ficha.fechaAceptada != null || ficha.fechaDenegada != null ||  -->
             <!-- Nuevo -->
             <button pButton (click)="openHideModal()" type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"

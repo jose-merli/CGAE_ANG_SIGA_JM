@@ -118,8 +118,8 @@ export let endpoints_facturacionsjcs: any = {
     movimientosVarios_getListadoPagos: "movimientosVarios/getListadoPagos",
     movimientosVarios_saveMovimientosVarios: "movimientosVarios/saveMovimientosVarios",
     movimientosVarios_updateMovimientosVarios: "movimientosVarios/updateMovimientosVarios",
-   // movimientosVarios_saveCriteriosMovimientosVarios: "movimientosVarios/saveCriteriosMovimientosVarios",
-   // movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios",
+    // movimientosVarios_saveCriteriosMovimientosVarios: "movimientosVarios/saveCriteriosMovimientosVarios",
+    // movimientosVarios_updateCriteriosMovimientosVarios: "movimientosVarios/updateCriteriosMovimientosVarios",
     movimientosVarios_getMovimientoVarioPorId: "movimientosVarios/getMovimientoVarioPorId",
 
     /* Endpoints Certificaciones */
@@ -140,4 +140,7 @@ export let endpoints_facturacionsjcs: any = {
     certificaciones_descargarLogReintegrosXunta: "certificaciones/descargarLogReintegrosXunta",
     certificaciones_descargarInformeIncidencias: "certificaciones/descargarInformeIncidencias",
     certificaciones_accionXuntaEnvios: "certificaciones/accionXuntaEnvios",
+    certificaciones_subirFicheroCAM: "certificaciones/subirFicheroCAM",
+    certificaciones_descargaInformeCAM: "certificaciones/descargaInformeCAM",
+    certificaciones_perteneceInstitucionCAMoXunta: "certificaciones/perteneceInstitucionCAMoXunta",
 }

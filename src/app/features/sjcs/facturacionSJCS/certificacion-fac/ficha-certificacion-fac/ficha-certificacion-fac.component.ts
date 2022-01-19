@@ -25,6 +25,8 @@ import { TarjetaMovimientosVariosAsociadosComponent } from './tarjeta-movimiento
 import { saveAs } from "file-saver/FileSaver";
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { EnvioXuntaItem } from '../../../../../models/sjcs/EnvioXuntaItem';
+import { DescargaInfomreCAMItem } from '../../../../../models/sjcs/DescargaInfomreCAMItem';
+import { DescargaReintegrosXuntaDTO } from '../../../../../models/sjcs/DescargaReintegrosXuntaDTO';
 
 export interface Enlace {
   id: string;
@@ -64,8 +66,11 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
       { id: 'fichaCertMovApli', nombre: this.translateService.instant('facturacionSJCS.fichaCertificacion.movVariosApli'), ref: null }
     ]
   };
-
   fechasMaxMin: MovimientosVariosApliCerRequestDTO = new MovimientosVariosApliCerRequestDTO();
+  esCAM: boolean = false;
+  esXunta: boolean = false;
+
+
   @ViewChild(TarjetaDatosGeneralesCertificacionComponent) tarjetaDatosGenerales: TarjetaDatosGeneralesCertificacionComponent;
   @ViewChild(TarjetaFacturacionComponent) tarjetaFact: TarjetaFacturacionComponent;
   @ViewChild(TarjetaMovimientosVariosAplicadosComponent) tarjetaMovApli: TarjetaMovimientosVariosAplicadosComponent;
@@ -93,6 +98,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         this.router.navigate(["/errorAcceso"]);
       }
 
+      this.comprobacionesIniciales();
 
       if (sessionStorage.getItem("filtrosBusquedaCerti")) {
         this.filtrosDeBusqueda = JSON.parse(sessionStorage.getItem("filtrosBusquedaCerti"));
@@ -123,6 +129,27 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
 
     }).catch(error => console.error(error));
 
+  }
+
+  async comprobacionesIniciales() {
+
+    this.progressSpinner = true;
+
+    await this.esInsticucionCAMoXunta().then((data: { valor: string }) => {
+      this.progressSpinner = false;
+
+      if (data.valor == 'CAM') {
+        this.esCAM = true;
+      }
+
+      if (data.valor == 'XUNTA') {
+        this.esXunta = true;
+      }
+
+    }).catch(err => {
+      this.progressSpinner = false;
+      if (err) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.mensaje.error.bbdd'));
+    });
   }
 
   ngAfterViewChecked(): void {
@@ -205,6 +232,14 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         }
       );
     }
@@ -255,6 +290,14 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         }
       );
     }
@@ -277,6 +320,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
         } else {
           this.certificacion = resp.certificacionesItemList[0];
+          this.tarjetaFact.idCertificacion = this.certificacion.idCertificacion;
         }
 
       },
@@ -386,9 +430,19 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         }
       );
 
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
   }
 
@@ -417,31 +471,49 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         this.progressSpinner = false;
       },
       err => {
+        this.progressSpinner = false;
+
+        if (err && (err.status == '403' || err.status == 403)) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
 
         if (err != undefined && JSON.parse(err.error).error.description != "") {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
-        this.progressSpinner = false;
+
       }
     )
   }
 
   descargar(event: boolean) {
 
+    let url = "certificaciones_descargarCertificacionesXunta";
+
+    if (this.esCAM) {
+      url = "certificaciones_descargaInformeCAM";
+    }
+
+
     if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
 
       this.progressSpinner = true;
 
       let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
 
-      const payload = new DescargaCertificacionesXuntaItem();
+      const payload = this.esCAM ? new DescargaInfomreCAMItem() : new DescargaCertificacionesXuntaItem();
       payload.idEstadoCertificacion = this.certificacion.idEstadoCertificacion;
       payload.idInstitucion = Number(this.sigaStorageService.institucionActual);
-      payload.listaIdFacturaciones = listaIds.length > 0 ? listaIds : [];
+      payload.listaIdFacturaciones = listaIdsSinRepetidos.length > 0 ? listaIdsSinRepetidos : [];
 
-      this.sigaService.postDownloadFilesWithFileName2("certificaciones_descargarCertificacionesXunta", payload).subscribe(
+      this.sigaService.postDownloadFilesWithFileName2(url, payload).subscribe(
         (data: { file: Blob, filename: string, status: number }) => {
           this.progressSpinner = false;
 
@@ -451,45 +523,112 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         err => {
           this.progressSpinner = false;
 
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
+
           if (null != err.error && JSON.parse(err.error).error.description != "") {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
           }
         }
       );
 
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
   }
 
   descargarLogReintegrosXunta(event) {
-    if (event == true) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
       this.progressSpinner = true;
-      let idFactsList: string[] = [];
 
-      if (!this.tarjetaFact.datos != null || this.tarjetaFact.datos != undefined || this.tarjetaFact.datos.length != 0) {
-        for (let idFact of this.tarjetaFact.datos) {
-          idFactsList.push(idFact.idFacturacion.toString());
-        }
+      let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
 
-        this.sigaService.postDownloadFiles("certificaciones_descargarLogReintegrosXunta", idFactsList).subscribe(
-          data => {
+      const payload = new DescargaReintegrosXuntaDTO();
+      payload.idFactsList = listaIdsSinRepetidos;
 
-            let blob = null;
+      this.sigaService.postDownloadFilesWithFileName2("certificaciones_descargarLogReintegrosXunta", payload).subscribe(
+        data => {
 
-            blob = new Blob([data], { type: "application/zip" });
-            saveAs(blob, "Reintegros_Xunta_Error_Log.zip");
+          let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+          saveAs(data.file, filename);
 
-            this.progressSpinner = false;
-          },
-          err => {
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+
+
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
           }
-        );
-      }
+
+          if (err) this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
+    }
+  }
+
+  descargarInformeIncidenciasXunta(event) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
+      this.progressSpinner = true;
+
+      let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
+
+      const payload = new DescargaReintegrosXuntaDTO();
+      payload.idFactsList = listaIdsSinRepetidos;
+
+      this.sigaService.postDownloadFilesWithFileName2("certificaciones_descargarInformeIncidencias", payload).subscribe(
+        (data: { file: Blob, filename: string, status: number }) => {
+
+          let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+          saveAs(data.file, filename);
+
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
+
+          if (err) this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
   }
 
@@ -500,10 +639,11 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
       this.progressSpinner = true;
 
       let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
 
       const payload = new EnvioXuntaItem();
       payload.idInstitucion = Number(this.sigaStorageService.institucionActual);
-      payload.listaIdFacturaciones = listaIds.length > 0 ? listaIds : [];
+      payload.listaIdFacturaciones = listaIdsSinRepetidos.length > 0 ? listaIdsSinRepetidos : [];
       payload.codigoOperacion = OPERACION_REINTEGROS;
 
       this.sigaService.post("certificaciones_accionXuntaEnvios", payload).subscribe(
@@ -520,11 +660,69 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         }
       );
 
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
 
+  }
+
+  subirFicheroCAM(event: File) {
+
+    if (event && this.tarjetaFact && this.tarjetaFact != null && this.tarjetaFact.datos && this.tarjetaFact.datos != null && this.tarjetaFact.datos.length > 0) {
+
+      this.progressSpinner = true;
+
+      let listaIds: string[] = this.tarjetaFact.datos.map(el => el.idFacturacion.toString());
+      let listaIdsSinRepetidos = Array.from(new Set(listaIds));
+
+      this.sigaService.postSendFileAndParameters2("certificaciones_subirFicheroCAM", event, {
+        listaIdFacturaciones: listaIdsSinRepetidos.length > 0 ? listaIdsSinRepetidos : []
+      }).subscribe(
+        data => {
+
+          this.progressSpinner = false;
+
+          const res = data;
+
+          if (res.error && res.error != null && res.error.description != null && res.error.description.toString().trim().length > 0 && res.status == 'KO' && (res.error.code == '500' || res.error.code == '400')) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description.toString()));
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
+
+        },
+        err => {
+          this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
+        }
+      );
+
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
+    }
+
+  }
+
+  esInsticucionCAMoXunta() {
+    return this.sigaService.get("certificaciones_perteneceInstitucionCAMoXunta").toPromise();
   }
 
 }

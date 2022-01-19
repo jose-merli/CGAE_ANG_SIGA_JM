@@ -53,9 +53,11 @@ export class FiltroBusquedaBaremosComponent implements OnInit {
       this.filtros.idFacturaciones = [idFacturacion];
       this.buscar();
     } else if (this.persistenceService.getFiltros() != undefined) {
-      this.filtros = this.persistenceService.getFiltros();
-
+      this.filtros = this.persistenceService.getFiltros(); 
       this.persistenceService.clearFiltros();
+      if(this.filtros.idFacturaciones == undefined || this.filtros.idFacturaciones == null){
+        this.filtros.idFacturaciones = ['0'];
+      }
       this.getComboTurno();
       this.getComboFacturacion();
       this.buscar();
