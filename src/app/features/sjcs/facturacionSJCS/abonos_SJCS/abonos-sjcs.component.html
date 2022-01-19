@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-filtros-abonos-sjcs (busqueda)="searchAbonos()"></app-filtros-abonos-sjcs>
+    <app-filtros-abonos-sjcs  (busqueda)="searchAbonos()"></app-filtros-abonos-sjcs>
     <app-tabla-abonos-sjcs *ngIf="buscar" [datos]="datos" [filtro]="filtro" (busqueda)="searchAbonos()"></app-tabla-abonos-sjcs>
 </div>
 

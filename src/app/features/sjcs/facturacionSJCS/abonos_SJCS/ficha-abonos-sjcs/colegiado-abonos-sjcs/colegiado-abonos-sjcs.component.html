@@ -1,12 +1,12 @@
 <p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
 
-<div class="busqueda-container">
+<div class="busqueda-container" id="colegiado">
   <div class="card">
     <div class="card-header header-ficha" >
       <div  class="form-row">
         <div class="col-lg-1 col-md-2">
           <div class="img-colegiado">
-            <i class="fas fa-cog icon-ficha"></i>
+            <i class="fas fa-user icon-ficha"></i>
           </div>
         </div>
         <div class="col-lg-2 col-md-2">
@@ -22,7 +22,7 @@
             <label class="mr-auto "> {{ this.datos.numeroAbono }}</label>
           </div>
         </div>
-        <div class="col-lg-2 col-md-2">
+        <div class="col-lg-1 col-md-1">
           <div class="d-flex justify-content-end mb-1">
             <label class="mr-auto title-ficha">{{ "facturacionSJCS.tarjeta.abonosSJCS.numCol" | translate}}</label>
           </div>
@@ -46,9 +46,17 @@
             <label class="mr-auto "> {{ this.datos.nombreGeneral }}</label>
           </div>
         </div>
-        <div class="col-lg-1 col-md-1">
+        <div class="col-lg-2 col-md-2">
           <div class="d-flex justify-content-end mb-1">
-            <label class="mr-auto title-ficha"><strong>{{ "informesycomunicaciones.comunicaciones.fichaColegial" | translate}}</strong></label>
+            <label  class="mr-auto">
+              <a (click)="navigateToCliente()">
+                <i class="fas fa-external-link-alt mr-2"></i>
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  {{ 'informesycomunicaciones.comunicaciones.fichaColegial' | translate }}
+                </span>
+              </a>
+            </label>
+
           </div>
         </div>
       </div>
