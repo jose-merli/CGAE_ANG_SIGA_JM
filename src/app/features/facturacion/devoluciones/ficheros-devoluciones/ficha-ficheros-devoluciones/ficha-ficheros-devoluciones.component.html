@@ -12,7 +12,7 @@
     <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosResumen" [icono]="'clipboard'" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
     </app-tarjeta-resumen-fija>
 
-    <!-- <app-datos-carga-devoluciones [bodyInicial]="body" [openTarjetaDatosGeneracion]="openTarjetaDatosGeneracion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-datos-carga-devoluciones> -->
+      <app-datos-carga-devoluciones [bodyInicial]="body" [openTarjetaDatosCarga]="openTarjetaDatosCarga" [modoEdicion]="modoEdicion" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"></app-datos-carga-devoluciones>
 
       <app-cuenta-entidad-adeudos *ngIf="modoEdicion" [bodyInicial]="body"></app-cuenta-entidad-adeudos>
 
