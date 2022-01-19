@@ -50,7 +50,7 @@ export class GestionFacturasComponent implements OnInit {
     }
     
     if (this.body != undefined) {
-      this.getDatosFactura(this.body.idFactura, this.body.tipo).catch(error => {
+      this.getDatosFactura(this.body.idFactura, this.body.idAbono, this.body.tipo).catch(error => {
         if (error != undefined) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
         } else {
@@ -68,8 +68,8 @@ export class GestionFacturasComponent implements OnInit {
     }
   }
 
-  getDatosFactura(idFactura: string, tipo: string): Promise<any> {
-    return this.sigaServices.getParam("facturacionPyS_getFactura", `?idFactura=${idFactura}&tipo=${tipo}`).toPromise().then(
+  getDatosFactura(idFactura: string, idAbono: string, tipo: string): Promise<any> {
+    return this.sigaServices.getParam("facturacionPyS_getFactura", `?idFactura=${idFactura}&idAbono=${idAbono}&tipo=${tipo}`).toPromise().then(
       n => {
         let datos: FacturasItem[] = n.facturasItems;
 
@@ -230,8 +230,7 @@ export class GestionFacturasComponent implements OnInit {
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
     ).then(() => { 
-      const idToSearch = this.body.tipo == "FACTURA" ? this.body.idFactura : this.body.idAbono;
-      return this.getDatosFactura(idToSearch, this.body.tipo); 
+      return this.getDatosFactura(this.body.idFactura, this.body.idAbono, this.body.tipo); 
     }).then(() => {
       this.updateTarjetaResumen();
       setTimeout(() => {
@@ -251,8 +250,7 @@ export class GestionFacturasComponent implements OnInit {
   refreshData(event: FacturasItem): void {
     this.progressSpinner = true;
 
-    const idToSearch = this.body.tipo == "FACTURA" ? this.body.idFactura : this.body.idAbono;
-    this.getDatosFactura(idToSearch, event.tipo).catch(error => {
+    this.getDatosFactura(this.body.idFactura, this.body.idAbono, event.tipo).catch(error => {
       if (error != undefined) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
       } else {
