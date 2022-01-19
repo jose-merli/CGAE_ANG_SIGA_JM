@@ -51,6 +51,7 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
 
   //Suscripciones
   subscriptionActivarDesactivarServicios: Subscription;
+  permisoSuscripcion: boolean = false;
 
   constructor(private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService, 
     private translateService: TranslateService, private confirmationService: ConfirmationService, 
@@ -82,6 +83,7 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
 
   checkPermisos(){
 	  this.getPermisoEliminarReactivarServicios();
+    this.getPermisoSuscribir();
   }
 
   getPermisoEliminarReactivarServicios() {
@@ -155,7 +157,12 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
   }
 
   checkServ(){
-    if(this.selectedRows.length != 1){
+    let msg = this.commonsService.checkPermisos(this.permisoSuscripcion, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    }
+    else if(this.selectedRows.length != 1){
       this.showMessage("error",
       this.translateService.instant("Limite de servicios por suscripcion"),
       this.translateService.instant("facturacion.suscripcion.unServicioSuscripcion")
@@ -243,21 +250,31 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
     if (selectedServicio.formapago != this.translateService.instant("facturacion.productos.pagoNoDisponible")) {
       
       if (selectedServicio.fechaBajaIva == null) {
-        let serviciosLista : ListaServiciosSuscripcionItem[] = [];
 
-        let newServicio = new ListaServiciosSuscripcionItem();
-        newServicio.idServicio = selectedServicio.idservicio;
-        newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
-        newServicio.idTipoServicios = selectedServicio.idtiposervicios;
-        newServicio.noFacturable = selectedServicio.noFacturable;
-        newServicio.descripcion = selectedServicio.descripcion;
+        //Comprueba si el servicio es automatico
+        if (selectedServicio.automatico == "Manual") {
+          let serviciosLista : ListaServiciosSuscripcionItem[] = [];
 
-        serviciosLista.push(newServicio);
+          let newServicio = new ListaServiciosSuscripcionItem();
+          newServicio.idServicio = selectedServicio.idservicio;
+          newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
+          newServicio.idTipoServicios = selectedServicio.idtiposervicios;
+          newServicio.noFacturable = selectedServicio.noFacturable;
+          newServicio.descripcion = selectedServicio.descripcion;
 
-        if (this.checkFormasPagoComunes(serviciosLista)) {
-          return true;
+          serviciosLista.push(newServicio);
+
+          if (this.checkFormasPagoComunes(serviciosLista)) {
+            return true;
+          }
+          else{
+            return false;
+          }
         }
-        else{
+        else {
+          this.showMessage("error",
+          this.translateService.instant("facturacion.servicios.noValido"),
+          this.translateService.instant("facturacion.servicios.noValidoDesc"));
           return false;
         }
       }
@@ -349,8 +366,8 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
       }
       else {
         this.showMessage("error",
-          this.translateService.instant("menu.facturacion.noCompatiblePorUsuario"),
-          this.translateService.instant("menu.facturacion.noCompatiblePorUsuarioDesc")
+          this.translateService.instant("facturacion.productos.noCompatiblePorUsuario"),
+          this.translateService.instant("facturacion.productos.noCompatiblePorUsuarioDesc")
         );
         return false;
       }
@@ -600,6 +617,15 @@ export class GestionServiciosComponent implements OnInit, OnDestroy {
         ];
       }
     });
+  }
+
+  getPermisoSuscribir(){
+    this.commonsService
+			.checkAcceso(procesos_PyS.fichaCompraSuscripcion)
+			.then((respuesta) => {
+				this.permisoSuscripcion = respuesta;
+			})
+			.catch((error) => console.error(error));
   }
 
   //FIN SERVICIOS

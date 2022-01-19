@@ -82,7 +82,7 @@
 
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura"
+      <button pButton [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura || isLetrado"
         type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}"></button>
 
       <button *ngIf="!historico" (click)="mostrarHistorico()" pButton type="button" icon="fa fa-history " iconPos="left"
@@ -92,7 +92,7 @@
         label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
       <button pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-        [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura"
+        [disabled]="selectedDatos.length == 0 || selectedDatos == undefined || !permisoEscritura || isLetrado || disableEliminar"
         label="{{ 'general.boton.eliminar' | translate}}" (click)="confirmDelete()"></button>
     </div>
   </div>

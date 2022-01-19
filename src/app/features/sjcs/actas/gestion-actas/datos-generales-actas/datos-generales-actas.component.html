@@ -77,7 +77,7 @@
           <div class="col-lg-3 col-md-3">
             <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucion' |
                   translate}}</strong></label>
-                <app-fecha [(value)]="this.datosFiltro.fecharesolucion" (valueChangeSelected)="fillFechaResolucion($event)"
+                <app-fecha [(value)]="datosFiltro.fecharesolucion" (valueChangeSelected)="fillFechaResolucion($event)"
                   (valueChangeInput)="fillFechaResolucion($event)">
                 </app-fecha>
           </div>
@@ -85,8 +85,8 @@
           <div class="form-group col-lg-3 col-md-3">
               <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunion' |
                 translate}}*</strong></label>
-              <app-fecha [(value)]="this.datosFiltro.fechareunion" (valueChangeSelected)="fillFechaReunion($event)"
-                (valueChangeInput)="fillFechaReunion($event)">
+              <app-fecha [(value)]="datosFiltro.fechareunion" (valueChangeSelected)="fillFechaReunion($event)"
+              (valueChangeInput)="fillFechaReunion($event)">
               </app-fecha>
             </div>
 

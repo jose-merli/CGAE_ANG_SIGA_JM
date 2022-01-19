@@ -244,7 +244,7 @@ export class TablaResultadoMixComponent implements OnInit {
   }
   getComboGuardias(row : Row, idTurno){
     this.sigaServices.getParam(
-      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+      "busquedaGuardia_guardiaNoBaja", "?idTurno=" + idTurno).subscribe(
         data => {
           row.cells[1].combo = data.combooItems;    
         },
@@ -1235,13 +1235,15 @@ export class TablaResultadoMixComponent implements OnInit {
 
     if(this.fechaActual == null || this.fechaActual== undefined || this.observaciones == null || this.observaciones== "" || this.selectedArray.length==0){
       this.mensajeObservaciones();
-    }else{
+    }
+    else{
 
       this.infoParaElPadre = [];
       
       this.rowGroups.forEach(el => {
         if(this.selectedArray.includes(el.id)){
           let obj = JSON.parse(JSON.stringify(el.cells));
+
           this.infoParaElPadre.push( {
             'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
             'fechaActual': this.fechaActual,

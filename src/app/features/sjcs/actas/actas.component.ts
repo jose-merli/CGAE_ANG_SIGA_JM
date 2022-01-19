@@ -9,9 +9,6 @@ import { Router } from '../../../../../node_modules/@angular/router';
 import { procesos_comision } from '../../../permisos/procesos_comision';
 import { DatePipe } from '@angular/common';
 
-
-
-
 @Component({
   selector: 'app-actas',
   templateUrl: './actas.component.html',
