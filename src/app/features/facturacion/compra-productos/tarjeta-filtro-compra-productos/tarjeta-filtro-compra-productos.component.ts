@@ -44,7 +44,7 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
   apellidosCliente: string;
   nifCifCliente: string;
 
-  permisoCompra;
+  permisoCompra: boolean = false;
   
   @Output() busqueda = new EventEmitter<boolean>();
 
@@ -319,7 +319,9 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
 
     if (msg != undefined) {
       this.msgs = msg;
-    } else this.nuevaCompra();
+    } else{
+      this.nuevaCompra();
+    }
   }
 
   nuevaCompra() {

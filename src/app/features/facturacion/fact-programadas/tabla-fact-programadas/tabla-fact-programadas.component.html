@@ -48,7 +48,6 @@
                   <a class="enlace" (click)="openTab(dato)"><span [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span></a>
                 </div>
 
-
                 <div *ngSwitchCase="'fechaCompraSuscripcionDesde'">
                   <span [ngClass]="{ historico: historico }">{{ dato[col.field] | date: "dd/MM/yyyy" }}</span>
                 </div>

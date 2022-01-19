@@ -91,9 +91,17 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
     }
   }
 
-  changeModoBusqueda() {
-    this.datos = [];
-    this.buscar = false;
+  changeModoBusqueda(event) {
+   
+    if (event == "f") {
+      this.datos = [];
+      this.buscar = false;
+      this.filtros.getComboFacturacion()
+    } else if (event == "p") {
+      this.datos = [];
+      this.buscar = false;
+      this.filtros.getComboPagos()
+    }
   }
 
   searchFacturacion() {

@@ -551,25 +551,28 @@ this.estado = this.datosGeneralesIniciales.estado;
     //console.log('DATA TO DUPLICATE *: ', event)
 //TO DO: pasar los datos event al servicio global para obtenerlos desde tabla-mix
   this.persistenceService.setDatos(event);
-  let estadoNumerico = "0";
+  let estadoNumerico = "4";
   switch (event.estado) {
     case "Pendiente":
-      estadoNumerico = "5";
-      break;
-    case "Programada":
-      estadoNumerico = "1";
-      break;
-    case "En proceso":
-      estadoNumerico = "2";
-      break;
-    case "Procesada con Errores":
-      estadoNumerico = "3";
-      break;
-    case "Generada":
       estadoNumerico = "4";
       break;
-    default:
+    case "Programada":
       estadoNumerico = "0";
+      break;
+    case "En proceso":
+      estadoNumerico = "1";
+      break;
+    case "Procesada con Errores":
+      estadoNumerico = "2";
+      break;
+    case "Generada":
+      estadoNumerico = "3";
+      break;
+      case "Reprogramada":
+        estadoNumerico = "5";
+        break;
+    default:
+      estadoNumerico = "4";
       break;
   }
   let idCalG;
@@ -669,25 +672,28 @@ this.estado = this.datosGeneralesIniciales.estado;
         };
 
       datosGeneralesToSave = datGen;
-      let estadoNumerico = "0";
+      let estadoNumerico = "4";
       switch (datosGeneralesToSave.estado) {
 				case "Pendiente":
-					estadoNumerico = "5";
-					break;
-				case "Programada":
-					estadoNumerico = "1";
-					break;
-				case "En proceso":
-					estadoNumerico = "2";
-					break;
-				case "Procesada con Errores":
-					estadoNumerico = "3";
-          break;
-        case "Generada":
 					estadoNumerico = "4";
 					break;
-				default:
+				case "Programada":
 					estadoNumerico = "0";
+					break;
+				case "En proceso":
+					estadoNumerico = "1";
+					break;
+				case "Procesada con Errores":
+					estadoNumerico = "2";
+          break;
+        case "Generada":
+					estadoNumerico = "3";
+          break;
+          case "Reprogramada":
+            estadoNumerico = "5";
+            break;
+				default:
+					estadoNumerico = "4";
 					break;
       }
       this.estado = datosGeneralesToSave.estado;
@@ -888,6 +894,7 @@ this.estado = this.datosGeneralesIniciales.estado;
 
 
   newCalendarProg(datos){
+   
     this.sigaServices.post(
    "guardiaCalendario_newCalendarioProgramado",  datos).subscribe(
      data => {
@@ -899,7 +906,11 @@ this.estado = this.datosGeneralesIniciales.estado;
           JSON.stringify(this.persistenciaGuardia)
         );
       }
+      if (datos.idCalG == null){
+        this.showMessage('info', "Debe asociar alguna guardia", "Debe asociar alguna guardia");
+      }else{
         this.router.navigate(["/programacionCalendarios"]);
+      }
         this.progressSpinner = false;
      }, err => {
       this.progressSpinner = false;

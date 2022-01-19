@@ -87,41 +87,37 @@ export class CertificacionFacComponent implements OnInit {
 
     if (event == true) {
 
-      if (this.hayCamposRellenos()) {
-        this.mostrarTabla = false;
-        this.progressSpinner = true;
+      this.mostrarTabla = false;
+      this.progressSpinner = true;
 
-        this.sigaServices.post("certificaciones_buscarCertificaciones", this.filtros.filtros).subscribe(
-          data => {
-            const resp: CertificacionesObject = JSON.parse(data.body);
-            this.progressSpinner = false;
+      this.sigaServices.post("certificaciones_buscarCertificaciones", this.filtros.filtros).subscribe(
+        data => {
+          const resp: CertificacionesObject = JSON.parse(data.body);
+          this.progressSpinner = false;
 
-            if (resp && resp.error && resp.error != null && resp.error.description != null && resp.error.code != null && resp.error.code.toString() == "500") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
-            } else {
-              if (resp.error != null && resp.error.description != null && resp.error.code != null && resp.error.code.toString() == "200") {
-                this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(resp.error.description.toString()));
-              }
-
-              this.datos = resp.certificacionesItemList;
-              this.filtrosDeBusqueda = Object.assign({}, this.filtros.filtros);
-              this.mostrarTabla = true;
+          if (resp && resp.error && resp.error != null && resp.error.description != null && resp.error.code != null && resp.error.code.toString() == "500") {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
+          } else {
+            if (resp.error != null && resp.error.description != null && resp.error.code != null && resp.error.code.toString() == "200") {
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(resp.error.description.toString()));
             }
 
-          },
-          err => {
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-            setTimeout(() => {
-              this.tabla.tablaFoco.nativeElement.scrollIntoView();
-            }, 5);
+            this.datos = resp.certificacionesItemList;
+            this.filtrosDeBusqueda = Object.assign({}, this.filtros.filtros);
+            this.mostrarTabla = true;
           }
-        );
-      } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-      }
+
+        },
+        err => {
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+          setTimeout(() => {
+            this.tabla.tablaFoco.nativeElement.scrollIntoView();
+          }, 5);
+        }
+      );
     }
   }
 
@@ -154,6 +150,14 @@ export class CertificacionFacComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
+          if (err && (err.status == '403' || err.status == 403)) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
         },
         () => {
           this.getCertificaciones(true);

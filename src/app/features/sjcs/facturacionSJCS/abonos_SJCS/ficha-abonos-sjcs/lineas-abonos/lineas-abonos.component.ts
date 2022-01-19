@@ -42,6 +42,7 @@ export class LineasAbonosComponent implements OnInit, OnChanges {
 
   openFicha: boolean = false;
 
+  intro:boolean= false;
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -50,13 +51,18 @@ export class LineasAbonosComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    if (this.bodyInicial != undefined) {
-      this.getComboTiposIVA();
-      this.getParametros();
-    }
+
+     // this.getComboTiposIVA();
+      //this.getParametros();
+    
    }
 
   ngOnChanges(changes: SimpleChanges) {
+    if(changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined && !this.intro){
+      this.intro = true;
+      this.getComboTiposIVA();
+      this.getParametros();
+    }
     if (changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined) {
 
         this.getLineasAbono();

@@ -187,8 +187,12 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   }
 
   changeDateFormat(date1){
+    let date1C = date1;
     // date1 dd/MM/yyyy
-    let date1C = date1.split("/").reverse().join("-")
+    if (!isNaN(Number(date1))){
+      date1C = date1.split("/").reverse().join("-");
+    }
+     
     return date1C;
   }
 
@@ -233,7 +237,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   }
 	formatDateSol(date) {
     const pattern = 'dd/MM/yyyy hh:mm:ss';
-    if (date != undefined && !date.includes('/'))
+    if (date != undefined && isNaN(Number(date)))
 		return this.datepipe.transform(date, pattern);
 	
 	  }

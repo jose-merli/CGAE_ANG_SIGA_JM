@@ -4,6 +4,7 @@ import { SortEvent } from 'primeng/api';
 import { Subject, Subscription } from 'rxjs';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
+import { ComboPreciosSuscripcionItem } from '../../../../models/ComboPreciosSuscripcionItem';
 import { DatosBancariosItem } from '../../../../models/DatosBancariosItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { FichaTarjetaPreciosItem } from '../../../../models/FichaTarjetaPreciosItem';
@@ -108,8 +109,9 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   disableDown: boolean = true;
   disableUp: boolean = true;
   subscriptionListaPrecios: Subscription;
-  comboPrecios: ComboItem[];
-  arrayPrecios: FichaTarjetaPreciosItem[];
+  comboPrecios: ComboItem[] = [];
+  arrayPrecios: ComboPreciosSuscripcionItem[];
+  comboServiciosManuales: ListaServiciosItems[];
   // tiposObject: ComboItem[];
   // subscriptionTypeSelectValues: Subscription;
 
@@ -139,7 +141,9 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       if(this.ficha.servicios.length>0){
         this.ficha.servicios.forEach(el => el.idPeticion = this.ficha.nSolicitud);
         this.serviciosTarjeta = this.ficha.servicios;
-        this.getComboPrecios();
+        if(this.ficha.idPersona != null && this.serviciosTarjeta.length >0){
+          this.getComboPrecios();
+        }
       }
     }
     this.datosTarjeta = this.ficha;
@@ -208,7 +212,9 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
             servicio.precioServicioValor = Number(servicio.precioServicioValor).toFixed(2);
           }
           this.newFormaPagoCabecera();
-          this.getComboPrecios();
+          if(this.ficha.idPersona != null && this.serviciosTarjeta.length >0){
+            this.getComboPrecios();
+          }
 
           this.datosTarjeta = this.ficha;
 
@@ -268,7 +274,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
 
           this.comboServicios = JSON.parse(listaServiciosDTO.body).listaServiciosItems
 
-          //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e servicios
+          //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera pagina de servicios
           this.tablaServicios.reset();
 
           //Se revisan las formas de pago para añadir los "no factuables" y los "No disponible"
@@ -287,6 +293,8 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
               }
             }
           });
+
+          this.comboServiciosManuales = this.comboServicios.filter(el => el.automatico == "Manual");
 
           if(this.ficha.fechaPendiente == null && this.ficha.servicios.length > 0){
             this.initServicios();
@@ -353,7 +361,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     let campoVacio = false;
     //Comprobacion de campos obligatorios de los servicios
     this.serviciosTarjeta.forEach(el => {
-      if (el.idPrecioServicio == null || 
+      if (//el.idPrecioServicio == null || 
         (el.fechaAlta == null && this.ficha.fechaAceptada!= null) ||
         (el.fechaBaja == null && this.ficha.fechaAnulada!= null)) {
           campoVacio = true;
@@ -432,7 +440,9 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       newServicio.solicitarBaja = selectedServicio.solicitarBaja;
       this.serviciosTarjeta.push(newServicio);
       this.checkTotal();
-      this.getComboPrecios();
+      if(this.ficha.idPersona != null && this.serviciosTarjeta.length >0){
+        this.getComboPrecios();
+      }
     }
 
   }
@@ -457,39 +467,52 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       }
       this.checkTotal();
       //this.checkFormasPagoComunes(this.serviciosTarjeta);
-      this.getComboPrecios();
+      if(this.ficha.idPersona != null && this.serviciosTarjeta.length >0){
+        this.getComboPrecios();
+      }
     }
 
   checkServicioSeleccionado(selectedServicio : ListaServiciosItems) {
     if (selectedServicio.formapago != this.translateService.instant("facturacion.productos.pagoNoDisponible")) {
       
       if (selectedServicio.fechaBajaIva == null) {
-        let serviciosLista : ListaServiciosSuscripcionItem[] = JSON.parse(JSON.stringify(this.serviciosTarjeta));
 
-        let newServicio = new ListaServiciosSuscripcionItem();
-        newServicio.idServicio = selectedServicio.idservicio;
-        newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
-        newServicio.idTipoServicios = selectedServicio.idtiposervicios;
-        newServicio.noFacturable = selectedServicio.noFacturable;
-        newServicio.descripcion = selectedServicio.descripcion;
+        //Comprueba si el servicio es automatico
+        if (selectedServicio.automatico == "Manual") {
 
-        serviciosLista.push(newServicio);
+          let serviciosLista : ListaServiciosSuscripcionItem[] = JSON.parse(JSON.stringify(this.serviciosTarjeta));
 
-        if (this.checkFormasPagoComunes(serviciosLista)) {
-          let found = this.serviciosTarjeta.find(serv =>
-            serv.idServicio == selectedServicio.idservicio && serv.idTipoServicios == selectedServicio.idtiposervicios && serv.idServiciosInstitucion == selectedServicio.idserviciosinstitucion
-          )
-          if (found == undefined) {
-            return true;
-          } else {
-            this.showMessage("error",
-              this.translateService.instant("facturacion.productos.productoPresenteLista"),
-              this.translateService.instant("facturacion.productos.productoPresenteListaDesc")
-            );
+          let newServicio = new ListaServiciosSuscripcionItem();
+          newServicio.idServicio = selectedServicio.idservicio;
+          newServicio.idServiciosInstitucion = selectedServicio.idserviciosinstitucion;
+          newServicio.idTipoServicios = selectedServicio.idtiposervicios;
+          newServicio.noFacturable = selectedServicio.noFacturable;
+          newServicio.descripcion = selectedServicio.descripcion;
+
+          serviciosLista.push(newServicio);
+
+          if (this.checkFormasPagoComunes(serviciosLista)) {
+            let found = this.serviciosTarjeta.find(serv =>
+              serv.idServicio == selectedServicio.idservicio && serv.idTipoServicios == selectedServicio.idtiposervicios && serv.idServiciosInstitucion == selectedServicio.idserviciosinstitucion
+            )
+            if (found == undefined) {
+              return true;
+            } else {
+              this.showMessage("error",
+                this.translateService.instant("facturacion.productos.productoPresenteLista"),
+                this.translateService.instant("facturacion.productos.productoPresenteListaDesc")
+              );
+              return false;
+            }
+          }
+          else{
             return false;
           }
         }
-        else{
+        else {
+          this.showMessage("error",
+          this.translateService.instant("facturacion.servicios.noValido"),
+          this.translateService.instant("facturacion.servicios.noValidoDesc"));
           return false;
         }
       }
@@ -741,7 +764,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
       //Si son todos no facturables
       if (i == servicios.length) {
         let noFacturableItem = new ComboItem();
-        noFacturableItem.label = this.translateService.instant("facturacion.servicios.noFacturable");
+        noFacturableItem.label = this.translateService.instant("facturacion.productos.noFacturable");
         noFacturableItem.value = "-1";
         this.comboComun.push(noFacturableItem);
         this.selectedPago = "-1";
@@ -792,60 +815,97 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   // }
 
   getComboPrecios(){
-    let servicio = new ServicioDetalleItem(); 
-    servicio.idservicio = this.serviciosTarjeta[0].idServicio;
-    servicio.idtiposervicios = this.serviciosTarjeta[0].idTipoServicios;
-    servicio.idserviciosinstitucion = this.serviciosTarjeta[0].idServiciosInstitucion;
-    this.subscriptionListaPrecios = this.sigaServices.post("fichaServicio_obtenerPreciosServicio", servicio).subscribe(
+    this.datosTarjeta.servicios = this.serviciosTarjeta;
+    let peticion = JSON.parse(JSON.stringify(this.datosTarjeta)); 
+    this.subscriptionListaPrecios = this.sigaServices.post("PyS_comboPreciosServPers",
+    peticion).subscribe(
       response => {
         this.progressSpinner = false;
 
         let preciosServicioObject = JSON.parse(response.body);
-        this.arrayPrecios = preciosServicioObject.fichaTarjetaPreciosItem;
+        this.arrayPrecios = preciosServicioObject.preciosSuscripcionItem;
 
         if (preciosServicioObject.error.code == 500) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          //this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
         else{
           this.serviciosTarjeta.forEach(serv => {
             if(serv.automatico == "1"){
-              let precioDef = this.arrayPrecios.find(el => 
-                el.pordefecto == "1"
-              )
-              if(precioDef != undefined){
-                serv.idPrecioServicio = precioDef.idpreciosservicios.toString();
-                serv.precioServicioDesc = precioDef.descripcionprecio;
-                serv.precioServicioValor = precioDef.precio;
-                serv.periodicidadValor = precioDef.periodicidadValor.toString();
-                serv.periodicidadDesc = precioDef.descripcionperiodicidad;
-                serv.idPeriodicidad = precioDef.idperiodicidad.toString();
-              }
-            }
-            else{
-              this.comboPrecios = [];
-              let i = 0;
-              serv.idComboPrecio = "0";
-              let total = null;
-              this.arrayPrecios.forEach(el =>{
-                //Comprobamos la mejor tarifa para la seleccion por defecto
-                if(total == null || total > ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100))){
-                  total = ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100));
-                  //Se asigna el precio por defecto unicamente cuando no tiene uno ya elegido
-                  if(serv.idPrecioServicio == null){
-                    serv.idComboPrecio = i.toString();
-                    this.onChangePrecio(serv);
-                  }
-                }
-                let comb = new ComboItem();
-                comb.label = el.descripcionprecio;
-                comb.value = i.toString();
-                this.comboPrecios.push(comb);
-                i++;
-              })
-              //Si el servicio tiene un precio seleccionado
+
+              //Se selecciona el precio que aparecia en la lista de suscripciones
               if(serv.idPrecioServicio != null){
                 serv.idComboPrecio = this.arrayPrecios.findIndex(el => el.idpreciosservicios.toString() == serv.idPrecioServicio).toString();
                 this.onChangePrecio(this.serviciosTarjeta[0]);
+              }
+              
+              let preciosVal = this.arrayPrecios.filter(el => 
+                el.valido == "1"
+              )
+              let total = null;
+              preciosVal.forEach(el =>{
+                //Comprobamos la mejor tarifa entre las disponibles de la suscripcion automatica
+                if(total == null || total > ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100))){
+                  total = ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100));
+                  //Se asignan los valores del precio más barato
+                  if(serv.idPrecioServicio == null){
+                    serv.idPrecioServicio = el.idpreciosservicios.toString();
+                    serv.precioServicioDesc = el.descripcionprecio;
+                    serv.precioServicioValor = el.precio;
+                    serv.periodicidadValor = el.periodicidadValor.toString();
+                    serv.periodicidadDesc = el.descripcionperiodicidad;
+                    serv.idPeriodicidad = el.idperiodicidad.toString();
+                    this.checkTotal();
+                  }
+                }
+              });
+            }
+            else{
+
+              //Solo seleecionamos un precio si la peticion ha sido ya aceptada
+              if(this.ficha.fechaAceptada != null){
+                let preciosVal = this.arrayPrecios.filter(el => 
+                  el.valido == "1"
+                )
+                let total = null;
+                preciosVal.forEach(el =>{
+                  //Comprobamos la mejor tarifa entre las disponibles de la suscripcion automatica
+                  if(total == null || total > ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100))){
+                    total = ((Number(el.precio) * Number(el.periodicidadValor)) * (1 + Number(serv.valorIva) / 100));
+                    //Se asignan los valores del precio más barato
+                    if(serv.idPrecioServicio == null){
+                      serv.idPrecioServicio = el.idpreciosservicios.toString();
+                      serv.precioServicioDesc = el.descripcionprecio;
+                      serv.precioServicioValor = el.precio;
+                      serv.periodicidadValor = el.periodicidadValor.toString();
+                      serv.periodicidadDesc = el.descripcionperiodicidad;
+                      serv.idPeriodicidad = el.idperiodicidad.toString();
+                      this.checkTotal();
+                    }
+                  }
+                });
+              }
+              //Inicializamos el combo con los precios que cumplen los criterios
+              else{
+              
+                this.comboPrecios = [];
+                let i = 0;
+                //serv.idComboPrecio = "0";
+                let total = null;
+                
+                this.arrayPrecios.forEach(el =>{
+                  let comb = new ComboItem();
+                  comb.label = el.descripcionprecio;
+                  comb.value = i.toString();
+                  if(el.valido == "1" || (serv.idPrecioServicio != undefined && serv.idPrecioServicio != null && el.idpreciosservicios.toString() == serv.idPrecioServicio.toString())){
+                    this.comboPrecios.push(comb);
+                  }
+                  i++;
+                })
+                //Si el servicio tiene un precio seleccionado
+                if(serv.idPrecioServicio != null){
+                  serv.idComboPrecio = this.arrayPrecios.findIndex(el => el.idpreciosservicios.toString() == serv.idPrecioServicio).toString();
+                  this.onChangePrecio(this.serviciosTarjeta[0]);
+                }
               }
             }
           })

@@ -126,7 +126,7 @@
           label="{{ 'general.boton.restablecer' | translate }}" [disabled]="isDisabledRestablecer() || !permisoEscritura"
           (click)="restablecer()"></button>
         <button pButton type="button" iconPos="left" icon="fa fa-save" label="{{ 'general.boton.guardar' | translate }}"
-          (click)="guardar()"  [disabled]="!permisoEscritura"></button>
+          (click)="guardar()"  [disabled]="!permisoEscritura || isLetrado || disableEliminar"></button>
       </div>
     </div>
 

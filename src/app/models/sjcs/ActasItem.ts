@@ -14,7 +14,11 @@ export class ActasItem {
 	  nombrepresidente:String;
 	  nombresecretario:String;
 	  fecharesolucion:Date;
+	  fecharesoluciondesde:Date;
+	  fecharesolucionhasta:Date;
 	  fechareunion:Date;
+	  fechareuniondesde:Date;
+	  fechareunionhasta:Date;
 	  horainicio: String;
 	  horafin: String;
 	  usumodificacion: Number;
