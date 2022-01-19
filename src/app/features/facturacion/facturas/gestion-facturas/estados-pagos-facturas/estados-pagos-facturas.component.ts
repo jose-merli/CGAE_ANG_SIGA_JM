@@ -49,6 +49,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   resaltadoDatos: boolean = false;
   resaltadoFecha: boolean = true;
   resaltadoEstado: boolean = false;
+  resaltadoComentario: boolean = true;
   resaltadoBanco: boolean = false;
   showModalNuevoEstado: boolean = false;
 
@@ -237,7 +238,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   nuevoAbono() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
-    if (this.bodyInicial.tipo != "ABONO" || !["6"].includes(ultimaAccion.idEstado)) {
+    if (this.bodyInicial.tipo != "ABONO" || !["6"].includes(this.bodyInicial.estado)) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.abonoPorCaja.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -491,7 +492,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Enlace al abono
   navigateToAbono(row: FacturaEstadosPagosItem) {
     let factura: FacturasItem = new FacturasItem();
-    factura.idFactura = row.idAbono;
+    factura.idAbono = row.idAbono;
     factura.tipo = "ABONO";
 
     sessionStorage.setItem("facturasItem", JSON.stringify(factura));
