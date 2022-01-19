@@ -3,7 +3,8 @@
 <div class="header-title">
   <i class="fa fa-square"></i>
   <p>{{ "menu.facturacion" | translate }}
-    <i class="fa fa-angle-right"></i>Búsqueda Ficheros Devoluciones
+    <i class="fa fa-angle-right"></i>{{ "menu.facturacion.exportacionesyotros" | translate }}
+    <i class="fa fa-angle-right"></i>{{ "menu.facturacion.contabilidad" | translate }}
   </p>
 </div>
 <div class="card">
@@ -17,12 +18,12 @@
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
           <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>Identificador desde</label>
+            <label>{{ "facturacion.contabilidad.filtro.identficadorDesde" | translate }}</label>
             <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
           </div>
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>Identificador hasta</label>
+            <label>{{ "facturacion.contabilidad.filtro.identficadorHasta" | translate }}</label>
             <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="filtros.idContabilidadHasta" pInputText />
           </div>
 

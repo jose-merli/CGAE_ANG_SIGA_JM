@@ -188,6 +188,17 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
     });
   }
 
+  checkFacturar() {
+   this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Botón no implementado actualmente"
+      }
+    ];
+  }
+
+  //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {
     this.msgs = [];
   }

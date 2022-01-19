@@ -1,0 +1,164 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id="facSJCSFichaFactDatosFac">
+  <div class="card">
+    <div class="card-header header-ficha">
+      <div *ngIf="!showFichaFacturacion" class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado" (click)="onHideDatosGenerales()">
+            <i class="fas fa-cog icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="onHideDatosGenerales()">
+            <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.datosFacturacion" | translate }}
+            </label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre" | translate }}:
+              <span>{{ body.nombre }}</span>
+            </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde" | translate }}:
+              <span>{{ body.fechaDesde | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta" | translate }}:
+              <span>{{ body.fechaHasta | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.regularizada" | translate }}:
+              <span>{{ checkRegularizar == true ? 'Sí': 'No' }}</span>
+            </label>
+            <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" | translate }}:
+              <span>{{ getTextEstadoFac(idEstadoFacturacion) }}</span>
+            </label>
+            <i *ngIf="!showFichaFacturacion" class="fa fa-angle-down float-right" (click)="onHideDatosGenerales()"></i>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="showFichaFacturacion" class="header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="onHideDatosGenerales()">
+        <div class="img-colegiado">
+          <i class="fas fa-cog icon-ficha"></i>
+        </div>
+        <label class="title-ficha">{{ 'facturacionSJCS.facturacionesYPagos.datosFacturacion' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+    <div *ngIf="showFichaFacturacion" class="card-body">
+      <div class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group col-lg-6 col-md-6">
+            <div>
+              <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre' | translate}} (*)</label>
+              <input type="text" maxlength="95" name="nombre" class="form-control"
+                [disabled]='cerrada || !permisos || camposDisabled()' [(ngModel)]='body.nombre' pInputText
+                [ngClass]="{'camposObligatorios': marcarObligatorio('input', body.nombre)}" />
+            </div>
+            <div style="margin-top: 1em; margin-bottom: 1em;">
+              <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}
+                (*)</label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria'
+                [options]="partidaPresupuestaria" [filter]="true"
+                placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+                [showClear]="true" [disabled]='cerrada || !permisos || camposDisabled()'
+                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.idPartidaPresupuestaria)}">
+              </p-dropdown>
+            </div>
+            <div style="display: flex;">
+              <div class="form-group col-lg-6 col-md-6" style="margin-left: -1em;">
+                <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}} (*)</label>
+                <app-fecha [utc]="false" [(value)]="body.fechaDesde" (valueChangeSelected)="fillFechaDesde($event)"
+                  (valueChangeInput)="fillFechaDesde($event)" [disabled]='cerrada || !permisos || camposDisabled()'
+                  [inputStyleClass]="marcarObligatorio('datePicker', body.fechaDesde) ? 'camposObligatorios': ''">
+                </app-fecha>
+              </div>
+              <div class="form-group col-lg-6 col-md-6" style="margin-left: 2em;">
+                <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta' | translate}} (*)</label>
+                <app-fecha [utc]="false" [(value)]="body.fechaHasta" [minDate]="minDate"
+                  (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)"
+                  [disabled]='cerrada || !permisos || camposDisabled()'
+                  [inputStyleClass]="marcarObligatorio('datePicker', body.fechaHasta) ? 'camposObligatorios': ''">
+                </app-fecha>
+              </div>
+            </div>
+            <div style="display: flex;">
+              <div class="form-group col-lg-6 col-md-6 p-0">
+                <div class="not-margin-left">
+                  <p-checkbox [(ngModel)]='checkRegularizar' binary="true"
+                    label="{{'facturacionSJCS.facturacionesYPagos.regularizarFacturado' | translate}}"
+                    [disabled]='cerrada || !permisos || camposDisabled()'></p-checkbox>
+                </div>
+              </div>
+              <div class="form-group col-lg-6 col-md-6">
+                <p-checkbox [(ngModel)]='checkVisible' binary="true"
+                  label="{{'facturacionSJCS.facturacionesYPagos.visible' | translate}}"
+                  [disabled]="cerrada || !permisos || camposDisabled() || idEstadoFacturacion != '20'"></p-checkbox>
+              </div>
+            </div>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <p-table [value]="estadosFacturacion" [columns]="cols" [responsive]="true" #tabla class="tabla-listado"
+              [paginator]="true" [rows]="selectedItem" paginatorPosition="both">
+              <ng-template pTemplate="colgroup" let-columns>
+                <colgroup>
+                  <col *ngFor="let col of cols">
+                </colgroup>
+              </ng-template>
+              <ng-template pTemplate="header" let-columns>
+                <tr>
+                  <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                    {{ col.header | translate}}</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                  <td class="text-center" *ngFor="let col of columns">
+                    <div *ngIf="col.field == 'fechaEstado'" [pTooltip]="dato.observaciones" tooltipPosition="top">
+                      <label>{{ dato[col.field] | date: 'dd/MM/yyyy H:mm'}}</label>
+                    </div>
+                    <div *ngIf="col.field != 'fechaEstado'" [pTooltip]="dato.observaciones" tooltipPosition="top">
+                      <span>{{dato[col.field]}}</span>
+                    </div>
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="columns.length">
+                    {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                  </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="paginatorleft">
+                <div class="mostrar d-flex text-right justify-content-end">
+                  <label class="pr-3 registros-totales">Mostrando registros del {{tabla.first + 1}} al
+                    {{tabla.first + tabla.rows}} de un total de {{tabla.totalRecords}}</label>
+                </div>
+              </ng-template>
+            </p-table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer" *ngIf="showFichaFacturacion">
+      <div class="text-right main-button">
+        <button (click)="descargarLog()" [disabled]="!permisos" pButton type="button"
+        icon="fa fa-download" iconPos="left"
+        label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
+        <button (click)="simular()" [disabled]="disabledSimular()  || !permisos" pButton type="button"
+          icon="fa fa-play-circle" iconPos="left"
+          label="{{ 'facturacionSJCS.facturacionesYPagos.simular' | translate }}"></button>
+        <button (click)="ejecutar()" [disabled]='disabledEjecutar() || !permisos' pButton type="button"
+          icon="fa fa-play" iconPos="left"
+          label="{{ 'general.boton.ejecutar' | translate }}/{{ 'general.boton.recalcularFacturacion' | translate }}"></button>
+        <button [disabled]="true" pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"
+          icon="fa fa-send" iconPos="left"></button>
+        <button (click)="reabrir()" [disabled]='disabledReabrir() || !permisos' pButton type="button"
+          label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}" icon="fa fa-lock-open"
+          iconPos="left"></button>
+        <button (click)="restablecer()" [disabled]="disabledRestablecer() || !permisos" pButton type="button"
+          icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+        <button (click)="save()" [disabled]="disabledSave() || !permisos" pButton type="button" icon="fa fa-save"
+          iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>

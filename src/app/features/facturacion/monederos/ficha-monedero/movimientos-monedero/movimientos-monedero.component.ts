@@ -181,8 +181,8 @@ export class MovimientosMonederoComponent implements OnInit {
     //REVISAR MENSAJES
     else if(this.movimientosTarjeta.length == 0){
       this.showMessage("error",
-        "***"+this.translateService.instant("facturacion.productos.noBorrarProductos"),
-        "***"+this.translateService.instant("facturacion.productos.prodNecesario")
+        this.translateService.instant("facturacion.monedero.noMovimientoAsociado"),
+        this.translateService.instant("facturacion.monedero.movimientoNecesario")
       );
     }else {
       this.updateMovimientosMonedero();
@@ -235,12 +235,12 @@ export class MovimientosMonederoComponent implements OnInit {
 
       newMovimiento.fecha = new Date();
       newMovimiento.impOp = 0;
-      newMovimiento.concepto = "";
+      newMovimiento.concepto = "Ingreso";
       newMovimiento.nuevo = true;
       
       //Nos aseguramos que el otro movimiento no sea editable
       if(this.movimientosTarjeta.length > 0){
-        this.movimientosTarjeta[this.movimientosTarjeta.length-1].nuevo = false;
+        this.movimientosTarjeta[0].nuevo = false;
       }
       this.movimientosTarjeta.unshift(newMovimiento);
       this.checkTotal();
@@ -256,7 +256,7 @@ export class MovimientosMonederoComponent implements OnInit {
       //Se comprueba que la fila seleccionada es posterior al ultimo gasto
       let indx = this.movimientosTarjeta.indexOf(mov);
       if(indx != 0){
-        this.showMessage("error", "Error", "** Solo se permite borrar el primer movimiento");
+        this.showMessage("error", "Error", this.translateService.instant("facturacion.monedero.borrarSoloPrimero"));
       }
       else{
         //Se comprueba que alguna fila seleccionada sea un ingreso
@@ -274,11 +274,11 @@ export class MovimientosMonederoComponent implements OnInit {
             this.movimientosTarjeta.splice(indx, 1);
           }
           else{
-            this.showMessage("error", "Error", "** No se puede eliminar un movimiento de ingreso anterior a uno de cobro");
+            this.showMessage("error", "Error", this.translateService.instant("facturacion.monedero.ingresoPreCobro"));
           }
         }
         else if(mov.impOp < 0){
-          this.showMessage("error", "Error", "** No se puede eliminar un movimiento de cobro");
+          this.showMessage("error", "Error", this.translateService.instant("facturacion.monedero.noBorrarCobro"));
         }
       }
     }

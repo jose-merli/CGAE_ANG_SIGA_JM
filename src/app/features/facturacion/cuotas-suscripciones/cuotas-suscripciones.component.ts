@@ -23,6 +23,7 @@ export class CuotasSuscripcionesComponent implements OnInit {
   progressSpinner: boolean = false;
 
   listaSuscripciones: ListaSuscripcionesItem[];
+  filtrosSuscripciones: FiltrosSuscripcionesItem;
 
   muestraTablaSuscripciones: boolean = false;
   fromFichaCen: boolean = false;
@@ -52,11 +53,11 @@ export class CuotasSuscripcionesComponent implements OnInit {
 
   busquedaSuscripciones(event) {
     this.progressSpinner = true;
-    let filtrosSuscripciones: FiltrosSuscripcionesItem = this.filtrosBusqueda.filtrosSuscripciones;
+    this.filtrosSuscripciones = this.filtrosBusqueda.filtrosSuscripciones;
 
     sessionStorage.setItem("filtroBusqSuscripcion",JSON.stringify(this.filtrosBusqueda.filtrosSuscripciones));
 
-    this.subscriptionSuscripcionesBusqueda = this.sigaServices.post("PyS_getListaSuscripciones", filtrosSuscripciones).subscribe(
+    this.subscriptionSuscripcionesBusqueda = this.sigaServices.post("PyS_getListaSuscripciones", this.filtrosSuscripciones).subscribe(
       listaSuscripcionesDTO => {
 
         

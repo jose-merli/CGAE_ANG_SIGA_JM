@@ -4,7 +4,7 @@
     <div class="card-header header-ficha">
 
       <!-- Cabecera en ficha cerrada -->
-      <div *ngIf="!esFichaActiva('lineas')" class="form-row">
+      <div *ngIf="!esFichaActiva()" class="form-row">
         <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('lineas')">
           <div class="img-colegiado">
             <i class="far fa-list-alt icon-ficha pointer"></i>
@@ -31,13 +31,13 @@
               </ng-container>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('lineas')"
-              *ngIf="!esFichaActiva('lineas')"></i>
+              *ngIf="!esFichaActiva()"></i>
           </div>
         </div>
       </div>
 
       <!-- Cabecera en ficha abierta -->
-      <div *ngIf="esFichaActiva('lineas')" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
         (click)="abreCierraFicha('lineas')">
         <div class="img-colegiado">
           <i class="far fa-list-alt icon-ficha"></i>
@@ -48,7 +48,7 @@
     </div>
 
     <!-- Cuerpo en ficha abierta -->
-    <div *ngIf="esFichaActiva('lineas')" class="card-body card-body-ficha">
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
 
       <!-- TABLA RESULTADOS -->
       <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
@@ -141,7 +141,7 @@
       
     </div>
 
-    <div *ngIf="esFichaActiva('lineas')" class="card-footer">
+    <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>

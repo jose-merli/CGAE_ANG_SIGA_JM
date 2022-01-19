@@ -8,6 +8,7 @@ import { FichaEstadoFacFacturacionItem } from '../../../../../models/FichaEstado
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-datos-generales-fact-programadas',
@@ -302,6 +303,32 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
         this.progressSpinner = false;
       }
     );
+  }
+
+  // Descargar LOG
+  descargarLog(){
+    let resHead ={ 'response' : null, 'header': null };
+
+    if (this.bodyInicial.nombreFichero) {
+      this.progressSpinner = true;
+      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFichaFacturacion", [{ idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idProgramacion }]);
+      descarga.subscribe(response => {
+        this.progressSpinner = false;
+
+        const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
+        let filename: string = response.headers.get("Content-Disposition");
+        filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+
+        saveAs(file, filename);
+        this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+      });
+    } else {
+      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+    }
   }
 
   // Cambios en fechas

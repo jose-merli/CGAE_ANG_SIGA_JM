@@ -81,6 +81,11 @@
         </div>
       </div>
 
+      <app-tarjeta-facturacion-generica [datosEntrada]="actuacionDesigna" [pantalla]="'ACTUACIONDESIGNA'"
+        (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac"
+        (opened)="openTarjetaFac = $event">
+      </app-tarjeta-facturacion-generica>
+
     </div>
 
     <div class="mt-3 text-right main-button">

@@ -38,7 +38,7 @@
 
                   <span *ngIf="col.field == 'fecha'">{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
 
-                  <span *ngIf="col.field == 'concepto' && !rowData.nuevo ">{{rowData[col.field]}}</span>
+                  <span *ngIf="col.field == 'concepto' && !rowData.nuevo">{{rowData[col.field]}}</span>
                   <input [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'concepto' && rowData.nuevo && movimientosTarjeta.length - 1 == rowIndex" type="text"
                     [(ngModel)]="rowData[col.field]" pInputText>
 

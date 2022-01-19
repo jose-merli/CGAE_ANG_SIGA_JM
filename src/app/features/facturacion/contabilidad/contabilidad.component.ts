@@ -59,7 +59,6 @@ export class ContabilidadComponent implements OnInit {
           d.fechaCreacion = this.transformDate(d.fechaCreacion);
           d.fechaExportacionDesde = this.transformDate(d.fechaExportacionDesde);
           d.fechaExportacionHasta = this.transformDate(d.fechaExportacionHasta);
-          d.nombreEstado = this.transformEstado(d.estado);
         });
 
         this.buscar = true;
@@ -98,27 +97,7 @@ export class ContabilidadComponent implements OnInit {
     fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
     return fecha;
   }
-  transformEstado(estado:number){
-    let nombreEstado:String;
-    switch (estado) {
-      case 0:
-          nombreEstado ="Caso 0"
-          break;
-      case 1:
-          nombreEstado ="Caso 1"
-          break;
-      case 2:
-          nombreEstado ="Caso 2"
-          break;
-      case 3:
-          nombreEstado ="Caso 3"  
-          break;
-      default:
-          nombreEstado ="Erroneo"
-          break;
-    } 
-    return nombreEstado;
-  }
+
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

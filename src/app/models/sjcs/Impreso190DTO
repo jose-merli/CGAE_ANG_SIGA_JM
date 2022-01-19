@@ -1,0 +1,9 @@
+import { Impreso190Item } from "./Impreso190Item";
+import { Error } from "../Error";
+
+export class Impreso190DTO {
+  error: Error;
+  pagosjgItem: Impreso190Item[] = [];
+
+  constructor() { }
+}

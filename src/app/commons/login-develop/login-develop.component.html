@@ -6,7 +6,9 @@
 
     <table align="center" class="table-login">
         <tr>
-            <td class="labelText"><label>Institución</label></td>
+            <td class="labelText">
+                <label>Institución</label>
+            </td>
             <td>
                 <!--<select formControlName="tmpLoginInstitucion" style="width:300px" (ngModelChange)="onChange($event)">
                     <option value="" selected></option>
@@ -19,12 +21,14 @@
                 </p-dropdown>
 
             </td>
-            <button [disabled]="isHabilitadoEntrar()" (keyup.enter)="submit()" pButton type="button " (click)='submit()'
+            <button [disabled]="isHabilitadoEntrar()" pButton type="button " (click)='submit()'
                 title="Entrar con los datos de los combos" label="Entrar"></button>
 
         </tr>
         <tr>
-            <td class="labelText"><label>¿Letrado?</label></td>
+            <td class="labelText">
+                <label>¿Letrado?</label>
+            </td>
             <td colspan="2">
                 <!--<select formControlName="sLetrado" class="boxCombo" style="width:300px;">
                     <option value=N selected="">NO, no soy Letrado</option>

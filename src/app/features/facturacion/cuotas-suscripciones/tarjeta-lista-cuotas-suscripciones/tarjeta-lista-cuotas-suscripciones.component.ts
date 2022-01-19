@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message, SortEvent } from 'primeng/api';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
+import { FiltrosSuscripcionesItem } from '../../../../models/FiltrosSuscripcionesItem';
 import { ListaSuscripcionesItem } from '../../../../models/ListaSuscripcionesItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
@@ -24,6 +25,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
 
   @Output() actualizarLista = new EventEmitter<Boolean>();
   @Input() listaSuscripciones: ListaSuscripcionesItem[];
+  @Input() filtrosSuscripciones: FiltrosSuscripcionesItem;
   @ViewChild("suscripcionesTable") suscripcionesTable: DataTable;
 
   cols = [
@@ -89,6 +91,15 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
     }
     this.checkPermisos();
     this.initComboEstadoSuscripcion();
+  }
+
+  ngOnChanges(changes: SimpleChanges){
+    if(this.filtrosSuscripciones.aFechaDe != null){
+      this.currentDate = this.filtrosSuscripciones.aFechaDe;
+    }
+    else {
+      this.currentDate = new Date();
+    }
   }
 
   initComboEstadoSuscripcion() {
@@ -287,6 +298,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
       solicitud.nSolicitud = row.nSolicitud;
       solicitud.fechaAceptada = row.fechaEfectiva;
       solicitud.fechaDenegada = row.fechaDenegada;
+      solicitud.idFormaPagoSeleccionada = row.idFormaPago;
       peticion.push(solicitud);
     });
     this.sigaServices.post('PyS_aprobarSuscripcionMultiple', peticion).subscribe(
@@ -295,6 +307,8 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else if(JSON.parse(n.body).error.description!=""){
           this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description);
+          //Se actualiza la información de la ficha
+          this.actualizarLista.emit(true);
         }else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Se actualiza la información de la ficha

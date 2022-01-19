@@ -111,11 +111,11 @@
 
       <button pButton (click)="confirmEliminar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-      <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
+      <button pButton (click)="descargarLog()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-download" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
       <button pButton (click)="confirmComunicar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.comunicar' | translate }}"></button>
       <button pButton (click)="nuevoFicheroAdeudos()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
     </div>
   </div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" width="425"></p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>

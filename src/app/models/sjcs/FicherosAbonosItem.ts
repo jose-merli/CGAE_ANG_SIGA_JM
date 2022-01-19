@@ -10,12 +10,14 @@ export class FicherosAbonosItem {
 	fechaCreacionHasta: Date;
 	idSufijo: String;
 	sufijo: String;
-	importeTotal: String;
+	importeTotal: string;
 	importeTotalDesde: String;
 	importeTotalHasta: String;
 	numRecibos: String;
 	numRecibosDesde: String;
 	numRecibosHasta: String;
+	propSEPA: string;
+	propOtros: string;
 
     constructor() { }
 }

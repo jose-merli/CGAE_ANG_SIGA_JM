@@ -67,7 +67,9 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     if (changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined) {
       this.getCols();
       this.getComboMotivosDevolucion();
-      this.getEstadosPagos();
+
+      if (this.bodyInicial.idFactura)
+        this.getEstadosPagos();
     }
   }
 
@@ -421,11 +423,13 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     let valid: boolean = true;
 
     if (this.nuevoEstado.idAccion == "7") {
-      valid = this.nuevoEstado && this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.impTotalPagado != undefined && this.nuevoEstado.impTotalPagado.trim().length != 0 && this.nuevoEstado.impTotalPorPagar && this.nuevoEstado.impTotalPorPagar.trim().length != 0
+      valid = this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.impTotalPagado != undefined && this.nuevoEstado.impTotalPagado.trim().length != 0 && this.nuevoEstado.impTotalPorPagar && this.nuevoEstado.impTotalPorPagar.trim().length != 0
         && this.nuevoEstado.idEstado != undefined && this.nuevoEstado.idEstado.trim().length != 0 && (this.nuevoEstado.idEstado != "5" || this.nuevoEstado.idEstado == "5" && this.nuevoEstado.cuentaBanco != undefined && this.nuevoEstado.cuentaBanco.trim().length != 0);
     } else {
       valid = this.nuevoEstado && this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.impTotalPagado != undefined && this.nuevoEstado.impTotalPagado.trim().length != 0 && this.nuevoEstado.impTotalPorPagar && this.nuevoEstado.impTotalPorPagar.trim().length != 0;
     }
+
+    valid = valid && this.nuevoEstado.comentario != undefined && this.nuevoEstado.comentario.trim().length != 0;
     
     if (!valid) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
@@ -487,7 +491,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Enlace al abono
   navigateToAbono(row: FacturaEstadosPagosItem) {
     let factura: FacturasItem = new FacturasItem();
-    factura.idFactura = row.idFactura;
+    factura.idFactura = row.idAbono;
     factura.tipo = "ABONO";
 
     sessionStorage.setItem("facturasItem", JSON.stringify(factura));

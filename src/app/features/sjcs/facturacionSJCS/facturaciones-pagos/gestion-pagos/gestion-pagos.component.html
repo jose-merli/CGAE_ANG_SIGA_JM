@@ -1,0 +1,72 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div id="fichaPagosSJCS">
+
+  <div>
+
+    <div id="top"></div>
+
+    <div class="datos-container">
+      <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>SJCS &nbsp;<i class="fa fa-angle-right"></i>{{'facturacionSJCS.facturacionesYPagos.fichaPago' | translate}}
+        </p>
+      </div>
+
+      <div class="tarjetaFija">
+
+        <div class="card">
+          <div class="card-body p-0">
+            <mat-accordion class="example-headers-align" multi>
+              <mat-expansion-panel [disabled]="true">
+                <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                  <app-tarjeta [image]="tarjetaFija.imagen" cardTitle="{{tarjetaFija.nombre | translate}}"
+                    [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono" [enlaces]="tarjetaFija.enlaces"
+                    [fixed]="tarjetaFija.fixed" class="w-100" (isOpen)="isOpenReceive($event)">
+                  </app-tarjeta>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                </ng-template>
+              </mat-expansion-panel>
+            </mat-accordion>
+          </div>
+        </div>
+
+      </div>
+
+      <app-datos-pagos *ngIf="showCards" [(idPago)]="idPago" [(idEstadoPago)]="idEstadoPago"
+        [(modoEdicion)]="modoEdicion" [numCriterios]="numCriterios" [editingConceptos]="editingConceptos"
+        [facturasMarcadas]="facturasMarcadas" [paramDeducirCobroAutom]="paramDeducirCobroAutom" [idFacturacionDesdeFichaFac]="idFacturacionDesdeFichaFac"
+        (facturacionChange)="idFacturacion = $event" (compensacionFactEvent)="compensacionFact()"
+        (addEnlace)="addEnlace($event)" (changePago)="getPago()">
+      </app-datos-pagos>
+
+      <app-conceptos-pagos *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago"
+        [idFacturacion]="idFacturacion" (editing)="changeEditingConceptos($event)" [modoEdicion]="modoEdicion"
+        (addEnlace)="addEnlace($event)">
+      </app-conceptos-pagos>
+
+      <app-configuracion-ficheros *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago"
+        [modoEdicion]="modoEdicion" (addEnlace)="addEnlace($event)">
+      </app-configuracion-ficheros>
+
+      <app-cartas-pago *ngIf="showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago" [modoEdicion]="modoEdicion"
+        (addEnlace)="addEnlace($event)">
+      </app-cartas-pago>
+
+      <app-compensacion-factura *ngIf=" showCards" [idPago]="idPago" [idEstadoPago]="idEstadoPago"
+        (facturasMarcadasEvent)="facturasMarcadas = $event" [modoEdicion]="modoEdicion"
+        [paramDeducirCobroAutom]="paramDeducirCobroAutom" (addEnlace)="addEnlace($event)">
+      </app-compensacion-factura>
+
+      <div class="text-right main-button">
+        <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+          label="{{ 'general.boton.volver' | translate}}"></button>
+      </div>
+    </div>
+
+    <div id="down"></div>
+
+  </div>
+
+</div>

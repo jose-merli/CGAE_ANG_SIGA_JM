@@ -20,6 +20,7 @@ export class GeneracionSeriesFacturaComponent implements OnInit, OnChanges {
   @Input() bodyInicial: SerieFacturacionItem;
 
   comboModeloFactura: any[] = [];
+  comboModeloFacturaRectificativa: any[] = [];
 
   @Input() openTarjetaGeneracion;
   @Output() opened = new EventEmitter<Boolean>();
@@ -35,11 +36,16 @@ export class GeneracionSeriesFacturaComponent implements OnInit, OnChanges {
     private translateService: TranslateService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    this.progressSpinner = true;
+    Promise.all([
+      this.getComboModelosComunicacion(),
+      this.getComboModelosComunicacionRectificativa()
+    ]).then(() => this.progressSpinner = false);
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.bodyInicial) {
-      this.getComboModelosComunicacion();
       this.restablecer();
     }
   }
@@ -49,6 +55,18 @@ export class GeneracionSeriesFacturaComponent implements OnInit, OnChanges {
       n => {
         this.comboModeloFactura = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboModeloFactura);
+      },
+      err => {
+
+      }
+    );
+  }
+
+  getComboModelosComunicacionRectificativa() {
+    this.sigaServices.getParam("facturacionPyS_comboModelosComunicacion", "?esRectificativa=true").subscribe(
+      n => {
+        this.comboModeloFacturaRectificativa = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModeloFacturaRectificativa);
       },
       err => {
 
