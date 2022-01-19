@@ -20,7 +20,7 @@
             <label>{{ 'facturacion.seriesFactura.generarPDF.modFact' | translate }}: 
               <span>{{ findLabelInCombo(comboModeloFactura, body.idModeloFactura) }}</span></label>
             <label>{{ 'facturacion.seriesFactura.generarPDF.modFactRect' | translate }}: 
-              <span>{{ findLabelInCombo(comboModeloFactura, body.idModeloRectificativa) }}</span></label>
+              <span>{{ findLabelInCombo(comboModeloFacturaRectificativa, body.idModeloRectificativa) }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('generacion')"
               *ngIf="!esFichaActiva()"></i>
@@ -56,7 +56,7 @@
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'facturacion.seriesFactura.generarPDF.modFactRect' | translate }} (*)</label>
             <p-dropdown class="select-form" [(ngModel)]='body.idModeloRectificativa' placeholder="{{'general.boton.seleccionar' | translate}}"
-                [options]="comboModeloFactura" [ngClass]="styleObligatorio(body.idModeloRectificativa)" [filter]="true" filterBy="label,labelSinTilde"
+                [options]="comboModeloFacturaRectificativa" [ngClass]="styleObligatorio(body.idModeloRectificativa)" [filter]="true" filterBy="label,labelSinTilde"
                 [showClear]="true"></p-dropdown>
           </div>
         </div>

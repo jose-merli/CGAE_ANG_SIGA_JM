@@ -119,17 +119,66 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
       idseriefacturacion: this.body.idSerieFacturacion
     };
 
+    this.progressSpinner = true;
     this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).subscribe(
       n => {
         let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAdeudosItems;
         if (results != undefined && results.length != 0) {
           this.ficherosAdeudos = results[0];
         }
+
+        this.progressSpinner = false;
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
       }
     );
+  }
+
+  generarFicheroAdeudos(): void {
+    if (this.isValid()) {
+      let ficheroAdeudos = new FicherosAdeudosItem();
+      ficheroAdeudos.idseriefacturacion = this.bodyInicial.idSerieFacturacion;
+      ficheroAdeudos.idprogramacion = this.bodyInicial.idProgramacion;
+      ficheroAdeudos.fechaPresentacion = this.bodyInicial.fechaPresentacion;
+      ficheroAdeudos.fechaRecibosPrimeros = this.bodyInicial.fechaRecibosPrimeros;
+      ficheroAdeudos.fechaRecibosRecurrentes = this.bodyInicial.fechaRecibosRecurrentes;
+      ficheroAdeudos.fechaRecibosCOR = this.bodyInicial.fechaRecibosCOR1;
+      ficheroAdeudos.fechaRecibosB2B = this.bodyInicial.fechaRecibosB2B;
+
+      this.progressSpinner = true;
+      this.sigaServices.post("facturacionPyS_nuevoFicheroAdeudos", ficheroAdeudos)
+        .toPromise()
+        .then(
+          n => {
+            if (!this.modoEdicion) {
+              let numFicheros = JSON.parse(n.body).id;
+              this.showMessage("info", "Información", `Se han generado ${numFicheros} ficheros`);
+              this.getFicheroAdeudos();
+            }
+          },
+          err => {
+            if (err && err.message) {
+              let message = this.translateService.instant(err.message);
+              if (message && message.trim().length != 0) {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(message));
+              } else {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+              }
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            }
+
+            this.progressSpinner = false;
+          }
+        );      
+    } else {
+      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+      this.resaltadoDatos = true;
+    }
+
+    
   }
 
   navigateToFicheroAdeudos() {

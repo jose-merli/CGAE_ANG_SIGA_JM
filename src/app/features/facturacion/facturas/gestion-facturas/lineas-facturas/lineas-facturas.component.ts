@@ -187,7 +187,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   getLineasAbono() {
     this.progressSpinner = true;
-    this.sigaServices.getParam("facturacionPyS_getLineasAbono", "?idAbono=" + this.bodyInicial.idFactura).subscribe(
+    this.sigaServices.getParam("facturacionPyS_getLineasAbono", "?idAbono=" + this.bodyInicial.idAbono).subscribe(
       n => {
         this.datos = n.facturasLineasItems;
         this.datos.forEach(d => d.modoEdicion = false);

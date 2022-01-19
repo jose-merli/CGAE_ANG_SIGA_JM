@@ -47,7 +47,7 @@
         <div class="form-row">
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacionPyS.ficherosAdeudos.fechaPresentacionFicherosAdeudos" | translate }} (*)</label>
-            <app-fecha [(value)]="body.fechaPresentacion"  [inputStyleClass]="styleObligatorio(body.fechaApertura)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaPresentacion')" (valueChangeInput)="fillFecha($event, 'fechaPresentacion')"></app-fecha>
+            <app-fecha [(value)]="body.fechaPresentacion"  [inputStyleClass]="styleObligatorio(body.fechaPresentacion)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaPresentacion')" (valueChangeInput)="fillFecha($event, 'fechaPresentacion')"></app-fecha>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacionPyS.ficherosAdeudos.fechaCargoPrimerosRecibos" | translate }} (*)</label>
@@ -83,16 +83,13 @@
 
     <div *ngIf="esFichaActiva('datosGeneracion')" class="card-footer">
       <div class="text-right main-button ">
-        <!-- <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion" type="button"
-          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button> -->
-        
-        <button pButton type="button" icon="fas fa-download" iconPos="left" [disabled]="!permisoEscritura" (click)="descargarFicheroAdeudo()" label="{{'general.boton.download' | translate }}"></button>
+        <button pButton type="button" icon="fas fa-download" iconPos="left" [disabled]="!permisoEscritura || !modoEdicion" (click)="descargarLog()" label="{{'general.boton.download' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="!permisoEscritura" (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="!permisoEscritura || !modoEdicion" (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="rest()" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="deshabilitarGuardado()" (click)="rest()" label="{{ 'general.boton.restablecer' | translate}}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura" (click)="save()" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura || deshabilitarGuardado()" (click)="save()" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>

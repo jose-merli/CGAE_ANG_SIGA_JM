@@ -154,8 +154,8 @@ export class FichaFicherosDevolucionesComponent implements OnInit {
 
     this.enlacesTarjetaResumen.push({
       label: "facturacion.seriesFactura.bancoEntidad",
-      value: document.getElementById("cuentaEntidadAdeudos"),
-      nombre: "cuentaEntidadAdeudos",
+      value: document.getElementById("cuentaEntidad"),
+      nombre: "cuentaEntidad",
     });
 
     this.enlacesTarjetaResumen.push({

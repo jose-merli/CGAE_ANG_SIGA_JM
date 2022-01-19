@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { TranslateService } from '../../../../commons/translate';
 import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
+import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
   selector: 'app-gestion-adeudos',
@@ -35,7 +36,8 @@ export class GestionAdeudosComponent implements OnInit {
 
   constructor(private translateService: TranslateService,
     private location: Location,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private sigaServices: SigaServices) { }
 
   async ngOnInit() {
     this.progressSpinner = true;
@@ -72,6 +74,116 @@ export class GestionAdeudosComponent implements OnInit {
 
     this.progressSpinner = false;
     this.goTop();
+  }
+
+  // Función para guardar o actualizar
+
+  guardadoSend(event: FicherosAdeudosItem) {
+    this.progressSpinner = true;
+
+    this.guardarFicheroAdeudos(!this.modoEdicion, event)
+    .then(() => { return this.recuperarFicheroAdeudos().then(() => {
+      this.modoEdicion = this.body.idDisqueteCargos != undefined;
+
+      // Actualizar tarjetas
+      if (this.modoEdicion)
+        this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
+    })}).catch(error => {
+      if (error != undefined && error.descripcion != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.descripcion);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    }).then(() => this.progressSpinner = false);
+    
+  }
+
+  // Recargar datos
+
+  refreshData() {
+    this.recuperarFicheroAdeudos().then(() => {
+      this.modoEdicion = this.body.idDisqueteCargos != undefined;
+
+      // Actualizar tarjetas
+      if (this.modoEdicion)
+        this.updateTarjetaResumen();
+      setTimeout(() => {
+        this.updateEnlacesTarjetaResumen();
+      }, 5);
+    }).catch(error => {
+      if (error != undefined && error.descripcion != undefined) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.descripcion);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    }).then(() => {
+      this.progressSpinner = false;
+      if (this.modoEdicion) {
+        this.backTo();
+      }
+    });
+  }
+
+  guardarFicheroAdeudos(nuevo: boolean, ficheroAdeudos: FicherosAdeudosItem): Promise<any> {
+    let endpoint = nuevo ? "facturacionPyS_nuevoFicheroAdeudos" : "facturacionPyS_actualizarFicheroAdeudos";
+    return this.sigaServices.post(endpoint, ficheroAdeudos)
+      .toPromise()
+      .then(
+        n => {
+          if (!this.modoEdicion) {
+            let numFicheros = JSON.parse(n.body).id;
+            this.showMessage("info", "Información", `Se han generado ${numFicheros} ficheros`);
+          }
+        },
+        err => {
+          let error = JSON.parse(err.error);
+          if (error && error.error && error.error.message) {
+            let message = this.translateService.instant(error.message);
+            console.log(message);
+            if (message && message.trim().length != 0) {
+              Promise.reject({ descripcion: message });
+            }
+          }
+          return Promise.reject({ descripcion: this.translateService.instant("general.mensaje.error.bbdd") });
+        }
+      );      
+  }
+
+  recuperarFicheroAdeudos() {
+    if (this.body.idDisqueteCargos) {
+      let filtros = { idDisqueteCargos: this.body.idDisqueteCargos };
+
+      return this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).toPromise().then(
+        n => {
+          let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAdeudosItems;
+
+          if (results.length != 0) {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+            this.body = results.find(d => d.idDisqueteCargos == this.body.idDisqueteCargos);
+          } else {
+            return Promise.reject({ descripcion: this.translateService.instant("general.mensaje.error.bbdd") });
+          }
+        },
+        err => {
+          let error = JSON.parse(err.error);
+          if (error && error.error && error.error.message) {
+            let message = this.translateService.instant(error.message);
+            console.log(message);
+            if (message && message.trim().length != 0) {
+              Promise.reject({ descripcion: message });
+            }
+          }
+
+          return Promise.reject({ descripcion: this.translateService.instant("general.mensaje.error.bbdd") });
+        });
+    } else {
+      return Promise.resolve();
+    }
+    
   }
 
   goTop() {
@@ -179,8 +291,8 @@ export class GestionAdeudosComponent implements OnInit {
 
     this.enlacesTarjetaResumen.push({
       label: "facturacion.seriesFactura.bancoEntidad",
-      value: document.getElementById("cuentaEntidadAdeudos"),
-      nombre: "cuentaEntidadAdeudos",
+      value: document.getElementById("cuentaEntidad"),
+      nombre: "cuentaEntidad",
     });
 
     this.enlacesTarjetaResumen.push({

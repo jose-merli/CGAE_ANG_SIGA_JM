@@ -44,7 +44,7 @@ export class GestionFacturasComponent implements OnInit {
     } else if (sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       this.body = new FacturasItem();
-    } else if (this.body == undefined || this.body.idFactura == undefined || this.body.tipo == undefined) {
+    } else if (this.body == undefined || this.body.idFactura == undefined || this.body.idAbono == undefined || this.body.tipo == undefined) {
       this.progressSpinner = false;
       this.location.back();
     }
@@ -230,7 +230,8 @@ export class GestionFacturasComponent implements OnInit {
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
     ).then(() => { 
-      return this.getDatosFactura(this.body.idFactura, this.body.tipo); 
+      const idToSearch = this.body.tipo == "FACTURA" ? this.body.idFactura : this.body.idAbono;
+      return this.getDatosFactura(idToSearch, this.body.tipo); 
     }).then(() => {
       this.updateTarjetaResumen();
       setTimeout(() => {
@@ -250,7 +251,8 @@ export class GestionFacturasComponent implements OnInit {
   refreshData(event: FacturasItem): void {
     this.progressSpinner = true;
 
-    this.getDatosFactura(event.idFactura, event.tipo).catch(error => {
+    const idToSearch = this.body.tipo == "FACTURA" ? this.body.idFactura : this.body.idAbono;
+    this.getDatosFactura(idToSearch, event.tipo).catch(error => {
       if (error != undefined) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
       } else {

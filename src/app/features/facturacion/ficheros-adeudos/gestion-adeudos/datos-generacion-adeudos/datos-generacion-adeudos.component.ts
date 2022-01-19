@@ -7,6 +7,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-datos-generacion-adeudos',
@@ -21,8 +22,9 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   @Input() permisoEscritura;
 
   @Output() opened = new EventEmitter<Boolean>();
-  @Output() idOpened = new EventEmitter<Boolean>();
-  // @Output() guardadoSend = new EventEmitter<any>();
+  @Output() idOpened = new EventEmitter<string>();
+  @Output() guardadoSend = new EventEmitter<FicherosAdeudosItem>();
+  @Output() refreshData = new EventEmitter<void>();
 
   openFicha: boolean = true;
   progressSpinner: boolean = false;
@@ -54,7 +56,7 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     private localStorageService: SigaStorageService) { }
 
   async ngOnInit() {
-    this.cargaDatosSEPA(this.body.idInstitucion);
+    this.cargaDatosSEPA();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -63,29 +65,30 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     }
   }
 
-  cargaDatosSEPA(idInstitucion){
+  cargaDatosSEPA(){
     this.progressSpinner=true;
     
-    this.sigaServices.getParam("facturacionPyS_parametrosSEPA", idInstitucion ? `?idInstitucion=${idInstitucion}` : "").subscribe(
+    this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
       n => {
         let data = n.combooItems;
+        console.log(data);
         
         for(let i=0; data.length>i; i++){
           
           if(data[i].value=="SEPA_DIAS_HABILES_PRIMEROS_RECIBOS"){
-            this.primerosRecibosSEPA=data[i].label;
+            this.primerosRecibosSEPA = parseFloat(data[i].label);
             this.minDateRecibos = new Date(this.fechaHoy.getTime()+(this.primerosRecibosSEPA*24*60*60*1000));
 
           }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_RECURRENTES"){
-            this.recibosRecurrentesSEPA=data[i].label;
+            this.recibosRecurrentesSEPA = parseFloat(data[i].label);
             this.minDateRecurrentes = new Date(this.fechaHoy.getTime()+(this.recibosRecurrentesSEPA*24*60*60*1000));
 
           }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_COR1"){
-            this.recibosCORSEPA=data[i].label;
+            this.recibosCORSEPA = parseFloat(data[i].label);
             this.minDateCOR = new Date(this.fechaHoy.getTime()+(this.recibosCORSEPA*24*60*60*1000));
 
           }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_B2B"){
-            this.recibosB2BSEPA=data[i].label;
+            this.recibosB2BSEPA = parseFloat(data[i].label);
             this.minDateB2B = new Date(this.fechaHoy.getTime()+(this.recibosB2BSEPA*24*60*60*1000));
           }
         }
@@ -99,8 +102,30 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     );
   }
 
-  descargarFicheroAdeudo(){
+  // Descargar LOG
+  descargarLog(){
+    let resHead ={ 'response' : null, 'header': null };
 
+    if (this.bodyInicial.nombreFichero) {
+      this.progressSpinner = true;
+      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFicheroAdeudos", [{ idDisqueteCargos: this.bodyInicial.idDisqueteCargos }]);
+      descarga.subscribe(response => {
+        this.progressSpinner = false;
+
+        const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
+        let filename: string = response.headers.get("Content-Disposition");
+        filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+
+        saveAs(file, filename);
+        this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+      });
+    } else {
+      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+    }
   }
 
   confirmEliminar(): void {
@@ -122,17 +147,16 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   }
 
   eliminar() {
-    // this.sigaServices.post("facturacionPyS_eliminaSerieFacturacion", this.selectedDatos).subscribe(
-    //   data => {
-    //     this.busqueda.emit();
-    //     this.showMessage("success", "Eliminar", "Las series de facturación han sido dadas de baja con exito.");
-    //     this.progressSpinner = false;
-    //   },
-    //   err => {
-    //     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-    //     this.progressSpinner = false;
-    //   }
-    // );
+    this.sigaServices.post("facturacionPyS_eliminarFicheroAdeudos", this.bodyInicial).subscribe(
+      data => {
+        this.refreshData.emit();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
   rest(){
@@ -165,22 +189,33 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
       this.body.fechaRecibosB2B= new Date(this.body.fechaRecibosB2B)
   }
 
+  // Dehabilitar guardado cuando no cambien los campos
+  deshabilitarGuardado(): boolean {
+    return this.notChangedDate(this.body.fechaPresentacion, this.bodyInicial.fechaPresentacion)
+        && this.notChangedDate(this.body.fechaRecibosPrimeros, this.bodyInicial.fechaRecibosPrimeros)
+        && this.notChangedDate(this.body.fechaRecibosRecurrentes, this.bodyInicial.fechaRecibosRecurrentes)
+        && this.notChangedDate(this.body.fechaRecibosCOR, this.bodyInicial.fechaRecibosCOR)
+        && this.notChangedDate(this.body.fechaRecibosB2B, this.bodyInicial.fechaRecibosB2B);
+  }
+
+  notChangedDate(value1: Date, value2: Date): boolean {
+    return value1 == value2 || value1 == undefined && value2 == undefined || new Date(value1).getTime() == new Date(value2).getTime();
+  }
+
   isValid(): boolean {
     return this.body.fechaRecibosRecurrentes != undefined && this.body.fechaPresentacion != undefined && this.body.fechaRecibosPrimeros != undefined && this.body.fechaRecibosB2B != undefined && this.body.fechaRecibosCOR != undefined;
   }
 
   save(){
-    if (this.isValid()) {
-     
+    if (this.isValid() &&  !this.deshabilitarGuardado()) {
+      console.log(this.body);
+     this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
     }
   }
-/*
-  facturacionPyS_nuevoFicheroAdeudos:  "facturacionPyS/nuevoFicheroAdeudos",
-    facturacionPyS_actualizarFicheroAdeudos:  "facturacionPyS/actualizarFicheroAdeudos",
-*/
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -206,20 +241,12 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   }
 
   esFichaActiva(key) {
-    return this.fichaPosible.activa;
+    return this.openTarjetaDatosGeneracion;
   }
 
   abreCierraFicha(key) {
-    if (key == "datosGeneracion" && !this.activacionTarjeta) {
-      this.fichaPosible.activa = !this.fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-
-    if (this.activacionTarjeta) {
-      this.fichaPosible.activa = !this.fichaPosible.activa;
-      this.openFicha = !this.openFicha;
-    }
-    this.opened.emit(this.openFicha);
+    this.openTarjetaDatosGeneracion = !this.openTarjetaDatosGeneracion;
+    this.opened.emit(this.openTarjetaDatosGeneracion);
     this.idOpened.emit(key);
   }
 
@@ -227,17 +254,19 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     if(campo==='fechaPresentacion'){
       this.body.fechaPresentacion = event;
       
-      this.body.fechaRecibosPrimeros = new Date(this.body.fechaPresentacion.getTime()+(this.primerosRecibosSEPA*24*60*60*1000));
-      this.minDateRecibos = this.body.fechaRecibosPrimeros
+      if (this.body.fechaPresentacion) {
+        this.body.fechaRecibosPrimeros = new Date(this.body.fechaPresentacion.getTime()+(this.primerosRecibosSEPA*24*60*60*1000));
+        this.minDateRecibos = this.body.fechaRecibosPrimeros;
 
-      this.body.fechaRecibosRecurrentes = new Date(this.body.fechaPresentacion.getTime()+(this.recibosRecurrentesSEPA*24*60*60*1000));
-      this.minDateRecurrentes = this.body.fechaRecibosRecurrentes
+        this.body.fechaRecibosRecurrentes = new Date(this.body.fechaPresentacion.getTime()+(this.recibosRecurrentesSEPA*24*60*60*1000));
+        this.minDateRecurrentes = this.body.fechaRecibosRecurrentes;
 
-      this.body.fechaRecibosCOR = new Date(this.body.fechaPresentacion.getTime()+(this.recibosCORSEPA*24*60*60*1000));
-      this.minDateCOR = this.body.fechaRecibosCOR
+        this.body.fechaRecibosCOR = new Date(this.body.fechaPresentacion.getTime()+(this.recibosCORSEPA*24*60*60*1000));
+        this.minDateCOR = this.body.fechaRecibosCOR;
 
-      this.body.fechaRecibosB2B = new Date(this.body.fechaPresentacion.getTime()+(this.recibosB2BSEPA*24*60*60*1000));
-      this.minDateB2B = this.body.fechaRecibosB2B
+        this.body.fechaRecibosB2B = new Date(this.body.fechaPresentacion.getTime()+(this.recibosB2BSEPA*24*60*60*1000));
+        this.minDateB2B = this.body.fechaRecibosB2B;
+      }
 
     }else if(campo==='fechaRecibosPrimeros'){
       this.body.fechaRecibosPrimeros = event;

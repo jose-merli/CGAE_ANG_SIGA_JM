@@ -38,7 +38,7 @@ export class ComunicacionesFacturasComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
-    if (this.bodyInicial != undefined) {
+    if (this.bodyInicial != undefined && this.bodyInicial.idFactura != undefined) {
       this.getComunicacionesCobro();
     }
   }

@@ -97,9 +97,9 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="!(confirmada && !ficherosAdeudos)" pButton (click)="nuevoFicheroAdeudos()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
+        <button [disabled]="!(confirmada && !ficherosAdeudos)" pButton (click)="generarFicheroAdeudos()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
 
-        <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-save" iconPos="left"

@@ -275,8 +275,15 @@ export class DestinatariosListaSeriesFacturaComponent implements OnInit, OnChang
   // Enlace a la ficha de consultas
   navigateTo(dato) {
     if (dato != undefined) {
-      sessionStorage.setItem("consultasSearch", JSON.stringify(dato));
+      if (dato.general == "N" || dato.general == "0" || (this.institucionActual == 2000 && (dato.generica == "S" || dato.general == "1"))) {
+        sessionStorage.setItem("consultaEditable", "S");
+      } else {
+        sessionStorage.setItem("consultaEditable", "N");
+      }
 
+      // Cuerpo de la busqueda
+      sessionStorage.setItem("consultasSearch", JSON.stringify(dato));
+  
       // Ficha actual
       sessionStorage.setItem("serieFacturacionItem", JSON.stringify(this.body));
 

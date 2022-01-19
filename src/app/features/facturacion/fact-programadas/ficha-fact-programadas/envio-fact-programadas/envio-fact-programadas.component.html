@@ -66,7 +66,7 @@
         <button [disabled]="!(confirmada && finalizado && logDisponible)" pButton (click)="confirmDescargar()"
           type="button" icon="fa fa-download" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
 
-        <button [disabled]="!(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button [disabled]="deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
         <button [disabled]="deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-save" iconPos="left"

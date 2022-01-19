@@ -5,6 +5,7 @@ export class FacturasItem {
     tipo: string;//"FACTURA" o "ABONO"
 
 	idFactura: string;
+	idAbono: string;
 	idInstitucion: string;
 
 	//datos generales

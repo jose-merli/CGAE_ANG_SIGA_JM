@@ -36,6 +36,7 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   logDisponible:boolean = false;
 
   comboModelosFactura: ComboItem[] = [];
+  comboModelosFacturaRectificativa: ComboItem[] = [];
 
   constructor(
     private commonsService: CommonsService,
@@ -43,7 +44,13 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.getComboModelosComunicacion();
+    this.progressSpinner = true;
+
+    Promise.all([
+      this.getComboModelosComunicacion(),
+      this.getComboModelosComunicacionRectificativa()
+    ]).then(() => this.progressSpinner = false);
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -52,17 +59,25 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   getComboModelosComunicacion() {
-    this.progressSpinner = true;
-    this.sigaServices.get("facturacionPyS_comboModelosComunicacion").subscribe(
+    return this.sigaServices.get("facturacionPyS_comboModelosComunicacion").toPromise().then(
       n => {
         this.comboModelosFactura = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboModelosFactura);
-
-        this.progressSpinner = false;
       },
       err => {
         console.log(err);
-        this.progressSpinner = false;
+      }
+    );
+  }
+
+  getComboModelosComunicacionRectificativa() {
+    return this.sigaServices.getParam("facturacionPyS_comboModelosComunicacion", "?esRectificativa=true").toPromise().then(
+      n => {
+        this.comboModelosFacturaRectificativa = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboModelosFacturaRectificativa);
+      },
+      err => {
+        console.log(err);
       }
     );
   }
@@ -103,19 +118,27 @@ export class GenFacturaFactProgramadasComponent implements OnInit, OnChanges {
   // Descargar LOG
   descargarLog(){
     let resHead ={ 'response' : null, 'header': null };
-    this.progressSpinner = true;
-    let descarga =  this.sigaServices.postDownloadFilesWithFileName("facturacionPyS_descargarFichaFacturacion", [{ idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idProgramacion }]);
-    descarga.subscribe((data: {file: Blob, filename: string}) => {
-      this.progressSpinner = false;
-      console.log(data);
-      let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
-      saveAs(data.file, filename);
-      this.showMessage( 'success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
-    },
-    err => {
-      this.progressSpinner = false;
+
+    if (this.bodyInicial.nombreFichero) {
+      this.progressSpinner = true;
+      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFichaFacturacion", [{ idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idProgramacion }]);
+      descarga.subscribe(response => {
+        this.progressSpinner = false;
+
+        const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
+        let filename: string = response.headers.get("Content-Disposition");
+        filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+
+        saveAs(file, filename);
+        this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+      });
+    } else {
       this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
-    });
+    }
   }
 
   // Estilo obligatorio
