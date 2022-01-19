@@ -200,7 +200,7 @@
           <div class="text-right main-button">
             <button pButton (click)="checkNuevoAnticipo()" type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"
-              [disabled]="ficha.fechaAceptada == null || ficha.fechaDenegada != null || descuentosTarjeta.length != 0 ||
+              [disabled]="ficha.fechaAceptada == null || ficha.fechaDenegada != null || ficha.fechaAnulada != null || descuentosTarjeta.length != 0 ||
               (ficha.productos != null  && this.ficha.facturas.length >0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == 'Factura')
               || !permisoNuevoAnticipo"></button>
             <button pButton (click)="checkBorrarAnticipo()" type="button" icon="fa fa-eraser" iconPos="left"
