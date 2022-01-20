@@ -142,9 +142,11 @@ export class NuevaIncorporacionComponent implements OnInit {
   seleccion: boolean = false;
   documentos : DocumentacionIncorporacionItem [] = [];
   showInfoDoc : boolean = true;
+  showDialog : boolean = false;
   paramsDocumentacionEXEA : string;
   disableDelete : boolean = true;
   disableDownload : boolean = true;
+  asunto : string;
   @ViewChild("table") table : Table;
   constructor(
     private translateService: TranslateService,
@@ -366,11 +368,14 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.isActivoEXEA = (stringActivoEXEA == "1");
 
         if(this.isActivoEXEA){
+          this.getAsunto()
           this.getParamsDocumentacionEXEA();
+          if(this.estadoSolicitudSelected == '20' && this.solicitudEditar.idEstado != '20'){
+            this.estadoSolicitudSelected = '10'
+          }
         }
 
         if (this.consulta == false) {
-          this.estadoSolicitudSelected = this.isActivoEXEA ? "10" : "20";
           let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
           this.solicitudEditar.estadoSolicitud = estado.label;
         }
@@ -559,7 +564,6 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.estadosSolicitud = result.combooItems;
         this.arregloTildesCombo(this.estadosSolicitud);
         if (this.consulta == false) {
-          this.estadoSolicitudSelected = this.isActivoEXEA ? "10" : "20";
           let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
           this.solicitudEditar.estadoSolicitud = estado.label;
         }
@@ -1422,12 +1426,12 @@ export class NuevaIncorporacionComponent implements OnInit {
               }else if(resultado.numColegiado == "disponible" && this.isActivoEXEA){
                 this.msgs = [];
                 //INICIAMOS COLEGIACION POR EXEA
-                if(this.checkDocumentacionCumplimentada()){
-                  this.showInfo('Todo bien, llamamos a exea');
+                if(this.checkDocumentacionCumplimentada() && this.checkNuevosRegistros()){
+                  this.iniciarTramiteEXEA();
                 }else{
                   this.showFailNotTraduce('Falta documentación obligatoria por adjuntar');
+                  this.progressSpinner = false;
                 }
-                this.progressSpinner = false;
               } else {
                 this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
                 this.numColegiadoDuplicado = true;
@@ -1585,6 +1589,9 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.resaltadoDatosBancos = false;
     this.numColegiadoDuplicado = false;
 
+    if(this.estadoSolicitudSelected == '20' && this.isActivoEXEA){
+      this.estadoSolicitudSelected = '10';
+    }
     this.solicitudEditar.idEstado = this.estadoSolicitudSelected;
     this.solicitudEditar.idTipo = this.tipoSolicitudSelected;
     this.solicitudEditar.tipoColegiacion = this.tipoColegiacionSelected;
@@ -1976,6 +1983,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onChangeCombosDoc(){
+
+    if(this.tipoSolicitudSelected == '60'){ //Reincorporacion
+      this.modalidadDocumentacionSelected = this.tipoColegiacionSelected == '40' ? '13':'12' //comprobamos si es no ejerciente
+    }
     if(this.tipoSolicitudSelected && this.tipoColegiacionSelected && this.modalidadDocumentacionSelected && this.isActivoEXEA){
       this.getDocRequeridaEXEA();
     }else{
@@ -2344,6 +2355,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   checkDatosAprobar() {
+    this.showDialog = false;
     if ((this.consulta || this.pendienteAprobacion) && (this.solicitudEditar.idEstado != '50' && this.solicitudEditar.idEstado != '30')) {
       if (!this.disabledAprobar()) {
         if (this.cargo == true || this.abono == true || this.abonoJCS == true) {
@@ -2577,6 +2589,91 @@ para poder filtrar el dato con o sin estos caracteres*/
     
   }
 
+  iniciarTramiteEXEA(){
+    this.progressSpinner = true;
+    this.sigaServices
+    .post("expedientesEXEA_iniciarTramite", this.solicitudEditar.idSolicitud + "/" + this.asunto)
+    .subscribe(
+      data => {
+        let body = JSON.parse(data.body);
+        if(body.error){
+          this.showFailNotTraduce('Error al iniciar el trámite de EXEA: ' + body.error.message);
+        }else{
+          this.showInfo('Trámite iniciado correctamente');
+          sessionStorage.removeItem("editedSolicitud");
+
+          this.solicitudEditar.idSolicitud = body.id.split(';')[0];
+          this.solicitudEditar.numRegistro = body.id.split(';')[1];
+          this.consulta = true;
+          this.pendienteAprobacion = true;
+          sessionStorage.setItem("pendienteAprobacion", "true");
+          this.solicitudEditar.idEstado = "20";
+          this.estadoSolicitudSelected = "20";
+          let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+          this.solicitudEditar.estadoSolicitud = estado.label;
+          let tipoSolicitud = this.tiposSolicitud.find(x => x.value == this.tipoSolicitudSelected);
+          this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
+          let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
+          this.solicitudEditar.modalidad = modalidad.label;
+          sessionStorage.setItem("consulta", "true");
+          this.solicitudEditar.fechaEstadoSolicitud = new Date();
+          sessionStorage.setItem(
+            "editedSolicitud",
+            JSON.stringify(this.solicitudEditar)
+          );
+          this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
+
+          this.progressSpinner = false;
+          this.showSuccess("Trámite iniciado correctamente");
+        }
+        this.progressSpinner = false;
+      },
+      error => {
+        this.showFailNotTraduce('Error al iniciar el trámite de EXEA: ' + error);
+        this.progressSpinner = false;
+      },
+      ()=>{
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  getAsunto(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.sigaStorageService.institucionActual;
+    parametro.modulo = "EXEA";
+    parametro.parametrosGenerales = "ASUNTO_EXP_COL";
+    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+      data => {
+        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+        let asunto = resp.find(element => element.parametro == "ASUNTO_EXP_COL" && element.idInstitucion == element.idinstitucionActual);
+        
+        if(!asunto){
+          asunto = resp.find(element => element.parametro == "ASUNTO_EXP_COL" && element.idInstitucion == '0');
+        }
+
+        if(asunto && asunto.valor != 'NULL'){
+          this.asunto = String(asunto.valor);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
+  }
+
+
+  checkNuevosRegistros(){
+    let ok = false;
+    if(!this.documentos || this.documentos.length == 0
+      || this.documentos.filter(doc => doc.nuevoRegistro).length == 0
+      || this.documentos.filter(doc => doc.nuevoRegistro).every(doc => doc.documento != '' && doc.documento != null && doc.nombreDoc != '' && doc.nombreDoc != null)){
+        ok = true;
+    }
+    return ok;
+  }
+
   getFile(dato : DocumentacionIncorporacionItem, pUploadFile: any, event: any) {
     let fileList: FileList = event.files;
     let nombreCompletoArchivo = fileList[0].name;
@@ -2674,5 +2771,12 @@ para poder filtrar el dato con o sin estos caracteres*/
         ok = true;
     }
     return ok;
+  }
+
+  openDialog(){
+    this.showDialog = true;
+  }
+  closeDialog(){
+    this.showDialog = false;
   }
 }

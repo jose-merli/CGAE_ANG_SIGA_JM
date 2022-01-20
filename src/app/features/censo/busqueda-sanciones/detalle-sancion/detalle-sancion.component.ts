@@ -795,6 +795,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
 
   goToFicha(){
     sessionStorage.setItem("titular", String(this.body.nombre));
+    sessionStorage.setItem("nifColegiado", String(this.body.nif));
     this.router.navigate(["/fichaExpedienteEXEA"], {queryParams : {idExpediente : this.body.numExpediente}});
   }
 

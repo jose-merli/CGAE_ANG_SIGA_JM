@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import * as moment from 'moment';
 import { Message } from 'primeng/api';
 import { ExpedienteItem } from '../../../../models/ExpedienteItem';
 import { ParametroItem } from '../../../../models/ParametroItem';
@@ -26,7 +27,11 @@ export class FichaExpExeaDatosGeneralesComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.expediente.currentValue){
-      this.fechaInicio = new Date(this.expediente.fechaApertura);
+      if(this.sigaStorageService.isLetrado){
+        this.fechaInicio = new Date(this.expediente.fechaApertura);
+      }else{
+        this.fechaInicio = moment(this.expediente.fechaApertura, 'dd/MM/yyyy hh:mm').toDate();
+      }
       if(this.expediente.fechaRegistro){
         this.fechaRegistro = new Date(this.expediente.fechaRegistro);
       }

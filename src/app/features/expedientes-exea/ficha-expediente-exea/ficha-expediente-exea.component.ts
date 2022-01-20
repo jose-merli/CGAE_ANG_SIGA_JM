@@ -130,9 +130,15 @@ export class FichaExpedienteExeaComponent implements OnInit {
 
   getDetalleExpedientePersonalColegio(){
 
+    let params : string = "?numExp="+this.idExpediente;
+    if(sessionStorage.getItem('nifColegiado')){
+      params += '&identificacionColegiado=' + sessionStorage.getItem('nifColegiado');
+
+      sessionStorage.removeItem('nifColegiado');
+    }
     this.progressSpinner = true;
     this.sigaServices.getParam(
-      "expedientesEXEA_getDetalleExpedientePersonalColegio", "?numExp="+this.idExpediente).subscribe(
+      "expedientesEXEA_getDetalleExpedientePersonalColegio", params).subscribe(
         data => {
           
           if(!data.error){
@@ -240,6 +246,12 @@ export class FichaExpedienteExeaComponent implements OnInit {
   initTarjetas(){
     if(this.expedienteEXEA){
 
+      let fechaApertura = '';
+      if(this.sigaStorageService.isLetrado){
+        fechaApertura = this.datePipe.transform(this.expedienteEXEA.fechaApertura,'dd/MM/yyyy HH:mm');
+      }else{
+        fechaApertura = this.expedienteEXEA.fechaApertura;
+      }
       let camposDatosGenerales = [
         {
           "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.NumExpediente"),
@@ -247,7 +259,7 @@ export class FichaExpedienteExeaComponent implements OnInit {
         },
         {
           "key": this.translateService.instant("formacion.busquedaInscripcion.fechaSolicitud"),
-          "value":  this.datePipe.transform(this.expedienteEXEA.fechaApertura,'dd/MM/yyyy HH:mm')
+          "value":  fechaApertura
         },
         {
           "key": 'Tipo Expediente',
@@ -291,7 +303,7 @@ export class FichaExpedienteExeaComponent implements OnInit {
           },
           {
             "key" : this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado"),
-            "value" : this.datePipe.transform(new Date(this.expedienteEXEA.hitos[0].fecha), "dd/MM/yyyy HH:mm")
+            "value" : this.expedienteEXEA.hitos[0].fecha
           }
         ];
         this.listaTarjetas[2].campos = camposHistorico;

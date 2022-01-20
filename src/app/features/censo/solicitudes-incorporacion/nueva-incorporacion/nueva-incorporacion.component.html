@@ -897,8 +897,8 @@
         <button (click)="denegarSolicitud()" [disabled]="isLetrado"
             *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30') && !isActivoEXEA"
             pButton type="button " icon="fas fa-times" iconPos="left" label="Denegar"></button>
-        <button [disabled]="isLetrado" *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30') && isActivoEXEA" 
-            pButton type="button " icon="fas fa-check" iconPos="left" label="Iniciar EXEA" (click)="checkDatosAprobar()"></button>
+        <button [disabled]="isLetrado || solicitudEditar.idEstado == '20' || estadoSolicitudSelected == '20' || solicitudEditar.idEstado == '30' || solicitudEditar.idEstado == '50'" *ngIf="isActivoEXEA" 
+            pButton type="button " icon="fas fa-check" iconPos="left" label="Iniciar EXEA" (click)="openDialog()"></button>
         <button (click)="SolicitarCertificado()" *ngIf="consulta" disabled pButton type="button "
             icon="fas fa-certificate" iconPos="left" label="Solicitar certificado"></button>
     </div>
@@ -916,3 +916,21 @@
     <button type="button" pButton icon="fa-close" label="No" (click)="confirmEliminar.reject()"></button>
   </p-footer>
 </p-confirmDialog>
+
+<p-dialog [(visible)]="showDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+    <p-header>
+      <label>Inicio de trámite</label>
+    </p-header>
+    <div class="row">
+      <div class="form-group col-lg-8 col-md-8">
+        <label>Asunto</label>
+        <input [(ngModel)]="asunto" type="text" class="form-control" pInputText>
+      </div>
+    </div>
+    <p-footer>
+      <div class="text-right main-button ">
+        <button (click)="closeDialog()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+        <button (click)="checkDatosAprobar()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.submit' | translate}}" pButton></button>
+      </div>
+    </p-footer>
+  </p-dialog>

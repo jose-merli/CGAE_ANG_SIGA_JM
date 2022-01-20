@@ -11,4 +11,5 @@ export let endpoints_expedientes: any = {
     expedientesEXEA_subirDoc : "expedientesEXEA/subirDocumentoSolIncorp",
     expedientesEXEA_eliminarDoc : "expedientesEXEA/eliminarDocumentoSolIncorp",
     expedientesEXEA_descargarDoc : "expedientesEXEA/descargarDocumentoSolIncorp",
+    expedientesEXEA_iniciarTramite : "expedientesEXEA/iniciarTramiteColegiacionEXEA"
 }
