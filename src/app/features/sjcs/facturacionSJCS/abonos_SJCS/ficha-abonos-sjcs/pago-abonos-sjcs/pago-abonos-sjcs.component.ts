@@ -33,7 +33,6 @@ export class PagoAbonosSJCSComponent implements OnInit {
 
   ngOnInit() {
     console.log("si va bn")
-    this.getLineasAbono()
     
    }
    abreCierraFicha(){
@@ -71,7 +70,7 @@ export class PagoAbonosSJCSComponent implements OnInit {
   }
 
   
-  getLineasAbono() {
+ /* getLineasAbono() {
     this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getLineasAbono", "?idAbono=" + this.datos.idFactura).subscribe(
       n => {
@@ -83,6 +82,6 @@ export class PagoAbonosSJCSComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
-  }
+  }*/
 
  }

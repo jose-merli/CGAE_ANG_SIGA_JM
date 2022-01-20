@@ -127,7 +127,7 @@ export class TablaAbonosSCJSComponent implements OnInit {
 
   navigateToCliente(selectedRow:FacAbonoItem) {
     
-    if (selectedRow.ncolident) {
+    if (selectedRow.esSociedad == "NO") {
       
       this.progressSpinner = true;
 
@@ -143,12 +143,11 @@ export class TablaAbonosSCJSComponent implements OnInit {
 
             
             sessionStorage.setItem("abonosSJCSItem", JSON.stringify(selectedRow));
-            sessionStorage.setItem("volver", "true");
+            sessionStorage.setItem("volverAbonoSJCS", "true");
 
             sessionStorage.setItem("personaBody", JSON.stringify(datosColegiado));
-            sessionStorage.setItem("filtrosAbonosSJCS", JSON.stringify(filtros));
+            sessionStorage.setItem("filtrosAbonosSJCS", JSON.stringify(this.filtro));
             sessionStorage.setItem("solicitudAprobada", "true");
-            sessionStorage.setItem("origin", "Cliente");
           }
         },
         err => {
@@ -157,6 +156,31 @@ export class TablaAbonosSCJSComponent implements OnInit {
       ).then(() => this.progressSpinner = false).then(() => {
         if (sessionStorage.getItem("personaBody")) {
           this.router.navigate(["/fichaColegial"]);
+        } 
+      });
+    }else{
+      this.progressSpinner = true;
+    
+      this.sigaServices.postPaginado(
+        "fichaColegialSociedades_searchSocieties",
+        "?numPagina=1", selectedRow.idPersona).toPromise().then(
+        n => {
+          let results: any[] = JSON.parse(n.body).busquedaJuridicaItems;
+          if (results != undefined && results.length != 0) {
+            let sociedadItem: any = results[0];
+  
+            sessionStorage.setItem("abonosSJCSItem", JSON.stringify(selectedRow));
+            sessionStorage.setItem("volver", "true");
+  
+            sessionStorage.setItem("usuarioBody", JSON.stringify(sociedadItem));
+          }
+        },
+        err => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+      ).then(() => this.progressSpinner = false).then(() => {
+        if (sessionStorage.getItem("usuarioBody")) {
+          this.router.navigate(["/fichaPersonaJuridica"]);
         } 
       });
     }

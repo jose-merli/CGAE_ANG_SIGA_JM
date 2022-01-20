@@ -5,7 +5,7 @@ export class FacAbonoItem {
     fechaEmisionDesde:Date;
     fechaEmisionHasta:Date;
     contabilizada:String;
-    idPersona:number;
+    idPersona:String;
     idCuenta:number;
     idFactura:String;
     idFacturacion:String;
@@ -13,7 +13,7 @@ export class FacAbonoItem {
     numeroAbono:String;
     observaciones:String;
     numFacturaCompensada:String;
-
+    esSociedad:String;
 	estado:number;
     estadoNombre: String;
     forma:String;
@@ -40,7 +40,7 @@ export class FacAbonoItem {
 
     //Filtros - Colegiado
     colegioNombre:String;
-    numColegiado:number;
+    numColegiado:String;
     numIdentificadorColegiado:number;
     apellidosColegiado:String;
     nombreColegiado:String;

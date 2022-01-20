@@ -1,10 +1,11 @@
 import { DatePipe, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { FacturasItem } from '../../../../../models/FacturasItem';
 import { FacAbonoItem } from '../../../../../models/sjcs/FacAbonoItem';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { PagoAbonosSJCSComponent } from './pago-abonos-sjcs/pago-abonos-sjcs.component';
 
 
 
@@ -23,6 +24,9 @@ export class FichaAbonosSCJSComponent implements OnInit {
   body: FacturasItem;
   enlacesTarjetaResumen = [];
   datosImportantes=[];
+
+  @ViewChild(PagoAbonosSJCSComponent)pagoPadre;
+
   constructor(
     private location: Location,
     private sigaServices: SigaServices,
@@ -52,6 +56,7 @@ export class FichaAbonosSCJSComponent implements OnInit {
         }
 
         this.body = datos[0];
+        
       }, err => { 
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
