@@ -613,7 +613,7 @@
                         <label>{{"facturacion.devolucionManual.titularDomiciliacion" | translate}}</label>
                         <input *ngIf="solicitudEditar.iban == undefined || solicitudEditar.iban == ''" [disabled]="consulta" type="text"
                             class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
-                        <input *ngIf="solicitudEditar.iban != undefined && solicitudEditar.iban != ''" [ngClass]="styleObligatorioBanco(solicitudEditar.titular)" [disabled]="consulta" type="text"
+                        <input *ngIf="solicitudEditar.iban != undefined && solicitudEditar.iban != ''" [ngClass]="{'camposObligatorios': checkCampoEsVacio(solicitudEditar.titular) && !checkCampoEsVacio(solicitudEditar.iban) }" [disabled]="consulta" type="text"
                         class="form-control" pInputText [(ngModel)]="solicitudEditar.titular">
                     </div>
                     <!--<div class="form-group col-lg-3 col-md-3">
@@ -648,17 +648,17 @@
 
                     <div class="form-group col-lg-3 col-md-2">
                         <br>
-                        <p-checkbox [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Cargo"
+                        <p-checkbox [ngClass]="{'checkbox-obligatorio': (!cargo && !abono && !abonoJCS) && !checkCampoEsVacio(solicitudEditar.iban) }" [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Cargo"
                             [(ngModel)]="cargo"></p-checkbox>
                     </div>
                     <div class="form-group col-lg-3 col-md-2">
                         <br>
-                        <p-checkbox [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Abono"
+                        <p-checkbox [ngClass]="{'checkbox-obligatorio': (!cargo && !abono && !abonoJCS) && !checkCampoEsVacio(solicitudEditar.iban) }" [disabled]="consulta" (onChange)="onChangeCargo()" binary="true" label="Abono"
                             [(ngModel)]="abono"></p-checkbox>
                     </div>
                     <div class="form-group col-lg-3 col-md-2">
                         <br>
-                        <p-checkbox [disabled]="consulta" (onChange)="onChangeAbonoSJCS()" binary="true" label="Cuenta SJCS"
+                        <p-checkbox [ngClass]="{'checkbox-obligatorio': (!cargo && !abono && !abonoJCS) && !checkCampoEsVacio(solicitudEditar.iban) }" [disabled]="consulta" (onChange)="onChangeAbonoSJCS()" binary="true" label="Cuenta SJCS"
                             [(ngModel)]="abonoJCS"></p-checkbox>
                     </div>
                 </div>

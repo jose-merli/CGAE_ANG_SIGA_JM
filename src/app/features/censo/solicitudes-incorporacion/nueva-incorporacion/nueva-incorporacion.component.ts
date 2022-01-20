@@ -1056,17 +1056,10 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.bic != "") ||
       (this.cargo || this.abono || this.abonoJCS)
     ) {
-      if (
-        this.solicitudEditar.titular != null &&
-        this.solicitudEditar.titular != undefined &&
-        this.solicitudEditar.titular != "" &&
-        this.solicitudEditar.titular.trim() &&
-        this.solicitudEditar.iban != null &&
-        this.solicitudEditar.iban != undefined &&
-        this.solicitudEditar.iban != "" &&
-        this.solicitudEditar.bic != null &&
-        this.solicitudEditar.bic != undefined &&
-        this.solicitudEditar.bic != "" &&
+      if (!this.checkCampoEsVacio(this.solicitudEditar.titular) &&
+        //this.solicitudEditar.titular.trim() 
+        !this.checkCampoEsVacio(this.solicitudEditar.iban) &&
+        !this.checkCampoEsVacio(this.solicitudEditar.bic) &&
         (this.cargo || this.abono || this.abonoJCS)
       ) {
         if (this.validarIban()) {
@@ -1111,7 +1104,11 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   validateAprobarSolitud() {
     if (this.solicitudEditar.fechaIncorporacion != undefined && this.solicitudEditar.fechaIncorporacion != null) {
-      this.aprobarSolicitud();
+      if(this.comprobarDatosBancarios()){
+        this.aprobarSolicitud();
+      }else{
+        this.datosBancariosErroneos();
+      }
     } else {
       this.showFailNotTraduce("Es necesario informar de la fecha de incorporación antes de aprobar. Rellénela y guarde");
     }
@@ -2060,10 +2057,40 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (!this.consulta) {
       if (this.isGuardar()) {
         this.isSave = true;
-        this.guardar(true);
+        if(this.comprobarDatosBancarios()){
+          this.guardar(true);
+        }else{
+         this.datosBancariosErroneos();
+        }
       } else {
         this.muestraCamposObligatorios();
       } 
+    }
+  }
+
+  comprobarDatosBancarios(){
+    if((this.isValidIBAN() && !this.checkCampoEsVacio(this.solicitudEditar.titular) && !this.checkCampoEsVacio(this.solicitudEditar.iban) && (this.cargo != false || this.abono != false || this.abonoJCS != false)) 
+        || (this.checkCampoEsVacio(this.solicitudEditar.titular) && this.checkCampoEsVacio(this.solicitudEditar.iban)) 
+        || (!this.checkCampoEsVacio(this.solicitudEditar.titular) && this.checkCampoEsVacio(this.solicitudEditar.iban))){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  datosBancariosErroneos(){
+    if(!this.isValidIBAN()) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.ibanincorrecto");
+
+    if(this.checkCampoEsVacio(this.solicitudEditar.titular)) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.titularrequerido");
+
+    if(this.cargo == false && this.abono == false && this.abonoJCS == false) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.checkboxbancariorequerido");
+  }
+
+  checkCampoEsVacio(campo){
+    if(campo != "" && campo != null && campo != undefined){
+      return false;
+    }else{
+      return true;
     }
   }
 
