@@ -37,7 +37,7 @@
     </div>
 
     <div *ngIf="esFichaActiva('resolucion')" class="card-body card-body-ficha">
-      <div class="row">
+      <div *ngIf = "resolucion != undefined" class="row">
         <div class="form-group col-lg-4 col-md-4">
           <label style="font-weight: bold; padding-bottom: 5px"> {{
             "justiciaGratuita.ejg.gestionejg.DatosResolucion" | translate}} </label>

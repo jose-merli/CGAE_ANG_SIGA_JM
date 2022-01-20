@@ -18,8 +18,10 @@ export class FiltroActasComponent implements OnInit {
   showDatosGenerales: boolean = true;
   msgs = [];
 
-  valueResolucion: Date;
-  valueReunion: Date;
+  valueResolucionDesde: Date;
+  valueResolucionHasta: Date;
+  valueReunionDesde: Date;
+  valueReunionHasta: Date;
   valueAnio: String;
   valueNumero: String;
   valuePresidente: String;
@@ -50,8 +52,10 @@ export class FiltroActasComponent implements OnInit {
     if(sessionStorage.getItem("filtrosActa")){
       this.datosFiltro = JSON.parse(sessionStorage.getItem("filtrosActa"));
 
-      this.datosFiltro.fecharesolucion = this.transformDate(this.datosFiltro.fecharesolucion);
-      this.datosFiltro.fechareunion = this.transformDate(this.datosFiltro.fechareunion);
+      this.datosFiltro.fecharesoluciondesde = this.transformDate(this.datosFiltro.fecharesoluciondesde);
+      this.datosFiltro.fecharesolucionhasta = this.transformDate(this.datosFiltro.fecharesolucionhasta);
+      this.datosFiltro.fechareuniondesde = this.transformDate(this.datosFiltro.fechareuniondesde);
+      this.datosFiltro.fechareunionhasta = this.transformDate(this.datosFiltro.fechareunionhasta);
      
       
       sessionStorage.removeItem("filtrosActa");
@@ -107,14 +111,24 @@ export class FiltroActasComponent implements OnInit {
   }
 
 
-  fillFechaResolucion(event) {
-      this.datosFiltro.fecharesolucion = this.transformDate(event);
+  fillFechaResolucionDesde(event) {
+      this.datosFiltro.fecharesoluciondesde = this.transformDate(event);
     
   }
 
-  fillFechaReunion(event) {
-      this.datosFiltro.fechareunion = this.transformDate(event);
-     
+  fillFechaResolucionHasta(event) {
+    this.datosFiltro.fecharesolucionhasta = this.transformDate(event);
+  
+  }
+
+  fillFechaReunionDesde(event) {
+    this.datosFiltro.fechareuniondesde = this.transformDate(event);
+    
+  }
+
+  fillFechaReunionHasta(event) {
+      this.datosFiltro.fechareunionhasta = this.transformDate(event);
+      
   }
 
   onHideDatosGenerales() {

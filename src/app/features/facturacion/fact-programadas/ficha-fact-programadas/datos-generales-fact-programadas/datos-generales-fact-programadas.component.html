@@ -100,7 +100,7 @@
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
-              <input type="text" [(ngModel)]="body.estadoConfirmacion" class="form-control" [disabled]="true" pInputText>
+              <a class="form-control falsoInput" style="cursor: pointer;" (click)="getDatos(); cambiarEstadoDialogo(true);" pInputText> {{ body.estadoConfirmacion }} </a>
             </div>
           </div>
         </div>
@@ -128,6 +128,100 @@
     </div>
   </div>
 </div>
+
+<!--DIALOG CAMBIA ESTADO-->
+<p-dialog width="1200" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="dialogVisible">
+  <div class="card mt-3">
+    <div class="card-body p-0">
+      <!-- <p-table [autoLayout]="true" [value]="datosMostrados" [columns]="modalCols" [responsive]="true"
+      class="tabla-listado overflow" [paginator]="true" paginatorPosition="both">
+      
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of columns" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" *ngSwitchCase="col.field" pInputText
+              type="text" (input)="table.filter($event.target.value, col.field, 'contains')" 
+              placeholder="{{'general.boton.search' | translate}}" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-dato let-columns="columns">
+        <tr>
+          <td class="text-center" *ngFor="let col of columns">
+            
+            {{ dato[col.field] }}
+
+          </td>
+        </tr>
+      </ng-template> -->
+
+      <!-- <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+            + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+          </label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+              name="groupname"></p-checkbox>
+          </div>
+        </div>
+      </ng-template> -->
+
+      <p-table [autoLayout]="true" [columns]="modalCols" [value]="datosMostrados" 
+              [responsive]="true" class="tabla-listado overflow">
+        
+      <ng-template pTemplate="colgroup" let-columns>
+          <colgroup>
+            <col *ngFor="let col of columns" [style.width]="col.width">
+          </colgroup>
+        </ng-template>
+        
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field"> {{ col.header | translate }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input pDroppable="false" *ngSwitchCase="col.field" pInputText
+                type="text" (input)="table.filter($event.target.value, col.field, 'contains')" 
+                placeholder="{{'general.boton.search' | translate}}" />
+              </th>
+          </tr>
+      </ng-template>
+        <ng-template pTemplate="body" let-dato let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns" class="text-center">
+                  {{dato[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+      </p-table>
+
+    </div>
+  </div>
+
+  <p-footer>
+    <div class="main-button col-lg-12 col-md-12 mt-2">
+      <button (click)="cambiarEstadoDialogo(false)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.close' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
+
+<!-- Fin del bloque -->
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

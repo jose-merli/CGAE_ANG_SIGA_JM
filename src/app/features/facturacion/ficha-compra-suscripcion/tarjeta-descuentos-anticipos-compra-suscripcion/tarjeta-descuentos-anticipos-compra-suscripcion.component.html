@@ -64,7 +64,7 @@
           <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div *ngIf="col.field =='tipo'">
+                <div *ngIf="col.field =='desTipo'">
                   <span>{{rowData[col.field]}}</span>
                 </div>
                 <div *ngIf="col.field =='importe'">
@@ -146,7 +146,7 @@
           <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div *ngIf="col.field =='tipo'">
+                <div *ngIf="col.field =='desTipo'">
                   <span>{{rowData[col.field]}}</span>
                 </div>
                 <div *ngIf="col.field =='importe'">
@@ -200,11 +200,13 @@
           <div class="text-right main-button">
             <button pButton (click)="checkNuevoAnticipo()" type="button" icon="fa fa-plus" iconPos="left"
               label="{{ 'general.boton.new' | translate}}"
-              [disabled]="ficha.fechaAceptada == null || ficha.fechaDenegada != null || descuentosTarjeta.length != 0 ||
-              (ficha.productos != null  && this.ficha.facturas.length >0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == 'Factura')"></button>
-            <button pButton (click)="borrarAnticipo()" type="button" icon="fa fa-eraser" iconPos="left"
+              [disabled]="ficha.fechaAceptada == null || ficha.fechaDenegada != null || ficha.fechaAnulada != null || descuentosTarjeta.length != 0 ||
+              (ficha.productos != null  && this.ficha.facturas.length >0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == 'Factura')
+              || !permisoNuevoAnticipo"></button>
+            <button pButton (click)="checkBorrarAnticipo()" type="button" icon="fa fa-eraser" iconPos="left"
               label="{{ 'general.boton.borrar' | translate}}"
-              [disabled]="selectedRows.length == 0 || (ficha.productos != null  && this.ficha.facturas.length >0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == 'Factura')"></button>
+              [disabled]="selectedRows.length == 0 || (ficha.productos != null  && this.ficha.facturas.length >0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == 'Factura')
+              || !permisoBorrarAnticipo"></button>
           </div>
         </p-footer>
 

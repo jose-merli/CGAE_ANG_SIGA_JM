@@ -132,7 +132,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     let campoVacio = false;
     //Comprobacion de campos obligatorios de los servicios
     this.tarjServicios.serviciosTarjeta.forEach(el => {
-      if (el.idPrecioServicio == null ||
+      if (//el.idPrecioServicio == null ||
         (el.fechaAlta == null && this.ficha.fechaAceptada!= null) ||
         (el.fechaBaja == null && this.ficha.fechaAnulada!= null)) {
           campoVacio = true;
@@ -171,7 +171,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       this.scrollToOblig.emit("productos");
     }
     //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
-    else if((this.tarjProductos.selectedPago == "80" || this.tarjServicios.selectedPago == "20")&& this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
+    else if((this.tarjProductos.selectedPago == "80" || this.tarjProductos.selectedPago == "20")&& this.tarjProductos.datosTarjeta.cuentaBancSelecc == null){
       this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
       this.scrollToOblig.emit("productos");
     }
@@ -240,7 +240,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
         this.scrollToOblig.emit("productos");
       }
       //Si ha seleccionado forma de pago "domicialiacion bancaria" pero no ha elegido cuenta.
-      else if ((this.tarjProductos.selectedPago == "80" || this.tarjServicios.selectedPago == "20") && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null) {
+      else if ((this.tarjProductos.selectedPago == "80" || this.tarjProductos.selectedPago == "20") && this.tarjProductos.datosTarjeta.cuentaBancSelecc == null) {
         this.showMessage("error", this.translateService.instant('menu.facturacion.productos'), this.translateService.instant('general.message.camposObligatorios'));
         this.scrollToOblig.emit("productos");
       }

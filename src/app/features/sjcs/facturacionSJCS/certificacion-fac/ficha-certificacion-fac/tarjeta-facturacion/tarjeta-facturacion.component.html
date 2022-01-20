@@ -41,51 +41,17 @@
             <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
               <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
                 <td class="text-center" *ngFor="let col of columns">
+
                   <div *ngIf="col.field == 'fechaDesde' || col.field == 'fechaHasta'">
                     <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
                   </div>
-                  <div *ngIf="col.field == 'importeOficio'">
-                    <label
-                      *ngIf="dato[col.field] != '' && dato[col.field] != null  && dato[col.field] != undefined">{{ dato[col.field] | numberPipe}}
-                      €</label>
-                      <label
-                      *ngIf="dato[col.field] != '' || dato[col.field] != null  || dato[col.field] != undefined">0 €</label>
+
+                  <div
+                    *ngIf="!datos[rowIndex].nuevoRegistro && (col.field == 'importeOficio' || col.field == 'importeGuardia' || col.field == 'importeEjg' 
+                  || col.field == 'importeSoj' || col.field == 'importeTotal' || col.field == 'importePendiente' || col.field == 'importePagado')">
+                    <label>{{ dato[col.field] | currency: 'EUR'}}</label>
                   </div>
-                  <div *ngIf="col.field == 'importeGuardia'">
-                    <label
-                      *ngIf="dato[col.field] != '' && dato[col.field] != null  && dato[col.field] != undefined">{{ dato[col.field] | numberPipe}}
-                      €</label>
-                      <label
-                      *ngIf="dato[col.field] != '' || dato[col.field] != null  || dato[col.field] != undefined">0 €</label>
-                  </div>
-                  <div *ngIf="col.field == 'importeEjg'">
-                    <label
-                      *ngIf="dato[col.field] != '' && dato[col.field] != null  && dato[col.field] != undefined">{{ dato[col.field] | numberPipe}}
-                      €</label>
-                  </div>
-                  <div *ngIf="col.field == 'importeSoj'">
-                    <label
-                      *ngIf="dato[col.field] != '' && dato[col.field] != null  && dato[col.field] != undefined">{{ dato[col.field] | numberPipe}}
-                      €</label>
-                      <label
-                      *ngIf="dato[col.field] != '' && dato[col.field] != null  && dato[col.field] != undefined">{{ dato[col.field] | numberPipe}}
-                      €</label>
-                  </div>
-                  <div *ngIf="col.field == 'importeTotal'">
-                    <label
-                      *ngIf="dato[col.field] != '' && dato[col.field] != null  && dato[col.field] != undefined">{{ dato[col.field] | numberPipe}}
-                      €</label>
-                  </div>
-                  <div *ngIf="col.field == 'importePendiente'">
-                    <label
-                      *ngIf="dato[col.field] != '' && dato[col.field] != null  && dato[col.field] != undefined">{{ dato[col.field] | numberPipe}}
-                      €</label>
-                  </div>
-                  <div *ngIf="col.field == 'importePagado'">
-                    <label
-                      *ngIf="dato[col.field] != '' && dato[col.field] != null  && dato[col.field] != undefined">{{ dato[col.field] | numberPipe}}
-                      €</label>
-                  </div>
+
                   <div *ngIf="col.field == 'nombre' && datos[rowIndex].nuevoRegistro">
                     <p-dropdown class="select-form" [(ngModel)]='idFacturacion'
                       placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboFactByPartida"
@@ -96,11 +62,11 @@
                   <div *ngIf="col.field == 'nombre'">
                     <label>{{ dato[col.field]}}</label>
                   </div>
-                  <div *ngIf="col.field == 'idGrupo'">
-                    <label>{{ dato[col.field]}}</label>
-                  </div>
-                  <div *ngIf="col.field == 'regularizacion'">
-                    <label>{{ dato[col.field]}}</label>
+
+                  <div *ngIf="col.field != 'fechaDesde' && col.field != 'fechaHasta' && col.field != 'nombre' && col.field != 'importeOficio' 
+                  && col.field != 'importeGuardia' && col.field != 'importeEjg' && col.field != 'importeSoj' && col.field != 'importeTotal' 
+                  && col.field != 'importePendiente' && col.field != 'importePagado'">
+                    <label>{{ dato[col.field] }}</label>
                   </div>
 
                 </td>
@@ -145,36 +111,36 @@
     <div class="card-footer">
       <div class="text-right main-button">
         <!--Eliminar-->
-        <button pButton [disabled]="!permisos || selectedDatos.length == 0 || isValidando()" (click)="confirmDelete()"
-          type="button" icon="fa fa-trash-alt" iconPos="left"
+        <button pButton [disabled]="!permisos || selectedDatos.length == 0 || isValidando() || !modoEdicion"
+          (click)="confirmDelete()" type="button" icon="fa fa-trash-alt" iconPos="left"
           label="{{ 'general.boton.eliminar' | translate}}"></button>
         <!--Reabrir-->
-        <button (click)="reabrir()" [disabled]="!permisos || selectedDatos.length == 0 || isValidando()" pButton
-          type="button" label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}" icon="fa fa-lock-open"
-          iconPos="left"></button>
+        <button (click)="reabrir()" [disabled]="!permisos || selectedDatos.length == 0 || isValidando() || !modoEdicion"
+          pButton type="button" label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}"
+          icon="fa fa-lock-open" iconPos="left"></button>
 
         <!--Comunicar-->
         <button [disabled]="true" pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"
           icon="fa fa-send" iconPos="left"></button>
         <!--Nuevo-->
         <button (click)="nuevo()" [disabled]="(isNuevo && (certificacion.estado !='ABIERTA' || certificacion.estado !='NO VALIDADA' 
-        || certificacion.estado !='ENVÍO CON ERRORES')) || isValidando()" pButton type="button"
-          label="{{ 'general.boton.new' | translate }}" icon="fas fa-plus" iconPos="left"></button>
+        || certificacion.estado !='ENVÍO CON ERRORES')) || isValidando() || !modoEdicion || isCerrada()" pButton
+          type="button" label="{{ 'general.boton.new' | translate }}" icon="fas fa-plus" iconPos="left"></button>
         <!--Restablecer-->
-        <button (click)="restablecer()" [disabled]="!isNuevo || !permisos || isValidando()" pButton type="button"
-          icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+        <button (click)="restablecer()" [disabled]="!isNuevo || !permisos || isValidando() || !modoEdicion" pButton
+          type="button" icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
         <!--Guardar-->
-        <button (click)="save()" [disabled]="!isNuevo || !permisos || isValidando()" pButton type="button"
-          icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button (click)="save()" [disabled]="!isNuevo || !permisos || isValidando() || !modoEdicion" pButton
+          type="button" icon="fa fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
 
       </div>
     </div>
   </div>
 </div>
-<p-confirmDialog header="Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
   <p-footer>
-    <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
-    <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
   </p-footer>
 </p-confirmDialog>
 

@@ -591,7 +591,7 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
   // DE MOMENTO VA PERFE 
   backTo() {
     if (sessionStorage.getItem("fromTarjetaLetradoInscripciones") != null){
-         this.persistenceService.setDatos(sessionStorage.getItem("fromTarjetaLetradoInscripciones"));
+         this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("fromTarjetaLetradoInscripciones")));
          sessionStorage.removeItem("fromTarjetaLetradoInscripciones");
          this.router.navigate(["/fichaInscripcionesGuardia"]);
 

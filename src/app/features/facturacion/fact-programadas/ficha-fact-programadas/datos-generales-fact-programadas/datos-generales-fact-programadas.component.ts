@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import * as moment from 'moment';
-//import moment = require('moment');
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import moment = require('moment');
 import { ConfirmationService, Message } from 'primeng/api';
+import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
+import { FichaEstadoFacFacturacionItem } from '../../../../../models/FichaEstadoFacFacturacionItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -41,6 +42,15 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   // Fecha para la restricción de fecha de generación
   fechaActual: Date;
 
+  // Estados
+  dialogVisible: boolean = false;
+
+  // Modal
+  modalCols = [];
+  buscadores = [];
+  rowsPerPage = [];
+  datosMostrados: FichaEstadoFacFacturacionItem[];
+
   constructor(
     private commonsService: CommonsService,
     private sigaServices: SigaServices,
@@ -54,6 +64,8 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   ngOnInit() {
     this.fechaActual = new Date();
     this.fechaActual.setHours(0,0,0,0);
+
+    this.getModalCols();
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -94,6 +106,29 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
         && this.notChangedDate(this.body.fechaFinProductos, this.bodyInicial.fechaFinProductos);
   }
 
+  getDatos() {
+    this.datosMostrados = [
+      {
+        orden : 10,
+        faseProcesoFacturacion : "Generación programada",
+        fechaProgramacion : "18/08/2020 14:41",
+        puestoCola : "1/5"
+      },
+      {
+        orden: 20,
+        faseProcesoFacturacion : "Confirmación programada",
+        fechaProgramacion : "18/08/2020 14:41",
+        puestoCola : "2/5"
+      },
+      {
+        orden: 30,
+        faseProcesoFacturacion : "Pago automático programado",
+        fechaProgramacion : "18/08/2020 14:41",
+        puestoCola : "3/5"
+      }
+    ]
+  }
+
   notChangedString(value1: string, value2: string): boolean {
     return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
   }
@@ -102,8 +137,37 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     return value1 == value2 || value1 == undefined && value2 == undefined || new Date(value1).getTime() == new Date(value2).getTime();
   }
 
-  // Guardar
+  // Definición de las columnas del modal
+  getModalCols() {
+    this.modalCols = [
+      { field: "orden", header: "administracion.informes.literal.orden", width: "10%" },
+      { field: "faseProcesoFacturacion", header: "facturacionPyS.facturaciones.FaseProcesoFac", width: "20%" },
+      { field: "fechaProgramacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada", width: "10%" },
+      { field: "puestoCola", header: "facturacionPyS.facturaciones.PuestoCola", width: "10%" }
+    ];
 
+    this.modalCols.forEach(it => this.buscadores.push(""));
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  // Guardar
   isValid(): boolean {
     let camposObligatorios: boolean = this.body.idSerieFacturacion != undefined && this.body.idSerieFacturacion.trim() != "" 
         && this.body.descripcion != undefined  && this.body.descripcion.trim() != "" && this.body.descripcion.length <= 255
@@ -408,6 +472,15 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       summary: summary,
       detail: msg
     });
+  }
+
+  cambiarEstadoDialogo(estado) {
+    this.dialogVisible = estado;
+    if (!estado) {
+      this.datosMostrados = []
+    }
+    console.log(this.datosMostrados);
+    console.log(estado);
   }
 
   clear() {

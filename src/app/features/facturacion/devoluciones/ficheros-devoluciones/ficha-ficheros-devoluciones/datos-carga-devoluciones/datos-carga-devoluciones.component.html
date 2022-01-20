@@ -1,3 +1,81 @@
-<p>
-  datos-carga-devoluciones works!
-</p>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="datosCarga">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosCarga')">
+          <div class="img-colegiado">
+            <i class="fa fa-file-alt icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosCarga')">
+            <label class="mr-auto title-ficha pointer">Datos de Carga</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>Identificador: 
+              <span>{{ bodyInicial.idDisqueteDevoluciones }}</span></label>
+            <label>Fecha creación: 
+              <span>{{ bodyInicial.fechaCreacion | date: 'dd/MM/yyyy' }}</span></label>
+            <label>Carga comisión a clientes: 
+              <span>{{ bodyInicial.comisionCuentaContable }}</span></label>
+                
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosCarga')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('datosCarga')">
+        <div class="img-colegiado">
+          <i class="fa fa-file-alt icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">Datos de Carga</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
+      <div class="form-row lg-12 md-12">
+        <div class="col-lg-3 col-md-3">
+          <p>Adjuntar</p>
+          <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xls"
+            multiple="false" (onSelect)="getFile($event)" auto="true">
+          </p-fileUpload>
+        </div>
+        <div class="form-check col-lg-3 col-md-3 align-self-center">
+          <label class="form-group-label">Cargar comisión al cliente</label>
+          <p-checkbox binary="true" [(ngModel)]="bodyInicial.comision"></p-checkbox>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Identificador</label>
+          <input type="text" class="form-control" [(ngModel)]="bodyInicial.idDisqueteDevoluciones" disabled pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>Fecha creación</label>
+          <input type="text" class="form-control" [(ngModel)]="bodyInicial.fechaCreacion" disabled pInputText>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

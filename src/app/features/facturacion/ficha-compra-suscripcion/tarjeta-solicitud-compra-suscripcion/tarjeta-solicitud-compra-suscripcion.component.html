@@ -107,13 +107,14 @@
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
         <!-- Solicitud -->
-        <button pButton *ngIf="ficha.productos != null && esColegiado" (click)="checkSolicitarCompra()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.productos.solicitarCompra' | translate}}" [disabled]="ficha.fechaPendiente != null || ficha.fechaSolicitada != null || !permisoSolicitarCompra"></button>
-        <button pButton *ngIf="ficha.productos == null && esColegiado" (click)="checkSolicitarSuscripcion()" [disabled]="ficha.fechaPendiente != null" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.productos.solicitarSuscripcion' | translate}}" [disabled]="ficha.fechaSolicitada != null || !permisoSolicitarSuscripcion"></button>
+        <button pButton *ngIf="ficha.productos != null && esColegiado" (click)="checkSolicitarCompra()" [disabled]="ficha.fechaPendiente != null || !permisoSolicitarCompra" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'facturacion.productos.solicitarCompra' | translate}}" [disabled]="ficha.fechaSolicitada != null"></button>
+        <button pButton *ngIf="ficha.productos == null && esColegiado" (click)="checkSolicitarSuscripcion()" [disabled]="ficha.fechaPendiente != null || !permisoSolicitarSuscripcion" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'facturacion.productos.solicitarSuscripcion' | translate}}" [disabled]="ficha.fechaSolicitada != null"></button>
       <!-- Aprobar -->
         <button pButton *ngIf="!esColegiado"  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || !permisoAprobarCompra"></button>
+          label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null 
+          || (this.ficha.productos != null && !permisoAprobarCompra) || (this.ficha.servicios != null && !permisoAprobarSuscripcion)"></button>
       <!-- Denegar/Cancelar -->
         <button *ngIf="!esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.denegar' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || !permisoDenegar"></button>
@@ -121,7 +122,8 @@
           label="{{ 'general.boton.cancel' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || !permisoDenegar"></button>
       <!-- Anular -->
         <button pButton  (click)="checkAnular()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.anular' | translate}}" [disabled]="(ficha.fechaAceptada == null && ficha.fechaSolicitadaAnulacion == null) || ficha.fechaAnulada != null || (ficha.fechaSolicitadaAnulacion != null && esColegiado) || !permisoAnularCompra || !permisoAnularSuscripcion"></button>
+          label="{{ 'general.boton.anular' | translate}}" [disabled]="(ficha.fechaAceptada == null && ficha.fechaSolicitadaAnulacion == null) || ficha.fechaAnulada != null 
+          || (ficha.fechaSolicitadaAnulacion != null && esColegiado) || (this.ficha.productos != null && !permisoAnularCompra) || (this.ficha.servicios != null && !permisoAnularSuscripcion)"></button>
       <!-- Facturar -->
         <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
         label="{{ 'general.boton.facturar' | translate}}" [disabled]="ficha.fechaSolicitada == null"></button>

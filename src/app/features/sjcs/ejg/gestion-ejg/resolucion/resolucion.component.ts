@@ -8,6 +8,7 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { Router } from "@angular/router";
 import { ConfirmationService } from 'primeng/api';
 import { saveAs } from "file-saver/FileSaver";
+import { ActasItem } from '../../../../../models/sjcs/ActasItem';
 
 @Component({
   selector: 'app-resolucion',
@@ -24,8 +25,8 @@ export class ResolucionComponent implements OnInit {
   openFicha: boolean = false;
   nuevo;
   body: EJGItem;
-  bodyInicial: EJGItem = new EJGItem();
-  resolucion: ResolucionEJGItem;
+  bodyInicial: ResolucionEJGItem = new ResolucionEJGItem();
+  resolucion: ResolucionEJGItem = new ResolucionEJGItem();
   msgs;
   comboActaAnnio = [];
   comboResolucion = [];
@@ -103,13 +104,19 @@ export class ResolucionComponent implements OnInit {
   }
 
   getResolucion(selected) {
-    //this.progressSpinner = true;
+    this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getResolucion", selected).subscribe(
       n => {
-        if (n.body) {
+        if (n.body != "") {
           this.resolucion = JSON.parse(n.body);
           this.bodyInicial = JSON.parse(n.body);
-        } else { this.resolucion = new ResolucionEJGItem(); }
+        } else { 
+          this.resolucion = new ResolucionEJGItem(); 
+          this.resolucion.requiereNotificarProc = true;
+          this.resolucion.turnadoRatificacion = true;
+          this.bodyInicial.requiereNotificarProc = true;
+          this.bodyInicial.turnadoRatificacion = true;
+        }
         if (this.resolucion.fechaPresentacionPonente != undefined)
           this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
         if (this.resolucion.fechaResolucionCAJG != undefined)
@@ -125,10 +132,11 @@ export class ResolucionComponent implements OnInit {
 
         //Se desbloquea el desplegable de fundamento juridico si hay una resolucion seleccionada al inciar la tarjeta.
         if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) this.isDisabledFundamentosJurid = false;
-        //this.progressSpinner = false;
+        this.progressSpinner = false;
       },
       err => {
-        //console.log(err);
+        this.progressSpinner = false;
+        console.log(err);
       }
     );
   }
@@ -144,13 +152,14 @@ export class ResolucionComponent implements OnInit {
           this.ResolDesc = resol.label;
       },
       err => {
-        //console.log(err);
+        console.log(err);
       }
     );
   }
 
   getComboActaAnnio() {
-    this.sigaServices.get("gestionejg_comboActaAnnio").subscribe(
+
+    this.sigaServices.getParam("gestionejg_comboActaAnnio", `?anioacta=${this.resolucion.annioActa}&idacta=${this.resolucion.idActa}`).subscribe(
       n => {
         this.comboActaAnnio = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboActaAnnio);
@@ -174,6 +183,7 @@ export class ResolucionComponent implements OnInit {
     this.comboFundamentoJurid = [];
     if (this.resolucion.idTiporatificacionEJG != undefined && this.resolucion.idTiporatificacionEJG != null) {
       this.isDisabledFundamentosJurid = false;
+      this.resolucion.idFundamentoJuridico = null;
       this.getComboFundamentoJurid();
     } else {
       this.isDisabledFundamentosJurid = true;
@@ -208,7 +218,7 @@ export class ResolucionComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboPonente);
       },
       err => {
-        //console.log(err);
+        console.log(err);
       }
     );
   }
@@ -260,6 +270,8 @@ export class ResolucionComponent implements OnInit {
       }
     }
   }
+
+
   checkPermisosSave() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
@@ -268,7 +280,27 @@ export class ResolucionComponent implements OnInit {
       if (this.disabledSave()) {
         this.msgs = this.commonsServices.checkPermisoAccion();
       } else {
-        this.save();
+
+        //Se recupera la propiedad "edtablecomision" del ultimo estado del EJG
+        let ejg = this.persistenceService.getDatos();
+        this.progressSpinner = true;
+        this.sigaServices.post("gestionejg_getEditResolEjg", ejg).subscribe(
+          n => {
+            //Se comprueba si el ultimo estado introducido tiene "edtablecomision" == 1 (resolucion editable)
+            if(n.body == "true"){
+              this.save();
+            }
+            else{
+              //REVISAR: SUSTITUIR POR ETIQUETA
+              this.showMessage('error', 'Error', "El ultimo estado del EJG no permite editar resoluciones (editableComsion)");
+              this.progressSpinner = false;
+            }
+          },
+          err => {
+            console.log(err);
+            this.progressSpinner = false;
+          }
+        );
       }
     }
   }
@@ -283,8 +315,13 @@ export class ResolucionComponent implements OnInit {
 
     //Se debe extraer los valores que necesitamos del id del elemento del combo de actas seleccionado.
     if (this.resolucion.idAnnioActa != null) {
-      this.resolucion.idActa = Number(this.resolucion.idAnnioActa.split(",")[0]);
-      this.resolucion.annioActa = Number(this.resolucion.idAnnioActa.split(",")[1]);
+      //REVISAR POSIBLE MEJORA
+      // let annioIdActa = this.resolucion.idAnnioActa.split("-")[0];
+      // this.resolucion.idActa = Number(annioIdActa.split("/")[1]);
+      // this.resolucion.annioActa = Number(annioIdActa.split("/")[0]);
+      let array = this.resolucion.idAnnioActa.split(',');
+      this.resolucion.annioActa = parseInt(array[1]);
+      this.resolucion.idActa = parseInt(array[0]);
     }
     else {
       this.resolucion.idActa = null;
@@ -300,7 +337,8 @@ export class ResolucionComponent implements OnInit {
           this.newEstado.emit(null);
 
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.bodyInicial = JSON.parse(JSON.stringify(this.resolucion));
+          //Para que se actualice la informacion si fuera necesario
+          this.getResolucion(this.persistenceService.getDatos());
           this.setCabecera();
         } else {
           this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
@@ -348,6 +386,10 @@ export class ResolucionComponent implements OnInit {
 
   rest() {
     this.resolucion = JSON.parse(JSON.stringify(this.bodyInicial));
+    this.isDisabledFundamentosJurid = (this.resolucion.idTiporatificacionEJG == null);
+    if(this.resolucion.idTiporatificacionEJG != null){
+      this.getComboFundamentoJurid();
+    }
     if (this.resolucion.fechaPresentacionPonente != undefined)
       this.resolucion.fechaPresentacionPonente = new Date(this.resolucion.fechaPresentacionPonente);
     if (this.resolucion.fechaResolucionCAJG != undefined)
@@ -379,22 +421,31 @@ export class ResolucionComponent implements OnInit {
   }
 
   openActa() {
-    //Implmentacion teorica.
-    //Cambiar por acceso implmentado en la pantalla de acceso a actas.
-    //this.router.navigate(["/fichaActa"]);
+    if(this.bodyInicial.idAnnioActa != null){
+      let acta: ActasItem = new ActasItem();
+
+      
     //Se escoge la acta guardada, no la que se tenga seleccionada en el desplegable sin guardar.
-    //Los datos a pasar deberan revisarse acordemente.
-    //this.persistenceService.setDatos(this.bodyInicial);
-    //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
-    //El EJG se puede rellenar subiendo los datos a la capa de persistencia o con un item "EJGItem" que tendra prioridad.
-    //sessionStorage.setItem("EJGItem", JSON.stringify(this.bodyInicial));
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Boton no funcional actualmente"
-      }
-    ];
+      this.sigaServices.get("institucionActual").subscribe(n => {
+        acta.idinstitucion = n.value;
+
+        acta.idacta = this.bodyInicial.idActa.toString();
+        acta.anioacta = this.bodyInicial.annioActa.toString();
+        acta.numeroacta = this.comboActaAnnio.find(
+          el => el.value == this.bodyInicial.idAnnioActa
+        ).label.split(" -")[0];
+
+        localStorage.setItem('actasItem', JSON.stringify(acta));
+        //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
+        sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatos()));
+
+        this.router.navigate(["/fichaGestionActas"]);
+      });
+      
+    }
+    else{
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("sjcs.actas.noActa"));
+    }
   }
 
   clear() {
@@ -402,32 +453,57 @@ export class ResolucionComponent implements OnInit {
   }
 
   fillFechaPresPonente(event) {
-    if (event != null) this.resolucion.fechaPresentacionPonente = new Date(event);
+    if (event != null){
+      this.resolucion.fechaPresentacionPonente = new Date(event);
+    }
+    else{
+      this.resolucion.fechaPresentacionPonente = null;
+    }
   }
 
   fillFechaResCAJG(event) {
-    if (event != null) this.resolucion.fechaResolucionCAJG = new Date(event);
+    if (event != null){
+       this.resolucion.fechaResolucionCAJG = new Date(event);
+    }
+    else{
+      this.resolucion.fechaResolucionCAJG = null;
+    }
   }
 
-  fillFechaResCAJGActa(event) {
+  fillFechaResol(event) {
     let actaannio = this.comboActaAnnio.find(
-      item => item.value == this.resolucion.idTiporatificacionEJG
+      item => item.value == this.resolucion.idAnnioActa
     );
     let fechaActa = actaannio.label.split("-")[1];
 
     //Reasignamos la fecha al traerse del back en formato string
     //No se realiza directamente ya que la conversion de new Date con strings se realiza desde MM/DD/YYYY y se nos devuelve DD/MM/YYY desde el back
-    var dateParts = fechaActa.split("/");
+    if(!(fechaActa.trim() == "")){
+      var dateParts = fechaActa.split("/");
+      // var dateParts = fechaActa.split("/");
 
-    this.resolucion.fechaResolucionCAJG = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+      //Escogemos actualizar esta fecha de resolucion basandonos en el comentario presente en su columna
+      //en la BBDD en la tabla (SCS_EJG_RESOLUCION)
+      this.resolucion.fechaResolucionCAJG = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+    }
   }
 
   fillFechaNotif(event) {
-    if (event != null) this.resolucion.fechaNotificacion = new Date(event);
+    if (event != null){
+      this.resolucion.fechaNotificacion = new Date(event);
+    }
+    else{
+      this.resolucion.fechaNotificacion = null;
+    }
   }
 
   fillFechaResFirme(event) {
-    if (event != null) this.resolucion.fechaRatificacion = new Date(event);
+    if (event != null) {
+      this.resolucion.fechaRatificacion = new Date(event);
+    }
+    else{
+      this.resolucion.fechaRatificacion = null;
+    }
   }
 
   onChangeCheckT(event) {

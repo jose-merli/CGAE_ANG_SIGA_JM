@@ -149,7 +149,7 @@
         <button (click)="ejecutar()" [disabled]='disabledEjecutar() || !permisos' pButton type="button"
           icon="fa fa-play" iconPos="left"
           label="{{ 'general.boton.ejecutar' | translate }}/{{ 'general.boton.recalcularFacturacion' | translate }}"></button>
-        <button [disabled]="true" pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"
+        <button pButton type="button" label="{{ 'general.boton.comunicar' | translate }}"
           icon="fa fa-send" iconPos="left"></button>
         <button (click)="reabrir()" [disabled]='disabledReabrir() || !permisos' pButton type="button"
           label="{{ 'facturacionSJCS.facturacionesYPagos.reabrir' | translate }}" icon="fa fa-lock-open"

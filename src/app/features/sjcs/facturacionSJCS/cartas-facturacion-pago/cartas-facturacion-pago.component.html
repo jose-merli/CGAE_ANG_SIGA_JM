@@ -9,7 +9,7 @@
 
 <div class="busqueda-container">
   <app-filtro-cartas-facturacion-pago [permisoEscritura]="permisoEscritura" (emitSearch)="search($event)"
-    (changeModoBusqueda)="changeModoBusqueda()" [disabledLetradoFicha]="disabledLetradoFicha" [apartado]="apartado"></app-filtro-cartas-facturacion-pago>
+    (changeModoBusqueda)="changeModoBusqueda($event)" [disabledLetradoFicha]="disabledLetradoFicha" [apartado]="apartado"></app-filtro-cartas-facturacion-pago>
   <app-tabla-cartas-facturacion-pago *ngIf="buscar" [permisoEscritura]="permisoEscritura" [datos]="datos"
     [modoBusqueda]="modoBusqueda"></app-tabla-cartas-facturacion-pago>
 </div>

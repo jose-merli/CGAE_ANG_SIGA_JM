@@ -154,8 +154,12 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   }
 }
   changeDateFormat(date1){
+    let date1C = date1;
     // date1 dd/MM/yyyy
-    let date1C = date1.split("/").reverse().join("-")
+    if (!isNaN(Number(date1))){
+      date1C = date1.split("/").reverse().join("-");
+    }
+     
     return date1C;
   }
  
