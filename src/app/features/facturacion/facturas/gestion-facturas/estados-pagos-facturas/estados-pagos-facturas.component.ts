@@ -238,7 +238,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   nuevoAbono() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
-    if (this.bodyInicial.tipo != "ABONO" || !["6"].includes(this.bodyInicial.estado)) {
+    if (this.bodyInicial.tipo != "ABONO" || !["6"].includes(this.bodyInicial.idEstado)) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.abonoPorCaja.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();

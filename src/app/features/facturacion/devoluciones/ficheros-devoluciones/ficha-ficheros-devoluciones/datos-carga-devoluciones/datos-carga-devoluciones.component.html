@@ -12,15 +12,15 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosCarga')">
-            <label class="mr-auto title-ficha pointer">Datos de Carga</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacionPyS.ficherosTransferencias.datosCarga' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label>Identificador: 
+            <label>{{ 'justiciaGratuita.oficio.designas.interesados.identificador' | translate }}: 
               <span>{{ bodyInicial.idDisqueteDevoluciones }}</span></label>
-            <label>Fecha creación: 
-              <span>{{ bodyInicial.fechaCreacion | date: 'dd/MM/yyyy' }}</span></label>
-            <label>Carga comisión a clientes: 
-              <span>{{ bodyInicial.comisionCuentaContable }}</span></label>
+            <label>{{ 'informesycomunicaciones.enviosMasivos.fechaCreacion' | translate }}: 
+              <span>{{ bodyInicial.fechaCreacion }}</span></label>
+            <label>{{ 'facturacionPyS.ficherosTransferencias.datosCarga.comision' | translate }}: 
+              <span>{{ comision ? 'Sí' : No }}</span></label>
                 
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosCarga')"
@@ -35,7 +35,7 @@
         <div class="img-colegiado">
           <i class="fa fa-file-alt icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">Datos de Carga</label>
+        <label class="title-ficha pointer">{{ 'facturacionPyS.ficherosTransferencias.datosCarga' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -44,21 +44,21 @@
     <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
       <div class="form-row lg-12 md-12">
         <div class="col-lg-3 col-md-3">
-          <p>Adjuntar</p>
+          <p>{{ 'censo.sociedades.datosBancarios.adjuntar' | translate }}</p>
           <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xls"
-            multiple="false" (onSelect)="getFile($event)" auto="true">
+            multiple="false" customUpload="true" (uploadHandler)="getFile($event)" auto="true">
           </p-fileUpload>
         </div>
         <div class="form-check col-lg-3 col-md-3 align-self-center">
-          <label class="form-group-label">Cargar comisión al cliente</label>
-          <p-checkbox binary="true" [(ngModel)]="bodyInicial.comision"></p-checkbox>
+          <label class="form-group-label">{{ 'facturacionPyS.ficherosTransferencias.datosCarga.comision' | translate }}</label>
+          <p-checkbox binary="true" [(ngModel)]="comision"></p-checkbox>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Identificador</label>
+          <label>{{ 'justiciaGratuita.oficio.designas.interesados.identificador' | translate }}</label>
           <input type="text" class="form-control" [(ngModel)]="bodyInicial.idDisqueteDevoluciones" disabled pInputText>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <label>Fecha creación</label>
+          <label>{{ 'informesycomunicaciones.enviosMasivos.fechaCreacion' | translate }}</label>
           <input type="text" class="form-control" [(ngModel)]="bodyInicial.fechaCreacion" disabled pInputText>
         </div>
       </div>
@@ -66,11 +66,14 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+        <button pButton type="button" icon="fas fa-download" iconPos="left" [disabled]="!modoEdicion || !bodyInicial.nombreFichero" 
+          (click)="descargarLog()" label="{{'general.boton.download' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left"
-          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="!modoEdicion" 
+          (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="modoEdicion || !file" 
+          (click)="save()" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
   </div>
@@ -79,3 +82,23 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<!-- PRIMERA CONFIRMACIÓN -->
+<p-confirmDialog key="first" header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
+
+<!-- SEGUNDA CONFIRMACIÓN -->
+<p-dialog width="425" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalEliminar">
+  <p-header class="title">
+    <label>{{ 'general.cabecera.confirmacion' | translate }}</label>
+  </p-header>
+
+  <div class="form-row">
+    <label>{{ 'facturacionPyS.ficherosTransferencias.messages.segundaConfirmacion.importe' | translate }} (<span class="font-weight-bold">{{ bodyInicial.facturacion }} €</span>). {{ 'facturacionPyS.ficherosTransferencias.messages.segundaConfirmacion' | translate }}</label>
+    <input DigitDecimaNumber type="text" class="form-control" pInputText [(ngModel)]="confirmImporteTotal"/>
+  </div>
+
+  <p-footer class="main-button">
+    <button type="button" pButton icon="fa-check" label="Sí" (click)="confirmEliminar2()" [disabled]="disableConfirmEliminar()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="rejectEliminar2()"></button>
+  </p-footer>
+</p-dialog>

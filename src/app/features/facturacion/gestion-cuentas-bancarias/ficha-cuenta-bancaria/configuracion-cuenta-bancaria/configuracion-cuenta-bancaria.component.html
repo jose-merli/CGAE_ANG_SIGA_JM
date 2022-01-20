@@ -15,8 +15,8 @@
             <label class="mr-auto title-ficha pointer">{{ 'facturacion.cuentaBancaria.configuracion' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
-            <label *ngIf="tipoFicheros">{{ 'facturacion.cuentaBancaria.fichSecuencia' | translate }}: 
-              <span *ngIf="tipoFicheros">{{ findLabelInCombo(comboConfigFicherosSecuencia, body.configFicherosSecuencia) }}</span></label>
+            <label *ngIf="tipoFicheros == '0'">{{ 'facturacion.cuentaBancaria.fichSecuencia' | translate }}: 
+              <span *ngIf="tipoFicheros == '0'">{{ findLabelInCombo(comboConfigFicherosSecuencia, body.configFicherosSecuencia) }}</span></label>
             <label>{{ 'facturacion.cuentaBancaria.fichEsquema' | translate }}: 
               <span>{{ findLabelInCombo(comboconfigFicherosEsquema, body.configFicherosEsquema) }}</span></label>
             <label>{{ 'facturacion.cuentaBancaria.fichLugar' | translate }}: 
@@ -45,7 +45,7 @@
     <!-- Cuerpo en ficha abierta -->
     <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
       <div class="form-row lg-12 md-12">
-        <div *ngIf="tipoFicheros" class="form-group col-lg-3 col-md-3">
+        <div *ngIf="tipoFicheros == '0'" class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.cuentaBancaria.fichSecuencia' | translate }} (*)</label>
           <p-dropdown class="select-form" [(ngModel)]='body.configFicherosSecuencia' placeholder="Seleccionar"
               [options]="comboConfigFicherosSecuencia" [filter]="true" filterBy="label,labelSinTilde"

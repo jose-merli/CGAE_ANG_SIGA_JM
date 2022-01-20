@@ -97,3 +97,23 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+<!-- PRIMERA CONFIRMACIÓN -->
+<p-confirmDialog key="first" header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
+
+<!-- SEGUNDA CONFIRMACIÓN -->
+<p-dialog width="425" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalEliminar">
+  <p-header class="title">
+    <label>{{ 'general.cabecera.confirmacion' | translate }}</label>
+  </p-header>
+
+  <div class="form-row">
+    <label>{{ 'facturacionPyS.ficherosTransferencias.messages.segundaConfirmacion.importe' | translate }} (<span class="font-weight-bold">{{ bodyInicial.totalRemesa }} €</span>). {{ 'facturacionPyS.ficherosTransferencias.messages.segundaConfirmacion' | translate }}</label>
+    <input DigitDecimaNumber type="text" class="form-control" pInputText [(ngModel)]="confirmImporteTotal"/>
+  </div>
+
+  <p-footer class="main-button">
+    <button type="button" pButton icon="fa-check" label="Sí" (click)="confirmEliminar2()" [disabled]="disableConfirmEliminar()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="rejectEliminar2()"></button>
+  </p-footer>
+</p-dialog>
