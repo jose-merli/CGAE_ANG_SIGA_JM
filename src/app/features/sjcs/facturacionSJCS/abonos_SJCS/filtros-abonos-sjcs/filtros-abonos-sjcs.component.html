@@ -108,7 +108,7 @@
 
         <app-busqueda-colegiado-express [tarjeta]="'tramitador'" [pantalla]="'ejg'" 
 
-              [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"> 
+              [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)"> 
 
             </app-busqueda-colegiado-express>
 

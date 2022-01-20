@@ -80,11 +80,10 @@ export class SociedadAbonosSJCSComponent implements OnInit {
           let datosColegiado: DatosColegiadosItem = results[0];
 
           sessionStorage.setItem("abonosSJCSItem", JSON.stringify(this.datos));
-          sessionStorage.setItem("volver", "true");
+          sessionStorage.setItem("volverAbonoSJCS", "true");
           sessionStorage.setItem("personaBody", JSON.stringify(datosColegiado));
-          sessionStorage.setItem("filtrosAbonosSJCS", JSON.stringify(filtros));
           sessionStorage.setItem("solicitudAprobada", "true");
-          sessionStorage.setItem("origin", "Cliente");
+
         }
       },
       err => {

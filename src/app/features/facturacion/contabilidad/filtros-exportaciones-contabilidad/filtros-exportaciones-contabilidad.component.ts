@@ -17,6 +17,10 @@ import { FacRegistroFichContaItem } from '../../../../models/FacRegistroFichCont
     filtros:FacRegistroFichContaItem = new FacRegistroFichContaItem();
 
     ngOnInit(): void {
+        //En la documentación funcional se pide que por defecto aparezca el campo 
+        //con la fecha de dos años antes
+        let today = new Date();
+        this.filtros.fechaCreacionDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
     }
   
     clearFilters(){

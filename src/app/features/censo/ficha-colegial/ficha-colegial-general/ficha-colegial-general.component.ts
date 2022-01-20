@@ -455,7 +455,9 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
       this.desactivarVolver = false;
     } else if (sessionStorage.getItem("fichaColegialByMenu")) {
       this.desactivarVolver = true;
-    } else if (sessionStorage.getItem("destinatarioCom") != null) {
+    } else if (sessionStorage.getItem("abonosSJCSItem")) {
+      this.desactivarVolver = false;
+    }else if (sessionStorage.getItem("destinatarioCom") != null) {
       this.desactivarVolver = false;
     } else if (sessionStorage.getItem("esNuevoNoColegiado")) {
       this.desactivarVolver = false;
@@ -615,7 +617,11 @@ export class FichaColegialGeneralComponent implements OnInit, OnDestroy {
     //this.location.back();
     if (sessionStorage.getItem("busquedaCensoGeneral") == "true") {
       this.router.navigate(["/busquedaCensoGeneral"]);
-    } else if (sessionStorage.getItem("esColegiado") == "false") {
+    } 
+    else if (sessionStorage.getItem("volverAbonoSJCS") == "true") {
+      this.location.back();
+    } 
+    else if (sessionStorage.getItem("esColegiado") == "false") {
       this.router.navigate(["/busquedaNoColegiados"]);
     } else if (sessionStorage.getItem("esColegiado") == "true" && sessionStorage.getItem("solicitudAprobada") != "true" && sessionStorage.getItem("origin")!="Cliente") {
       this.router.navigate(["/busquedaColegiados"]);

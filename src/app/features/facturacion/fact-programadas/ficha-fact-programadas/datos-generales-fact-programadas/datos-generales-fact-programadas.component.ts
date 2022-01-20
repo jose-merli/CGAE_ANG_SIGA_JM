@@ -46,8 +46,6 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   dialogVisible: boolean = false;
 
   // Modal
-  @ViewChild("table") table : DataTable;
-  selectedItem: number = 10;
   modalCols = [];
   buscadores = [];
   rowsPerPage = [];
