@@ -14,16 +14,16 @@
         </div>
         <div class="d-flex justify-content-between sub">
           <label>{{'dato.jgr.guardia.guardias.ultimaFechaDesde' | translate}}:
-            <strong>{{datos.fechaDesde | date: 'dd/MM/yyyy'}}</strong>
+            <strong>{{datos.fechaDesde}}</strong>
           </label>
           <label>{{'dato.jgr.guardia.guardias.ultimaFechaHasta' | translate}}:
-            <strong>{{datos.fechaHasta | date: 'dd/MM/yyyy'}}</strong>
+            <strong>{{datos.fechaHasta}}</strong>
           </label>
           <label>{{'dato.jgr.guardia.guardias.generado' | translate}}:
             <strong>{{datos.generado}}</strong>
           </label>
           <label>
-            <div class="verticalAlign">
+            <div *ngIf="calendarioDisponible" class="verticalAlign">
               <div>
                 <i class="fas fa-external-link-alt mr-2 icono-enlace"
                 aria-hidden="true"></i>

@@ -23,6 +23,7 @@ export let endpoints_generales: any = {
     combo_comboOrigenContacto : "combo/comboOrigenContacto",
     combo_comboTipoActuacion : "combo/comboTipoActuacionAsistencia",
     combo_comboCosteFijo : "combo/comboCosteFijoActuacionAsistencia",
+    combo_comboProcedimientosEXEA: "combo/comboProcedimientosEXEA",
 
     gestionJusticiables_busquedaClaveAsuntosEJG: "gestionJusticiables/busquedaClaveAsuntosEJG",
     gestionJusticiables_busquedaClaveAsuntosAsistencias: "gestionJusticiables/busquedaClaveAsuntosAsistencias",
