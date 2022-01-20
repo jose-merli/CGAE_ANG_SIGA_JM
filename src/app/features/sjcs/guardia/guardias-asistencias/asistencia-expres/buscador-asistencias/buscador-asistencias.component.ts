@@ -31,9 +31,9 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
   ];
   comboEstado = [];
   comboActuacionesV = [
-    {label:"NO",value:"N"},
-    {label:"SÍ",value:"S"},
-    {label:"SIN ACT.",value:"SA"}
+    {label:"NO",value:"'NO'"},
+    {label:"SÍ",value:"'SI'"},
+    {label:"SIN ACT.",value: "'SA'"}
   ];
   comboEstadoAsistido = [];
   comboJuzgados = [];
@@ -72,7 +72,6 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     }
   }
   ngAfterViewInit(): void {
-
     if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
       this.modoBusqueda = 'a';
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
@@ -156,7 +155,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboEstado = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboEstado);
@@ -172,7 +171,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
           this.comboTipoActuacion = n.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.commonsService.arregloTildesCombo(this.comboTipoActuacion);
         }
@@ -187,7 +186,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboProcedimientos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboProcedimientos);
@@ -197,16 +196,21 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
   }
 
   getComboTurnos(){
-    this.sigaServices.get("combo_turnos").subscribe(
-      n => {
-        this.comboTurnos = n.combooItems;
-      },
-      err => {
-        console.log(err);
-      }, () => {
-        this.commonsService.arregloTildesCombo(this.comboTurnos);
-      }
-    );
+    //Tipo letrado designacion
+    let tipoLetrado = "2"; 
+
+    this.sigaServices.getParam("filtrosejg_comboTurno",
+      "?idTurno=" + tipoLetrado).subscribe(
+        n => {
+          this.comboTurnos = n.combooItems;
+        },
+        err => {
+          //console.log(err);
+        },
+        () => {
+          this.commonsService.arregloTildesCombo(this.comboTurnos);
+        }
+      );
   }
 
   getComboGuardias(){
@@ -216,7 +220,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
           this.comboGuardias = n.combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
 
         }, () => {
           this.commonsService.arregloTildesCombo(this.comboGuardias);
@@ -237,7 +241,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -269,7 +273,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboTurnos);
@@ -283,7 +287,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboComisarias = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboComisarias);
       }
@@ -296,7 +300,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboJuzgados = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboJuzgados);
@@ -314,7 +318,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.comboEstadoAsistido.splice(indexUF);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       ()=>{
         this.commonsService.arregloTildesCombo(this.comboEstadoAsistido);

@@ -23,11 +23,12 @@ export class CalendarioGestionGuardiaColegiadoComponent implements OnInit {
   responseObject
  dataRecived:boolean;
  comboEstado = [
-  { label: "Pendiente", value: "5" },
-  { label: "Programada", value: "1" },
-  { label: "En proceso", value: "2" },
-  { label: "Procesada con Errores", value: "3" },
-  { label: "Generada", value: "4" }
+  { label: "Pendiente", value: "4" },
+  { label: "Programada", value: "0" },
+  { label: "En proceso", value: "1" },
+  { label: "Procesada con Errores", value: "2" },
+  { label: "Generada", value: "3" },
+  { label: "Reprogramada", value: "5" }
 ];
 comboListaGuardias =[];
   constructor(
@@ -61,7 +62,7 @@ comboListaGuardias =[];
           this.progressSpinner = false
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false
         }
       )
@@ -106,7 +107,8 @@ comboListaGuardias =[];
               'listaGuarias':   {value : this.comboListaGuardias.find(comboItem => comboItem.label == this.calendarioItem.listaGuardias).value},
               'idCalendarioProgramado': this.calendarioItem.idCalendarioProgramado,
               'facturado': this.calendarioItem.facturado,
-              'asistenciasAsociadas': this.calendarioItem.asistenciasAsociadas
+              'asistenciasAsociadas': this.calendarioItem.asistenciasAsociadas,
+              //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
             };
           this.dataRecived = true;
           }else{
@@ -115,12 +117,20 @@ comboListaGuardias =[];
           this.progressSpinner = false
         },
         (error) => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false
+          this.showMessage("error", "No existen calendarios para esta guardia", "No existen calendarios para esta guardia");
         }
       );
   }
-
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
 
   navigateToFichaGuardia() {
@@ -134,13 +144,5 @@ comboListaGuardias =[];
     this.msgs = []
   }
 
-  showMessage(severity, summary, msg) {
-    this.msgs = [];
-    this.msgs.push({
-      severity: severity,
-      summary: summary,
-      detail: msg
-    });
-  }
 
 }

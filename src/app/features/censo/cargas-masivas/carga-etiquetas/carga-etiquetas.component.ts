@@ -121,7 +121,7 @@ export class CargaEtiquetasComponent implements OnInit {
             }
           },
           error => {
-            console.log(error);
+            //console.log(error);
             this.showFail("Error en la subida del fichero.");
             this.progressSpinner = false;
           },
@@ -220,7 +220,7 @@ export class CargaEtiquetasComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -243,7 +243,7 @@ export class CargaEtiquetasComponent implements OnInit {
           } this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -269,7 +269,7 @@ export class CargaEtiquetasComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -295,7 +295,7 @@ export class CargaEtiquetasComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

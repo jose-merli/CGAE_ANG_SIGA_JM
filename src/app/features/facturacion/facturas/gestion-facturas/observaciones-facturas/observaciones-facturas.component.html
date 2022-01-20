@@ -1,0 +1,64 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="observaciones">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('observaciones')">
+          <div class="img-colegiado">
+            <i class="far fa-comment icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('observaciones')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.facturas.observaciones.literal' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-end default">
+
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('observaciones')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('observaciones')">
+        <div class="img-colegiado">
+          <i class="far fa-comment icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.facturas.observaciones.literal' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="form-group w-100">
+          <label>{{ 'censo.nuevaSolicitud.observaciones' | translate }}</label>
+          <editor id="observacionesFactura" apiKey="{{apiKey}}" [init]="editorConfig1" [(ngModel)]="body.observacionesFactura"></editor>
+        </div>
+        <div class="form-group w-100">
+          <label>{{ 'facturacion.facturas.observaciones.fichero' | translate }}</label>
+          <editor id="observacionesFicheroFactura" apiKey="{{apiKey}}" [init]="editorConfig2" [(ngModel)]="body.observacionesFicheroFactura"></editor>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
+          (click)="save()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

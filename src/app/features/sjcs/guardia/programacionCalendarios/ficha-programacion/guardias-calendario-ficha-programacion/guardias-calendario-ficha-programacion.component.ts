@@ -22,7 +22,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
-  @Output() descargaLog= new EventEmitter<Boolean>();
+  @Output() descargaLog= new EventEmitter<String>();
   @Input() tarjetaDatosGenerales= {
     'duplicar' : '',
     'tabla': [],
@@ -48,7 +48,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   @Output() disGen = new EventEmitter<Boolean>();
   @Output() fillDatosTarjetaGuardiasCalendario = new EventEmitter<any[]>();
   @Output() linkGuardiaColegiado2 = new EventEmitter<any>();
-  @Output() searchGuardiasFromCal = new EventEmitter<string>();
+  @Output() searchGuardiasFromCal = new EventEmitter<any>();
   @Input() estado;
   dataReady = false;
   tipoGuardiaResumen = {
@@ -257,7 +257,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -269,12 +269,12 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
     ngOnChanges(changes){
-      console.log('changes ', changes)
+      //console.log('changes ', changes)
     }
     getGuardiasFromConjunto(idConjunto, fromCombo) {
       this.dataReady = false;
@@ -299,15 +299,15 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
               this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
               this.cd.detectChanges();
               this.dataReady = true;
-              console.log(this.rowGroups)
-              console.log(this.rowGroupsAux)
+              //console.log(this.rowGroups)
+              //console.log(this.rowGroupsAux)
             }
            
             this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       ()=>{
         this.progressSpinner = false;
@@ -339,7 +339,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -379,7 +379,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
       err => {
 
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          console.log('err.error - ', err.error)
+          //console.log('err.error - ', err.error)
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -467,9 +467,14 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
         this.sigaService.postPaginado(
           "guardiaCalendario_eliminarGuardiaCalendar", "?idCalendar=" +this.idCal, lista).subscribe(
             data => {
-              this.searchGuardiasFromCal.emit(this.idCal);
+              let dat = {
+                'idCal': this.idCal,
+                'fechaDesde' : this.tarjetaDatosGenerales.fechaDesde,
+                'fechaHasta' : this.tarjetaDatosGenerales.fechaHasta
+              }
+              this.searchGuardiasFromCal.emit(dat);
             }, err => {
-              console.log(err);
+              //console.log(err);
             });
         
 //to do
@@ -496,7 +501,8 @@ jsonToRow(fromCombo){
     { type: 'text', value: dat.generado, combo: null, hiddenValue:'', required : false},
     { type: 'link2', value:  this.datosTarjetaGuardiasCalendario.length , combo: null, hiddenValue:'', required : false},
     { type: 'invisible', value: dat.idGuardia, combo: null, hiddenValue:'', required : false},
-    { type: 'invisible', value: dat.idTurno, combo: null, hiddenValue:'', required : false}
+    { type: 'invisible', value: dat.idTurno, combo: null, hiddenValue:'', required : false},
+    { type: 'invisible', value: dat.idCalendarioGuardia, combo: null, hiddenValue:'', required : false}
     ];
     let obj:Row = {cells: objCells};
     arr.push(obj);
@@ -541,13 +547,13 @@ jsonToRow(fromCombo){
           },
           err => {
             this.progressSpinner = false;
-            console.log(err);
+            //console.log(err);
           }
         )
     },
     err => {
       this.progressSpinner = false;
-      console.log(err);
+      //console.log(err);
     }
   );
 }
@@ -576,7 +582,7 @@ setGuardiasCalendario(guardiaCalendario){
       data => {
 
       }, err => {
-        console.log(err);
+        //console.log(err);
       });
 }
 
@@ -609,23 +615,28 @@ setGuardiasCalendario(guardiaCalendario){
 
   saveGuardiasConjunto(lista){
     this.sigaService.postPaginado(
-      "guardiaCalendario_guardarGuardiaConjunto" ,"?idConjuntoGuardia=" + this.idConjuntoGuardiaElegido.toString(), lista).subscribe(
+      "guardiaCalendario_guardarGuardiaConjunto" ,"?idConjuntoGuardia=" + this.idConjuntoGuardiaElegido.toString() + "&fechaDesde=" + this.tarjetaDatosGenerales.fechaDesde + "&fechaHasta=" + this.tarjetaDatosGenerales.fechaHasta + "&idTurno=" + this.tarjetaDatosGenerales.idTurno + "&idGuardia=" + this.tarjetaDatosGenerales.idGuardia, lista, ).subscribe(
         data => {
           this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, true);
         }, err => {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
-          console.log(err);
+          //console.log(err);
         });
   }
   saveGuardiasCalendario(lista, update){
     this.sigaService.postPaginado(
       "guardiaCalendario_guardarGuardiaCalendar", "?idCalendar=" +this.idCal + "&update=" + update , lista).subscribe(
         data => {
-          this.searchGuardiasFromCal.emit(this.idCal);
+          let dat = {
+            'idCal': this.idCal,
+            'fechaDesde' : this.tarjetaDatosGenerales.fechaDesde,
+            'fechaHasta' : this.tarjetaDatosGenerales.fechaHasta
+          }
+          this.searchGuardiasFromCal.emit(dat);
         }, err => {
           this.jsonToRow(false);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
-          console.log(err);
+          //console.log(err);
         });
   }
 

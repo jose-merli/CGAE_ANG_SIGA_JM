@@ -190,9 +190,6 @@ export class OldSigaServices {
 		let headers = new HttpHeaders({
 			'X-UA-Compatible': 'IE=EmulateIE7'
 		});
-
-		console.log('entra en el metodo get de oldsigaservice');
-
 		// let options = { headers: headers, responseType: 'blob' }
 		// options.responseType = ResponseContentType.Blob;
 

@@ -88,7 +88,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboCoste);
@@ -117,7 +117,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -184,7 +184,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         this.comboComisaria = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboComisaria);
@@ -200,7 +200,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         this.comboJuzgado = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboJuzgado);
@@ -216,7 +216,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         this.comboPrision = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboPrision);
@@ -232,7 +232,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         this.comboCoste = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboCoste);
@@ -247,7 +247,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         this.comboTipoActuacion = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboTipoActuacion);

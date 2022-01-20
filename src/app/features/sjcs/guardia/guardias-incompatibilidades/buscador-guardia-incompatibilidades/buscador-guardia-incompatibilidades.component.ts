@@ -14,7 +14,7 @@ import { DeleteIncompatibilidadesDatosEntradaItem } from './DeleteIncompatibilid
 import { SaveIncompatibilidadesDatosEntradaItem } from './SaveIncompatibilidadesDatosEntradaItem.model copy';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { ResultadoIncompatibilidades } from './ResultadoIncompatibilidades.model';
-import { Row, TablaResultadoMixIncompService } from '../../../../../commons/tabla-resultado-mix/tabla-resultado-mix-incompatib.service';
+import { Cell, Row, TablaResultadoMixIncompService } from '../../../../../commons/tabla-resultado-mix/tabla-resultado-mix-incompatib.service';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { ComboIncompatibilidadesDatosEntradaItem } from './ComboIncompatibilidadesDatosEntradaItem';
 import { ComboIncompatibilidadesRes } from './ComboIncompatibilidadesRes';
@@ -163,7 +163,7 @@ export class BuscadorGuardiaIncompatibilidadesComponent implements OnInit {
   },
     err => {
       this.progressSpinner = false;
-      console.log(err);
+      //console.log(err);
     });
 }
   
@@ -236,7 +236,7 @@ this.incompatibilidadesDatosEntradaItem = new IncompatibilidadesDatosEntradaItem
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -247,7 +247,13 @@ jsonToRow(){
   
   let arr = [];
   this.respuestaIncompatibilidades.forEach((res, i) => {
-    let ArrComboValue = [res.idGuardiaIncompatible];
+    let arrids = res.idGuardiaIncompatible.split(',');
+    let st = "";
+    /*arr.foreach(id =>{
+      st = st + "'" + id + "'" + ", ";
+    })*/
+    let ArrComboValue = [""] ;
+    ArrComboValue = arrids;
     let ArrNombresGI = [res.nombreGuardiaIncompatible]
     let objCells = [
     { type: 'text', value: res.nombreTurno },
@@ -494,7 +500,7 @@ delete(indexToDelete){
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -530,7 +536,7 @@ guardarInc(incompArray : SaveIncompatibilidadesDatosEntradaItem []){
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -573,7 +579,7 @@ guardarInc(incompArray : SaveIncompatibilidadesDatosEntradaItem []){
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.commonsService.scrollTablaFoco('tablaFoco');

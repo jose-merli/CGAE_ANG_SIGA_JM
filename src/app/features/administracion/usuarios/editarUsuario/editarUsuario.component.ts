@@ -57,7 +57,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
         this.usuarios_rol = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.sigaServices.get("usuarios_perfil").subscribe(
@@ -65,7 +65,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
         this.usuarios_perfil = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.body = JSON.parse(sessionStorage.getItem("usuarioBody"))[0];
@@ -158,7 +158,7 @@ export class EditarUsuarioComponent extends SigaWrapper implements OnInit {
       err => {
         this.showFail();
         this.correcto = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.correcto) {

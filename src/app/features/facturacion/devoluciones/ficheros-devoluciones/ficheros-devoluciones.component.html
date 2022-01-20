@@ -1,1 +1,9 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtros-ficheros-devoluciones (busqueda)="searchFicherosDevoluciones()"></app-filtros-ficheros-devoluciones>
+    <app-tabla-ficheros-devoluciones *ngIf="buscar" [datos]="datos" [filtro]="filtro" (busqueda)="searchFicherosDevoluciones()"></app-tabla-ficheros-devoluciones>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

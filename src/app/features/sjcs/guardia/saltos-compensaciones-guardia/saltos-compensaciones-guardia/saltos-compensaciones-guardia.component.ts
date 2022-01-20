@@ -171,7 +171,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -234,7 +234,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
         this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
       },
       () => {
@@ -645,7 +645,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
           this.comboGuardias = comboGuardias;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           row.cells[1].combo = this.comboGuardias;

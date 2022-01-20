@@ -91,7 +91,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			
 			  },
 			  err => {
-				console.log(err);
+				//console.log(err);
 			  },
 			  () => {
 			  }
@@ -162,6 +162,10 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.datos.observaciones = "";
 		
 		this.fichasPosibles = [
+			{
+				key: 'cola',
+				activa: true
+			},
 			{
 				key: 'letrado',
 				activa: true
@@ -367,7 +371,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			// }
 		  },
 		  err => {
-			console.log(err);
+			//console.log(err);
 			this.progressSpinner = false;
 		  }, () => {
 			this.progressSpinner = false;
@@ -431,9 +435,13 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 
 	changeDateFormat(date1){
-		// date1 dd/MM/yyyy
-		let date1C = date1.split("/").reverse().join("-")
-		return date1C;
+		let date1C = date1;
+    // date1 dd/MM/yyyy
+    if (!isNaN(Number(date1))){
+      date1C = date1.split("/").reverse().join("-");
+    }
+     
+    return date1C;
 	  }
 
 	cambiarFecha() {

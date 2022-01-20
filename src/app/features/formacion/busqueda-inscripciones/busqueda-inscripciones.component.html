@@ -258,7 +258,8 @@
     <div class="row">
       <div class="form-group-interlineado col-lg-12 col-md-12">
         <label>{{"censo.datosHistorico.literal.motivo" | translate}} (*)</label>
-        <textarea pInputTextarea [(ngModel)]="body.motivo" (ngModelChange)="comprobarCampoMotivo()"></textarea>
+        <textarea pInputTextarea [(ngModel)]="body.motivo" (ngModelChange)="comprobarCampoMotivo()" autoResize="autoResize"
+        maxLength="1024"></textarea>
       </div>
     </div>
   </div>

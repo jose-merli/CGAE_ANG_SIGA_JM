@@ -11,6 +11,7 @@ export class FichaConsultaComponent implements OnInit {
 	idModelo: string;
 	fichasPosibles: any[];
 	filtrosConsulta;
+	constructorConsultaExperta: string;
 
 	constructor(private activatedRoute: ActivatedRoute, private location: Location) { }
 
@@ -38,14 +39,24 @@ export class FichaConsultaComponent implements OnInit {
 			{
 				key: 'plantillas',
 				activa: false
+			},
+			{
+				key: 'constructor',
+				activa: false
 			}
 		];
+	}
+
+	emitConstructorConsultaExperta(event){
+		this.constructorConsultaExperta = event;
 	}
 
 	backTo() {
 		let filtros = JSON.parse(sessionStorage.getItem("filtrosConsultaConsulta"));
 		sessionStorage.setItem("filtrosConsulta", JSON.stringify(filtros));
 		sessionStorage.removeItem("filtrosConsultaConsulta");
+		sessionStorage.removeItem("constructorDeConsultasGuardado");
+		sessionStorage.removeItem("copiaCambiosConstructor");
 		this.location.back();
 	}
 }

@@ -113,7 +113,7 @@ export class GuardiaColegiadoComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaGuardCole');}, 5);
@@ -154,17 +154,16 @@ export class GuardiaColegiadoComponent implements OnInit {
   }
 
   checkFilters(){
-    if ((this.filtros.filtros.idTurno == null || this.filtros.filtros.idTurno == undefined || this.filtros.filtros.idTurno.length == 0) &&
-        (this.filtros.filtros.idGuardia == null || this.filtros.filtros.idGuardia == undefined || this.filtros.filtros.idGuardia.length == 0) &&
-        // (this.filtros.filtro.fechadesde == null || this.filtros.filtro.fechadesde == undefined || this.filtros.filtro.fechadesde.trim() == "" )&&
-        // (this.filtros.filtro.fechahasta == null || this.filtros.filtro.fechahasta == undefined || this.filtros.filtro.fechahasta.trim() == "" )&&
-        (this.filtros.filtros.validada == null || this.filtros.filtros.validada == undefined || this.filtros.filtros.validada.length == 0)) {
-        
-        this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-        return false;
+    if (//(this.filtros.filtros.idTurno != null && this.filtros.filtros.idTurno != undefined && this.filtros.filtros.idTurno.length != 0) ||
+        //(this.filtros.filtros.idGuardia != null && this.filtros.filtros.idGuardia != undefined && this.filtros.filtros.idGuardia.length != 0) ||
+        (this.filtros.filtros.fechadesde != null && this.filtros.filtros.fechadesde != undefined && this.filtros.filtros.fechadesde != "" ) || 
+        (this.filtros.filtros.fechahasta != null && this.filtros.filtros.fechahasta != undefined && this.filtros.filtros.fechahasta != "" ) //||
+        //(this.filtros.filtros.validada != null && this.filtros.filtros.validada != undefined && this.filtros.filtros.validada.length != 0)
+        ){
+          return true;
       } else {   
-        
-        return true;
+        this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("scs.busqueda.error.guardiasColegiado"));
+        return false;
       }
     }
 

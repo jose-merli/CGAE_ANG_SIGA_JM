@@ -1,0 +1,26 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<!-- Pantalla Facturacion > Coutas y Suscripciones -->
+<div>
+  <div class="header-title">
+      <i class="fa fa-square"></i>
+      <p>{{'menu.facturacion' | translate}}
+        <i class="fa fa-angle-right"></i>{{'menu.facturacion.cuotasSuscripciones' | translate}}
+  </div>
+  <!-- Buscador de suscripciones -->
+  <div class="card">
+    <app-tarjeta-filtro-cuotas-suscripciones (busqueda)="busquedaSuscripciones($event)" id="filtroSuscripciones"></app-tarjeta-filtro-cuotas-suscripciones>
+  </div>
+  <!-- Listado de suscripciones -->
+  <div>
+    <app-tarjeta-lista-cuotas-suscripciones [hidden]="!muestraTablaSuscripciones" 
+      (actualizarLista)="busquedaSuscripciones($event)" [listaSuscripciones]="listaSuscripciones" [filtrosSuscripciones]="filtrosSuscripciones" id="tablaSuscripciones">
+    </app-tarjeta-lista-cuotas-suscripciones>
+  </div>
+  <div *ngIf="fromFichaCen" class="mt-3 text-right main-button" id="down">
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+  </div>
+</div>

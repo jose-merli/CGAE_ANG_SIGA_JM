@@ -18,7 +18,8 @@ export const procesos_guardia: any = {
     tarjeta_caracteristicas_asistencias: "95W",
     inscripciones_guardias:"97L",
     guardias_colegiado:"98L",
-    listas_guardia:"91B"
+    listas_guardia:"91B",
+    asistencias:"952",
     //tarjetaGestionInscripcion: "98P", //comprobar 
     //tarjetaInscripcion: "97P",
     //tarjetaLetrado: "96P",

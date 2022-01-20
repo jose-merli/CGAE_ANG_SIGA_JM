@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { saveAs } from "file-saver/FileSaver";
 import { CommonsService } from '../../../../../_services/commons.service';
 import { MultiSelect } from 'primeng/multiselect';
+import { RevisionAutLetradoItem } from "../../../../../models/RevisionAutLetradoItem";
 
 @Component({
   selector: "app-consultar-datos-bancarios",
@@ -210,7 +211,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.tipoIdentificacion = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -295,7 +296,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.progressSpinner2 = false;
         }
@@ -317,7 +318,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           filename = a.value + "." + a.label;
         },
         error => {
-          console.log(error);
+          //console.log(error);
         },
         () => {
           this.sigaServices
@@ -410,7 +411,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         error => {
           this.bodySearch = JSON.parse(error["error"]);
           this.showFail(this.bodySearch.error.message.toString());
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -452,13 +453,18 @@ export class ConsultarDatosBancariosComponent implements OnInit {
     this.sigaServices.post("datosCuentaBancaria_insert", this.body).subscribe(
       data => {
         this.idCuenta = JSON.parse(data["body"]).id;
+        //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+        let peticion = new RevisionAutLetradoItem();
+        peticion.idPersona = this.body.idPersona.toString();
+        peticion.fechaProcesamiento = new Date();
+        this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
         this.showSuccess("Se han guardado correctamente los datos");
         sessionStorage.setItem("editar", "true");
       },
       error => {
         this.bodySearch = JSON.parse(error["error"]);
         this.showFail(this.bodySearch.error.message.toString());
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
         //Error al insertar los mandatos de las cuentas
         if (
@@ -544,7 +550,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           } else {
             this.showFailDefecto();
           }
-          console.log(error);
+          //console.log(error);
           //Error al insertar los mandatos de las cuentas
           if (this.bodySearch.error.message != undefined) {
             if (
@@ -609,13 +615,19 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             data => {
               this.progressSpinner = false;
               this.body.status = data.status;
-
+              
+              //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+              let peticion = new RevisionAutLetradoItem();
+              peticion.idPersona = this.body.idPersona.toString();
+              peticion.fechaProcesamiento = new Date();
+              this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
+              
               this.showSuccess("Se han guardado correctamente los datos");
             },
             error => {
               this.bodySearch = JSON.parse(error["error"]);
               this.showFail(this.bodySearch.error.message.toString());
-              console.log(error);
+              //console.log(error);
               //Error al insertar los mandatos de las cuentas
               if (
                 this.bodySearch.error.message.toString() ==
@@ -1481,7 +1493,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         error => {
           this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
           this.showFail(this.bodyDatosMandatosSearch.error.message.toString());
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         }
       );
@@ -1605,13 +1617,19 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       data => {
         this.progressSpinner = false;
         this.bodyDatosMandatos.status = data.status;
+              
+        //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+        let peticion = new RevisionAutLetradoItem();
+        peticion.idPersona = this.body.idPersona.toString();
+        peticion.fechaProcesamiento = new Date();
+        this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
 
         this.showSuccess("Se ha guardado el esquema");
       },
       error => {
         this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
         // this.showFail(this.bodyDatosMandatosSearch.error.message.toString());
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
       }
     );
@@ -1710,7 +1728,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           // this.showFail(
           //   this.bodyDatosBancariosAnexoSearch.error.message.toString()
           // );
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         }, () => {
           this.activarCamposMandatos();
@@ -1804,6 +1822,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
           this.bodyDatosBancariosAnexo.status = data.status;
           this.bodyDatosBancariosAnexo.id = data.id;
+              
+          //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+          let peticion = new RevisionAutLetradoItem();
+          peticion.idPersona = this.body.idPersona.toString();
+          peticion.fechaProcesamiento = new Date();
+          this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
 
           this.showSuccess("Se han guardado correctamente los datos");
 
@@ -1812,7 +1836,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         error => {
           this.bodyDatosMandatosSearch = JSON.parse(error["error"]);
           this.showFail(this.bodyDatosMandatosSearch.error.message.toString());
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -1982,6 +2006,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.progressSpinner = false;
         this.bodyDatosBancariosAnexo.status = data.status;
         this.resaltadoFirma=false;
+              
+        //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+        let peticion = new RevisionAutLetradoItem();
+        peticion.idPersona = this.body.idPersona.toString();
+        peticion.fechaProcesamiento = new Date();
+        this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
 
         if (this.file != undefined) {
           this.progressSpinner = true;
@@ -2014,7 +2044,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
                 this.showFailFile(
                   "Error al cargar el archivo. El tamaño del archivo no puede exceder de 1MB"
                 );
-                console.log(error);
+                //console.log(error);
                 this.progressSpinner = false;
                 this.displayFirmar = false;
               },
@@ -2033,7 +2063,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.showFail(
           this.bodyDatosBancariosAnexoSearch.error.message.toString()
         );
-        console.log(error);
+        //console.log(error);
         this.progressSpinner = false;
       },
       () => {
@@ -2164,7 +2194,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   uploadFile(event: any) {
-    console.log("Event", event);
+    //console.log("Event", event);
     // guardamos la imagen en front para despues guardarla, siempre que tenga extension de imagen
     let fileList: FileList = event.files;
 
@@ -2272,12 +2302,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             this.router.navigate(["/dialogoComunicaciones"]);
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 

@@ -145,20 +145,20 @@ export class FichaProgramacionComponent implements OnInit {
       this.fromCombo = confValue.fromCombo;
       this.dataReady = true;});
   
-    console.log('this.persistenceService.getDatos(): ', this.persistenceService.getDatos())
+    //console.log('this.persistenceService.getDatos(): ', this.persistenceService.getDatos())
     this.infoResumen = [];
     if (this.persistenceService.getDatos() != undefined) {
       this.dataToReceive = this.persistenceService.getDatos();
 
       if (this.dataToReceive.idCalendarioProgramado != null){
         this.disableGenerar = false;
-        this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado);
+        this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
       }else{
         this.disableGenerar = true;
         this.dataReady = true;
       }
       this.rowGroupsSaved = this.persistenceService.getDatos().tabla;
-      console.log('rowGroupsSaved: ', this.rowGroupsSaved)
+      //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
       this.datosGenerales = this.persistenceService.getDatos();
       this.datosGeneralesIniciales = Object.assign({},this.datosGenerales );
       this.duplicar = this.dataToReceive.duplicar;
@@ -175,13 +175,13 @@ export class FichaProgramacionComponent implements OnInit {
 
     if (this.dataToReceive.idCalendarioProgramado != null){
       this.disableGenerar = false;
-      this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado);
+      this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
     }else{
       this.disableGenerar = true;
       this.dataReady = true;
     }
     this.rowGroupsSaved = this.dataToReceive.tabla;
-    console.log('rowGroupsSaved: ', this.rowGroupsSaved)
+    //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
     this.datosGenerales = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
     this.datosGeneralesIniciales = Object.assign({},this.datosGenerales );
     this.duplicar = this.dataToReceive.duplicar;
@@ -229,7 +229,7 @@ this.estado = this.datosGeneralesIniciales.estado;
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       })
   }
 
@@ -240,18 +240,19 @@ this.estado = this.datosGeneralesIniciales.estado;
     
     if (this.persistenciaGuardia != undefined) {
       this.persistenciaGuardia.volver = true;
-      console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
-      this.filtros = this.dataToReceive.filtrosBusqueda;
-      if (this.filtros.fechaCalendarioDesde == undefined || this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == ''){
-        let AnioAnterior = new Date().getFullYear() - 1;
-        this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
-        }
-      sessionStorage.setItem(
-        "filtrosBusquedaGuardiasFichaGuardia",
-        JSON.stringify(this.filtros)
-      );
+      //console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
+      if(this.dataToReceive.filtrosBusqueda!= null && this.dataToReceive.filtrosBusqueda != undefined){
+        this.filtros = this.dataToReceive.filtrosBusqueda;
+        if (this.filtros.fechaCalendarioDesde == undefined || this.filtros.fechaCalendarioDesde == null || this.filtros.fechaCalendarioDesde == ''){
+          let AnioAnterior = new Date().getFullYear() - 1;
+          this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
+          }
+        sessionStorage.setItem(
+          "filtrosBusquedaGuardiasFichaGuardia",
+          JSON.stringify(this.filtros)
+        );
+      }
     }
-
     this.location.back();
   }
 
@@ -544,31 +545,34 @@ this.estado = this.datosGeneralesIniciales.estado;
   }
 
   getdataToDuplicate(event){
-    console.log('DATA TO DUPLICATE: ', event)
-    console.log('this.rowGroupsSaved: ', this.rowGroupsSaved)
+    //console.log('DATA TO DUPLICATE: ', event)
+    //console.log('this.rowGroupsSaved: ', this.rowGroupsSaved)
     event.tabla = this.rowGroupsSaved; // lo cogemos en el oninit si duplicar = true!!!!!!
-    console.log('DATA TO DUPLICATE *: ', event)
+    //console.log('DATA TO DUPLICATE *: ', event)
 //TO DO: pasar los datos event al servicio global para obtenerlos desde tabla-mix
   this.persistenceService.setDatos(event);
-  let estadoNumerico = "0";
+  let estadoNumerico = "4";
   switch (event.estado) {
     case "Pendiente":
-      estadoNumerico = "3";
-      break;
-    case "Programada":
-      estadoNumerico = "1";
-      break;
-    case "En proceso":
-      estadoNumerico = "2";
-      break;
-    case "Procesada con Errores":
-      estadoNumerico = "5";
-      break;
-    case "Generada":
       estadoNumerico = "4";
       break;
-    default:
+    case "Programada":
       estadoNumerico = "0";
+      break;
+    case "En proceso":
+      estadoNumerico = "1";
+      break;
+    case "Procesada con Errores":
+      estadoNumerico = "2";
+      break;
+    case "Generada":
+      estadoNumerico = "3";
+      break;
+      case "Reprogramada":
+        estadoNumerico = "5";
+        break;
+    default:
+      estadoNumerico = "4";
       break;
   }
   let idCalG;
@@ -592,6 +596,7 @@ this.estado = this.datosGeneralesIniciales.estado;
     'idCalG': idCalG,
     'listaGuardias': event.listaGuarias.label,
     'idCalendarioProgramado': event.idCalendarioProgramado,
+    //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
   };
   this.newCalendarProg(dataToDuplicate);
@@ -599,24 +604,23 @@ this.estado = this.datosGeneralesIniciales.estado;
 
     searchGuardiasFromCal(event){
       this.datosTarjetaGuardiasCalendario = [];
-      this.getGuardiasFromCal(event);
+      this.getGuardiasFromCal(event.idCal, event.fechaDesde, event.fechaHasta );
     }
-   getGuardiasFromCal(idCalendarioProgramado){
+   getGuardiasFromCal(idCalendarioProgramado, fechaDesde, fechaHasta){
      if (!this.fromCombo){
     this.datosTarjetaGuardiasCalendarioIni = [];
      }
     this.dataReady = false;
     this.progressSpinner = true;
-    this.sigaServices.post(
-      "guardiaCalendario_getGuardiasFromCalendar", idCalendarioProgramado).subscribe(
+    this.sigaServices.getParam(
+      "guardiaCalendario_getGuardiasFromCalendar" , `?idCalendar=${idCalendarioProgramado}&fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`).subscribe(
         data => {
-          console.log('data Ana: ', data.body)
-          let error = JSON.parse(data.body).error;
-          let datosTarjetaGuardiasCalendario2 = JSON.parse(data.body);
+
+          let datosTarjetaGuardiasCalendario2 = data;
           
           let numGuardias = datosTarjetaGuardiasCalendario2.length;
           datosTarjetaGuardiasCalendario2.forEach((dat, i) => {
-            console.log('dat: ', dat)
+            //console.log('dat: ', dat)
             let responseObject = (
               {
                 'orden': dat.orden,
@@ -625,7 +629,8 @@ this.estado = this.datosGeneralesIniciales.estado;
                 'generado': dat.generado,
                 'numGuardias': numGuardias,
                 'idGuardia': dat.idGuardia,
-                'idTurno': dat.idTurno
+                'idTurno': dat.idTurno,
+                'idCalendarioGuardia': dat.idCalendarioGuardia
               }
              
             );
@@ -637,7 +642,7 @@ this.estado = this.datosGeneralesIniciales.estado;
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         });
 
    
@@ -667,32 +672,40 @@ this.estado = this.datosGeneralesIniciales.estado;
         };
 
       datosGeneralesToSave = datGen;
-      let estadoNumerico = "0";
+      let estadoNumerico = "4";
       switch (datosGeneralesToSave.estado) {
 				case "Pendiente":
-					estadoNumerico = "3";
-					break;
-				case "Programada":
-					estadoNumerico = "1";
-					break;
-				case "En proceso":
-					estadoNumerico = "2";
-					break;
-				case "Procesada con Errores":
-					estadoNumerico = "5";
-          break;
-        case "Generada":
 					estadoNumerico = "4";
 					break;
-				default:
+				case "Programada":
 					estadoNumerico = "0";
+					break;
+				case "En proceso":
+					estadoNumerico = "1";
+					break;
+				case "Procesada con Errores":
+					estadoNumerico = "2";
+          break;
+        case "Generada":
+					estadoNumerico = "3";
+          break;
+          case "Reprogramada":
+            estadoNumerico = "5";
+            break;
+				default:
+					estadoNumerico = "4";
 					break;
       }
       this.estado = datosGeneralesToSave.estado;
       this.dataReady = false;
       this.datosTarjetaGuardiasCalendario = []; //reload tarjeta guardias cal
       this.dataReady = true;
-      this.searchGuardiasFromCal(datosGeneralesToSave.idCalendarioProgramado);
+      let dat = {
+        'idCal': datosGeneralesToSave.idCalendarioProgramado,
+        'fechaDesde' : datosGeneralesToSave.fechaDesde,
+        'fechaHasta' : datosGeneralesToSave.fechaHasta
+      }
+      this.searchGuardiasFromCal(dat);
       let idCalG;
       if (this.idConjuntoGuardiaElegido == 0){
         idCalG = null;
@@ -714,6 +727,7 @@ this.estado = this.datosGeneralesIniciales.estado;
         'idCalG': datosGeneralesToSave.listaGuarias.value,
         'listaGuardias': datosGeneralesToSave.listaGuarias.label,
         'idCalendarioProgramado': datosGeneralesToSave.idCalendarioProgramado,
+        //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
       };
       this.fInicioElegida = datosGeneralesToSave.fechaDesde;
@@ -724,14 +738,14 @@ this.estado = this.datosGeneralesIniciales.estado;
        
     })
     if (this.wrongList.length == 0){
-      console.log('datosGeneralesToSave.idCalendarioProgramado: ', datosGeneralesToSave.idCalendarioProgramado)
+      //console.log('datosGeneralesToSave.idCalendarioProgramado: ', datosGeneralesToSave.idCalendarioProgramado)
       if (datosGeneralesToSave.idCalendarioProgramado != null && datosGeneralesToSave.idCalendarioProgramado != '0'){
         //actualizar existente
-        console.log('****UPDATE')
+        //console.log('****UPDATE')
         this.updateCalendarData(dataToSave);
       }else{
         //muevo
-        console.log('****NEW')
+        //console.log('****NEW')
         this.newCalendarProg(dataToSave);
       }
       
@@ -750,17 +764,17 @@ this.estado = this.datosGeneralesIniciales.estado;
       "guardiaCalendario_getFechasProgFromGuardia", "?idGuardia=" + idGuardia).subscribe(
         data => {
           fechasArr = data;
-          console.log('fechasArr: ', fechasArr)
+          //console.log('fechasArr: ', fechasArr)
           fechasArr.forEach( f => {
             let fIniProg = this.formatDate2(f.fechaDesde);
             let fFinProg = this.formatDate2(f.fechaHasta);
-            console.log('inicio elegida: ', new Date(this.fInicioElegida).getTime())
-            console.log('<= fFinProg: ', new Date(fFinProg).getTime())
+            //console.log('inicio elegida: ', new Date(this.fInicioElegida).getTime())
+            //console.log('<= fFinProg: ', new Date(fFinProg).getTime())
 
-            console.log('fin elegida: ', new Date(this.fFinElegida).getTime())
-            console.log('>= fIniProg: ', new Date(fIniProg).getTime())
+            //console.log('fin elegida: ', new Date(this.fFinElegida).getTime())
+            //console.log('>= fIniProg: ', new Date(fIniProg).getTime())
             if (new Date(this.fInicioElegida).getTime() <= new Date(fFinProg).getTime() && new Date(this.fFinElegida).getTime() >= new Date(fIniProg).getTime()){
-              console.log('FALSEEE')
+              //console.log('FALSEEE')
               //LAS FECHAS COINCIDEN CON LA PROGRAMACIÓN DE ESTA GUARDIA
               this.progressSpinner = false;
               this.showMessage('error', 'Error. Las fechas seleccionadas coinciden con alguna programación de la guardia ' + idGuardia + ', cuyo rango de fechas es: ' + fIniProg + ' - ' + fFinProg, '')
@@ -768,7 +782,7 @@ this.estado = this.datosGeneralesIniciales.estado;
               this.wrongList.push(go);
             }else{
              //se hace el guardado correcto
-             console.log('TRUEEEEE')
+             //console.log('TRUEEEEE')
              this.showMessage('success', 'Guardado correctamente', '')
              //habilitar botón GENERAR
              this.disableGenerar = false;
@@ -780,7 +794,7 @@ this.estado = this.datosGeneralesIniciales.estado;
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           go = false;
           this.wrongList.push(go);
@@ -814,7 +828,7 @@ this.estado = this.datosGeneralesIniciales.estado;
       //Al generar, pasará al estado Programada (rellenando previamente la Fecha de programación si estaba vacía)
       if(this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null){
         this.datosGenerales.fechaProgramacion = new Date();
-        console.log('this.datosGenerales.fechaProgramacion: ', this.datosGenerales.fechaProgramacion)
+        //console.log('this.datosGenerales.fechaProgramacion: ', this.datosGenerales.fechaProgramacion)
       }
 
     let estadoNumerico = "0";
@@ -850,6 +864,7 @@ this.estado = this.datosGeneralesIniciales.estado;
         'idCalG': this.datosGenerales.listaGuarias.value,
         'listaGuardias': this.datosGenerales.listaGuarias.label,
         'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
+        //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
     
       };
       this.generarCalendario(dataToGenerate);
@@ -865,27 +880,37 @@ this.estado = this.datosGeneralesIniciales.estado;
        this.sigaServices.post(
       "guardiaCalendario_updateCalendarioProgramado",  datos).subscribe(
         data => {
-          this.showMessage('error', "Se ha actualizado correctamente", "Se ha actualizado correctamente");
+          this.showMessage('info', "Se ha actualizado correctamente", "Se ha actualizado correctamente");
         }, err => {
-          this.showMessage('error', "No se ha actualizado correctamente", "No se ha actualizado correctamente");
-          console.log(err);
+          if(err.status = "409"){
+            this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");
+          }else {
+            this.showMessage('error', "No se ha actualizado correctamente", "No se ha actualizado correctamente");
+          }
+          //console.log(err);
         });
+       
   }
 
 
   newCalendarProg(datos){
+   
     this.sigaServices.post(
    "guardiaCalendario_newCalendarioProgramado",  datos).subscribe(
      data => {
 
-      console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
+      //console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
       if (this.persistenciaGuardia != undefined) {
         sessionStorage.setItem(
           "filtrosBusquedaGuardiasFichaGuardia",
           JSON.stringify(this.persistenciaGuardia)
         );
       }
+      if (datos.idCalG == null){
+        this.showMessage('info', "Debe asociar alguna guardia", "Debe asociar alguna guardia");
+      }else{
         this.router.navigate(["/programacionCalendarios"]);
+      }
         this.progressSpinner = false;
      }, err => {
       this.progressSpinner = false;
@@ -895,11 +920,16 @@ this.estado = this.datosGeneralesIniciales.estado;
       }else {
         this.showMessage('error', "No se ha generado correctamente", "No se ha generado correctamente");
       }
-       console.log(err);
+       //console.log(err);
      });
 }
 
 descargarLog(event){
+  let datosCalendariosSeleccionado = {
+    'idCalendarioGuardias': event.idCalendarioGuardias,
+    'idTurno': event.idTurno,
+    'idGuardia': event.idGuardia
+  };
   let estadoNumerico = "0";
   switch (this.datosGenerales.estado) {
     case "Pendiente":
@@ -908,6 +938,9 @@ descargarLog(event){
     case "Programada":
       estadoNumerico = "1";
       break;
+      case "Generada":
+        estadoNumerico = "4";
+        break;
     default:
       estadoNumerico = "0";
       break;
@@ -917,8 +950,8 @@ descargarLog(event){
   let dataToDownload = {
     'turno': this.datosGenerales.turno,
     'guardia': this.datosGenerales.nombre,
-    'idGuardia': this.datosGenerales.idGuardia,
-    'idTurno': this.datosGenerales.idTurno,
+    'idGuardia': datosCalendariosSeleccionado.idGuardia,
+    'idTurno': datosCalendariosSeleccionado.idTurno,
     'observaciones': this.datosGenerales.observaciones,
     'fechaDesde': this.datosGenerales.fechaDesde,
     'fechaHasta': this.datosGenerales.fechaHasta,
@@ -926,10 +959,10 @@ descargarLog(event){
     'estado': estadoNumerico,
     'generado': this.datosGenerales.generado,
     'numGuardias': this.datosGenerales.numGuardias,
-    'idCalG': this.datosGenerales.listaGuarias.value,
+    'idCalG': this.datosGenerales.listaGuarias.value, //conjunto
     'listaGuardias': this.datosGenerales.listaGuarias.label,
     'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
-
+    'idCalendarioGuardias' : datosCalendariosSeleccionado.idCalendarioGuardias
   };
 
   if (event){
@@ -945,15 +978,46 @@ descargarLog(event){
         resHead.header = resp.headers;
         let contentDispositionHeader = resHead.header.get('Content-Disposition');
         let fileName = contentDispositionHeader.split(';')[1].trim().split('=')[1];
-        console.log('fileName: ', fileName)
+        //console.log('fileName: ', fileName)
         let blob = new Blob([resHead.response], { type: 'application/octet-stream' });
         saveAs(blob, fileName);
         this.showMessage( 'success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+        switch (estadoNumerico) {
+          case "5":
+            this.datosGenerales.estado = "Pendiente";
+            break;
+          case "1":
+            this.datosGenerales.estado = "Programada";
+            break;
+          case "4":
+            this.datosGenerales.estado = "Generada";
+            break;
+          default:
+            this.datosGenerales.estado = "-";
+            break;
+        }
   },
   err => {
         this.progressSpinner = false;
         this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
-        console.log(err);
+        //console.log(err);
+
+
+        switch (estadoNumerico) {
+          case "5":
+            this.datosGenerales.estado = "Pendiente";
+            break;
+          case "1":
+            this.datosGenerales.estado = "Programada";
+            break;
+          case "4":
+            this.datosGenerales.estado = "Generada";
+            break;
+          default:
+            this.datosGenerales.estado = "-";
+            break;
+        }
+
       });
     }
   }
@@ -963,9 +1027,43 @@ descargarLog(event){
       "guardiaCalendario_generar",  datos).subscribe(
         data => {
           this.progressSpinner = false;
+          this.showMessage('success', 'Calendario generado correctamente', '')
+          setTimeout(() => {
+            let dataToSend = {
+              'duplicar': false,
+              'tabla': [],
+              'turno':this.datosGenerales.turno,
+              'nombre': this.datosGenerales.nombre,
+              'generado': 'Si',
+              'numGuardias': this.datosGenerales.numGuardias,
+              'listaGuarias': this.datosGenerales.listaGuarias,
+              'fechaDesde': this.datosGenerales.fechaDesde,
+              'fechaHasta': this.datosGenerales.fechaHasta,
+              'fechaProgramacion': this.datosGenerales.fechaProgramacion,
+              'estado': "Generada",
+              'observaciones': this.datosGenerales.observaciones,
+              'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
+              'idTurno': this.datosGenerales.idTurno,
+              'idGuardia': this.datosGenerales.idGuardia,
+              'filtrosBusqueda' : this.dataToReceive.filtrosBusqueda
+            }
+              this.persistenceService.setDatos(dataToSend);
+              this.router.navigate(["/fichaProgramacion"]);
+  
+          }, 3000);
+         
+     
         }, err => {
           this.progressSpinner = false;
-          console.log(err);
+          let errorDTO = {'code': 0,'message': '','description':'', 'infoURL':null,'details':[]};
+          let responseDTO = {'status': '', 'id': '', 'error': errorDTO};
+          
+          responseDTO = err.error;
+          responseDTO = JSON.parse(err.error);
+          let mensajeError = responseDTO.error.message;
+          this.showMessage('error', 'Error. No puede generarse el calendario. ' + mensajeError, '')
+          
+          //console.log(err);
         });
   }
 
@@ -976,7 +1074,7 @@ descargarLog(event){
 
   disGen($event){
     this.disableGenerar = $event;
-    console.log('DISABLE GENERAR', $event)
+    //console.log('DISABLE GENERAR', $event)
   }
 
   clear() {

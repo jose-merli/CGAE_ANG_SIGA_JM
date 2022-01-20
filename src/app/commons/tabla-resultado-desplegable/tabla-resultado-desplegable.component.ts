@@ -164,7 +164,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.selectedHeader.push(cab);
       this.cabecerasMultiselect.push(cab.name);
     });
-    this.totalRegistros = this.rowGroups.length;
+    if (this.rowGroups != undefined){
+      this.totalRegistros = this.rowGroups.length;
+    }else{
+      this.totalRegistros = 0;
+    }
+    
     this.selected = false;
     this.selectedArray = [];
     this.selecteChild = [];
@@ -404,6 +409,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   validaCheck(texto) {
     return texto === 'Si';
+  }
+  fillFechaAsist(event, cell, rowId, row, rowGroup, padre, index) {
+    cell.value = event;
+    this.rowIdsToUpdate.push(rowId);
+    if( rowGroup.rows[1].cells[3].type == 'datePickerAct'){
+      rowGroup.rows[1].cells[3].value = event;
+    }
   }
   fillFecha(event, cell, rowId, row, rowGroup, padre, index) {
     if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
@@ -912,7 +924,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         /*if (event.itemValue.id == "ejgs" || event.itemValue.id == "clientes"){
           event.itemValue.id = "anio";
         }
-        console.log('event.itemValue.id: ', event.itemValue.id)*/
+        //console.log('event.itemValue.id: ', event.itemValue.id)*/
         if (ocultar && event.itemValue.id == "anio"){
           this.ocultarItem("clientes");
           this.ocultarItem("ejgs");
@@ -1151,6 +1163,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
 
     this.lastChange = "onChangeMulti";
+
+
+      this.rowIdsToUpdate.push(rowId);
   }
 
   searchNuevo(comboModulos, comboAcreditacion ){
@@ -1184,7 +1199,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   newFromSelected(){
-    console.log('sessionStorage.getItem(rowIdsToUpdate) ', sessionStorage.getItem('rowIdsToUpdate') );
+    //console.log('sessionStorage.getItem(rowIdsToUpdate) ', sessionStorage.getItem('rowIdsToUpdate') );
     if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
         this.confirmationService.confirm({
@@ -1253,7 +1268,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
          
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }
       );
@@ -1408,13 +1423,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           //rowG.rows.splice(this.childNumber, 1);
           if (rowG.rows[this.childNumber + 1].cells[8].value == false){
             //actuacion No Validada
-            console.log("isListreado")
+            //console.log("isListreado")
             if ((this.isLetrado && this.turnoAllow == "1" ) || (!this.isLetrado)){
               if (rowG.rows[this.childNumber + 1].cells[35].value == "1"){
                 this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
                 this.refreshData.emit(true);
               }else{
-                console.log("push del else");
+                //console.log("push del else");
                 deletedAct.push(rowG.rows[this.childNumber + 1].cells)
               }
             }else {
@@ -1655,7 +1670,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         })
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }
       );
@@ -1682,7 +1697,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -1704,7 +1719,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -1760,7 +1775,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () =>{
           this.progressSpinner = false;
@@ -1884,7 +1899,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.commonsService.scrollTop();
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () =>{
@@ -1923,7 +1938,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           }
         );
     }
-
+    fillRowGroup(event, rowGroup){
+      rowGroup.id = event;
+    }
     navigateComunicarJE(rowGroup, identificador) {
       sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
       if (this.pantalla == 'JE'){
@@ -1947,7 +1964,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.keys = JSON.parse(data["body"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { datos_combos } from '../../../../utils/datos_combos';
 import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 import { MultiSelect } from 'primeng/multiselect';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-filtros-ejg',
@@ -81,10 +82,13 @@ export class FiltrosEjgComponent implements OnInit {
 
   bodyDictamen = [];
   @Input() permisos;
+  @Input() remesa;
   /*Éste método es útil cuando queremos qeremos informar de cambios en los datos desde el hijo,
   por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
   @Input() permisoEscritura;
+
+  remesaFicha: boolean = false;
 
 
   @ViewChild('inputNumero') inputNumero: ElementRef;
@@ -105,6 +109,15 @@ export class FiltrosEjgComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     this.getCombos();
+
+    if(this.remesa != null || this.remesa != undefined){
+      this.remesaFicha = true;
+      this.body.informacionEconomica = this.remesa.informacionEconomica;
+    }
+
+    console.log("Viene de la ficha de una remesa? -> ", this.remesaFicha);
+    console.log("Remesa -> ", this.remesa);
+
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
@@ -131,6 +144,9 @@ export class FiltrosEjgComponent implements OnInit {
     } else {
       this.body = new EJGItem();
       this.body.annio = new Date().getFullYear().toString();
+      if(this.remesa != null || this.remesa != undefined){
+        this.body.informacionEconomica = this.remesa.informacionEconomica;
+      }
     }
 
 
@@ -233,6 +249,17 @@ export class FiltrosEjgComponent implements OnInit {
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
+      && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
+      this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+      this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
+    }else{
+      this.usuarioBusquedaExpress.numColegiado = " ";
+      this.body.numColegiado = "";
+      this.body.idPersona = "";
+      sessionStorage.removeItem("numColegiado");
+      this.numColegiadoRelleno=false;
+    }
   }
 
   getComboProcedimiento() {
@@ -245,7 +272,7 @@ export class FiltrosEjgComponent implements OnInit {
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -263,7 +290,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.bodyDictamen.push("-1");
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -274,7 +301,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboRol);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -285,7 +312,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboPerceptivo);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -296,7 +323,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboRenuncia);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -312,7 +339,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboFundamentoCalif);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -323,7 +350,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboResolucion);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -352,7 +379,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.comboImpugnacion.push({ label: "Sin Resolución", value: -2 });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -363,7 +390,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboFundamentoImpug);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -374,7 +401,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboPonente);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -394,7 +421,7 @@ export class FiltrosEjgComponent implements OnInit {
             } else { this.inst2000 = true; }
           },
           err => {
-            console.log(err);
+            //console.log(err);
           }
         );
 
@@ -408,7 +435,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoEJG);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -419,7 +446,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTipoEJGColegio);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -429,9 +456,22 @@ export class FiltrosEjgComponent implements OnInit {
       n => {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
+
+        if(this.remesaFicha){
+          let comboItem = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '7');
+          let comboItem2 = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '17');
+
+          this.comboEstadoEJG[0] = comboItem;
+          this.comboEstadoEJG[1] = comboItem2;
+
+          for(; this.comboEstadoEJG.length > 2;){
+              this.comboEstadoEJG.pop();
+          }
+        }
+        console.log("comboEstadoEJG -> ", this.comboEstadoEJG);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -449,7 +489,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboTurno);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -465,7 +505,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -477,7 +517,7 @@ export class FiltrosEjgComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboJuzgado);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -696,6 +736,10 @@ export class FiltrosEjgComponent implements OnInit {
 
     this.clearFiltersTramitador();
     this.getComboColegio();
+
+    if(this.remesa != null || this.remesa != undefined){
+      this.body.informacionEconomica = this.remesa.informacionEconomica;
+    }
 
     this.showdatosIdentificacion = true;
     this.showDatosGeneralesEJG = false;

@@ -1,0 +1,76 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="traspasoFacturas">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('traspasoFacturas')">
+          <div class="img-colegiado">
+            <i class="fas fa-exchange-alt icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('traspasoFacturas')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.traspaso.literal' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>{{ 'facturacion.seriesFactura.traspaso.auto' | translate }}: 
+              <span>{{ body.traspasoFacturas ? "Sí" : "No" }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantilla' | translate }}: 
+              <span>{{ body.traspasoPlantilla }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantillaAudit' | translate }}: 
+              <span>{{ body.traspasoCodAuditoriaDef }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('traspasoFacturas')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('traspasoFacturas')">
+        <div class="img-colegiado">
+          <i class="fas fa-exchange-alt icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.traspaso.literal' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="form-row w-100">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label></label>
+            <p-checkbox [(ngModel)]="body.traspasoFacturas" label="{{ 'facturacion.seriesFactura.traspaso.auto' | translate }}" binary="true"></p-checkbox>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantilla' | translate }}</label>
+            <input type="text" class="form-control" [ngClass]="styleObligatorio(body.traspasoPlantilla)" pInputText [(ngModel)]="body.traspasoPlantilla" maxLength="10" />
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ 'facturacion.seriesFactura.traspaso.plantillaAudit' | translate }}</label>
+            <input type="text" class="form-control" [ngClass]="styleObligatorio(body.traspasoCodAuditoriaDef)" pInputText [(ngModel)]="body.traspasoCodAuditoriaDef" maxLength="10" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

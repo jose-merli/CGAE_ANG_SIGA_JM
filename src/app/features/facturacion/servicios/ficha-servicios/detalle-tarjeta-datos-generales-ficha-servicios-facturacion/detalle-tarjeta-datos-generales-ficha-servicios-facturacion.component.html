@@ -1,0 +1,235 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="form-row p-lg-3 p-md-3">
+
+  <!-- Categoria -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.categoria" | translate}}(*)</label>
+    <p-dropdown [disabled]="servicio.editar == true" (onChange)="valueChangeCategoria()" [filter]="true"
+      styleClass="widthAll" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+      [(ngModel)]='servicio.idtiposervicios' [options]="categoriasObject.combooItems"
+      [ngClass]="{'camposObligatorios': aGuardar && servicio.idtiposervicios == null}">
+    </p-dropdown>
+  </div>
+
+  <!-- Tipo -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.tipo" | translate}}(*)</label>
+    <p-dropdown [disabled]="servicio.idtiposervicios == null || servicio.editar == true" [filter]="true"
+      styleClass="widthAll" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}"
+      [(ngModel)]='servicio.idservicio' [options]="tiposObject.combooItems"
+      [ngClass]="{'camposObligatorios': aGuardar && servicio.idservicio == null}">
+    </p-dropdown>
+  </div>
+
+  <!-- Servicio -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.servicios.servicio" | translate}}(*)</label>
+    <input type="text" class="form-control" [(ngModel)]='servicio.descripcion'
+      [ngClass]="{'camposObligatorios': aGuardar && (servicio.descripcion == '' || servicio.descripcion == undefined)}"
+      pInputText>
+  </div>
+
+  <!-- Codigo -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.codigo" | translate}}</label>
+    <input type="text" class="form-control" [(ngModel)]='servicio.codigoext' pInputText>
+  </div>
+
+  <!-- Permitir solicitud por internet -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+      <p-checkbox binary="true" [disabled]="checkboxAsignacionAutomatica"
+        label="{{'facturacion.fichaservicios.datosgenerales.permitirsoliciturinternet' | translate}}"
+        [(ngModel)]="checkBoxPermitirSolicitudPorInternet" (onChange)="onChangePermitirSolicitudInternet()">
+      </p-checkbox>
+    </div>
+  </div>
+
+  <!-- Permitir anulacion por internet -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+      <p-checkbox binary="true" [disabled]="checkboxAsignacionAutomatica"
+        label="{{'facturacion.fichaservicios.datosgenerales.permitiranulacioninternet' | translate}}"
+        [(ngModel)]="checkboxPermitirAnulacionPorInternet" (onChange)="onChangePermitirAnulacionInternet()">
+      </p-checkbox>
+    </div>
+  </div>
+
+  <!-- Condicion de suscripcion -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.fichaservicios.datosgenerales.condicionsuscripcion" | translate}}</label>
+    <p-dropdown (onChange)="valueChangeCondicion()" [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='servicio.idconsulta'
+      [options]="condicionesSuscripcionObject.combooItems">
+    </p-dropdown>
+  </div>
+
+  <!-- Asignacion automatica -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+      <p-checkbox [disabled]="servicio.idconsulta == null || servicio.idconsulta == undefined || servicio.idconsulta == 0" binary="true"
+        label="{{'facturacion.fichaservicios.datosgenerales.asignacionautomatica' | translate}}"
+        [(ngModel)]="checkboxAsignacionAutomatica" (onChange)="onChangeAsignacionAutomatica()">
+      </p-checkbox>
+    </div>
+  </div>
+
+  <!-- Cuenta contable -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>{{ "facturacion.fichaproductos.datosgenerales.cuentacontable" | translate}}</label>
+    <input maxlength="20" type="text" class="form-control" [(ngModel)]='servicio.cuentacontable' pInputText>
+  </div>
+
+</div>
+
+<!-- Botones -->
+<div class="card-footer">
+  <div class="text-right main-button">
+    <!-- Nueva Condicion -->
+    <button (click)="nuevacondicion()" [disabled]="desactivarBotonEliminar" pButton type="button" icon="fa fa-database" iconPos="left"
+      label="{{'informesycomunicaciones.consultas.constructor.nuevacondicionboton' | translate}}"></button>
+
+    <!-- Restablecer -->
+    <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+      label="{{'general.boton.restablecer' | translate}}"></button>
+
+    <!-- Eliminar -->
+    <button [disabled]="desactivarBotonEliminar" *ngIf="servicio.fechabaja == null" (click)="checkEliminarReactivar()"
+      pButton type="button" icon="fa fa-trash-alt " iconPos="left"
+      label="{{'general.boton.eliminar' | translate}}"></button>
+
+    <!-- Borrar suscripciones o bajas -->
+    <button *ngIf="servicio.editar" (click)="borrarSuscripcionesBajas()" pButton type="button" icon="fa fa-trash-alt "
+      iconPos="left"
+      label="{{'facturacion.servicios.fichaservicio.botonborrarsuscripcionesbajas' | translate}}"></button>
+
+    <!-- Reactivar -->
+    <button (click)="checkEliminarReactivar()" *ngIf="servicio.fechabaja != null" pButton type="button" icon="fa fa-undo "
+      iconPos="left" label="{{'facturacion.maestros.tiposproductosservicios.reactivar' | translate}}"></button>
+
+    <!-- Guardar -->
+    <button (click)="checkGuardar()" pButton type="button" icon="far fa-save" iconPos="left"
+      label="{{ 'general.boton.guardar' | translate}}"></button>
+  </div>
+</div>
+
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}"
+  key="avisoDomiciliacionBancariaUnicaFormaPago" icon="icon" width="425" #avisoDomiciliacionBancariaUnicaFormaPago>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si"
+      (click)="avisoDomiciliacionBancariaUnicaFormaPago.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No"
+      (click)="avisoDomiciliacionBancariaUnicaFormaPago.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="avisoSuscripcionAutomatica" icon="icon"
+  width="425" #avisoSuscripcionAutomatica>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="avisoSuscripcionAutomatica.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="avisoSuscripcionAutomatica.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+
+<!-- DIALOG BORRAR SUSCRIPCIONES O BAJAS -->
+<p-dialog width="auto" height="auto" responsive="true" modal="modal" [draggable]="false" resizable="false"
+  [(visible)]="showModalSuscripcionesBajas" (onHide)="cancelarDialogBorrarSuscripcionesBajas()">
+  <p-header class="title">
+    <label>{{ "facturacion.servicios.fichaservicio.titulobajasaltasdialog" | translate}}</label>
+  </p-header>
+  <div class="form-row">
+
+    <!-- Altas y Bajas -->
+    <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
+      <span class="mr-4">
+        <p-radioButton [(ngModel)]='borrarSuscripcionBajaItem.opcionaltasbajas' name="altasBajas" value="0"
+          label="{{ 'facturacion.servicios.fichaservicio.radiobuttonvaloraltasbajas' | translate}}"
+          (click)="onChangeRadioButtonsOpcionAltasBajas('altasBajas')"></p-radioButton>
+      </span>
+    </div>
+
+    <!-- Fecha de eliminacion de altas -->
+    <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
+      <label>{{ "facturacion.servicios.fichaservicio.fechaeliminacionaltas" | translate}}</label>
+      <app-fecha [(value)]="borrarSuscripcionBajaItem.fechaeliminacionaltas"
+        (valueChangeSelected)="fillFechaEliminacionAltas($event)"
+        (valueChangeInput)="fillFechaEliminacionAltas($event)"></app-fecha>
+    </div>
+
+    <!-- Bajas -->
+    <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
+      <span class="mr-4">
+        <p-radioButton [(ngModel)]='borrarSuscripcionBajaItem.opcionaltasbajas' name="altasBajas" value="1"
+          label="{{ 'facturacion.servicios.fichaservicio.radiobuttonvalorbajas' | translate}}"
+          (click)="onChangeRadioButtonsOpcionAltasBajas('bajas')">
+        </p-radioButton>
+      </span>
+    </div>
+
+    <!-- Incluir solicitudes de bajas manuales -->
+    <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
+      <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
+        <p-checkbox [disabled]="borrarSuscripcionBajaItem.opcionaltasbajas == '0'" binary="true"
+          label="{{ 'facturacion.servicios.fichaservicio.incluirsolbajasmanuales' | translate}}"
+          [(ngModel)]="checkboxIncluirSolBajasManuales" (onChange)="onChangeIncluirSolBajasManuales()">
+        </p-checkbox>
+      </div>
+    </div>
+  </div>
+
+  <div class="paddingDialogBorrarSuscripcionesBajasButtons">
+    <div class="text-right main-button">
+      <button (click)="guardarDialogBorrarSuscripcionesBajas()" pButton type="button" icon="fa fa-edit" iconPos="left"
+        label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelarDialogBorrarSuscripcionesBajas()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+
+</p-dialog>
+
+<!-- DIALOG SERVICIO AUTOMATICO A MANUAL -->
+<p-dialog width="auto" height="auto" responsive="true" modal="modal" [draggable]="false" resizable="false"
+  [(visible)]="showModalServicioAutomaticoAManual" (onHide)="cancelarDialogBorrarSuscripcionesBajas()">
+  <p-header class="title">
+    <label>{{ "facturacion.servicios.fichaservicio.titulobajasaltasdialog" | translate}}</label>
+  </p-header>
+  <div class="form-row">
+
+    <!-- Dar de baja a todas las personas ya suscritas -->
+    <div class="form-group-interlineado col-lg-12 col-md-12 pb-lg-2 pb-md-2">
+      <div class="d-flex justify-content-between">
+        <p-checkbox binary="true"
+          label="{{ 'facturacion.productosYServicios.fichaservicios.dialogbajasuscriptores' | translate}}" 
+          [(ngModel)]="checkboxDialogServicioAutomaticoAManual" (onChange)="onChangeDialogServicioAutomaticoAManual()">
+        </p-checkbox>
+        
+      </div>
+    </div>
+
+  </div>
+
+  <div class="paddingDialogBorrarSuscripcionesBajasButtons">
+    <div class="text-right main-button">
+      <button (click)="checkGuardarDialogBorrarSuscripcionesBajas()" pButton type="button" icon="fa fa-edit" iconPos="left"
+        label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelarDialogServicioAutomaticoAManual()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+
+</p-dialog>

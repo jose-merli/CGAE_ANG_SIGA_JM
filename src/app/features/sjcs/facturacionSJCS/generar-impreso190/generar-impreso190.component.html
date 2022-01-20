@@ -1,1 +1,17 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>SJCS&nbsp;<i class="fa fa-angle-right"></i>{{'menu.facturacionSJCS.generarImpreso190' |
+        translate}}
+    </p>
+</div>
+
+<div class="busqueda-container">
+    <app-filtro-generar-impreso190 (getImpresos) = "getImpresos($event)" [permisoEscritura] = "permisoEscritura"> </app-filtro-generar-impreso190>
+    <app-tabla-generar-impreso190 *ngIf="buscar" [datos]="datos" (getImpresoRefresh) = "getImpresos($event)" [permisoEscritura] = "permisoEscritura"></app-tabla-generar-impreso190>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>

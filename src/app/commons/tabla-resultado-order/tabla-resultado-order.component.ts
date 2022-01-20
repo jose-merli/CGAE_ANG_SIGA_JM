@@ -36,10 +36,12 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Output() anySelected = new EventEmitter<any>();
   @Output() selectedRow = new EventEmitter<any>();
   @Output() colaGuardiaModified = new EventEmitter<any>();
+  @Output() colaGuardiaOrdenada = new EventEmitter<any>();
+  
   @Output() rest = new EventEmitter<Boolean>();
   @Output() dupli = new EventEmitter<Boolean>();
   @Output() guardarGuardiasEnConjunto = new EventEmitter<any>();
-  @Output() descargaLog = new EventEmitter<Boolean>();
+  @Output() descargaLog = new EventEmitter<{}>();
   @Output() disableGen = new EventEmitter<Boolean>();
   @Output() saveGuardiasEnLista = new EventEmitter<Row[]>();
   @Input() permisosEscritura : boolean = true;
@@ -104,6 +106,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() minimoLetrado;
   @Input() s;
   @Output() linkGuardiaColegiado = new EventEmitter<any>();
+  marcadoultimo = false;
   numPage = 0;
   isLetrado : boolean = false;
   constructor(
@@ -130,8 +133,9 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.marcadoultimo = false;
     this.ordenarByOrderField();
-    console.log('rowGroups al inicio: ', this.rowGroups)
+    //console.log('rowGroups al inicio: ', this.rowGroups)
     this.selectedArray = [];
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     if(this.rowGroups != undefined){
@@ -171,13 +175,13 @@ export class TablaResultadoOrderComponent implements OnInit {
               },
               err => {
                 this.progressSpinner = false;
-                console.log(err);
+                //console.log(err);
               }
             )
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       );
   
@@ -198,15 +202,17 @@ export class TablaResultadoOrderComponent implements OnInit {
     })
     if(!this.listaGuardias){
       this.xArr = [];
-      this.rowGroups.forEach((rg, i) =>{
-        if(this.pantalla == 'colaGuardias'){
-          this.grupos.push(rg.cells[0].value);
-        }else{
-        this.grupos.push(rg.cells[1].value);
-        }
-        let x = this.ordenValue(i);
-        this.xArr.push(x);
-      })
+      if (this.rowGroups != undefined){
+        this.rowGroups.forEach((rg, i) =>{
+          if(this.pantalla == 'colaGuardias'){
+            this.grupos.push(rg.cells[0].value);
+          }else{
+          this.grupos.push(rg.cells[1].value);
+          }
+          let x = this.ordenValue(i);
+          this.xArr.push(x);
+        });
+      }
       if (!this.calendarios){
         if (this.grupos.length != 0){
           this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
@@ -259,9 +265,14 @@ export class TablaResultadoOrderComponent implements OnInit {
     
   }
 
-  guardar(){
+  guardar(ultimo){
+      this.rowGroups.forEach(rG=>{
+      if (rG.cells[0].value.toString().startsWith('U')){
+        rG.cells[0].value = rG.cells[0].value.substring(1);
+      }
+    })
     this.progressSpinner = true;
-    console.log('this.rowGroups: ', this.rowGroups)
+    //console.log('this.rowGroups: ', this.rowGroups)
     if (this.calendarios){
       this.guardiasCalendarioModified.emit(this.rowGroups);
       this.totalRegistros = this.rowGroups.length;
@@ -289,7 +300,15 @@ export class TablaResultadoOrderComponent implements OnInit {
     }
     this.totalRegistros = this.rowGroups.length;
     if (!errorVacio && !errorSecuenciaOrden && !errorSecuenciaGrupo){
-      this.updateColaGuardia();
+      if (!ultimo){
+          this.updateColaGuardia();
+      }else{
+          this.updateColaGuardiaSameOrder();
+      }
+    
+        
+
+
       this.showMsg('success', 'Se ha guardado correctamente', '')
       this.progressSpinner = false;
     }else if (errorGrupoNoOrden){
@@ -318,22 +337,25 @@ export class TablaResultadoOrderComponent implements OnInit {
 
 
   ordenarByOrderField(){
-    let data :Row[] = [];
-    this.rowGroups = this.rowGroupsAux.filter((row) => {
-        data.push(row);
+    if(this.rowGroupsAux != undefined){
+      let data :Row[] = [];
+      this.rowGroups = this.rowGroupsAux.filter((row) => {
+          data.push(row);
+      });
+  
+      this.rowGroups = data.sort((a, b) => {
+        if (a.cells[0].value != null && b.cells[0].value != null){
+        let resultado;
+        resultado = compare(Number(a.cells[0].value), Number(b.cells[0].value), true);
+        return resultado ;
+        }else{
+          return 0;
+        }
     });
+    this.rowGroupsAux = this.rowGroups;
+    this.totalRegistros = this.rowGroups.length;
+    }
 
-    this.rowGroups = data.sort((a, b) => {
-      if (a.cells[0].value != null && b.cells[0].value != null){
-      let resultado;
-      resultado = compare(Number(a.cells[0].value), Number(b.cells[0].value), true);
-      return resultado ;
-      }else{
-        return 0;
-      }
-  });
-  this.rowGroupsAux = this.rowGroups;
-  this.totalRegistros = this.rowGroups.length;
   }
 
   saveCal(){
@@ -395,13 +417,13 @@ export class TablaResultadoOrderComponent implements OnInit {
             },
             err => {
               this.progressSpinner = false;
-              console.log(err);
+              //console.log(err);
             }
           )
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -413,6 +435,10 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
   updateColaGuardia(){
     this.colaGuardiaModified.emit(this.rowGroups);
+    this.totalRegistros = this.rowGroups.length;
+  }
+  updateColaGuardiaSameOrder(){
+    this.colaGuardiaOrdenada.emit(this.rowGroups);
     this.totalRegistros = this.rowGroups.length;
   }
 displayWrongSequence(){
@@ -519,6 +545,9 @@ checkLetrados(){
     let err2 = false;
     let arrNumbers : Number[] = [];
     this.rowGroups.forEach((row, i) => { 
+      if (this.rowGroups[i].cells[j].value.toString().startsWith('U')){
+        this.rowGroups[i].cells[j].value = this.rowGroups[i].cells[j].value.substring(1);
+      }
       if (i < this.rowGroups.length - 1){
         if (this.rowGroups[i].cells[j].value != null && this.rowGroups[i + 1].cells[j].value != null){
         if (this.rowGroups[i].cells[j].value != this.rowGroups[i + 1].cells[j].value){
@@ -527,7 +556,7 @@ checkLetrados(){
           errorSecuencia = this.isIncreasingSequence(arrNumbers);
           errSeqArr.push(errorSecuencia);
           if (errorSecuencia == true){
-            console.log('error true ' , i)
+            //console.log('error true ' , i)
           }
         } else {
           arrNumbers.push(Number(row.cells[j].value));
@@ -656,13 +685,13 @@ return rowsByGroup;
     this.rowGroups = this.rowGroupsAux.filter((row) => {
         data.push(row);
     });
-    console.log('this.rowGroupsAux: ', this.rowGroupsAux)
-    console.log('data: ', data)
+    //console.log('this.rowGroupsAux: ', this.rowGroupsAux)
+    //console.log('data: ', data)
     this.rowGroups = data.sort((a, b) => {
-      console.log('a.cells[0].value: ', a.cells[0].value)
-      console.log('a.cells[3].value: ', a.cells[3].value)
-      console.log('b.cells[0].value: ', b.cells[0].value)
-      console.log('b.cells[3].value: ', b.cells[3].value)
+      //console.log('a.cells[0].value: ', a.cells[0].value)
+      //console.log('a.cells[3].value: ', a.cells[3].value)
+      //console.log('b.cells[0].value: ', b.cells[0].value)
+      //console.log('b.cells[3].value: ', b.cells[3].value)
       if (a.cells[0].value != null && b.cells[0].value != null){
       let resultado;
       if (this.pantalla == 'colaGuardias'){
@@ -674,10 +703,10 @@ return rowsByGroup;
       }else{
         resultado = compare(Number(a.cells[1].value), Number(b.cells[1].value), true);
       }
-      console.log('resultado: ',resultado)
+      //console.log('resultado: ',resultado)
     return resultado ;
       }else{
-        console.log('resultado 0: ',0)
+        //console.log('resultado 0: ',0)
         return 0;
         /*let last = this.rowGroups[this.rowGroups.length - 1];
         this.rowGroups[this.rowGroups.length - 1] = a;
@@ -700,7 +729,7 @@ return rowsByGroup;
     this.numPage = event;
   }
 valueChange(i, z, $event){
-  console.log('valueChange')
+  //console.log('valueChange')
   if (this.pantalla == 'colaGuardias'){
     let posicion = this.numperPage*(this.numPage) + i
     if ( z == 1){
@@ -768,6 +797,38 @@ this.totalRegistros = this.rowGroups.length;
 
   }*/
   moveToLast(){
+    this.rowGroups.forEach(rG=>{
+      if (rG.cells[0].value.toString().startsWith('U')){
+        rG.cells[0].value = rG.cells[0].value.substring(1);
+      }
+    })
+    let posicionEntabla = this.from + this.positionSelected;
+    if (this.rowGroups[posicionEntabla].cells[16] != undefined){
+      this.rowGroups[posicionEntabla].cells[16].value = 1;
+    }else{
+      this.rowGroups[posicionEntabla].cells[12].value = 1;
+    }
+    
+   
+    /*this.rowGroups.forEach((rG, i) => {
+      if (this.rowGroups[posicionEntabla].cells[12] != undefined){
+        if (i == posicionEntabla){
+          this.rowGroups[posicionEntabla].cells[12].value = 1;
+        }else{
+          this.rowGroups[i].cells[12].value = 0;
+        }
+      }else if (this.rowGroups[posicionEntabla].cells[16] != undefined){
+        if (i == posicionEntabla){
+          this.rowGroups[posicionEntabla].cells[16].value = 1;
+        }else{
+          this.rowGroups[i].cells[16].value = 0;
+        }
+      }
+
+    })*/
+    this.rowGroupsAux = this.rowGroups;
+
+    this.marcadoultimo = true;
     let i = 1;
     let lastGroup = this.grupos[this.grupos.length - 1];
     let groupSelected = 0;
@@ -776,7 +837,7 @@ this.totalRegistros = this.rowGroups.length;
       i++;
       lastGroup = this.grupos[this.grupos.length - i];
       }
-      groupSelected = this.rowGroups[this.positionSelected].cells[0].value;
+      groupSelected = this.rowGroups[posicionEntabla].cells[0].value;
        this.rowGroupsAux.forEach((row, index)=> {
       if(groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) == Number(groupSelected)){
         this.rowGroups[index].cells[0].value = lastGroup;
@@ -790,20 +851,26 @@ this.totalRegistros = this.rowGroups.length;
       }
   });
   if (groupSelected == null){
-        let last = this.rowGroups[this.rowGroups.length - 1];
-        let selected = this.rowGroups[this.positionSelected];
-        this.rowGroups.forEach((row, index)=> {
-          if (index != 0  && index <=this.positionSelected){
-          this.rowGroups[index] = this.rowGroups[index - 1];
+      let selected = this.rowGroups[posicionEntabla];
+          let ordenColaSeleccionado = Object.assign({},selected.cells[12]);
+         let ordenColaUltimo = Object.assign({},this.rowGroups[this.rowGroups.length - 1].cells[12]);
+         let ordenColaPrimero = Object.assign({},this.rowGroups[0].cells[12]);
+        let j = 0;
+        while (j < posicionEntabla){
+          //this.rowGroups[index] = this.rowGroupsAux[index - 1];
+          this.rowGroups[j].cells[12].value = this.rowGroupsAux[j+1].cells[12].value;
+          j++;
           }
-          });
        
-        this.rowGroups[0] = last;
-         this.rowGroups[this.rowGroups.length - 1] = selected;
+         //selected = last
+         this.rowGroups[posicionEntabla].cells[12].value = ordenColaUltimo.value;
+         //last = first
+         this.rowGroups[this.rowGroups.length - 1].cells[12].value = ordenColaPrimero.value;
+         
         
       }
     }else{
-      groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
+      groupSelected = this.rowGroups[posicionEntabla].cells[1].value;
        this.rowGroupsAux.forEach((row, index)=> {
       if(Number(row.cells[1].value) == Number(groupSelected)){
         this.rowGroups[index].cells[1].value = lastGroup;
@@ -816,9 +883,15 @@ this.totalRegistros = this.rowGroups.length;
  
   this.rowGroupsAux = this.rowGroups;
   this.totalRegistros = this.rowGroups.length;
-  this.guardar();
+  this.guardar(true);
   }
   moveRow(movement){
+    this.rowGroups.forEach(rG=>{
+      if (rG.cells[0].value.toString().startsWith('U')){
+        rG.cells[0].value = rG.cells[0].value.substring(1);
+      }
+    })
+    let posicionEntabla = this.from + this.positionSelected;
     this.disableGen.emit(true);
     let groupSelected;
     if (this.calendarios){
@@ -854,7 +927,7 @@ this.totalRegistros = this.rowGroups.length;
         this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
       }
       }else if (this.pantalla == "colaGuardias"){
-      groupSelected = this.rowGroups[this.positionSelected].cells[0].value;
+      groupSelected = this.rowGroups[posicionEntabla].cells[0].value;
      
         /*if (movement == 'up'){
           let first = this.rowGroups[this.positionSelected - 1];
@@ -865,30 +938,48 @@ this.totalRegistros = this.rowGroups.length;
           this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
           this.rowGroups[this.positionSelected] = first;
         }*/
-        if (movement == 'up'){
-          let actual = this.rowGroups[this.positionSelected].cells[0].value;
-          //actual = anterior
-          this.rowGroups[this.positionSelected].cells[0].value = this.rowGroups[this.positionSelected - 1].cells[0].value;
-          //anterior = actual
-          this.rowGroups[this.positionSelected - 1].cells[0].value = actual;
-        } else if (movement == 'down'){
-          let actual = this.rowGroups[this.positionSelected].cells[0].value;
-          //actual = siguiente
-          this.rowGroups[this.positionSelected].cells[0].value = this.rowGroups[this.positionSelected + 1].cells[0].value;
-          //siguiente = actual
-          this.rowGroups[this.positionSelected + 1].cells[0].value = actual;
+        let y = 0;
+        if (groupSelected == null){
+          y = 12;
+          if (movement == 'up'){
+            let or = Object.assign({},this.rowGroups[posicionEntabla].cells[12]);
+          this.rowGroups[posicionEntabla].cells[12].value = this.rowGroups[posicionEntabla - 1].cells[12].value;
+          this.rowGroups[posicionEntabla - 1].cells[12].value = or.value;
+          } else if (movement == 'down'){
+            let or = Object.assign({},this.rowGroups[posicionEntabla].cells[12]);
+          this.rowGroups[posicionEntabla].cells[12].value = this.rowGroups[posicionEntabla + 1].cells[12].value;
+          this.rowGroups[posicionEntabla + 1].cells[12].value = or.value;
+          }
+          this.rowGroupsAux = this.rowGroups;
+          this.guardar(true);
+        }else{
+          if (movement == 'up'){
+            let actual = this.rowGroups[posicionEntabla].cells[y].value;
+            //actual = anterior
+            this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla - 1].cells[y].value;
+            //anterior = actual
+            this.rowGroups[posicionEntabla - 1].cells[y].value = actual;
+          } else if (movement == 'down'){
+            let actual = this.rowGroups[posicionEntabla].cells[y].value;
+            //actual = siguiente
+            this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla + 1].cells[y].value;
+            //siguiente = actual
+            this.rowGroups[posicionEntabla + 1].cells[y].value = actual;
+          }
         }
     }else{
       groupSelected = this.rowGroups[this.positionSelected].cells[1].value;
       this.rowGroupsAux.forEach((row, index)=> {
       
         if (movement == 'up'){
+          
           if(Number(row.cells[1].value) == Number(groupSelected)){
             this.rowGroups[index].cells[1].value = (Number(groupSelected) - 1);
           } else if (Number(row.cells[1].value) == Number(groupSelected) - 1){
             this.rowGroups[index].cells[1].value = groupSelected;
           }
         } else if (movement == 'down'){
+          
           if(Number(row.cells[1].value) == Number(groupSelected)){
             this.rowGroups[index].cells[1].value = (Number(groupSelected) + 1);
           } else if (Number(row.cells[1].value) == Number(groupSelected) + 1){
@@ -897,6 +988,7 @@ this.totalRegistros = this.rowGroups.length;
         }
       
       })
+      
     
   }
     this.rowGroupsAux = this.rowGroups;
@@ -1014,7 +1106,7 @@ this.totalRegistros = this.rowGroups.length;
     }
     restablecer(){
       this.disableGen.emit(false);
-      console.log('this.rowGroupsAux: ', this.rowGroupsAux)
+      //console.log('this.rowGroupsAux: ', this.rowGroupsAux)
       this.rowGroups = this.rowGroupsAux;
       this.rest.emit(true);
     }
@@ -1073,7 +1165,7 @@ this.totalRegistros = this.rowGroups.length;
         this.rowGroups[this.rowGroups.length - 1].cells[1].combo = null;
         this.rowGroups[this.rowGroups.length - 1].cells[2].type = 'linkNew';
         this.rowGroups[this.rowGroups.length - 1].cells[2].combo = null;
-        console.log(this.rowGroups)
+        //console.log(this.rowGroups)
         this.disableGen.emit(true);
         this.getComboTurno();
         let newCells: Cell[] = [
@@ -1098,20 +1190,20 @@ this.totalRegistros = this.rowGroups.length;
       n => {
         this.progressSpinner = false;
         this.comboTurno = n.combooItems;
-        console.log('this.comboTurno : ', this.comboTurno )
+        //console.log('this.comboTurno : ', this.comboTurno )
         this.cd.detectChanges();
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }
     );
   }
   
   onChangeTurno(idTurno, row : Row) {
     this.getComboGuardia(idTurno);
-    console.log('idTurno: ', idTurno)
+    //console.log('idTurno: ', idTurno)
     this.comboGuardia = [];
     if(this.listaGuardias){
       row.cells[3].value = '';
@@ -1135,7 +1227,7 @@ this.totalRegistros = this.rowGroups.length;
                 this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             ()=>{
@@ -1154,9 +1246,9 @@ this.totalRegistros = this.rowGroups.length;
       row.cells.forEach((cell, c) => {
         if (cell.type == 'selectDependency2'){
           
-          console.log('this.comboGuardia: ', this.comboGuardia)
+          //console.log('this.comboGuardia: ', this.comboGuardia)
           this.rowGroups[r].cells[c].combo = this.comboGuardia;
-          console.log('row.cells: ', row.cells)
+          //console.log('row.cells: ', row.cells)
         }
       })
     })
@@ -1174,14 +1266,14 @@ this.totalRegistros = this.rowGroups.length;
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       )
 
   }
   
   anadirLetrado(){
-    console.log('this.rowwSelected: ', this.rowwSelected)
+    //console.log('this.rowwSelected: ', this.rowwSelected)
     if (this.rowwSelected.length != 0){
       let calendario = {
            'orden': this.rowwSelected.cells[0].value,
@@ -1221,7 +1313,16 @@ this.totalRegistros = this.rowGroups.length;
     return new Blob(byteArrays, {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     }
   descargarLog(){
-    this.descargaLog.emit(true);
+    if (this.estado != 'Pendiente'){
+    let datosCalendariosSeleccionado = {
+      'idCalendarioGuardias': this.rowwSelected.cells[7].value,
+      'idTurno': this.rowwSelected.cells[6].value,
+      'idGuardia': this.rowwSelected.cells[5].value,
+    };
+    this.descargaLog.emit(datosCalendariosSeleccionado);
+    }else{
+      this.showMsg('error','Error', 'No existe LOG , ya que no ha comenzado la generación');
+    }
     }
 
 
@@ -1266,8 +1367,8 @@ this.totalRegistros = this.rowGroups.length;
       rowObject.cells = newCells;
       this.rowGroups.push(rowObject); 
       this.totalRegistros = this.rowGroups.length;
-      console.log('this.rowGroups NUEVO: ', this.rowGroups)
-      console.log('this.totalRegistros NUEVO: ', this.totalRegistros)
+      //console.log('this.rowGroups NUEVO: ', this.rowGroups)
+      //console.log('this.totalRegistros NUEVO: ', this.totalRegistros)
       this.to = this.totalRegistros;
       this.cd.detectChanges();
    }
@@ -1314,14 +1415,15 @@ this.totalRegistros = this.rowGroups.length;
   }
 
   nuevoSaltoComp(){
+    let pos = this.from + this.positionSelected;
     let dataFilterFromColaGuardia = { 'turno': 0,
     'guardia': 0,
     'colegiado': 0,
     'grupo': 0};
-    dataFilterFromColaGuardia.turno = this.rowGroups[this.positionSelected].cells[10].value;
-    dataFilterFromColaGuardia.guardia = this.rowGroups[this.positionSelected].cells[11].value;
-    dataFilterFromColaGuardia.colegiado = this.rowGroups[this.positionSelected].cells[2].value;
-    dataFilterFromColaGuardia.grupo = this.rowGroups[this.positionSelected].cells[0].value;
+    dataFilterFromColaGuardia.turno = this.rowGroups[pos].cells[10].value;
+    dataFilterFromColaGuardia.guardia = this.rowGroups[pos].cells[11].value;
+    dataFilterFromColaGuardia.colegiado = this.rowGroups[pos].cells[2].value;
+    dataFilterFromColaGuardia.grupo = this.rowGroups[pos].cells[0].value;
     this.persistenceService.setDatos(dataFilterFromColaGuardia);
     sessionStorage.setItem(
       "itemSaltosCompColaGuardia",

@@ -142,7 +142,7 @@
           
 //             },
 //             err => {
-//               console.log(err);
+//               //console.log(err);
 //             },
 //             () => {
 //             }
@@ -227,14 +227,14 @@
 //                     this.progressSpinner = false;
 //                   },
 //                   err => {
-//                     console.log(err);
+//                     //console.log(err);
 //                     this.progressSpinner = false;
 //                   },
 //                 );
 //             }
 //           },
 //           err => {
-//             console.log(err);
+//             //console.log(err);
 //           },
 
 //         );
@@ -388,7 +388,7 @@ import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 
 export class TarjetaLetradoComponent implements OnInit {
   // datos;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   body: ResultadoInscripciones = new ResultadoInscripciones("");
   bodyInicial;
   progressSpinner: boolean = false;
@@ -475,11 +475,16 @@ export class TarjetaLetradoComponent implements OnInit {
   }
 
   navigateToFichaColegial(){
+    console.log('navegamos a ficha colegial con los datos: ', this.datos)
+            sessionStorage.setItem("fromTarjetaLetradoInscripciones", JSON.stringify(this.datos));
             this.router.navigate(["/fichaColegial"]);
   }
 
   ngOnInit() {
-    
+    console.log('this.datos letrado: ', this.datos)
+    if (this.datos == null || this.datos == undefined){
+      this.datos = this.persistenceService.getDatos();
+    }
    let origen =  sessionStorage.getItem("sesion");
    if(origen == "nuevaInscripcion"){
     this.disableDirecciones = false;
@@ -531,7 +536,7 @@ export class TarjetaLetradoComponent implements OnInit {
           
             },
             err => {
-              console.log(err);
+              //console.log(err);
             },
             () => {
             }
@@ -569,7 +574,7 @@ export class TarjetaLetradoComponent implements OnInit {
 
 
       this.colegiadoInscripcion.numColegiado = this.letradoItem.ncolegiado;
-      if(this.letradoItem.ncolegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.nColegiado; //tener cuidado con esa C mayuscula
+      if(this.letradoItem.ncolegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.ncolegiado;
       if(this.letradoItem.numColegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.numColegiado;
       this.colegiadoInscripcion.idPersona = this.letradoItem.idpersona;
       if(this.letradoItem.idPersona != undefined)this.colegiadoInscripcion.idPersona = this.letradoItem.idPersona;
@@ -639,7 +644,7 @@ export class TarjetaLetradoComponent implements OnInit {
                     this.progressSpinner = false;
                   },
                   err => {
-                    console.log(err);
+                    //console.log(err);
                     this.progressSpinner = false;
                   },
                 );
@@ -648,7 +653,7 @@ export class TarjetaLetradoComponent implements OnInit {
 
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           
@@ -663,7 +668,9 @@ export class TarjetaLetradoComponent implements OnInit {
     }
   }
 
-
+  abreCierraFicha() {
+        this.openFicha = !this.openFicha;
+  }
   /*actualizarFichaResumen() {
     if (this.modoEdicion) {
 

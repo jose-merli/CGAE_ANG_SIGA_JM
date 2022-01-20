@@ -214,7 +214,7 @@ export class ConsultasComponent implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -285,7 +285,7 @@ export class ConsultasComponent implements OnInit {
         // this.clasesComunicaciones.unshift({ label: "", value: "" });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
     this.sigaServices.get("consultas_comboObjetivos").subscribe(
@@ -294,7 +294,7 @@ export class ConsultasComponent implements OnInit {
         // this.objetivos.unshift({ label: "", value: "" });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     ),
       this.sigaServices.get("consultas_comboModulos").subscribe(
@@ -328,7 +328,7 @@ export class ConsultasComponent implements OnInit {
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -458,7 +458,7 @@ export class ConsultasComponent implements OnInit {
           this.datos = this.searchConsultas.consultaItem;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -500,7 +500,7 @@ export class ConsultasComponent implements OnInit {
             "informesycomunicaciones.consultas.errorDuplicado"
           )
         );
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -575,7 +575,7 @@ export class ConsultasComponent implements OnInit {
             "informesycomunicaciones.consultas.errorEliminarConsulta"
           )
         );
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.selectAll = false;
@@ -595,6 +595,7 @@ export class ConsultasComponent implements OnInit {
   }
 
   navigateTo(dato) {
+    sessionStorage.removeItem("servicioDetalle");
     if (
       dato[dato.length - 1].fechaBaja == null &&
       this.historico &&
@@ -661,6 +662,7 @@ export class ConsultasComponent implements OnInit {
   addConsulta() {
     this.router.navigate(["/fichaConsulta"]);
     sessionStorage.removeItem("consultasSearch");
+    sessionStorage.removeItem("servicioDetalle");
     sessionStorage.setItem("crearNuevaConsulta", JSON.stringify("true"));
   }
 
@@ -676,7 +678,7 @@ export class ConsultasComponent implements OnInit {
   //       this.objetivos.unshift({ label: "", value: "" });
   //     },
   //     err => {
-  //       console.log(err);
+  //       //console.log(err);
   //     }
   //   ),
   // }
@@ -712,7 +714,7 @@ export class ConsultasComponent implements OnInit {
   //           });
   //         },
   //         err => {
-  //           console.log(err);
+  //           //console.log(err);
   //         }
   //       );
   //   }
@@ -820,7 +822,7 @@ export class ConsultasComponent implements OnInit {
           }
         },
         error => {
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
           this.showFail(
             this.translateService.instant(
@@ -881,7 +883,7 @@ export class ConsultasComponent implements OnInit {
           this.router.navigate(["/dialogoComunicaciones"]);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

@@ -1,0 +1,114 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="genAdeudos">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('genAdeudos')">
+          <div class="img-colegiado">
+            <i class="fas fa-dollar icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('genAdeudos')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.factProgramadas.genAdeudos' | translate }}</label>
+
+            <label *ngIf="ficherosAdeudos" class="mr-3">
+              <i (click)="navigateToFicheroAdeudos();$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2"></i>
+              <a (click)="navigateToFicheroAdeudos();$event.stopPropagation();">
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  {{ 'facturacion.factProgramadas.genAdeudos.enlace' | translate }}
+                </span>
+              </a>
+            </label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.presentacion' | translate }}: 
+              <span>{{ body.fechaPresentacion | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.primeros' | translate }}: 
+              <span>{{ body.fechaRecibosPrimeros | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.recurrentes' | translate }}: 
+              <span>{{ body.fechaRecibosRecurrentes | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.cor1' | translate }}: 
+              <span>{{ body.fechaRecibosCOR1 | date: 'dd/MM/yyyy' }}</span></label>
+            <label>{{ 'facturacion.factProgramadas.genAdeudos.b2b' | translate }}: 
+              <span>{{ body.fechaRecibosB2B | date: 'dd/MM/yyyy' }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('genAdeudos')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('genAdeudos')">
+        <div class="img-colegiado">
+          <i class="fas fa-dollar icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.factProgramadas.genAdeudos' | translate }}</label>
+
+        <label *ngIf="ficherosAdeudos" class="ml-auto mr-3">
+          <i (click)="navigateToFicheroAdeudos();$event.stopPropagation();"
+            class="fas fa-external-link-alt mr-2"></i>
+          <a (click)="navigateToFicheroAdeudos();$event.stopPropagation();">
+            <span style="color: blue; text-decoration: underline;cursor:pointer;">
+              {{ 'facturacion.factProgramadas.genAdeudos.enlace' | translate }}
+            </span>
+          </a>
+        </label>
+        <i class="fa fa-angle-up{{ ficherosAdeudos ? '' : ' ml-auto' }}"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.genAdeudos' | translate }} (*)</label>
+          <app-fecha [(value)]="body.fechaPresentacion" [inputStyleClass]="styleObligatorio(body.fechaPresentacion)" [minDate]="fechaHoy" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaPresentacion($event)" [disabled]="!(porProgramar || porConfirmarError)">
+          </app-fecha>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.genAdeudos.primeros' | translate }} (*)</label>
+          <app-fecha [(value)]="body.fechaRecibosPrimeros" [inputStyleClass]="styleObligatorio(body.fechaRecibosPrimeros)" [minDate]="minDateRecibos" (valueChangeSelected)="fillFechaRecibosPrimeros($event)" (valueChangeInput)="fillFechaRecibosPrimeros($event)" [disabled]="!(porProgramar || porConfirmarError)">
+          </app-fecha>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.genAdeudos.recurrentes' | translate }} (*)</label>
+          <app-fecha [(value)]="body.fechaRecibosRecurrentes" [inputStyleClass]="styleObligatorio(body.fechaRecibosRecurrentes)" [minDate]="minDateRecurrentes" (valueChangeSelected)="fillFechaRecibosRecurrentes($event)" (valueChangeInput)="fillFechaRecibosRecurrentes($event)" [disabled]="!(porProgramar || porConfirmarError)">
+          </app-fecha>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.genAdeudos.cor1' | translate }} (*)</label>
+          <app-fecha [(value)]="body.fechaRecibosCOR1" [inputStyleClass]="styleObligatorio(body.fechaRecibosCOR1)" [minDate]="minDateCOR" (valueChangeSelected)="fillFechaRecibosCOR1($event)" (valueChangeInput)="fillFechaRecibosCOR1($event)" [disabled]="!(porProgramar || porConfirmarError)">
+          </app-fecha>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.factProgramadas.genAdeudos.b2b' | translate }} (*)</label>
+          <app-fecha [(value)]="body.fechaRecibosB2B" [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" [minDate]="minDateB2B" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)" [disabled]="!(porProgramar || porConfirmarError)">
+          </app-fecha>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button [disabled]="!(confirmada && !ficherosAdeudos)" pButton (click)="nuevoFicheroAdeudos()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
+
+        <button [disabled]="!(porProgramar || porConfirmarError)" pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

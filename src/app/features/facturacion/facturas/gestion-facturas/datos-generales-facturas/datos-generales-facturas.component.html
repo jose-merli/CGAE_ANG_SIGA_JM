@@ -1,0 +1,148 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="datosGenerales">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
+            <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            
+            <label>{{ 'facturacion.facturas.datosGenerales.numFactura' | translate }}: 
+                <span>{{ bodyInicial.numeroFactura }}</span></label>
+            <label>{{ 'facturacion.facturas.datosGenerales.emision' | translate }}: 
+                <span>{{ bodyInicial.fechaEmision | date: "dd/MM/yyyy" }}</span></label>
+            <label>{{ 'facturacion.productos.importeNeto' | translate }}: 
+              <span>{{ bodyInicial.importeNeto + " €" }}</span></label>
+            <label>{{ 'facturacion.productos.importeIva' | translate }}: 
+              <span>{{ bodyInicial.importeIVA + " €" }}</span></label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}: 
+              <span>{{ bodyInicial.importefacturado + " €" }}</span></label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
+              <span>{{ (bodyInicial.tipo == "FACTURA" ? bodyInicial.importeAdeudadoPendiente : bodyInicial.importeAdeudadoPendienteAb) + " €" }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('datosGenerales')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva()" *ngIf="bodyInicial" class="card-body card-body-ficha">
+      <div class="row">
+        <div class="bloque col-lg-4 col-md-4">
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px">{{ 'justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.inicial' | translate }}</label>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.numFactura' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.numeroFactura" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.emision' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.fechaEmision | date: 'dd/MM/yyyy'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.productos.importeNeto' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeNeto ? bodyInicial.importeNeto + ' €' : '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.productos.importeIva' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeIVA ? bodyInicial.importeIVA + ' €' : '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importefacturado ? bodyInicial.importefacturado + ' €' : '-'" disabled pInputText>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-4 col-md-4">
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px">{{ 'facturacion.facturas.datosGenerales.cobros' | translate }}</label>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.impAnticipado' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeAnticipado ? bodyInicial.importeAnticipado + ' €': '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.importeCompensado' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeCompensado ? bodyInicial.importeCompensado + ' €' : '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.impCaja' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeCaja ? bodyInicial.importeCaja + ' €' : '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.impBanco' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeBanco ? bodyInicial.importeBanco + ' €' : '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.impCobrado' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importePagado ? bodyInicial.importePagado + ' €' : '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeAdeudadoPendiente ? bodyInicial.importeAdeudadoPendiente + ' €' : '-'" disabled pInputText>
+            </div>
+          </div>
+        </div>
+        <div class="bloque col-lg-4 col-md-4">
+          <label style="text-align:center; font-weight: bold; padding-bottom: 10px">{{ 'menu.facturacion.abonos' | translate }}</label>
+          <div class="form-row">
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.impAnulado' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeAnuladoAb ? bodyInicial.importeAnuladoAb + ' €' : '-'" disabled pInputText>
+            </div>
+
+            <div class="w-100 d-none d-md-block"></div>
+            
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.impCaja' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeCajaAb ? bodyInicial.importeCajaAb + ' €' : '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.impBanco' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeBancoAb ? bodyInicial.importeBancoAb + ' €' : '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacion.facturas.datosGenerales.impAbTotal' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importePagadoAb ? bodyInicial.importePagadoAb + ' €' : '-'" disabled pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}</label>
+              <input type="text" class="form-control" [value]="bodyInicial.importeAdeudadoPendienteAb ? bodyInicial.importeAdeudadoPendienteAb + ' €' : '-'" disabled pInputText>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="comunicar()" label="{{ 'general.boton.comunicar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

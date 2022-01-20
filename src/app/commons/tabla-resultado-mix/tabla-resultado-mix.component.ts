@@ -1,4 +1,4 @@
-import { ElementRef, Renderer2, Output, EventEmitter } from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter, ChangeDetectorRef, OnChanges, SimpleChanges } from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
@@ -15,6 +15,7 @@ import { DatePipe } from '@angular/common';
 import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';
 import { SigaServices } from '../../_services/siga.service';
 import { CommonsService } from '../../_services/commons.service';
+import { PaginadorComponent } from '../paginador/paginador.component';
 
 
 /*interface Cabecera {
@@ -96,7 +97,7 @@ export class TablaResultadoMixComponent implements OnInit {
   infoParaElPadre: { fechasolicitudbajaSeleccionada: any; fechaActual: any; observaciones: any; id_persona: any; idturno: any, idinstitucion: any, idguardia: any,  fechasolicitud: any, fechavalidacion: any, fechabaja: any, observacionessolicitud: any, observacionesbaja: any, observacionesvalidacion: any, observacionesdenegacion: any, fechadenegacion: any, observacionesvalbaja: any, fechavaloralta: any, fechavalorbaja: any, validarinscripciones: any, estado: any} [];
   jsonParaEnviar: { tipoAccion:any, datos: any};
   
-  infoHabilitado: { isLetrado: any; validarjustificaciones:any; estadoNombre:any};
+  infoHabilitado: { isLetrado: any; validarInscripciones:any; estadoNombre:any};
   last;
   entra = false;
   comboTurnos = [];
@@ -105,6 +106,7 @@ export class TablaResultadoMixComponent implements OnInit {
   @Input() firstColumn: number = 0;
   @Input() lastColumn: number = 10;
   @Input() filtrosValues = new CalendarioProgramadoItem();
+  @ViewChild(PaginadorComponent) paginador : PaginadorComponent;
   constructor(
     
     private renderer: Renderer2,
@@ -114,10 +116,11 @@ export class TablaResultadoMixComponent implements OnInit {
     private translateService: TranslateService,
     private datePipe: DatePipe,
     private commonsService : CommonsService,
-    private sigaServices : SigaServices
+    private sigaServices : SigaServices,
+    private cd : ChangeDetectorRef
 
   ) {
-    this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
+    /*this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
         if(!event.target.classList.contains("selectedRowClass")){
@@ -125,14 +128,14 @@ export class TablaResultadoMixComponent implements OnInit {
           this.selectedArray = [];
         }
       }
-    });
+    });*/
   }
 
   ngOnInit(): void {
 
-    console.log('AÑADIR DATA TO DUPLICATE: ', this.dataToDuplicate)
-console.log('this.rowGroups: tabla ', this.rowGroups)
-console.log("VALOR DE MI INPUT: ",this.inscripciones)
+    //console.log('AÑADIR DATA TO DUPLICATE: ', this.dataToDuplicate)
+//console.log('this.rowGroups: tabla ', this.rowGroups)
+//console.log("VALOR DE MI INPUT: ",this.inscripciones)
     let values = [];
     let labels = [];
     let arrayOfSelected = [];
@@ -166,8 +169,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     this.cabeceras.forEach(cab => {
       this.cabecerasMultiselect.push(cab.name);
     })
-    console.log('this.rowGroups: ', this.rowGroups)
-    console.log('this.totalRegistros: ', this.totalRegistros)
+    //console.log('this.rowGroups: ', this.rowGroups)
+    //console.log('this.totalRegistros: ', this.totalRegistros)
     if(this.incompatibilidades){
       this.getComboTurno();
     }
@@ -175,7 +178,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
 
   onChangeMulti(event, rowPosition, cell){
     let deseleccionado;
-   
+    rowPosition = this.from + rowPosition;
+    this.rowGroups[rowPosition].cells[6].value = event.value.join(", ");
     let selected = event.itemValue;
     let arraySelected = event.value;
     let labelSelected;
@@ -215,7 +219,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         this.comboTurnos = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.commonsService.arregloTildesCombo(this.comboTurnos);
@@ -240,12 +244,12 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   }
   getComboGuardias(row : Row, idTurno){
     this.sigaServices.getParam(
-      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+      "busquedaGuardia_guardiaNoBaja", "?idTurno=" + idTurno).subscribe(
         data => {
           row.cells[1].combo = data.combooItems;    
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         ()=>{
           this.commonsService.arregloTildesCombo(row.cells[1].combo);
@@ -329,7 +333,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     }
   }
   sortData(sort: Sort) {
-    console.log("entro en el método Sort con valor:"+ sort.active+","+sort.direction);
+    //console.log("entro en el método Sort con valor:"+ sort.active+","+sort.direction);
     let data: Row[] = [];
     this.rowGroups = this.rowGroups.filter((row) => {
       data.push(row);
@@ -346,7 +350,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       for (let i = 0; i < this.cabeceras.length; i++) {
         let nombreCabecera = this.cabeceras[i].id;
         if (nombreCabecera == sort.active){
-          console.log("a.cells["+i+"].type:"+a.cells[i].type);
+          //console.log("a.cells["+i+"].type:"+a.cells[i].type);
 
           if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
             return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
@@ -364,7 +368,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
               const dayA = valorA.substr(0, 2) ;
               const monthA = valorA.substr(3, 2);
               const yearA = valorA.substr(6, 10);
-              console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+              //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
               var dt=new Date(yearA, monthA, dayA);
               if(!isNaN(dt.getTime())){ //Checked for date
                 return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
@@ -393,10 +397,19 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     return "";
   }
   setMyStyles(size) {
-    let styles = {
-      'max-width': size + 'px',
-    };
-    return styles;
+    let styles = {};
+    if (this.calendarios){
+       styles = {
+        'width': size + 'px',
+      };
+      return styles;
+    }else{
+       styles = {
+        'max-width': size + 'px',
+      };
+      return styles;
+    }
+    
   }
 
   searchChange(x: any) {
@@ -405,13 +418,13 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       let isReturn = true;
       for(let j=0; j<this.cabeceras.length;j++){
         if (this.searchText[j] != " " &&  this.searchText[j]){
-          console.log('row.cells[j].value: ', row.cells[j].value)
+          //console.log('row.cells[j].value: ', row.cells[j].value)
           if (row.cells[j].value){
-             console.log('row.cells[j].value 2: ', row.cells[j].value)
-            console.log("tipo de celda:"+row.cells[j].type);
+             //console.log('row.cells[j].value 2: ', row.cells[j].value)
+            //console.log("tipo de celda:"+row.cells[j].type);
             if(row.cells[j].type == 'select'){
               let labelCombo = this.getComboLabel(row.cells[j].value);
-              console.log("valor de celda:"+labelCombo);
+              //console.log("valor de celda:"+labelCombo);
               if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
                 isReturn = false;
                 break;
@@ -468,6 +481,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     }
   }
   perPage(perPage){
+    if(perPage)
     this.numperPage = perPage;
   }
   getValuesOMIndex(index){
@@ -502,7 +516,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
           'idCalendarioProgramado': selectedRowValue.cells[10].value,
           'idTurno': selectedRowValue.cells[11].value,
           'idGuardia': selectedRowValue.cells[12].value,
-          'filtrosBusqueda' : this.filtrosValues
+          'filtrosBusqueda' : this.filtrosValues,
+          'idCalendarioGuardia': selectedRowValue.cells[16].value,
         }
           if( dataToSend.estado == "Generada"){
             dataToSendArr.push(dataToSend);
@@ -544,7 +559,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   }
   duplicar2(){
     if (this.selectedRowValue.length != 0){
-      console.log('this.selectedRowValue', this.selectedRowValue)
+      //console.log('this.selectedRowValue', this.selectedRowValue)
     this.enableGuardar = true;
     let row: Row = new Row();
       
@@ -560,7 +575,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
       let cell10: Cell = this.selectedRowValue[9];
     
     row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
-    console.log(row)
+    //console.log(row)
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
@@ -621,8 +636,8 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     /* if (this.persistenceService.getPermisos() != undefined) {
        this.permisoEscritura = this.persistenceService.getPermisos();
      }*/
-     console.log('se envia fecha: ', row.cells[4].value.value)
-     console.log("ROW:",row);
+     //console.log('se envia fecha: ', row.cells[4].value.value)
+     //console.log("ROW:",row);
      let dataToSend = {
       // 'duplicar': false,
       // 'tabla': [],
@@ -690,6 +705,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
      if (!this.seleccionarTodo && this.selectedArray.length <= 1) {
        //this.progressSpinner = true;
        this.persistenceService.setDatos(dataToSend);
+       console.log('dataToSend: ', dataToSend)
        //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
        this.router.navigate(["/fichaInscripcionesGuardia"]);
  
@@ -697,7 +713,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
    }
 
   duplicar(){
-    console.log('duplicar this.selectedRowValue: ', this.selectedRowValue)
+    //console.log('duplicar this.selectedRowValue: ', this.selectedRowValue)
        /* if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }*/
@@ -820,7 +836,12 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
-    //this.to = this.totalRegistros;
+    
+    this.cd.detectChanges();
+
+    if(this.paginador){
+      this.paginador.onChangeRowsPerPages(this.numperPage);
+    }
   }
   inputChange(event, i, z, cell){
     this.enableGuardar = true;
@@ -860,7 +881,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
     this.sigaServices.post(
       "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
-          console.log('data: ', data.body)
+          //console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
           let datos = JSON.parse(data.body);
           if(datos){
@@ -885,6 +906,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
                 'idCalendarioProgramado': datos.idCalendarioProgramado,
                 'facturado': datos.facturado,
                 'asistenciasAsociadas': datos.asistenciasAsociadas
+                //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
               };
               if (compareDate (this.last.fechaDesde, fechaDesdeSelected, true) == 1 && idGuardiaSelected == this.last.idGuardia){
                 this.entra = true;
@@ -893,7 +915,7 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
 
         },
         (error)=>{
-          console.log(error);
+          //console.log(error);
         }
       );
 
@@ -1019,7 +1041,6 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
         let [fechaMod,hora] = rawDate.split(" ");
         let arrayDate = fechaMod.split("/")[2] + "-" + fechaMod.split("/")[1] + "-" + fechaMod.split("/")[0];
         fecha = new Date((arrayDate += "T"+hora));
-      
     } else {
       fecha = undefined;
     }
@@ -1033,21 +1054,21 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   }
 
   HabilitarBotones(){
-    let validarjustificaciones = '';
+    let validarInscripciones = '';
     let estadoNombre = '';
     if (this.selectedRowValue[22] != undefined){
-       validarjustificaciones = this.selectedRowValue[22].value;
+      validarInscripciones = this.selectedRowValue[23].value;
     }
     if (this.selectedRowValue[8] != undefined){
       estadoNombre = this.selectedRowValue[8].value;
     }
     this.infoHabilitado= {
       isLetrado : this.isLetrado,
-      validarjustificaciones: validarjustificaciones,
+      validarInscripciones: validarInscripciones,
       estadoNombre: estadoNombre
  };    
 
-    if(this.infoHabilitado.validarjustificaciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
+    if(this.infoHabilitado.validarInscripciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
       this.habilitadoValidar=false;
     }else{
       this.habilitadoValidar=true;
@@ -1071,161 +1092,190 @@ console.log("VALOR DE MI INPUT: ",this.inscripciones)
   }
 
   validar(){
-    this.infoParaElPadre = [];
-    console.log("entra");
-    console.log("observaciones:",this.observaciones);
-    console.log("fecha:",this.fechaActual);
+    
+    if(this.fechaActual == null || this.fechaActual== undefined || this.observaciones == null || this.observaciones== "" || this.selectedArray.length==0){
+      this.mensajeObservaciones();
+    }else{
+      this.infoParaElPadre = [];
+      //console.log("entra");
+      //console.log("observaciones:",this.observaciones);
+      //console.log("fecha:",this.fechaActual);
 
-    this.selectedArray.forEach(el => {
-      let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
-      this.infoParaElPadre.push( {
-        'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
-        'fechaActual': this.fechaActual,
-        'observaciones': this.observaciones,
-        'id_persona': obj[21].value,
-        'idinstitucion' : obj[9].value,
-        'idturno': obj[10].value,
-        'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFechaSol(obj[4].value),
-        'fechavalidacion': this.transformaFecha(obj[5].value),
-        'fechabaja': this.transformaFecha(obj[12].value),
-        'observacionessolicitud': obj[13].value,
-        'observacionesbaja': obj[14].value,
-        'observacionesvalidacion': obj[15].value,
-        'observacionesdenegacion': obj[16].value,
-        'fechadenegacion': this.transformaFecha(obj[17].value),
-        'observacionesvalbaja': obj[18].value,
-        'fechavaloralta': obj[19].value,
-        'fechavalorbaja': obj[20].value,
-        'validarinscripciones': obj[23].value,
-        'estado': obj[24].value
+      this.selectedArray.forEach(el => {
+        let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
+        this.infoParaElPadre.push( {
+          'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
+          'fechaActual': this.fechaActual,
+          'observaciones': this.observaciones,
+          'id_persona': obj[21].value,
+          'idinstitucion' : obj[9].value,
+          'idturno': obj[10].value,
+          'idguardia': obj[11].value,
+          'fechasolicitud': obj[4].value,
+          'fechavalidacion': this.transformaFecha(obj[5].value),
+          'fechabaja': this.transformaFecha(obj[12].value),
+          'observacionessolicitud': obj[13].value,
+          'observacionesbaja': obj[14].value,
+          'observacionesvalidacion': obj[15].value,
+          'observacionesdenegacion': obj[16].value,
+          'fechadenegacion': this.transformaFecha(obj[17].value),
+          'observacionesvalbaja': obj[18].value,
+          'fechavaloralta': obj[19].value,
+          'fechavalorbaja': obj[20].value,
+          'validarinscripciones': obj[23].value,
+          'estado': obj[24].value
 
 
+        });
+        
       });
-      
-    });
 
-    this.jsonParaEnviar = 
-    {'tipoAccion': "validar",
-      'datos': this.infoParaElPadre}
-      console.log(this.jsonParaEnviar);
-    this.resultado.emit(this.jsonParaEnviar);
+      this.jsonParaEnviar = 
+      {'tipoAccion': "validar",
+        'datos': this.infoParaElPadre}
+        //console.log(this.jsonParaEnviar);
+      this.resultado.emit(this.jsonParaEnviar);
+    }
   }
 
   denegar(){
 
-    this.infoParaElPadre = [];
+    if(this.fechaActual == null || this.fechaActual== undefined || this.observaciones == null || this.observaciones== "" || this.selectedArray.length==0){
+      this.mensajeObservaciones();
+    }else{
+      this.infoParaElPadre = [];
 
-    this.selectedArray.forEach(el => {
-      let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
-      this.infoParaElPadre.push( {
-        'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
-        'fechaActual': this.fechaActual,
-        'observaciones': this.observaciones,
-        'id_persona': obj[21].value,
-        'idinstitucion' : obj[9].value,
-        'idturno': obj[10].value,
-        'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFechaSol(obj[4].value),
-        'fechavalidacion': this.transformaFecha(obj[5].value),
-        'fechabaja': this.transformaFecha(obj[12].value),
-        'observacionessolicitud': obj[13].value,
-        'observacionesbaja': obj[14].value,
-        'observacionesvalidacion': obj[15].value,
-        'observacionesdenegacion': obj[16].value,
-        'fechadenegacion': this.transformaFecha(obj[17].value),
-        'observacionesvalbaja': obj[18].value,
-        'fechavaloralta': obj[19].value,
-        'fechavalorbaja': obj[20].value,
-        'validarinscripciones': obj[23].value,
-        'estado': obj[24].value
+      this.selectedArray.forEach(el => {
+        let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
+        this.infoParaElPadre.push( {
+          'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
+          'fechaActual': this.fechaActual,
+          'observaciones': this.observaciones,
+          'id_persona': obj[21].value,
+          'idinstitucion' : obj[9].value,
+          'idturno': obj[10].value,
+          'idguardia': obj[11].value,
+          'fechasolicitud': obj[4].value,
+          'fechavalidacion': this.transformaFecha(obj[5].value),
+          'fechabaja': this.transformaFecha(obj[12].value),
+          'observacionessolicitud': obj[13].value,
+          'observacionesbaja': obj[14].value,
+          'observacionesvalidacion': obj[15].value,
+          'observacionesdenegacion': obj[16].value,
+          'fechadenegacion': this.transformaFecha(obj[17].value),
+          'observacionesvalbaja': obj[18].value,
+          'fechavaloralta': obj[19].value,
+          'fechavalorbaja': obj[20].value,
+          'validarinscripciones': obj[23].value,
+          'estado': obj[24].value
+        });
+        
       });
-      
-    });
 
-    this.jsonParaEnviar = 
-    {'tipoAccion': "denegar",
-      'datos': this.infoParaElPadre}
-    this.resultado.emit(this.jsonParaEnviar);  
+      this.jsonParaEnviar = 
+      {'tipoAccion': "denegar",
+        'datos': this.infoParaElPadre}
+      this.resultado.emit(this.jsonParaEnviar);  
+    }
+  }
+  mensajeObservaciones() {
+    this.msgs = [];
+      this.msgs.push({
+        severity: "error",
+        summary: "Incorrecto",
+        detail: "Es necesario seleccionar algún registro y rellenar la fecha y las observaciones"
+      });
   }
 
   solicitarBaja(){
 
-    this.infoParaElPadre = [];
+    if(this.fechaActual == null || this.fechaActual== undefined || this.observaciones == null || this.observaciones== "" || this.selectedArray.length==0){
+      this.mensajeObservaciones();
+    }else{
+      this.infoParaElPadre = [];
 
-    this.selectedArray.forEach(el => {
-      let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
-      this.infoParaElPadre.push( {
-        'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
-        'fechaActual': this.fechaActual,
-        'observaciones': this.observaciones,
-        'id_persona': obj[21].value,
-        'idinstitucion' : obj[9].value,
-        'idturno': obj[10].value,
-        'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFechaSol(obj[4].value),
-        'fechavalidacion': this.transformaFecha(obj[5].value),
-        'fechabaja': this.transformaFecha(obj[12].value),
-        'observacionessolicitud': obj[13].value,
-        'observacionesbaja': obj[14].value,
-        'observacionesvalidacion': obj[15].value,
-        'observacionesdenegacion': obj[16].value,
-        'fechadenegacion': this.transformaFecha(obj[17].value),
-        'observacionesvalbaja': obj[18].value,
-        'fechavaloralta': obj[19].value,
-        'fechavalorbaja': obj[20].value,
-        'validarinscripciones': obj[23].value,
-        'estado': obj[24].value
+      this.selectedArray.forEach(el => {
+        let obj = JSON.parse(JSON.stringify(this.rowGroups[el])).cells;
+        this.infoParaElPadre.push( {
+          'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
+          'fechaActual': this.fechaActual,
+          'observaciones': this.observaciones,
+          'id_persona': obj[21].value,
+          'idinstitucion' : obj[9].value,
+          'idturno': obj[10].value,
+          'idguardia': obj[11].value,
+          'fechasolicitud': obj[4].value,
+          'fechavalidacion': this.transformaFecha(obj[5].value),
+          'fechabaja': this.transformaFecha(obj[12].value),
+          'observacionessolicitud': obj[13].value,
+          'observacionesbaja': obj[14].value,
+          'observacionesvalidacion': obj[15].value,
+          'observacionesdenegacion': obj[16].value,
+          'fechadenegacion': this.transformaFecha(obj[17].value),
+          'observacionesvalbaja': obj[18].value,
+          'fechavaloralta': obj[19].value,
+          'fechavalorbaja': obj[20].value,
+          'validarinscripciones': obj[23].value,
+          'estado': obj[24].value
 
 
+        });
+        
       });
-      
-    });
 
 
-    this.jsonParaEnviar = 
-    {'tipoAccion': "solicitarBaja",
-      'datos': this.infoParaElPadre}
-    this.resultado.emit(this.jsonParaEnviar);  
+      this.jsonParaEnviar = 
+      {'tipoAccion': "solicitarBaja",
+        'datos': this.infoParaElPadre}
+      this.resultado.emit(this.jsonParaEnviar);  
+    }
   }
 
   cambiarFecha(){
 
-    this.infoParaElPadre = [];
-    
-    this.rowGroups.forEach(el => {
-      let obj = JSON.parse(JSON.stringify(el.cells));
-      this.infoParaElPadre.push( {
-        'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
-        'fechaActual': this.fechaActual,
-        'observaciones': this.observaciones,
-        'id_persona': obj[21].value,
-        'idinstitucion' : obj[9].value,
-        'idturno': obj[10].value,
-        'idguardia': obj[11].value,
-        'fechasolicitud': this.transformaFechaSol(obj[4].value),
-        'fechavalidacion': this.transformaFecha(obj[5].value),
-        'fechabaja': this.transformaFecha(obj[12].value),
-        'observacionessolicitud': obj[13].value,
-        'observacionesbaja': obj[14].value,
-        'observacionesvalidacion': obj[15].value,
-        'observacionesdenegacion': obj[16].value,
-        'fechadenegacion': this.transformaFecha(obj[17].value),
-        'observacionesvalbaja': obj[18].value,
-        'fechavaloralta': obj[19].value,
-        'fechavalorbaja': obj[20].value,
-        'validarinscripciones': obj[23].value,
-        'estado': obj[24].value
+    if(this.fechaActual == null || this.fechaActual== undefined || this.observaciones == null || this.observaciones== "" || this.selectedArray.length==0){
+      this.mensajeObservaciones();
+    }
+    else{
 
-
-      });
+      this.infoParaElPadre = [];
       
-    });
+      this.rowGroups.forEach(el => {
+        if(this.selectedArray.includes(el.id)){
+          let obj = JSON.parse(JSON.stringify(el.cells));
 
-    this.jsonParaEnviar = 
-    {'tipoAccion': "cambiarFecha",
-      'datos': this.infoParaElPadre}
-    this.resultado.emit(this.jsonParaEnviar);  
+          this.infoParaElPadre.push( {
+            'fechasolicitudbajaSeleccionada': this.transformaFecha(obj[6].value),
+            'fechaActual': this.fechaActual,
+            'observaciones': this.observaciones,
+            'id_persona': obj[21].value,
+            'idinstitucion' : obj[9].value,
+            'idturno': obj[10].value,
+            'idguardia': obj[11].value,
+            'fechasolicitud': obj[4].value,
+            'fechavalidacion': this.transformaFecha(obj[5].value),
+            'fechabaja': this.transformaFecha(obj[12].value),
+            'observacionessolicitud': obj[13].value,
+            'observacionesbaja': obj[14].value,
+            'observacionesvalidacion': obj[15].value,
+            'observacionesdenegacion': obj[16].value,
+            'fechadenegacion': this.transformaFecha(obj[17].value),
+            'observacionesvalbaja': obj[18].value,
+            'fechavaloralta': obj[19].value,
+            'fechavalorbaja': obj[20].value,
+            'validarinscripciones': obj[23].value,
+            'estado': obj[24].value
+
+          
+          });
+        }
+      });
+
+      this.jsonParaEnviar = 
+      {'tipoAccion': "cambiarFecha",
+        'datos': this.infoParaElPadre}
+      this.resultado.emit(this.jsonParaEnviar);  
+    }
   }
 }
 
@@ -1244,7 +1294,7 @@ function compareDateAndTime (date1:  any, date2:  any, isAsc: boolean){
     const hourA = horaA.substr(0, 2);
     const minA = horaA.substr(3, 2);
     const segA = horaA.substr(6, 8);
-    console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
+    //console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
     objDate1= {  day: dayA,month: monthA, year: yearA};
     hour1={ hour: hourA,minute: minA,second: segA};
   }
@@ -1258,12 +1308,12 @@ function compareDateAndTime (date1:  any, date2:  any, isAsc: boolean){
     const hourB = horaB.substr(0, 2);
     const minB = horaB.substr(3, 2);
     const segB = horaB.substr(6, 8);
-    console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
+    //console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
     objDate2= {  day: dayB,month: monthB, year: yearB};
     hour2={ hour: hourB,minute: minB,second: segB};
   }
 
-  console.log("comparacionDate isAsc:"+ isAsc+";");
+  //console.log("comparacionDate isAsc:"+ isAsc+";");
 
   return  compareDateHour(objDate1, hour1, objDate2, hour2, isAsc);
 
@@ -1288,7 +1338,7 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
     const dayA = fechaA.substr(0, 2) ;
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
-    console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+    //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
     dateA = new Date(yearA, monthA, dayA);
   }
 
@@ -1296,11 +1346,11 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
     const dayB = fechaB.substr(0, 2) ;
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
-    console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+    //console.log("fecha b:"+ yearB+","+monthB+","+dayB);
     dateB = new Date(yearB, monthB, dayB);
   }
 
-  console.log("comparacionDate isAsc:"+ isAsc+";");
+  //console.log("comparacionDate isAsc:"+ isAsc+";");
 
   return compare(dateA, dateB, isAsc);
 
@@ -1308,15 +1358,15 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
 }
 
 function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
-  console.log("comparacion  a:"+ a+"; b:"+ b);
+  //console.log("comparacion  a:"+ a+"; b:"+ b);
 
   if (typeof a === "string" && typeof b === "string") {
-    console.log("comparacion  de cadenas");
+    //console.log("comparacion  de cadenas");
     a = a.toLowerCase();
     b = b.toLowerCase();
   }
 
-  console.log("compare isAsc:"+ isAsc+";");
+  //console.log("compare isAsc:"+ isAsc+";");
 
   if (a==null && b!=null){
     return ( 1 ) * (isAsc ? 1 : -1);

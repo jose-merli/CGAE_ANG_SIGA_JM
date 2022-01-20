@@ -1,0 +1,136 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<div class="card">
+
+  <div class="card-body">
+
+    <div class="form-row">
+      <div class="col-4">
+        <p-radioButton class="pr-2" name="modo" value="r"
+          label="{{ 'facturacionSJCS.retenciones.opcion.retencion' | translate }}" [(ngModel)]='modoBusqueda'
+          (click)="changeFilters()"></p-radioButton>
+        <p-radioButton name="modo" value="a" label="{{ 'facturacionSJCS.retenciones.opcion.aplicacion' | translate }}"
+          [(ngModel)]='modoBusqueda' (click)="changeFilters()"></p-radioButton>
+      </div>
+    </div>
+
+    <p (click)="onHideDestinatarios()" class="title-module"> {{ 'facturacionSJCS.retenciones.destinatario' |
+      translate}}
+      <i *ngIf="showDestinatarios" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDestinatarios" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- INICIO CAMPOS FILTRO DESTINATARIOS -->
+    <div *ngIf="showDestinatarios && usuarioBusquedaExpress != undefined" class="module vista-simple">
+      <!--<app-busqueda-colegiado-express [numColegiado]="filtros.ncolegiado" [nombreAp]="filtros.nombreApellidoColegiado"
+        [disabled]="isLetrado || disabledLetradoFicha" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)"
+        [obligatorio]="obligatorio" (botonBuscarEvent)="botonBuscarColegiadoExpress()">
+      </app-busqueda-colegiado-express>-->
+
+      <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
+      [disabled]="isLetrado || disabledLetradoFicha" [obligatorio]="obligatorio" 
+      [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="recuperarColegiado($event)" (idPersona)="recuperarIdPersona($event)">
+    </app-busqueda-colegiado-express> 
+    </div>
+    <!-- FIN CAMPOS FILTRO DESTINATARIOS -->
+
+    <p (click)="onHideDatosGenerales()" class="title-module"> {{ 'general.message.datos.generales' | translate}}
+      <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+      <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+    </p>
+
+    <!-- INICIO CAMPOS FILTRO DATOS GENERALES -->
+    <div *ngIf="showDatosGenerales" class="module vista-simple">
+
+      <div class="form-row">
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.retenciones.tipoRetencion' | translate }}</label>
+          <p-multiSelect #multiTiposRetencion class="select-form" [(ngModel)]='filtros.tiposRetencion'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboTiposRetencion" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} tipos seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(multiTiposRetencion)"
+            (onChange)="onChangeMultiSelect($event, 'tiposRetencion')">
+          </p-multiSelect>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.retenciones.destinatarios' | translate }}</label>
+          <p-multiSelect #multiDestinatarios class="select-form" [(ngModel)]='filtros.idDestinatarios'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboDestinatarios" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} destinatarios seleccionados'"
+            filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(multiDestinatarios)"
+            (onChange)="onChangeMultiSelect($event, 'idDestinatarios')">
+          </p-multiSelect>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.retenciones.fechaNotiDesde' | translate }}</label>
+          <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDede($event, 'fechaInicio')"
+            (valueChangeInput)="fillFechaDede($event, 'fechaInicio')" [(value)]="filtros.fechaInicio"></app-fecha>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.retenciones.fechaNotiHasta' | translate }}</label>
+          <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event, 'fechaFin')"
+            (valueChangeInput)="fillFechaHasta($event, 'fechaFin')" [(value)]="filtros.fechaFin"
+            [minDate]="filtros.fechaInicio"></app-fecha>
+        </div>
+
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.retenciones.pagoDeAplica' | translate }}</label>
+          <p-multiSelect #multiPagos class="select-form" [(ngModel)]='filtros.idPagos'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboPagos" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} pagos seleccionados'" filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(multiPagos)"
+            (onChange)="onChangeMultiSelect($event, 'idPagos')">
+          </p-multiSelect>
+        </div>
+
+        <!-- <div *ngIf="modoBusqueda == 'a'" class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.retenciones.numAbono' | translate }}</label>
+          <input type="text" pInputText class="form-control" [(ngModel)]="filtros.numeroAbono" />
+        </div> -->
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.retenciones.fechaApliDesde' | translate }}</label>
+          <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDede($event, 'fechaAplicacionDesde')"
+            (valueChangeInput)="fillFechaDede($event, 'fechaAplicacionDesde')" [(value)]="filtros.fechaAplicacionDesde">
+          </app-fecha>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.retenciones.fechaApliHasta' | translate }}</label>
+          <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event, 'fechaAplicacionHasta')"
+            (valueChangeInput)="fillFechaHasta($event, 'fechaAplicacionHasta')" [(value)]="filtros.fechaAplicacionHasta"
+            [minDate]="filtros.fechaAplicacionDesde"></app-fecha>
+        </div>
+
+      </div>
+
+    </div>
+    <!-- FIN CAMPOS FILTRO DATOS GENERALES -->
+
+  </div>
+
+  <!-- BOTONERA -->
+  <div class="card-footer">
+    <div class="text-right main-button">
+      <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"
+        (click)="limpiar()"></button>
+      <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"
+        (click)="buscar()"></button>
+      <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"
+        [disabled]="!permisoEscritura || isLetrado" (click)="nuevo()"></button>
+    </div>
+  </div>
+
+</div>

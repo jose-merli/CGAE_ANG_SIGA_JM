@@ -152,7 +152,7 @@ export class FichaCalendarioComponent implements OnInit {
         this.comboCalendarType = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -189,7 +189,7 @@ export class FichaCalendarioComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         this.saveCalendarFlag = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -207,7 +207,7 @@ export class FichaCalendarioComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.cargarPermisos();
@@ -266,7 +266,7 @@ export class FichaCalendarioComponent implements OnInit {
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -291,7 +291,7 @@ export class FichaCalendarioComponent implements OnInit {
           this.treeInicial = JSON.parse(JSON.stringify(this.profilesTree));
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -702,7 +702,7 @@ export class FichaCalendarioComponent implements OnInit {
         this.comboNotifyTypeTraining = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -713,7 +713,7 @@ export class FichaCalendarioComponent implements OnInit {
         this.comboNotifyType = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -726,7 +726,7 @@ export class FichaCalendarioComponent implements OnInit {
         this.arregloTildesCombo(this.comboTemplates);
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {
@@ -741,7 +741,7 @@ export class FichaCalendarioComponent implements OnInit {
         this.comboMeasureUnit = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -752,7 +752,7 @@ export class FichaCalendarioComponent implements OnInit {
         this.comboAfterBefore = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -807,7 +807,7 @@ export class FichaCalendarioComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

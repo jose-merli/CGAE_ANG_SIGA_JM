@@ -1,0 +1,130 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="destinatariosLista">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('destinatariosLista')">
+          <div class="img-colegiado">
+            <i class="far fa-list-alt icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('destinatariosLista')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.destLista' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>Nº {{ 'enviosMasivos.literal.listasDestinatarios' | translate }}: 
+              <span>{{ datos ? datos.length : 0 }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('destinatariosLista')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('destinatariosLista')">
+        <div class="img-colegiado">
+          <i class="far fa-list-alt icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.destLista' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
+      <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+          class="tabla-listado" [paginator]="true" [rows]="selectedItem" [first]="first"
+          [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both" selectionMode="multiple">
+          <ng-template pTemplate="colgroup" let-columns>
+            <colgroup>
+              <col *ngFor="let col of columns" [style.width]="col.width">
+            </colgroup>
+          </ng-template>
+
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                {{col.header | translate}}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input placeholder="{{ 'general.boton.search' | translate }}" pDroppable="false"
+                  (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text"
+                  (input)="table.filter($event.target.value,col.field, 'contains')">
+              </th>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td [attr.colspan]="columns.length">
+                {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate}}.
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+              <td class="text-center" *ngFor="let col of columns" pEditableColumn>
+                <p-dropdown [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [filter]="true"
+                  filterBy="label,labelSinTilde" *ngIf="col.field=='nombre' && !dato.asociada"
+                  [(ngModel)]="dato.idConsulta" [options]="consultas" class="select-form" [ngClass]="styleObligatorio(dato.idConsulta)"
+                  (onChange)="onChangeConsultas($event)" dataKey="label" [emptyFilterMessage]="resultadosConsultas"
+                  (input)="buscarConsultas($event)"></p-dropdown>
+                <span *ngIf="col.field=='nombre' && dato.asociada"><a [routerLink]="" class="enlace"
+                  (click)="navigateTo(dato)">{{dato.nombre}}</a></span>
+                <span *ngIf="col.field=='finalidad' && dato.finalidad != ''">{{dato.finalidad}}</span>
+                <span *ngIf="col.field=='objetivo' && dato.objetivo != ''">{{dato.objetivo}}</span>
+              </td>
+            </tr>
+          </ng-template>
+
+          <ng-template pTemplate="paginatorleft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label
+                class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
+                {{table.first + 1}} al {{table.first
+                + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                {{table.totalRecords}}
+              </label>
+              <label
+                class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}}:
+                {{ selectedDatos ? selectedDatos.length : 0 }}
+              </label>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="Seleccionar
+              todo" name="groupname"></p-checkbox>
+              </div>
+            </div>
+          </ng-template>
+      </p-table>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-plus" iconPos="left" (click)="addConsulta()" *ngIf="deshabilitarGuardado()"
+          label="{{ 'general.boton.new' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-eraser" iconPos="left" (click)="eliminar()" [disabled]="nuevaConsulta || selectedDatos == undefined || selectedDatos.length == 0"
+          label="{{ 'general.boton.eliminar' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
+          label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left" (click)="guardar()" [disabled]="deshabilitarGuardado()"
+          label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

@@ -1,0 +1,83 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="comision">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('comision')">
+          <div class="img-colegiado">
+            <i class="fa fa-bank icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('comision')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.cuentaBancaria.comision' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }}: 
+              <span>{{ body.comisionImporte }} €</span></label>
+            <label>{{ 'general.description' | translate }}: 
+              <span>{{ body.comisionDescripcion }}</span></label>
+            <label>{{ 'facturacion.productos.iva' | translate }}: 
+              <span>{{ body.tipoIVA }}</span></label>
+            <label>{{ 'facturacion.cuentaBancaria.contable' | translate }}: 
+              <span>{{ body.comisionCuentaContable }}</span></label>
+                
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('comision')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('comision')">
+        <div class="img-colegiado">
+          <i class="fa fa-bank icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.cuentaBancaria.comision' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="esFichaActiva()" class="card-body card-body-ficha">
+      <div class="form-row lg-12 md-12">
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }} (*)</label>
+          <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.comisionImporte" [ngClass]="styleObligatorio(body.comisionImporte)" maxlength="10" pInputText>        
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'general.description' | translate }} (*)</label>
+          <input type="text" class="form-control" [(ngModel)]="body.comisionDescripcion" [ngClass]="styleObligatorio(body.comisionDescripcion)" maxlength="255" pInputText>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.productos.iva' | translate }} (*)</label>
+          <p-dropdown class="select-form" [(ngModel)]='body.idTipoIVA' placeholder="Seleccionar"
+              [options]="comboTiposIVA" [filter]="true" filterBy="label,labelSinTilde"
+              [ngClass]="styleObligatorio(body.idTipoIVA)" [showClear]="true"></p-dropdown>
+        </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ 'facturacion.cuentaBancaria.contable' | translate }}</label>
+          <input type="text" class="form-control" [(ngModel)]="body.comisionCuentaContable" maxlength="20" pInputText>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

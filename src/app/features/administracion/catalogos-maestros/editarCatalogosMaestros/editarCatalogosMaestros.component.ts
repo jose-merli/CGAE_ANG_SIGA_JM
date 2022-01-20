@@ -45,7 +45,7 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
         this.catalogoArray = n.comboCatalogoItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -85,7 +85,7 @@ export class EditarCatalogosMaestrosComponent extends SigaWrapper
       err => {
         this.showFail();
         this.correcto = false;
-        console.log(err);
+        //console.log(err);
         sessionStorage.setItem(
           "registroAuditoriaUsuariosActualizado",
           JSON.stringify(this.correcto)

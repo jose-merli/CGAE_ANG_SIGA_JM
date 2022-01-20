@@ -55,7 +55,7 @@ export class TarjetaComponent implements OnInit {
 
   //Meter los datos del letrado en session
   irFichaColegial(){
-    console.log("DATOS LETRADO", this.datosLetrado);
+    //console.log("DATOS LETRADO", this.datosLetrado);
     let bodyColegiado: DatosColegiadosItem = new DatosColegiadosItem();
     bodyColegiado.nif = this.datosLetrado.nif;
     bodyColegiado.idInstitucion = this.datosLetrado.numeroInstitucion;

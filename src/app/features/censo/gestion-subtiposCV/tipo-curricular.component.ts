@@ -86,7 +86,7 @@ export class TipoCurricularComponent {
         this.categoriaCurricular = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -232,7 +232,7 @@ export class TipoCurricularComponent {
           this.table.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -495,7 +495,7 @@ export class TipoCurricularComponent {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           this.editar = false;
@@ -722,7 +722,7 @@ export class TipoCurricularComponent {
           this.datos = this.bodySearch.tipoCurricularItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 

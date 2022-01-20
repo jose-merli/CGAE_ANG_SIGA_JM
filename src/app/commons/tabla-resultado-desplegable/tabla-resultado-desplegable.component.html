@@ -89,6 +89,11 @@
                                 (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)" [disabled]="colegiado" [showTime]="cell.showTime">
                               </app-fecha>
                             </span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'datePickerAsist'">
+                                <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFechaAsist($event, cell, rowGroup.id, row, rowGroup, true, z)"
+                                (valueChangeInput)="fillFechaAsist($event, cell, rowGroup.id, row, rowGroup)" [disabled]="colegiado" [showTime]="cell.showTime">
+                              </app-fecha>
+                            </span>
                            <!----<span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                                     <app-selector class="wrapText center" [i]="0" [selector]="cell.value"
                                     [textoVisible]="cell.value.nombre"></app-selector>
@@ -119,15 +124,20 @@
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
-                                <p-dropdown autoWidth="false" class="center width60" [(ngModel)]="cell.value[0]" placeholder = "{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}"
-                                    [options]="cell.combo" filterBy="label,labelSinTilde" [filter]="true" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
+                                <!--<p-dropdown autoWidth="false" class="center width60" [(ngModel)]="cell.value[0]" placeholder = "{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}"
+                                    [options]="cell.combo" filterBy="label,labelSinTilde" [filter]="true" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>-->
+
+                                    <p-multiSelect class="select-form center width60" [(ngModel)]='cell.value[0]' [options]="cell.combo"
+                                    [filter]="true" maxSelectedLabels="10" filterBy="label,labelSinTilde" selectionLimit="10" styleClass="widthAll"
+                                    defaultLabel="{{ 'justiciaGratuita.ejg.preDesigna.delitos' | translate}}" (onChange)="onChangeMulti($event, rowGroup.id, cell, z, true, z)" ></p-multiSelect>
+
                                 <input type="text" class="form-control" pInputText size="10" [value]="cell.value[1]" [(ngModel)]="cell.value[1]" (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)" placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'">
                                <input type="text"
                                     class="form-control" pInputText size="10" [placeholder]="cell.value" [(ngModel)]="cell.value" (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup, true, z)"></span>
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
-                                <div class="main-button" style="width: 40%;">
+                                <div class="main-button" style="width: 30%;">
                                     <button pButton type="button" iconPos="left" [label]="cell.value[0]"
                                         (click)="cell.value[3] == 'C' ? cell.value[3] = 'J' :  cell.value[3] = 'C'"></button>
                                 </div>
@@ -135,7 +145,7 @@
                                 <!-- <app-selector [i]="cell.value[4]" [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
                                     style="width: 60%;" (value)="onChangeSelector($event, row, cell, rowGroup.id, row, rowGroup)">
                                 </app-selector>-->
-                                <p-dropdown autoWidth="false" class="center width60" [(ngModel)]="cell.value[4]" placeholder = "{{'general.boton.seleccionar' | translate}}" [filter]="true" 
+                                <p-dropdown autoWidth="false" class="center width70 showFull" [(ngModel)]="cell.value[4]" placeholder = "{{'general.boton.seleccionar' | translate}}" [filter]="true" 
                                     [options]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]" showClear="true" filterBy="label,labelSinTilde" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">
@@ -196,6 +206,11 @@
                                 (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)" [disabled]="colegiado" [showTime]="cell.showTime">
                               </app-fecha>
                             </span>
+                            <span class="w100 cell-value" *ngIf="cell.type == 'datePickerAct'">
+                                <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFecha($event, cell, rowGroup.id, row, rowGroup, false, i)"
+                                (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)" [disabled]="colegiado" [showTime]="cell.showTime">
+                              </app-fecha>
+                            </span>
                             <!--<span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                                 <app-selector class="center" [i]="0" [textoVisible]="" [selector]="cell.value">
                                 </app-selector>
@@ -230,7 +245,7 @@
                                 <input type="text" class="form-control" pInputText [value]="cell.value[1]" [(ngModel)]="cell.value[1]" (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)" placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
                             </span>
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
-                                <div class="main-button" style="width: 40%;">
+                                <div class="main-button" style="width: 30%;">
                                     <button pButton type="button" iconPos="left" [label]="cell.value[0]"
                                         (click)="cell.value[3] == 'C' ? cell.value[3] = 'J' :  cell.value[3] = 'C'"></button>
                                 </div>
@@ -238,7 +253,7 @@
                              <!-- <app-selector [i]="cell.value[4]" [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
                                     style="width: 60%;" (value)="onChangeSelector($event, row, cell, rowGroup.id, row, rowGroup)">
                                 </app-selector>-->
-                                <p-dropdown autoWidth="false" [(ngModel)]="cell.value[4]" placeholder = "{{'general.boton.seleccionar' | translate}}" [filter]="true" class="center width60"
+                                <p-dropdown autoWidth="false" [(ngModel)]="cell.value[4]" placeholder = "{{'general.boton.seleccionar' | translate}}" [filter]="true" class="center width70 showFull"
                                     [options]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]" showClear="true" filterBy="label,labelSinTilde" styleClass="widthAll" (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">

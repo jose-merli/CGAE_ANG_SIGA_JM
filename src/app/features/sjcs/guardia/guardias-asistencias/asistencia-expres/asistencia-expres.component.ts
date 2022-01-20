@@ -51,6 +51,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   resaltadoDatos: boolean = false;
   permisoEscrituraAE : boolean = false;
   resultModified;
+  letradoFillAutomaticamente = false;
   @ViewChild(BuscadorAsistenciaExpresComponent) filtrosAE: BuscadorAsistenciaExpresComponent;
   @ViewChild(ResultadoAsistenciaExpresComponent) resultadoAE: ResultadoAsistenciaExpresComponent;
   @ViewChild(BuscadorAsistenciasComponent) filtro : BuscadorAsistenciasComponent;
@@ -66,33 +67,58 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    if (this.activatedRoute.snapshot.queryParamMap.get('searchMode') != null &&
-      this.activatedRoute.snapshot.queryParamMap.get('searchMode') != undefined
-      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') != ''
-      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') == 'a') {
+    this.show = false;
+    this.getComboDelitosOnly();
+  
+    if ((this.activatedRoute.snapshot.queryParamMap.get('searchMode')
+      && this.activatedRoute.snapshot.queryParamMap.get('searchMode') == 'a')
+      || sessionStorage.getItem("modoBusqueda") == "a") {
 
       this.modoBusqueda = 'a';
 
+    } else if((this.activatedRoute.snapshot.queryParamMap.get('searchMode')
+    && this.activatedRoute.snapshot.queryParamMap.get('searchMode') == 'b')
+    || sessionStorage.getItem("modoBusqueda") == "b"){
+      this.modoBusqueda = 'b';
     }
     this.isLetrado = this.sigaStorageService.isLetrado;
+    if(this.modoBusqueda == 'b'){
+      this.commonServices.checkAcceso(procesos_guardia.asistencias_express)
+      .then(respuesta => {
 
-    this.commonServices.checkAcceso(procesos_guardia.asistencias_express)
-    .then(respuesta => {
+        this.permisoEscrituraAE = respuesta;
 
-      this.permisoEscrituraAE = respuesta;
+        this.persistenceService.setPermisos(this.permisoEscrituraAE);
 
-      this.persistenceService.setPermisos(this.permisoEscrituraAE);
+        if (this.permisoEscrituraAE == undefined && this.modoBusqueda == 'b') {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
 
-       if (this.permisoEscrituraAE == undefined) {
-         sessionStorage.setItem("codError", "403");
-         sessionStorage.setItem(
-           "descError",
-           this.translateService.instant("generico.error.permiso.denegado")
-         );
-         this.router.navigate(["/errorAcceso"]);
-       }
+      }).catch(error => console.error(error));
+    }else if(this.modoBusqueda == 'a'){
+      this.commonServices.checkAcceso(procesos_guardia.asistencias)
+      .then(respuesta => {
 
-    }).catch(error => console.error(error));
+        this.permisoEscrituraAE = respuesta;
+
+        this.persistenceService.setPermisos(this.permisoEscrituraAE);
+
+        if (this.permisoEscrituraAE == undefined && this.modoBusqueda == 'a') {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem(
+            "descError",
+            this.translateService.instant("generico.error.permiso.denegado")
+          );
+          this.router.navigate(["/errorAcceso"]);
+        }
+
+      }).catch(error => console.error(error));
+    }
 
     this.radios = [
                     { label: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.busquedaasistencias"), value: 'a' },
@@ -226,15 +252,19 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           let asistenciasDTO = JSON.parse(n["body"]);
           if(asistenciasDTO.error){
             this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
-          }else if(asistenciasDTO.tarjetaAsistenciaItems.length === 0){
+          }else if(asistenciasDTO.tarjetaAsistenciaItems2 != undefined){
+            if(asistenciasDTO.tarjetaAsistenciaItems2.length === 0){
             this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
-          }else{
-            this.fromJsonToRowGroups(asistenciasDTO.tarjetaAsistenciaItems);
-          }    
+            }else{
+              this.fromJsonToRowGroups(asistenciasDTO.tarjetaAsistenciaItems2);
+            }  
+          } else{
+            this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+          } 
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         () =>{
           this.progressSpinner = false;
@@ -246,7 +276,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
 
   fromJsonToRowGroups(asistencias : TarjetaAsistenciaItem[]){
-
+ 
     let nombreApellidosType, fechaActuacionType, lugarType, nDiligenciaType;
     let nombreApellidosValue, delitosObservacionesValue, ejgValue, fechaActuacionValue, lugarValue, nDiligenciaValue;
     let objetoActuacion = {};
@@ -266,9 +296,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
         if(asistencia.idDelito
             || asistencia.observaciones){
-              let comboDelitosValue = '';
+              let comboDelitosValue = [];
               if(asistencia.idDelito){
-                comboDelitosValue = asistencia.idDelito;
+                asistencia.idDelito.forEach(idDelito => {
+                  comboDelitosValue.push(idDelito)
+                })
               }
           delitosObservacionesValue = [comboDelitosValue, asistencia.observaciones];
         }else{
@@ -283,7 +315,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
 
         fechaActuacionType = 'datePicker';
-        fechaActuacionValue = new Date(Date.parse(actuacion.fechaActuacion));
+        if(actuacion.fechaActuacion!=null){
+          fechaActuacionValue = new Date(Date.parse(actuacion.fechaActuacion));
+        }else{
+          fechaActuacionValue = null;
+        }
 
         let comisariaJuzgado = 'C';
         let idJuzgadoComisaria = '';
@@ -311,20 +347,20 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           [
             {type: 'invisible', value: '', combo: this.comboSexo, size: 445.5},
             {type: 'invisible', value: '', combo: this.comboDelitos, size: 225.75},
-            {type: 'invisible', value: '', size: 225.75},
-            {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 225.75},
-            {type: lugarType, value: lugarValue, size: 225.75},
-            {type: nDiligenciaType, value: nDiligenciaValue, size: 225.75}
+            {type: 'invisible', value: '', size: 100},
+            {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 200},
+            {type: lugarType, value: lugarValue, size: 400},
+            {type: nDiligenciaType, value: nDiligenciaValue, size: 100}
           ]
         }else{
           arrayDatosActuacion =
           [
             {type: nombreApellidosType, value: nombreApellidosValue, combo: this.comboSexo, size: 445.5},
             {type: '2SelectorInput', value: delitosObservacionesValue, combo: this.comboDelitos, size: 225.75},
-            {type: 'link', value: ejgValue, size: 225.75},
-            {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 225.75},
-            {type: lugarType, value: lugarValue, size: 225.75},
-            {type: nDiligenciaType, value: nDiligenciaValue, size: 225.75},
+            {type: 'link', value: ejgValue, size: 100},
+            {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 200},
+            {type: lugarType, value: lugarValue, size: 400},
+            {type: nDiligenciaType, value: nDiligenciaValue, size: 100},
             {type: 'invisible', value: asistencia.idTipoEjg}
           ]
         }
@@ -359,11 +395,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
           this.comboJuzgados = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboJuzgados);
-          this.search()
+          //this.search()
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -384,13 +420,33 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false
       }
     );
 
   }
+  getComboComisariasOnly(){
 
+    this.sigaServices.getParam("busquedaGuardias_getComisarias","?idTurno="+this.filtrosAE.filtro.idTurno).subscribe(
+      n => {
+        this.clear();
+        if(n.error !== null
+          && n.error.code === 500){
+          this.showMsg("error", "Error", n.error.description.toString());
+        }else{
+
+          this.comboComisarias = n.combooItems;
+          this.commonServices.arregloTildesCombo(this.comboComisarias);
+        }
+      },
+      err => {
+        //console.log(err);
+        this.progressSpinner = false
+      }
+    );
+
+  }
   getComboDelitos() {
     
     let designaItem = {};
@@ -403,13 +459,30 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         this.getComboJuzgados();
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMsg('error',this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), err);
         this.progressSpinner = false
       }
     );
   }
-
+  getComboDelitosOnly() {
+    
+    let designaItem = {};
+    
+    this.sigaServices.post("combo_comboDelitos", designaItem).subscribe(
+      n => {
+        let combos= JSON.parse(n["body"]);
+        this.comboDelitos = combos.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboDelitos);
+ 
+      },
+      err => {
+        //console.log(err);
+        this.showMsg('error',this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), err);
+        this.progressSpinner = false
+      }
+    );
+  }
   saveTableData(event){
     this.progressSpinner = true;
     let rowGroupsToUpdate : RowGroup[] = event;
@@ -483,7 +556,12 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           
         },
         err => {
-          console.log(err);
+          if(err.status = "409"){
+            this.showMsg('error', 'El usuario es colegiado y no existe una guardia para la fecha seleccionada. No puede continuar', '');
+          }else{
+            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), '');
+          }
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -592,6 +670,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       }else{
         filtroAsistenciaItem.idTipoActuacion = ""
       }
+      if(this.filtro.filtro.idActuacionValidada  && this.filtro.filtro.idActuacionValidada.length > 0){
+        filtroAsistenciaItem.idActuacionValidada = this.filtro.filtro.idActuacionValidada.toString();
+      }else{
+        filtroAsistenciaItem.idActuacionValidada = ""
+      }
       
       setTimeout(()=>{
         if(this.modoBusqueda == 'a' && this.filtro && this.filtro.filtro){
@@ -617,7 +700,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
             },
             () =>{
               this.progressSpinner = false;
@@ -677,14 +760,14 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         (this.filtro.filtro.idTipoActuacion == null || this.filtro.filtro.idTipoActuacion == undefined || this.filtro.filtro.idTipoActuacion.length == 0) &&
         (this.filtro.filtro.idProcedimiento == null || this.filtro.filtro.idProcedimiento == undefined || this.filtro.filtro.idProcedimiento.length == 0) &&
         (this.filtro.filtro.nig == null || this.filtro.filtro.nig == undefined || this.filtro.filtro.nig.trim() == "" || this.filtro.filtro.nig.trim().length < 3) &&
-        (this.filtro.filtro.anio == null || this.filtro.filtro.anio == undefined || this.filtro.filtro.anio.trim() == "" || this.filtro.filtro.anio.trim().length < 3)) {
+        (this.filtro.filtro.anio == null || this.filtro.filtro.anio == undefined )) {
         
         this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
         return false;
       } else {   
         // quita espacios vacios antes de buscar
         if (this.filtro.filtro.anio != undefined && this.filtro.filtro.anio != null) {
-          this.filtro.filtro.anio = this.filtro.filtro.anio.trim();
+          this.filtro.filtro.anio = this.filtro.filtro.anio;
         }
         if (this.filtro.filtro.numero != undefined && this.filtro.filtro.numero != null) {
           this.filtro.filtro.numero = this.filtro.filtro.numero.trim();
@@ -702,6 +785,21 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           this.filtro.filtro.nif = this.filtro.filtro.nif.trim();
         }
         return true;
+      }
+    }
+
+    letradoFillAutomatic(event){
+      this.letradoFillAutomaticamente = event;
+    }
+
+    buscarAE(){
+      this.getComboComisariasOnly();
+      this.getComboJuzgados();
+      this.show = true;
+      if (this.letradoFillAutomaticamente){
+        this.search();
+      }else{
+        this.checkSustitutoCheckBox();
       }
     }
 }

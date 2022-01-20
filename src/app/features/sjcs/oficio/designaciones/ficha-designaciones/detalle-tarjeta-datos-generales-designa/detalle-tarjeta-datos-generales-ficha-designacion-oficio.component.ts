@@ -147,7 +147,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         }
       },
       (err) => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -190,7 +190,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
 
@@ -337,7 +337,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(this.selectores[1].opciones);
@@ -368,7 +368,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(this.selectores[0].opciones);
@@ -455,7 +455,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     }
                   },
                   err => {
-                    console.log(err);
+                    //console.log(err);
                     this.progressSpinner = false;
                   }, () => {
                     this.progressSpinner = false;
@@ -516,7 +516,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 summary,
                 detail
               });
-              console.log(n);
+              //console.log(n);
               this.progressSpinner = false;
             },
             err => {
@@ -567,7 +567,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 summary,
                 detail
               });
-              console.log(n);
+              //console.log(n);
               this.progressSpinner = false;
             },
             err => {
@@ -582,7 +582,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     summary,
                     detail
                   });
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             }, () => {
               this.progressSpinner = false;
@@ -751,7 +751,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                         }
                       },
                       err => {
-                        console.log(err);
+                        //console.log(err);
                         this.progressSpinner = false;
                       }, () => {
                         this.progressSpinner = false;
@@ -769,10 +769,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     summary,
                     detail
                   });
-                  console.log(n);
+                  //console.log(n);
                 },
                 err => {
-                  console.log(err);
+                  //console.log(err);
                   severity = "error";
                   summary = this.translateService.instant("justiciaGratuita.oficio.designas.errorNuevaCola");
                   detail = "";
@@ -823,11 +823,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     summary,
                     detail
                   });
-                  console.log(n);
+                  //console.log(n);
 
                 },
                 err => {
-                  console.log(err);
+                  //console.log(err);
                   severity = "error";
                   summary = this.translateService.instant("justiciaGratuita.oficio.designas.error2NuevaCola");
                   this.msgs.push({
@@ -908,14 +908,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         },
           err => {
             this.progressSpinner = false;
-            console.log(err);
+            //console.log(err);
           }
         );
         this.progressSpinner = false;
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       }, () => {
         this.progressSpinner = false;
         setTimeout(() => {
@@ -940,7 +940,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         this.keys = JSON.parse(data["body"]);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -980,12 +980,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 this.router.navigate(["/dialogoComunicaciones"]);
               },
               err => {
-                console.log(err);
+                //console.log(err);
               }
             );
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

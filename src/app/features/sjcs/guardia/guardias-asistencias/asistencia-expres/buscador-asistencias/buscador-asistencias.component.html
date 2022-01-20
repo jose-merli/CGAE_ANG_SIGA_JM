@@ -13,10 +13,10 @@
                   <div class="form-row">
                       <div class="form-group-interlineado col-lg-2 col-md-2">
                         <label>{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}}</label>
-                        <input type="text" pKeyFilter="int" class="form-control" [(ngModel)]="filtro.anio" [ngModelOptions]="{standalone: true}" pInputText maxlength="4"/>
+                        <input type="number" pKeyFilter="int" class="form-control" [(ngModel)]="filtro.anio" [ngModelOptions]="{standalone: true}" pInputText maxlength="4"/>
                       </div>
                       <div class="form-group-interlineado col-lg-2 col-md-2">
-                        <label>{{'facturacionSJCS.facturacionesYPagos.numero' | translate}}</label>
+                        <label>{{'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
                         <input type="text" pKeyFilter="int" class="form-control" [(ngModel)]="filtro.numero" [ngModelOptions]="{standalone: true}" pInputText maxlength="10"/>
                       </div>
                       <div class="form-group-interlineado col-lg-2 col-md-2">
@@ -64,10 +64,9 @@
                     </div>
                     <div class="form-group-interlineado col-lg-3 col-md-3">
                       <label>{{'justiciaGratuita.oficio.justificacionExpres.actuacionesValidadas' | translate}}</label>
-                      <p-dropdown class="select-form" [(ngModel)]="filtro.idActuacionValidada" [ngModelOptions]="{standalone: true}"
-                          placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                          [showClear]="true" [options]="comboActuacionesV">
-                      </p-dropdown>
+                      <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='filtro.idActuacionValidada'
+                                [options]="comboActuacionesV" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+                                styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"></p-multiSelect>
                     </div>
                   </div>
               </ng-template>

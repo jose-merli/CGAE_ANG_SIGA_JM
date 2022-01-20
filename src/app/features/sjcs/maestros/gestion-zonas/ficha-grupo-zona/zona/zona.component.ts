@@ -92,7 +92,7 @@ export class ZonaComponent implements OnInit {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
 
       }
@@ -143,7 +143,7 @@ export class ZonaComponent implements OnInit {
           this.getPartidosJudiciales();
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
 
         }
@@ -650,7 +650,7 @@ export class ZonaComponent implements OnInit {
   }
 
   openMultiSelect(dato) {
-    // console.log(this.multiSelect);
+    // //console.log(this.multiSelect);
     dato.onPanelShow;
     // dato.show();
     // dato.overlayVisible = true;

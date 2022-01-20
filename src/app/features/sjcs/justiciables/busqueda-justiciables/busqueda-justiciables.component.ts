@@ -180,7 +180,7 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       });
   }
 

@@ -28,6 +28,7 @@ export class BuscadorGuardiaComponent implements OnInit {
   cabeceras;
   rowGroupsAux;
   rowGroups;
+  noUndefined = false
   abogado = false;
   @ViewChild(FiltrosGuardiaComponent) filtros;
   @ViewChild(TablaGuardiasComponent) tabla;
@@ -137,6 +138,11 @@ export class BuscadorGuardiaComponent implements OnInit {
       n => {
         let error = JSON.parse(n.body).error;
         this.datos = JSON.parse(n.body).guardiaItems;
+        if (this.datos != undefined){
+          this.noUndefined = true;
+        }else{
+          this.noUndefined = false;
+        }
         this.buscar = true;
         this.datos = this.datos.map(it => {
           it.letradosIns = +it.letradosIns;
@@ -154,7 +160,7 @@ export class BuscadorGuardiaComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         setTimeout(() => {

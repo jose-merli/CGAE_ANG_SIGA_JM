@@ -182,7 +182,7 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       });
   }
 

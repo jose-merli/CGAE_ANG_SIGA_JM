@@ -160,12 +160,12 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
     //this.isLetrado = this.sigaStorageService.isLetrado;
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
-
+    
     if (sessionStorage.getItem("datosColegiado") != null || sessionStorage.getItem("datosColegiado") != undefined) {
       this.datosColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
       this.buscarDesdeEnlace();
       this.filtros.usuarioBusquedaExpress.numColegiado = this.datosColegiado.numColegiado;
-
+      sessionStorage.removeItem("datosColegiado");
     }
 
     this.commonsService.checkAcceso(procesos_guardia.inscripciones_guardias)
@@ -192,8 +192,14 @@ export class GuardiasInscripcionesComponent implements OnInit {
     }
 
   }
+
+/*  ngOnDestroy(): void {
+    this.persistenceService.clearFiltros();
+  }*/
+
   getFiltrosValues(event) {
     this.filtrosValues = JSON.parse(JSON.stringify(event));
+    this.persistenceService.setFiltros(this.filtrosValues);
     this.convertArraysToStrings();
     this.buscarIns();
 
@@ -302,7 +308,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(() => { this.commonsService.scrollTablaFoco('tablaFoco'); }, 5);
@@ -355,7 +361,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                 'apellidos2': dat.apellidos2,
                 'idinstitucion': dat.idinstitucion,
                 'idpersona': dat.idpersona,
-                'fechasolicitud': this.formatDateSol(dat.fechasolicitud),
+                'fechasolicitud': dat.fechasolicitud,
                 'observacionessolicitud': dat.observacionessolicitud,
                 'fechavalidacion': this.formatDate(dat.fechavalidacion),
                 'fechabaja': this.formatDate(dat.fechabaja),
@@ -398,7 +404,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(() => { this.commonsService.scrollTablaFoco('tablaFoco'); }, 5);
@@ -422,11 +428,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
       }
 
       let objCells = [
-        { type: 'text', value: res.ncolegiado },                                                                 //0
-        { type: 'text', value: res.apellidosnombre },                                                            //1
+        { type: 'link', value: res.ncolegiado },                                                                 //0
+        { type: 'link', value: res.apellidosnombre },                                                            //1
         { type: 'textToolTip', value: [res.nombre, res.abreviatura] }, //turno                                    //2
         { type: 'textToolTip', value: [res.descripcionGuardia, res.nombreGuardia] },                             //3
-        { type: 'text', value: res.fechasolicitud },                                                             //4
+        { type: 'timestamp', value: res.fechasolicitud },                                                             //4
         { type: 'text', value: res.fechavalidacion },                                                            //5
         { type: 'text', value: res.fechasolicitudbaja },                                                         //6
         { type: 'text', value: res.fechabaja },                                                                  //7
@@ -527,12 +533,13 @@ export class GuardiasInscripcionesComponent implements OnInit {
           data => {
             this.progressSpinner = false;
            
+            this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           },
           err => {
             this.progressSpinner = false;
-            console.log(err);
+            //console.log(err);
             
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
@@ -594,7 +601,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                           data => {
                             this.progressSpinner = false;
                             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+                            this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
                           },
                           err => {
                             this.progressSpinner = false;
@@ -607,7 +614,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
                           data => {
                             this.progressSpinner = false;
                             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+                            this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
                           },
                           err => {
                             this.progressSpinner = false;
@@ -647,11 +654,12 @@ export class GuardiasInscripcionesComponent implements OnInit {
           this.progressSpinner = false;
          
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
           objetoValidacion = [];
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
          
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
           objetoValidacion = [];
@@ -668,13 +676,13 @@ export class GuardiasInscripcionesComponent implements OnInit {
       "guardiasInscripciones_solicitarBajaInscripciones", objetoValidacion).subscribe(
         data => {
           this.progressSpinner = false;
-         
+          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
@@ -690,14 +698,14 @@ export class GuardiasInscripcionesComponent implements OnInit {
     this.sigaServices.post(
       "guardiasInscripciones_cambiarFechaInscripciones", objetoValidacion).subscribe(
         data => {
-          console.log("entra en el data");
+          //console.log("entra en el data");
           this.progressSpinner = false;
-         
+          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
         },
@@ -718,9 +726,6 @@ export class GuardiasInscripcionesComponent implements OnInit {
       accept: () => {
         //permitirá hacer la baja
         this.llamadaBackSolicitarBaja(objetoValidacion);
-        
-
-
       },
       reject: () => {
         this.msgs = [
@@ -752,13 +757,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
           }else{
             this.llamadaBackSolicitarBaja(objetoValidacion);
           }
-
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+          
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
 
@@ -799,7 +802,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           this.objetoValidacion = []; */
         } else if (el.estado == "2") {//validacion de inscripcion en estado Pendiente de Baja.
           estado = el.estado;
-          el.fechasolicitudbajaNUEVA = el.fechaActual;
+          el.fechabaja = el.fechaActual;
           el.observacionesvalbajaNUEVA = el.observaciones;
 
            objVal = this.rellenarObjetoBack(el);
@@ -815,7 +818,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
         
         this.llamadaBackValidar(this.objetoValidacion,estado);
         this.objetoValidacion = [];
-        this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
+        
 
       }else{
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "La validacion solo se lleva a cabo sobre inscripciones en estado de Pendiente de Alta y Pendiente de Baja.");
@@ -833,12 +836,11 @@ export class GuardiasInscripcionesComponent implements OnInit {
         let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBack(el);
 
         this.objetoValidacion.push(objVal);
-        this.objetoValidacion = [];
 
       });
 
       this.llamadaBackDenegar(this.objetoValidacion);
-      this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
+      this.objetoValidacion = [];
 
     } else if (this.jsonParaEnviar.tipoAccion == "solicitarBaja") {
 
@@ -868,7 +870,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
           this.objetoValidacion = [];
 
           //this.llamadaBackSolicitarBaja();
-          this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
+          
         }
 
 
@@ -902,13 +904,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
 
       this.llamadaBackCambiarFecha(this.objetoValidacion);
         this.objetoValidacion = [];
-        this.buscarIns()//se vuelve a buscar las inscripciones una vez que se realiza cualquier accion
-
-
-
-
     }
-  
 
   }
   transformaFecha(fecha) {
@@ -966,7 +962,7 @@ export class GuardiasInscripcionesComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.commonsService.scrollTablaFoco('tablaFoco');

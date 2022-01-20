@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Output, EventEmitter } from '@angular/core';
 import { DataTable } from "primeng/datatable";
 import { DatosGeneralesConsultaItem } from '../../../../../models/DatosGeneralesConsultaItem';
 import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
@@ -9,6 +9,10 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { Subject } from "rxjs/Subject";
 import { ModelosComConsultasItem } from '../../../../../models/ModelosComConsultasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { ServicioDetalleItem } from '../../../../../models/ServicioDetalleItem';
+import { Router } from '@angular/router';
+import { QueryBuilderDTO } from '../../../../../models/QueryBuilderDTO';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: "app-datos-generales-consulta",
@@ -40,6 +44,8 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   institucionActual: any;
   msgs: Message[];
   generica: string;
+  constructorConsultaExperta: string;
+  @Output() emitConstructorConsultaExperta = new EventEmitter<string>();
   listaModelos: any = [];
   progressSpinner: Boolean = false;
   resaltadoDatos: boolean = false;
@@ -67,6 +73,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
 
   private consultasRefresh = new Subject<any>();
   consultasRefresh$ = this.consultasRefresh.asObservable();
+  servicioDetalle: ServicioDetalleItem = new ServicioDetalleItem();
 
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
@@ -74,7 +81,8 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -92,6 +100,27 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     if (sessionStorage.getItem("listadoModelos") != undefined) {
       this.listaModelos = JSON.parse(sessionStorage.getItem("listadoModelos"));
     }
+
+    if(sessionStorage.getItem("servicioDetalle") != undefined){
+      this.servicioDetalle = JSON.parse(sessionStorage.getItem("servicioDetalle"));
+      this.body.nombre = this.servicioDetalle.descripcion;
+      this.body.idModulo = "3";
+      this.body.idObjetivo = "3";
+      this.cargaComboClaseCom("3");
+      this.body.idClaseComunicacion = "1";
+      this.generica = 'N';
+
+      if(sessionStorage.getItem("precioDetalle") != undefined){
+        let precioDetalle = JSON.parse(sessionStorage.getItem("precioDetalle"));
+        if(precioDetalle[0].descripcionprecio != undefined && precioDetalle[0].descripcionprecio != ""){
+          this.body.nombre = this.servicioDetalle.descripcion + " " + precioDetalle[0].descripcionprecio;
+        }else{
+          this.body.nombre = this.servicioDetalle.descripcion;
+        }
+      }
+
+    }
+
     this.cols = [
       {
         field: "consulta",
@@ -152,6 +181,60 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     }
   }
 
+  queryBuilderDTO: QueryBuilderDTO = new QueryBuilderDTO();
+  subscriptionGuardarDatosConstructor: Subscription;
+  estabaPulsadoConsultaExperta: boolean;
+  
+  emitUsoConstructorConsultaExperta(){
+    if(this.estabaPulsadoConsultaExperta == true && this.constructorConsultaExperta == 'constructor' && sessionStorage.getItem("constructorDeConsultasGuardado") == "true"){
+      let keyConfirmation = "deletePlantillaDoc";
+
+      this.queryBuilderDTO.consulta = "";
+      this.queryBuilderDTO.idconsulta = this.body.idConsulta.toString();
+
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant("informesycomunicaciones.fichaconsultas.datosgenerales.avisoborradoconsulta"),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.progressSpinner = true;
+
+          this.subscriptionGuardarDatosConstructor = this.sigaServices.post("constructorConsultas_guardarDatosConstructor", this.queryBuilderDTO).subscribe(
+            response => {
+      
+              if (response.status == 500) {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+              } else {
+                this.emitConstructorConsultaExperta.emit(this.constructorConsultaExperta);
+                this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              }
+      
+              this.progressSpinner = false;
+            },
+            err => {
+              this.progressSpinner = false;
+            },
+            () => {}
+          );
+        },
+        reject: () => {
+          this.constructorConsultaExperta = 'consultaExperta';
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
+    }else{
+      this.emitConstructorConsultaExperta.emit(this.constructorConsultaExperta);
+    }
+  }
+
   // Mensajes
   showFail(mensaje: string) {
     this.msgs = [];
@@ -184,6 +267,16 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     this.msgs = [];
   }
 
+  //Inicializa las propiedades necesarias para el dialogo de confirmacion
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
   getInstitucion() {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
@@ -197,7 +290,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
       this.habilitarBotones();
     },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -212,7 +305,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
         this.idiomas = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -229,8 +322,13 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   cargaComboClaseCom(event) {
     this.onlyCheckDatos();
     if (event != null) {
-      this.body.idModulo = event.value;
+      if(event.value != null){
+        this.body.idModulo = event.value;
+      }else if (sessionStorage.getItem("servicioDetalle") != undefined){
+        this.body.idModulo = event;
+      }
     }
+
     this.sigaServices
       .getParam(
         "consultas_claseComunicacionesByModulo",
@@ -257,7 +355,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           });
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -282,7 +380,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         });
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -293,7 +391,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.objetivos = data.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -450,7 +548,7 @@ para poder filtrar el dato con o sin estos caracteres*/
               );
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.showFail(
                 "informesycomunicaciones.modelosdecomunicacion.ficha.errorGuardado"
               );
@@ -498,9 +596,15 @@ para poder filtrar el dato con o sin estos caracteres*/
         },
         err => {
           this.showFail(this.translateService.instant('informesycomunicaciones.consultas.ficha.errorGuardadoConsulta'));
-          console.log(err);
+          //console.log(err);
         },
         () => {
+          if(sessionStorage.getItem("servicioDetalle") != undefined || sessionStorage.getItem("precioDetalle") != undefined){
+            sessionStorage.setItem("vieneDeNuevaCondicion", "true");
+            sessionStorage.setItem("nombreConsulta", this.body.nombre.toString());
+            sessionStorage.removeItem("consultasSearch");
+            this.location.back();
+          }
           this.progressSpinner = false;
         }
       );

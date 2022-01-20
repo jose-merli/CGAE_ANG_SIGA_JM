@@ -84,9 +84,24 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-    if (this.persistenceService.getFiltros() != undefined) {
+    //console.log('this.permisos: ', this.permisos)
+    if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("FichaInscripciones")!= undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      //this.isBuscar();
+      if(this.filtros.afechade!=null && this.filtros.afechade != undefined){
+        this.filtros.afechade = this.transformaFecha(this.filtros.afechade);
+      }
+      if(this.filtros.fechadesde!=null && this.filtros.fechadesde != undefined){
+        this.filtros.fechadesde = this.transformaFecha(this.filtros.fechadesde);
+      }
+      if(this.filtros.fechahasta!=null && this.filtros.fechahasta != undefined){
+        this.filtros.fechahasta = this.transformaFecha(this.filtros.fechahasta);
+      }
+      this.persistenceService.clearFiltros();
+      sessionStorage.removeItem("FichaInscripciones");
+      this.isBuscar();
+    }else{
+      sessionStorage.removeItem("FichaInscripciones");
+      this.persistenceService.clearFiltros();
     }
 
     if (this.isLetrado) {
@@ -134,6 +149,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
           const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
           this.usuarioBusquedaExpress.numColegiado = numColegiado;
           this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+          this.filtros.ncolegiado = numColegiado;
 
           this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
           this.progressSpinner = false;
@@ -201,7 +217,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
         this.commonsService.arregloTildesCombo(this.turnos);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -216,7 +232,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
 
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }
@@ -345,7 +361,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      this.isBuscar();
+      setTimeout( () => { this.isBuscar(); }, 2000 );
     }
   }
 

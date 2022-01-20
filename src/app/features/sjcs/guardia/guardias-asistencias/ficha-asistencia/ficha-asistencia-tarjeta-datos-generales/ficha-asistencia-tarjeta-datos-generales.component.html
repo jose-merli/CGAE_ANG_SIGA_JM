@@ -75,7 +75,7 @@
         <p-dropdown class="select-form"
             placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
             [showClear]="true" [(ngModel)]="asistencia.idLetradoGuardia" [disabled]="ineditable"
-            [ngModelOptions]="{standalone: true}" [options]="comboLetradoGuardia">
+            [ngModelOptions]="{standalone: true}" [options]="comboLetradoGuardia" (onChange)="onChangeLetradoGuardia()">
         </p-dropdown>
       </div>
       <div class="form-group col-lg-12 col-md-12">
@@ -108,5 +108,12 @@
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="confirmEliminarGeneral.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="confirmEliminarGeneral.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="confirmCambioLetradoActuaciones" #confirmCambioLetradoActuaciones>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmCambioLetradoActuaciones.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmCambioLetradoActuaciones.reject()"></button>
   </p-footer>
 </p-confirmDialog>

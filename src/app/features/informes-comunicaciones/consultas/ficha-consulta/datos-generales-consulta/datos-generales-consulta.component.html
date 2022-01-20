@@ -87,6 +87,14 @@
             </div>
           </div>
         </div>
+        <div class="row">
+          <div class="form-group col-lg-12 col-md-12">
+            <p-radioButton [(ngModel)]="constructorConsultaExperta" name="usoConstructorConsultaExperta" value="constructor"
+                    label="{{ 'informesycomunicaciones.fichaconsultas.datosgenerales.constructorconsultasbtn' | translate}}" (onClick)="constructorConsultaExperta = 'constructor'; emitUsoConstructorConsultaExperta()"></p-radioButton>
+            <p-radioButton [(ngModel)]="constructorConsultaExperta" class="mr-2 mt-auto"
+                    name="usoConstructorConsultaExperta" value="consultaExperta" label="{{ 'informesycomunicaciones.fichaconsultas.datosgenerales.consultaexpertabtn' | translate}}" (onClick)="constructorConsultaExperta = 'consultaExperta'; emitUsoConstructorConsultaExperta(); estabaPulsadoConsultaExperta = true"></p-radioButton>
+          </div>
+        </div>
       </div>
       <div *ngIf="openFicha" class="card-footer ">
         <div class="text-right main-button ">
@@ -104,3 +112,11 @@
   <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
 </div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

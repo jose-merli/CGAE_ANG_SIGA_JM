@@ -268,7 +268,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -326,7 +326,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
         this.getValueForCombo();
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -761,7 +761,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
         },
         error => {
           this.showFail("La acción no se ha realizado correctamente");
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {
@@ -783,7 +783,7 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
         },
         error => {
           this.showFail("La acción no se ha realizado correctamente");
-          console.log(error);
+          //console.log(error);
           this.progressSpinner = false;
         },
         () => {

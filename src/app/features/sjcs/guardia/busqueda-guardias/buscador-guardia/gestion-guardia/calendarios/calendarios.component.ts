@@ -21,27 +21,53 @@ export class CalendariosComponent implements OnInit {
     fechaHasta: "",
     generado: ""
   };
+   msgs;
   comboEstado = [
-    { label: "Pendiente", value: "5" },
-    { label: "Programada", value: "1" },
-    { label: "En proceso", value: "2" },
-    { label: "Procesada con Errores", value: "3" },
-    { label: "Generada", value: "4" }
+    { label: "Pendiente", value: "4" },
+    { label: "Programada", value: "0" },
+    { label: "En proceso", value: "1" },
+    { label: "Procesada con Errores", value: "2" },
+    { label: "Generada", value: "3" },
+    { label: "Reprogramada", value: "5" }
   ];
   comboListaGuardias =[];
-  
+  progressSpinner = false;
+  responseObject = 
+              {
+                'duplicar': false,
+                'turno': '',
+                'nombre': '',
+                'tabla' : [],
+                'idTurno': '',
+                'idGuardia': '',
+                'observaciones': '',
+                'fechaDesde': '',
+                'fechaHasta': '',
+                'fechaProgramacion': new Date(),
+                'estado': '' ,
+                'generado': '',
+                'numGuardias': '',
+                'idCalG': '',
+                'listaGuarias': {},
+                'idCalendarioProgramado': '',
+                'facturado': '',
+                'asistenciasAsociadas': ''
+              };
+    calendarioDisponible = false;
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private router : Router,
     private commonsService : CommonsService) { }
 
   ngOnInit() {
+    this.calendarioDisponible = false;
     this.sigaServices.datosRedy$.subscribe(
       data => {
         if (data.body) {
           data = JSON.parse(data.body)
           this.modoEdicion = true;
-          this.getDatosCalendario();
+          //this.getDatosCalendario();
+          this.getCalProg();
         }
       });
 
@@ -59,13 +85,14 @@ export class CalendariosComponent implements OnInit {
           this.commonsService.arregloTildesCombo(this.comboListaGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
   }
 
-  goToFichaProgramacion(){
+  getCalProg(){
+    this.progressSpinner = true;
     let datosEntrada = 
     { 'idTurno': this.persistenceService.getDatos().idTurno,
       'idConjuntoGuardia': null,
@@ -78,12 +105,12 @@ export class CalendariosComponent implements OnInit {
     this.sigaServices.post(
       "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
-          console.log('data: ', data.body)
+          //console.log('data: ', data.body)
           let error = JSON.parse(data.body).error;
           let datos = JSON.parse(data.body);
           if(datos){
 
-              let responseObject = 
+              this.responseObject = 
               {
                 'duplicar': false,
                 'turno': datos.turno,
@@ -102,15 +129,24 @@ export class CalendariosComponent implements OnInit {
                 'listaGuarias': {value : this.comboListaGuardias.find(comboItem => comboItem.label == datos.listaGuardias).value},
                 'idCalendarioProgramado': datos.idCalendarioProgramado,
                 'facturado': datos.facturado,
-                'asistenciasAsociadas': datos.asistenciasAsociadas
+                'asistenciasAsociadas': datos.asistenciasAsociadas,
+                //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
               };
 
-              this.persistenceService.setDatos(responseObject);
-              this.router.navigate(["/fichaProgramacion"]);
+              this.datos.fechaDesde = this.responseObject.fechaDesde;
+              this.datos.fechaHasta = this.responseObject.fechaHasta;
+              this.datos.generado = this.responseObject.generado;
+              if (this.datos.fechaDesde != "" && this.datos.fechaDesde != undefined && this.datos.fechaDesde != null){
+                this.calendarioDisponible = true;
+              }
+              this.persistenceService.setDatos(this.responseObject);
+              this.progressSpinner = false;
           }
 
         },
         (error)=>{
+          this.progressSpinner = false;
+          this.showMessage("info", "No existen calendarios para esta guardia", "No existen calendarios para esta guardia");
           console.log(error);
         }
       );
@@ -118,6 +154,19 @@ export class CalendariosComponent implements OnInit {
 
   }
 
+  goToFichaProgramacion(){
+    this.persistenceService.setDatos(this.responseObject);
+    this.progressSpinner = false;
+    this.router.navigate(["/fichaProgramacion"]);
+  }
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
 
   getDatosCalendario() {
     //let idGuardiaprovisional = 362; //borrar
@@ -129,9 +178,13 @@ export class CalendariosComponent implements OnInit {
             this.datos = JSON.parse(data.body);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
   }
 
+  clear() {
+    this.msgs = [];
+  }
+  
 }

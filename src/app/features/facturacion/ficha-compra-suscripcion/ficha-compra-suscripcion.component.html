@@ -1,0 +1,31 @@
+<div class="ficha-comunicacion-container" id="top">
+  <div class="header-title">
+      <i class="fa fa-square"></i>
+      <p>{{'menu.facturacion' | translate}}
+        <i class="fa fa-angle-right"></i>{{'facturacion.productos.CompraSuscripcion' | translate}}
+  </div>
+  <div>
+      <app-tarjeta-cliente-compra-suscripcion #cliente [(ficha)]="ficha" [esColegiado]="esColegiado" [resaltadoDatos]="resaltadoDatos" id="cliente">
+      </app-tarjeta-cliente-compra-suscripcion>
+      <app-tarjeta-solicitud-compra-suscripcion  [(ficha)]="ficha" (scrollToOblig)="scrollToOblig($event)" (actualizaFicha)="actualizarFicha()" 
+      [tarjProductos]="tarjProductos" [esColegiado]="esColegiado" [tarjServicios]="tarjServicios" >
+      </app-tarjeta-solicitud-compra-suscripcion>
+      <app-tarjeta-productos-compra-suscripcion #productos *ngIf="ficha.productos != null" [(ficha)]="ficha" [resaltadoDatos]="resaltadoDatos" 
+      (actualizaFicha)="actualizarFicha()" [esColegiado]="esColegiado" id="productos"> 
+      </app-tarjeta-productos-compra-suscripcion>
+      <app-tarjeta-servicios-compra-suscripcion #servicios *ngIf="ficha.servicios != null" [(ficha)]="ficha" [resaltadoDatos]="resaltadoDatos" 
+      (actualizaFicha)="actualizarFicha()" [esColegiado]="esColegiado" id="servicios"> 
+      </app-tarjeta-servicios-compra-suscripcion>
+      <app-tarjeta-descuentos-anticipos-compra-suscripcion [(ficha)]="ficha"></app-tarjeta-descuentos-anticipos-compra-suscripcion>
+      <app-tarjeta-factura-compra-suscripcion  [(ficha)]="ficha">
+      </app-tarjeta-factura-compra-suscripcion>
+  </div>
+</div>
+
+<div class="mt-3 text-right main-button" id="down">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

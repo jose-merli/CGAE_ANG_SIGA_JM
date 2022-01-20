@@ -11,6 +11,7 @@ import { FichaColegialEdicionCurricularesObject } from "../../../../models/Ficha
 import { TipoCurricularItem } from "../../../../models/TipoCurricularItem";
 import { SubtipoCurricularItem } from "../../../../models/SubtipoCurricularItem";
 import { CommonsService } from '../../../../_services/commons.service';
+import { RevisionAutLetradoItem } from "../../../../models/RevisionAutLetradoItem";
 /*** COMPONENTES ***/
 
 @Component({
@@ -123,7 +124,7 @@ disabledAction:boolean = false;
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -245,7 +246,7 @@ disabledAction:boolean = false;
           this.backTo();
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.showFail();
         },
@@ -278,7 +279,7 @@ disabledAction:boolean = false;
   //       this.isLetrado = data;
   //     },
   //     err => {
-  //       console.log(err);
+  //       //console.log(err);
   //     }
   //   );
   // }
@@ -377,7 +378,7 @@ disabledAction:boolean = false;
             this.backTo();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.showFail();
           },
@@ -403,7 +404,7 @@ disabledAction:boolean = false;
             this.backTo();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.showFail();
           },
@@ -447,13 +448,23 @@ disabledAction:boolean = false;
         .subscribe(
           data => {
             this.progressSpinner = false;
+            //Se comprueba si se han realizado cambios en los datos colegiales
+            if (
+              this.body != this.bodyInicial
+            ){
+              //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+              let peticion = new RevisionAutLetradoItem();
+              peticion.idPersona = this.body.idPersona.toString();
+              peticion.fechaProcesamiento = this.body.dateFechaInicio;
+              this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
+            }
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
             this.showSuccess();
             this.backTo();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.showFail();
           },
@@ -469,13 +480,23 @@ disabledAction:boolean = false;
         .subscribe(
           data => {
             this.progressSpinner = false;
+            //Se comprueba si se han realizado cambios en los datos colegiales
+            if (
+              this.body != this.bodyInicial
+            ){
+              //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+              let peticion = new RevisionAutLetradoItem();
+              peticion.idPersona = this.body.idPersona.toString();
+              peticion.fechaProcesamiento = new Date();
+              this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
+            }
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
             this.activateGuardar();
             this.showSuccess();
             this.backTo();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.showFail();
           },
@@ -709,7 +730,7 @@ disabledAction:boolean = false;
           this.body.idTipoCvSubtipo2 = "";
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
 
@@ -724,7 +745,7 @@ disabledAction:boolean = false;
           this.subtipoCurricularCombo = JSON.parse(data.body).combooItems;
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       );
   }

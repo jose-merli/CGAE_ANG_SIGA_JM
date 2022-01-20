@@ -73,15 +73,15 @@ export class AsistenciasFichaPreasistenciasComponent implements OnInit {
 
     let preasistenciaItem  : PreAsistenciaItem = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
 
-    if(preasistenciaItem && preasistenciaItem.estado == '2'){
+    if(preasistenciaItem && preasistenciaItem.estado.includes('2')){
       this.activable = true;
       this.denegable = false;
       this.confirmable = false;
-    }else if(preasistenciaItem && preasistenciaItem.estado == '1'){
+    }else if(preasistenciaItem && preasistenciaItem.estado.includes('1')){
       this.activable = false;
       this.denegable = false;
       this.confirmable = false;
-    }else if(preasistenciaItem && preasistenciaItem.estado == '0'){
+    }else if(preasistenciaItem && preasistenciaItem.estado.includes('0')){
       this.activable = false;
       this.denegable = true;
       this.confirmable = true;
@@ -199,7 +199,7 @@ export class AsistenciasFichaPreasistenciasComponent implements OnInit {
           }    
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         ()=>{
           this.progressSpinner = false;
@@ -234,7 +234,7 @@ export class AsistenciasFichaPreasistenciasComponent implements OnInit {
           }    
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         ()=>{
           this.progressSpinner = false;

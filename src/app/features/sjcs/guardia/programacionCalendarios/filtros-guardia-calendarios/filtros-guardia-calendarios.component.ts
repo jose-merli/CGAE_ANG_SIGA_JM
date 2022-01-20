@@ -109,8 +109,12 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
 
   }
   changeDateFormat2(date1){
+    let date1C = date1;
     // date1 dd/MM/yyyy
-    let date1C = date1.split("/").reverse().join("-")
+    if (!isNaN(Number(date1))){
+      date1C = date1.split("/").reverse().join("-");
+    }
+     
     return date1C;
   }
   getComboTurno() {
@@ -120,18 +124,19 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
 
   getComboEstado() {
     this.comboEstado = [
-      { label: "Pendiente", value: "3" },
-      { label: "Programada", value: "1" },
-      { label: "En proceso", value: "2" },
-      { label: "Procesada con Errores", value: "5" },
-      { label: "Generada", value: "4" }
+      { label: "Pendiente", value: "4" },
+      { label: "Programada", value: "0" },
+      { label: "En proceso", value: "1" },
+      { label: "Procesada con Errores", value: "2" },
+      { label: "Generada", value: "3" },
+      { label: "Reprogramada", value: "5" }
     ];
     /*this.sigaServices.get("busquedaGuardia_estado").subscribe(
       n => {
@@ -139,7 +144,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
         this.commonServices.arregloTildesCombo(this.comboEstado);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );*/
   }
@@ -165,7 +170,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
       }
@@ -179,7 +184,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboConjuntoGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -194,7 +199,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
           this.commonServices.arregloTildesCombo(this.comboListaGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -533,5 +538,5 @@ function compare(a: number | string | Date, b: number | string | Date, isAsc: bo
     return ( -1 ) * (isAsc ? 1 : -1);
   }
 
-  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  return (a <= b ? -1 : 1) * (isAsc ? 1 : -1);
 }

@@ -1,0 +1,176 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="busqueda-container">
+  <div class="header-title">
+    <i class="fa fa-square"></i>
+    <p>{{ "menu.facturacion" | translate }}
+      <i class="fa fa-angle-right"></i>{{ "menu.facturacion.facturas" | translate }}
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <!-- Datos generales -->
+      <p class="title-module" (click)="onHideDatosGenerales()">{{ "administracion.catalogos.titulo.datos.generales" | translate }}
+        <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+      </p>
+
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.numeroFactura" | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="body.numeroFactura" pInputText/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.contabilizado" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.contabilizado'
+             placeholder="{{'general.boton.seleccionar' | translate}}"
+            [options]="comboContabilizado" [filter]="true" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.formaCobroAbono" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.formaCobroAbono' placeholder="{{'general.boton.seleccionar' | translate}}"
+            [options]='comboFormaCobroAbono' [filter]="true" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.numAbonoSJCSCompensador" | translate }}</label>
+            <input type="text" class="form-control" [(ngModel)]="body.numeroAbonoSJCS" pInputText/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.fechaEmisionDesde" | translate }}</label>
+            <app-fecha [(value)]="body.fechaEmisionDesde" [maxDate]="body.fechaEmisionHasta"
+            (valueChangeSelected)="fillFecha($event, 'emisionDesde')" (valueChangeInput)="fillFecha($event, 'emisionDesde')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.fechaEmisionHasta" | translate }}</label>
+            <app-fecha [(value)]="body.fechaEmisionHasta" [minDate]="body.fechaEmisionDesde"
+            (valueChangeSelected)="fillFecha($event, 'emisionHasta')" (valueChangeInput)="fillFecha($event, 'emisionHasta')"></app-fecha>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.importeFacturadoDesde" | translate }}</label>
+            <input type="number" class="form-control" [(ngModel)]="body.importefacturadoDesde" pInputText/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.importeFacturadoHasta" | translate }}</label>
+            <input type="number" class="form-control" [(ngModel)]="body.importefacturadoHasta"pInputText/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "censo.nuevaSolicitud.estado" | translate }}</label>            
+            <p-multiSelect #estados class="select-form" [(ngModel)]='estadosSelect'
+            defaultLabel="{{'general.boton.seleccionar' | translate}}" 
+            [options]="comboEstadosFacturas" optionLabel="label1" [filter]="true"
+            maxSelectedLabels="10" [selectedItemsLabel]="'{0} consultas seleccionadas'" 
+            filterBy="label,labelSinTilde"
+            styleClass="widthAll" (onPanelShow)="focusInputField(estados)"></p-multiSelect>
+          </div>
+        </div>
+      </div>
+
+      <!-- Datos de agrupacion -->
+      <p class="title-module" (click)="onShowDatosAgrupacion()">{{ "facturacion.facturas.datosAgrupacion" | translate }}
+        <i *ngIf="showDatosAgrupacion" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosAgrupacion" class="fa fa-angle-down float-right"></i>
+      </p>
+
+      <div *ngIf="showDatosAgrupacion" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionPyS.ficherosAdeudos.serie" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.serie' placeholder="{{'general.boton.seleccionar' | translate}}"
+              [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde"
+              [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "menu.facturacion" | translate }}</label>
+            <p-dropdown class="select-form"  [(ngModel)]='body.facturacion' placeholder="{{'general.boton.seleccionar' | translate}}"
+            [options]="comboFacturaciones" [filter]="true" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group-interlineado col-lg-6 col-md-6">
+            <div class="row">
+              <div class="form-group-interlineado col-lg-4 col-md-4">
+                <label>{{ "facturacion.facturas.identificadorFicheroAdeudos" | translate }}</label>
+                <input type="text" class="form-control" [(ngModel)]='body.identificadorAdeudos' pInputText/>
+              </div>
+              <div class="form-group-interlineado col-lg-4 col-md-4">
+                <label>{{ "facturacion.facturas.identificadorFicherosTransferencias" | translate }}</label>
+                <input type="text" class="form-control" [(ngModel)]='body.identificadorTransferencia' pInputText/>
+              </div>
+              <div class="form-group-interlineado col-lg-4 col-md-4">
+                <label>{{ "facturacion.facturas.identificadorFicheroDevolucion" | translate }}</label>
+                <input type="text" class="form-control" [(ngModel)]='body.identificadorDevolucion' pInputText/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cliente -->
+      <p class="title-module" (click)="onShowCliente()">{{ "facturacion.productos.Cliente" | translate }}
+        <i *ngIf="showCliente" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showCliente" class="fa fa-angle-down float-right"></i>
+      </p>
+
+      <div *ngIf="showCliente" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-12 col-md-12">
+            <app-busqueda-colegiado-express [pantalla]="'ejg'"
+                [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp"
+                (colegiado)="changeColegiado($event)">
+            </app-busqueda-colegiado-express>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comunicaciones de cobros y recobros -->
+      <p class="title-module" (click)="onShowComunicacionesCobrosRecobros()">{{ "facturacion.facturas.comunicacionesCobrosRecobros" | translate }}
+        <i *ngIf="showComunicacionesCobrosRecobros" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showComunicacionesCobrosRecobros" class="fa fa-angle-down float-right"></i>
+      </p>
+
+      <div *ngIf="showComunicacionesCobrosRecobros" class="module vista-avanzada">
+        <div class="form-row">
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.facturasPendientesClienteDesde" | translate }}</label>
+            <input type="number" class="form-control" [(ngModel)]="body.facturasPendientesDesde" pInputText/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.facturasPendientesClienteHasta" | translate }}</label>
+            <input type="number" class="form-control" [(ngModel)]="body.facturasPendientesHasta" pInputText/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.importeAdeudadoFacturaDesde" | translate }}</label>
+            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeAdeudadoDesde" pInputText/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.importeAdeudadoFacturaHasta" | translate }}</label>
+            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.importeAdeudadoHasta" pInputText/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.numeroComunicacionesFacturaDesde" | translate }}</label>
+            <input type="number" class="form-control" [(ngModel)]="body.comunicacionesFacturasDesde" pInputText/>
+          </div>
+          <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacion.facturas.numeroComunicacionesFacturaHasta" | translate }}</label>
+            <input type="number" class="form-control" [(ngModel)]="body.comunicacionesFacturasHasta" pInputText/>
+          </div>
+          
+        </div>
+      </div>
+
+    </div>
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="clearFilters()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+          label="{{ 'general.boton.clear' | translate}}"></button>
+        <button (click)="isBuscar()" pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{'general.boton.search' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

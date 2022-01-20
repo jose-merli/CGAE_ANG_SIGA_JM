@@ -59,61 +59,62 @@ export class ProgramacionCalendariosComponent implements OnInit {
     {
       id: "turno",
       name: "dato.jgr.guardia.guardias.turno",
-      size: 250
+      size: 200
     },
     {
       id: "guardia",
       name: "oficio.cargasMasivas.guardia",
-      size: 250
+      size: 200
     },
     {
       id: "fechaCalDesde",
       name: "justiciaGratuita.Calendarios.FechaDesde",
-      size: 140
+      size: 100
     },
     {
       id: "fechaCalHasta",
       name: "justiciaGratuita.Calendarios.FechaHasta",
-      size: 140
+      size: 100
     },
     {
       id: "fechaProgramada",
       name: "justiciaGratuita.Calendarios.FechaProgramada",
-      size: 140
+      size: 100
     },
     {
       id: "listaGuardias",
       name: "menu.justiciaGratuita.calendarios.ListaGuardias",
-      size: 250
+      size: 150
     },
     {
       id: "observaciones",
       name: "justiciaGratuita.Calendarios.Observaciones",
-      size: 250
+      size: 150
     },
     {
       id: "estado",
       name: "menu.justiciaGratuita.calendarios.Estado",
-      size: 140
+      size: 80
     },
     {
       id: "generado",
       name: "justiciaGratuita.Calendarios.Generado",
-      size: 140
+      size: 80
     },
     {
       id: "numGuardias",
       name: "justiciaGratuita.Calendarios.NumGuardias",
-      size: 140
+      size: 80
     }
   ];
 
   comboEstados = [
-    { label: "Pendiente", value: "3" },
-    { label: "Programada", value: "1" },
-    { label: "En proceso", value: "2" },
-    { label: "Procesada con Errores", value: "5" },
-    { label: "Generada", value: "4" }
+    { label: "Pendiente", value: "4" },
+    { label: "Programada", value: "0" },
+    { label: "En proceso", value: "1" },
+    { label: "Procesada con Errores", value: "2" },
+    { label: "Generada", value: "3" },
+    { label: "Reprogramada", value: "5" }
   ];
   @ViewChild(FiltrosGuardiaCalendarioComponent) filtros;
   //@ViewChild(TablaGuardiasComponent) tabla;
@@ -139,16 +140,16 @@ export class ProgramacionCalendariosComponent implements OnInit {
         this.rowGroups = this.dataToDuplicate.tabla;
         
         let objCells: Cell[] = [
-          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 250 , disabled: false},
-          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 250 , disabled: false},
-          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 140, disabled: false},
-          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 140, disabled: false},
-          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 140, disabled: false},
-          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 250, disabled: false},
-          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 250, disabled: false},
-          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 140, disabled: false},
-          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 140 , disabled: false},
-          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 140 , disabled: false},
+          { type: 'text', value: this.dataToDuplicate.turno, combo: null, size: 200 , disabled: false},
+          { type: 'text', value: this.dataToDuplicate.nombre, combo: null, size: 200 , disabled: false},
+          { type: 'date', value: this.dataToDuplicate.fechaDesde, combo: null, size: 100, disabled: false},
+          { type: 'date', value: this.dataToDuplicate.fechaHasta , combo: null, size: 100, disabled: false},
+          { type: 'dateTime', value: this.dataToDuplicate.fechaProgramacion , combo: null, size: 100, disabled: false},
+          { type: 'label', value: this.dataToDuplicate.listaGuarias, combo: null, size: 150, disabled: false},
+          { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 150, disabled: false},
+          { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 80, disabled: false},
+          { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 80 , disabled: false},
+          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 80 , disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0, disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0, disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0, disabled: false}          
@@ -202,7 +203,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
         derechoAcceso = permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (derechoAcceso == 3) {
@@ -299,7 +300,8 @@ let datosEntrada =
                 'listaGuardias': dat.listaGuardias,
                 'idCalendarioProgramado': dat.idCalendarioProgramado,
                 'facturado': dat.facturado,
-                'asistenciasAsociadas': dat.asistenciasAsociadas
+                'asistenciasAsociadas': dat.asistenciasAsociadas,
+                'idCalendarioGuardias' : dat.idCalendarioGuardias
               }
              
             );
@@ -321,20 +323,23 @@ let datosEntrada =
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => { 
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
         });
 }
 formatOfficial(fechaB){
-  const dayB = fechaB.substr(0, 2) ;
-  const monthB = fechaB.substr(3, 2);
-  const yearB = fechaB.substr(6, 4);
-  const hourB = fechaB.substr(11, 2);
-  const minB = fechaB.substr(14, 2);
-  const segB = fechaB.substr(17, 2);
-  return yearB + "-" + monthB + "-" + dayB + "T" + hourB + ":" + minB + ":" + segB;
+  if (fechaB != null && fechaB != undefined){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 4);
+    const hourB = fechaB.substr(11, 2);
+    const minB = fechaB.substr(14, 2);
+    const segB = fechaB.substr(17, 2);
+    return yearB + "-" + monthB + "-" + dayB + "T" + hourB + ":" + minB + ":" + segB;
+  }
+
   //'1968-11-16T00:00:00'
 }
 jsonToRow(){
@@ -347,22 +352,23 @@ jsonToRow(){
     let fP = {label: res.fechaProgramacion, value: new Date(this.formatOfficial(res.fechaProgramacion))};
     //let fP = {label: res.fechaProgramacion, value: res.fechaProgramacion};
     let objCells = [
-    { type: 'text', value: res.turno, size: 250 },
-    { type: 'text', value: res.guardia, size: 250  },
-    { type: 'date', value: this.changeDateFormat(res.fechaDesde), size: 140 },
-    { type: 'date', value: this.changeDateFormat(res.fechaHasta), size: 140 },
-    { type: 'dateTime', value: fP, size: 140 },
+    { type: 'text', value: res.turno, size: 200 },
+    { type: 'text', value: res.guardia, size: 200  },
+    { type: 'date', value: this.changeDateFormat(res.fechaDesde), size: 100 },
+    { type: 'date', value: this.changeDateFormat(res.fechaHasta), size: 100 },
+    { type: 'dateTime', value: fP, size: 100 },
     //{ type: 'text', value: new Date(res.fechaProgramacion.toString()) },
-    { type: 'label', value: {label: res.listaGuardias, value: res.idCalG }, size: 250 },
-    { type: 'link', value: res.observaciones, size: 250  },
-    { type: 'text', value: this.getStatusValue(res.estado), size: 140 },
-    { type: 'text', value: res.generado, size: 140 },
-    { type: 'text', value: res.numGuardias, size: 140},
+    { type: 'label', value: {label: res.listaGuardias, value: res.idCalG }, size: 150 },
+    { type: 'link', value: res.observaciones, size: 150  },
+    { type: 'text', value: this.getStatusValue(res.estado), size: 80 },
+    { type: 'text', value: res.generado, size: 80 },
+    { type: 'text', value: res.numGuardias, size: 80},
     { type: 'invisible', value: res.idCalendarioProgramado, size: 0},
     { type: 'invisible', value: res.idTurno, size: 0},
     { type: 'invisible', value: res.idGuardia, size: 0},
     { type: 'invisible', value: res.facturado, size: 0},
     { type: 'invisible', value: res.asistenciasAsociadas, size: 0},
+    { type: 'invisible', value: res.idCalendarioGuardias, size: 0}
     
     ];
     let obj = {id: i, cells: objCells};
@@ -535,7 +541,7 @@ delete(indexToDelete){
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -581,7 +587,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         },
         () => {
           setTimeout(()=>{this.commonsService.scrollTablaFoco('tablaFoco')},5);
@@ -624,7 +630,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.commonsService.scrollTablaFoco('tablaFoco');
@@ -684,22 +690,25 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         let estadoNumerico = "0";
         switch (event.estado) {
           case "Pendiente":
-            estadoNumerico = "3";
-            break;
-          case "Programada":
-            estadoNumerico = "1";
-            break;
-          case "En proceso":
-            estadoNumerico = "2";
-            break;
-          case "Procesada con Errores":
-            estadoNumerico = "5";
-            break;
-          case "Generada":
             estadoNumerico = "4";
             break;
-          default:
+          case "Programada":
             estadoNumerico = "0";
+            break;
+          case "En proceso":
+            estadoNumerico = "1";
+            break;
+          case "Procesada con Errores":
+            estadoNumerico = "2";
+            break;
+          case "Generada":
+            estadoNumerico = "3";
+            break;
+            case "Reprogramada":
+              estadoNumerico = "5";
+              break;
+          default:
+            estadoNumerico = "4";
             break;
         }
         let dataToZip = {
@@ -717,6 +726,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
           'idCalG': event.listaGuarias.value,
           'listaGuardias': event.listaGuarias.label,
           'idCalendarioProgramado': event.idCalendarioProgramado,
+          'idCalendarioGuardias' : event.idCalendarioGuardias
         };
         dataToZipArr.push(dataToZip);
         } else{
@@ -740,7 +750,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
           saveAs(blob, "GeneracionCalendariosLog_ZIP.zip");
         this.progressSpinner = false;
         }, err => {
-          console.log(err);
+          //console.log(err);
         });
   }*/
 
@@ -764,7 +774,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
         this.showMessage({ severity: 'success', summary: 'LOG descargado correctamente', msg: 'LOG descargado correctamente' });
       }, err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
         this.showMessage({ severity: 'error', summary: 'El LOG no pudo descargarse', msg: 'El LOG no pudo descargarse' });
       });
 }

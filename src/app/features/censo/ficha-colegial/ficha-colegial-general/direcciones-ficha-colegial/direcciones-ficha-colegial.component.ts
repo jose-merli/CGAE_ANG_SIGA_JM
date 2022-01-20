@@ -11,6 +11,7 @@ import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem
 import { DatosDireccionesObject } from '../../../../../models/DatosDireccionesObject';
 import { FichaColegialColegialesItem } from '../../../../../models/FichaColegialColegialesItem';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
+import { RevisionAutLetradoItem } from '../../../../../models/RevisionAutLetradoItem';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { cardService } from "./../../../../../_services/cardSearch.service";
@@ -445,6 +446,11 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
   serviceDeleteDirection(datosDelete, all) {
     this.sigaServices.post("direcciones_remove", datosDelete).subscribe(
       data => {
+        //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
+        let peticion = new RevisionAutLetradoItem();
+        peticion.idPersona = this.generalBody.idPersona.toString();
+        peticion.fechaProcesamiento = new Date();
+        this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
         this.progressSpinner = false;
         this.showSuccess();
 
@@ -459,7 +465,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
         this.selectMultipleDirecciones = false;
         this.selectAllDirecciones = false;
         this.numSelectedDirecciones = 0;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         this.progressSpinner = false;
@@ -516,7 +522,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
             this.mostrarNumero = true;
           },
@@ -749,7 +755,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
           this.tableDirecciones.paginator = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {

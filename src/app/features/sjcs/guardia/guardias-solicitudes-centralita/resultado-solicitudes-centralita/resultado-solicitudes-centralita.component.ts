@@ -213,7 +213,7 @@ export class ResultadoSolicitudesCentralitaComponent implements OnInit, AfterVie
           }    
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         ()=>{
           this.progressSpinner = false;
@@ -249,7 +249,7 @@ export class ResultadoSolicitudesCentralitaComponent implements OnInit, AfterVie
           }    
         },
         err => {
-          console.log(err);
+          //console.log(err);
         },
         ()=>{
           this.progressSpinner = false;

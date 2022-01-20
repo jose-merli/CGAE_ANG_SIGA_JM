@@ -11,13 +11,16 @@
       <div class="d-flex justify-content-start">
         <label class="mr-auto titulo-tarjeta">{{ cardTitle }}</label>
         <div *ngIf="enlaceCardClosed !== undefined && enlaceCardClosed !== null" class="right">
-          <a *ngIf="enlaceCardClosed.href !== undefined && enlaceCardClosed.href !== null" [routerLink]="enlaceCardClosed.href" class="enlace"> <i class="fas fa-external-link-alt mr-2 icono-enlace"
+          <a *ngIf="enlaceCardClosed.href !== undefined && enlaceCardClosed.href !== null"
+            [routerLink]="enlaceCardClosed.href" class="enlace"> <i class="fas fa-external-link-alt mr-2 icono-enlace"
               aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
-          <a *ngIf="(enlaceCardClosed.href === undefined || enlaceCardClosed.href === null) && (enlaceCardClosed.click !== undefined && enlaceCardClosed.click !== null) " (click)="irFichaColegial()" class="enlace"> <i (click)="enlaceCardClosed.click" class="fas fa-external-link-alt mr-2 icono-enlace"
-              aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
+          <a *ngIf="(enlaceCardClosed.href === undefined || enlaceCardClosed.href === null) && (enlaceCardClosed.click !== undefined && enlaceCardClosed.click !== null) "
+            (click)="irFichaColegial()" class="enlace"> <i (click)="enlaceCardClosed.click"
+              class="fas fa-external-link-alt mr-2 icono-enlace" aria-hidden="true"></i>{{ enlaceCardClosed.title }}</a>
         </div>
       </div>
-      <div onclick="event.stopPropagation()" *ngIf="campos" class="col-12 form-row m-0 p-0 pt-2 justify-content-between">
+      <div onclick="event.stopPropagation()" *ngIf="campos"
+        class="col-12 form-row m-0 p-0 pt-2 justify-content-between">
         <div *ngFor="let campo of campos" class="d-flex flex-wrap campos">
           <label *ngIf="campo.key!=null">
             {{ campo.key }}:
@@ -32,7 +35,7 @@
           </label>
         </div>
       </div>
-      
+
       <div *ngIf="enlaces" class="d-flex flex-wrap justify-content-between pt-2">
         <label *ngFor="let enlace of enlaces" class="mr-auto pr-2">
 
@@ -127,8 +130,15 @@
   <div class="col-1"></div>
   <div class="col-11 form-row pt-2">
     <div *ngFor="let enlace of enlaces" class="d-flex flex-wrap mr-auto">
-      <label>
+      <label *ngIf="enlace.href && enlace.params">
         <a (click)="goToCard(enlace)" [routerLink]="[enlace.href,  enlace.params]">
+          <span class="enlace">
+            {{ enlace.nombre }}
+          </span>
+        </a>
+      </label>
+      <label *ngIf="enlace.href == undefined && enlace.params == undefined">
+        <a (click)="goToCard(enlace)">
           <span class="enlace">
             {{ enlace.nombre }}
           </span>
@@ -146,9 +156,9 @@
   <!-- <div class="col-12 text-right click">
     <i class="fas fa-thumbtack"></i>
   </div> -->
-  
+
 </div>
-  <!-- Spinner -->
-  <div *ngIf="progressSpinner" class="overlay-spinner">
-    <div class="loader"></div>
-  </div>
+<!-- Spinner -->
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

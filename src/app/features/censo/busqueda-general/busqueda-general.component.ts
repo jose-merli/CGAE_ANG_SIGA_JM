@@ -95,6 +95,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   idClaseComunicacion: String;
   keys: any[] = [];
   fromAbogadoContrario: boolean = false;
+  fromCliente: boolean = false;
   fromAbogadoContrarioEJG: boolean = false;
 
   migaPan: string = '';
@@ -150,6 +151,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
     }
     if(sessionStorage.getItem("origin") == "AbogadoContrarioEJG"){
       this.fromAbogadoContrarioEJG = true;
+    }
+    else if(sessionStorage.getItem("origin")=="newCliente"){
+      sessionStorage.removeItem('origin');
+      this.fromCliente=true;
     }
 
     //sessionStorage.removeItem('origin');
@@ -257,7 +262,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
         this.colegios_rol = n.combooItems;
       },
       (err) => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // this.sigaServices.get("institucionActual").subscribe(n => {
@@ -378,7 +383,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
           },
           (err) => {
             this.progressSpinner = false;
-            console.log(err);
+            //console.log(err);
           },
           () => {
             // this.sigaServices.get("institucionActual").subscribe(n => {
@@ -389,7 +394,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       },
       (err) => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         // this.sigaServices.get("institucionActual").subscribe(n => {
@@ -695,7 +700,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
             }
           },
           (err) => {
-            console.log(err);
+            //console.log(err);
             this.progressSpinner = false;
           },
           () => {
@@ -733,7 +738,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
           }
         );
       }
-    } if (this.persona == 'p') {
+    } else if (this.persona == 'p') {
       if (this.checkFilterProc()) {
         if (this.bodyProc.nombre == undefined) {
           this.bodyFisica.nombre = '';
@@ -823,7 +828,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
               // this.table.paginator = true;
             },
             (err) => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             },
             () => {
@@ -883,7 +888,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     
     //let colegioSelec = this.colegios_seleccionados[0].idInstitucion;
     // En caso que venga de una ficha de contrario
-    if (this.fromAbogadoContrario || this.fromAbogadoContrarioEJG) {
+    if (this.fromAbogadoContrario || this.fromAbogadoContrarioEJG || this.fromCliente) {
       sessionStorage.setItem('abogado', JSON.stringify(id));
       if(this.fromAbogadoContrario) sessionStorage.setItem("origin", "Contrario");
       else sessionStorage.setItem("origin", "ContrarioEJG");
@@ -911,7 +916,11 @@ export class BusquedaGeneralComponent implements OnDestroy {
 
         this.router.navigate(['fichaPersonaJuridica']);
       }
-    } 
+    } else if( sessionStorage.getItem('nuevoMovVarios') == 'true'){
+      sessionStorage.setItem('datosPersonaFisica',JSON.stringify(id));
+      sessionStorage.setItem('showDatosCliente',"true");
+      this.location.back();
+    }
     // else if (sessionStorage.getItem('nuevoProcurador')) {
     //   sessionStorage.setItem('datosProcurador', JSON.stringify(id));
     //   this.backTo();
@@ -963,7 +972,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
           this.progressSpinner = false;
         },
         (err) => {
-          console.log(err);
+          //console.log(err);
         },
         () => {
           if (this.continue == true) {
@@ -1041,7 +1050,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
                       this.router.navigate(["/fichaColegial"]);
                     },
                     err => {
-                      console.log(err);
+                      //console.log(err);
                       this.progressSpinner = false;
                     },
                     () => {
@@ -1438,12 +1447,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
             this.router.navigate(['/dialogoComunicaciones']);
           },
           (err) => {
-            console.log(err);
+            //console.log(err);
           }
         );
       },
       (err) => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }

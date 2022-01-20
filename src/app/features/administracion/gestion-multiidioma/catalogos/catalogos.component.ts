@@ -127,7 +127,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
         this.selectedIdiomaBusqueda = this.valorDefecto.value;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -136,7 +136,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
         this.entidad = n.combooItems;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
 
@@ -195,7 +195,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
           this.buscarSeleccionado = true;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -229,7 +229,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
         this.derechoAcceso = this.permisosArray[0].derechoacceso;
       },
       err => {
-        console.log(err);
+        //console.log(err);
       },
       () => {
         if (this.derechoAcceso == 3) {
@@ -314,7 +314,7 @@ export class Catalogos extends SigaWrapper implements OnInit {
             this.showSuccessEdit();
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.showFail();
           },
           () => {

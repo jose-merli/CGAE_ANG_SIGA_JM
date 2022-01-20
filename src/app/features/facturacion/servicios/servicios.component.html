@@ -1,0 +1,27 @@
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<!-- Ubicacion en la app -->
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p> {{ 'menu.facturacion' | translate}}
+    <i class="fa fa-angle-right"></i>{{ 'menu.productosYServicios.categorias.servicios' | translate}}
+  </p>
+</div>
+
+<!-- Pantalla Facturacion > Servicios -->
+<div>
+  <!-- Buscador de servicios -->
+  <div class="card">
+    <app-filtros-servicios (busqueda)="busquedaServicios($event)"></app-filtros-servicios>
+  </div>
+  <!-- Listado de servicios -->
+  <div>
+    <app-gestion-servicios *ngIf="muestraTablaServicios" [serviceData]="serviceData"
+      [serviceDataConHistorico]="serviceDataConHistorico" [serviceDataSinHistorico]="serviceDataSinHistorico"
+      (busqueda)="busquedaServicios($event)" id="tablaServicios">
+    </app-gestion-servicios>
+  </div>
+</div>

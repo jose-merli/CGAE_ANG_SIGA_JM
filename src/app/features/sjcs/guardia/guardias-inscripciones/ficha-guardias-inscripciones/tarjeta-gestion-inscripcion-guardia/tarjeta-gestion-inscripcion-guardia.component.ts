@@ -168,8 +168,12 @@ export class TarjetaGestionInscripcionGuardiaComponent implements OnInit {
   }
 
   changeDateFormat(date1){
+    let date1C = date1;
     // date1 dd/MM/yyyy
-    let date1C = date1.split("/").reverse().join("-")
+    if (!isNaN(Number(date1))){
+      date1C = date1.split("/").reverse().join("-");
+    }
+     
     return date1C;
   }
 
@@ -191,7 +195,7 @@ export class TarjetaGestionInscripcionGuardiaComponent implements OnInit {
       'apellidos2': obj.apellidos2,
       'idinstitucion': obj.idinstitucion,
       'idpersona': obj.idpersona,
-      'fechasolicitud': (obj['fechasolicitud'] != null && obj['fechasolicitud'] != undefined) ? new Date(this.changeDateFormat(obj['fechasolicitud'])) : obj['fechasolicitud'],
+      'fechasolicitud': (obj['fechasolicitud'] != null && obj['fechasolicitud'] != undefined) ? new Date(this.formatDateSol(obj['fechasolicitud'])) : obj['fechasolicitud'],
       'observacionessolicitud': obj.observacionessolicitud,
       'fechavalidacion':  (obj['fechavalidacion'] != null && obj['fechavalidacion'] != undefined) ? new Date(this.changeDateFormat(obj['fechavalidacion'])) : obj['fechavalidacion'],
       'observacionesvalidacion': obj.observacionesvalidacion,
@@ -212,7 +216,11 @@ export class TarjetaGestionInscripcionGuardiaComponent implements OnInit {
 
     return new ResultadoInscripciones(objeto);
   }
-
+	formatDateSol(date) {
+		const pattern = 'dd/MM/yyyy hh:mm:ss';
+		return this.datepipe.transform(date, pattern);
+	
+	  }
   busqueda() { //MIRAR DONDE SE LLAMA
     this.progressSpinner = true;
     let objVal: ResultadoInscripciones = this.rellenarObjetoBack(this.datos);
@@ -227,7 +235,7 @@ export class TarjetaGestionInscripcionGuardiaComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }, () => {
           this.progressSpinner = false;
         }
@@ -599,7 +607,7 @@ export class TarjetaGestionInscripcionGuardiaComponent implements OnInit {
     }
   }
   openMultiSelect(dato) {
-    // console.log(this.multiSelect);
+    // //console.log(this.multiSelect);
     dato.onPanelShow;
     // this.multiSelect.show();
     // dato.overlayVisible = true;

@@ -15,11 +15,11 @@ import { FichaActuacionAsistenciaTarjetaHistoricoComponent } from './ficha-actua
 export class FichaActuacionAsistenciaComponent implements OnInit {
 
   rutas: string[] = [];
-  progressSpinner : boolean = false;
-  asistencia : TarjetaAsistenciaItem;
-  actuacion : ActuacionAsistenciaItem;
-  editable : boolean = true;
-  nuevaActuacion : boolean ;
+  progressSpinner: boolean = false;
+  asistencia: TarjetaAsistenciaItem;
+  actuacion: ActuacionAsistenciaItem;
+  editable: boolean = true;
+  nuevaActuacion: boolean;
   tarjetaFija = {
     nombre: "Resumen Actuación",
     icono: 'fas fa-clipboard',
@@ -71,22 +71,26 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       campos: []
     }
   ];
-  @ViewChild(FichaActuacionAsistenciaTarjetaHistoricoComponent) historicoComponent : FichaActuacionAsistenciaTarjetaHistoricoComponent;
-  constructor(private translateService : TranslateService,
-    private router : Router,
-    private sigaServices : SigaServices,
-    private datepipe : DatePipe) { }
+
+  @ViewChild(FichaActuacionAsistenciaTarjetaHistoricoComponent) historicoComponent: FichaActuacionAsistenciaTarjetaHistoricoComponent;
+
+  openTarjetaFac: Boolean = false;
+
+  constructor(private translateService: TranslateService,
+    private router: Router,
+    private sigaServices: SigaServices,
+    private datepipe: DatePipe) { }
 
   ngOnInit() {
-    this.rutas = ['SJCS',this.translateService.instant("menu.justiciaGratuita.asistencia"), 'Actuaciones'];
+    this.rutas = ['SJCS', this.translateService.instant("menu.justiciaGratuita.asistencia"), 'Actuaciones'];
 
     this.asistencia = JSON.parse(sessionStorage.getItem('asistenciaToFichaActuacion'));
     sessionStorage.removeItem('asistenciaToFichaActuacion');
-    if(sessionStorage.getItem('nuevaActuacionAsistencia') == "true"){
+    if (sessionStorage.getItem('nuevaActuacionAsistencia') == "true") {
       this.nuevaActuacion = true;
       sessionStorage.removeItem('nuevaActuacionAsistencia');
       this.initTarjetas();
-    }else if(this.asistencia && sessionStorage.getItem('actuacionAsistencia')){
+    } else if (this.asistencia && sessionStorage.getItem('actuacionAsistencia')) {
       this.actuacion = JSON.parse(sessionStorage.getItem('actuacionAsistencia'));
       sessionStorage.removeItem('actuacionAsistencia');
       this.getActuacionData();
@@ -95,10 +99,10 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
 
   }
 
-  initTarjetas(){
+  initTarjetas() {
 
-    if(this.nuevaActuacion){
-      this.tarjetaFija.campos=[
+    if (this.nuevaActuacion) {
+      this.tarjetaFija.campos = [
         {
           "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.annioNum") + ' asistencia',
           "value": ''
@@ -149,7 +153,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
           "value": ""
         },
         {
-          "key": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.comisaria")+'/'+this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Juzgado"),
+          "key": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.comisaria") + '/' + this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Juzgado"),
           "value": ""
         }
       ];
@@ -182,18 +186,18 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       ];
 
       this.listaTarjetas.forEach(tarj => {
-        if(tarj.nombre != 'Datos Generales'){
+        if (tarj.nombre != 'Datos Generales') {
           tarj.detalle = false;
         }
       });
-    }else{
+    } else {
       //Si la actuacion esta anulada o validada, no se podrá editar de ninguna forma
-      if(this.actuacion.anulada == '1' || this.actuacion.validada == 'SÍ'){
+      if (this.actuacion.anulada == '1' || this.actuacion.validada == 'SÍ') {
         this.editable = false;
-      }else{
+      } else {
         this.editable = true;
       }
-      this.tarjetaFija.campos=[
+      this.tarjetaFija.campos = [
         {
           "key": this.translateService.instant("justiciaGratuita.ejg.datosGenerales.annioNum") + ' asistencia',
           "value": this.asistencia.anioNumero
@@ -243,7 +247,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
           "value": this.actuacion.costeDesc
         },
         {
-          "key": 'Comisaría/'+this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Juzgado"),
+          "key": 'Comisaría/' + this.translateService.instant("justiciaGratuita.ejg.datosGenerales.Juzgado"),
           "value": this.actuacion.comisariaJuzgado
         }
       ];
@@ -275,14 +279,14 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
         }
       ];
 
-      if(this.actuacion.numDocumentos){
-          this.listaTarjetas[3].campos = [
-            {
-              "key": this.translateService.instant("enviosMasivos.literal.numDocumentos"),
-              "value": this.actuacion.numDocumentos
-            }
-          ];
-      }else{
+      if (this.actuacion.numDocumentos) {
+        this.listaTarjetas[3].campos = [
+          {
+            "key": this.translateService.instant("enviosMasivos.literal.numDocumentos"),
+            "value": this.actuacion.numDocumentos
+          }
+        ];
+      } else {
         this.listaTarjetas[3].campos = [
           {
             "key": null,
@@ -292,7 +296,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       }
 
       this.listaTarjetas.forEach(tarj => {
-        if(tarj.nombre != 'Datos Generales'){
+        if (tarj.nombre != 'Datos Generales') {
           tarj.detalle = true;
         }
       });
@@ -313,35 +317,43 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       this.tarjetaFija.enlaces.push(tarjTmp);
     });
 
+    let tarjTmp = {
+      id: 'facSJCSTarjFacGene',
+      ref: document.getElementById('facSJCSTarjFacGene'),
+      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+    };
+
+    this.tarjetaFija.enlaces.push(tarjTmp);
+
   }
 
-  refreshTarjetas(event){
-    if(!this.actuacion){
+  refreshTarjetas(event) {
+    if (!this.actuacion) {
       this.actuacion = new ActuacionAsistenciaItem();
     }
-    if(this.nuevaActuacion){
+    if (this.nuevaActuacion) {
       this.nuevaActuacion = false;
     }
     this.actuacion.idActuacion = event;
     this.getActuacionData();
   }
-  refreshHistorico(event){
-    if(event && this.historicoComponent){//Si esta desplegada la tarjeta historico la refrescamos
+  refreshHistorico(event) {
+    if (event && this.historicoComponent) {//Si esta desplegada la tarjeta historico la refrescamos
       this.historicoComponent.getHistorico();
     }
   }
-  getActuacionData(){
+  getActuacionData() {
 
-    if(this.asistencia && this.actuacion){
+    if (this.asistencia && this.actuacion) {
 
       this.progressSpinner = true;
-      this.sigaServices.getParam("actuaciones_searchTarjetaActuacion","?anioNumero="+this.asistencia.anioNumero+"&idActuacion="+this.actuacion.idActuacion).subscribe(
+      this.sigaServices.getParam("actuaciones_searchTarjetaActuacion", "?anioNumero=" + this.asistencia.anioNumero + "&idActuacion=" + this.actuacion.idActuacion).subscribe(
         n => {
           this.actuacion = n.actuacionAsistenciaItems[0];
           this.initTarjetas();
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
@@ -359,6 +371,10 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       tarjTemp.opened = true;
     }
 
+    if (event && event == 'facSJCSTarjFacGene') {
+      this.openTarjetaFac = true;
+    }
+
   }
 
   goTop() {
@@ -369,11 +385,16 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
     }
   }
 
-  backTo(){
-    if(this.asistencia){
-      sessionStorage.setItem('idAsistencia',this.asistencia.anioNumero);
+  backTo() {
+    if (this.asistencia) {
+      sessionStorage.setItem('idAsistencia', this.asistencia.anioNumero);
     }
     this.router.navigate(['/fichaAsistencia']);
+  }
+
+  guardarDatos() {
+    sessionStorage.setItem('asistenciaToFichaActuacion', JSON.stringify(this.asistencia));
+    sessionStorage.setItem('actuacionAsistencia', JSON.stringify(this.actuacion));
   }
 
 }

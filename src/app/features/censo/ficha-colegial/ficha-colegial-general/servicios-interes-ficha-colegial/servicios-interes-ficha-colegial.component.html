@@ -1,81 +1,95 @@
 <div id="sInteres">
-<div *ngIf="activacionTarjeta">
-<div *ngIf="tarjetaInteres == '3' || tarjetaInteres == '2'" class="card">
-  <div class="card-header header-ficha">
-    <div class="form-row">
-      <div class="col-lg-1 col-md-2">
-        <div class="img-colegiado">
-          <i class="fas fa-link icon-ficha"></i>
+  <div *ngIf="activacionTarjeta">
+  <div *ngIf="tarjetaInteres == '3' || tarjetaInteres == '2'" class="card">
+    <div class="card-header header-ficha">
+      <div class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-link icon-ficha"></i>
+          </div>
         </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ "facturacion.tarjetas.literal.serviciosInteres" | translate }}
+            </label>
+          </div>
+          <div class="d-flex justify-content-between">
+            <label>
+              <a (click)="irTurnoOficio()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "gratuita.personaJG.literal.masInfo" | translate }}
+                </span>
+              </a>
+            </label>
+            <label>
+              <a (click)="turnoInscrito()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.oficio.designas.turnoInscrito" | translate }}
+                </span>
+              </a>
+            </label>
+            <label>
+              <a (click)="designas()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.justiciaGratuita.designas" | translate }}
+                </span>
+              </a>
+            </label>
+            <label>
+              <a (click)="turnoInscrito()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.oficio.designas.proximasDesignaciones" | translate }}
+                </span>
+              </a>
+            </label>
+            <label>
+              <a (click)="bajasTemporales()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.oficio.bajasTemporales" | translate }}
+                </span>
+              </a>
+            </label>
+            <label>
+              <a (click)="monederos()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.facturacion.busquedaMonedero" | translate }}
+          </span>
+          </a>
+              <a (click)="inscripcionesGuardia()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.guardia.inscripcionesGuardia" | translate }}
+                </span>
+              </a>
+            </label>
+            <label>
+              <a (click)="cuotasSuscripciones()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.facturacion.cuotasSuscripciones" | translate }}
+                </span>
+              </a>
+            </label>
+            <label>
+              <a (click)="comprasProductos()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.facturacion.compraProductos" | translate }}
+          </span>
+              </a>
+        <a (click)="guardiasColegiado()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.guardia.guardiasColegiado" | translate }}
+                </span>
+              </a>
+            </label>
+            <i class="float-right"></i>
+          </div>
+          
+          <div class="d-flex justify-content-between">
+            <label>
+              <a (click)="asistencias()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.justiciaGratuita.asistencia" | translate }}
+                </span>
+              </a>
+            </label>
+            <label>
+              <a (click)="preAsistencia()">
+                <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.sjcs.solicitudesAceptadasCentralita" | translate }}
+                </span>
+              </a>
+            </label>
+            <i class="float-right"></i>
+          </div>
       </div>
-      <div class="col-lg-11 col-md-10">
-        <div class="d-flex justify-content-start mb-1">
-          <label class="mr-auto title-ficha">{{ "facturacion.tarjetas.literal.serviciosInteres" | translate }}
-          </label>
-        </div>
-        <div class="d-flex justify-content-between">
-          <label>
-            <a (click)="irTurnoOficio()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "gratuita.personaJG.literal.masInfo" | translate }}
-              </span>
-            </a>
-          </label>
-          <label>
-            <a (click)="turnoInscrito()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.oficio.designas.turnoInscrito" | translate }}
-              </span>
-            </a>
-          </label>
-          <label>
-            <a (click)="designas()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.justiciaGratuita.designas" | translate }}
-              </span>
-            </a>
-          </label>
-          <label>
-            <a (click)="turnoInscrito()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.oficio.designas.proximasDesignaciones" | translate }}
-              </span>
-            </a>
-          </label>
-          <label>
-            <a (click)="bajasTemporales()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.oficio.bajasTemporales" | translate }}
-              </span>
-            </a>
-          </label>
-          <label>
-            <a (click)="inscripcionesGuardia()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.guardia.inscripcionesGuardia" | translate }}
-              </span>
-            </a>
-          </label>
-          <label>
-            <a (click)="guardiasColegiado()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "justiciaGratuita.guardia.guardiasColegiado" | translate }}
-              </span>
-            </a>
-          </label>
-          <i class="float-right"></i>
-        </div>
-        
-        <div class="d-flex justify-content-between">
-          <label>
-            <a (click)="asistencias()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.justiciaGratuita.asistencia" | translate }}
-              </span>
-            </a>
-          </label>
-          <label>
-            <a (click)="preAsistencia()">
-              <span style="color: blue; text-decoration: underline;cursor:pointer">{{ "menu.sjcs.solicitudesAceptadasCentralita" | translate }}
-              </span>
-            </a>
-          </label>
-          <i class="float-right"></i>
-        </div>
     </div>
   </div>
-</div>
-</div>
-</div>
+  </div>
+  </div>

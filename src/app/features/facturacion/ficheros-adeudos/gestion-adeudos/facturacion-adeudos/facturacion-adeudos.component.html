@@ -1,0 +1,42 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container" id="facturacion">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+      <div class="form-row">
+        <div class="col-lg-1 col-md-2">
+          <div class="img-colegiado">
+            <i class="fas fa-dollar icon-ficha"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1">
+            <label class="mr-auto title-ficha">{{ 'menu.facturacion' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>{{ 'menu.facturacion.asignacionDeConceptosFacturables' | translate }}: 
+              <span>{{ body.nombreabreviado }}</span>
+            </label>
+            <label>{{ 'administracion.parametrosGenerales.literal.descripcion' | translate }}: 
+              <span>{{ body.descripcion }}</span>
+            </label>
+            <label>{{ 'informesycomunicaciones.comunicaciones.busqueda.fechaCreacion' | translate }}: 
+              <span>{{ body.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
+            </label>
+            <label class="mr-3">
+              <i (click)="ir();$event.stopPropagation();"
+                class="fas fa-external-link-alt mr-2"></i>
+              <a (click)="ir();$event.stopPropagation();">
+                <span style="color: blue; text-decoration: underline;cursor:pointer;">
+                  {{ 'menu.justiciaGratuita.informes.fichaFacturacion' | translate }}
+                </span>
+              </a>
+            </label>
+            <!-- <label class="float-right pointer" style="color: blue; text-decoration: underline" (click)="ir()">{{ 'menu.justiciaGratuita.informes.fichaFacturacion' | translate }}</label> -->
+          </div>
+        </div>
+      </div>    
+  </div>
+</div>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

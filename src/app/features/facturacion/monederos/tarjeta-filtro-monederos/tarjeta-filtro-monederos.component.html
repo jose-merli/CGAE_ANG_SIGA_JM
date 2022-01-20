@@ -1,0 +1,74 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<!-- Campos Buscador -->
+<div class="card-body">
+
+  <div class="form-row">
+    <!-- <div class="col-lg-6 col-md-6">    
+      <app-busqueda-colegiado-express class="flexCenter" [pantalla]="'monedero'"
+                        [numColegiado]="usuarioBusquedaExpress.numColegiado" (colegiado)="changeColegiado($event)"
+                        [nombreAp]="usuarioBusquedaExpress.nombreAp" [disabled]="disabledBusquedaExpress">
+                    </app-busqueda-colegiado-express>
+    </div> -->
+
+     <!-- Buscador de Persona -->
+  
+    <div class="col-lg-2 col-md-2">
+      <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}
+      </label>
+      <input [(ngModel)]="usuarioBusquedaExpress.numColegiado" type="text" disabled class="form-control" 
+        pInputText/>
+    </div>
+    <div class="col-lg-8 col-md-8">
+      <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+      </label>
+      <input [(ngModel)]="usuarioBusquedaExpress.nombreAp" type="text" disabled class="form-control" 
+        pInputText />
+    </div>
+    <div class="main-button btnBuscadorPersonas col-lg-2 col-md-2">
+      <button type="submit" [disabled]="esColegiado" pButton icon="fa fa-search"
+        (click)="searchPersona()" iconPos="left"></button>
+      <button pButton type="button" [disabled]="esColegiado" icon="fa fa-eraser" iconPos="left"
+        (click)="limpiarCliente()">
+      </button>
+    </div>
+    
+
+    <!-- Fecha de solicitud -->
+    <div class="col-lg-3 col-md-3 mt-md-3 mt-lg-3">
+      <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudDesde" | translate }}
+      </label>
+      <app-fecha [(value)]="filtrosMonederoItem.fechaDesde"
+        [maxDate]="getFechaHastaCalendar(filtrosMonederoItem.fechaDesde, filtrosMonederoItem.fechaHasta)"
+        (valueChangeSelected)="fillFechaDesde($event)" (valueChangeInput)="fillFechaDesde($event)">
+      </app-fecha>
+    </div>
+    <div class="col-lg-3 col-md-3 mt-md-3 mt-lg-3">
+      <label>{{ "oficio.busquedaBajasTemporales.fechaSolicitudHasta" | translate }}
+      </label>
+      <app-fecha [(value)]="filtrosMonederoItem.fechaHasta"
+        [minDate]="getFechaDesdeCalendar(filtrosMonederoItem.fechaDesde, filtrosMonederoItem.fechaHasta)"
+        (valueChangeSelected)="fillFechaHasta($event)" (valueChangeInput)="fillFechaHasta($event)">
+      </app-fecha>
+    </div>
+
+  </div>
+</div>
+
+<!-- Botones -->
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"
+      (click)="limpiar()">
+    </button>
+
+    <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"
+      (click)="buscar()">
+    </button>
+    
+     <button (click)="nuevoMonedero()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> 
+  </div>
+</div>

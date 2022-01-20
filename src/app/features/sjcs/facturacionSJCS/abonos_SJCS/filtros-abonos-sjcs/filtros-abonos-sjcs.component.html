@@ -1,0 +1,191 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="header-title">
+  <i class="fa fa-square"></i>
+  <p>{{ "menu.facturacion" | translate }}
+    <i class="fa fa-angle-right"></i>Búsqueda Ficheros Devoluciones
+  </p>
+</div>
+<div class="card">
+
+    <!-- Datos generales -->
+    <div class="card-body">
+        <p class="title-module" (click)="onHideDatosGenerales()">{{ "administracion.catalogos.titulo.datos.generales" | translate }}
+            <i *ngIf="showDatosGenerales" class="fa fa-angle-up float-right"></i>
+            <i *ngIf="!showDatosGenerales" class="fa fa-angle-down float-right"></i>
+        </p>
+  
+      <div *ngIf="showDatosGenerales" class="module vista-avanzada">
+
+        <div class="form-row">
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.filtros.abonosSJCS.numeroAbono" | translate }}</label>
+                <input  type="text" class="form-control" [(ngModel)]="filtros.numeroAbono" pInputText />
+            </div>
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado" | translate }} </label>
+                <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="combo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.filtros.abonosSJCS.formaAbono" | translate }} </label>
+                <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="combo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+             </div>
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{"facturacionSJCS.filtros.abonosSJCS.numFacturaCompensada" | translate}}</label>
+                <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadHasta" pInputText />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacion.facturas.fechaEmisionDesde" | translate }}</label>
+                <app-fecha [(value)]="filtros.fechaCreacionHasta" (valueChangeSelected)="fillFecha($event, 'creacionHasta')" (valueChangeInput)="fillFecha($event, 'creacionHasta')">
+                </app-fecha>
+              </div>
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacion.facturas.fechaEmisionHasta" | translate }}</label>
+                <app-fecha [(value)]="filtros.fechaCreacionHasta" (valueChangeSelected)="fillFecha($event, 'creacionHasta')" (valueChangeInput)="fillFecha($event, 'creacionHasta')">
+                </app-fecha>
+            </div>
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.filtros.abonosSJCS.importeDesde" | translate }}</label>
+                <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+            </div>
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.filtros.abonosSJCS.importeHasta" | translate }}</label>
+                <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+            </div>
+
+        </div>
+
+        <div class="form-row">
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacion.facturas.contabilizado" | translate }} </label>
+                <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="combo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+        </div>
+
+      </div><!-- DIV FIN Datos de Agrupacion -->
+  
+      <!-- Datos de Agrupacion -->
+      <p class="title-module" (click)="onHideDatosAgrupacion()">{{ "facturacion.facturas.datosAgrupacion" | translate }} 
+        <i *ngIf="showDatosAgrupacion" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showDatosAgrupacion" class="fa fa-angle-down float-right"></i>
+        </p>
+  
+      <div *ngIf="showDatosAgrupacion" class="module vista-avanzada">
+
+        <div class="form-row">
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "justiciaGratuita.oficio.turnos.grupofacturacion" | translate }} </label>
+                <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="combo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+    
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.filtros.abonosSJCS.pagoDesde" | translate }} </label>
+                <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="combo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+    
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.filtros.abonosSJCS.pagoHasta" | translate }} </label>
+                <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="combo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.filtros.abonosSJCS.identificadorFicheroTransferencias" | translate }}</label>
+                <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+            </div>
+        </div>
+
+      </div>
+
+    
+  
+      <!-- Colegiado -->
+      <p class="title-module" (click)="onHideColegiado()">{{ "facturacionSJCS.retenciones.ficha.colegiado" | translate }} 
+        <i *ngIf="showColegiado" class="fa fa-angle-up float-right"></i>
+        <i *ngIf="!showColegiado" class="fa fa-angle-down float-right"></i>
+      </p>
+  
+      <div *ngIf="showColegiado" class="module vista-avanzada">
+
+        <div class="form-row">
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.facturacionesYPagos.colegio" | translate }}</label>
+                <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="combo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+            </div>
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.filtros.abonosSJCS.numColegiado" | translate }}</label>
+                <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+            </div>
+    
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.filtros.abonosSJCS.numIdentificacion" | translate }}</label>
+                <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+            </div>
+    
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.facturacionesYPagos.apellidos" | translate }}</label>
+                <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+            </div>
+
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>{{ "facturacionSJCS.retenciones.nombre" | translate }}</label>
+                <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+            </div>
+        </div>
+
+      </div>
+
+  <!-- Sociedad -->
+  <p class="title-module" (click)="onHideSociedad()">{{ "facturacionSJCS.filtros.sociedad" | translate }}
+    <i *ngIf="showSociedad" class="fa fa-angle-up float-right"></i>
+    <i *ngIf="!showSociedad" class="fa fa-angle-down float-right"></i>
+  </p>
+
+  <div *ngIf="showSociedad" class="module vista-avanzada">
+
+    <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.facturacionesYPagos.colegio" | translate }} </label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idseriefacturacion' placeholder="{{'general.boton.seleccionar' | translate}}" [options]="combo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.filtros.abonosSJCS.numIdentificacion" | translate }}</label>
+            <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "facturacionSJCS.retenciones.nombre" | translate }}</label>
+            <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+        </div>
+
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+            <label>{{ "gratuita.definirTurnosIndex.literal.abreviatura" | translate }}</label>
+            <input  type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+        </div>
+    </div>
+
+  </div>
+
+
+    </div><!--FIN DIV BODY-->
+  
+
+    <div class="card-footer">
+      <div class="text-right main-button">
+        <button (click)="clearFilters()" pButton type="button"  icon="fa fa-eraser"  iconPos="left"
+          label="{{ 'general.boton.clear' | translate}}"></button>
+        <button (click)="searchAbonosSJCS()" pButton type="button" icon="fa fa-search" iconPos="left"
+          label="{{'general.boton.search' | translate}}"></button>
+      </div>
+    </div>
+  </div>
+  
+  <div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+  </div>

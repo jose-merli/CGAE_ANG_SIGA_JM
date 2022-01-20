@@ -191,7 +191,7 @@ formatDate2(date) {
           this.commonServices.arregloTildesCombo(this.comboListaGuardias);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -208,7 +208,7 @@ formatDate2(date) {
         },
         err => {
           this.progressSpinner = false;
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -267,7 +267,7 @@ formatDate2(date) {
 
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -279,7 +279,7 @@ formatDate2(date) {
         this.commonServices.arregloTildesCombo(this.comboTurno);
       },
       err => {
-        console.log(err);
+        //console.log(err);
       }
     );
   }
@@ -304,7 +304,7 @@ formatDate2(date) {
           this.commonServices.arregloTildesCombo(this.comboGuardia);
         },
         err => {
-          console.log(err);
+          //console.log(err);
         }
       )
 
@@ -343,7 +343,7 @@ formatDate2(date) {
       err => {
 
         if (err.error != undefined && JSON.parse(err.error).error.description != "") {
-          console.log('err.error - ', err.error)
+          //console.log('err.error - ', err.error)
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
@@ -364,8 +364,8 @@ formatDate2(date) {
  
       if (compareDateOk == 1) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Rango de fechas incorrecto. Debe cumplir que la fecha desde sea menor o igual que la fecha hasta");
-      }else if (compareDateFuture1 != -1 || compareDateFuture2 != -1){
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen guardias asociadas a una programación con fechas futuras");
+      //}else if (compareDateFuture1 != -1 || compareDateFuture2 != -1){
+        //this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen guardias asociadas a una programación con fechas futuras");
       }else{
 
 

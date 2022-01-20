@@ -1,0 +1,84 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<!-- Campos Buscador -->
+<div class="form-row p-lg-3 p-md-3">
+
+  <!-- Categoria -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.categoria" | translate}}</label>
+    <p-dropdown (onChange)="valueChangeCategoria()" [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosProductos.categoria'
+      [options]="categoriasObject.combooItems">
+    </p-dropdown>
+  </div>
+
+  <!-- Tipo -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.tipo" | translate}}</label>
+    <p-dropdown [disabled]="filtrosProductos.categoria == null" [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosProductos.tipo'
+      [options]="tiposObject.combooItems">
+    </p-dropdown>
+  </div>
+
+  <!-- Producto -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.producto" | translate}}</label>
+    <input type="text" class="form-control" [(ngModel)]='filtrosProductos.producto' pInputText>
+  </div>
+
+  <!-- Codigo -->
+  <div class="form-group-interlineado col-lg-3 col-md-3 pb-lg-2 pb-md-2">
+    <label>{{ "facturacion.productos.codigo" | translate}}</label>
+    <input type="text" maxLength="20" class="form-control" [(ngModel)]='filtrosProductos.codigo' pInputText>
+  </div>
+
+  <!-- Precio Desde -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>{{ "facturacion.productos.preciodesde" | translate}}</label>
+    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='filtrosProductos.precioDesde' pInputText>
+  </div>
+
+  <!-- Precio hasta -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>{{ "facturacion.productos.preciohasta" | translate}}</label>
+    <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]='filtrosProductos.precioHasta' pInputText>
+  </div>
+
+  <!-- IVA -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>{{ "facturacion.productos.iva" | translate}}</label>
+    <p-dropdown [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosProductos.iva'
+      [options]="ivasObject.combooItems">
+    </p-dropdown>
+  </div>
+
+  <!-- Forma de pago -->
+  <div class="form-group-interlineado col-lg-3 col-md-3">
+    <label>{{ "facturacion.productos.formapago" | translate}}</label>
+    <p-dropdown [filter]="true" styleClass="widthAll" [showClear]="true"
+      placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]='filtrosProductos.formaPago'
+      [options]="formasPagoObject.combooItems">
+    </p-dropdown>
+  </div>
+
+</div>
+
+<!-- Botones -->
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"
+      (click)="limpiar()">
+    </button>
+
+    <button pButton type="button" icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}"
+      (click)="buscar()">
+    </button>
+
+    <button (click)="nuevo()" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"></button>
+  </div>
+</div>
