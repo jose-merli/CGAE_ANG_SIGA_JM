@@ -2457,24 +2457,31 @@ para poder filtrar el dato con o sin estos caracteres*/
   validateSizeFile() {
     if(this.solicitudEditar.idSolicitud && this.documentos){
       this.progressSpinner = true;
-      let nuevoDocumento : DocumentacionIncorporacionItem = this.documentos.find(documento => documento.nuevoRegistro);
-      if(nuevoDocumento){
-        let fileData : File = nuevoDocumento.fileData;
+      let nuevosDocumentos : DocumentacionIncorporacionItem [] = this.documentos.filter(documento => documento.fileData != null);
+      if(nuevosDocumentos.length > 0){
+
         this.sigaServices.get("plantillasDoc_sizeFichero")
           .subscribe(
             response => {
               let tam = response.combooItems[0].value;
               let tamBytes = tam * 1024 * 1024;
-              if (fileData.size < tamBytes) {
+              let docsOk = true;
+              nuevosDocumentos.forEach( documento => {
+                let fileData : File = documento.fileData;
+                if (fileData.size >= tamBytes && docsOk) {
+                  docsOk = false;
+                  this.showFailNotTraduce(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargarArchivo") + tam + " MB: " + documento.fileData.name);
+                  
+                }
+              });
+              this.progressSpinner = false;
+              if(docsOk){
                 this.save();
-              } else {
-                this.showFailNotTraduce(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargarArchivo") + tam + " MB");
-                this.progressSpinner = false;
               }
             });
-        }else {
-          this.save();
-        }
+      }else {
+        this.save();
+      }
     }
   }
 
