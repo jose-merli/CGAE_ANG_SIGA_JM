@@ -22,6 +22,9 @@ export class ContabilidadComponent implements OnInit {
   msgs: Message[] = [];
 
   buscar: boolean = false;
+  enabledSave: boolean = false;
+  disabledNuevo: boolean = false;
+
   datos: FacRegistroFichContaItem[] = [];
 
   filtro:FacRegistroFichContaItem;
@@ -62,6 +65,8 @@ export class ContabilidadComponent implements OnInit {
         });
 
         this.buscar = true;
+        this.enabledSave = false;
+        this.disabledNuevo = false;
         
         if (this.tabla != undefined) {
           this.tabla.table.sortOrder = 0;

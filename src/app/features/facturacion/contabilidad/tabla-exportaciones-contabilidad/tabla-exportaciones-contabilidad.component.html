@@ -42,13 +42,14 @@
 
                 <input *ngIf="!dato['nuevo']" [disabled]="true" type="text" class="form-control" [(ngModel)]="dato[col.field]" pInputText />
                 
-                <input *ngIf="dato['nuevo']"  type="text" class="form-control" [(ngModel)]="dato[col.field]" pInputText />
+                <input *ngIf="dato['nuevo']"  type="text" class="form-control" [(ngModel)]="dato[col.field]" pInputText [ngClass]="{'camposObligatorios': checkCampoEsVacio(dato[col.field])}"/>
 
 
               </div>
               <div *ngSwitchCase="'fechaExportacionDesde'">  
 
-                <app-fecha *ngIf="dato['nuevo']"  [(value)]="dato[col.field]" (valueChangeSelected)="fillFechaNew($event, 'exportacionDesde')" (valueChangeInput)="fillFechaNew($event, 'exportacionDesde')" >
+                <app-fecha *ngIf="dato['nuevo']" [(value)]="dato[col.field]" (valueChangeSelected)="fillFechaNew($event, 'exportacionDesde')" (valueChangeInput)="fillFechaNew($event, 'exportacionDesde')" 
+                [inputStyleClass]="styleObligatorio(dato[col.field])"> 
                 </app-fecha>
 
                 <span *ngIf="!dato['nuevo']"> {{ dato[col.field] }}</span>
@@ -96,14 +97,18 @@
 
   <div class="card-footer">
     <div class="text-right main-button">
+      <!-- DESCARGAR -->
       <button pButton (click)="descargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.download' | translate }}"></button>
       <!--
       <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
       <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
       -->
+      <!-- NUEVO -->
       <button pButton (click)="getNewFacRegistroFichConta()" [disabled]="disabledNuevo" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.new' | translate }}"></button>
+      <!-- RESTABLECER -->
       <button pButton (click)="restablecer()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
-      <button pButton (click)="guardar()" [disabled]="!enabledSave" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      <!--GUARDAR -->
+      <button pButton (click)="checkObligatorios()" [disabled]="!enabledSave" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
     </div>
   </div>
 </div>
