@@ -147,9 +147,9 @@ export class FichaFicherosDevolucionesComponent implements OnInit {
     this.enlacesTarjetaResumen = [];
 
     this.enlacesTarjetaResumen.push({
-      label: 'facturacionPyS.ficherosAdeudos.datosGeneracion',
+      label: 'facturacionPyS.ficherosTransferencias.datosCarga',
       value: document.getElementById("datosCarga"),
-      nombre: "datosGeneracion",
+      nombre: "descargarLog",
     });
 
     this.enlacesTarjetaResumen.push({

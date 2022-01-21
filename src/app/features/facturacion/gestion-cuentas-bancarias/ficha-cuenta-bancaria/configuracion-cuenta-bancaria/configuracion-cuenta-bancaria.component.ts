@@ -23,7 +23,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
   @Input() bodyInicial: CuentasBancariasItem;
   body: CuentasBancariasItem;
   
-  tipoFicheros: boolean = false; // SEPA_TIPO_FICHEROS
+  tipoFicheros: string = '1'; // SEPA_TIPO_FICHEROS
 
   resaltadoDatos: boolean = false;
 
@@ -90,6 +90,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
           
           if(data[i].value=="SEPA_TIPO_FICHEROS"){
             this.tipoFicheros = data[i].label;
+            console.log(this.tipoFicheros)
           }
         }
 
@@ -112,7 +113,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
   // Guadar
 
   isValid(): boolean {
-    return (!this.tipoFicheros || this.body.configFicherosSecuencia != undefined && this.body.configFicherosSecuencia.trim() != "")
+    return (this.tipoFicheros != '0' || this.body.configFicherosSecuencia != undefined && this.body.configFicherosSecuencia.trim() != "")
       && this.body.configFicherosEsquema != undefined && this.body.configFicherosEsquema.trim() != ""
       && this.body.configLugaresQueMasSecuencia != undefined && this.body.configLugaresQueMasSecuencia.trim() != ""
       && this.body.configConceptoAmpliado != undefined && this.body.configConceptoAmpliado.trim() != "";

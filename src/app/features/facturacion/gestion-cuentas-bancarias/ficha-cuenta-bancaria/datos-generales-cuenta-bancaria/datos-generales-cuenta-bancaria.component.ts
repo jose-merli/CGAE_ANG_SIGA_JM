@@ -243,26 +243,16 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnDestroy,
         if (error != undefined && error.message != undefined) {
           let translatedError = this.translateService.instant(error.message);
           if (translatedError && translatedError.trim().length != 0) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), translatedError);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("general.mensaje.error.bbdd"));
           }
         } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         }
-        
+        this.progressSpinner = false;
       }
     );
-  }
-
-  confirmDelete() {
-    let icon = "fa fa-eraser";
-    this.confirmationService.confirm({
-      message: this.translateService.instant("messages.deleteConfirmation"),
-      header: null,
-      icon: icon,
-      accept: async () => {
-        this.delete();
-      }
-    });
   }
 
   confirmReactivar() {
@@ -275,21 +265,6 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnDestroy,
         this.reactivar();
       }
     });
-  }
-
-  delete() {
-    this.progressSpinner = true;
-    this.sigaServices.post("facturacionPyS_borrarCuentasBancarias", [this.bodyInicial])
-      .subscribe(
-        n => {
-          this.progressSpinner = false;
-          this.refreshData.emit();
-        },
-        err => {
-          this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        }
-      );
   }
 
   reactivar() {

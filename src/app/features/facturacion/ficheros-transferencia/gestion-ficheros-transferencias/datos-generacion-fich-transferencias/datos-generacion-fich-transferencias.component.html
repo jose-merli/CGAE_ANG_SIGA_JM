@@ -81,7 +81,7 @@
   </p-header>
 
   <div class="form-row">
-    <label>Introduzca el importe del fichero para confirmar la operación (<span class="font-weight-bold">{{ bodyInicial.importeTotal }} €</span>). ¿Está seguro que desea continuar?</label>
+    <label>{{ 'facturacionPyS.ficherosTransferencias.messages.segundaConfirmacion.importe' | translate }} (<span class="font-weight-bold">{{ bodyInicial.importeTotal }} €</span>). {{ 'facturacionPyS.ficherosTransferencias.messages.segundaConfirmacion' | translate }}</label>
     <input DigitDecimaNumber type="text" class="form-control" pInputText [(ngModel)]="confirmImporteTotal"/>
   </div>
 

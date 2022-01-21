@@ -1,3 +1,5 @@
+import { DocumentacionIncorporacionItem } from "./DocumentacionIncorporacionItem";
+
 export class SolicitudIncorporacionItem {
   idSolicitud: String;
   estadoMutualidad: String;
@@ -77,6 +79,9 @@ export class SolicitudIncorporacionItem {
   idsolicitud: string;
   naturalde: string;
   nombreBanco: string;
+
+  numRegistro : string;
+  documentos : DocumentacionIncorporacionItem [];
 
   constructor() { }
 }

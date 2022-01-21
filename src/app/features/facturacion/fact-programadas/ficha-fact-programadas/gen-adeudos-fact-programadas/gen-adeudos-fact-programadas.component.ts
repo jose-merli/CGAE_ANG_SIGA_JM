@@ -159,12 +159,14 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
             }
           },
           err => {
-            if (err && err.message) {
-              let message = this.translateService.instant(err.message);
+            let error = JSON.parse(err.error);
+            if (error && error.error && error.error.message) {
+              let message = this.translateService.instant(error.error.message);
+
               if (message && message.trim().length != 0) {
-                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(message));
-              } else {
                 this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+              } else {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
               }
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -177,7 +179,6 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
     }
-
     
   }
 

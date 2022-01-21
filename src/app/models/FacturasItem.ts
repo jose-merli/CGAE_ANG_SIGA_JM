@@ -10,6 +10,7 @@ export class FacturasItem {
 
 	//datos generales
 	numeroFactura: string;
+	idEstado: string;
 	estado: string;
 	estadosFiltroFac: any[];
 	estadosFiltroAb: any[];

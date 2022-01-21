@@ -17,21 +17,26 @@
   
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
+          <!-- IDENTIFICADOR DESDE -->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacion.contabilidad.filtro.identficadorDesde" | translate }}</label>
-            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
+            <input (keypress)="($event.charCode >= 48 && $event.charCode < 58)" maxlength="10" type="text" class="form-control" [(ngModel)]="filtros.idContabilidadDesde" pInputText />
           </div>
 
+          <!-- IDENTIFICADOR HASTA -->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacion.contabilidad.filtro.identficadorHasta" | translate }}</label>
-            <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="filtros.idContabilidadHasta" pInputText />
+            <input (keypress)="($event.charCode >= 48 && $event.charCode < 58)" maxlength="10" type="text" class="form-control" [(ngModel)]="filtros.idContabilidadHasta" pInputText />
           </div>
 
+          <!-- FECHA CREACION DESDE -->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacion.ficherosAdeudos.fechaCreacionDesde" | translate }}</label>
             <app-fecha [(value)]="filtros.fechaCreacionDesde" (valueChangeSelected)="fillFecha($event, 'creacionDesde')" (valueChangeInput)="fillFecha($event, 'creacionDesde')" [maxDate]="filtros.fechaCreacionHasta">
             </app-fecha>
           </div>
+
+          <!-- FECHA CREACION HASTA -->
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacion.ficherosAdeudos.fechaCreacionHasta" | translate }}</label>
             <app-fecha [(value)]="filtros.fechaCreacionHasta" (valueChangeSelected)="fillFecha($event, 'creacionHasta')" (valueChangeInput)="fillFecha($event, 'creacionHasta')">
@@ -48,21 +53,26 @@
   
       <div *ngIf="showDatosExportacion" class="module vista-avanzada">
         <div class="form-row">
+            <!-- NUM ASIENTOS DESDE -->
             <div class="form-group-interlineado col-lg-3 col-md-3">
                 <label>{{ "facturacion.contabilidad.filtro.numAsientosDesde" | translate }}</label>
-                <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="filtros.numAsientosDesde" pInputText />
+                <input (keypress)="($event.charCode >= 48 && $event.charCode < 58)" maxlength="10" type="text" class="form-control" [(ngModel)]="filtros.numAsientosDesde" pInputText />
               </div>
     
+              <!-- NUM ASIENTOS DESDE -->
               <div class="form-group-interlineado col-lg-3 col-md-3">
                 <label>{{ "facturacion.contabilidad.filtro.numAsientosHasta" | translate }}</label>
-                <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="filtros.numAsientosHasta" pInputText />
+                <input (keypress)="($event.charCode >= 48 && $event.charCode < 58)" maxlength="10" type="text" class="form-control" [(ngModel)]="filtros.numAsientosHasta" pInputText />
               </div>
     
+              <!-- FECHA EXPORTACION DESDE -->
               <div class="form-group-interlineado col-lg-3 col-md-3">
                 <label>{{ "facturacion.contabilidad.filtro.fechaExportacionDesde" | translate }}</label>
                 <app-fecha [(value)]="filtros.fechaExportacionDesde" (valueChangeSelected)="fillFecha($event, 'exportacionDesde')" (valueChangeInput)="fillFecha($event, 'exportacionDesde')" [maxDate]="filtros.fechaExportacionDesde">
                 </app-fecha>
               </div>
+
+              <!-- FECHA EXPORTACION HASTA -->
               <div class="form-group-interlineado col-lg-3 col-md-3">
                 <label>{{ "facturacion.contabilidad.filtro.fechaExportacionHasta" | translate }}</label>
                 <app-fecha [(value)]="filtros.fechaExportacionHasta" (valueChangeSelected)="fillFecha($event, 'exportacionHasta')" (valueChangeInput)="fillFecha($event, 'exportacionHasta')" >
