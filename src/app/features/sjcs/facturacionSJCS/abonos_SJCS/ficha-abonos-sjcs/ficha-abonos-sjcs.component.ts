@@ -20,6 +20,7 @@ export class FichaAbonosSCJSComponent implements OnInit {
   url;
   datos:FacAbonoItem;
   progressSpinner:boolean= false;
+  isSociedad:boolean = false;
   iconoTarjetaResumen = "clipboard";
   body: FacturasItem;
   enlacesTarjetaResumen = [];
@@ -38,6 +39,7 @@ export class FichaAbonosSCJSComponent implements OnInit {
     
     if (sessionStorage.getItem("abonosSJCSItem")) {
       this.datos = JSON.parse(sessionStorage.getItem("abonosSJCSItem"));
+      if(this.datos.esSociedad == "SI") this.isSociedad = true;
       sessionStorage.removeItem("abonosSJCSItem");
     } 
     this.getDatosFactura(this.datos.idAbono);
@@ -46,8 +48,8 @@ export class FichaAbonosSCJSComponent implements OnInit {
 
     this.progressSpinner = false;
   }
-  getDatosFactura(idFactura): Promise<any> {
-    return this.sigaServices.getParam("facturacionPyS_getFactura", `?idFactura=${idFactura}&tipo=ABONO`).toPromise().then(
+  getDatosFactura( idAbono): Promise<any> {
+    return this.sigaServices.getParam("facturacionPyS_getFactura", `?idFactura=0&idAbono=${idAbono}&tipo=ABONO`).toPromise().then(
       n => {
         let datos: FacturasItem[] = n.facturasItems;
 
@@ -91,7 +93,7 @@ export class FichaAbonosSCJSComponent implements OnInit {
       label: "facturacion.productos.Cliente",
       value: document.getElementById("colegiado"),
       nombre: "cliente",
-    });
+    }); 
 
     this.enlacesTarjetaResumen.push({
       label: "facturacionSJCS.tabla.abonosSJCS.pagoSJCS",
