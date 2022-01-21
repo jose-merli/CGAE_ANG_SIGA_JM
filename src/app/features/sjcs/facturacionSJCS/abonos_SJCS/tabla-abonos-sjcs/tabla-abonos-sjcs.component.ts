@@ -32,7 +32,7 @@ export class TablaAbonosSCJSComponent implements OnInit {
   @ViewChild("table") table: DataTable;
   rowsPerPage = [];
   selectedItem: number = 10;
-  selectedDatos = [];
+  selectedDatos: FacAbonoItem[] = [];
   cols = [];
   buscadores = [];
   selectAll: boolean;
@@ -40,6 +40,8 @@ export class TablaAbonosSCJSComponent implements OnInit {
   disabledNuevo : boolean = false;
   enabledSave:boolean = false;
   editar:boolean = false;
+
+  FAC_ABONO_ESTADO_PENDIENTE_BANCO: string = "5";
 
 
   constructor(
@@ -185,6 +187,44 @@ export class TablaAbonosSCJSComponent implements OnInit {
       });
     }
     
+  }
+
+  disableNuevoFicheroTransferencias() {
+    return !this.selectedDatos || this.selectedDatos.filter(d => d.estado && d.estado.toString() == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO).length == 0;
+  }
+  
+  nuevoFicheroTransferencias() {
+    this.progressSpinner = true;
+
+    let abonosFichero = this.selectedDatos.filter(d => d.estado && d.estado.toString() == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO).map(d => {
+      return {
+        idAbono: d.idAbono
+      };
+    });
+
+    this.sigaServices.post("facturacionPyS_nuevoFicheroTransferenciasSjcs", abonosFichero).subscribe(
+      n => {
+        this.progressSpinner = false;
+        this.showMessage("success", this.translateService.instant("general.message.correct"), "Se han generado correctamente los ficheros de transferencias");
+        this.busqueda.emit();
+      },
+      err => {
+        let error = JSON.parse(err.error);
+        if (error && error.error && error.error.message) {
+          let message = this.translateService.instant(error.error.message);
+  
+          if (message && message.trim().length != 0) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+        
+        this.progressSpinner = false;
+      }
+    );
   }
 
   // Resultados por página
