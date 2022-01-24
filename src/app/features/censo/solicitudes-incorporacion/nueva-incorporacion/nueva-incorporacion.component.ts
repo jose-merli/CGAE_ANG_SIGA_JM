@@ -2554,6 +2554,43 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  downloadJustificante(){
+    if(this.solicitudEditar.claveConsulta){
+      this.progressSpinner = true;
+      this.sigaServices
+        .getParam(
+          "expedientesEXEA_getJustificante",
+          "?claveConsulta="+this.solicitudEditar.claveConsulta
+        )
+        .subscribe(
+          data => {
+            let blob = null;
+            if(data){
+              if(data.size == 0){ //Si size es 0 es que no trae nada
+                this.showFailNotTraduce('No se ha encontrado el documento indicado');
+              }else{
+                
+                let nombreFichero = "Justificante.pdf";
+                let mime = this.getMimeType(nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length));
+                blob = new Blob([data], { type: mime });
+                saveAs(blob, nombreFichero);
+              }
+            }else{
+              this.showFailNotTraduce('Ocurrió un error al obtener el justificante');
+            }
+            this.progressSpinner = false;
+          },
+          error => {
+            console.log(error);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+  }
+
   delete(){
     this.confirmationService.confirm({
       key: "confirmEliminar",
@@ -2611,6 +2648,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
           this.solicitudEditar.idSolicitud = body.id.split(';')[0];
           this.solicitudEditar.numRegistro = body.id.split(';')[1];
+          this.solicitudEditar.claveConsulta = body.id.split(';')[2];
           this.consulta = true;
           this.pendienteAprobacion = true;
           sessionStorage.setItem("pendienteAprobacion", "true");
