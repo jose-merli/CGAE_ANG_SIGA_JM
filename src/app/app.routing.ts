@@ -287,8 +287,7 @@ import { GestionActasComponent } from "./features/sjcs/actas/gestion-actas/gesti
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
-	{ path: 'login', component: LoginComponent },
-
+	{ path: 'login', component: LoginMultipleComponent },
 	{ path: 'loginDefault', component: LoginComponent },
 	{ path: 'loginDevelop', component: LoginDevelopComponent },
 	{ path: "logout", component: LogoutComponent },
