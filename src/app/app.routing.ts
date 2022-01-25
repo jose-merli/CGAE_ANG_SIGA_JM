@@ -4,6 +4,10 @@ import { FichaActuacionAsistenciaComponent } from "./features/sjcs/guardia/guard
 import { FichaListaGuardiasComponent } from "./features/sjcs/guardia/definir-listas-guardias/ficha-lista-guardias/ficha-lista-guardias.component";
 import { CertificacionFacComponent } from "./features/sjcs/facturacionSJCS/certificacion-fac/certificacion-fac.component";
 import { Routes, RouterModule } from "@angular/router";
+
+
+
+
 import { LoginDevelopComponent } from "./commons/login-develop/login-develop.component";
 import { LoginMultipleComponent } from "./commons/login-multiple/login-multiple.component";
 import { LoginComponent } from "./commons/login/login.component";
@@ -12,9 +16,12 @@ import { HomeComponent } from "./features/home/home.component";
 import { LogoutComponent } from "./commons/logout/logout.component";
 
 // Censo
+
+
 import { BusquedaNoColegiadosComponent } from './features/censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { CertificadosAcaComponent } from './features/censo/certificados-aca/certificados-aca.component';
 import { ComisionesCargosComponent } from './features/censo/comisiones-cargos/comisiones-cargos.component';
+
 import { SolicitudesEspecificasComponent } from './features/censo/solicitudes-especificas/solicitudes-especificas.component';
 import { SolicitudesIncorporacionComponent } from './features/censo/solicitudes-incorporacion/solicitudes-incorporacion.component';
 import { AlterMutuaComponent } from './features/censo/solicitudes-incorporacion/alter-mutua/alter-mutua.component';
@@ -31,6 +38,7 @@ import { MantenimientoDuplicadosComponent } from './features/censo/mantenimiento
 import { MediadoresComponent } from './features/censo/mediadores/mediadores.component';
 import { CargasPeriodicasComponent } from './features/censo/cargas-periodicas/cargas-periodicas.component';
 import { ConfigurarPerfilComponent } from './features/censo/configurar-perfil/configurar-perfil.component';
+
 import { TipoCurricularComponent } from './features/censo/gestion-subtiposCV/tipo-curricular.component';
 import { BusquedaGeneralComponent } from './features/censo/busqueda-general/busqueda-general.component';
 import { DetalleIntegranteComponent } from './features/censo/datosPersonaJuridica/datos-integrantes/detalleIntegrante/detalleIntegrante.component';
@@ -121,11 +129,16 @@ import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-a
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { EJGComponent } from './features/sjcs/ejg/ejg.component';
+
+
+
+
 import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
 
 import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/abonos-sjcs.component';
 import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
+
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
 import { JustificacionLetradoComponent } from './features/sjcs/informes/justificacion-letrado/justificacion-letrado.component';
 import { InformeFacturacionComponent } from './features/sjcs/informes/informe-facturacion/informe-facturacion.component';
@@ -162,11 +175,13 @@ import { ListaCorreosComponent } from './features/comunicaciones/lista-correos/l
 import { BandejaSalidaComponent } from './features/comunicaciones/bandeja-salida/bandeja-salida.component';
 import { BandejaEntradaComponent } from './features/comunicaciones/bandeja-entrada/bandeja-entrada.component';
 // Administracion
+
 import { CatalogosMaestrosComponent } from './features/administracion/catalogos-maestros-classique/catalogos-maestros-classique.component';
 import { GruposUsuarios } from './features/administracion/grupos-usuarios/grupos-usuarios.component';
 import { Etiquetas } from './features/administracion/gestion-multiidioma/etiquetas/etiquetas.component';
 import { SeleccionarIdioma } from './features/administracion/seleccionar-idioma/seleccionar-idioma.component';
 import { Usuarios } from './features/administracion/usuarios/usuarios.component';
+
 import { EditarUsuarioComponent } from './features/administracion/usuarios/editarUsuario/editarUsuario.component';
 import { ParametrosGenerales } from './features/administracion/parametros/parametros-generales/parametros-generales.component';
 import { EditarCatalogosMaestrosComponent } from './features/administracion/catalogos-maestros/editarCatalogosMaestros/editarCatalogosMaestros.component';
@@ -181,6 +196,7 @@ import { AuditoriaUsuarios } from './features/administracion/auditoria/usuarios/
 import { GestionAuditoriaComponent } from './features/administracion/auditoria/usuarios/editarAuditoriaUsuarios/gestion-auditoria.component';
 import { GestionEntidad } from './features/administracion/gestion-entidad/gestion-entidad.component';
 import { BusquedaPersonasJuridicas } from './features/censo/busqueda-personas-juridicas/busqueda-personas-juridicas.component';
+
 import { DatosPersonaJuridicaComponent } from './features/censo/datosPersonaJuridica/datosPersonaJuridica.component';
 import { MutualidadAbogaciaSeguroAccidentes } from './features/censo/solicitudes-incorporacion/mutualidadAbogaciaSeguroAccidentes/mutualidad-abogacia-seguro-accidentes.component';
 // CENSO II
@@ -220,6 +236,9 @@ import { ConsultasComponent } from './features/informes-comunicaciones/consultas
 import { FichaConsultaComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/ficha-consulta.component';
 
 import { ComunicacionesComponent } from './features/informes-comunicaciones/comunicaciones/comunicaciones.component';
+import { NuevoExpedienteExeaComponent } from "./features/expedientes-exea/nuevo-expediente-exea/nuevo-expediente-exea.component";
+import { GestionExpedientesExeaComponent } from "./features/expedientes-exea/gestion-expedientes-exea/gestion-expedientes-exea.component";
+import { FichaExpedienteExeaComponent } from "./features/expedientes-exea/ficha-expediente-exea/ficha-expediente-exea.component";
 
 import { FichaRegistroComunicacionComponent } from './features/informes-comunicaciones/comunicaciones/ficha-registro-comunicacion/ficha-registro-comunicacion.component';
 import { EnviosMasivosComponent } from './features/informes-comunicaciones/envios-masivos/envios-masivos.component';
@@ -261,6 +280,10 @@ import { FichaColegialGeneralComponent } from "./features/censo/ficha-colegial/f
 import { FichaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/ficha-abonos-sjcs.component';
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
 import { GestionActasComponent } from "./features/sjcs/actas/gestion-actas/gestion-actas.component";
+
+
+
+
 
 const appRoutes: Routes = [
 	{ path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
@@ -995,6 +1018,11 @@ const appRoutes: Routes = [
 		path: 'gestionActas',
 		component: ActasComponent,
 		canActivate: [ AuthGuard ]
+
+
+
+
+
 	},
 	{
 		path: 'fichaGestionActas',
@@ -1462,6 +1490,12 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 
+
+
+
+
+
+
 	{
 		path: 'devolucion',
 		component: DevolucionComponent,
@@ -1484,6 +1518,16 @@ const appRoutes: Routes = [
 		component: DialogoComunicacionesComponent
 		//canActivate: [AuthGuard]
 	},
+
+
+
+
+
+
+
+
+
+
 	{
 		path: 'certificacionFac',
 		component: CertificacionFacComponent,
@@ -1551,6 +1595,21 @@ const appRoutes: Routes = [
 	{
 		path: 'fichaServicios',
 		component: FichaServiciosComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'fichaExpedienteEXEA',
+		component: FichaExpedienteExeaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'nuevoExpedienteEXEA',
+		component: NuevoExpedienteExeaComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'gestionExpedientesEXEA',
+		component: GestionExpedientesExeaComponent,
 		canActivate: [AuthGuard]
 	},
 	{ path: ' ', redirectTo: 'home' }

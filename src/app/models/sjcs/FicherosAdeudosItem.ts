@@ -17,7 +17,7 @@ export class FicherosAdeudosItem {
 	numerolineas: String;
 	idSufijo: String;
 	sufijo: String;
-	totalRemesa: String;
+	totalRemesa: string;
 	importeTotalDesde: String;
 	importeTotalHasta: String;
 	numRecibos: String;

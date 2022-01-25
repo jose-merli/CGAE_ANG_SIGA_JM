@@ -37,9 +37,12 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_nuevoFicheroAdeudos:  "facturacionPyS/nuevoFicheroAdeudos",
     facturacionPyS_actualizarFicheroAdeudos:  "facturacionPyS/actualizarFicheroAdeudos",
     facturacionPyS_descargarFicheroAdeudos: "facturacionPyS/descargarFicheroAdeudos",
-    facturacionPyS_eliminarFicheroAdeudos: "facturacionPyS_eliminarFicheroAdeudos",
+    facturacionPyS_eliminarFicheroAdeudos: "facturacionPyS/eliminarFicheroAdeudos",
     facturacionPyS_getFicherosTransferencias:  "facturacionPyS/getFicherosTransferencias",
+    facturacionPyS_nuevoFicheroTransferencias:  "facturacionPyS/nuevoFicheroTransferencias",
+    facturacionPyS_nuevoFicheroTransferenciasSjcs:  "facturacionPyS/nuevoFicheroTransferenciasSjcs",
     facturacionPyS_descargarFicheroTransferencias: "facturacionPyS/descargarFicheroTransferencias",
+    facturacionPyS_eliminarFicheroTransferencias: "facturacionPyS/eliminarFicheroTransferencias",
     facturacionPyS_getUsosSufijos: "facturacionPyS/getUsosSufijos",
     facturacionPyS_comboTiposIVA: "facturacionPyS/general/comboTiposIVA",
     facturacionPyS_guardarContadorSerie: "facturacionPyS/guardarContadorSerie",
@@ -63,6 +66,7 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_getInformeFacturacion: "facturacionPyS/getInformeFacturacion",
     facturacionPyS_getFicherosDevoluciones: "facturacionPyS/getFicherosDevoluciones",
     facturacionPyS_descargarFicheroDevoluciones: "facturacionPyS/descargarFicheroDevoluciones",
+    facturacionPyS_eliminarFicheroDevoluciones: "facturacionPyS/eliminarFicheroDevoluciones",
     facturacionPyS_comboFacturaciones: "facturacionPyS/general/comboFacturaciones",
     facturacionPyS_getFacturas: "facturacionPyS/getFacturas",
     facturacionPyS_getFactura: "facturacionPyS/getFactura",
@@ -82,4 +86,6 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_guardarRegistroFichConta: "facturacionPyS/guardarRegistroFichConta",
     facturacionPyS_getFacturasIncluidas: "facturacionPyS/getFacturasIncluidas",
     facturacionPyS_buscarExportacionContabilidad: "facturacionPyS/searchExportacionContabilidad",
+    facturacionPyS_desactivarReactivarRegistroFichConta: "facturacionPyS/desactivarReactivarRegistroFichConta",
+    facturacionPyS_generarExcel:"facturacionPyS/generarExcel"
 }

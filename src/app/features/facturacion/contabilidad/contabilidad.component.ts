@@ -22,6 +22,9 @@ export class ContabilidadComponent implements OnInit {
   msgs: Message[] = [];
 
   buscar: boolean = false;
+  @ViewChild(Boolean)enabledSave: boolean = false;
+  @ViewChild(Boolean)disabledNuevo: boolean = false;
+
   datos: FacRegistroFichContaItem[] = [];
 
   filtro:FacRegistroFichContaItem;
@@ -45,15 +48,34 @@ export class ContabilidadComponent implements OnInit {
     this.msgs = [];
   }
   
-  searchExportacionesContabilidad(){
+  ultimaFechaHasta: Date;
+  searchExportacionesContabilidad(event){
     this.filtro = JSON.parse(JSON.stringify(this.filtrosPadre.filtros));
     this.progressSpinner = true;
+
+    if(event == true){
+      this.filtro.historico = true;
+    }else{
+      this.filtro.historico = false;
+    }
 
     this.sigaServices.post("facturacionPyS_buscarExportacionContabilidad", this.filtro).subscribe(
       n => {
         this.datos = JSON.parse(n.body).facRegistroFichConta;
         let error = JSON.parse(n.body).error;
         this.progressSpinner = false;
+
+        //Fecha desde: en caso de registro nuevo, será un selector de fecha obligatorio, que por defecto se cargará 
+        //con la siguiente fecha a la última “fecha hasta” exportada que no esté de baja.
+        this.ultimaFechaHasta = new Date(0);
+        this.datos.forEach(registro =>{
+          if(registro.fechaBaja == null){
+            let fechaExportacionHastaRegistro = new Date(registro.fechaExportacionHasta);
+            if(this.ultimaFechaHasta < fechaExportacionHastaRegistro){
+              this.ultimaFechaHasta = fechaExportacionHastaRegistro;
+            }
+          }
+        })
 
         this.datos.forEach(d => {
           d.fechaCreacion = this.transformDate(d.fechaCreacion);
@@ -62,6 +84,8 @@ export class ContabilidadComponent implements OnInit {
         });
 
         this.buscar = true;
+        this.enabledSave = false;
+        this.disabledNuevo = false;
         
         if (this.tabla != undefined) {
           this.tabla.table.sortOrder = 0;

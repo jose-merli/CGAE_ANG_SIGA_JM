@@ -990,7 +990,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
             enviar.idEstadoCivil = id[0].idEstadoCivil;
             enviar.fechaNacimiento = id[0].fechaNacimientoString;
             enviar.idTratamiento = id[0].idTratamiento;
-            enviar.idEstado = id[0].situacion;
+            //enviar.idEstado = id[0].situacion;
             enviar.domicilio = id[0].direccion;
             enviar.idProvincia = id[0].idProvincia;
             enviar.idPoblacion = id[0].idPoblacion;

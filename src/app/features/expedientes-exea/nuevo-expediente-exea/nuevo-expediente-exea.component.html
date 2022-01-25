@@ -1,0 +1,17 @@
+<app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
+<div class="card">
+    <div class="card-body">
+        <div class="form-row">
+            <div class="form-group-interlineado col-lg-3 col-md-3">
+                <label>Procedimiento</label>
+                <p-dropdown class="select-form"
+                    placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                    [showClear]="true" [(ngModel)]="idProcedimiento"
+                    [ngModelOptions]="{standalone: true}" [options]="comboProcedimientos"
+                    (onChange)="onChangeProcedimiento()">
+                </p-dropdown>
+            </div>
+        </div>
+    </div>
+</div>
+<app-my-iframe *ngIf="showFrame" url="{{ url }}"></app-my-iframe>

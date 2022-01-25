@@ -40,6 +40,9 @@
     <app-datos-bancarios-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaBancarios]="tarjetaBancarios" [esColegiado]="esColegiado"
       [isLetrado]="isLetrado" [idPersona]="idPersona" [openBanca]="openBanca"></app-datos-bancarios-ficha-colegial>
     <app-regtel-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaRegtel]="tarjetaRegtel" [openRegtel]="openRegtel"></app-regtel-ficha-colegial>
+    <!-- NUEVA TARJETA MODULO EXPEDIENTES Y EXPEDIENTES EXEA INICIO -->
+    <app-expedientes-ficha-colegial [openExp]="openExp" (idOpened)="isCloseReceive($event)" (opened)="manuallyOpened = $event" [tarjetaExpedientes]="tarjetaExpedientes"></app-expedientes-ficha-colegial>
+    <!-- NUEVA TARJETA MODULO EXPEDIENTES Y EXPEDIENTES EXEA FIN -->
     <app-alter-mutua-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaAlterMutua]="tarjetaAlterMutua"></app-alter-mutua-ficha-colegial>
     <app-mutualidad-abogacia-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaMutualidad]="tarjetaMutualidad" [datosBancarios]="datosBancarios"
       [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>

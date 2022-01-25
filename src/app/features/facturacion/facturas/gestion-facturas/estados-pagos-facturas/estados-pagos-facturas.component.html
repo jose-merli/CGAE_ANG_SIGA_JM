@@ -149,17 +149,22 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button pButton [disabled]="bodyInicial.tipo != 'ABONO'" type="button" icon="fa fa-plus" iconPos="left"
+        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'ABONO' || disableAccionConImporte()" 
+          type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoAbono()" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
-        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA'" 
+          type="button" icon="fa fa-undo" iconPos="left"
           (click)="anular()" label="{{ 'general.boton.anular' | translate }}"></button>
-        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA'" 
+          type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolverConComision()" label="{{ 'facturacion.facturas.estadosPagos.devolverConComision' | translate }}"></button>
-        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA'" 
+          type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolver()" label="{{ 'facturacion.facturas.estadosPagos.devolver' | translate }}"></button>
         <button pButton type="button" icon="fa fa-trash" iconPos="left"
           (click)="eliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
-        <button pButton [disabled]="bodyInicial.tipo != 'FACTURA'" type="button" icon="fa fa-plus" iconPos="left"
+        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA' || disableAccionConImporte()" 
+          type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoCobro()" label="Nuevo Cobro"></button>
         <button pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="renegociar()" label="{{ 'general.boton.renegociar' | translate }}"></button>
@@ -173,7 +178,7 @@
 </div>
 
 <!--DIALOG CAMBIA ESTADO-->
-<p-dialog width="320" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNuevoEstado">
+<p-dialog width="450" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalNuevoEstado">
   <p-header *ngIf="nuevoEstado" class="title">
     <label>{{ nuevoEstado.accion }}</label>
   </p-header>
