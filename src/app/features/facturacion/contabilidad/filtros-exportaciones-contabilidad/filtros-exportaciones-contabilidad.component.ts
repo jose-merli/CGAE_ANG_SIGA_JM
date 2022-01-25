@@ -49,7 +49,8 @@ import { FacRegistroFichContaItem } from '../../../../models/FacRegistroFichCont
     }
 
     searchExportacionesContabilidad(){
-        this.busqueda.emit()
+        //False para buscar sin historico
+        this.busqueda.emit(false)
     }
 
     clear() {
