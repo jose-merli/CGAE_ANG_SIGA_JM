@@ -45,7 +45,7 @@
       <div class="form-row lg-12 md-12">
         <div class="col-lg-3 col-md-3">
           <p>{{ 'censo.sociedades.datosBancarios.adjuntar' | translate }}</p>
-          <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xls"
+          <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xml,.txt"
             multiple="false" customUpload="true" (uploadHandler)="getFile($event)" auto="true">
           </p-fileUpload>
         </div>

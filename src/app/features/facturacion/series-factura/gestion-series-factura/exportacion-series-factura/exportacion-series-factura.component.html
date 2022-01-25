@@ -17,7 +17,7 @@
           <div class="d-flex justify-content-between default">
             <label>{{ 'facturacion.seriesFactura.export.confCliente' | translate }}: 
               <span>{{ findLabelInCombo(comboConfDeudor, body.confDeudor) }}</span></label>
-            <label>{{ 'facturacion.seriesFactura.export.ctaCliente' | translate }}: 
+            <label>{{ 'facturacion.seriesFactura.export.cuentaClientes' | translate }}: 
               <span>{{ body.ctaClientes }}</span></label>
             <label>{{ 'facturacion.seriesFactura.export.confIngresos' | translate }}: 
               <span>{{ findLabelInCombo(comboConfIngresos, body.confIngresos) }}</span></label>
@@ -51,7 +51,7 @@
               [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{ 'facturacion.seriesFactura.export.ctaCliente' | translate }}</label>
+          <label>{{ 'facturacion.seriesFactura.export.cuentaClientes' | translate }}</label>
           <input type="text" class="form-control" pInputText [(ngModel)]="body.ctaClientes" />
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">

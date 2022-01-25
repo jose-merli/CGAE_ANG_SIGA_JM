@@ -476,11 +476,6 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   cambiarEstadoDialogo(estado) {
     this.dialogVisible = estado;
-    if (!estado) {
-      this.datosMostrados = []
-    }
-    console.log(this.datosMostrados);
-    console.log(estado);
   }
 
   clear() {
