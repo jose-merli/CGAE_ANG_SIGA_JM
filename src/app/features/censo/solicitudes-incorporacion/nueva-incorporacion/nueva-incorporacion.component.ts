@@ -2558,9 +2558,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     if(this.solicitudEditar.claveConsulta){
       this.progressSpinner = true;
       this.sigaServices
-        .getParam(
+        .postDownloadFiles(
           "expedientesEXEA_getJustificante",
-          "?claveConsulta="+this.solicitudEditar.claveConsulta
+          this.solicitudEditar.claveConsulta
         )
         .subscribe(
           data => {
@@ -2570,7 +2570,7 @@ para poder filtrar el dato con o sin estos caracteres*/
                 this.showFailNotTraduce('No se ha encontrado el documento indicado');
               }else{
                 
-                let nombreFichero = "Justificante.pdf";
+                let nombreFichero = "Registro.pdf";
                 let mime = this.getMimeType(nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length));
                 blob = new Blob([data], { type: mime });
                 saveAs(blob, nombreFichero);
