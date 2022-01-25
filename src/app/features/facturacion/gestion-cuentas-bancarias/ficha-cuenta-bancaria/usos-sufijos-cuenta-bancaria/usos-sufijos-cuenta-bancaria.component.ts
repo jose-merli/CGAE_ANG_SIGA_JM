@@ -25,6 +25,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Output() refreshData = new EventEmitter<void>();
   
+  descripcionSerie:String;
   // Tabla
   datos: any[] = [];
   datosInit: any[] = [];
@@ -70,6 +71,10 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
 
   // Combo de sufijos
 
+  onChangeDrop(event){
+    this.descripcionSerie = event.value.label2;
+  }
+
   getComboSufijo() {
     this.sigaServices.get("facturacionPyS_comboSufijo").subscribe(
       n => {
@@ -85,12 +90,11 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
   // Combo de Series de Facturación
 
   getComboSerieFacturacion() {
-    this.sigaServices.get("facturacionPyS_comboSeriesFacturacion").subscribe(
+    this.sigaServices.get("facturacionPyS_comboSeriesFacturacionConDesc").subscribe(
       n => {
         this.comboSeriesFacturacion = n.combooItems;
-        this.comboSeriesFacturacion = this.comboSeriesFacturacion.filter(item => this.datos.find(item2 => item2.tipo == "SERIE" && item.value == item2.idSerieFacturacion) == undefined);
-        this.commonsService.arregloTildesCombo(this.comboSeriesFacturacion);
-
+        this.comboSeriesFacturacion = this.comboSeriesFacturacion.filter(item => this.datos.find(
+          item2 => item2.tipo == "SERIE" && item.value == item2.idSerieFacturacion) == undefined);
         this.progressSpinner = false;
       },
       err => {
