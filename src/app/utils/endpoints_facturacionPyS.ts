@@ -68,6 +68,7 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_getInformeFacturacion: "facturacionPyS/getInformeFacturacion",
     facturacionPyS_getFicherosDevoluciones: "facturacionPyS/getFicherosDevoluciones",
     facturacionPyS_descargarFicheroDevoluciones: "facturacionPyS/descargarFicheroDevoluciones",
+    facturacionPyS_nuevoFicheroDevoluciones: "facturacionPyS/nuevoFicheroDevoluciones",
     facturacionPyS_eliminarFicheroDevoluciones: "facturacionPyS/eliminarFicheroDevoluciones",
     facturacionPyS_comboFacturaciones: "facturacionPyS/general/comboFacturaciones",
     facturacionPyS_getFacturas: "facturacionPyS/getFacturas",
@@ -88,5 +89,6 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_guardarRegistroFichConta: "facturacionPyS/guardarRegistroFichConta",
     facturacionPyS_getFacturasIncluidas: "facturacionPyS/getFacturasIncluidas",
     facturacionPyS_buscarExportacionContabilidad: "facturacionPyS/searchExportacionContabilidad",
-    facturacionPyS_generarExcel:"facturacionPyS/generarExcel",
+    facturacionPyS_desactivarReactivarRegistroFichConta: "facturacionPyS/desactivarReactivarRegistroFichConta",
+    facturacionPyS_generarExcel:"facturacionPyS/generarExcel"
 }

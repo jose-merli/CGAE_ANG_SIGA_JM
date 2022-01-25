@@ -500,7 +500,13 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Enlace a la factura
   navigateToFactura(row: FacturaEstadosPagosItem) {
     let factura: FacturasItem = new FacturasItem();
-    factura.idFactura = row.idFactura;
+
+    if (row.comisionIdFactura) {
+      factura.idFactura = row.comisionIdFactura;
+    } else {
+      factura.idFactura = row.idFactura;
+    }
+
     factura.tipo = "FACTURA";
 
     sessionStorage.setItem("facturasItem", JSON.stringify(factura));

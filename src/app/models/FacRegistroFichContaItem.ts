@@ -16,6 +16,7 @@ export class FacRegistroFichContaItem {
     nombreEstado: String;
 	nuevo: boolean= false;
 	fechaBaja: Date;
+	historico: boolean;
   
     constructor() {}
   }

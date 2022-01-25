@@ -112,7 +112,10 @@
                   </div>
                   <div *ngSwitchCase="'comentario'">
                     <span *ngIf="dato['idCargos']">{{ 'facturacion.cmc.fichero' | translate }} <a class="enlace" (click)="navigateToFicheroAdeudos(dato)">{{ dato['idCargos'] }}</a></span>
-                    <span *ngIf="dato['enlaceFactura']">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['numeroFactura'] }}</a></span>
+                    <span *ngIf="dato['enlaceFactura']">
+                      <span *ngIf="!dato['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['numeroFactura'] }}</a></span>
+                      <span *ngIf="dato['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['comisionFactura'] }}</a></span>
+                    </span>
                     <span *ngIf="dato['idSJCS']">Abono <a class="enlace" (click)="navigateToSJCS(dato)">{{ dato['idSJCS'] }}</a></span>
                     <span *ngIf="dato['enlaceAbono']">Rectif. <a class="enlace" (click)="navigateToAbono(dato)">{{ dato['numeroAbono'] }}</a></span>
                   </div>

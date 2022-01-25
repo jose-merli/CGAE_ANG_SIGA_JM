@@ -39,13 +39,10 @@ export class FiltrosFacturasComponent implements OnInit {
 
   // crear un body con el item (después de haber creado el item)
   body: FacturasItem = new FacturasItem();
+  comboColegios : ComboItem[] = [];
+  institucionGeneral : boolean = true;
 
-  // Busqueda de colegiado
-  usuarioBusquedaExpress = {
-    numColegiado: '',
-    nombreAp: '',
-    idPersona:''
-  };
+  institucionActual;
 
   constructor(
     private translateService: TranslateService,
@@ -67,8 +64,6 @@ export class FiltrosFacturasComponent implements OnInit {
       this.body.fechaEmisionDesde = this.transformDate(this.body.fechaEmisionDesde);
       this.body.fechaEmisionHasta = this.transformDate(this.body.fechaEmisionHasta);
 
-      this.changeColegiado({ nColegiado: this.body.numeroColegiado });
-
       this.isBuscar();
     } else if(!sessionStorage.getItem("idFichero")) {
         this.body.fechaEmisionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));     
@@ -85,14 +80,6 @@ export class FiltrosFacturasComponent implements OnInit {
       this.isBuscar();
     }
 
-    if (sessionStorage.getItem("buscadorColegiados")) {
-      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-      sessionStorage.removeItem("buscadorColegiados");
-
-      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
-      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
-      this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
-    }
   }
 
   // Get combos
@@ -102,6 +89,10 @@ export class FiltrosFacturasComponent implements OnInit {
     this.getComboFacturaciones();
     this.getComboFormaCobroAbono();
     this.getComboEstadosFacturas();
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+      this.getColegios();
+    });
   }
   
 
@@ -121,6 +112,28 @@ export class FiltrosFacturasComponent implements OnInit {
         console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner=false;
+      }
+    );
+  }
+
+  getColegios() {
+    this.progressSpinner = true;
+
+    this.sigaServices.getParam("busquedaCol_colegio", "?idInstitucion=" + this.institucionActual).subscribe(
+      n => {
+        this.comboColegios = n.combooItems;
+        this.commonServices.arregloTildesCombo(this.comboColegios);
+
+        if (this.institucionActual == "2000") {
+          this.institucionGeneral = true;
+        }
+
+        this.progressSpinner = false;
+      },
+      err => {
+        //console.log(err);
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
@@ -204,21 +217,6 @@ export class FiltrosFacturasComponent implements OnInit {
     this.showComunicacionesCobrosRecobros = !this.showComunicacionesCobrosRecobros;
   }
 
-  changeColegiado(event) {
-    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
-    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
-    if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
-      && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
-      this.body.numeroColegiado = this.usuarioBusquedaExpress.numColegiado;
-      this.body.idCliente = this.usuarioBusquedaExpress.idPersona;
-    }else{
-      this.usuarioBusquedaExpress.numColegiado = " ";
-      this.body.numeroColegiado = undefined;
-      this.body.idCliente = undefined;
-      sessionStorage.removeItem("numColegiado");
-    }
-  }
-
   // boton de busqueda
   isBuscar() {
     
@@ -265,12 +263,6 @@ export class FiltrosFacturasComponent implements OnInit {
     this.showCliente = true;
     this.showComunicacionesCobrosRecobros = true;
 
-    // Filtro de colegiado
-    this.usuarioBusquedaExpress = {
-      numColegiado: '',
-      nombreAp: '',
-      idPersona:''
-    };
     sessionStorage.removeItem("numColegiado");
 
     this.goTop();
