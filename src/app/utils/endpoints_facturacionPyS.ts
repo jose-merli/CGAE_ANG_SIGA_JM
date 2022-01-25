@@ -86,4 +86,5 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_guardarRegistroFichConta: "facturacionPyS/guardarRegistroFichConta",
     facturacionPyS_getFacturasIncluidas: "facturacionPyS/getFacturasIncluidas",
     facturacionPyS_buscarExportacionContabilidad: "facturacionPyS/searchExportacionContabilidad",
+    facturacionPyS_desactivarReactivarRegistroFichConta: "facturacionPyS/desactivarReactivarRegistroFichConta"
 }
