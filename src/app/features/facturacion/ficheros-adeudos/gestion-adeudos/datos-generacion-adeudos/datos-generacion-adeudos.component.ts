@@ -180,7 +180,7 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("facturacionPyS_eliminarFicheroAdeudos", this.bodyInicial).subscribe(
       data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), "El fichero de transferencias ha sido eliminado con exito.");
+        this.showMessage("success", this.translateService.instant("general.message.correct"), "El fichero de adeudos ha sido eliminado con exito.");
         this.backTo();
         this.progressSpinner = false;
       },

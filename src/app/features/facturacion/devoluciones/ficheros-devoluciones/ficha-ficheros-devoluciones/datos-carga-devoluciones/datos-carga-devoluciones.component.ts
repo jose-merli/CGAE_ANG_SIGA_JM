@@ -5,6 +5,7 @@ import { saveAs } from "file-saver/FileSaver";
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Location } from '@angular/common';
+import { stringify } from '@angular/core/src/util';
 
 @Component({
   selector: 'app-datos-carga-devoluciones',
@@ -25,7 +26,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
   
   @ViewChild("pUploadFile")
   pUploadFile;
-  file;
+  file: File;
 
   showModalEliminar: boolean = false;
   confirmImporteTotal: string;
@@ -60,7 +61,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     console.log(nombreCompletoArchivo);
     
     if (extensionArchivo == null || extensionArchivo.trim() == "" 
-          || !/\.(xls)$/i.test(extensionArchivo.trim().toUpperCase())
+          || !/\.(xml)$/i.test(extensionArchivo.trim().toUpperCase())
     ) {
       this.file = undefined;
 
@@ -72,6 +73,22 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
       this.progressSpinner = false;
     }
     
+  }
+
+  // Guardar y procesar
+  save() {
+    this.progressSpinner = true;
+
+    this.sigaServices.postSendFileAndParameters2("facturacionPyS_nuevoFicheroDevoluciones", this.file, {
+      conComision: this.comision
+    }).subscribe(
+      n => {
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    )
   }
 
   // Descargar LOG
@@ -148,7 +165,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
     this.sigaServices.post("facturacionPyS_eliminarFicheroDevoluciones", this.bodyInicial).subscribe(
       data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), "El fichero de transferencias ha sido eliminado con exito.");
+        this.showMessage("success", this.translateService.instant("general.message.correct"), "El fichero de devoluciones ha sido eliminado con exito.");
         this.backTo();
         this.progressSpinner = false;
       },

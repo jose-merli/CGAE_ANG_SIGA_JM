@@ -30,6 +30,8 @@ export class FacturaEstadosPagosItem {
 	comentario: string;
 
 	comision: boolean;
+	comisionIdFactura: string;
+	comisionFactura: string;
 
     constructor() {}
 }
