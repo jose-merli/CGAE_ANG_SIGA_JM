@@ -34,7 +34,7 @@ import { FacRegistroFichContaItem } from '../../../../models/FacRegistroFichCont
             this.filtros.fechaCreacionHasta = event;
         else if(campo === 'exportacionDesde')
             this.filtros.fechaExportacionDesde = event;
-        else if(campo === ' exportacionHasta')
+        else if(campo === 'exportacionHasta')
             this.filtros.fechaExportacionHasta = event;
     }
 

@@ -10,6 +10,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { Console } from 'console';
 import { truncate } from 'fs';
 import { FindValueSubscriber } from 'rxjs/operators/find';
+import { procesos_facturacionPyS } from '../../../../permisos/procesos_facturacionPyS';
 
 
 @Component({
@@ -28,8 +29,6 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
   @Input() datos: FacRegistroFichContaItem[];
   @Input() filtro;
   @Input() ultimaFechaHasta;
-  @Input() disabledNuevo;
-  @Input() enabledSave;
   @Output() busqueda = new EventEmitter<boolean>();
   
   // Elementos para la tabla
@@ -42,14 +41,18 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
   selectAll: boolean;
   selectMultiple: boolean;
   editar:boolean = false;
-  historico: boolean = false; //Indica si se estan mostrando historicos o no para por ejemplo ocultar/mostrar los botones de historico.
+  @Input() historico: boolean; //Indica si se estan mostrando historicos o no para por ejemplo ocultar/mostrar los botones de historico.
+  @Input() disabledNuevo;
+  @Input() enabledSave;
   //Variables para mostrar boton reactivar o eliminar
   numSelectedAbleRegisters: number = 0;
   numSelectedDisableRegisters: number = 0;
 
   newRegister:FacRegistroFichContaItem = new FacRegistroFichContaItem();
 
+  //PERMISOS
   permisoEliminarReactivarExporContabilidad: boolean = false;
+  permisoGuardarExporContabilidad: boolean = false;
 
   constructor(
     private persistenceService: PersistenceService,
@@ -64,16 +67,46 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
+    this.checkPermisos();
 
     this.getCols();
   }
 
+  //INICIO METODOS PERMISOS
+
+  checkPermisos() {
+    this.getPermisoGuardarExporContabilidad();
+    this.getPermisoReactivarExporContabilidad(); 
+  }
+
+  getPermisoGuardarExporContabilidad() {
+    this.commonsService
+       .checkAcceso(procesos_facturacionPyS.guardarFicheroExportacionContabilidad)
+        .then((respuesta) => {
+           this.permisoGuardarExporContabilidad = respuesta;
+        })
+    .catch((error) => console.error(error));
+  }
+
+  getPermisoReactivarExporContabilidad() {
+    this.commonsService
+       .checkAcceso(procesos_facturacionPyS.eliminarReactivarFicheroExportacionContabilidad)
+        .then((respuesta) => {
+           this.permisoEliminarReactivarExporContabilidad = respuesta;
+        })
+    .catch((error) => console.error(error));
+  }
+
+  //FIN METODOS SERVICIOS
+
   // Se actualiza cada vez que cambien los inputs
   ngOnChanges(changes: SimpleChanges) {
     this.selectedDatos = [];
+   /*  if(changes.datos != undefined){
+      this.historico = false;
+      this.enabledSave = false;
+      this.disabledNuevo = false;
+    } */
   }
 
   // Definición de las columnas
@@ -138,7 +171,7 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
         this.numSelectedDisableRegisters = 0;
 
         this.selectedDatos.forEach(rows => {
-          if (rows.fechabaja == null) {
+          if (rows.fechaBaja == null) {
             this.numSelectedAbleRegisters++;
           } else {
             this.numSelectedDisableRegisters++;
@@ -159,7 +192,7 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
     this.numSelectedDisableRegisters = 0;
 
     this.selectedDatos.forEach(rows => {
-      if (rows.fechabaja == null) {
+      if (rows.fechaBaja == null) {
         this.numSelectedAbleRegisters++;
       } else {
         this.numSelectedDisableRegisters++;
@@ -173,7 +206,7 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
     this.numSelectedDisableRegisters = 0;
 
     this.selectedDatos.forEach(rows => {
-      if (rows.fechabaja == null) {
+      if (rows.fechaBaja == null) {
         this.numSelectedAbleRegisters++;
       } else {
         this.numSelectedDisableRegisters++;
@@ -210,7 +243,19 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
     this.disabledNuevo = false;
     this.enabledSave = false;
     this.historico = false;
-    this.busqueda.emit()
+    //False para buscar sin historico
+    this.busqueda.emit(false);
+  }
+
+  checkNuevo(){
+    let msg = null;
+      msg = this.commonsService.checkPermisos(this.permisoGuardarExporContabilidad, undefined);
+  
+  	  if (msg != null) {
+        this.msgs = msg;
+      } else {
+        this.getNewFacRegistroFichConta();
+      }
   }
 
   getNewFacRegistroFichConta() {
@@ -280,6 +325,17 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
     }
   }
 
+  checkGuardarPermisos(){
+    let msg = null;
+    msg = this.commonsService.checkPermisos(this.permisoGuardarExporContabilidad, undefined);
+  
+  	if (msg != null) {
+      this.msgs = msg;
+    } else {
+      this.checkObligatorios();
+    }
+  }
+
   checkObligatorios(){
     if(this.datos[0].nuevo == true && !this.checkCampoEsVacio(this.datos[0].nombreFichero) && !this.checkCampoEsVacio(this.datos[0].fechaExportacionDesde)){
       this.guardar();
@@ -304,6 +360,8 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
   guardar(){
     this.disabledNuevo = false;
     this.enabledSave = false;
+    this.numSelectedAbleRegisters = 0;
+    this.numSelectedDisableRegisters = 0;
     this.progressSpinner = true;
 
     this.newRegister.fechaCreacion = this.convertirMascaraDDMMYYaDate(this.newRegister.fechaCreacion);
@@ -320,7 +378,8 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
         this.disabledNuevo = false;
         this.enabledSave = false;
         this.historico = false;
-        this.busqueda.emit();
+        //false para buscar sin historico
+        this.busqueda.emit(false);
         this.progressSpinner = false;
 
       },
@@ -343,20 +402,21 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
     let msg = null;
 	  msg = this.commonsService.checkPermisos(this.permisoEliminarReactivarExporContabilidad, undefined);
 
-/* 	  if (msg != null) {
+	  if (msg != null) {
 	    this.msgs = msg;
 	  } else {
-	    this.activarDesactivar(this.selectedDatos);
-    } */
-
-    this.activarDesactivar();
+	    this.activarDesactivar();
+    }
   }
 
   //Metodo para activar/desactivar servicios mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tenga alguna solicitud ya existente, en caso contrario se hara borrado fisico (DELETE)
   activarDesactivar() {
     let keyConfirmation = "deletePlantillaDoc";
     let mensaje;
-    if (this.selectedDatos[0].fechabaja != null) {
+    this.numSelectedAbleRegisters = 0;
+    this.numSelectedDisableRegisters = 0;
+
+    if (this.selectedDatos[0].fechaBaja != null) {
       mensaje = this.translateService.instant("facturacion.maestros.tiposproductosservicios.reactivarconfirm");
     } else if (this.selectedDatos[0].fechabaja == null) {
       mensaje = this.translateService.instant("messages.deleteConfirmation");
@@ -369,7 +429,17 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
       accept: () => {
         this.progressSpinner = true;
 
-        this.sigaServices.post("facturacionPyS_desactivarReactivarRegistroFichConta", this.selectedDatos).subscribe(
+        let registros: FacRegistroFichContaItem[] = JSON.parse(JSON.stringify(this.selectedDatos));
+        registros.forEach(registro => {
+          registro.fechaCreacion = this.convertirMascaraDDMMYYaDate(registro.fechaCreacion);
+          registro.fechaExportacionDesde = this.convertirMascaraDDMMYYaDate(registro.fechaExportacionDesde);
+          registro.fechaExportacionHasta = this.convertirMascaraDDMMYYaDate(registro.fechaExportacionHasta);
+          if(registro.fechaBaja != null){
+            registro.fechaBaja = new Date(registro.fechaBaja);
+          } 
+        });
+
+        this.sigaServices.post("facturacionPyS_desactivarReactivarRegistroFichConta", registros).subscribe(
           response => {
             if(response.status == 200)
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -384,7 +454,7 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
             this.historico = false;
             this.selectAll = false;
             this.selectMultiple = false;
-            this.busqueda.emit(true);
+            this.busqueda.emit(false);
             this.progressSpinner = false;
           }
         );
@@ -408,33 +478,23 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
     this.historico = true;
     this.selectMultiple = false;
     this.selectAll = false
+    this.numSelectedAbleRegisters = 0;
+    this.numSelectedDisableRegisters = 0;
     this.selectedDatos = [];
 
     //true para buscar con historico
     this.busqueda.emit(true);
-
-    let thereIsHistoricalRegister;
-    this.datos.forEach(registro => {
-      if (registro.fechaBaja != null) {
-        thereIsHistoricalRegister = true;
-      }
-    });
-
-    if (thereIsHistoricalRegister != true) {
-      this.historico = false;
-      //Mensaje informativo en caso de que no haya registros eliminados.
-      this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("facturacion.maestros.tiposproductosservicios.nohistorico"));
-
-    }
   }
 
   getListaFacRegistroSinHistorico(){
     this.historico = false;
     this.selectMultiple = false;
     this.selectAll = false
+    this.numSelectedAbleRegisters = 0;
+    this.numSelectedDisableRegisters = 0;
     this.selectedDatos = [];
 
-    //true para buscar sin historico
+    //false para buscar sin historico
     this.busqueda.emit(false);
   }
 

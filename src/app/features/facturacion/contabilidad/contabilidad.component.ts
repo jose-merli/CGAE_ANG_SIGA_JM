@@ -22,12 +22,13 @@ export class ContabilidadComponent implements OnInit {
   msgs: Message[] = [];
 
   buscar: boolean = false;
-  @ViewChild(Boolean)enabledSave: boolean = false;
-  @ViewChild(Boolean)disabledNuevo: boolean = false;
+  enabledSave: boolean = false;
+  disabledNuevo: boolean = false;
 
   datos: FacRegistroFichContaItem[] = [];
 
   filtro:FacRegistroFichContaItem;
+  historico:boolean = false;
 
   @ViewChild(FiltrosExportacionesContabilidadComponent) filtrosPadre;
   @ViewChild(TablaExportacionesContabilidadComponent) tabla;
@@ -82,6 +83,24 @@ export class ContabilidadComponent implements OnInit {
           d.fechaExportacionDesde = this.transformDate(d.fechaExportacionDesde);
           d.fechaExportacionHasta = this.transformDate(d.fechaExportacionHasta);
         });
+
+        if(event == true){
+          let thereIsHistoricalRegister;
+          this.datos.forEach(registro => {
+            if (registro.fechaBaja != null) {
+              thereIsHistoricalRegister = true;
+            }
+          });
+
+          if (thereIsHistoricalRegister != true) {
+            this.historico = false;
+            //Mensaje informativo en caso de que no haya registros eliminados.
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("facturacion.maestros.tiposproductosservicios.nohistorico"));
+
+          }
+        }else{
+          this.historico = false;
+        }
 
         this.buscar = true;
         this.enabledSave = false;

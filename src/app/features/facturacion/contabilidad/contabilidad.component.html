@@ -1,7 +1,8 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
     <app-filtros-exportaciones-contabilidad (busqueda)="searchExportacionesContabilidad($event)"></app-filtros-exportaciones-contabilidad>
-    <app-tabla-exportaciones-contabilidad *ngIf="buscar" [datos]="datos" [filtro]="filtro" [ultimaFechaHasta]="ultimaFechaHasta" [disabledNuevo]="disabledNuevo" [enabledSave]="enabledSave" (busqueda)="searchExportacionesContabilidad($event)"></app-tabla-exportaciones-contabilidad>
+    <app-tabla-exportaciones-contabilidad *ngIf="buscar" [datos]="datos" [filtro]="filtro" [ultimaFechaHasta]="ultimaFechaHasta" [disabledNuevo]="disabledNuevo" 
+    [enabledSave]="enabledSave" [historico]="historico" (busqueda)="searchExportacionesContabilidad($event)"></app-tabla-exportaciones-contabilidad>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
