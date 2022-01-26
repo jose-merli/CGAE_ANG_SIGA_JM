@@ -21,6 +21,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
     numColegiado: '',
     nombreAp: ''
   };
+  @Input() modoLectura: boolean;
   @Input() asistencia : TarjetaAsistenciaItem;
   @Output() refreshTarjetas = new EventEmitter<string>();
   @Input() permisoEscritura : boolean;
@@ -28,10 +29,10 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
   comboOrigenContacto = [];
   comboProcedimientos = [];
   progressSpinner : boolean = false;
-  
+  textFilter = "Seleccionar";
   caracteristica : CaracteristicasItem = new CaracteristicasItem();
   caracteristicaAux : CaracteristicasItem = new CaracteristicasItem();
-
+  comboJuzgados = [];
   constructor(private router: Router,
     private sigaServices : SigaServices,
     private commonServices : CommonsService, 
@@ -46,6 +47,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
     }
     this.getComboOrigenContacto();
     this.getComboProcedimientos();
+    this.getComboJuzgados();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -78,6 +80,11 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
           if(n.caracteristicasAsistenciaItems.length > 0){
             this.caracteristica = n.caracteristicasAsistenciaItems[0];
             this.caracteristicaAux = Object.assign({},this.caracteristica);
+            if(this.caracteristica.asesoramiento.toString() == '0'){
+              this.caracteristica.asesoramiento = false;
+            }else if(this.caracteristica.asesoramiento.toString() == '1'){
+              this.caracteristica.asesoramiento = true;
+            }
           }
         },
         err => {
@@ -194,4 +201,25 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
       });
   }
 
+
+  getComboJuzgados(){
+
+    this.sigaServices.get("combo_comboJuzgado").subscribe(
+      n => {
+        this.comboJuzgados = n.combooItems;
+      },
+      err => {
+        //console.log(err);
+
+      }, () => {
+        this.commonServices.arregloTildesCombo(this.comboJuzgados);
+      }
+    );
+
+  }
+
+
+  onChangeJuzgado(event){
+    this.caracteristica.idJuzgado = event.value;
+  }
 }

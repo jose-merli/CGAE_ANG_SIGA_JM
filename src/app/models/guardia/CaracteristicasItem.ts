@@ -13,7 +13,7 @@ export class CaracteristicasItem {
     ordenProteccion : boolean;
     otras: boolean;
     otrasDesc: string;
-    asesoramiento : string;
+    asesoramiento : boolean;
     ministerioFiscal : string;
     medicoForense : string;
     numColegiado : string;
@@ -22,6 +22,7 @@ export class CaracteristicasItem {
     numeroProcedimiento : string;
     nig : string;
     descOrigenContacto : string;
+    idJuzgado: string;
 
     constructor(){}
 }

@@ -13,6 +13,7 @@ import { TarjetaAsistenciaItem } from '../../../../../../models/guardia/TarjetaA
 import * as moment from 'moment';
 import { EJGItem } from '../../../../../../models/sjcs/EJGItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
+import { TreeModule } from 'primeng/primeng';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-designacion-oficio',
@@ -44,6 +45,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   @Input() campos;
   @Input() selectedValue;
   @Output() refreshDataGenerales = new EventEmitter<DesignaItem>();
+  @Output() searchRelacionesAs = new EventEmitter<boolean>();
   nuevaDesignaCreada: DesignaItem;
   currentRoute: String;
   idClasesComunicacionArray: string[] = [];
@@ -274,6 +276,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.selectores[0].value = this.datosAsistencia.idTurno;
       let fechaNoHora = moment(this.datosAsistencia.fechaAsistencia.substr(0,10), 'DD/MM/YYYY').toDate();
       this.fechaGenerales = fechaNoHora;
+      this.searchRelacionesAs.emit(true);
     } else if (sessionStorage.getItem("EJG")) { //Se comprueba si se procede de la pantalla de gestion de EJG
       this.datosEJG =JSON.parse(sessionStorage.getItem("EJG"));
       sessionStorage.removeItem("EJG");

@@ -237,8 +237,12 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   }
 	formatDateSol(date) {
     const pattern = 'dd/MM/yyyy hh:mm:ss';
-    if (date != undefined && isNaN(Number(date)))
-		return this.datepipe.transform(date, pattern);
+    if (date != undefined && isNaN(Number(date))){
+      if (!date.includes('/')){
+        return this.datepipe.transform(date, pattern);
+      }
+    }
+
 	
 	  }
   getInscripciones() {
@@ -408,13 +412,13 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
-      this.selectedDatos = this.body;
-      this.numSelected = this.body.length;
-      if (this.historico) {
+      this.selectedDatos = this.inscripcionesItem;
+      this.numSelected = this.inscripcionesItem.length;
+    /*  if (this.historico) {
         this.selectedDatos = this.body.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
       } else {
         this.selectedDatos = this.body;
-      }
+      }*/
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -523,7 +527,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
         rowData.selectedBoolean = true;
         if(rowData.descripcionObligatoriedad == "Todas o ninguna"){
           this.inscripcionesItem.forEach(element => {
-            if (element.idturno == rowData.idTurno) {
+            if (element.idTurno == rowData.idTurno) {
               element.selectedBoolean = true;
               this.inscripcionesSelected.push(element);
             }
@@ -536,7 +540,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
         if(rowData.descripcionObligatoriedad == "Todas o ninguna"){
           rowData.selectedBoolean = false;
           this.inscripcionesItem.forEach(element => {
-            if (element.idturno == rowData.idTurno) {
+            if (element.idTurno == rowData.idTurno) {
               element.selectedBoolean = false;
               /* let findDato = this.inscripcionesSelected.find(item => item.idguardia == element.idguardia);
               if (findDato != undefined) {
@@ -585,7 +589,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
         this.disabledGuardias = true;
         rowData.selectedBooleanPadre = true;
         this.inscripcionesItem.forEach(element => {
-          if (element.idguardia == rowData.idGuardia) {
+          if (element.idGuardia == rowData.idGuardia) {
             element.selectedBoolean = true;
             this.inscripcionesSelected.push(element);
           }
@@ -594,12 +598,14 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
       if (rowData.descripcionObligatoriedad == "Todas o ninguna") {
         this.disabledGuardias = false;
         rowData.selectedBooleanPadre = true;
+        /*this.disabledGuardias = false;
+        rowData.selectedBooleanPadre = true;
         this.inscripcionesItem.forEach(element => {
-          if (element.idguardia == rowData.idGuardia) {
+          if (element.idGuardia == rowData.idGuardia) {
             element.selectedBoolean = true;
             this.inscripcionesSelected.push(element);
           }
-        });
+        });*/
       }
       if(rowData.descripcionObligatoriedad == "A elegir"){
         this.disabledGuardias = false;
@@ -612,7 +618,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
       this.disabledGuardias = true;
       rowData.selectedBooleanPadre = false;
       this.inscripcionesItem.forEach(element => {
-        if (element.idguardia == rowData.idGuardia) {
+        if (element.idGuardia == rowData.idGuardia) {
           element.selectedBoolean = false;
           //let findDato = this.inscripcionesSelected.find(item => item.idguardia == element.idguardia);
           //if (findDato != undefined) {
@@ -636,4 +642,6 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   
     this.seleccionadosSend.emit(send);
   }
+
+
 }

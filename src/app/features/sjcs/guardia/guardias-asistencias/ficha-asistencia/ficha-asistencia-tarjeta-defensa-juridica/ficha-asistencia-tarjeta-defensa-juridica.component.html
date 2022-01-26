@@ -69,9 +69,9 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}" [disabled] = "idAsistencia == null || idAsistencia == '' || !editable"
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}" [disabled] = "idAsistencia == null || idAsistencia == '' || !editable || modoLectura"
       (click)="restablecer();"></button>
-    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia == '' || !editable"
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia == '' || !editable || modoLectura"
       (click)="saveDefensaJuridicaData();"></button>
   </div>
 </div>

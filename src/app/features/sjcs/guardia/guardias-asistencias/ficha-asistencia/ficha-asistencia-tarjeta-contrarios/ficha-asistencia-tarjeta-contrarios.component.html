@@ -49,18 +49,18 @@
     <p-footer>
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-comment" iconPos="left"
-          label="{{'general.boton.comunicar' | translate}}" [disabled]="!editable"></button>
+          label="{{'general.boton.comunicar' | translate}}" [disabled]="!editable || modoLectura"></button>
         <button *ngIf="!mostrarHistorico" pButton type="button"  icon="fa fa-history" iconPos="left"
           label="{{'general.message.mostrarHistorico' | translate}}" 
-          (click)="onClickHistorico(true)" [disabled] = "idAsistencia == '' || idAsistencia == null || !editable"></button>
-        <button *ngIf="mostrarHistorico" pButton type="button"  icon="fa fa-history" iconPos="left" [disabled]="!editable"
+          (click)="onClickHistorico(true)" [disabled] = "idAsistencia == '' || idAsistencia == null || !editable || modoLectura"></button>
+        <button *ngIf="mostrarHistorico" pButton type="button"  icon="fa fa-history" iconPos="left" [disabled]="!editable || modoLectura"
           label="{{'general.message.ocultarHistorico' | translate}}"
           (click)="onClickHistorico(false)"></button>
-        <button *ngIf="!mostrarHistorico" pButton [disabled] = "idAsistencia == '' || idAsistencia == null || deleteDisabled || !editable" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
+        <button *ngIf="!mostrarHistorico" pButton [disabled] = "idAsistencia == '' || idAsistencia == null || deleteDisabled || !editable || modoLectura" type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
           (click)="deleteContrarios()"></button>
-        <button *ngIf="!mostrarHistorico" pButton [disabled] = "idAsistencia == '' || idAsistencia == null || !editable" type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"
+        <button *ngIf="!mostrarHistorico" pButton [disabled] = "idAsistencia == '' || idAsistencia == null || !editable || modoLectura" type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"
           (click)="newContrario()"></button>
-        <button *ngIf="mostrarHistorico" pButton [disabled]="reactivarDisabled || !editable" type="button"
+        <button *ngIf="mostrarHistorico" pButton [disabled]="reactivarDisabled || !editable || modoLectura" type="button"
           icon="fa fa-plus" iconPos="left" (click)="reactivarContrario()"
           label="{{ 'general.boton.reactivar' | translate}}"></button>
       </div>

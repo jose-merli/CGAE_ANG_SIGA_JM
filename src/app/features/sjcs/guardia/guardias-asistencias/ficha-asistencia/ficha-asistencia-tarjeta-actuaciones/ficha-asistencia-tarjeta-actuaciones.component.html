@@ -105,17 +105,17 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
   <p-footer>
     <div class="text-right main-button">
       <button *ngIf="!mostrarHistorico" pButton type="button" icon="fa fa-history" iconPos="left" label="{{'general.message.mostrarHistorico' | translate}}"
-        (click)="changeHistorico()" [disabled]="asistencia == null || asistencia == undefined || !editable"></button>
+        (click)="changeHistorico()" [disabled]="asistencia == null || asistencia == undefined"></button>
       <button *ngIf="mostrarHistorico" pButton type="button"  icon="fa fa-history" iconPos="left"
-        label="{{'general.message.ocultarHistorico' | translate}}" [disabled]="asistencia == null || asistencia == undefined || !editable"
+        label="{{'general.message.ocultarHistorico' | translate}}" [disabled]=""
         (click)="changeHistorico()"></button>
-      <button *ngIf="mostrarHistorico" [disabled]="disableReactivar || asistencia == null || asistencia == undefined || !editable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.reactivar' | translate}}"
+      <button *ngIf="mostrarHistorico" [disabled]="disableReactivar || asistencia == null || asistencia == undefined" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.reactivar' | translate}}"
         (click)="updateEstadoActuacion('0')"></button>
-      <button *ngIf="!mostrarHistorico" [disabled]="disableDelete || asistencia == null || asistencia == undefined || !editable" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.anular' | translate}}"
+      <button *ngIf="!mostrarHistorico" [disabled]="disableDelete || asistencia == null || asistencia == undefined" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.anular' | translate}}"
         (click)="updateEstadoActuacion('1')"></button>
-      <button [disabled]="disableDelete || asistencia == null || asistencia == undefined || !editable" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
+      <button [disabled]="disableDelete || asistencia == null || asistencia == undefined || !editable || modoLectura" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
         (click)="askEliminar()"></button>
-      <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"
+      <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}" [disabled]="modoLectura"
         (click)="nuevaActuacion()"></button>
       </div>
   </p-footer>

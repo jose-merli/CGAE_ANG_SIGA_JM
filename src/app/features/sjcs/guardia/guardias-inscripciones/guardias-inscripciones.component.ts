@@ -224,8 +224,10 @@ export class GuardiasInscripcionesComponent implements OnInit {
   }
   formatDateSol(date) {
     const pattern = 'dd/MM/yyyy hh:mm:ss';
-    return this.datepipe.transform(date, pattern);
-
+     if (date != undefined && isNaN(Number(date))){
+      if (!date.includes('/'))
+      return this.datepipe.transform(date, pattern);
+      }
   }
 
 

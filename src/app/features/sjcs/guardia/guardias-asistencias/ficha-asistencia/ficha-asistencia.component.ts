@@ -135,6 +135,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
   }];
   datosTarjetaFacGenerica: string;
   openTarjetaFac: Boolean = false;
+  modoLectura: Boolean = false;
 
   @ViewChild(FichaAsistenciaTarjetaDatosGeneralesComponent) datosGenerales: FichaAsistenciaTarjetaDatosGeneralesComponent;
   constructor(private location: Location,
@@ -684,6 +685,12 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
           this.showMsg("error", "Error", n.error.description.toString());
         } else {
           let newAsistenciaData: TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
+          console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
+          console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
+          if (newAsistenciaData.estado == '2'){
+            //anulada
+            this.modoLectura = true;
+          }
           this.editable = newAsistenciaData.estado == '1';
           this.tarjetaFija.campos[0]["value"] = newAsistenciaData.anioNumero;
           this.tarjetaFija.campos[1]["value"] = newAsistenciaData.fechaAsistencia.substr(0, 11);
@@ -937,5 +944,10 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
 
   guardarDatos() {
     sessionStorage.setItem("idAsistencia", this.datosTarjetaFacGenerica);
+  }
+
+  eventoAnular(anular){
+    this.modoLectura = anular;
+    //to do: pasarselo a el resto de tarjetas para anular botones
   }
 }

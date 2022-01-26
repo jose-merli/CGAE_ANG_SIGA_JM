@@ -154,6 +154,13 @@
                       [showClear]="true" [(ngModel)]="caracteristica.idProcedimiento"  [disabled] ="!permisoEscritura || !editable"
                       [ngModelOptions]="{standalone: true}" [options]="comboProcedimientos"></p-dropdown>
                     </div>
+
+                    <div class="form-group col-lg-3 col-md-3 w-100">
+                      <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
+                      <p-dropdown   placeholder="{{'general.boton.seleccionar' | translate}}" autoWidth="false" [(ngModel)]='caracteristica.idJuzgado'
+                      [options]="comboJuzgados"  [showClear]="true" 
+                      styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeJuzgado($event);" [disabled] ="!permisoEscritura || !editable"></p-dropdown>
+                    </div>
                   </div>
                   <div class="form-row w-100">
                     <div class="form-group col-lg-3 col-md-3 w-100">
@@ -176,9 +183,9 @@
     <div class="card-footer w100">
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
-          (click)="restablecer()" [disabled] = "asistencia == null || asistencia == undefined || !permisoEscritura || !editable"></button>
+          (click)="restablecer()" [disabled] = "asistencia == null || asistencia == undefined || !permisoEscritura || !editable || modoLectura"></button>
         <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
-          (click)="saveCaracteristicas()" [disabled] = "asistencia == null || asistencia == undefined || !permisoEscritura || !editable"></button>
+          (click)="saveCaracteristicas()" [disabled] = "asistencia == null || asistencia == undefined || !permisoEscritura || !editable || modoLectura"></button>
       </div>
     </div>
   </div>

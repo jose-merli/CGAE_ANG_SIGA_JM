@@ -15,10 +15,11 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
 
 
   msgs : Message [] = [];
+  @Input() modoLectura: boolean;
   @Input() asistencia : TarjetaAsistenciaItem;
   @Input() editable : boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();
-  disableReactivar : boolean = true;
+  disableReactivar : boolean = false;
   mostrarHistorico : boolean = false;
   rows : number = 10;
   rowsPerPage = [
@@ -86,11 +87,16 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
         }else{
           actuaciones.push(this.selectedDatos);
         }
-        if (newEstado == '1'){
-          actuaciones.forEach(act => {
+
+        actuaciones.forEach(act => {
+          act.estado = newEstado;
+          if (newEstado == '1'){
             act.anulada = '1';
-          })
-        }
+          }else{
+            act.anulada = '0';
+          }
+        })
+
         if(actuaciones.length > 0 ){
           this.sigaServices.postPaginado("busquedaGuardias_updateEstadoActuacion","?anioNumero="+this.asistencia.anioNumero, actuaciones).subscribe(
             n => {
@@ -197,9 +203,15 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
   }
 
   onClickEnlace(actuacion : ActuacionAsistenciaItem){
-
+    let actuacionParaAbrir: ActuacionAsistenciaItem;
+    this.actuaciones.forEach(act => {
+      if(act.numeroAsunto == actuacion.numeroAsunto){
+        actuacionParaAbrir = act;
+      }
+    });
     sessionStorage.setItem('asistenciaToFichaActuacion',JSON.stringify(this.asistencia));
-    sessionStorage.setItem('actuacionAsistencia', JSON.stringify(actuacion));
+    sessionStorage.setItem('actuacionAsistencia', JSON.stringify(actuacionParaAbrir));
+    console.log('enlace a actuacion: ', actuacionParaAbrir)
     this.router.navigate(['/fichaActuacionAsistencia']);
 
   }

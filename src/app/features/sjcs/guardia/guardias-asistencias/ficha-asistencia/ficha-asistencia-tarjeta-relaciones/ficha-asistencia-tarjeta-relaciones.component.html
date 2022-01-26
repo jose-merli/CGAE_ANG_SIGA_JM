@@ -46,16 +46,16 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
   </ng-template>
   <p-footer>
     <div class="text-right main-button">
-      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.crearEJG' | translate}}" [disabled] = "asistencia == null || disableEJG || !editable"
+      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.crearEJG' | translate}}" [disabled] = "asistencia == null || disableEJG || !editable || modoLectura"
       (click)="crearEJG();"></button>
-      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.asociarEJG' | translate}}" [disabled] = "asistencia == null || disableEJG || !editable"
+      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.asociarEJG' | translate}}" [disabled] = "asistencia == null || disableEJG || !editable || modoLectura"
       (click)="asociarEJG();"></button>
-      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.AsociarDesignacion' | translate}}" [disabled] = "asistencia == null || disableDesigna || !editable"
+      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.AsociarDesignacion' | translate}}" [disabled] = "asistencia == null || disableDesigna || !editable || modoLectura"
       (click)="asociarDesignacion();"></button>
-      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.crearDesignacion' | translate}}" [disabled] = "asistencia == null || disableDesigna || !editable"
+      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.crearDesignacion' | translate}}" [disabled] = "asistencia == null || disableDesigna || !editable || modoLectura"
       (click)="crearDesignacion()"></button>
       <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
-        (click)="eliminarRelacion()" [disabled] = "asistencia == null || disableDelete || !editable"></button>
+        (click)="eliminarRelacion()" [disabled] = "asistencia == null || disableDelete || !editable || modoLectura"></button>
     </div>
   </p-footer>
 </p-dataTable>

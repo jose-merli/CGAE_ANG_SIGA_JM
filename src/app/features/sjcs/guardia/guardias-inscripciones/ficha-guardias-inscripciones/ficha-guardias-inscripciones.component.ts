@@ -154,7 +154,9 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		//Comprueba la procedencia
 		if (sessionStorage.getItem("sesion") == "nuevaInscripcion") {
 			this.getDatosTarjetaResumen(this.datos);
+			
 			this.datos.fechasolicitud = this.datepipe.transform(new Date(), 'dd/MM/yyyy'); //formatear la fecha
+			console.log('ana 3: ', this.datos.fechasolicitud )
 			this.modoEdicion = false;
 		} else {
 			this.modoEdicion = true;
@@ -768,6 +770,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 
 	formatDate(date) {
+		console.log('ana 4: ', date )
 		const pattern = 'dd/MM/yyyy';
 		return this.datepipe.transform(date, pattern);
 
@@ -786,6 +789,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		  });
 	  }
 	  datetoString(date) {
+		console.log('ana 5: ', date )
 		const pattern = 'dd/MM/yyyy';
 		  return this.datePipe.transform(date, pattern);
 		}
@@ -1288,15 +1292,25 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		return new ResultadoInscripciones(objeto);
 	}
 	formatDateSol(date) {
+		console.log('ana 1: ', date)
+		console.log('date.includes ',date.includes('/'))
 		const pattern = 'dd/MM/yyyy hh:mm:ss';
-		return this.datepipe.transform(date, pattern);
+		if (date != undefined && isNaN(Number(date))){
+			if (!date.includes('/')){
+				return this.datepipe.transform(date, pattern);
+			}
+		}
 	
 	  }
 
 	formatDateSol2(date) {
+		console.log('ana 2: ', date)
 		const pattern = 'dd/MM/yyyy';
-		if (date != undefined && isNaN(Number(date)))
-		return this.datepipe.transform(date, pattern);
+		if (date != undefined && isNaN(Number(date))){
+			if (!date.includes('/')){
+				return this.datepipe.transform(date, pattern);
+			}
+		}
 	
 	  }
 	callSaveService(url) {

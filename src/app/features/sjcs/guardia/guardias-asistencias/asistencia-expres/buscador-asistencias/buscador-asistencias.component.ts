@@ -149,6 +149,8 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     this.getComboEstadoAsistido();
   }
 
+
+
   getComboEstadosAsistencia(){
     this.sigaServices.get("combo_estadosAsistencia").subscribe(
       n => {
