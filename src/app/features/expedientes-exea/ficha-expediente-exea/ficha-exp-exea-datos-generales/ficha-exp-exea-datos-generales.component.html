@@ -1,0 +1,46 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+<div class="row w-100 m-0 padding-interior">
+  <div class="form-row">
+    <div class="form-group-interlineado col-lg-6 col-md-6">
+      <label>Titular</label>
+      <input type="text" class="form-control" pInputText [disabled]="true" [(ngModel)]="expediente.titular" [disabled]="true"/>
+    </div>
+    <div class="form-group-interlineado col-lg-6 col-md-6">
+      <label>Organismo responsable</label>
+      <input type="text" class="form-control" pInputText [disabled]="true" [(ngModel)]="expediente.descInstitucion" [disabled]="true"/>
+    </div>
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>Número Expediente</label>
+      <input type="text" class="form-control" pInputText [disabled]="true" [(ngModel)]="expediente.numExpediente" [disabled]="true"/>
+    </div>
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>Fecha Inicio</label>
+      <app-fecha [(value)]="fechaInicio"  [disabled]="true" [showTime]="true"></app-fecha>
+    </div>
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>Número registro</label>
+      <input type="text" class="form-control" pInputText [disabled]="true" [(ngModel)]="expediente.numRegistro" [disabled]="true"/>
+    </div>
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>Fecha de Registro</label>
+      <app-fecha [(value)]="fechaRegistro"  [disabled]="true" [showTime]="true"></app-fecha>
+    </div>
+    <div class="form-group-interlineado col-lg-6 col-md-6">
+      <label>Tipo Expediente</label>
+      <input type="text" class="form-control" pInputText [disabled]="true" [(ngModel)]="expediente.tipoExpediente" [disabled]="true"/>
+    </div>
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>Estado Expediente</label>
+      <input type="text" class="form-control" pInputText [disabled]="true" [(ngModel)]="expediente.estadoExpediente" [disabled]="true"/>
+    </div>
+  </div>
+</div>
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" iconPos="left" label="Tramitar"
+      (click)="tramitar();" [disabled]="isLetrado"></button>
+  </div>
+</div>

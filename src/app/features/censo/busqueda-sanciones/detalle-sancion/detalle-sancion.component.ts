@@ -20,6 +20,7 @@ import { AuthenticationService } from "../../../../_services/authentication.serv
 import { NuevaSancionItem } from "../../../../models/NuevaSancionItem";
 import { OnDestroy } from '@angular/core';
 import { CommonsService } from '../../../../_services/commons.service';
+import { SigaStorageService } from "../../../../siga-storage.service";
 
 @Component({
   selector: "app-detalle-sancion",
@@ -63,16 +64,21 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
 
   resaltadoDatos:boolean = false;
 
+  isLetrado : boolean = false;
+
   constructor(
     private location: Location,
     private authenticationService: AuthenticationService,
     private sigaServices: SigaServices,
     private router: Router,
     private commonsService: CommonsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private sigaStorageService : SigaStorageService
   ) { }
 
   ngOnInit() {
+
+    this.isLetrado = (this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona);
     // sessionStorage.removeItem("nuevaSancion");
     this.controlFechas();
     this.getComboColegios();
@@ -785,6 +791,12 @@ export class DetalleSancionComponent implements OnInit, OnDestroy {
           this.return();
         }
       );
+  }
+
+  goToFicha(){
+    sessionStorage.setItem("titular", String(this.body.nombre));
+    sessionStorage.setItem("nifColegiado", String(this.body.nif));
+    this.router.navigate(["/fichaExpedienteEXEA"], {queryParams : {idExpediente : this.body.numExpediente}});
   }
 
   controlChkBox() {

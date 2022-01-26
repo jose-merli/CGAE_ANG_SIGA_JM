@@ -17,6 +17,10 @@ import { FacRegistroFichContaItem } from '../../../../models/FacRegistroFichCont
     filtros:FacRegistroFichContaItem = new FacRegistroFichContaItem();
 
     ngOnInit(): void {
+        //En la documentación funcional se pide que por defecto aparezca el campo 
+        //con la fecha de dos años antes
+        let today = new Date();
+        this.filtros.fechaCreacionDesde = new Date(new Date().setFullYear(today.getFullYear() - 2));
     }
   
     clearFilters(){
@@ -30,7 +34,7 @@ import { FacRegistroFichContaItem } from '../../../../models/FacRegistroFichCont
             this.filtros.fechaCreacionHasta = event;
         else if(campo === 'exportacionDesde')
             this.filtros.fechaExportacionDesde = event;
-        else if(campo === ' exportacionHasta')
+        else if(campo === 'exportacionHasta')
             this.filtros.fechaExportacionHasta = event;
     }
 
@@ -45,7 +49,8 @@ import { FacRegistroFichContaItem } from '../../../../models/FacRegistroFichCont
     }
 
     searchExportacionesContabilidad(){
-        this.busqueda.emit()
+        //False para buscar sin historico
+        this.busqueda.emit(false)
     }
 
     clear() {

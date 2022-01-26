@@ -33,7 +33,6 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   comboEstados:ComboItem[] = [];
   comboPago:ComboItem[] = [];
   filtros:FacAbonoItem = new FacAbonoItem(); //Complementar atributos
-
   institucionActual;
   combo;
 
@@ -84,7 +83,20 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   clear(){
     this.filtros =  new FacAbonoItem(); 
   }
-
+  changeColegiado(event) {
+    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
+      && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
+      this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+      this.filtros.idPersona = this.usuarioBusquedaExpress.idPersona;
+    }else{
+      this.usuarioBusquedaExpress.numColegiado = " ";
+      this.filtros.numColegiado = undefined;
+      this.filtros.idPersona = undefined;
+      sessionStorage.removeItem("numColegiado");
+    }
+  }
   fillFecha(event, campo) {
     if(campo==='emisionDesde')
       this.filtros.fechaEmisionDesde = event;
@@ -139,9 +151,13 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
     this.showSociedad = !this.showSociedad;
   }
   searchAbonos(){
+    if( this.usuarioBusquedaExpress.numColegiado.length > 0)
+      this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado
     this.busqueda.emit();
   }
-  clearFilters(){}
+  clearFilters(){
+    this.filtros = new FacAbonoItem();
+  }
 
   searchAbonosSJCS(){}
 

@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { saveAs } from "file-saver/FileSaver";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-datos-generacion-adeudos',
@@ -46,6 +47,9 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   recibosCORSEPA=0;
   recibosB2BSEPA=0;
 
+  showModalEliminar: boolean = false;
+  confirmImporteTotal: string;
+
   fichaPosible = {
     key: "datosGeneracion",
     activa: true
@@ -53,7 +57,7 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices, private confirmationService: ConfirmationService,
     private commonsServices: CommonsService, private translateService: TranslateService,
-    private localStorageService: SigaStorageService) { }
+    private localStorageService: SigaStorageService, private location: Location) { }
 
   async ngOnInit() {
     this.cargaDatosSEPA();
@@ -128,17 +132,19 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     }
   }
 
+  // Primera confirmación
   confirmEliminar(): void {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
+    let mess = this.translateService.instant("facturacionPyS.ficherosTransferencias.messages.primeraConfirmacion");
     let icon = "fa fa-eraser";
 
     this.confirmationService.confirm({
-      //key: "asoc",
+      key: "first",
       message: mess,
       icon: icon,
+      acceptLabel: "Sí",
+      rejectLabel: "No",
       accept: () => {
-        this.progressSpinner = true;
-        this.eliminar();
+        this.showModalEliminar = true;
       },
       reject: () => {
         this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
@@ -146,10 +152,36 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     });
   }
 
+  // Segunda confirmación
+
+  confirmEliminar2(): void {
+    if (!this.disableConfirmEliminar()) {
+      this.showModalEliminar = false;
+      this.eliminar();
+      this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El importe introducido no coincide con el importe total del fichero");
+    }   
+  }
+
+  rejectEliminar2(): void {
+    this.showModalEliminar = false;
+    this.confirmImporteTotal = undefined;
+    this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+  }
+
+  disableConfirmEliminar(): boolean {
+    return parseFloat(this.confirmImporteTotal) != parseFloat(this.bodyInicial.totalRemesa);
+  }
+
+  // Función de eliminar
+
   eliminar() {
+    this.progressSpinner = true;
     this.sigaServices.post("facturacionPyS_eliminarFicheroAdeudos", this.bodyInicial).subscribe(
       data => {
-        this.refreshData.emit();
+        this.showMessage("success", this.translateService.instant("general.message.correct"), "El fichero de adeudos ha sido eliminado con exito.");
+        this.backTo();
         this.progressSpinner = false;
       },
       err => {
@@ -280,5 +312,10 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     }else if(campo==='fechaRecibosB2B'){
       this.body.fechaRecibosB2B = event;
     }
+  }
+
+  backTo() {
+    sessionStorage.setItem("volver", "true")
+    this.location.back();
   }
 }

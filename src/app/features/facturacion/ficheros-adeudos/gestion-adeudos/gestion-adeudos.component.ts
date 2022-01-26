@@ -141,10 +141,12 @@ export class GestionAdeudosComponent implements OnInit {
         err => {
           let error = JSON.parse(err.error);
           if (error && error.error && error.error.message) {
-            let message = this.translateService.instant(error.message);
-            console.log(message);
+            let message = this.translateService.instant(error.error.message);
+
             if (message && message.trim().length != 0) {
-              Promise.reject({ descripcion: message });
+              return Promise.reject({ descripcion: message });
+            } else {
+              return Promise.reject({ descripcion: error.error.message });
             }
           }
           return Promise.reject({ descripcion: this.translateService.instant("general.mensaje.error.bbdd") });
@@ -171,7 +173,7 @@ export class GestionAdeudosComponent implements OnInit {
         err => {
           let error = JSON.parse(err.error);
           if (error && error.error && error.error.message) {
-            let message = this.translateService.instant(error.message);
+            let message = this.translateService.instant(error.error.message);
             console.log(message);
             if (message && message.trim().length != 0) {
               Promise.reject({ descripcion: message });
@@ -259,7 +261,7 @@ export class GestionAdeudosComponent implements OnInit {
       },
       {
         label: this.translateService.instant("menu.facturacion"),
-        value: this.body.facturacion
+        value: this.body.descripcion
       },
       {
         label: this.translateService.instant("facturacion.seriesFactura.cuentaBancaria"),

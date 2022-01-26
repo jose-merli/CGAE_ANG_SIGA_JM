@@ -1,6 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { Message } from 'primeng/primeng';
+import { Confirmation, ConfirmationService, Message } from 'primeng/primeng';
 import { FicherosDevolucionesItem } from '../../../../../../models/FicherosDevolucionesItem';
+import { saveAs } from "file-saver/FileSaver";
+import { SigaServices } from '../../../../../../_services/siga.service';
+import { TranslateService } from '../../../../../../commons/translate';
+import { Location } from '@angular/common';
+import { stringify } from '@angular/core/src/util';
 
 @Component({
   selector: 'app-datos-carga-devoluciones',
@@ -21,8 +26,19 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
   
   @ViewChild("pUploadFile")
   pUploadFile;
+  file: File;
+
+  showModalEliminar: boolean = false;
+  confirmImporteTotal: string;
+
+  comision: boolean;
   
-  constructor() { }
+  constructor(
+    private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
+    private location: Location
+  ) { }
 
   ngOnInit() {
   }
@@ -32,6 +48,8 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
   }
 
   getFile(event: any) {
+    this.progressSpinner = true;
+
     let fileList: FileList = event.files;
 
     let nombreCompletoArchivo = fileList[0].name;
@@ -41,31 +59,121 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     );
 
     console.log(nombreCompletoArchivo);
-    /*
-    if (
-      extensionArchivo == null ||
-      extensionArchivo.trim() == "" ||
-      !/\.(xls)$/i.test(extensionArchivo.trim().toUpperCase())
+    
+    if (extensionArchivo == null || extensionArchivo.trim() == "" 
+          || !/\.(xml)$/i.test(extensionArchivo.trim().toUpperCase())
     ) {
       this.file = undefined;
-      this.archivoDisponible = false;
-      this.existeArchivo = false;
-      this.showMessage(
-        "info",
-        this.translateService.instant("general.message.informacion"),
-        this.translateService.instant(
-          "formacion.mensaje.extesion.fichero.erronea"
-        )
-      );
+
+      this.progressSpinner = false;
     } else {
       // se almacena el archivo para habilitar boton guardar
       this.file = fileList[0];
-      this.archivoDisponible = true;
-      this.existeArchivo = true;
 
-      this.uploadFile();
+      this.progressSpinner = false;
     }
-    */
+    
+  }
+
+  // Guardar y procesar
+  save() {
+    this.progressSpinner = true;
+
+    this.sigaServices.postSendFileAndParameters2("facturacionPyS_nuevoFicheroDevoluciones", this.file, {
+      conComision: this.comision
+    }).subscribe(
+      n => {
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    )
+  }
+
+  // Descargar LOG
+  descargarLog(){
+    let resHead ={ 'response' : null, 'header': null };
+
+    if (this.bodyInicial.nombreFichero) {
+      this.progressSpinner = true;
+      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFicheroDevoluciones", [{ idDisqueteDevoluciones: this.bodyInicial.idDisqueteDevoluciones }]);
+      descarga.subscribe(response => {
+        this.progressSpinner = false;
+
+        const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
+        let filename: string = response.headers.get("Content-Disposition");
+        filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+
+        saveAs(file, filename);
+        this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+      });
+    } else {
+      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+    }
+  }
+
+  // Primera confirmación
+  confirmEliminar(): void {
+    let mess = this.translateService.instant("facturacionPyS.ficherosTransferencias.messages.primeraConfirmacion");
+    let icon = "fa fa-eraser";
+
+    this.confirmationService.confirm({
+      key: "first",
+      message: mess,
+      icon: icon,
+      acceptLabel: "Sí",
+      rejectLabel: "No",
+      accept: () => {
+        this.showModalEliminar = true;
+      },
+      reject: () => {
+        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+      }
+    });
+  }
+
+  // Segunda confirmación
+
+  confirmEliminar2(): void {
+    if (!this.disableConfirmEliminar()) {
+      this.showModalEliminar = false;
+      this.eliminar();
+      this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El importe introducido no coincide con el importe total del fichero");
+    }   
+  }
+
+  rejectEliminar2(): void {
+    this.showModalEliminar = false;
+    this.confirmImporteTotal = undefined;
+    this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+  }
+
+  disableConfirmEliminar(): boolean {
+    return parseFloat(this.confirmImporteTotal) != parseFloat(this.bodyInicial.facturacion);
+  }
+
+  // Función de eliminar
+
+  eliminar() {
+    this.progressSpinner = true;
+    this.sigaServices.post("facturacionPyS_eliminarFicheroDevoluciones", this.bodyInicial).subscribe(
+      data => {
+        this.showMessage("success", this.translateService.instant("general.message.correct"), "El fichero de devoluciones ha sido eliminado con exito.");
+        this.backTo();
+        this.progressSpinner = false;
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+      }
+    );
   }
 
   // Fundiones para mostrar y ocultar los mensajes
@@ -96,4 +204,8 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     this.idOpened.emit(key);
   }
 
+  backTo() {
+    sessionStorage.setItem("volver", "true")
+    this.location.back();
+  }
 }

@@ -22,9 +22,13 @@ export class ContabilidadComponent implements OnInit {
   msgs: Message[] = [];
 
   buscar: boolean = false;
+  enabledSave: boolean = false;
+  disabledNuevo: boolean = false;
+
   datos: FacRegistroFichContaItem[] = [];
 
   filtro:FacRegistroFichContaItem;
+  historico:boolean = false;
 
   @ViewChild(FiltrosExportacionesContabilidadComponent) filtrosPadre;
   @ViewChild(TablaExportacionesContabilidadComponent) tabla;
@@ -45,9 +49,16 @@ export class ContabilidadComponent implements OnInit {
     this.msgs = [];
   }
   
-  searchExportacionesContabilidad(){
+  ultimaFechaHasta: Date;
+  searchExportacionesContabilidad(event){
     this.filtro = JSON.parse(JSON.stringify(this.filtrosPadre.filtros));
     this.progressSpinner = true;
+
+    if(event == true){
+      this.filtro.historico = true;
+    }else{
+      this.filtro.historico = false;
+    }
 
     this.sigaServices.post("facturacionPyS_buscarExportacionContabilidad", this.filtro).subscribe(
       n => {
@@ -55,13 +66,45 @@ export class ContabilidadComponent implements OnInit {
         let error = JSON.parse(n.body).error;
         this.progressSpinner = false;
 
+        //Fecha desde: en caso de registro nuevo, será un selector de fecha obligatorio, que por defecto se cargará 
+        //con la siguiente fecha a la última “fecha hasta” exportada que no esté de baja.
+        this.ultimaFechaHasta = new Date(0);
+        this.datos.forEach(registro =>{
+          if(registro.fechaBaja == null){
+            let fechaExportacionHastaRegistro = new Date(registro.fechaExportacionHasta);
+            if(this.ultimaFechaHasta < fechaExportacionHastaRegistro){
+              this.ultimaFechaHasta = fechaExportacionHastaRegistro;
+            }
+          }
+        })
+
         this.datos.forEach(d => {
           d.fechaCreacion = this.transformDate(d.fechaCreacion);
           d.fechaExportacionDesde = this.transformDate(d.fechaExportacionDesde);
           d.fechaExportacionHasta = this.transformDate(d.fechaExportacionHasta);
         });
 
+        if(event == true){
+          let thereIsHistoricalRegister;
+          this.datos.forEach(registro => {
+            if (registro.fechaBaja != null) {
+              thereIsHistoricalRegister = true;
+            }
+          });
+
+          if (thereIsHistoricalRegister != true) {
+            this.historico = false;
+            //Mensaje informativo en caso de que no haya registros eliminados.
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("facturacion.maestros.tiposproductosservicios.nohistorico"));
+
+          }
+        }else{
+          this.historico = false;
+        }
+
         this.buscar = true;
+        this.enabledSave = false;
+        this.disabledNuevo = false;
         
         if (this.tabla != undefined) {
           this.tabla.table.sortOrder = 0;

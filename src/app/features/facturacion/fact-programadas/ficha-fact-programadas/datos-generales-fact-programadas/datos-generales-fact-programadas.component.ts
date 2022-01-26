@@ -46,8 +46,6 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   dialogVisible: boolean = false;
 
   // Modal
-  @ViewChild("table") table : DataTable;
-  selectedItem: number = 10;
   modalCols = [];
   buscadores = [];
   rowsPerPage = [];
@@ -478,11 +476,6 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   cambiarEstadoDialogo(estado) {
     this.dialogVisible = estado;
-    if (!estado) {
-      this.datosMostrados = []
-    }
-    console.log(this.datosMostrados);
-    console.log(estado);
   }
 
   clear() {

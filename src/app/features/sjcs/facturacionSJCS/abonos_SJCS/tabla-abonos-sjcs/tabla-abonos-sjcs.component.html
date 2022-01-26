@@ -95,8 +95,17 @@
       <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
       <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
       -->
+      <!-- Botón debería ser "generar fichero transferencias" -->
+      <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="nuevoFicheroTransferencias()" [disabled]="disableNuevoFicheroTransferencias()"
+        label="{{'general.boton.generarFichero' | translate }}"></button>
+
       </div>
   </div>
 </div>
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" width="425"></p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
+  <div class="loader"></div>
+</div>

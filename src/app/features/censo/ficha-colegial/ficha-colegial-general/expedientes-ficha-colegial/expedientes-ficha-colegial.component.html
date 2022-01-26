@@ -1,0 +1,194 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div id= "tarjExp">
+<div *ngIf="(tarjetaExpedientes == '3' || tarjetaExpedientes == '2')" class="card">
+  <div class="card-header header-ficha">
+    <div *ngIf="!esFichaActiva('expedientes')" class="form-row">
+      <div class="col-lg-1 col-md-2">
+        <div class="img-colegiado" (click)="abreCierraFicha('expedientes')">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+      </div>
+      <div class="col-lg-11 col-md-10">
+        <div class="d-flex justify-content-start mb-1 pointer" (click)="abreCierraFicha('expedientes')">
+          <label  class="mr-auto title-ficha">{{ "menu.expedientes" | translate }}
+          </label>
+        </div>
+        <div class="d-flex justify-content-between">
+          <label>Número total: 
+            <span *ngIf="(expSIGA && expEXEA) || (expSIGA && !isActivoEXEA)">{{numExpSIGA + numExpEXEA}}</span>
+            <span *ngIf="isActivoEXEA && !expEXEA">{{ "aplicacion.cargando" | translate }}</span>
+          </label>
+          <i (click)="abreCierraFicha('expedientes')" *ngIf="!esFichaActiva('expedientes')" class="fa fa-angle-down float-right"></i>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="esFichaActiva('expedientes')" (click)="abreCierraFicha('expedientes')"class=" header-ficha-open d-flex justify-content-start align-items-center">
+      <div class="img-colegiado" (click)="abreCierraFicha('expedientes')">
+        <i class="far fa-address-book icon-ficha"></i>
+      </div>
+      <label (click)="abreCierraFicha('expedientes')" class="title-ficha">{{ "menu.expedientes" | translate }}
+      </label>
+      <i (click)="abreCierraFicha('expedientes')" class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+  <div *ngIf="esFichaActiva('expedientes')" class="card-body card-body-ficha">
+   <!--  <div class="row">
+      <div class="bloque col-lg-12 col-md-12 col-sm-12">-->
+        <div class="form-row">
+
+          <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="my-1" [expanded]="true" [disabled]="true">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="w100 font-weight-bold">
+                        <p class="w100">{{ "menu.expedientes" | translate }} SIGA</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                  <p-table [value]="expedientesSiga" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
+                  [responsive]="true" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
+                   [ngClass]="{ 'customCursor': selectMultiple}"
+                  paginatorPosition="both">
+                    <ng-template pTemplate="colgroup" let-columns>
+                      <colgroup>
+                        <col *ngFor="let col of cols" [style.width]="col.width">
+                      </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                      <tr>
+                        <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                          {{ col.header | translate }}
+                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                          <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+                            *ngSwitchCase="col.field" pInputText type="text" (input)="
+                      table.filter($event.target.value, col.field, 'contains')
+                    " />
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                      <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                          <td class="text-center" *ngFor="let col of columns">
+                              <div *ngIf = "col.field != 'numExpediente'">
+                                  <label>{{ dato[col.field]}}</label>
+                              </div>
+                              <div *ngIf = "col.field == 'numExpediente'">
+                                <label><a><span (click)="openTab(dato)" style="color: blue; text-decoration: underline; cursor: pointer;">{{dato[col.field]}}</span></a></label>
+                              </div>
+                          </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                      <tr>
+                        <td [attr.colspan]="columns.length">
+                          {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                        </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                      <div class="mostrar d-flex text-right justify-content-end">
+                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+                          translate }}{{table.first + 1}} al
+                          {{table.first + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
+                          }} {{table.totalRecords}}</label>
+                        <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{
+                          'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+                        </label>
+                        <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{
+                          'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+                        </label>
+                        <label>{{"general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+                        </p-dropdown>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <div class="ml-3 selectAll">
+                          <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll"
+                            binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-table>
+                </ng-template>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+        <div *ngIf="isActivoEXEA" class="form-row">
+          <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel class="my-1" [expanded]="true" [disabled]="true">
+                <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+                    <div class="w100 font-weight-bold">
+                        <p class="w100">{{ "menu.expedientes" | translate }} EXEA</p>
+                    </div>
+                </mat-expansion-panel-header>
+                <ng-template matExpansionPanelContent>
+                  <p-table [value]="expedientesEXEA" [columns]="colsEXEA" [(selection)]="selectedDatosEXEA" selectionMode="multiple"
+                  [responsive]="true" #tableEXEA class="tabla-listado" [paginator]="true" [rows]="selectedItemEXEA"
+                   [ngClass]="{ 'customCursor': selectMultipleEXEA}"
+                  paginatorPosition="both">
+                    <ng-template pTemplate="colgroup" let-columns>
+                      <colgroup>
+                        <col *ngFor="let col of colsEXEA" [style.width]="col.width">
+                      </colgroup>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                      <tr>
+                        <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+                          {{ col.header | translate }}
+                          <p-sortIcon [field]="col.field"></p-sortIcon>
+                          <input pDroppable="false" [(ngModel)]="buscadoresEXEA[i]" (click)="$event.stopPropagation()"
+                            *ngSwitchCase="col.field" pInputText type="text" (input)="
+                      table.filter($event.target.value, col.field, 'contains')
+                    " />
+                        </th>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+                      <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+                          <td class="text-center" *ngFor="let col of columns">
+                              <div *ngIf = "col.field != 'numExpediente'">
+                                  <label>{{ dato[col.field]}}</label>
+                              </div>
+                              <div *ngIf = "col.field == 'numExpediente'">
+                                <label><a><span (click)="openTab(dato)" style="color: blue; text-decoration: underline; cursor: pointer;">{{dato[col.field]}}</span></a></label>
+                              </div>
+                          </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage" let-columns>
+                      <tr>
+                        <td [attr.colspan]="columns.length">
+                          {{'censo.busquedaClientesAvanzada.literal.sinResultados' | translate }}
+                        </td>
+                      </tr>
+                    </ng-template>
+                    <ng-template pTemplate="paginatorleft">
+                      <div class="mostrar d-flex text-right justify-content-end">
+                        <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+                          translate }}{{tableEXEA.first + 1}} al
+                          {{tableEXEA.first + tableEXEA.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
+                          }} {{tableEXEA.totalRecords}}</label>
+                        <label class="pr-3 numSeleccionados" *ngIf="selectedDatosEXEA  && selectedDatosEXEA.length > 0">{{
+                          'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+                        </label>
+                        <label class="pr-3 numSeleccionados" *ngIf="selectedDatosEXEA && selectedDatosEXEA.length <= 0">{{
+                          'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+                        </label>
+                        <label>{{"general.message.mostrar" | translate}}</label>
+                        <p-dropdown [(ngModel)]="selectedItemEXEA" [options]="rowsPerPage" (onChange)="onChangeRowsPerPagesEXEA($event)">
+                        </p-dropdown>
+                        <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+                        <div class="ml-3 selectAll">
+                          <p-checkbox (onChange)="onChangeSelectAllEXEA()" [(ngModel)]="selectAllEXEA"
+                            binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}" name="groupname"></p-checkbox>
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-table>
+                </ng-template>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      <!--</div>
+    </div> -->
+  </div>
+</div>
+</div>
