@@ -147,6 +147,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   disableDelete : boolean = true;
   disableDownload : boolean = true;
   asunto : string;
+  codDocAnexo : string;
   @ViewChild("table") table : Table;
   constructor(
     private translateService: TranslateService,
@@ -368,7 +369,8 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.isActivoEXEA = (stringActivoEXEA == "1");
 
         if(this.isActivoEXEA){
-          this.getAsunto()
+          this.getAsunto();
+          this.getCodDocAnexo();
           this.getParamsDocumentacionEXEA();
           if(this.estadoSolicitudSelected == '20' && this.solicitudEditar.idEstado != '20'){
             this.estadoSolicitudSelected = '10'
@@ -507,29 +509,31 @@ export class NuevaIncorporacionComponent implements OnInit {
   }
 
   sincronizarDocEXEASIGA(documentosSincronizacion : DocumentacionIncorporacionItem []){
-    this.progressSpinner = true;
-    this.sigaServices
-    .post("expedientesEXEA_sincronizarDoc", documentosSincronizacion)
-    .subscribe(
-      data => {
-        let error = JSON.parse(data.body).error;
-        if(error){
-          this.showFailNotTraduce('Error al sincronizar la documentacion de SIGA con EXEA: ' + error.message);
-        }else{
-          this.showInfo('Documentacion sincronizada con EXEA correctamente');
-          this.getDocRequerida();
+    if(documentosSincronizacion && documentosSincronizacion.length > 0){
+      this.progressSpinner = true;
+      this.sigaServices
+      .post("expedientesEXEA_sincronizarDoc", documentosSincronizacion)
+      .subscribe(
+        data => {
+          let error = JSON.parse(data.body).error;
+          if(error){
+            this.showFailNotTraduce('Error al sincronizar la documentacion de SIGA con EXEA: ' + error.message);
+          }else{
+            this.showInfo('Documentacion sincronizada con EXEA correctamente');
+            this.getDocRequerida();
+          }
+          this.progressSpinner = false;
+          // this.editar = false;
+        },
+        error => {
+          this.showFailNotTraduce('Error al sincronizar la documentacion: ' + error);
+          this.progressSpinner = false;
+        },
+        ()=>{
+          this.progressSpinner = false;
         }
-        this.progressSpinner = false;
-        // this.editar = false;
-      },
-      error => {
-        this.showFailNotTraduce('Error al sincronizar la documentacion: ' + error);
-        this.progressSpinner = false;
-      },
-      ()=>{
-        this.progressSpinner = false;
-      }
-    );
+      );
+    }
   }
 
 
@@ -2378,18 +2382,23 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   newDoc(){
-    let docIncorporacion : DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
-    docIncorporacion.nuevoRegistro = true;
-    docIncorporacion.obligatorio = 'NO';
-    docIncorporacion.codDocEXEA = '002';
-    docIncorporacion.idModalidad = String(this.modalidadDocumentacionSelected);
-    docIncorporacion.tipoColegiacion = String(this.tipoColegiacionSelected);
-    docIncorporacion.tipoSolicitud = String(this.tipoSolicitudSelected);
 
-    this.documentos.unshift(docIncorporacion);
+    if(this.codDocAnexo){
+      let docIncorporacion : DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
+      docIncorporacion.nuevoRegistro = true;
+      docIncorporacion.obligatorio = 'NO';
+      docIncorporacion.codDocEXEA = '002';
+      docIncorporacion.idModalidad = String(this.modalidadDocumentacionSelected);
+      docIncorporacion.tipoColegiacion = String(this.tipoColegiacionSelected);
+      docIncorporacion.tipoSolicitud = String(this.tipoSolicitudSelected);
 
-    this.changeDetectorRef.detectChanges();
-    this.table.reset();
+      this.documentos.unshift(docIncorporacion);
+
+      this.changeDetectorRef.detectChanges();
+      this.table.reset();
+    }else{
+      this.showFailNotTraduce('No se puedo obtener correctamente el código documento del anexo');
+    }
   }
 
   initTabla(){
@@ -2486,7 +2495,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   save(){
-    this.progressSpinner = true;
+    if(this.checkNuevosRegistros()){
+
+      this.progressSpinner = true;
       this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
         n => {
           this.progressSpinner = false;
@@ -2505,6 +2516,10 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.progressSpinner = false;
         }
       );
+    } else {
+      this.showFailNotTraduce('Falta documentación que adjuntar a los anexos');
+      this.progressSpinner = false;
+    }
   }
 
   downloadDoc(){
@@ -2649,6 +2664,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.solicitudEditar.idSolicitud = body.id.split(';')[0];
           this.solicitudEditar.numRegistro = body.id.split(';')[1];
           this.solicitudEditar.claveConsulta = body.id.split(';')[2];
+          this.solicitudEditar.numExpediente = body.id.split(';')[3];
           this.consulta = true;
           this.pendienteAprobacion = true;
           sessionStorage.setItem("pendienteAprobacion", "true");
@@ -2683,6 +2699,34 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
+  openEXEA(){
+    if(this.solicitudEditar && this.solicitudEditar.numExpediente){
+      let parametro = new ParametroRequestDto();
+      parametro.idInstitucion = this.sigaStorageService.institucionActual;
+      parametro.modulo = "EXEA";
+      parametro.parametrosGenerales = "URL_EXEA";
+
+      this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+        data => {
+          let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+          let url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == element.idinstitucionActual);
+          
+          if(!url){
+            url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == '0');
+          }
+
+          if(url){
+            window.open(url.valor + "selectAnActivity.do?numexp="+this.solicitudEditar.numExpediente, '_blank');
+          }
+        },
+        err => {
+          console.log(err);
+        },
+        () => {}
+      );
+    }
+  }
+
   getAsunto(){
     let parametro = new ParametroRequestDto();
     parametro.idInstitucion = this.sigaStorageService.institucionActual;
@@ -2708,12 +2752,37 @@ para poder filtrar el dato con o sin estos caracteres*/
     );
   }
 
+  getCodDocAnexo(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.sigaStorageService.institucionActual;
+    parametro.modulo = "EXEA";
+    parametro.parametrosGenerales = "COD_DOC_ANEXO";
+    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+      data => {
+        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+        let codDocAnexo = resp.find(element => element.parametro == "COD_DOC_ANEXO" && element.idInstitucion == element.idinstitucionActual);
+        
+        if(!codDocAnexo){
+          codDocAnexo = resp.find(element => element.parametro == "COD_DOC_ANEXO" && element.idInstitucion == '0');
+        }
+
+        if(codDocAnexo && codDocAnexo.valor != 'NULL'){
+          this.codDocAnexo = String(codDocAnexo.valor);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
+  }
+
 
   checkNuevosRegistros(){
     let ok = false;
     if(!this.documentos || this.documentos.length == 0
       || this.documentos.filter(doc => doc.nuevoRegistro).length == 0
-      || this.documentos.filter(doc => doc.nuevoRegistro).every(doc => doc.documento != '' && doc.documento != null && doc.nombreDoc != '' && doc.nombreDoc != null)){
+      || this.documentos.filter(doc => doc.nuevoRegistro).every(doc => doc.documento != '' && doc.documento != null && doc.nombreDoc != '' && doc.nombreDoc != null && doc.fileData != null && doc.fileData != undefined)){
         ok = true;
     }
     return ok;

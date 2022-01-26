@@ -92,8 +92,13 @@
                         </div>
                         <div class="row">
                             <div class="form-group col-lg-6 col-md-6">
-                                <label>Número registro</label>
+                                <label>{{'exp.expedientesexea.numeroregistro' | translate}}</label>
                                 <input [(ngModel)]="solicitudEditar.numRegistro" [disabled]="true" type="text"
+                                class="form-control" pInputText>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6">
+                                <label>{{'exp.expedientesexea.numeroexp' | translate}}</label>
+                                <input [(ngModel)]="solicitudEditar.numExpediente"  style="color: blue; text-decoration: underline; cursor: pointer;" (click)="openEXEA()" readonly type="text"
                                 class="form-control" pInputText>
                             </div>
                         </div>
@@ -797,13 +802,13 @@
                     <div class="card-footer" style="width: 100%; float: right;">
                         <div class="text-right main-button">
                 
-                            <button pButton type="button" icon="fa fa-download" [disabled]="disableDownload" iconPos="left" label="{{'general.boton.download' | translate}}" (click)="downloadDoc()" 
+                            <button pButton type="button" icon="fa fa-download" [disabled]="disableDownload || !isActivoEXEA || !solicitudEditar.idSolicitud" iconPos="left" label="{{'general.boton.download' | translate}}" (click)="downloadDoc()"
                             ></button>
-                            <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}" (click)="newDoc()"
+                            <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}" (click)="newDoc()" [disabled]="!isActivoEXEA || !solicitudEditar.idSolicitud"
                             ></button>
-                            <button pButton type="button" icon="fa fa-trash-alt" [disabled]="disableDelete" iconPos="left" label="{{'general.boton.eliminar' | translate}}" (click)="delete()"
+                            <button pButton type="button" icon="fa fa-trash-alt" [disabled]="disableDelete || !isActivoEXEA || !solicitudEditar.idSolicitud" iconPos="left" label="{{'general.boton.eliminar' | translate}}" (click)="delete()"
                             ></button>
-                            <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" (click)="validateSizeFile()"></button>
+                            <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" (click)="validateSizeFile()" [disabled]="!isActivoEXEA || !solicitudEditar.idSolicitud"></button>
                 
                         </div>
                       </div>
@@ -924,9 +929,9 @@
       <label>Inicio de trámite</label>
     </p-header>
     <div class="row">
-      <div class="form-group col-lg-8 col-md-8">
+      <div class="form-group col-lg-12 col-md-12">
         <label>Asunto</label>
-        <input [(ngModel)]="asunto" type="text" class="form-control" pInputText>
+        <textarea [(ngModel)]="asunto" type="text" [rows]="10" [cols]="10" pInputTextarea class="form-control"></textarea>
       </div>
     </div>
     <p-footer>

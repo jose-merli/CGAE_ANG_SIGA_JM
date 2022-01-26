@@ -82,6 +82,7 @@ export class SolicitudIncorporacionItem {
 
   numRegistro : string;
   claveConsulta : string;
+  numExpediente : string;
   documentos : DocumentacionIncorporacionItem [];
 
   constructor() { }
