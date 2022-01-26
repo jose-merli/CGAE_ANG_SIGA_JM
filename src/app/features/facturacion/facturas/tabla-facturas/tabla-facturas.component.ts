@@ -4,6 +4,7 @@ import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { DatosColegiadosItem } from '../../../../models/DatosColegiadosItem';
 import { FacturasItem } from '../../../../models/FacturasItem';
+import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -139,9 +140,18 @@ disableNuevoFicheroTransferencias() {
   return !this.selectedDatos || this.selectedDatos.filter(d => d.tipo != "FACTURA" && d.idEstado == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO).length == 0;
 }
 
+nuevoFicheroAdeudos() {
+  let ficheroAdeudos = new FicherosAdeudosItem();
+  sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
+  sessionStorage.setItem("Nuevo", "true");
+  
+  this.router.navigate(["/gestionAdeudos"]);
+}
+
 nuevoFicheroTransferencias() {
   this.progressSpinner = true;
   let abonosFichero = this.selectedDatos.filter(d => d.tipo != "FACTURA" && d.idEstado == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO);
+  
   this.sigaServices.post("facturacionPyS_nuevoFicheroTransferencias", abonosFichero).subscribe(
     n => {
       this.progressSpinner = false;

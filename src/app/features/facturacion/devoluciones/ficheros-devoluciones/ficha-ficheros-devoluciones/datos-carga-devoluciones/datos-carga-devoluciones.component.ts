@@ -77,18 +77,20 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
 
   // Guardar y procesar
   save() {
-    this.progressSpinner = true;
+    if (!this.modoEdicion && this.file != undefined) {
+      this.progressSpinner = true;
 
-    this.sigaServices.postSendFileAndParameters2("facturacionPyS_nuevoFicheroDevoluciones", this.file, {
-      conComision: this.comision
-    }).subscribe(
-      n => {
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    )
+      this.sigaServices.postSendFileAndParameters2("facturacionPyS_nuevoFicheroDevoluciones", this.file, {
+        conComision: this.comision != undefined ? this.comision : false
+      }).subscribe(
+        n => {
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
 
   // Descargar LOG
@@ -163,14 +165,21 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
 
   eliminar() {
     this.progressSpinner = true;
-    this.sigaServices.post("facturacionPyS_eliminarFicheroDevoluciones", this.bodyInicial).subscribe(
+    console.log(this.bodyInicial)
+    let deleteRequest = {
+      idDisqueteDevoluciones: this.bodyInicial.idDisqueteDevoluciones
+    };
+
+    this.sigaServices.post("facturacionPyS_eliminarFicheroDevoluciones", deleteRequest).subscribe(
       data => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), "El fichero de devoluciones ha sido eliminado con exito.");
         this.backTo();
+        this.confirmImporteTotal = undefined;
         this.progressSpinner = false;
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.confirmImporteTotal = undefined;
         this.progressSpinner = false;
       }
     );

@@ -31,6 +31,7 @@ export class FiltrosBusquedaTransferenciasComponent implements OnInit {
 
  @Input() permisos;
  @Input() permisoEscritura;
+ @Input() fcs: boolean = false;
 
  @Output() buscarFicheros = new EventEmitter<boolean>();
 
@@ -114,16 +115,6 @@ export class FiltrosBusquedaTransferenciasComponent implements OnInit {
     } else {
       return true;
     }
-  }
-
-  nuevo(){
-    if (sessionStorage.getItem("FicherosAbonosItem")) {
-      sessionStorage.removeItem("FicherosAbonosItem");
-    }
-
-    this.persistenceService.clearDatos();
-    sessionStorage.setItem("Nuevo", "true");
-    this.router.navigate(["/gestionFicherosTransferencias"]);
   }
 
   buscar() {

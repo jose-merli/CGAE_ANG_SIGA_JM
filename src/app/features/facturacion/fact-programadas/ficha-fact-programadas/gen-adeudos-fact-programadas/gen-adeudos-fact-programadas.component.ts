@@ -147,6 +147,10 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
       ficheroAdeudos.fechaRecibosCOR = this.bodyInicial.fechaRecibosCOR1;
       ficheroAdeudos.fechaRecibosB2B = this.bodyInicial.fechaRecibosB2B;
 
+      sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
+
+      this.router.navigate(['/gestionAdeudos']);
+
       this.progressSpinner = true;
       this.sigaServices.post("facturacionPyS_nuevoFicheroAdeudos", ficheroAdeudos)
         .toPromise()

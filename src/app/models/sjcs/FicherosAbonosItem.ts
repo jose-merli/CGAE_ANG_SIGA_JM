@@ -18,6 +18,7 @@ export class FicherosAbonosItem {
 	numRecibosHasta: String;
 	propSEPA: string;
 	propOtros: string;
+	fcs: boolean;
 
     constructor() { }
 }
