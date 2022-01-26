@@ -62,6 +62,14 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
           this.showMsg('error','Error', n.error.description);
         }else{
           this.datosJustificacion = n.tarjetaJustificacionItems[0];
+          if(this.datosJustificacion.validada == '0'){
+            this.datosJustificacion.estado = '';
+          }else{
+            this.datosJustificacion.estado = 'VALIDADA';
+          }
+          if(this.datosJustificacion.anulada == '1'){
+            this.datosJustificacion.estado = 'ANULADA';
+          }
           this.datosJustificacionAux = Object.assign({},this.datosJustificacion);
           if(this.isLetrado && !this.datosJustificacion.fechaJustificacion){ //Si es letrado, deshabilitamos el campo de fecha y lo seteamos a la fecha actual
             this.datosJustificacion.fechaJustificacion = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
@@ -147,6 +155,9 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
             this.datosJustificacion.estado = '';
           }else{
             this.datosJustificacion.estado = 'VALIDADA';
+          }
+          if(this.datosJustificacion.anulada == '1'){
+            this.datosJustificacion.estado = 'ANULADA';
           }
           this.checkEstados();
           this.datosJustificacion.validada = '';

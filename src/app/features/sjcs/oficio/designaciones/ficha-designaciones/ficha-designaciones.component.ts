@@ -1156,7 +1156,10 @@ export class FichaDesignacionesComponent implements OnInit {
       );
     }
   }
-
+  searchRelacionesAs(nueva){
+    this.nuevaDesigna = false;
+    this.searchRelaciones();
+  }
   searchRelaciones() {
     if (!this.nuevaDesigna) {
       this.progressSpinner = true;

@@ -13,7 +13,7 @@
         
         <app-datos-generales-ejg (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" 
         *ngIf="permisoEscrituraDatosGenerales != undefined" [modoEdicion]="modoEdicion" [permisoEscritura]="permisoEscrituraDatosGenerales" (modoEdicionSend)="modoEdicionSend($event)" 
-        (guardadoSend)="guardadoSend($event)" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (newEstado)="newEstado()" [noAsocDes]="noAsocDes">
+        (guardadoSend)="guardadoSend($event)" [openTarjetaDatosGenerales]="openTarjetaDatosGenerales" (newEstado)="newEstado()" [noAsocDes]="noAsocDes" [nuevo] ="nuevo">
         </app-datos-generales-ejg>
 
         <app-servicios-tramitacion *ngIf="permisoEscrituraServiciosTramitacion != undefined && modoEdicion"

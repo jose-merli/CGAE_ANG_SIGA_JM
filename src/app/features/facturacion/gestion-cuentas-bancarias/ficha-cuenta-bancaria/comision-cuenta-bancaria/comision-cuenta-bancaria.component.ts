@@ -47,7 +47,7 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
   // Combo de tipos IVA
   getComboTiposIVA() {
     this.progressSpinner = true;
-    this.sigaServices.getParam("facturacionPyS_comboTiposIVA", "?codBanco=" + this.body.codBanco).subscribe(
+    this.sigaServices.getParam("facturacionPyS_comboTiposIVACuentasBancariasEntidad", "?idTipoIVA=" + this.body.idTipoIVA).subscribe(
       n => {
         this.comboTiposIVA = n.combooItems;
         this.comboTiposIVA.forEach(c => c.label = c.label1);

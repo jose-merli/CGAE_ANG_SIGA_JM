@@ -217,8 +217,11 @@ export class TarjetaGestionInscripcionGuardiaComponent implements OnInit {
     return new ResultadoInscripciones(objeto);
   }
 	formatDateSol(date) {
-		const pattern = 'dd/MM/yyyy hh:mm:ss';
-		return this.datepipe.transform(date, pattern);
+    const pattern = 'dd/MM/yyyy hh:mm:ss';
+    if (date != undefined && isNaN(Number(date))){
+      if (!date.includes('/'))
+      return this.datepipe.transform(date, pattern);
+    }
 	
 	  }
   busqueda() { //MIRAR DONDE SE LLAMA

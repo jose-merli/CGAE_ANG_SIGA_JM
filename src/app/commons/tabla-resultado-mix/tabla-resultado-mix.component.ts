@@ -333,6 +333,7 @@ export class TablaResultadoMixComponent implements OnInit {
     }
   }
   sortData(sort: Sort) {
+    if (!this.inscripciones){
     //console.log("entro en el método Sort con valor:"+ sort.active+","+sort.direction);
     let data: Row[] = [];
     this.rowGroups = this.rowGroups.filter((row) => {
@@ -385,7 +386,28 @@ export class TablaResultadoMixComponent implements OnInit {
  
     });
 
-  }
+  }else{
+    let data :Row[] = [];
+    this.rowGroups = this.rowGroupsAux.filter((row) => {
+        data.push(row);
+    });
+    data = data.slice();
+    if (!sort.active || sort.direction === '') {
+      this.rowGroups = data;
+      return;
+    }
+    this.rowGroups = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      let resultado;
+        for (let i = 0; i < a.cells.length; i++) {
+        resultado = compare(a.cells[i].value, b.cells[i].value, isAsc);
+        }
+    return resultado ;
+  });
+  this.rowGroupsAux = this.rowGroups;
+  
+    } 
+}
 
 
   getComboLabel(key: string){
@@ -413,6 +435,7 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   searchChange(x: any) {
+    if (!this.inscripciones ){
     let isReturnArr = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       let isReturn = true;
@@ -449,7 +472,34 @@ export class TablaResultadoMixComponent implements OnInit {
 
     });
     this.totalRegistros = this.rowGroups.length;
+  } else{
+      let isReturn = true;
+      let isReturnArr = [];
+      this.rowGroups = this.rowGroupsAux.filter((row) => {
+        let validTimestamp = (new Date(row.cells[x].value)).getTime() > 0;
+        let word;
+        if (!validTimestamp){
+          word = row.cells[x].value;
+        }else{
+          word = this.datetoString(new Date(row.cells[x].value));
+        }
+            if (
+              this.searchText[x] != " " &&
+              this.searchText[x] != undefined && 
+              !word.toString().toLowerCase().includes(this.searchText[x].toLowerCase())
+            ) {
+              
+              isReturn = false;
+            } else {
+              isReturn = true;
+            }
+        if (isReturn) {
+          return row;
+        }
+      });
+      this.totalRegistros = this.rowGroups.length;
   }
+}
 
 
   showMsg(severity, summary, detail) {

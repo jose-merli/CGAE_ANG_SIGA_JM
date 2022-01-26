@@ -12,6 +12,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 export class FichaAsistenciaTarjetaObservacionesComponent implements OnInit {
 
   msgs : Message [] = [];
+  @Input() modoLectura: boolean;
   @Input() idAsistencia : string;
   @Input() editable : boolean;
   tarjetaObservacionesItem : TarjetaObservacionesItem = new TarjetaObservacionesItem();

@@ -21,7 +21,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() idTurno;
   @Input() idGuardia;
   @Input() art27;
-
+  @Input() filtros;
   @Input() obligatorio: boolean;
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
@@ -39,6 +39,9 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   constructor(private localStorageService: SigaStorageService, private router: Router, private sigaServices: SigaServices, private translateService: TranslateService, private PpersistenceService: PersistenceService) { }
 
   ngOnInit() {
+    if (this.pantalla == 'asistencia'){
+    sessionStorage.setItem('filtroAsistencia', JSON.stringify(this.filtros));
+    }
     if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
@@ -78,6 +81,9 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   isBuscar(form) {
+    if (this.pantalla == 'asistencia'){
+      sessionStorage.setItem('filtroAsistencia', JSON.stringify(this.filtros));
+      }
     //Se revisa si esta en la pantalla de gestion de Ejg y la tarjeta de servicios de tramitación
     if (this.tarjeta == "ServiciosTramit" && this.pantalla == "gestionEjg") {
       //Se comprueba que se han rellenado los campos de turno y guardia

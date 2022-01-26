@@ -26,6 +26,12 @@
             </colgroup>
           </ng-template>
           <ng-template pTemplate="header" let-columns>
+            <tr class="selectAllHeader"> 
+              <th>
+                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                label="Seleccionar todo" name="groupname"></p-checkbox>
+              </th>
+            </tr>
             <tr>
               <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                 <div class="text-center"
@@ -83,6 +89,34 @@
 
             </tr>
           </ng-template>
+
+
+
+
+          <!--<ng-template pTemplate="paginatorleft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
+                translate}}
+                {{table.first + 1}} al {{table.first
+                + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                {{table.totalRecords}}
+              </label>
+              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
+                translate}}:
+                {{selectedDatos.length}}
+              </label>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+              <div class="ml-3 selectAll">
+                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
+                  label="Seleccionar todo" name="groupname"></p-checkbox>
+              </div>
+            </div>
+          </ng-template>-->
+
+
         </p-table>
       <!-- </div> -->
     <!-- </div> -->

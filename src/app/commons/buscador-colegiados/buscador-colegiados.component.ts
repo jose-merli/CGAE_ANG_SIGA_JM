@@ -98,6 +98,9 @@ export class BuscadorColegiadosComponent implements OnInit {
 
   goBack() {
     sessionStorage.setItem("volver", "true");
+    if(sessionStorage.getItem('filtroAsistencia')){
+      sessionStorage.setItem("modoBusqueda","a");
+    }
     this.location.back();
   }
 
