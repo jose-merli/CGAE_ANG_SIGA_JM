@@ -2573,22 +2573,19 @@ para poder filtrar el dato con o sin estos caracteres*/
     if(this.solicitudEditar.claveConsulta){
       this.progressSpinner = true;
       this.sigaServices
-        .postDownloadFiles(
+        .postDownloadFilesWithFileName2(
           "expedientesEXEA_getJustificante",
           this.solicitudEditar.claveConsulta
         )
         .subscribe(
-          data => {
+          (data: { file: Blob, filename: string, status: number }) => {
             let blob = null;
             if(data){
-              if(data.size == 0){ //Si size es 0 es que no trae nada
+              if(data == null){ //Si size es 0 es que no trae nada
                 this.showFailNotTraduce('No se ha encontrado el documento indicado');
               }else{
-                
-                let nombreFichero = "Registro.pdf";
-                let mime = this.getMimeType(nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length));
-                blob = new Blob([data], { type: mime });
-                saveAs(blob, nombreFichero);
+                let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+                saveAs(data.file, filename);
               }
             }else{
               this.showFailNotTraduce('Ocurrió un error al obtener el justificante');
