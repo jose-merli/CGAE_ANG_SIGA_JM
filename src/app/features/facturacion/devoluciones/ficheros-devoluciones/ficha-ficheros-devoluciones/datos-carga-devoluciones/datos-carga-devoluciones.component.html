@@ -46,12 +46,12 @@
         <div class="col-lg-3 col-md-3">
           <p>{{ 'censo.sociedades.datosBancarios.adjuntar' | translate }}</p>
           <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xml,.txt"
-            multiple="false" customUpload="true" (uploadHandler)="getFile($event)" auto="true">
+            multiple="false" customUpload="true" (uploadHandler)="getFile($event)" auto="true" [disabled]="modoEdicion || procesoIniciado">
           </p-fileUpload>
         </div>
         <div class="form-check col-lg-3 col-md-3 align-self-center">
           <label class="form-group-label">{{ 'facturacionPyS.ficherosTransferencias.datosCarga.comision' | translate }}</label>
-          <p-checkbox binary="true" [(ngModel)]="comision"></p-checkbox>
+          <p-checkbox binary="true" [(ngModel)]="comision" [disabled]="modoEdicion || procesoIniciado"></p-checkbox>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'justiciaGratuita.oficio.designas.interesados.identificador' | translate }}</label>
@@ -72,7 +72,7 @@
         <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="!modoEdicion" 
           (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="modoEdicion || !file" 
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="modoEdicion || !file || procesoIniciado" 
           (click)="save()" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

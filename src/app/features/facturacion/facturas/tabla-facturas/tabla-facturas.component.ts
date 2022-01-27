@@ -148,6 +148,25 @@ nuevoFicheroAdeudos() {
   this.router.navigate(["/gestionAdeudos"]);
 }
 
+// Confirmación de un nuevo fichero de transferencias
+confirmNuevoFicheroTransferencias(): void {
+  let mess = this.translateService.instant("facturacionPyS.facturas.fichTransferencias.confirmacion");
+  let icon = "fa fa-plus";
+
+  this.confirmationService.confirm({
+    message: mess,
+    icon: icon,
+    acceptLabel: "Sí",
+    rejectLabel: "No",
+    accept: () => {
+      this.nuevoFicheroAdeudos();
+    },
+    reject: () => {
+      this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+    }
+  });
+}
+
 nuevoFicheroTransferencias() {
   this.progressSpinner = true;
   let abonosFichero = this.selectedDatos.filter(d => d.tipo != "FACTURA" && d.idEstado == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO);
@@ -155,26 +174,30 @@ nuevoFicheroTransferencias() {
   this.sigaServices.post("facturacionPyS_nuevoFicheroTransferencias", abonosFichero).subscribe(
     n => {
       this.progressSpinner = false;
-      this.showMessage("success", this.translateService.instant("general.message.correct"), "Se han generado correctamente los ficheros de transferencias");
+      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionPyS.facturas.fichTransferencias.generando"));
       this.busqueda.emit();
     },
     err => {
-      let error = JSON.parse(err.error);
-      if (error && error.error && error.error.message) {
-        let message = this.translateService.instant(error.error.message);
-
-        if (message && message.trim().length != 0) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
-        }
-      } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
+      this.handleServerSideErrorMessage(err);
       
       this.progressSpinner = false;
     }
   );
+}
+
+handleServerSideErrorMessage(err): void {
+  let error = JSON.parse(err.error);
+  if (error && error.error && error.error.message) {
+    let message = this.translateService.instant(error.error.message);
+
+    if (message && message.trim().length != 0) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+    }
+  } else {
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+  }
 }
 
 selectFila(event) {

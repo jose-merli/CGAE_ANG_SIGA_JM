@@ -158,7 +158,7 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     if (!this.disableConfirmEliminar()) {
       this.showModalEliminar = false;
       this.eliminar();
-      this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
+      // this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El importe introducido no coincide con el importe total del fichero");
     }   
@@ -180,12 +180,17 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("facturacionPyS_eliminarFicheroAdeudos", this.bodyInicial).subscribe(
       data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), "El fichero de adeudos ha sido eliminado con exito.");
+        sessionStorage.setItem("mensaje", JSON.stringify({
+          severity: "success", summary: this.translateService.instant("general.message.correct"), detail: this.translateService.instant("facturacionPyS.ficherosExp.eliminar.exito")
+        }));
+        sessionStorage.setItem("volver", "true");
         this.backTo();
+        this.confirmImporteTotal = undefined;
         this.progressSpinner = false;
       },
       err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.handleServerSideErrorMessage(err);
+        this.confirmImporteTotal = undefined;
         this.progressSpinner = false;
       }
     );
@@ -245,6 +250,21 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
+    }
+  }
+
+  handleServerSideErrorMessage(err): void {
+    let error = JSON.parse(err.error);
+    if (error && error.error && error.error.message) {
+      let message = this.translateService.instant(error.error.message);
+  
+      if (message && message.trim().length != 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+      }
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
     }
   }
 

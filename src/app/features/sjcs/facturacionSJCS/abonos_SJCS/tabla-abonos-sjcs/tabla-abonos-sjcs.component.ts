@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataTable } from 'primeng/primeng';
+import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Message } from 'primeng/components/common/message';
 import { FacAbonoItem } from '../../../../../models/sjcs/FacAbonoItem';
@@ -51,7 +51,8 @@ export class TablaAbonosSCJSComponent implements OnInit {
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
-    private datepipe: DatePipe
+    private datepipe: DatePipe,
+    private confirmationService: ConfirmationService
   ) { }
 
   ngOnInit() {
@@ -192,6 +193,25 @@ export class TablaAbonosSCJSComponent implements OnInit {
   disableNuevoFicheroTransferencias() {
     return !this.selectedDatos || this.selectedDatos.filter(d => d.estado && d.estado.toString() == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO).length == 0;
   }
+
+  // Confirmación de un nuevo fichero de transferencias
+  confirmNuevoFicheroTransferencias(): void {
+    let mess = this.translateService.instant("facturacionPyS.facturas.fichTransferenciasSJCS.confirmacion");
+    let icon = "fa fa-plus";
+
+    this.confirmationService.confirm({
+      message: mess,
+      icon: icon,
+      acceptLabel: "Sí",
+      rejectLabel: "No",
+      accept: () => {
+        this.nuevoFicheroTransferencias();
+      },
+      reject: () => {
+        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+      }
+    });
+  }
   
   nuevoFicheroTransferencias() {
     this.progressSpinner = true;
@@ -205,23 +225,11 @@ export class TablaAbonosSCJSComponent implements OnInit {
     this.sigaServices.post("facturacionPyS_nuevoFicheroTransferenciasSjcs", abonosFichero).subscribe(
       n => {
         this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), "Se han generado correctamente los ficheros de transferencias");
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionPyS.facturas.fichTransferenciasSJCS.generando"));
         this.busqueda.emit();
       },
       err => {
-        let error = JSON.parse(err.error);
-        if (error && error.error && error.error.message) {
-          let message = this.translateService.instant(error.error.message);
-  
-          if (message && message.trim().length != 0) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
-          } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
-          }
-        } else {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        }
-        
+        this.handleServerSideErrorMessage(err);
         this.progressSpinner = false;
       }
     );
@@ -247,6 +255,21 @@ export class TablaAbonosSCJSComponent implements OnInit {
 
 
   // FUnciones de utilidad
+
+  handleServerSideErrorMessage(err): void {
+    let error = JSON.parse(err.error);
+    if (error && error.error && error.error.message) {
+      let message = this.translateService.instant(error.error.message);
+  
+      if (message && message.trim().length != 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+      }
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    }
+  }
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
