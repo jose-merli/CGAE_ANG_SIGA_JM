@@ -18,6 +18,7 @@ export class TablaFacturasComponent implements OnInit {
   msgs;
 
   FAC_ABONO_ESTADO_PENDIENTE_BANCO: string = "5";
+  FAC_FACTURA_ESTADO_PENDIENTE_BANCO: string = "5";
 
   selectedDatos: FacturasItem[] = [];
   rowsPerPage = [];
@@ -136,7 +137,7 @@ getCols() {
   ];
 }
 
-disableNuevoFicheroTransferencias() {
+disableNuevoFicheroTransferencias(): boolean {
   return !this.selectedDatos || this.selectedDatos.filter(d => d.tipo != "FACTURA" && d.idEstado == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO).length == 0;
 }
 
@@ -146,6 +147,10 @@ nuevoFicheroAdeudos() {
   sessionStorage.setItem("Nuevo", "true");
   
   this.router.navigate(["/gestionAdeudos"]);
+}
+
+disableNuevoFicheroAdeudos(): boolean {
+  return !this.selectedDatos || this.selectedDatos.filter(d => d.tipo == "FACTURA" && d.idEstado == this.FAC_FACTURA_ESTADO_PENDIENTE_BANCO).length == 0;
 }
 
 // Confirmación de un nuevo fichero de transferencias
@@ -159,7 +164,7 @@ confirmNuevoFicheroTransferencias(): void {
     acceptLabel: "Sí",
     rejectLabel: "No",
     accept: () => {
-      this.nuevoFicheroAdeudos();
+      this.nuevoFicheroTransferencias();
     },
     reject: () => {
       this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));

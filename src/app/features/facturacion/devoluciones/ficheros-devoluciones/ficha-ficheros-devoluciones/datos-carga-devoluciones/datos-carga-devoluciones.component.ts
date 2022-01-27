@@ -86,12 +86,26 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
         conComision: this.comision != undefined ? this.comision : false
       }).subscribe(
         n => {
-          this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("facturacionPyS.ficherosDevoluciones.generando"));
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionPyS.ficherosDevoluciones.generando"));
           this.procesoIniciado = true;
           this.progressSpinner = false;
         },
         err => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          if (err && err.error) {
+            let error = err.error;
+            if (error && error.error && error.error.message) {
+              let message = this.translateService.instant(error.error.message);
+          
+              if (message && message.trim().length != 0) {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+              } else {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+              }
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            }
+          }
+          
           this.progressSpinner = false;
         }
       );

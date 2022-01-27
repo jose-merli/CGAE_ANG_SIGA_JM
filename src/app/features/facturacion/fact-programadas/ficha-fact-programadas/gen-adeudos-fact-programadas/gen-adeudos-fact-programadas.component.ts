@@ -137,48 +137,20 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   generarFicheroAdeudos(): void {
-    if (this.isValid()) {
+    if (this.isValid() && !this.ficherosAdeudos) {
       let ficheroAdeudos = new FicherosAdeudosItem();
-      ficheroAdeudos.idseriefacturacion = this.bodyInicial.idSerieFacturacion;
-      ficheroAdeudos.idprogramacion = this.bodyInicial.idProgramacion;
-      ficheroAdeudos.fechaPresentacion = this.bodyInicial.fechaPresentacion;
-      ficheroAdeudos.fechaRecibosPrimeros = this.bodyInicial.fechaRecibosPrimeros;
-      ficheroAdeudos.fechaRecibosRecurrentes = this.bodyInicial.fechaRecibosRecurrentes;
-      ficheroAdeudos.fechaRecibosCOR = this.bodyInicial.fechaRecibosCOR1;
-      ficheroAdeudos.fechaRecibosB2B = this.bodyInicial.fechaRecibosB2B;
+      ficheroAdeudos.idseriefacturacion = this.body.idSerieFacturacion;
+      ficheroAdeudos.idprogramacion = this.body.idProgramacion;
+      ficheroAdeudos.fechaPresentacion = this.body.fechaPresentacion;
+      ficheroAdeudos.fechaRecibosPrimeros = this.body.fechaRecibosPrimeros;
+      ficheroAdeudos.fechaRecibosRecurrentes = this.body.fechaRecibosRecurrentes;
+      ficheroAdeudos.fechaRecibosCOR = this.body.fechaRecibosCOR1;
+      ficheroAdeudos.fechaRecibosB2B = this.body.fechaRecibosB2B;
 
       sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
+      sessionStorage.setItem("Nuevo", JSON.stringify(true));
 
-      this.router.navigate(['/gestionAdeudos']);
-
-      this.progressSpinner = true;
-      this.sigaServices.post("facturacionPyS_nuevoFicheroAdeudos", ficheroAdeudos)
-        .toPromise()
-        .then(
-          n => {
-            if (!this.modoEdicion) {
-              let numFicheros = JSON.parse(n.body).id;
-              this.showMessage("info", "Información", `Se han generado ${numFicheros} ficheros`);
-              this.getFicheroAdeudos();
-            }
-          },
-          err => {
-            let error = JSON.parse(err.error);
-            if (error && error.error && error.error.message) {
-              let message = this.translateService.instant(error.error.message);
-
-              if (message && message.trim().length != 0) {
-                this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
-              } else {
-                this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
-              }
-            } else {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-            }
-
-            this.progressSpinner = false;
-          }
-        );      
+      this.router.navigate(['/gestionAdeudos']);  
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
