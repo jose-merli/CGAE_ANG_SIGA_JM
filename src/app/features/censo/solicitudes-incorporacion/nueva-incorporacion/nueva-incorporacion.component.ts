@@ -2581,7 +2581,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           (data: { file: Blob, filename: string, status: number }) => {
             let blob = null;
             if(data){
-              if(data == null){ //Si size es 0 es que no trae nada
+              if(!data.file || data.file.size == 0){ //Si size es 0 es que no trae nada
                 this.showFailNotTraduce('No se ha encontrado el documento indicado');
               }else{
                 let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
