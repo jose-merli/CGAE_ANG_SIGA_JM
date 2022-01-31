@@ -63,7 +63,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     console.log(nombreCompletoArchivo);
     
     if (extensionArchivo == null || extensionArchivo.trim() == "" 
-          || !/\.(xml)$/i.test(extensionArchivo.trim().toUpperCase())
+          || !/\.(xml|txt|d19)$/i.test(extensionArchivo.trim().toUpperCase())
     ) {
       this.file = undefined;
 

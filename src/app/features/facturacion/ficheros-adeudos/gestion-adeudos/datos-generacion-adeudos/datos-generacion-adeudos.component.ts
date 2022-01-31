@@ -75,7 +75,6 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
       n => {
         let data = n.combooItems;
-        console.log(data);
         
         for(let i=0; data.length>i; i++){
           
@@ -245,7 +244,6 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
 
   save(){
     if (this.isValid() &&  !this.deshabilitarGuardado()) {
-      console.log(this.body);
      this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];

@@ -244,12 +244,17 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
   }
 
-  nuevoFicheroAdeudos(){
-    let ficheroAdeudos = new FicherosAdeudosItem();
-    sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
-    sessionStorage.setItem("Nuevo", "true");
-
-    this.router.navigate(['/gestionAdeudos']);
+  nuevoFicheroAdeudos() {
+    let facturacionesGeneracion = this.selectedDatos;
+    
+    if (facturacionesGeneracion && facturacionesGeneracion.length != 0) {
+      let ficheroAdeudos = new FicherosAdeudosItem();
+      ficheroAdeudos.facturacionesGeneracion = facturacionesGeneracion;
+      sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
+      sessionStorage.setItem("Nuevo", "true");
+      
+      this.router.navigate(["/gestionAdeudos"]); 
+    }
   }
 
   // Botón para archivar selección
