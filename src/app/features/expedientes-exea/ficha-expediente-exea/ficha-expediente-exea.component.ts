@@ -311,43 +311,7 @@ export class FichaExpedienteExeaComponent implements OnInit {
 
       this.getURLSedeElectronica();
 
-      if(this.expedienteEXEA.idFase && !this.sigaStorageService.isLetrado){
-        this.getURLShowExpedienteEXEA();
-      }
     }
-  }
-
-  getURLShowExpedienteEXEA(){
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.sigaStorageService.institucionActual;
-    parametro.modulo = "EXEA";
-    parametro.parametrosGenerales = "URL_EXEA";
-
-    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
-      data => {
-        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
-        let url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == element.idinstitucionActual);
-        
-        if(!url){
-          url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == '0');
-        }
-
-        if(url && url.valor != 'NULL'){
-          let urlDetalle : string = String(url.valor) + "showExpedient.do?stageId="+this.expedienteEXEA.idFase;
-          this.listaTarjetas[3].enlaces.push(
-            {
-              texto: 'Abrir expediente en EXEA',
-              detalle : urlDetalle
-            }
-          );
-        }
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      },
-      () => {}
-    );
   }
 
   getURLSedeElectronica(){
