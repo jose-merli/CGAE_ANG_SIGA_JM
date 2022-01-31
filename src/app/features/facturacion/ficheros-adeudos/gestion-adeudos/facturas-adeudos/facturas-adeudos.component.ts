@@ -105,10 +105,19 @@ export class FacturasAdeudosComponent implements OnInit {
   ir(){
 
     //this.progressSpinner=true;
-    sessionStorage.setItem("tipoFichero", this.tipoFichero);
-    sessionStorage.setItem("idFichero", this.idFichero);
+    if (this.tipoFichero == 'T' && this.bodyInicial.fcs) {
+      
+      sessionStorage.setItem("filtrosAbonosSJCS", JSON.stringify({
+        identificadorFicheroT: this.bodyInicial.idDisqueteAbono
+      }));
 
-    this.router.navigate(["/facturas"]);
+      this.router.navigate(["/abonosSJCS"]);
+    } else {
+      sessionStorage.setItem("tipoFichero", this.tipoFichero);
+      sessionStorage.setItem("idFichero", this.idFichero);
+
+      this.router.navigate(["/facturas"]);
+    }
   
   }
   

@@ -115,11 +115,11 @@
       label="{{'general.boton.comunicar' | translate }}"></button>
 
       <!-- Botón debería ser "generar fichero transferencias" -->
-      <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="nuevoFicheroTransferencias()" [disabled]="disableNuevoFicheroTransferencias()"
+      <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="confirmNuevoFicheroTransferencias()" [disabled]="disableNuevoFicheroTransferencias()"
       label="{{'general.boton.generarFichero' | translate }}"></button>
 
       <!-- Botón debería ser "nuevo fichero de adeudos" -->
-      <button pButton type="button" icon="fas fa-plus" iconPos="left" 
+      <button pButton type="button" icon="fas fa-plus" iconPos="left" (click)="nuevoFicheroAdeudos()" [disabled]="disableNuevoFicheroAdeudos()"
       label="{{'menu.facturacion.disquetecargos' | translate }}"></button>
     </div>
   </div>

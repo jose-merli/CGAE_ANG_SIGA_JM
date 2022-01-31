@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { saveAs } from "file-saver/FileSaver";
+import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
 
 @Component({
   selector: 'app-tabla-fact-programadas',
@@ -243,8 +244,17 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
   }
 
-  nuevoFicheroAdeudos(){
+  nuevoFicheroAdeudos() {
+    let facturacionesGeneracion = this.selectedDatos;
     
+    if (facturacionesGeneracion && facturacionesGeneracion.length != 0) {
+      let ficheroAdeudos = new FicherosAdeudosItem();
+      ficheroAdeudos.facturacionesGeneracion = facturacionesGeneracion;
+      sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
+      sessionStorage.setItem("Nuevo", "true");
+      
+      this.router.navigate(["/gestionAdeudos"]); 
+    }
   }
 
   // Botón para archivar selección

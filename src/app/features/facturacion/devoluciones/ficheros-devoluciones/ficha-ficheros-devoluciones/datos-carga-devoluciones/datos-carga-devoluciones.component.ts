@@ -28,6 +28,8 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
   pUploadFile;
   file: File;
 
+  procesoIniciado: boolean = false;
+
   showModalEliminar: boolean = false;
   confirmImporteTotal: string;
 
@@ -61,7 +63,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     console.log(nombreCompletoArchivo);
     
     if (extensionArchivo == null || extensionArchivo.trim() == "" 
-          || !/\.(xml)$/i.test(extensionArchivo.trim().toUpperCase())
+          || !/\.(xml|txt|d19)$/i.test(extensionArchivo.trim().toUpperCase())
     ) {
       this.file = undefined;
 
@@ -77,18 +79,37 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
 
   // Guardar y procesar
   save() {
-    this.progressSpinner = true;
+    if (!this.modoEdicion && this.file != undefined) {
+      this.progressSpinner = true;
 
-    this.sigaServices.postSendFileAndParameters2("facturacionPyS_nuevoFicheroDevoluciones", this.file, {
-      conComision: this.comision
-    }).subscribe(
-      n => {
-        this.progressSpinner = false;
-      },
-      err => {
-        this.progressSpinner = false;
-      }
-    )
+      this.sigaServices.postSendFileAndParameters2("facturacionPyS_nuevoFicheroDevoluciones", this.file, {
+        conComision: this.comision != undefined ? this.comision : false
+      }).subscribe(
+        n => {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionPyS.ficherosDevoluciones.generando"));
+          this.procesoIniciado = true;
+          this.progressSpinner = false;
+        },
+        err => {
+          if (err && err.error) {
+            let error = err.error;
+            if (error && error.error && error.error.message) {
+              let message = this.translateService.instant(error.error.message);
+          
+              if (message && message.trim().length != 0) {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+              } else {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+              }
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+            }
+          }
+          
+          this.progressSpinner = false;
+        }
+      );
+    }
   }
 
   // Descargar LOG
@@ -143,7 +164,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     if (!this.disableConfirmEliminar()) {
       this.showModalEliminar = false;
       this.eliminar();
-      this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
+      // this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El importe introducido no coincide con el importe total del fichero");
     }   
@@ -163,14 +184,24 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
 
   eliminar() {
     this.progressSpinner = true;
-    this.sigaServices.post("facturacionPyS_eliminarFicheroDevoluciones", this.bodyInicial).subscribe(
+    console.log(this.bodyInicial)
+    let deleteRequest = {
+      idDisqueteDevoluciones: this.bodyInicial.idDisqueteDevoluciones
+    };
+
+    this.sigaServices.post("facturacionPyS_eliminarFicheroDevoluciones", deleteRequest).subscribe(
       data => {
-        this.showMessage("success", this.translateService.instant("general.message.correct"), "El fichero de devoluciones ha sido eliminado con exito.");
+        sessionStorage.setItem("mensaje", JSON.stringify({
+          severity: "success", summary: this.translateService.instant("general.message.correct"), detail: this.translateService.instant("facturacionPyS.ficherosExp.eliminar.exito")
+        }));
+        sessionStorage.setItem("volver", "true");
         this.backTo();
+        this.confirmImporteTotal = undefined;
         this.progressSpinner = false;
       },
       err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.handleServerSideErrorMessage(err);
+        this.confirmImporteTotal = undefined;
         this.progressSpinner = false;
       }
     );
@@ -191,6 +222,20 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     this.msgs = [];
   }
 
+  handleServerSideErrorMessage(err): void {
+    let error = JSON.parse(err.error);
+    if (error && error.error && error.error.message) {
+      let message = this.translateService.instant(error.error.message);
+  
+      if (message && message.trim().length != 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+      }
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    }
+  }
 
   // Abrir y cerrar la ficha
 

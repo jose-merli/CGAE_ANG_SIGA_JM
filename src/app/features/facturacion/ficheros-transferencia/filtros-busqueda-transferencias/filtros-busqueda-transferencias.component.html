@@ -2,9 +2,21 @@
 <div class="busqueda-container">
   <div class="header-title">
     <i class="fa fa-square"></i>
+
+    <ng-container *ngIf="!fcs">
       <p>{{ "menu.facturacion" | translate }}
-      <i class="fa fa-angle-right"></i>{{ "menu.facturacion.abonosBanco" | translate }}
-    </p>
+        <i class="fa fa-angle-right"></i>{{ 'menu.facturacion.exportacionesyotros' | translate }}
+        <i class="fa fa-angle-right"></i>{{ "facturacionPyS.ficherosTransferencias.busqueda" | translate }}
+      </p>
+    </ng-container>
+
+    <ng-container *ngIf="fcs">
+      <p>SJCS
+        <i class="fa fa-angle-right"></i>{{ "menu.facturacion" | translate }}
+        <i class="fa fa-angle-right"></i>{{ "facturacionPyS.ficherosTransferenciasSJCS.busqueda" | translate }}
+      </p>
+    </ng-container>
+    
   </div>
 
   <div class="card">
@@ -74,7 +86,6 @@
            label="{{ 'general.boton.clear' | translate}}"></button>
         <button (click)="buscar()" pButton type="button" icon="fa fa-search" iconPos="left"
           label="{{'general.boton.search' | translate}}"></button>
-        <button (click)="nuevo()" [disabled]="!permisoEscritura" pButton type="button"  icon="fa fa-plus" iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
       </div>
     </div>
   </div>

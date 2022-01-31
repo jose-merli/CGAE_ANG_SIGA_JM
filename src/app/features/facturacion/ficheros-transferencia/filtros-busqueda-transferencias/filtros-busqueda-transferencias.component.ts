@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FicherosAbonosItem } from '../../../../models/sjcs/FicherosAbonosItem';
@@ -31,6 +32,7 @@ export class FiltrosBusquedaTransferenciasComponent implements OnInit {
 
  @Input() permisos;
  @Input() permisoEscritura;
+ @Input() fcs: boolean = false;
 
  @Output() buscarFicheros = new EventEmitter<boolean>();
 
@@ -44,7 +46,13 @@ export class FiltrosBusquedaTransferenciasComponent implements OnInit {
   ngOnInit() {
     this.cargaCombos();
 
-    if(this.persistenceService.getFiltros() && sessionStorage.getItem("volver")){
+    if (sessionStorage.getItem("mensaje") && sessionStorage.getItem("volver")) {
+      let message: Message = JSON.parse(sessionStorage.getItem("mensaje"));
+      if (message)
+        this.showMessage(message.severity, message.summary, message.detail);
+      sessionStorage.removeItem("mensaje");
+      sessionStorage.removeItem("volver");
+    } else if(this.persistenceService.getFiltros() && sessionStorage.getItem("volver")){
       this.body = this.persistenceService.getFiltros();
       this.persistenceService.clearFiltros();
 
@@ -114,16 +122,6 @@ export class FiltrosBusquedaTransferenciasComponent implements OnInit {
     } else {
       return true;
     }
-  }
-
-  nuevo(){
-    if (sessionStorage.getItem("FicherosAbonosItem")) {
-      sessionStorage.removeItem("FicherosAbonosItem");
-    }
-
-    this.persistenceService.clearDatos();
-    sessionStorage.setItem("Nuevo", "true");
-    this.router.navigate(["/gestionFicherosTransferencias"]);
   }
 
   buscar() {

@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '../../../commons/translate';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -21,21 +22,30 @@ export class FicherosTransferenciaComponent implements OnInit {
   buscar: boolean = false;
   permisoEscritura: boolean = false;
 
+  fcs: boolean = false;
+
   @ViewChild(FiltrosBusquedaTransferenciasComponent) filtros;
   @ViewChild(TablaFicherosTransferenciasComponent) tabla;
 
   constructor(private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private commonsService: CommonsService) {
+    private commonsService: CommonsService,
+    private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
     this.buscar = false;
     this.permisoEscritura=true //cambiar cuando se implemente los permisos
+
+    if (this.activatedRoute.snapshot.queryParamMap.get('fcs')
+        && this.activatedRoute.snapshot.queryParamMap.get('fcs') == '1') {
+      this.fcs = true;
+    }
   }
 
   buscarFicheros(event) {
     this.filtro = JSON.parse(JSON.stringify(this.filtros.body));
+    this.filtro.fcs = this.fcs;
 
     this.progressSpinner = true;
 
