@@ -435,6 +435,8 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     this.resaltadoDatos = false;
     this.emptyFilters = true;
     this.filtros = new CalendarioProgramadoItem();
+    let AnioAnterior = new Date().getFullYear() - 1;
+    this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
     this.isDisabledMateria = true;
   }
 

@@ -418,6 +418,15 @@ export class TablaResultadoMixComponent implements OnInit {
     }
     return "";
   }
+
+  getComboLabel2(cell){
+    for (let i = 0; i < cell.combo.length; i++){
+      if (cell.combo[i].value == cell.value){
+        return cell.combo[i].label;
+      }
+    }
+    return "";
+  }
   setMyStyles(size) {
     let styles = {};
     if (this.calendarios){
@@ -447,6 +456,13 @@ export class TablaResultadoMixComponent implements OnInit {
             //console.log("tipo de celda:"+row.cells[j].type);
             if(row.cells[j].type == 'select'){
               let labelCombo = this.getComboLabel(row.cells[j].value);
+              //console.log("valor de celda:"+labelCombo);
+              if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
+                isReturn = false;
+                break;
+              }
+            } if(row.cells[j].type == 'multiselect'){
+              let labelCombo = this.getComboLabel2(row.cells[j]);
               //console.log("valor de celda:"+labelCombo);
               if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
                 isReturn = false;
@@ -806,17 +822,7 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   nuevo(){
-        /*{ type: 'text', value: res.nombreTurno },
-    { type: 'text', value: res.nombreGuardia },
-    { type: 'multiselect', combo: this.comboGuardiasIncompatibles, value: ArrComboValue },
-    { type: 'input', value: res.motivos },
-    { type: 'input', value: res.diasSeparacionGuardias },
-    { type: 'invisible', value: res.idTurnoIncompatible },
-    { type: 'invisible', value: res.idGuardiaIncompatible },
-    { type: 'invisible', value: res.idGuardia },
-    { type: 'invisible', value: res.idTurno },
-    { type: 'invisible', value: res.nombreTurnoIncompatible },
-    { type: 'invisible', value: res.nombreGuardiaIncompatible }]*/
+
     this.enableGuardar = true;
     let row: Row = new Row();
     

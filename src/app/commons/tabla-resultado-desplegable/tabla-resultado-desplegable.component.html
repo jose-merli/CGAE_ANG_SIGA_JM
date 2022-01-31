@@ -164,10 +164,7 @@
                     </div>
                 </div>
             </div>
-            <div *ngFor="let row of rowGroup.rows | slice:1; let i = index" class="table-row child"  [ngClass]="{'collapse': row.position == 'collapse'}">
-                <div (click)="selectRow(rowSelected, rowGroup.id + i, i)" class="table-row-wrapper hoverBlue"
-                    [ngClass]="{'hoverBlue2': isSelected(rowGroup.id + i), 'fixedBlue': seleccionarTodo}"
-                    [id]="rowGroup.id" #rowSelected>
+             
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 hidden selectedRowClass">
                     </div>
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 hidden selectedRowClass">
