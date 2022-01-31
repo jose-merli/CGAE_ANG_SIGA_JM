@@ -40,40 +40,40 @@ export class NuevoExpedienteExeaComponent implements OnInit {
     );
   }
 
-  onChangeProcedimiento(){
-
-    if(this.idProcedimiento){
-
-      this.getUrlEXEA();
-      
+  styleObligatorio(evento) {
+    if (evento == undefined || evento == null || evento == "") {
+      return this.commonsService.styleObligatorio(evento);
     }
-
   }
 
+
   getUrlEXEA(){
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.sigaStorageService.institucionActual;
-    parametro.modulo = "EXEA";
-    parametro.parametrosGenerales = "URL_EXEA";
 
-    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
-      data => {
-        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
-        let url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == element.idinstitucionActual);
-        
-        if(!url){
-          url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == '0');
-        }
+    if(this.idProcedimiento){
+      let parametro = new ParametroRequestDto();
+      parametro.idInstitucion = this.sigaStorageService.institucionActual;
+      parametro.modulo = "EXEA";
+      parametro.parametrosGenerales = "URL_EXEA";
 
-        if(url){
-          window.open(url.valor + "createProcess.do?procedureId=" + this.idProcedimiento,'_blank');
-        }
-      },
-      err => {
-        console.log(err);
-      },
-      () => {}
-    );
+      this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+        data => {
+          let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+          let url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == element.idinstitucionActual);
+          
+          if(!url){
+            url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == '0');
+          }
+
+          if(url){
+            window.open(url.valor + "createProcess.do?procedureId=" + this.idProcedimiento,'_blank');
+          }
+        },
+        err => {
+          console.log(err);
+        },
+        () => {}
+      );
+    }
   }
 }
 
