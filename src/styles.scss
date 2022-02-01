@@ -608,7 +608,8 @@ label {
 }
 
 .ui-calendar {
-  width: 100%;
+  width: 100% !important;
+  overflow: visible !important;
 }
 
 .ui-calendar .ui-widget.ui-button:focus {
@@ -1343,7 +1344,9 @@ p-footer .main-button {
     }
   }
 }
-
+.ui-datepicker{
+  z-index: 99999999999999999999 !important;
+}
 .ui-datepicker .ui-datepicker-year-prev,
 .ui-datepicker .ui-datepicker-year-next {
   position: absolute;

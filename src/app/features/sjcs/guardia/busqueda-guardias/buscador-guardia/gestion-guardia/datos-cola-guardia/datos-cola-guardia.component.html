@@ -13,8 +13,11 @@
           <label class="mr-auto title-ficha">{{ 'justiciaGratuita.oficio.turnos.coladeguardias' | translate }}</label>
         </div>
         <div class="d-flex justify-content-between sub">
-          <label>
+          <label class="w-70">
             <strong>{{resumenColaGuardia}}</strong>
+          </label>
+          <label class="w-30">
+            <strong>{{resumenColaGuardiaLast}}</strong>
           </label>
           <i (click)="abreCierraFicha()" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
         </div>

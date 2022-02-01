@@ -115,6 +115,7 @@ export class PersistenceService {
 
     getPermisos() {
         let data = sessionStorage.getItem(this.permisosName);
+        if(data != undefined)
         return JSON.parse(data);
     }
 

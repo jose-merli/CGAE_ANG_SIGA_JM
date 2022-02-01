@@ -1,7 +1,7 @@
 <p-calendar class="arreglo-fecha" [(ngModel)]="value" [monthNavigator]="true" [yearNavigator]="true" [yearRange]="yearRange"
   [locale]="es" dateFormat="dd/mm/yy" icon="far fa-calendar-alt" (onSelect)="change($event)" (onInput)="input($event)" showIcon="true"
   #calendar [minDate]="minDate" [inputStyleClass]="inputStyleClass" [maxDate]="maxDate" [showTime]="showTime" [disabled]="disabled" [utc]="utc" (onBlur)="blur($event)"
-  (onFocus)="focus($event)" [appendTo] = "appendTo"  >
+  (onFocus)="focus($event)" [appendTo] = "header">
   <!-- NO TOCAR EL CAMPO UTC, SE DEBE QUEDAR APUNTANDO A LA VARIABLE UTC, SI SE DESEA CAMBIAR, SE HACE DESDE EL COMPONENTE IMPORTADO COMO PARÁMETRO -->
   <p-footer>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
     <div class="main-button d-flex col-lg-12">
