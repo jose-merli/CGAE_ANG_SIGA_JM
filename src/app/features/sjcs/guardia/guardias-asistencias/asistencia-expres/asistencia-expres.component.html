@@ -40,7 +40,7 @@
 </div>
 <div [hidden]="modoBusqueda != 'b' || !show">
     <div class="card mt-3">
-        <div class="card-body p-0" id="tablaFoco1">
+        <div *ngIf="modoBusqueda == 'b'" class="card-body p-0" id="tablaFoco1">
             <app-resultado-asistencia-expres [filtro]="filtrosAE.filtro" [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
             [comboJuzgadosAE]="comboJuzgados" [comboComisarias]="comboComisarias" [comboDelitos]="comboDelitos" [comboSexo] = "comboSexo"
             (saveTableData)="saveTableData($event)"></app-resultado-asistencia-expres>
@@ -50,7 +50,7 @@
 
 <div [hidden]="modoBusqueda != 'a' || !show">
     <div class="card mt-3">
-        <div class="card-body p-0" id="tablaFoco2">
+        <div *ngIf="modoBusqueda == 'a'" class="card-body p-0" id="tablaFoco2">
             <!--Componente con la p-table para resultado de asistencias, por hacer-->
             <app-resultado-asistencias [asistencias]="asistencias" [filtro]="filtro.filtro" (searchAgain)="searchAsistenciasEvent($event)"></app-resultado-asistencias>
         </div>

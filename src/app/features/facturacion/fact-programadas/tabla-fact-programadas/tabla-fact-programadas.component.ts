@@ -9,6 +9,7 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { saveAs } from "file-saver/FileSaver";
 import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
+import { ComboItem } from '../../../../models/ComboItem';
 
 @Component({
   selector: 'app-tabla-fact-programadas',
@@ -39,6 +40,14 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   selectAll: boolean;
   selectMultiple: boolean;
 
+  @Input() controlEmisionFacturasSII: boolean = false;
+
+  showModalEliminar: boolean = false;
+  currentUsername: string;
+  confirmUsername: string;
+  currentDataToDelete: FacFacturacionprogramadaItem;
+  numDeletedItems: number = 0;
+
   constructor(
     private commonsService: CommonsService,
     private router: Router,
@@ -55,6 +64,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     }
 
     this.getCols();
+    this.getDataLoggedUser();
   }
 
   // Se actualiza cada vez que cambien los inputs
@@ -197,29 +207,32 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     return res;
   }
 
-  // Botón de eliminar
-  confirmEliminar(): void {
+  // Acción del botón de eliminar
+  confirmEliminar(firstItem: boolean = true): void {
+    if (this.selectedDatos && this.selectedDatos.length > 0) {
+      this.confirmUsername = undefined;
+      this.currentDataToDelete = this.selectedDatos.pop();
+      this.confirmEliminar1();
+    } else if (!firstItem && this.numDeletedItems > 0) {
+      this.busqueda.emit();
+    } else if (firstItem) {
+      this.numDeletedItems = 0;
+    }
+  }
+
+  // Primera confirmación
+  confirmEliminar1(): void {
     let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
     let icon = "fa fa-eraser";
 
     this.confirmationService.confirm({
-      // key: "confirmEliminar",
+      key: "first",
       message: mess,
       icon: icon,
+      acceptLabel: "Sí",
+      rejectLabel: "No",
       accept: () => {
-        this.progressSpinner = true;
-        Promise.all(this.selectedDatos.map<Promise<any>>(dato => this.eliminar(dato)))
-          .catch(error => {
-            if (error != undefined) {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
-            } else {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-            }
-          }).then(() => {
-            this.busqueda.emit();
-            this.progressSpinner = false;
-          });
-        
+        this.showModalEliminar = true;
       },
       reject: () => {
         this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
@@ -227,29 +240,69 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     });
   }
 
-  eliminar(dato: FacFacturacionprogramadaItem): Promise<any> {
-    return this.sigaServices.post("facturacionPyS_eliminarFacturacion", dato).toPromise().then(
-      n => { },
+  // Segunda confirmación
+
+  confirmEliminar2(): void {
+    if (!this.disableConfirmEliminar()) {
+      this.showModalEliminar = false;
+      this.eliminar(this.currentDataToDelete);
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El usuario introducido no coincide con el usuario actual");
+    }   
+  }
+
+  rejectEliminar2(): void {
+    this.showModalEliminar = false;
+    this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+  }
+
+  disableConfirmEliminar(): boolean {
+    return this.confirmUsername != this.currentUsername;
+  }
+
+  // Función de eliminar
+
+  eliminar(dato: FacFacturacionprogramadaItem) {
+    this.progressSpinner = true;
+    this.sigaServices.post("facturacionPyS_eliminarFacturacion", dato).subscribe(
+      data => {
+        this.progressSpinner = false;
+        this.confirmEliminar(false);
+      },
       err => {
-        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        this.handleServerSideErrorMessage(err);
+        this.progressSpinner = false;
+        this.confirmEliminar(false);
       }
     );
   }
 
-  confirmDescargar(){
-
-  }
+  // Obtenemos el nombre del usuario actual para la confirmación
+  getDataLoggedUser() {
+		this.sigaServices.get("usuario_logeado").subscribe(n => {
+			const usuario = n.usuarioLogeadoItem;
+			
+      if (usuario && usuario.length > 0) {
+        this.currentUsername = usuario[0].nombre;
+      }
+		});
+	}
 
   confirmComunicar(){
 
   }
 
-  nuevoFicheroAdeudos(){
-    let ficheroAdeudos = new FicherosAdeudosItem();
-    sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
-    sessionStorage.setItem("Nuevo", "true");
-
-    this.router.navigate(['/gestionAdeudos']);
+  nuevoFicheroAdeudos() {
+    let facturacionesGeneracion = this.selectedDatos;
+    
+    if (facturacionesGeneracion && facturacionesGeneracion.length != 0) {
+      let ficheroAdeudos = new FicherosAdeudosItem();
+      ficheroAdeudos.facturacionesGeneracion = facturacionesGeneracion;
+      sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
+      sessionStorage.setItem("Nuevo", "true");
+      
+      this.router.navigate(["/gestionAdeudos"]); 
+    }
   }
 
   // Botón para archivar selección
@@ -313,6 +366,21 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   // Funciones de utilidad
+
+  handleServerSideErrorMessage(err): void {
+    let error = JSON.parse(err.error);
+    if (error && error.error && error.error.message) {
+      let message = this.translateService.instant(error.error.message);
+  
+      if (message && message.trim().length != 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+      }
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    }
+  }
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

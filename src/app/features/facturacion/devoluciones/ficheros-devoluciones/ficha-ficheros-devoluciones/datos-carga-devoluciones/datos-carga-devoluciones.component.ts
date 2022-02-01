@@ -63,7 +63,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     console.log(nombreCompletoArchivo);
     
     if (extensionArchivo == null || extensionArchivo.trim() == "" 
-          || !/\.(xml)$/i.test(extensionArchivo.trim().toUpperCase())
+          || !/\.(xml|txt|d19)$/i.test(extensionArchivo.trim().toUpperCase())
     ) {
       this.file = undefined;
 
@@ -166,7 +166,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
       this.eliminar();
       // this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
     } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El importe introducido no coincide con el importe total del fichero");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionPyS.ficherosExp.eliminar.error.importe"));
     }   
   }
 

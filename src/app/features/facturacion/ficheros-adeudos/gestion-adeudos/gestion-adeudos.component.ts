@@ -47,6 +47,8 @@ export class GestionAdeudosComponent implements OnInit {
       if (sessionStorage.getItem("FicherosAdeudosItem")) {
         this.body = JSON.parse(sessionStorage.getItem("FicherosAdeudosItem")); 
         sessionStorage.removeItem("FicherosAdeudosItem");
+
+        console.log(`Facturas para generación: ${this.body.facturasGeneracion}`);
       } else {
         this.body = new FicherosAdeudosItem();
       }

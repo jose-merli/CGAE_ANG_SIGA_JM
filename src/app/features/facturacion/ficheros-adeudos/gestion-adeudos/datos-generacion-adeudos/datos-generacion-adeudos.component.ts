@@ -75,7 +75,6 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
       n => {
         let data = n.combooItems;
-        console.log(data);
         
         for(let i=0; data.length>i; i++){
           
@@ -160,7 +159,7 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
       this.eliminar();
       // this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
     } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El importe introducido no coincide con el importe total del fichero");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionPyS.ficherosExp.eliminar.error.importe"));
     }   
   }
 
@@ -245,7 +244,6 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
 
   save(){
     if (this.isValid() &&  !this.deshabilitarGuardado()) {
-      console.log(this.body);
      this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];

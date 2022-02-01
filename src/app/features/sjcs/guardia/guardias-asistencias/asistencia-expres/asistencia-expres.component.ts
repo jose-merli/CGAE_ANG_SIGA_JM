@@ -29,7 +29,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   msgs: Message[] = [];
   show = false;
   cFormValidity = true;
-  modoBusqueda = 'b';
+  modoBusqueda = '';
   rowGroups : RowGroup[];
   rowGroupsAux: RowGroup[];
   initialRowGroups : RowGroup[];

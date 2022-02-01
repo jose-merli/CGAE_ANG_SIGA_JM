@@ -3,14 +3,18 @@
     <div class="card-body">
         <div class="form-row">
             <div class="form-group-interlineado col-lg-3 col-md-3">
-                <label>Procedimiento</label>
+                <label>{{'justiciaGratuita.maestros.Procedimiento' | translate}} (*)</label>
                 <p-dropdown class="select-form"
                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                    [showClear]="true" [(ngModel)]="idProcedimiento"
-                    [ngModelOptions]="{standalone: true}" [options]="comboProcedimientos"
-                    (onChange)="onChangeProcedimiento()">
+                    [showClear]="true" [(ngModel)]="idProcedimiento" [ngClass]="styleObligatorio(idProcedimiento)"
+                    [ngModelOptions]="{standalone: true}" [options]="comboProcedimientos">
                 </p-dropdown>
             </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="text-right main-button ">
+            <button (click)="getUrlEXEA()" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}" [disabled]="!idProcedimiento"></button>
         </div>
     </div>
 </div>

@@ -81,6 +81,8 @@ export class SolicitudIncorporacionItem {
   nombreBanco: string;
 
   numRegistro : string;
+  claveConsulta : string;
+  numExpediente : string;
   documentos : DocumentacionIncorporacionItem [];
 
   constructor() { }

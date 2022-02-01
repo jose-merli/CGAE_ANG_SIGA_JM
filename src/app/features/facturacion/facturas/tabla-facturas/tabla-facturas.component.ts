@@ -142,11 +142,16 @@ disableNuevoFicheroTransferencias(): boolean {
 }
 
 nuevoFicheroAdeudos() {
-  let ficheroAdeudos = new FicherosAdeudosItem();
-  sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
-  sessionStorage.setItem("Nuevo", "true");
+  let facturasGeneracion = this.selectedDatos.filter(d => d.tipo == "FACTURA" && d.idEstado == this.FAC_FACTURA_ESTADO_PENDIENTE_BANCO);
   
-  this.router.navigate(["/gestionAdeudos"]);
+  if (facturasGeneracion && facturasGeneracion.length != 0) {
+    let ficheroAdeudos = new FicherosAdeudosItem();
+    ficheroAdeudos.facturasGeneracion = facturasGeneracion.map(d => d.idFactura);
+    sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
+    sessionStorage.setItem("Nuevo", "true");
+    
+    this.router.navigate(["/gestionAdeudos"]); 
+  }
 }
 
 disableNuevoFicheroAdeudos(): boolean {
