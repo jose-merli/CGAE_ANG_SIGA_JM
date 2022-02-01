@@ -66,7 +66,7 @@
                     <span class="badge badge-{{ calcBadgeEstado('fac', dato['idEstadoConfirmacion']) }}">Fac</span>
                     <span class="badge badge-{{ calcBadgeEstado('pdf', dato['idEstadoPDF']) }}">PDF</span>
                     <span class="badge badge-{{ calcBadgeEstado('env', dato['idEstadoEnvio']) }}">Env</span>
-                    <span class="badge badge-{{ calcBadgeEstado('tra', dato['idEstadoTraspaso']) }}">Tra</span>
+                    <span class="badge badge-{{ calcBadgeEstado('tra', dato['idEstadoTraspaso']) }}" *ngIf="controlEmisionFacturasSII">Tra</span>
                   </span>
                 </div>
   
@@ -118,4 +118,26 @@
   </div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<!-- PRIMERA CONFIRMACIÓN -->
+<p-confirmDialog key="first" header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
+
+<!-- SEGUNDA CONFIRMACIÓN -->
+<p-dialog width="425" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModalEliminar">
+  <p-header class="title">
+    <label>{{ 'general.cabecera.confirmacion' | translate }}</label>
+  </p-header>
+
+  <div class="form-row" *ngIf="currentDataToDelete">
+    <label>Introduzca el nombre de usuario actual para continuar con la eliminación de la facturación con descripción <span class="text-weight-bold">{{ currentDataToDelete.descripcion }}</span>:</label>
+    <input type="text" class="form-control" pInputText [(ngModel)]="confirmUsername"/>
+  </div>
+
+  <p-footer class="main-button" *ngIf="currentDataToDelete">
+    <button type="button" pButton icon="fa-check" label="Sí" (click)="confirmEliminar2()" [disabled]="disableConfirmEliminar()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="rejectEliminar2()"></button>
+  </p-footer>
+</p-dialog>

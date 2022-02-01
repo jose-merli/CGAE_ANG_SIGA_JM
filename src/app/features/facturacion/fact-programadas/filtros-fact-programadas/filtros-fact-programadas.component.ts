@@ -19,6 +19,7 @@ export class FiltrosFactProgramadasComponent implements OnInit {
   msgs: Message[] = [];
   permisoEscritura: boolean = false;
 
+  @Input() controlEmisionFacturasSII: boolean = false;
   @Output() busqueda = new EventEmitter<boolean>();
 
   showDatosGenerales: boolean = true;
@@ -117,9 +118,9 @@ export class FiltrosFactProgramadasComponent implements OnInit {
 
   getComboCompraSuscripcion() {
     this.comboCompraSuscripcion = [
-      { value: "0", label: "Compras y Suscripciones", local: undefined },
-      { value: "1", label: "Sólo Compras", local: undefined },
-      { value: "2", label: "Sólo Suscripciones", local: undefined }
+      { value: "0", label: this.translateService.instant("facturacion.productos.CompraSuscripcion"), local: undefined },
+      { value: "1", label: this.translateService.instant("facturacion.factProgramadas.literal.compra"), local: undefined },
+      { value: "2", label: this.translateService.instant("facturacion.factProgramadas.literal.suscripcion"), local: undefined }
     ];
     this.commonsService.arregloTildesCombo(this.comboCompraSuscripcion);
   }

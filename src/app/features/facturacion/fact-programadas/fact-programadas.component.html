@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-filtros-fact-programadas (busqueda)="searchFacturacionProgramada()"></app-filtros-fact-programadas>
-    <app-tabla-fact-programadas *ngIf="buscar" [datos]="datos" (busqueda)="searchFacturacionProgramada()"></app-tabla-fact-programadas>
+    <app-filtros-fact-programadas [controlEmisionFacturasSII]="controlEmisionFacturasSII" (busqueda)="searchFacturacionProgramada()"></app-filtros-fact-programadas>
+    <app-tabla-fact-programadas *ngIf="buscar" [datos]="datos" [controlEmisionFacturasSII]="controlEmisionFacturasSII" (busqueda)="searchFacturacionProgramada()"></app-tabla-fact-programadas>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
