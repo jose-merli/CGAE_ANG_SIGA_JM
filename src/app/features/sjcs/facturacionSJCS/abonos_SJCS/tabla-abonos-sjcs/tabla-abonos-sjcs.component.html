@@ -1,5 +1,5 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<p-growl [(value)]="msgsDescarga" (onHover)="clear()" life="150000"></p-growl>
 <div class="card mt-3">
   <div class="card-body p-0">
 
@@ -93,8 +93,9 @@
     <div class="text-right main-button">
        <!--
       <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
-      <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
       -->
+      <button pButton (click)="generarExcel()"  type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.generarExcel' | translate }}"></button>
+      
       <!-- Botón debería ser "generar fichero transferencias" -->
       <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="nuevoFicheroTransferencias()" [disabled]="disableNuevoFicheroTransferencias()"
         label="{{'general.boton.generarFichero' | translate }}"></button>

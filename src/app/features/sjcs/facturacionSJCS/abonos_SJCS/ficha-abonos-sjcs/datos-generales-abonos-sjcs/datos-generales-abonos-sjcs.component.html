@@ -20,13 +20,16 @@
             <label> {{ "justiciaGratuita.ejg.datosGenerales.FechaReunion" | translate }}
               <span> {{ this.datos.fechaEmision | date: 'dd/MM/yyyy' }}</span>
             </label>
-            <label> {{ "justiciaGratuita.ejg.datosGenerales.annioNum" | translate }} 
+            <label> {{ "facturacion.productos.importeNeto" | translate }} 
               <span> {{ this.datos.importeTotalNeto }}</span>
             </label>
-            <label> {{ "justiciaGratuita.ejg.datosGenerales.annioNum" | translate }} 
+            <label> {{ "facturacionSJCS.filtros.abonosSJCS.importeIRPF" | translate }} 
+              <span> {{ this.datos.importeIRPF }}</span>
+              </label>
+            <label> {{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }} 
               <span> {{ this.datos.importeTotal }}</span>
             </label>
-            <label> {{ "justiciaGratuita.ejg.datosGenerales.annioNum" | translate }} 
+            <label> {{ "facturacionSJCS.facturacionesYPagos.importePendiente" | translate }} 
               <span> {{ this.datos.importePendientePorAbonar }}</span>
             </label>
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
@@ -45,7 +48,7 @@
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <div class="form-row">
 	  
-        <div class="bloque col-lg-4 col-md-4">
+        <div class="bloque col-lg-5 col-md-5">
           <div class="form-row">
             <label><strong>{{ 'justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.inicial' | translate }}</strong></label>
          
@@ -78,8 +81,8 @@
             </div>
 
             <div  class="form-group col-lg-4 col-md-4 ">
-              <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal'| translate }} (*)</label>
-              <input type="text" [(ngModel)]="this.datos.importeTotal" class="form-control"
+              <label>{{ 'facturacionSJCS.filtros.abonosSJCS.importeIRPF'| translate }} (*)</label>
+              <input type="text" [(ngModel)]="this.datos.importeIRPF" class="form-control"
                  pInputText [disabled]="true">
             </div>
 

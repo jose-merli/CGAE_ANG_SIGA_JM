@@ -94,7 +94,7 @@ export class ObservacionesAbonosSJCSComponent implements OnInit, OnChanges {
 
   save(): void {
     if (!this.deshabilitarGuardado()) {
-      //guardar
+      this.guardadoSend(this.body)
     }
   }
 
