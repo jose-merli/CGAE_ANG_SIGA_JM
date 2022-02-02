@@ -61,7 +61,6 @@ export class SerieFacturaFactProgramadasComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
         this.progressSpinner = false;
       }
     );
