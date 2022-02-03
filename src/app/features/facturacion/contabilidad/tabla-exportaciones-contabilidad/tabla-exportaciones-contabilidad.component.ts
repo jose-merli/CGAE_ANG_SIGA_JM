@@ -42,8 +42,8 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
   selectMultiple: boolean;
   editar:boolean = false;
   @Input() historico: boolean; //Indica si se estan mostrando historicos o no para por ejemplo ocultar/mostrar los botones de historico.
-  @Input() disabledNuevo;
-  @Input() enabledSave;
+  @Input() disabledNuevo: boolean;
+  @Input() enabledSave: boolean;
   //Variables para mostrar boton reactivar o eliminar
   numSelectedAbleRegisters: number = 0;
   numSelectedDisableRegisters: number = 0;
@@ -385,6 +385,7 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.busqueda.emit(false);
         this.progressSpinner = false;
       },
       () => {

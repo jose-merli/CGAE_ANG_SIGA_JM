@@ -4,6 +4,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FacAbonoItem } from '../../../../../models/sjcs/FacAbonoItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -36,15 +37,17 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   institucionActual;
   combo;
 
-  
+  isLetrado;
+  esColegiado: boolean = false;
   msgs;
-
+  usuarioLogado;
 
   constructor( private router: Router,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private commonServices: CommonsService) {
+    private commonServices: CommonsService,
+    private sigaStorageService: SigaStorageService) {
    
   }
   usuarioBusquedaExpress = { 
@@ -63,25 +66,72 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
     this.getComboGrupoFacturacion();
     this.getComboEstados();
     this.getComboPago();
-
-    if (sessionStorage.getItem("buscadorColegiados")) {
-      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
-      sessionStorage.removeItem("buscadorColegiados");
-
-      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
-      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
-      this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
-    }
+    this.isLetrado = this.sigaStorageService.isLetrado;
+    
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       this.getComboColegios();
     });
 
+    if (this.isLetrado) {
+      this.getDataLoggedUser();
+    } else {
+      if (sessionStorage.getItem('buscadorColegiados')) {
+
+        const { nombre, apellidos, nColegiado, idPersona } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
+
+        this.usuarioBusquedaExpress.nombreAp= `${apellidos}, ${nombre}`;
+        this.usuarioBusquedaExpress.numColegiado = nColegiado;
+        this.usuarioBusquedaExpress.idPersona  = this.sigaStorageService.idPersona;
+        this.filtros.idPersona = idPersona;
+
+        sessionStorage.removeItem('buscadorColegiados');
+      }
+    }
+
 
   }
 
-  clear(){
-    this.filtros =  new FacAbonoItem(); 
+  getDataLoggedUser() {
+    this.progressSpinner = true;
+
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+      const usuario = n.usuarioLogeadoItem;
+      const colegiadoItem = new ColegiadoItem();
+      colegiadoItem.nif = usuario[0].dni;
+
+      this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+        usr => {
+          const { numColegiado, nombre, idPersona } = JSON.parse(usr.body).colegiadoItem[0];
+          this.usuarioBusquedaExpress.numColegiado = numColegiado;
+          this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+          this.usuarioBusquedaExpress.idPersona = idPersona;
+          this.filtros.idPersona = idPersona;
+          this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+          this.progressSpinner = false;
+
+         }, err =>{
+          this.progressSpinner = false;
+        },
+        ()=>{
+          this.progressSpinner = false;
+        });
+      });
+}
+
+  isColegiado() {
+
+    this.esColegiado = true;
+
+    this.usuarioBusquedaExpress.numColegiado = this.sigaStorageService.numColegiado;
+    this.usuarioBusquedaExpress.idPersona  = this.sigaStorageService.idPersona;
+    this.usuarioBusquedaExpress.nombreAp = this.sigaStorageService.nombreApe;
+    this.filtros.idPersona = this.sigaStorageService.idPersona;
+  }
+
+  clear() {
+    this.msgs = [];
   }
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
@@ -157,6 +207,7 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   }
   clearFilters(){
     this.filtros = new FacAbonoItem();
+    console.log(this.filtros)
   }
 
   searchAbonosSJCS(){}

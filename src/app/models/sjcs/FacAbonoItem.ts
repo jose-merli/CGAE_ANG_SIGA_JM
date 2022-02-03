@@ -26,6 +26,7 @@ export class FacAbonoItem {
     importeTotalAbonadoBanco:number;
     importeTotalAbonado:number;
     importePendientePorAbonar:number;
+    importeIRPF:String;
 
     idPersonaDeudor:number;
     idCuentaDeudor:number;

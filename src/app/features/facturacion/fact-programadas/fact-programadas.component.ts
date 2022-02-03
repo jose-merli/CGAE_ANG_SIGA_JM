@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../commons/translate';
+import { ComboItem } from '../../../models/ComboItem';
 import { FacFacturacionprogramadaItem } from '../../../models/FacFacturacionprogramadaItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -20,6 +21,8 @@ export class FactProgramadasComponent implements OnInit {
   buscar: boolean = false;
   datos: FacFacturacionprogramadaItem[] = [];
 
+  controlEmisionFacturasSII: boolean = false;
+
   @ViewChild(FiltrosFactProgramadasComponent) filtros;
   @ViewChild(TablaFactProgramadasComponent) tabla;
 
@@ -30,6 +33,28 @@ export class FactProgramadasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.getParametrosCONTROL();
+  }
+
+  // Obtener parametros de CONTROL
+  getParametrosCONTROL(): void {
+    this.progressSpinner = true;
+    this.sigaServices.get("facturacionPyS_parametrosCONTROL").subscribe(
+      n => {
+        let items: ComboItem[] = n.combooItems;
+        
+        let controlEmisionItem: ComboItem = items.find(item => item.label == "CONTROL_EMISION_FACTURAS_SII");
+
+        if (controlEmisionItem) {
+          this.controlEmisionFacturasSII = controlEmisionItem.value == "1";
+        }
+
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   searchFacturacionProgramada() {

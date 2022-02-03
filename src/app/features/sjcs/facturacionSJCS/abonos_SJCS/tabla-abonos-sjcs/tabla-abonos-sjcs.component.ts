@@ -9,7 +9,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DatosColegiadosItem } from '../../../../../models/DatosColegiadosItem';
-
+import { saveAs } from 'file-saver/FileSaver';
 
 @Component({
   selector: 'app-tabla-abonos-sjcs',
@@ -20,6 +20,7 @@ import { DatosColegiadosItem } from '../../../../../models/DatosColegiadosItem';
 export class TablaAbonosSCJSComponent implements OnInit {
 
   msgs: Message[] = [];
+  msgsDescarga:Message[] = [];
   progressSpinner: boolean = false;
   permisoEscritura: boolean = true;
 
@@ -284,5 +285,66 @@ export class TablaAbonosSCJSComponent implements OnInit {
     this.msgs = [];
   }
 
+  generarExcel(){
+    
+
+    let descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes'));
+  descargasPendientes = descargasPendientes + 1;
+  sessionStorage.setItem('descargasPendientes', descargasPendientes);
+  this.showInfoPerenne(
+    this.translateService.instant("general.accion.descargaCola.inicio") + descargasPendientes
+  );
+
+
+  this.sigaServices
+    .postDownloadFiles("facturacionPyS_generarExcelAbonos", this.filtro)
+    .subscribe(data => {
+      if (data == null) {
+        this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+        descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+        sessionStorage.setItem('descargasPendientes', descargasPendientes);        
+      } else {
+        let nombre = this.translateService.instant("censo.nombre.fichero.generarexcel") + new Date().getTime() + ".xlsx";
+        saveAs(data, nombre);
+        descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+        sessionStorage.setItem('descargasPendientes', descargasPendientes);
+        this.showInfoPerenne(
+          this.translateService.instant("general.accion.descargaCola.fin")  + descargasPendientes
+        );
+      }
+    }, error => {
+      descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+      sessionStorage.setItem('descargasPendientes', descargasPendientes);
+
+      this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
+    }, () => {
+      
+    });
+  }
+
+
+// Mensajes
+showFail(mensaje: string) {
+
+  this.msgs = [];
+  this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+}
+
+showSuccess(mensaje: string) {
+
+  this.msgs = [];
+  this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+}
+
+showInfo(mensaje: string) {
+
+  this.msgs = [];
+  this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+}
+
+showInfoPerenne(mensaje: string) {
+  this.msgsDescarga = [];
+  this.msgsDescarga.push({ severity: 'info', summary: '', detail: mensaje });
+}
 
 }
