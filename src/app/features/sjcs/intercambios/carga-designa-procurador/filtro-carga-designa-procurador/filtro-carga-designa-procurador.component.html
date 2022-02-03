@@ -11,8 +11,8 @@
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros' |
-            translate}}</strong></label>
+          <label>{{ 'formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros' |
+            translate}}</label>
           <div class="form-row">
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <input type="text" name="prefijo" value="" class="box" class="registro-control w-100" (keypress)="numberOnly($event)"
@@ -31,22 +31,22 @@
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'censo.cargaMasivaDatosCurriculares.literal.nombreFichero' |
-            translate}}</strong></label>
+          <label>{{ 'censo.cargaMasivaDatosCurriculares.literal.nombreFichero' |
+            translate}}</label>
           <input type="text" name="nombreFichero" value="" class="box" class="form-control" [(ngModel)]='filtros.nombreFichero'
             maxLength="200" pInputText>
         </div>
         <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label><strong>{{ 'justiciaGratuita.remesasResultados.filtro.fechaRemesaDesde' |
-              translate}}</strong></label>
+            <label>{{ 'justiciaGratuita.remesasResultados.filtro.fechaRemesaDesde' |
+              translate}}</label>
             <app-fecha [(value)]="filtros.fechaResolucionDesde" (valueChangeSelected)="fillFechaResolucionDesde($event)"
               (valueChangeInput)="fillFechaResolucionDesde($event)">
             </app-fecha>
           </div>
   
           <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label><strong>{{ 'justiciaGratuita.remesasResultados.filtro.fechaRemesaHasta' |
-              translate}}</strong></label>
+            <label>{{ 'justiciaGratuita.remesasResultados.filtro.fechaRemesaHasta' |
+              translate}}</label>
             <app-fecha [(value)]="filtros.fechaResolucionHasta" (valueChangeSelected)="fillFechaResolucionHasta($event)"
               (valueChangeInput)="fillFechaResolucionHasta($event)" [minDate]="filtros.fechaResolucionHasta">
             </app-fecha>
@@ -56,16 +56,16 @@
 
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'justiciaGratuita.remesasResultados.filtro.fechaCargaDesde' |
-            translate}}</strong></label>
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.fechaCargaDesde' |
+            translate}}</label>
           <app-fecha [(value)]="filtros.fechaCargaDesde" (valueChangeSelected)="fillFechaCargaDesde($event)"
             (valueChangeInput)="fillFechaCargaDesde($event)">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'justiciaGratuita.remesasResultados.filtro.fechaCargaHasta' |
-            translate}}</strong></label>
+          <label>{{ 'justiciaGratuita.remesasResultados.filtro.fechaCargaHasta' |
+            translate}}</label>
           <app-fecha [(value)]="filtros.fechaCargaHasta" (valueChangeSelected)="fillFechaCargaHasta($event)"
             (valueChangeInput)="fillFechaCargaHasta($event)" [minDate]="filtros.fechaCargaHasta">
           </app-fecha>
@@ -73,19 +73,19 @@
       </div>
     </div>
   </div>
-</div>
-<div class="card-footer">
-  <!-- BOTONES TARJETA -->
-  <div class="text-right main-button">
-    <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left"
-      label="{{ 'general.boton.clear' | translate}}"></button>
-    <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left"
-      label="{{ 'general.boton.search' | translate }}"></button>
-
-    <button (click)="openTab()" *ngIf="buttonNew" pButton type="button"  icon="fa fa-plus"
-       iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
+  <div class="card-footer">
+    <!-- BOTONES TARJETA -->
+    <div class="text-right main-button">
+      <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left"
+        label="{{ 'general.boton.clear' | translate}}"></button>
+      <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left"
+        label="{{ 'general.boton.search' | translate }}"></button>
   
-    <button  (click)="obtenerDesignaProcurador()" *ngIf="!buttonNew" pButton type="button"  icon="fa fa-search"
-     iconPos="left" label="{{ 'general.boton.obtenerDesignaProcurador' | translate}}"></button>
-    </div>
+      <button (click)="openTab()" *ngIf="buttonNew" pButton type="button"  icon="fa fa-plus"
+         iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
+    
+      <button  (click)="obtenerDesignaProcurador()" *ngIf="!buttonNew" pButton type="button"  icon="fa fa-search"
+       iconPos="left" label="{{ 'general.boton.obtenerDesignaProcurador' | translate}}"></button>
+      </div>
+  </div>
 </div>

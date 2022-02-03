@@ -11,8 +11,8 @@
     <div *ngIf="showDatosGenerales" class="module vista-simple">
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros' |
-            translate}}</strong></label>
+          <label>{{ 'formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros' |
+            translate}}</label>
           <div class="form-row">
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
               <input type="text" name="prefijo" value="" class="box" class="registro-control w-100" (keypress)="numberOnly($event)"
@@ -31,8 +31,8 @@
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'administracion.parametrosGenerales.literal.descripcion' |
-            translate}}</strong></label>
+          <label>{{ 'administracion.parametrosGenerales.literal.descripcion' |
+            translate}}</label>
           <input type="text" name="nombre" value="" class="box" class="form-control" [(ngModel)]='filtros.descripcion'
             maxLength="200" pInputText>
         </div>
@@ -40,14 +40,14 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <div class="form-row">
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
-              <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
-                  translate}}</strong></label>
+              <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
+                  translate}}</label>
               <input type="text" [(ngModel)]="filtros.annioEJG" (keypress)="numberOnly($event)" class="form-control" maxLength="4" pInputText>
             </div>
             /
             <div class="form-group-interlineado col-lg-4 col-md-4 px-1">
-              <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
-                  translate}}</strong></label>
+              <label>{{ 'gratuita.busquedaAsistencias.literal.numero' |
+                  translate}}</label>
               <input type="text" class="form-control" maxLength="10" #inputNumero pInputText
                 [(ngModel)]="filtros.numeroEJG" (keypress)="numberOnly($event)">
             </div>
@@ -55,8 +55,8 @@
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'censo.fichaIntegrantes.literal.estado' |
-            translate}}</strong></label>
+          <label>{{ 'censo.fichaIntegrantes.literal.estado' |
+            translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='filtros.estado' placeholder="Seleccionar"
             [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
           </p-dropdown>
@@ -65,32 +65,32 @@
 
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'justiciaGratuita.remesas.filtro.FechaGeneracionDesde' |
-            translate}}</strong></label>
+          <label>{{ 'justiciaGratuita.remesas.filtro.FechaGeneracionDesde' |
+            translate}}</label>
           <app-fecha [(value)]="filtros.fechaGeneracionDesde" (valueChangeSelected)="fillFechaGeneracionDesde($event)"
             (valueChangeInput)="fillFechaGeneracionDesde($event)">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'justiciaGratuita.remesas.filtro.FechaGeneracionHasta' |
-            translate}}</strong></label>
+          <label>{{ 'justiciaGratuita.remesas.filtro.FechaGeneracionHasta' |
+            translate}}</label>
           <app-fecha [(value)]="filtros.fechaGeneracionHasta" (valueChangeSelected)="fillFechaGeneracionHasta($event)"
             (valueChangeInput)="fillFechaGeneracionHasta($event)" [minDate]="filtros.fechaGeneracionDesde">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'justiciaGratuita.remesas.filtro.FechaEnvioDesde' |
-            translate}}</strong></label>
+          <label>{{ 'justiciaGratuita.remesas.filtro.FechaEnvioDesde' |
+            translate}}</label>
           <app-fecha [(value)]="filtros.fechaEnvioDesde" (valueChangeSelected)="fillFechaEnvioDesde($event)"
             (valueChangeInput)="fillFechaEnvioDesde($event)">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'justiciaGratuita.remesas.filtro.FechaEnvioHasta' |
-            translate}}</strong></label>
+          <label>{{ 'justiciaGratuita.remesas.filtro.FechaEnvioHasta' |
+            translate}}</label>
           <app-fecha [(value)]="filtros.fechaEnvioHasta" (valueChangeSelected)="fillFechaEnvioHasta($event)"
             (valueChangeInput)="fillFechaEnvioHasta($event)" [minDate]="filtros.fechaEnvioDesde">
           </app-fecha>
@@ -99,16 +99,16 @@
 
       <div class="form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'justiciaGratuita.remesas.filtro.FechaRecepcionDesde' |
-            translate}}</strong></label>
+          <label>{{ 'justiciaGratuita.remesas.filtro.FechaRecepcionDesde' |
+            translate}}</label>
           <app-fecha [(value)]="filtros.fechaRecepcionDesde" (valueChangeSelected)="fillFechaRecepcionDesde($event)"
             (valueChangeInput)="fillFechaRecepcionDesde($event)">
           </app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label><strong>{{ 'justiciaGratuita.remesas.filtro.FechaRecepcionHasta' |
-            translate}}</strong></label>
+          <label>{{ 'justiciaGratuita.remesas.filtro.FechaRecepcionHasta' |
+            translate}}</label>
           <app-fecha [(value)]="filtros.fechaRecepcionHasta" (valueChangeSelected)="fillFechaRecepcionHasta($event)"
             (valueChangeInput)="fillFechaRecepcionHasta($event)" [minDate]="filtros.fechaRecepcionDesde">
           </app-fecha>

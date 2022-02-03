@@ -9,6 +9,7 @@ import { Router } from "@angular/router";
 import { ConfirmationService } from 'primeng/api';
 import { saveAs } from "file-saver/FileSaver";
 import { ActasItem } from '../../../../../models/sjcs/ActasItem';
+import { t } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-resolucion',
@@ -38,7 +39,8 @@ export class ResolucionComponent implements OnInit {
   ResolDesc: String;
   progressSpinner: boolean = false;
   habilitarActas: boolean = false;
-
+  perfilCJG:boolean = false;
+  usuario: any[] = [];
   resaltadoDatosGenerales: boolean = false;
 
   fichaPosible = {
@@ -71,6 +73,16 @@ export class ResolucionComponent implements OnInit {
     }
     this.getComboPonente();
     this.getComboOrigen();
+    this.checkPerfil();
+  }
+
+  checkPerfil(){
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+      this.usuario = n.usuarioLogeadoItem;
+      if (this.usuario[0].idPerfiles.indexOf("CJG") > -1 ) {
+        this.perfilCJG = true;
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -273,6 +285,7 @@ export class ResolucionComponent implements OnInit {
 
 
   checkPermisosSave() {
+    
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -280,27 +293,32 @@ export class ResolucionComponent implements OnInit {
       if (this.disabledSave()) {
         this.msgs = this.commonsServices.checkPermisoAccion();
       } else {
+        if(this.perfilCJG){
+            //Se recupera la propiedad "edtablecomision" del ultimo estado del EJG
+            let ejg = this.persistenceService.getDatos();
+            this.progressSpinner = true;
+            this.sigaServices.post("gestionejg_getEditResolEjg", ejg).subscribe(
+              n => {
+                //Se comprueba si el ultimo estado introducido tiene "edtablecomision" == 1 (resolucion editable)
+                if(n.body == "true"){
+                  this.save();
+                }
+                else{
+                  //REVISAR: SUSTITUIR POR ETIQUETA
+                  this.showMessage('error', 'Error', "El ultimo estado del EJG no permite editar resoluciones (editableComsion)");
+                  this.progressSpinner = false;
+                }
+              },
+              err => {
+                console.log(err);
+                this.progressSpinner = false;
+              }
+            );
+        }else{
+          this.save();
+        }
+  
 
-        //Se recupera la propiedad "edtablecomision" del ultimo estado del EJG
-        let ejg = this.persistenceService.getDatos();
-        this.progressSpinner = true;
-        this.sigaServices.post("gestionejg_getEditResolEjg", ejg).subscribe(
-          n => {
-            //Se comprueba si el ultimo estado introducido tiene "edtablecomision" == 1 (resolucion editable)
-            if(n.body == "true"){
-              this.save();
-            }
-            else{
-              //REVISAR: SUSTITUIR POR ETIQUETA
-              this.showMessage('error', 'Error', "El ultimo estado del EJG no permite editar resoluciones (editableComsion)");
-              this.progressSpinner = false;
-            }
-          },
-          err => {
-            console.log(err);
-            this.progressSpinner = false;
-          }
-        );
       }
     }
   }

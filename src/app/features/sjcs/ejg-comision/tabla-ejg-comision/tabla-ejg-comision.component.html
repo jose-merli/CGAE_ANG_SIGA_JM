@@ -207,7 +207,7 @@
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectPonente == true"></p-dropdown>
       </div>
-      <div>
+      <div class="dropM">
         <label>{{"justiciaGratuita.ejg.datosGenerales.FechaPresPonente" | translate}}</label>
         <app-fecha [inputStyleClass]="styleObligatorioFechaPonente(valueFechaPonente)" [(value)]="valueFechaPonente"
           (valueChangeSelected)="fillFechaPrueba($event)" (valueChangeInput)="fillFechaPrueba($event)" [disabled]="selectPonente == true">
@@ -221,15 +221,15 @@
       </div>
     </div>
     <div class="col-sm">
-      <div>
+      <div class="dropM">
         <label>{{"justiciaGratuita.maestros.fundamentosResolucion.resolucion" | translate}}</label>
         <p-dropdown [(ngModel)]='valueResolucion' class="select-form" (onChange)="checkResolucion()"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboResolucion" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectResolucionFundamento == true" [ngClass]="styleObligatorioResolucion(valueResolucion)"></p-dropdown>
       </div>
-      <div>
+      <div class="dropM"> 
         <label>{{"justiciaGratuita.ejg.datosGenerales.Fundamento" | translate}}</label>
-        <p-dropdown [(ngModel)]='valueFundamento' class="select-form" (onChange)="checkFundamento()"
+        <p-dropdown [autoWidth]="false" [(ngModel)]='valueFundamento' class="select-form" (onChange)="checkFundamento()"
           placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboFundamento" [filter]="true" filterBy="label,labelSinTilde"
           [showClear]="true" [disabled]="selectResolucionFundamento == true" ></p-dropdown>
       </div>
