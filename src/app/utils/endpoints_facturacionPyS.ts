@@ -92,4 +92,5 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_desactivarReactivarRegistroFichConta: "facturacionPyS/desactivarReactivarRegistroFichConta",
     facturacionPyS_generarExcel:"facturacionPyS/generarExcel",
     facturacionPyS_generarExcelAbonos:"facturacionPyS/generarExcelAbonos",
+    contabilidadExportacion_descargarFicheros:"facturacionPyS/descargarFicherosContabilidad"
 }

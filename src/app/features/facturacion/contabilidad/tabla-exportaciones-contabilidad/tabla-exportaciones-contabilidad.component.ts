@@ -11,6 +11,7 @@ import { Console } from 'console';
 import { truncate } from 'fs';
 import { FindValueSubscriber } from 'rxjs/operators/find';
 import { procesos_facturacionPyS } from '../../../../permisos/procesos_facturacionPyS';
+import { saveAs } from "file-saver/FileSaver";
 
 
 @Component({
@@ -474,6 +475,44 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
     });
   }
 
+  descargar(){
+    this.progressSpinner = true;
+    let registros: FacRegistroFichContaItem[] = JSON.parse(JSON.stringify(this.selectedDatos));
+    
+    registros.forEach(registro => {
+      registro.fechaCreacion = this.convertirMascaraDDMMYYaDate(registro.fechaCreacion);
+      registro.fechaExportacionDesde = this.convertirMascaraDDMMYYaDate(registro.fechaExportacionDesde);
+      registro.fechaExportacionHasta = this.convertirMascaraDDMMYYaDate(registro.fechaExportacionHasta);
+      if(registro.fechaBaja != null){
+        registro.fechaBaja = new Date(registro.fechaBaja);
+      } 
+    });
+
+    this.sigaServices.postDownloadFilesWithFileName("contabilidadExportacion_descargarFicheros", registros).subscribe(
+      (response: {file: Blob, filename: string, status: number}) => {
+        // Se comprueba si todos los documentos asociados no tiene ningún fichero 
+        if(response.file.size > 0 && response.status == 200){
+          let filename = response.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+          saveAs(response.file, filename);
+        }
+        else if(response.status == 204){
+          this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
+        }
+        else{
+           this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.noFich"));
+        }
+
+        this.selectedDatos = [];
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },()=>{
+        this.progressSpinner = false;
+      }
+    );
+  }
+
   //Metodo para obtener los datos de la tabla FAC_REGISTROFICHCONTA tanto activos como no activos
   getListaFacRegistroHistorico() {
     this.historico = true;
@@ -497,10 +536,6 @@ export class TablaExportacionesContabilidadComponent implements OnInit {
 
     //false para buscar sin historico
     this.busqueda.emit(false);
-  }
-
-  descargar(){
-
   }
 
 }
