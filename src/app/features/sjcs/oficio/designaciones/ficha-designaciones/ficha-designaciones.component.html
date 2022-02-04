@@ -55,7 +55,7 @@
                                 <ng-template matExpansionPanelContent>
                                     <div *ngIf="tarj.nombre == 'Datos Generales'">
                                         <app-detalle-tarjeta-datos-generales-ficha-designacion-oficio [campos]="campos"
-                                            (actualizaFicha)="actualizaFicha($event)"
+                                            (actualizaFicha)="actualizaFicha($event)" (searchRelacionesAs)="searchRelacionesAs($event)"
                                             (refreshData)="refreshDataGenerales($event)">
                                         </app-detalle-tarjeta-datos-generales-ficha-designacion-oficio>
                                     </div>

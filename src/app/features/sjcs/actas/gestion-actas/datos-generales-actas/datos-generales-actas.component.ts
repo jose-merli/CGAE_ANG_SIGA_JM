@@ -93,7 +93,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   
   nombrePresidente;
   numCompleto: String;
-
+  resaltadoDatos: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private confirmationService: ConfirmationService,
     private translateService: TranslateService, private commonsService: CommonsService) {
@@ -188,11 +188,9 @@ export class DatosGeneralesActasComponent implements OnInit {
     this.confirmationService.confirm({
       message: '¿Estas seguro que quieres guardar el acta?',
       accept: () => {
-        console.log("aceptado guardar acta");
         this.guardarActa();
       },
       reject: () => {
-        console.log("rechazado guardar acta");
       }
   });
 }
@@ -201,17 +199,26 @@ export class DatosGeneralesActasComponent implements OnInit {
     let mostrar : boolean = true;
     if(actItem.fechareunion == null) mostrar = false;
     if(actItem.numeroacta.length == 0) mostrar = false;
-    if(!mostrar) this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+    if(!mostrar) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
+      this.resaltadoDatos = true;
+    }
     return mostrar;
   }
 
-  
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
 
   guardarActa() {
     this.progressSpinner = true;
     this.datosFiltro.horainicio = this.inicio;
     this.datosFiltro.horafin = this.fin;
+
     if(this.camposObligatorios(this.datosFiltro)){
+      this.resaltadoDatos = false;
       this.sigaServices.post("filtrosacta_guardarActa", this.datosFiltro).subscribe(
         data => {
           data =JSON.parse(data.body)
@@ -256,11 +263,9 @@ export class DatosGeneralesActasComponent implements OnInit {
     this.confirmationService.confirm({
       message: '¿Estas seguro que quieres abrir el acta?',
       accept: () => {
-        console.log("aceptado abrir acta");
         this.abrirActa();
       },
       reject: () => {
-        console.log("rechazado abrir acta");
       }
     });
   }
@@ -293,11 +298,9 @@ export class DatosGeneralesActasComponent implements OnInit {
     this.confirmationService.confirm({
       message: 'Si hay algún ejg que no tenga resolución se sacará del acta. ¿Desea continuar?',
       accept: () => {
-        console.log("aceptado cerrar acta");
         this.cerrarActa();
       },
       reject: () => {
-        console.log("rechazado cerrar acta");
       }
   });
 }
@@ -441,11 +444,9 @@ export class DatosGeneralesActasComponent implements OnInit {
       message: 'Se van a añadir los EJG pendientes con resolución Pendiente CAJG o Devuelto Colegio al ' + 
       'recuadro "Expediente Retirados (Acta)" y desvincularlo del acta, quedando pendientes',
       accept: () => {
-        console.log("aceptado	Añadir EJG’s Pendientes CAJG");
         this.anadirEJGPendientesCAJG();
       },
       reject: () => {
-        console.log("rechazado Añadir EJG’s Pendientes CAJG");
       }
     });
   }

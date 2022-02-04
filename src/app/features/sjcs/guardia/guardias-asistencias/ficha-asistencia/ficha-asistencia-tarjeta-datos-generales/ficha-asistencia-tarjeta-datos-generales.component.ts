@@ -24,6 +24,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
 
   @Output() refreshDatosGenerales = new EventEmitter<string>();
+  @Output() eventoAnular = new EventEmitter<boolean>();
   msgs: Message[] = [];
   permisoEscritura : boolean;
   progressSpinner : boolean = false;
@@ -537,7 +538,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
   anular(){
 
-    
+    this.eventoAnular.emit(true);
     this.asistencia.estado = "2";
     this.asistencia.fechaEstado = this.datepipe.transform(new Date(), "dd/MM/yyyy");
     this.updateEstadoAsistencia();
@@ -547,7 +548,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   finalizar(){
 
     this.anulable = false;
-    this.reactivable = false;
+    this.reactivable = true;
     this.finalizable = false;
     this.asistencia.estado = "4";
     this.asistencia.fechaEstado = this.datepipe.transform(new Date(), "dd/MM/yyyy");
@@ -556,7 +557,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   }
 
   reactivar(){
-
+    this.eventoAnular.emit(false);
     this.anulable = true;
     this.reactivable = false;
     this.finalizable = true;
@@ -612,9 +613,9 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
       this.ineditable = true;
 
     }else if (this.asistencia.estado == "4"){
-
+//finalizado
       this.anulable = false;
-      this.reactivable = false;
+      this.reactivable = true;
       this.finalizable = false;
       this.ineditable = true;
 

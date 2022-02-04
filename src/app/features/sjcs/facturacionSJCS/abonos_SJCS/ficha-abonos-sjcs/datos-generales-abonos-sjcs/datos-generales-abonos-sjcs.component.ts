@@ -24,7 +24,6 @@ export class DatosGeneralesAbonosSJCSComponent implements OnInit {
 
   progressSpinner:boolean = false;
   comp:number=0;
-  irpf:number=0;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices, private confirmationService: ConfirmationService,
     private translateService: TranslateService, private commonsService: CommonsService) {

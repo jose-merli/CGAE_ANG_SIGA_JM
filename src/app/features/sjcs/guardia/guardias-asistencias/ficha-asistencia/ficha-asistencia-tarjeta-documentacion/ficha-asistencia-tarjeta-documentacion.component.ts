@@ -17,6 +17,7 @@ import { SigaStorageService } from '../../../../../../siga-storage.service';
 export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnChanges {
 
   msgs : Message [] = [];
+  @Input() modoLectura: boolean;
   @Input() idAsistencia : string;
   @Input() editable: boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();

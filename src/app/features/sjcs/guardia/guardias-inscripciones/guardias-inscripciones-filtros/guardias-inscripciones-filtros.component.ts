@@ -47,7 +47,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() filtrosValues = new EventEmitter<InscripcionesItems>();
-  permisos: any;
+  permisos: any = true;
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
@@ -57,6 +57,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
     private sigaStorageService : SigaStorageService) { }
   
   ngAfterViewInit(): void {
+    this.permisos = this.persistenceService.getPermisos();
     if(sessionStorage.getItem("filtroFromFichaGuardia")){
       let filtrosFromGuardia = {
         idTurno: '',
@@ -72,7 +73,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   }
 
   ngOnInit() {
-
+    this.permisos = this.persistenceService.getPermisos();
+    console.log('this.permisos 1: ', this.permisos)
     this.getComboTurno();
 
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
@@ -275,10 +277,12 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   }
 
   isBuscar() {
+    this.permisos = this.persistenceService.getPermisos();
     if (this.checkFilters()) {
       /* this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux(); */
+      console.log('this.permisos 2: ', this.permisos)
       this.filtrosValues.emit(this.filtros);
 
     }

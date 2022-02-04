@@ -18,6 +18,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
 
   msgs : Message [] = [];
+  @Input() modoLectura: boolean;
   @Input() idAsistencia : string;
   @Input() editable : boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();

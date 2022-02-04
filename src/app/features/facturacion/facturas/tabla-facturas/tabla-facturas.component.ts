@@ -4,6 +4,7 @@ import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { DatosColegiadosItem } from '../../../../models/DatosColegiadosItem';
 import { FacturasItem } from '../../../../models/FacturasItem';
+import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
@@ -16,7 +17,10 @@ export class TablaFacturasComponent implements OnInit {
   cols;
   msgs;
 
-  selectedDatos = [];
+  FAC_ABONO_ESTADO_PENDIENTE_BANCO: string = "5";
+  FAC_FACTURA_ESTADO_PENDIENTE_BANCO: string = "5";
+
+  selectedDatos: FacturasItem[] = [];
   rowsPerPage = [];
   buscadores = [];
 
@@ -29,7 +33,7 @@ export class TablaFacturasComponent implements OnInit {
   permisoEscritura: boolean = false;
   progressSpinner: boolean = false;
 
-  @Input() datos;
+  @Input() datos: FacturasItem[];
   @Input() filtro;
 
   @Output() busqueda = new EventEmitter<boolean>();
@@ -131,6 +135,79 @@ getCols() {
       value: 40
     }
   ];
+}
+
+disableNuevoFicheroTransferencias(): boolean {
+  return !this.selectedDatos || this.selectedDatos.filter(d => d.tipo != "FACTURA" && d.idEstado == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO).length == 0;
+}
+
+nuevoFicheroAdeudos() {
+  let facturasGeneracion = this.selectedDatos.filter(d => d.tipo == "FACTURA" && d.idEstado == this.FAC_FACTURA_ESTADO_PENDIENTE_BANCO);
+  
+  if (facturasGeneracion && facturasGeneracion.length != 0) {
+    let ficheroAdeudos = new FicherosAdeudosItem();
+    ficheroAdeudos.facturasGeneracion = facturasGeneracion.map(d => d.idFactura);
+    sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
+    sessionStorage.setItem("Nuevo", "true");
+    
+    this.router.navigate(["/gestionAdeudos"]); 
+  }
+}
+
+disableNuevoFicheroAdeudos(): boolean {
+  return !this.selectedDatos || this.selectedDatos.filter(d => d.tipo == "FACTURA" && d.idEstado == this.FAC_FACTURA_ESTADO_PENDIENTE_BANCO).length == 0;
+}
+
+// Confirmación de un nuevo fichero de transferencias
+confirmNuevoFicheroTransferencias(): void {
+  let mess = this.translateService.instant("facturacionPyS.facturas.fichTransferencias.confirmacion");
+  let icon = "fa fa-plus";
+
+  this.confirmationService.confirm({
+    message: mess,
+    icon: icon,
+    acceptLabel: "Sí",
+    rejectLabel: "No",
+    accept: () => {
+      this.nuevoFicheroTransferencias();
+    },
+    reject: () => {
+      this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+    }
+  });
+}
+
+nuevoFicheroTransferencias() {
+  this.progressSpinner = true;
+  let abonosFichero = this.selectedDatos.filter(d => d.tipo != "FACTURA" && d.idEstado == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO);
+  
+  this.sigaServices.post("facturacionPyS_nuevoFicheroTransferencias", abonosFichero).subscribe(
+    n => {
+      this.progressSpinner = false;
+      this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionPyS.facturas.fichTransferencias.generando"));
+      this.busqueda.emit();
+    },
+    err => {
+      this.handleServerSideErrorMessage(err);
+      
+      this.progressSpinner = false;
+    }
+  );
+}
+
+handleServerSideErrorMessage(err): void {
+  let error = JSON.parse(err.error);
+  if (error && error.error && error.error.message) {
+    let message = this.translateService.instant(error.error.message);
+
+    if (message && message.trim().length != 0) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+    }
+  } else {
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+  }
 }
 
 selectFila(event) {

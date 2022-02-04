@@ -60,11 +60,11 @@
 
 <div class="card-footer">
     <div class="text-right main-button">
-        <button pButton type="button"  icon="fa fa-undo" iconPos="left" label="{{'censo.tipoCuenta.cargo.desasociar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"
+        <button pButton type="button"  icon="fa fa-undo" iconPos="left" label="{{'censo.tipoCuenta.cargo.desasociar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
             (click)="desasociarJusticiable();"></button>
-        <button pButton type="button"  icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"
+        <button pButton type="button"  icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
             (click)="searchJusticiable();" ></button>
-        <button pButton type="button"  icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"
+        <button pButton type="button"  icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
             (click)="guardarJusticiable();"></button>
     </div>
 </div>

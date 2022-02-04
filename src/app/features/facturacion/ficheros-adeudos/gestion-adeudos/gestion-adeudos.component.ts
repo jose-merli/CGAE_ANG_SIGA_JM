@@ -42,7 +42,19 @@ export class GestionAdeudosComponent implements OnInit {
   async ngOnInit() {
     this.progressSpinner = true;
 
-    if (sessionStorage.getItem("FicherosAdeudosItem")) {
+    if (sessionStorage.getItem("Nuevo")) {
+      sessionStorage.removeItem("Nuevo");
+      if (sessionStorage.getItem("FicherosAdeudosItem")) {
+        this.body = JSON.parse(sessionStorage.getItem("FicherosAdeudosItem")); 
+        sessionStorage.removeItem("FicherosAdeudosItem");
+
+        console.log(`Facturas para generación: ${this.body.facturasGeneracion}`);
+      } else {
+        this.body = new FicherosAdeudosItem();
+      }
+      
+      this.modoEdicion = false;
+    } else if (sessionStorage.getItem("FicherosAdeudosItem")) {
       this.body = JSON.parse(sessionStorage.getItem("FicherosAdeudosItem")); 
       sessionStorage.removeItem("FicherosAdeudosItem");
 
@@ -53,11 +65,6 @@ export class GestionAdeudosComponent implements OnInit {
       this.body = this.persistenceService.getDatos();
       this.modoEdicion=true;
 
-    } else if(sessionStorage.getItem("Nuevo")) {
-      sessionStorage.removeItem("Nuevo");
-      this.body = new FicherosAdeudosItem();
-
-      this.modoEdicion = false;
     }
 
     if (this.modoEdicion) {
@@ -82,16 +89,26 @@ export class GestionAdeudosComponent implements OnInit {
     this.progressSpinner = true;
 
     this.guardarFicheroAdeudos(!this.modoEdicion, event)
-    .then(() => { return this.recuperarFicheroAdeudos().then(() => {
-      this.modoEdicion = this.body.idDisqueteCargos != undefined;
-
-      // Actualizar tarjetas
-      if (this.modoEdicion)
-        this.updateTarjetaResumen();
-      setTimeout(() => {
-        this.updateEnlacesTarjetaResumen();
-      }, 5);
-    })}).catch(error => {
+    .then(() => { 
+      if (!this.modoEdicion) {
+        sessionStorage.setItem("mensaje", JSON.stringify({
+          severity: "success", summary: this.translateService.instant("general.message.correct"), detail: this.translateService.instant("facturacionPyS.facturas.fichAdeudos.generando")
+        }));
+        sessionStorage.setItem("volver", "true");
+        this.backTo();
+      } else {
+        return this.recuperarFicheroAdeudos().then(() => {
+          this.modoEdicion = this.body.idDisqueteCargos != undefined;
+    
+          // Actualizar tarjetas
+          if (this.modoEdicion)
+            this.updateTarjetaResumen();
+          setTimeout(() => {
+            this.updateEnlacesTarjetaResumen();
+          }, 5); 
+        });
+      }
+    }).catch(error => {
       if (error != undefined && error.descripcion != undefined) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.descripcion);
       } else {
@@ -132,19 +149,16 @@ export class GestionAdeudosComponent implements OnInit {
     return this.sigaServices.post(endpoint, ficheroAdeudos)
       .toPromise()
       .then(
-        n => {
-          if (!this.modoEdicion) {
-            let numFicheros = JSON.parse(n.body).id;
-            this.showMessage("info", "Información", `Se han generado ${numFicheros} ficheros`);
-          }
-        },
+        n => { },
         err => {
           let error = JSON.parse(err.error);
           if (error && error.error && error.error.message) {
-            let message = this.translateService.instant(error.message);
-            console.log(message);
+            let message = this.translateService.instant(error.error.message);
+
             if (message && message.trim().length != 0) {
-              Promise.reject({ descripcion: message });
+              return Promise.reject({ descripcion: message });
+            } else {
+              return Promise.reject({ descripcion: error.error.message });
             }
           }
           return Promise.reject({ descripcion: this.translateService.instant("general.mensaje.error.bbdd") });
@@ -171,7 +185,7 @@ export class GestionAdeudosComponent implements OnInit {
         err => {
           let error = JSON.parse(err.error);
           if (error && error.error && error.error.message) {
-            let message = this.translateService.instant(error.message);
+            let message = this.translateService.instant(error.error.message);
             console.log(message);
             if (message && message.trim().length != 0) {
               Promise.reject({ descripcion: message });
@@ -259,7 +273,7 @@ export class GestionAdeudosComponent implements OnInit {
       },
       {
         label: this.translateService.instant("menu.facturacion"),
-        value: this.body.facturacion
+        value: this.body.descripcion
       },
       {
         label: this.translateService.instant("facturacion.seriesFactura.cuentaBancaria"),

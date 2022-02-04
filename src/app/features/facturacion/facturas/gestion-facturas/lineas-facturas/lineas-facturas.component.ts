@@ -241,9 +241,17 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   // Guardar
   isValid(): boolean {
-    if (this.datos.some(d => d.descripcion == undefined || d.descripcion.trim().length == 0 
+    if (this.bodyInicial.tipo == "FACTURA" && this.datos.some(d => d.descripcion == undefined 
+        || d.descripcion.trim().length == 0 
         || d.precioUnitario == undefined || d.precioUnitario.trim().length == 0
         || d.idTipoIVA == undefined || d.idTipoIVA.trim().length == 0)) {
+      this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
+      return false;
+    }
+
+    if (this.bodyInicial.tipo != "FACTURA" && this.datos.some(d => d.descripcion == undefined 
+        || d.descripcion.trim().length == 0 
+        || d.precioUnitario == undefined || d.precioUnitario.trim().length == 0)) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
       return false;
     }
@@ -266,7 +274,8 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
     let datosToUpdate: FacturaLineaItem[] = this.datos.filter(d1 => 
       !this.datosInit.some(d2 => d1.descripcion == d2.descripcion 
-      && d1.precioUnitario == d2.precioUnitario && d1.cantidad == d2.cantidad && d1.idTipoIVA == d2.idTipoIVA && d1.importeTotal == d2.importeTotal));
+      && d1.precioUnitario == d2.precioUnitario 
+      && d1.cantidad == d2.cantidad && d1.idTipoIVA == d2.idTipoIVA && d1.importeTotal == d2.importeTotal));
 
     Promise.all(datosToUpdate.map(d => {
       if (this.bodyInicial.tipo == "FACTURA") {

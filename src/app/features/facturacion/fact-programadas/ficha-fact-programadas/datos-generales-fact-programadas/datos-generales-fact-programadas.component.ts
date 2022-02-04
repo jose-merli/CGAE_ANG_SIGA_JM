@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import moment = require('moment');
+import * as moment from 'moment';
 import { ConfirmationService, Message } from 'primeng/api';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
@@ -46,8 +46,6 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   dialogVisible: boolean = false;
 
   // Modal
-  @ViewChild("table") table : DataTable;
-  selectedItem: number = 10;
   modalCols = [];
   buscadores = [];
   rowsPerPage = [];
@@ -478,11 +476,6 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   cambiarEstadoDialogo(estado) {
     this.dialogVisible = estado;
-    if (!estado) {
-      this.datosMostrados = []
-    }
-    console.log(this.datosMostrados);
-    console.log(estado);
   }
 
   clear() {

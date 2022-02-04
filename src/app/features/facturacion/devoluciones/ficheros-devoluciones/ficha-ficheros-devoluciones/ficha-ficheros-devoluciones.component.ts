@@ -19,7 +19,7 @@ export class FichaFicherosDevolucionesComponent implements OnInit {
   modoEdicion: boolean;
   muestraFacturacion: boolean = false;
 
-  openTarjetaDatosGeneracion: boolean = true;
+  openTarjetaDatosCarga: boolean = true;
   openTarjetaFacturas: boolean = false;
 
   permisoEscrituraDatosGeneracion:boolean = true; //cambiar con los permisos
@@ -104,7 +104,7 @@ export class FichaFicherosDevolucionesComponent implements OnInit {
     if (event != undefined) {
       switch (event) {
         case "datosGeneracion":
-          this.openTarjetaDatosGeneracion = this.manuallyOpened;
+          this.openTarjetaDatosCarga = this.manuallyOpened;
           break;
         case "facturas":
           this.openTarjetaFacturas = this.manuallyOpened;
@@ -117,7 +117,7 @@ export class FichaFicherosDevolucionesComponent implements OnInit {
     if (event != undefined) {
       switch (event) {
         case "datosGeneracion":
-          this.openTarjetaDatosGeneracion = true;
+          this.openTarjetaDatosCarga = true;
           break;
         case "facturas":
           this.openTarjetaFacturas = true;
@@ -147,9 +147,9 @@ export class FichaFicherosDevolucionesComponent implements OnInit {
     this.enlacesTarjetaResumen = [];
 
     this.enlacesTarjetaResumen.push({
-      label: 'facturacionPyS.ficherosAdeudos.datosGeneracion',
-      value: document.getElementById("datosGeneracion"),
-      nombre: "datosGeneracion",
+      label: 'facturacionPyS.ficherosTransferencias.datosCarga',
+      value: document.getElementById("datosCarga"),
+      nombre: "descargarLog",
     });
 
     this.enlacesTarjetaResumen.push({

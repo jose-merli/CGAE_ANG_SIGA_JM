@@ -49,6 +49,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   resaltadoDatos: boolean = false;
   resaltadoFecha: boolean = true;
   resaltadoEstado: boolean = false;
+  resaltadoComentario: boolean = true;
   resaltadoBanco: boolean = false;
   showModalNuevoEstado: boolean = false;
 
@@ -152,7 +153,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   renegociar(): void {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
-    if (!["2", "4", "5"].includes(ultimaAccion.idEstado)) {
+    if (this.bodyInicial.tipo == "FACTURA" && !["2", "4", "5"].includes(ultimaAccion.idEstado) 
+        || this.bodyInicial.tipo != "FACTURA" && this.bodyInicial.idEstado == "1") {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.renegociacion.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -208,7 +210,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   nuevoCobro() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
-    if (this.bodyInicial.tipo != "FACTURA" || !["2"].includes(ultimaAccion.idEstado)) {
+    if (this.bodyInicial.tipo != "FACTURA" || !["2"].includes(ultimaAccion.idEstado) 
+        || ultimaAccion.impTotalPorPagar != undefined && parseFloat(ultimaAccion.impTotalPorPagar) == 0) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.cobroPorCaja.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -237,7 +240,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   nuevoAbono() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
-    if (this.bodyInicial.tipo != "ABONO" || !["6"].includes(ultimaAccion.idEstado)) {
+    if (this.bodyInicial.tipo != "ABONO" || !["6"].includes(this.bodyInicial.idEstado) 
+        || this.bodyInicial.importeAdeudadoPendienteAb != undefined && parseFloat(this.bodyInicial.importeAdeudadoPendienteAb) == 0) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.abonoPorCaja.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -266,7 +270,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   onChangeImporte(event: number): void {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
-    if (this.nuevoEstado.idAccion == "4") {
+    if (this.nuevoEstado.idAccion == "4" && this.bodyInicial.tipo == "FACTURA") {
       this.nuevoEstado.impTotalPorPagar = (+ultimaAccion.impTotalPorPagar - +this.nuevoEstado.impTotalPorPagar).toString();
 
       if (parseFloat(this.nuevoEstado.impTotalPagado) < 0) {
@@ -274,8 +278,24 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       } else if (parseFloat(this.nuevoEstado.impTotalPagado) > parseFloat(ultimaAccion.impTotalPorPagar)) {
         this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
       }
+    } else if (this.nuevoEstado.idAccion == "4") {
+      if (parseFloat(this.nuevoEstado.impTotalPagado) < 0) {
+        this.nuevoEstado.impTotalPagado = "0";
+      } else if (parseFloat(this.nuevoEstado.impTotalPagado) > parseFloat(this.bodyInicial.importeAdeudadoPendienteAb)) {
+        this.nuevoEstado.impTotalPagado = this.bodyInicial.importeAdeudadoPendienteAb;
+      }
     }
 
+  }
+
+  disableAccionConImporte(): boolean {
+    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+
+    if (this.bodyInicial.tipo == "FACTURA") {
+        return parseFloat(ultimaAccion.impTotalPorPagar) == 0;
+    } else {
+      return parseFloat(this.bodyInicial.importeAdeudadoPendienteAb) == 0;
+    }
   }
 
 
@@ -480,7 +500,13 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Enlace a la factura
   navigateToFactura(row: FacturaEstadosPagosItem) {
     let factura: FacturasItem = new FacturasItem();
-    factura.idFactura = row.idFactura;
+
+    if (row.comisionIdFactura) {
+      factura.idFactura = row.comisionIdFactura;
+    } else {
+      factura.idFactura = row.idFactura;
+    }
+
     factura.tipo = "FACTURA";
 
     sessionStorage.setItem("facturasItem", JSON.stringify(factura));
@@ -491,7 +517,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Enlace al abono
   navigateToAbono(row: FacturaEstadosPagosItem) {
     let factura: FacturasItem = new FacturasItem();
-    factura.idFactura = row.idAbono;
+    factura.idAbono = row.idAbono;
     factura.tipo = "ABONO";
 
     sessionStorage.setItem("facturasItem", JSON.stringify(factura));

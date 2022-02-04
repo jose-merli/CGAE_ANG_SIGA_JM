@@ -1,5 +1,6 @@
 import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
@@ -43,7 +44,13 @@ export class FiltrosBusquedaAdeudosComponent implements OnInit {
   ngOnInit() {
     this.cargaCombos();
 
-    if(this.persistenceService.getFiltros() && sessionStorage.getItem("volver")){
+    if (sessionStorage.getItem("mensaje") && sessionStorage.getItem("volver")) {
+      let message: Message = JSON.parse(sessionStorage.getItem("mensaje"));
+      if (message)
+        this.showMessage(message.severity, message.summary, message.detail);
+      sessionStorage.removeItem("mensaje");
+      sessionStorage.removeItem("volver");
+    } else if(this.persistenceService.getFiltros() && sessionStorage.getItem("volver")){
       this.body = this.persistenceService.getFiltros();
       this.persistenceService.clearFiltros();
 

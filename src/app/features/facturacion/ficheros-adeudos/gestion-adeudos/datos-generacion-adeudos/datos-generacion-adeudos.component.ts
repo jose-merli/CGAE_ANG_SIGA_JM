@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { saveAs } from "file-saver/FileSaver";
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-datos-generacion-adeudos',
@@ -46,6 +47,9 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   recibosCORSEPA=0;
   recibosB2BSEPA=0;
 
+  showModalEliminar: boolean = false;
+  confirmImporteTotal: string;
+
   fichaPosible = {
     key: "datosGeneracion",
     activa: true
@@ -53,7 +57,7 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices, private confirmationService: ConfirmationService,
     private commonsServices: CommonsService, private translateService: TranslateService,
-    private localStorageService: SigaStorageService) { }
+    private localStorageService: SigaStorageService, private location: Location) { }
 
   async ngOnInit() {
     this.cargaDatosSEPA();
@@ -71,7 +75,6 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
       n => {
         let data = n.combooItems;
-        console.log(data);
         
         for(let i=0; data.length>i; i++){
           
@@ -128,17 +131,19 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     }
   }
 
+  // Primera confirmación
   confirmEliminar(): void {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
+    let mess = this.translateService.instant("facturacionPyS.ficherosTransferencias.messages.primeraConfirmacion");
     let icon = "fa fa-eraser";
 
     this.confirmationService.confirm({
-      //key: "asoc",
+      key: "first",
       message: mess,
       icon: icon,
+      acceptLabel: "Sí",
+      rejectLabel: "No",
       accept: () => {
-        this.progressSpinner = true;
-        this.eliminar();
+        this.showModalEliminar = true;
       },
       reject: () => {
         this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
@@ -146,14 +151,45 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     });
   }
 
+  // Segunda confirmación
+
+  confirmEliminar2(): void {
+    if (!this.disableConfirmEliminar()) {
+      this.showModalEliminar = false;
+      this.eliminar();
+      // this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionPyS.ficherosExp.eliminar.error.importe"));
+    }   
+  }
+
+  rejectEliminar2(): void {
+    this.showModalEliminar = false;
+    this.confirmImporteTotal = undefined;
+    this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+  }
+
+  disableConfirmEliminar(): boolean {
+    return parseFloat(this.confirmImporteTotal) != parseFloat(this.bodyInicial.totalRemesa);
+  }
+
+  // Función de eliminar
+
   eliminar() {
+    this.progressSpinner = true;
     this.sigaServices.post("facturacionPyS_eliminarFicheroAdeudos", this.bodyInicial).subscribe(
       data => {
-        this.refreshData.emit();
+        sessionStorage.setItem("mensaje", JSON.stringify({
+          severity: "success", summary: this.translateService.instant("general.message.correct"), detail: this.translateService.instant("facturacionPyS.ficherosExp.eliminar.exito")
+        }));
+        sessionStorage.setItem("volver", "true");
+        this.backTo();
+        this.confirmImporteTotal = undefined;
         this.progressSpinner = false;
       },
       err => {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.handleServerSideErrorMessage(err);
+        this.confirmImporteTotal = undefined;
         this.progressSpinner = false;
       }
     );
@@ -208,11 +244,25 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
 
   save(){
     if (this.isValid() &&  !this.deshabilitarGuardado()) {
-      console.log(this.body);
      this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
+    }
+  }
+
+  handleServerSideErrorMessage(err): void {
+    let error = JSON.parse(err.error);
+    if (error && error.error && error.error.message) {
+      let message = this.translateService.instant(error.error.message);
+  
+      if (message && message.trim().length != 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+      }
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
     }
   }
 
@@ -280,5 +330,10 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
     }else if(campo==='fechaRecibosB2B'){
       this.body.fechaRecibosB2B = event;
     }
+  }
+
+  backTo() {
+    sessionStorage.setItem("volver", "true")
+    this.location.back();
   }
 }

@@ -40,6 +40,8 @@ import { NuevaComunicacionItem } from '../models/NuevaComunicacionItem';
 import { DocumentacionAsistenciaItem } from '../models/guardia/DocumentacionAsistenciaItem';
 import { DocumentoAsistenciaItem } from '../models/guardia/DocumentoAsistenciaItem';
 import { BehaviorSubject } from 'rxjs';
+import { endpoints_expedientes } from '../utils/endpoints_expedientes';
+import { DocumentacionIncorporacionItem } from '../models/DocumentacionIncorporacionItem';
 
 @Injectable()
 export class SigaServices {
@@ -706,7 +708,8 @@ export class SigaServices {
     ...endpoints_EJG_Comision,
 		...endpoints_remesa,
 		...endpoints_intercambios,
-		...endpoints_guardia
+		...endpoints_guardia,
+		...endpoints_expedientes
 	};
 
 	private menuToggled = new Subject<any>();
@@ -1125,6 +1128,43 @@ export class SigaServices {
 			});
 
 	}
+	
+	postSendFileAndIdSolicitud(service: string, documentos: DocumentacionIncorporacionItem[], idSolicitud: string): Observable<any>{
+	let formData: FormData = new FormData();
+	documentos.forEach((documento, i )=>{
+
+		let documentoJSON : DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
+		documentoJSON.idDocumentacion = documento.idDocumentacion;
+		documentoJSON.codDocEXEA = documento.codDocEXEA;
+		documentoJSON.documento = documento.documento;
+		documentoJSON.observaciones = documento.observaciones;
+		documentoJSON.obligatorio = documento.obligatorio;
+		documentoJSON.idModalidad = documento.idModalidad;
+		documentoJSON.tipoColegiacion = documento.tipoColegiacion;
+		documentoJSON.tipoSolicitud = documento.tipoSolicitud;
+
+		if(!documento.idFichero && documento.fileData){
+			formData.append(`uploadFile${i}`, documento.fileData, documento.fileData.name + ';' + JSON.stringify(documentoJSON));
+		}
+
+	});
+
+    let headers = new HttpHeaders();
+
+    headers.append('Content-Type', 'multipart/form-data');
+    headers.append('Accept', 'application/json');
+
+	formData.append('idSolicitud', idSolicitud);
+
+	return this.http
+      .post(environment.newSigaUrl + this.endpoints[service], formData, {
+        headers: headers
+      })
+      .map((response) => {
+        return response;
+      });
+
+  }
 
 	postSendFileAndDesigna(service: string, documentos: any[], designa: any): Observable<any> {
 		let formData: FormData = new FormData();

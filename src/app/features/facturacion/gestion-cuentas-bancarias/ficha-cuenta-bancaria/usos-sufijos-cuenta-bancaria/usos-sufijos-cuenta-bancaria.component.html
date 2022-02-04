@@ -75,9 +75,14 @@
                   <div *ngSwitchCase="'abreviatura'">
                     <span *ngIf="!dato['nuevo']"><a class="enlace" (click)="openTab(dato)">{{ dato[col.field] }}</a></span>
                     <p-dropdown *ngIf="dato['nuevo']" class="select-form" [(ngModel)]="datos[rowIndex].idSerieFacturacion" placeholder="Seleccionar"
-                      [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde"
+                      [options]="comboSeriesFacturacion" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeDrop($event)" optionLabel="label1"
                       [ngClass]="styleObligatorio(datos[rowIndex].idSerieFacturacion)" [showClear]="true"></p-dropdown>
                   </div>
+                  <div *ngSwitchCase="'descripcion'">
+                    <span *ngIf="!dato['nuevo']">{{ dato[col.field] }}</span>
+                    <span *ngIf="dato['nuevo']">{{ descripcionSerie }}</span>
+                  </div>
+
                   <div *ngSwitchCase="'sufijo'">
                     <span *ngIf="!dato['nuevo']">{{ dato[col.field] }}</span>
                     <p-dropdown *ngIf="dato['nuevo']" class="select-form" [(ngModel)]="datos[rowIndex].idSufijo" placeholder="Seleccionar"

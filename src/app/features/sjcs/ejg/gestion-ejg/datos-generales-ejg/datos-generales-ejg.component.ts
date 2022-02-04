@@ -31,7 +31,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() guardadoSend = new EventEmitter<any>();
   @Output() newEstado = new EventEmitter();
-
+  @Input() nuevo;
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
   progressSpinner: boolean = false;
@@ -39,7 +39,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
   bodyInicial: EJGItem;
   nuevoBody: EJGItem = new EJGItem();
   msgs: Message[] = [];
-  nuevo;
   url = null;
   textSelected: String = '{0} opciones seleccionadas';
   tipoEJGDesc = "";
@@ -82,6 +81,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
+    console.log('nuevo 2: ', this.nuevo)
     this.resaltadoDatos = true;
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();

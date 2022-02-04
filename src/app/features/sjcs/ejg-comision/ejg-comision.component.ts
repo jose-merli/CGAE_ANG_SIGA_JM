@@ -82,6 +82,12 @@ export class EjgComisionComponent implements OnInit {
         sessionStorage.removeItem("actasItem");
         console.log("El acta es -> ", this.acta);
       }
+
+      if(sessionStorage.getItem("msgActa") != null){
+        sessionStorage.removeItem('msgActa')
+        this.showMessageError("info", this.translateService.instant("general.message.informacion"), 
+        this.translateService.instant("justiciaGratuita.ejg.mensaje.actasES"));
+      }
         
       
   }

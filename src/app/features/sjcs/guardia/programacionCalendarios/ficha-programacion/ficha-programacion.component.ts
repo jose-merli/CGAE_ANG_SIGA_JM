@@ -581,6 +581,9 @@ this.estado = this.datosGeneralesIniciales.estado;
   }else{
     idCalG = this.idConjuntoGuardiaElegido ;
   }
+  if (idCalG == null){
+    idCalG = event.listaGuarias.value;
+  }
   let dataToDuplicate = {
     'turno': event.turno,
     'guardia': event.nombre,
@@ -894,7 +897,7 @@ this.estado = this.datosGeneralesIniciales.estado;
 
 
   newCalendarProg(datos){
-   
+   console.log('datos ana: ', datos)
     this.sigaServices.post(
    "guardiaCalendario_newCalendarioProgramado",  datos).subscribe(
      data => {

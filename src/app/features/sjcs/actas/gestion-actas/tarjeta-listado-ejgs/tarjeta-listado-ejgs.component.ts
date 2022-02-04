@@ -256,6 +256,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
 
   asociarEJG() {
     sessionStorage.setItem('actasItem', JSON.stringify(this.datos));
+    sessionStorage.setItem('msgActa','true');
     this.router.navigate(["/ejg-comision"]);
   }
 

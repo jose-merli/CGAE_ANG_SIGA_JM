@@ -114,7 +114,11 @@ export class MenuComponent implements OnInit {
           let searchMode : string = ruta.split("=")[1];
           this.onCloseMenu();
           this.router.navigate(["/guardiasAsistencias"], { queryParams: { searchMode: searchMode } });
-        }else{
+        }else if (ruta.includes("ficherosTransferencia") && ruta.includes("fcs")) {
+          let fcs : string = ruta.split("=")[1];
+          this.onCloseMenu();
+          this.router.navigate(["/ficherosTransferencia"], { queryParams: { fcs: fcs } });
+        } else {
           this.onCloseMenu();
           this.router.navigate([ruta]);
         }

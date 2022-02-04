@@ -1,3 +1,6 @@
+import { FacFacturacionprogramadaItem } from "../FacFacturacionprogramadaItem";
+import { FacturasItem } from "../FacturasItem";
+
 export class FicherosAdeudosItem {
 
     idInstitucion: String;
@@ -17,7 +20,7 @@ export class FicherosAdeudosItem {
 	numerolineas: String;
 	idSufijo: String;
 	sufijo: String;
-	totalRemesa: String;
+	totalRemesa: string;
 	importeTotalDesde: String;
 	importeTotalHasta: String;
 	numRecibos: String;
@@ -32,5 +35,8 @@ export class FicherosAdeudosItem {
 	fechaRecibosB2B: Date;
 	fechaUltimaModificacion: Date;
 	
+	facturasGeneracion: string[];
+	facturacionesGeneracion: FacFacturacionprogramadaItem[];
+
     constructor() { }
 }

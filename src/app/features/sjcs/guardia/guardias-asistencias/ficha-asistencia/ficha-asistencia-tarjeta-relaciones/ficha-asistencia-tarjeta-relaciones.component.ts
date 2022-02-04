@@ -20,6 +20,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
 
   msgs : Message [] = [];
+  @Input() modoLectura: boolean;
   @Input() asistencia : TarjetaAsistenciaItem;
   @Input() editable : boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();
@@ -63,7 +64,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
     private commonsService : CommonsService) { }
 
   ngOnInit() {
-
+console.log('modoLectura RELACIONES: ', this.modoLectura)
     this.getRelaciones();
 
   }

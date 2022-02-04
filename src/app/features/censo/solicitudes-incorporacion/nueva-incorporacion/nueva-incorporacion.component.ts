@@ -24,6 +24,13 @@ import { DropdownModule, Dropdown } from "primeng/dropdown";
 import { NoColegiadoItem } from "../../../../models/NoColegiadoItem";
 import { DatosColegiadosItem } from "../../../../models/DatosColegiadosItem";
 import { CommonsService } from "../../../../_services/commons.service";
+import { DocumentacionIncorporacionItem } from "../../../../models/DocumentacionIncorporacionItem";
+import { Table } from "primeng/table";
+import { SigaNoInterceptorServices } from "../../../../_services/sigaNoInterceptor.service";
+import { ParametroItem } from "../../../../models/ParametroItem";
+import { ParametroRequestDto } from "../../../../models/ParametroRequestDto";
+import { SigaStorageService } from "../../../../siga-storage.service";
+import { saveAs } from "file-saver/FileSaver";
 
 export enum KEY_CODE {
   ENTER = 13
@@ -41,6 +48,8 @@ export class NuevaIncorporacionComponent implements OnInit {
   fichaPersonal: boolean = false;
   fichaDireccion: boolean = false;
   fichaBancaria: boolean = false;
+  fichaDocumentacion: boolean = false;
+  
   es: any;
   solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   checkSolicitudInicio: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
@@ -120,12 +129,35 @@ export class NuevaIncorporacionComponent implements OnInit {
   fechaActual: Date = new Date();
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
+  isActivoEXEA : boolean = false;
+  //TABLA DOCUMENTACION
+  rowsPerPage: any = [];
+  cols;
+  selectedItem: number = 10;
+  selectAll;
+  selectedDatos : DocumentacionIncorporacionItem [] = [];
+  buscadores = [];
+  numSelected = 0;
+  selectMultiple: boolean = false;
+  seleccion: boolean = false;
+  documentos : DocumentacionIncorporacionItem [] = [];
+  showInfoDoc : boolean = true;
+  showDialog : boolean = false;
+  paramsDocumentacionEXEA : string;
+  disableDelete : boolean = true;
+  disableDownload : boolean = true;
+  asunto : string;
+  codDocAnexo : string;
+  @ViewChild("table") table : Table;
   constructor(
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
-    private router: Router
+    private router: Router,
+    private changeDetectorRef : ChangeDetectorRef,
+    private sigaNoInterceptorService : SigaNoInterceptorServices,
+    private sigaStorageService : SigaStorageService
   ) { }
 
   @ViewChild("poblacion")
@@ -325,7 +357,185 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.abreCierraFichaDireccion();
     }
 
+    this.isActivoEXEAInstitucion();
+    this.initTabla();
   }
+
+  isActivoEXEAInstitucion(){
+    this.sigaServices.get("expedientesEXEA_isActivo").subscribe(
+      n => {
+        let stringActivoEXEA = n.valor;
+
+        this.isActivoEXEA = (stringActivoEXEA == "1");
+
+        if(this.isActivoEXEA){
+          this.getAsunto();
+          this.getCodDocAnexo();
+          this.getParamsDocumentacionEXEA();
+          if(this.estadoSolicitudSelected == '20' && this.solicitudEditar.idEstado != '20'){
+            this.estadoSolicitudSelected = '10'
+          }
+        }
+
+        if (this.consulta == false) {
+          let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+          this.solicitudEditar.estadoSolicitud = estado.label;
+        }
+      },
+      err => {
+        console.log(err);
+      }, () => {
+      }
+    );
+  }
+
+  getParamsDocumentacionEXEA(){
+    this.sigaServices.get("expedientesEXEA_getParamsDocumentacion").subscribe(
+      n => {
+        let params : string = n.valor;
+
+        if(params.includes("Error")){
+          this.showFail(params);
+        }else{
+          this.paramsDocumentacionEXEA = params;
+          
+          this.getDocRequeridaEXEA();
+          
+        }
+
+      },
+      err => {
+        console.log(err);
+      }, () => {
+      }
+    );
+  }
+
+  getDocRequeridaEXEA(){
+    if(this.paramsDocumentacionEXEA){
+      let parametro = new ParametroRequestDto();
+      parametro.idInstitucion = this.sigaStorageService.institucionActual;
+      parametro.modulo = "EXEA";
+      parametro.parametrosGenerales = "URL_EXEA_EXPEDIENTES";
+    
+      this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+        data => {
+          let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+          let url = resp.find(element => element.parametro == "URL_EXEA_EXPEDIENTES" && element.idInstitucion == element.idinstitucionActual);
+          
+          if(!url){
+            url = resp.find(element => element.parametro == "URL_EXEA_EXPEDIENTES" && element.idInstitucion == '0');
+          }
+
+          if(url){
+            this.sigaNoInterceptorService.getParam(String(url.valor) + "/procedimientos", "?institucion=" + this.paramsDocumentacionEXEA.split('/')[0] + "&procedimiento=" + this.paramsDocumentacionEXEA.split('/')[1]).subscribe(
+              n => {
+                let procedimientos : any[]  = n.listaProcedimientos;
+
+                if(procedimientos && procedimientos.length > 0 ){
+                  let documentosEXEA : any[] = procedimientos[0].listaDocumentos;
+
+                  let modalidadEXEA : String = this.modalidadDocumentacionSelected;
+                  let tipoColegiacionEXEA : String;
+
+                  //Si se trata de una reincorporacion, el campo procedencia desaparecerá, por lo que dependiendo del tipo de colegiacion
+                  //le pondremos un valor u otro para tratarlo internamente
+                  if(this.tipoSolicitudSelected == '60'){ //Reincorporacion
+                    modalidadEXEA = this.tipoColegiacionSelected == '40' ? '3':'2' //comprobamos si es no ejerciente
+                  }
+
+                  if(modalidadEXEA == '11'){
+                    modalidadEXEA = '1';
+                  }else if(modalidadEXEA == '12'){
+                    modalidadEXEA = '2';
+                  }else if(modalidadEXEA == '13'){
+                    modalidadEXEA = '3';
+                  }
+
+                  if(this.tipoColegiacionSelected == '30'){
+
+                    tipoColegiacionEXEA = 'E'; //Ejerciente EXEA
+            
+                  }else if(this.tipoColegiacionSelected == '40'){
+            
+                    tipoColegiacionEXEA = 'N';//No Ejerciente EXEA
+            
+                  }else{
+            
+                    tipoColegiacionEXEA = 'I';//Inscrito EXEA
+            
+                  }
+
+                  documentosEXEA = documentosEXEA.filter(documento => documento.criterio1 == tipoColegiacionEXEA && documento.criterio2 == modalidadEXEA);
+
+                  this.fromJSONToDocIncorporacionItem(documentosEXEA);
+                }
+
+              },
+              err => {
+                console.log(err);
+              }
+            );
+          }
+        },
+        err => {
+          console.log(err);
+        },
+        () => {}
+      );
+    }
+    
+  }
+
+  fromJSONToDocIncorporacionItem(documentosEXEA : any[]){
+
+    let documentosSincronizacion : DocumentacionIncorporacionItem [] = [];
+    documentosEXEA.forEach(documento =>{
+      let documentoSIGA = new DocumentacionIncorporacionItem();
+
+      documentoSIGA.documento = documento.descripcion;
+      documentoSIGA.obligatorio = documento.obligatorio;
+      documentoSIGA.idModalidad = String(this.modalidadDocumentacionSelected);
+      documentoSIGA.tipoColegiacion = String(this.tipoColegiacionSelected);
+      documentoSIGA.tipoSolicitud = String(this.tipoSolicitudSelected);
+      if(documento.condiciones){
+        documentoSIGA.observaciones = documento.condiciones;
+      }
+      documentoSIGA.codDocEXEA = documento.codDoc;
+      documentosSincronizacion.push(documentoSIGA);
+    })
+
+    this.sincronizarDocEXEASIGA(documentosSincronizacion);
+  }
+
+  sincronizarDocEXEASIGA(documentosSincronizacion : DocumentacionIncorporacionItem []){
+    if(documentosSincronizacion && documentosSincronizacion.length > 0){
+      this.progressSpinner = true;
+      this.sigaServices
+      .post("expedientesEXEA_sincronizarDoc", documentosSincronizacion)
+      .subscribe(
+        data => {
+          let error = JSON.parse(data.body).error;
+          if(error){
+            this.showFailNotTraduce('Error al sincronizar la documentacion de SIGA con EXEA: ' + error.message);
+          }else{
+            this.showInfo('Documentacion sincronizada con EXEA correctamente');
+            this.getDocRequerida();
+          }
+          this.progressSpinner = false;
+          // this.editar = false;
+        },
+        error => {
+          this.showFailNotTraduce('Error al sincronizar la documentacion: ' + error);
+          this.progressSpinner = false;
+        },
+        ()=>{
+          this.progressSpinner = false;
+        }
+      );
+    }
+  }
+
 
   cargarCombos() {
     this.comboSexo = [
@@ -344,12 +554,20 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     );
 
+    /*this.tiposSolicitud = [
+      {
+        value:'I', label:'Incorporación'
+      },
+      {
+        value:'R', label:'Reincorporación'
+      }
+    ]*/
+
     this.sigaServices.get("solicitudIncorporacion_estadoSolicitud").subscribe(
       result => {
         this.estadosSolicitud = result.combooItems;
         this.arregloTildesCombo(this.estadosSolicitud);
         if (this.consulta == false) {
-          this.estadoSolicitudSelected = "20";
           let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
           this.solicitudEditar.estadoSolicitud = estado.label;
         }
@@ -436,6 +654,18 @@ export class NuevaIncorporacionComponent implements OnInit {
       }
     );
 
+    /*this.tipoColegiacion = [
+      {
+        value:'E',label:'Ejerciente'
+      },
+      {
+        value:'N',label:'No ejerciente'
+      },
+      {
+        value:'I',label:'Inscrito'
+      }
+    ]*/
+
     this.sigaServices
       .get("solicitudIncorporacion_modalidadDocumentacion")
       .subscribe(
@@ -447,6 +677,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           //console.log(error);
         }
       );
+
 
     this.sigaServices.get("integrantes_provincias").subscribe(
       result => {
@@ -1136,7 +1367,7 @@ export class NuevaIncorporacionComponent implements OnInit {
             data => {
               let resultado = JSON.parse(data["body"]);
 
-              if (resultado.numColegiado == "disponible") {
+              if (resultado.numColegiado == "disponible" && !this.isActivoEXEA) {
                 this.sigaServices
                   .post(
                     "solicitudIncorporacion_aprobarSolicitud",
@@ -1196,6 +1427,15 @@ export class NuevaIncorporacionComponent implements OnInit {
                     }
                   );
 
+              }else if(resultado.numColegiado == "disponible" && this.isActivoEXEA){
+                this.msgs = [];
+                //INICIAMOS COLEGIACION POR EXEA
+                if(this.checkDocumentacionCumplimentada() && this.checkNuevosRegistros()){
+                  this.iniciarTramiteEXEA();
+                }else{
+                  this.showFailNotTraduce('Falta documentación obligatoria por adjuntar');
+                  this.progressSpinner = false;
+                }
               } else {
                 this.showFail("censo.solicitudIncorporacion.ficha.numColegiadoDuplicado");
                 this.numColegiadoDuplicado = true;
@@ -1353,6 +1593,9 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.resaltadoDatosBancos = false;
     this.numColegiadoDuplicado = false;
 
+    if(this.estadoSolicitudSelected == '20' && this.isActivoEXEA){
+      this.estadoSolicitudSelected = '10';
+    }
     this.solicitudEditar.idEstado = this.estadoSolicitudSelected;
     this.solicitudEditar.idTipo = this.tipoSolicitudSelected;
     this.solicitudEditar.tipoColegiacion = this.tipoColegiacionSelected;
@@ -1405,7 +1648,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
           this.solicitudEditar.idSolicitud = JSON.parse(result.body).id;
 
-          this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+          //this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
           this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
           this.pendienteAprobacion = true;
           this.consulta = false;
@@ -1743,6 +1986,19 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
   }
 
+  onChangeCombosDoc(){
+
+    if(this.tipoSolicitudSelected == '60'){ //Reincorporacion
+      this.modalidadDocumentacionSelected = this.tipoColegiacionSelected == '40' ? '13':'12' //comprobamos si es no ejerciente
+    }
+    if(this.tipoSolicitudSelected && this.tipoColegiacionSelected && this.modalidadDocumentacionSelected && this.isActivoEXEA){
+      this.getDocRequeridaEXEA();
+    }else{
+      this.showInfoDoc = true;
+      this.documentos = [];
+    }
+  }
+
   abreCierraFichaColegiacion() {
     this.fichaColegiacion = !this.fichaColegiacion;
   }
@@ -1765,6 +2021,10 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
   abreCierraFichaBancaria() {
     this.fichaBancaria = !this.fichaBancaria;
+  }
+
+  abreCierraFichaDocumentacion(){
+    this.fichaDocumentacion = !this.fichaDocumentacion;
   }
 
   checkIdentificacion(doc: String) {
@@ -2099,6 +2359,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   checkDatosAprobar() {
+    this.showDialog = false;
     if ((this.consulta || this.pendienteAprobacion) && (this.solicitudEditar.idEstado != '50' && this.solicitudEditar.idEstado != '30')) {
       if (!this.disabledAprobar()) {
         if (this.cargo == true || this.abono == true || this.abonoJCS == true) {
@@ -2118,5 +2379,515 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.validateAprobarSolitud();
       }
     }
+  }
+
+  newDoc(){
+
+    if(this.codDocAnexo){
+      let docIncorporacion : DocumentacionIncorporacionItem = new DocumentacionIncorporacionItem();
+      docIncorporacion.nuevoRegistro = true;
+      docIncorporacion.obligatorio = 'NO';
+      docIncorporacion.codDocEXEA = '002';
+      docIncorporacion.idModalidad = String(this.modalidadDocumentacionSelected);
+      docIncorporacion.tipoColegiacion = String(this.tipoColegiacionSelected);
+      docIncorporacion.tipoSolicitud = String(this.tipoSolicitudSelected);
+
+      this.documentos.unshift(docIncorporacion);
+
+      this.changeDetectorRef.detectChanges();
+      this.table.reset();
+    }else{
+      this.showFailNotTraduce('No se puedo obtener correctamente el código documento del anexo');
+    }
+  }
+
+  initTabla(){
+
+    this.cols = [
+      { field: "documento", header: "justiciaGratuita.ejg.documentacion.Documento", width: '3%' },
+      { field: "obligatorio", header: "dato.jgr.guardia.guardias.obligatoriedad", width: "3%" },
+      { field: "observaciones", header: "censo.nuevaSolicitud.observaciones", width: "3%" },
+      { field: "nombreDoc", header: "informesycomunicaciones.comunicaciones.documento.nombre", width: "3%" },
+    ];
+    this.cols.forEach(it => this.buscadores.push(""));
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+
+    if(this.solicitudEditar && this.tipoSolicitudSelected && this.solicitudEditar.idModalidadDocumentacion && this.solicitudEditar.idTipoColegiacion){
+      this.getDocRequerida();
+      this.showInfoDoc = false;
+    }else{
+      this.showInfoDoc = true;
+    }
+
+  }
+
+  getDocRequerida(){
+
+    let params : string = "?tipoColegiacion=" + this.tipoColegiacionSelected + "&tipoSolicitud="+this.tipoSolicitudSelected+"&modalidadDocumentacion="+this.modalidadDocumentacionSelected
+    if(this.solicitudEditar.idSolicitud){
+      params+="&idSolicitud="+this.solicitudEditar.idSolicitud;
+    }
+    this.sigaServices
+      .getParam(
+        "solicitudesInc_getDocRequerida",
+        params
+      )
+      .subscribe(
+        result => {
+          this.documentos = result.documentacionIncorporacionItem;
+          this.showInfoDoc = false;
+          console.log(this.documentos);
+        },
+        error => {
+          console.log(error);
+        }
+      );
+
+  }
+
+  validateSizeFile() {
+    if(this.solicitudEditar.idSolicitud && this.documentos){
+      this.progressSpinner = true;
+      let nuevosDocumentos : DocumentacionIncorporacionItem [] = this.documentos.filter(documento => documento.fileData != null);
+      if(nuevosDocumentos.length > 0){
+
+        this.sigaServices.get("plantillasDoc_sizeFichero")
+          .subscribe(
+            response => {
+              let tam = response.combooItems[0].value;
+              let tamBytes = tam * 1024 * 1024;
+              let docsOk = true;
+              nuevosDocumentos.forEach( documento => {
+                let fileData : File = documento.fileData;
+                if (fileData.size >= tamBytes && docsOk) {
+                  docsOk = false;
+                  this.showFailNotTraduce(this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargarArchivo") + tam + " MB: " + documento.fileData.name);
+                  
+                }
+              });
+              this.progressSpinner = false;
+              if(docsOk){
+                this.save();
+              }
+            });
+      }else {
+        this.save();
+      }
+    }
+  }
+
+  save(){
+    if(this.checkNuevosRegistros()){
+
+      this.progressSpinner = true;
+      this.sigaServices.postSendFileAndIdSolicitud("expedientesEXEA_subirDoc", this.documentos, String(this.solicitudEditar.idSolicitud)).subscribe(
+        n => {
+          this.progressSpinner = false;
+          let result = n;
+          if(result.error){
+            this.showFailNotTraduce(result.error.description);
+          }else{
+            this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+            this.getDocRequerida();
+          }
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.progressSpinner = false;
+        }
+      );
+    } else {
+      this.showFailNotTraduce('Falta documentación que adjuntar a los anexos');
+      this.progressSpinner = false;
+    }
+  }
+
+  downloadDoc(){
+    if(this.selectedDatos && this.selectedDatos.length > 0){
+      this.progressSpinner = true;
+      let documentos : DocumentacionIncorporacionItem[] = [];
+      if(Array.isArray(this.selectedDatos)){
+        documentos = this.selectedDatos;
+      }else{
+        documentos.push(this.selectedDatos);
+      }
+
+      this.sigaServices
+      .postDownloadFiles("expedientesEXEA_descargarDoc", documentos)
+      .subscribe(
+        data => {
+          let blob = null;
+
+          if(data.size == 0){ //Si size es 0 es que no trae nada
+            this.showFailNotTraduce('No se ha encontrado el documento indicado');
+          }else if (documentos.length == 1) {
+            
+            let nombreFichero = documentos[0].nombreDoc;
+            if(!nombreFichero){
+              nombreFichero = "default.pdf";
+            }
+            let mime = this.getMimeType(nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length));
+            blob = new Blob([data], { type: mime });
+            saveAs(blob, documentos[0].nombreDoc);
+          } else {
+
+            blob = new Blob([data], { type: "application/zip" });
+            saveAs(blob, "documentos.zip");
+          }
+          this.selectedDatos = [];
+          this.numSelected = 0;
+          this.progressSpinner = false;
+        },
+        err => {
+          console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }
+  }
+
+  downloadJustificante(){
+    if(this.solicitudEditar.claveConsulta){
+      this.progressSpinner = true;
+      this.sigaServices
+        .postDownloadFilesWithFileName2(
+          "expedientesEXEA_getJustificante",
+          this.solicitudEditar.claveConsulta
+        )
+        .subscribe(
+          (data: { file: Blob, filename: string, status: number }) => {
+            let blob = null;
+            if(data){
+              if(!data.file || data.file.size == 0){ //Si size es 0 es que no trae nada
+                this.showFailNotTraduce('No se ha encontrado el documento indicado');
+              }else{
+                let filename = data.filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+                saveAs(data.file, filename);
+              }
+            }else{
+              this.showFailNotTraduce('Ocurrió un error al obtener el justificante');
+            }
+            this.progressSpinner = false;
+          },
+          error => {
+            console.log(error);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+  }
+
+  delete(){
+    this.confirmationService.confirm({
+      key: "confirmEliminar",
+      message: this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.seguroEliminarDocumentos"),
+      icon: "fa fa-question-circle",
+      accept: () => {this.executeDelete();},
+      reject: () =>{this.showInfo(this.translateService.instant("general.message.accion.cancelada"));}
+    });
+  }
+
+  executeDelete(){
+    this.progressSpinner = true;
+    let documentos : DocumentacionIncorporacionItem[] = [];
+    if(Array.isArray(this.selectedDatos)){
+      documentos = this.selectedDatos;
+    }else{
+      documentos.push(this.selectedDatos);
+    }
+
+    this.sigaServices
+    .postPaginado("expedientesEXEA_eliminarDoc", "?idSolicitud="+this.solicitudEditar.idSolicitud, documentos)
+    .subscribe(
+      n => {
+        let result = n;
+        if(result.error){
+          this.showFailNotTraduce(result.error.description);
+        }else{
+          this.showSuccess(this.translateService.instant("general.message.accion.realizada"));
+          this.getDocRequerida();
+        }
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+    
+  }
+
+  iniciarTramiteEXEA(){
+    this.progressSpinner = true;
+    this.sigaServices
+    .post("expedientesEXEA_iniciarTramite", this.solicitudEditar.idSolicitud + "/" + this.asunto)
+    .subscribe(
+      data => {
+        let body = JSON.parse(data.body);
+        if(body.error){
+          this.showFailNotTraduce('Error al iniciar el trámite de EXEA: ' + body.error.message);
+        }else{
+          this.showInfo('Trámite iniciado correctamente');
+          sessionStorage.removeItem("editedSolicitud");
+
+          this.solicitudEditar.idSolicitud = body.id.split(';')[0];
+          this.solicitudEditar.numRegistro = body.id.split(';')[1];
+          this.solicitudEditar.claveConsulta = body.id.split(';')[2];
+          this.solicitudEditar.numExpediente = body.id.split(';')[3];
+          this.consulta = true;
+          this.pendienteAprobacion = true;
+          sessionStorage.setItem("pendienteAprobacion", "true");
+          this.solicitudEditar.idEstado = "20";
+          this.estadoSolicitudSelected = "20";
+          let estado = this.estadosSolicitud.find(x => x.value == this.estadoSolicitudSelected);
+          this.solicitudEditar.estadoSolicitud = estado.label;
+          let tipoSolicitud = this.tiposSolicitud.find(x => x.value == this.tipoSolicitudSelected);
+          this.solicitudEditar.tipoSolicitud = tipoSolicitud.label;
+          let modalidad = this.modalidadDocumentacion.find(x => x.value == this.modalidadDocumentacionSelected);
+          this.solicitudEditar.modalidad = modalidad.label;
+          sessionStorage.setItem("consulta", "true");
+          this.solicitudEditar.fechaEstadoSolicitud = new Date();
+          sessionStorage.setItem(
+            "editedSolicitud",
+            JSON.stringify(this.solicitudEditar)
+          );
+          this.checkSolicitudInicio = JSON.parse(sessionStorage.getItem("editedSolicitud"));
+
+          this.progressSpinner = false;
+          this.showSuccess("Trámite iniciado correctamente");
+        }
+        this.progressSpinner = false;
+      },
+      error => {
+        this.showFailNotTraduce('Error al iniciar el trámite de EXEA: ' + error);
+        this.progressSpinner = false;
+      },
+      ()=>{
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  openEXEA(){
+    if(this.solicitudEditar && this.solicitudEditar.numExpediente){
+      let parametro = new ParametroRequestDto();
+      parametro.idInstitucion = this.sigaStorageService.institucionActual;
+      parametro.modulo = "EXEA";
+      parametro.parametrosGenerales = "URL_EXEA";
+
+      this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+        data => {
+          let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+          let url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == element.idinstitucionActual);
+          
+          if(!url){
+            url = resp.find(element => element.parametro == "URL_EXEA" && element.idInstitucion == '0');
+          }
+
+          if(url){
+            window.open(url.valor + "selectAnActivity.do?numexp="+this.solicitudEditar.numExpediente, '_blank');
+          }
+        },
+        err => {
+          console.log(err);
+        },
+        () => {}
+      );
+    }
+  }
+
+  getAsunto(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.sigaStorageService.institucionActual;
+    parametro.modulo = "EXEA";
+    parametro.parametrosGenerales = "ASUNTO_EXP_COL";
+    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+      data => {
+        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+        let asunto = resp.find(element => element.parametro == "ASUNTO_EXP_COL" && element.idInstitucion == element.idinstitucionActual);
+        
+        if(!asunto){
+          asunto = resp.find(element => element.parametro == "ASUNTO_EXP_COL" && element.idInstitucion == '0');
+        }
+
+        if(asunto && asunto.valor != 'NULL'){
+          this.asunto = String(asunto.valor);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
+  }
+
+  getCodDocAnexo(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.sigaStorageService.institucionActual;
+    parametro.modulo = "EXEA";
+    parametro.parametrosGenerales = "COD_DOC_ANEXO";
+    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
+      data => {
+        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
+        let codDocAnexo = resp.find(element => element.parametro == "COD_DOC_ANEXO" && element.idInstitucion == element.idinstitucionActual);
+        
+        if(!codDocAnexo){
+          codDocAnexo = resp.find(element => element.parametro == "COD_DOC_ANEXO" && element.idInstitucion == '0');
+        }
+
+        if(codDocAnexo && codDocAnexo.valor != 'NULL'){
+          this.codDocAnexo = String(codDocAnexo.valor);
+        }
+      },
+      err => {
+        console.log(err);
+      },
+      () => {}
+    );
+  }
+
+
+  checkNuevosRegistros(){
+    let ok = false;
+    if(!this.documentos || this.documentos.length == 0
+      || this.documentos.filter(doc => doc.nuevoRegistro).length == 0
+      || this.documentos.filter(doc => doc.nuevoRegistro).every(doc => doc.documento != '' && doc.documento != null && doc.nombreDoc != '' && doc.nombreDoc != null && doc.fileData != null && doc.fileData != undefined)){
+        ok = true;
+    }
+    return ok;
+  }
+
+  getFile(dato : DocumentacionIncorporacionItem, pUploadFile: any, event: any) {
+    let fileList: FileList = event.files;
+    let nombreCompletoArchivo = fileList[0].name;
+    dato.nombreDoc = fileList[0].name;
+    dato.fileData = fileList[0];
+    pUploadFile.chooseLabel = nombreCompletoArchivo;
+  }
+
+
+  onChangeSelectAll() {
+
+    if (this.selectAll && this.documentos) {
+      this.selectMultiple = true;
+      this.selectedDatos = this.documentos;
+      this.numSelected = this.documentos.length;
+      if(this.selectedDatos.every(doc => doc.idFichero != null && doc.idFichero != '' && doc.idFichero != undefined)){
+        this.disableDelete = false;
+        this.disableDownload = false;
+      }
+    } else {
+      this.selectedDatos = [];
+      this.numSelected = 0;
+      this.selectMultiple = false;
+    }
+      
+  }
+
+  onChangeRowsPerPages(event) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.table.reset();
+  }
+
+  actualizaSeleccionados(){
+    if(!this.selectedDatos || this.selectedDatos.length <= 0){ //si no hay nada seleccionado deshabilitamos
+      this.disableDelete = true;
+      this.disableDownload = true;
+    }else if(this.selectedDatos.length == 1 && this.selectedDatos.find(doc => doc.idFichero != null && doc.idFichero != '' && doc.idFichero != undefined)){ //si hay solamente uno seleccionado y tiene fichero habilitamos
+      this.disableDelete = false;
+      this.disableDownload = false;
+    }else if (this.selectedDatos.length > 1 && this.selectedDatos.every(doc => doc.idFichero != null && doc.idFichero != '' && doc.idFichero != undefined)){ //si hay mas de uno seleccionado y tiene fichero habilitamos
+      this.disableDelete = false;
+      this.disableDownload = false;
+    }else{ //Si no tienen fichero adjunto deshabilitamos
+      this.disableDelete = true;
+      this.disableDownload = true
+    }
+  }
+
+  getMimeType(extension: string): string {
+
+    let mime: string = "";
+
+    switch (extension.toLowerCase()) {
+
+      case ".doc":
+        mime = "application/msword";
+        break;
+      case ".docx":
+        mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        break;
+      case ".pdf":
+        mime = "application/pdf";
+        break;
+      case ".jpg":
+        mime = "image/jpeg";
+        break;
+      case ".png":
+        mime = "image/png";
+        break;
+      case ".rtf":
+        mime = "application/rtf";
+        break;
+      case ".txt":
+        mime = "text/plain";
+        break;
+    }
+
+    return mime;
+  }
+
+  checkDocumentacionCumplimentada(){
+    let ok : boolean = false;
+    if(this.isActivoEXEA //Si la institucion trabaja con EXEA
+      && this.documentos
+      && this.documentos.length > 0 //Si hay documentos
+      && (
+        (this.documentos.find(doc => doc.obligatorio == 'SÍ') //Si hay algun documento que sea obligatorio y los obligatorios tienen fichero adjunto
+        && this.documentos.filter(doc => doc.obligatorio == 'SÍ').every(doc => doc.idFichero != null && doc.idFichero != '' && doc.idFichero != undefined))
+        ||  !this.documentos.find(doc => doc.obligatorio == 'SÍ') // O si no hay ninguno obligatorio
+        )){
+          ok = true;
+    }else if(this.isActivoEXEA
+      && (!this.documentos || this.documentos.length == 0)){
+        ok = true;
+    }
+    return ok;
+  }
+
+  openDialog(){
+    this.showDialog = true;
+  }
+  closeDialog(){
+    this.showDialog = false;
   }
 }

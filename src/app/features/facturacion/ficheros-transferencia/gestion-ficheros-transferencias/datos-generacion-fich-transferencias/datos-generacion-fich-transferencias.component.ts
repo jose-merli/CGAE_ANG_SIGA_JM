@@ -5,6 +5,7 @@ import { FacAbonoItem } from '../../../../../models/sjcs/FacAbonoItem';
 import { FicherosAbonosItem } from '../../../../../models/sjcs/FicherosAbonosItem';
 import { saveAs } from "file-saver/FileSaver";
 import { SigaServices } from '../../../../../_services/siga.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-datos-generacion-fich-transferencias',
@@ -37,7 +38,7 @@ export class DatosGeneracionFichTransferenciasComponent implements OnInit {
   }
 
   constructor(private confirmationService: ConfirmationService, private translateService: TranslateService,
-     private sigaServices: SigaServices) { }
+     private sigaServices: SigaServices, private location: Location) { }
 
   async ngOnInit() {
     this.body =  JSON.parse(JSON.stringify(this.bodyInicial));
@@ -84,7 +85,7 @@ export class DatosGeneracionFichTransferenciasComponent implements OnInit {
 
   // Primera confirmación
   confirmEliminar(): void {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
+    let mess = this.translateService.instant("facturacionPyS.ficherosTransferencias.messages.primeraConfirmacion");
     let icon = "fa fa-eraser";
 
     this.confirmationService.confirm({
@@ -108,9 +109,9 @@ export class DatosGeneracionFichTransferenciasComponent implements OnInit {
     if (!this.disableConfirmEliminar()) {
       this.showModalEliminar = false;
       this.eliminar();
-      this.showMessage("info", "Exito", "El importe coincide correctamente");
+      // this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
     } else {
-      this.showMessage("info", "Cancelar", "El importe no coincide");
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionPyS.ficherosExp.eliminar.error.importe"));
     }   
   }
 
@@ -127,20 +128,41 @@ export class DatosGeneracionFichTransferenciasComponent implements OnInit {
   // Función de eliminar
 
   eliminar() {
-    // this.sigaServices.post("facturacionPyS_eliminaSerieFacturacion", this.selectedDatos).subscribe(
-    //   data => {
-    //     this.busqueda.emit();
-    //     this.showMessage("success", "Eliminar", "Las series de facturación han sido dadas de baja con exito.");
-    //     this.progressSpinner = false;
-    //   },
-    //   err => {
-    //     this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-    //     this.progressSpinner = false;
-    //   }
-    // );
+    this.progressSpinner = true;
+    this.sigaServices.post("facturacionPyS_eliminarFicheroTransferencias", this.bodyInicial).subscribe(
+      data => {
+        sessionStorage.setItem("mensaje", JSON.stringify({
+          severity: "success", summary: this.translateService.instant("general.message.correct"), detail: this.translateService.instant("facturacionPyS.ficherosExp.eliminar.exito")
+        }));
+        sessionStorage.setItem("volver", "true");
+        this.backTo();
+        this.confirmImporteTotal = undefined;
+        this.progressSpinner = false;
+      },
+      err => {
+        this.handleServerSideErrorMessage(err);
+        this.confirmImporteTotal = undefined;
+        this.progressSpinner = false;
+      }
+    );
   }
 
   // Funciones de utilidad
+
+  handleServerSideErrorMessage(err): void {
+    let error = JSON.parse(err.error);
+    if (error && error.error && error.error.message) {
+      let message = this.translateService.instant(error.error.message);
+  
+      if (message && message.trim().length != 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+      }
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    }
+  }
 
   showMessage(severity, summary, msg) {
     this.msgs = [];
@@ -173,5 +195,10 @@ export class DatosGeneracionFichTransferenciasComponent implements OnInit {
     }
     this.opened.emit(this.openFicha);
     this.idOpened.emit(key);
+  }
+
+  backTo() {
+    sessionStorage.setItem("volver", "true")
+    this.location.back();
   }
 }

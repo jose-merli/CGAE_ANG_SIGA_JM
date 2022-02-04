@@ -5,7 +5,7 @@ import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
-
+import { saveAs } from 'file-saver/FileSaver';
 @Component({
   selector: 'app-destinatarios-etiquetas-series-factura',
   templateUrl: './destinatarios-etiquetas-series-factura.component.html',
@@ -15,7 +15,7 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
 
   msgs: Message[];
   progressSpinner: boolean = false;
-
+  msgsDescarga: any;
   @Input() body: SerieFacturacionItem;
   
   etiquetasSeleccionadasInicial: any[];
@@ -36,7 +36,11 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
     private translateService: TranslateService
   ) { }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    if (sessionStorage.getItem('descargasPendientes') == undefined) {
+      sessionStorage.setItem('descargasPendientes', '0');
+    }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.body && this.body.idSerieFacturacion != undefined) {
@@ -157,5 +161,72 @@ export class DestinatariosEtiquetasSeriesFacturaComponent implements OnInit, OnC
     this.opened.emit(this.openTarjetaDestinatariosEtiquetas);
     this.idOpened.emit(key);
   }
+
+  generarExcel(){
+
+      let objEtiquetas = {
+        idSerieFacturacion: this.body.idSerieFacturacion,
+        seleccionados: this.etiquetasSeleccionadas,
+        noSeleccionados: this.etiquetasNoSeleccionadas
+      };
+
+      let descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes'));
+    descargasPendientes = descargasPendientes + 1;
+    sessionStorage.setItem('descargasPendientes', descargasPendientes);
+    this.showInfoPerenne(
+      this.translateService.instant("general.accion.descargaCola.inicio") + descargasPendientes
+    );
+
+
+    this.sigaServices
+      .postDownloadFiles("facturacionPyS_generarExcel", objEtiquetas)
+      .subscribe(data => {
+        if (data == null) {
+          this.showInfo(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+          descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+          sessionStorage.setItem('descargasPendientes', descargasPendientes);        
+        } else {
+          let nombre = this.translateService.instant("censo.nombre.fichero.generarexcel") + new Date().getTime() + ".xlsx";
+          saveAs(data, nombre);
+          descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+          sessionStorage.setItem('descargasPendientes', descargasPendientes);
+          this.showInfoPerenne(
+            this.translateService.instant("general.accion.descargaCola.fin")  + descargasPendientes
+          );
+        }
+      }, error => {
+        descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+        sessionStorage.setItem('descargasPendientes', descargasPendientes);
+
+        this.showFail(this.translateService.instant("informesYcomunicaciones.consultas.mensaje.error.ejecutarConsulta"));
+      }, () => {
+        
+      });
+    
+  }
+
+    // Mensajes
+    showFail(mensaje: string) {
+
+      this.msgs = [];
+      this.msgs.push({ severity: "error", summary: "", detail: mensaje });
+    }
+  
+    showSuccess(mensaje: string) {
+  
+      this.msgs = [];
+      this.msgs.push({ severity: "success", summary: "", detail: mensaje });
+    }
+  
+    showInfo(mensaje: string) {
+  
+      this.msgs = [];
+      this.msgs.push({ severity: "info", summary: "", detail: mensaje });
+    }
+  
+    showInfoPerenne(mensaje: string) {
+      this.msgsDescarga = [];
+      this.msgsDescarga.push({ severity: 'info', summary: '', detail: mensaje });
+    }
 
 }

@@ -16,7 +16,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
   styleUrls: ['./ficha-asistencia-tarjeta-asistido.component.scss']
 })
 export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
-
+  @Input() modoLectura: boolean;
   @Input() idAsistencia : string;
   @Input() idPersonaAsistido : string;
   @Input() editable : boolean;

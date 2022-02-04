@@ -187,7 +187,17 @@ export class GestionCuentasBancariasComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          let error = JSON.parse(err.error).error;
+          if (error != undefined && error.message != undefined) {
+            let translatedError = this.translateService.instant(error.message);
+            if (translatedError && translatedError.trim().length != 0) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), translatedError);
+            } else {
+              this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            }
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
         }
       );
   }

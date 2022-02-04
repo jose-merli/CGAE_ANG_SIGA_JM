@@ -127,7 +127,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     }
   }
 
-  sortData(sort: Sort) {
+  /*sortData(sort: Sort) {
     let data: Row[] = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       data.push(row);
@@ -151,7 +151,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
 
-  }
+  }*/
 
 
   searchChange(j: any) {
@@ -190,6 +190,61 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     });
     this.totalRegistros = this.rowGroups.length;
   }
+
+  sortData(sort: Sort) {
+    //console.log("entro en el método Sort con valor:"+ sort.active+","+sort.direction);
+    let data: Row[] = [];
+    this.rowGroups = this.rowGroups.filter((row) => {
+      data.push(row);
+    });
+    data = data.slice();
+    if (!sort.active || sort.direction === '') {
+      this.rowGroups = data;
+      return;
+    }
+
+    this.rowGroups = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+
+      for (let i = 0; i < this.cabeceras.length; i++) {
+        let nombreCabecera = this.cabeceras[i].id;
+        if (nombreCabecera == sort.active){
+          //console.log("a.cells["+i+"].type:"+a.cells[i].type);
+
+          if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
+            return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
+          }else if (a.cells[i].type=='date' && b.cells[i].type=='date'){
+            return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
+          }
+          else if (a.cells[i].type=='dateTime' && b.cells[i].type=='dateTime'){
+            return compareDateAndTime(a.cells[i].value.label, b.cells[i].value.label, isAsc);
+          }
+
+          let valorA = a.cells[i].value;
+          let valorB = b.cells[i].value;
+          if (valorA!=null && valorB!=null){
+            if(isNaN(valorA)){ //Checked for numeric
+              const dayA = valorA.substr(0, 2) ;
+              const monthA = valorA.substr(3, 2);
+              const yearA = valorA.substr(6, 10);
+              //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+              var dt=new Date(yearA, monthA, dayA);
+              if(!isNaN(dt.getTime())){ //Checked for date
+                return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
+              }else{
+              }
+            } else{
+            }
+          }
+
+          return compare(a.cells[i].value, b.cells[i].value, isAsc);
+          
+        }
+      }
+ 
+    });
+}
+
 
   showMsg(severity, summary, detail) {
     this.msgs = [];
@@ -546,6 +601,105 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   }
 
 }
-function compare(a: string, b: number | string, isAsc: boolean) {
+function compare2(a: string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
+function compareDateAndTime (date1:  any, date2:  any, isAsc: boolean){
+  let objDate1 = null;
+  let hour1 = null;
+  let objDate2 = null;
+  let hour2 = null;
+  let fechaA1 = date1.split("/").join("-")
+  let fechaA = fechaA1.split(" ")[0];
+  let horaA = fechaA1.split(" ")[1].split(":").join("-");
+  if (fechaA!=null && horaA!=null){
+    const dayA = fechaA.substr(0, 2) ;
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    const hourA = horaA.substr(0, 2);
+    const minA = horaA.substr(3, 2);
+    const segA = horaA.substr(6, 8);
+    //console.log("fecha a:"+ yearA+","+monthA+","+dayA +  "  " + hourA + ":" + minA + ":" + segA);
+    objDate1= {  day: dayA,month: monthA, year: yearA};
+    hour1={ hour: hourA,minute: minA,second: segA};
+  }
+  let fechaB1 = date2.split("/").join("-")
+  let fechaB = fechaB1.split(" ")[0];
+  let horaB = fechaB1.split(" ")[1].split(":").join("-");
+  if (fechaB!=null){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    const hourB = horaB.substr(0, 2);
+    const minB = horaB.substr(3, 2);
+    const segB = horaB.substr(6, 8);
+    //console.log("fecha b:"+ yearB+","+monthB+","+dayB+  "  " + hourB + ":" + minB + ":" + segB);
+    objDate2= {  day: dayB,month: monthB, year: yearB};
+    hour2={ hour: hourB,minute: minB,second: segB};
+  }
+
+  //console.log("comparacionDate isAsc:"+ isAsc+";");
+
+  return  compareDateHour(objDate1, hour1, objDate2, hour2, isAsc);
+
+}
+
+function compareDateHour(dateObj1,hour1,dateObj2,hour2, isAsc){
+
+  let objDate1=new Date(dateObj1.year+'-'+dateObj1.month+"-"+dateObj1.day+
+  " "+ hour1.hour +":" + hour1.minute + ":" + hour1.second + ".000Z");
+  let objDate2=new Date(dateObj2.year+'-'+dateObj2.month+"-"+dateObj2.day+
+  " "+ hour2.hour +":" + hour2.minute + ":" + hour2.second + ".000Z");
+
+  //return (objDate1.getTime() / 1000) > (objDate2.getTime() / 1000) ? true :false;
+  return ((objDate1.getTime() / 1000) < (objDate2.getTime() / 1000) ? -1 : 1) * (isAsc ? 1 : -1);
+}
+
+function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+
+  let dateA = null;
+  let dateB = null;
+  if (fechaA!=null){
+    const dayA = fechaA.substr(0, 2) ;
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+    dateA = new Date(yearA, monthA, dayA);
+  }
+
+  if (fechaB!=null){
+    const dayB = fechaB.substr(0, 2) ;
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    //console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+    dateB = new Date(yearB, monthB, dayB);
+  }
+
+  //console.log("comparacionDate isAsc:"+ isAsc+";");
+
+  return compare(dateA, dateB, isAsc);
+
+
+}
+
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+  //console.log("comparacion  a:"+ a+"; b:"+ b);
+
+  if (typeof a === "string" && typeof b === "string") {
+    //console.log("comparacion  de cadenas");
+    a = a.toLowerCase();
+    b = b.toLowerCase();
+  }
+
+  //console.log("compare isAsc:"+ isAsc+";");
+
+  if (a==null && b!=null){
+    return ( 1 ) * (isAsc ? 1 : -1);
+  }
+  if (a!=null && b==null){
+    return ( -1 ) * (isAsc ? 1 : -1);
+  }
+
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+}					   
+

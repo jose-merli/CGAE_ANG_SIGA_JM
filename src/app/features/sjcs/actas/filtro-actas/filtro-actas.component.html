@@ -14,14 +14,14 @@
         <div class="form-group-interlineado col-lg-6 col-md-6">
           <div class="form-row">
             <div class="col-lg-6 col-md-6">
-              <label><strong>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
-                  translate}}</strong></label>
+              <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' |
+                  translate}}</label>
               <input type="text" [(ngModel)]="datosFiltro.anioacta" class="form-control" (keypress)="numberOnly($event)"
                 maxLength="4" pInputText>
             </div>
             <div class="col-log-6 col-md-6">
-              <label><strong>{{ 'gratuita.busquedaAsistencias.literal.numero' |
-                  translate}}</strong></label>
+              <label>{{ 'gratuita.busquedaAsistencias.literal.numero' |
+                  translate}}</label>
               <input type="text" class="form-control" maxLength="10" #inputNumero pInputText [(ngModel)]="datosFiltro.numeroacta">
             </div>
           </div>
@@ -30,15 +30,15 @@
         <div class="form-group-interlineado col-lg-6 col-md-6">
           <div class="form-row">
             <div class="col-lg-6 col-md-6">
-              <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucionDesde' |
-               translate}}</strong></label>
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucionDesde' |
+               translate}}</label>
               <app-fecha [(value)]="datosFiltro.fecharesoluciondesde" (valueChangeSelected)="fillFechaResolucionDesde($event)"
                 (valueChangeInput)="fillFechaResolucionDesde($event)">
               </app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
-              <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucionHasta' |
-                translate}}</strong></label>
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaResolucionHasta' |
+                translate}}</label>
               <app-fecha [(value)]="datosFiltro.fecharesolucionhasta" (valueChangeSelected)="fillFechaResolucionHasta($event)"
                 (valueChangeInput)="fillFechaResolucionHasta($event)">
               </app-fecha>
@@ -49,15 +49,15 @@
         <div class="form-group-interlineado col-lg-6 col-md-6">
           <div class="form-row">
             <div class="col-lg-6 col-md-6">
-              <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunionDesde' |
-               translate}}</strong></label>
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunionDesde' |
+               translate}}</label>
               <app-fecha [(value)]="datosFiltro.fechareuniondesde" (valueChangeSelected)="fillFechaReunionDesde($event)"
                 (valueChangeInput)="fillFechaReunionDesde($event)">
               </app-fecha>
             </div>
             <div class="col-lg-6 col-md-6">
-              <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunionHasta' |
-                translate}}</strong></label>
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.FechaReunionHasta' |
+                translate}}</label>
               <app-fecha [(value)]="datosFiltro.fechareunionhasta" (valueChangeSelected)="fillFechaReunionHasta($event)"
                 (valueChangeInput)="fillFechaReunionHasta($event)">
               </app-fecha>
@@ -68,15 +68,15 @@
         <div class="form-group-interlineado col-lg-6 col-md-6">
           <div class="form-row">
             <div class="col-lg-6 col-md-6">
-              <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.Presidente' |
-                translate}}</strong></label>
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.Presidente' |
+                translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]='datosFiltro.idpresidente' placeholder="Seleccionar" [options]="comboPresidente"
                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
               </p-dropdown>
             </div>
             <div class="col-lg-6 col-md-6">
-              <label><strong>{{ 'justiciaGratuita.ejg.datosGenerales.Secretario' |
-                translate}}</strong></label>
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.Secretario' |
+                translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]='datosFiltro.idsecretario' placeholder="Seleccionar" [options]="comboSecretario"
                 [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
               </p-dropdown>
@@ -86,7 +86,7 @@
       </div>
     </div>
   </div>
-</div>
+  
 <div class="card-footer">
   <!-- BOTONES TARJETA -->
   <div class="text-right main-button">
@@ -97,4 +97,5 @@
     <button (click)="nuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
       label="{{ 'general.boton.new' | translate }}"></button>
   </div>
+</div>
 </div>

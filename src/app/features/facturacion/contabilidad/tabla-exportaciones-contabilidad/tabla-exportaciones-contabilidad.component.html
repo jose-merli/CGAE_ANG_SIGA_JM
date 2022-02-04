@@ -4,9 +4,9 @@
   <div class="card-body p-0">
 
     <!-- TABLA RESULTADOS -->
-    <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
       class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
-      selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
+      selectionMode="multiple" paginatorPosition="both" id="tablaFoco" (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -40,18 +40,19 @@
             <div [ngSwitch]="col.field">
               <div *ngSwitchCase="'nombreFichero'">  
 
-                <input *ngIf="!dato['nuevo']" [disabled]="true" type="text" class="form-control" [(ngModel)]="dato[col.field]" pInputText />
+                <input *ngIf="!dato['nuevo']" [disabled]="true" type="text" class="form-control" [(ngModel)]="dato[col.field]" [ngClass]="{'historico': dato.fechaBaja != null}" pInputText />
                 
-                <input *ngIf="dato['nuevo']"  type="text" class="form-control" [(ngModel)]="dato[col.field]" pInputText />
+                <input *ngIf="dato['nuevo']"  type="text" class="form-control" [(ngModel)]="dato[col.field]" pInputText [ngClass]="{'camposObligatorios': checkCampoEsVacio(dato[col.field])}"/>
 
 
               </div>
               <div *ngSwitchCase="'fechaExportacionDesde'">  
 
-                <app-fecha *ngIf="dato['nuevo']"  [(value)]="dato[col.field]" (valueChangeSelected)="fillFechaNew($event, 'exportacionDesde')" (valueChangeInput)="fillFechaNew($event, 'exportacionDesde')" >
+                <app-fecha *ngIf="dato['nuevo']" [(value)]="dato[col.field]" (valueChangeSelected)="fillFechaNew($event, 'exportacionDesde')" (valueChangeInput)="fillFechaNew($event, 'exportacionDesde')" 
+                [inputStyleClass]="styleObligatorio(dato[col.field])"> 
                 </app-fecha>
 
-                <span *ngIf="!dato['nuevo']"> {{ dato[col.field] }}</span>
+                <span *ngIf="!dato['nuevo']" [ngClass]="{'historico': dato.fechaBaja != null}"> {{ dato[col.field] }}</span>
 
               </div>
 
@@ -60,12 +61,12 @@
                 <app-fecha *ngIf="dato['nuevo']"  [(value)]="dato[col.field]" (valueChangeSelected)="fillFechaNew($event, 'exportacionHasta')" (valueChangeInput)="fillFechaNew($event, 'exportacionHasta')" >
                 </app-fecha>
 
-                <span *ngIf="!dato['nuevo']"> {{ dato[col.field] }}</span>
+                <span *ngIf="!dato['nuevo']" [ngClass]="{'historico': dato.fechaBaja != null}"> {{ dato[col.field] }}</span>
 
               </div>
-              <div *ngSwitchCase="'numAsientos'"><span *ngIf="!dato['nuevo']">{{ dato[col.field] }} </span></div>
+              <div *ngSwitchCase="'numAsientos'"><span *ngIf="!dato['nuevo']" [ngClass]="{'historico': dato.fechaBaja != null}">{{ dato[col.field] }} </span></div>
 
-              <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
+              <div *ngSwitchDefault><span [ngClass]="{'historico': dato.fechaBaja != null}">{{ dato[col.field] }}</span></div>
             </div>
 
           </td>
@@ -90,22 +91,56 @@
           </div>
         </div>
       </ng-template>
-
     </p-table>
   </div>
 
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton (click)="descargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.download' | translate }}"></button>
-      <!--
-      <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
-      <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate }}"></button>
-      -->
-      <button pButton (click)="getNewFacRegistroFichConta()" [disabled]="disabledNuevo" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.new' | translate }}"></button>
-      <button pButton (click)="restablecer()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
-      <button pButton (click)="guardar()" [disabled]="!enabledSave" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+      <!-- DESCARGAR -->
+      <button pButton (click)="descargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate }}"></button>
+
+      <!-- ELIMINAR -->
+      <button
+      [disabled]="(selectedDatos == '') || (numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || disabledNuevo"
+      *ngIf="(numSelectedAbleRegisters > 0 && numSelectedDisableRegisters > 0) || (numSelectedAbleRegisters >= 0 && numSelectedDisableRegisters == 0)"
+      (click)="checkActivarDesactivar()" pButton type="button" icon="fa fa-trash-alt " iconPos="left"
+      label="{{'general.boton.eliminar' | translate}}"></button>
+
+      <!-- REACTIVAR -->
+      <button [disabled]="(selectedRows == '')" (click)="checkActivarDesactivar()"
+      *ngIf="numSelectedAbleRegisters == 0 && numSelectedDisableRegisters > 0" pButton type="button"
+      icon="fa fa-undo " iconPos="left"
+      label="{{'facturacion.maestros.tiposproductosservicios.reactivar' | translate}}"></button>
+
+      <!-- MOSTRAR HISTORICO -->
+      <button *ngIf="!historico" (click)="getListaFacRegistroHistorico(); selectedDatos=[]" pButton type="button"
+      icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+
+      <!-- OCULTAR HISTORICO -->
+      <button *ngIf="historico" (click)="getListaFacRegistroSinHistorico(); selectedDatos=[]" pButton type="button" icon="fa fa-undo"
+      iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
+      <!-- NUEVO -->
+      <button pButton (click)="getNewFacRegistroFichConta()" [disabled]="disabledNuevo" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate }}"></button>
+
+      <!-- RESTABLECER -->
+      <button pButton (click)="restablecer()" [disabled]="!enabledSave" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+      <!--GUARDAR -->
+      <button pButton (click)="checkGuardarPermisos()" [disabled]="!enabledSave" type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate }}"></button>
+
     </div>
   </div>
 </div>
 
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" width="425"></p-confirmDialog>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+  width="425" #deletePlantillaDoc>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="deletePlantillaDoc.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="deletePlantillaDoc.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

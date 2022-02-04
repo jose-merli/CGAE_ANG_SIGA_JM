@@ -72,27 +72,26 @@ export class SociedadAbonosSJCSComponent implements OnInit {
     sessionStorage.setItem("consulta", "true");
     let filtros = { idPersona: this.datos.idPersona };
 
-    this.sigaServices.postPaginado("busquedaColegiados_searchColegiadoFicha", "?numPagina=1", filtros).toPromise().then(
+    this.sigaServices.postPaginado(
+      "fichaColegialSociedades_searchSocieties",
+      "?numPagina=1", filtros.idPersona).toPromise().then(
       n => {
-        let results: DatosColegiadosItem[] = JSON.parse(n.body).colegiadoItem;
-        
+        let results: any[] = JSON.parse(n.body).busquedaJuridicaItems;
         if (results != undefined && results.length != 0) {
-          let datosColegiado: DatosColegiadosItem = results[0];
+          let sociedadItem: any = results[0];
 
           sessionStorage.setItem("abonosSJCSItem", JSON.stringify(this.datos));
           sessionStorage.setItem("volver", "true");
-          sessionStorage.setItem("personaBody", JSON.stringify(datosColegiado));
-          sessionStorage.setItem("filtrosAbonosSJCS", JSON.stringify(filtros));
-          sessionStorage.setItem("solicitudAprobada", "true");
-          sessionStorage.setItem("origin", "Cliente");
+
+          sessionStorage.setItem("usuarioBody", JSON.stringify(sociedadItem));
         }
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     ).then(() => this.progressSpinner = false).then(() => {
-      if (sessionStorage.getItem("personaBody")) {
-        this.router.navigate(["/fichaColegial"]);
+      if (sessionStorage.getItem("usuarioBody")) {
+        this.router.navigate(["/fichaPersonaJuridica"]);
       } 
     });
     }

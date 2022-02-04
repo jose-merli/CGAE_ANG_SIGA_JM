@@ -23,8 +23,8 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
-      (click)="restablecer();" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"></button>
+      (click)="restablecer();" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
-      (click)="saveTarjetaObservaciones();" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable"></button>
+      (click)="saveTarjetaObservaciones();" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"></button>
   </div>
 </div>
