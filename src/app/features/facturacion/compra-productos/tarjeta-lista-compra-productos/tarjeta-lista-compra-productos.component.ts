@@ -10,6 +10,7 @@ import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { TarjetaHisFichaActComponent } from '../../../sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
 import { FichaCompraSuscripcionComponent } from '../../ficha-compra-suscripcion/ficha-compra-suscripcion.component';
 
 @Component({
@@ -74,6 +75,8 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 
   progressSpinner: boolean = false;
   esColegiado: boolean = true;
+  permisoSolicitarCompra: boolean = false;
+  permisoFacturarCompra: boolean = false;
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService,
@@ -123,6 +126,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     this.getPermisoAprobarCompra();
     this.getPermisoDenegar();
     this.getPermisoAnularCompra();
+    this.getPermisoFacturarCompra();
   }
  
   checkAprobar() {
@@ -260,15 +264,79 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     }
   }
 
-  checkFacturar(){
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Boton no funcional actualmente"
+  checkFacturar() {
+
+    let msg = this.commonsService.checkPermisos(this.permisoFacturarCompra, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    }  else{
+      let compShow: ListaComprasProductosItem[] = [];
+
+      //Se comprueban los estados de las solicitudes. Se aceptan unicamente con estado "Aceptada", el resto no se tienen en cuenta.
+      if(this.selectedRows.filter(el => !(el.fechaEfectiva != null && el.fechaSolicitadaAnulacion == null && el.fechaAnulada == null)) != undefined){
+        compShow.concat(this.selectedRows.filter(el => !(el.fechaEfectiva != null && el.fechaSolicitadaAnulacion == null && el.fechaAnulada == null)));
+        this.selectedRows = this.selectedRows.filter( ( el ) => !compShow.includes( el ) );
       }
-    ];
+      this.facturarCompra(compShow);
+    }
   }
+
+  facturarCompra(compShow: ListaComprasProductosItem[]) {
+    if(this.selectedRows.length > 0){
+      this.progressSpinner = true;
+
+      let peticion: FichaCompraSuscripcionItem[] = [];
+      this.selectedRows.forEach(row => {
+        let solicitud: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
+        solicitud.nSolicitud = row.nSolicitud;
+        solicitud.fechaAceptada = row.fechaEfectiva;
+        solicitud.fechaDenegada = row.fechaDenegada;
+        solicitud.fechaAnulada = row.fechaAnulada;
+        solicitud.fechaSolicitadaAnulacion = row.fechaSolicitadaAnulacion;
+        peticion.push(solicitud);
+      });
+
+      this.sigaServices.post('PyS_facturarCompraMultiple', peticion).subscribe(
+        (n) => {
+          if (n.status != 200) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          } else if(JSON.parse(n.body).error.description!="" || compShow.length > 0){
+            let mess = "";
+            for(let sus of compShow){
+              mess += sus.nSolicitud + ", ";
+            }
+            mess = mess.substr(1,mess.length-3);
+            this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description+", "+mess);
+          }else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            //Se actualiza la información de la ficha
+            this.actualizarLista.emit(true);
+          }
+
+          
+          this.selectedRows = [];
+          this.numSelectedRows = 0;
+          this.progressSpinner = false;
+        },
+        (err) => {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+          this.progressSpinner = false;
+        }
+      );
+    }
+    else{
+      let mess = "";
+      for(let sus of compShow){
+        mess += sus.nSolicitud + ", ";
+      }
+      mess = mess.substr(1,mess.length-3);
+
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + mess);
+          
+    }
+  }
+
 
   aprobarCompra() {
 
@@ -306,6 +374,15 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  nofuncional(){
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Boton no funcional actualmente"
+      }];
   }
 
   denegar() {
@@ -446,6 +523,16 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 			.checkAcceso(procesos_PyS.anularCompra)
 			.then((respuesta) => {
 				this.permisoAnularCompra = respuesta;
+			})
+			.catch((error) => console.error(error));
+  }
+
+  getPermisoFacturarCompra(){
+    //En la documentación no parece distinguir que se requiera una permiso especifico para esta acción
+    this.commonsService
+			.checkAcceso(procesos_PyS.facturarCompra)
+			.then((respuesta) => {
+				this.permisoFacturarCompra = respuesta;
 			})
 			.catch((error) => console.error(error));
   }
