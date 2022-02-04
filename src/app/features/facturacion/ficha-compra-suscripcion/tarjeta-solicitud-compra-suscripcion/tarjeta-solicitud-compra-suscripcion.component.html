@@ -129,7 +129,7 @@
         label="{{ 'general.boton.facturar' | translate}}" [disabled]="ficha.fechaAceptada == null || ficha.fechaSolicitadaAnulacion != null 
         || ficha.fechaAnulada == null || esColegiado || !permisoFacturarCompra"></button>
       <!-- Comunicaciones -->
-        <button pButton  (click)="" type="button" icon="fa fa-search" iconPos="left"
+        <button pButton  (click)="nofuncional()" type="button" icon="fa fa-search" iconPos="left"
         label="{{ 'facturacion.consultamorosos.literal.comunicaciones' | translate}}" [disabled]="ficha.fechaSolicitada == null"></button>
       </div>
     </div>

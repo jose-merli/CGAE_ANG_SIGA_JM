@@ -376,6 +376,15 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     );
   }
 
+  nofuncional(){
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Boton no funcional actualmente"
+      }];
+  }
+
   denegar() {
     this.progressSpinner = true;
     let peticion: FichaCompraSuscripcionItem[] = [];

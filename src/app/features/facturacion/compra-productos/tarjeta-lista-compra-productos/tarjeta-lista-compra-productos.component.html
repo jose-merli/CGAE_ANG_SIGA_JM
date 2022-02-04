@@ -95,10 +95,10 @@
          <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.facturar' | translate}}" [disabled]="selectedRows.length == 0 || esColegiado"></button>
       <!-- Descargar facturas -->
-         <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
+         <button pButton  (click)="nofuncional()" type="button" icon="fa fa-search" iconPos="left"
          label="{{ 'facturacion.productos.descargarFacturas' | translate}}" [disabled]="selectedRows.length == 0"></button>
       <!-- Comunicaciones -->
-          <button pButton  (click)="" type="button" icon="fa fa-search" iconPos="left"
+          <button pButton  (click)="nofuncional()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'facturacion.consultamorosos.literal.comunicaciones' | translate}}" [disabled]="selectedRows.length > 0"></button>
       </div>
     </p-footer>

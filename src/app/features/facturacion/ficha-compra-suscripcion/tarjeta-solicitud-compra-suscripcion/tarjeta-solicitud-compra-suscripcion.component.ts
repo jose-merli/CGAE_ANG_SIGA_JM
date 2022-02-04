@@ -358,6 +358,15 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     }
   }
 
+  nofuncional(){
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Boton no funcional actualmente"
+      }];
+  }
+  
   confirmAnular() {
 
     let mess = this.translateService.instant(
