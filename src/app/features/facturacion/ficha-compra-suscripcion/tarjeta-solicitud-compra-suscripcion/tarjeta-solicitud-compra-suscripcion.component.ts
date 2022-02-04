@@ -41,6 +41,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   permisoAprobarCompra: boolean = false;
   permisoDenegar: boolean = false;
   permisoAnularCompra: boolean = false;
+  permisoFactrarCompra: boolean = false;
   permisoAnularSuscripcion: boolean = false;
   permisoSolicitarSscripcion: boolean = false;
   permisoSolicitarSuscripcion: boolean = false;
@@ -107,6 +108,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     this.getPermisoSolicitarSuscripcion();
     this.getPermisoAprobarSuscripcion();
     this.getPermisoAnularSuscripcion();
+    this.getPermisoFacturarCompra();
   }
 
   checkProductos(){
@@ -617,15 +619,45 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 			.catch((error) => console.error(error));
   }
 
+  getPermisoFacturarCompra(){
+    //En la documentación no parece distinguir que se requiera una permiso especifico para esta acción
+    this.commonsService
+			.checkAcceso(procesos_PyS.facturarCompra)
+			.then((respuesta) => {
+				this.permisoFactrarCompra = respuesta;
+			})
+			.catch((error) => console.error(error));
+  }
+
   checkFacturar() {
-    this.msgs = [
-       {
-         severity: "info",
-         summary: "En proceso",
-         detail: "Botón no implementado actualmente"
-       }
-     ];
+
+    let msg = this.commonsService.checkPermisos(this.permisoSolicitarCompra, undefined);
+
+    if (msg != undefined) {
+      this.msgs = msg;
+    }  else{
+      this.facturarCompra();
+    }
    }
+  facturarCompra() {
+    this.sigaServices.post('PyS_facturarCompra', this.ficha.nSolicitud).subscribe(
+      (n) => {
+        if( n.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          
+          //Se actualiza la información de la ficha incluyendo las facturas asociadas
+          this.actualizaFicha.emit();
+        }
+        this.progressSpinner = false;
+      },
+      (err) => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.progressSpinner = false;
+      }
+    );
+  }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {

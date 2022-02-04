@@ -29,6 +29,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   @ViewChild("cliente") tarjCliente;
   @ViewChild("productos") tarjProductos;
   @ViewChild("servicios") tarjServicios;
+  @ViewChild("facturas") tarjFacturas;
   esColegiado: boolean; // Con esta variable se determina si el usuario conectado es un colegiado o no.
 
 
@@ -54,36 +55,6 @@ export class FichaCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  //Metodo para obtener los valores del desplegable "Forma de pago" de la tarjeta Forma de pago
-  // getComboFormaPago() {
-  //   this.progressSpinner = true;
-
-  //   this.sigaServices.get("productosBusqueda_comboFormaPago").subscribe(
-  //     PayMethodSelectValues => {
-  //       this.progressSpinner = false;
-
-  //       let comboPagos = PayMethodSelectValues.combooItems;
-  //       //Revisamos el combo para escoger unicamente el combo con los valores en comun de los productos.
-  //       //Posible optimizacion con la implementacion de un servicio especifico para esta pantalla.
-  //       let comunes = [];
-  //       if(this.ficha.idFormasPagoComunes != null)comunes = this.ficha.idFormasPagoComunes.split(",");
-  //           comboPagos.forEach(pago => {
-  //             for(let comun of comunes){
-  //               if(pago.value==comun || pago.value==this.ficha.idFormaPagoSeleccionada.toString) this.comboComun.push(pago);
-  //             }
-  //             //Se asigna el valor que se mostrará en la cabecera de la tarjeta.
-  //             if(pago.value==this.ficha.idFormaPagoSeleccionada) this.desFormaPagoSelecc = pago.label;
-  //           });
-  //     },
-  //     err => {
-  //       this.progressSpinner = false;
-  //     },
-  //     () => {
-  //       this.progressSpinner = false;
-  //     }
-  //   );
-  // }
-
   actualizarFicha(){
     this.progressSpinner = true;
 
@@ -96,7 +67,12 @@ export class FichaCompraSuscripcionComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           let newF:FichaCompraSuscripcionItem = JSON.parse(n.body);
-          newF.facturas= this.ficha.facturas;
+          //newF.facturas= this.ficha.facturas;
+          //Se comprueban las facturas asociadas nuevamente unicamente en caso de que se trate una compra
+          //ya que unicamente podrian cambiar al pulsarse el botón facturar que actualmente solo esta disponible para las compras
+          if(this.ficha.productos != null){
+            this.tarjFacturas.getFacturasPeticion();
+          }
 
           this.ficha = newF;
 

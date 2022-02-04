@@ -17,7 +17,7 @@
       (actualizaFicha)="actualizarFicha()" [esColegiado]="esColegiado" id="servicios"> 
       </app-tarjeta-servicios-compra-suscripcion>
       <app-tarjeta-descuentos-anticipos-compra-suscripcion [(ficha)]="ficha"></app-tarjeta-descuentos-anticipos-compra-suscripcion>
-      <app-tarjeta-factura-compra-suscripcion  [(ficha)]="ficha">
+      <app-tarjeta-factura-compra-suscripcion #facturas [(ficha)]="ficha" id="facturas">
       </app-tarjeta-factura-compra-suscripcion>
   </div>
 </div>
