@@ -76,7 +76,7 @@
                       (click)="openTab(rowData)">{{rowData[col.field]}}</span>
 
                     <span *ngIf="col.field == 'observaciones' && !observacionesEditable"
-                      (click)="changeEditable()">{{rowData[col.field]}}</span>
+                      (click)="changeEditable()" (keydown)="changeEditable()">{{rowData[col.field]}}</span>
                     <input *ngIf="col.field == 'observaciones' && observacionesEditable" pInputText type="text"
                       [(ngModel)]="rowData[col.field]" type="text" pInputText>
 
