@@ -842,11 +842,14 @@ export class NuevaIncorporacionComponent implements OnInit {
       );
   }
 
+  esIbanExtranjero: boolean = false;
   isValidIbanExt(): boolean {
     if (this.solicitudEditar.iban != null && this.solicitudEditar.iban != undefined &&
       this.solicitudEditar.iban != "" && this.solicitudEditar.iban.length == this.lengthCountryCode) {
+      this.esIbanExtranjero = true;
       return true;
     } else {
+      this.esIbanExtranjero = false;
       return false;
     }
   }
@@ -1361,6 +1364,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected;
     this.solicitudEditar.idPais = this.paisSelected;
     this.solicitudEditar.sexo = this.sexoSelected;
+    this.solicitudEditar.titular = this.solicitudEditar.nombre;
 
     if (this.paisSelected == "191") {
       this.solicitudEditar.idProvincia = this.provinciaSelected;
@@ -1457,6 +1461,7 @@ export class NuevaIncorporacionComponent implements OnInit {
                 detail: "Solicitud guardada correctamente."
               }
             ];
+
           }
         },
         error => {
@@ -2057,7 +2062,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (!this.consulta) {
       if (this.isGuardar()) {
         this.isSave = true;
-        if(this.comprobarDatosBancarios()){
+        if(this.comprobarDatosBancarios() && this.checkBIC()){
           this.guardar(true);
         }else{
          this.datosBancariosErroneos();
@@ -2069,12 +2074,25 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   comprobarDatosBancarios(){
-    if((this.isValidIBAN() && !this.checkCampoEsVacio(this.solicitudEditar.titular) && !this.checkCampoEsVacio(this.solicitudEditar.iban) && (this.cargo != false || this.abono != false || this.abonoJCS != false)) 
+    if(( (this.isValidIBAN() || this.isValidIbanExt)&&!this.checkCampoEsVacio(this.solicitudEditar.titular) && !this.checkCampoEsVacio(this.solicitudEditar.iban) && (this.cargo != false || this.abono != false || this.abonoJCS != false)) 
         || (this.checkCampoEsVacio(this.solicitudEditar.titular) && this.checkCampoEsVacio(this.solicitudEditar.iban)) 
         || (!this.checkCampoEsVacio(this.solicitudEditar.titular) && this.checkCampoEsVacio(this.solicitudEditar.iban))){
       return true;
     }else{
       return false;
+    }
+  }
+
+  checkBIC(){
+    if(this.esIbanExtranjero){
+      if(this.checkCampoEsVacio(this.solicitudEditar.bic)){
+        return false;
+      }
+      else{
+        return true;
+      }
+    }else{
+      return true;
     }
   }
 
@@ -2084,6 +2102,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     if(this.checkCampoEsVacio(this.solicitudEditar.titular)) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.titularrequerido");
 
     if(this.cargo == false && this.abono == false && this.abonoJCS == false) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.checkboxbancariorequerido");
+
+    if(this.esIbanExtranjero && this.checkCampoEsVacio(this.solicitudEditar.bic)) this.showFailNotTraduce("El BIC ha de ser introducido obligatoriamente de forma manual al usar un IBAN extranjero");
   }
 
   checkCampoEsVacio(campo){
