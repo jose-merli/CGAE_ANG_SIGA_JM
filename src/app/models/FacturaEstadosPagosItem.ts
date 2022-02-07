@@ -33,5 +33,13 @@ export class FacturaEstadosPagosItem {
 	comisionIdFactura: string;
 	comisionFactura: string;
 
+	// Estados de abono SJCS
+	fecha: Date;
+	identificador: string;
+	idPagosjg: string;
+	cuentaBancaria: string;
+	movimiento: string;
+	importePendiente: string;
+
     constructor() {}
 }

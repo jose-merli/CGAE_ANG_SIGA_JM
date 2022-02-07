@@ -53,7 +53,7 @@
     <!-- Cuerpo en ficha abierta -->
     <div *ngIf="openFicha" class="card-body card-body-ficha">
       <!-- TABLA RESULTADOS -->
-      <p-table [autoLayout]="true" [value]="grupos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+      <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
         class="tabla-listado" [paginator]="true" [rows]="selectedItem" [ngClass]="{ 'customCursor' : selectMultiple }"
         selectionMode="multiple" paginatorPosition="both" id="tablaFoco">
         <ng-template pTemplate="colgroup" let-columns>
@@ -83,46 +83,29 @@
           </tr>
         </ng-template>
 
-        <ng-template pTemplate="body" let-grupo let-columns="columns" let-rowIndex="rowIndex">
-
-          <!-- Número de factura -->
-          <tr [pSelectableRow]="grupo" [pSelectableRowIndex]="rowIndex" class="justify-content-start">
-            <td [attr.colspan]="columns.length">
-              <div (click)="toggleGrupo(rowIndex)" class="d-flex justify-content-start align-items-center">
-                <label>{{ grupo['key'] }}</label>
-                <i class="fa fa-{{ grupo['activo'] ? 'angle-up' : 'angle-down' }} ml-auto"></i>
+        <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+          <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+            <td class="text-center" *ngFor="let col of columns">
+              <div [ngSwitch]="col.field">
+                <div *ngSwitchCase="'fecha'">
+                  <span>{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
+                </div>
+                <div *ngSwitchCase="'comentario'">
+                  <span *ngIf="dato.numeroAbono">{{ 'censo.tipoCuenta.abono' | translate }} <a (click)="navigateToAbono(dato)" class="enlace">{{ dato['numeroAbono'] }}</a></span>
+                  <span *ngIf="dato.numeroFactura">{{ 'facturacion.consultamorosos.titulo.factura' | translate }} <a (click)="navigateToFactura(dato)" class="enlace">{{ dato['numeroFactura'] }}</a></span>
+                  <span *ngIf="tieneFichero(dato)">{{ 'facturacionjg.literal.fichero' | translate }} <a (click)="navigateToFicheroTransferencias(dato)" class="enlace">{{ dato['identificador'] }}</a></span>
+                </div>
+                <div *ngSwitchCase="'movimiento'">
+                  <span>{{ dato[col.field] ? dato[col.field] + " €" : "-" }}</span>
+                </div>
+                <div *ngSwitchCase="'importePendiente'">
+                  <span>{{ dato[col.field] ? dato[col.field] + " €" : "-" }}</span>
+                </div>
+                <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
               </div>
               
             </td>
           </tr>
-
-          <!-- Columnas -->
-          <ng-container *ngIf="grupo['activo']">
-            <tr *ngFor="let dato of grupo['values']" [pSelectableRow]="grupo" [pSelectableRowIndex]="rowIndex">
-              <td *ngFor="let col of columns">
-                <div [ngSwitch]="col.field">
-                  <div *ngSwitchCase="'fechaModificaion'">
-                    <span>{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
-                  </div>
-                  <div *ngSwitchCase="'impTotalPagado'">
-                    <span class="pull-right">{{ dato[col.field] + ' €' }}</span>
-                  </div>
-                  <div *ngSwitchCase="'impTotalPorPagar'">
-                    <span class="pull-right">{{ dato[col.field] + ' €' }}</span>
-                  </div>
-                  <div *ngSwitchCase="'comentario'">
-                    <span *ngIf="dato['idCargos']">{{ 'facturacion.cmc.fichero' | translate }} <a class="enlace" (click)="navigateToFicheroAdeudos(dato)">{{ dato['idCargos'] }}</a></span>
-                    <span *ngIf="dato['enlaceFactura']">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['numeroFactura'] }}</a></span>
-                    <span *ngIf="dato['idSJCS']">Abono <a class="enlace" (click)="navigateToSJCS(dato)">{{ dato['idSJCS'] }}</a></span>
-                    <span *ngIf="dato['enlaceAbono']">Rectif. <a class="enlace" (click)="navigateToAbono(dato)">{{ dato['numeroAbono'] }}</a></span>
-                  </div>
-                  <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
-                </div>
-              </td>
-            </tr>
-
-          </ng-container>
-          
         </ng-template>
 
         <ng-template pTemplate="paginatorleft">
@@ -157,10 +140,13 @@
           (click)="nuevoAbono()" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
         <button pButton type="button" icon="fa fa-trash" iconPos="left"
           (click)="eliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
+
+        <!--
         <button (click)="guardar()" pButton type="button" icon="fa fa-edit" iconPos="left" 
         label="{{'general.boton.guardarCerrar' | translate}}"></button>
         <button (click)="restablecer()" pButton type="button" icon="fa fa-edit" iconPos="left" 
         label="{{'general.boton.restablecer' | translate}}"></button>
+          -->
       </div>
     </div>
   </div>

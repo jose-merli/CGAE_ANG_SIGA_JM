@@ -33,7 +33,6 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   selectAll: boolean;
   selectMultiple: boolean;
 
-  grupos: any[];
   datos: FacturaEstadosPagosItem[] = [];
   datosInit: FacturaEstadosPagosItem[] = [];
 
@@ -64,9 +63,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     if (changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined) {
       this.getCols();
       this.getComboMotivosDevolucion();
-
-      if (this.bodyInicial.idFactura)
-        this.getEstadosPagos();
+      this.getEstadosPagos();
     }
   }
 
@@ -86,13 +83,13 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   // Definición de las columnas
   getCols() {
     this.cols = [
-      { field: "fechaModificaion", header: "facturacionSJCS.facturacionesYPagos.fecha", width: "10%" },
+      { field: "fecha", header: "facturacionSJCS.facturacionesYPagos.fecha", width: "10%" },
       { field: "accion", header: "facturacion.facturas.estadosPagos.accion", width: "20%" },
       { field: "comentario", header: "facturacion.facturas.estadosPagos.nota", width: "20%" },
       { field: "estado", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado", width: "20%" },
-      { field: "iban", header: "facturacion.seriesFactura.cuentaBancaria", width: "10%" },
-      { field: "impTotalPagado", header: "facturacion.facturas.estadosPagos.movimiento", width: "10%" },
-      { field: "impTotalPorPagar", header: "facturacionSJCS.facturacionesYPagos.importePendiente", width: "10%" }
+      { field: "cuentaBancaria", header: "facturacion.seriesFactura.cuentaBancaria", width: "10%" },
+      { field: "movimiento", header: "facturacion.facturas.estadosPagos.movimiento", width: "10%" },
+      { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente", width: "10%" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -120,22 +117,13 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
   getEstadosPagos() {
     this.progressSpinner = true;
-    this.sigaServices.getParam("facturacionPyS_getEstadosPagos", "?idFactura=" + this.bodyInicial.idFactura).subscribe(
+    this.sigaServices.getParam("facturacionPyS_getEstadosAbonosSJCS", "?idAbono=" + this.bodyInicial.idAbono).subscribe(
       n => {
-        this.datos = n.estadosPagosItems;
-
-        from(this.datos).pipe(
-          groupBy(ep => ep.numeroFactura),
-          mergeMap(group => group.reduce((acc, cur) => {
-              acc.values.push(cur);
-              return acc;
-            }, { key: group.key, values: [], activo: true })
-          ),
-          toArray()
-        ).subscribe(grupos => this.grupos = grupos);
-
+        this.datos = n.estadosAbonosItems;
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
         this.progressSpinner = false;
+
+        console.log(this.datos);
       },
       err => {
         console.log(err);
@@ -144,10 +132,29 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     );
   }
 
+  // Función para comprobar si la línea tiene fichero de transferencias
+  tieneFichero(dato: FacturaEstadosPagosItem): boolean {
+    let pagado = this.translateService.instant("general.literal.pagado");
+    let pagadoBanco = this.translateService.instant("facturacion.abonosPagos.datosPagoAbono.abonoBanco");
+
+    console.log(pagado, pagadoBanco)
+
+    return dato.accion == pagadoBanco && dato.estado == pagado;
+  }
+
   // Acciones
 
+  compensar(): void {
+    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+
+    if (![""].includes(this.bodyInicial.estado)) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "");
+
+    }
+  }
+
   renegociar(): void {
-  
+    
 
   }
 
@@ -162,7 +169,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     return true;
   }
 
-  compensar(){}
+  
   
   nuevoAbono() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
@@ -245,15 +252,6 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
   restablecer() {
     this.datos = JSON.parse(JSON.stringify(this.datosInit));
-    from(this.datos).pipe(
-      groupBy(ep => ep.numeroFactura),
-      mergeMap(group => group.reduce((acc, cur) => {
-          acc.values.push(cur);
-          return acc;
-        }, { key: group.key, values: [], activo: true })
-      ),
-      toArray()
-    ).subscribe(grupos => this.grupos = grupos);
 
     this.nuevoEstado = undefined;
 
@@ -308,8 +306,8 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     factura.idFactura = row.idFactura;
     factura.tipo = "FACTURA";
 
-    sessionStorage.setItem("facturasItem", JSON.stringify(factura));
-    sessionStorage.setItem("volver", "true");
+    sessionStorage.setItem("abonosSJCSItem", JSON.stringify(factura));
+    sessionStorage.setItem("volverAbonoSJCS", "true");
     this.router.navigate(["/gestionFacturas"]);
   }
 
@@ -319,27 +317,28 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     factura.idAbono = row.idAbono;
     factura.tipo = "ABONO";
 
-    sessionStorage.setItem("facturasItem", JSON.stringify(factura));
-    sessionStorage.setItem("volver", "true");
+    sessionStorage.setItem("abonosSJCSItem", JSON.stringify(factura));
+    sessionStorage.setItem("volverAbonoSJCS", "true");
     this.router.navigate(["/gestionFacturas"]);
   }
+
   navigateToSJCS(){}
 
-  // Enlace al fichero de adeudos
-  navigateToFicheroAdeudos(row: FacturaEstadosPagosItem) {
+  // Enlace al fichero de transferencias
+  navigateToFicheroTransferencias(row: FacturaEstadosPagosItem) {
     this.progressSpinner = true;
-    let filtros = { idDisqueteCargos: row.idCargos };
+    let filtros = { idDisqueteAbonos: row.identificador };
 
-    this.sigaServices.post("facturacionPyS_getFicherosAdeudos", filtros).toPromise().then(
+    this.sigaServices.post("facturacionPyS_getFicherosTransferencias", filtros).toPromise().then(
       n => {
-        let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAdeudosItems;
+        let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosTransferenciasItems;
         if (results != undefined && results.length != 0) {
           let ficherosAdeudosItem: FicherosAdeudosItem = results[0];
 
-          sessionStorage.setItem("facturasItem", JSON.stringify(this.bodyInicial));
-          sessionStorage.setItem("volver", "true");
+          sessionStorage.setItem("abonosSJCSItem", JSON.stringify(this.bodyInicial));
+          sessionStorage.setItem("volverAbonoSJCS", "true");
 
-          sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficherosAdeudosItem));
+          sessionStorage.setItem("FicherosTransferenciasItem", JSON.stringify(ficherosAdeudosItem));
         }
       },
       err => {
@@ -347,15 +346,10 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     ).then(() => this.progressSpinner = false).then(() => {
-      if (sessionStorage.getItem("FicherosAdeudosItem")) {
-        this.router.navigate(["/gestionAdeudos"]);
+      if (sessionStorage.getItem("FicherosTransferenciasItem")) {
+        this.router.navigate(["/gestionTransferencias"]);
       } 
     });
-  }
-
-  // Abrir y cerrar un grupo de estados
-  toggleGrupo(index: number) {
-    this.grupos[index].activo = !this.grupos[index].activo;
   }
 
   // Fecha
@@ -387,7 +381,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   onChangeSelectAll(): void {
       if (this.selectAll) {
         this.selectMultiple = true;
-        this.selectedDatos = this.grupos;
+        this.selectedDatos = this.datos;
       } else {
         this.selectedDatos = [];
         this.selectMultiple = false;
