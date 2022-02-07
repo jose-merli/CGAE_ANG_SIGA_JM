@@ -55,7 +55,16 @@ export class FiltrosFacturasComponent implements OnInit {
 
   ngOnInit() {
     this.getCombos();
+    //Si viene de la ficha Colegiado
+    if (sessionStorage.getItem("datosColegiado")) {
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
+      sessionStorage.removeItem("datosColegiado");
 
+      this.body.nombre = busquedaColegiado.soloNombre;
+      this.body.apellidos = busquedaColegiado.apellidos1 + " " + busquedaColegiado.apellidos2;
+      this.body.numeroColegiado = busquedaColegiado.numColegiado;
+      this.body.idCliente = busquedaColegiado.idPersona;
+    }
     if (sessionStorage.getItem("mensaje") && sessionStorage.getItem("volver")) {
       let message: Message = JSON.parse(sessionStorage.getItem("mensaje"));
       if (message)

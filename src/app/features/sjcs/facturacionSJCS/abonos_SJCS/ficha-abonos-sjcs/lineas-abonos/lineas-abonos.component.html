@@ -23,10 +23,7 @@
               <label>{{ 'facturacion.productos.importeIva' | translate }}: 
                 <span *ngIf="datos.length != 0">{{ datos[0].importeIVA + " €" }}</span></label>
               <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].importeTotal + " €" }}</span></label>
-              <label>{{ 'facturacion.facturas.datosGenerales.impAnticipado' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].importeAnticipado + " €" }}</span></label>
-            
+                <span *ngIf="datos.length != 0">{{ datos[0].importeTotal + " €" }}</span></label> 
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"
               *ngIf="!openFicha"></i>
           </div>

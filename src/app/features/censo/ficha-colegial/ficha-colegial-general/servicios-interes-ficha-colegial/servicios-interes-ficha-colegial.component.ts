@@ -249,5 +249,21 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
     sessionStorage.setItem("origin","fichaColegial");
     this.router.navigate(["/guardiasSolicitudesCentralita"]);
   }
+  facturas(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/facturas"]);
+  }
+  abonosSJCS(){
+    if(!this.isLetrado){
+      sessionStorage.setItem("colegiadoRelleno","true");
+      sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
+    }
+    sessionStorage.setItem("origin","fichaColegial");
+    this.router.navigate(["/abonosSJCS"]);
+  }
 
 }
