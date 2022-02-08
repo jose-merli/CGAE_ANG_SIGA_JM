@@ -45,11 +45,11 @@
       <div class="form-row lg-12 md-12">
         <div class="form-check col-lg-3 col-md-3 align-self-center">
           <label class="form-group-label">{{ 'facturacion.cuentaBancaria.usoFicheros.sjcs' | translate }}</label>
-          <p-checkbox binary="true" [(ngModel)]="body.sjcs"></p-checkbox>
+          <p-checkbox [disabled]="body.fechaBaja != null" binary="true" [(ngModel)]="body.sjcs"></p-checkbox>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.cuentaBancaria.usoFicheros.sufijo' | translate }}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.idSufijoSjcs' placeholder="Seleccionar"
+          <p-dropdown [disabled]="!body.sjcs || body.fechaBaja != null" class="select-form" [(ngModel)]='body.idSufijoSjcs' placeholder="Seleccionar"
               [options]="comboSufijos" [filter]="true" filterBy="label,labelSinTilde"
               [ngClass]="styleObligatorio(body.idSufijoSjcs)" [showClear]="true"></p-dropdown>
         </div>
