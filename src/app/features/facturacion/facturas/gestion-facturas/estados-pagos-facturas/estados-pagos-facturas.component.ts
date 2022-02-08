@@ -525,6 +525,17 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     this.router.navigate(["/gestionFacturas"]);
   }
 
+  navigateToSJCS(row: FacturaEstadosPagosItem) {
+    let factura: FacturasItem = new FacturasItem();
+    factura.idAbono = row.idAbono;
+    factura.tipo = "ABONO";
+
+    sessionStorage.setItem("facturasItem", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("abonosSJCSItem", JSON.stringify(factura));
+    sessionStorage.setItem("volverAbonoSJCS", "true");
+    this.router.navigate(["/gestionFacturas"]);
+  }
+
   // Enlace al fichero de adeudos
   navigateToFicheroAdeudos(row: FacturaEstadosPagosItem) {
     this.progressSpinner = true;

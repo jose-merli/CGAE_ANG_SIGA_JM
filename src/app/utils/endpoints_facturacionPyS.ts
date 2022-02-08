@@ -94,4 +94,6 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_generarExcelAbonos:"facturacionPyS/generarExcelAbonos",
     contabilidadExportacion_descargarFicheros:"facturacionPyS/descargarFicherosContabilidad",
     facturacionPyS_getEstadosAbonosSJCS: "facturacionPyS/getEstadosAbonosSJCS",
+    facturacionPyS_compensarAbonoSJCS: "facturacionPyS/compensarAbonoSJCS",
+    facturacionPyS_pagarPorCajaAbonoSJCS: "facturacionPyS/pagarPorCajaAbonoSJCS",
 }

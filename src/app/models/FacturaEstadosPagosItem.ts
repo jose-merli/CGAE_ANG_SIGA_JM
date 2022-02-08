@@ -40,6 +40,7 @@ export class FacturaEstadosPagosItem {
 	cuentaBancaria: string;
 	movimiento: string;
 	importePendiente: string;
+	idDisqueteAbono: string;
 
     constructor() {}
 }

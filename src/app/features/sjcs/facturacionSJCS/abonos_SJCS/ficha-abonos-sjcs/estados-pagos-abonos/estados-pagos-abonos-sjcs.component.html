@@ -91,9 +91,9 @@
                   <span>{{ dato[col.field] | date: 'dd/MM/yyyy' }}</span>
                 </div>
                 <div *ngSwitchCase="'comentario'">
-                  <span *ngIf="dato.numeroAbono">{{ 'censo.tipoCuenta.abono' | translate }} <a (click)="navigateToAbono(dato)" class="enlace">{{ dato['numeroAbono'] }}</a></span>
-                  <span *ngIf="dato.numeroFactura">{{ 'facturacion.consultamorosos.titulo.factura' | translate }} <a (click)="navigateToFactura(dato)" class="enlace">{{ dato['numeroFactura'] }}</a></span>
-                  <span *ngIf="tieneFichero(dato)">{{ 'facturacionjg.literal.fichero' | translate }} <a (click)="navigateToFicheroTransferencias(dato)" class="enlace">{{ dato['identificador'] }}</a></span>
+                  <span *ngIf="dato.numeroAbono">{{ 'facturacion.facturas.estadosPagos.sjcs' | translate }} <a (click)="navigateToAbono(dato)" class="enlace">{{ dato['numeroAbono'] }}</a></span>
+                  <span *ngIf="dato.numeroFactura">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a (click)="navigateToFactura(dato)" class="enlace">{{ dato['numeroFactura'] }}</a></span>
+                  <span *ngIf="tieneFichero(dato)">{{ 'facturacion.cmc.fichero' | translate }} <a (click)="navigateToFicheroTransferencias(dato)" class="enlace">{{ dato['idDisqueteAbono'] }}</a></span>
                 </div>
                 <div *ngSwitchCase="'movimiento'">
                   <span>{{ dato[col.field] ? dato[col.field] + " €" : "-" }}</span>
@@ -162,9 +162,13 @@
     <label>{{ nuevoEstado.accion }}</label>
   </p-header>
   <div *ngIf="nuevoEstado" class="form-row">
+    <div [ngSwitch]="bodyInicial.estado">
+      <div *ngSwitchCase="expression">output</div>
+      <div *ngSwitchDefault>output2</div>
+    </div>
     <div class="form-group-interlineado col-lg-12 col-md-12" >
       <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}</label>
-      <app-fecha [(value)]="nuevoEstado.fechaModificaion" [minDate]="nuevoEstado.fechaMin" [inputStyleClass]="styleFechaObligatorio(resaltadoFecha, nuevoEstado.fechaModificaion)" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"></app-fecha>
+      <app-fecha [(value)]="nuevoEstado.fecha" [disabled]="true"></app-fecha>
     </div>
     <div *ngIf="nuevoEstado.idAccion == '7'" class="form-group-interlineado col-lg-12 col-md-12">
       <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
@@ -172,30 +176,37 @@
         [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
     </div>
     <div class="form-group-interlineado col-lg-12 col-md-12">
+      <label>{{ 'facturacion.facturas.datosGenerales.numFactura' | translate }}</label>
+      <!--facturacion.facturas.datosGenerales.numFactura
       <label>{{ 'facturacion.facturas.estadosPagos.nota' | translate }}</label>
-      <input *ngIf="nuevoEstado.idAccion != '6'" type="text" class="form-control" [(ngModel)]="nuevoEstado.comentario" maxlength="nuevoEstado.notaMaxLength" [ngClass]="styleObligatorio(resaltadoComentario, nuevoEstado.comentario)" pInputText>
+      -->
+      <input *ngIf="nuevoEstado.idAccion != '6'" type="text" class="form-control" [(ngModel)]="nuevoEstado.numeroFactura" maxlength="nuevoEstado.notaMaxLength" [ngClass]="styleObligatorio(resaltadoComentario, nuevoEstado.numeroFactura)" pInputText>
       <p-dropdown *ngIf="nuevoEstado.idAccion == '6'" class="select-form" [(ngModel)]='nuevoEstado.comentario' placeholder="Seleccionar" [ngClass]="styleObligatorio(resaltadoComentario, nuevoEstado.comentario)"
         [options]="comboNotas" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
     </div>
+
+    <!--
     <div class="form-group-interlineado col-lg-12 col-md-12">
       <label>{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}</label>
       <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.cuentaBanco' placeholder="Seleccionar" [disabled]="!enabledComboCuentasBancarias()" [ngClass]="styleObligatorio(resaltadoBanco, nuevoEstado.cuentaBanco)"
         [options]="bodyInicial.cuentasBanco" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
     </div>
+    -->
+
     <div class="form-group-interlineado col-lg-12 col-md-12">
       <label>{{ 'facturacion.facturas.estadosPagos.movimiento' | translate }}</label>
-      <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPagado" 
-        maxlength="10" (change)="onChangeImporte()" [disabled]="['6','7','8'].includes(nuevoEstado.idAccion)" [ngClass]="styleObligatorio(true, nuevoEstado.impTotalPagado)" pInputText>
+      <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.movimiento" 
+        maxlength="10" (change)="onChangeImporte()" [ngClass]="styleObligatorio(true, nuevoEstado.movimiento)" pInputText>
     </div>
     <div class="form-group-interlineado col-lg-12 col-md-12">
       <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}</label>
-      <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPorPagar" 
-        maxlength="10" (change)="onChangeImporte()" [disabled]="['4','6','7','8'].includes(nuevoEstado.idAccion)" [ngClass]="styleObligatorio(true, nuevoEstado.impTotalPorPagar)" pInputText>
+      <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.importePendiente" 
+        maxlength="10" (change)="onChangeImporte()" [disabled]="[ACCION_ABONO_COMPENSACION].includes(nuevoEstado.idAccion)" [ngClass]="styleObligatorio(true, nuevoEstado.importePendiente)" pInputText>
     </div>
   </div>
 
   <p-footer class="main-button col-lg-12 col-md-12 mt-2">
-   
+    <button (click)="guardar()" pButton type="button" icon="fa fa-edit" iconPos="left"  class="mb-2" label="{{'general.boton.guardarCerrar' | translate}}"></button>
     <button (click)="cerrarDialog(true)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
   </p-footer>
 </p-dialog>

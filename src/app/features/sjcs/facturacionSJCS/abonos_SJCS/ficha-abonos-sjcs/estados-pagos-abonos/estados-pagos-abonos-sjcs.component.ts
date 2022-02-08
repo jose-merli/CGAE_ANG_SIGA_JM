@@ -48,6 +48,15 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   showModalNuevoEstado: boolean = false;
 
   openFicha: boolean = true;
+
+  ESTADO_ABONO_PAGADO: string = "1";
+  ESTADO_ABONO_BANCO: string = "5";
+  ESTADO_ABONO_CAJA: string = "6";
+
+  ACCION_ABONO_COMPENSACION: string = "10";
+  ACCION_ABONO_RENEGOCIACION: string = "7";
+  ACCION_ABONO_NUEVO_CAJA: string = "4";
+
   constructor(
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -134,117 +143,75 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
   // Función para comprobar si la línea tiene fichero de transferencias
   tieneFichero(dato: FacturaEstadosPagosItem): boolean {
-    let pagado = this.translateService.instant("general.literal.pagado");
-    let pagadoBanco = this.translateService.instant("facturacion.abonosPagos.datosPagoAbono.abonoBanco");
-
-    console.log(pagado, pagadoBanco)
-
-    return dato.accion == pagadoBanco && dato.estado == pagado;
+    return dato.idEstado == this.ESTADO_ABONO_PAGADO 
+      && dato.idDisqueteAbono != undefined && dato.idDisqueteAbono.trim().length > 0;
   }
 
   // Acciones
 
   compensar(): void {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
-
-    if (![""].includes(this.bodyInicial.estado)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "");
-
-    }
-  }
-
-  renegociar(): void {
-    
-
-  }
-
-  enabledComboCuentasBancarias(): boolean {
-    if (this.nuevoEstado.idEstado != "5") {
-      this.nuevoEstado.cuentaBanco = undefined;
-      this.resaltadoBanco = false;
-      return false;
-    }
-
-    this.resaltadoBanco = true;
-    return true;
-  }
-
-  
-  
-  nuevoAbono() {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
-
-    if (this.bodyInicial.tipo != "ABONO" || !["6"].includes(this.bodyInicial.estado)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.abonoPorCaja.error"));
+    if ([this.ESTADO_ABONO_PAGADO].includes(ultimaAccion.idEstado)) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se pueden compensar abonos cuyo último estado no sea Abonado");
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
-      // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
-
-      let fechaActual: Date = new Date();
-      this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
-      this.nuevoEstado.fechaModificaion = new Date();
+      this.nuevoEstado.fecha = new Date();
       this.nuevoEstado.notaMaxLength = 256;
+      this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
 
       // Acción
-      this.nuevoEstado.idAccion = "4";
-      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.abonoPorCaja");
+      this.nuevoEstado.idAccion = this.ACCION_ABONO_COMPENSACION;
+      this.nuevoEstado.accion = "Compensación";//this.translateService.instant("facturacion.pagosFactura.accion.compensacion");
 
       // El importe pendiente se recalcula
-      this.nuevoEstado.impTotalPagado = "0";
-      this.nuevoEstado.impTotalPorPagar = ultimaAccion.impTotalPorPagar;
+      this.nuevoEstado.movimiento = ultimaAccion.importePendiente;
+      this.nuevoEstado.importePendiente = "0";
 
       this.showModalNuevoEstado = true;
     }
+  }
 
+  nuevoAbono(): void {
+    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    if (this.ESTADO_ABONO_CAJA != ultimaAccion.idEstado) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede abonar abonos SJCS pendientes por caja");
+    } else {
+      this.nuevoEstado = new FacturaEstadosPagosItem();
+
+      this.nuevoEstado.fecha = new Date();
+      this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
+
+      // Acción
+      this.nuevoEstado.idAccion = this.ACCION_ABONO_NUEVO_CAJA;
+      this.nuevoEstado.accion = "Abono por Caja";//this.translateService.instant("facturacion.pagosFactura.accion.compensacion");
+
+      // El importe pendiente se recalcula
+      this.nuevoEstado.movimiento = ultimaAccion.importePendiente;
+      this.nuevoEstado.importePendiente = "0";
+
+      this.showModalNuevoEstado = true;
+    }
+    
   }
 
   onChangeImporte(event: number): void {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
-    if (this.nuevoEstado.idAccion == "4") {
-      this.nuevoEstado.impTotalPorPagar = (+ultimaAccion.impTotalPorPagar - +this.nuevoEstado.impTotalPorPagar).toString();
-
-      if (parseFloat(this.nuevoEstado.impTotalPagado) < 0) {
-        this.nuevoEstado.impTotalPagado = "0";
-      } else if (parseFloat(this.nuevoEstado.impTotalPagado) > parseFloat(ultimaAccion.impTotalPorPagar)) {
-        this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
+    if ([this.ACCION_ABONO_COMPENSACION, this.ACCION_ABONO_NUEVO_CAJA].includes(this.nuevoEstado.idAccion)) {
+      if (parseFloat(this.nuevoEstado.movimiento) < 0) {
+        this.nuevoEstado.movimiento = "0";
+      } else if (parseFloat(this.nuevoEstado.movimiento) > parseFloat(ultimaAccion.importePendiente)) {
+        this.nuevoEstado.movimiento = ultimaAccion.importePendiente;
       }
+
+      this.nuevoEstado.movimiento = parseFloat(this.nuevoEstado.movimiento).toFixed(2);
+      this.nuevoEstado.importePendiente = (+ultimaAccion.importePendiente - +this.nuevoEstado.movimiento).toFixed(2);
     }
 
   }
 
-
-  anular() {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
-
-    if (this.bodyInicial.tipo != "FACTURA" || ["7", "8"].includes(ultimaAccion.idEstado)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.anulacion.error"));
-    } else {
-      this.nuevoEstado = new FacturaEstadosPagosItem();
-
-      // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
-
-      let fechaActual: Date = new Date();
-      this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
-      this.nuevoEstado.fechaModificaion = new Date();
-      this.nuevoEstado.notaMaxLength = 255;
-
-      // Acción
-      this.nuevoEstado.idAccion = "8";
-      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.anulacion");
-
-      this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
-      this.nuevoEstado.impTotalPorPagar = "0";
-
-      this.showModalNuevoEstado = true;
-    }
-  }
-
-  // Eliminar
-  eliminar() {
+  renegociar(): void {
 
   }
 
@@ -283,6 +250,79 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   }
 
   guardar() {
+    let endpoint;
+    switch (this.nuevoEstado.idAccion) {
+      case this.ACCION_ABONO_COMPENSACION:
+        endpoint = "facturacionPyS_compensarAbonoSJCS";
+        break;
+    
+      case this.ACCION_ABONO_NUEVO_CAJA:
+        endpoint = "facturacionPyS_pagarPorCajaAbonoSJCS";
+        break;
+
+      case this.ACCION_ABONO_RENEGOCIACION:
+        endpoint = "facturacionPyS_renegociarAbonoSJCS";
+        break;
+
+      default:
+        endpoint = "";
+        break;
+    }
+
+    this.progressSpinner = true;
+    this.sigaServices.post(endpoint, this.nuevoEstado).subscribe(
+      n => {
+        this.progressSpinner = false;
+        this.getEstadosPagos();
+      },
+      err => {
+        this.progressSpinner = false;
+        this.handleServerSideErrorMessage(err);
+      }
+    )
+  }
+
+  enabledComboCuentasBancarias(): boolean {
+    if (this.nuevoEstado.idEstado != this.ESTADO_ABONO_BANCO) {
+      this.nuevoEstado.cuentaBanco = undefined;
+      this.resaltadoBanco = false;
+      return false;
+    }
+
+    this.resaltadoBanco = true;
+    return true;
+  }
+
+
+  anular() {
+    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+
+    if (this.bodyInicial.tipo != "FACTURA" || ["7", "8"].includes(ultimaAccion.idEstado)) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.anulacion.error"));
+    } else {
+      this.nuevoEstado = new FacturaEstadosPagosItem();
+
+      // IdFactura
+      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+
+      let fechaActual: Date = new Date();
+      this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
+      this.nuevoEstado.fechaModificaion = new Date();
+      this.nuevoEstado.notaMaxLength = 255;
+
+      // Acción
+      this.nuevoEstado.idAccion = "8";
+      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.anulacion");
+
+      this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
+      this.nuevoEstado.impTotalPorPagar = "0";
+
+      this.showModalNuevoEstado = true;
+    }
+  }
+
+  // Eliminar
+  eliminar() {
 
   }
 
@@ -304,9 +344,11 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   navigateToFactura(row: FacturaEstadosPagosItem) {
     let factura: FacturasItem = new FacturasItem();
     factura.idFactura = row.idFactura;
+
     factura.tipo = "FACTURA";
 
-    sessionStorage.setItem("abonosSJCSItem", JSON.stringify(factura));
+    sessionStorage.setItem("abonosSJCSItem", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("facturasItem", JSON.stringify(factura));
     sessionStorage.setItem("volverAbonoSJCS", "true");
     this.router.navigate(["/gestionFacturas"]);
   }
@@ -327,18 +369,18 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   // Enlace al fichero de transferencias
   navigateToFicheroTransferencias(row: FacturaEstadosPagosItem) {
     this.progressSpinner = true;
-    let filtros = { idDisqueteAbonos: row.identificador };
+    let filtros = { idDisqueteAbono: row.idDisqueteAbono };
 
     this.sigaServices.post("facturacionPyS_getFicherosTransferencias", filtros).toPromise().then(
       n => {
-        let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosTransferenciasItems;
+        let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAbonosItems;
         if (results != undefined && results.length != 0) {
           let ficherosAdeudosItem: FicherosAdeudosItem = results[0];
 
           sessionStorage.setItem("abonosSJCSItem", JSON.stringify(this.bodyInicial));
           sessionStorage.setItem("volverAbonoSJCS", "true");
 
-          sessionStorage.setItem("FicherosTransferenciasItem", JSON.stringify(ficherosAdeudosItem));
+          sessionStorage.setItem("FicherosAbonosItem", JSON.stringify(ficherosAdeudosItem));
         }
       },
       err => {
@@ -346,10 +388,26 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     ).then(() => this.progressSpinner = false).then(() => {
-      if (sessionStorage.getItem("FicherosTransferenciasItem")) {
-        this.router.navigate(["/gestionTransferencias"]);
+      if (sessionStorage.getItem("FicherosAbonosItem")) {
+        this.router.navigate(['/gestionFicherosTransferencias']);
       } 
     });
+  }
+
+  // Controlar errores del servidor  
+  handleServerSideErrorMessage(err): void {
+    let error = JSON.parse(err.error);
+    if (error && error.error && error.error.message) {
+      let message = this.translateService.instant(error.error.message);
+  
+      if (message && message.trim().length != 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+      }
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    }
   }
 
   // Fecha
