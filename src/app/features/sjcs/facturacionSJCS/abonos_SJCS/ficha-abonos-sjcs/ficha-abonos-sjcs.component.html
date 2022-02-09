@@ -1,15 +1,40 @@
+<div class="ficha-comunicacion-container" id="top">
+    <div class="header-title">
+        <i class="fa fa-square"></i>
+        <p>{{ "menu.facturacion" | translate }}
+            <i class="fa fa-angle-right"></i>Facturación SJCS
+            <i class="fa fa-angle-right"></i>Ficha Abono SJCS
+        </p>
+    </div>
+    <div>
+        <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" 
+        [chincheta]="true" [datos]="datosImportantes" [icono]="iconoTarjetaResumen" [enlaces]="enlacesTarjetaResumen">
+        </app-tarjeta-resumen-fija>
 
-<app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" 
-[chincheta]="true" [datos]="datosImportantes" [icono]="iconoTarjetaResumen" [enlaces]="enlacesTarjetaResumen">
-</app-tarjeta-resumen-fija>
-<div *ngIf="!isSociedad">
-    <app-colegiado-abonos-sjcs [datos]="datos"></app-colegiado-abonos-sjcs>
+        <div class="ficha-container">
+
+        </div>
+        <div *ngIf="!isSociedad">
+            <app-colegiado-abonos-sjcs [datos]="datos"></app-colegiado-abonos-sjcs>
+        </div>
+
+        <app-pago-abonos-sjcs [datos]="datos"></app-pago-abonos-sjcs>
+
+        <div *ngIf="isSociedad">
+            <app-sociedad-abonos-sjcs [datos]="datos"></app-sociedad-abonos-sjcs>
+        </div>
+
+        <app-datos-generales-abonos-sjcs [datos]="datos"></app-datos-generales-abonos-sjcs>
+        <app-estados-pagos-abonos-sjcs [bodyInicial]="body" (refreshData)="refreshData()"></app-estados-pagos-abonos-sjcs>
+        <app-lineas-abonos [bodyInicial]="body"></app-lineas-abonos>
+        <app-observaciones-abonos-sjcs [bodyInicial]="body"></app-observaciones-abonos-sjcs>
 </div>
-<app-pago-abonos-sjcs [datos]="datos"></app-pago-abonos-sjcs>
-<div *ngIf="isSociedad">
-    <app-sociedad-abonos-sjcs [datos]="datos"></app-sociedad-abonos-sjcs>
+
+<div class="mt-3 text-right main-button" id="down">
+    <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+  </div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
 </div>
-<app-datos-generales-abonos-sjcs [datos]="datos"></app-datos-generales-abonos-sjcs>
-<app-estados-pagos-abonos-sjcs [bodyInicial]="body" ></app-estados-pagos-abonos-sjcs>
-<app-lineas-abonos [bodyInicial]="body"></app-lineas-abonos>
-<app-observaciones-abonos-sjcs [bodyInicial]="body"></app-observaciones-abonos-sjcs>
+

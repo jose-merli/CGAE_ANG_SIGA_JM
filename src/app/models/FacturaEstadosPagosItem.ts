@@ -37,10 +37,13 @@ export class FacturaEstadosPagosItem {
 	fecha: Date;
 	identificador: string;
 	idPagosjg: string;
+	idCuenta: string;
 	cuentaBancaria: string;
 	movimiento: string;
 	importePendiente: string;
 	idDisqueteAbono: string;
+
+	nuevo: boolean;
 
     constructor() {}
 }

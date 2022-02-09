@@ -26,6 +26,8 @@ export class FichaAbonosSCJSComponent implements OnInit {
   enlacesTarjetaResumen = [];
   datosImportantes=[];
 
+  msgs;
+
   @ViewChild(PagoAbonosSJCSComponent)pagoPadre;
 
   constructor(
@@ -34,36 +36,44 @@ export class FichaAbonosSCJSComponent implements OnInit {
     private translateService: TranslateService,
     private datepipe: DatePipe
   ) { }
+
   ngOnInit() {
-    this.progressSpinner = true;
-    
     if (sessionStorage.getItem("abonosSJCSItem")) {
       this.datos = JSON.parse(sessionStorage.getItem("abonosSJCSItem"));
       if(this.datos.esSociedad == "SI") this.isSociedad = true;
       sessionStorage.removeItem("abonosSJCSItem");
     } 
-    this.getDatosFactura(this.datos.idAbono);
-    this.updateTarjetaResumen();
-    this.updateEnlacesTarjetaResumen();
 
-    this.progressSpinner = false;
+    this.getDatosFactura(this.datos.idAbono);
   }
-  getDatosFactura( idAbono): Promise<any> {
-    return this.sigaServices.getParam("facturacionPyS_getFactura", `?idFactura=0&idAbono=${idAbono}&tipo=ABONO`).toPromise().then(
+
+  getDatosFactura(idAbono): void {
+    this.progressSpinner = true;
+    this.sigaServices.getParam("facturacionPyS_getFactura", `?idFactura=0&idAbono=${idAbono}&tipo=ABONO`).toPromise().then(
       n => {
+        this.progressSpinner = false;
         let datos: FacturasItem[] = n.facturasItems;
 
         if (datos == undefined || datos.length == 0) {
-          return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+          this.showMessage("error", "Error", this.translateService.instant("general.mensaje.error.bbdd"));
         }
 
         this.body = datos[0];
         
+        // Actualizar tarjeta resumen
+        this.updateTarjetaResumen();
+        this.updateEnlacesTarjetaResumen();
       }, err => { 
-        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        this.progressSpinner = false;
+        this.showMessage("error", "Error", this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
   }
+
+  refreshData(): void {
+    this.getDatosFactura(this.body.idAbono);
+  }
+
  // Transformar fecha
  transformDate(fecha) {
   if (fecha != undefined)
@@ -136,5 +146,18 @@ export class FichaAbonosSCJSComponent implements OnInit {
 
   }
 
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  backTo() {
+    sessionStorage.setItem("volver", "true")
+    this.location.back();
+  }
 
 }
