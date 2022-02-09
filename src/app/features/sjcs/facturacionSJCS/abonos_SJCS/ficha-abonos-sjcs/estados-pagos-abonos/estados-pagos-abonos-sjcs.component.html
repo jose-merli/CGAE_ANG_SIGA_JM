@@ -22,15 +22,15 @@
               <label>{{ 'facturacion.facturas.estadosPagos.accion' | translate }}: 
                 <span>{{ datos[datos.length - 1].accion }}</span></label>
               <label>{{ 'facturacion.facturas.estadosPagos.nota' | translate }}: 
-                <span>{{ datos[datos.length - 1].comentario }}</span></label>
+                <span>{{ datos[datos.length - 1].numeroFactura }}</span></label>
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}: 
                 <span>{{ datos[datos.length - 1].estado }}</span></label>
               <label>{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}: 
-                <span>(...{{ datos[datos.length - 1].iban | slice: -4 }})</span></label>
+                <span>(...{{ datos[datos.length - 1].cuentaBancaria }})</span></label>
               <label>{{ 'facturacion.facturas.estadosPagos.movimiento' | translate }}: 
-                <span>{{ datos[datos.length - 1].impTotalPagado + " €" }}</span></label>
+                <span>{{ datos[datos.length - 1].movimiento + " €" }}</span></label>
               <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
-                <span>{{ datos[datos.length - 1].impTotalPorPagar + " €" }}</span></label>
+                <span>{{ datos[datos.length - 1].importePendiente + " €" }}</span></label>
             </ng-container>
             
             <i class="fa fa-angle-down float-right {{ (datos && datos.length != 0) ? '' : ' ml-auto' }}" (click)="abreCierraFicha()"

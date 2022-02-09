@@ -113,7 +113,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
   getEstadosPagos() {
     this.progressSpinner = true;
-    this.sigaServices.getParam("facturacionPyS_getEstadosAbonosSJCS", "?idAbono=" + this.bodyInicial.idAbono).subscribe(
+    this.sigaServices.getParam("facturacionPyS_getEstadosAbonos", "?idAbono=" + this.bodyInicial.idAbono).subscribe(
       n => {
         this.datos = n.estadosAbonosItems;
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
@@ -273,15 +273,15 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     let endpoint;
     switch (this.nuevoEstado.idAccion) {
       case this.ACCION_ABONO_COMPENSACION:
-        endpoint = "facturacionPyS_compensarAbonoSJCS";
+        endpoint = "facturacionPyS_compensarAbono";
         break;
     
       case this.ACCION_ABONO_NUEVO_CAJA:
-        endpoint = "facturacionPyS_pagarPorCajaAbonoSJCS";
+        endpoint = "facturacionPyS_pagarPorCajaAbono";
         break;
 
       case this.ACCION_ABONO_RENEGOCIACION:
-        endpoint = "facturacionPyS_renegociarAbonoSJCS";
+        endpoint = "facturacionPyS_renegociarAbono";
         break;
 
       default:
@@ -315,7 +315,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
 
     this.progressSpinner = true;
-    this.sigaServices.post("facturacionPyS_eliminarPagoPorCajaAbonoSJCS", this.nuevoEstado).subscribe(
+    this.sigaServices.post("facturacionPyS_eliminarPagoPorCajaAbono", this.nuevoEstado).subscribe(
       n => {
         this.progressSpinner = false;
         this.refreshData.emit();
@@ -340,7 +340,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     this.resaltadoBanco = true;
     return true;
   }
-  
+
   // Enlace a la factura
   navigateToFactura(row: FacturaEstadosPagosItem) {
     let factura: FacturasItem = new FacturasItem();
