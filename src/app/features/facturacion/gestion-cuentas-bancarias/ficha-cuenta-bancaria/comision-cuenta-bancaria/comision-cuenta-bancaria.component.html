@@ -47,7 +47,7 @@
       <div class="form-row lg-12 md-12">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }} (*)</label>
-          <input [disabled]="body.fechaBaja != null" DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.comisionImporte" [ngClass]="styleObligatorio(body.comisionImporte)" maxlength="10" pInputText>        
+          <input [disabled]="body.fechaBaja != null" DigitDecimaNumber type="text" class="form-control" [(ngModel)]="body.comisionImporte" [ngClass]="styleObligatorio(body.comisionImporte)" maxlength="8" pInputText>        
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'general.description' | translate }} (*)</label>
