@@ -886,6 +886,8 @@ import { FichaExpedienteExeaComponent } from './features/expedientes-exea/ficha-
 import { FichaExpExeaDatosGeneralesComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-datos-generales/ficha-exp-exea-datos-generales.component';
 import { FichaExpExeaDocumentacionComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-documentacion/ficha-exp-exea-documentacion.component';
 import { FichaExpExeaHistoricoComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-historico/ficha-exp-exea-historico.component';
+import { TablaFacturasSeleccionadasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas-seleccionadas/tabla-facturas-seleccionadas.component';
+import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-seleccionadas/tabla-abonos-seleccionadas.component';
 @NgModule({
 	declarations: [
 		GestionActasComponent,
@@ -2015,7 +2017,9 @@ import { FichaExpExeaHistoricoComponent } from './features/expedientes-exea/fich
 		FichaExpedienteExeaComponent,
 		FichaExpExeaDatosGeneralesComponent,
 		FichaExpExeaDocumentacionComponent,
-		FichaExpExeaHistoricoComponent
+		FichaExpExeaHistoricoComponent,
+		TablaFacturasSeleccionadasComponent,
+		TablaAbonosSeleccionadasComponent,
 	],
 	imports: [
 

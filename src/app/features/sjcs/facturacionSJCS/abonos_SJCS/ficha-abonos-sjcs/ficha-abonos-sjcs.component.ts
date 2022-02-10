@@ -44,7 +44,12 @@ export class FichaAbonosSCJSComponent implements OnInit {
       sessionStorage.removeItem("abonosSJCSItem");
     } 
 
-    this.getDatosFactura(this.datos.idAbono);
+    if (this.datos != undefined && this.datos.idAbono != undefined) {
+      this.getDatosFactura(this.datos.idAbono);
+    } else {
+      this.backTo();
+    }
+    
   }
 
   getDatosFactura(idAbono): void {
