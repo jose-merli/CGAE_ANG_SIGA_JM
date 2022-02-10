@@ -59,6 +59,7 @@ export class FacturasItem {
 	identificadorAdeudos: string;
 	identificadorTransferencia: string;
 	identificadorDevolucion: string;
+	idAccion:String;
 
 	//cliente
 	idCliente: string;
@@ -66,6 +67,18 @@ export class FacturasItem {
 	numeroIdentificacion: string;
 	apellidos: string;
 	nombre: string;
+
+	//pago
+	idFormaPago:string;
+	nombreFormaPago:string;
+
+	//EstadoPago
+	estadoUlt:string;
+	importePorPagarUlt:string;
+	impTotalPagadoUlt:string;
+	idAccionUlt:string;
+	fechaModificacionUlt:string;
+	
 
 	//deudor
 	idDeudor: string;

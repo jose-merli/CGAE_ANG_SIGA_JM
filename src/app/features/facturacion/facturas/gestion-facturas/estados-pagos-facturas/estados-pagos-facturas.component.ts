@@ -392,12 +392,14 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   eliminar() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
     ultimaAccion.idFactura = this.bodyInicial.idFactura;
+    let estadosPagosItems:FacturaEstadosPagosItem [] = new Array();
+    estadosPagosItems.push(ultimaAccion);
 
-    if (!["4"].includes(ultimaAccion.idAccion)) {
+    if (!["4"].includes(estadosPagosItems[0].idAccion)) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.eliminar.error"));
     } else {
       this.progressSpinner = true;
-      this.sigaServices.post("facturacionPyS_eliminarEstadosPagos", ultimaAccion).toPromise()
+      this.sigaServices.post("facturacionPyS_eliminarEstadosPagos", estadosPagosItems).toPromise()
       .then(
         n => { },
         err => {
@@ -461,10 +463,13 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   guardar() {
     if (this.isValid()) {
       this.progressSpinner = true;
-      this.sigaServices.post("facturacionPyS_insertarEstadosPagos", this.nuevoEstado).toPromise()
+      let items: FacturaEstadosPagosItem[]=[]
+      items.push(this.nuevoEstado)
+      this.sigaServices.post("facturacionPyS_insertarEstadosPagos", items).toPromise()
         .then(
           n => {
             this.guardadoSend.emit(this.bodyInicial);
+           
            },
           err => {
             return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
@@ -482,6 +487,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.resaltadoDatos = true;
     }
   }
+  
+  
 
   cerrarDialog(operacionCancelada: boolean) {
     this.showModalNuevoEstado = false;

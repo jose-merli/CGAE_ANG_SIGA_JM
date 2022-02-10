@@ -12,18 +12,16 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
-            <label class="mr-auto title-ficha pointer">{{ 'facturacion.abonosSJCS.lineas.lineasConcepto' | translate }}</label>
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.facturas.tarjeta.facturas' | translate }}</label>
           </div>
           <div class="d-flex justify-content-between default">
             
-              <label>{{ 'general.description' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].descripcion }}</span></label>
-              <label>{{ 'facturacion.productos.importeNeto' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].importeNeto + " €" }}</span></label>
-              <label>{{ 'facturacion.productos.importeIva' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].importeIVA + " €" }}</span></label>
-              <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].importeTotal + " €" }}</span></label> 
+              <label>{{ 'facturacion.factProgramadas.serieFactu.numFactu' | translate }}: 
+                <span>{{ bodyInicial.length}}</span></label>
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total' | translate }}: 
+                <span>{{total }}</span></label>
+              <label>{{ 'facturacion.factProgramadas.serieFactu.totalPendiente' | translate }}: 
+                <span >{{ totalPendiente }}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"
               *ngIf="!openFicha"></i>
           </div>
@@ -36,7 +34,7 @@
         <div class="img-colegiado">
           <i class="far fa-list-alt icon-ficha"></i>
         </div>
-        <label class="title-ficha pointer">{{ 'facturacion.abonosSJCS.lineas.lineasConcepto' | translate }}</label>
+        <label class="title-ficha pointer">{{ 'facturacion.ficherosAdeudos.facturasSueltas' | translate }}</label>
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
@@ -79,35 +77,7 @@
         <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
-              <div *ngIf="col.field == 'descripcion'">
-                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']">{{ dato[col.field] }}</span>
-                
-                <input *ngIf="col.editable && dato['modoEdicion']" type="text" class="form-control" [ngClass]="styleObligatorio(datos[rowIndex][col.field])" [(ngModel)]="datos[rowIndex][col.field]" pInputText>
-              </div>
-
-              <div *ngIf="col.field == 'cantidad'">
-                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']" class="pull-right">{{ dato[col.field] }}</span>
-                
-                <input *ngIf="col.editable && dato['modoEdicion']" type="text" class="form-control" [ngClass]="styleObligatorio(datos[rowIndex][col.field])" [(ngModel)]="datos[rowIndex][col.field]" pInputText>
-              </div>
-
-              <div *ngIf="col.field == 'precioUnitario' || col.field == 'importeNeto' || col.field == 'importeNeto' || col.field == 'importeIVA' || col.field == 'importeTotal'">
-                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']" class="pull-right">{{ dato[col.field] ? dato[col.field] + " €" : "-" }}</span>
-                
-                <input DigitDecimaNumber *ngIf="col.editable && dato['modoEdicion']" type="text" class="form-control" [ngClass]="styleObligatorio(datos[rowIndex][col.field])" [(ngModel)]="datos[rowIndex][col.field]" maxlength="10" (change)="onChangeImportes(rowIndex)" pInputText>
-              </div>
-
-              <div *ngIf="col.field == 'importeAnticipado'">
-                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']" class="pull-right">{{ dato[col.field] ? dato[col.field] + " €" : "0 €" }}</span>
-              </div>
-              
-              <div *ngIf="col.field == 'tipoIVA'">
-                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']">{{ dato[col.field] }}</span>
-                
-                <p-dropdown *ngIf="col.editable && dato['modoEdicion']" class="select-form" [(ngModel)]="datos[rowIndex]['idTipoIVA']" placeholder="Seleccionar"
-                  [options]="comboTiposIVA" [filter]="true" filterBy="label,labelSinTilde" 
-                  [ngClass]="styleObligatorio(datos[rowIndex]['idTipoIVA'])" [showClear]="true" (onChange)="onChangeImportes(rowIndex)"></p-dropdown>
-              </div>
+                <span >{{ dato[col.field] }}</span>
             </td>
           </tr>
         </ng-template>
@@ -133,15 +103,6 @@
 
       </p-table>
       
-    </div>
-
-    <div *ngIf="openFicha" class="card-footer">
-      <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
-          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
-        (click)="checkGuardar()" label="{{ 'general.boton.guardar' | translate }}"></button>
-      </div>
     </div>
   </div>
 </div>
