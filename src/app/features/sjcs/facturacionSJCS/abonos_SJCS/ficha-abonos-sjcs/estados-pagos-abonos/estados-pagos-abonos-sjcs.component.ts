@@ -50,6 +50,9 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
   openFicha: boolean = true;
 
+  // Texto para comprobar si se debe mostrar el botón de eliminar
+  accionAbonoCaja: string;
+
   ESTADO_ABONO_PAGADO: string = "1";
   ESTADO_ABONO_BANCO: string = "5";
   ESTADO_ABONO_CAJA: string = "6";
@@ -134,12 +137,31 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
       && dato.idDisqueteAbono != undefined && dato.idDisqueteAbono.trim().length > 0;
   }
 
+  disabledEliminar(): boolean {
+    if (this.datos != undefined && this.datos.length != 0) {
+      let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+
+      if (this.accionAbonoCaja == undefined || this.accionAbonoCaja.trim().length == 0)
+        this.accionAbonoCaja = this.translateService.instant("facturacion.abonosPagos.datosPagoAbono.abonoCaja");
+
+      return ultimaAccion.accion != this.accionAbonoCaja;
+    } else {
+      return true;
+    }
+    
+  }
+
   // Acciones
+
+  disabledCompensar(): boolean {
+    return this.bodyInicial == undefined || [this.ESTADO_ABONO_PAGADO].includes(this.bodyInicial.idEstado);
+  }
 
   compensar(): void {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
-    if ([this.ESTADO_ABONO_PAGADO].includes(ultimaAccion.idEstado)) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se pueden compensar abonos cuyo último estado no sea Abonado");
+
+    if (this.disabledCompensar()) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.abonosSJCS.compensacion.deshabilitado"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
@@ -150,7 +172,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = this.ACCION_ABONO_COMPENSACION;
-      this.nuevoEstado.accion = "Compensación";//this.translateService.instant("facturacion.pagosFactura.accion.compensacion");
+      this.nuevoEstado.accion = this.translateService.instant("facturacionSJCS.abonosSJCS.compensacion.literal");
 
       // El importe pendiente se recalcula
       this.nuevoEstado.movimiento = ultimaAccion.importePendiente;
@@ -160,10 +182,15 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     }
   }
 
+  disabledNuevoAbono(): boolean {
+    return this.bodyInicial == undefined || this.ESTADO_ABONO_CAJA != this.bodyInicial.idEstado;
+  }
+
   nuevoAbono(): void {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
-    if (this.ESTADO_ABONO_CAJA != ultimaAccion.idEstado) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede abonar abonos SJCS pendientes por caja");
+
+    if (this.disabledNuevoAbono()) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.abonosSJCS.nuevoAbono.deshabilitado"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
@@ -173,7 +200,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = this.ACCION_ABONO_NUEVO_CAJA;
-      this.nuevoEstado.accion = "Abono por Caja";//this.translateService.instant("facturacion.pagosFactura.accion.compensacion");
+      this.nuevoEstado.accion = this.translateService.instant("facturacion.abonosPagos.datosPagoAbono.abonoCaja");
 
       // El importe pendiente se recalcula
       this.nuevoEstado.movimiento = ultimaAccion.importePendiente;
@@ -201,21 +228,29 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
   }
 
+  disabledRenegociar(): boolean {
+    return this.bodyInicial == undefined || this.ESTADO_ABONO_PAGADO == this.bodyInicial.idEstado;
+  }
+
   renegociar(): void {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
-    if (this.ESTADO_ABONO_PAGADO == ultimaAccion.idEstado) {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Sólo se puede renegociar abonos SJCS pendientes de abono");
+
+    if (this.disabledRenegociar()) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.abonosSJCS.renegociacion.deshabilitado"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       this.nuevoEstado.nuevo = true;
-      this.nuevoEstado.fecha = new Date();
+
+      let fechaHoy = new Date();
+      this.nuevoEstado.fecha = fechaHoy;
+      this.nuevoEstado.fechaMin = fechaHoy;
       this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
       this.resaltadoEstado = true;
 
       // Acción
       this.nuevoEstado.idAccion = this.ACCION_ABONO_RENEGOCIACION;
-      this.nuevoEstado.accion = "Renegociación";//this.translateService.instant("facturacion.pagosFactura.accion.compensacion");
+      this.nuevoEstado.accion = this.translateService.instant("facturacionSJCS.abonosSJCS.renegociacion.literal");
 
       this.comboEstados = [
         { value: "6", label: this.translateService.instant("facturacion.facturas.pendienteAbonoCaja"), local: undefined },
@@ -225,6 +260,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
       this.datos.push(this.nuevoEstado);
     }
   }
+
 
   // Restablecer
 
@@ -250,7 +286,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
       && this.nuevoEstado.importePendiente != undefined && this.nuevoEstado.importePendiente.trim().length != 0;
 
       if (parseFloat(this.nuevoEstado.movimiento) <= 0) {
-        this.showMessage("error", "Error", "El importe del movimiento debe ser distinto de cero");
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.abonosSJCS.error.importeCero"));
         return false;
       }
     } else {
@@ -263,7 +299,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     }
     
     if (!valid) {
-      this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.message.camposObligatorios'));
     }
     
     return valid;
@@ -273,6 +309,17 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     let endpoint;
     switch (this.nuevoEstado.idAccion) {
       case this.ACCION_ABONO_COMPENSACION:
+
+      /*
+        // Extraemosel número de la factura en caso de que tenga el numero correcto
+        let reg = /factura\s+(.+)/i;
+        let groups = reg.exec(this.nuevoEstado.comentario)
+        if (groups != undefined && groups.length != 0) {
+          this.nuevoEstado.numeroFactura = groups[0].trim();
+          this.nuevoEstado.comentario = undefined;
+        }
+        */
+          
         endpoint = "facturacionPyS_compensarAbono";
         break;
     
@@ -310,24 +357,26 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
   // Eliminar
   eliminar() {
-    this.nuevoEstado = new FacturaEstadosPagosItem();
-    this.nuevoEstado.fecha = new Date();
-    this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
+    if (!this.disabledEliminar()) {
+      this.nuevoEstado = new FacturaEstadosPagosItem();
+      this.nuevoEstado.fecha = new Date();
+      this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
 
-    this.progressSpinner = true;
-    this.sigaServices.post("facturacionPyS_eliminarPagoPorCajaAbono", this.nuevoEstado).subscribe(
-      n => {
-        this.progressSpinner = false;
-        this.refreshData.emit();
+      this.progressSpinner = true;
+      this.sigaServices.post("facturacionPyS_eliminarPagoPorCajaAbono", this.nuevoEstado).subscribe(
+        n => {
+          this.progressSpinner = false;
+          this.refreshData.emit();
 
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-      },
-      err => {
-        this.progressSpinner = false;
-        this.nuevoEstado = undefined;
-        this.handleServerSideErrorMessage(err);
-      }
-    )
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        },
+        err => {
+          this.progressSpinner = false;
+          this.nuevoEstado = undefined;
+          this.handleServerSideErrorMessage(err);
+        }
+      )
+    }
   }
 
   enabledComboCuentasBancarias(): boolean {
