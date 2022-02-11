@@ -161,7 +161,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.resaltadoEstado = true;
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -210,6 +210,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   nuevoCobro() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
+    console.log(this.datos)
+
     if (this.bodyInicial.tipo != "FACTURA" || !["2"].includes(ultimaAccion.idEstado) 
         || ultimaAccion.impTotalPorPagar != undefined && parseFloat(ultimaAccion.impTotalPorPagar) == 0) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.cobroPorCaja.error"));
@@ -217,7 +219,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -247,7 +249,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -308,7 +310,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -338,7 +340,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -370,7 +372,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
