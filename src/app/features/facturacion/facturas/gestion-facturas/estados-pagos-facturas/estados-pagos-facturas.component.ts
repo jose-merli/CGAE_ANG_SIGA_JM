@@ -467,6 +467,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         .then(
           n => {
             this.guardadoSend.emit(this.bodyInicial);
+           
            },
           err => {
             return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
@@ -484,6 +485,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.resaltadoDatos = true;
     }
   }
+  
+  
 
   cerrarDialog(operacionCancelada: boolean) {
     this.showModalNuevoEstado = false;

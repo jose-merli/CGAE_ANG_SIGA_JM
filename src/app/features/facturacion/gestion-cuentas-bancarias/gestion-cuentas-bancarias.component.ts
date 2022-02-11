@@ -54,7 +54,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
       { field: "iban", header: "censo.mutualidad.literal.iban", width: "10%" },
       { field: "descripcion", header: "general.boton.description", width: "20%" },
       { field: "comisionImporte", header: "facturacion.cuentasBancarias.comisionImporte", width: "10%" },
-      { field: "sjcs", header: "menu.justiciaGratuita", width: "10%" },
+      { field: "sjcsFiltro", header: "menu.justiciaGratuita", width: "10%" },
       { field: "numUsos", header: "facturacion.cuentasBancarias.numUsos", width: "10%" },
       { field: "numFicheros", header: "facturacion.cuentasBancarias.numFicheros", width: "15%" },
     ];
