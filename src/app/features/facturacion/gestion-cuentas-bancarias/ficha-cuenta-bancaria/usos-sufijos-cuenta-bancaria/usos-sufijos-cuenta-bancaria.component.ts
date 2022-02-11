@@ -2,6 +2,7 @@ import { ThrowStmt } from '@angular/compiler';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTable } from 'primeng/primeng';
+import { elementAt } from 'rxjs/operator/elementAt';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
@@ -211,8 +212,16 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
 
   save(): void {
     this.progressSpinner = true;
+    let datosAux = this.datos;
 
-    this.sigaServices.post("facturacionPyS_insertaActualizaSerie", this.datos).subscribe(
+    datosAux.forEach(function(elem){
+      if(elem.idSerieFacturacion != null && elem.idSerieFacturacion != undefined
+          && elem.idSerieFacturacion.value != null && elem.idSerieFacturacion.value != undefined){
+            elem.idSerieFacturacion = elem.idSerieFacturacion.value;
+          }
+    });
+    
+    this.sigaServices.post("facturacionPyS_insertaActualizaSerie", datosAux).subscribe(
       n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.refreshData.emit();
@@ -220,8 +229,8 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       },
       err => {
-        let error = JSON.parse(err.error).error;
-        if (error != undefined && error.message != undefined) {
+        if (err.error != undefined && err.error.message != undefined) {
+          let error = JSON.parse(err.error).error;
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.message));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -234,7 +243,7 @@ export class UsosSufijosCuentaBancariaComponent implements OnInit, OnChanges {
 
   // Estilo obligatorio
   styleObligatorio(evento: string) {
-    if (this.resaltadoDatos && (evento == undefined || evento == null || evento.trim() == "")) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null)) {
       return this.commonsService.styleObligatorio(evento);
     }
   }
