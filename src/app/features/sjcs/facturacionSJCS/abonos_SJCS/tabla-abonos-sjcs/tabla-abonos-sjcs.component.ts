@@ -424,7 +424,7 @@ accion(){
       //this.renegociar()
       break;
     case "Nuevo":
-      this.compensar()
+      this.nuevoAbono()
     break;
   }
 }

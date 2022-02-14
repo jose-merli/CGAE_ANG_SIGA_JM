@@ -51,8 +51,8 @@ export class TablaFacturasComponent implements OnInit {
   comentario:boolean = false;
   combo:boolean = false;
   comboAction:ComboItem [] =[];
-  nombreTarjeta:String="";
-  accionAux:String="";
+  nombreTarjeta:string="";
+  accionAux:string="";
   resaltadoDatos: boolean = false;
   resaltadoFecha: boolean = false;
 
@@ -668,7 +668,7 @@ isValid(){
     isValid = false
     this.resaltadoDatos = true;
   }
-  if(!this.esRenegociar && this.combo || this.comboSel == null || this.comboSel == ""){
+  if(!this.esRenegociar && this.combo && this.comboSel == null || this.comboSel == ""){
     isValid = false
     this.resaltadoDatos = true;
   } 
@@ -681,7 +681,7 @@ isValid(){
   guardarDefi() {
     if(this.isValid()){
       this.progressSpinner = true;
-      this.sigaServices.post("facturacionPyS_insertarEstadosPagos", this.itemsParaModificar).toPromise()
+      this.sigaServices.post("facturacionPyS_insertarEstadosPagosVarios", this.itemsParaModificar).toPromise()
         .then(
           n => {
            // this.guardadoSend.emit(this.bodyInicial);

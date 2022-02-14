@@ -161,7 +161,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.resaltadoEstado = true;
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -175,13 +175,13 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       // Combo de pago de pago o abono por caja y banco
       if (this.bodyInicial.tipo == "FACTURA") {
         this.comboEstados = [
-          { value: "2", label: this.translateService.instant("facturacion.facturas.pendienteCobro"), local: undefined },
-          { value: "5", label: this.translateService.instant("facturacion.facturas.pendienteBanco"), local: undefined }
+          { value: "caja", label: this.translateService.instant("facturacion.facturas.pendienteCobro"), local: undefined },
+          { value: "otroBanco", label: this.translateService.instant("facturacion.facturas.pendienteBanco"), local: undefined }
         ];
       } else {
         this.comboEstados = [
-          { value: "6", label: this.translateService.instant("facturacion.facturas.pendienteAbonoCaja"), local: undefined },
-          { value: "5", label: this.translateService.instant("facturacion.facturas.pendienteAbonoBanco"), local: undefined },
+          { value: "caja", label: this.translateService.instant("facturacion.facturas.pendienteAbonoCaja"), local: undefined },
+          { value: "otroBanco", label: this.translateService.instant("facturacion.facturas.pendienteAbonoBanco"), local: undefined },
           
         ];
       }
@@ -197,7 +197,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   enabledComboCuentasBancarias(): boolean {
-    if (this.nuevoEstado.idEstado != "5") {
+    if (!["otroBanco"].includes(this.nuevoEstado.modo)) {
       this.nuevoEstado.cuentaBanco = undefined;
       this.resaltadoBanco = false;
       return false;
@@ -210,6 +210,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   nuevoCobro() {
     let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
 
+    console.log(this.datos)
+
     if (this.bodyInicial.tipo != "FACTURA" || !["2"].includes(ultimaAccion.idEstado) 
         || ultimaAccion.impTotalPorPagar != undefined && parseFloat(ultimaAccion.impTotalPorPagar) == 0) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.cobroPorCaja.error"));
@@ -217,7 +219,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -247,7 +249,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -308,7 +310,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -338,7 +340,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -370,7 +372,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado = new FacturaEstadosPagosItem();
 
       // IdFactura
-      this.nuevoEstado.idFactura = this.bodyInicial.idFactura;
+      this.nuevoEstado.idFactura = ultimaAccion.idFactura;
 
       let fechaActual: Date = new Date();
       this.nuevoEstado.fechaMin = fechaActual > new Date(ultimaAccion.fechaModificaion) ? fechaActual : new Date(ultimaAccion.fechaModificaion);
@@ -444,7 +446,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
     if (this.nuevoEstado.idAccion == "7") {
       valid = this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.impTotalPagado != undefined && this.nuevoEstado.impTotalPagado.trim().length != 0 && this.nuevoEstado.impTotalPorPagar && this.nuevoEstado.impTotalPorPagar.trim().length != 0
-        && this.nuevoEstado.idEstado != undefined && this.nuevoEstado.idEstado.trim().length != 0 && (this.nuevoEstado.idEstado != "5" || this.nuevoEstado.idEstado == "5" && this.nuevoEstado.cuentaBanco != undefined && this.nuevoEstado.cuentaBanco.trim().length != 0);
+        && this.nuevoEstado.modo != undefined && this.nuevoEstado.modo.trim().length != 0 && (this.nuevoEstado.modo != "otroBanco" || this.nuevoEstado.modo == "otroBanco" && this.nuevoEstado.cuentaBanco != undefined && this.nuevoEstado.cuentaBanco.trim().length != 0);
     } else {
       valid = this.nuevoEstado && this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.impTotalPagado != undefined && this.nuevoEstado.impTotalPagado.trim().length != 0 && this.nuevoEstado.impTotalPorPagar && this.nuevoEstado.impTotalPorPagar.trim().length != 0;
     }

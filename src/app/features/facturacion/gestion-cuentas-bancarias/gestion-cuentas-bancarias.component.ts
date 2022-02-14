@@ -182,7 +182,12 @@ export class GestionCuentasBancariasComponent implements OnInit {
       .subscribe(
         n => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          let error = JSON.parse(n.body).error;
+          if (error != undefined && error.message != undefined && error.message.indexOf("cuentas eliminadas") !== -1) {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), error.message);
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
           this.cargarDatos();
         },
         err => {
@@ -192,6 +197,8 @@ export class GestionCuentasBancariasComponent implements OnInit {
             let translatedError = this.translateService.instant(error.message);
             if (translatedError && translatedError.trim().length != 0) {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), translatedError);
+            } else if (error.message.indexOf("cuentas eliminadas") !== -1) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.message);
             } else {
               this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             }

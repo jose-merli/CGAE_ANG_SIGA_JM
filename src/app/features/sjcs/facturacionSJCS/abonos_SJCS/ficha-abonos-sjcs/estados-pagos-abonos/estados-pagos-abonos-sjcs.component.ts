@@ -197,6 +197,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
       this.nuevoEstado.nuevo = true;
       this.nuevoEstado.fecha = new Date();
       this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
+      this.nuevoEstado.notaMaxLength = 256;
 
       // Acción
       this.nuevoEstado.idAccion = this.ACCION_ABONO_NUEVO_CAJA;
