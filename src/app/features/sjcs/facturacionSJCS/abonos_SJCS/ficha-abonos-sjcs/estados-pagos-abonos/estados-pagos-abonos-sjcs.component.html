@@ -97,12 +97,16 @@
                   -->
                 </div>
                 <div *ngSwitchCase="'comentario'">
+                  <span *ngIf="!dato.nuevo && dato.comentario">{{ dato[col.field] }}</span>
                   <span *ngIf="!dato.nuevo && dato.numeroAbono">{{ 'facturacion.facturas.estadosPagos.sjcs' | translate }} <a (click)="navigateToAbono(dato)" class="enlace">{{ dato['numeroAbono'] }}</a></span>
                   <span *ngIf="!dato.nuevo && dato.numeroFactura">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a (click)="navigateToFactura(dato)" class="enlace">{{ dato['numeroFactura'] }}</a></span>
                   <span *ngIf="!dato.nuevo && tieneFichero(dato)">{{ 'facturacion.cmc.fichero' | translate }} <a (click)="navigateToFicheroTransferencias(dato)" class="enlace">{{ dato['idDisqueteAbono'] }}</a></span>
                 
                   <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_ABONO_COMPENSACION">
                     <input type="text" class="form-control" [(ngModel)]="nuevoEstado.numeroFactura" maxlength="nuevoEstado.notaMaxLength" pInputText>
+                  </div>
+                  <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_ABONO_NUEVO_CAJA">
+                    <input type="text" class="form-control" [(ngModel)]="nuevoEstado.comentario" maxlength="nuevoEstado.notaMaxLength" pInputText>
                   </div>
                 </div>
                 <div *ngSwitchCase="'estado'">
