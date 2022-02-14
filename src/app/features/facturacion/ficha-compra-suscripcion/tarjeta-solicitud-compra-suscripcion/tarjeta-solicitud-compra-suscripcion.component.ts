@@ -12,6 +12,8 @@ import { Location } from '@angular/common';
 import { TarjetaProductosCompraSuscripcionComponent } from '../tarjeta-productos-compra-suscripcion/tarjeta-productos-compra-suscripcion.component';
 import { TarjetaServiciosCompraSuscripcionComponent } from '../tarjeta-servicios-compra-suscripcion/tarjeta-servicios-compra-suscripcion.component';
 import { stringify } from 'querystring';
+import { FacturacionRapidaRequestDTO } from '../../../../models/FacturacionRapidaRequestDTO';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-tarjeta-solicitud-compra-suscripcion',
@@ -41,7 +43,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   permisoAprobarCompra: boolean = false;
   permisoDenegar: boolean = false;
   permisoAnularCompra: boolean = false;
-  permisoFactrarCompra: boolean = false;
+  permisoFacturarCompra: boolean = false;
   permisoAnularSuscripcion: boolean = false;
   permisoSolicitarSscripcion: boolean = false;
   permisoSolicitarSuscripcion: boolean = false;
@@ -49,6 +51,10 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 
   progressSpinner : boolean = false;
   showTarjeta: boolean = false;
+
+  showModalSerieFacturacion = false;
+  comboSeriesFacturacion: any[] = [];
+  serieFacturacionSeleccionada: string;
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService, 
@@ -628,44 +634,99 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
 			.catch((error) => console.error(error));
   }
 
-  getPermisoFacturarCompra(){
+  getPermisoFacturarCompra() {
     //En la documentación no parece distinguir que se requiera una permiso especifico para esta acción
     this.commonsService
-			.checkAcceso(procesos_PyS.facturarCompra)
-			.then((respuesta) => {
-				this.permisoFactrarCompra = respuesta;
-			})
-			.catch((error) => console.error(error));
+      .checkAcceso(procesos_PyS.facturarCompra)
+      .then((respuesta) => {
+        this.permisoFacturarCompra = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
-  checkFacturar() {
+  async checkFacturar() {
 
     let msg = this.commonsService.checkPermisos(this.permisoSolicitarCompra, undefined);
 
     if (msg != undefined) {
       this.msgs = msg;
-    }  else{
-      this.facturarCompra();
+    } else {
+      this.progressSpinner = true;
+      this.serieFacturacionSeleccionada = undefined;
+      await this.getSeleccionSerieFacturacion().then(data => {
+        this.comboSeriesFacturacion = data.combooItems;
+
+        if (this.comboSeriesFacturacion == null) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.compraFacturada"));
+        } else {
+          this.showModalSerieFacturacion = true;
+        }
+
+        this.progressSpinner = false;
+      }).catch(err => {
+        this.progressSpinner = false;
+      });
     }
-   }
+  }
+
   facturarCompra() {
-    this.sigaServices.post('PyS_facturarCompra', this.ficha.nSolicitud).subscribe(
-      (n) => {
-        if( n.status != 200) {
+
+    this.progressSpinner = true;
+
+    const compra = new FacturacionRapidaRequestDTO();
+    compra.idInstitucion = this.ficha.idInstitucion;
+    compra.idPeticion = this.ficha.nSolicitud;
+    compra.idSerieFacturacion = this.serieFacturacionSeleccionada;
+
+    this.sigaServices.postDownloadFilesWithFileName2('PyS_facturarCompra', compra).subscribe(
+      (data: { file: Blob, filename: string, status: number }) => {
+
+        if (data.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
+
+          let filename = data.filename.split('=')[1];
+          saveAs(data.file, filename);
+          this.progressSpinner = false;
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          
           //Se actualiza la información de la ficha incluyendo las facturas asociadas
           this.actualizaFicha.emit();
         }
-        this.progressSpinner = false;
+
       },
-      (err) => {
+      err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         this.progressSpinner = false;
       }
     );
+  }
+
+  checkModalSerieFacturacion() {
+
+    if (!this.serieFacturacionSeleccionada || this.serieFacturacionSeleccionada == null || this.serieFacturacionSeleccionada.length == 0) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.seleccionar.elemento"));
+    } else {
+      this.cerrarModalSerieFacturacion();
+      this.facturarCompra();
+    }
+  }
+
+  cerrarModalSerieFacturacion() {
+    this.showModalSerieFacturacion = false;
+  }
+
+  getSeleccionSerieFacturacion() {
+    return this.sigaServices.getParam("PyS_getSeleccionSerieFacturacion", `?idInstitucion=${this.ficha.idInstitucion}&idPeticion=${this.ficha.nSolicitud}`).toPromise();
+  }
+
+  marcarObligatorio(valor) {
+    let resp = false;
+
+    if (valor == undefined || valor == null || valor.trim().length == 0) {
+      resp = true;
+    }
+
+    return resp;
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el

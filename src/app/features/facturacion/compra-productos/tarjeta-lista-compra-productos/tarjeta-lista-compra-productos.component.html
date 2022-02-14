@@ -93,7 +93,7 @@
           label="{{ 'general.boton.anular' | translate}}" [disabled]="selectedRows.length == 0"></button>
       <!-- Facturar -->
          <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.facturar' | translate}}" [disabled]="selectedRows.length == 0 || esColegiado"></button>
+          label="{{ 'general.boton.facturar' | translate}}" [disabled]="selectedRows.length == 0 || esColegiado || selectedRows.length > 1"></button>
       <!-- Descargar facturas -->
          <button pButton  (click)="nofuncional()" type="button" icon="fa fa-search" iconPos="left"
          label="{{ 'facturacion.productos.descargarFacturas' | translate}}" [disabled]="selectedRows.length == 0"></button>
