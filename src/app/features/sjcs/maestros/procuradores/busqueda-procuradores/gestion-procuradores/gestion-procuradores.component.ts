@@ -156,12 +156,12 @@ export class GestionProcuradoresComponent implements OnInit {
   disabledSave() {
 
 
-    if ((this.generales.body.nombre != undefined && this.generales.body.nombre != null && this.generales.body.apellido1 != undefined &&
+    if ((this.generales.body.idColProcurador != undefined && this.generales.body.idColProcurador != null && this.generales.body.nombre != undefined && this.generales.body.nombre != null && this.generales.body.apellido1 != undefined &&
       this.generales.body.apellido1 != null && this.generales.body.nColegiado != undefined && this.generales.body.nColegiado != null)
       && (this.direcciones.validDir || this.direcciones.validDir == null || this.direcciones.validDir == undefined) &&
       this.permisoEscritura && ((JSON.stringify(this.direcciones.body) != JSON.stringify(this.direcciones.bodyInicial))
         || (JSON.stringify(this.generales.body) != JSON.stringify(this.generales.bodyInicial)))) {
-      if (this.generales.body.apellido1.trim() != "" && this.generales.body.nombre.trim() != "" && this.generales.body.nColegiado.trim()) {
+      if (this.generales.body.apellido1.trim() != "" && this.generales.body.nombre.trim() != "" && this.generales.body.nColegiado.trim() && this.generales.body.idColProcurador.trim()) {
         return false;
       } else { return true; }
 
