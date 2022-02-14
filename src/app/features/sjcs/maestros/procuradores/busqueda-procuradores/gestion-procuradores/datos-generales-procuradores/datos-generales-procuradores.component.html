@@ -68,7 +68,7 @@
                 pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }}
+              <label>{{ "censo.busquedaClientesAvanzada.literal.colegio" | translate }} (*)
               </label>
               <p-dropdown class="select-form" [(ngModel)]='body.idColProcurador' [filter]="true" filterBy="label,labelSinTilde" [disabled]="historico || !permisoEscritura"
                 [options]="comboColegios" [emptyFilterMessage]="resultadosPoblaciones" id="dropdown" placeholder="{{'general.boton.seleccionar' | translate}}"
