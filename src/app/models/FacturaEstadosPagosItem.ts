@@ -6,6 +6,7 @@ export class FacturaEstadosPagosItem {
 	idAccion: string;
 	accion: string;
 
+	modo: string;
 	idEstado: string;
 	estado: string;
 
