@@ -62,6 +62,7 @@ export class TablaFacturasSeleccionadasComponent implements OnInit,OnChanges {
       this.datos = [];
       this.total=0
       this.totalPendiente = 0;
+      this.itemsGeneral=[];
       /*this.bodyInicial.forEach(element =>{
         let item:FacturaSeleccionada=new FacturaSeleccionada();
         item.estado = element.idEstado;
