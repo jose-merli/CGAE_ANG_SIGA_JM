@@ -22,7 +22,7 @@
               <label>{{ 'facturacion.facturas.estadosPagos.accion' | translate }}: 
                 <span>{{ datos[datos.length - 1].accion }}</span></label>
               <label>{{ 'facturacion.facturas.estadosPagos.nota' | translate }}: 
-                <span>{{ datos[datos.length - 1].numeroFactura }}</span></label>
+                <span>{{ datos[datos.length - 1].comentario }}</span></label>
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}: 
                 <span>{{ datos[datos.length - 1].estado }}</span></label>
               <label>{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}: 
@@ -97,13 +97,16 @@
                   -->
                 </div>
                 <div *ngSwitchCase="'comentario'">
+                  <span *ngIf="!dato.nuevo && dato.comentario">{{ dato[col.field] }}</span>
                   <span *ngIf="!dato.nuevo && dato.numeroAbono">{{ 'facturacion.facturas.estadosPagos.sjcs' | translate }} <a (click)="navigateToAbono(dato)" class="enlace">{{ dato['numeroAbono'] }}</a></span>
                   <span *ngIf="!dato.nuevo && dato.numeroFactura">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a (click)="navigateToFactura(dato)" class="enlace">{{ dato['numeroFactura'] }}</a></span>
                   <span *ngIf="!dato.nuevo && tieneFichero(dato)">{{ 'facturacion.cmc.fichero' | translate }} <a (click)="navigateToFicheroTransferencias(dato)" class="enlace">{{ dato['idDisqueteAbono'] }}</a></span>
                 
                   <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_ABONO_COMPENSACION">
-                    <label>{{ 'facturacion.facturas.datosGenerales.numFactura' | translate }}</label>
                     <input type="text" class="form-control" [(ngModel)]="nuevoEstado.numeroFactura" maxlength="nuevoEstado.notaMaxLength" pInputText>
+                  </div>
+                  <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_ABONO_NUEVO_CAJA">
+                    <input type="text" class="form-control" [(ngModel)]="nuevoEstado.comentario" maxlength="nuevoEstado.notaMaxLength" pInputText>
                   </div>
                 </div>
                 <div *ngSwitchCase="'estado'">
@@ -164,19 +167,18 @@
 
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="nuevoEstado"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="nuevoEstado || disabledCompensar()"
           (click)="compensar()" label="{{ 'facturacionSJCS.facturacionesYPagos.compensar' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="nuevoEstado"
+        <button pButton type="button" icon="fas fa-exchange-alt" iconPos="left" [disabled]="nuevoEstado || disabledRenegociar()"
           (click)="renegociar()" label="{{ 'general.boton.renegociar' | translate }}"></button>
-        <button pButton  type="button" icon="fa fa-plus" iconPos="left" [disabled]="nuevoEstado"
+        <button pButton  type="button" icon="fa fa-plus" iconPos="left" [disabled]="nuevoEstado || disabledNuevoAbono()"
           (click)="nuevoAbono()" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-trash" iconPos="left" [disabled]="nuevoEstado"
+        <button pButton type="button" icon="fa fa-trash" iconPos="left" [disabled]="nuevoEstado || disabledEliminar()"
           (click)="eliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-        
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-edit" iconPos="left" [disabled]="!nuevoEstado"
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!nuevoEstado"
           label="{{'general.boton.restablecer' | translate}}"></button>
-        <button (click)="guardar()" pButton type="button" icon="fa fa-edit" iconPos="left" [disabled]="!nuevoEstado"
+        <button (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!nuevoEstado"
           label="{{'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

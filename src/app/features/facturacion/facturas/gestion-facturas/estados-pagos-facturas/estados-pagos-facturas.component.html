@@ -86,7 +86,7 @@
         <ng-template pTemplate="body" let-grupo let-columns="columns" let-rowIndex="rowIndex">
 
           <!-- Número de factura -->
-          <tr [pSelectableRow]="grupo" [pSelectableRowIndex]="rowIndex" class="justify-content-start">
+          <tr class="justify-content-start">
             <td [attr.colspan]="columns.length">
               <div (click)="toggleGrupo(rowIndex)" class="d-flex justify-content-start align-items-center">
                 <label>{{ grupo['key'] }}</label>
@@ -97,8 +97,8 @@
           </tr>
 
           <!-- Columnas -->
-          <ng-container *ngIf="grupo['activo']">
-            <tr *ngFor="let dato of grupo['values']" [pSelectableRow]="grupo" [pSelectableRowIndex]="rowIndex">
+          <ng-container *ngIf="grupo['activo'] && grupo['key'] != numeroAbono">
+            <tr *ngFor="let dato of grupo['values']">
               <td *ngFor="let col of columns">
                 <div [ngSwitch]="col.field">
                   <div *ngSwitchCase="'fechaModificaion'">
@@ -123,8 +123,42 @@
                 </div>
               </td>
             </tr>
-
           </ng-container>
+
+          <ng-container *ngIf="grupo['activo'] && grupo['key'] == numeroAbono">
+            <tr *ngFor="let dato of grupo['values']">
+              <td *ngFor="let col of columns">
+                <div [ngSwitch]="col.field">
+                  <div *ngSwitchCase="'fechaModificaion'">
+                    <span>{{ dato['fecha'] | date: 'dd/MM/yyyy' }}</span>
+                  </div>
+                  <div *ngSwitchCase="'comentario'">
+                    <span *ngIf="!dato.nuevo && dato.comentario">{{ dato[col.field] }}</span>
+                    <span *ngIf="!dato.nuevo && dato.numeroAbono">{{ 'facturacion.facturas.estadosPagos.sjcs' | translate }} <a (click)="navigateToAbono(dato)" class="enlace">{{ dato['numeroAbono'] }}</a></span>
+                    <span *ngIf="!dato.nuevo && dato.numeroFactura">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a (click)="navigateToFactura(dato)" class="enlace">{{ dato['numeroFactura'] }}</a></span>
+                    <span *ngIf="!dato.nuevo && tieneFichero(dato)">{{ 'facturacion.cmc.fichero' | translate }} <a (click)="navigateToFicheroTransferencias(dato)" class="enlace">{{ dato['idDisqueteAbono'] }}</a></span>
+                  </div>
+                  <div *ngSwitchCase="'estado'">
+                    <span *ngIf="!dato.nuevo">{{ dato['estado'] }}</span>
+                  </div>
+                  <div *ngSwitchCase="'cuentaBancaria'">
+                    <span *ngIf="!dato.nuevo">{{ dato['cuentaBancaria'] }}</span>
+                  </div>
+                  <div *ngSwitchCase="'impTotalPagado'">
+                    <span *ngIf="!dato.nuevo" class="pull-right">{{ dato['movimiento'] ? dato['movimiento'] + " €" : "-" }}</span>
+                  </div>
+                  <div *ngSwitchCase="'impTotalPorPagar'">
+                    <span *ngIf="!dato.nuevo" class="pull-right">{{ dato['importePendiente'] ? dato['importePendiente'] + " €" : "-" }}</span>
+                  </div>
+                  <div *ngSwitchDefault>
+                    <span>{{ dato[col.field] }}</span></div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+
+            
+
           
         </ng-template>
 
@@ -152,24 +186,24 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'ABONO' || disableAccionConImporte()" 
+        <button pButton [disabled]="disabledNuevoAbono()" 
           type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoAbono()" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA'" 
+        <button pButton [disabled]="disabledAnular()" 
           type="button" icon="fa fa-undo" iconPos="left"
           (click)="anular()" label="{{ 'general.boton.anular' | translate }}"></button>
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA'" 
+        <button pButton [disabled]="disabledDevolverConComision()" 
           type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolverConComision()" label="{{ 'facturacion.facturas.estadosPagos.devolverConComision' | translate }}"></button>
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA'" 
+        <button pButton [disabled]="disabledDevolver()" 
           type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolver()" label="{{ 'facturacion.facturas.estadosPagos.devolver' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-trash" iconPos="left"
+        <button pButton type="button" icon="fa fa-trash" iconPos="left" [disabled]="disabledEliminar()"
           (click)="eliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA' || disableAccionConImporte()" 
+        <button pButton [disabled]="disabledNuevoCobro()" 
           type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoCobro()" label="Nuevo Cobro"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="disabledRenegociar()"
           (click)="renegociar()" label="{{ 'general.boton.renegociar' | translate }}"></button>
       </div>
     </div>
@@ -192,7 +226,7 @@
     </div>
     <div *ngIf="nuevoEstado.idAccion == '7'" class="form-group-interlineado col-lg-12 col-md-12">
       <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
-      <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.idEstado' placeholder="Seleccionar" [ngClass]="styleObligatorio(resaltadoEstado, nuevoEstado.idEstado)"
+      <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.modo' placeholder="Seleccionar" [ngClass]="styleObligatorio(resaltadoEstado, nuevoEstado.modo)"
         [options]="comboEstados" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
     </div>
     <div class="form-group-interlineado col-lg-12 col-md-12">

@@ -227,7 +227,16 @@ export class GestionFacturasComponent implements OnInit {
 
     this.sigaServices.post("facturacionPyS_guardaDatosFactura", event).toPromise().then(
       n => { }, err => { 
-        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        if (err.error != undefined) {
+          let error = JSON.parse(err.error).error;
+          if( error.message != undefined){
+            return Promise.reject(this.translateService.instant(error.message));
+          } else {
+            return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+          }
+        }else {
+          return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        }
       }
     ).then(() => { 
       return this.getDatosFactura(this.body.idFactura, this.body.idAbono, this.body.tipo); 

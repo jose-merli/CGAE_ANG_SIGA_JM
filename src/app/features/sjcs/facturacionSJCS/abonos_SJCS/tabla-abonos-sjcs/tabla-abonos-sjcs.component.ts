@@ -10,6 +10,9 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { DatosColegiadosItem } from '../../../../../models/DatosColegiadosItem';
 import { saveAs } from 'file-saver/FileSaver';
+import { FacturaEstadosPagosItem } from '../../../../../models/FacturaEstadosPagosItem';
+import { ComboItem } from '../../../../../models/ComboItem';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-tabla-abonos-sjcs',
@@ -42,8 +45,26 @@ export class TablaAbonosSCJSComponent implements OnInit {
   enabledSave:boolean = false;
   editar:boolean = false;
 
+  openFichaModal:boolean = false;
+  esRenegociar:boolean = false;
+  showModal:boolean = false;
+  itemAction:FacturaEstadosPagosItem = new FacturaEstadosPagosItem();
+  comboAction:ComboItem[] = [];
   FAC_ABONO_ESTADO_PENDIENTE_BANCO: string = "5";
+  comboSel:string;
+  actionBtn:string;
+  itemsParaModificar:FacturaEstadosPagosItem[] = [];
+  ESTADO_ABONO_PAGADO: string = "1";
+  ESTADO_ABONO_BANCO: string = "5";
+  ESTADO_ABONO_CAJA: string = "6";
 
+  ACCION_ABONO_COMPENSACION: string = "10";
+  ACCION_ABONO_RENEGOCIACION: string = "7";
+  ACCION_ABONO_NUEVO_CAJA: string = "4";
+  endPoint:string;
+  resaltadoDatos: boolean = false;
+  resaltadoFecha: boolean = false;
+  nombreTarjeta:string="";
 
   constructor(
     private persistenceService: PersistenceService,
@@ -60,6 +81,7 @@ export class TablaAbonosSCJSComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
+    this.itemAction.fechaMin = new Date()
 
     this.getCols();
   }
@@ -128,6 +150,9 @@ export class TablaAbonosSCJSComponent implements OnInit {
 
 
   }
+  abreCierraFicha(){
+    this.openFichaModal = !this.openFichaModal
+  }
 
   navigateToCliente(selectedRow:FacAbonoItem) {
     
@@ -190,6 +215,12 @@ export class TablaAbonosSCJSComponent implements OnInit {
     }
     
   }
+
+  fillFecha(event, campo) {
+    if(campo==='fechaMin')
+      this.itemAction.fechaMin = event;
+  }
+
 
   disableNuevoFicheroTransferencias() {
     return !this.selectedDatos || this.selectedDatos.filter(d => d.estado && d.estado.toString() == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO).length == 0;
@@ -346,5 +377,166 @@ showInfoPerenne(mensaje: string) {
   this.msgsDescarga = [];
   this.msgsDescarga.push({ severity: 'info', summary: '', detail: mensaje });
 }
+cerrarDialog(operacionCancelada: boolean) {
+  this.showModal = false;
+  this.esRenegociar = false;
+  this.resaltadoFecha = false;
+  this.resaltadoDatos = false;
+  this.changeDetectorRef.detectChanges();
+
+  if (operacionCancelada) {
+    this.itemAction = new FacturaEstadosPagosItem();
+    this.itemAction.comentario= ""
+    this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+  }
+}
+
+modal(action:string){
+  switch (action) {
+    case  'Renegociar':
+      this.esRenegociar = true;  
+      this.nombreTarjeta = this.translateService.instant("general.boton.renegociar")
+      this.comboNegociar()
+      break;
+    case  'Compensar':
+      this.nombreTarjeta = this.translateService.instant("facturacionSJCS.facturacionesYPagos.compensar")
+      this.esRenegociar = false;  
+      break;
+    case  'Nuevo':
+      this.esRenegociar = false;  
+      this.nombreTarjeta =this.translateService.instant("facturacion.facturas.estadosPagos.nuevoAbono")
+    break;
+
+  }
+  this.actionBtn = action;
+  if(action == 'Renegociar'){
+
+  } 
+  this.showModal = true;
+}
+
+accion(){
+  switch (this.actionBtn) {
+    case "Compensar":
+      this.compensar()
+      break;
+    case "Renegociar":
+      //this.renegociar()
+      break;
+    case "Nuevo":
+      this.nuevoAbono()
+    break;
+  }
+}
+
+compensar(): void {
+  this.itemsParaModificar= []
+  this.selectedDatos.forEach(element =>{
+    if(![this.ESTADO_ABONO_PAGADO].includes(element.estado.toString())){
+      let item = new FacturaEstadosPagosItem();
+      item.nuevo = true;
+      item.fecha = new Date();
+      item.notaMaxLength = 256;
+      item.idAbono = element.idAbono.toString();
+      // Acción
+      item.idAccion = this.ACCION_ABONO_COMPENSACION;
+      item.accion = "Compensación";//this.translateService.instant("facturacion.pagosFactura.accion.compensacion");
+
+      
+      // El importe pendiente se recalcula
+      item.movimiento = element.importePendientePorAbonar.toString();
+      item.importePendiente = "0";
+
+      this.itemsParaModificar.push(item)
+    }
+  });
+  this.endPoint = "facturacionPyS_compensarAbonoVarios"
+  this.guardar()
+}
+nuevoAbono(): void {
+  this.itemsParaModificar= []
+  this.selectedDatos.forEach(element =>{
+    if(this.ESTADO_ABONO_CAJA == element.estado.toString()){
+      let item = new FacturaEstadosPagosItem();
+      item.nuevo = true;
+      item.fecha = new Date();
+      item.notaMaxLength = 256;
+      item.idAbono = element.idAbono.toString();
+      // Acción
+      item.idAccion =  this.ACCION_ABONO_NUEVO_CAJA;
+      item.accion = "Abono por Caja";//this.translateService.instant("facturacion.pagosFactura.accion.compensacion");
+      
+      // El importe pendiente se recalcula
+      item.movimiento = element.importePendientePorAbonar.toString();
+      item.importePendiente = "0";
+
+      this.itemsParaModificar.push(item)
+      
+    }
+  });
+  this.endPoint = "facturacionPyS_nuevoAbonoMasivo"
+  this.guardar()
+  
+}
+comboNegociar(){
+  this.comboAction =  [
+    { value: "1", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
+    { value: "2", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
+    { value: "3",  label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
+  ];
+}
+styleObligatorio(evento) {
+
+  if (this.resaltadoDatos || this.resaltadoFecha && (evento == undefined || evento == null || evento == "")) {
+    return this.commonsService.styleObligatorio(evento);
+  }
+
+}
+muestraCamposObligatorios() {
+this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+}
+isValid(){
+  let isValid:boolean = true;
+  if(this.esRenegociar && this.comboSel == null || this.comboSel == ""){
+    isValid = false
+    this.resaltadoDatos = true;
+  }
+
+  if(this.itemAction.fechaMin == null || this.itemAction.fechaMin == undefined || this.itemAction.fechaMin.toString() == ""){
+    this.resaltadoFecha = true
+    isValid = false;
+  }
+  return isValid;
+}
+guardar() {
+    
+    /*case this.ACCION_ABONO_NUEVO_CAJA:
+      endpoint = "facturacionPyS_pagarPorCajaAbono";
+      break;
+
+    case this.ACCION_ABONO_RENEGOCIACION:
+      endpoint = "facturacionPyS_renegociarAbono";
+      break;
+  */
+  if(this.isValid()){
+    this.progressSpinner = true;
+    this.sigaServices.post(this.endPoint, this.itemsParaModificar).subscribe(
+      n => {
+        this.progressSpinner = false;
+       //refrescar this.refreshData.emit();
+
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
+      err => {
+        this.progressSpinner = false;
+        this.handleServerSideErrorMessage(err);
+      }
+    );
+  }else{
+    this.muestraCamposObligatorios()
+  }
+    
+  } 
+
 
 }

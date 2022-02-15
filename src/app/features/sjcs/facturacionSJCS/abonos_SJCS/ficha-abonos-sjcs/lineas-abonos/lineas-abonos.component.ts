@@ -113,16 +113,13 @@ export class LineasAbonosComponent implements OnInit, OnChanges {
   }
 
   getColsAbono() {
-    this.cols = [
-      { field: "descripcion", header: "general.description", width: "30%", editable: this.modificarDescripcion },
-      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.modificarImporteUnitario },
-      { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%", editable: false },
-      { field: "importeNeto", header: "facturacion.productos.importeNeto", width: "10%", editable: false }, 
-      { field: "tipoIVA", header: "facturacion.facturas.lineas.tipoIVA", width: "10%", editable: this.modificarIVA },
-      { field: "importeIVA", header: "facturacion.productos.importeIva", width: "10%", editable: false },
-      { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "10%", editable: false },
-      { field: "importeAnticipado", header: "facturacion.facturas.datosGenerales.impAnticipado", width: "10%", editable: false },
-    ];
+      this.cols = [
+        { field: "descripcion", header: "general.description", width: "40%", editable: this.modificarDescripcion },
+        { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.modificarImporteUnitario },
+        { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%", editable: false },
+        { field: "importeNeto", header: "facturacion.productos.importeNeto", width: "10%", editable: false }
+        // { field: "importeTotal", header: "Importe Total", width: "20%", editable: false },
+      ];
   }
 
 
@@ -174,7 +171,9 @@ export class LineasAbonosComponent implements OnInit, OnChanges {
 
   guardarLineasAbono(linea: FacturaLineaItem): Promise<any> {
     return this.sigaServices.post("facturacionPyS_guardarLineasAbono", linea).toPromise().then(
-      n => { },
+      n => { 
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      },
       err => {
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
       }
@@ -202,13 +201,13 @@ export class LineasAbonosComponent implements OnInit, OnChanges {
 
   // Guardar
   isValid(): boolean {
-    if (this.datos.some(d => d.descripcion == undefined || d.descripcion.trim().length == 0 
-        || d.precioUnitario == undefined || d.precioUnitario.trim().length == 0
-        || d.idTipoIVA == undefined || d.idTipoIVA.trim().length == 0)) {
+
+    if (this.bodyInicial.tipo != "FACTURA" && this.datos.some(d => d.descripcion == undefined 
+        || d.descripcion.trim().length == 0 
+        || d.precioUnitario == undefined || d.precioUnitario.trim().length == 0)) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
       return false;
     }
-
     return true;
   }
 
@@ -264,6 +263,7 @@ export class LineasAbonosComponent implements OnInit, OnChanges {
       this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
       }
   }
+  
 
   // Restablecer
 

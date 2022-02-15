@@ -257,6 +257,7 @@ export class DatosGeneralesActasComponent implements OnInit {
   restablecer() {
 
     this.datosFiltro =JSON.parse(JSON.stringify(this.restablecerDatosFiltro));
+    this.datosFiltro.fechareunion = new Date(this.restablecerDatosFiltro.fechareunion)
   }
 
   abrirActaDialogo() {

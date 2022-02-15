@@ -94,6 +94,16 @@
        <!--
       <button pButton (click)="confirmDescargar()" [disabled]="selectedDatos.length == 0" type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
       -->
+      <button pButton (click)="modal('Compensar')"  type="button" 
+      icon="fa fa-eraser" iconPos="left" label="{{ 'facturacionSJCS.facturacionesYPagos.compensar' | translate }}"></button>
+
+      <button pButton (click)="modal('Renegociar')"  type="button" 
+      icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.renegociar' | translate }}"></button>
+      
+      <button pButton (click)="modal('Nuevo')"  type="button"
+       icon="fa fa-eraser" iconPos="left" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
+      
+
       <button pButton (click)="generarExcel()"  type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.generarExcel' | translate }}"></button>
       
       <!-- Botón debería ser "generar fichero transferencias" -->
@@ -110,3 +120,87 @@
   <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
 </div>
+
+<!--DIALOG CAMBIA ESTADO-->
+<p-dialog  [width]="800" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModal">
+  <p-header  class="header-title">
+      <i class="fa fa-square"></i>
+         <p>{{ "menu.facturacion" | translate }}
+        <i class="fa fa-angle-right"></i>
+        {{ "menu.facturacion.facturas" | translate }}
+        <i class="fa fa-angle-right"></i>
+        {{ "facturacion.facturas.tarjeta.accion" | translate }}
+      </p>
+  </p-header>
+  <app-tabla-abonos-seleccionadas [bodyInicial]="selectedDatos"> </app-tabla-abonos-seleccionadas>
+
+  <!-- NUEVO COBRO TARJETA-->
+  <div class="ficha-container">
+    <div class="card" id="top">
+      <div class="card-header header-ficha">
+        <!-- Cabecera en ficha cerrada -->
+        <div *ngIf="!openFichaModal" class="form-row">
+          <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+            <div class="img-colegiado">
+              <i class="far fa-address-book icon-ficha pointer"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+              <label class="mr-auto title-ficha pointer">{{ nombreTarjeta }}</label>
+            </div>
+            <div class="d-flex justify-content-between default">
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}: 
+                  <span>{{ itemAction.fechaMin | date: "dd/MM/yyyy" }}</span></label>        
+              <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"
+                *ngIf="!openFichaModal"></i>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Cabecera en ficha abierta -->
+        <div *ngIf="openFichaModal" class=" header-ficha-open d-flex justify-content-start align-items-center"
+          (click)="abreCierraFicha()">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha"></i>
+          </div>
+          <label class="title-ficha pointer">{{ nombreTarjeta }}</label>
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <!-- Cuerpo en ficha abierta -->
+      <div  *ngIf="openFichaModal" class="card-body card-body-ficha">
+        <div class="row">
+          <div class="col-lg-12 col-md-12">
+            <div class="form-row">
+              <div class="form-group col-lg-3 col-md-3">
+                <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}(*)</label>
+                <app-fecha [(value)]="itemAction.fechaMin"
+                  (valueChangeSelected)="fillFecha($event, 'fechaMin')" [inputStyleClass]="styleObligatorio(itemAction.fechaMin)"
+                  (valueChangeInput)="fillFecha($event, 'fechaMin')"></app-fecha>
+              </div>
+              <div  class="form-group col-lg-3 col-md-3">
+                <label>{{ 'general.boton.comments' | translate }}</label>
+                <input type="text" class="form-control"  [(ngModel)]='itemAction.comentario' pInputText>
+              </div>
+              <div  *ngIf="esRenegociar" class="form-group col-lg-3 col-md-3">
+                <label>{{ 'facturacion.facturas.opcion.renegociar' | translate }}</label>
+                <p-dropdown class="select-form" [(ngModel)]='comboSel' [ngClass]="styleObligatorio(comboSel)"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [options]='comboAction' [filter]="true"
+                [showClear]="true"></p-dropdown>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+  
+
+    </div>
+  </div>
+
+  <p-footer class="main-button col-lg-12 col-md-12 mt-2">
+    <button (click)="accion()" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
+    <button (click)="cerrarDialog(true)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+  </p-footer>
+</p-dialog>

@@ -54,7 +54,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
       { field: "iban", header: "censo.mutualidad.literal.iban", width: "10%" },
       { field: "descripcion", header: "general.boton.description", width: "20%" },
       { field: "comisionImporte", header: "facturacion.cuentasBancarias.comisionImporte", width: "10%" },
-      { field: "sjcs", header: "menu.justiciaGratuita", width: "10%" },
+      { field: "sjcsFiltro", header: "menu.justiciaGratuita", width: "10%" },
       { field: "numUsos", header: "facturacion.cuentasBancarias.numUsos", width: "10%" },
       { field: "numFicheros", header: "facturacion.cuentasBancarias.numFicheros", width: "15%" },
     ];
@@ -182,7 +182,12 @@ export class GestionCuentasBancariasComponent implements OnInit {
       .subscribe(
         n => {
           this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          let error = JSON.parse(n.body).error;
+          if (error != undefined && error.message != undefined && error.message.indexOf("cuentas eliminadas") !== -1) {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), error.message);
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
           this.cargarDatos();
         },
         err => {
@@ -192,6 +197,8 @@ export class GestionCuentasBancariasComponent implements OnInit {
             let translatedError = this.translateService.instant(error.message);
             if (translatedError && translatedError.trim().length != 0) {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), translatedError);
+            } else if (error.message.indexOf("cuentas eliminadas") !== -1) {
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.message);
             } else {
               this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             }

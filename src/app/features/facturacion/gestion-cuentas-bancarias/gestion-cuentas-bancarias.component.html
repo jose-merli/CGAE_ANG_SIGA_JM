@@ -45,8 +45,8 @@
                   <span [ngClass]="{ historico: historico }" (click)="openTab(dato)" class="enlace">{{ dato[col.field]
                     }}</span>
                 </div>
-                <div *ngSwitchCase="'sjcs'">
-                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] ? "Sí" : "No" }}</span>
+                <div *ngSwitchCase="'sjcsFiltro'">
+                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] == 'si' ? "Sí" : "No" }}</span>
                 </div>
                 <div *ngSwitchCase="'comisionImporte'">
                   <span class="pull-right" [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
