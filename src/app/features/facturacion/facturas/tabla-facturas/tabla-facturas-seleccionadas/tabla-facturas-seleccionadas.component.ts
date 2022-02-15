@@ -71,9 +71,11 @@ export class TablaFacturasSeleccionadasComponent implements OnInit,OnChanges {
       });
       */
      this.bodyInicial.forEach(element => {
-       if(element.tipo == 'FACTURA')
           this.itemsGeneral.push(element)
      });
+
+     
+
      from(this.itemsGeneral).pipe(
       groupBy(ep => ep.idEstado),
       mergeMap(group => group.reduce((acc, cur) => {
