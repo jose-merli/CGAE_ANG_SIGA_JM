@@ -65,7 +65,13 @@ export class GuardiaItem {
     idListaGuardia : string;
     tipoGuardia;
     idConjuntoGuardia;
-
+    numMinimoSimple;
+	simpleOImporteIndividual;
+	naPartir;
+	maximo;
+	porDia;
+    nDias;
+    
     constructor() { }
 
 }
