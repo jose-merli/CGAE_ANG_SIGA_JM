@@ -602,7 +602,7 @@ muestraCamposObligatorios() {
   anularFacturas() {
     this.itemsParaModificar= [];
     this.selectedDatos.forEach(element =>{
-      if(element.tipo =="FACTURA" && !["7", "8"].includes(element.idEstado)){
+      if(element.tipo =="FACTURA" && !["7", "8"].includes(element.estadoUlt)){
         let item= new FacturaEstadosPagosItem();
 
         // IdFactura

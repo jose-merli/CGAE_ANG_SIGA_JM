@@ -266,6 +266,10 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 
   checkFacturar() {
 
+    if(this.selectedRows.length == 0 || this.selectedRows.length > 1) {
+      
+    }
+
     let msg = this.commonsService.checkPermisos(this.permisoFacturarCompra, undefined);
 
     if (msg != undefined) {

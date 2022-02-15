@@ -41,12 +41,12 @@
         <div class="form-row">
             <div class="form-group-interlineado col-lg-3 col-md-3">
                 <label>{{ "facturacion.facturas.fechaEmisionDesde" | translate }}</label>
-                <app-fecha [(value)]="filtros.fechaEmisionDesde" (valueChangeSelected)="fillFecha($event, 'emisionHasta')" (valueChangeInput)="fillFecha($event, 'emisionHasta')">
+                <app-fecha [(value)]="filtros.fechaEmisionDesde" (valueChangeSelected)="fillFecha($event, 'emisionDesde')" (valueChangeInput)="fillFecha($event, 'emisionDesde')">
                 </app-fecha>
               </div>
             <div class="form-group-interlineado col-lg-3 col-md-3">
                 <label>{{ "facturacion.facturas.fechaEmisionHasta" | translate }}</label>
-                <app-fecha [(value)]="filtros.fechaEmisionHasta" (valueChangeSelected)="fillFecha($event, 'emisionDesde')" (valueChangeInput)="fillFecha($event, 'emisionDesde')">
+                <app-fecha [(value)]="filtros.fechaEmisionHasta" (valueChangeSelected)="fillFecha($event, 'emisionHasta')" (valueChangeInput)="fillFecha($event, 'emisionHasta')">
                 </app-fecha>
             </div>
             <div class="form-group-interlineado col-lg-3 col-md-3">
