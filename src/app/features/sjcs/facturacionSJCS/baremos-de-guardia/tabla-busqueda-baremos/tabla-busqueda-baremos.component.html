@@ -30,7 +30,7 @@
         <td *ngFor="let col of columns | slice:0:10" class="text-center">
           <div class="d-flex">
             <a [pRowToggler]="rowData">
-              <div *ngIf="col.field =='nomTurno'">
+              <div *ngIf="col.field =='guardias'">
                 <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
                 <a *ngIf="!setItalic(rowData)" [ngClass]="{'enlace': !desactivarHistorico}"
                   (click)="openFichaBaremos(rowData)">
@@ -48,7 +48,7 @@
                 | currency: 'EUR' }}</span>
           </div>
 
-          <div *ngIf="col.field !='nomTurno' && col.field !='simpleOImporteIndividual'">
+          <div *ngIf="col.field !='guardias' && col.field !='simpleOImporteIndividual'">
             <span *ngIf="!setItalic(rowData)">{{rowData[col.field]}}</span>
             <span *ngIf="setItalic(rowData)"
               [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
@@ -107,7 +107,6 @@
       icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
   </div>
 </div>
-
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
