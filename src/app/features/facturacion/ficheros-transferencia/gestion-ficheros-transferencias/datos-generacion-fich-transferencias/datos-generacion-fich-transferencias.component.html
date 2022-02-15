@@ -22,6 +22,12 @@
             <label>{{ 'informesycomunicaciones.enviosMasivos.fechaCreacion' | translate }}: 
               <span>{{ body.fechaCreacion | date: 'dd/MM/yyyy' }}</span>
             </label>
+            <label>{{ "facturacionPyS.ficherosAdeudos.gestionFicherosTransferencias.propositoSepa" | translate }}: 
+              <span>{{ body.propSEPA }}</span>
+            </label>
+            <label>{{ "facturacionPyS.ficherosAdeudos.gestionFicherosTransferencias.propositoOtros" | translate }}: 
+              <span>{{ body.propOtros }}</span>
+            </label>
           </div>
         </div>
       </div>

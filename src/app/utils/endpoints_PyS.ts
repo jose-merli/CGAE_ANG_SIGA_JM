@@ -16,7 +16,7 @@ export let endpoints_PyS: any = {
     PyS_getDescuentosPeticion: "/pys/getDescuentosPeticion",
     PyS_saveAnticipoPeticion: "/pys/saveAnticipoPeticion",
     PyS_anularPeticion: "/pys/anularPeticion",
-    PyS_facturarCompra: "/pys/facturarCompra",
+    PyS_facturarCompra: "/facturacionRapidaPyS/facturacionRapidaCompra",
     PyS_getListaSuscripciones: "/pys/getListaSuscripciones",
     PyS_getListaServiciosSuscripcion: "/pys/getListaServiciosSuscripcion",
     PyS_solicitarSuscripcion: "pys/solicitarSuscripcion",
@@ -41,6 +41,7 @@ export let endpoints_PyS: any = {
     PyS_liquidarMonederos: "pys/liquidarMonederos",
     PyS_actualizacionColaSuscripcionesPersona: "pys/actualizacionColaSuscripcionesPersona",
     PyS_comboPreciosServPers: "combo/comboPreciosServPers",
+    PyS_getSeleccionSerieFacturacion: "/facturacionRapidaPyS/getSeleccionSerieFacturacion",
      //INICIO PRODUCTOS Y SERVICIOS
   
     //PANTALLA TIPOS PRODUCTOS
