@@ -94,7 +94,7 @@ export class TablaBusquedaBaremosComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "nomTurno", header: "facturacionSJCS.baremosDeGuardia.turnoguardia", width: '20%' },
+      { field: "guardias", header: "facturacionSJCS.baremosDeGuardia.turnoguardia", width: '20%' },
       { field: "ndias", header: "facturacionSJCS.baremosDeGuardia.nDias", width: '5%' },
       { field: "baremo", header: "facturacionSJCS.baremosDeGuardia.tipoBaremo", width: '15%' },
       { field: "dias", header: "facturacionSJCS.baremosDeGuardia.diasAplicar", width: '5%' },
@@ -108,8 +108,8 @@ export class TablaBusquedaBaremosComponent implements OnInit {
 
     this.subCols = [
       { field: "nombre" },
-      { field: "diasAplicarGuardia" },
-      { field: "tipoBaremoGuardia" },
+      { field: "nDias" },
+      { field: "baremo" },
       { field: "diasGuardia" },
       { field: "minimoGuardia" },
       { field: "dispImporteGuardia" },
