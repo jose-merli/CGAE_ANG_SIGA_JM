@@ -111,12 +111,12 @@ export class TablaBusquedaBaremosComponent implements OnInit {
       { field: "nDias" },
       { field: "baremo" },
       { field: "diasGuardia" },
-      { field: "minimoGuardia" },
-      { field: "dispImporteGuardia" },
-      { field: "naPartir1Guardia" },
-      { field: "maximoGuardia" },
-      { field: "naPartir2Guardia" },
-      { field: "porDiaGuardia" }
+      { field: "numMinimoSimple" },
+      { field: "simpleOImporteIndividual" },
+      { field: "naPartir" },
+      { field: "maximo" },
+      { field: "naPartir" },
+      { field: "porDia" }
     ];
 
     this.rowsPerPage = [
