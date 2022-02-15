@@ -126,7 +126,7 @@
           </ng-container>
 
           <ng-container *ngIf="grupo['activo'] && grupo['key'] == numeroAbono">
-            <tr *ngFor="let dato of estadosAbonos">
+            <tr *ngFor="let dato of grupo['values']">
               <td *ngFor="let col of columns">
                 <div [ngSwitch]="col.field">
                   <div *ngSwitchCase="'fechaModificaion'">
@@ -186,24 +186,24 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'ABONO' || disableAccionConImporte()" 
+        <button pButton [disabled]="disabledNuevoAbono()" 
           type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoAbono()" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA'" 
+        <button pButton [disabled]="disabledAnular()" 
           type="button" icon="fa fa-undo" iconPos="left"
           (click)="anular()" label="{{ 'general.boton.anular' | translate }}"></button>
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA'" 
+        <button pButton [disabled]="disabledDevolverConComision()" 
           type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolverConComision()" label="{{ 'facturacion.facturas.estadosPagos.devolverConComision' | translate }}"></button>
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA'" 
+        <button pButton [disabled]="disabledDevolver()" 
           type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolver()" label="{{ 'facturacion.facturas.estadosPagos.devolver' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-trash" iconPos="left"
+        <button pButton type="button" icon="fa fa-trash" iconPos="left" [disabled]="disabledEliminar()"
           (click)="eliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
-        <button pButton [disabled]="!this.datos || this.datos.length == 0 || bodyInicial.tipo != 'FACTURA' || disableAccionConImporte()" 
+        <button pButton [disabled]="disabledNuevoCobro()" 
           type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoCobro()" label="Nuevo Cobro"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="disabledRenegociar()"
           (click)="renegociar()" label="{{ 'general.boton.renegociar' | translate }}"></button>
       </div>
     </div>

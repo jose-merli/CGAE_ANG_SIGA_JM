@@ -54,7 +54,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   showModalNuevoEstado: boolean = false;
 
   numeroAbono: string;
-  estadosAbonos: FacturaEstadosPagosItem[];
 
   ESTADO_ABONO_PAGADO: string = "1";
   ESTADO_ABONO_BANCO: string = "5";
@@ -154,7 +153,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         if (this.datos != undefined && this.datos.length > 0) {
           let idAbono = this.datos[this.datos.length - 1].idAbono;
           
-
           if (idAbono != undefined && idAbono.trim().length != 0) {
             this.numeroAbono = this.datos[this.datos.length - 1].numeroAbono;
             this.getEstadosAbonos(idAbono);
@@ -169,17 +167,87 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     );
   }
 
+  getUltimoEstado() {
+    let grupo = this.grupos[this.grupos.length - 1];
+    return grupo.values[grupo.values.length - 1]
+  }
+
+  esUltimoEstadoFactura() {
+    return this.grupos[this.grupos.length - 1].key != this.numeroAbono;
+  }
+
+  // Visibilidad de las acciones
+  disabledRenegociar(): boolean {
+    if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
+        || this.grupos[this.grupos.length - 1].values.length == 0)
+      return true;
+      
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
+    return this.esUltimoEstadoFactura() && !["2", "4", "5"].includes(ultimaAccion.idEstado) 
+        || !this.esUltimoEstadoFactura() && this.bodyInicial.idEstado == "1";
+  }
+
+  disabledNuevoCobro(): boolean {
+    if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
+      || this.grupos[this.grupos.length - 1].values.length == 0)
+      return true;
+      
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
+    return !this.esUltimoEstadoFactura() || !["2"].includes(ultimaAccion.idEstado) 
+    || ultimaAccion.impTotalPorPagar != undefined && parseFloat(ultimaAccion.impTotalPorPagar) == 0;
+  }
+
+  disabledNuevoAbono(): boolean {
+    if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
+      || this.grupos[this.grupos.length - 1].values.length == 0)
+      return true;
+
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
+    return this.esUltimoEstadoFactura() || !["6"].includes(ultimaAccion.idEstado) 
+    || ultimaAccion.impTotalPorPagar != undefined && parseFloat(ultimaAccion.impTotalPorPagar) == 0;
+  }
+
+  disabledDevolver(): boolean {
+    if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
+      || this.grupos[this.grupos.length - 1].values.length == 0)
+      return true;
+
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
+    return !this.esUltimoEstadoFactura() || !["5"].includes(ultimaAccion.idAccion);
+  }
+
+  disabledDevolverConComision(): boolean {
+    return this.disabledDevolver();
+  }
+
+  disabledAnular(): boolean {
+    if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
+      || this.grupos[this.grupos.length - 1].values.length == 0)
+      return true;
+
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
+    return !this.esUltimoEstadoFactura() || ["7", "8"].includes(ultimaAccion.idEstado);
+  }
+
+  disabledEliminar(): boolean {
+    if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
+      || this.grupos[this.grupos.length - 1].values.length == 0)
+      return true;
+
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
+    return !["4"].includes(ultimaAccion.idAccion);
+  }
+
   // Obtención de los datos del abono
 
   getEstadosAbonos(idAbono: string) {
     this.progressSpinner = true;
     this.sigaServices.getParam("facturacionPyS_getEstadosAbonos", "?idAbono=" + idAbono).subscribe(
       n => {
-        this.estadosAbonos = n.estadosAbonosItems;
+        this.grupos.push({ key: this.numeroAbono, values: n.estadosAbonosItems, activo: this.bodyInicial.numeroFactura == this.numeroAbono });
         this.progressSpinner = false;
 
-        this.grupos.push({ key: this.numeroAbono, values: [], activo: this.bodyInicial.numeroFactura == this.numeroAbono });
-        console.log(this.estadosAbonos)
+        console.log(this.grupos)
       },
       err => {
         console.log(err);
@@ -191,10 +259,9 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Acciones
 
   renegociar(): void {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
-    if (this.bodyInicial.tipo == "FACTURA" && !["2", "4", "5"].includes(ultimaAccion.idEstado) 
-        || this.bodyInicial.tipo != "FACTURA" && this.bodyInicial.idEstado == "1") {
+    if (this.disabledRenegociar()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.renegociacion.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -248,12 +315,11 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   nuevoCobro() {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
     console.log(this.datos)
 
-    if (this.bodyInicial.tipo != "FACTURA" || !["2"].includes(ultimaAccion.idEstado) 
-        || ultimaAccion.impTotalPorPagar != undefined && parseFloat(ultimaAccion.impTotalPorPagar) == 0) {
+    if (this.disabledNuevoCobro()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.cobroPorCaja.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -280,10 +346,9 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   nuevoAbono() {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
-    if (this.bodyInicial.tipo != "ABONO" || !["6"].includes(this.bodyInicial.idEstado) 
-        || this.bodyInicial.importeAdeudadoPendienteAb != undefined && parseFloat(this.bodyInicial.importeAdeudadoPendienteAb) == 0) {
+    if (this.disabledNuevoAbono()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.abonoPorCaja.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -310,7 +375,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   onChangeImporte(event: number): void {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
     if (this.nuevoEstado.idAccion == "4" && this.bodyInicial.tipo == "FACTURA") {
       this.nuevoEstado.impTotalPorPagar = (+ultimaAccion.impTotalPorPagar - +this.nuevoEstado.impTotalPorPagar).toString();
@@ -331,7 +396,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   disableAccionConImporte(): boolean {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
     if (this.bodyInicial.tipo == "FACTURA") {
         return parseFloat(ultimaAccion.impTotalPorPagar) == 0;
@@ -340,11 +405,10 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     }
   }
 
-
   devolver() {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
-    if (this.bodyInicial.tipo != "FACTURA" || !["5"].includes(ultimaAccion.idAccion)) {
+    if (this.disabledDevolver()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.devolucion.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -372,9 +436,9 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   devolverConComision() {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
-    if (this.bodyInicial.tipo != "FACTURA" || !["5"].includes(ultimaAccion.idAccion)) {
+    if (this.disabledDevolverConComision()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.devolucion.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -404,9 +468,9 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   anular() {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
-    if (this.bodyInicial.tipo != "FACTURA" || ["7", "8"].includes(ultimaAccion.idEstado)) {
+    if (this.disabledAnular()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.anulacion.error"));
     } else {
       this.nuevoEstado = new FacturaEstadosPagosItem();
@@ -432,10 +496,10 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   // Eliminar
   eliminar() {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
     ultimaAccion.idFactura = this.bodyInicial.idFactura;
 
-    if (!["4"].includes(ultimaAccion.idAccion)) {
+    if (this.disabledEliminar()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.eliminar.error"));
     } else {
       this.progressSpinner = true;
@@ -507,7 +571,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         .then(
           n => {
             this.guardadoSend.emit(this.bodyInicial);
-           
            },
           err => {
             return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
@@ -530,6 +593,34 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   tieneFichero(dato: FacturaEstadosPagosItem): boolean {
     return dato.idEstado == this.ESTADO_ABONO_PAGADO 
       && dato.idDisqueteAbono != undefined && dato.idDisqueteAbono.trim().length > 0;
+  }
+
+  // Enlace al fichero de transferencias
+  navigateToFicheroTransferencias(row: FacturaEstadosPagosItem) {
+    this.progressSpinner = true;
+    let filtros = { idDisqueteAbono: row.idDisqueteAbono };
+
+    this.sigaServices.post("facturacionPyS_getFicherosTransferencias", filtros).toPromise().then(
+      n => {
+        let results: FicherosAdeudosItem[] = JSON.parse(n.body).ficherosAbonosItems;
+        if (results != undefined && results.length != 0) {
+          let ficherosAdeudosItem: FicherosAdeudosItem = results[0];
+
+          sessionStorage.setItem("abonosSJCSItem", JSON.stringify(this.bodyInicial));
+          sessionStorage.setItem("volverAbonoSJCS", "true");
+
+          sessionStorage.setItem("FicherosAbonosItem", JSON.stringify(ficherosAdeudosItem));
+        }
+      },
+      err => {
+        console.log(err);
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    ).then(() => this.progressSpinner = false).then(() => {
+      if (sessionStorage.getItem("FicherosAbonosItem")) {
+        this.router.navigate(['/gestionFicherosTransferencias']);
+      } 
+    });
   }
   
 
