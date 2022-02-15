@@ -53,6 +53,13 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   resaltadoBanco: boolean = false;
   showModalNuevoEstado: boolean = false;
 
+  numeroAbono: string;
+  estadosAbonos: FacturaEstadosPagosItem[];
+
+  ESTADO_ABONO_PAGADO: string = "1";
+  ESTADO_ABONO_BANCO: string = "5";
+  ESTADO_ABONO_CAJA: string = "6";
+
   constructor(
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
@@ -133,13 +140,46 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
           mergeMap(group => group.reduce((acc, cur) => {
               acc.values.push(cur);
               return acc;
-            }, { key: group.key, values: [], activo: true })
+            }, { key: group.key, values: [], activo: this.bodyInicial.numeroFactura == group.key })
           ),
           toArray()
         ).subscribe(grupos => this.grupos = grupos);
 
         this.datosInit = JSON.parse(JSON.stringify(this.datos));
         this.progressSpinner = false;
+
+        console.log(this.datos)
+
+        //Encontramos los datos del abono
+        if (this.datos != undefined && this.datos.length > 0) {
+          let idAbono = this.datos[this.datos.length - 1].idAbono;
+          
+
+          if (idAbono != undefined && idAbono.trim().length != 0) {
+            this.numeroAbono = this.datos[this.datos.length - 1].numeroAbono;
+            this.getEstadosAbonos(idAbono);
+          }
+            
+        }
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  // Obtención de los datos del abono
+
+  getEstadosAbonos(idAbono: string) {
+    this.progressSpinner = true;
+    this.sigaServices.getParam("facturacionPyS_getEstadosAbonos", "?idAbono=" + idAbono).subscribe(
+      n => {
+        this.estadosAbonos = n.estadosAbonosItems;
+        this.progressSpinner = false;
+
+        this.grupos.push({ key: this.numeroAbono, values: [], activo: this.bodyInicial.numeroFactura == this.numeroAbono });
+        console.log(this.estadosAbonos)
       },
       err => {
         console.log(err);
@@ -486,6 +526,11 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     }
   }
   
+  // Función para comprobar si la línea tiene fichero de transferencias
+  tieneFichero(dato: FacturaEstadosPagosItem): boolean {
+    return dato.idEstado == this.ESTADO_ABONO_PAGADO 
+      && dato.idDisqueteAbono != undefined && dato.idDisqueteAbono.trim().length > 0;
+  }
   
 
   cerrarDialog(operacionCancelada: boolean) {
