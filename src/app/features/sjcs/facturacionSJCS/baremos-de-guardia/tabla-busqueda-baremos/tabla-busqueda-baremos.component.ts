@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Table } from 'primeng/table';
 import { BaremosGuardiaItem } from '../../../../../models/sjcs/BaremosGuardiaItem';
 import { PersistenceService } from '../../../../../_services/persistence.service';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-tabla-busqueda-baremos',
   templateUrl: './tabla-busqueda-baremos.component.html',
@@ -76,7 +77,8 @@ export class TablaBusquedaBaremosComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
-    private router: Router) { }
+    private router: Router,
+    private location: Location) { }
 
   ngOnInit() {
     this.getCols();
@@ -209,4 +211,5 @@ export class TablaBusquedaBaremosComponent implements OnInit {
       this.router.navigate(['/fichaBaremosDeGuardia']);
     }
   }
+
 }
