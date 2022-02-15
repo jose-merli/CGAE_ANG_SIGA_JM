@@ -92,8 +92,9 @@
         <button pButton  (click)="checkAnularCompra()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.anular' | translate}}" [disabled]="selectedRows.length == 0"></button>
       <!-- Facturar -->
-         <button pButton  (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.facturar' | translate}}" [disabled]="selectedRows.length == 0 || esColegiado || selectedRows.length > 1"></button>
+        <button pButton (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.facturar' | translate}}"
+          [disabled]="selectedRows == undefined || selectedRows == null || selectedRows.length <= 0 || selectedRows.length > 1 || esColegiado || !permisoFacturarCompra"></button>
       <!-- Descargar facturas -->
          <button pButton  (click)="nofuncional()" type="button" icon="fa fa-search" iconPos="left"
          label="{{ 'facturacion.productos.descargarFacturas' | translate}}" [disabled]="selectedRows.length == 0"></button>
@@ -113,5 +114,31 @@
     <button type="button" pButton icon="fa-close" label="{{ 'general.boton.no' | translate }}" (click)="anulPeticion.reject()"></button>
   </p-footer>
 </p-confirmDialog>
+
+<!-- Modal para seleccionar la serie de facturación -->
+<p-dialog width="600" responsive="true" modal="modal" [draggable]="false" resizable="false"
+  [(visible)]="showModalSerieFacturacion">
+  <p-header class="title">
+    <label>{{ 'factPyS.mensaje.modalFac.header' | translate}}</label>
+  </p-header>
+  <div class="form-row">
+    <div class="form-group col-lg-12 col-md-12">
+      <label>{{ 'factPyS.mensaje.modalFac.label' | translate}} (*)</label>
+      <p-dropdown [(ngModel)]='serieFacturacionSeleccionada' class="select-form"
+        placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboSeriesFacturacion" [filter]="true"
+        filterBy="label,labelSinTilde" [showClear]="true"
+        [ngClass]="{'camposObligatorios': marcarObligatorio(serieFacturacionSeleccionada)}"></p-dropdown>
+    </div>
+    <div class="form-group col-lg-12 col-md-12">
+      <label>{{ 'factPyS.mensaje.modalFac.mensaje' | translate}}</label>
+    </div>
+    <div class="main-button text-right col-lg-12 col-md-12">
+      <button (click)="checkModalSerieFacturacion()" pButton type="button" icon="fa fa-edit" iconPos="left"
+        label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cerrarModalSerieFacturacion()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{'general.boton.close' | translate}}"></button>
+    </div>
+  </div>
+</p-dialog>
 
 
