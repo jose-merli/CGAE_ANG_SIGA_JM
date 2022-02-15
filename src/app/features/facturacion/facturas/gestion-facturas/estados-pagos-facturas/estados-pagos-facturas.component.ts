@@ -167,6 +167,24 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     );
   }
 
+  // Obtención de los datos del abono
+
+  getEstadosAbonos(idAbono: string) {
+    this.progressSpinner = true;
+    this.sigaServices.getParam("facturacionPyS_getEstadosAbonos", "?idAbono=" + idAbono).subscribe(
+      n => {
+        this.grupos.push({ key: this.numeroAbono, values: n.estadosAbonosItems, activo: this.bodyInicial.numeroFactura == this.numeroAbono });
+        this.progressSpinner = false;
+
+        console.log(this.grupos)
+      },
+      err => {
+        console.log(err);
+        this.progressSpinner = false;
+      }
+    );
+  }
+
   getUltimoEstado() {
     let grupo = this.grupos[this.grupos.length - 1];
     return grupo.values[grupo.values.length - 1]
@@ -184,7 +202,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
     return this.esUltimoEstadoFactura() && !["2", "4", "5"].includes(ultimaAccion.idEstado) 
-        || !this.esUltimoEstadoFactura() && this.bodyInicial.idEstado == "1";
+        || !this.esUltimoEstadoFactura() && ultimaAccion.idEstado == "1";
   }
 
   disabledNuevoCobro(): boolean {
@@ -236,24 +254,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
     return !["4"].includes(ultimaAccion.idAccion);
-  }
-
-  // Obtención de los datos del abono
-
-  getEstadosAbonos(idAbono: string) {
-    this.progressSpinner = true;
-    this.sigaServices.getParam("facturacionPyS_getEstadosAbonos", "?idAbono=" + idAbono).subscribe(
-      n => {
-        this.grupos.push({ key: this.numeroAbono, values: n.estadosAbonosItems, activo: this.bodyInicial.numeroFactura == this.numeroAbono });
-        this.progressSpinner = false;
-
-        console.log(this.grupos)
-      },
-      err => {
-        console.log(err);
-        this.progressSpinner = false;
-      }
-    );
   }
 
   // Acciones
