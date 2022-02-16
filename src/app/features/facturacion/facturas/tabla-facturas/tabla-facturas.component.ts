@@ -327,11 +327,11 @@ onChangeSelectAll() {
     }
   }
 
-  comboNegociar(){
+  comboRenegociar(){
     this.comboAction =  [
-      { value: "1", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
-      { value: "2", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
-      { value: "3",  label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
+      { value: "cuentaFactura_activa", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
+      { value: "cuentaFactura_activa_masClientes", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
+      { value: "caja",  label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
     ];
   }
 
@@ -343,7 +343,7 @@ onChangeSelectAll() {
     this.itemAction =  new FacturaEstadosPagosItem();
     this.esRenegociar = true;
     this.accionAux = "Renegociar"
-    this.comboNegociar();
+    this.comboRenegociar();
   }
 
   nuevoCobro(){
@@ -425,17 +425,13 @@ onChangeSelectAll() {
           item.comentario = this.itemAction.comentario;
           item.notaMaxLength = 1024;
 
+          item.modo = this.comboSel;
+
           // Acción
           item.idAccion = "7";
           item.accion = this.translateService.instant("facturacion.facturas.estadosPagos.renegociacion");
 
-          if(element.tipo == "FACTURA"){
-            if(this.comboSel == "1" || this.comboSel == "2") element.idEstado = "5"
-            if(this.comboSel == "3") element.idEstado = "2"
-          }else{
-            if(this.comboSel == "1" || this.comboSel == "2") element.idEstado = "5"
-            if(this.comboSel == "3") element.idEstado = "6"
-          }
+          item.modo = this.comboSel;
 
           // El importe pendiente se recalcula
           item.impTotalPagado = "0";
@@ -676,10 +672,23 @@ isValid(){
     this.resaltadoFecha = true
     isValid = false;
   }
+  
+  if(!isValid) this.muestraCamposObligatorios()
+
   return isValid;
 }
+requisitos(){
+  let cumpleTodo:boolean = true;
+  if(this.itemsParaModificar.length == 0){
+    //Las facturas seleccionadas no cumplen con los requisitos para la accion.
+   this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Las facturas seleccionadas no cumplen con los requisitos para la accion.");
+   return false;
+  }
+  return true;
+}
   guardarDefi() {
-    if(this.isValid()){
+    if(this.isValid() && this.requisitos()){
+      
       this.progressSpinner = true;
       this.sigaServices.post("facturacionPyS_insertarEstadosPagosVarios", this.itemsParaModificar).toPromise()
         .then(
@@ -700,8 +709,6 @@ isValid(){
           this.cerrarDialog(false);
         });
     
-    }else{
-      this.muestraCamposObligatorios()
     }
      
   }

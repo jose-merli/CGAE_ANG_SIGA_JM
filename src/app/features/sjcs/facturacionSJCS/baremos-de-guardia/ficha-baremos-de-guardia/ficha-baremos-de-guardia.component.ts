@@ -283,13 +283,26 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         this.progressSpinner = false
       }
     } else if (this.modoEdicion) {
-      turno = this.datos.idTurno
-      guardia = this.datos.idGuardia
+      let lista =[];
+      let listBaremos=[];
+      lista.push(`${this.datos.idTurno}/${this.datos.idGuardia}`);
+ 
+      if ((this.tarjetaDatosGenerales.filtros.idTurno != null || this.tarjetaDatosGenerales.filtros.idTurno != undefined)
+        && (this.tarjetaDatosGenerales.filtros.idGuardia != null || this.tarjetaDatosGenerales.filtros.idGuardia != undefined)) {
+         
+          lista.push(`${this.tarjetaDatosGenerales.filtros.idTurno}/${this.tarjetaDatosGenerales.filtros.idGuardia}`);
+      }
       if ((this.tarjetaConfigFac.filtrosDis.aPartirDis != null || this.tarjetaConfigFac.filtrosDis.aPartirDis != undefined) &&
         (this.tarjetaConfigFac.filtrosDis.aPartirMax != null || this.tarjetaConfigFac.filtrosDis.aPartirMax != undefined)) {
         if (this.tarjetaConfigFac.filtrosDis.aPartirDis < this.tarjetaConfigFac.filtrosDis.aPartirMax) {
-          this.configuracionHito(confBaremo, turno, guardia);
-          this.sigaServices.post("baremosGuardia_saveBaremo", confBaremo).subscribe(
+          for(let ele of lista){
+            confBaremo = [];
+            let [t,g] = ele.split('/')
+            this.configuracionHito(confBaremo, t, g);
+            listBaremos.push(confBaremo);
+            
+          }
+          this.sigaServices.post("baremosGuardia_saveBaremo", listBaremos).subscribe(
             data => {
               let error = JSON.parse(data.body).error;
               this.progressSpinner = false;
@@ -311,13 +324,19 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
               }
             }
           )
-        } else {
+        }  else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El numero de A partir de disponibilidad debe ser menor que a partir de maximo");
           this.progressSpinner = false
         }
-      } else {
-        this.configuracionHito(confBaremo, turno, guardia);
-        this.sigaServices.post("baremosGuardia_saveBaremo", confBaremo).subscribe(
+     }  else {
+      for(let ele of lista){
+        confBaremo = [];
+        let [t,g] = ele.split('/')
+            this.configuracionHito(confBaremo, t, g);
+        listBaremos.push(confBaremo);
+        
+      }
+        this.sigaServices.post("baremosGuardia_saveBaremo", listBaremos).subscribe(
           data => {
             let error = JSON.parse(data.body).error;
             this.progressSpinner = false;
@@ -341,7 +360,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         )
       }
 
-    }
+   }
 
 
 

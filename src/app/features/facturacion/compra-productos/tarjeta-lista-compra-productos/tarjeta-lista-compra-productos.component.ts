@@ -4,6 +4,7 @@ import { ConfirmationService, Message, SortEvent } from 'primeng/components/comm
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
+import { FacturacionRapidaRequestDTO } from '../../../../models/FacturacionRapidaRequestDTO';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { ListaComprasProductosItem } from '../../../../models/ListaComprasProductosItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
@@ -12,6 +13,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { TarjetaHisFichaActComponent } from '../../../sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
 import { FichaCompraSuscripcionComponent } from '../../ficha-compra-suscripcion/ficha-compra-suscripcion.component';
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-tarjeta-lista-compra-productos',
@@ -77,6 +79,11 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
   esColegiado: boolean = true;
   permisoSolicitarCompra: boolean = false;
   permisoFacturarCompra: boolean = false;
+
+  showModalSerieFacturacion = false;
+  comboSeriesFacturacion: any[] = [];
+  serieFacturacionSeleccionada: string;
+  nSolicitudFacturar: string;
 
   constructor(
     private sigaServices: SigaServices, private translateService: TranslateService,
@@ -264,83 +271,50 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     }
   }
 
-  checkFacturar() {
-
-    if(this.selectedRows.length == 0 || this.selectedRows.length > 1) {
-      
-    }
+  async checkFacturar() {
 
     let msg = this.commonsService.checkPermisos(this.permisoFacturarCompra, undefined);
 
     if (msg != undefined) {
       this.msgs = msg;
-    }  else{
-      let compShow: ListaComprasProductosItem[] = [];
+    } else {
 
-      //Se comprueban los estados de las solicitudes. Se aceptan unicamente con estado "Aceptada", el resto no se tienen en cuenta.
-      if(this.selectedRows.filter(el => !(el.fechaEfectiva != null && el.fechaSolicitadaAnulacion == null && el.fechaAnulada == null)) != undefined){
-        compShow.concat(this.selectedRows.filter(el => !(el.fechaEfectiva != null && el.fechaSolicitadaAnulacion == null && el.fechaAnulada == null)));
-        this.selectedRows = this.selectedRows.filter( ( el ) => !compShow.includes( el ) );
-      }
-      this.facturarCompra(compShow);
-    }
-  }
+      if (this.selectedRows.length > 1) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.nElementos.seleccionados"));
+      } else {
 
-  facturarCompra(compShow: ListaComprasProductosItem[]) {
-    if(this.selectedRows.length > 0){
-      this.progressSpinner = true;
+        //Se comprueban los estados de la solicitud. Se acepta unicamente con estado "Aceptada".
+        if (this.selectedRows[0].fechaEfectiva != null && this.selectedRows[0].fechaSolicitadaAnulacion == null && this.selectedRows[0].fechaAnulada == null) {
 
-      let peticion: FichaCompraSuscripcionItem[] = [];
-      this.selectedRows.forEach(row => {
-        let solicitud: FichaCompraSuscripcionItem = new FichaCompraSuscripcionItem();
-        solicitud.nSolicitud = row.nSolicitud;
-        solicitud.fechaAceptada = row.fechaEfectiva;
-        solicitud.fechaDenegada = row.fechaDenegada;
-        solicitud.fechaAnulada = row.fechaAnulada;
-        solicitud.fechaSolicitadaAnulacion = row.fechaSolicitadaAnulacion;
-        peticion.push(solicitud);
-      });
+          this.progressSpinner = true;
+          this.serieFacturacionSeleccionada = undefined;
+          this.nSolicitudFacturar = undefined;
+          await this.getSeleccionSerieFacturacion(this.localStorageService.institucionActual, this.selectedRows[0].nSolicitud)
+            .then(data => {
+              this.comboSeriesFacturacion = data.combooItems;
 
-      this.sigaServices.post('PyS_facturarCompraMultiple', peticion).subscribe(
-        (n) => {
-          if (n.status != 200) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          } else if(JSON.parse(n.body).error.description!="" || compShow.length > 0){
-            let mess = "";
-            for(let sus of compShow){
-              mess += sus.nSolicitud + ", ";
-            }
-            mess = mess.substr(1,mess.length-3);
-            this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") +JSON.parse(n.body).error.description+", "+mess);
-          }else {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            //Se actualiza la información de la ficha
-            this.actualizarLista.emit(true);
-          }
+              if (this.comboSeriesFacturacion == null) {
+                // this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.compraFacturada"));
+                this.nSolicitudFacturar = this.selectedRows[0].nSolicitud;
+                this.facturarCompra(false);
+              } else {
+                this.showModalSerieFacturacion = true;
+                this.nSolicitudFacturar = this.selectedRows[0].nSolicitud;
+              }
 
-          
-          this.selectedRows = [];
-          this.numSelectedRows = 0;
-          this.progressSpinner = false;
-        },
-        (err) => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          this.progressSpinner = false;
+              this.progressSpinner = false;
+            }).catch(err => {
+              this.progressSpinner = false;
+            });
+
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.estado.noPermitido"));
         }
-      );
-    }
-    else{
-      let mess = "";
-      for(let sus of compShow){
-        mess += sus.nSolicitud + ", ";
       }
-      mess = mess.substr(1,mess.length-3);
 
-      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + mess);
-          
     }
-  }
 
+  }
 
   aprobarCompra() {
 
@@ -531,13 +505,84 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
 			.catch((error) => console.error(error));
   }
 
-  getPermisoFacturarCompra(){
+  getPermisoFacturarCompra() {
     //En la documentación no parece distinguir que se requiera una permiso especifico para esta acción
     this.commonsService
-			.checkAcceso(procesos_PyS.facturarCompra)
-			.then((respuesta) => {
-				this.permisoFacturarCompra = respuesta;
-			})
-			.catch((error) => console.error(error));
+      .checkAcceso(procesos_PyS.facturarCompra)
+      .then((respuesta) => {
+        this.permisoFacturarCompra = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
+
+
+  getSeleccionSerieFacturacion(idInstitucion: string, nSolicitud: string) {
+    return this.sigaServices.getParam("PyS_getSeleccionSerieFacturacion", `?idInstitucion=${idInstitucion}&idPeticion=${nSolicitud}`).toPromise();
+  }
+
+  marcarObligatorio(valor) {
+    let resp = false;
+
+    if (valor == undefined || valor == null || valor.trim().length == 0) {
+      resp = true;
+    }
+
+    return resp;
+  }
+
+  cerrarModalSerieFacturacion() {
+    this.showModalSerieFacturacion = false;
+  }
+
+  checkModalSerieFacturacion() {
+
+    if (!this.serieFacturacionSeleccionada || this.serieFacturacionSeleccionada == null || this.serieFacturacionSeleccionada.length == 0) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.seleccionar.elemento"));
+    } else {
+      this.cerrarModalSerieFacturacion();
+      this.facturarCompra(true);
+    }
+  }
+
+
+  facturarCompra(aplicaSerie: boolean) {
+
+    this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("factPyS.mensaje.ini.fac"));
+
+    const compra = new FacturacionRapidaRequestDTO();
+    compra.idInstitucion = this.localStorageService.institucionActual;
+    compra.idPeticion = this.nSolicitudFacturar;
+
+    if(aplicaSerie) {
+      compra.idSerieFacturacion = this.serieFacturacionSeleccionada;
+    } else{
+      compra.idSerieFacturacion = "NA"; //Mandamos esta cadena para que no se vuelva a facturar y se genere solo el PDF
+    }
+
+    this.sigaServices.postDownloadFilesWithFileName2('PyS_facturarCompra', compra).subscribe(
+      (data: { file: Blob, filename: string, status: number }) => {
+
+        if (data.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+
+          let filename = data.filename.split('=')[1];
+          saveAs(data.file, filename);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          //Se actualiza la información de la ficha
+          this.actualizarLista.emit(true);
+        }
+
+        this.selectedRows = [];
+        this.numSelectedRows = 0;
+
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.selectedRows = [];
+        this.numSelectedRows = 0;
+      }
+    );
+  }
+
 }
