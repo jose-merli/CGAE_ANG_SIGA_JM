@@ -5,7 +5,8 @@ import { TranslateService } from '../../../../commons/translate/translation.serv
 import { Router } from '@angular/router';
 import { FiltroBusquedaBaremosComponent } from './filtro-busqueda-baremos/filtro-busqueda-baremos.component';
 import { SigaServices } from '../../../../_services/siga.service';
-
+import { BaremosGuardiaItem } from '../../../../models/sjcs/BaremosGuardiaItem';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-baremos-de-guardia',
   templateUrl: './baremos-de-guardia.component.html',
@@ -23,7 +24,8 @@ export class BaremosDeGuardiaComponent implements OnInit {
     private commonsService: CommonsService,
     private translateService: TranslateService,
     private router: Router,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -49,7 +51,16 @@ export class BaremosDeGuardiaComponent implements OnInit {
 
 
       this.progressSpinner = true;
-      this.sigaServices.post("baremosGuardia_buscar", this.filtros.filtros).subscribe(
+      let baremoBusqueda: BaremosGuardiaItem = new BaremosGuardiaItem();
+      baremoBusqueda.idFacturaciones = [this.filtros.filtros.idFacturaciones.toString()];
+      if(this.filtros.filtros.idGuardias && this.filtros.filtros.idGuardias != null){
+        baremoBusqueda.idGuardias = this.filtros.filtros.idGuardias;
+      }
+      if(this.filtros.filtros.idTurnos && this.filtros.filtros.idTurnos != null){
+        baremoBusqueda.idTurnos = this.filtros.filtros.idTurnos;
+      }
+      
+      this.sigaServices.post("baremosGuardia_buscar", baremoBusqueda).subscribe(
         data => {
           this.datos = JSON.parse(data.body).baremosRequestItems;
           this.mostrarTablaResultados = true;
@@ -101,4 +112,8 @@ export class BaremosDeGuardiaComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
+  backTo() {
+		this.location.back();
+	}
 }

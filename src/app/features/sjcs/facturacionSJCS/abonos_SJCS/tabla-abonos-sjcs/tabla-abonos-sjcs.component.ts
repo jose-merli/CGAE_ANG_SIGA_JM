@@ -396,7 +396,7 @@ modal(action:string){
     case  'Renegociar':
       this.esRenegociar = true;  
       this.nombreTarjeta = this.translateService.instant("general.boton.renegociar")
-      this.comboNegociar()
+      this.comboRenegociar()
       break;
     case  'Compensar':
       this.nombreTarjeta = this.translateService.instant("facturacionSJCS.facturacionesYPagos.compensar")
@@ -421,7 +421,7 @@ accion(){
       this.compensar()
       break;
     case "Renegociar":
-      //this.renegociar()
+      this.renegociar()
       break;
     case "Nuevo":
       this.nuevoAbono()
@@ -440,7 +440,7 @@ compensar(): void {
       item.idAbono = element.idAbono.toString();
       // Acción
       item.idAccion = this.ACCION_ABONO_COMPENSACION;
-      item.accion = "Compensación";//this.translateService.instant("facturacion.pagosFactura.accion.compensacion");
+      item.accion = this.translateService.instant("facturacion.pagosFactura.accion.compensacion");
 
       
       // El importe pendiente se recalcula
@@ -478,12 +478,41 @@ nuevoAbono(): void {
   this.guardar()
   
 }
-comboNegociar(){
+comboRenegociar(){
   this.comboAction =  [
-    { value: "1", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
-    { value: "2", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
-    { value: "3",  label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
+    { value: "cuentaFactura_activa", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
+    { value: "cuentaFactura_activa_masClientes", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
+    { value: "caja",  label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
   ];
+}
+
+renegociar(): void {
+
+  this.itemsParaModificar= []
+  this.selectedDatos.forEach(element =>{
+    if(this.ESTADO_ABONO_PAGADO != element.estado.toString() || element != undefined){
+      let item = new FacturaEstadosPagosItem();
+      item.nuevo = true;
+      if(this.itemAction.fechaMin  > new Date(element.fechaEmision) ){
+        item.fecha = this.itemAction.fechaModificaion
+      }else{
+        item.fecha = new Date();
+      }
+
+      item.idAbono = element.idAbono.toString();
+      // Acción
+      item.idAccion =  this.ACCION_ABONO_RENEGOCIACION;
+      item.accion =  this.translateService.instant("facturacionSJCS.abonosSJCS.renegociacion.literal");
+
+      item.modo = this.comboSel
+      this.itemsParaModificar.push(item)
+      
+    }
+  });
+  this.endPoint = "facturacionPyS_renegociarAbonoVarios"
+  this.guardar()
+
+
 }
 styleObligatorio(evento) {
 
@@ -506,7 +535,19 @@ isValid(){
     this.resaltadoFecha = true
     isValid = false;
   }
+
+  if(!isValid) this.muestraCamposObligatorios()
+  
   return isValid;
+}
+requisitos(){
+  let cumpleTodo:boolean = true;
+  if(this.itemsParaModificar.length == 0){
+    //Las facturas seleccionadas no cumplen con los requisitos para la accion.
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Las facturas seleccionadas no cumplen con los requisitos para la accion.");
+    return false;
+  }
+  return true;
 }
 guardar() {
     
@@ -518,7 +559,7 @@ guardar() {
       endpoint = "facturacionPyS_renegociarAbono";
       break;
   */
-  if(this.isValid()){
+  if(this.isValid() && this.requisitos()){
     this.progressSpinner = true;
     this.sigaServices.post(this.endPoint, this.itemsParaModificar).subscribe(
       n => {
@@ -532,8 +573,6 @@ guardar() {
         this.handleServerSideErrorMessage(err);
       }
     );
-  }else{
-    this.muestraCamposObligatorios()
   }
     
   } 

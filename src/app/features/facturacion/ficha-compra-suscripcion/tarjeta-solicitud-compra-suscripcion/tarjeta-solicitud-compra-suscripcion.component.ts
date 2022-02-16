@@ -657,7 +657,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
         this.comboSeriesFacturacion = data.combooItems;
 
         if (this.comboSeriesFacturacion == null) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.compraFacturada"));
+          //this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.compraFacturada"));
+          this.facturarCompra(false);
         } else {
           this.showModalSerieFacturacion = true;
         }
@@ -669,14 +670,19 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  facturarCompra() {
+  facturarCompra(aplicaSerie: boolean) {
 
     this.progressSpinner = true;
 
     const compra = new FacturacionRapidaRequestDTO();
     compra.idInstitucion = this.ficha.idInstitucion;
     compra.idPeticion = this.ficha.nSolicitud;
-    compra.idSerieFacturacion = this.serieFacturacionSeleccionada;
+
+    if(aplicaSerie) {
+      compra.idSerieFacturacion = this.serieFacturacionSeleccionada;
+    } else{
+      compra.idSerieFacturacion = "NA"; //Mandamos esta cadena para que no se vuelva a facturar y se genere solo el PDF
+    }
 
     this.sigaServices.postDownloadFilesWithFileName2('PyS_facturarCompra', compra).subscribe(
       (data: { file: Blob, filename: string, status: number }) => {
@@ -707,7 +713,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.seleccionar.elemento"));
     } else {
       this.cerrarModalSerieFacturacion();
-      this.facturarCompra();
+      this.facturarCompra(true);
     }
   }
 
