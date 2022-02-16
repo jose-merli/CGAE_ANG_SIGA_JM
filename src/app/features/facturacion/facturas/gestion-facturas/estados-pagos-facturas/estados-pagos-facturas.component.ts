@@ -51,7 +51,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   resaltadoEstado: boolean = false;
   resaltadoComentario: boolean = true;
   resaltadoBanco: boolean = false;
-  showModalNuevoEstado: boolean = false;
 
   numeroAbono: string;
 
@@ -408,29 +407,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     }
   }
 
-  /*
-  onChangeImporte(event: number): void {
-    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
-
-    if (this.nuevoEstado.idAccion == "4" && this.bodyInicial.tipo == "FACTURA") {
-      this.nuevoEstado.impTotalPorPagar = (+ultimaAccion.impTotalPorPagar - +this.nuevoEstado.impTotalPorPagar).toString();
-
-      if (parseFloat(this.nuevoEstado.impTotalPagado) < 0) {
-        this.nuevoEstado.impTotalPagado = "0";
-      } else if (parseFloat(this.nuevoEstado.impTotalPagado) > parseFloat(ultimaAccion.impTotalPorPagar)) {
-        this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
-      }
-    } else if (this.nuevoEstado.idAccion == "4") {
-      if (parseFloat(this.nuevoEstado.impTotalPagado) < 0) {
-        this.nuevoEstado.impTotalPagado = "0";
-      } else if (parseFloat(this.nuevoEstado.impTotalPagado) > parseFloat(this.bodyInicial.importeAdeudadoPendienteAb)) {
-        this.nuevoEstado.impTotalPagado = this.bodyInicial.importeAdeudadoPendienteAb;
-      }
-    }
-
-  }
-  */
-
   onChangeImporte(event: number): void {
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado(1);
 
@@ -592,14 +568,14 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Restablecer
 
   restablecer() {
-    this.grupos = JSON.parse(JSON.stringify(this.datosInit));
-
     this.nuevoEstado = undefined;
 
     this.resaltadoDatos = false;
     this.resaltadoDatos = false;
     this.resaltadoEstado = false;
     this.resaltadoBanco = false;
+    
+    this.grupos = JSON.parse(JSON.stringify(this.datosInit));
   }
 
   // Modal para guardar el nuevo estado
@@ -644,7 +620,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
             err => {
               this.handleServerSideErrorMessage(err);
               this.progressSpinner = false;
-              this.cerrarDialog(false);
           });
       } else if (this.nuevoEstado.idAccion == this.ACCION_ABONO_NUEVO_CAJA) {
         this.progressSpinner = true;
@@ -657,7 +632,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
             err => {
               this.handleServerSideErrorMessage(err);
               this.progressSpinner = false;
-              this.cerrarDialog(false);
           });
       } else if (this.nuevoEstado.idAccion == this.ACCION_ABONO_RENEGOCIACION) {
         this.progressSpinner = true;
@@ -670,7 +644,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
             err => {
               this.handleServerSideErrorMessage(err);
               this.progressSpinner = false;
-              this.cerrarDialog(false);
           });
       }
     } else {
@@ -710,21 +683,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         this.router.navigate(['/gestionFicherosTransferencias']);
       } 
     });
-  }
-  
-
-  cerrarDialog(operacionCancelada: boolean) {
-    this.showModalNuevoEstado = false;
-    this.resaltadoDatos = false;
-    this.resaltadoEstado = false;
-    this.resaltadoBanco = false;
-    this.nuevoEstado = undefined;
-
-    this.changeDetectorRef.detectChanges();
-
-    if (operacionCancelada) {
-      this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
-    }
   }
 
   // Enlace a la factura
