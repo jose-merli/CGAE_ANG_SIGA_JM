@@ -153,10 +153,10 @@
 
         <div class="card-footer" *ngIf="showTarjeta">
             <div class="text-right main-button">
-                <button *ngIf="!isNuevo" [disabled]="modoEdicion" pButton type="button" icon="fa fa-plus" iconPos="left" (click)="filaTablaCombos()"
+                <button *ngIf="!isNuevo" pButton type="button" icon="fa fa-plus" iconPos="left" (click)="filaTablaCombos()"
                     label="{{ 'general.boton.new' | translate }}"></button>
 
-                    <button *ngIf="isNuevo" [disabled]="modoEdicion" pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
+                    <button *ngIf="isNuevo" pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
                     label="{{ 'general.boton.restablecer' | translate }}"></button>
             </div>
         </div>
