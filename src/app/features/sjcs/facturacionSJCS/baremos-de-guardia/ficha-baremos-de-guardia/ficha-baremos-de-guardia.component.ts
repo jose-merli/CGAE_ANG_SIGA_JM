@@ -721,6 +721,11 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigAdi.descontar = true
           break;
 
+
+            //para hito 63
+        case 63:
+          this.tarjetaConfigAdi.facAsuntosAntiguos = true
+          break;
       }
     }
 
@@ -918,7 +923,21 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         }
       }
 
+
     }
+
+    //hito 63
+
+    if(this.tarjetaConfigAdi.facAsuntosAntiguos) {
+      let hito: BaremosGuardiaItem = new BaremosGuardiaItem()
+      hito.idHito = '63'
+      hito.idTurno = turno;
+      hito.idGuardia = guardia;
+      hito.precioHito = this.tarjetaConfigAdi.filtrosAdi.importe
+      confBaremo.push(hito);
+    }
+      
+    
 
     //hitos de configuracion SOJ y EJG
     if (this.tarjetaConfigAdi.importeSOJ != null || this.tarjetaConfigAdi.importeSOJ != undefined) {
