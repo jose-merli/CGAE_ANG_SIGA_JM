@@ -289,7 +289,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = "7";
-      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.renegociacion");
+      this.nuevoEstado.accion = this.translateService.instant("facturacionSJCS.abonosSJCS.renegociacion.literal");
 
       // Combo de pago de pago o abono por caja y banco
       this.comboEstados = [
@@ -340,11 +340,11 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = "4";
-      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.cobroPorCaja");
+      this.nuevoEstado.accion = this.translateService.instant("facturacionPyS.abonosPagos.datosPagoAbono.cobroCaja");
 
       // El importe pendiente se recalcula
-      this.nuevoEstado.impTotalPagado = "0";
-      this.nuevoEstado.impTotalPorPagar = ultimaAccion.impTotalPorPagar;
+      this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
+      this.nuevoEstado.impTotalPorPagar = "0";
 
       this.grupos[this.grupos.length - 1].values.push(this.nuevoEstado);
     }
@@ -464,7 +464,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = "6";
-      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.devolucion");
+      this.nuevoEstado.accion = this.translateService.instant("facturacionPyS.facturas.estadosPagos.devolucion");
 
       // Cuenta a la que se le pasó el cargo
       this.nuevoEstado.cuentaBanco = ultimaAccion.cuentaBanco;
@@ -495,7 +495,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = "6";
-      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.devolucion");
+      this.nuevoEstado.accion = this.translateService.instant("facturacionPyS.facturas.estadosPagos.devolucion");
 
       // Devolver con comisión al cliente
       this.nuevoEstado.comision = true;
@@ -529,7 +529,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Acción
       this.nuevoEstado.idAccion = "8";
-      this.nuevoEstado.accion = this.translateService.instant("facturacion.facturas.estadosPagos.anulacion");
+      this.nuevoEstado.accion = this.translateService.instant("facturacionPyS.facturas.estadosPagos.anulacion");
 
       this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
       this.nuevoEstado.impTotalPorPagar = "0";

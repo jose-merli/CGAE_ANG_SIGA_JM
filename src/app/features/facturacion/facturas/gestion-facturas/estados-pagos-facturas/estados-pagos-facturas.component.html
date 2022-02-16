@@ -135,7 +135,7 @@
             <td [attr.colspan]="columns.length">
               <div (click)="toggleGrupo(rowIndex)" class="d-flex justify-content-start align-items-center">
                 <label>{{ (grupo['key'] != numeroAbono ? 'facturacionSJCS.facturacionesYPagos.factura' 
-                  : '' ) | translate }} {{ grupo['key'] }}</label>
+                  : 'facturacionPyS.facturas.facturaRect.literal' ) | translate }} {{ grupo['key'] }}</label>
                 <i class="fa fa-{{ grupo['activo'] ? 'angle-up' : 'angle-down' }} ml-auto"></i>
               </div>
             </td>
@@ -183,6 +183,7 @@
                     <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_FACTURA_DEVOLUCION">                    
                       <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.comentario' placeholder="Seleccionar" [ngClass]="styleObligatorio(resaltadoComentario, nuevoEstado.comentario)"
                         [options]="comboNotas" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" appendTo="body"></p-dropdown>
+                        <div *ngIf="nuevoEstado.comision" class="help-block">{{ 'facturacionPyS.facturas.mensaje.comision' | translate }}</div>
                     </div>
                   </div>
                   <div *ngSwitchCase="'estado'">
