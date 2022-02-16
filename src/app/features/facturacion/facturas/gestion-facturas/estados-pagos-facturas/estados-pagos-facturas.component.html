@@ -135,7 +135,7 @@
             <td [attr.colspan]="columns.length">
               <div (click)="toggleGrupo(rowIndex)" class="d-flex justify-content-start align-items-center">
                 <label>{{ (grupo['key'] != numeroAbono ? 'facturacionSJCS.facturacionesYPagos.factura' 
-                  : '' ) | translate }} {{ grupo['key'] }}</label>
+                  : 'facturacionPyS.facturas.facturaRect.literal' ) | translate }} {{ grupo['key'] }}</label>
                 <i class="fa fa-{{ grupo['activo'] ? 'angle-up' : 'angle-down' }} ml-auto"></i>
               </div>
             </td>
