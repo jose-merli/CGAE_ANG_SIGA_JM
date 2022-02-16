@@ -636,7 +636,7 @@
                         <label>{{"censo.fichaCliente.datosBancarios.cuentaBancaria.bic" | translate}}</label>
                         <input [(ngModel)]="solicitudEditar.bic"
                             type="text" class="form-control" (ngModelChange)="recuperarBicBanco()"
-                            [disabled]="!editarExt || consulta" [attr.maxlength]="11" [attr.minlength]="8" pInputText>
+                            [disabled]="!editarExt || consulta" [attr.maxlength]="11" [attr.minlength]="8" [ngClass]="{'camposObligatorios': esIbanExtranjero && checkCampoEsVacio(solicitudEditar.bic)}" pInputText>
                         <div *ngIf="bicValido == false">
                             <small class="input-error">BIC incorrecto</small>
                         </div>

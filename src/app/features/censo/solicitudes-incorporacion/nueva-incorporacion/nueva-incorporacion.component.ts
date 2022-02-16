@@ -1364,7 +1364,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected;
     this.solicitudEditar.idPais = this.paisSelected;
     this.solicitudEditar.sexo = this.sexoSelected;
-    this.solicitudEditar.titular = this.solicitudEditar.nombre;
+
+    !this.checkCampoEsVacio(this.solicitudEditar.nombre) ? this.solicitudEditar.titular = this.solicitudEditar.nombre : this.solicitudEditar.titular = ""
+    !this.checkCampoEsVacio(this.solicitudEditar.apellido1) ? this.solicitudEditar.titular = this.solicitudEditar.titular + ", " + this.solicitudEditar.apellido1 : this.solicitudEditar.titular = this.solicitudEditar.titular + ""
+    !this.checkCampoEsVacio(this.solicitudEditar.apellido2) ? this.solicitudEditar.titular = this.solicitudEditar.titular + " " + this.solicitudEditar.apellido2 : this.solicitudEditar.titular = this.solicitudEditar.titular + ""
 
     if (this.paisSelected == "191") {
       this.solicitudEditar.idProvincia = this.provinciaSelected;
@@ -2089,7 +2092,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         return false;
       }
       else{
-        return true;
+        if(this.validarBIC) {
+          return true} 
+        else{
+          return false;
+        }
       }
     }else{
       return true;
@@ -2103,7 +2110,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 
     if(this.cargo == false && this.abono == false && this.abonoJCS == false) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.checkboxbancariorequerido");
 
-    if(this.esIbanExtranjero && this.checkCampoEsVacio(this.solicitudEditar.bic)) this.showFailNotTraduce("El BIC ha de ser introducido obligatoriamente de forma manual al usar un IBAN extranjero");
+    if(this.esIbanExtranjero && this.checkCampoEsVacio(this.solicitudEditar.bic)) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.bicnecesario");
+
+    if(!this.validarBIC) this.showFail("El BIC no es correcto");
   }
 
   checkCampoEsVacio(campo){
