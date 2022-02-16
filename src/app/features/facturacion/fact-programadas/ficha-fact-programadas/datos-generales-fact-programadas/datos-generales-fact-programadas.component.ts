@@ -9,6 +9,10 @@ import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { saveAs } from "file-saver/FileSaver";
+import { FaseFacturacionProgramadaObject } from '../../../../../models/FaseFacturacionProgramadaObject';
+import { FaseFacturacionProgramadaItem } from '../../../../../models/FaseFacturacionProgramadaItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-datos-generales-fact-programadas',
@@ -49,13 +53,15 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   modalCols = [];
   buscadores = [];
   rowsPerPage = [];
-  datosMostrados: FichaEstadoFacFacturacionItem[];
+  datosMostrados: FaseFacturacionProgramadaItem[] = [];
+  @ViewChild("table") table: Table;
 
   constructor(
     private commonsService: CommonsService,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private sigaStorageService: SigaStorageService
   ) { }
 
   // Al inicializar el formulario se inicializa la fecha actual sin el tiempo
@@ -106,29 +112,6 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
         && this.notChangedDate(this.body.fechaFinProductos, this.bodyInicial.fechaFinProductos);
   }
 
-  getDatos() {
-    this.datosMostrados = [
-      {
-        orden : 10,
-        faseProcesoFacturacion : "Generación programada",
-        fechaProgramacion : "18/08/2020 14:41",
-        puestoCola : "1/5"
-      },
-      {
-        orden: 20,
-        faseProcesoFacturacion : "Confirmación programada",
-        fechaProgramacion : "18/08/2020 14:41",
-        puestoCola : "2/5"
-      },
-      {
-        orden: 30,
-        faseProcesoFacturacion : "Pago automático programado",
-        fechaProgramacion : "18/08/2020 14:41",
-        puestoCola : "3/5"
-      }
-    ]
-  }
-
   notChangedString(value1: string, value2: string): boolean {
     return value1 == value2 || (value1 == undefined || value1.trim().length == 0) && (value2 == undefined || value2.trim().length == 0);
   }
@@ -141,9 +124,9 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   getModalCols() {
     this.modalCols = [
       { field: "orden", header: "administracion.informes.literal.orden", width: "10%" },
-      { field: "faseProcesoFacturacion", header: "facturacionPyS.facturaciones.FaseProcesoFac", width: "20%" },
+      { field: "nombreFase", header: "facturacionPyS.facturaciones.FaseProcesoFac", width: "20%" },
       { field: "fechaProgramacion", header: "informesycomunicaciones.comunicaciones.busqueda.fechaProgramada", width: "10%" },
-      { field: "puestoCola", header: "facturacionPyS.facturaciones.PuestoCola", width: "10%" }
+      { field: "puestoEnCola", header: "facturacionPyS.facturaciones.PuestoCola", width: "20%" }
     ];
 
     this.modalCols.forEach(it => this.buscadores.push(""));
@@ -478,8 +461,40 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     this.dialogVisible = estado;
   }
 
+  cerrarDialog() {
+    this.cambiarEstadoDialogo(false);
+  }
+
   clear() {
     this.msgs = [];
+  }
+
+  getFasesFacturacionProgramada() {
+
+    this.progressSpinner = true;
+
+    const idInstitucion = this.sigaStorageService.institucionActual;
+    const idSerieFacturacion = this.body.idSerieFacturacion;
+    const idProgramacion = this.body.idProgramacion;
+
+    this.sigaServices.getParam("facturacionPyS_getFasesFacturacionProgramada", `?idInstitucion=${idInstitucion}&idSerieFacturacion=${idSerieFacturacion}&idProgramacion=${idProgramacion}`).subscribe(
+      (data: FaseFacturacionProgramadaObject) => {
+
+        if (data.error != null && data.error.description != null) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(data.error.description.toString()));
+        } else {
+          this.datosMostrados = data.faseFacturacionProgramadaItemList;
+          this.cambiarEstadoDialogo(true);
+        }
+
+        this.progressSpinner = false;
+      },
+      (err) => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+
   }
 
 }
