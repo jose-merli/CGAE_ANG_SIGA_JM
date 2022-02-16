@@ -54,10 +54,12 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
 
   onHideTarjeta() {
     // if (this.retencionesService.modoEdicion) {
-    this.showTarjeta = !this.showTarjeta;
+    //this.showTarjeta = !this.showTarjeta;
     // } else {
     //   this.showTarjeta = true;
     // }
+
+    this.showTarjeta ? this.showTarjeta = false : this.showTarjeta = true;
   }
 
   changeContAsAc() {
