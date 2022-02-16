@@ -183,6 +183,7 @@
                     <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_FACTURA_DEVOLUCION">                    
                       <p-dropdown class="select-form" [(ngModel)]='nuevoEstado.comentario' placeholder="Seleccionar" [ngClass]="styleObligatorio(resaltadoComentario, nuevoEstado.comentario)"
                         [options]="comboNotas" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" appendTo="body"></p-dropdown>
+                        <div *ngIf="nuevoEstado.comision" class="help-block">{{ 'facturacionPyS.facturas.mensaje.comision' | translate }}</div>
                     </div>
                   </div>
                   <div *ngSwitchCase="'estado'">
