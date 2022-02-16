@@ -3,6 +3,8 @@ import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardia
 import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
 
+
+
 @Component({
   selector: 'app-ficha-bar-confi-adi',
   templateUrl: './ficha-bar-confi-adi.component.html',
@@ -52,10 +54,12 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
 
   onHideTarjeta() {
     // if (this.retencionesService.modoEdicion) {
-    this.showTarjeta = !this.showTarjeta;
+    //this.showTarjeta = !this.showTarjeta;
     // } else {
     //   this.showTarjeta = true;
     // }
+
+    this.showTarjeta ? this.showTarjeta = false : this.showTarjeta = true;
   }
 
   changeContAsAc() {

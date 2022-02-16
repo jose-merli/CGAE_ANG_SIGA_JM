@@ -79,11 +79,14 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   onHideTarjeta() {
     // if (this.retencionesService.modoEdicion) {
-    this.showTarjeta = !this.showTarjeta;
+    //this.showTarjeta = !this.showTarjeta;
     // } else {
     //   this.showTarjeta = true;
     // }
+
+    this.showTarjeta ? this.showTarjeta = false : this.showTarjeta = true;
   }
+  
   onChangeDiasDis(event, dia) {
     switch (dia) {
       case 'L':

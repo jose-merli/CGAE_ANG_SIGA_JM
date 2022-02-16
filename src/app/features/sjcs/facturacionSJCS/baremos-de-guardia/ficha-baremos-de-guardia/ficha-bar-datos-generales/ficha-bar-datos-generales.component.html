@@ -4,7 +4,7 @@
 
         <div class="card-header header-ficha">
 
-            <!-- <div *ngIf="!showTarjeta" class="form-row">
+            <div *ngIf="!showTarjeta" class="form-row">
 
                 <div class="col-lg-1 col-md-2">
                     <div class="img-colegiado" (click)="onHideTarjeta()">
@@ -19,14 +19,14 @@
                         </label>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
+                      <!--   <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
                             <span>A</span>
-                        </label>
+                        </label> -->
                         <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
                     </div>
                 </div>
 
-            </div> -->
+            </div>
 
             <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center"
                 (click)="onHideTarjeta()">
@@ -153,10 +153,10 @@
 
         <div class="card-footer" *ngIf="showTarjeta">
             <div class="text-right main-button">
-                <button *ngIf="!isNuevo" [disabled]="modoEdicion" pButton type="button" icon="fa fa-plus" iconPos="left" (click)="filaTablaCombos()"
+                <button *ngIf="!isNuevo" [disabled]="!permisoEscritura" pButton type="button" icon="fa fa-plus" iconPos="left" (click)="filaTablaCombos()"
                     label="{{ 'general.boton.new' | translate }}"></button>
 
-                    <button *ngIf="isNuevo" [disabled]="modoEdicion" pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
+                    <button *ngIf="isNuevo" pButton type="button" icon="fa fa-undo" iconPos="left" (click)="restablecer()"
                     label="{{ 'general.boton.restablecer' | translate }}"></button>
             </div>
         </div>

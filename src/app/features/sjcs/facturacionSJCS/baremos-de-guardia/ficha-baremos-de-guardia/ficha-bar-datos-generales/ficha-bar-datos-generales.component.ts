@@ -61,13 +61,15 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
     this.addEnlace.emit(enlace);
   }
 
-  /* onHideTarjeta() {
+  onHideTarjeta() {
     // if (this.retencionesService.modoEdicion) {
-    this.showTarjeta = !this.showTarjeta;
+    //this.showTarjeta = !this.showTarjeta;
     // } else {
     //   this.showTarjeta = true;
     // }
-  } */
+
+    this.showTarjeta ? this.showTarjeta = false : this.showTarjeta = true;
+  }
 
   getCols() {
 

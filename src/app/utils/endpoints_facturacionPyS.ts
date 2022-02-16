@@ -96,6 +96,7 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_getEstadosAbonos: "facturacionPyS/getEstadosAbonos",
     facturacionPyS_compensarAbono: "facturacionPyS/compensarAbono",
     facturacionPyS_renegociarAbono: "facturacionPyS/renegociarAbono",
+    facturacionPyS_renegociarAbonoVarios: "facturacionPyS/renegociarAbonoVarios",
     facturacionPyS_pagarPorCajaAbono: "facturacionPyS/pagarPorCajaAbono",
     facturacionPyS_eliminarPagoPorCajaAbono: "facturacionPyS/eliminarPagoPorCajaAbono",
     facturacionPyS_compensarAbonoVarios: "facturacionPyS/compensarAbonoVarios",
