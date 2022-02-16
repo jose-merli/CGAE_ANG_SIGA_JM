@@ -560,6 +560,7 @@ import { HoraComponent } from './commons/hora/hora.component';
 import { InputDivididoComponent } from './commons/input-dividido/input-dividido.component';
 import { TablaResultadoMixComponent } from './commons/tabla-resultado-mix/tabla-resultado-mix.component';
 import { Paginador3Module } from './commons/paginador3/paginador3.module'
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 //OFICIO
 import { TablaResultadoDesplegableComponent } from './commons/tabla-resultado-desplegable/tabla-resultado-desplegable.component';
@@ -2026,6 +2027,7 @@ import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJ
 		SelectorModule,
 		Paginador3Module,
 		BrowserModule,
+		MatTooltipModule,
 
 		HttpClientModule,
 		FormsModule,
@@ -2123,7 +2125,6 @@ import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJ
 		ScheduleModule,
 		PipeTranslationModule,
 		AutoCompleteModule,
-		TooltipModule,
 		ListboxModule,
 		ChipsModule,
 		MultiSelectModule,

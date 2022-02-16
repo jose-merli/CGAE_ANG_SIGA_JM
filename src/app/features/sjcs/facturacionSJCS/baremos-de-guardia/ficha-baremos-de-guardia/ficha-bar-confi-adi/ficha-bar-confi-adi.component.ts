@@ -3,6 +3,8 @@ import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardia
 import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
 
+
+
 @Component({
   selector: 'app-ficha-bar-confi-adi',
   templateUrl: './ficha-bar-confi-adi.component.html',

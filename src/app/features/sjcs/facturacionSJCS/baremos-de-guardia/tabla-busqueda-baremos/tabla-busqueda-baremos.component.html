@@ -64,6 +64,7 @@
         <td *ngFor="let sub of subCols" class="text-center">
           <div [ngClass]="{'displayMargin' : (sub.field == 'idGuardia')}">
             <span *ngIf="!setItalic(guardia)">{{ guardia[sub.field] }}</span>
+            <span *ngIf="sub.field == 'simpleOImporteIndividual' ">€</span>
             <span *ngIf="setItalic(guardia)"
               [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ guardia[sub.field] }}</span>
           </div>
