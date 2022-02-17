@@ -24,6 +24,8 @@ export class TablaFacturasComponent implements OnInit {
 
   FAC_ABONO_ESTADO_PENDIENTE_BANCO: string = "5";
   FAC_FACTURA_ESTADO_PENDIENTE_BANCO: string = "5";
+  ACCION_ABONO_NUEVO_CAJA: string = "4";
+  ESTADO_ABONO_CAJA: string = "6";
 
   selectedDatos: FacturasItem[] = [];
   rowsPerPage = [];
@@ -55,6 +57,7 @@ export class TablaFacturasComponent implements OnInit {
   accionAux:string="";
   resaltadoDatos: boolean = false;
   resaltadoFecha: boolean = false;
+
 
   itemsParaModificar:FacturaEstadosPagosItem[]= [];
   constructor(
@@ -510,6 +513,37 @@ onChangeSelectAll() {
     });
   }
 
+  nuevoAbonoSJCS(): void {
+    this.itemsParaModificar = [];
+    this.selectedDatos.forEach(element =>{
+      if (this.ESTADO_ABONO_CAJA == element.idEstado && element.tipo =="ABONO")  {
+        let item:FacturaEstadosPagosItem = new FacturaEstadosPagosItem();
+          item.nuevo = true;
+          let fechaActual: Date = new Date();
+          item.fechaMin = fechaActual > new Date(element.fechaModificacionUlt) ? fechaActual : new Date(element.fechaModificacionUlt);
+          if(this.itemAction.fechaModificaion  > new Date(element.fechaModificacionUlt) ){
+            item.fechaModificaion = this.itemAction.fechaModificaion
+          }else{
+            item.fechaModificaion = new Date();
+          }
+          item.idAbono = element.idAbono
+          item.notaMaxLength = 256;
+          // Acción
+          item.idAccion = this.ACCION_ABONO_NUEVO_CAJA;
+          item.accion = this.translateService.instant("facturacion.abonosPagos.datosPagoAbono.abonoCaja");
+
+          // El importe pendiente se recalcula
+          item.movimiento = element.importeAdeudadoPendiente;
+          item.importePendiente = "0";
+
+          this.itemsParaModificar.push(item);
+      }
+    });
+
+
+    
+  }
+
   styleObligatorio(evento) {
 
     if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
@@ -639,7 +673,7 @@ muestraCamposObligatorios() {
          break; 
       } 
       case "Nuevo Abono": { 
-         this.nuevoAbonoFacturas();
+         this.nuevoAbonoSJCS();
          break; 
       } 
       case "Devolver": { 
@@ -656,7 +690,8 @@ muestraCamposObligatorios() {
      } 
 
    } 
-   this.guardarDefi();
+   if(accionAux != "Nuevo Abono")this.guardarDefi();
+   else this.guardarAbono();
   }
 isValid(){
   let isValid:boolean = true;
@@ -712,6 +747,26 @@ requisitos(){
     }
      
   }
+
+  guardarAbono() {
+    
+    if(this.isValid() && this.requisitos()){
+      this.progressSpinner = true;
+      this.sigaServices.post("facturacionPyS_nuevoAbonoMasivo", this.itemsParaModificar).subscribe(
+        n => {
+          this.progressSpinner = false;
+         //refrescar this.refreshData.emit();
+  
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        },
+        err => {
+          this.progressSpinner = false;
+          this.handleServerSideErrorMessage(err);
+        }
+      );
+    }
+      
+    } 
 
 
 }

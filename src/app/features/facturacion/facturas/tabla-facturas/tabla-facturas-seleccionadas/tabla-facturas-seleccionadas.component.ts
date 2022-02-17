@@ -70,13 +70,13 @@ export class TablaFacturasSeleccionadasComponent implements OnInit,OnChanges {
         this.datos.push(item)
       });
       */
-     this.bodyInicial.forEach(element => {
+     /*this.bodyInicial.forEach(element => {
           this.itemsGeneral.push(element)
-     });
+     });*/
 
      
 
-     from(this.itemsGeneral).pipe(
+     from(this.bodyInicial).pipe(
       groupBy(ep => ep.idEstado),
       mergeMap(group => group.reduce((acc, cur) => {
           acc.values.push(cur);
