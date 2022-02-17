@@ -95,15 +95,15 @@ export class TablaAbonosSCJSComponent implements OnInit {
   // Definición de las columnas
   getCols() {
     this.cols = [
-      { field: "numeroAbono", header: this.translateService.instant("facturacionSJCS.tabla.abonosSJCS.numeroAbono"), width: "10%" },
-      { field: "fechaEmision", header: this.translateService.instant("facturacion.facturas.fechaEmision"), width: "10%" },
+      { field: "numeroAbono", header: this.translateService.instant("facturacionSJCS.tabla.abonosSJCS.numeroAbono"), width: "8%" },
+      { field: "fechaEmision", header: this.translateService.instant("facturacion.facturas.fechaEmision"), width: "8%" },
       { field: "nombrePago", header: this.translateService.instant("facturacionSJCS.tabla.abonosSJCS.pagoSJCS"), width: "20%" },
-      { field: "ncolident", header: this.translateService.instant("facturacion.facturas.numeroColegiadoIdentificador"), width: "10%" },
+      { field: "ncolident", header: this.translateService.instant("facturacion.facturas.numeroColegiadoIdentificador"), width: "8%" },
       { field: "nombreCompleto", header: this.translateService.instant("facturacion.productos.Cliente"), width: "20%" },
-      { field: "esSociedad", header: this.translateService.instant("facturacionSJCS.filtros.abonosSJCS.sociedad"), width: "10%" },
-      { field: "importeTotal", header: this.translateService.instant("facturacionSJCS.facturacionesYPagos.importeTotal"), width: "10%" }, 
-      { field: "importePendientePorAbonar", header: this.translateService.instant("facturacion.facturas.importePendiente"), width: "10%" },
-      { field: "estadoNombre", header: this.translateService.instant("censo.fichaIntegrantes.literal.estado"), width: "10%" }, 
+      { field: "esSociedad", header: this.translateService.instant("facturacionSJCS.filtros.abonosSJCS.sociedad"), width: "8%" },
+      { field: "importeTotal", header: this.translateService.instant("facturacionSJCS.facturacionesYPagos.importeTotal"), width: "8%" }, 
+      { field: "importePendientePorAbonar", header: this.translateService.instant("facturacion.facturas.importePendiente"), width: "8%" },
+      { field: "estadoNombre", header: this.translateService.instant("censo.fichaIntegrantes.literal.estado"), width: "20%" }, 
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -551,14 +551,6 @@ requisitos(){
 }
 guardar() {
     
-    /*case this.ACCION_ABONO_NUEVO_CAJA:
-      endpoint = "facturacionPyS_pagarPorCajaAbono";
-      break;
-
-    case this.ACCION_ABONO_RENEGOCIACION:
-      endpoint = "facturacionPyS_renegociarAbono";
-      break;
-  */
   if(this.isValid() && this.requisitos()){
     this.progressSpinner = true;
     this.sigaServices.post(this.endPoint, this.itemsParaModificar).subscribe(
