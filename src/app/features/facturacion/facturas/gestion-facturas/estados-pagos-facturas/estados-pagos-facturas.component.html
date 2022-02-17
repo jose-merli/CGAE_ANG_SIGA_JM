@@ -27,13 +27,14 @@
                     <span>{{ getUltimoEstado().accion }}</span></label>
 
                   <label>{{ 'facturacion.facturas.estadosPagos.nota' | translate }}: 
-                    <span *ngIf="getUltimoEstado().idCargos">{{ 'facturacion.cmc.fichero' | translate }} {{ getUltimoEstado()['idCargos'] }}</span>
-                    <span *ngIf="getUltimoEstado().enlaceFactura">
-                      <span *ngIf="!getUltimoEstado().comisionIdFactura"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ getUltimoEstado()['numeroFactura'] }}</span>
-                      <span *ngIf="getUltimoEstado().comisionIdFactura"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ getUltimoEstado()['comisionFactura'] }}</span>
+                    <span *ngIf="getUltimoEstado().comentario">{{ getUltimoEstado()['comentario'] }}</span>
+                    <span *ngIf="!getUltimoEstado().comentario && getUltimoEstado()['idCargos']">{{ 'facturacion.cmc.fichero' | translate }} {{ getUltimoEstado()['idCargos'] }}</span>
+                    <span *ngIf="!getUltimoEstado().comentario && getUltimoEstado()['enlaceFactura']">
+                      <span *ngIf="!getUltimoEstado()['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ getUltimoEstado()['numeroFactura'] }}</span>
+                      <span *ngIf="getUltimoEstado()['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ getUltimoEstado()['comisionFactura'] }}</span>
                     </span>
-                    <span *ngIf="getUltimoEstado().idPagosjg">Abono {{ getUltimoEstado()['idPagosjg'] }}</span>
-                    <span *ngIf="getUltimoEstado().enlaceAbono">Rectif. {{ getUltimoEstado()['numeroAbono'] }}</span></label>
+                    <span *ngIf="!getUltimoEstado().comentario && getUltimoEstado()['idPagosjg']">Abono {{ getUltimoEstado()['idPagosjg'] }}</span>
+                    <span *ngIf="!getUltimoEstado().comentario && getUltimoEstado()['enlaceAbono']">Rectif. {{ getUltimoEstado()['numeroAbono'] }}</span></label>
                 </div>
 
                 <div class="d-flex justify-content-between default">
