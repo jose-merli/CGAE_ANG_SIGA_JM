@@ -56,6 +56,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   ESTADO_ABONO_PAGADO: string = "1";
   ESTADO_ABONO_BANCO: string = "5";
   ESTADO_ABONO_CAJA: string = "6";
+  ESTADO_ABONO_REVISION: string = "7";
 
   ACCION_ABONO_COMPENSACION: string = "10";
   ACCION_ABONO_RENEGOCIACION: string = "7";
@@ -151,14 +152,18 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     
   }
 
+  getUltimoEstado(skip: number = 0) {
+    return this.datos[this.datos.length - 1 - skip]
+  }
+
   // Acciones
 
   disabledCompensar(): boolean {
-    return this.bodyInicial == undefined || [this.ESTADO_ABONO_PAGADO].includes(this.bodyInicial.idEstado);
+    return this.datos == undefined || this.datos.length == 0 || [this.ESTADO_ABONO_PAGADO].includes(this.getUltimoEstado().idEstado);
   }
 
   compensar(): void {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
     if (this.disabledCompensar()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.abonosSJCS.compensacion.deshabilitado"));
@@ -168,7 +173,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
       this.nuevoEstado.nuevo = true;
       this.nuevoEstado.fecha = new Date();
       this.nuevoEstado.notaMaxLength = 256;
-      this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
+      this.nuevoEstado.idAbono = ultimaAccion.idAbono;
 
       // Acción
       this.nuevoEstado.idAccion = this.ACCION_ABONO_COMPENSACION;
@@ -183,11 +188,11 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   }
 
   disabledNuevoAbono(): boolean {
-    return this.bodyInicial == undefined || this.ESTADO_ABONO_CAJA != this.bodyInicial.idEstado;
+    return this.datos == undefined || this.datos.length == 0 || ![this.ESTADO_ABONO_REVISION, this.ESTADO_ABONO_CAJA].includes(this.getUltimoEstado().idEstado);
   }
 
   nuevoAbono(): void {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
     if (this.disabledNuevoAbono()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.abonosSJCS.nuevoAbono.deshabilitado"));
@@ -196,7 +201,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
 
       this.nuevoEstado.nuevo = true;
       this.nuevoEstado.fecha = new Date();
-      this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
+      this.nuevoEstado.idAbono = ultimaAccion.idAbono;
       this.nuevoEstado.notaMaxLength = 256;
 
       // Acción
@@ -230,11 +235,11 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
   }
 
   disabledRenegociar(): boolean {
-    return this.bodyInicial == undefined || this.ESTADO_ABONO_PAGADO == this.bodyInicial.idEstado;
+    return this.datos == undefined || this.datos.length == 0 || this.ESTADO_ABONO_PAGADO == this.getUltimoEstado().idEstado;
   }
 
   renegociar(): void {
-    let ultimaAccion: FacturaEstadosPagosItem = this.datos[this.datos.length - 1];
+    let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
     if (this.disabledRenegociar()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.abonosSJCS.renegociacion.deshabilitado"));
@@ -246,7 +251,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
       let fechaHoy = new Date();
       this.nuevoEstado.fecha = fechaHoy;
       this.nuevoEstado.fechaMin = fechaHoy;
-      this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
+      this.nuevoEstado.idAbono = ultimaAccion.idAbono;
       this.resaltadoEstado = true;
 
       // Acción
@@ -361,7 +366,7 @@ export class EstadosPagosAbonosSJCSComponent implements OnInit, OnChanges {
     if (!this.disabledEliminar()) {
       this.nuevoEstado = new FacturaEstadosPagosItem();
       this.nuevoEstado.fecha = new Date();
-      this.nuevoEstado.idAbono = this.bodyInicial.idAbono;
+      this.nuevoEstado.idAbono = this.getUltimoEstado().idAbono;
 
       this.progressSpinner = true;
       this.sigaServices.post("facturacionPyS_eliminarPagoPorCajaAbono", this.nuevoEstado).subscribe(
