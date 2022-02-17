@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { Console } from 'console';
 import { DataTable, Message } from 'primeng/primeng';
 import { from } from 'rxjs/observable/from';
 import { groupBy, mergeMap, toArray } from 'rxjs/operators';
@@ -84,6 +85,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.getComboMotivosDevolucion();
       this.restablecer();
 
+      console.log(changes)
       if (this.bodyInicial.idFactura)
         this.getEstadosPagos();
     }
@@ -143,6 +145,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       n => {
         this.datos = n.estadosPagosItems;
 
+        this.grupos = [];
         from(this.datos).pipe(
           groupBy(ep => ep.numeroFactura),
           mergeMap(group => group.reduce((acc, cur) => {
