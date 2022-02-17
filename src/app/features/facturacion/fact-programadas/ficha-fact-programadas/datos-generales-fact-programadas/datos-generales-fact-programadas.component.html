@@ -115,8 +115,15 @@
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
-              <a class="form-control falsoInput" (click)="getDatos(); cambiarEstadoDialogo(true);" pInputText> {{
-                body.estadoConfirmacion }} </a>
+              <div class="row">
+                <div class="col-md-10">
+                  <input type="text" class="form-control" maxLength="255"
+                  disabled="true" pInputText [value]="body.estadoConfirmacion">
+                </div>
+                <div class="col-md-2 verticalAlign px-0">
+                  <i class="fa fa-info-circle" aria-hidden="true" (click)="getFasesFacturacionProgramada()"></i>
+                </div> 
+              </div> 
             </div>
           </div>
         </div>
@@ -153,10 +160,10 @@
 
 <!--DIALOG CAMBIA ESTADO-->
 <p-dialog width="1200" responsive="true" modal="modal" [draggable]="false" resizable="false"
-  [(visible)]="dialogVisible">
-  <p-header> Información de la cola de facturación </p-header>
+  [(visible)]="dialogVisible" (onHide)="cerrarDialog()">
+  <p-header>{{'factPyS.header.modal.fase' | translate}}</p-header>
 
-  <p-table [autoLayout]="true" [columns]="modalCols" [value]="datosMostrados" [responsive]="true"
+  <p-table #table [autoLayout]="true" [columns]="modalCols" [value]="datosMostrados" [responsive]="true"
     class="tabla-listado overflow">
 
     <ng-template pTemplate="colgroup" let-columns>
@@ -167,10 +174,10 @@
 
     <ng-template pTemplate="header" let-columns>
       <tr>
-        <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field"> {{ col.header | translate
-          }}
+        <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+          {{ col.header | translate}}
           <p-sortIcon [field]="col.field"></p-sortIcon>
-          <input pDroppable="false" *ngSwitchCase="col.field" pInputText type="text"
+          <input pDroppable="false" *ngSwitchCase="col.field" pInputText type="text" (click)="$event.stopPropagation()"
             (input)="table.filter($event.target.value, col.field, 'contains')"
             placeholder="{{'general.boton.search' | translate}}" />
         </th>
