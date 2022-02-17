@@ -115,15 +115,17 @@
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}</label>
-              <div class="row">
+              <div *ngIf="modoEdicion" class="row">
                 <div class="col-md-10">
                   <input type="text" class="form-control" maxLength="255"
-                  disabled="true" pInputText [value]="body.estadoConfirmacion">
+                  disabled="true" pInputText [value]="body.estadoConfirmacion || ''">
                 </div>
                 <div class="col-md-2 verticalAlign px-0">
-                  <i class="fa fa-info-circle" aria-hidden="true" (click)="getFasesFacturacionProgramada()"></i>
+                  <i *ngIf="modoEdicion" class="fa fa-info-circle" aria-hidden="true" (click)="getFasesFacturacionProgramada()"></i>
                 </div> 
               </div> 
+              <input *ngIf="!modoEdicion" type="text" class="form-control" maxLength="255"
+                  disabled="true" pInputText [value]="body.estadoConfirmacion || ''">
             </div>
           </div>
         </div>
