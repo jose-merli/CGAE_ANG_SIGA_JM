@@ -46,7 +46,7 @@
         <div class="col-lg-3 col-md-3">
           <p>{{ 'censo.sociedades.datosBancarios.adjuntar' | translate }}</p>
           <p-fileUpload #pUploadFile chooseLabel="{{ 'general.boton.cargar.archivo' | translate }}" name="file" mode="basic" accept=".xml,.txt,.d19"
-            multiple="false" customUpload="true" (uploadHandler)="getFile($event)" auto="true" [disabled]="modoEdicion || procesoIniciado">
+            customUpload="true" (uploadHandler)="getFile($event)" auto="true" [disabled]="modoEdicion || procesoIniciado">
           </p-fileUpload>
         </div>
         <div class="form-check col-lg-3 col-md-3 align-self-center">
