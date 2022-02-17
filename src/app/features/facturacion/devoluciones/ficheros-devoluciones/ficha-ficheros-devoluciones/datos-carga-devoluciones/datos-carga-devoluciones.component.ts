@@ -59,8 +59,6 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
       nombreCompletoArchivo.lastIndexOf("."),
       nombreCompletoArchivo.length
     );
-
-    console.log(nombreCompletoArchivo);
     
     if (extensionArchivo == null || extensionArchivo.trim() == "" 
           || !/\.(xml|txt|d19)$/i.test(extensionArchivo.trim().toUpperCase())
@@ -72,6 +70,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
       // se almacena el archivo para habilitar boton guardar
       this.file = fileList[0];
 
+      this.pUploadFile.clear();
       this.progressSpinner = false;
     }
     
@@ -184,7 +183,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
 
   eliminar() {
     this.progressSpinner = true;
-    console.log(this.bodyInicial)
+    
     let deleteRequest = {
       idDisqueteDevoluciones: this.bodyInicial.idDisqueteDevoluciones
     };
