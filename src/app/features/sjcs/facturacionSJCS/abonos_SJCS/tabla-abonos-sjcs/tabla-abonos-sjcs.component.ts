@@ -558,7 +558,18 @@ guardar() {
         this.progressSpinner = false;
        //refrescar this.refreshData.emit();
 
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        if (this.endPoint == "facturacionPyS_renegociarAbonoVarios") {
+          let abonosRenegociados = JSON.parse(n.body).id;
+          let mensajeAbonosRenegociados = "Se han renegociado " + JSON.parse(n.body).id + " abonos";
+
+          if (abonosRenegociados == 0) {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), mensajeAbonosRenegociados);
+          } else {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), mensajeAbonosRenegociados);
+          }
+        } else {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        }
       },
       err => {
         this.progressSpinner = false;
