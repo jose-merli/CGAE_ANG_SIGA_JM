@@ -169,13 +169,14 @@
                     </div>
                   </div>
                   <div *ngSwitchCase="'comentario'">
-                    <span *ngIf="!dato.nuevo && dato['idCargos']">{{ 'facturacion.cmc.fichero' | translate }} <a class="enlace" (click)="navigateToFicheroAdeudos(dato)">{{ dato['idCargos'] }}</a></span>
-                    <span *ngIf="!dato.nuevo && dato['enlaceFactura']">
+                    <span *ngIf="dato.comentario && !dato.nuevo">{{ dato[col.field] }}</span>
+                    <span *ngIf="!dato.comentario && !dato.nuevo && dato['idCargos']">{{ 'facturacion.cmc.fichero' | translate }} <a class="enlace" (click)="navigateToFicheroAdeudos(dato)">{{ dato['idCargos'] }}</a></span>
+                    <span *ngIf="!dato.comentario && !dato.nuevo && dato['enlaceFactura']">
                       <span *ngIf="!dato['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['numeroFactura'] }}</a></span>
                       <span *ngIf="dato['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} <a class="enlace" (click)="navigateToFactura(dato)">{{ dato['comisionFactura'] }}</a></span>
                     </span>
-                    <span *ngIf="!dato.nuevo && dato['idPagosjg']">Abono <a class="enlace" (click)="navigateToSJCS(dato)">{{ dato['idPagosjg'] }}</a></span>
-                    <span *ngIf="!dato.nuevo && dato['enlaceAbono']">Rectif. <a class="enlace" (click)="navigateToAbono(dato)">{{ dato['numeroAbono'] }}</a></span>
+                    <span *ngIf="!dato.comentario && !dato.nuevo && dato['idPagosjg']">Abono <a class="enlace" (click)="navigateToSJCS(dato)">{{ dato['idPagosjg'] }}</a></span>
+                    <span *ngIf="!dato.comentario && !dato.nuevo && dato['enlaceAbono']">Rectif. <a class="enlace" (click)="navigateToAbono(dato)">{{ dato['numeroAbono'] }}</a></span>
                   
                     <div *ngIf="dato.nuevo && [ACCION_FACTURA_ANULACION, ACCION_ABONO_RENEGOCIACION, ACCION_FACTURA_NUEVO_CAJA].includes(nuevoEstado.idAccion)">
                       <input type="text" class="form-control" [(ngModel)]="nuevoEstado.comentario" maxlength="nuevoEstado.notaMaxLength" pInputText>
