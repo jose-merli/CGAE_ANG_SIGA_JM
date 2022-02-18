@@ -12,47 +12,6 @@ import { Location } from '@angular/common';
 export class TablaBusquedaBaremosComponent implements OnInit {
   progressSpinner: boolean = false;
   selectedDatos = [];
-  datosDefecto = [
-    {
-      idTurno: 'Turno1',
-      nDias: 'nDias1',
-      tipoBaremo: 'tipoBaremo1',
-      diasAplicar: 'diasAplicar1',
-      minimo: 'minimo1',
-      dispImporte: 'dispImporte1',
-      naPartir1: 'naPartir11',
-      maximo: 'maximo1',
-      naPartir2: 'naPartir21',
-      porDia: 'porDia1',
-      guardias: [
-        {
-          idGuardia: 'idGuardia1',
-          nDiasGuardia: 'nDiasGuardia1',
-          tipoBaremoGuardia: 'tipoBaremoGuardia1',
-          diasAplicarGuardia: 'diasAplicarGuardia1',
-          minimoGuardia: 'minimoGuardia1',
-          dispImporteGuardia: 'dispImporteGuardia1',
-          naPartir1Guardia: 'naPartir1Guardia1',
-          maximoGuardia: 'maximoGuardia1',
-          naPartir2Guardia: 'naPartir2Guardia1',
-          porDiaGuardia: 'porDiaGuardia1'
-        },
-        {
-          idGuardia: 'idGuardia2',
-          nDiasGuardia: 'nDiasGuardia2',
-          tipoBaremoGuardia: 'tipoBaremoGuardia2',
-          diasAplicarGuardia: 'diasAplicarGuardia2',
-          minimoGuardia: 'minimoGuardia2',
-          dispImporteGuardia: 'dispImporteGuardia2',
-          naPartir1Guardia: 'naPartir1Guardia2',
-          maximoGuardia: 'maximoGuardia2',
-          naPartir2Guardia: 'naPartir2Guardia2',
-          porDiaGuardia: 'porDiaGuardia2'
-        },
-      ]
-
-    }
-  ];
   cols = [];
   subCols = [];
   rowsPerPage = [];
@@ -89,36 +48,23 @@ export class TablaBusquedaBaremosComponent implements OnInit {
       this.historico = false;
     }
     if (this.datos == null || this.datos == undefined) {
-      this.datos = this.datosDefecto
+      this.datos = [];
     }
   }
 
   getCols() {
 
-    // this.cols = [
-    //   { field: "guardias", header: "facturacionSJCS.baremosDeGuardia.turnoguardia", width: '20%' },
-    //   { field: "ndias", header: "facturacionSJCS.baremosDeGuardia.nDias", width: '5%' },
-    //   { field: "baremo", header: "facturacionSJCS.baremosDeGuardia.tipoBaremo", width: '15%' },
-    //   { field: "dias", header: "facturacionSJCS.baremosDeGuardia.diasAplicar", width: '5%' },
-    //   { field: "numMinimoSimple", header: "facturacionSJCS.baremosDeGuardia.minimo", width: '5%' },
-    //   { field: "simpleOImporteIndividual", header: "facturacionSJCS.baremosDeGuardia.dispImporte", width: '5%' },
-    //   { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
-    //   { field: "maximo", header: "facturacionSJCS.baremosDeGuardia.maximo", width: '5%' },
-    //   { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
-    //   { field: "porDia", header: "facturacionSJCS.baremosDeGuardia.porDia", width: '5%' }
-    // ];
-
     this.cols = [
-      { field: "nombre" },
-      { field: "nDias" },
-      { field: "baremo" },
-      { field: "diasGuardia" },
-      { field: "numMinimoSimple" },
-      { field: "simpleOImporteIndividual" },
-      { field: "naPartir" },
-      { field: "maximo" },
-      { field: "naPartir" },
-      { field: "porDia" }
+      { field: "nombre", header: "facturacionSJCS.baremosDeGuardia.turnoguardia", width: '20%' },
+      { field: "nDias", header: "facturacionSJCS.baremosDeGuardia.nDias", width: '5%' },
+      { field: "baremo", header: "facturacionSJCS.baremosDeGuardia.tipoBaremo", width: '15%' },
+      { field: "diasGuardia", header: "facturacionSJCS.baremosDeGuardia.diasAplicar", width: '5%' },
+      { field: "numMinimoSimple", header: "facturacionSJCS.baremosDeGuardia.minimo", width: '5%' },
+      { field: "simpleOImporteIndividual", header: "facturacionSJCS.baremosDeGuardia.dispImporte", width: '5%' },
+      { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
+      { field: "maximo", header: "facturacionSJCS.baremosDeGuardia.maximo", width: '5%' },
+      { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
+      { field: "porDia", header: "facturacionSJCS.baremosDeGuardia.porDia", width: '5%' }
     ];
 
     this.rowsPerPage = [

@@ -46,7 +46,7 @@ export class BaremosDeGuardiaComponent implements OnInit {
 
   }
 
-  getBaremosGuardias(event) {
+  getBaremosGuardias(event, historico?:boolean) {
     if (event == true) {
 
 
@@ -58,6 +58,14 @@ export class BaremosDeGuardiaComponent implements OnInit {
       }
       if(this.filtros.filtros.idTurnos && this.filtros.filtros.idTurnos != null){
         baremoBusqueda.idTurnos = this.filtros.filtros.idTurnos;
+      }
+
+      if (historico) {
+        if (historico == true) {
+          baremoBusqueda.historico = true;
+        } else if (historico == false) {
+          baremoBusqueda.historico = false;
+        }
       }
       
       this.sigaServices.post("baremosGuardia_buscar", baremoBusqueda).subscribe(
@@ -91,10 +99,10 @@ export class BaremosDeGuardiaComponent implements OnInit {
     let buscar = true;
     if (event == true) {
       this.filtros.filtros.historico = true;
-      this.getBaremosGuardias(buscar);
+      this.getBaremosGuardias(buscar, true);
     } else if (event == false) {
       this.filtros.filtros.historico = false;
-      this.getBaremosGuardias(buscar);
+      this.getBaremosGuardias(buscar, false);
     }
 
   }

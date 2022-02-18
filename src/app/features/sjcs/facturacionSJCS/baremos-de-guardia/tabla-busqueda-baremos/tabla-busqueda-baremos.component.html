@@ -28,50 +28,20 @@
       <tr>
 
         <td *ngFor="let col of columns | slice:0:10" class="text-center">
-          <!-- <div class="d-flex">
-            <a [pRowToggler]="rowData">
-              <div *ngIf="col.field =='guardias'">
-                <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                <a *ngIf="!setItalic(rowData)" [ngClass]="{'enlace': !desactivarHistorico}"
-                  (click)="openFichaBaremos(rowData)">
-                  <span>{{rowData[col.field]}}</span></a>
-                <span *ngIf="setItalic(rowData)"
-                  [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
-              </div>
-            </a>
+          <div *ngIf="col.field =='nombre'">
+            <span (click)="openFichaBaremos(rowData)" class="enlace" [ngClass]="{'enlace': !setItalic(rowData), 'historico': setItalic(rowData)}">{{rowData[col.field]}}</span>
           </div>
 
           <div *ngIf="col.field =='simpleOImporteIndividual'">
-            <span *ngIf="!setItalic(rowData)">{{rowData[col.field] | currency: 'EUR' }}</span>
-            <span *ngIf="setItalic(rowData)"
-              [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]
-                | currency: 'EUR' }}</span>
+            <span [ngClass]="{'historico': setItalic(rowData)}">{{rowData[col.field] | currency: 'EUR'}}</span>
           </div>
 
-          <div *ngIf="col.field !='guardias' && col.field !='simpleOImporteIndividual'">
-            <span *ngIf="!setItalic(rowData)">{{rowData[col.field]}}</span>
-            <span *ngIf="setItalic(rowData)"
-              [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
-          </div>-->
-          <span>{{rowData[col.field]}}</span>
+          <div *ngIf="col.field !='simpleOImporteIndividual' && col.field !='nombre'">
+            <span [ngClass]="{'historico': setItalic(rowData)}">{{rowData[col.field]}}</span>
+          </div>
         </td>
       </tr>
     </ng-template>
-<!-- 
-    <ng-template pTemplate="rowexpansion" let-dato let-columns="subCols">
-
-      <tr *ngFor="let guardia of dato.guardiasObj">
-        <td *ngFor="let sub of subCols" class="text-center">
-          <div [ngClass]="{'displayMargin' : (sub.field == 'idGuardia')}">
-            <span *ngIf="!setItalic(guardia)">{{ guardia[sub.field] }}</span>
-            <span *ngIf="sub.field == 'simpleOImporteIndividual' ">€</span>
-            <span *ngIf="setItalic(guardia)"
-              [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ guardia[sub.field] }}</span>
-          </div>
-        </td>
-      </tr>
-
-    </ng-template> -->
 
     <ng-template pTemplate="emptymessage" let-columns>
       <tr>
