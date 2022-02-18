@@ -107,7 +107,7 @@
   
       <div *ngIf="showColegiado" class="module vista-avanzada">
 
-        <app-busqueda-colegiado-express [tarjeta]="'tramitador'" [pantalla]="'ejg'" 
+        <app-busqueda-colegiado-express (idPersona)="getIdPersona($evento)"
 
               [numColegiado]="usuarioBusquedaExpress.numColegiado" [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)"> 
 

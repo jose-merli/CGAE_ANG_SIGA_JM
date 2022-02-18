@@ -481,7 +481,11 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       (data: FaseFacturacionProgramadaObject) => {
 
         if (data.error != null && data.error.description != null) {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(data.error.description.toString()));
+          if (data.error.code.toString() == '200') {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant(data.error.description.toString()));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(data.error.description.toString()));
+          }
         } else {
           this.datosMostrados = data.faseFacturacionProgramadaItemList;
           this.cambiarEstadoDialogo(true);

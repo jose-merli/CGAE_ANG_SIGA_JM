@@ -8,6 +8,7 @@ import { ColegiadoObject } from '../../../../../../models/ColegiadoObject';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate/translation.service';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 
 export class Colegiado {
   idPersona: string;
@@ -44,7 +45,9 @@ export class TarjetaColegiadoComponent implements OnInit, AfterViewInit {
     private retencionesService: RetencionesService,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
-    private translateService: TranslateService) { }
+    private translateService: TranslateService,
+    private sigaStorageService: SigaStorageService) { }
+    isLetrado: boolean = false;
 
   ngOnInit() {
 
@@ -86,7 +89,7 @@ export class TarjetaColegiadoComponent implements OnInit, AfterViewInit {
       }
 
     }).catch(error => console.error(error));
-
+    this.isLetrado = this.sigaStorageService.isLetrado;
   }
 
   ngAfterViewInit() {

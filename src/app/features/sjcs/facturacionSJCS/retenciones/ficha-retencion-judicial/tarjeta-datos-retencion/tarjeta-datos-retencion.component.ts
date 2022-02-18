@@ -12,6 +12,7 @@ import { Colegiado } from '../tarjeta-colegiado/tarjeta-colegiado.component';
 import { DatePipe } from '@angular/common';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
+import { SigaStorageService } from '../../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-tarjeta-datos-retencion',
@@ -39,13 +40,14 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   @Output() retencionEvent = new EventEmitter<RetencionItem>();
 
   disableEliminar:boolean = false;
-  
+  isLetrado: boolean = false;
   constructor(private sigaServices: SigaServices,
     private retencionesService: RetencionesService,
     private translateService: TranslateService,
     private commonsService: CommonsService,
     private datePipe: DatePipe,
-    private router: Router) { }
+    private router: Router,
+    private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
 
@@ -63,6 +65,8 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
       this.getComboDestinatarios();
 
     }).catch(error => console.error(error));
+
+    this.isLetrado = this.sigaStorageService.isLetrado;
 
   }
 

@@ -84,9 +84,9 @@
       <div class="text-right main-button">
         <button pButton type="button" iconPos="left" icon="fa fa-undo"
           label="{{ 'general.boton.restablecer' | translate }}" (click)="restablecer()"
-          [disabled]="isDisabledRestablecer() || !permisoEscritura"></button>
+          [disabled]="isDisabledRestablecer() || !permisoEscritura || isLetrado"></button>
         <button pButton type="button" iconPos="left" icon="fa fa-search"
-          label="{{ 'general.boton.search' | translate }}" (click)="buscar()" [disabled]="!permisoEscritura"></button>
+          label="{{ 'general.boton.search' | translate }}" (click)="buscar()" [disabled]="!permisoEscritura || isLetrado"></button>
       </div>
     </div>
 

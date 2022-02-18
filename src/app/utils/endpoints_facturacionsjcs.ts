@@ -101,6 +101,7 @@ export let endpoints_facturacionsjcs: any = {
     baremosGuardia_getGuardiasByConf: "baremosGuardia/getGuardiasByConf",
     baremosGuardia_saveBaremo: "baremosGuardia/saveBaremo",
     baremosGuardia_getBaremo: "baremosGuardia/getBaremo",
+    baremosGuardia_getTurnoGuarConf: "baremosGuardia/getTurnoGuarConf",
 
     /* Endpoints Tarjeta genérica facturaciones */
     tarjGenFac_getFacturacionesPorAsuntoActuacionDesigna: "facturacionsjcs/getFacturacionesPorAsuntoActuacionDesigna",
