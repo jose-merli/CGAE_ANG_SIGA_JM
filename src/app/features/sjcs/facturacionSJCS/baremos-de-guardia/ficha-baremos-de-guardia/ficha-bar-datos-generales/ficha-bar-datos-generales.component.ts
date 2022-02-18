@@ -27,6 +27,7 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
 
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Output() guardiasByConf = new EventEmitter<boolean>();
+  @Output() rest = new EventEmitter<boolean>();
   @Input() datos;
   @Input() modoEdicion;
   @Input() permisoEscritura: boolean = false;
@@ -43,8 +44,10 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
     private persistenceService:PersistenceService) { }
 
   ngOnInit() {
+    
       if(this.datos != null || this.datos != undefined){
         this.datos = JSON.parse(JSON.stringify(this.datos));
+
         this.getCols();
         this.getComboTurnos();
       }
@@ -61,22 +64,20 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
     this.addEnlace.emit(enlace);
   }
 
-  onHideTarjeta() {
+  /* onHideTarjeta() {
     // if (this.retencionesService.modoEdicion) {
-    //this.showTarjeta = !this.showTarjeta;
+    this.showTarjeta = !this.showTarjeta;
     // } else {
     //   this.showTarjeta = true;
     // }
-
-    this.showTarjeta ? this.showTarjeta = false : this.showTarjeta = true;
-  }
+  } */
 
   getCols() {
 
     this.cols = [
       { field: "nomturno", header: "facturacionSJCS.baremosDeGuardia.turno", width: "33%" },
       { field: "nomguardia", header: 'facturacionSJCS.baremosDeGuardia.guardia', width: "33%" },
-      { field: "baremo", header: 'facturacionSJCS.baremosDeGuardia.tipoBaremo', width: "33%" }
+      //{ field: "baremo", header: 'facturacionSJCS.baremosDeGuardia.tipoBaremo', width: "33%" }
     ];
 
     this.rowsPerPage = [
@@ -190,7 +191,8 @@ export class FichaBarDatosGeneralesComponent implements OnInit, AfterViewInit {
   restablecer() {
     this.isNuevo = false;
     this.selectedDatos = []
-    this.guardiasByConf.emit(true);
+    this.rest.emit(true)
+   
   }
 
   focusInputField(someMultiselect: MultiSelect) {
