@@ -28,7 +28,7 @@
       <tr>
 
         <td *ngFor="let col of columns | slice:0:10" class="text-center">
-          <div class="d-flex">
+          <!-- <div class="d-flex">
             <a [pRowToggler]="rowData">
               <div *ngIf="col.field =='guardias'">
                 <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
@@ -52,12 +52,12 @@
             <span *ngIf="!setItalic(rowData)">{{rowData[col.field]}}</span>
             <span *ngIf="setItalic(rowData)"
               [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
-          </div>
-
+          </div>-->
+          <span>{{rowData[col.field]}}</span>
         </td>
       </tr>
     </ng-template>
-
+<!-- 
     <ng-template pTemplate="rowexpansion" let-dato let-columns="subCols">
 
       <tr *ngFor="let guardia of dato.guardiasObj">
@@ -71,7 +71,7 @@
         </td>
       </tr>
 
-    </ng-template>
+    </ng-template> -->
 
     <ng-template pTemplate="emptymessage" let-columns>
       <tr>

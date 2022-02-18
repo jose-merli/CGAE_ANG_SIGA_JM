@@ -95,20 +95,20 @@ export class TablaBusquedaBaremosComponent implements OnInit {
 
   getCols() {
 
-    this.cols = [
-      { field: "guardias", header: "facturacionSJCS.baremosDeGuardia.turnoguardia", width: '20%' },
-      { field: "ndias", header: "facturacionSJCS.baremosDeGuardia.nDias", width: '5%' },
-      { field: "baremo", header: "facturacionSJCS.baremosDeGuardia.tipoBaremo", width: '15%' },
-      { field: "dias", header: "facturacionSJCS.baremosDeGuardia.diasAplicar", width: '5%' },
-      { field: "numMinimoSimple", header: "facturacionSJCS.baremosDeGuardia.minimo", width: '5%' },
-      { field: "simpleOImporteIndividual", header: "facturacionSJCS.baremosDeGuardia.dispImporte", width: '5%' },
-      { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
-      { field: "maximo", header: "facturacionSJCS.baremosDeGuardia.maximo", width: '5%' },
-      { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
-      { field: "porDia", header: "facturacionSJCS.baremosDeGuardia.porDia", width: '5%' }
-    ];
+    // this.cols = [
+    //   { field: "guardias", header: "facturacionSJCS.baremosDeGuardia.turnoguardia", width: '20%' },
+    //   { field: "ndias", header: "facturacionSJCS.baremosDeGuardia.nDias", width: '5%' },
+    //   { field: "baremo", header: "facturacionSJCS.baremosDeGuardia.tipoBaremo", width: '15%' },
+    //   { field: "dias", header: "facturacionSJCS.baremosDeGuardia.diasAplicar", width: '5%' },
+    //   { field: "numMinimoSimple", header: "facturacionSJCS.baremosDeGuardia.minimo", width: '5%' },
+    //   { field: "simpleOImporteIndividual", header: "facturacionSJCS.baremosDeGuardia.dispImporte", width: '5%' },
+    //   { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
+    //   { field: "maximo", header: "facturacionSJCS.baremosDeGuardia.maximo", width: '5%' },
+    //   { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
+    //   { field: "porDia", header: "facturacionSJCS.baremosDeGuardia.porDia", width: '5%' }
+    // ];
 
-    this.subCols = [
+    this.cols = [
       { field: "nombre" },
       { field: "nDias" },
       { field: "baremo" },

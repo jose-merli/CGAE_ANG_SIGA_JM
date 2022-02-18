@@ -62,7 +62,7 @@ export class BaremosDeGuardiaComponent implements OnInit {
       
       this.sigaServices.post("baremosGuardia_buscar", baremoBusqueda).subscribe(
         data => {
-          this.datos = JSON.parse(data.body).baremosRequestItems;
+          this.datos = JSON.parse(data.body).baremosRequestItems[0].guardiasObj;
           this.mostrarTablaResultados = true;
           let error = JSON.parse(data.body).error;
           this.progressSpinner = false;
