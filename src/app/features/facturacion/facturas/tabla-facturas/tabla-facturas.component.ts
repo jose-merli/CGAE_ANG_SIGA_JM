@@ -1,5 +1,5 @@
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { actionBegin } from '@syncfusion/ej2-angular-grids';
 import { ConfirmationService, DataTable } from 'primeng/primeng';
@@ -48,7 +48,6 @@ export class TablaFacturasComponent implements OnInit {
   @Output() busqueda = new EventEmitter<boolean>();
 
   @ViewChild("table") table: DataTable;
-
   comboSel:string;
   comentario:boolean = false;
   combo:boolean = false;
@@ -60,6 +59,7 @@ export class TablaFacturasComponent implements OnInit {
 
 
   itemsParaModificar:FacturaEstadosPagosItem[]= [];
+  itemsParaModificarAbonos:FacturaEstadosPagosItem[]= [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef, 
     private sigaServices: SigaServices,
@@ -81,6 +81,8 @@ export class TablaFacturasComponent implements OnInit {
   openTab(selectedRow) {
     let facturasItem: FacturasItem = selectedRow;
     sessionStorage.setItem("facturasItem", JSON.stringify(facturasItem));
+    sessionStorage.setItem('filtrosFacturas', JSON.stringify(this.filtro));
+
     this.router.navigate(["/gestionFacturas"]);
   }
   abreCierraFicha(){
@@ -201,6 +203,7 @@ confirmNuevoFicheroTransferencias(): void {
   });
 }
 
+
 nuevoFicheroTransferencias() {
   this.progressSpinner = true;
   let abonosFichero = this.selectedDatos.filter(d => d.tipo != "FACTURA" && d.idEstado == this.FAC_ABONO_ESTADO_PENDIENTE_BANCO);
@@ -318,6 +321,8 @@ onChangeSelectAll() {
     
   }
 
+  
+
   cerrarDialog(operacionCancelada: boolean) {
     this.showModal = false;
     this.esRenegociar = false;
@@ -411,10 +416,10 @@ onChangeSelectAll() {
 
   renegociarFacturas(): void {
     this.itemsParaModificar = [];
+    this.itemsParaModificarAbonos = [];
     this.selectedDatos.forEach(element =>{
         let item:FacturaEstadosPagosItem = new FacturaEstadosPagosItem();
-        if(element.tipo == "FACTURA"  && ["2", "4", "5"].includes(element.idEstado) 
-        || element.tipo != "FACTURA" && element.idEstado == "1"){
+        if(element.tipo == "FACTURA"  && ["2", "4", "5"].includes(element.idEstado) ){
           // IdFactura
           item.idFactura = element.idFactura;
 
@@ -444,8 +449,37 @@ onChangeSelectAll() {
         }
     });
 
- 
+    this.selectedDatos.forEach(element =>{
+      let item:FacturaEstadosPagosItem = new FacturaEstadosPagosItem();
+      if( element.tipo == "ABONO" && element.idEstado != "1"){
+        // IdFactura
+        item.idAbono = element.idAbono;
+        item.nuevo = true;
+        let fechaActual: Date = new Date();
+        item.fechaMin = fechaActual > new Date(element.fechaModificacionUlt) ? fechaActual : new Date(element.fechaModificacionUlt);
+        if(this.itemAction.fechaModificaion  > new Date(element.fechaModificacionUlt) ){
+          item.fechaModificaion = this.itemAction.fechaModificaion
+        }else{
+          item.fechaModificaion = new Date();
+        }
+        item.comentario = this.itemAction.comentario;
+        item.notaMaxLength = 1024;
 
+        item.modo = this.comboSel;
+
+        // Acción
+        item.idAccion = "7";
+        item.accion = this.translateService.instant("facturacion.facturas.estadosPagos.renegociacion");
+
+        item.modo = this.comboSel;
+
+        // El importe pendiente se recalcula
+        item.impTotalPagado = "0";
+        item.impTotalPorPagar = element.importePorPagarUlt;
+
+        this.itemsParaModificarAbonos.push(item);
+      }
+  });
   }
 
   nuevoCobroFacturas() {
@@ -478,38 +512,6 @@ onChangeSelectAll() {
 
           this.itemsParaModificar.push(item);
         }
-    });
-  }
-
-  nuevoAbonoFacturas() {
-    this.itemsParaModificar = [];
-    this.selectedDatos.forEach(element =>{
-      let item:FacturaEstadosPagosItem = new FacturaEstadosPagosItem();
-      if(element.tipo == "ABONO"  && ["6"].includes(element.idEstado) && 
-      element.importeAdeudadoPendienteAb != undefined && parseFloat(element.importeAdeudadoPendienteAb) == 0){
-    // IdFactura
-        item.idFactura = element.idFactura;
-
-
-        let fechaActual: Date = new Date();
-        item.fechaMin = fechaActual > new Date(element.fechaModificacionUlt) ? fechaActual : new Date(element.fechaModificacionUlt);
-        if(this.itemAction.fechaModificaion  > new Date(element.fechaModificacionUlt) ){
-          item.fechaModificaion = this.itemAction.fechaModificaion
-        }else{
-          item.fechaModificaion = new Date();
-        }
-        item.comentario = this.itemAction.comentario;
-        item.notaMaxLength = 256;
-        // Acción
-        item.idAccion = "4";
-        item.accion = this.translateService.instant("facturacion.facturas.estadosPagos.abonoPorCaja");
-
-        // El importe pendiente se recalcula
-        item.impTotalPagado = "0";
-        item.impTotalPorPagar = element.importePorPagarUlt;
-
-        this.itemsParaModificar.push(item);
-      }
     });
   }
 
@@ -690,9 +692,17 @@ muestraCamposObligatorios() {
      } 
 
    } 
-   if(accionAux != "Nuevo Abono")this.guardarDefi();
-   else this.guardarAbono();
+   if(accionAux == "Nuevo Abono"){
+     this.guardarAbono();
+   }else if(accionAux == "Renegociar"){
+    this.guardarDefi();
+    this.guardarRenegociar();
+   } else{
+    this.guardarDefi();
+   }
+   
   }
+  
 isValid(){
   let isValid:boolean = true;
   if(this.esRenegociar && this.comboSel == null || this.comboSel == ""){
@@ -716,11 +726,25 @@ requisitos(){
   let cumpleTodo:boolean = true;
   if(this.itemsParaModificar.length == 0){
     //Las facturas seleccionadas no cumplen con los requisitos para la accion.
-   this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Las facturas seleccionadas no cumplen con los requisitos para la accion.");
+   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.cargaMasiva.error"));
    return false;
   }
   return true;
 }
+mensajeCargaMasiva(registrosProcesados,totalRegistros){
+  if(registrosProcesados != "0"){
+    this.showMessage("correct", this.translateService.instant("general.message.informacion"), 
+    this.translateService.instant("facturacion.facturas.cargaMasiva.procesamiento") + " "+ registrosProcesados+ "/"+totalRegistros
+    +  this.translateService.instant("consultas.consultaslistas.literal.registros")
+    );
+  }else{
+    this.showMessage("error", this.translateService.instant("general.message.informacion"), 
+    this.translateService.instant("facturacion.facturas.cargaMasiva.procesamiento.error") 
+    );
+  }
+
+}
+
   guardarDefi() {
     if(this.isValid() && this.requisitos()){
       
@@ -728,9 +752,9 @@ requisitos(){
       this.sigaServices.post("facturacionPyS_insertarEstadosPagosVarios", this.itemsParaModificar).toPromise()
         .then(
           n => {
+            this.mensajeCargaMasiva(JSON.parse(n.body).id,this.itemsParaModificar.length)
            // this.guardadoSend.emit(this.bodyInicial);
-           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-           },
+          },
           err => {
             return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
         }).catch(error => {
@@ -750,14 +774,28 @@ requisitos(){
 
   guardarAbono() {
     
-    if(this.isValid() && this.requisitos()){
+    if(this.isValid() &&  this.requisitos()){
       this.progressSpinner = true;
       this.sigaServices.post("facturacionPyS_nuevoAbonoMasivo", this.itemsParaModificar).subscribe(
         n => {
           this.progressSpinner = false;
-         //refrescar this.refreshData.emit();
-  
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.mensajeCargaMasiva(JSON.parse(n.body).id,this.itemsParaModificar.length)     
+         this.cerrarDialog(false);
+        },
+        err => {
+          this.progressSpinner = false;
+          this.handleServerSideErrorMessage(err);
+        }
+      );}
+     } 
+
+  guardarRenegociar() {
+    if(this.isValid() && this.itemsParaModificarAbonos.length > 0){
+      this.progressSpinner = true;
+      this.sigaServices.post('facturacionPyS_renegociarAbonoVarios', this.itemsParaModificarAbonos).subscribe(
+        n => {
+          this.progressSpinner = false;
+          this.mensajeCargaMasiva(JSON.parse(n.body).id,this.itemsParaModificarAbonos.length)
         },
         err => {
           this.progressSpinner = false;
@@ -765,8 +803,7 @@ requisitos(){
         }
       );
     }
-      
-    } 
+  }
 
 
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MultiSelect } from 'primeng/multiselect';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
@@ -19,13 +19,15 @@ export class FiltrosFacturasComponent implements OnInit {
   @Output() buscarFacturas = new EventEmitter<boolean>();
 
   progressSpinner: boolean = false;
+  @Input() idPersona;
 
   // variables para desplegar/minimizar secciones del componente
   showDatosGenerales: boolean = true;
   showDatosAgrupacion: boolean = true;
   showCliente: boolean = true;
   showComunicacionesCobrosRecobros: boolean = true;
-
+  
+  @ViewChild('inputNum') inputNum: ElementRef;
   // crear combo para opciones en un dropdown
   comboSeriesFacturacion: ComboItem[] = [];
   comboContabilizado: ComboItem[] = [];
@@ -52,6 +54,15 @@ export class FiltrosFacturasComponent implements OnInit {
     private sigaServices: SigaServices,
     //private router: Router
   ) { }
+  usuarioBusquedaExpress = { 
+
+    numColegiado: '', 
+
+    nombreAp: '', 
+
+    idPersona:'' 
+
+  }; 
 
   ngOnInit() {
     this.getCombos();
@@ -65,13 +76,15 @@ export class FiltrosFacturasComponent implements OnInit {
       this.body.numeroColegiado = busquedaColegiado.numColegiado;
       this.body.idCliente = busquedaColegiado.idPersona;
     }
+   
+
     if (sessionStorage.getItem("mensaje") && sessionStorage.getItem("volver")) {
       let message: Message = JSON.parse(sessionStorage.getItem("mensaje"));
       if (message)
         this.showMessage(message.severity, message.summary, message.detail);
       sessionStorage.removeItem("mensaje");
       sessionStorage.removeItem("volver");
-    } else if(this.persistenceService.getFiltros() && sessionStorage.getItem("volver")){
+    } /*else if(this.persistenceService.getFiltros() && sessionStorage.getItem("volver")){
       this.body = this.persistenceService.getFiltros();
       this.persistenceService.clearFiltros();
 
@@ -81,7 +94,7 @@ export class FiltrosFacturasComponent implements OnInit {
       this.body.fechaEmisionHasta = this.transformDate(this.body.fechaEmisionHasta);
 
       this.isBuscar();
-    } else if(!sessionStorage.getItem("idFichero")) {
+    } */else if(!sessionStorage.getItem("idFichero")) {
         this.body.fechaEmisionDesde = new Date( new Date().setFullYear(new Date().getFullYear()-2));     
     } else if(sessionStorage.getItem("idFichero")) {
       if (sessionStorage.getItem("tipoFichero") =='T') {
@@ -95,7 +108,9 @@ export class FiltrosFacturasComponent implements OnInit {
 			sessionStorage.removeItem("tipoFichero");
       this.isBuscar();
     }
-
+    setTimeout(() => {
+      this.inputNum.nativeElement.focus();  
+    }, 300);
   }
 
   // Get combos

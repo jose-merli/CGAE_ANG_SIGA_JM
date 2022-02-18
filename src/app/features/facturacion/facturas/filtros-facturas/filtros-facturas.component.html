@@ -20,14 +20,16 @@
       <div *ngIf="showDatosGenerales" class="module vista-avanzada">
         <div class="form-row">
           <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ "facturacionSJCS.facturacionesYPagos.numeroFactura" | translate }}</label>
-            <input type="text" class="form-control" [(ngModel)]="body.numeroFactura" pInputText />
+            <label><strong>{{ "facturacionSJCS.facturacionesYPagos.numeroFactura" | translate }}</strong></label>
+            <input type="text" class="form-control"  #inputNum  [(ngModel)]="body.numeroFactura" pInputText />
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ "facturacion.facturas.contabilizado" | translate }}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.contabilizado'
-              placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboContabilizado" [filter]="true"
-              [showClear]="true"></p-dropdown>
+            <label>{{ "censo.nuevaSolicitud.estado" | translate }}</label>
+            <p-multiSelect #estados class="select-form" [(ngModel)]='estadosSelect'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstadosFacturas"
+              optionLabel="label1" [filter]="true" maxSelectedLabels="10"
+              [selectedItemsLabel]="'{0} consultas seleccionadas'" filterBy="label,labelSinTilde" styleClass="widthAll"
+              (onPanelShow)="focusInputField(estados)"></p-multiSelect>
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacion.facturas.formaCobroAbono" | translate }}</label>
@@ -60,12 +62,10 @@
             <input type="number" class="form-control" [(ngModel)]="body.importefacturadoHasta" pInputText />
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
-            <label>{{ "censo.nuevaSolicitud.estado" | translate }}</label>
-            <p-multiSelect #estados class="select-form" [(ngModel)]='estadosSelect'
-              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstadosFacturas"
-              optionLabel="label1" [filter]="true" maxSelectedLabels="10"
-              [selectedItemsLabel]="'{0} consultas seleccionadas'" filterBy="label,labelSinTilde" styleClass="widthAll"
-              (onPanelShow)="focusInputField(estados)"></p-multiSelect>
+            <label>{{ "facturacion.facturas.contabilizado" | translate }}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.contabilizado'
+              placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboContabilizado" [filter]="true"
+              [showClear]="true"></p-dropdown>
           </div>
         </div>
       </div>

@@ -31,6 +31,15 @@ export class FacturasComponent implements OnInit {
 	ngOnInit() {
 		this.buscar = false;
 		this.permisoEscritura=true //cambiar cuando se implemente los permisos
+		if (sessionStorage.getItem('filtrosFacturas')) {
+			this.filtros.body = JSON.parse(sessionStorage.getItem('filtrosFacturas'));
+			sessionStorage.removeItem('filtrosFacturas');
+			this.filtros.body.fechaEmisionDesde = this.transformDate(this.filtros.body.fechaEmisionDesde);
+			this.filtros.body.fechaEmisionHasta = this.transformDate(this.filtros.body.fechaEmisionHasta);
+	  
+			this.buscarFacturas();
+		  }
+
 	}
 
 	buscarFacturas() {
@@ -88,5 +97,14 @@ export class FacturasComponent implements OnInit {
 	
 	  clear() {
 		this.msgs = [];
+	  }
+
+	  transformDate(fecha) {
+		if (fecha != undefined)
+		  fecha = new Date(fecha);
+		else
+		  fecha = null;
+		// fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
+		return fecha;
 	  }
 }
