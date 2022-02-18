@@ -544,11 +544,25 @@ requisitos(){
   let cumpleTodo:boolean = true;
   if(this.itemsParaModificar.length == 0){
     //Las facturas seleccionadas no cumplen con los requisitos para la accion.
-    this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Las facturas seleccionadas no cumplen con los requisitos para la accion.");
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.abonosSJCS.cargaMasiva.error"));
     return false;
   }
   return true;
 }
+mensajeCargaMasiva(registrosProcesados,totalRegistros){
+  if(registrosProcesados != "0"){
+    this.showMessage("correct", this.translateService.instant("general.message.informacion"), 
+    this.translateService.instant("facturacion.facturas.cargaMasiva.procesamiento") + " "+ registrosProcesados+ "/"+totalRegistros
+    +  this.translateService.instant("consultas.consultaslistas.literal.registros")
+    );
+  }else{
+    this.showMessage("error", this.translateService.instant("general.message.informacion"), 
+    this.translateService.instant("facturacion.facturas.cargaMasiva.procesamiento.error") 
+    );
+  }
+
+}
+
 guardar() {
     
   if(this.isValid() && this.requisitos()){
@@ -557,19 +571,7 @@ guardar() {
       n => {
         this.progressSpinner = false;
        //refrescar this.refreshData.emit();
-
-        if (this.endPoint == "facturacionPyS_renegociarAbonoVarios") {
-          let abonosRenegociados = JSON.parse(n.body).id;
-          let mensajeAbonosRenegociados = "Se han renegociado " + JSON.parse(n.body).id + " abonos";
-
-          if (abonosRenegociados == 0) {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), mensajeAbonosRenegociados);
-          } else {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), mensajeAbonosRenegociados);
-          }
-        } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        }
+       this.mensajeCargaMasiva(JSON.parse(n.body).id,this.itemsParaModificar.length)
       },
       err => {
         this.progressSpinner = false;

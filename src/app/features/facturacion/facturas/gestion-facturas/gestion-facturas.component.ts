@@ -38,8 +38,10 @@ export class GestionFacturasComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
 
+    let tmpBody;
+
     if (sessionStorage.getItem("facturasItem")) {
-      this.body = JSON.parse(sessionStorage.getItem("facturasItem"));
+      tmpBody = JSON.parse(sessionStorage.getItem("facturasItem"));
       sessionStorage.removeItem("facturasItem");
     } else if (sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
@@ -49,8 +51,8 @@ export class GestionFacturasComponent implements OnInit {
       this.location.back();
     }
     
-    if (this.body != undefined) {
-      this.getDatosFactura(this.body.idFactura, this.body.idAbono, this.body.tipo).catch(error => {
+    if (tmpBody != undefined) {
+      this.getDatosFactura(tmpBody.idFactura, tmpBody.idAbono, tmpBody.tipo).catch(error => {
         if (error != undefined) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
         } else {

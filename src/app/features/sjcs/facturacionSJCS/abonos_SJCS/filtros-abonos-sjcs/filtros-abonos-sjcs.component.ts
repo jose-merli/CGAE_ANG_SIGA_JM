@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
@@ -41,6 +41,7 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   esColegiado: boolean = false;
   msgs;
   usuarioLogado;
+  @Input() idPersona;
 
   constructor( private router: Router,
     private translateService: TranslateService,
@@ -59,6 +60,7 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
     idPersona:'' 
 
   }; 
+
 
   ngOnInit() {
     this.getComboContabilizado();
@@ -81,6 +83,22 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.numColegiado;
       this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
     }
+    if (sessionStorage.getItem("buscadorColegiados")) {
+
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+
+      sessionStorage.removeItem('buscadorColegiados');
+
+      if (busquedaColegiado.nombreSolo != undefined) this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombreSolo;
+      else this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
+
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+      this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+
+      //Asignacion de idPersona según el origen de la busqueda.
+      this.idPersona = busquedaColegiado.idPersona;
+      if (this.idPersona == undefined) this.idPersona = busquedaColegiado.idpersona;
+    }
 
 
   }
@@ -91,6 +109,10 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+  getIdPersona(evento) {
+    this.idPersona = evento;
+  }
+
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;

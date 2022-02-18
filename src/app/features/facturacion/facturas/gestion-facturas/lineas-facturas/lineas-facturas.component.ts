@@ -46,6 +46,8 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   modificarImporteUnitario: boolean = false;
   modificarIVA: boolean = false;
 
+  FACTURA_ESTADO_EN_REVISION: string = "7";
+
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -54,14 +56,12 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    if (this.bodyInicial != undefined) {
-      this.getComboTiposIVA();
-      this.getParametrosFACTURACION();
-    }
-   }
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined) {
+      this.getParametrosFACTURACION();
+      this.getComboTiposIVA();
       if (this.bodyInicial.tipo == "FACTURA") {
         this.getLineasFactura();
       } else {
@@ -115,13 +115,17 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     ];
   }
 
+  facturaEnRevision(): boolean {
+    return this.bodyInicial != undefined && this.bodyInicial != undefined && this.bodyInicial.idEstado == this.FACTURA_ESTADO_EN_REVISION;
+  }
+
   getColsFactura() {
     this.cols = [
       { field: "descripcion", header: "general.description", width: "30%", editable: this.modificarDescripcion },
-      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.modificarImporteUnitario },
+      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.modificarImporteUnitario && this.facturaEnRevision() },
       { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%", editable: false },
       { field: "importeNeto", header: "facturacion.productos.importeNeto", width: "10%", editable: false }, 
-      { field: "tipoIVA", header: "facturacion.facturas.lineas.tipoIVA", width: "10%", editable: this.modificarIVA },
+      { field: "tipoIVA", header: "facturacion.facturas.lineas.tipoIVA", width: "10%", editable: this.modificarIVA && this.facturaEnRevision() },
       { field: "importeIVA", header: "facturacion.productos.importeIva", width: "10%", editable: false },
       { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "10%", editable: false },
       { field: "importeAnticipado", header: "facturacion.facturas.datosGenerales.impAnticipado", width: "10%", editable: false },
@@ -206,7 +210,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     return this.sigaServices.post("facturacionPyS_guardarLineasFactura", linea).toPromise().then(
       n => { },
       err => {
-        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        return Promise.reject(err);
       }
     );
   }
@@ -215,7 +219,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     return this.sigaServices.post("facturacionPyS_guardarLineasAbono", linea).toPromise().then(
       n => { },
       err => {
-        return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
+        return Promise.reject(err);
       }
     );
   }
@@ -283,16 +287,29 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       } else if (this.bodyInicial.tipo == "ABONO") {
         return this.guardarLineasAbono(d);
       }
-    })).catch(error => {
-      if (error != undefined) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error);
-      } else {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-      }
-    }).then(() => {
+    })).then(() => {
       this.progressSpinner = false;
       this.guardadoSend.emit(this.bodyInicial);
+    }).catch(error => {
+      this.handleServerSideErrorMessage(error);
+      this.progressSpinner = false;
     });
+  }
+
+  // Controlar errores del servidor  
+  handleServerSideErrorMessage(err): void {
+    let error = JSON.parse(err.error);
+    if (error && error.error && error.error.message) {
+      let message = this.translateService.instant(error.error.message);
+  
+      if (message && message.trim().length != 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+      }
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+    }
   }
 
 

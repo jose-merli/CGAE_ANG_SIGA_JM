@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Console } from 'console';
 import { DataTable, Message } from 'primeng/primeng';
 import { from } from 'rxjs/observable/from';
 import { groupBy, mergeMap, toArray } from 'rxjs/operators';
@@ -85,7 +84,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.getComboMotivosDevolucion();
       this.restablecer();
 
-      console.log(changes)
       if (this.bodyInicial.idFactura)
         this.getEstadosPagos();
     }
@@ -159,7 +157,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         this.datosInit = JSON.parse(JSON.stringify(this.grupos));
         this.progressSpinner = false;
 
-        console.log(this.datos)
 
         //Encontramos los datos del abono
         if (this.datos != undefined && this.datos.length > 0) {
@@ -189,8 +186,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
 
         this.datosInit = JSON.parse(JSON.stringify(this.grupos));
-
-        console.log(this.grupos)
       },
       err => {
         console.log(err);
@@ -324,8 +319,6 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   nuevoCobro() {
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
-
-    console.log(this.datos)
 
     if (this.disabledNuevoCobro()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.cobroPorCaja.error"));
