@@ -153,8 +153,11 @@ export class FiltroCertificacionFacComponent implements OnInit {
 
     switch (institucion) {
       case "2000":
+      case "3001":
+      case "3002":
       case "3003":
       case "3004":
+      case "3005":
       case "3006":
       case "3007":
       case "3008":
