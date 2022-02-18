@@ -38,9 +38,11 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     ]
   };
 
+ 
+
   modoEdicion: boolean;
   progressSpinner: boolean;
-  datosFichDatGenerales;
+  datosFichDatGenerales:BaremosGuardiaItem[] = [];
   datosFichConfiFac = {
     diasDis: {
       lDis: false,
@@ -67,10 +69,11 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   };
   proceso2014:boolean = false;
   msgs: any[];
-  tieneDatos: boolean;
+  tieneDatos: boolean = false;
   datos: BaremosGuardiaItem = new BaremosGuardiaItem();
   datosFichaBaremos;
   permisoEscritura;
+  hitos:string[]=[]
   @ViewChild(FichaBarDatosGeneralesComponent) tarjetaDatosGenerales: FichaBarDatosGeneralesComponent;
   @ViewChild(FichaBarConfiFacComponent) tarjetaConfigFac: FichaBarConfiFacComponent;
   @ViewChild(FichaBarConfiAdiComponent) tarjetaConfigAdi: FichaBarConfiAdiComponent;
@@ -101,33 +104,39 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
       this.modoEdicion = JSON.parse(sessionStorage.getItem('modoEdicionBaremo'));
     }
 
-    if(this.persistenceService.getDatos() != null || this.persistenceService.getDatos() != undefined){
+    /* if(this.persistenceService.getDatos() != null || this.persistenceService.getDatos() != undefined){
       this.datos = this.persistenceService.getDatos()
       this.persistenceService.clearDatos()
     //para pasar los datos de el turno y la guardia a la tabla de datos generales
-    let data = [];
+    /* let data = [];
     data.push(this.datos)
     this.datosFichDatGenerales = data;
-    this.persistenceService.clearDatos();
+    this.persistenceService.clearDatos(); 
     //obtiene la configuracion de los baremos
     this.getBaremo(this.datos)
+    
     this.tieneDatos = true;
-    }else{
+    }else{ */
       if (this.modoEdicion) {
         if (sessionStorage.getItem('dataBaremoMod')) {
             this.datos = JSON.parse(sessionStorage.getItem('dataBaremoMod'))
             this.persistenceService.clearDatos()
           //para pasar los datos de el turno y la guardia a la tabla de datos generales
-          let data = [];
+          /* let data = [];
           data.push(this.datos)
-          this.datosFichDatGenerales = data;
+          this.datosFichDatGenerales = data; */
           this.persistenceService.setDatos(this.datos);
         
           sessionStorage.removeItem('dataBaremoMod')
   
           //obtiene la configuracion de los baremos
+          this.progressSpinner = true
           this.getBaremo(this.datos)
-          this.tieneDatos = true;
+          this.progressSpinner = false
+          
+          
+        
+          
         }
       } else {
         //this.getGuardiasByConf(true);
@@ -135,7 +144,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         this.datosFichDatGenerales = []
         this.tieneDatos = true
       }
-    }
+   // }
 
     
 
@@ -212,12 +221,32 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     }
   }
 
+  getTurnoGuarConf(hitos) {
+    
+
+    
+    this.sigaServices.post("baremosGuardia_getTurnoGuarConf", hitos).subscribe(
+      data => {
+        this.datosFichDatGenerales = JSON.parse(data.body).baremosGuardiaItems;
+       
+        //let error = JSON.parse(JSON.stringify(data)).error;
+        this.tieneDatos = true;
+      },
+      err => {
+        console.error(err)
+        this.progressSpinner = false;
+      }
+    )
+  
+}
+
   guardarCerrar() {
     this.progressSpinner = true
     let confBaremo: BaremosGuardiaItem[] = [];
     let turno, guardia
 
     if (!this.modoEdicion) {
+     
       if ((this.tarjetaDatosGenerales.filtros.idTurno != null || this.tarjetaDatosGenerales.filtros.idTurno != undefined)
         && (this.tarjetaDatosGenerales.filtros.idGuardia != null || this.tarjetaDatosGenerales.filtros.idGuardia != undefined)) {
         turno = this.tarjetaDatosGenerales.filtros.idTurno;
@@ -285,7 +314,14 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     } else if (this.modoEdicion) {
       let lista =[];
       let listBaremos=[];
-      lista.push(`${this.datos.idTurno}/${this.datos.idGuardia}`);
+      let idTurno,idGuardia;
+      this.datosFichDatGenerales.forEach(tg=>{
+        lista.push(`${tg.idTurno}/${tg.idGuardia}`)
+        idTurno = tg.idTurno
+        idGuardia = tg.idGuardia
+      })
+        
+        
  
       if ((this.tarjetaDatosGenerales.filtros.idTurno != null || this.tarjetaDatosGenerales.filtros.idTurno != undefined)
         && (this.tarjetaDatosGenerales.filtros.idGuardia != null || this.tarjetaDatosGenerales.filtros.idGuardia != undefined)) {
@@ -306,13 +342,18 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
             data => {
               let error = JSON.parse(data.body).error;
               this.progressSpinner = false;
-
+              
               if (error != undefined && error != null && error.description != null) {
                 if (error.code == '200') {
                   this.showMessage("success", this.translateService.instant("general.message.success"), this.translateService.instant(error.description));
                 } else {
                   this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
                 }
+              }
+              if((idTurno && idTurno != null) && (idGuardia && idGuardia != null)){
+                
+                this.getBaremo({idTurno,idGuardia})
+                this.tarjetaDatosGenerales.isNuevo = false;
               }
             },
             err => {
@@ -462,10 +503,11 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   }
 
   getBaremo(obj) {
-    this.progressSpinner = true
+    this.progressSpinner = true;
     this.sigaServices.post("baremosGuardia_getBaremo", obj).subscribe(
       data => {
         this.datosFichaBaremos = JSON.parse(data.body).baremosGuardiaItems;
+       
         this.rellenaConfiguracionBaremo(this.datosFichaBaremos);
         let error = JSON.parse(JSON.stringify(data.body)).error;
         this.progressSpinner = false;
@@ -497,7 +539,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     let agrupaAsAc;
     let diasAsAc;
     let event: boolean = false;
-    this.progressSpinner = true
+    
     data.forEach(e => {
       if (hitosDisponibilidad.includes(parseInt(e.idHito))) {
         agrupaDis = e.agrupar;
@@ -529,7 +571,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     for (let h of data) {
       let hito = parseInt(h.idHito);
       let precioHito = parseFloat(h.precioHito);
-
+      
       switch (hito) {
         //para hito principal 1.
         case 1:
@@ -540,6 +582,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.changeContDis()
 
           this.tarjetaConfigFac.filtrosDis.importeDis = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
@@ -550,6 +593,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.contDis = 'asi'
           this.tarjetaConfigFac.changeContDis()
           this.tarjetaConfigFac.filtrosDis.importeMaxDis = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
@@ -560,6 +604,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.contDis = 'asi'
           this.tarjetaConfigFac.changeContDis()
           this.tarjetaConfigFac.filtrosDis.importeMinDis = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
@@ -570,11 +615,13 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.contDis = 'asi'
           this.tarjetaConfigFac.changeContDis()
           this.tarjetaConfigFac.filtrosDis.dispAsuntosDis = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
         case 45:
             this.tarjetaConfigFac.filtrosDis.aPartirMax = precioHito
+            this.hitos.push(hito.toString())
           break;
         //para hito principal 44
 
@@ -585,6 +632,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.contDis = 'act'
           this.tarjetaConfigFac.changeContDis()
           this.tarjetaConfigFac.filtrosDis.importeDis = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
@@ -595,6 +643,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.contDis = 'act'
           this.tarjetaConfigFac.changeContDis()
           this.tarjetaConfigFac.filtrosDis.importeMaxDis = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
@@ -605,6 +654,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.contDis = 'act'
           this.tarjetaConfigFac.changeContDis()
           this.tarjetaConfigFac.filtrosDis.importeMinDis = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
@@ -615,12 +665,14 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.contDis = 'act'
           this.tarjetaConfigFac.changeContDis()
           this.tarjetaConfigFac.filtrosDis.dispAsuntosDis = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
         case 46:
           
             this.tarjetaConfigFac.filtrosDis.aPartirDis = precioHito
+            this.hitos.push(hito.toString())
           
           break;
         //para hito principal 20 y 5
@@ -634,6 +686,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.precio = 'porTipos'
           this.tarjetaConfigFac.changePrecio()
           this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
@@ -646,14 +699,17 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.precio = 'unico'
           this.tarjetaConfigFac.changePrecio()
           this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
+          this.hitos.push(hito.toString())
           break;
         case 3:
           this.tarjetaConfigFac.filtrosAsAc.importeMaxAsAc = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
         case 10:
           this.tarjetaConfigFac.filtrosAsAc.dispAsuntosAsAc = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
@@ -665,11 +721,13 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigAdi.precio = 'unico'
           this.tarjetaConfigAdi.changePrecio()
           this.tarjetaConfigAdi.filtrosAdi.importe = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
         case 6:
           this.tarjetaConfigAdi.filtrosAdi.importeMax = precioHito
+          this.hitos.push(hito.toString())
           break;
 
         //para hito principal 25
@@ -680,11 +738,13 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigAdi.precio = 'porTipos'
           this.tarjetaConfigAdi.changePrecio()
           this.tarjetaConfigAdi.filtrosAdi.importe = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
         case 24:
           this.tarjetaConfigAdi.filtrosAdi.importeMax = precioHito
+          this.hitos.push(hito.toString())
           break;
         //para hito principal 7 y 22
         case 7:
@@ -696,6 +756,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.precio = 'unico'
           this.tarjetaConfigFac.changePrecio()
           this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
@@ -708,47 +769,55 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.tarjetaConfigFac.precio = 'porTipos'
           this.tarjetaConfigFac.changePrecio()
           this.tarjetaConfigFac.filtrosAsAc.importeAsAc = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
         case 8:
           this.tarjetaConfigFac.filtrosAsAc.importeMaxAsAc = precioHito
+          this.hitos.push(hito.toString())
           break;
 
         case 19:
           this.tarjetaConfigFac.filtrosAsAc.dispAsuntosAsAc = precioHito
+          this.hitos.push(hito.toString())
           break;
 
         //para hito 12 (SOJ)
         case 12:
           this.tarjetaConfigAdi.importeSOJ = precioHito
+          this.hitos.push(hito.toString())
           break;
 
 
         //para hito 13 (EJG)
         case 13:
           this.tarjetaConfigAdi.importeEJG = precioHito
+          this.hitos.push(hito.toString())
 
           break;
           //para hito 61
         case 61:
           this.tarjetaConfigAdi.procesoFac2014 = true
-
+          this.hitos.push(hito.toString())
           break;
           //para hito 62
         case 62:
           this.tarjetaConfigAdi.descontar = true
+          this.hitos.push(hito.toString())
           break;
 
 
             //para hito 63
         case 63:
           this.tarjetaConfigAdi.facAsuntosAntiguos = true
+          this.hitos.push(hito.toString())
           break;
       }
     }
-
-    this.progressSpinner = false
+    this.getTurnoGuarConf(this.hitos);
+    
+    
 
   }
 
@@ -1074,6 +1143,21 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
   disProc2014(event){
     this.proceso2014 = event
+  }
+
+  restablecerDatosGenerales(event){
+    if(event){
+      
+      if(this.modoEdicion){
+        
+        let idTurno = this.datosFichDatGenerales[0].idTurno
+        let idGuardia = this.datosFichDatGenerales[0].idGuardia
+        this.getBaremo({idTurno,idGuardia});
+        
+      }else{
+        this.datosFichDatGenerales = [];
+      }
+    }
   }
 
 }
