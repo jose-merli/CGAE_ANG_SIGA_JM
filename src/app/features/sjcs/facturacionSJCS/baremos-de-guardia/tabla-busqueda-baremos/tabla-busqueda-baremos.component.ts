@@ -42,11 +42,12 @@ export class TablaBusquedaBaremosComponent implements OnInit {
   ngOnInit() {
     this.getCols();
     if (this.persistenceService.getHistorico() != undefined) {
-      this.historico = this.persistenceService.getHistorico();
+      //this.historico = this.persistenceService.getHistorico();
       this.persistenceService.clearHistorico();
     } else {
-      this.historico = false;
+      //this.historico = false;
     }
+    this.historico= false;
     if (this.datos == null || this.datos == undefined) {
       this.datos = [];
     }
@@ -142,8 +143,20 @@ export class TablaBusquedaBaremosComponent implements OnInit {
     }
   }
 
-  openFichaBaremos(rowData) {
-    if (!this.desactivarHistorico) {
+  openFichaBaremos(rowData, historicoFicha) {
+    if(rowData.fechabaja != null){
+      let baremoGuar = new BaremosGuardiaItem();
+      baremoGuar.idGuardia = rowData.idGuardia;
+      baremoGuar.idTurno = rowData.idTurno;
+      baremoGuar.nomguardia = rowData.guardias;
+      baremoGuar.nomturno = rowData.nomTurno;
+      baremoGuar.baremo = rowData.baremo;
+      baremoGuar.idhitoconfiguracion = rowData.idhitoconfiguracion;
+
+      sessionStorage.setItem('modoEdicionBaremo', "false");
+      sessionStorage.setItem('dataBaremoMod', JSON.stringify(baremoGuar));
+      this.router.navigate(['/fichaBaremosDeGuardia']);
+    }else if (!this.desactivarHistorico) {
       let baremoGuar = new BaremosGuardiaItem();
       baremoGuar.idGuardia = rowData.idGuardia;
       baremoGuar.idTurno = rowData.idTurno;

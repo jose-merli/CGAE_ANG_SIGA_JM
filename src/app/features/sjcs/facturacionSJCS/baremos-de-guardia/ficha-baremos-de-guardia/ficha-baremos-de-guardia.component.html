@@ -43,7 +43,7 @@
       <div class="text-right main-button">
         <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
           label="{{ 'general.boton.volver' | translate}}"></button>
-        <button pButton type="button" [disabled]="!permisoEscritura" icon="fa fa-edit" iconPos="left" (click)="guardarCerrar()"
+        <button pButton type="button" [disabled]="!permisoEscritura || !modoEdicion" icon="fa fa-edit" iconPos="left" (click)="guardarCerrar()"
           label="{{ 'general.boton.guardarCerrar' | translate}}"></button>
       </div>
 
