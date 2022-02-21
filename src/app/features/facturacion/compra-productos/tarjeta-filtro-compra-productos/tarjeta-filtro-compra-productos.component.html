@@ -78,7 +78,7 @@
     <!-- Tipo -->
     <div class="col-lg-3 col-md-3">
       <label>{{ "facturacion.productos.tipo" | translate}}</label>
-      <p-multiSelect [disabled]="filtrosCompraProductos.idCategoria == null" styleClass="widthAll" 
+      <p-multiSelect [disabled]="filtrosCompraProductos.idCategoria == null || tiposObject.combooItems.length == 0" styleClass="widthAll" 
         [(ngModel)]='filtrosCompraProductos.idTipoProducto' defaultLabel="{{'general.boton.seleccionar' | translate}}"
         [options]="tiposObject.combooItems">
       </p-multiSelect>
