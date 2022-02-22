@@ -40,6 +40,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   buscadores = [];
 
   //Permisos
+  esColegiado: boolean;
   eliminarReactivarProductos: boolean;
   permisoMostrarHistorico: boolean;
 
@@ -62,6 +63,12 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+    } else {
+      this.esColegiado = false;
+    }
+
     this.checkPermisos();
 
     if (this.persistenceService.getPaginacion() != undefined) {
@@ -266,7 +273,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
 
 	  if (msg != null) {
 	    this.msgs = msg;
-	  } else {
+	  } else if (!this.esColegiado) {
       this.getListaProductosHistorico();
       this.selectedRows=[]
 	  }
