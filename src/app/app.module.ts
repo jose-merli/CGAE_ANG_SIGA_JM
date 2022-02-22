@@ -889,6 +889,7 @@ import { FichaExpExeaDocumentacionComponent } from './features/expedientes-exea/
 import { FichaExpExeaHistoricoComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-historico/ficha-exp-exea-historico.component';
 import { TablaFacturasSeleccionadasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas-seleccionadas/tabla-facturas-seleccionadas.component';
 import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-seleccionadas/tabla-abonos-seleccionadas.component';
+
 @NgModule({
 	declarations: [
 		GestionActasComponent,
@@ -2020,7 +2021,7 @@ import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJ
 		FichaExpExeaDocumentacionComponent,
 		FichaExpExeaHistoricoComponent,
 		TablaFacturasSeleccionadasComponent,
-		TablaAbonosSeleccionadasComponent,
+		TablaAbonosSeleccionadasComponent
 	],
 	imports: [
 
