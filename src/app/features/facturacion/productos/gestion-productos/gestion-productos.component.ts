@@ -188,7 +188,11 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         result = 1;
       else if (value1 == null && value2 == null)
         result = 0;
-      else if (typeof value1 === 'string' && typeof value2 === 'string')
+      else if (['valor', 'precioiva'].includes(event.field)) {
+        value1 = parseFloat(value1.replace('€','').replace(/\./g,'').replace(',', '.')); // Número con comas en lugar de puntos
+        value2 = parseFloat(value2.replace('€','').replace(/\./g,'').replace(',', '.')); // Número con comas en lugar de puntos
+        result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+      } else if (typeof value1 === 'string' && typeof value2 === 'string')
         result = value1.localeCompare(value2);
       else
         result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
