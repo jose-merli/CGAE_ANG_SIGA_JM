@@ -5,6 +5,7 @@ import { ListaServiciosItems } from '../../../../models/ListaServiciosItems';
 import { ServicioDetalleItem } from '../../../../models/ServicioDetalleItem';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Location } from '@angular/common';
+import { TranslateService } from '../../../../commons/translate';
 
 @Component({
   selector: 'app-ficha-servicios',
@@ -20,7 +21,7 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
   listaTarjetas = [
     {
       id: 'serviciosDatosGenerales',
-      nombre: "Datos Generales",
+      nombre: this.translateService.instant("general.message.datos.generales"),
       imagen: "",
       icono: 'far fa-address-book',
       fixed: false,
@@ -30,7 +31,7 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
     },
     {
       id: 'serviciosFormasDePago',
-      nombre: "Forma de pago",
+      nombre: this.translateService.instant("facturacion.fichaproductos.formaPago.literal"),
       imagen: "",
       icono: 'far fa-credit-card',
       fixed: false,
@@ -40,7 +41,7 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
     },
     {
       id: 'serviciosPrecios',
-      nombre: "Precios",
+      nombre: this.translateService.instant("formacion.fichaCurso.tarjetaPrecios.precios"),
       imagen: "",
       icono: 'fa fa-eur',
       fixed: false,
@@ -60,7 +61,8 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
   subscriptionServiceDetail: Subscription;
   subscriptionCategorySelectValues: Subscription;
 
-  constructor(private location: Location, private router: Router, private sigaServices: SigaServices) { }
+  constructor(private location: Location, private router: Router, 
+    private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
     if (sessionStorage.getItem('servicioBuscador')) {
