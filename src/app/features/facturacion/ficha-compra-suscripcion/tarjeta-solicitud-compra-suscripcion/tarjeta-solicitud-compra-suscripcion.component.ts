@@ -50,7 +50,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   permisoAprobarSuscripcion: boolean = false;
 
   progressSpinner : boolean = false;
-  showTarjeta: boolean = false;
+  showTarjeta: boolean = true;
 
   showModalSerieFacturacion = false;
   comboSeriesFacturacion: any[] = [];

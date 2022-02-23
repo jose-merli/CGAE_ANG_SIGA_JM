@@ -619,6 +619,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
           this.progressSpinner = false;
         },
         err => {
+          this.handleServerSideErrorMessage(err);
           this.progressSpinner = false;
         },
         () => {
@@ -638,12 +639,28 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
           }
         },
         err => {
+          this.handleServerSideErrorMessage(err);
           this.progressSpinner = false;
         },
         () => {
           this.progressSpinner = false;
         }
       );
+    }
+  }
+
+  handleServerSideErrorMessage(err): void {
+    let error = JSON.parse(err.error);
+    if (error && error.error && error.error.message) {
+      let message = this.translateService.instant(error.error.message);
+  
+      if (message && message.trim().length != 0) {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
+      } else {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), error.error.message);
+      }
+    } else {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
     }
   }
 

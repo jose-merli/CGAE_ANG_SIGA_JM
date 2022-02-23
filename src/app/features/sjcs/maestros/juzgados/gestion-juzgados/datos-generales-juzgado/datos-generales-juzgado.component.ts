@@ -167,7 +167,7 @@ export class DatosGeneralesJuzgadoComponent implements OnInit {
 
         if (!this.modoEdicion) {
           this.modoEdicion = true;
-          this.idJuzgado = JSON.parse(data.datos).id;
+          this.idJuzgado = JSON.parse(data.body).id;
           let send = {
             modoEdicion: this.modoEdicion,
             idJuzgado: this.idJuzgado
