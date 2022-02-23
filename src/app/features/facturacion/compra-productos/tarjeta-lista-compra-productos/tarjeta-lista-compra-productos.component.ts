@@ -35,7 +35,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     { field: "nSolicitud", header: "facturacion.productos.nSolicitud" },
     { field: "nIdentificacion", header: "censo.consultaDatosColegiacion.literal.numIden" },
     { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
-    { field: "apellidosNombre", header: "justiciaGratuita.oficio.designas.interesados.apellidosnombre" },
+    { field: "apellidosNombreAux", header: "justiciaGratuita.oficio.designas.interesados.apellidosnombre" },
     { field: "concepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
     { field: "desFormaPago", header: "facturacion.productos.formapago" },
     { field: "importe", header: "facturacionSJCS.facturacionesYPagos.importe" },
