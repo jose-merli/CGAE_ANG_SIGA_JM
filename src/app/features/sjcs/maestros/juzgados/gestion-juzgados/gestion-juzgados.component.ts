@@ -41,6 +41,10 @@ export class GestionJuzgadosComponent implements OnInit {
         activa: true
       },
       {
+        key: "direccion",
+        activa: true
+      },
+      {
         key: "procedimientos",
         activa: false
       }

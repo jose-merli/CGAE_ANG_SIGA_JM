@@ -1,5 +1,6 @@
 export class ListaComprasProductosItem{
     apellidosNombre: string;
+    apellidosNombreAux:string;
     concepto: string;
     estadoFactura: string;
     fechaEfectiva: Date;
