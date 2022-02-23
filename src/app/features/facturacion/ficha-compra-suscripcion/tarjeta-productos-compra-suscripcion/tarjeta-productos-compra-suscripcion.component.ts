@@ -245,13 +245,14 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
 
         //Descomentar esto y comentar el codigo de abajo asignando el valor de comboProductos
         //Si se quiere mostrar unicamente productos no derogados
-        // JSON.parse(listaProductosDTO.body).listaProductosItems.forEach(producto => {
-        //   if (producto.fechabaja == null) {
-        //     this.comboProductos.push(producto);
-        //   }
-        // });
+        JSON.parse(listaProductosDTO.body).listaProductosItems.forEach(producto => {
+          if (producto.fechabaja == null) {
+            this.comboProductos.push(producto);
+          }
+        });
 
-        this.comboProductos = JSON.parse(listaProductosDTO.body).listaProductosItems
+        // Codigo que muestra tambien los productos derogados
+        //this.comboProductos = JSON.parse(listaProductosDTO.body).listaProductosItems
 
         //Apaño temporal ya que si no se hace este reset, la tabla muestra unicamente la primera paginad e productos
         this.tablaProductos.reset();

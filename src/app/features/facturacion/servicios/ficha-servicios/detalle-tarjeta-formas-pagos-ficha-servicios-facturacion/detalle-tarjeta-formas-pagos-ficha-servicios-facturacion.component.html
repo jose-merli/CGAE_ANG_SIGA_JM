@@ -8,7 +8,7 @@
   <!-- No Facturable -->
   <div class="form-group-interlineado col-lg-3 col-md-3">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes">
-      <p-checkbox binary="true" label="No Facturable" [(ngModel)]="checkboxNoFacturable"
+      <p-checkbox binary="true" label="{{ 'facturacion.productos.noFacturable' | translate }}" [(ngModel)]="checkboxNoFacturable"
         (onChange)="onChangeNoFacturable()">
       </p-checkbox>
     </div>
@@ -49,7 +49,7 @@
   <!-- Facturación proporcional por días de suscripción -->
   <div class="form-group-interlineado2 col-lg-4 col-md-4">
     <div class="d-flex align-items-baseline justify-content-between alineacionCheckboxes2">
-      <p-checkbox binary="true" label="Facturación proporcional por días de suscripción "
+      <p-checkbox binary="true" label="{{ 'facturacion.fichaproductos.formasdepago.factProporcional' | translate }}"
         [(ngModel)]="checkboxFacturacionProporcionalDiasInscripcion"
         (onChange)="onChangeFacturacionProporcionalDiasInscripcion()">
       </p-checkbox>

@@ -5,6 +5,7 @@ import { ListaProductosItems } from '../../../../models/ListaProductosItems';
 import { ProductoDetalleItem } from '../../../../models/ProductoDetalleItem';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Location } from '@angular/common';
+import { TranslateService } from '../../../../commons/translate';
 
 @Component({
   selector: 'app-ficha-productos',
@@ -20,7 +21,7 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
   listaTarjetas = [
     {
       id: 'productosDatosGenerales',
-      nombre: "Datos Generales",
+      nombre: this.translateService.instant("general.message.datos.generales"),
       imagen: "",
       icono: 'far fa-address-book',
       fixed: false,
@@ -30,7 +31,7 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
     },
     {
       id: 'productosFormasDePago',
-      nombre: "Forma de pago",
+      nombre: this.translateService.instant("facturacion.fichaproductos.formaPago.literal"),
       imagen: "",
       icono: 'far fa-credit-card',
       fixed: false,
@@ -48,7 +49,8 @@ export class FichaProductosComponent implements OnInit, OnDestroy {
   subscriptionProductDetail: Subscription;
   subscriptionCategorySelectValues: Subscription;
 
-  constructor(private router: Router, private sigaServices: SigaServices, private location: Location) { }
+  constructor(private router: Router, private sigaServices: SigaServices, private location: Location,
+    private translateService: TranslateService) { }
 
   ngOnInit() {
     if (sessionStorage.getItem('productoBuscador')) {

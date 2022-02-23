@@ -64,6 +64,9 @@ export class CompraProductosComponent implements OnInit {
           this.listaCompraProductos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
 
           this.muestraTablaCompraProductos= true;
+          this.listaCompraProductos.forEach(e => {
+            e.apellidosNombreAux = this.getLabelbyFilter(e.apellidosNombre).toLocaleUpperCase()
+          })
           this.listaBusqueda.productsTable.reset();
           setTimeout(() => {
             this.commonsService.scrollTablaFoco('tablaCompraProductos');
@@ -91,6 +94,28 @@ export class CompraProductosComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  getLabelbyFilter(string): string {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+	para poder filtrar el dato con o sin estos caracteres*/
+    let labelSinTilde = string;
+    let accents =
+      'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
+    let accentsOut =
+      'aaaaaaaaaaaaaooooooooooooooeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz';
+    let i;
+    let x;
+    for (i = 0; i < labelSinTilde.length; i++) {
+      if ((x = accents.indexOf(labelSinTilde.charAt(i))) != -1) {
+        labelSinTilde = labelSinTilde.replace(
+          labelSinTilde.charAt(i),
+          accentsOut[x]
+        );
+      }
+    }
+
+    return labelSinTilde;
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el

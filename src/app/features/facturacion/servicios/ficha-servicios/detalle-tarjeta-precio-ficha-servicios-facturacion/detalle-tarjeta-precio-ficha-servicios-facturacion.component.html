@@ -64,7 +64,7 @@
           <div *ngIf=" col.field=='descripcionprecio'">
             <label *ngIf=" !edit && rowData.nuevo=='0'">{{rowData[col.field]}}</label>
 
-            <input *ngIf=" edit && !nuevo" type="text" class="form-control" [(ngModel)]='rowData.descripcionprecio'
+            <input *ngIf=" edit && !nuevo" type="text" class="form-control" [(ngModel)]='rowData.descripcionprecio' maxlength="100"
               pInputText (keydown)="changeTableField(rowData)">
 
             <input *ngIf="nuevo && rowIndex == 0" type="text" class="form-control"
@@ -129,7 +129,7 @@
   <p-footer>
     <div class="text-right main-button">
         <!-- Nueva Condicion -->
-      <button [disabled]="numSelectedRows != 1 || selectedRows[0].descripcionconsulta == 'No tiene condición'" (click)="nuevacondicion()" pButton type="button" icon="fa fa-database" iconPos="left"
+      <button [disabled]="numSelectedRows != 1 || selectedRows[0].descripcionconsulta == precioDefecto" (click)="nuevacondicion()" pButton type="button" icon="fa fa-database" iconPos="left"
       label="{{'informesycomunicaciones.consultas.constructor.nuevacondicionboton' | translate}}"></button>
 
       <!-- Restablecer -->
