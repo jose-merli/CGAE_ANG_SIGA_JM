@@ -58,10 +58,12 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
   subscriptionCondicionesSelect: Subscription;
   subscriptionCrearEditarPrecios: Subscription;
   subscriptionEliminarPrecios: Subscription;
+  precioDefecto:string;
 
   constructor(private commonsService: CommonsService, private changeDetectorRef: ChangeDetectorRef, private sigaServices: SigaServices, private persistenceService: PersistenceService, private translateService: TranslateService, private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
+    this.labels();
     this.checkPermisos();
 
     if (this.persistenceService.getPaginacion() != undefined) {
@@ -85,6 +87,9 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
     this.getGuardarPreciosServicios();
     this.getPermisoNuevaCondicion();
     this.getPermisoEliminarPrecios();
+  }
+  labels(){
+    this.precioDefecto = this.translateService.instant("formacion.fichaCurso.tarjetaPrecios.precioPorDefecto")
   }
 
   getGuardarPreciosServicios() {
@@ -458,7 +463,6 @@ export class DetalleTarjetaPrecioFichaServiciosFacturacionComponent implements O
 
         this.preciosServicioObject = JSON.parse(preciosServicioObject.body);
         this.preciosDatos = this.preciosServicioObject.fichaTarjetaPreciosItem;
-
         if (JSON.parse(preciosServicioObject.body).error.code == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
