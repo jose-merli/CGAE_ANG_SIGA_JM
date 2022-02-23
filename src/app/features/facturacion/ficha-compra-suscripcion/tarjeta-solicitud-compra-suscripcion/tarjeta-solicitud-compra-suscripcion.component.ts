@@ -50,7 +50,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   permisoAprobarSuscripcion: boolean = false;
 
   progressSpinner : boolean = false;
-  showTarjeta: boolean = false;
+  showTarjeta: boolean = true;
 
   showModalSerieFacturacion = false;
   comboSeriesFacturacion: any[] = [];
@@ -349,9 +349,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
     }
     //Se comprueba que todos los servicios de la peticion son manuales ya que los servicios automaticos no se pueden anular
-    //REVISAR : Cambiar mensaje
     else if(this.esColegiado && this.ficha.servicios != null && (this.ficha.servicios.find(el => el.automatico == "1") != undefined)){
-      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+      this.showMessage("error", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudAnularError ") + this.ficha.nSolicitud);
     }
     //Se comprueba si hay alguna factura asociada cuando el personal del colegio va a anular una petición
     //REVISAR: Revisar concepto de factura anulada y no anulada y su anulación.

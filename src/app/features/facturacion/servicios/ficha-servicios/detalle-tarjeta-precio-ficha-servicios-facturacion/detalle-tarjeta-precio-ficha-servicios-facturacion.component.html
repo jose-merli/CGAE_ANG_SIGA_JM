@@ -129,7 +129,7 @@
   <p-footer>
     <div class="text-right main-button">
         <!-- Nueva Condicion -->
-      <button [disabled]="numSelectedRows != 1 || selectedRows[0].descripcionconsulta == 'No tiene condición'" (click)="nuevacondicion()" pButton type="button" icon="fa fa-database" iconPos="left"
+      <button [disabled]="numSelectedRows != 1 || selectedRows[0].descripcionconsulta == precioDefecto" (click)="nuevacondicion()" pButton type="button" icon="fa fa-database" iconPos="left"
       label="{{'informesycomunicaciones.consultas.constructor.nuevacondicionboton' | translate}}"></button>
 
       <!-- Restablecer -->

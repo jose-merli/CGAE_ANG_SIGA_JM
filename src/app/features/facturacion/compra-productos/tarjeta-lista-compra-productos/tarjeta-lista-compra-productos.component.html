@@ -6,7 +6,7 @@
 
 <div class="card mt-3">
   <div class="card-body p-0">
-    <p-table #productsTable [value]="listaCompraProductos" [columns]="cols" [(selection)]="selectedRows"
+    <p-table id="tablaCompra" #productsTable [value]="listaCompraProductos" [columns]="cols" [(selection)]="selectedRows"
       selectionMode="multiple" [responsive]="true" class="tabla-listado" [paginator]="true" [rows]="rowsPerPage"
       (onRowSelect)="onRowSelect()" (onRowUnselect)="onRowUnselect()" [first]="first"
       (sortFunction)="customSort($event)" [customSort]="true" paginatorPosition="both">
@@ -20,10 +20,14 @@
       <ng-template pTemplate="header" let-columns>
         <tr>
           <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+
             {{ col.header | translate}}
             <p-sortIcon [field]="col.field"></p-sortIcon>
             <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
-              *ngSwitchCase="col.field" pInputText type="text"
+              *ngIf="col.field == 'apellidosNombreAux'" pInputText type="text"
+              (input)="productsTable.filter(getLabelbyFilter($event.target.value), 'apellidosNombreAux', 'contains')" />
+              <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+              *ngIf="col.field != 'apellidosNombreAux'" pInputText type="text"
               (input)="productsTable.filter($event.target.value, col.field, 'contains')" />
           </th>
         </tr>
@@ -37,6 +41,7 @@
               <span *ngIf="col.field == 'idEstadoSolicitud'">{{estadosCompraObject[rowData[col.field]-1].label}}</span>
               <span *ngIf="col.field != 'concepto' && col.field != 'idEstadoSolicitud' && col.field != 'importe'">{{rowData[col.field]}}</span>
               <span *ngIf="col.field == 'importe'">{{rowData[col.field]}} €</span>
+              <span *ngIf="col.field == apellidosNombreAux">{{rowData['apellidosNombre']}}</span>
             </div>
             <div *ngIf="col.field =='fechaSolicitud' || col.field == 'fechaEfectiva'" >
               <span>{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>

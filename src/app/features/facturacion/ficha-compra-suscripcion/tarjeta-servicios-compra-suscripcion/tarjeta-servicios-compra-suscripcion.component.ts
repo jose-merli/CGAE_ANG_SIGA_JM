@@ -28,7 +28,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
   //Variables generales app
   msgs = []; //Para mostrar los mensajes p-growl y dialogos de confirmacion
   progressSpinner: boolean = false; //Para mostrar/no mostrar el spinner de carga
-  showTarjeta: boolean = false;
+  showTarjeta: boolean = true;
 
   permisoEditarImporte: boolean = false;
   permisoActualizarServicioSuscripcion: boolean = false;
