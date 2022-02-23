@@ -1,0 +1,195 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="busqueda-container">
+
+   <div class="busqueda-container">
+    <div class="card">
+      <div class="card-header header-ficha" (click)="abrirFicha()">
+        <div *ngIf="!openFicha" class="form-row">
+          <div class="col-lg-1 col-md-2">
+            <div class="img-colegiado">
+              <i class="fa fa-mail-forward icon-ficha"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10 ">
+            <div class="d-flex justify-content-end mb-1">
+              <label class="mr-auto title-ficha">{{ 'censo.consultaDirecciones.literal.direccion' | translate }}</label>
+            </div>
+            <div class="d-flex justify-content-between">
+              <br>
+              <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "></i>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
+          <div class="img-colegiado">
+            <i class="fa fa-mail-forward icon-ficha"></i>
+          </div>
+          <label class="title-ficha">{{ 'censo.consultaDirecciones.literal.direccion' | translate }}</label>
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+
+      <div *ngIf="openFicha" class="card-body card-body-ficha">
+        <div class="row">
+          <!-- BLOQUE IZQUIERDO -->
+          <div class="bloque col-lg-6 col-md-6">
+
+            <div class="form-row">
+
+              <div class="form-group col-lg-12 col-md-1 input-ayuda">
+                <label style="font-weight: bold;">{{ 'envios.definir.literal.datosdestino' | translate }}</label>
+              </div>
+         
+              <!-- DIRECCION -->
+              <div class="form-group col-lg-12 col-md-12">             
+                  <label>
+                    {{"censo.consultaDirecciones.literal.direccion" | translate}}
+                  </label>
+                  <input [(ngModel)]="datos.domicilio" [disabled]="!permisoEscritura || historico" type="text" class="form-control" [maxLength]="100"
+                    pInputText>
+              </div>
+              
+              <!-- PAIS -->
+              <!-- <div class="form-group col-lg-6 col-md-6">
+                <label>
+                  {{"censo.datosDireccion.literal.pais2" | translate}}
+                </label>
+                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="datos.idPais" [showClear]="true"
+                  [filter]="true" filterMatchMode="contains" [options]="comboPais" [disabled]="true"
+                  (onChange)="onChangePais()">
+                </p-dropdown>
+              </div> -->
+
+              <!-- CODIGO POSTAL -->
+              <div class="form-group col-lg-6 col-md-6">
+                  <label>
+                    {{"censo.ws.literal.codigopostal" | translate}} (*)
+                  </label>
+                  <input (keypress)="numberOnly($event)" type="text" class="form-control" [maxLength]="5" [(ngModel)]="datos.codigoPostal" (ngModelChange)="onChangeCodigoPostal()"
+                    [disabled]="historico || !permisoEscritura" pInputText>
+              </div>
+
+              <!-- PROVINCIA -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label>
+                  {{"censo.datosDireccion.literal.provincia" | translate}}
+                </label>
+                <p-dropdown class="select-form" [(ngModel)]='datos.idProvincia' (onChange)="onChangeProvincia()" [filter]="true" filterBy="label,labelSinTilde"
+                  [options]="comboProvincias" placeholder="{{'general.boton.seleccionar' | translate}}" disabled [showClear]="true">
+                </p-dropdown>
+              </div>
+
+              <!-- POBLACION -->
+              <div class="form-group col-lg-6 col-md-6">
+                <label>
+                  {{"censo.consultaDirecciones.literal.poblacion" | translate}} (*)
+                </label>
+                <p-dropdown class="select-form" [(ngModel)]='datos.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [disabled]="isDisabledPoblacion || historico || !permisoEscritura"
+                  [options]="comboPoblacion" (input)="buscarPoblacion($event)" [emptyFilterMessage]="resultadosPoblaciones" id="dropdown"
+                  placeholder="{{'general.boton.seleccionar' | translate}}" [showClear]="true">
+                </p-dropdown>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- BLOQUE DERECHO -->
+          <div class="bloque col-lg-6 col-md-6">
+
+            <div class="form-row">
+
+              <div class="form-group col-lg-12 col-md-12">
+                <label style="text-align:center; font-weight: bold;">{{ 'censo.datosDireccion.literal.datos.contacto' | translate }}</label>
+              </div>
+              <div class="form-group col-lg-12 col-md-12">
+                <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}" [value]="datosContacto" [editable]="true" [responsive]="true"
+                  #table class="tabla-listado" [sortOrder]="1" paginatorPosition="both" [editable]="true"
+                  pageLinks="4">
+                  <p-column *ngFor="let col of columnasDirecciones" [sortable]="true" [field]="col.field" [header]="col.header | translate">
+                    <ng-template *ngIf="col.field == 'valor'" let-dato="rowData" pTemplate="body">
+          
+                      <!-- Telefono 1 -->
+                      <div *ngIf="dato.tipo == 'Telefono'">
+                        <input (keypress)="numberOnly($event)" type="text" class="form-control" maxLength="20" [(ngModel)]="datos.telefono1" (input)="changeTelefono1()"
+                          [disabled]="historico || !permisoEscritura" pInputText>
+                        <div *ngIf="!tlf1Valido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                        </div>
+                      </div>
+
+                      <!--Telefono 2 -->
+                      <div *ngIf="dato.tipo == 'Telefono 2'">
+                        <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20"
+                          [(ngModel)]="datos.telefono2" (input)="changeTelefono2()" pInputText>
+                        <div *ngIf="!tlf2Valido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.telefono' | translate}}</small>
+                        </div>
+                      </div>
+              
+                      <!-- MOVIL -->
+                      <div *ngIf="dato.tipo == 'Móvil'">
+                        <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20"
+                          [(ngModel)]="datos.movil" (input)="changeMovil()" pInputText>
+                        <div *ngIf="!mvlValido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.movil' | translate}}</small>
+                        </div>
+                      </div>
+
+                      <!-- EMAIL (COPIAR DE DATOS GENERALES JUZGADO)-->
+                      <div *ngIf="dato.tipo == 'Correo-Electrónico'">
+                        <div *ngIf="edicionEmail" class="ui-inputgroup">
+                          <input type="text" [disabled]="!permisoEscritura" maxlength="50" pInputText [(ngModel)]="datos.email" (input)="changeEmail()"/>
+                          <button (click)="editEmail()" pButton type="button" icon="fas fa-check"
+                            class="ui-button-warn"></button>
+                        </div>
+                        <div *ngIf="!emailValido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.email' | translate}}</small>
+                        </div>
+                        <div *ngIf="!edicionEmail" class="ui-inputgroup">
+                          <a *ngIf="dato[col.field] != undefined && dato[col.field] != ''" [href]="'mailto:'+dato[col.field]" class="col-11 enlace" target="_blank">{{dato[col.field]}}</a>
+                          <span *ngIf="dato[col.field] == undefined || dato[col.field] == ''" class="col-11">{{dato[col.field]}}</span>
+                          <button (click)="editEmail()" pButton type="button" icon="fas fa-pencil-alt" class="ui-button-warn button-edit col-1"></button>
+                        </div>
+                      </div>
+
+                      <!-- FAX -->
+                      <div *ngIf="dato.tipo == 'Fax'">
+                        <input (keypress)="numberOnly($event)" type="text" [disabled]="historico || !permisoEscritura" class="form-control" maxLength="20"
+                          [(ngModel)]="datos.fax" (input)="changeFax()" pInputText>
+                        <div *ngIf="!faxValido">
+                          <small class="input-error">{{ 'general.mensaje.validacion.fax' | translate}}</small>
+                        </div>
+                      </div>
+              
+                    </ng-template>
+                    <ng-template *ngIf="col.field == 'tipo'" let-dato="rowData" pTemplate="body">
+                      <label>{{dato.tipo}}</label>
+                    </ng-template>
+                  </p-column>
+                </p-dataTable>
+
+              </div>
+            </div>
+          </div>
+         
+        </div>
+        <br>
+      </div>
+      <div *ngIf="openFicha" class="card-footer ">
+        <div class="text-right main-button ">
+
+          <button (click)="checkPermisosRest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <button (click)="checkPermisosSave()" pButton [disabled]="disabledSave()" type="button" icon="far fa-save" iconPos="left"
+          label="{{ 'general.boton.guardar' | translate}}"></button>
+            
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

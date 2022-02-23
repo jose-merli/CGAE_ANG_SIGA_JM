@@ -64,7 +64,7 @@
           <div *ngIf=" col.field=='descripcionprecio'">
             <label *ngIf=" !edit && rowData.nuevo=='0'">{{rowData[col.field]}}</label>
 
-            <input *ngIf=" edit && !nuevo" type="text" class="form-control" [(ngModel)]='rowData.descripcionprecio'
+            <input *ngIf=" edit && !nuevo" type="text" class="form-control" [(ngModel)]='rowData.descripcionprecio' maxlength="100"
               pInputText (keydown)="changeTableField(rowData)">
 
             <input *ngIf="nuevo && rowIndex == 0" type="text" class="form-control"

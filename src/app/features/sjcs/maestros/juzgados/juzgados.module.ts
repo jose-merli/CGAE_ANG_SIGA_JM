@@ -4,7 +4,7 @@ import { BusquedaJuzgadosComponent } from './busqueda-juzgados.component';
 import { TablaJuzgadosComponent } from './tabla-juzgados/tabla-juzgados.component';
 import { FiltroJuzgadosComponent } from './filtro-juzgados/filtro-juzgados.component';
 import { TableModule } from '../../../../../../node_modules/primeng/table';
-import { PaginatorModule, InputTextModule, ButtonModule, DropdownModule, MenubarModule, GrowlModule, ConfirmationService, ConfirmDialogModule } from '../../../../../../node_modules/primeng/primeng';
+import { DataTableModule, PaginatorModule, InputTextModule, ButtonModule, DropdownModule, MenubarModule, GrowlModule, ConfirmationService, ConfirmDialogModule } from '../../../../../../node_modules/primeng/primeng';
 import { FormsModule } from '../../../../../../node_modules/@angular/forms';
 import { PipeTranslationModule } from '../../../../commons/translate/pipe-translation.module';
 import { ImagePipe } from '../../../../commons/image-pipe/image.pipe';
@@ -27,10 +27,12 @@ import { DatosGeneralesJuzgadoComponent } from './gestion-juzgados/datos-general
 import { ProcedimientosJuzgadoComponent } from './gestion-juzgados/procedimientos-juzgado/procedimientos-juzgado.component';
 import { FechaModule } from '../../../../commons/fecha/fecha.module';
 import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.module';
+import { DireccionJuzComponent } from './gestion-juzgados/direccion-juzgado/direccion-juz.component';
 
 @NgModule({
   imports: [
     CommonModule,
+    DataTableModule,
     TableModule,
     PaginatorModule,
     InputTextModule,
@@ -51,7 +53,8 @@ import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.mo
     FiltroJuzgadosComponent,
     GestionJuzgadosComponent,
     DatosGeneralesJuzgadoComponent,
-    ProcedimientosJuzgadoComponent
+    ProcedimientosJuzgadoComponent,
+    DireccionJuzComponent
   ],
   providers: [
     // { provide: TranslationClass.TRANSLATIONS, useValue: TranslationClass.dictionary },

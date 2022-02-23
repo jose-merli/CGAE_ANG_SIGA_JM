@@ -87,11 +87,11 @@
           label="{{'facturacion.productos.comprar' | translate }}"></button>
 
         <!-- MOSTRAR HISTORICO -->
-        <button *ngIf="!historico" (click)="checkMostrarHistorico()" pButton type="button"
+        <button *ngIf="!esColegiado && !historico" (click)="checkMostrarHistorico()" pButton type="button"
           icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
         <!-- OCULTAR HISTORICO -->
-        <button *ngIf="historico" (click)="checkOcultarHistorico()" pButton type="button" icon="fa fa-undo"
+        <button *ngIf="!esColegiado && historico" (click)="checkOcultarHistorico()" pButton type="button" icon="fa fa-undo"
           iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
         <!-- ELIMINAR PRODUCTO -->
