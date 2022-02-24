@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { ComboItem } from '../administracion/parametros/parametros-generales/parametros-generales.component';
 import { SigaServices } from '../../_services/siga.service';
 import { OldSigaServices } from '../../_services/oldSiga.service';
@@ -24,13 +24,14 @@ import { ColegiadoItem } from '../../models/ColegiadoItem';
 })
 export class HomeComponent implements OnInit {
 	constructor(private sigaServices: SigaServices, private oldSigaServices: OldSigaServices,private authenticationService: AuthenticationService, handler: HttpBackend, 
-		private localStorageService: SigaStorageService) {
+		private localStorageService: SigaStorageService, private  ngZone:NgZone) {
 		this.http = new HttpClient(handler);
 		this.oldSigaServices = oldSigaServices;
 	}
 	generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
 	private http: HttpClient;
 	ngOnInit() {
+		this.ngZone.runOutsideAngular(()=>{
 		this.sigaServices.get('getLetrado').subscribe(
 			(data) => {
 			  if (data.value == 'S') {
@@ -43,6 +44,7 @@ export class HomeComponent implements OnInit {
 			  //console.log(err);
 			}
 		  );
+		});
 		this.getLetrado();
 		this.getColegiadoLogeado();
 		//this.getMantenerSesion();
