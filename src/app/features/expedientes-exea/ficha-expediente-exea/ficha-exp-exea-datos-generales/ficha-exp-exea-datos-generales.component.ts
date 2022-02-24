@@ -30,13 +30,13 @@ export class FichaExpExeaDatosGeneralesComponent implements OnInit, OnChanges {
       if(this.sigaStorageService.isLetrado){
         this.fechaInicio = new Date(this.expediente.fechaApertura);
       }else{
-        this.fechaInicio = moment(this.expediente.fechaApertura, 'dd/MM/yyyy hh:mm').toDate();
+        this.fechaInicio = moment(this.expediente.fechaApertura, 'DD/MM/YYYY hh:mm').toDate();
       }
       if(this.expediente.fechaRegistro){
         if(this.sigaStorageService.isLetrado){
           this.fechaRegistro = new Date(this.expediente.fechaRegistro);
         }else{
-          this.fechaRegistro = moment(this.expediente.fechaRegistro, 'dd/MM/yyyy hh:mm').toDate();
+          this.fechaRegistro = moment(this.expediente.fechaRegistro, 'DD/MM/YYYY hh:mm').toDate();
         }
       }
     }
