@@ -22,7 +22,7 @@
           <ng-template matExpansionPanelContent>
             <div *ngIf="tarj.id == 'serviciosDatosGenerales'">
               <app-detalle-tarjeta-datos-generales-ficha-servicios-facturacion
-                (mostrarTarjetaFormaPagos)="mostrarTarjetaFormaPagos($event)" [servicio]="servicio"
+                (mostrarTarjetaFormaPagos)="mostrarTarjetaFormaPagos($event)"  (mostrarTarjetaPrecios)="mostrarTarjetaPrecios($event)" (getInfo)="getInfo($event)" [servicio]="servicio"
                 [servicioDelBuscador]="servicioDelBuscador">
               </app-detalle-tarjeta-datos-generales-ficha-servicios-facturacion>
             </div>
