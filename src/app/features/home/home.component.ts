@@ -31,7 +31,6 @@ export class HomeComponent implements OnInit {
 	generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
 	private http: HttpClient;
 	ngOnInit() {
-		this.ngZone.runOutsideAngular(()=>{
 		this.sigaServices.get('getLetrado').subscribe(
 			(data) => {
 			  if (data.value == 'S') {
@@ -43,8 +42,7 @@ export class HomeComponent implements OnInit {
 			(err) => {
 			  //console.log(err);
 			}
-		  );
-		});
+		);
 		this.getLetrado();
 		this.getColegiadoLogeado();
 		//this.getMantenerSesion();
