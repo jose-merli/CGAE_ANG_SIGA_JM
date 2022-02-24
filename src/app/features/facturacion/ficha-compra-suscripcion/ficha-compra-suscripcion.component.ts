@@ -46,6 +46,14 @@ export class FichaCompraSuscripcionComponent implements OnInit {
       this.esColegiado = false;
     }
 
+    if (sessionStorage.getItem("mensaje")) {
+      let message: Message = JSON.parse(sessionStorage.getItem("mensaje"));
+      if (message)
+        this.showMessage(message.severity, message.summary, message.detail);
+      sessionStorage.removeItem("mensaje");
+      sessionStorage.removeItem("volver");
+    }
+
     sessionStorage.removeItem("origin");
 
     if(sessionStorage.getItem("FichaCompraSuscripcion")){
@@ -116,5 +124,9 @@ export class FichaCompraSuscripcionComponent implements OnInit {
       summary: summary,
       detail: msg
     });
+  }
+
+  clear() {
+    this.msgs = [];
   }
 }
