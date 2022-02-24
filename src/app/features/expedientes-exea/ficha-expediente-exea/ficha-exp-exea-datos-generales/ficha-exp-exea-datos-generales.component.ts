@@ -43,7 +43,7 @@ export class FichaExpExeaDatosGeneralesComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
+    this.isLetrado = this.sigaStorageService.isLetrado;
   }
 
   tramitar(){

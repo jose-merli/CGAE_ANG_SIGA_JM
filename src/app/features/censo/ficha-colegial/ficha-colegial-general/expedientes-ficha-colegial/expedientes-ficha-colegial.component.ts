@@ -152,7 +152,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
   }
 
   getExpedientesEXEA(){
-    if(this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona){
+    if(this.sigaStorageService.isLetrado){
       //Obtenemos token login por SOAP de EXEA y hacemos llamada REST
 
       this.sigaServices.get("expedientesEXEA_getTokenEXEA").subscribe(
@@ -303,7 +303,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
       //Aqui redirigiriamos a la ficha de expediente de exea
       sessionStorage.setItem("titular", this.generalBody.nombre.toString());
       sessionStorage.setItem("personaBody", JSON.stringify(this.generalBody));
-      if(this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona){
+      if(this.sigaStorageService.isLetrado){
         this.router.navigate(["/fichaExpedienteEXEA"], {queryParams : {idExpediente : dato.idExpedienteEXEA}});
       }else{
         sessionStorage.setItem("infoAdicionalExp", JSON.stringify(dato));

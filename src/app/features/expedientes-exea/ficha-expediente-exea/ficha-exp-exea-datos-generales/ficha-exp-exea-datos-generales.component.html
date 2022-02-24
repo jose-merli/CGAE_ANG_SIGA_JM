@@ -38,9 +38,9 @@
     </div>
   </div>
 </div>
-<div class="card-footer">
+<div class="card-footer" *ngIf="!isLetrado">
   <div class="text-right main-button">
     <button pButton type="button" iconPos="left" label="Abrir en EXEA" icon="fas fa-link icon-ficha"
-      (click)="tramitar();" [disabled]="isLetrado"></button>
+      (click)="tramitar();"></button>
   </div>
 </div>
