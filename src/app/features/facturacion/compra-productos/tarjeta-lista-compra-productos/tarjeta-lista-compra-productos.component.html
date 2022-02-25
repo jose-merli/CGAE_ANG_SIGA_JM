@@ -101,7 +101,7 @@
           label="{{ 'general.boton.facturar' | translate}}"
           [disabled]="selectedRows == undefined || selectedRows == null || selectedRows.length <= 0 || selectedRows.length > 1 || esColegiado || !permisoFacturarCompra"></button>
       <!-- Descargar facturas -->
-         <button pButton  (click)="nofuncional()" type="button" icon="fa fa-search" iconPos="left"
+         <button pButton  (click)="descargarFacturas()" type="button" icon="fa fa-search" iconPos="left"
          label="{{ 'facturacion.productos.descargarFacturas' | translate}}" [disabled]="selectedRows.length == 0"></button>
       <!-- Comunicaciones -->
           <button pButton  (click)="nofuncional()" type="button" icon="fa fa-search" iconPos="left"

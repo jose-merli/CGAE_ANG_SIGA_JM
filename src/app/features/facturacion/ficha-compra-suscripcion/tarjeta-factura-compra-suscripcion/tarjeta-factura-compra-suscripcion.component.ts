@@ -8,6 +8,8 @@ import { ListaFacturasPeticionItem } from '../../../../models/ListaFacturasPetic
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { saveAs } from "file-saver/FileSaver";
+import { ListaComprasProductosItem } from '../../../../models/ListaComprasProductosItem';
 
 @Component({
   selector: 'app-tarjeta-factura-compra-suscripcion',
@@ -188,15 +190,30 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
     });
   }
 
-  checkFacturar() {
-   this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Botón no implementado actualmente"
+descargarFacturas(){
+    let item:ListaComprasProductosItem = new ListaComprasProductosItem();
+    item.nSolicitud = this.ficha.nSolicitud
+    let items:ListaComprasProductosItem[] =[];
+    items.push(item);
+    this.sigaServices.postDownloadFilesWithFileName2('PyS_facturaDescargar', items).subscribe(
+      (data: { file: Blob, filename: string, status: number }) => {
+        if (data.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+
+          let filename = data.filename.split('=')[1];
+          saveAs(data.file, filename);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+        }
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+
       }
-    ];
+    );
   }
+
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
   clear() {

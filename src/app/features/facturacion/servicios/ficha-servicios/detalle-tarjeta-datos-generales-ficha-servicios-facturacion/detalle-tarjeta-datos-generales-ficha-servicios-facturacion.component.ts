@@ -42,6 +42,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   //Variables Dialog Borrar Suscripciones y bajas
   borrarSuscripcionBajaItem: BorrarSuscripcionItem = new BorrarSuscripcionItem;
   showModalSuscripcionesBajas = false; //Muestra o no muestra el dialogo de suscripciones o bajas
+  showModalServicioAutomaticoAManual: boolean = false;
   checkboxIncluirSolBajasManuales: boolean = false;
 
   //variables de control
@@ -453,23 +454,18 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.showModalSuscripcionesBajas = false;
   }
 
-  showModalServicioAutomaticoAManual: boolean = false;
   modalServicioAutomaticoAManual(){
     let msg = this.commonsService.checkPermisos(this.permisoEliminarSuscripcionBaja, undefined);
 	    if (msg != null) {
 	      this.msgs = msg;
 	    } else {
-        this.showModalServicioAutomaticoAManual = true;;
+        this.showModalServicioAutomaticoAManual = true;
 	    }
   }
 
   cancelarDialogServicioAutomaticoAManual() {
     this.checkboxDialogServicioAutomaticoAManual = false;
     this.showModalServicioAutomaticoAManual = false;
-  }
-
-  onChangeDarDeBajaAtodasLasPersonas(){
-    
   }
 
   nuevacondicion(){

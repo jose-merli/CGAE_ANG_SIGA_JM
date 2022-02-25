@@ -89,13 +89,19 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
+      <button pButton [disabled]="historico || !permisos || selectedDatos.length == 0" (click)="asociarModulosAJuzgados()"
+        type="button" icon="fa fa-plus" iconPos="left" label="{{ 'sjcs.maestros.modulos.asociarajuzgados' | translate}}"></button>
+
       <button *ngIf="!historico" (click)="searchModulo(); selectedDatos = []; selectAll=false; selectMultiple = false" pButton
         type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+
       <button *ngIf="historico" (click)="searchModulo(); selectedDatos = []; selectAll=false; selectMultiple = false" pButton type="button"
         icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
       <button *ngIf="!historico" pButton [disabled]="!permisos || (!selectMultiple || !selectAll) && selectedDatos.length == 0"
         (click)="checkPermisosDelete(selectedDatos); selectAll = false; seleccionMultiple = false; selectedDatos =[]" type="button"
         icon="fa fa-trash-alt" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
+        
       <button *ngIf="historico" pButton [disabled]="!permisos || selectedDatos.length == 0 || selectedDatos == undefined" (click)="checkPermisosActivate(selectedDatos); selectAll = false; seleccionMultiple = false;"
         type="button" icon="fa fa-check" iconPos="left" label="{{ 'general.boton.activar' | translate}}"></button>
     </div>
@@ -110,3 +116,35 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+
+
+<!-- DIALOG ASOCIAR MODULOS A JUZGADOS -->
+<p-dialog width="auto" height="auto" responsive="true" modal="modal" [draggable]="false" resizable="false"
+  [(visible)]="showModalAsociarModulosAJuzgados" (onHide)="cancelarDialogAsociarModulosAJuzgados()">
+  <p-header class="title">
+     <label>{{ "sjcs.maestros.modulos.asociarajuzgados" | translate}}</label>
+  </p-header>
+  <div class="form-row">
+
+    
+    <div class="form-group-interlineado col-lg-12 col-md-12 pb-lg-2 pb-md-2">
+      <span class="mr-4">
+        <label> {{ "menu.facturacionSJCS.mantenimientoJuzgados" | translate}} </label>
+        <p-multiSelect #someDropdown1 [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='juzgados'
+        [options]="juzgadosList" maxSelectedLabels="10" selectionLimits="10" [selectedItemsLabel]="textSelected"
+        styleClass="widthAll"[filter]="true" filterBy="label,labelSinTilde" ></p-multiSelect>
+      </span>
+    </div>
+
+  </div>
+
+  <div class="paddingDialogBorrarSuscripcionesBajasButtons">
+    <div class="text-right main-button">
+      <button (click)="guardarDialogAsociarModulosAJuzgados()" pButton type="button" icon="fa fa-edit" iconPos="left"
+        label="{{'general.boton.guardarCerrar' | translate}}"></button>
+      <button (click)="cancelarDialogAsociarModulosAJuzgados()" pButton type="button" icon="fa fa-close" iconPos="left"
+        label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </div>
+
+</p-dialog>

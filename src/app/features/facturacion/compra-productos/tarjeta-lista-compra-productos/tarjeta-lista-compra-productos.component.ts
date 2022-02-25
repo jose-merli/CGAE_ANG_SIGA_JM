@@ -585,4 +585,30 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     );
   }
 
+  descargarFacturas(){
+    this.sigaServices.postDownloadFilesWithFileName2('PyS_facturaDescargar', this.selectedRows).subscribe(
+      (data: { file: Blob, filename: string, status: number }) => {
+
+        if (data.status != 200) {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+
+          let filename = data.filename.split('=')[1];
+          saveAs(data.file, filename);
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+        }
+
+        this.selectedRows = [];
+        this.numSelectedRows = 0;
+
+      },
+      err => {
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        this.selectedRows = [];
+        this.numSelectedRows = 0;
+      }
+    );
+  }
+
 }

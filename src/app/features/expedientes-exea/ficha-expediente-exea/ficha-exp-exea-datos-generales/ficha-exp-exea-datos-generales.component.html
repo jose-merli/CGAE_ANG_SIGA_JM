@@ -26,7 +26,7 @@
     </div>
     <div class="form-group-interlineado col-lg-3 col-md-3">
       <label>{{'censo.consultaDatosRegistrales.literal.fechaRegistro' | translate}}</label>
-      <app-fecha [(value)]="fechaRegistro"  [disabled]="true" [showTime]="true"></app-fecha>
+      <app-fecha [(value)]="fechaRegistro"  [disabled]="true"></app-fecha>
     </div>
     <div class="form-group-interlineado col-lg-6 col-md-6">
       <label>{{'justiciaGratuita.ejg.datosGenerales.TipoExpediente' | translate}}</label>
@@ -38,9 +38,9 @@
     </div>
   </div>
 </div>
-<div class="card-footer">
+<div class="card-footer" *ngIf="!isLetrado">
   <div class="text-right main-button">
     <button pButton type="button" iconPos="left" label="Abrir en EXEA" icon="fas fa-link icon-ficha"
-      (click)="tramitar();" [disabled]="isLetrado"></button>
+      (click)="tramitar();"></button>
   </div>
 </div>

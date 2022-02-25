@@ -115,7 +115,7 @@
         <p-footer>
           <div class="text-right main-button">
             <!-- Descargar facturas -->
-            <button pButton (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
+            <button pButton (click)="descargarFacturas()" type="button" icon="fa fa-search" iconPos="left"
               label="{{ 'facturacion.productos.descargarFacturas' | translate}}"
               [disabled]="selectedRows.length == 0"></button>
           </div>

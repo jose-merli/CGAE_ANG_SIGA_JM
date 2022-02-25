@@ -34,6 +34,7 @@ export let endpoints_maestros: any = {
     gestionJuzgados_createCourt: "maestros/gestionJuzgados/createCourt",
     gestionJuzgados_updateCourt: "maestros/gestionJuzgados/updateCourt",
     gestionJuzgados_associateProcess: "maestros/gestionJuzgados/associateProcess",
+    gestionJuzgados_asociarModulosAJuzgados: "maestros/gestionJuzgados/asociarModulosAJuzgados",
 
     gestionCostesFijos_getCosteFijos: "maestros/gestionCostesFijos/comboCosteFijos",
     gestionCostesFijos_getComboAsistencia: "maestros/gestionCostesFijos/comboAsistencia",

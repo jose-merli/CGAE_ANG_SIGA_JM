@@ -35,6 +35,8 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
   msgs;
   permisoEscritura: any;
 
+  vieneDeFichaJuzgado: String;
+
 
 
   constructor(private translateService: TranslateService,
@@ -63,9 +65,19 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
         }
       }
       ).catch(error => console.error(error));
+
+      if(sessionStorage.getItem("vieneDeFichaJuzgado")) this.vieneDeFichaJuzgado = sessionStorage.getItem("vieneDeFichaJuzgado");
   }
 
   ngAfterViewInit() {
+  }
+
+  ngOnDestroy(){
+    if(sessionStorage.getItem("vieneDeFichaJuzgado")) sessionStorage.removeItem("vieneDeFichaJuzgado");
+  }
+
+  volverFichaJuzgado(){
+    this.router.navigate(["gestionJuzgados"]);
   }
 
   // busquedaReceive(event) {
