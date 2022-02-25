@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ListaServiciosItems } from '../../../../models/ListaServiciosItems';
@@ -87,6 +87,12 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
     this.mostrarTarjPrecios = event;
   }
 
+  getInfo(item:ServicioDetalleItem){
+    this.servicioDelBuscador.idtiposervicios = item.idtiposervicios;
+    this.servicioDelBuscador.idservicio = item.idservicio;
+    this.servicioDelBuscador.idserviciosinstitucion = item.idserviciosinstitucion;
+    this.detalleServicio()
+  }
   backTo() {
     sessionStorage.setItem("volver", 'true');
     sessionStorage.removeItem('servicioBuscador');
@@ -108,6 +114,7 @@ export class FichaServiciosComponent implements OnInit, OnDestroy {
           this.servicio.formasdepagosecretariaoriginales = Object.assign([], this.servicio.formasdepagosecretaria);
           this.servicio.editar = true;
           this.servicio.serviciooriginal = { ...servicio };
+          this.servicioDelBuscador.noFacturable = this.servicio.nofacturable;
           this.progressSpinner = false;
         },
         err => {

@@ -405,6 +405,13 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
     this.body.numColegiado = event.nColegiado;
     this.body.apellidosYNombre = event.nombreAp;
+
+    if (this.esCadenaVacia(this.body.numColegiado) || this.body.apellidosYNombre)
+      this.body.idPersona = undefined;
+  }
+
+  esCadenaVacia(value: string): boolean {
+    return value == undefined || value.trim().length == 0;
   }
 
   rest() {
@@ -416,7 +423,7 @@ export class ServiciosTramitacionComponent implements OnInit {
 
 
   disabledSave() {
-    if (this.body.idTurno != null && this.body.idGuardia != null && this.body.apellidosYNombre != null) {
+    if (this.body.idTurno != null && this.body.idGuardia != null) {
       return false;
     }
     else return true;

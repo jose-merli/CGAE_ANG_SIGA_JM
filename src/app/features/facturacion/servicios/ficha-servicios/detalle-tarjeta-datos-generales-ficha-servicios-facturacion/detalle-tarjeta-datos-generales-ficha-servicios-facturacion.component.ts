@@ -37,10 +37,12 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
   checkboxDialogServicioAutomaticoAManual: boolean = false;
   listaCodigosPorInstitucionObject: CodigosPorInstitucionObject;
   @Output() mostrarTarjetaFormaPagos = new EventEmitter<boolean>();
-
+  @Output() mostrarTarjetaPrecios = new EventEmitter<boolean>();
+  @Output() getInfo = new EventEmitter<any>();
   //Variables Dialog Borrar Suscripciones y bajas
   borrarSuscripcionBajaItem: BorrarSuscripcionItem = new BorrarSuscripcionItem;
   showModalSuscripcionesBajas = false; //Muestra o no muestra el dialogo de suscripciones o bajas
+  showModalServicioAutomaticoAManual: boolean = false;
   checkboxIncluirSolBajasManuales: boolean = false;
 
   //variables de control
@@ -452,23 +454,18 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.showModalSuscripcionesBajas = false;
   }
 
-  showModalServicioAutomaticoAManual: boolean = false;
   modalServicioAutomaticoAManual(){
     let msg = this.commonsService.checkPermisos(this.permisoEliminarSuscripcionBaja, undefined);
 	    if (msg != null) {
 	      this.msgs = msg;
 	    } else {
-        this.showModalServicioAutomaticoAManual = true;;
+        this.showModalServicioAutomaticoAManual = true;
 	    }
   }
 
   cancelarDialogServicioAutomaticoAManual() {
     this.checkboxDialogServicioAutomaticoAManual = false;
     this.showModalServicioAutomaticoAManual = false;
-  }
-
-  onChangeDarDeBajaAtodasLasPersonas(){
-    
   }
 
   nuevacondicion(){
@@ -604,10 +601,13 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     if (!this.servicio.editar) {
       this.subscriptionCrearServicioInstitucion = this.sigaServices.post("fichaServicio_crearServicio", this.servicio).subscribe(
         response => {
+          let res = JSON.parse(response.body);
           if (response.status == 200) {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             this.desactivarBotonEliminar = false;
-            this.mostrarTarjetaFormaPagos.emit(true);
+            this.servicio.editar = true;
+            this.servicio.idserviciosinstitucion = res.id;
+            this.getInfo.emit(this.servicio);
           } else {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
           }

@@ -713,10 +713,10 @@
             <div [hidden]="!fichaDocumentacion" class="card-body card-body-ficha">
                 <div *ngIf="showInfoDoc" class="info-limit d-flex justify-content-center align-items-center mb-1">
                     <i class="fa fa-info-circle pr-2"></i>
-                    <div class="d-inline-block">
+                    <div class="d-inline-block" >
                         <div>
                             <span class="pr-2 text-left">
-                                Para cargar la documentación requerida es necesario rellenar los campos Solicitud de, Tipo Colegiación y Modalidad documentación.
+                                Para cargar la documentación requerida es necesario rellenar los campos Solicitud de, Tipo Colegiación y Procedencia.
                             </span>
                         </div>
                     </div>
@@ -761,7 +761,7 @@
                                     <span *ngIf="col.field == 'nombreDoc' && !dato.idFichero" class="w100">
                                         <p-fileUpload #pUploadFile name="file" mode="basic" accept=".doc,.docx,.pdf,.jpg,.png,.rtf,.txt"
                                             chooseLabel="{{ 'general.boton.adjuntarFichero' | translate }}" class="edit my-0 mx-auto main-button"
-                                            auto="true" (onSelect)="getFile(dato, pUploadFile, $event)"></p-fileUpload>
+                                            auto="true" (onSelect)="getFile(dato, pUploadFile, $event)" [disabled]="solicitudEditar.idEstado == '20'"></p-fileUpload>
                                     </span>
                                     <span *ngIf="col.field == 'nombreDoc' && dato.idFichero" class="w100">
                                         <label>{{ dato[col.field]}}</label>
@@ -804,11 +804,11 @@
                 
                             <button pButton type="button" icon="fa fa-download" [disabled]="disableDownload || !isActivoEXEA || !solicitudEditar.idSolicitud" iconPos="left" label="{{'general.boton.download' | translate}}" (click)="downloadDoc()"
                             ></button>
-                            <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}" (click)="newDoc()" [disabled]="!isActivoEXEA || !solicitudEditar.idSolicitud"
+                            <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}" (click)="newDoc()" [disabled]="!isActivoEXEA || !solicitudEditar.idSolicitud || consulta"
                             ></button>
-                            <button pButton type="button" icon="fa fa-trash-alt" [disabled]="disableDelete || !isActivoEXEA || !solicitudEditar.idSolicitud" iconPos="left" label="{{'general.boton.eliminar' | translate}}" (click)="delete()"
+                            <button pButton type="button" icon="fa fa-trash-alt" [disabled]="disableDelete || !isActivoEXEA || !solicitudEditar.idSolicitud || consulta" iconPos="left" label="{{'general.boton.eliminar' | translate}}" (click)="delete()"
                             ></button>
-                            <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" (click)="validateSizeFile()" [disabled]="!isActivoEXEA || !solicitudEditar.idSolicitud"></button>
+                            <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" (click)="validateSizeFile()" [disabled]="!isActivoEXEA || !solicitudEditar.idSolicitud || consulta"></button>
                 
                         </div>
                       </div>
@@ -894,15 +894,15 @@
     <div class="mt-3 text-right main-button ">
         <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left"
             label="{{ 'general.boton.volver' | translate}}"></button>
-        <button *ngIf="!consulta" id = "buttonGuardar" (click)="checkDatos()" pButton type="button " icon="fa fa-save" iconPos="left"
-            label="Guardar" [disabled]="consulta"></button>
+        <button *ngIf="!consulta || isActivoEXEA" id = "buttonGuardar" (click)="checkDatos()" pButton type="button " icon="fa fa-save" iconPos="left"
+            label="Guardar" [disabled]="consulta || (isActivoEXEA && solicitudEditar.idEstado == '20')"></button>
         <button (click)="checkDatosAprobar()" [disabled]="isLetrado"
             *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30') && !isActivoEXEA"
             pButton type="button " icon="fas fa-check" iconPos="left" label="Aprobar "></button>
         <button (click)="denegarSolicitud()" [disabled]="isLetrado"
             *ngIf="(consulta || pendienteAprobacion) && (solicitudEditar.idEstado != '50' && solicitudEditar.idEstado != '30') && !isActivoEXEA"
             pButton type="button " icon="fas fa-times" iconPos="left" label="Denegar"></button>
-        <button [disabled]="isLetrado || !solicitudEditar.idSolicitud || solicitudEditar.idEstado == '20' || estadoSolicitudSelected == '20' || solicitudEditar.idEstado == '30' || solicitudEditar.idEstado == '50'" *ngIf="isActivoEXEA" 
+        <button [disabled]="isLetrado || solicitudEditar.idEstado != '10'" *ngIf="isActivoEXEA" 
             pButton type="button " icon="fas fa-check" iconPos="left" label="Iniciar EXEA" (click)="openDialog()"></button>
         <button *ngIf="isActivoEXEA"  [disabled]="!solicitudEditar.claveConsulta"
             pButton type="button " icon="fa fa-download" iconPos="left" label="Descargar Justificante" (click)="downloadJustificante()"></button>

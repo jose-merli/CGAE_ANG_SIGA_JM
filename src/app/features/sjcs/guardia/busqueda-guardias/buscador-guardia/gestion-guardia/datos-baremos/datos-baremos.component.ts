@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 export class DatosBaremosComponent implements OnInit {
 
   rowsPerPage: any = [];
-  cols;
+  cols = [];
   colsPartidoJudicial;
   msgs;
   @Input() modoEdicion: boolean = false;
@@ -32,9 +32,10 @@ export class DatosBaremosComponent implements OnInit {
   nuevo: boolean = false;
   progressSpinner: boolean = false;
   //Resultados de la busqueda
-
+  @Input() openFicha: boolean = false;
   @Input() tarjetaBaremos;
-
+  @ViewChild("tabla") tabla;
+  buscadores = [];
   constructor(
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -44,6 +45,10 @@ export class DatosBaremosComponent implements OnInit {
 
   ngOnInit() {
 
+    this.getCols();
+    if (this.persistenceService.getDatos()){
+      this.getDatosBaremos();
+    }
     this.sigaServices.datosRedy$.subscribe(
       data => {
         this.modoEdicion = true;
@@ -81,8 +86,8 @@ export class DatosBaremosComponent implements OnInit {
   goToFichaBaremos(){
    
    let goBaremos:BaremosGuardiaItem = new BaremosGuardiaItem();
-   goBaremos.idTurno = this.datos.idTurno;
-   goBaremos.idGuardia = this.datos.idGuardia;
+   goBaremos.idTurno = this.persistenceService.getDatos().idTurno;
+   goBaremos.idGuardia =this.persistenceService.getDatos().idGuardia
 
    sessionStorage.setItem("tarjetaBaremosFichaGuardia",JSON.stringify(goBaremos));
 
@@ -103,5 +108,80 @@ export class DatosBaremosComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+  
+  getCols() {
+
+    this.cols = [
+      { field: "guardias", header: "facturacionSJCS.baremosDeGuardia.turnoguardia", width: '20%' },
+      { field: "ndias", header: "facturacionSJCS.baremosDeGuardia.nDias", width: '5%' },
+      { field: "baremo", header: "facturacionSJCS.baremosDeGuardia.tipoBaremo", width: '15%' },
+      { field: "dias", header: "facturacionSJCS.baremosDeGuardia.diasAplicar", width: '5%' },
+      { field: "numMinimoSimple", header: "facturacionSJCS.baremosDeGuardia.minimo", width: '5%' },
+      { field: "simpleOImporteIndividual", header: "facturacionSJCS.baremosDeGuardia.dispImporte", width: '5%' },
+      { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
+      { field: "maximo", header: "facturacionSJCS.baremosDeGuardia.maximo", width: '5%' },
+      { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
+      { field: "porDia", header: "facturacionSJCS.baremosDeGuardia.porDia", width: '5%' }
+    ];
+    this.cols.forEach(it => this.buscadores.push(""))
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  getDatosBaremos() {
+    if (this.persistenceService.getDatos().idGuardia) {
+      let idGuardia = this.persistenceService.getDatos().idGuardia;
+      this.sigaServices.getParam(
+        "busquedaGuardias_baremosGuardias", "?idGuardia="+idGuardia).subscribe(
+          data => {
+            this.datos = data.baremosRequestItems;
+            this.progressSpinner = false;
+          },
+          err => {
+            //console.log(err);
+            this.progressSpinner = false;
+          },
+          ()=>{
+            this.progressSpinner = false;
+          }
+        );
+
+    }
+  }
+  
+ abreCierraFicha() {
+   if (this.modoEdicion) {
+     this.openFicha = !this.openFicha;
+     if (this.openFicha)
+       if (!this.datos) {
+         this.progressSpinner = true;
+         this.getDatosBaremos();
+       } else this.onChangeRowsPerPages({ value: this.selectedItem })
+   }
+ }
+
+ onChangeRowsPerPages(event) {
+  if (this.tabla) {
+    this.selectedItem = event.value;
+    this.changeDetectorRef.detectChanges();
+    this.tabla.reset();
+  }
+}
 
 }
