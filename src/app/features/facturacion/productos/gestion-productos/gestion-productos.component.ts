@@ -439,17 +439,17 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     }
     else{
       let hayInactivo: boolean = false;
+      this.filterSolicitadoPorInternet();
       this.selectedRows.forEach(producto => {
         if(producto.fechabaja != null){
           hayInactivo = true;
         }
       });
 
-      if(!hayInactivo){
-        if (this.checkProductosCompra()) {
+      if(!hayInactivo && this.checkProductosCompra()){
           this.nuevaCompra();
-        }
       }else{
+        sessionStorage.removeItem("mensaje");
         this.showMessage("error",
         this.translateService.instant("general.message.incorrect"),
         this.translateService.instant("facturacion.productos.avisocomprarproductosinactivos"))
@@ -501,6 +501,24 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     }
     else {
       return false;
+    }
+  }
+
+  filterSolicitadoPorInternet(): void {
+    let numOriginal = this.selectedRows.length;
+    this.selectedRows = (this.selectedRows as any[]).filter(r => r.solicitarAlta == '1');
+
+    if (this.selectedRows.length == 0) {
+      this.showMessage("error",
+          this.translateService.instant("general.message.incorrect"),
+          this.translateService.instant("facturacion.productos.comprar.error.ningunoSolicitarInternet")
+        );
+    } else if (numOriginal != this.selectedRows.length) {
+      sessionStorage.setItem("mensaje", JSON.stringify({
+        severity: "warn", 
+        summary: this.translateService.instant("general.message.warn"), 
+        detail: this.translateService.instant("facturacion.productos.comprar.error.algunosSolicitarInternet")
+      }));
     }
   }
 
@@ -615,11 +633,14 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
           sessionStorage.setItem("FichaCompraSuscripcion", n.body);
           this.router.navigate(["/fichaCompraSuscripcion"]);
         } else {
+          sessionStorage.removeItem("mensaje");
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
       },
       (err) => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        
+        sessionStorage.removeItem("mensaje");
         this.progressSpinner = false;
       }
     );

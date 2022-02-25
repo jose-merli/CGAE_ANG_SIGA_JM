@@ -9,6 +9,9 @@ import {
   NavigationEnd
 } from "@angular/router";
 import { CookieService } from "ngx-cookie-service";
+import { SigaStorageService } from "./siga-storage.service";
+import { SigaServices } from "./_services/siga.service";
+import { ColegiadoItem } from "./models/ColegiadoItem";
 
 @Component({
   selector: "app-root",
@@ -35,15 +38,32 @@ export class AppComponent implements OnInit {
     private autenticateService: AuthenticationService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private localStorageService : SigaStorageService,
+    private sigaServices : SigaServices
   ) { }
 
-  ngOnInit() {
+   async ngOnInit(): Promise<void> {
     //sessionStorage.removeItem("authenticated");
     //  sessionStorage.clear();
     this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
+    await this.sigaServices.get('getLetrado').subscribe(
+			(data) => {
+			  if (data.value == 'S') {
+				this.localStorageService.isLetrado = true;
+			  } else {
+				this.localStorageService.isLetrado = false;
+			  }
+			},
+			(err) => {
+			  //console.log(err);
+			}
+		);
+    await this.getDataLoggedUser();
+    await this.getInstitucionActual();
+		
 
     this.router.events.subscribe(evt => {
       if (evt instanceof NavigationEnd) {
@@ -147,4 +167,24 @@ export class AppComponent implements OnInit {
     this.bottomCookies = "-100";
     this.set(this.expires);
   }
+
+  getDataLoggedUser() {
+		this.sigaServices.get("usuario_logeado").subscribe(async n => {
+			const usuario = n.usuarioLogeadoItem;
+			const colegiadoItem = new ColegiadoItem();
+			colegiadoItem.nif = usuario[0].dni;
+			await this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+				usr => {
+					let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
+					if(usuarioLogado) {
+						this.localStorageService.idPersona = usuarioLogado.idPersona;
+						this.localStorageService.numColegiado = usuarioLogado.numColegiado;
+					}
+				});
+		});
+	}
+
+	getInstitucionActual() {
+		this.sigaServices.get("institucionActual").subscribe(n => { this.localStorageService.institucionActual = n.value });
+	}
 }

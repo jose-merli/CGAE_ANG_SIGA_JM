@@ -60,15 +60,25 @@
 
             <!-- MOVIL VISIBLE CHECK -->
             <div class="form-group col-lg-3 col-md-3 pt-1">
-              <span>{{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate
-              }}</span>
-              <p-checkbox [(ngModel)]="visibleMovilValue" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura" binary="true"></p-checkbox>
+              <div>
+                <span>{{ 'administracion.informes.literal.visible' | translate }} {{ 'censo.datosDireccion.literal.movil' | translate
+                }}</span>
+              </div>
+              
+              <div>
+                <p-checkbox [(ngModel)]="visibleMovilValue" (onChange)="cambiaMovil()" [disabled]="historico || !permisoEscritura" binary="true"></p-checkbox>
+              </div>
             </div>
 
             <!-- ES DECANO -->
             <div class="form-group col-lg-2 col-md-2 pt-1">
-              <span>{{ 'justiciaGratuita.maestros.gestionJuzgados.datosGenerales.decano' | translate }}</span>
-              <p-checkbox [(ngModel)]="esDecanoValue" (onChange)="cambiaDecano()" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
+              <div>
+                <span>{{ 'justiciaGratuita.maestros.gestionJuzgados.datosGenerales.decano' | translate }}</span>
+              </div>
+
+              <div>
+                <p-checkbox [(ngModel)]="esDecanoValue" (onChange)="cambiaDecano()" binary="true" [disabled]="historico || !permisoEscritura"></p-checkbox>
+              </div>
             </div>
           </div>
         </div>
@@ -111,8 +121,12 @@
 
             <!-- ES CODIGO EJIS CHECK -->
             <div class="form-group col-lg-3 col-md-3 selectAll">
-              <label>{{ "justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.isCodigoEjis" | translate }}</label>
-              <p-checkbox [disabled]="historico || !permisoEscritura" (onChange)="cambiaCodigoEjis()" [(ngModel)]="isCodigoEjisValue" binary="true"></p-checkbox>
+              <div>
+                <label>{{ "justiciaGratuita.maestros.gestionJuzgados.seccionIntercambio.isCodigoEjis" | translate }}</label>
+              </div>
+              <div>
+                <p-checkbox [disabled]="historico || !permisoEscritura" (onChange)="cambiaCodigoEjis()" [(ngModel)]="isCodigoEjisValue" binary="true"></p-checkbox>
+              </div>
             </div>
 
             <!-- CODIGO EJIS -->

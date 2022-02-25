@@ -148,6 +148,7 @@ export class NuevaIncorporacionComponent implements OnInit {
   disableDownload : boolean = true;
   asunto : string;
   codDocAnexo : string;
+  errorDocumentacion : boolean = false;
   @ViewChild("table") table : Table;
   constructor(
     private translateService: TranslateService,
@@ -375,6 +376,11 @@ export class NuevaIncorporacionComponent implements OnInit {
           if(this.estadoSolicitudSelected == '20' && this.solicitudEditar.idEstado != '20'){
             this.estadoSolicitudSelected = '10'
           }
+          if(this.solicitudEditar.idEstado == '10'){
+            this.consulta = false;
+          }else if(this.solicitudEditar.idEstado == '20'){
+            this.consulta = true;
+          }
         }
 
         if (this.consulta == false) {
@@ -433,6 +439,7 @@ export class NuevaIncorporacionComponent implements OnInit {
                 let procedimientos : any[]  = n.listaProcedimientos;
 
                 if(procedimientos && procedimientos.length > 0 ){
+                  this.errorDocumentacion = false;;
                   let documentosEXEA : any[] = procedimientos[0].listaDocumentos;
 
                   let modalidadEXEA : String = this.modalidadDocumentacionSelected;
@@ -469,17 +476,21 @@ export class NuevaIncorporacionComponent implements OnInit {
                   documentosEXEA = documentosEXEA.filter(documento => documento.criterio1 == tipoColegiacionEXEA && documento.criterio2 == modalidadEXEA);
 
                   this.fromJSONToDocIncorporacionItem(documentosEXEA);
+                }else{
+                  this.errorDocumentacion = true;
                 }
 
               },
               err => {
                 console.log(err);
+                this.errorDocumentacion = true;
               }
             );
           }
         },
         err => {
           console.log(err);
+          this.errorDocumentacion = true;
         },
         () => {}
       );
@@ -518,7 +529,9 @@ export class NuevaIncorporacionComponent implements OnInit {
           let error = JSON.parse(data.body).error;
           if(error){
             this.showFailNotTraduce('Error al sincronizar la documentacion de SIGA con EXEA: ' + error.message);
+            this.errorDocumentacion = true;
           }else{
+            this.errorDocumentacion = false;
             this.showInfo('Documentacion sincronizada con EXEA correctamente');
             this.getDocRequerida();
           }
@@ -528,11 +541,14 @@ export class NuevaIncorporacionComponent implements OnInit {
         error => {
           this.showFailNotTraduce('Error al sincronizar la documentacion: ' + error);
           this.progressSpinner = false;
+          this.errorDocumentacion = true;
         },
         ()=>{
           this.progressSpinner = false;
         }
       );
+    }else{
+      this.errorDocumentacion = true;
     }
   }
 
@@ -2360,7 +2376,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   checkDatosAprobar() {
     this.showDialog = false;
-    if ((this.consulta || this.pendienteAprobacion) && (this.solicitudEditar.idEstado != '50' && this.solicitudEditar.idEstado != '30')) {
+    if ((this.consulta || this.pendienteAprobacion || (this.isActivoEXEA && !this.consulta)) && (this.solicitudEditar.idEstado != '50' && this.solicitudEditar.idEstado != '30')) {
       if (!this.disabledAprobar()) {
         if (this.cargo == true || this.abono == true || this.abonoJCS == true) {
           if ((this.solicitudEditar.titular == "" || this.solicitudEditar.titular == undefined) || (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) || (this.solicitudEditar.bic == "" || this.solicitudEditar.bic == undefined) || (this.solicitudEditar.banco == "" || this.solicitudEditar.banco == undefined)) {
@@ -2453,8 +2469,8 @@ para poder filtrar el dato con o sin estos caracteres*/
       .subscribe(
         result => {
           this.documentos = result.documentacionIncorporacionItem;
+          this.selectedDatos = [];
           this.showInfoDoc = false;
-          console.log(this.documentos);
         },
         error => {
           console.log(error);

@@ -54,6 +54,16 @@ export class DireccionJuzComponent implements OnInit {
       this.progressSpinner = false;
     }
 
+    if (this.modoEdicion) {
+      this.datos = this.datos;
+      this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+
+    } else {
+      this.datos = new JuzgadoItem();
+      this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+
+    }
+
     this.getComboProvincias();
     this.validateHistorical();
     this.getDatosContactos();

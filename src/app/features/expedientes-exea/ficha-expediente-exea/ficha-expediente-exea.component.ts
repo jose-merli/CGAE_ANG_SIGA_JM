@@ -92,7 +92,7 @@ export class FichaExpedienteExeaComponent implements OnInit {
     this.route.queryParams
 			.subscribe(params => {
 				this.idExpediente = params.idExpediente;
-        if(this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona){
+        if(this.sigaStorageService.isLetrado){
           this.getDetalleExpediente();
           this.listaTarjetas[2].visible = true;
         }else{
