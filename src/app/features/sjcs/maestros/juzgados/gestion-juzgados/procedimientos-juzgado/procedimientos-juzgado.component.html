@@ -113,14 +113,21 @@
     </div>
     <div *ngIf="openFicha" class="card-footer ">
       <div class="text-right main-button ">
-        <button [disabled]="historico || !permisoEscritura" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo"
-          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
+        <!-- RESTABLECER -->
+       <!--  <button [disabled]="historico || !permisoEscritura" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo"
+          iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button> -->
+
+        <!-- ELIMINAR -->
         <button [disabled]="historico || nuevo || !permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
           (click)="checkPermisosDelete()" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-        <button [disabled]="historico || !permisoEscritura || disableGuardar()" (click)="checkPermisosSave()" pButton type="button"
-          icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
-        <button pButton [disabled]="selectAll || historico || !permisoEscritura || !disableGuardar() || nuevo" (click)="checkPermisosNewProcedimiento()"
-          type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+
+        <!-- GUARDAR -->
+       <!--  <button [disabled]="historico || !permisoEscritura || disableGuardar()" (click)="checkPermisosSave()" pButton type="button"
+          icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button> -->
+
+        <!-- AÑADIR -->
+        <button pButton [disabled]="!permisoEscritura" (click)="aniadirModulos()"
+          type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.anadir' | translate}}"></button>
 
       </div>
     </div>
@@ -133,6 +140,5 @@
   </p-footer>
 </p-confirmDialog>
 <div *ngIf="progressSpinner" class="overlay-spinner">
-  <!--<p-progressSpinner animationDuration="1s"></p-progressSpinner>-->
   <div class="loader"></div>
 </div>
