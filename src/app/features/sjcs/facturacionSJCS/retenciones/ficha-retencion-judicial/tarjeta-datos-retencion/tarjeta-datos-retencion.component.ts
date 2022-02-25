@@ -67,7 +67,9 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
     }).catch(error => console.error(error));
 
     this.isLetrado = this.sigaStorageService.isLetrado;
-
+console.log(this.showTarjeta);
+ console.log(this.permisoEscritura);
+ console.log(this.isLetrado);
   }
 
   getDataInicial() {
@@ -207,7 +209,13 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   isDisabledRestablecer() {
-    return (JSON.stringify(this.body) == JSON.stringify(this.bodyAux));
+    if(this.isLetrado){
+      return true;
+    }else if(this.permisoEscritura){
+      return false;
+    }else{
+      return true;
+    }
   }
 
   restablecer() {

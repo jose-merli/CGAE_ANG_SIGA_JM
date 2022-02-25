@@ -255,7 +255,9 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         (this.tarjetaConfigFac.filtrosDis.aPartirMax != null || this.tarjetaConfigFac.filtrosDis.aPartirMax != undefined)) {
         if (this.tarjetaConfigFac.filtrosDis.aPartirDis < this.tarjetaConfigFac.filtrosDis.aPartirMax) {
           this.configuracionHito(confBaremo, turno, guardia);
-          this.sigaServices.post("baremosGuardia_saveBaremo", confBaremo).subscribe(
+          let listBaremos=[];
+          listBaremos.push(confBaremo);
+          this.sigaServices.post("baremosGuardia_saveBaremo", listBaremos).subscribe(
             data => {
               let error = JSON.parse(data.body).error;
               this.progressSpinner = false;
@@ -283,7 +285,9 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         }
       } else {
         this.configuracionHito(confBaremo, turno, guardia);
-        this.sigaServices.post("baremosGuardia_saveBaremo", confBaremo).subscribe(
+        let listBaremos=[];
+        listBaremos.push(confBaremo);
+        this.sigaServices.post("baremosGuardia_saveBaremo", listBaremos).subscribe(
           data => {
             let error = JSON.parse(data.body).error;
             this.progressSpinner = false;

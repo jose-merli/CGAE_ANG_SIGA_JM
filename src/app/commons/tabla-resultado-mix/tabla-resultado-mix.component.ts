@@ -938,7 +938,9 @@ export class TablaResultadoMixComponent implements OnInit {
       "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
           //console.log('data: ', data.body)
-          let error = JSON.parse(data.body).error;
+          if(data.body){
+            let error = JSON.parse(data.body).error;
+          }
           let datos = JSON.parse(data.body);
           if(datos){
 
