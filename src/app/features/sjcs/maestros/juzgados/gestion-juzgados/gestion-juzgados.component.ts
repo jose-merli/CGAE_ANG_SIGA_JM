@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Location } from '@angular/common';
 import { JuzgadoItem } from '../../../../../models/sjcs/JuzgadoItem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-gestion-juzgados',
@@ -14,7 +15,7 @@ export class GestionJuzgadosComponent implements OnInit {
   datos: JuzgadoItem = new JuzgadoItem();
   modoEdicion: boolean = true;
 
-  constructor(private persistenceService: PersistenceService, private location: Location) { }
+  constructor(private persistenceService: PersistenceService, private location: Location, private router: Router) { }
 
   ngOnInit() {
 
@@ -53,7 +54,7 @@ export class GestionJuzgadosComponent implements OnInit {
   }
 
   backTo() {
-    this.location.back();
+    this.router.navigate(["mantenimientoJuzgados"]);
   }
 
   modoEdicionSend(event) {

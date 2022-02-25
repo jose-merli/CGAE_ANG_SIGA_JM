@@ -19,6 +19,8 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { SortEvent } from '../../../../../../../node_modules/primeng/api';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { ProcedimientoObject } from '../../../../../models/sjcs/ProcedimientoObject';
+import { JuzgadoItem } from '../../../../../models/sjcs/JuzgadoItem';
 
 @Component({
 	selector: 'app-tabla-modulos',
@@ -47,6 +49,9 @@ export class TablaModulosComponent implements OnInit {
 	nuevo: boolean = false;
 	progressSpinner: boolean = false;
 
+	textSelected: String = '{0} opciones seleccionadas';
+	textFilter: string = "Seleccionar";
+
 	//Resultados de la busqueda
 	@Input() datos;
 	//Combo partidos judiciales
@@ -73,6 +78,8 @@ export class TablaModulosComponent implements OnInit {
 		} else {
 			this.permisos = false;
 		}
+
+		this.searchJuzgados();
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -300,6 +307,72 @@ export class TablaModulosComponent implements OnInit {
 
 	clear() {
 		this.msgs = [];
+	}
+
+	showModalAsociarModulosAJuzgados: boolean = false;
+	asociarModulosAJuzgados(){
+		this.showModalAsociarModulosAJuzgados = true;
+	}
+
+	cancelarDialogAsociarModulosAJuzgados() {
+		this.showModalAsociarModulosAJuzgados = false;
+	}
+
+	filtros: JuzgadoItem = new JuzgadoItem();
+	juzgadosList: any[] = [];
+	searchJuzgados() {
+		this.progressSpinner = true;
+		this.sigaServices.post("busquedaJuzgados_searchCourt", this.filtros).subscribe(
+		  n => {
+
+			JSON.parse(n.body).juzgadoItems.forEach(juzgados => {
+				this.juzgadosList.push({label: juzgados.nombre, value: juzgados.idJuzgado})
+			});
+			
+			this.progressSpinner = false;
+
+		  },
+		  err => {
+			this.progressSpinner = false;
+		  });
+	  }
+
+	juzgados: any[] = [];
+	guardarDialogAsociarModulosAJuzgados(){
+		this.progressSpinner = true;
+
+		this.juzgados.forEach(juzgado => {
+			let procedimientoDTO = new ProcedimientoObject();
+		
+			procedimientoDTO.procedimientosItems = this.selectedDatos;
+			procedimientoDTO.idJuzgado = juzgado;
+		
+		
+			this.sigaServices.post("gestionJuzgados_asociarModulosAJuzgados", procedimientoDTO).subscribe(
+				data => {
+					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+					this.progressSpinner = false;
+					this.showModalAsociarModulosAJuzgados = false;
+				},
+				err => {
+		
+					if (err.error != undefined && JSON.parse(err.error).error.description != "") {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+					} else {
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+					}
+					this.showModalAsociarModulosAJuzgados = false;
+					this.progressSpinner = false;
+					},
+				() => {
+					this.showModalAsociarModulosAJuzgados = false;
+					this.progressSpinner = false;
+				}
+			);
+		
+			
+		});
+			
 	}
 
 

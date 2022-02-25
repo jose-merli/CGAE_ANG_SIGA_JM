@@ -7,6 +7,7 @@ import { ProcedimientoObject } from '../../../../../../models/sjcs/Procedimiento
 import { exists } from 'fs';
 import { element } from '../../../../../../../../node_modules/protractor';
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -49,7 +50,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
     private sigaServices: SigaServices, private translateService: TranslateService,
-    private confirmationService: ConfirmationService, private commonsService: CommonsService
+    private confirmationService: ConfirmationService, private commonsService: CommonsService, private router: Router
   ) { }
 
   ngOnInit() {
@@ -357,6 +358,11 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
         this.newProcedimiento();
       }
     }
+  }
+
+  aniadirModulos(){
+    sessionStorage.setItem("vieneDeFichaJuzgado", "true");
+    this.router.navigate(["maestrosModulos"]);
   }
 
   newProcedimiento() {
