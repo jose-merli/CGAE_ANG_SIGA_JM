@@ -6,6 +6,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FacturaLineaItem } from '../../../../../models/FacturaLineaItem';
 import { FacturasItem } from '../../../../../models/FacturasItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -42,6 +43,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   comboTiposIVA: any[];
   resaltadoDatos: boolean = false;
 
+  permisoEscritura: boolean = true;
   modificarDescripcion: boolean = false;
   modificarImporteUnitario: boolean = false;
   modificarIVA: boolean = false;
@@ -52,10 +54,15 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
-    private translateService: TranslateService
+    private translateService: TranslateService,
+    private localStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
+    if (this.localStorageService.isLetrado)
+      this.permisoEscritura = false;
+    else
+      this.permisoEscritura = true;
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -121,11 +128,11 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   getColsFactura() {
     this.cols = [
-      { field: "descripcion", header: "general.description", width: "30%", editable: this.modificarDescripcion },
-      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.modificarImporteUnitario && this.facturaEnRevision() },
+      { field: "descripcion", header: "general.description", width: "30%", editable: this.permisoEscritura && this.modificarDescripcion },
+      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.permisoEscritura && this.modificarImporteUnitario && this.facturaEnRevision() },
       { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%", editable: false },
       { field: "importeNeto", header: "facturacion.productos.importeNeto", width: "10%", editable: false }, 
-      { field: "tipoIVA", header: "facturacion.facturas.lineas.tipoIVA", width: "10%", editable: this.modificarIVA && this.facturaEnRevision() },
+      { field: "tipoIVA", header: "facturacion.facturas.lineas.tipoIVA", width: "10%", editable: this.permisoEscritura && this.modificarIVA && this.facturaEnRevision() },
       { field: "importeIVA", header: "facturacion.productos.importeIva", width: "10%", editable: false },
       { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importeTotal", width: "10%", editable: false },
       { field: "importeAnticipado", header: "facturacion.facturas.datosGenerales.impAnticipado", width: "10%", editable: false },
@@ -134,8 +141,8 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   getColsAbono() {
     this.cols = [
-      { field: "descripcion", header: "general.description", width: "40%", editable: this.modificarDescripcion },
-      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.modificarImporteUnitario },
+      { field: "descripcion", header: "general.description", width: "40%", editable: this.permisoEscritura && this.modificarDescripcion },
+      { field: "precioUnitario", header: "facturacion.productos.precioUnitario", width: "10%", editable: this.permisoEscritura && this.modificarImporteUnitario },
       { field: "cantidad", header: "facturacionSJCS.facturacionesYPagos.cantidad", width: "10%", editable: false },
       { field: "importeNeto", header: "facturacion.productos.importeNeto", width: "10%", editable: false }
       // { field: "importeTotal", header: "Importe Total", width: "20%", editable: false },
@@ -266,7 +273,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   
 
   checkGuardar() {
-    if (this.isValid() && !this.deshabilitarGuardado()) {
+    if (this.permisoEscritura && this.isValid() && !this.deshabilitarGuardado()) {
       this.guardarLineas();
     } else {
       this.resaltadoDatos = true;

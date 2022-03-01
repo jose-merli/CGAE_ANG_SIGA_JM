@@ -143,9 +143,9 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="deshabilitarGuardado()"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!permisoEscritura || deshabilitarGuardado()"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura || deshabilitarGuardado()"
         (click)="checkGuardar()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
