@@ -38,21 +38,21 @@
       <div class="row">
         <div class="form-group w-100">
           <label>{{ 'dato.jgr.guardia.guardias.motivos' | translate }}</label>
-          <editor id="motivosAbono" apiKey="{{apiKey}}" [init]="editorConfig1" [(ngModel)]="body.motivosAbono"></editor>
+          <editor id="motivosAbono" apiKey="{{apiKey}}" [init]="editorConfig1" [(ngModel)]="body.motivosAbono" [disabled]="!permisoEscritura"></editor>
         </div>
         <div class="form-group w-100">
           <label>{{ 'censo.nuevaSolicitud.observaciones' | translate }}</label>
-          <editor id="observacionesAbono" apiKey="{{apiKey}}" [init]="editorConfig2" [(ngModel)]="body.observacionesAbono"></editor>
+          <editor id="observacionesAbono" apiKey="{{apiKey}}" [init]="editorConfig2" [(ngModel)]="body.observacionesAbono" [disabled]="!permisoEscritura"></editor>
         </div>
       </div>
     </div>
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!permisoEscritura || deshabilitarGuardado()"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura || deshabilitarGuardado()"
           (click)="save()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

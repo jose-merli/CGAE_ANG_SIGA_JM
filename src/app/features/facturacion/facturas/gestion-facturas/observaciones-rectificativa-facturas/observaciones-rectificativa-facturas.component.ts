@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { FacturasItem } from '../../../../../models/FacturasItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-observaciones-rectificativa-facturas',
@@ -52,10 +53,19 @@ export class ObservacionesRectificativaFacturasComponent implements OnInit, OnCh
     }
   };
 
-  constructor() { }
+  permisoEscritura: boolean = true;
+
+  constructor(
+    private localStorageService: SigaStorageService
+  ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
+
+    if (this.localStorageService.isLetrado)
+      this.permisoEscritura = false;
+    else
+      this.permisoEscritura = true;
 
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
@@ -90,7 +100,7 @@ export class ObservacionesRectificativaFacturasComponent implements OnInit, OnCh
   // Guardar
 
   save(): void {
-    if (!this.deshabilitarGuardado()) {
+    if (this.permisoEscritura && !this.deshabilitarGuardado()) {
       this.guardadoSend.emit(this.body);
     }
   }
