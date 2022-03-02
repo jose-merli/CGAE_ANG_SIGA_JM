@@ -147,7 +147,7 @@
         label="{{ 'general.boton.clear' | translate}}"></button>
       <button (click)="searchFacturaciones()" pButton type="button" icon="fa fa-search" iconPos="left"
         label="{{'general.boton.search' | translate}}"></button>
-      <button (click)="nuevaFacturacion()" pButton type="button"  icon="fa fa-plus"
+      <button *ngIf="permisoEscritura" (click)="nuevaFacturacion()" pButton type="button"  icon="fa fa-plus"
         iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
     </div>
   </div>

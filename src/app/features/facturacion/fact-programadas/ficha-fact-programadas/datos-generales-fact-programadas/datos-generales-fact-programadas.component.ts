@@ -23,6 +23,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
+  @Input() permisoEscritura: boolean;
 
   @Input() modoEdicion: boolean;
   @Input() openTarjetaDatosGenerales;
@@ -206,7 +207,9 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   }
 
   checkSave(): void {
-    if (this.isValid() && !this.deshabilitarGuardado()) {
+    this.msgs = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (this.msgs == undefined && this.isValid() && !this.deshabilitarGuardado()) {
       this.body.esDatosGenerales = true;
 
       // Corregir fecha de generación prevista si coincide con la fecha actual
@@ -222,21 +225,25 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   // Botón de eliminar
   confirmEliminar(): void {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
-    let icon = "fa fa-eraser";
+    this.msgs = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
 
-    this.confirmationService.confirm({
-      // key: "confirmEliminar",
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.progressSpinner = true;
-        this.eliminar();
-      },
-      reject: () => {
-        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
-      }
-    });
+    if (this.msgs == undefined) {
+      let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
+      let icon = "fa fa-eraser";
+
+      this.confirmationService.confirm({
+        // key: "confirmEliminar",
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.progressSpinner = true;
+          this.eliminar();
+        },
+        reject: () => {
+          this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      });
+    }
   }
 
   eliminar() {
