@@ -406,7 +406,7 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.body.numColegiado = event.nColegiado;
     this.body.apellidosYNombre = event.nombreAp;
 
-    if (this.esCadenaVacia(this.body.numColegiado) || this.body.apellidosYNombre)
+    if (this.esCadenaVacia(this.body.numColegiado) || this.esCadenaVacia(this.body.apellidosYNombre))
       this.body.idPersona = undefined;
   }
 
