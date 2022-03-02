@@ -225,15 +225,6 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
       this.body.fechaRecibosB2B= new Date(this.body.fechaRecibosB2B)
   }
 
-  // Dehabilitar guardado cuando no cambien los campos
-  deshabilitarGuardado(): boolean {
-    return this.notChangedDate(this.body.fechaPresentacion, this.bodyInicial.fechaPresentacion)
-        && this.notChangedDate(this.body.fechaRecibosPrimeros, this.bodyInicial.fechaRecibosPrimeros)
-        && this.notChangedDate(this.body.fechaRecibosRecurrentes, this.bodyInicial.fechaRecibosRecurrentes)
-        && this.notChangedDate(this.body.fechaRecibosCOR, this.bodyInicial.fechaRecibosCOR)
-        && this.notChangedDate(this.body.fechaRecibosB2B, this.bodyInicial.fechaRecibosB2B);
-  }
-
   notChangedDate(value1: Date, value2: Date): boolean {
     return value1 == value2 || value1 == undefined && value2 == undefined || new Date(value1).getTime() == new Date(value2).getTime();
   }
@@ -243,7 +234,7 @@ export class DatosGeneracionAdeudosComponent implements OnInit {
   }
 
   save(){
-    if (this.isValid() &&  !this.deshabilitarGuardado()) {
+    if (this.isValid()) {
      this.guardadoSend.emit(this.body);
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];

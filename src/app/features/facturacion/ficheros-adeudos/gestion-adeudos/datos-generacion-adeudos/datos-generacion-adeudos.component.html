@@ -87,7 +87,7 @@
 
         <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="!permisoEscritura || !modoEdicion" (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura || deshabilitarGuardado()" (click)="save()" label="{{ 'general.boton.guardarGenerar' | translate}}"></button>
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!permisoEscritura" (click)="save()" label="{{ 'general.boton.guardarGenerar' | translate}}"></button>
       </div>
     </div>
   </div>
