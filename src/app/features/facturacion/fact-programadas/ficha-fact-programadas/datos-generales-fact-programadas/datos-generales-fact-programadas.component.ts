@@ -13,6 +13,7 @@ import { FaseFacturacionProgramadaObject } from '../../../../../models/FaseFactu
 import { FaseFacturacionProgramadaItem } from '../../../../../models/FaseFacturacionProgramadaItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { Table } from 'primeng/table';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-datos-generales-fact-programadas',
@@ -62,7 +63,8 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
-    private sigaStorageService: SigaStorageService
+    private sigaStorageService: SigaStorageService,
+    private location: Location
   ) { }
 
   // Al inicializar el formulario se inicializa la fecha actual sin el tiempo
@@ -232,7 +234,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       let icon = "fa fa-eraser";
 
       this.confirmationService.confirm({
-        // key: "confirmEliminar",
+        key: "confirmEliminar",
         message: mess,
         icon: icon,
         accept: () => {
@@ -249,8 +251,8 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   eliminar() {
     this.sigaServices.post("facturacionPyS_eliminarFacturacion", this.bodyInicial).subscribe(
       n => {
-        this.refreshData.emit();
         this.progressSpinner = false;
+        this.backTo();
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -506,6 +508,11 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       }
     );
 
+  }
+
+  backTo() {
+    sessionStorage.setItem("volver", "true");
+    this.location.back();
   }
 
 }
