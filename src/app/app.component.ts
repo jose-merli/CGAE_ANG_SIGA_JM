@@ -46,24 +46,7 @@ export class AppComponent implements OnInit {
    async ngOnInit(): Promise<void> {
     //sessionStorage.removeItem("authenticated");
     //  sessionStorage.clear();
-    this.router.routeReuseStrategy.shouldReuseRoute = function () {
-      return false;
-    };
-    await this.sigaServices.get('getLetrado').subscribe(
-			(data) => {
-			  if (data.value == 'S') {
-				this.localStorageService.isLetrado = true;
-			  } else {
-				this.localStorageService.isLetrado = false;
-			  }
-			},
-			(err) => {
-			  //console.log(err);
-			}
-		);
-    await this.getDataLoggedUser();
-    await this.getInstitucionActual();
-		
+    		
 
     this.router.events.subscribe(evt => {
       if (evt instanceof NavigationEnd) {
@@ -91,6 +74,24 @@ export class AppComponent implements OnInit {
       "Utilizamos cookies propias y de analítica para mejorar tu experiencia de usuario. Si continúas navegando, consideramos que aceptas su uso."
     );
     this.cookieValue = this.cookieService.get("Test");
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
+      return false;
+    };
+    await this.sigaServices.get('getLetrado').subscribe(
+			(data) => {
+			  if (data.value == 'S') {
+				this.localStorageService.isLetrado = true;
+			  } else {
+				this.localStorageService.isLetrado = false;
+			  }
+			},
+			(err) => {
+			  //console.log(err);
+			}
+		);
+    await this.getDataLoggedUser();
+    await this.getInstitucionActual();
+
   }
 
   subscribeNavigationEnd() {
