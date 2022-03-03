@@ -97,7 +97,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   getProcJuged() {
 
     this.sigaServices
-      .getParam("gestionJuzgados_searchProcCourt", "?idJuzgado=" + this.datos.idJuzgado).subscribe(
+      .getParam("gestionJuzgados_searchProcCourt", "?idJuzgado=" + this.datos.idJuzgado + "&historico=" + this.datos.historico.toString()).subscribe(
         n => {
           this.procedimientos = n.procedimientosItems;
           this.initSelectedDatos = JSON.parse(JSON.stringify((this.procedimientos)));
@@ -138,7 +138,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
   }
 
   setItalic(dato) {
-    if (dato.fechaBaja == null) return false;
+    if (dato.fechadesdevigor <= new Date() && (dato.fechahastavigor > new Date() || dato.fechahastavigor == null)) return false;
     else return true;
   }
 

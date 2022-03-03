@@ -115,14 +115,14 @@ export class TablaModulosComponent implements OnInit {
 			this.persistenceService.setDatos(this.selectedDatos[0]);
 			this.router.navigate(["/gestionModulos"], { queryParams: { idProcedimiento: this.selectedDatos[0].idProcedimiento } });
 		} else {
-			if (evento.data.fechabaja == undefined && this.historico == true) {
+			/* if (evento.data.fechabaja == undefined && this.historico == true) {
 				this.selectedDatos.pop();
-			}
+			} */
 		}
 
 	}
 
-	checkPermisosDelete(selectedDatos) {
+	checkPermisosDelete() {
 		let msg = this.commonsService.checkPermisos(this.permisos, undefined);
 
 		if (msg != undefined) {
@@ -131,54 +131,77 @@ export class TablaModulosComponent implements OnInit {
 			if (!this.permisos || (!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0) {
 				this.msgs = this.commonsService.checkPermisoAccion();
 			} else {
-				this.confirmDelete(selectedDatos);
+				this.dialogBajaLogicaFisica();
 			}
 		}
 	}
 
-	confirmDelete(selectedDatos) {
-		let mess = this.translateService.instant(
-			"messages.deleteConfirmation"
-		);
-		let icon = "fa fa-edit";
-		this.confirmationService.confirm({
-			message: mess,
-			icon: icon,
-			accept: () => {
-				this.delete(selectedDatos)
-			},
-			reject: () => {
-				this.msgs = [
-					{
-						severity: "info",
-						summary: "Cancelar",
-						detail: this.translateService.instant(
-							"general.message.accion.cancelada"
-						)
-					}
-				];
-			}
-		});
+	showModalBajaLogicaFisica: boolean = false;
+	bajaLogicaFisicaModuloRadioButton: String = 'bajalogica'
+	dialogBajaLogicaFisica(){
+		this.showModalBajaLogicaFisica = true;
 	}
 
-	checkPermisosActivate(selectedDatos) {
+	cancelarDialogBajaLogicaFisica() {
+		this.showModalBajaLogicaFisica = false;
+	}
+
+	fechaBajaLogica: Date;
+	fillFechaBajaLogica(event) {
+		this.fechaBajaLogica = this.transformaFecha(event);
+	}
+
+	transformaFecha(fecha) {
+		if (fecha != null) {
+		  let jsonDate = JSON.stringify(fecha);
+		  let rawDate = jsonDate.slice(1, -1);
+		  if (rawDate.length < 14) {
+			let splitDate = rawDate.split("/");
+			let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+			fecha = new Date((arrayDate += "T00:00:00.001Z"));
+		  } else {
+			fecha = new Date(fecha);
+		  }
+		} else {
+		  fecha = undefined;
+		}
+	
+		return fecha;
+	  }
+
+
+	checkPermisosActivate() {
 		let msg = this.commonsService.checkPermisos(this.permisos, undefined);
 
 		if (msg != undefined) {
 			this.msgs = msg;
 		} else {
-			if (!this.permisos || selectedDatos.length == 0 || selectedDatos == undefined) {
+			if (!this.permisos || this.selectedDatos.length == 0 || this.selectedDatos == undefined) {
 				this.msgs = this.commonsService.checkPermisoAccion();
 			} else {
-				this.delete(selectedDatos);
+				this.delete();
 			}
 		}
 	}
 
-	delete(selectedDatos) {
-		let ModulosDelete = new ModulosObject();
-		ModulosDelete.modulosItem = selectedDatos
-		this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", ModulosDelete).subscribe(
+	modulosDelete = new ModulosObject();
+	esReactivar: boolean = false;
+	delete() {
+		if(this.esReactivar){
+			this.modulosDelete.baja = 'reactivar';
+		}else if(this.bajaLogicaFisicaModuloRadioButton == 'bajalogica'){
+			this.selectedDatos.forEach( modulo => {
+					modulo.fechahastavigor = this.fechaBajaLogica;
+				}
+			)
+
+			this.modulosDelete.baja = "bajalogica";
+		}else{
+			this.modulosDelete.baja = "bajafisica";
+		}
+
+		this.modulosDelete.modulosItem = this.selectedDatos;
+		this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", this.modulosDelete).subscribe(
 			data => {
 				this.selectedDatos = [];
 				if (this.historico) {
@@ -187,6 +210,7 @@ export class TablaModulosComponent implements OnInit {
 					this.searchModulos.emit(false);
 				}
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+				this.showModalBajaLogicaFisica = false;
 				this.progressSpinner = false;
 			},
 			err => {
@@ -195,9 +219,11 @@ export class TablaModulosComponent implements OnInit {
 				} else {
 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
 				}
+				this.showModalBajaLogicaFisica = false;
 				this.progressSpinner = false;
 			},
 			() => {
+				this.showModalBajaLogicaFisica = false;
 				this.progressSpinner = false;
 				this.historico = false;
 				this.selectAll = false;
@@ -231,7 +257,7 @@ export class TablaModulosComponent implements OnInit {
 	}
 
 	setItalic(dato) {
-		if (dato.fechabaja == null) return false;
+		if (dato.fechadesdevigor <= new Date() && (dato.fechahastavigor > new Date() || dato.fechahastavigor == null)) return false;
 		else return true;
 	}
 
@@ -240,9 +266,10 @@ export class TablaModulosComponent implements OnInit {
 		this.cols = [
 			{ field: "codigo", header: "general.boton.code", width: "12%" },
 			{ field: "nombre", header: "administracion.parametrosGenerales.literal.nombre", width: "42%" },
-			{ field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio", width: "12%" },
-			{ field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin", width: "12%" },
-			{ field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "12%" }
+			{ field: "fechadesdevigor", header: "facturacion.seriesFacturacion.literal.fInicio", width: "11%" },
+			{ field: "fechahastavigor", header: "censo.consultaDatos.literal.fechaFin", width: "11%" },
+			{ field: "importe", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "8%" },
+			{ field: "jurisdiccionDes", header: "menu.justiciaGratuita.maestros.Jurisdiccion", width: "16%" },
 
 		];
 		this.cols.forEach(it => this.buscadores.push(""));
@@ -317,6 +344,7 @@ export class TablaModulosComponent implements OnInit {
 	cancelarDialogAsociarModulosAJuzgados() {
 		this.showModalAsociarModulosAJuzgados = false;
 	}
+	
 
 	filtros: JuzgadoItem = new JuzgadoItem();
 	juzgadosList: any[] = [];
@@ -326,7 +354,7 @@ export class TablaModulosComponent implements OnInit {
 		  n => {
 
 			JSON.parse(n.body).juzgadoItems.forEach(juzgados => {
-				this.juzgadosList.push({label: juzgados.nombre, value: juzgados.idJuzgado})
+				this.juzgadosList.push({label: juzgados.nombre + " (" + juzgados.codigoExt2 + ")", value: juzgados.idJuzgado})
 			});
 			
 			this.progressSpinner = false;

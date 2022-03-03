@@ -20,5 +20,6 @@ export class ModulosItem {
   observaciones: string;
   complementoCheck: boolean;
   permitiraniadirletradoCheck: boolean;
+  jurisdiccionDes: string;
   constructor() { }
 }
