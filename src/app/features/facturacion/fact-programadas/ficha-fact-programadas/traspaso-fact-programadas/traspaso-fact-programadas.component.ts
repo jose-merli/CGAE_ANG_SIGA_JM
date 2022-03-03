@@ -14,6 +14,7 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
+  @Input() permisoEscritura: boolean;
 
   @Input() modoEdicion: boolean;
   @Input() openTarjetaTraspaso;
@@ -78,7 +79,9 @@ export class TraspasoFactProgramadasComponent implements OnInit, OnChanges {
   // Guardar
 
   checkSave(): void {
-    if (!this.deshabilitarGuardado()) {
+    this.msgs = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (this.msgs == undefined && !this.deshabilitarGuardado()) {
       this.body.esDatosGenerales = false;
       this.guardadoSend.emit(this.body);
     }

@@ -480,7 +480,7 @@ nuevoAbono(): void {
 }
 comboRenegociar(){
   this.comboAction =  [
-    { value: "cuentaFactura_activa", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
+    { value: "cuenta_activa", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
     { value: "cuentaFactura_activa_masClientes", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
     { value: "caja",  label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
   ];
@@ -551,7 +551,7 @@ requisitos(){
 }
 mensajeCargaMasiva(registrosProcesados,totalRegistros){
   if(registrosProcesados != "0"){
-    this.showMessage("correct", this.translateService.instant("general.message.informacion"), 
+    this.showMessage("success", this.translateService.instant("general.message.informacion"), 
     this.translateService.instant("facturacion.facturas.cargaMasiva.procesamiento") + " "+ registrosProcesados+ "/"+totalRegistros
     +  this.translateService.instant("consultas.consultaslistas.literal.registros")
     );

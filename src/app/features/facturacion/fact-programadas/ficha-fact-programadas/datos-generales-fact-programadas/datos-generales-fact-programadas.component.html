@@ -54,14 +54,14 @@
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ 'general.description' | translate }} (*)</label>
               <input type="text" [(ngModel)]="body.descripcion" class="form-control" maxLength="255"
-                [disabled]="!porProgramar" pInputText>
+                [disabled]="!permisoEscritura || !porProgramar" pInputText>
             </div>
             <div class="form-group col-lg-12 col-md-12">
               <label>{{ 'justiciaGratuita.remesas.tabla.FechaGeneracion' | translate }} (*)</label>
               <app-fecha [(value)]="body.fechaPrevistaGeneracion" [minDate]="fechaActual"
                 [inputStyleClass]="styleFechaGeneracion(body.fechaPrevistaGeneracion)"
                 (valueChangeSelected)="fillFechaRealGeneracion($event)"
-                (valueChangeInput)="fillFechaRealGeneracion($event)" [disabled]="!porProgramar">
+                (valueChangeInput)="fillFechaRealGeneracion($event)" [disabled]="!permisoEscritura || !porProgramar">
               </app-fecha>
             </div>
             <div class="form-group col-lg-12 col-md-12">
@@ -69,7 +69,7 @@
               <app-fecha [(value)]="body.fechaPrevistaConfirm" [minDate]="body.fechaPrevistaGeneracion"
                 [inputStyleClass]="styleFechaConfirmacion(body.fechaPrevistaConfirm)"
                 (valueChangeSelected)="fillFechaConfirmacion($event)" (valueChangeInput)="fillFechaConfirmacion($event)"
-                [disabled]="!(porProgramar || porConfirmarError)">
+                [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)">
               </app-fecha>
             </div>
           </div>
@@ -80,28 +80,28 @@
               <label>{{ 'facturacion.factProgramadas.datosGenerales.prodDesde' | translate }} (*)</label>
               <app-fecha [(value)]="body.fechaInicioProductos" [maxDate]="body.fechaFinProductos"
                 [inputStyleClass]="styleFechaProductos()" (valueChangeSelected)="fillFechaInicioProductos($event)"
-                (valueChangeInput)="fillFechaInicioProductos($event)" [disabled]="!porProgramar">
+                (valueChangeInput)="fillFechaInicioProductos($event)" [disabled]="!permisoEscritura || !porProgramar">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.factProgramadas.datosGenerales.prodHasta' | translate }} (*)</label>
               <app-fecha [(value)]="body.fechaFinProductos" [minDate]="body.fechaInicioProductos"
                 [inputStyleClass]="styleFechaProductos()" (valueChangeSelected)="fillFechaFinProductos($event)"
-                (valueChangeInput)="fillFechaFinProductos($event)" [disabled]="!porProgramar">
+                (valueChangeInput)="fillFechaFinProductos($event)" [disabled]="!permisoEscritura || !porProgramar">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.factProgramadas.datosGenerales.susDesde' | translate }} (*)</label>
               <app-fecha [(value)]="body.fechaInicioServicios" [maxDate]="body.fechaFinServicios"
                 [inputStyleClass]="styleFechaServicios()" (valueChangeSelected)="fillFechaInicioServicios($event)"
-                (valueChangeInput)="fillFechaInicioServicios($event)" [disabled]="!porProgramar">
+                (valueChangeInput)="fillFechaInicioServicios($event)" [disabled]="!permisoEscritura || !porProgramar">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.factProgramadas.datosGenerales.susHasta' | translate }} (*)</label>
               <app-fecha [(value)]="body.fechaFinServicios" [minDate]="body.fechaInicioServicios"
                 [inputStyleClass]="styleFechaServicios()" (valueChangeSelected)="fillFechaFinServicios($event)"
-                (valueChangeInput)="fillFechaFinServicios($event)" [disabled]="!porProgramar">
+                (valueChangeInput)="fillFechaFinServicios($event)" [disabled]="!permisoEscritura || !porProgramar">
               </app-fecha>
             </div>
           </div>
@@ -134,7 +134,7 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="!modoEdicion || !(porProgramar || porConfirmarError)" pButton (click)="confirmEliminar()"
+        <button [disabled]="!permisoEscritura || !modoEdicion || !(porProgramar || porConfirmarError)" pButton (click)="confirmEliminar()"
           type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
         <button [disabled]="!(porConfirmar || porConfirmarError || confirmada)" pButton (click)="descargarLog()"
@@ -148,17 +148,20 @@
           type="button" icon="fa fa-history" iconPos="left"
           label="{{ 'form.busquedaCursos.literal.boton.desarchivar' | translate }}"></button>
 
-        <button [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
+        <button [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
           icon="fa fa-undo" iconPos="left" (click)="restablecer()"
           label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
+        <button [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
           icon="fa fa-save" iconPos="left" (click)="checkSave()"
           label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- PRIMERA CONFIRMACIÓN -->
+<p-confirmDialog key="confirmEliminar" header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
 
 <!--DIALOG CAMBIA ESTADO-->
 <p-dialog width="1200" responsive="true" modal="modal" [draggable]="false" resizable="false"

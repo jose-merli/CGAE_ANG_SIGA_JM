@@ -2,8 +2,10 @@ import { Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Outpu
 import { MultiSelect } from 'primeng/multiselect';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
+import { ColegiadoItem } from '../../../../models/ColegiadoItem';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FacturasItem } from '../../../../models/FacturasItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -46,12 +48,17 @@ export class FiltrosFacturasComponent implements OnInit {
   institucionGeneral : boolean = true;
 
   institucionActual;
+  isLetrado : boolean = false;
+  nombreAux : string = "";
+  apellidoAux : string = "";
+  numColegiadoAux : string = "";
 
   constructor(
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private commonServices: CommonsService,
     private sigaServices: SigaServices,
+    private sigaStorageService: SigaStorageService,
     //private router: Router
   ) { }
   usuarioBusquedaExpress = { 
@@ -65,6 +72,14 @@ export class FiltrosFacturasComponent implements OnInit {
   }; 
 
   ngOnInit() {
+
+    this.isLetrado = this.sigaStorageService.isLetrado;
+
+    if(this.isLetrado){
+      this.getDataLoggedUser();
+    }
+
+    
     this.getCombos();
     //Si viene de la ficha Colegiado
     if (sessionStorage.getItem("datosColegiado")) {
@@ -126,6 +141,40 @@ export class FiltrosFacturasComponent implements OnInit {
     });
   }
   
+  getDataLoggedUser() {
+    this.progressSpinner = true;
+  
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+  
+    const usuario = n.usuarioLogeadoItem;
+    const colegiadoItem = new ColegiadoItem();
+    colegiadoItem.nif = usuario[0].dni;
+  
+    this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+      usr => {
+        const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+        let nombreCompleto = nombre.split(',');
+        this.body.nombre = nombreCompleto[1];
+        this.body.apellidos = nombreCompleto[0];
+        this.body.numeroColegiado = numColegiado;
+        this.nombreAux = this.body.nombre;
+        this.apellidoAux = this.body.apellidos;
+        this.numColegiadoAux = this.body.numeroColegiado;
+
+        this.progressSpinner = false;
+      }, err => {
+      this.progressSpinner = false;
+      },
+      () => {
+      this.progressSpinner = false;
+      setTimeout(() => {
+        //this.isBuscar();
+      }, 5);
+      });
+    });
+
+    this.progressSpinner = false;
+}
 
   // Combos
   getComboEstadosFacturas() {
@@ -295,6 +344,12 @@ export class FiltrosFacturasComponent implements OnInit {
     this.showComunicacionesCobrosRecobros = true;
 
     sessionStorage.removeItem("numColegiado");
+
+    if(this.isLetrado){
+      this.body.nombre = this.nombreAux;
+      this.body.apellidos = this.apellidoAux;
+      this.body.numeroColegiado = this.numColegiadoAux;
+    }
 
     this.goTop();
   }

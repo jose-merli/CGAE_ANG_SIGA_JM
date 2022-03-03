@@ -126,7 +126,7 @@
               </div>
               <div class="form-group-interlineado col-lg-3 col-md-3">
                 <label>{{ "facturacionSJCS.filtros.abonosSJCS.numColegiado" | translate }}</label>
-                <input type="text" class="form-control" [(ngModel)]="body.numeroColegiado" pInputText />
+                <input [disabled]="isLetrado" type="text" class="form-control" [(ngModel)]="body.numeroColegiado" pInputText />
               </div>
               <div class="form-group-interlineado col-lg-3 col-md-3">
                 <label>{{ "facturacionSJCS.filtros.abonosSJCS.numIdentificacion" | translate }}</label>
@@ -137,11 +137,11 @@
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacionSJCS.facturacionesYPagos.apellidos" | translate }}</label>
-            <input type="text" class="form-control" [(ngModel)]="body.apellidos" pInputText />
+            <input [disabled]="isLetrado" type="text" class="form-control" [(ngModel)]="body.apellidos" pInputText />
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.nombre" | translate }}</label>
-            <input type="text" class="form-control" [(ngModel)]="body.nombre" pInputText />
+            <input [disabled]="isLetrado" type="text" class="form-control" [(ngModel)]="body.nombre" pInputText />
           </div>
         </div>
       </div>

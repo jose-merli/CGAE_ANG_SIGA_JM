@@ -6,6 +6,7 @@ import { ComboItem } from '../../../../models/ComboItem';
 import { CuentasBancariasItem } from '../../../../models/CuentasBancariasItem';
 import { FacFacturacionprogramadaItem } from '../../../../models/FacFacturacionprogramadaItem';
 import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
@@ -17,6 +18,7 @@ export class FichaFactProgramadasComponent implements OnInit {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
+  permisoEscritura: boolean = false;
 
   iconoTarjetaResumen = "clipboard";
   body: FacFacturacionprogramadaItem;
@@ -40,11 +42,13 @@ export class FichaFactProgramadasComponent implements OnInit {
   constructor(
     private translateService: TranslateService,
     private location: Location,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private localStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
+    this.checkPermisoEscritura(); // Comprobar permiso de escritura
 
     if (sessionStorage.getItem("facturacionProgramadaItem")) {
       this.body = JSON.parse(sessionStorage.getItem("facturacionProgramadaItem"));
@@ -145,6 +149,14 @@ export class FichaFactProgramadasComponent implements OnInit {
       });
     }
 
+  }
+
+  // Los usuarios colegiados no tienen permiso de escritura
+  checkPermisoEscritura(): void {
+    if (this.localStorageService.isLetrado)
+      this.permisoEscritura = false;
+    else
+      this.permisoEscritura = true;
   }
 
   // Obtener parametros de CONTROL
