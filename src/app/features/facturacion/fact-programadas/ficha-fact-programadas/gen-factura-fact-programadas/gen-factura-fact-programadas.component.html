@@ -48,18 +48,18 @@
         <div class="form-check col-lg-3 col-md-3 align-self-center d-flex justify-content-between">
           <label class="form-group-label">{{ 'facturacion.seriesFactura.generarPDF.auto' | translate }}</label>
           &nbsp;&nbsp;
-          <p-checkbox class="float-right" [(ngModel)]="body.generaPDF" binary="true" [disabled]="!(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)"></p-checkbox>
+          <p-checkbox class="float-right" [(ngModel)]="body.generaPDF" binary="true" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)"></p-checkbox>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.seriesFactura.generarPDF.modFact' | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idModeloFactura' placeholder="Seleccionar"
-              [options]="comboModelosFactura" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)"
+              [options]="comboModelosFactura" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)"
               [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.seriesFactura.generarPDF.modFactRect' | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idModeloRectificativa' placeholder="Seleccionar"
-              [options]="comboModelosFacturaRectificativa" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)"
+              [options]="comboModelosFacturaRectificativa" [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)"
               [showClear]="true"></p-dropdown>
         </div>
         <div class="form-group col-lg-3 col-md-3">
@@ -74,10 +74,10 @@
         <button [disabled]="!(confirmada && finalizado && logDisponible)" pButton (click)="confirmDescargar()"
           type="button" icon="fa fa-download" iconPos="left" label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
 
-        <button [disabled]="deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button [disabled]="!permisoEscritura || deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button [disabled]="deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button [disabled]="!permisoEscritura || deshabilitarGuardado() || !(porProgramar || porConfirmarError || confirmada && noAplica || confirmada && finalizadoError)" pButton type="button" icon="fa fa-save" iconPos="left"
           (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>

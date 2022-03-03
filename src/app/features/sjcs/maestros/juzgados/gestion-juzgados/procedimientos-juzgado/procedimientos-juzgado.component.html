@@ -117,6 +117,14 @@
        <!--  <button [disabled]="historico || !permisoEscritura" (click)="checkPermisosRest()" pButton type="button" icon="fa fa-undo"
           iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button> -->
 
+        <!-- MOSTRAR HISTORICO -->
+        <button *ngIf="!historico" (click)="historico = true; datos.historico = true; selectedDatos = []; selectAll=false; selectMultiple = false; getProcJuged()" pButton
+          type="button" icon="fa fa-history" iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+  
+        <!-- OCULTAR HISTORICO -->
+        <button *ngIf="historico" (click)="historico = false; datos.historico = false; selectedDatos = []; selectAll=false; selectMultiple = false; getProcJuged()" pButton type="button"
+          icon="fa fa-undo" iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
         <!-- ELIMINAR -->
         <button [disabled]="historico || nuevo || !permisoEscritura || ((!selectMultiple || !selectAll) && selectedDatos.length == 0)"
           (click)="checkPermisosDelete()" pButton type="button" icon="fa fa-trash-alt " iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>

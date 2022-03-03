@@ -13,6 +13,7 @@ import { FaseFacturacionProgramadaObject } from '../../../../../models/FaseFactu
 import { FaseFacturacionProgramadaItem } from '../../../../../models/FaseFacturacionProgramadaItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { Table } from 'primeng/table';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-datos-generales-fact-programadas',
@@ -23,6 +24,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
+  @Input() permisoEscritura: boolean;
 
   @Input() modoEdicion: boolean;
   @Input() openTarjetaDatosGenerales;
@@ -61,7 +63,8 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
-    private sigaStorageService: SigaStorageService
+    private sigaStorageService: SigaStorageService,
+    private location: Location
   ) { }
 
   // Al inicializar el formulario se inicializa la fecha actual sin el tiempo
@@ -206,7 +209,9 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   }
 
   checkSave(): void {
-    if (this.isValid() && !this.deshabilitarGuardado()) {
+    this.msgs = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (this.msgs == undefined && this.isValid() && !this.deshabilitarGuardado()) {
       this.body.esDatosGenerales = true;
 
       // Corregir fecha de generación prevista si coincide con la fecha actual
@@ -222,28 +227,32 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   // Botón de eliminar
   confirmEliminar(): void {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
-    let icon = "fa fa-eraser";
+    this.msgs = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
 
-    this.confirmationService.confirm({
-      // key: "confirmEliminar",
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.progressSpinner = true;
-        this.eliminar();
-      },
-      reject: () => {
-        this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
-      }
-    });
+    if (this.msgs == undefined) {
+      let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
+      let icon = "fa fa-eraser";
+
+      this.confirmationService.confirm({
+        key: "confirmEliminar",
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.progressSpinner = true;
+          this.eliminar();
+        },
+        reject: () => {
+          this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      });
+    }
   }
 
   eliminar() {
     this.sigaServices.post("facturacionPyS_eliminarFacturacion", this.bodyInicial).subscribe(
       n => {
-        this.refreshData.emit();
         this.progressSpinner = false;
+        this.backTo();
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
@@ -499,6 +508,11 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
       }
     );
 
+  }
+
+  backTo() {
+    sessionStorage.setItem("volver", "true");
+    this.location.back();
   }
 
 }

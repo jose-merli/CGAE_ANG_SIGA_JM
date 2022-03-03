@@ -50,15 +50,15 @@
               </div>
               
               <!-- PAIS -->
-              <!-- <div class="form-group col-lg-6 col-md-6">
+              <div class="form-group col-lg-6 col-md-6">
                 <label>
                   {{"censo.datosDireccion.literal.pais2" | translate}}
                 </label>
-                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="datos.idPais" [showClear]="true"
-                  [filter]="true" filterMatchMode="contains" [options]="comboPais" [disabled]="true"
-                  (onChange)="onChangePais()">
+                <p-dropdown class="select-form" placeholder="{{ 'general.boton.seleccionar' | translate }}" [showClear]="true"
+                  [filter]="true" filterMatchMode="contains" [options]="comboPais" [(ngModel)]="idPais" [disabled]="true"
+                  >
                 </p-dropdown>
-              </div> -->
+              </div>
 
               <!-- CODIGO POSTAL -->
               <div class="form-group col-lg-6 col-md-6">

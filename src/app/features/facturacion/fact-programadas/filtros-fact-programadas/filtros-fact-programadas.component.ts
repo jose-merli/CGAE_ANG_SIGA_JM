@@ -4,6 +4,7 @@ import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FacFacturacionprogramadaItem } from '../../../../models/FacFacturacionprogramadaItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService, KEY_CODE } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -40,13 +41,12 @@ export class FiltrosFactProgramadasComponent implements OnInit {
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
-    private router: Router
+    private router: Router,
+    private localStorageService: SigaStorageService
   ) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
+    this.checkPermisoEscritura(); // Comprobar permiso de escritura
 
     // Opción para volver desde la ficha
     if (sessionStorage.getItem("mensaje") && sessionStorage.getItem("volver")) {
@@ -77,6 +77,14 @@ export class FiltrosFactProgramadasComponent implements OnInit {
     this.getCombos();
   }
 
+  // Los usuarios colegiados no tienen permiso de escritura
+  checkPermisoEscritura(): void {
+    if (this.localStorageService.isLetrado)
+      this.permisoEscritura = false;
+    else
+      this.permisoEscritura = true;
+  }
+
   // Buscar facturaciones
   searchFacturaciones(): void {
     this.persistenceService.setFiltros(this.body);
@@ -85,13 +93,17 @@ export class FiltrosFactProgramadasComponent implements OnInit {
 
   // Crear una nueva facturación
   nuevaFacturacion(): void {
-    if (sessionStorage.getItem("facturacionProgramandaItem")) {
-      sessionStorage.removeItem("facturacionProgramandaItem");
-    }
+    this.msgs = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
 
-    this.persistenceService.clearDatos();
-    sessionStorage.setItem("Nuevo", "true");
-    this.router.navigate(["/fichaFacturaciones"]);
+    if (this.msgs == undefined) {
+      if (sessionStorage.getItem("facturacionProgramandaItem")) {
+        sessionStorage.removeItem("facturacionProgramandaItem");
+      }
+  
+      this.persistenceService.clearDatos();
+      sessionStorage.setItem("Nuevo", "true");
+      this.router.navigate(["/fichaFacturaciones"]);
+    }
   }
 
   // Combos

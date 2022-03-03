@@ -18,6 +18,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
+  @Input() permisoEscritura: boolean;
 
   @Input() modoEdicion: boolean;
   @Input() openTarjetaGenAdeudos;
@@ -104,10 +105,12 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   checkSave(): void {
-    if (this.isValid() && !this.deshabilitarGuardado()) {
+    this.msgs = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (this.msgs == undefined && this.isValid() && !this.deshabilitarGuardado()) {
       this.body.esDatosGenerales = false;
       this.guardadoSend.emit(this.body);
-    } else {
+    } else if (this.msgs == undefined) {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
     }
@@ -137,7 +140,9 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   }
 
   generarFicheroAdeudos(): void {
-    if (this.isValid() && !this.ficherosAdeudos) {
+    this.msgs = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+
+    if (this.msgs == undefined && this.isValid() && !this.ficherosAdeudos) {
       let ficheroAdeudos = new FicherosAdeudosItem();
       ficheroAdeudos.idseriefacturacion = this.body.idSerieFacturacion;
       ficheroAdeudos.idprogramacion = this.body.idProgramacion;
@@ -151,7 +156,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
       sessionStorage.setItem("Nuevo", JSON.stringify(true));
 
       this.router.navigate(['/gestionAdeudos']);  
-    } else {
+    } else if (this.msgs == undefined) {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
       this.resaltadoDatos = true;
     }
