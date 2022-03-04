@@ -30,9 +30,9 @@
       <div class="text-right main-button">
         <button pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate }}"
           (click)="restablecer()"></button>
-        <button pButton type="button" icon="fa fa-search" iconPos="left" [disabled]="!permisoEscritura"
+        <button pButton type="button" icon="fa fa-search" iconPos="left" 
           label="{{ 'general.boton.search' | translate }}" (click)="buscarImpresos()"></button>
-        
+        <!-- quito permiso de sólo lectura [disabled]="!permisoEscritura" -->
       </div>
     </div>
   </div>
