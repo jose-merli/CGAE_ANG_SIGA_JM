@@ -176,6 +176,7 @@ import { BandejaSalidaComponent } from './features/comunicaciones/bandeja-salida
 import { BandejaEntradaComponent } from './features/comunicaciones/bandeja-entrada/bandeja-entrada.component';
 // Administracion
 
+import { CatalogosMaestros } from './features/administracion/catalogos-maestros/catalogos-maestros.component';
 import { CatalogosMaestrosComponent } from './features/administracion/catalogos-maestros-classique/catalogos-maestros-classique.component';
 import { GruposUsuarios } from './features/administracion/grupos-usuarios/grupos-usuarios.component';
 import { Etiquetas } from './features/administracion/gestion-multiidioma/etiquetas/etiquetas.component';
@@ -1373,8 +1374,8 @@ const appRoutes: Routes = [
 	// Administracion
 	{
 		path: 'catalogosMaestros',
-		//component: CatalogosMaestros,
-		component: CatalogosMaestrosComponent,
+		component: CatalogosMaestros,
+		//component: CatalogosMaestrosComponent,
 		canActivate: [AuthGuard]
 	},
 	{

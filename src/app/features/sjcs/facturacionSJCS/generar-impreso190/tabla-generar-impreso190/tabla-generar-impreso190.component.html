@@ -112,9 +112,9 @@
       <button pButton (click)="nuevoImpreso()" [disabled]="isNuevo || !permisoEscritura" type="button" icon="fa-plus"
         iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
 
-      <button pButton (click)="confirmDescarga()" [disabled]="selectedDatos.length == 0 || !permisoEscritura || isNuevo"
+      <button pButton (click)="confirmDescarga()" [disabled]="selectedDatos.length == 0 || isNuevo"
         type="button" icon="fa fa-download" iconPos="left" label="{{ 'general.boton.download' | translate}}"></button>
-
+      <!-- quito permiso de sólo lectura || !permisoEscritura -->
     </div>
   </div>
   <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="addImpreso" #addImpreso>
