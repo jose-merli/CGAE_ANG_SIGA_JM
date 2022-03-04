@@ -134,25 +134,25 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="!permisoEscritura || !modoEdicion || !(porProgramar || porConfirmarError)" pButton (click)="confirmEliminar()"
+        <button *ngIf="permisoEscritura" [disabled]="!modoEdicion || !(porProgramar || porConfirmarError)" pButton (click)="confirmEliminar()"
           type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
         <button [disabled]="!(porConfirmar || porConfirmarError || confirmada)" pButton (click)="descargarLog()"
           type="button" icon="fa fa-download" iconPos="left"
           label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
 
-        <button *ngIf="(porConfirmarError || confirmada) && !body.archivarFact" pButton (click)="archivar()"
+        <button *ngIf="permisoEscritura && (porConfirmarError || confirmada) && !body.archivarFact" pButton (click)="archivar()"
           type="button" icon="fas fa-archive" iconPos="left"
           label="{{ 'general.boton.archivar' | translate }}"></button>
-        <button *ngIf="(porConfirmarError || confirmada) && body.archivarFact" pButton (click)="desarchivar()"
+        <button *ngIf="permisoEscritura && (porConfirmarError || confirmada) && body.archivarFact" pButton (click)="desarchivar()"
           type="button" icon="fa fa-history" iconPos="left"
           label="{{ 'form.busquedaCursos.literal.boton.desarchivar' | translate }}"></button>
 
-        <button [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
+        <button *ngIf="permisoEscritura" [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
           icon="fa fa-undo" iconPos="left" (click)="restablecer()"
           label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
+        <button *ngIf="permisoEscritura" [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button"
           icon="fa fa-save" iconPos="left" (click)="checkSave()"
           label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>

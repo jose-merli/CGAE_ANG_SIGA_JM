@@ -40,6 +40,12 @@ export class DireccionJuzComponent implements OnInit {
    datosContacto: any[];
    idJuzgado;
 
+   //Pais solo esta presente de forma visual
+   comboPais = [{label: "España",
+                 value: 0
+                }]
+  idPais = 0;
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private translateService: TranslateService, private commonsService: CommonsService) { }
 

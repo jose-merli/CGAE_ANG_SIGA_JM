@@ -31,6 +31,7 @@ import { PipeNumberModule } from '../../../../commons/number-pipe/number-pipe.mo
 import { MultiSelectModule } from "primeng/multiselect";
 import { PartidasComponent } from '../partidas/partidas.component';
 import { PrecioModule } from '../../../../commons/precio/precio.module';
+import { RadioButtonModule } from "primeng/radiobutton";
 
 // import { FichaGrupoZonaModule } from './ficha-grupo-zona/ficha-grupo-zona.module';
 
@@ -55,7 +56,8 @@ import { PrecioModule } from '../../../../commons/precio/precio.module';
     ConfirmDialogModule,
     // FichaGrupoZonaModule
     PipeNumberModule,
-    DialogModule
+    DialogModule,
+    RadioButtonModule
   ],
   declarations: [
     FiltrosModulosComponent,
