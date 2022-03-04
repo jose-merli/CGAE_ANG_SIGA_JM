@@ -115,6 +115,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
 
   cargarDatos() {
     this.progressSpinner = true;
+    this.selectedDatos = [];
     this.allCuentasBancarias = [];
 
     this.sigaServices.get("facturacionPyS_getCuentasBancarias").subscribe(
@@ -142,9 +143,7 @@ export class GestionCuentasBancariasComponent implements OnInit {
     this.allCuentasBancarias.forEach(cuenta => {
 
       if (this.historico) {
-        if (cuenta.fechaBaja != null) {
-          this.datos.push(cuenta);
-        }
+        this.datos.push(cuenta);
       } else {
         if (cuenta.fechaBaja == null) {
           this.datos.push(cuenta);
@@ -154,26 +153,44 @@ export class GestionCuentasBancariasComponent implements OnInit {
     });
   }
 
+  esHistorico(dato: CuentasBancariasItem) {
+    return dato.fechaBaja != null;
+  }
+
+  disabledEliminar(): boolean {
+    return !this.selectedDatos || this.selectedDatos.length == 0 
+        || this.selectedDatos.filter(d => !this.esHistorico(d)).length != this.selectedDatos.length; 
+  }
+
   confirmDelete() {
-    this.confirmationService.confirm({
-      message: this.translateService.instant("messages.deleteConfirmation"),
-      header: null,
-      icon: null,
-      accept: async () => {
-        this.delete();
-      }
-    });
+    if (!this.disabledEliminar()) {
+      this.confirmationService.confirm({
+        message: this.translateService.instant("messages.deleteConfirmation"),
+        header: null,
+        icon: null,
+        accept: async () => {
+          this.delete();
+        }
+      });
+    }
+  }
+
+  disabledReactivar(): boolean {
+    return !this.selectedDatos || this.selectedDatos.length == 0 
+        || this.selectedDatos.filter(d => this.esHistorico(d)).length != this.selectedDatos.length; 
   }
 
   confirmReactivar() {
-    this.confirmationService.confirm({
-      message: this.translateService.instant("messages.activateConfirmation"),
-      header: null,
-      icon: null,
-      accept: async () => {
-        this.reactivar();
-      }
-    });
+    if (!this.disabledReactivar()) {
+      this.confirmationService.confirm({
+        message: this.translateService.instant("messages.activateConfirmation"),
+        header: null,
+        icon: null,
+        accept: async () => {
+          this.reactivar();
+        }
+      });
+    }
   }
 
   delete() {

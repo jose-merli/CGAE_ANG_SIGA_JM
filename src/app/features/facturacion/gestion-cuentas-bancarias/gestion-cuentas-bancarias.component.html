@@ -39,26 +39,26 @@
             <td class="text-center" *ngFor="let col of columns">
               <div [ngSwitch]="col.field">
                 <div *ngSwitchCase="'iban'">
-                  <span [ngClass]="{ historico: historico }">(... {{ dato[col.field] | slice:-4 }} )</span>
+                  <span [ngClass]="{ historico: esHistorico(dato) }">(... {{ dato[col.field] | slice:-4 }} )</span>
                 </div>
                 <div *ngSwitchCase="'descripcion'">
-                  <span [ngClass]="{ historico: historico }" (click)="openTab(dato)" class="enlace">{{ dato[col.field]
+                  <span [ngClass]="{ historico: esHistorico(dato) }" (click)="openTab(dato)" class="enlace">{{ dato[col.field]
                     }}</span>
                 </div>
                 <div *ngSwitchCase="'sjcsFiltro'">
-                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] == 'si' ? "Sí" : "No" }}</span>
+                  <span [ngClass]="{ historico: esHistorico(dato) }">{{ dato[col.field] == 'si' ? "Sí" : "No" }}</span>
                 </div>
                 <div *ngSwitchCase="'comisionImporte'">
-                  <span class="pull-right" [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
+                  <span class="pull-right" [ngClass]="{ historico: esHistorico(dato) }">{{ dato[col.field] }} €</span>
                 </div>
                 <div *ngSwitchCase="'numUsos'">
-                  <span class="pull-right" [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span>
+                  <span class="pull-right" [ngClass]="{ historico: esHistorico(dato) }">{{ dato[col.field] }}</span>
                 </div>
                 <div *ngSwitchCase="'numFicheros'">
-                  <span class="pull-right" [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span>
+                  <span class="pull-right" [ngClass]="{ historico: esHistorico(dato) }">{{ dato[col.field] }}</span>
                 </div>
                 <div *ngSwitchDefault>
-                  <span [ngClass]="{ historico: historico }">{{ dato[col.field] }}</span>
+                  <span [ngClass]="{ historico: esHistorico(dato) }">{{ dato[col.field] }}</span>
                 </div>
               </div>
             </td>
@@ -105,9 +105,9 @@
         <button *ngIf="historico" (click)="mostrarOcultarHistoricos()" pButton type="button" icon="fa fa-history"
           iconPos="left" label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
-        <button *ngIf="!historico" [disabled]="(selectedDatos.length === 0)" (click)="confirmDelete()" pButton type="button"
+        <button *ngIf="!historico || historico && !disabledEliminar()" [disabled]="disabledEliminar()" (click)="confirmDelete()" pButton type="button"
           icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-        <button *ngIf="historico" [disabled]="(selectedDatos.length === 0)" (click)="confirmReactivar()" pButton type="button"
+        <button *ngIf="historico && disabledEliminar()" [disabled]="disabledReactivar()" (click)="confirmReactivar()" pButton type="button"
           icon="fa fa-undo" iconPos="left" label="{{ 'general.boton.reactivar' | translate}}"></button>
 
         <button *ngIf="!historico" [disabled]=" !permisoEscritura" (click)="isNuevo()" pButton type="button"
