@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
-import { CuentasBancariasItem } from '../../../../models/CuentasBancariasItem';
 import { FacFacturacionprogramadaItem } from '../../../../models/FacFacturacionprogramadaItem';
 import { SerieFacturacionItem } from '../../../../models/SerieFacturacionItem';
+import { procesos_facturacionPyS } from '../../../../permisos/procesos_facturacionPyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
+import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 
 @Component({
@@ -43,12 +44,13 @@ export class FichaFactProgramadasComponent implements OnInit {
     private translateService: TranslateService,
     private location: Location,
     private sigaServices: SigaServices,
-    private localStorageService: SigaStorageService
+    private localStorageService: SigaStorageService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
-    this.checkPermisoEscritura(); // Comprobar permiso de escritura
+    this.getPermisoEscritura(); // Comprobar permiso de escritura
 
     if (sessionStorage.getItem("facturacionProgramadaItem")) {
       this.body = JSON.parse(sessionStorage.getItem("facturacionProgramadaItem"));
@@ -75,6 +77,16 @@ export class FichaFactProgramadasComponent implements OnInit {
 
     this.progressSpinner = false;
     this.goTop();
+  }
+
+  // Permiso del menú Facturaciones
+  getPermisoEscritura() {
+    this.commonsService
+      .checkAcceso(procesos_facturacionPyS.facturaciones)
+      .then((respuesta) => {
+        this.permisoEscritura = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
   // Tarjeta resumen
@@ -149,14 +161,6 @@ export class FichaFactProgramadasComponent implements OnInit {
       });
     }
 
-  }
-
-  // Los usuarios colegiados no tienen permiso de escritura
-  checkPermisoEscritura(): void {
-    if (this.localStorageService.isLetrado)
-      this.permisoEscritura = false;
-    else
-      this.permisoEscritura = true;
   }
 
   // Obtener parametros de CONTROL

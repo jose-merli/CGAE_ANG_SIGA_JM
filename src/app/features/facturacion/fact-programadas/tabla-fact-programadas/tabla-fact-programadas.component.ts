@@ -9,7 +9,7 @@ import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { saveAs } from "file-saver/FileSaver";
 import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
-import { ComboItem } from '../../../../models/ComboItem';
+import { procesos_facturacionPyS } from '../../../../permisos/procesos_facturacionPyS';
 
 @Component({
   selector: 'app-tabla-fact-programadas',
@@ -21,6 +21,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   msgs: Message[] = [];
   progressSpinner: boolean = false;
   permisoEscritura: boolean = false;
+  permisoDisqueteCargos: boolean = false;
 
   //Resultados de la busqueda
   @Input() datos: FacFacturacionprogramadaItem[];
@@ -59,12 +60,31 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
+    this.getPermisoEscritura(); // Comprobamos el tipo de aceso
+    this.getPermisoFicheroAdeudos(); // Permiso para la acción de Nuevo Fichero Adeudos
 
     this.getCols();
     this.getDataLoggedUser();
+  }
+
+  // Permiso del menú Facturaciones
+  getPermisoEscritura() {
+    this.commonsService
+      .checkAcceso(procesos_facturacionPyS.facturaciones)
+      .then((respuesta) => {
+        this.permisoEscritura = respuesta;
+      })
+      .catch((error) => console.error(error));
+  }
+
+  // Permiso del menú FIchero de Adeudos
+  getPermisoFicheroAdeudos() {
+    this.commonsService
+      .checkAcceso(procesos_facturacionPyS.disqueteCargos)
+      .then((respuesta) => {
+        this.permisoDisqueteCargos = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
   // Se actualiza cada vez que cambien los inputs

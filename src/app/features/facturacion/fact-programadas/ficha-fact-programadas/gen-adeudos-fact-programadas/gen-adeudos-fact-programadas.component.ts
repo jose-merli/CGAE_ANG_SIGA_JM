@@ -5,6 +5,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FacFacturacionprogramadaItem } from '../../../../../models/FacFacturacionprogramadaItem';
 import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
+import { procesos_facturacionPyS } from '../../../../../permisos/procesos_facturacionPyS';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -19,6 +20,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   msgs: Message[] = [];
   progressSpinner: boolean = false;
   @Input() permisoEscritura: boolean;
+  permisoDisqueteCargos: boolean = false;
 
   @Input() modoEdicion: boolean;
   @Input() openTarjetaGenAdeudos;
@@ -52,6 +54,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.parametrosSEPA();
+    this.getPermisoFicheroAdeudos(); // Permiso para la acción de NUevo FIchero Adeudos
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -59,6 +62,16 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
       this.restablecer();
       this.getFicheroAdeudos();
     }
+  }
+
+  // Permiso del menú FIchero de Adeudos
+  getPermisoFicheroAdeudos() {
+    this.commonsService
+      .checkAcceso(procesos_facturacionPyS.disqueteCargos)
+      .then((respuesta) => {
+        this.permisoDisqueteCargos = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
   // Restablecer

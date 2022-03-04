@@ -4,6 +4,7 @@ import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FacFacturacionprogramadaItem } from '../../../../models/FacFacturacionprogramadaItem';
+import { procesos_facturacionPyS } from '../../../../permisos/procesos_facturacionPyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService, KEY_CODE } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
@@ -46,7 +47,7 @@ export class FiltrosFactProgramadasComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.checkPermisoEscritura(); // Comprobar permiso de escritura
+    this.getPermisoEscritura(); // Comprobar permiso de escritura
 
     // Opción para volver desde la ficha
     if (sessionStorage.getItem("mensaje") && sessionStorage.getItem("volver")) {
@@ -77,12 +78,14 @@ export class FiltrosFactProgramadasComponent implements OnInit {
     this.getCombos();
   }
 
-  // Los usuarios colegiados no tienen permiso de escritura
-  checkPermisoEscritura(): void {
-    if (this.localStorageService.isLetrado)
-      this.permisoEscritura = false;
-    else
-      this.permisoEscritura = true;
+  // Permiso del menú Facturaciones
+  getPermisoEscritura() {
+    this.commonsService
+      .checkAcceso(procesos_facturacionPyS.facturaciones)
+      .then((respuesta) => {
+        this.permisoEscritura = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
   // Buscar facturaciones

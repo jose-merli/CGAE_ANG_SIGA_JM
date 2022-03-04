@@ -97,12 +97,12 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button [disabled]="!permisoEscritura || !(confirmada && !ficherosAdeudos)" pButton (click)="generarFicheroAdeudos()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
+        <button *ngIf="permisoEscritura && permisoDisqueteCargos" [disabled]="!(confirmada && !ficherosAdeudos)" pButton (click)="generarFicheroAdeudos()" type="button" icon="fa fa-plus" iconPos="left" label="{{ 'facturacion.factProgramadas.adeudos.nuevo' | translate }}"></button>
 
-        <button [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-undo" iconPos="left"
+        <button *ngIf="permisoEscritura" [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-undo" iconPos="left"
           (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
 
-        <button [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button *ngIf="permisoEscritura" [disabled]="!(porProgramar || porConfirmarError) || deshabilitarGuardado()" pButton type="button" icon="fa fa-save" iconPos="left"
           (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
       </div>
     </div>
