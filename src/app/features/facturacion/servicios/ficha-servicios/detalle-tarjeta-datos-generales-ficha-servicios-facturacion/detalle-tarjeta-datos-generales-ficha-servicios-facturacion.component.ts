@@ -220,9 +220,9 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
       this.servicio.permitirbaja = '0';
     } else {
       this.servicio.automatico = '0';
-      if(this.servicioOriginal.automatico == '1'){
+      /*if(this.servicioOriginal.automatico == '1'){
         this.modalServicioAutomaticoAManual();
-      }
+      }*/
     }
   }
 
@@ -351,7 +351,11 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
         this.avisoSuscripcionAutomatica();
       }
     } else {
-      this.guardar();
+        if(this.checkboxAsignacionAutomatica)
+          this.guardar()
+        else  
+          this.modalServicioAutomaticoAManual();
+      //this.guardar();
     }
   }
 

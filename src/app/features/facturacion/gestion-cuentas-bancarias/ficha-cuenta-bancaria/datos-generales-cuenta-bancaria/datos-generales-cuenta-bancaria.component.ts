@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { Observable, Subscription } from 'rxjs';
+import { concatAll } from 'rxjs/operator/concatAll';
 import { TranslateService } from '../../../../../commons/translate';
 import { CuentasBancariasItem } from '../../../../../models/CuentasBancariasItem';
 import { CommonsService } from '../../../../../_services/commons.service';
@@ -98,6 +99,16 @@ export class DatosGeneralesCuentaBancariaComponent implements OnInit, OnDestroy,
       (this.body.numUsos != undefined ? (this.body.numUsos > 0 ? "EN USO" : "SIN USO") : "-");
   }
 
+	numberOnly(event): boolean {
+		const charCode = (event.which) ? event.which : event.keyCode;
+		if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+			return true;
+		}
+		else {
+			return false;
+
+		}
+	}
   // Obtener descripción
 
   calcDescripcion(): void {

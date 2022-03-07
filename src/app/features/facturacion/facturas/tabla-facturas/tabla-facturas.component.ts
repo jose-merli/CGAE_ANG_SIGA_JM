@@ -733,7 +733,7 @@ requisitos(){
 }
 mensajeCargaMasiva(registrosProcesados,totalRegistros){
   if(registrosProcesados != "0"){
-    this.showMessage("correct", this.translateService.instant("general.message.informacion"), 
+    this.showMessage("success", this.translateService.instant("general.message.informacion"), 
     this.translateService.instant("facturacion.facturas.cargaMasiva.procesamiento") + " "+ registrosProcesados+ "/"+totalRegistros
     +  this.translateService.instant("consultas.consultaslistas.literal.registros")
     );

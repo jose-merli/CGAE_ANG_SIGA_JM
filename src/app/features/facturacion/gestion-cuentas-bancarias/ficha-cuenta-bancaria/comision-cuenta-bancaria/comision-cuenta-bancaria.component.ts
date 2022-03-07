@@ -76,6 +76,17 @@ export class ComisionCuentaBancariaComponent implements OnInit, OnChanges {
       && this.body.idTipoIVA != undefined && this.body.idTipoIVA.trim() != "";
   }
 
+  numberOnly(event): boolean {
+		const charCode = (event.which) ? event.which : event.keyCode;
+		if (charCode >= 48 && charCode <= 57 || (charCode == 44)) {
+			return true;
+		}
+		else {
+			return false;
+
+		}
+	}
+
   checkSave(): void {
     if (this.isValid() && !this.deshabilitarGuardado()) {
       this.guardadoSend.emit(this.body);
