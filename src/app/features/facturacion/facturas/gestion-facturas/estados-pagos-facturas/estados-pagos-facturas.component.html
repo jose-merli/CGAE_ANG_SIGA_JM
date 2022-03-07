@@ -315,10 +315,9 @@
           (click)="nuevoCobro()" label="Nuevo Cobro"></button>
         <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="nuevoEstado || disabledRenegociar()"
           (click)="esUltimoEstadoFactura() ? renegociar() : renegociarAbono()" label="{{ 'general.boton.renegociar' | translate }}"></button>
-
         <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!nuevoEstado"
           label="{{'general.boton.restablecer' | translate}}"></button>
-        <button (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!nuevoEstado"
+        <button (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!nuevoEstado || soloLectura"
           label="{{'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

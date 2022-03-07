@@ -37,6 +37,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   buscadores = [];
   selectAll: boolean;
   selectMultiple: boolean;
+  soloLectura : boolean;
 
   grupos: { key: string, values: FacturaEstadosPagosItem[], activo: boolean }[];
   datos: FacturaEstadosPagosItem[] = [];
@@ -76,6 +77,11 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
+
+    if (sessionStorage.getItem("isLetrado") === "true") {
+      this.soloLectura = true;
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -206,7 +212,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   // Visibilidad de las acciones
   disabledRenegociar(): boolean {
     if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
-        || this.grupos[this.grupos.length - 1].values.length == 0)
+        || this.grupos[this.grupos.length - 1].values.length == 0 || this.soloLectura)
       return true;
       
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
@@ -216,7 +222,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   disabledNuevoCobro(): boolean {
     if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
-      || this.grupos[this.grupos.length - 1].values.length == 0)
+      || this.grupos[this.grupos.length - 1].values.length == 0 || this.soloLectura)
       return true;
       
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
@@ -226,7 +232,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   disabledNuevoAbono(): boolean {
     if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
-      || this.grupos[this.grupos.length - 1].values.length == 0)
+      || this.grupos[this.grupos.length - 1].values.length == 0 || this.soloLectura)
       return true;
 
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
@@ -236,7 +242,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   disabledDevolver(): boolean {
     if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
-      || this.grupos[this.grupos.length - 1].values.length == 0)
+      || this.grupos[this.grupos.length - 1].values.length == 0 || this.soloLectura)
       return true;
 
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
@@ -249,7 +255,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   disabledAnular(): boolean {
     if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
-      || this.grupos[this.grupos.length - 1].values.length == 0)
+      || this.grupos[this.grupos.length - 1].values.length == 0 || this.soloLectura)
       return true;
 
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
@@ -258,7 +264,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
   disabledEliminar(): boolean {
     if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 
-      || this.grupos[this.grupos.length - 1].values.length == 0)
+      || this.grupos[this.grupos.length - 1].values.length == 0 || this.soloLectura)
       return true;
 
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
@@ -604,7 +610,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   guardar() {
-    if (this.isValid()) {
+    if (this.isValid() && !this.soloLectura) {
       if (this.esUltimoEstadoFactura()) {
         this.progressSpinner = true;
         this.sigaServices.post("facturacionPyS_insertarEstadosPagos", this.nuevoEstado).toPromise()
