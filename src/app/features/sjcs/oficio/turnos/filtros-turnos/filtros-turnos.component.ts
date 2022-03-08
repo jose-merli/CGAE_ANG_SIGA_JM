@@ -324,7 +324,7 @@ export class FiltrosTurnos implements OnInit {
   }
 
   partidoJudiciales() {
-    if (this.filtros.idsubzona.length > 0) {
+    if (this.filtros.idsubzona != null && this.filtros.idsubzona.length > 0) {
       this.sigaServices
         .getParam(
           "fichaZonas_searchSubzones",
