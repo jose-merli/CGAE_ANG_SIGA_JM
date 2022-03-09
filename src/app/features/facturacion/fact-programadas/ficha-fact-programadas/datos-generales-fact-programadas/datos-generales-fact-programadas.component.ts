@@ -41,6 +41,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   // Estados de confirmación
   porProgramar: boolean = true;
+  generada: boolean = false;
   porConfirmar: boolean = false;
   porConfirmarError: boolean = false;
   confirmada: boolean = false;
@@ -99,6 +100,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
     this.resaltadoDatos = false;
 
     this.porProgramar = !this.modoEdicion || this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
+    this.generada = this.body.idEstadoConfirmacion == "20" || this.body.idEstadoConfirmacion == "2";
     this.porConfirmar = this.body.idEstadoConfirmacion == "18" || this.body.idEstadoConfirmacion == "19" || this.body.idEstadoConfirmacion == "1" || this.body.idEstadoConfirmacion == "17";
     this.porConfirmarError = this.body.idEstadoConfirmacion == "21";
     this.confirmada = this.body.idEstadoConfirmacion == "3";
@@ -299,7 +301,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   descargarLog(){
     let resHead ={ 'response' : null, 'header': null };
 
-    if (this.bodyInicial.nombreFichero) {
+    if (this.bodyInicial.logError) {
       this.progressSpinner = true;
       let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFichaFacturacion", [{ idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idProgramacion }]);
       descarga.subscribe(response => {

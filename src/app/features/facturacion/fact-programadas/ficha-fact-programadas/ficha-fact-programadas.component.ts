@@ -173,6 +173,9 @@ export class FichaFactProgramadasComponent implements OnInit {
 
         if (controlEmisionItem) {
           this.controlEmisionFacturasSII = controlEmisionItem.value == "1";
+          setTimeout(() => {
+            this.updateEnlacesTarjetaResumen();
+          }, 5);
         }
       },
       err => {

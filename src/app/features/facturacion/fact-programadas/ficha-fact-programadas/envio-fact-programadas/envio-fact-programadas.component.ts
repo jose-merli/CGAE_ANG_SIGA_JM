@@ -108,7 +108,7 @@ export class EnvioFactProgramadasComponent implements OnInit, OnChanges {
   descargarLog(){
     let resHead ={ 'response' : null, 'header': null };
 
-    if (this.bodyInicial.nombreFichero) {
+    if (this.bodyInicial.logError) {
       this.progressSpinner = true;
       let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFichaFacturacion", [{ idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idProgramacion }]);
       descarga.subscribe(response => {
