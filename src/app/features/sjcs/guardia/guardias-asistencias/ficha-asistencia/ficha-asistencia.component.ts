@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../commons/translate';
 import { DatePipe, Location } from '@angular/common';
@@ -15,7 +15,7 @@ import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
   templateUrl: './ficha-asistencia.component.html',
   styleUrls: ['./ficha-asistencia.component.scss']
 })
-export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
+export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
 
   msgs: Message[] = [];
   rutas: string[] = [];
@@ -179,6 +179,12 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
     }
 
   }
+
+  ngOnDestroy(){
+    if(sessionStorage.getItem("vieneDeFichaDesigna")) sessionStorage.removeItem("vieneDeFichaDesigna");
+    if(sessionStorage.getItem("idAsistencia")) sessionStorage.removeItem("idAsistencia");
+  }
+
   clear() {
     this.msgs = [];
   }
@@ -934,6 +940,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit {
   }
 
   backTo() {
+    if(sessionStorage.getItem("vieneDeFichaDesigna")) this.location.back();
+
     if (this.preasistencia) {
       this.router.navigate(['/fichaPreasistencia']);
     } else {
