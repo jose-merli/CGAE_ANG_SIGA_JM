@@ -69,17 +69,17 @@
               <input *ngIf="body.tiporetencion == 'F' || body.tiporetencion == 'L'" pInputText class="form-control"
                 type="number" name="retencion" [(ngModel)]="body.importe"
                 [ngClass]="{'camposObligatorios': marcarObligatorio('inputNumber', body.importe)}"
-                (blur)="compruebaImporte(expRegImporte.test(body.importe))" [disabled]="!permisoEscritura || isLetrado || disabledImporte" />
+                (blur)="compruebaImporte(expRegImporte.test(body.importe))" [disabled]="!permisoEscritura || disabledImporte || isLetrado" />
 
               <input *ngIf="body.tiporetencion == 'P'" pInputText class="form-control" type="number" name="retencion"
                 [(ngModel)]="body.importe"
                 [ngClass]="{'camposObligatorios': marcarObligatorio('inputNumber', body.importe)}"
-                (blur)="compruebaImporte(expRegPorcentaje.test(body.importe))" [disabled]="!permisoEscritura || isLetrado || disabledImporte" />
+                (blur)="compruebaImporte(expRegPorcentaje.test(body.importe))" [disabled]="!permisoEscritura || disabledImporte || isLetrado" />
 
               <input *ngIf="body.tiporetencion != 'F' && body.tiporetencion != 'L' && body.tiporetencion != 'P'"
                 pInputText class="form-control" type="number" name="retencion" [(ngModel)]="body.importe"
                 [ngClass]="{'camposObligatorios': marcarObligatorio('inputNumber', body.importe)}"
-                [disabled]="!permisoEscritura || isLetrado || disabledImporte" />
+                [disabled]="!permisoEscritura || disabledImporte || isLetrado" />
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacionSJCS.retenciones.fechaDeNoti' | translate }} (*)</label>
@@ -121,12 +121,12 @@
     </div>
 
     <div class="card-footer" *ngIf="showTarjeta">
-      <div *ngIf="!permisoEscritura || isLetrado" class="text-right main-button">
-        <button *ngIf="permisoEscritura || !isLetrado" pButton type="button" iconPos="left" icon="fa fa-undo"
-          label="{{ 'general.boton.restablecer' | translate }}" [disabled]="isDisabledRestablecer()"
+      <div  class="text-right main-button">
+        <button *ngIf="permisoEscritura && !isLetrado" pButton type="button" iconPos="left" icon="fa fa-undo"
+          label="{{ 'general.boton.restablecer' | translate }}"
           (click)="restablecer()"></button>
-        <button *ngIf="permisoEscritura || !isLetrado" pButton type="button" iconPos="left" icon="fa fa-save" label="{{ 'general.boton.guardar' | translate }}"
-          (click)="guardar()"  [disabled]="!permisoEscritura || isLetrado || disableEliminar"></button>
+        <button *ngIf="permisoEscritura && !isLetrado" pButton type="button" iconPos="left" icon="fa fa-save" label="{{ 'general.boton.guardar' | translate }}"
+          (click)="guardar()" ></button>
       </div>
     </div>
 

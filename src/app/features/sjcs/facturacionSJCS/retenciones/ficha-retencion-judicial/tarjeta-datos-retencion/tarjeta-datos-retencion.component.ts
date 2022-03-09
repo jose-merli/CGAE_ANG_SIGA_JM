@@ -34,6 +34,8 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   permisoEscritura: boolean;
 
   @Input() colegiado: Colegiado;
+  
+  @Input() permisoEscrituraDatosRetencion: boolean;
 
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Output() showMessage = new EventEmitter<any>();
@@ -51,25 +53,27 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaDatosRetencion).then(respuesta => {
+    // this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaDatosRetencion).then(respuesta => {
 
-      this.permisoEscritura = respuesta;
+    //   this.permisoEscritura = respuesta;
 
-      if (this.permisoEscritura == undefined) {
-        sessionStorage.setItem("codError", "403");
-        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
-        this.router.navigate(["/errorAcceso"]);
-      }
+    //   if (this.permisoEscritura == undefined) {
+    //     sessionStorage.setItem("codError", "403");
+    //     sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+    //     this.router.navigate(["/errorAcceso"]);
+    //   }
 
-      this.getComboTiposRetencion();
-      this.getComboDestinatarios();
+       this.getComboTiposRetencion();
+       this.getComboDestinatarios();
 
-    }).catch(error => console.error(error));
-
+    // }).catch(error => console.error(error));
+    this.permisoEscritura = this.permisoEscrituraDatosRetencion;
+    if (this.permisoEscrituraDatosRetencion == undefined) {
+          sessionStorage.setItem("codError", "403");
+          sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+          this.router.navigate(["/errorAcceso"]);
+    }
     this.isLetrado = this.sigaStorageService.isLetrado;
-console.log(this.showTarjeta);
- console.log(this.permisoEscritura);
- console.log(this.isLetrado);
   }
 
   getDataInicial() {

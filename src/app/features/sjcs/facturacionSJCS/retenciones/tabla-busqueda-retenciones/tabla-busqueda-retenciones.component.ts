@@ -6,6 +6,8 @@ import { RetencionesItem } from '../../../../../models/sjcs/RetencionesItem';
 import { Router } from '@angular/router';
 import { RetencionesService } from '../retenciones.service';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 @Component({
   selector: 'app-tabla-busqueda-retenciones',
   templateUrl: './tabla-busqueda-retenciones.component.html',
@@ -29,6 +31,7 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   rowsPerPage: any = [];
   cols;
   msgs;
+  permisoEscrituraDatosRetencion:boolean;
   isLetrado: boolean = false;
   historico: boolean = false;
   disableEliminar: boolean = false;
@@ -37,12 +40,18 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
     private translateService: TranslateService,
     private router: Router,
     private retencionesService: RetencionesService,
-    private sigaStorageService: SigaStorageService
+    private sigaStorageService: SigaStorageService,
+    private commonsService: CommonsService
     ) { }
 
   ngOnInit() {
     this.getCols();
     this.isLetrado = this.sigaStorageService.isLetrado;
+    this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaDatosRetencion).then(respuesta => {
+
+      this.permisoEscrituraDatosRetencion = respuesta;
+
+    }).catch(error => console.error(error));
   }
 
   showMessage(severity, summary, msg) {
@@ -177,6 +186,7 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
   openFicha(dato: RetencionesItem) {
     this.retencionesService.modoEdicion = true;
     this.retencionesService.retencion = dato;
+    this.retencionesService.permisoEscrituraDatosRetencion = this.permisoEscrituraDatosRetencion;
     this.router.navigate(["/fichaRetencionJudicial"]);
   }
 
