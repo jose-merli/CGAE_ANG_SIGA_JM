@@ -55,15 +55,15 @@
                             <p-radioButton [disabled]="!disPrecio || !permisoEscritura" (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="porTipos" label="{{'facturacionSJCS.baremos.precioTipos' | translate}}"></p-radioButton>
                         </div>
                         <div  class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.facturacionesYPagos.importe' | translate}}</label>
+                            <label>{{'facturacionSJCS.facturacionesYPagos.importe' | currency:'EUR'}}</label>
                             <input [disabled]="!disableImput || !permisoEscritura" type="number"  [(ngModel)]="filtrosAdi.importe" class="form-control" />
                         </div>
                         <div  class="form-group col-lg-6 col-md-6 verticalAlign">
-                            <a class="enlace" (click)="irAtipos()" *ngIf="modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
+                            <a [ngClass]="{ 'enlace': contAsAc== 'asi' || contAsAc== 'act'}" (click)="show($event)" *ngIf="modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
                             <a *ngIf="!modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
                         </div>
                         <div  class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.baremosDeGuardia.maximo' | translate}}</label>
+                            <label>{{'facturacionSJCS.baremosDeGuardia.maximo' | currency:'EUR'}}</label>
                             <input type="number" [disabled]="!disableImput || !permisoEscritura" [(ngModel)]="filtrosAdi.importeMax" class="form-control" />
                         </div>
                     </div>
@@ -101,11 +101,11 @@
 
             <div class="row">
                 <div class="form-group col-lg-6 col-md-6">
-                    <label>{{'menu.justiciaGratuita.soj' |translate}}</label>
+                    <label>{{'menu.justiciaGratuita.soj' | currency:'EUR'}}</label>
                     <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeSOJ" class="form-control" />
                 </div>
                 <div class="form-group col-lg-6 col-md-6">
-                    <label>{{'menu.justiciaGratuita.ejg' |translate}}</label>
+                    <label>{{'menu.justiciaGratuita.ejg' | currency:'EUR'}}</label>
                     <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeEJG" class="form-control" />
                 </div>
             </div>
@@ -115,12 +115,14 @@
     </div>
 
 </div>
-<p-dialog width="1300" height ="1200" responsive="true" modal="modal" [draggable]="false" resizable="true" [(visible)]="showModal"
-    (onHide)="cerrarDialog()">
-    <p-scrollPanel width="auto" height="auto">
+<p-overlayPanel class="overlayPanelPrueba" (onBeforeHide)="hideOverlay($event)" [dismissable]="true"
+    [showCloseIcon]="true" #op>
+<!-- <p-dialog width="1300" height ="1200" responsive="true" modal="modal" [draggable]="false" resizable="true" [(visible)]="showModal" -->
+    <!-- (onHide)="cerrarDialog()"> -->
+    <!-- <p-scrollPanel width="auto" height="auto"> -->
         <app-gestion-tiposasistencia *ngIf="contAsAc == 'asi' && showModal" [origenBaremos]="origenBaremos">
         </app-gestion-tiposasistencia>
         <app-gestion-tiposactuacion *ngIf="contAsAc == 'act' && showModal" [origenBaremos]="origenBaremos"></app-gestion-tiposactuacion>
-    </p-scrollPanel>
-    
-</p-dialog>
+    <!-- </p-scrollPanel> -->
+</p-overlayPanel>
+<!-- </p-dialog> -->
