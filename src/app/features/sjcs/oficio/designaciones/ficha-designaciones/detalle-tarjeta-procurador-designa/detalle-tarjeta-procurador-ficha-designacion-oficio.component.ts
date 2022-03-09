@@ -315,7 +315,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     //Se asignan los valores de la designa.
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"))
     procuradorPeticion.idTurno = designa.idTurno.toString();
-    procuradorPeticion.anio = this.datosProcurador.anio;
+    procuradorPeticion.anio = designa.anio.toString();
     procuradorPeticion.numero = designa.numero.toString();
 
     //Se asignan los valores asignados en la tabla.
