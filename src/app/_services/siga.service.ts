@@ -868,9 +868,8 @@ export class SigaServices {
 		//   });
 	}
 	getDownloadFiles(service: string, body: any): any {
-		//console.log('body: ', body)
 		return this.http
-			.post(environment.newSigaUrl + this.endpoints[service], body, { observe: 'response', responseType: 'blob' });
+			.post(environment.newSigaUrl + this.endpoints[service], body, { observe: 'response', responseType: 'blob' }); // Si no funciona, poner "observe: 'response'" antes del responseType
 	}
 
 	postDownloadFilesWithFileName(service: string, body: any): Observable<any> {

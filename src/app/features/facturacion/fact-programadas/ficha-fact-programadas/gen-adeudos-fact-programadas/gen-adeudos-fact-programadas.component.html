@@ -69,28 +69,23 @@
       <div class="form-row">
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaPresentacion" [inputStyleClass]="styleObligatorio(body.fechaPresentacion)" [minDate]="fechaHoy" (valueChangeSelected)="fillFechaPresentacion($event)" (valueChangeInput)="fillFechaPresentacion($event)" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)">
-          </app-fecha>
+          <app-fecha [(value)]="body.fechaPresentacion" [inputStyleClass]="styleObligatorio(body.fechaPresentacion)" [minDate]="fechaHoy" (valueChangeSelected)="fillFecha($event, 'fechaPresentacion')" (valueChangeInput)="fillFecha($event, 'fechaPresentacion')" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)"></app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos.primeros' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosPrimeros" [inputStyleClass]="styleObligatorio(body.fechaRecibosPrimeros)" [minDate]="minDateRecibos" (valueChangeSelected)="fillFechaRecibosPrimeros($event)" (valueChangeInput)="fillFechaRecibosPrimeros($event)" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)">
-          </app-fecha>
+          <app-fecha [(value)]="body.fechaRecibosPrimeros" [inputStyleClass]="styleObligatorio(body.fechaRecibosPrimeros)" [minDate]="minDateRecibos" (valueChangeSelected)="fillFecha($event, 'fechaRecibosPrimeros')" (valueChangeInput)="fillFecha($event, 'fechaRecibosPrimeros')" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)"></app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos.recurrentes' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosRecurrentes" [inputStyleClass]="styleObligatorio(body.fechaRecibosRecurrentes)" [minDate]="minDateRecurrentes" (valueChangeSelected)="fillFechaRecibosRecurrentes($event)" (valueChangeInput)="fillFechaRecibosRecurrentes($event)" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)">
-          </app-fecha>
+          <app-fecha [(value)]="body.fechaRecibosRecurrentes" [inputStyleClass]="styleObligatorio(body.fechaRecibosRecurrentes)" [minDate]="minDateRecurrentes" (valueChangeSelected)="fillFecha($event, 'fechaRecibosRecurrentes')" (valueChangeInput)="fillFecha($event, 'fechaRecibosRecurrentes')" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)"></app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos.cor1' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosCOR1" [inputStyleClass]="styleObligatorio(body.fechaRecibosCOR1)" [minDate]="minDateCOR" (valueChangeSelected)="fillFechaRecibosCOR1($event)" (valueChangeInput)="fillFechaRecibosCOR1($event)" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)">
-          </app-fecha>
+          <app-fecha [(value)]="body.fechaRecibosCOR1" [inputStyleClass]="styleObligatorio(body.fechaRecibosCOR1)" [minDate]="minDateCOR1" (valueChangeSelected)="fillFecha($event, 'fechaRecibosCOR1')" (valueChangeInput)="fillFecha($event, 'fechaRecibosCOR1')" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)"></app-fecha>
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos.b2b' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosB2B" [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" [minDate]="minDateB2B" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)">
-          </app-fecha>
+          <app-fecha [(value)]="body.fechaRecibosB2B" [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" [minDate]="minDateB2B" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)"></app-fecha>
         </div>
       </div>
     </div>

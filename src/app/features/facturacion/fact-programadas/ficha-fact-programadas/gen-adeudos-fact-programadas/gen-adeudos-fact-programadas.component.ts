@@ -41,8 +41,13 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   fechaHoy = new Date();
   minDateRecibos = new Date();
   minDateRecurrentes = new Date();
-  minDateCOR = new Date();
+  minDateCOR1 = new Date();
   minDateB2B = new Date();
+
+  primerosRecibosSEPA=0;
+  recibosRecurrentesSEPA=0;
+  recibosCORSEPA=0;
+  recibosB2BSEPA=0;
 
   constructor(
     private commonsService: CommonsService,
@@ -53,7 +58,7 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    this.parametrosSEPA();
+    this.cargaDatosSEPA();
     this.getPermisoFicheroAdeudos(); // Permiso para la acción de NUevo FIchero Adeudos
   }
 
@@ -186,64 +191,73 @@ export class GenAdeudosFactProgramadasComponent implements OnInit, OnChanges {
     }
   }
 
-  parametrosSEPA(){
+  cargaDatosSEPA(){
     this.progressSpinner=true;
     
     this.sigaServices.get("facturacionPyS_parametrosSEPA").subscribe(
       n => {
-        let data: ComboItem[] = n.combooItems;
+        let data = n.combooItems;
+        
+        for(let i=0; data.length>i; i++){
+          
+          if(data[i].value=="SEPA_DIAS_HABILES_PRIMEROS_RECIBOS"){
+            this.primerosRecibosSEPA = parseFloat(data[i].label);
+            this.minDateRecibos = new Date(this.fechaHoy.getTime()+(this.primerosRecibosSEPA*24*60*60*1000));
 
-        data.forEach(element => {
-          let value: number = +element.value;
-          switch (element.label) {
-            case "SEPA_DIAS_HABILES_PRIMEROS_RECIBOS":
-              this.minDateRecibos = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
-              break;
+          }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_RECURRENTES"){
+            this.recibosRecurrentesSEPA = parseFloat(data[i].label);
+            this.minDateRecurrentes = new Date(this.fechaHoy.getTime()+(this.recibosRecurrentesSEPA*24*60*60*1000));
 
-            case "SEPA_DIAS_HABILES_RECIBOS_RECURRENTES":
-              this.minDateRecurrentes = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
-              break;
+          }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_COR1"){
+            this.recibosCORSEPA = parseFloat(data[i].label);
+            this.minDateCOR1 = new Date(this.fechaHoy.getTime()+(this.recibosCORSEPA*24*60*60*1000));
 
-            case "SEPA_DIAS_HABILES_RECIBOS_COR1":
-              this.minDateCOR = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
-              break;
-
-            case "SEPA_DIAS_HABILES_RECIBOS_B2B":
-              this.minDateB2B = new Date(this.fechaHoy.getTime()+(value*24*60*60*1000));
-              break;
+          }else if(data[i].value=="SEPA_DIAS_HABILES_RECIBOS_B2B"){
+            this.recibosB2BSEPA = parseFloat(data[i].label);
+            this.minDateB2B = new Date(this.fechaHoy.getTime()+(this.recibosB2BSEPA*24*60*60*1000));
           }
-        });
+        }
 
         this.progressSpinner=false;
       },
       err => {
         this.progressSpinner=false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        console.log(err);
       }
     );
   }
 
   // OnChange de las fechas
+  fillFecha(event, campo) {
+    if(campo==='fechaPresentacion'){
+      this.body.fechaPresentacion = event;
+      
+      if (this.body.fechaPresentacion) {
+        this.body.fechaRecibosPrimeros = new Date(this.body.fechaPresentacion.getTime()+(this.primerosRecibosSEPA*24*60*60*1000));
+        this.minDateRecibos = this.body.fechaRecibosPrimeros;
 
-  fillFechaPresentacion(event) {
-    this.body.fechaPresentacion = event;
-  }
+        this.body.fechaRecibosRecurrentes = new Date(this.body.fechaPresentacion.getTime()+(this.recibosRecurrentesSEPA*24*60*60*1000));
+        this.minDateRecurrentes = this.body.fechaRecibosRecurrentes;
 
-  fillFechaRecibosPrimeros(event) {
-    this.body.fechaRecibosPrimeros = event;
-  }
-  
-  fillFechaRecibosRecurrentes(event) {
-    this.body.fechaRecibosRecurrentes = event;
-  }
-  
-  fillFechaRecibosCOR1(event) {
-    this.body.fechaRecibosCOR1 = event;
-  }
+        this.body.fechaRecibosCOR1 = new Date(this.body.fechaPresentacion.getTime()+(this.recibosCORSEPA*24*60*60*1000));
+        this.minDateCOR1 = this.body.fechaRecibosCOR1;
 
-  fillFechaRecibosB2B(event) {
-    this.body.fechaRecibosB2B = event;
+        this.body.fechaRecibosB2B = new Date(this.body.fechaPresentacion.getTime()+(this.recibosB2BSEPA*24*60*60*1000));
+        this.minDateB2B = this.body.fechaRecibosB2B;
+      }
+
+    }else if(campo==='fechaRecibosPrimeros'){
+      this.body.fechaRecibosPrimeros = event;
+    
+    }else if(campo==='fechaRecibosRecurrentes'){
+      this.body.fechaRecibosRecurrentes = event;
+    
+    }else if(campo==='fechaRecibosCOR1'){
+      this.body.fechaRecibosCOR1 = event;
+    
+    }else if(campo==='fechaRecibosB2B'){
+      this.body.fechaRecibosB2B = event;
+    }
   }
   
 
