@@ -337,9 +337,9 @@ onChangeSelectAll() {
 
   comboRenegociar(){
     this.comboAction =  [
-      { value: "cuentaFactura_activa", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
-      { value: "cuentaFactura_activa_masClientes", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
-      { value: "caja",  label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
+      { value: "cuentaFactura_activa", label: "1. "+this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
+      { value: "cuentaFactura_activa_masClientes", label: "2. "+this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
+      { value: "caja",  label: "3. "+this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
     ];
   }
 
@@ -535,7 +535,7 @@ onChangeSelectAll() {
           item.accion = this.translateService.instant("facturacion.abonosPagos.datosPagoAbono.abonoCaja");
 
           // El importe pendiente se recalcula
-          item.movimiento = element.importeAdeudadoPendiente;
+          item.movimiento = element.importeAdeudadoPendiente.toString();
           item.importePendiente = "0";
 
           this.itemsParaModificar.push(item);

@@ -480,9 +480,9 @@ nuevoAbono(): void {
 }
 comboRenegociar(){
   this.comboAction =  [
-    { value: "cuenta_activa", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
-    { value: "cuentaFactura_activa_masClientes", label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
-    { value: "caja",  label: this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
+    { value: "cuenta_activa", label: "1. "+this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBanco"), local: undefined },
+    { value: "cuentaFactura_activa_masClientes", label:"2. "+ this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionBancoNo"), local: undefined },
+    { value: "caja",  label: "3. "+this.translateService.instant("facturacion.facturas.tarjeta.renegociar.opcionCaja"), local: undefined }
   ];
 }
 

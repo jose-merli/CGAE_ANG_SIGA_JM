@@ -28,7 +28,7 @@ export class FacturasItem {
 	importeIVA: string;
 	importeNeto: string;
 
-	importefacturado: string;
+	importefacturado: number;
 	importefacturadoDesde: string;
 	importefacturadoHasta: string;
 
@@ -41,7 +41,7 @@ export class FacturasItem {
 	importeCaja: string;
 	importeBanco: string;
 	importePagado: string;
-	importeAdeudadoPendiente: string;
+	importeAdeudadoPendiente: number;
 
 	//importes abono
 	importeAnuladoAb: string;

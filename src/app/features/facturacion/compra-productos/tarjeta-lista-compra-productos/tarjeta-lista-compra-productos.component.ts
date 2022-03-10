@@ -297,7 +297,11 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
                 // this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.compraFacturada"));
                 this.nSolicitudFacturar = this.selectedRows[0].nSolicitud;
                 this.facturarCompra(false);
-              } else {
+              } else if(this.comboSeriesFacturacion.length == 1){
+                this.nSolicitudFacturar = this.selectedRows[0].nSolicitud;
+                this.serieFacturacionSeleccionada = this.comboSeriesFacturacion[0].value
+                this.facturarCompra(true);
+              }else {
                 this.showModalSerieFacturacion = true;
                 this.nSolicitudFacturar = this.selectedRows[0].nSolicitud;
               }
