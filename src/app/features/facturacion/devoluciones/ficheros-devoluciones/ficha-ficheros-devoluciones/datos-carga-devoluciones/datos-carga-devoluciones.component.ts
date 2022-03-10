@@ -16,14 +16,14 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
-  
+
   @Input() openTarjetaDatosCarga: boolean;
   @Output() opened = new EventEmitter<boolean>();
   @Output() idOpened = new EventEmitter<boolean>();
   @Output() guardadoSend = new EventEmitter<FicherosDevolucionesItem>();
   @Input() bodyInicial: FicherosDevolucionesItem;
   @Input() modoEdicion: boolean;
-  
+
   @ViewChild("pUploadFile")
   pUploadFile;
   file: File;
@@ -34,7 +34,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
   confirmImporteTotal: string;
 
   comision: boolean;
-  
+
   constructor(
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -46,7 +46,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    
+
   }
 
   getFile(event: any) {
@@ -59,9 +59,9 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
       nombreCompletoArchivo.lastIndexOf("."),
       nombreCompletoArchivo.length
     );
-    
-    if (extensionArchivo == null || extensionArchivo.trim() == "" 
-          || !/\.(xml|txt|d19)$/i.test(extensionArchivo.trim().toUpperCase())
+
+    if (extensionArchivo == null || extensionArchivo.trim() == ""
+      || !/\.(xml|txt|d19)$/i.test(extensionArchivo.trim().toUpperCase())
     ) {
       this.file = undefined;
 
@@ -73,7 +73,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
       this.pUploadFile.clear();
       this.progressSpinner = false;
     }
-    
+
   }
 
   // Guardar y procesar
@@ -94,7 +94,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
             let error = err.error;
             if (error && error.error && error.error.message) {
               let message = this.translateService.instant(error.error.message);
-          
+
               if (message && message.trim().length != 0) {
                 this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
               } else {
@@ -104,7 +104,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
             }
           }
-          
+
           this.progressSpinner = false;
         }
       );
@@ -112,28 +112,30 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
   }
 
   // Descargar LOG
-  descargarLog(){
-    let resHead ={ 'response' : null, 'header': null };
+  descargarLog() {
+    let resHead = { 'response': null, 'header': null };
 
     if (this.bodyInicial.nombreFichero) {
       this.progressSpinner = true;
-      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFicheroDevoluciones", [{ idDisqueteDevoluciones: this.bodyInicial.idDisqueteDevoluciones }]);
+      let descarga = this.sigaServices.getDownloadFiles("facturacionPyS_descargarFicheroDevoluciones", [{ idDisqueteDevoluciones: this.bodyInicial.idDisqueteDevoluciones }]);
       descarga.subscribe(response => {
         this.progressSpinner = false;
 
-        const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
+        console.log(response);
+
+        const file = new Blob([response.body], { type: response.headers.get("Content-Type") });
         let filename: string = response.headers.get("Content-Disposition");
         filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
 
         saveAs(file, filename);
-        this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+        this.showMessage('success', 'LOG descargado correctamente', 'LOG descargado correctamente');
       },
-      err => {
-        this.progressSpinner = false;
-        this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
-      });
+        err => {
+          this.progressSpinner = false;
+          this.showMessage('error', 'El LOG no pudo descargarse', 'El LOG no pudo descargarse');
+        });
     } else {
-      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+      this.showMessage('error', 'El LOG no pudo descargarse', 'El LOG no pudo descargarse');
     }
   }
 
@@ -166,7 +168,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
       // this.showMessage("info", this.translateService.instant("general.message.informacion"), "El fichero está siendo eliminado");
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionPyS.ficherosExp.eliminar.error.importe"));
-    }   
+    }
   }
 
   rejectEliminar2(): void {
@@ -183,7 +185,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
 
   eliminar() {
     this.progressSpinner = true;
-    
+
     let deleteRequest = {
       idDisqueteDevoluciones: this.bodyInicial.idDisqueteDevoluciones
     };
@@ -225,7 +227,7 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
     let error = JSON.parse(err.error);
     if (error && error.error && error.error.message) {
       let message = this.translateService.instant(error.error.message);
-  
+
       if (message && message.trim().length != 0) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
       } else {

@@ -474,6 +474,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
 
   cerrarDialog() {
     this.cambiarEstadoDialogo(false);
+    this.datosMostrados = [];
   }
 
   clear() {
