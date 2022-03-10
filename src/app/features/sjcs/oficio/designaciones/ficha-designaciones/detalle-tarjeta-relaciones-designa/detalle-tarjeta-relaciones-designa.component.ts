@@ -252,10 +252,6 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     }
   }
 
-  porhacer() {
-    this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-  }
-
   checkPermisosAsociarEJG() {
     this.asociarEJG();
   }
@@ -289,15 +285,17 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     this.consultarEditar(dato);
   }
   consultarEditar(dato) {
-
+ 
     let identificador = dato.sjcs.charAt(0);
 
     switch (identificador) {
       case 'A':
-        /**
-       * TODO: enlazar una vez este creada la pagina.
-       */
-        this.porhacer();
+        this.progressSpinner = true;
+        
+        sessionStorage.setItem("idAsistencia",dato.anio+"/"+dato.numero);
+        sessionStorage.setItem("vieneDeFichaDesigna", "true");
+        this.router.navigate(["/fichaAsistencia"]);
+        
         break;
       case 'E':
         this.progressSpinner = true;
@@ -333,4 +331,5 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
         break;
     }
   }
+
 }

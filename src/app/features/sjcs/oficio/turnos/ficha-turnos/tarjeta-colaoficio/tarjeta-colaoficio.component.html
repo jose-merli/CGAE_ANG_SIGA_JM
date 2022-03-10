@@ -14,23 +14,30 @@
             <label class="mr-auto title-ficha" style="cursor:pointer" >{{'justiciaGratuita.oficio.turnos.coladeoficio'|translate}}</label>
           </div>
           <div  class="d-flex justify-content-between" style="cursor:default">
-            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ncolegiadoprimero" | translate }}
-              <span>{{ primerLetrado }}</span>
-            </label>
-            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.apellidosprimerletrado" | translate }}
-              <span>{{ nombreApellidosPrimerLetrado }}</span>
-            </label>
-            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}
-              <span>{{ ultimoLetrado }}</span>
-            </label>
-            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
-              <span>{{ apeyNombreUltimo }}</span>
-            </label>
-            <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ninscritos" | translate }}
-              <span>{{ nInscritos }}</span>
-            </label>
-            <label *ngIf="!existenDatos()">{{ "justiciaGratuita.oficio.turnos.colaoficio.vacio" | translate }}
-            </label>
+
+            <div>
+              <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ncolegiadoprimero" | translate }}
+                <span>{{ primerLetrado }}</span>
+              </label>
+              <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.apellidosprimerletrado" | translate }}
+                <span>{{ nombreApellidosPrimerLetrado }}</span>
+              </label>
+              <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}
+                <span>{{ ultimoLetrado }}</span>
+              </label>
+            </div>
+            <div>
+              <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
+                <span>{{ apeyNombreUltimo }}</span>
+              </label>
+              <label *ngIf="existenDatos()">{{ "justiciaGratuita.oficio.turnos.ninscritos" | translate }}
+                <span>{{ nInscritos }}</span>
+              </label>
+              <label *ngIf="!existenDatos()">{{ "justiciaGratuita.oficio.turnos.colaoficio.vacio" | translate }}
+              </label>
+            </div>
+            
+
             <i [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha} "  (click)="abreCierraFicha('colaOficio')"></i>
           </div>
         </div>

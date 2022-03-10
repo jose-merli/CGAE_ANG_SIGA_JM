@@ -9,6 +9,7 @@
   </div>
   <app-tarjeta-resumen-fija class="pb-50" *ngIf="idTurno != undefined" [chincheta]="true" titulo="justiciaGratuita.oficio.turnos.inforesumen"
   [datos]="datosTarjetaResumen" [enlaces]="enlacesTarjetaResumen" [icono]="iconoTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
+
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-datos-generales-consulta (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" [turnosItem]="turnosItem" (datosTarjetaResumenEmit)="datosTarjetaResumenEvent($event)" (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'generales'" [openGen]="openGen" [newTurno]="newTurno"></app-datos-generales-consulta>
     <app-configuracion-turnos (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaConfiguracionTurnos]="tarjetaConfiguracionTurnos" [idTurno]="idTurno" [turnosItem]="turnosItem" [modoEdicion]="modoEdicion" *ngSwitchCase="'configuracion'" [openConfigTurnos]="openConfigTurnos"></app-configuracion-turnos>

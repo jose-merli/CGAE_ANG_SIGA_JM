@@ -121,7 +121,9 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
       	//PROVISIONAL
       	//cuando se vaya a seguir con el desarrollo de guardias, hay que cambiar esto y la carga de las tarjetas
       	//
-        	this.enviarEnlacesTarjeta();
+		  setTimeout(() => {
+			this.enviarEnlacesTarjeta();
+		  }, 2000);
 
 		this.goTop();
 	}
