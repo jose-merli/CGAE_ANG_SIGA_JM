@@ -116,11 +116,12 @@ export class FiltrosFacturasComponent implements OnInit {
 			}
       sessionStorage.removeItem("idFichero");
 			sessionStorage.removeItem("tipoFichero");
-      this.isBuscar();
     }
     setTimeout(() => {
       this.inputNum.nativeElement.focus();  
+      this.isBuscar();
     }, 300);
+    
   }
 
   // Get combos

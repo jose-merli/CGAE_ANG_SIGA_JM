@@ -24,7 +24,7 @@
 
       <app-cuenta-entidad-adeudos *ngIf="modoEdicion" [bodyInicial]="body"></app-cuenta-entidad-adeudos>
 
-      <app-facturas-adeudos *ngIf="modoEdicion" [tipoFichero]="'T'" [bodyInicial]="body" [permisoEscritura]="permisoEscrituraFacturas" [tarjetaFacturas]="tarjetaFacturas" [openTarjetaFacturas]="openTarjetaFacturas" (opened)="manuallyOpened = $event" [modoEdicion]="modoEdicion" (idOpened)="isCloseReceive($event)"></app-facturas-adeudos>
+      <app-facturas-adeudos *ngIf="modoEdicion" [tipoFichero]="'T'" [bodyInicial]="body" [totalFacturas]="body.numRecibos" [totalImporte]="body.importeTotal" [permisoEscritura]="permisoEscrituraFacturas" [permisoEscritura]="permisoEscrituraFacturas" [tarjetaFacturas]="tarjetaFacturas"></app-facturas-adeudos>
   </div>
 </div>
 
