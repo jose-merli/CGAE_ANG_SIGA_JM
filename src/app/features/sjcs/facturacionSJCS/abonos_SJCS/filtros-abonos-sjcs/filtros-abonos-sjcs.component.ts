@@ -103,7 +103,7 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       if (this.idPersona == undefined) this.idPersona = busquedaColegiado.idpersona;
     }
 
-
+    this.searchAbonos();
   }
 
   getDataLoggedUser() {
