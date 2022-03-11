@@ -119,7 +119,7 @@ export class FiltrosFacturasComponent implements OnInit {
     }
     setTimeout(() => {
       this.inputNum.nativeElement.focus();  
-      this.isBuscar();
+      if(!this.isLetrado)this.isBuscar();
     }, 300);
     
   }
@@ -164,7 +164,7 @@ export class FiltrosFacturasComponent implements OnInit {
       () => {
       this.progressSpinner = false;
       setTimeout(() => {
-        //this.isBuscar();
+        this.isBuscar();
       }, 5);
       });
     });

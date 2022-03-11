@@ -103,7 +103,9 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       if (this.idPersona == undefined) this.idPersona = busquedaColegiado.idpersona;
     }
 
-    this.searchAbonos();
+    if(!this.isLetrado)this.searchAbonos()
+
+
   }
 
   getDataLoggedUser() {
@@ -128,7 +130,7 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       () => {
       this.progressSpinner = false;
       setTimeout(() => {
-        //this.isBuscar();
+        this.searchAbonos();
       }, 5);
       });
     });
