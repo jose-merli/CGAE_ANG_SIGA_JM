@@ -63,11 +63,13 @@ export class FichaListaGuardiasTarjetaDatosGeneralesComponent implements OnInit,
           if(insertResponseDTO.error){
             this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), insertResponseDTO.error.description);
           }else{
-            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             this.listaAux = Object.assign({},this.lista);
             if(!this.lista.idLista){ //Si es nueva le seteamos el nuevo id y habilitamos la tarjeta Guardias
               this.lista.idLista = insertResponseDTO.id;
               this.enableTarjetaGuardias.emit(this.lista.idLista);
+              this.showMsg('info', this.translateService.instant("sjcs.guardia.listaguardias.errortarjetaguardianecesaria"), '');
+            } else {
+              this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             }
             
           }    
