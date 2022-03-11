@@ -351,7 +351,9 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
         this.avisoSuscripcionAutomatica();
       }
     } else {
-        if(this.checkboxAsignacionAutomatica)
+        if(!this.servicio.editar)
+          this.guardar()
+        else if(this.checkboxAsignacionAutomatica)
           this.guardar()
         else  
           this.modalServicioAutomaticoAManual();
