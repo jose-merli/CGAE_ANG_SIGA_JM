@@ -104,7 +104,7 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
         filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
 
 
-        //saveAs(file, filename);
+        saveAs(file, filename);
         this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
       },
       err => {

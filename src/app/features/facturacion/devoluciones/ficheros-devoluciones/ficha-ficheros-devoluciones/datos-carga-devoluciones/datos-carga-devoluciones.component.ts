@@ -121,8 +121,6 @@ export class DatosCargaDevolucionesComponent implements OnInit, OnChanges {
       descarga.subscribe(response => {
         this.progressSpinner = false;
 
-        console.log(response);
-
         const file = new Blob([response.body], { type: response.headers.get("Content-Type") });
         let filename: string = response.headers.get("Content-Disposition");
         filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
