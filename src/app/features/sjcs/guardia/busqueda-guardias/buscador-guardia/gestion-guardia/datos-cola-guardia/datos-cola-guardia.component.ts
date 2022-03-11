@@ -390,7 +390,7 @@ inicio(){
           });
           this.transformData();
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
-          if (this.datos && this.datos.length > 0)
+          if (this.datos && this.datos.length > 0){
             this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe +  ', ' + this.datos[1].nColegiado + " " + this.datos[1].nombreApe +  ', ' + this.datos[2].nColegiado + " " + this.datos[2].nombreApe + ', ' + this.datos[3].nColegiado + " " + this.datos[3].nombreApe ; 
             this.resumenColaGuardiaLast = this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe;
             /*if (this.datosInicial.length > 0)
@@ -402,6 +402,7 @@ inicio(){
             this.resumenColaGuardia = "0 inscritos";
           if (this.body.idPersonaUltimo && this.datos.length > 0)
             this.body.idGrupoUltimo = this.datos[this.datos.length - 1].idGrupoGuardia;
+          }
           //this.rest();
           this.progressSpinner = false;
           

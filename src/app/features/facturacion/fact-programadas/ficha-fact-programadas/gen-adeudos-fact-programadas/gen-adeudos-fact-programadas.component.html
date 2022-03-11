@@ -85,7 +85,7 @@
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{ 'facturacion.factProgramadas.genAdeudos.b2b' | translate }} (*)</label>
-          <app-fecha [(value)]="body.fechaRecibosB2B" [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" [minDate]="minDateB2B" (valueChangeSelected)="fillFechaRecibosB2B($event)" (valueChangeInput)="fillFechaRecibosB2B($event)" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)"></app-fecha>
+          <app-fecha [(value)]="body.fechaRecibosB2B" [inputStyleClass]="styleObligatorio(body.fechaRecibosB2B)" [minDate]="minDateB2B" (valueChangeSelected)="fillFecha($event,'fechaRecibosB2B')" (valueChangeInput)="fillFecha($event,'fechaRecibosB2B')" [disabled]="!permisoEscritura || !(porProgramar || porConfirmarError)"></app-fecha>
         </div>
       </div>
     </div>

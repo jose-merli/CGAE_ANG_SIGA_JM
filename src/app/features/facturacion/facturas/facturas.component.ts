@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '../../../commons/translate';
+import { FacturasItem } from '../../../models/FacturasItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { OldSigaServices } from '../../../_services/oldSiga.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -12,7 +13,7 @@ import { TablaFacturasComponent } from './tabla-facturas/tabla-facturas.componen
 	styleUrls: [ './facturas.component.scss' ]
 })
 export class FacturasComponent implements OnInit {
-	datos;
+	datos:FacturasItem[];
 	msgs;
 	filtro;
 
@@ -85,6 +86,10 @@ export class FacturasComponent implements OnInit {
 		);
 	}
 
+	transformNumber(num:string){
+		num = parseFloat(num).toFixed(2);
+		return num;
+	}
 
 	showMessage(severity, summary, msg) {
 		this.msgs = [];

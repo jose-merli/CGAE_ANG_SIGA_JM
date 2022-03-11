@@ -105,11 +105,13 @@ export class CalendariosComponent implements OnInit {
     this.sigaServices.post(
       "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
         data => {
+          let datos;
           //console.log('data: ', data.body)
           if(data.body){
             let error = JSON.parse(data.body).error;
+          
+            datos = JSON.parse(data.body);
           }
-          let datos = JSON.parse(data.body);
           if(datos){
 
               this.responseObject = 
@@ -142,9 +144,8 @@ export class CalendariosComponent implements OnInit {
                 this.calendarioDisponible = true;
               }
               this.persistenceService.setDatos(this.responseObject);
-              this.progressSpinner = false;
           }
-
+          this.progressSpinner = false;
         },
         (error)=>{
           this.progressSpinner = false;
