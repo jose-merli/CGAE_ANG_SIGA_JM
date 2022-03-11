@@ -215,62 +215,63 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.getComboMotivosCambio();
 
     // La selección de Juzgado carga el combo de Procedimientos, y la selección de procedimientos carga el combo de módulos.
-    if (this.parametroConfigCombos.valor == '1') {
-      if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
-        this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
-        if (this.datos.selectores[1].value != undefined && this.datos.selectores[1].value != null && this.datos.selectores[1].value != '') {
-          this.getComboModulosConProcedimientos(this.datos.selectores[1].value);
-        } else {
-          this.datos.selectores[3].value = '';
-        }
-      } else {
-        this.datos.selectores[1].value = '';
-      }
-    }
-
-    // La selección de Juzgado carga el combo de módulos y la selección de módulo carga el combo de procedimientos.
-    if (this.parametroConfigCombos.valor == '2') {
-      if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
-        this.getComboModulosPorJuzgado(this.datos.selectores[0].value);
-
-        if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null && this.datos.selectores[3].value != '') {
-          this.getComboProcedimientosConModulo(this.datos.selectores[3].value);
+    if(this.parametroConfigCombos != null && this.parametroConfigCombos.valor != null ){
+      if (this.parametroConfigCombos.valor == '1') {
+        if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
+          this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
+          if (this.datos.selectores[1].value != undefined && this.datos.selectores[1].value != null && this.datos.selectores[1].value != '') {
+            this.getComboModulosConProcedimientos(this.datos.selectores[1].value);
+          } else {
+            this.datos.selectores[3].value = '';
+          }
         } else {
           this.datos.selectores[1].value = '';
         }
-      } else {
-        this.datos.selectores[3].value = '';
-      }
-    }
-
-    // La selección de Juzgado carga el combo de módulos y la carga del combo de procedimientos es independiente, se cargan todos los existentes para el colegio.
-    if (this.parametroConfigCombos.valor == '3') {
-      if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
-        this.getComboModulosPorJuzgado(this.datos.selectores[0].value);
-      } else {
-        this.datos.selectores[3].value = '';
       }
 
-      this.getComboProcedimientos();
-    }
+      // La selección de Juzgado carga el combo de módulos y la selección de módulo carga el combo de procedimientos.
+      if (this.parametroConfigCombos.valor == '2') {
+        if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
+          this.getComboModulosPorJuzgado(this.datos.selectores[0].value);
 
-    // La selección de Juzgado carga el combo de procedimientos y la carga del combo de módulos es independiente, se cargan todos los existentes para el colegio.
-    if (this.parametroConfigCombos.valor == '4') {
-      if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
-        this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
-      } else {
-        this.datos.selectores[1].value = '';
+          if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null && this.datos.selectores[3].value != '') {
+            this.getComboProcedimientosConModulo(this.datos.selectores[3].value);
+          } else {
+            this.datos.selectores[1].value = '';
+          }
+        } else {
+          this.datos.selectores[3].value = '';
+        }
       }
 
-      this.getComboModulos();
-    }
+      // La selección de Juzgado carga el combo de módulos y la carga del combo de procedimientos es independiente, se cargan todos los existentes para el colegio.
+      if (this.parametroConfigCombos.valor == '3') {
+        if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
+          this.getComboModulosPorJuzgado(this.datos.selectores[0].value);
+        } else {
+          this.datos.selectores[3].value = '';
+        }
 
-    // Todos los combos se cargan de forma independiente, con todos sus posibles valores de los existentes para el colegio.
-    if (this.parametroConfigCombos.valor == '5') {
-      this.getComboProcedimientos();
-      this.getComboModulos();
-    }
+        this.getComboProcedimientos();
+      }
 
+      // La selección de Juzgado carga el combo de procedimientos y la carga del combo de módulos es independiente, se cargan todos los existentes para el colegio.
+      if (this.parametroConfigCombos.valor == '4') {
+        if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
+          this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
+        } else {
+          this.datos.selectores[1].value = '';
+        }
+
+        this.getComboModulos();
+      }
+
+      // Todos los combos se cargan de forma independiente, con todos sus posibles valores de los existentes para el colegio.
+      if (this.parametroConfigCombos.valor == '5') {
+        this.getComboProcedimientos();
+        this.getComboModulos();
+      }
+    }
     if (this.datos.selectores[3].value != undefined && this.datos.selectores[3].value != null && this.datos.selectores[3].value != '') {
       this.getComboAcreditacionesPorModulo(this.datos.selectores[3].value);
     }
@@ -683,13 +684,13 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.datos.inputNig.value = this.actuacionDesigna.designaItem.nig;
     this.datos.datePicker.value = new Date();
     this.datos.inputNumPro.value = this.actuacionDesigna.designaItem.numProcedimiento;
-    if (this.actuacionDesigna.designaItem.idJuzgado) {
+    if (this.actuacionDesigna.designaItem.idJuzgado != null && this.actuacionDesigna.designaItem.idJuzgado != "") {
       this.datos.selectores[0].value = this.actuacionDesigna.designaItem.idJuzgado.toString();
     }
-    if (this.actuacionDesigna.designaItem.idPretension) {
+    if (this.actuacionDesigna.designaItem.idPretension != null && this.actuacionDesigna.designaItem.idPretension != "") {
       this.datos.selectores[1].value = this.actuacionDesigna.designaItem.idPretension.toString();
     }
-    if (this.actuacionDesigna.designaItem.idProcedimiento != null) {
+    if (this.actuacionDesigna.designaItem.idProcedimiento != null && this.actuacionDesigna.designaItem.idProcedimiento != "") {
       this.datos.selectores[3].value = this.actuacionDesigna.designaItem.idProcedimiento.toString();
     }
   }
