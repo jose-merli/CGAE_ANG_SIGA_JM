@@ -1,4 +1,5 @@
-import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ViewChild } from '@angular/core';
+import { OverlayPanel } from 'primeng/primeng';
 import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
@@ -22,11 +23,11 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   facAsuntosAntiguos: boolean = false;
   procesoFac2014: boolean = false;
   descontar: boolean = false;
-
+  disablediratipos: boolean = false;
   disableConfAdi: boolean = false;
   importeSOJ;
   importeEJG;
-
+  displayBoolean: boolean = false;
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Input() disProc2014;
   @Input() permisoEscritura: boolean = false;
@@ -37,6 +38,9 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   disableImput: boolean = false;
   disJuiciosRapidos: boolean = false;
 
+  @ViewChild("op")
+  op: OverlayPanel;
+  
   constructor(private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
@@ -66,8 +70,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
     if (this.disableConfAdi) {
       let institucion = this.localStorageService.institucionActual;
       let institucionesActuaciones = ['2002','2020','2058','2067','2078','2082'];
-      this.contAsAc
-
+      
       if(institucion == '2027' && this.contAsAc == 'act'){// se comprueba que se encuentre en la institucion de Gijon.
           this.disJuiciosRapidos = true
         }else if(institucionesActuaciones.includes(institucion) && this.contAsAc == 'asi'){
@@ -75,6 +78,9 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
         }else{
           this.disJuiciosRapidos = false
         }
+    }
+    if(this.contAsAc != 'asi' && this.contAsAc != 'act'){
+      this.disablediratipos = true;
     }
 
   }
@@ -114,6 +120,22 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   }
   cerrarDialog(){
     this.showModal = false;
+  }
+
+  hideOverlay(event) {
+    this.displayBoolean = false;
+  }
+
+  showDialog() {
+    this.displayBoolean = true;
+    // this.display = true;
+  }
+
+  show(event) {
+    if(this.contAsAc== 'asi' || this.contAsAc== 'act'){
+      this.showModal = true;
+      this.op.toggle(event);
+    }
   }
 
 }

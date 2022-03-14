@@ -49,10 +49,10 @@
                 </a>
               </div>
               <div *ngSwitchCase ="'importeTotal'">
-                {{ dato[col.field] | number:'':'es-ES' }} €
+                {{ dato[col.field] |  number:'1.2-2':'es-ES'  }} €
               </div>
               <div *ngSwitchCase ="'importePendientePorAbonar'">
-                {{ dato[col.field] | number:'':'es-ES' }} €
+                {{ dato[col.field] |  number:'1.2-2':'es-ES'  }} €
               </div>
               <div *ngSwitchCase ="'nombreCompleto'">
                 <a class="enlace"  (click)="navigateToCliente(dato)">
@@ -183,7 +183,7 @@
                 <label>{{ 'general.boton.comments' | translate }}</label>
                 <input type="text" class="form-control"  [(ngModel)]='itemAction.comentario' pInputText>
               </div>
-              <div  *ngIf="esRenegociar" class="form-group col-lg-3 col-md-3">
+              <div  *ngIf="esRenegociar" class="form-group col-lg-4 col-md-4">
                 <label>{{ 'facturacion.facturas.opcion.renegociar' | translate }}</label>
                 <p-dropdown class="select-form" [(ngModel)]='comboSel' [ngClass]="styleObligatorio(comboSel)"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [options]='comboAction' [filter]="true"

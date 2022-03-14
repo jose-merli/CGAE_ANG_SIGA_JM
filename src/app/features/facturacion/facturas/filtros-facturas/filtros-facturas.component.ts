@@ -75,11 +75,6 @@ export class FiltrosFacturasComponent implements OnInit {
 
     this.isLetrado = this.sigaStorageService.isLetrado;
 
-    if(this.isLetrado){
-      this.getDataLoggedUser();
-    }
-
-    
     this.getCombos();
     //Si viene de la ficha Colegiado
     if (sessionStorage.getItem("datosColegiado")) {
@@ -90,9 +85,9 @@ export class FiltrosFacturasComponent implements OnInit {
       this.body.apellidos = busquedaColegiado.apellidos1 + " " + busquedaColegiado.apellidos2;
       this.body.numeroColegiado = busquedaColegiado.numColegiado;
       this.body.idCliente = busquedaColegiado.idPersona;
+    }else  if(this.isLetrado){  
+        this.getDataLoggedUser();
     }
-   
-
     if (sessionStorage.getItem("mensaje") && sessionStorage.getItem("volver")) {
       let message: Message = JSON.parse(sessionStorage.getItem("mensaje"));
       if (message)
@@ -121,11 +116,12 @@ export class FiltrosFacturasComponent implements OnInit {
 			}
       sessionStorage.removeItem("idFichero");
 			sessionStorage.removeItem("tipoFichero");
-      this.isBuscar();
     }
     setTimeout(() => {
       this.inputNum.nativeElement.focus();  
+      if(!this.isLetrado)this.isBuscar();
     }, 300);
+    
   }
 
   // Get combos
@@ -168,7 +164,7 @@ export class FiltrosFacturasComponent implements OnInit {
       () => {
       this.progressSpinner = false;
       setTimeout(() => {
-        //this.isBuscar();
+        this.isBuscar();
       }, 5);
       });
     });

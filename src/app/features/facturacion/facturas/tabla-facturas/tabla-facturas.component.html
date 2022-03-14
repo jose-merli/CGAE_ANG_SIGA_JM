@@ -55,11 +55,11 @@
             </div>
 
             <div *ngIf="col.field == 'importefacturado' && dato[col.field] != null">
-              <span class="pull-right">{{ dato[col.field] | number:'':'es-ES' }} €</span>
+              <span class="pull-right">{{ dato[col.field] | number:'1.2-2':'es-ES'   }} €</span>
             </div>
 
             <div *ngIf="col.field == 'importeAdeudadoPendiente' && dato[col.field] != null">
-              <span class="pull-right">{{ dato[col.field] | number:'':'es-ES' }} €</span>
+              <span class="pull-right">{{ dato[col.field] | number:'1.2-2':'es-ES'  }} €</span>
             </div>
 
             <div *ngIf="col.field == 'ultimaComunicacion'">
@@ -222,7 +222,7 @@
                 <label>{{ 'general.boton.comments' | translate }}</label>
                 <input type="text" class="form-control"  [(ngModel)]='itemAction.comentario' pInputText>
               </div>
-              <div  *ngIf="combo && !esRenegociar" class="form-group col-lg-3 col-md-3">
+              <div  *ngIf="combo && !esRenegociar" class="form-group col-lg-4 col-md-4">
                 <label>{{ 'censo.resultadosSolicitudesModificacion.literal.descripcion' | translate }}</label>
                 <p-dropdown class="select-form" [(ngModel)]='comboSel' [ngClass]="styleObligatorio( comboSel)"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [options]='comboAction' [filter]="true"

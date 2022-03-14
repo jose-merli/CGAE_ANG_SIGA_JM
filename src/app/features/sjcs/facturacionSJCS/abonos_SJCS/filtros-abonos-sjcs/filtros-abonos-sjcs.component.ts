@@ -74,6 +74,7 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       this.getComboColegios();
     });
 
+    this.isLetrado = this.sigaStorageService.isLetrado;
     //Si viene de la ficha Colegiado
     if (sessionStorage.getItem("datosColegiado")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("datosColegiado"));
@@ -82,6 +83,8 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre;
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.numColegiado;
       this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
+    }else if(this.isLetrado){  
+        this.getDataLoggedUser();
     }
     if (sessionStorage.getItem("buscadorColegiados")) {
 
@@ -100,10 +103,40 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       if (this.idPersona == undefined) this.idPersona = busquedaColegiado.idpersona;
     }
 
+    if(!this.isLetrado)this.searchAbonos()
+
 
   }
 
+  getDataLoggedUser() {
+    this.progressSpinner = true;
+  
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+  
+    const usuario = n.usuarioLogeadoItem;
+    const colegiadoItem = new ColegiadoItem();
+    colegiadoItem.nif = usuario[0].dni;
+  
+    this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+      usr => {
+        const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+        this.usuarioBusquedaExpress.nombreAp =  nombre
+        this.usuarioBusquedaExpress.numColegiado = numColegiado;
 
+        this.progressSpinner = false;
+      }, err => {
+      this.progressSpinner = false;
+      },
+      () => {
+      this.progressSpinner = false;
+      setTimeout(() => {
+        this.searchAbonos();
+      }, 5);
+      });
+    });
+
+    this.progressSpinner = false;
+}
 
 
   clear() {

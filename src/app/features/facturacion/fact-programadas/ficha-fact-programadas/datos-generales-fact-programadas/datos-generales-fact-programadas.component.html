@@ -137,14 +137,14 @@
         <button *ngIf="permisoEscritura" [disabled]="!modoEdicion || !(porProgramar || porConfirmarError)" pButton (click)="confirmEliminar()"
           type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
-        <button [disabled]="!(porConfirmar || porConfirmarError || confirmada)" pButton (click)="descargarLog()"
+        <button [disabled]="!(generada || porConfirmar || porConfirmarError || confirmada)" pButton (click)="descargarLog()"
           type="button" icon="fa fa-download" iconPos="left"
           label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
 
-        <button *ngIf="permisoEscritura && (porConfirmarError || confirmada) && !body.archivarFact" pButton (click)="archivar()"
+        <button *ngIf="permisoEscritura && (generada || porConfirmarError || confirmada) && !body.archivarFact" pButton (click)="archivar()"
           type="button" icon="fas fa-archive" iconPos="left"
           label="{{ 'general.boton.archivar' | translate }}"></button>
-        <button *ngIf="permisoEscritura && (porConfirmarError || confirmada) && body.archivarFact" pButton (click)="desarchivar()"
+        <button *ngIf="permisoEscritura && (generada || porConfirmarError || confirmada) && body.archivarFact" pButton (click)="desarchivar()"
           type="button" icon="fa fa-history" iconPos="left"
           label="{{ 'form.busquedaCursos.literal.boton.desarchivar' | translate }}"></button>
 
@@ -164,7 +164,7 @@
 <p-confirmDialog key="confirmEliminar" header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
 
 <!--DIALOG CAMBIA ESTADO-->
-<p-dialog width="1200" responsive="true" modal="modal" [draggable]="false" resizable="false"
+<p-dialog width="1200" responsive="true" modal="modal" draggable="false" resizable="false"
   [(visible)]="dialogVisible" (onHide)="cerrarDialog()">
   <p-header>{{'factPyS.header.modal.fase' | translate}}</p-header>
 

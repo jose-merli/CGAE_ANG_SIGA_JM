@@ -156,6 +156,27 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
       this.denegar();
     }
   }
+  getLabelbyFilter(string): string {
+    /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+	para poder filtrar el dato con o sin estos caracteres*/
+    let labelSinTilde = string;
+    let accents =
+      'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
+    let accentsOut =
+      'aaaaaaaaaaaaaooooooooooooooeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz';
+    let i;
+    let x;
+    for (i = 0; i < labelSinTilde.length; i++) {
+      if ((x = accents.indexOf(labelSinTilde.charAt(i))) != -1) {
+        labelSinTilde = labelSinTilde.replace(
+          labelSinTilde.charAt(i),
+          accentsOut[x]
+        );
+      }
+    }
+
+    return labelSinTilde;
+  }
 
   // REVISAR: Añadir comprobación de facturación
   checkAnularCompra(){
@@ -297,7 +318,11 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
                 // this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.compraFacturada"));
                 this.nSolicitudFacturar = this.selectedRows[0].nSolicitud;
                 this.facturarCompra(false);
-              } else {
+              } else if(this.comboSeriesFacturacion.length == 1){
+                this.nSolicitudFacturar = this.selectedRows[0].nSolicitud;
+                this.serieFacturacionSeleccionada = this.comboSeriesFacturacion[0].value
+                this.facturarCompra(true);
+              }else {
                 this.showModalSerieFacturacion = true;
                 this.nSolicitudFacturar = this.selectedRows[0].nSolicitud;
               }

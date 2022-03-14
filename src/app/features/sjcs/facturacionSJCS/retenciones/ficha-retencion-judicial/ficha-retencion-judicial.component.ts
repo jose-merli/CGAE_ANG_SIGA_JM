@@ -64,7 +64,7 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
   isLetrado: boolean = false;
   msgs;
   colegiado: Colegiado;
-
+  permisoEscrituraDatosRetencion: boolean;
   @ViewChild(TarjetaColegiadoComponent) tarjetaColegiado: TarjetaColegiadoComponent;
   @ViewChild(TarjetaDatosRetencionComponent) tarjetaDatosRetJud: TarjetaDatosRetencionComponent;
   @ViewChild(TarjetaAplicacionEnPagosComponent) tarjetaAplEnPag: TarjetaAplicacionEnPagosComponent;
@@ -92,7 +92,13 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
       this.isLetrado = this.sigaStorageService.isLetrado;
 
     }).catch(error => console.error(error));
+    // this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaRetTarjetaDatosRetencion).then(respuesta => {
 
+    //   this.permisoEscrituraDatosRetencion = respuesta;
+
+    // }).catch(error => console.error(error));
+    console.log(this.retencionesService.permisoEscrituraDatosRetencion);
+    this.permisoEscrituraDatosRetencion = this.retencionesService.permisoEscrituraDatosRetencion;
   }
 
   isOpenReceive(event) {

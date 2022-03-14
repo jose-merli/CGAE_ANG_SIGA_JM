@@ -11,6 +11,7 @@ export class RetencionesService implements OnDestroy {
   retencion: RetencionesItem = new RetencionesItem();
   filtrosRetenciones: RetencionesRequestDto = new RetencionesRequestDto();
   rutaMenu: Subscription;
+  permisoEscrituraDatosRetencion: boolean;
 
   constructor(private sigaServices: SigaServices) {
     this.rutaMenu = this.sigaServices.rutaMenu$.subscribe(

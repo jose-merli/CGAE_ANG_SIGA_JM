@@ -15,12 +15,12 @@
     </div> 
   
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
-    <app-tarjeta-cola-fija class="pb-50" *ngIf="permisosTarjetaCola && ficha.key == 'cola'" chincheta="true" icono="far fa-file-alt" 
-      titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3"></app-tarjeta-cola-fija>
     <app-tarjeta-letrado (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaLetrado]="tarjetaLetrado"  [letradoItem]="letradoItem" 
       (modoEdicionSend)="modoEdicionSend($event)" *ngSwitchCase="'letrado'" [openLetrado]="openLetrado"></app-tarjeta-letrado>
     <app-tarjeta-inscripcion [datos]="datos" [idPersona]="idPersona" (seleccionadosSend)="seleccionadosSend($event)"  [modoEdicion]="modoEdicion"
       *ngSwitchCase="'inscripcion'"></app-tarjeta-inscripcion>
+    <app-tarjeta-cola-fija class="pb-50" *ngIf="permisosTarjetaCola && ficha.key == 'cola'" chincheta="true" icono="far fa-file-alt" 
+      titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3"></app-tarjeta-cola-fija>
     <app-tarjeta-gestion-inscripcion [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion"
       *ngSwitchCase="'gestioninscripcion'"></app-tarjeta-gestion-inscripcion>
   </div>

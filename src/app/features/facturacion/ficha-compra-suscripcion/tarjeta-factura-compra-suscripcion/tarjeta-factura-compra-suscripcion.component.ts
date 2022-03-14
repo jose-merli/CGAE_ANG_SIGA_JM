@@ -10,6 +10,8 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { saveAs } from "file-saver/FileSaver";
 import { ListaComprasProductosItem } from '../../../../models/ListaComprasProductosItem';
+import { ListaProductosItems } from '../../../../models/ListaProductosItems';
+import { FacturasItem } from '../../../../models/FacturasItem';
 
 @Component({
   selector: 'app-tarjeta-factura-compra-suscripcion',
@@ -86,18 +88,12 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
   }
 
   openTab(selectedRow) {
-    //REVISAR
-    // this.progressSpinner = true;
     // sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
-    // sessionStorage.setItem("origin", "Compra");
-    // this.router.navigate(["/fichaProductos"]); //Cambiar direccion a la ficha de facturas y añadir item con informacion necesaria para inicializar la ficha
-    this.msgs = [
-      {
-        severity: "info",
-        summary: "En proceso",
-        detail: "Ficha no implementada actualmente"
-      }
-    ];
+    let facturasItem: FacturasItem = selectedRow;
+    
+    sessionStorage.setItem("FichaCompraSuscripcion", JSON.stringify(this.ficha));
+    sessionStorage.setItem("facturasItem", JSON.stringify(facturasItem));
+    this.router.navigate(["/gestionFacturas"]); 
   }
 
   getFacturasPeticion(){

@@ -596,7 +596,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       }
     } else {
       if (this.nuevoEstado.idAccion == this.ACCION_ABONO_RENEGOCIACION) {
-        valid = this.nuevoEstado.modo != undefined && this.nuevoEstado.modo.trim().length != 0 && (this.nuevoEstado.idEstado != this.ESTADO_ABONO_BANCO || this.nuevoEstado.idEstado == this.ESTADO_ABONO_BANCO && this.nuevoEstado.idCuenta != undefined && this.nuevoEstado.idCuenta.trim().length != 0);
+        valid = this.nuevoEstado.idEstado != undefined && this.nuevoEstado.idEstado.trim().length != 0 && (this.nuevoEstado.idEstado != this.ESTADO_ABONO_BANCO || this.nuevoEstado.idEstado == this.ESTADO_ABONO_BANCO && this.nuevoEstado.idCuenta != undefined && this.nuevoEstado.idCuenta.trim().length != 0);
       } else if (this.nuevoEstado.idAccion == this.ACCION_ABONO_NUEVO_CAJA) {
         valid = this.nuevoEstado.movimiento && this.nuevoEstado.movimiento.trim().length != 0;
       }

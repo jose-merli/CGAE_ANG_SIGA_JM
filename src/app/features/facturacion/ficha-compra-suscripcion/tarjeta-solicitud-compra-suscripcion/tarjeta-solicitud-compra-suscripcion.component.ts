@@ -655,10 +655,14 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
       await this.getSeleccionSerieFacturacion().then(data => {
         this.comboSeriesFacturacion = data.combooItems;
 
-        if (this.comboSeriesFacturacion == null) {
+        if (this.comboSeriesFacturacion == null ) {
           //this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("factPyS.mensaje.compraFacturada"));
           this.facturarCompra(false);
-        } else {
+        }else if(this.comboSeriesFacturacion.length == 1){
+          this.serieFacturacionSeleccionada = this.comboSeriesFacturacion[0].value
+          this.facturarCompra(true);
+        } 
+        else {
           this.showModalSerieFacturacion = true;
         }
 

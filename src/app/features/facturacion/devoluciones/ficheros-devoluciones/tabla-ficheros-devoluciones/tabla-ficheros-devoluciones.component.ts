@@ -88,14 +88,21 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
     let resHead ={ 'response' : null, 'header': null };
 
     if (this.selectedDatos && this.selectedDatos.length != 0) {
+
+      let datosNuevos = this.selectedDatos.map( datos => {
+        return {idDisqueteDevoluciones : datos.idDisqueteDevoluciones}
+      });
+
       this.progressSpinner = true;
-      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFicheroDevoluciones", this.selectedDatos);
+      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFicheroDevoluciones", datosNuevos);
       descarga.subscribe(response => {
+
         this.progressSpinner = false;
 
         const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
         let filename: string = response.headers.get("Content-Disposition");
         filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+
 
         saveAs(file, filename);
         this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );

@@ -157,12 +157,12 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
         this.showDatosGenerales = true;
       }
 
-      this.buscar();
     }
 
     if(this.usuarioBusquedaExpress.numColegiado != null && this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != ""){
 			this.filtros.ncolegiado =this.usuarioBusquedaExpress.numColegiado;
 			this.filtros.nombreApellidoColegiado = this.usuarioBusquedaExpress.nombreAp;
+      this.buscar();
 		  }
 
     this.getComboTiposRetencion();
