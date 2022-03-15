@@ -100,7 +100,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       }
       this.persistenceService.clearFiltros();
       sessionStorage.removeItem("FichaInscripciones");
-      this.isBuscar();
+      //this.isBuscar();
     }else{
       sessionStorage.removeItem("FichaInscripciones");
       this.persistenceService.clearFiltros();
