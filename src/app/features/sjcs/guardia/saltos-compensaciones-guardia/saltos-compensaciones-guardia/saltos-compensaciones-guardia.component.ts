@@ -394,6 +394,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         }
 
         if (resp.status == 'OK') {
+          this.showMessage({ severity : "success", summary : this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
           this.isNewFromOtherPage = false;
           this.search(false);
         }
@@ -428,6 +429,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         }
 
         if (resp.status == 'OK') {
+          this.showMessage({ severity : "success", summary : this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
           this.isNewFromOtherPage = false;
           this.search(false);
         }
@@ -440,7 +442,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
   }
 
   guardar(event){
-
+    this.progressSpinner = true;
     let arraySaltos: SaltoCompItem[] = [];
 
     event.forEach(row => {
@@ -498,10 +500,11 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
           this.isNewFromOtherPage = false;
           this.search(false);
         }
-
+        this.progressSpinner = false;
       },
       error => {
         this.showMessage({ severity: "error", summary: this.translateService.instant("general.message.incorrect"), msg: this.translateService.instant("general.mensaje.error.bbdd") });
+        this.progressSpinner = false;
       }
     );
   }

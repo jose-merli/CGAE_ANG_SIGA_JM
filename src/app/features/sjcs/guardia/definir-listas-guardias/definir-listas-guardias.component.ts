@@ -140,7 +140,7 @@ export class DefinirListasGuardiasComponent implements OnInit {
             this.showMsg('info', 'Info', listaGuardiasDTO.error.description);
           }
           let listaGuardiasItems : ListaGuardiasItem [] = listaGuardiasDTO.listaGuardiasItems;
-          this.buscador.filtroAux = Object.assign({},this.buscador.filtro);
+         // this.buscador.filtroAux = Object.assign({},this.buscador.filtro);
           this.listas = listaGuardiasItems;
           this.showResponse();
         }    
