@@ -207,7 +207,10 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		//this.actualizarBotones();
 		this.getColaOficio();
 		this.HabilitarBotones();
-		this.enviarEnlacesTarjeta();
+		setTimeout(() => {
+			this.enviarEnlacesTarjeta();
+		  }, 2000);
+		
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -1091,14 +1094,6 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		};
 
 		this.enlacesTarjetaResumen.push(tarjetaInscripciones);
-
-		let tarjetaColaFijaInscripcion = {
-			label: "justiciaGratuita.oficio.inscripciones.posicionenlacola",
-			value: document.getElementById("colaFijaInscripcion"),
-			nombre: "colaFijaInscripcion",
-		};
-
-		this.enlacesTarjetaResumen.push(tarjetaColaFijaInscripcion);
 
 		let tarjetaGestionInscripciones = {
 			label: "justiciaGratuita.oficio.inscripciones.seguimientoInscripcion",

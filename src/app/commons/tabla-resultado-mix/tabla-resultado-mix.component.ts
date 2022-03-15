@@ -594,7 +594,7 @@ export class TablaResultadoMixComponent implements OnInit {
              this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
             }
       })
-      if(dataToSendArr.length>0) this.descargaLOG.emit(dataToSendArr);
+      //if(dataToSendArr.length>0) this.descargaLOG.emit(dataToSendArr);
 
     } else if (this.selectedRowValue[0] != undefined){
       
