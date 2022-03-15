@@ -430,14 +430,6 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
         this.tarjetaFija.enlaces.push(tarjTmp);
       }
 
-      let tarjTmp = {
-        id: 'facSJCSTarjFacGene',
-        ref: document.getElementById('facSJCSTarjFacGene'),
-        nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
-      };
-
-      this.tarjetaFija.enlaces.push(tarjTmp);
-
       if (tarj.nombre != 'Datos Generales') { //Durante la creacion, deshabilitamos las tarjetas que no sean la de datos generales
         tarj.detalle = false;
       }
@@ -445,6 +437,13 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
         tarj.opened = false;
       }
     });
+    let tarjTmp = {
+      id: 'facSJCSTarjFacGene',
+      ref: document.getElementById('facSJCSTarjFacGene'),
+      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+    };
+
+    this.tarjetaFija.enlaces.push(tarjTmp);
   }
 
   refreshDatosGenerales(event) {
