@@ -61,6 +61,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	manuallyOpened: Boolean;
 	permisosTarjetaCola: boolean = true;
 	openLetrado: Boolean = false;
+	gestioninscripcion: Boolean = false;
 	turno: any;
 	historico: boolean = false;
 	datosColaOficio;
@@ -1114,9 +1115,9 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				case "tarjetaLetrado":
 					this.openLetrado = this.manuallyOpened;
 					break;
-				// case "configTurnos":
-				// this.openConfigTurnos = this.manuallyOpened;
-				// break;
+				 case "gestioninscripcion":
+				 this.gestioninscripcion = this.manuallyOpened;
+				 break;
 				// case "configColaOficio":
 				// this.openConfigColaOficio = this.manuallyOpened;
 				// break;
@@ -1143,9 +1144,9 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				case "tarjetaLetrado":
 					this.openLetrado = true;
 					break;
-				// case "configTurnos":
-				//   this.openConfigTurnos = true;
-				//   break;
+				 case "gestioninscripcion":
+				   this.gestioninscripcion = true;
+				   break;
 				// case "configColaOficio":
 				//   this.openConfigColaOficio = true;
 				//   break;

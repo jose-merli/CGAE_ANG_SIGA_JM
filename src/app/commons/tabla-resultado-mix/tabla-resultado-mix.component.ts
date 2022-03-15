@@ -558,6 +558,7 @@ export class TablaResultadoMixComponent implements OnInit {
   descargarLOG(){
     let dataToSendArr = [];
     let selectedValuesArr:Row[] = [];
+
     if (this.selectedArray.length > 0){
       this.selectedArray.forEach(index => {
         let selectedValues:Row  = this.getValuesOMIndex(index);
@@ -574,8 +575,8 @@ export class TablaResultadoMixComponent implements OnInit {
           'generado': selectedRowValue.cells[8].value,
           'numGuardias': selectedRowValue.cells[9].value,
           'listaGuarias': selectedRowValue.cells[5].value,
-          'fechaDesde': '',
-          'fechaHasta': '',
+          'fechaDesde':  selectedRowValue.cells[2].value,
+          'fechaHasta':  selectedRowValue.cells[3].value,
           'fechaProgramacion': selectedRowValue.cells[4].value.label,
           'estado': selectedRowValue.cells[7].value,
           'observaciones': selectedRowValue.cells[6].value,
@@ -583,16 +584,18 @@ export class TablaResultadoMixComponent implements OnInit {
           'idTurno': selectedRowValue.cells[11].value,
           'idGuardia': selectedRowValue.cells[12].value,
           'filtrosBusqueda' : this.filtrosValues,
-          'idCalendarioGuardia': selectedRowValue.cells[16].value,
+         // 'idCalendarioGuardia': selectedRowValue.cells[16].value,
         }
           if( dataToSend.estado == "Generada"){
             dataToSendArr.push(dataToSend);
-            this.descargaLOG.emit(dataToSendArr);
+            
           }
           else{
              this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
             }
       })
+      if(dataToSendArr.length>0) this.descargaLOG.emit(dataToSendArr);
+
     } else if (this.selectedRowValue[0] != undefined){
       
       let dataToSend = {
@@ -603,8 +606,8 @@ export class TablaResultadoMixComponent implements OnInit {
         'generado': this.selectedRowValue[8].value,
         'numGuardias': this.selectedRowValue[9].value,
         'listaGuarias': this.selectedRowValue[5].value,
-        'fechaDesde': '',
-        'fechaHasta': '',
+        'fechaDesde':  this.selectedRowValue[2].value,
+        'fechaHasta':  this.selectedRowValue[3].value,
         'fechaProgramacion': this.selectedRowValue[4].value.label,
         'estado': this.selectedRowValue[7].value,
         'observaciones': this.selectedRowValue[6].value,
@@ -615,13 +618,13 @@ export class TablaResultadoMixComponent implements OnInit {
       }
        if( dataToSend.estado == "Generada"){
         dataToSendArr.push(dataToSend);
-        this.descargaLOG.emit(dataToSendArr);
        }else{
         this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')
        }
     }else{
       this.showMsg('error', 'Error. Debe seleccionar uno o más registros para poder descargar sus LOGs' ,'')
     }
+    if(dataToSendArr.length>0)this.descargaLOG.emit(dataToSendArr);
   }
   duplicar2(){
     if (this.selectedRowValue.length != 0){
