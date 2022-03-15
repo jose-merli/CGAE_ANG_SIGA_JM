@@ -409,7 +409,17 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.deleteEvent.emit(this.selectedArray);
       this.selectedArray = [];
+      this.showSuccessDelete();
     }
+  }
+
+  showSuccessDelete() {
+    this.msgs = [];
+    this.msgs.push({
+      severity: "success",
+      summary: "Correcto",
+      detail: "Se ha eliminado el registro correctamente"
+    });
   }
 
   toogleHistorico(valor: boolean) {

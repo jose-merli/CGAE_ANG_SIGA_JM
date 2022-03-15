@@ -394,7 +394,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         }
 
         if (resp.status == 'OK') {
-          this.showMessage({ severity : "success", summary : this.translateService.instant("general.message.correct"), msg: this.translateService.instant("general.message.accion.realizada")});
+          this.showMessage({ severity: "success", summary: 'Operación realizada con éxito', msg: 'Los registros seleccionados han sido anulados' });
           this.isNewFromOtherPage = false;
           this.search(false);
         }
