@@ -494,10 +494,8 @@ export class FichaInscripcionesComponent implements OnInit {
 			data => {
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 				this.progressSpinner = false;
-				//El redireccionamiento es una solucion temporal hasta que se
-				//decida el método de actualización de la ficha.
-				//this.router.navigate(["/inscripciones"]);
-				this.ngOnInit();
+				//Como se puede solicitar el alta para varias guardias no se puede refrescar la pantalla
+				this.location.back;
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {
