@@ -310,12 +310,19 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
 
     this.rowGroups.forEach(row => {
       if (
-        row.cells[0].value == null || row.cells[0].value.trim() == '' ||
+        (row.cells[0].value != undefined &&
+        row.cells[1].value != undefined &&
+        row.cells[2].value != undefined &&
+        row.cells[3].value != undefined &&
+        row.cells[4].value != undefined &&
+        row.cells[5].value != undefined)  
+        &&
+        (row.cells[0].value == null || row.cells[0].value.trim() == '' ||
         row.cells[1].value == null || row.cells[1].value.trim() == '' ||
         row.cells[2].value == null || row.cells[2].value.trim() == '' ||
         row.cells[3].value == null || row.cells[3].value.trim() == '' ||
         row.cells[4].value == null || row.cells[4].value.trim() == '' ||
-        row.cells[5].value == null || row.cells[5].value.trim() == ''
+        row.cells[5].value == null || row.cells[5].value.trim() == '')
       ) {
         error = true;
       }
