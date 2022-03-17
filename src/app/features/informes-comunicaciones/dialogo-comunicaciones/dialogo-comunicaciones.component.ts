@@ -368,6 +368,10 @@ export class DialogoComunicacionesComponent implements OnInit {
 			}
 		});
 
+		if (this.datosSeleccionados == null || this.datosSeleccionados == undefined) {
+			this.datosSeleccionados = [];
+		}
+		
 		if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
 
 			if (this.consultasSearch != undefined) {
