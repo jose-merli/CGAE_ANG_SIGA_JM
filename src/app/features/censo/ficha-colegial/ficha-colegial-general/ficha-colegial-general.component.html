@@ -25,9 +25,9 @@
         (modoEdicionSend)="modoEdicionSend($event)" (isOpen)="isOpenReceive($event)" [manuallyOpened] = "manuallyOpened"></app-tarjeta-resumen-fija>
     <app-servicios-interes-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [datosColegiado]="generalBody" [tarjetaInteres]="tarjetaInteres" [esColegiado]="esColegiado"></app-servicios-interes-ficha-colegial>
           
-    <app-datos-generales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaGenerales]="tarjetaGenerales" 
+    <app-datos-generales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaGenerales]="tarjetaGenerales" [datosTratamientos]="datosTratamientos"
       [esColegiado]="esColegiado" (datosTarjetaResumenEmit)= "datosTarjetaResumenEvent($event)" (idPersonaNuevo)="idPersonaNuevoEvent($event)" (aparecerLOPD)="aparecerLOPDEvent($event)" [openGen]="openGen"></app-datos-generales-ficha-colegial>
-    <app-datos-colegiales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColegiales]="tarjetaColegiales" [esColegiado]="esColegiado" [openColegia]="openColegia"></app-datos-colegiales-ficha-colegial>
+    <app-datos-colegiales-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColegiales]="tarjetaColegiales" [datosTratamientos]="datosTratamientos" [esColegiado]="esColegiado" [openColegia]="openColegia"></app-datos-colegiales-ficha-colegial>
     <app-otras-colegiaciones-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaOtrasColegiaciones]="tarjetaOtrasColegiaciones" 
       [esColegiado]="esColegiado" [openOtrasCole]="openOtrasCole"></app-otras-colegiaciones-ficha-colegial>
     <app-certificados-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [idPersona]="idPersona" [tarjetaCertificados]="tarjetaCertificados"  [esColegiado]="esColegiado" [openCertifi]="openCertifi"></app-certificados-ficha-colegial>

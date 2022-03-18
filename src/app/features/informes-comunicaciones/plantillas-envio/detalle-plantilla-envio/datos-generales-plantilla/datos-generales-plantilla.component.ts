@@ -235,6 +235,10 @@ para poder filtrar el dato con o sin estos caracteres*/
               "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"
             )
           );
+          if (result.description == null){
+            this.showFail(this.translateService.instant(
+              "general.message.datos.generales.remitente"));
+          }
         },
         err => {
           //console.log(err);
@@ -273,6 +277,10 @@ para poder filtrar el dato con o sin estos caracteres*/
               "informesycomunicaciones.modelosdecomunicacion.ficha.correctPlantillaGuardada"
             )
           );
+          if (result.description == null){
+            this.showFail(this.translateService.instant(
+              "general.message.datos.generales.remitente"));
+          }
         },
         err => {
           //console.log(err);

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation, OnChanges } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { esCalendar } from "../../../../utils/calendar";
 import { Message } from "primeng/components/common/api";
@@ -25,7 +25,7 @@ import { MultiSelect } from 'primeng/multiselect';
   styleUrls: ["./datos-registrales.component.scss"],
   encapsulation: ViewEncapsulation.None
 })
-export class DatosRegistralesComponent implements OnInit {
+export class DatosRegistralesComponent implements OnInit, OnChanges {
   uploadedFiles: any[] = [];
   formBusqueda: FormGroup;
   cols: any = [];
@@ -123,6 +123,7 @@ export class DatosRegistralesComponent implements OnInit {
 
   tarjeta: string;
   searchDatos: boolean = false;
+  @Input() cantidadIntegrantes; 
   @Input() openTarjeta;
   @Output() permisosEnlace = new EventEmitter<any>();
 
@@ -239,6 +240,14 @@ export class DatosRegistralesComponent implements OnInit {
     if (fichaPosible == false) {
       this.abreCierraFicha(this.openTarjeta);
     }
+
+    if (changes.cantidadIntegrantes && 
+        changes.cantidadIntegrantes != null && 
+        changes.cantidadIntegrantes.currentValue == 0 && 
+        this.sociedadProfesional == true) { 
+      this.sociedadProfesional = false; 
+      this.showCustomFail("Debe haber como mínimo un integrante para poder marcar la sociedad como profesional."); 
+    } 
 
   }
   checkAcceso() {
@@ -521,6 +530,18 @@ export class DatosRegistralesComponent implements OnInit {
             if (this.body.numRegistro == "") {
               this.body.numRegistro = null;
             }
+
+            if (this.cantidadIntegrantes == 0) { 
+              this.body.sociedadProfesional = "0"; 
+            } 
+
+            if (this.body.resena == null) { 
+              this.body.resena = ""; 
+            } 
+
+            if (this.body.objetoSocial == null) { 
+              this.body.objetoSocial = ""; 
+            } 
             this.sigaServices
               .post("datosRegistrales_update", this.body)
               .subscribe(
@@ -560,7 +581,13 @@ export class DatosRegistralesComponent implements OnInit {
         this.progressSpinner = false;
       }
     } else {
-      this.showCustomFail("Debe rellenar todos los datos obligatorios para guardar");
+      if (this.body.resena != undefined &&
+        !this.onlySpaces(this.body.resena) &&
+        this.body.resena.length < 3) {
+        this.showCustomFail("La reseña debe tener al menos 3 caracteres.");
+      } else {
+        this.showCustomFail("Debe rellenar todos los datos obligatorios para guardar");
+      }
     }
 
   }
@@ -685,8 +712,6 @@ export class DatosRegistralesComponent implements OnInit {
   desactivadoGuardar() {
     if (this.sociedadProfesional == true) {
       if (
-        this.body.objetoSocial != undefined &&
-        !this.onlySpaces(this.body.objetoSocial) &&
         this.body.resena != undefined &&
         !this.onlySpaces(this.body.resena) &&
         this.fechaConstitucion != undefined &&
@@ -696,6 +721,12 @@ export class DatosRegistralesComponent implements OnInit {
         this.contadorNoCorrecto == false &&
         this.fechaFinCorrecta != false
       ) {
+
+        if (this.body.resena == undefined || this.onlySpaces(this.body.resena) || this.body.resena.length < 3) {
+          this.showCustomFail("La reseña debe tener al menos 3 caracteres.");
+          return true;
+        }
+
         if (this.camposDesactivados == true && this.noEditable == false) {
           this.muestraCamposObligatorios();
           return true;
@@ -712,27 +743,23 @@ export class DatosRegistralesComponent implements OnInit {
         this.resaltadoDatos = true;
         return true;
       }
-    } else if (
-      (this.body.objetoSocial != undefined &&
-        this.body.objetoSocial != "" &&
-        !this.onlySpaces(this.body.objetoSocial)) &&
-      (this.body.resena != undefined &&
-        this.body.resena != "" &&
-        !this.onlySpaces(this.body.resena)) &&
-      (this.fechaConstitucion != undefined &&
-        this.compruebaFechaConstitucion()) &&
-      this.fechaInscripcion != undefined 
-    ) {
-      return false;
     } else {
+      if (this.body.resena != undefined &&
+        !this.onlySpaces(this.body.resena) &&
+        this.body.resena.length < 3) {
+        return true;
+      }
 
       if ((this.body.contadorNumsspp == undefined ||
         this.onlySpaces(this.body.contadorNumsspp) || this.body.contadorNumsspp == null) && this.noEditable) {
         this.showCustomFail("No está configurado correctamente el contador de Sociedades. Si no tiene acceso a la configuración de contadores, por favor contacte con el Administrador");
+        
+        // this.muestraCamposObligatorios();
+        this.resaltadoDatos = true;
+        return true;
+      } else {
+        return false;
       }
-      // this.muestraCamposObligatorios();
-      this.resaltadoDatos = true;
-      return true;
     }
   }
 
@@ -891,6 +918,11 @@ export class DatosRegistralesComponent implements OnInit {
   //   }
   // }
 
+  compruebaNumIntegrantes() { 
+    if (this.cantidadIntegrantes == 0) { 
+      this.showCustomFail("Debe haber como mínimo un integrante para poder marcar la sociedad como profesional."); 
+    } 
+  } 
 
   fillFechaConstitucion(event) {
     this.fechaConstitucion = event;

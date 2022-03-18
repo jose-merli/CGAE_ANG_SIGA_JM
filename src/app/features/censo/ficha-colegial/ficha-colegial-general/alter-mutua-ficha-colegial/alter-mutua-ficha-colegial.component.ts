@@ -17,6 +17,8 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   tratamientoDesc: String;
 
+  @Input() datosTratamientos;
+
   generalTratamiento: any[] = [];
   progressSpinner: boolean = false;
   viernes = false
@@ -38,21 +40,14 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
   ngOnChanges() {
     if ((this.tarjetaAlterMutua == "2" || this.tarjetaAlterMutua == "3") && !this.viernes) {
 
-      this.sigaServices.get("fichaColegialGenerales_tratamiento").subscribe(
-        n => {
-          this.viernes = true;
-          this.generalTratamiento = n.combooItems;
-          let tratamiento = this.generalTratamiento.find(
-            item => item.value === this.generalBody.idTratamiento
-          );
-          if (tratamiento != undefined && tratamiento.label != undefined) {
-            this.tratamientoDesc = tratamiento.label;
-          }
-        },
-        err => {
-          //console.log(err);
+        this.viernes = true;
+        this.generalTratamiento = this.datosTratamientos;
+        let tratamiento = this.generalTratamiento.find(
+          item => item.value === this.generalBody.idTratamiento
+        );
+        if (tratamiento != undefined && tratamiento.label != undefined) {
+          this.tratamientoDesc = tratamiento.label;
         }
-      );
     }
   }
   irAlterMutuaReta() {

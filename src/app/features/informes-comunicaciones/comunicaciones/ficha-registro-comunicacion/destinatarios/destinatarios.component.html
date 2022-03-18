@@ -62,6 +62,15 @@
                   <label *ngIf= "destinatario.idPersona > 0">{{"gratuita.mantenimientoTablasMaestra.literal.apellidos" | translate}}:
                     <span>{{destinatario.apellidos1}} {{destinatario.apellidos2}} </span>
                   </label>
+                  <label *ngIf="body.idTipoEnvios == 1">{{"censo.datosDireccion.literal.correo" | translate}}:
+                    <span>{{destinatario.correoElectronico}}</span>
+                  </label>
+                  <label *ngIf="body.idTipoEnvios == 2">{{"censo.datosDireccion.literal.direccion" | translate}}:
+                    <span>{{destinatario.direccion}}</span>
+                  </label>
+                  <label *ngIf="body.idTipoEnvios == 4 || body.idTipoEnvios == 5">{{"censo.datosDireccion.literal.telefonoMovil" | translate}}:
+                    <span>{{destinatario.movil}}</span>
+                  </label>
 
                   <label class="mr-3" *ngIf= "destinatario.idPersona > 0">
                     <i (click)="navigateTo(destinatario);$event.stopPropagation();"

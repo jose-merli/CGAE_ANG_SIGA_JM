@@ -166,7 +166,6 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   ngOnInit() {
     this.resaltadoDatos = true;
-    this.resaltadoDatosAprobar = true;
     this.resaltadoDatosBancos = true;
 
     sessionStorage.removeItem("esNuevoNoColegiado");
@@ -205,6 +204,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.consulta = false;
 
       if (sessionStorage.getItem("nuevaIncorporacion")) {
+
         let solicitudrecibida = JSON.parse(
           sessionStorage.getItem("nuevaIncorporacion")
         );
@@ -268,6 +268,7 @@ export class NuevaIncorporacionComponent implements OnInit {
         }
 
       } else {
+
         this.solicitudEditar = JSON.parse(
           sessionStorage.getItem("editedSolicitud")
         );
@@ -1087,11 +1088,14 @@ export class NuevaIncorporacionComponent implements OnInit {
       );
   }
 
+  esIbanExtranjero: boolean = false;
   isValidIbanExt(): boolean {
     if (this.solicitudEditar.iban != null && this.solicitudEditar.iban != undefined &&
       this.solicitudEditar.iban != "" && this.solicitudEditar.iban.length == this.lengthCountryCode) {
+      this.esIbanExtranjero = true;
       return true;
     } else {
+      this.esIbanExtranjero = false;
       return false;
     }
   }
@@ -1301,17 +1305,10 @@ export class NuevaIncorporacionComponent implements OnInit {
         this.solicitudEditar.bic != "") ||
       (this.cargo || this.abono || this.abonoJCS)
     ) {
-      if (
-        this.solicitudEditar.titular != null &&
-        this.solicitudEditar.titular != undefined &&
-        this.solicitudEditar.titular != "" &&
-        this.solicitudEditar.titular.trim() &&
-        this.solicitudEditar.iban != null &&
-        this.solicitudEditar.iban != undefined &&
-        this.solicitudEditar.iban != "" &&
-        this.solicitudEditar.bic != null &&
-        this.solicitudEditar.bic != undefined &&
-        this.solicitudEditar.bic != "" &&
+      if (!this.checkCampoEsVacio(this.solicitudEditar.titular) &&
+        //this.solicitudEditar.titular.trim() 
+        !this.checkCampoEsVacio(this.solicitudEditar.iban) &&
+        !this.checkCampoEsVacio(this.solicitudEditar.bic) &&
         (this.cargo || this.abono || this.abonoJCS)
       ) {
         if (this.validarIban()) {
@@ -1356,7 +1353,11 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   validateAprobarSolitud() {
     if (this.solicitudEditar.fechaIncorporacion != undefined && this.solicitudEditar.fechaIncorporacion != null) {
-      this.aprobarSolicitud();
+      if(this.comprobarDatosBancarios()){
+        this.aprobarSolicitud();
+      }else{
+        this.datosBancariosErroneos();
+      }
     } else {
       this.showFailNotTraduce("Es necesario informar de la fecha de incorporación antes de aprobar. Rellénela y guarde");
     }
@@ -1602,7 +1603,7 @@ export class NuevaIncorporacionComponent implements OnInit {
     }
   }
 
-  guardar(back) {
+  guardar(back) { //tipoSolicitudSelected, tipoColegiacionSelected, modalidadDocumentacionSelected, solicitudEditar.fechaEstado
     this.progressSpinner = true;
     this.resaltadoDatos = false;
     this.resaltadoDatosAprobar = false;
@@ -1621,6 +1622,10 @@ export class NuevaIncorporacionComponent implements OnInit {
     this.solicitudEditar.idEstadoCivil = this.estadoCivilSelected;
     this.solicitudEditar.idPais = this.paisSelected;
     this.solicitudEditar.sexo = this.sexoSelected;
+
+    !this.checkCampoEsVacio(this.solicitudEditar.nombre) ? this.solicitudEditar.titular = this.solicitudEditar.nombre : this.solicitudEditar.titular = ""
+    !this.checkCampoEsVacio(this.solicitudEditar.apellido1) ? this.solicitudEditar.titular = this.solicitudEditar.titular + ", " + this.solicitudEditar.apellido1 : this.solicitudEditar.titular = this.solicitudEditar.titular + ""
+    !this.checkCampoEsVacio(this.solicitudEditar.apellido2) ? this.solicitudEditar.titular = this.solicitudEditar.titular + " " + this.solicitudEditar.apellido2 : this.solicitudEditar.titular = this.solicitudEditar.titular + ""
 
     if (this.paisSelected == "191") {
       this.solicitudEditar.idProvincia = this.provinciaSelected;
@@ -1659,6 +1664,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
           this.tratarDatos();
           if (back == true) {
+            this.guardado = true;
             this.progressSpinner = false;
           }
 
@@ -1708,7 +1714,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           this.bodyInicial = JSON.parse(JSON.stringify(this.solicitudEditar));
           this.tratarDatos();
 
-          if (back == true) {
+          if (back == true) {           
             this.msgs = [
               {
                 severity: "success",
@@ -1716,6 +1722,7 @@ export class NuevaIncorporacionComponent implements OnInit {
                 detail: "Solicitud guardada correctamente."
               }
             ];
+
           }
         },
         error => {
@@ -1915,66 +1922,30 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.solicitudEditar.idProvincia = this.provinciaSelected;
     }
 
-    if (
+    if ( //tipoIdentificacionSelected, solicitudEditar.numeroIdentificacion,tratamientoSelected, solicitudEditar.nombre, solicitudEditar.apellido1
 
       !this.isLetrado
     ) {
       if (
         this.compruebaDNI() &&
-        this.estadoSolicitudSelected != "" &&
-        this.estadoSolicitudSelected != undefined &&
-        this.solicitudEditar.fechaEstado != null &&
-        this.solicitudEditar.fechaEstado != undefined &&
-        this.solicitudEditar.fechaSolicitud != null &&
-        this.solicitudEditar.fechaSolicitud != undefined &&
-        this.tipoSolicitudSelected != "" &&
-        this.tipoSolicitudSelected != undefined &&
-        this.tipoColegiacionSelected != "" &&
-        this.tipoColegiacionSelected != undefined &&
-        this.modalidadDocumentacionSelected != "" &&
-        this.modalidadDocumentacionSelected != undefined &&
-        this.solicitudEditar.correoElectronico != null &&
-        this.solicitudEditar.correoElectronico != undefined &&
-        this.emailValido &&
+        this.estadoSolicitudSelected != "" &&
+        this.estadoSolicitudSelected != undefined &&
         this.tipoIdentificacionSelected != "" &&
         this.tipoIdentificacionSelected != undefined &&
         this.solicitudEditar.numeroIdentificacion != null &&
         this.solicitudEditar.numeroIdentificacion != "" &&
         this.solicitudEditar.numeroIdentificacion != undefined &&
         this.tratamientoSelected != "" &&
-        this.tratamientoSelected != undefined &&
+        this.tratamientoSelected != undefined &&   
         this.solicitudEditar.nombre != null &&
         this.solicitudEditar.nombre != undefined &&
         this.solicitudEditar.nombre != "" &&
         this.solicitudEditar.apellido1 != null &&
         this.solicitudEditar.apellido1 != "" &&
-        this.solicitudEditar.apellido1 != undefined &&
-        this.solicitudEditar.fechaNacimiento != null &&
-        this.solicitudEditar.fechaNacimiento != undefined &&
-        this.paisSelected != undefined &&
-        this.solicitudEditar.domicilio != null &&
-        this.solicitudEditar.domicilio != "" &&
-        this.solicitudEditar.domicilio != undefined &&
-        (this.isValidCodigoPostal() || this.isPoblacionExtranjera) &&
-        this.solicitudEditar.codigoPostal != null &&
-        this.solicitudEditar.codigoPostal != undefined &&
-        this.solicitudEditar.codigoPostal != "" &&
-        (
-          (this.solicitudEditar.telefono1 != null &&
-            this.solicitudEditar.telefono1 != "" &&
-            this.solicitudEditar.telefono1 != undefined) || 
-          (this.solicitudEditar.movil != null &&
-            this.solicitudEditar.movil != "" &&
-            this.solicitudEditar.movil != undefined)
-        ) &&
-        this.tlf1Valido && this.tlf2Valido && this.fax1Valido &&
-        this.fax2Valido && this.mvlValido &&
-        this.solicitudEditar.correoElectronico != null &&
-        this.solicitudEditar.correoElectronico != undefined &&
-        this.solicitudEditar.correoElectronico != ""
-      ) {
+        this.solicitudEditar.apellido1 != undefined
+        ) {
 
-        if (this.solicitudEditar.iban != "" &&
+       /*  if (this.solicitudEditar.iban != "" &&
           this.solicitudEditar.iban != undefined && (this.validarIban() &&
             this.solicitudEditar.bic != "" &&
             this.solicitudEditar.bic != undefined &&
@@ -1991,7 +1962,9 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.resaltadoDatos = false;
             return false;
           }
-        }
+        } */
+        this.resaltadoDatos = true;
+        return true;
       } else {
         this.resaltadoDatos = false;
         return false;
@@ -2330,7 +2303,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   styleObligatorioTlf(evento) {
-    if (this.resaltadoDatos && (this.solicitudEditar.telefono1 == undefined || this.solicitudEditar.telefono1 == "") && (this.solicitudEditar.movil == undefined || this.solicitudEditar.movil == "")) {
+    if (this.resaltadoDatosAprobar && (this.solicitudEditar.telefono1 == undefined || this.solicitudEditar.telefono1 == "") && (this.solicitudEditar.movil == undefined || this.solicitudEditar.movil == "")) {
       return this.commonsService.styleObligatorio(evento);
     }
     
@@ -2367,10 +2340,61 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (!this.consulta) {
       if (this.isGuardar()) {
         this.isSave = true;
-        this.guardar(true);
+        if(this.comprobarDatosBancarios() && this.checkBIC()){
+          this.guardar(true);
+        }else{
+         this.datosBancariosErroneos();
+        }
       } else {
         this.muestraCamposObligatorios();
+      } 
+    }
+  }
+
+  comprobarDatosBancarios(){
+    if(( (this.isValidIBAN() || this.isValidIbanExt)&&!this.checkCampoEsVacio(this.solicitudEditar.titular) && !this.checkCampoEsVacio(this.solicitudEditar.iban) && (this.cargo != false || this.abono != false || this.abonoJCS != false)) 
+        || (this.checkCampoEsVacio(this.solicitudEditar.titular) && this.checkCampoEsVacio(this.solicitudEditar.iban)) 
+        || (!this.checkCampoEsVacio(this.solicitudEditar.titular) && this.checkCampoEsVacio(this.solicitudEditar.iban))){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+  checkBIC(){
+    if(this.esIbanExtranjero){
+      if(this.checkCampoEsVacio(this.solicitudEditar.bic)){
+        return false;
       }
+      else{
+        if(this.validarBIC) {
+          return true} 
+        else{
+          return false;
+        }
+      }
+    }else{
+      return true;
+    }
+  }
+
+  datosBancariosErroneos(){
+    if(!this.isValidIBAN()) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.ibanincorrecto");
+
+    if(this.checkCampoEsVacio(this.solicitudEditar.titular)) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.titularrequerido");
+
+    if(this.cargo == false && this.abono == false && this.abonoJCS == false) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.checkboxbancariorequerido");
+
+    if(this.esIbanExtranjero && this.checkCampoEsVacio(this.solicitudEditar.bic)) this.showFail("censo.solicitudesincorporaciones.nuevaincorporacion.bicnecesario");
+
+    if(!this.validarBIC) this.showFail("El BIC no es correcto");
+  }
+
+  checkCampoEsVacio(campo){
+    if(campo != "" && campo != null && campo != undefined){
+      return false;
+    }else{
+      return true;
     }
   }
 
@@ -2382,19 +2406,105 @@ para poder filtrar el dato con o sin estos caracteres*/
           if ((this.solicitudEditar.titular == "" || this.solicitudEditar.titular == undefined) || (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) || (this.solicitudEditar.bic == "" || this.solicitudEditar.bic == undefined) || (this.solicitudEditar.banco == "" || this.solicitudEditar.banco == undefined)) {
             this.muestraCamposObligatoriosBancos();
           }
-        }
 
-        if (this.solicitudEditar.fechaIncorporacion == undefined) {
-          this.muestraCamposObligatoriosAprobar();
-        }
+          if (this.solicitudEditar.fechaIncorporacion == undefined) {
+          //  if (this.solicitudEditar.fechaIncorporacion == undefined) {
+            this.muestraCamposObligatoriosAprobar();
+          }
 
-        if (!this.resaltadoDatosAprobar && !this.resaltadoDatosBancos) {
+          if (!this.resaltadoDatosAprobar && !this.resaltadoDatosBancos) {
+            this.validateAprobarSolitud();
+          }
+        } else {
           this.validateAprobarSolitud();
         }
-      } else {
-        this.validateAprobarSolitud();
       }
+    }else{
+      this.muestraCamposObligatoriosAprobar();
     }
+  }
+
+  checkCamposObligatoriosAprobar(): boolean{
+    if (
+            !this.isLetrado
+          ) {
+            if (
+              this.compruebaDNI() &&
+              this.estadoSolicitudSelected != "" &&
+              this.estadoSolicitudSelected != undefined &&
+              this.solicitudEditar.fechaEstado != null &&
+              this.solicitudEditar.fechaEstado != undefined &&
+              this.solicitudEditar.fechaSolicitud != null &&
+              this.solicitudEditar.fechaSolicitud != undefined &&
+              this.tipoSolicitudSelected != "" &&
+              this.tipoSolicitudSelected != undefined &&
+              this.tipoColegiacionSelected != "" &&
+              this.tipoColegiacionSelected != undefined &&
+              this.modalidadDocumentacionSelected != "" &&
+              this.modalidadDocumentacionSelected != undefined &&
+              this.solicitudEditar.correoElectronico != null &&
+              this.solicitudEditar.correoElectronico != undefined &&
+              this.emailValido &&
+              this.tipoIdentificacionSelected != "" &&
+              this.tipoIdentificacionSelected != undefined &&
+              this.solicitudEditar.numeroIdentificacion != null &&
+              this.solicitudEditar.numeroIdentificacion != "" &&
+              this.solicitudEditar.numeroIdentificacion != undefined &&
+              this.tratamientoSelected != "" &&
+              this.tratamientoSelected != undefined &&
+              this.solicitudEditar.nombre != null &&
+              this.solicitudEditar.nombre != undefined &&
+              this.solicitudEditar.nombre != "" &&
+              this.solicitudEditar.apellido1 != null &&
+              this.solicitudEditar.apellido1 != "" &&
+              this.solicitudEditar.apellido1 != undefined &&
+              this.paisSelected != undefined &&
+              this.solicitudEditar.domicilio != null &&
+              this.solicitudEditar.domicilio != "" &&
+              this.solicitudEditar.domicilio != undefined &&
+              (this.isValidCodigoPostal() || this.isPoblacionExtranjera) &&
+              this.solicitudEditar.codigoPostal != null &&
+              this.solicitudEditar.codigoPostal != undefined &&
+              this.solicitudEditar.codigoPostal != "" &&
+              (
+                (this.solicitudEditar.telefono1 != null &&
+                  this.solicitudEditar.telefono1 != "" &&
+                  this.solicitudEditar.telefono1 != undefined) || 
+                (this.solicitudEditar.movil != null &&
+                  this.solicitudEditar.movil != "" &&
+                  this.solicitudEditar.movil != undefined)
+              ) &&
+              this.tlf1Valido && this.tlf2Valido && this.fax1Valido &&
+              this.fax2Valido && this.mvlValido &&
+              this.solicitudEditar.correoElectronico != null &&
+              this.solicitudEditar.correoElectronico != undefined &&
+              this.solicitudEditar.correoElectronico != ""
+            ) {
+              if (this.solicitudEditar.iban != "" &&
+                this.solicitudEditar.iban != undefined && (this.validarIban() &&
+                  this.solicitudEditar.bic != "" &&
+                  this.solicitudEditar.bic != undefined &&
+                  this.solicitudEditar.titular != "" &&
+                  this.solicitudEditar.titular != undefined && this.solicitudEditar.titular.trim() != "")) {
+                this.resaltadoDatosAprobar= true;
+                return true;
+              } else {
+                if (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) {
+                  this.resaltadoDatosAprobar= true;
+                  return true;
+                } else {
+                  this.resaltadoDatosAprobar= false;
+                  return false;
+                }
+              }
+            } else {
+              this.resaltadoDatosAprobar= false;
+              return false;
+            }
+          } else {
+            this.resaltadoDatosAprobar= false;
+            return false;
+          }
   }
 
   newDoc(){

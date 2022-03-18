@@ -953,7 +953,8 @@ export class SigaServices {
 
 		return this.http
 			.post(environment.newSigaUrl + this.endpoints[service], formData, {
-				headers: headers
+				headers: headers,
+				observe: 'body'
 			})
 			.map((response) => {
 				return response;

@@ -162,7 +162,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				this.getPlantillas();
 			},
 			(err) => {
-				//console.log(err);
+				console.log(err);
 			}
 		);
 	}
@@ -206,7 +206,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				this.progressSpinner = false;
 			},
 			(err) => {
-				//console.log(err);
+				console.log(err);
 				this.progressSpinner = false;
 			}
 		);
@@ -246,7 +246,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 					
 				},
 				(err) => {
-					//console.log(err);
+					console.log(err);
 				}
 			);
 		}
@@ -315,7 +315,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 					}
 				},
 				(err) => {
-					//console.log(err);
+					console.log(err);
 					this.progressSpinner = false;
 					let message = JSON.parse(err.error).error.message;
 
@@ -368,6 +368,10 @@ export class DialogoComunicacionesComponent implements OnInit {
 			}
 		});
 
+		if (this.datosSeleccionados == null || this.datosSeleccionados == undefined) {
+			this.datosSeleccionados = [];
+		}
+		
 		if (this.datosSeleccionados != null && this.datosSeleccionados != undefined) {
 
 			if (this.consultasSearch != undefined) {
@@ -394,12 +398,18 @@ export class DialogoComunicacionesComponent implements OnInit {
 					this.backTo();
 				},
 				(err) => {
-					//console.log(err);
-					this.showFail(
-						this.translateService.instant(
-							'informesycomunicaciones.comunicaciones.mensaje.envio.error.generar'
-						)
-					);
+					if (JSON.parse(err.error).description != undefined && JSON.parse(err.error).description != null) {
+						this.showFail(
+							JSON.parse(err.error).description
+						);
+					} else {
+						this.showFail(
+							this.translateService.instant(
+								'informesycomunicaciones.comunicaciones.mensaje.envio.error.generar'
+							)
+						);
+					}
+					
 					this.progressSpinner = false;
 				},
 				() => {
@@ -432,7 +442,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				this.keys = JSON.parse(data['body']);
 			},
 			(err) => {
-				//console.log(err);
+				console.log(err);
 			}
 		);
 	}
@@ -566,18 +576,16 @@ export class DialogoComunicacionesComponent implements OnInit {
 									this.showValores = false;
 									this.progressSpinner = false;
 									this.clearPerenne();
-									this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
 									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
 								}
 							},
 							(error) => {
-								//console.log(error);
+								console.log(error);
 
 								this.progressSpinner = false;
 								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
 								sessionStorage.setItem('descargasPendientes', descargasPendientes);
 								this.clearPerenne();
-								this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
 								if (error.message != null && error.message != undefined) {
 									this.showFail(error.message);
 								} else {
@@ -594,7 +602,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				(err) => {
 					this.progressSpinner = false;
 					this.showValores = false;
-					//console.log(err);
+					console.log(err);
 					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
 					sessionStorage.setItem('descargasPendientes', descargasPendientes);
 					this.clearPerenne();
@@ -605,7 +613,6 @@ export class DialogoComunicacionesComponent implements OnInit {
 							mensaje = errDTO.message;
 						}
 					}
-					this.showInfoPerenne('Descargas Pendientes: ' + descargasPendientes);
 					this.showFail(mensaje);
 			},
 			() => {
@@ -649,7 +656,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				this.bodyComunicacion.fechaProgramacion = new Date(n.fecha);
 			},
 			(err) => {
-				//console.log(err);
+				console.log(err);
 			}
 		);
 	}
@@ -700,7 +707,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				// this.plantillas.unshift({ label: this.translateService.instant("tablas.literal.seleccionarTodo"), value: '' });
 			},
 			(err) => {
-				//console.log(err);
+				console.log(err);
 			},
 			() => { }
 		);

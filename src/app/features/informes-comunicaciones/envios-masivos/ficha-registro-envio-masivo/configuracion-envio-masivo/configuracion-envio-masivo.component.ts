@@ -136,6 +136,11 @@ export class ConfiguracionEnvioMasivoComponent implements OnInit {
             let datos = JSON.parse(data["body"]);
             this.body.asunto = datos.asunto;
             this.body.cuerpo = datos.cuerpo;
+            if (datos.idPersona == null){
+              this.showFail(this.translateService.instant(
+                "general.message.datos.generales.remitente"));
+                this.body.idPlantillaEnvios = null;
+            }
           },
             err => {
               //console.log(err);

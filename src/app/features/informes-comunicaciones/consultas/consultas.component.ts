@@ -244,6 +244,8 @@ export class ConsultasComponent implements OnInit {
       }
     } else {
       this.bodySearch.generica = "N";
+      this.bodySearch.idClaseComunicacion = "5";
+      this.bodySearch.permisoejecucion = true;
     }
   }
 
@@ -668,7 +670,10 @@ export class ConsultasComponent implements OnInit {
 
   limpiar() {
     this.bodySearch = new ConsultasSearchItem();
+    //Por defecto a estos valores
     this.bodySearch.generica = "N";
+    this.bodySearch.idClaseComunicacion = "5";
+    this.bodySearch.permisoejecucion = true;
   }
 
   // comboClaseCom() {

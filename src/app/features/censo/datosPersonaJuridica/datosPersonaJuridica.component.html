@@ -11,9 +11,9 @@
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
         <app-servicios-interes *ngSwitchCase="'interes'" (permisosEnlace)="permisosEnlace($event)"></app-servicios-interes>
         <app-datos-generales *ngSwitchCase="'generales'" [openTarjeta]="openTarjeta" (datosTarjeta)="datosTarjeta($event)" (enlacesTarjeta)="enlacesTarjeta($event)" (permisosEnlace)="permisosEnlace($event)"></app-datos-generales>
-        <app-datos-registrales *ngSwitchCase="'registrales'" [openTarjeta]="openTarjeta" (permisosEnlace)="permisosEnlace($event)"></app-datos-registrales>
+        <app-datos-registrales *ngSwitchCase="'registrales'"  [cantidadIntegrantes]="cantidadIntegrantes" [openTarjeta]="openTarjeta" (permisosEnlace)="permisosEnlace($event)"></app-datos-registrales>
         <app-accesoFichaPersona *ngSwitchCase="'notario'" [openTarjeta]="openTarjeta" (permisosEnlace)="permisosEnlace($event)"></app-accesoFichaPersona>
-        <app-datos-integrantes *ngSwitchCase="'integrantes'" [openTarjeta]="openTarjeta" (permisosEnlace)="permisosEnlace($event)"></app-datos-integrantes>
+        <app-datos-integrantes *ngSwitchCase="'integrantes'"  [(cantidadIntegrantes)]="cantidadIntegrantes" [openTarjeta]="openTarjeta" (permisosEnlace)="permisosEnlace($event)"></app-datos-integrantes>
         <app-datos-bancarios *ngSwitchCase="'bancarios'" [openTarjeta]="openTarjeta" (permisosEnlace)="permisosEnlace($event)"></app-datos-bancarios>
         <app-datos-retenciones *ngSwitchCase="'retenciones'" [openTarjeta]="openTarjeta" (permisosEnlace)="permisosEnlace($event)"></app-datos-retenciones>
         <app-datos-direcciones *ngSwitchCase="'direcciones'" [openTarjeta]="openTarjeta" (permisosEnlace)="permisosEnlace($event)"></app-datos-direcciones>

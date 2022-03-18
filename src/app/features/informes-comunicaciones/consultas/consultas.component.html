@@ -16,41 +16,54 @@
       </p>
       <div *ngIf="fichaBusqueda" class="module vista-simple">
         <div class="form-row">
-          <div class="form-group-interlineado col-lg-4 col-md-4">
-            <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
-            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" filterBy="label,labelSinTilde"
-              [options]="modulos" [(ngModel)]="bodySearch.idModulo" class="select-form">
-            </p-dropdown>
-          </div>
-          <div class="form-group-interlineado col-lg-4 col-md-4">
-            <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
-            <input type="text" class="form-control" [(ngModel)]="bodySearch.nombre" pInputText>
-          </div>
-          <div class="form-group-interlineado col-lg-4 col-md-4">
-            <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
-            <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
-          </div>
+         <!-- Modulo -->
+         <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{'administracion.parametrosGenerales.literal.modulo' | translate}}</label>
+          <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" filterBy="label,labelSinTilde"
+            [options]="modulos" [(ngModel)]="bodySearch.idModulo" class="select-form">
+          </p-dropdown>
         </div>
-        <div class="form-row d-flex align-items-end">
-
-          <div class="form-group-interlineado col-lg-4 col-md-4">
-            <label>{{'informesycomunicaciones.consultas.objetivo' | translate}}</label>
-            <p-dropdown [showClear]="true" [options]="objetivos" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="bodySearch.idObjetivo"
-              class="select-form"></p-dropdown>
-          </div>
-          <div class="form-group-interlineado col-lg-4 col-md-4">
-            <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
-            <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="clasesComunicaciones"
-              [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form">
-            </p-dropdown>
-          </div>
-          <div class="form-group-interlineado col-lg-4 col-md-4">
-            <label class="d-block">{{'informesycomunicaciones.consultas.generica' | translate}}</label>
-            <!-- <p-radioButton class="mr-2" name="groupname" value="S" [(ngModel)]="bodySearch.generica" label="Sí"></p-radioButton>
-          <p-radioButton name="groupname" value="N" [(ngModel)]="bodySearch.generica" label="No"></p-radioButton> -->
-            <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
-              class="select-form" [(ngModel)]='bodySearch.generica' [options]="comboGenerica"></p-dropdown>
-          </div>
+        <!--Clase de comunicacones -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{'comunicaciones.literal.claseComunicaciones' | translate}}</label>
+          <p-dropdown [filter]="true" [showClear]="true" placeholder="{{ 'general.boton.seleccionar' | translate }}" [options]="clasesComunicaciones"
+            [(ngModel)]="bodySearch.idClaseComunicacion" class="select-form">
+          </p-dropdown>
+        </div>
+        <!-- Nombre -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{"administracion.parametrosGenerales.literal.nombre" | translate}}</label>
+          <input type="text" class="form-control" [(ngModel)]="bodySearch.nombre" pInputText>
+        </div>
+        <!-- Descripcion -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}</label>
+          <input type="text" class="form-control" [(ngModel)]="bodySearch.descripcion" pInputText>
+        </div>
+      </div>
+      <div class="form-row d-flex align-items-end">
+        <!-- Objetivo -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{'informesycomunicaciones.consultas.objetivo' | translate}}</label>
+          <p-dropdown [showClear]="true" [options]="objetivos" placeholder="{{ 'general.boton.seleccionar' | translate }}" [(ngModel)]="bodySearch.idObjetivo"
+            class="select-form"></p-dropdown>
+        </div>
+        <!-- Generica -->
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label class="d-block">{{'informesycomunicaciones.consultas.generica' | translate}}</label>
+          <!-- <p-radioButton class="mr-2" name="groupname" value="S" [(ngModel)]="bodySearch.generica" label="Sí"></p-radioButton>
+        <p-radioButton name="groupname" value="N" [(ngModel)]="bodySearch.generica" label="No"></p-radioButton> -->
+          <p-dropdown [filter]="true" [showClear]="true" filterBy="label,labelSinTilde" placeholder="{{'general.boton.seleccionar' | translate}}"
+            class="select-form" [(ngModel)]='bodySearch.generica' [options]="comboGenerica"></p-dropdown>
+        </div>
+        <!-- Mostrar Consultas con Permiso Ejecucion -->
+        <div class="form-group-interlineado col-lg-6 col-md-6" id="checkboxPermisoEjecucionDiv">
+          <br>
+          <label id="permisoEjecucionLabel"> 
+            <p-checkbox [(ngModel)]='bodySearch.permisoejecucion' binary="true" id="checkboxPermisoEjecucion"></p-checkbox> 
+            {{'informescomunicaciones.consultas.permisoejecucionchecklabel' | translate}}
+          </label>   
+        </div>
 
         </div>
       </div>

@@ -222,19 +222,22 @@ export class GestionAuditoriaComponent extends SigaWrapper implements OnInit {
   arreglarFechas() {
     let returnEntrada = JSON.stringify(this.itemBody.fechaEntrada);
     let returnEfectiva = JSON.stringify(this.itemBody.fechaEfectiva);
-    returnEntrada = returnEntrada.substring(1, 11);
-    returnEfectiva = returnEfectiva.substring(1, 11);
-    let arrayEntrada = returnEntrada.split("-");
-    let arrayEfectiva = returnEfectiva.split("-");
 
-    this.itemBody.fechaEntrada = new Date();
-    this.itemBody.fechaEntrada.setFullYear(parseInt(arrayEntrada[2]), parseInt(arrayEntrada[1]), parseInt(arrayEntrada[0]));
+    returnEntrada = returnEntrada.replace(' ', 'T');
+    returnEfectiva = returnEfectiva.replace(' ', 'T');
 
-    this.itemBody.fechaEfectiva = new Date(returnEfectiva);
-    this.itemBody.fechaEfectiva.setFullYear(parseInt(arrayEfectiva[2]), parseInt(arrayEfectiva[1]), parseInt(arrayEfectiva[0]));
+    returnEntrada = returnEntrada.replace(/\"/g, '');
+    returnEfectiva = returnEfectiva.replace(/\"/g, '');
+    // returnEntrada = returnEntrada.substring(1, 11);
+    // returnEfectiva = returnEfectiva.substring(1, 11);
+    // let arrayEntrada = returnEntrada.split("-");
+    // let arrayEfectiva = returnEfectiva.split("-");
 
+    this.itemBody.fechaEntrada = new Date(returnEntrada);
+    //this.itemBody.fechaEntrada.setFullYear(parseInt(arrayEntrada[2]), parseInt(arrayEntrada[1]), parseInt(arrayEntrada[0]));
 
-    this
+    this.itemBody.fechaEfectiva =  new Date(returnEfectiva);
+    //this.itemBody.fechaEfectiva.setFullYear(parseInt(arrayEfectiva[2]), parseInt(arrayEfectiva[1]), parseInt(arrayEfectiva[0]));
   }
 
   styleObligatorio(evento){

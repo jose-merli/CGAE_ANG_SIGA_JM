@@ -72,6 +72,8 @@ export class DatosIntegrantesComponent implements OnInit {
   isValidate: boolean;
 
   tarjeta: string;
+  @Input() cantidadIntegrantes; 
+  @Output() cantidadIntegrantesChange = new EventEmitter<any>(); 
   @Input() openTarjeta;
   @Output() permisosEnlace = new EventEmitter<any>();
 
@@ -252,7 +254,8 @@ export class DatosIntegrantesComponent implements OnInit {
             this.progressSpinner = false;
             this.searchIntegrantes = JSON.parse(data["body"]);
             this.datos = this.searchIntegrantes.datosIntegrantesItem;
-            // //console.log(this.datos);
+            // console.log(this.datos);
+            this.cantidadIntegrantesChange.emit(this.datos.length); 
             this.datos = this.datos.map(it => {
               it.nombreApel = it.apellidos.trim() + ", " + it.nombre;
               return it;
@@ -273,6 +276,8 @@ export class DatosIntegrantesComponent implements OnInit {
             this.progressSpinner = false;
            }
         );
+    }else{
+      this.progressSpinner = false;
     }
   }
 
@@ -337,6 +342,7 @@ export class DatosIntegrantesComponent implements OnInit {
     let menuProcede = this.translateService.instant("menu.censo");
     sessionStorage.setItem("migaPan", migaPan);
     sessionStorage.setItem("menuProcede", menuProcede);
+    sessionStorage.setItem("AddDestinatarioIndv", "true");
 
     this.router.navigate(["/busquedaGeneral"]);
   }

@@ -254,7 +254,12 @@ export class ConsultarDatosDireccionesComponent implements OnInit {
           this.fechaModificacion;
         // this.showInfo('Fecha de modificación:' + this.fechaModificacion);
       }
-      this.onChangePais();
+      
+      if (this.body.idPais != null) {
+        this.onChangePais();
+      } else {
+        this.body.idPais = "";
+      }
 
       // this.isDisabledProvincia = true;
     } else {
@@ -1235,7 +1240,12 @@ para poder filtrar el dato con o sin estos caracteres*/
         (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null || this.body.idTipoDireccion.length==0)){
           this.muestraCamposObligatorios();
         }else{
-          this.comprobarAuditoria('noletrado');
+          if (!this.codigoPostalValido && this.body.idPais == "191") {
+            this.showFail("El código postal debe tener 5 dígitos");
+            return false;
+          } else {
+            this.comprobarAuditoria('noletrado');
+          }
         }
       }
     }
@@ -1249,7 +1259,11 @@ para poder filtrar el dato con o sin estos caracteres*/
         (this.body.idTipoDireccion==undefined || this.body.idTipoDireccion==null)){
           this.muestraCamposObligatorios();
         }else{
-          this.comprobarAuditoria('letrado');
+          if (!this.codigoPostalValido && this.body.idPais == "191") {
+            this.showFail("El código postal debe tener 5 dígitos");
+          } else {
+            this.comprobarAuditoria('letrado');
+          }
         }
       }
     }

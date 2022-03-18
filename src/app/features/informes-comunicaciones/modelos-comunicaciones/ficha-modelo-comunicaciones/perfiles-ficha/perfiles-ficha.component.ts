@@ -68,19 +68,15 @@ export class PerfilesFichaComponent implements OnInit {
       if (sessionStorage.getItem("soloLectura") == 'true') {
         this.soloLectura = true;
       }
-
-      if (sessionStorage.getItem("esPorDefecto") == 'SI' && this.institucionActual != 2000) {
-        this.soloLectura = true;
-      } else {
-        this.body = JSON.parse(sessionStorage.getItem('modelosSearch'));
-        if (this.body != null && this.body != undefined && this.body.porDefecto == 'SI' && this.institucionActual != 2000) {
-          if (
-            sessionStorage.getItem("soloLectura") != null &&
-            sessionStorage.getItem("soloLectura") != undefined &&
-            sessionStorage.getItem("soloLectura") == "true"
-          ) {
-            this.soloLectura = true;
-          }
+      
+      this.body = JSON.parse(sessionStorage.getItem('modelosSearch'));
+      if (this.body != null && this.body != undefined && this.body.porDefecto == 'SI' && this.institucionActual != 2000) {
+        if (
+          sessionStorage.getItem("soloLectura") != null &&
+          sessionStorage.getItem("soloLectura") != undefined &&
+          sessionStorage.getItem("soloLectura") == "true"
+        ) {
+          this.soloLectura = true;
         }
       }
 

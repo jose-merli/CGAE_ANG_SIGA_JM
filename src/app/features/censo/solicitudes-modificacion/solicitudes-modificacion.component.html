@@ -135,7 +135,7 @@
   <app-dialog></app-dialog>
 
   <!-- DIÁLOGO SOL. MOD. GENERAL -->
-  <p-dialog [(visible)]="displayGeneralRequest" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-dialog [(visible)]="displayGeneralRequest" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500" (onHide)="closeDialog()">
     <p-header class="title">
       <label>{{ "general.ventana.cgae" | translate }} {{ "censo.solicitudModificacion.literal.titulo" | translate }}
       </label>

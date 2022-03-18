@@ -1089,6 +1089,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.revisionCuentas = true;
           this.registroEditable = sessionStorage.getItem("editar");
           if (this.registroEditable == "false") {
+            this.body.motivo = 'Insertada nueva cuenta bancaria';
+
             if (this.isLetrado) {
               this.solicitarGuardarRegistro();
             } else {
@@ -1144,6 +1146,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.revisionCuentas = true;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
+          this.body.motivo = 'Insertada nueva cuenta bancaria';
+
           if (this.isLetrado) {
             this.solicitarGuardarRegistro();
           } else {
@@ -1226,6 +1230,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.revisionCuentas = true;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
+          this.body.motivo = 'Insertada nueva cuenta bancaria';
+          
           if (this.isLetrado) {
             this.solicitarGuardarRegistro();
           } else {
@@ -1251,6 +1257,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.body.noRevisarServicios = true;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
+          this.body.motivo = 'Insertada nueva cuenta bancaria';
+
           this.body.noRevisarServicios = true;
           if (this.isLetrado) {
             this.solicitarGuardarRegistro();
@@ -1355,6 +1363,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
             this.revisionCuentas = false;
             this.registroEditable = sessionStorage.getItem("editar");
             if (this.registroEditable == "false") {
+              this.body.motivo = 'Insertada nueva cuenta bancaria';
+
               if (this.isLetrado) {
                 this.solicitarGuardarRegistro();
               } else {
@@ -1392,6 +1402,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.revisionCuentas = false;
           this.registroEditable = sessionStorage.getItem("editar");
           if (this.registroEditable == "false") {
+            this.body.motivo = 'Insertada nueva cuenta bancaria';
+
             if (this.isLetrado) {
               this.solicitarGuardarRegistro();
             } else {
@@ -1417,6 +1429,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.revisionCuentas = false;
           this.registroEditable = sessionStorage.getItem("editar");
           if (this.registroEditable == "false") {
+            this.body.motivo = 'Insertada nueva cuenta bancaria';
+
             if (this.isLetrado) {
               this.solicitarGuardarRegistro();
             } else {
@@ -1441,6 +1455,8 @@ export class ConsultarDatosBancariosComponent implements OnInit {
         this.revisionCuentas = false;
         this.registroEditable = sessionStorage.getItem("editar");
         if (this.registroEditable == "false") {
+          this.body.motivo = 'Insertada nueva cuenta bancaria';
+          
           if (this.isLetrado) {
             this.solicitarGuardarRegistro();
           } else {

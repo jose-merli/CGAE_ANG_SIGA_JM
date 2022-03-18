@@ -73,6 +73,21 @@ export class DatosGeneralesFichaComponent implements OnInit {
       { label: "Sí", value: 1 }
     ];
 
+    this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
+    if (this.bodyModelo) {
+      if (this.bodyModelo.fechaBaja != null && this.bodyModelo.fechaBaja != "") {
+        sessionStorage.setItem("soloLectura", "true");
+      } else {
+        sessionStorage.setItem("soloLectura", "false");
+      }
+  
+      if (this.bodyModelo.porDefecto == 'SI') {
+        sessionStorage.setItem("esPorDefecto", "SI");
+      } else {
+        sessionStorage.setItem("esPorDefecto", "NO");
+      }
+    }
+
     this.getInstitucion();
 
     this.getClasesComunicaciones();
@@ -250,7 +265,6 @@ export class DatosGeneralesFichaComponent implements OnInit {
         this.soloLectura = true;
       } else {
 
-        this.bodyModelo = JSON.parse(sessionStorage.getItem('modelosSearch'));
         if (this.bodyModelo != undefined && this.bodyModelo != null) {
           if (this.bodyModelo.porDefecto == 'SI' && this.institucionActual != '2000') {
             if (
@@ -462,6 +476,10 @@ para poder filtrar el dato con o sin estos caracteres*/
         data => {
           this.body.tipoEnvio = JSON.parse(data["body"]).tipoEnvio;
           this.body.idTipoEnvio = JSON.parse(data["body"]).idTipoEnvios;
+          if (JSON.parse(data["body"]).idPersona ==null){
+            this.showFail(this.translateService.instant(
+              "general.message.datos.generales.remitente"));
+          }
         },
         err => {
           //console.log(err);
