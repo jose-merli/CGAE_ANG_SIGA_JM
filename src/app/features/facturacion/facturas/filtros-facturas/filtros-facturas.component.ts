@@ -85,6 +85,7 @@ export class FiltrosFacturasComponent implements OnInit {
       this.body.apellidos = busquedaColegiado.apellidos1 + " " + busquedaColegiado.apellidos2;
       this.body.numeroColegiado = busquedaColegiado.numColegiado;
       this.body.idCliente = busquedaColegiado.idPersona;
+      this.isBuscar()
     }else  if(this.isLetrado){  
         this.getDataLoggedUser();
     }
@@ -119,7 +120,7 @@ export class FiltrosFacturasComponent implements OnInit {
     }
     setTimeout(() => {
       this.inputNum.nativeElement.focus();  
-      if(!this.isLetrado)this.isBuscar();
+      //if(this.isLetrado)this.isBuscar();
     }, 300);
     
   }
@@ -150,8 +151,8 @@ export class FiltrosFacturasComponent implements OnInit {
       usr => {
         const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
         let nombreCompleto = nombre.split(',');
-        this.body.nombre = nombreCompleto[1];
-        this.body.apellidos = nombreCompleto[0];
+        this.body.nombre = nombreCompleto[1].trim();
+        this.body.apellidos = nombreCompleto[0].trim();
         this.body.numeroColegiado = numColegiado;
         this.nombreAux = this.body.nombre;
         this.apellidoAux = this.body.apellidos;

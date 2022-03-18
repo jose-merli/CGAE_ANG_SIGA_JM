@@ -83,6 +83,7 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre;
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.numColegiado;
       this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
+      this.searchAbonos();
     }else if(this.isLetrado){  
         this.getDataLoggedUser();
     }
@@ -102,10 +103,6 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       this.idPersona = busquedaColegiado.idPersona;
       if (this.idPersona == undefined) this.idPersona = busquedaColegiado.idpersona;
     }
-
-    if(!this.isLetrado)this.searchAbonos()
-
-
   }
 
   getDataLoggedUser() {

@@ -130,7 +130,7 @@
               </div>
               <div class="form-group-interlineado col-lg-3 col-md-3">
                 <label>{{ "facturacionSJCS.filtros.abonosSJCS.numIdentificacion" | translate }}</label>
-                <input type="text" class="form-control" [(ngModel)]="body.numeroIdentificacion" pInputText />
+                <input [disabled]="isLetrado" ltype="text" class="form-control" [(ngModel)]="body.numeroIdentificacion" pInputText />
               </div>
             </div>
           </div>
