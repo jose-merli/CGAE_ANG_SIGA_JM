@@ -129,6 +129,8 @@ export class NuevaIncorporacionComponent implements OnInit {
   fechaActual: Date = new Date();
   private DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE";
 
+  guardado: boolean = false;
+
   isActivoEXEA : boolean = false;
   //TABLA DOCUMENTACION
   rowsPerPage: any = [];
