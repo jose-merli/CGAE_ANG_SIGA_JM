@@ -118,10 +118,13 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
   isColegiado() {
 
     this.esColegiado = true;
-
+    
     this.filtros.ncolegiado = this.sigaStorageService.numColegiado;
     this.filtros.idPersona = this.sigaStorageService.idPersona;
-    this.filtros.apellidosNombre = this.sigaStorageService.nombreApe;
+     //MODIFICADO POR CROMAN PARA PODER REALIZAR EL VÍDEO DE CARTAS DE PAGO Y FACTURACIÓN, NO APARECÍA EL NOMBRE Y APELLIDO DEL COLEGIADO EN EL BUSCADOR EXPRÉS 
+    //this.filtros.apellidosNombre = this.sigaStorageService.nombreApe;
+    let nombre  = JSON.parse(sessionStorage.getItem('personaBody'));
+    this.filtros.apellidosNombre = nombre.nombre;
 
     this.showDatosColegiado = true;
   }
