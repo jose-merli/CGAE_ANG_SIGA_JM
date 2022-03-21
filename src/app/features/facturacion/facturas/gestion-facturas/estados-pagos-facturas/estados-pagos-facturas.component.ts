@@ -206,7 +206,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   }
 
   esUltimoEstadoFactura() {
-    return this.grupos[this.grupos.length - 1].key != this.numeroAbono;
+    return this.numeroAbono == undefined || this.grupos[this.grupos.length - 1].key != this.numeroAbono;
   }
 
   // Visibilidad de las acciones
