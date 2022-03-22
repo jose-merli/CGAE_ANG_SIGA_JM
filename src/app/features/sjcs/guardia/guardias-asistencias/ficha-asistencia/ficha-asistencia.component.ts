@@ -462,7 +462,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           this.tarjetaFija.campos[1]["value"] = newAsistenciaData.fechaAsistencia.substr(0, 11);
           this.tarjetaFija.campos[2]["value"] = newAsistenciaData.numeroColegiado + " - " + newAsistenciaData.nombreColegiado;
           this.tarjetaFija.campos[3]["value"] = newAsistenciaData.asistido;
-          this.tarjetaFija.campos[4]["value"] = newAsistenciaData.descripcionEstado.toUpperCase();
+          this.tarjetaFija.campos[4]["value"] = newAsistenciaData.descripcionEstado ? newAsistenciaData.descripcionEstado.toUpperCase() : "";
           this.tarjetaFija.campos[5]["value"] = newAsistenciaData.numeroActuaciones;
           this.tarjetaFija.campos[6]["value"] = newAsistenciaData.validada;
 
@@ -701,7 +701,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           this.tarjetaFija.campos[1]["value"] = newAsistenciaData.fechaAsistencia.substr(0, 11);
           this.tarjetaFija.campos[2]["value"] = newAsistenciaData.numeroColegiado + " - " + newAsistenciaData.nombreColegiado;
           this.tarjetaFija.campos[3]["value"] = newAsistenciaData.asistido;
-          this.tarjetaFija.campos[4]["value"] = newAsistenciaData.descripcionEstado.toUpperCase();
+          this.tarjetaFija.campos[4]["value"] = newAsistenciaData.descripcionEstado ? newAsistenciaData.descripcionEstado.toUpperCase() : "";
           this.tarjetaFija.campos[5]["value"] = newAsistenciaData.numeroActuaciones;
           this.tarjetaFija.campos[6]["value"] = newAsistenciaData.validada;
 
