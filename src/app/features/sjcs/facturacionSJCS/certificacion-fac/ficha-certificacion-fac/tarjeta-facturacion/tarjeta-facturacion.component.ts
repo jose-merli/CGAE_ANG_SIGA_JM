@@ -211,9 +211,13 @@ export class TarjetaFacturacionComponent implements OnInit {
   }
 
   save() {
-    this.isNuevo = false;
-    this.progressSpinner = true;
-    this.saveFact.emit(this.idFacturacion)
+    // Verficiar si la factura esta vácia para tratar error.
+    if (this.idFacturacion != undefined || this.idFacturacion != null) {
+      this.isNuevo = false;
+      this.progressSpinner = true;
+      this.saveFact.emit(this.idFacturacion)
+      this.idFacturacion = null;
+    }
   }
 
   confirmDelete() {
@@ -237,45 +241,53 @@ export class TarjetaFacturacionComponent implements OnInit {
       this.progressSpinner = true;
       let factCert: CertificacionesItem[] = [];
       for (let cert of this.selectedDatos) {
-        let certf: CertificacionesItem = new CertificacionesItem();
-        certf.idCertificacion = this.idCertificacion;
-        certf.idFacturacion = cert.idFacturacion;
-        factCert.push(certf)
+        // Verificar que no venga la factura sin datos para tratar error.
+        if (cert.idFacturacion != null || cert.idFacturacion != undefined) {
+          let certf: CertificacionesItem = new CertificacionesItem();
+          certf.idCertificacion = this.idCertificacion;
+          certf.idFacturacion = cert.idFacturacion;
+          factCert.push(certf)
+        }
       }
 
-      this.sigaServices.post("certificaciones_delFactCertificacion", factCert).subscribe(
-        data => {
-          this.progressSpinner = false;
+      // Comprobar que la lista de Certificados tenga datos.
+      if (factCert.length > 0) {
+        this.sigaServices.post("certificaciones_delFactCertificacion", factCert).subscribe(
+          data => {
+            this.progressSpinner = false;
 
-          const res = JSON.parse(data.body);
-          this.restablecer()
+            const res = JSON.parse(data.body);
+            this.restablecer()
 
-          if (res && res.error && res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "500") {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
-          } else {
-            if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
-              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant(res.error.description));
-            } else {
+            if (res && res.error && res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "500") {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
+            } else {
+              if (res.error != null && res.error.description != null && res.error.code != null && res.error.code.toString() == "200") {
+                this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant(res.error.description));
+              } else {
+                this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(res.error.description));
+              }
             }
-          }
-        },
-        err => {
-          this.progressSpinner = false;
+          },
+          err => {
+            this.progressSpinner = false;
 
-          if (err && (err.status == '403' || err.status == 403)) {
-            sessionStorage.setItem("codError", "403");
-            sessionStorage.setItem(
-              "descError",
-              this.translateService.instant("generico.error.permiso.denegado")
-            );
-            this.router.navigate(["/errorAcceso"]);
+            if (err && (err.status == '403' || err.status == 403)) {
+              sessionStorage.setItem("codError", "403");
+              sessionStorage.setItem(
+                "descError",
+                this.translateService.instant("generico.error.permiso.denegado")
+              );
+              this.router.navigate(["/errorAcceso"]);
+            }
+          },
+          () => {
+            this.getFactCertificaciones(this.idCertificacion);
           }
-        },
-        () => {
-          this.getFactCertificaciones(this.idCertificacion);
-        }
-      );
+        );
+      }
+      // Quitar el indicador de cargando la pagina
+      this.progressSpinner = false;
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("fichaCertificacionSJCS.tarjetaFacturacion.errEstadoEnviado"));
     }
@@ -379,9 +391,9 @@ export class TarjetaFacturacionComponent implements OnInit {
         //llama a servicio para cuando la partida presupuestaria sea NULL
         this.progressSpinner = true;
 
-        this.sigaServices.get("combo_factNull").subscribe(
+        this.sigaServices.post("combo_factNull", this.idCertificacion).subscribe(
           data => {
-            this.comboFactByPartida = data.combooItems;
+            this.comboFactByPartida = JSON.parse(data.body).combooItems;
             this.commonsService.arregloTildesCombo(this.comboFactByPartida);
             this.progressSpinner = false;
           },
