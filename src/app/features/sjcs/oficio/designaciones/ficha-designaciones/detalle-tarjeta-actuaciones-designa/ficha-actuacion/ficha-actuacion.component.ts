@@ -58,90 +58,7 @@ export class FichaActuacionComponent implements OnInit {
     enlaces: []
   };
 
-  listaTarjetas = [
-    {
-      id: 'sjcsDesigActuaOfiDatosGen',
-      nombre: "Datos Generales",
-      imagen: "",
-      icono: 'far fa-address-book',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: [
-        {
-          "key": "Juzgado",
-          "value": ""
-        },
-        {
-          "key": "Módulo",
-          "value": ""
-        },
-        {
-          "key": "Acreditación",
-          "value": ""
-        },
-      ]
-    },
-    {
-      id: 'sjcsDesigActuaOfiJustifi',
-      nombre: "Justificación",
-      imagen: "",
-      icono: 'fa fa-gavel',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: [
-        {
-          "key": "Fecha Justificación",
-          "value": ""
-        },
-        {
-          "key": "Estado",
-          "value": ""
-        },
-      ]
-    },
-    {
-      id: 'sjcsDesigActuaOfiDatFac',
-      nombre: "Datos Facturación",
-      imagen: "",
-      icono: 'fa fa-usd',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: []
-    },
-    {
-      id: 'sjcsDesigActuaOfiRela',
-      nombre: "Relaciones",
-      imagen: "",
-      icono: 'fas fa-link',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: []
-    },
-    {
-      id: 'sjcsDesigActuaOfiHist',
-      nombre: "Histórico",
-      imagen: "",
-      icono: 'fas fa-table',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: []
-    },
-    {
-      id: 'sjcsDesigActuaOfiDoc',
-      nombre: "Documentación",
-      imagen: "",
-      icono: 'fa fa-briefcase',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: []
-    }
-  ];
+  listaTarjetas: any[];
 
   institucionActual: string = '';
   actuacionDesigna: Actuacion;
@@ -155,6 +72,7 @@ export class FichaActuacionComponent implements OnInit {
   isColegiado;
   documentos: DocumentoDesignaItem[] = [];
   modoLectura: boolean = false;
+  modoLecturaDocumentacion: boolean = false;
   permiteTurno: boolean;
   openTarjetaFac: Boolean = false;
 
@@ -166,9 +84,11 @@ export class FichaActuacionComponent implements OnInit {
     private commonsService: CommonsService,
     private router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.getVisibilidadDocumentacion();
+    this.getTarjetasPlegadas();
 
-    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+    await this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
         let permisoEscritura = respuesta;
 
@@ -236,6 +156,25 @@ export class FichaActuacionComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
+    this.goTop();
+
+    this.listaTarjetas.forEach(tarj => {
+      let tarjTmp = {
+        id: tarj.id,
+        ref: document.getElementById(tarj.id),
+        nombre: tarj.nombre
+      };
+
+      this.tarjetaFija.enlaces.push(tarjTmp);
+    });
+
+    let tarjTmp = {
+      id: 'facSJCSTarjFacGene',
+      ref: document.getElementById('facSJCSTarjFacGene'),
+      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+    };
+
+    this.tarjetaFija.enlaces.push(tarjTmp);
   }
 
   cargaInicial() {
@@ -258,28 +197,94 @@ export class FichaActuacionComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit() {
+  getTarjetasPlegadas() {
+    this.listaTarjetas = [
+      {
+        id: 'sjcsDesigActuaOfiDatosGen',
+        nombre: "Datos Generales",
+        imagen: "",
+        icono: 'far fa-address-book',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: [
+          {
+            "key": "Juzgado",
+            "value": ""
+          },
+          {
+            "key": "Módulo",
+            "value": ""
+          },
+          {
+            "key": "Acreditación",
+            "value": ""
+          },
+        ]
+      },
+      {
+        id: 'sjcsDesigActuaOfiJustifi',
+        nombre: "Justificación",
+        imagen: "",
+        icono: 'fa fa-gavel',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: [
+          {
+            "key": "Fecha Justificación",
+            "value": ""
+          },
+          {
+            "key": "Estado",
+            "value": ""
+          },
+        ]
+      },
+      {
+        id: 'sjcsDesigActuaOfiDatFac',
+        nombre: "Datos Facturación",
+        imagen: "",
+        icono: 'fa fa-usd',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: []
+      },
+      {
+        id: 'sjcsDesigActuaOfiRela',
+        nombre: "Relaciones",
+        imagen: "",
+        icono: 'fas fa-link',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: []
+      },
+      {
+        id: 'sjcsDesigActuaOfiHist',
+        nombre: "Histórico",
+        imagen: "",
+        icono: 'fas fa-table',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: []
+      }
+    ];
 
-    this.goTop();
-
-    this.listaTarjetas.forEach(tarj => {
-      let tarjTmp = {
-        id: tarj.id,
-        ref: document.getElementById(tarj.id),
-        nombre: tarj.nombre
-      };
-
-      this.tarjetaFija.enlaces.push(tarjTmp);
-    });
-
-    let tarjTmp = {
-      id: 'facSJCSTarjFacGene',
-      ref: document.getElementById('facSJCSTarjFacGene'),
-      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
-    };
-
-    this.tarjetaFija.enlaces.push(tarjTmp);
-
+    if (this.modoLecturaDocumentacion) {
+      this.listaTarjetas.push({
+        id: 'sjcsDesigActuaOfiDoc',
+        nombre: "Documentación",
+        imagen: "",
+        icono: 'fa fa-briefcase',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: []
+      });
+    }
   }
 
   isOpenReceive(event) {
@@ -588,7 +593,9 @@ export class FichaActuacionComponent implements OnInit {
     }
 
     this.getAccionesActuacion();
-    this.getDocumentosPorActDesigna();
+    if (this.modoLecturaDocumentacion) {
+      this.getDocumentosPorActDesigna();
+    }
   }
 
   getDocumentosPorActDesigna() {
@@ -662,6 +669,17 @@ export class FichaActuacionComponent implements OnInit {
       }
     );
 
+  }
+
+  getVisibilidadDocumentacion() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDocumentacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaDocumentacion = permisoEscritura != undefined;
+
+        this.getTarjetasPlegadas();
+      }
+      ).catch(error => console.error(error));
   }
 
   guardarDatos() {
