@@ -20,7 +20,7 @@
             </div>
         </div>
     </div> 
-    <div *ngFor='let row of rowGroups; let i = index' class="table-row child">
+    <div *ngFor='let row of rowGroups | slice:from:to; let i = index' class="table-row child">
      
               <div (click)="selectRow(i, row)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}">
             
