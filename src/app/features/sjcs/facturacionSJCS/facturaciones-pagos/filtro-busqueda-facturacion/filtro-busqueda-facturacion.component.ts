@@ -180,12 +180,21 @@ export class FiltroBusquedaFacturacionComponent extends SigaWrapper implements O
 			this.filtrosPagos.idFacturacion = this.filtrosFacturacion.idFacturacion
 			this.filtrosPagos.idConcepto = this.filtrosFacturacion.idConcepto
 			this.filtrosPagos.idPartidaPresupuestaria = this.filtrosFacturacion.idPartidaPresupuestaria
+			// Filtro para pagos que tienen tambien en facturas.
+			this.filtrosPagos.idEstado = this.filtrosFacturacion.idEstado;
+			this.filtrosPagos.nombre = this.filtrosFacturacion.nombre;
+			this.filtrosPagos.idConcepto = this.filtrosFacturacion.idConcepto;
+			
 		}else if(this.selectedValue == "facturacion"){
 			this.filtrosFacturacion.fechaDesde = this.filtrosPagos.fechaDesde;
 			this.filtrosFacturacion.fechaHasta = this.filtrosPagos.fechaHasta;
 			this.filtrosFacturacion.idFacturacion = this.filtrosPagos.idFacturacion
 			this.filtrosFacturacion.idConcepto = this.filtrosPagos.idConcepto
 			this.filtrosFacturacion.idPartidaPresupuestaria = this.filtrosPagos.idPartidaPresupuestaria
+			// Filtro para pagos que tienen tambien en facturas.
+			this.filtrosFacturacion.idEstado = this.filtrosPagos.idEstado;
+			this.filtrosPagos.nombre = this.filtrosFacturacion.nombre;
+			this.filtrosPagos.idConcepto = this.filtrosFacturacion.idConcepto;
 		}
 		this.cambiaBuscar.emit(false);
 		this.isBuscar()
