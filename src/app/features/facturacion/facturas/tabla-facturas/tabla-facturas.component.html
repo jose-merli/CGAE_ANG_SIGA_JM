@@ -39,7 +39,7 @@
           <td class="text-center" *ngFor="let col of columns">
 
             <div *ngIf="col.field == 'numeroFactura'">
-              <a class="enlace" (click)="openTab(dato)"><span>{{ dato[col.field] }}</span></a>
+              <a class="enlace" (click)="openTab(dato)"><span>{{ dato[col.field] != null ? dato[col.field] : ('facturacionPyS.facturas.sinNumero' | translate) }}</span></a>
             </div>
 
             <div *ngIf="col.field == 'fechaEmision'">
@@ -75,7 +75,7 @@
               <span>{{ dato[col.field] }}</span>
             </div>
 
-            <div *ngIf="dato[col.field] == null ">
+            <div *ngIf="dato[col.field] == null && col.field != 'numeroFactura'">
               <span class="pull-right">-</span>
             </div>
           </td>

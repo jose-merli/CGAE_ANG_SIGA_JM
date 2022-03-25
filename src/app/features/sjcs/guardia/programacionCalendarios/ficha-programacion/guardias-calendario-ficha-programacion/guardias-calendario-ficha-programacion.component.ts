@@ -110,7 +110,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
 
 
   ngOnInit() {
-    if(this.estado == "Pendiente" || this.estado == "Programada"){
+    if(this.permisoEscritura && (this.estado == "Pendiente" || this.estado == "Programada")){
       this.isDisabledNuevo = false;
     }else{
       this.isDisabledNuevo = true;
@@ -601,10 +601,12 @@ setGuardiasCalendario(guardiaCalendario){
           'turno': nrg.cells[1].value,
           'guardia': nrg.cells[2].value,
           'generado': nrg.cells[3].value,
-          'idGuardia': nrg.cells[2].value
+          'idGuardia': nrg.cells[2].value,
+          'nuevo': nrg.cells.length <= 5
         });
         newList.push(responseObject);
     })
+
     if (this.idConjuntoGuardiaElegido != 0){
       this.saveGuardiasConjunto(newList);  
     }else{

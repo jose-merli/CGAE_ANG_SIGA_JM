@@ -190,7 +190,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
           tarj.detalle = false;
         }
       });
-    } else {
+    } else if (this.actuacion) {
       //Si la actuacion esta anulada o validada, no se podrá editar de ninguna forma
       if (this.actuacion.anulada == '1' || this.actuacion.validada == 'SÍ') {
         this.editable = false;

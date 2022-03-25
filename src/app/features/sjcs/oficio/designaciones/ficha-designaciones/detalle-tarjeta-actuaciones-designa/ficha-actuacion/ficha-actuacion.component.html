@@ -68,7 +68,7 @@
                     <app-tarjeta-his-ficha-act [listaAcciones]="listaAcciones">
                     </app-tarjeta-his-ficha-act>
                   </div>
-                  <div *ngIf="tarj.nombre == 'Documentación'">
+                  <div *ngIf="tarj.nombre == 'Documentación' && modoLecturaDocumentacion">
                     <app-tarjeta-doc-ficha-act [actuacionDesigna]="actuacionDesigna" [documentos]="documentos"
                       (buscarDocumentosEvent)="getDocumentosPorActDesigna()" [usuarioLogado]="usuarioLogado"
                       [isColegiado]="isColegiado" [isAnulada]="isAnulada" [modoLectura2]="modoLectura">
