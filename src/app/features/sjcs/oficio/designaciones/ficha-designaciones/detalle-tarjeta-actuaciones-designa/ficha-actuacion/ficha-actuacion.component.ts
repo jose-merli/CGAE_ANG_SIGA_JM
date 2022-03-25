@@ -85,9 +85,13 @@ export class FichaActuacionComponent implements OnInit {
     private router: Router) { }
 
   async ngOnInit() {
+    // Obtener los permisos de las tarjetas
     await this.getVisibilidadDocumentacion();
+
+    // Añadimos las tarjetas plegadas a la ficha (permisos ya obtenidos)
     this.getTarjetasPlegadas();
 
+    // Información de la ficha y las tarjetas plegadas
     await this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
         let permisoEscritura = respuesta;
@@ -593,6 +597,8 @@ export class FichaActuacionComponent implements OnInit {
     }
 
     this.getAccionesActuacion();
+
+    // Información de la tarjeta plegada de Documentación
     if (this.modoLecturaDocumentacion) {
       this.getDocumentosPorActDesigna();
     }
