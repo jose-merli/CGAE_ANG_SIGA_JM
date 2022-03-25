@@ -168,7 +168,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
 
   historicoEstados() {
     let idFac;
-
+    let i = 0;
     if (this.modoEdicion) {
       idFac = this.idFacturacion;
     } else if (!this.modoEdicion && undefined != this.body.idFacturacion) {
@@ -182,6 +182,19 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         data => {
           this.estadosFacturacion = data.facturacionItem;
           this.progressSpinnerDatos = false;
+          this.estadosFacturacion.forEach(estadoFac => {
+            // Comprobar que son estados automáticos de la APP Web.
+            if ((estadoFac.desEstado == this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.programada").toUpperCase() || 
+                estadoFac.desEstado  == this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.ejecutada").toUpperCase()  || 
+                estadoFac.desEstado  == this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.abierta").toUpperCase()    || 
+                estadoFac.desEstado  == this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.ejecucion").toUpperCase())   
+                && (estadoFac.nombreUsuModificacion === null) ) {
+                
+                // Nombre para Estado automáticos = 'Automático, SIGA'
+                this.estadosFacturacion[i].nombreUsuModificacion = this.translateService.instant("generico.usuario.automatico").toUpperCase();
+            }
+            i += 1;
+          });
         },
         err => {
           if (null != err.error) {
