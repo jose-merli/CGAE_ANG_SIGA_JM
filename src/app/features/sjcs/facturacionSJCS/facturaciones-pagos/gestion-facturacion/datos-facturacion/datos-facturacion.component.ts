@@ -11,6 +11,7 @@ import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_fa
 import { Router } from '@angular/router';
 import { Enlace } from '../gestion-facturacion.component'
 import { saveAs } from "file-saver/FileSaver";
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-datos-facturacion',
@@ -58,6 +59,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private persistenceService: PersistenceService,
     private router: Router) {
     super(USER_VALIDATIONS);
   }
@@ -189,6 +191,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         }
       );
     }
+
   }
 
   comboPartidasPresupuestarias() {
@@ -338,6 +341,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         this.changeCerrada.emit(true);
         this.historicoEstados();
         this.progressSpinnerDatos = false;
+        this.actualizarDatoAlmacenado();
       },
       err => {
 
@@ -364,6 +368,15 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         this.changeFacturacion.emit(true);
       }
     );
+  }
+
+  actualizarDatoAlmacenado() {
+
+    let dato : FacturacionItem = this.persistenceService.getDatos();
+    dato.idEstado = "50";
+    dato.desEstado = "PROGRAMADA";
+    this.persistenceService.setDatos(dato);
+
   }
 
   reabrir() {
