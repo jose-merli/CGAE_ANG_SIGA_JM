@@ -83,8 +83,8 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
     ];
   }
 
-  // Descargar LOG
-  descargarLog(){
+  // Descargar ficheros de devoluciones
+  descargar(){
     let resHead ={ 'response' : null, 'header': null };
 
     if (this.selectedDatos && this.selectedDatos.length != 0) {
@@ -105,14 +105,14 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
 
 
         saveAs(file, filename);
-        this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+        this.showMessage('success', 'Descargado correcta',  'Fichero descargado correctamente' );
       },
       err => {
         this.progressSpinner = false;
-        this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+        this.showMessage('error','Error en la descarga',  'El fichero no pudo descargarse' );
       });
     } else {
-      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+      this.showMessage('error','Error en la descarga',  'El fichero no pudo descargarse' );
     }
   }
 
