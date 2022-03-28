@@ -172,10 +172,11 @@ export class RelacionesComponent implements OnInit {
         // this.nExpedientes = this.expedientesEcon.length;
         // this.persistenceService.setFiltrosAux(this.expedientesEcon);
         // this.router.navigate(['/gestionEjg']);
-        let pre = new RelacionesItem();
+        /* let pre = new RelacionesItem();
         pre.sjcs = "PRE-DESIGNACION";
-        this.relaciones.push(pre);
+        this.relaciones.push(pre); */
         // this.progressSpinner = false;
+        this.persistenceService.setDatosRelaciones(this.relaciones);
       },
       err => {
         //console.log(err);
@@ -219,9 +220,9 @@ export class RelacionesComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       // this.progressSpinner = true;
       // this.datosEJG();
-      if (evento.data.sjcs == "PRE-DESIGNACION") {
+      /*if (evento.data.sjcs == "PRE-DESIGNACION") {
         this.navigateToFichaPre();
-      }
+      }*/
 
     } else {
       if (evento.data.fechabaja == undefined && this.historico) {
@@ -535,10 +536,10 @@ export class RelacionesComponent implements OnInit {
                 this.router.navigate(['/fichaDesignaciones']);
                       });
         break;
-      case 'PRE-DESIGNACION':
+      /*case 'PRE-DESIGNACION':
 
         this.router.navigate(['/ficha-pre-designacion']);
-        break;
+        break; */
 
       default:
         //Introducir en la BBDD

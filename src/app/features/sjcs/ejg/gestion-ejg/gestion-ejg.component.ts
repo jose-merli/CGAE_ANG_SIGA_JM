@@ -10,6 +10,9 @@ import { procesos_ejg } from '../../../../permisos/procesos_ejg';
 import { ServiciosTramitacionComponent } from './servicios-tramitacion/servicios-tramitacion.component';
 import { EstadosComponent } from './estados/estados.component';
 import { Message } from 'primeng/components/common/api';
+import { ContrariosPreDesignacionComponent } from './relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
+import { DefensaJuridicaComponent } from './relaciones/ficha-pre-designacion/defensa-juridica/defensa-juridica.component';
+import { ProcuradorPreDesignacionComponent } from './relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -48,6 +51,9 @@ export class GestionEjgComponent implements OnInit {
   permisoEscrituraImpugnacion;
   permisoEscrituraRegtel;
   permisoEscrituraComunicaciones;
+  permisoContrarios;
+  permisoProcurador;
+  permisoDefensaJuridica;
 
   iconoTarjetaResumen = "clipboard";
 
@@ -78,6 +84,9 @@ export class GestionEjgComponent implements OnInit {
   openTarjetaRegtel: Boolean = false;
   openTarjetaComunicaciones: Boolean = false;
   openTarjetaFac: Boolean = false;
+  openTarjetaDefensaJuridica: boolean;
+  openTarjetaContrariosPreDesigna: boolean;
+  openTarjetaProcuradorPreDesigna: boolean;
 
   enlacesTarjetaResumen = [];
 
@@ -85,6 +94,9 @@ export class GestionEjgComponent implements OnInit {
 
   @ViewChild(ServiciosTramitacionComponent) tramitacion;
   @ViewChild(EstadosComponent) tarjetaEstadosEJG;
+  @ViewChild(ContrariosPreDesignacionComponent) contrariosPreDesigna;
+  @ViewChild(DefensaJuridicaComponent) defensaJuridica;
+  @ViewChild(ProcuradorPreDesignacionComponent) procuradorPreDesigna;
 
   datosEntradaTarjGenerica: any;
 
@@ -293,7 +305,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResumen = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -302,7 +314,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDatosGenerales = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -311,7 +323,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraServiciosTramitacion = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -320,7 +332,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraUnidadFamiliar = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -329,7 +341,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraExpedientesEconomicos = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -338,16 +350,47 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRelaciones = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
+
+      this.commonsService.checkAcceso(procesos_ejg.defensaJuridica)
+      .then(respuesta => {
+        this.progressSpinner = true;
+        this.permisoDefensaJuridica = respuesta;
+        recibidos++;
+        if(recibidos==16)this.enviarEnlacesTarjeta();
+        this.progressSpinner = false;
+      }
+      ).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.procurador)
+      .then(respuesta => {
+        this.progressSpinner = true;
+        this.permisoProcurador = respuesta;
+        recibidos++;
+        if(recibidos==16)this.enviarEnlacesTarjeta();
+        this.progressSpinner = false;
+      }
+      ).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.contrarios)
+      .then(respuesta => {
+        this.progressSpinner = true;
+        this.permisoContrarios = respuesta;
+        recibidos++;
+        if(recibidos==16)this.enviarEnlacesTarjeta();
+        this.progressSpinner = false;
+      }
+      ).catch(error => console.error(error));
+      this.progressSpinner = false;
 
     //Estados
     this.commonsService.checkAcceso(procesos_ejg.estados)
       .then(respuesta => {
         this.permisoEscrituraEstados = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -356,7 +399,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDocumentacion = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -365,7 +408,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraInformeCalif = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -374,7 +417,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResolucion = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -383,7 +426,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraImpugnacion = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -392,7 +435,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRegtel = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -401,10 +444,13 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraComunicaciones = respuesta;
         recibidos++;
-        if (recibidos == 13) this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
-
+    
+    //Comprobar si el EJG tiene alguna designacion asignada.
+    //Si es asi, esta ficha sera unicamente de consulta, no edicion.
+    this.checkEJGDesignas();
   }
 
   enviarEnlacesTarjeta() {
@@ -463,6 +509,36 @@ export class GestionEjgComponent implements OnInit {
           label: "justiciaGratuita.ejg.datosGenerales.Relaciones",
           value: document.getElementById("relaciones"),
           nombre: "relaciones",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.permisoDefensaJuridica != undefined) {
+        pruebaTarjeta = {
+          label: "justiciaGratuita.ejg.preDesigna.defensaJuridica",
+          value: document.getElementById("defensaJuridica"),
+          nombre: "defensaJuridica",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.permisoContrarios != undefined) {
+        pruebaTarjeta = {
+          label: "justiciaGratuita.ejg.preDesigna.contrarios",
+          value: document.getElementById("contrariosPreDesigna"),
+          nombre: "contrariosPreDesigna",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.permisoProcurador != undefined) {
+        pruebaTarjeta = {
+          label: "justiciaGratuita.oficio.designas.contrarios.procurador",
+          value: document.getElementById("procuradorPreDesigna"),
+          nombre: "procuradorPreDesigna",
         };
 
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
@@ -594,6 +670,26 @@ export class GestionEjgComponent implements OnInit {
     }
   }
 
+  checkEJGDesignas() {
+    this.progressSpinner = true;
+    this.sigaServices.post("gestionejg_getEjgDesigna", this.body).subscribe(
+      n => {
+        let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;
+        if (ejgDesignas.length == 0){
+          this.permisoContrarios = true;
+          this.permisoDefensaJuridica = true;
+          this.permisoProcurador = true;
+        } 
+        else{
+          this.permisoContrarios = false;
+          this.permisoDefensaJuridica = false;
+          this.permisoProcurador = -false;
+        }
+        this.progressSpinner = false;
+      }
+    );
+  }
+
   isOpenReceive(event) {
 
     if (event != undefined) {
@@ -615,6 +711,15 @@ export class GestionEjgComponent implements OnInit {
           break;
         case "estados":
           this.openTarjetaEstados = true;
+          break;
+        case "defensaJuridica":
+          this.defensaJuridica.openDef = true;
+          break;
+        case "contrariosPreDesigna":
+          this.contrariosPreDesigna.openCon = true;
+          break;
+        case "procuradorPreDesigna":
+          this.procuradorPreDesigna.openPro = true;
           break;
         case "documentacion":
           this.openTarjetaDocumentacion = true;

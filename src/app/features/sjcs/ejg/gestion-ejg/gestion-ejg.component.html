@@ -45,6 +45,21 @@
             (actLetradoDesignado)="actualizaLetradoDesignado($event)">
         </app-relaciones>
 
+        <app-defensa-juridica [permisoEscritura]="permisoEscritura" 
+            [permisoDefensaJuridica]="permisoDefensaJuridica" 
+            id="defensaJuridica">
+        </app-defensa-juridica>
+        
+        <app-contrarios-pre-designacion [permisoEscritura]="permisoEscritura"
+            [permisoContrarios]="permisoContrarios" 
+            id="contrariosPreDesigna">
+        </app-contrarios-pre-designacion>
+        
+        <app-procurador-pre-designacion [permisoEscritura]="permisoEscritura" 
+            [permisoProcurador]="permisoProcurador" 
+            id="procuradorPreDesigna">
+        </app-procurador-pre-designacion>
+
         <app-estados *ngIf="permisoEscrituraEstados != undefined && modoEdicion" (opened)="manuallyOpened = $event"
             (idOpened)="isCloseReceive($event)" [tarjetaEstados]="tarjetaEstados" [modoEdicion]="modoEdicion"
             [permisoEscritura]="permisoEscrituraEstados" (modoEdicionSend)="modoEdicionSend($event)"

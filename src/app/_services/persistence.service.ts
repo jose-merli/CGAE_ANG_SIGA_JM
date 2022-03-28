@@ -3,11 +3,11 @@ import { Injectable } from '../../../node_modules/@angular/core';
 
 @Injectable()
 export class PersistenceService {
-
     private filtrosName: string = "filtros";
     private filtrosAuxName: string = "filtroAux";
     private paginacionName: string = "paginacion";
     private datosName: string = "datos";
+    private datosRelaciones: string = "datos";
     private bodyName: string = "body";
     private bodyAuxName: string = "bodyAux";
     private historicoName: string = "historico";
@@ -63,6 +63,15 @@ export class PersistenceService {
 
     getDatos() {
         let data = sessionStorage.getItem(this.datosName);
+        return JSON.parse(data);
+    }
+
+    setDatosRelaciones(relaciones: any[]) {
+        sessionStorage.setItem(this.datosRelaciones, JSON.stringify(relaciones));
+    }
+
+    getDatosRelaciones() {
+        let data = sessionStorage.getItem(this.datosRelaciones);
         return JSON.parse(data);
     }
 

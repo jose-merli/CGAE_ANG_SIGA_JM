@@ -70,10 +70,11 @@
               <span *ngIf="nRelaciones == 1 && tipoRelacion == 'EXPEDIENTE'">{{ relaciones[0].interesado}}</span>
             </label>
 
+            <!-- 
             <label *ngIf="nRelaciones == 1 && tipoRelacion == 'PRE-DESIGNACION'">
               <span *ngIf="nRelaciones == 1 && tipoRelacion == 'PRE-DESIGNACION'"></span>
             </label>
-
+            -->
 
             <i class="fa fa-angle-down ml-auto" (click)="abreCierraFicha('relaciones')"></i>
           </div>
@@ -121,7 +122,7 @@
                   </span>
                 </div>
                 <div *ngIf="checkPre(dato) && col.field == 'sjcs'">
-                  <span *ngIf="isPreDesigna == true" class="enlace" (click)="navigateToFichaPre()">{{dato[col.field]}}</span>
+                  <!-- <span *ngIf="isPreDesigna == true" class="enlace" (click)="navigateToFichaPre()">{{dato[col.field]}}</span>-->
                   <span *ngIf="isPreDesigna == false" class="enlace" (click)="checkPermisosConsultEditRelacion(dato)">{{dato[col.field]}}</span>
                 </div>
                 <!--   <div *ngIf="checkPre(dato) && col.field == sjcs && dato[col.field] != 'PRE-DESIGNACION'">

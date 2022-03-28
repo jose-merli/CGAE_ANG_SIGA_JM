@@ -28,12 +28,12 @@
         <div *ngFor="let rowGroup of rowGroups | slice:from:to" class="table-row-group" #rowGroupEl>
             <div class="table-row parent">
 
-                <!--<span *ngIf="rowGroup.rows.length > 1" class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
+                <span *ngIf="rowGroup.rows.length > 1" class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
                     <span (click)="iconClickChange(iconrightEl, icondownEl)" #iconrightEl><i
                             class="fas fa-chevron-right"></i></span>
                     <span class="collapse" (click)="iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i
                             class="fas fa-chevron-down"></i></span>
-                </span>-->
+                </span>
                 <div (click)="selectRow(rowSelected, rowGroup.id, i)" class="table-row-wrapper hoverBlue"
                     [ngClass]="{'hoverBlue2': isSelected(rowGroup.id), 'fixedBlue': seleccionarTodo}" #rowSelected>
 
