@@ -45,17 +45,17 @@
             (actLetradoDesignado)="actualizaLetradoDesignado($event)">
         </app-relaciones>
 
-        <app-defensa-juridica [permisoEscritura]="permisoEscritura" 
+        <app-defensa-juridica [permisoEscritura]="modoEdicion" 
             [permisoDefensaJuridica]="permisoDefensaJuridica" 
             id="defensaJuridica">
         </app-defensa-juridica>
         
-        <app-contrarios-pre-designacion [permisoEscritura]="permisoEscritura"
+        <app-contrarios-pre-designacion [permisoEscritura]="modoEdicion"
             [permisoContrarios]="permisoContrarios" 
             id="contrariosPreDesigna">
         </app-contrarios-pre-designacion>
         
-        <app-procurador-pre-designacion [permisoEscritura]="permisoEscritura" 
+        <app-procurador-pre-designacion [permisoEscritura]="modoEdicion" 
             [permisoProcurador]="permisoProcurador" 
             id="procuradorPreDesigna">
         </app-procurador-pre-designacion>
