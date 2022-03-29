@@ -611,6 +611,9 @@ import { GestionEjgComponent } from './features/sjcs/ejg/gestion-ejg/gestion-ejg
 import { AddExpedienteComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
 import { ComunicacionesEJGComponent } from './features/sjcs/ejg/gestion-ejg/comunicaciones/comunicaciones-ejg.component';
 import { RegtelEjgComponent } from './features/sjcs/ejg/gestion-ejg/regtel-ejg/regtel-ejg.component';
+import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/procurador-pre-designacion/procurador-pre-designacion.component';
+import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/contrarios-pre-designacion/contrarios-pre-designacion.component';
+import { DefensaJuridicaComponent } from './features/sjcs/ejg/gestion-ejg/defensa-juridica/defensa-juridica.component';
 
 
 import { SigaStorageService } from './siga-storage.service';
@@ -1576,7 +1579,9 @@ import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJ
 		AddExpedienteComponent,
 		ComunicacionesEJGComponent,
 		RegtelEjgComponent,
-		
+		DefensaJuridicaComponent,
+		ProcuradorPreDesignacionComponent,
+ 		ContrariosPreDesignacionComponent,
 		GestionActasComponent,
 
 

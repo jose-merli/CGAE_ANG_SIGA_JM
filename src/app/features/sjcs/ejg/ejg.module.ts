@@ -21,10 +21,6 @@ import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 import { TarjetaResumenFijaModule } from '../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { DialogModule } from 'primeng/dialog';
-import { ProcuradorPreDesignacionComponent } from './gestion-ejg/procurador-pre-designacion/procurador-pre-designacion.component';
-import { ContrariosPreDesignacionComponent } from './gestion-ejg/contrarios-pre-designacion/contrarios-pre-designacion.component';
-import { DefensaJuridicaComponent } from './gestion-ejg/defensa-juridica/defensa-juridica.component';
-
 
 @NgModule({
   imports: [
@@ -45,10 +41,7 @@ import { DefensaJuridicaComponent } from './gestion-ejg/defensa-juridica/defensa
     FechaModule,
     ConfirmDialogModule,
     BusquedaColegiadoExpressModule,
-    TarjetaResumenFijaModule,
-    DefensaJuridicaComponent,
-		ProcuradorPreDesignacionComponent,
- 		ContrariosPreDesignacionComponent,
+    TarjetaResumenFijaModule
   ],
   declarations: [
   ],
