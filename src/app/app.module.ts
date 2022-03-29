@@ -611,7 +611,7 @@ import { GestionEjgComponent } from './features/sjcs/ejg/gestion-ejg/gestion-ejg
 import { AddExpedienteComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
 import { ComunicacionesEJGComponent } from './features/sjcs/ejg/gestion-ejg/comunicaciones/comunicaciones-ejg.component';
 import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
-import { DefensaJuridicaComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/defensa-juridica/defensa-juridica.component';
+import { DefensaJuridicaComponent } from './features/sjcs/ejg/gestion-ejg/defensa-juridica/defensa-juridica.component';
 import { RegtelEjgComponent } from './features/sjcs/ejg/gestion-ejg/regtel-ejg/regtel-ejg.component';
 
 
@@ -734,8 +734,8 @@ import { FichaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos
 
 enableRipple(true);
 
-import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
-import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
+import { ProcuradorPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/procurador-pre-designacion/procurador-pre-designacion.component';
+import { ContrariosPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/contrarios-pre-designacion/contrarios-pre-designacion.component';
 import { GuardiaModule } from './features/sjcs/guardia/guardia.module';
 import { RetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/retenciones.component';
 import { FiltroBusquedaRetencionesComponent } from './features/sjcs/facturacionSJCS/retenciones/filtro-busqueda-retenciones/filtro-busqueda-retenciones.component';
