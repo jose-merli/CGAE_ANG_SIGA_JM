@@ -610,7 +610,6 @@ import { FiltrosEjgComponent } from './features/sjcs/ejg/filtros-busqueda-ejg/fi
 import { GestionEjgComponent } from './features/sjcs/ejg/gestion-ejg/gestion-ejg.component';
 import { AddExpedienteComponent } from './features/sjcs/ejg/gestion-ejg/datos-generales-ejg/add-expediente/add-expediente.component';
 import { ComunicacionesEJGComponent } from './features/sjcs/ejg/gestion-ejg/comunicaciones/comunicaciones-ejg.component';
-import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
 import { RegtelEjgComponent } from './features/sjcs/ejg/gestion-ejg/regtel-ejg/regtel-ejg.component';
 
 
@@ -1081,7 +1080,6 @@ import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJ
 		UnidadFamiliarComponent,
 		ExpedientesEconomicosComponent,
 		RelacionesComponent,
-		FichaPreDesignacionComponent,
 		EstadosComponent,
 		DocumentacionComponent,
 		InformeCalificacionComponent,
@@ -1569,7 +1567,6 @@ import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJ
 		UnidadFamiliarComponent,
 		ExpedientesEconomicosComponent,
 		RelacionesComponent,
-		FichaPreDesignacionComponent,
 		EstadosComponent,
 		DocumentacionComponent,
 		InformeCalificacionComponent,

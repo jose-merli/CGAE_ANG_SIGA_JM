@@ -10,9 +10,9 @@ import { procesos_ejg } from '../../../../permisos/procesos_ejg';
 import { ServiciosTramitacionComponent } from './servicios-tramitacion/servicios-tramitacion.component';
 import { EstadosComponent } from './estados/estados.component';
 import { Message } from 'primeng/components/common/api';
-import { ContrariosPreDesignacionComponent } from './relaciones/ficha-pre-designacion/contrarios-pre-designacion/contrarios-pre-designacion.component';
-import { DefensaJuridicaComponent } from './relaciones/ficha-pre-designacion/defensa-juridica/defensa-juridica.component';
-import { ProcuradorPreDesignacionComponent } from './relaciones/ficha-pre-designacion/procurador-pre-designacion/procurador-pre-designacion.component';
+import { ContrariosPreDesignacionComponent } from './contrarios-pre-designacion/contrarios-pre-designacion.component';
+import { DefensaJuridicaComponent } from './defensa-juridica/defensa-juridica.component';
+import { ProcuradorPreDesignacionComponent } from './procurador-pre-designacion/procurador-pre-designacion.component';
 
 @Component({
   selector: 'app-gestion-ejg',
