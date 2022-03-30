@@ -71,8 +71,15 @@ export class FichaActuacionComponent implements OnInit {
   relaciones: any;
   isColegiado;
   documentos: DocumentoDesignaItem[] = [];
+
   modoLectura: boolean = false;
   modoLecturaDocumentacion: boolean = false;
+  modoLecturaDatosGenerales: boolean = false;
+  modoLecturaJustificacion: boolean = false;
+  modoLecturaDatosFacturacion: boolean = false;
+  modoLecturaRelaciones: boolean = false;
+  modoLecturaHistorico: boolean = false;
+
   permiteTurno: boolean;
   openTarjetaFac: Boolean = false;
 
@@ -86,7 +93,7 @@ export class FichaActuacionComponent implements OnInit {
 
   async ngOnInit() {
     // Obtener los permisos de las tarjetas
-    await this.getVisibilidadDocumentacion();
+    await this.getVisibilidadTarjetas();
 
     // Añadimos las tarjetas plegadas a la ficha (permisos ya obtenidos)
     this.getTarjetasPlegadas();
@@ -202,8 +209,10 @@ export class FichaActuacionComponent implements OnInit {
   }
 
   getTarjetasPlegadas() {
-    this.listaTarjetas = [
-      {
+    this.listaTarjetas = [];
+
+    if (this.modoLecturaDatosGenerales) {
+      this.listaTarjetas.push({
         id: 'sjcsDesigActuaOfiDatosGen',
         nombre: "Datos Generales",
         imagen: "",
@@ -225,8 +234,11 @@ export class FichaActuacionComponent implements OnInit {
             "value": ""
           },
         ]
-      },
-      {
+      });
+    }
+
+    if (this.modoLecturaJustificacion) {
+      this.listaTarjetas.push({
         id: 'sjcsDesigActuaOfiJustifi',
         nombre: "Justificación",
         imagen: "",
@@ -244,8 +256,11 @@ export class FichaActuacionComponent implements OnInit {
             "value": ""
           },
         ]
-      },
-      {
+      });
+    }
+
+    if (this.modoLecturaDatosFacturacion) {
+      this.listaTarjetas.push({
         id: 'sjcsDesigActuaOfiDatFac',
         nombre: "Datos Facturación",
         imagen: "",
@@ -254,8 +269,11 @@ export class FichaActuacionComponent implements OnInit {
         detalle: true,
         opened: false,
         campos: []
-      },
-      {
+      });
+    }
+
+    if (this.modoLecturaRelaciones) {
+      this.listaTarjetas.push({
         id: 'sjcsDesigActuaOfiRela',
         nombre: "Relaciones",
         imagen: "",
@@ -264,8 +282,11 @@ export class FichaActuacionComponent implements OnInit {
         detalle: true,
         opened: false,
         campos: []
-      },
-      {
+      });
+    }
+
+    if (this.modoLecturaHistorico) {
+      this.listaTarjetas.push({
         id: 'sjcsDesigActuaOfiHist',
         nombre: "Histórico",
         imagen: "",
@@ -274,8 +295,8 @@ export class FichaActuacionComponent implements OnInit {
         detalle: true,
         opened: false,
         campos: []
-      }
-    ];
+      });
+    }
 
     if (this.modoLecturaDocumentacion) {
       this.listaTarjetas.push({
@@ -677,13 +698,67 @@ export class FichaActuacionComponent implements OnInit {
 
   }
 
+  getVisibilidadTarjetas() {
+    return Promise.all([
+      this.getVisibilidadDatosGenerales(),
+      this.getVisibilidadJustificacion(),
+      this.getVisibilidadDatosFacturacion(),
+      this.getVisibilidadRelaciones(),
+      this.getVisibilidadHistorico(),
+      this.getVisibilidadDocumentacion()
+    ]);
+  }
+
+  getVisibilidadDatosGenerales() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDatosGenerales)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaDatosGenerales = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  getVisibilidadJustificacion() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesJustificacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaJustificacion = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  getVisibilidadDatosFacturacion() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesFacturacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaDatosFacturacion = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  getVisibilidadRelaciones() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesRelaciones)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaRelaciones = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  getVisibilidadHistorico() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesHistorico)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaHistorico = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
   getVisibilidadDocumentacion() {
     return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDocumentacion)
       .then(respuesta => {
         let permisoEscritura = respuesta;
         this.modoLecturaDocumentacion = permisoEscritura != undefined;
-
-        this.getTarjetasPlegadas();
       }
       ).catch(error => console.error(error));
   }
