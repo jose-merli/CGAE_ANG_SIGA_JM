@@ -7,6 +7,7 @@ import { Message } from "primeng/components/common/api";
 import { TramosLECComponent } from '../../../../sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
 import { TranslateService } from '../../../../../commons/translate';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { saveAs } from "file-saver/FileSaver";
 
 
 @Component({
@@ -251,6 +252,39 @@ export class ProgramacionComponent implements OnInit {
     }else{
       this.muestraCamposObligatorios();
     }
+  }
+
+  downloadLogFile() {
+
+    let objDownload = {      
+      idEnvio: this.body.idEnvio,
+      idInstitucion: this.body.idInstitucion
+    };
+
+    this.sigaServices.post("enviosMasivos_nombreFicheroLog", objDownload).subscribe(
+      response => {
+        let fileInfo = JSON.parse(response["body"]);
+
+        this.sigaServices
+            .postDownloadFiles("enviosMasivos_descargarLog", objDownload)
+            .subscribe(data => {
+              const blob = new Blob([data], { type: "application/octet-stream" });
+              if (blob.size == 0) {          
+                this.showFail(this.translateService.instant(
+                  "message.enviomasivo.log.noexiste"
+                ));          
+
+              } else {
+                saveAs(data, fileInfo.name);
+              }
+            });
+        },
+        err => {
+          this.showFail(this.translateService.instant(
+            "message.enviomasivo.log.noexiste"
+          ));  
+        }
+    );    
   }
 
   onlyCheckDatos(){
