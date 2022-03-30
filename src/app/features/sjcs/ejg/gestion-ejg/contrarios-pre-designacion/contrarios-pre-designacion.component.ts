@@ -275,6 +275,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
             })
         }
         else {
+          sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
           this.router.navigate(["/gestionJusticiables"]);
         }
       },

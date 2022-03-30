@@ -704,7 +704,7 @@ export class RelacionesComponent implements OnInit {
         }
       );
     }
-    else this.router.navigate(["/ficha-pre-designacion"]);
+    //else this.router.navigate(["/ficha-pre-designacion"]); 
   }
 
 
@@ -785,13 +785,13 @@ export class RelacionesComponent implements OnInit {
                 item.nombreJuzgado = n.body;
                 this.progressSpinner = false;
                 sessionStorage.setItem("Designa", JSON.stringify(item));
-                this.router.navigate(["/ficha-pre-designacion"]);
+                //this.router.navigate(["/ficha-pre-designacion"]);
               },
               err => {
                 item.nombreJuzgado = "";
                 this.progressSpinner = false;
                 sessionStorage.setItem("Designa", JSON.stringify(item));
-                this.router.navigate(["/ficha-pre-designacion"]);
+                //this.router.navigate(["/ficha-pre-designacion"]);
               });
           },
           err => {
