@@ -110,7 +110,7 @@ export class DefensaJuridicaComponent implements OnInit {
       //Valor inicial a reestablecer
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
       this.getComboPreceptivo();
       this.getComboRenuncia();
       this.getComboSituaciones();
@@ -145,7 +145,7 @@ export class DefensaJuridicaComponent implements OnInit {
     parametro.modulo = "SCS";
     parametro.parametrosGenerales = "NIG_VALIDADOR";
     if (nig != null && nig != '') {
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
        this.sigaServices
         .postPaginado("parametros_search", "?numPagina=1", parametro)
         .toPromise().then(
@@ -174,7 +174,7 @@ export class DefensaJuridicaComponent implements OnInit {
                 }
               }
             });
-            this.progressSpinner = false;
+            //this.progressSpinner = false;
           }).catch(error => {
             let severity = "error";
             let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
@@ -186,7 +186,7 @@ export class DefensaJuridicaComponent implements OnInit {
             });
             ret = false;
           });
-          this.progressSpinner = false;
+          //this.progressSpinner = false;
     }
 
     if (!ret) this.save();
@@ -568,7 +568,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   cargarDatosDefensaJuridica() {
-		this.progressSpinner = true;
+		//this.progressSpinner = true;
 		let relaciones = this.persistenceService.getDatosRelaciones();
 		//Comprobamos si entre la relaciones hay una designacion
 		let foundDesigna = relaciones.find(element =>
@@ -632,7 +632,7 @@ export class DefensaJuridicaComponent implements OnInit {
 			  });
 			},
 			err => {
-			  this.progressSpinner = false;
+			  //this.progressSpinner = false;
 			}
 		  );
 		}
@@ -641,7 +641,7 @@ export class DefensaJuridicaComponent implements OnInit {
 	
 	
 	  getDatosAdicionales(item) {
-		this.progressSpinner = true;
+		//this.progressSpinner = true;
 		let designaAdicionales = new DesignaItem();
 		let anio = item.ano.split("/");
 		designaAdicionales.ano = Number(anio[0].substring(1, 5));
@@ -663,7 +663,7 @@ export class DefensaJuridicaComponent implements OnInit {
 	
 		  },
 		  err => {
-			this.progressSpinner = false;
+			//this.progressSpinner = false;
 		  }, () => {
 		  }
 		);
@@ -705,22 +705,22 @@ export class DefensaJuridicaComponent implements OnInit {
 				this.sigaServices.post("designaciones_busquedaJuzgado", item.idJuzgado).subscribe(
 				  n => {
 					item.nombreJuzgado = n.body;
-					this.progressSpinner = false;
+					//this.progressSpinner = false;
 					this.designa = item;
 				  },
 				  err => {
 					item.nombreJuzgado = "";
-					this.progressSpinner = false;
+					//this.progressSpinner = false;
 					this.designa = item;
 				  });
 			  },
 			  err => {
-				this.progressSpinner = false;
+				//this.progressSpinner = false;
         this.designa = item;
 			  });
 		  },
 		  err => {
-			this.progressSpinner = false;
+			//this.progressSpinner = false;
       this.designa = item;
 		  });
 	  }

@@ -52,8 +52,6 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 	ngOnInit() {
 
-		this.progressSpinner = true;
-
 		this.ejg = this.persistenceService.getDatos();
 
 		/* Procede de search*() */
@@ -89,10 +87,10 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 					this.generalBody.nColegiado = data.nColegiado;
 					this.generalBody.nombre = data.apellido1 + " " + data.apellido2 + ", " + data.nombre;
 					this.nombreCabecera = this.generalBody.nombre;
-					this.progressSpinner = false;
+					
 				},
 				err => {
-					this.progressSpinner = false;
+					
 				});
 			this.fechaCabecera = this.generalBody.fechaDesigna;
 		}
@@ -103,7 +101,6 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			this.perEscritura = false;
 		  }
 		
-		this.progressSpinner = false;
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {

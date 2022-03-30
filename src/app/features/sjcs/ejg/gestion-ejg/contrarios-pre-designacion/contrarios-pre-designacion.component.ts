@@ -183,7 +183,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   }
 
   searchContrariosEJG() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     let item = [this.ejg.numero.toString(), this.ejg.annio, this.ejg.tipoEJG, this.historicoContrario];
 
@@ -206,11 +206,11 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       if (error != null && error.description != null) {
         this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
       }
-      this.progressSpinner = false;
+      //this.progressSpinner = false;
     },
       err => {
       });
-      this.progressSpinner = false;
+      //this.progressSpinner = false;
   }
 
   NewContrario() {
