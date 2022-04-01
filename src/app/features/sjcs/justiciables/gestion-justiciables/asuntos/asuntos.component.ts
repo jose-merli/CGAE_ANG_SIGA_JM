@@ -40,6 +40,10 @@ export class AsuntosComponent implements OnInit, OnChanges {
   @Input() body: JusticiableItem = new JusticiableItem();
   @Input() modoEdicion;
   @Input() fromJusticiable;
+  @Input() tarjetaDatosAsuntos;
+
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<String>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -69,6 +73,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
       this.idPersona = this.body.idpersona;
     }
 
+    if (this.tarjetaDatosAsuntos == true) this.showTarjeta = this.tarjetaDatosAsuntos;
   }
 
   onHideTarjeta() {
@@ -80,6 +85,8 @@ export class AsuntosComponent implements OnInit, OnChanges {
         this.search();
       }
     }
+    this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Asuntos.
+    this.idOpened.emit('Asuntos'); // Constante para abrir la Tarjeta de Asuntos.
   }
 
   getCols() {

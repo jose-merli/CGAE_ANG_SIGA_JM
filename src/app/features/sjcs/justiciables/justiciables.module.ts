@@ -37,6 +37,7 @@ import { DatosAbogadoContrarioComponent } from './gestion-justiciables/datos-abo
 import { DatosProcuradorContrarioComponent } from './gestion-justiciables/datos-procurador-contrario/datos-procurador-contrario.component';
 import { DatosPersonalesComponent } from './gestion-justiciables/datos-personales/datos-personales.component';
 import { DatosUnidadFamiliarComponent } from './gestion-justiciables/datos-unidad-familiar/datos-unidad-familiar.component';
+import { TarjetaResumenFijaModule } from '../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 
 @NgModule({
   imports: [
@@ -58,8 +59,8 @@ import { DatosUnidadFamiliarComponent } from './gestion-justiciables/datos-unida
     FechaModule,
     FileUploadModule,
     DialogoModule,
-    ConfirmDialogModule
-
+    ConfirmDialogModule,
+    TarjetaResumenFijaModule
   ],
   declarations: [
     BusquedaJusticiablesComponent,

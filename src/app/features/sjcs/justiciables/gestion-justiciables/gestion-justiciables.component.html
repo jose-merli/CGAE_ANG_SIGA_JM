@@ -7,6 +7,11 @@
     </p>
   </div>
   <div>
+    <app-tarjeta-resumen-fija class="pb-50"
+            [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos"
+            [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen"
+            (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+    </app-tarjeta-resumen-fija>
     <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
@@ -18,9 +23,9 @@
       <!-- newJusticiable: Funcion para indicar a las demás tarjetas que se ha creado un nuevo justiciable -->
       <!-- searchJusticiableOverwritten: Funcion para indicar que se ha sobrescrito un justiciable al añadir en modo nuevo un nif registrado y pulsar que se quiere sobreescribir -->
       <div *ngIf="showDatosGenerales != undefined">
-        <app-datos-generales *ngSwitchCase="'generales'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [fromUniFamiliar]="fromUniFamiliar"
+        <app-datos-generales *ngSwitchCase="'generales'" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [fromUniFamiliar]="fromUniFamiliar"
           [modoRepresentante]="modoRepresentante" [checkedViewRepresentante]="checkedViewRepresentante" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
-          (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-generales>
+          (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)" ></app-datos-generales>
       </div>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
@@ -29,7 +34,7 @@
       y no querer actualizar el justiciable propio-->
 
       <div *ngIf="showDatosPersonales != undefined">
-        <app-datos-personales *ngSwitchCase="'personales'" [showTarjeta]="ficha.activa" [body]="body" [fromUniFamiliar]="fromUniFamiliar" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
+        <app-datos-personales *ngSwitchCase="'personales'" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosPersonales]="tarjetaDatosPersonales" [showTarjeta]="ficha.activa" [body]="body" [fromUniFamiliar]="fromUniFamiliar" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
           (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-personales>
       </div>
 
@@ -39,7 +44,7 @@
       y no querer actualizar el justiciable propio-->
 
       <div *ngIf="showDatosSolicitudes != undefined">
-        <app-datos-solicitud *ngSwitchCase="'solicitud'" [showTarjeta]="ficha.activa" [body]="body" (createJusticiableByUpdateSolicitud)="createJusticiableByUpdateSolicitud($event)"></app-datos-solicitud>
+        <app-datos-solicitud *ngSwitchCase="'solicitud'" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosSolicitud]="tarjetaDatosSolicitud"  [showTarjeta]="ficha.activa" [body]="body" (createJusticiableByUpdateSolicitud)="createJusticiableByUpdateSolicitud($event)"></app-datos-solicitud>
       </div>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
@@ -53,6 +58,7 @@
       <!-- navigateToJusticiable: Funcion para indicar que ya no estamos en modo representante -->
       <div *ngIf="showDatosRepresentantes != undefined">
         <app-datos-representante *ngSwitchCase="'representante'" [showTarjeta]="ficha.activa" [body]="body" [modoEdicion]="modoEdicion"
+          (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosRepresentante]="tarjetaDatosRepresentante"
           [checkedViewRepresentante]="checkedViewRepresentante" (newRepresentante)="newRepresentante($event)" (viewRepresentante)="viewRepresentante($event)"
           (createJusticiableByUpdateRepresentante)="createJusticiableByUpdateRepresentante($event)" [navigateToJusticiable]="navigateToJusticiable" 
           [fromContrario]="fromContrario" [fromInteresado]="fromInteresado" [fromContrarioEJG]="fromContrarioEJG" [fromUniFamiliar]="fromUniFamiliar">
@@ -63,14 +69,18 @@
       <!-- fromJusticiable: variable indica desde donde se accede a la ficha justiciables -->
       <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
       <div *ngIf="showAsuntos != undefined">
-        <app-asuntos *ngSwitchCase="'asuntos'" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [modoEdicion]="modoEdicion" ></app-asuntos>
+        <app-asuntos *ngSwitchCase="'asuntos'" 
+        (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosAsuntos]="tarjetaDatosAsuntos"
+        [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [modoEdicion]="modoEdicion" ></app-asuntos>
       </div>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
       <!-- body: variable donde se le pasa la informacion de un justiciable -->
       <!-- modoEdicion: variable indica si estamos en modo edicion o nuevo -->
       <div *ngIf="showAbogadoContrario != undefined">
-        <app-datos-abogado-contrario id = abogadoJusticiable *ngSwitchCase="'abogado'" (contrario)="contrario($event)" (contrarioEJG)="contrarioEJG($event)" [body]="body"  [modoEdicion]="modoEdicion" 
+        <app-datos-abogado-contrario id = abogadoJusticiable *ngSwitchCase="'abogado'" 
+        (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosAbogado]="tarjetaDatosAbogado"
+        (contrario)="contrario($event)" (contrarioEJG)="contrarioEJG($event)" [body]="body"  [modoEdicion]="modoEdicion" 
         [fromContrario]="fromContrario" [fromContrarioEJG]="fromContrarioEJG"></app-datos-abogado-contrario> 
       </div>
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->
@@ -79,12 +89,14 @@
 
       <div *ngIf="showProcuradorContrario != undefined">
         <app-datos-procurador-contrario id = "procuradorJusticiable" *ngSwitchCase="'procurador'" (contrario)="contrario($event)"  
+        (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosProcurador]="tarjetaDatosProcurador"
         (contrarioEJG)="contrarioEJG($event)" [body]="body" 
         [modoEdicion]="modoEdicion" [fromContrario]="fromContrario" [fromContrarioEJG]="fromContrarioEJG"></app-datos-procurador-contrario> 
       </div>
 
       <div *ngIf="showDatosUF != undefined">
         <app-datos-unidad-familiar *ngSwitchCase="'unidadFamiliar'" [solicitante]="solicitante" 
+        (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosUnidadFamiliar]="tarjetaDatosUnidadFamiliar"
         [body]="body" [modoEdicion]="modoEdicion" [fromUniFamiliar]="fromUniFamiliar"></app-datos-unidad-familiar> 
       </div>
     </div>
