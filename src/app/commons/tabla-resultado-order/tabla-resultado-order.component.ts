@@ -1141,32 +1141,35 @@ this.totalRegistros = this.rowGroups.length;
       //this.to = this.totalRegistros;
       }
       nuevo(){
-        this.comboTurno.forEach(cT=> {
-          if (cT.value == this.rowGroups[0].cells[1].value){
-            this.rowGroups[0].cells[1].value = cT.label;
-          }else if (cT.value == this.rowGroups[this.rowGroups.length - 1].cells[1].value){
-            this.rowGroups[this.rowGroups.length - 1].cells[1].value = cT.label;
-          }
-        
-        });
-        this.comboGuardia.forEach(cG=> {
-           if (cG.value == this.rowGroups[0].cells[2].value){
-            this.rowGroups[0].cells[2].value = cG.label;
-          }else if (cG.value == this.rowGroups[this.rowGroups.length - 1].cells[2].value){
-            this.rowGroups[this.rowGroups.length - 1].cells[2].value = cG.label;
-          }
-        
-        });
-        this.rowGroups[0].cells[1].type = 'textNew';
-        this.rowGroups[0].cells[1].combo = null;
-        this.rowGroups[0].cells[2].type = 'linkNew';
-        this.rowGroups[0].cells[2].combo = null;
-        this.rowGroups[this.rowGroups.length - 1].cells[1].type = 'textNew';
-        this.rowGroups[this.rowGroups.length - 1].cells[1].combo = null;
-        this.rowGroups[this.rowGroups.length - 1].cells[2].type = 'linkNew';
-        this.rowGroups[this.rowGroups.length - 1].cells[2].combo = null;
-        //console.log(this.rowGroups)
-        this.disableGen.emit(true);
+        if (this.rowGroups != null && this.rowGroups.length > 0) {
+          this.comboTurno.forEach(cT=> {
+            if (cT.value == this.rowGroups[0].cells[1].value){
+              this.rowGroups[0].cells[1].value = cT.label;
+            }else if (cT.value == this.rowGroups[this.rowGroups.length - 1].cells[1].value){
+              this.rowGroups[this.rowGroups.length - 1].cells[1].value = cT.label;
+            }
+          
+          });
+          this.comboGuardia.forEach(cG=> {
+            if (cG.value == this.rowGroups[0].cells[2].value){
+              this.rowGroups[0].cells[2].value = cG.label;
+            }else if (cG.value == this.rowGroups[this.rowGroups.length - 1].cells[2].value){
+              this.rowGroups[this.rowGroups.length - 1].cells[2].value = cG.label;
+            }
+          
+          });
+          this.rowGroups[0].cells[1].type = 'textNew';
+          this.rowGroups[0].cells[1].combo = null;
+          this.rowGroups[0].cells[2].type = 'linkNew';
+          this.rowGroups[0].cells[2].combo = null;
+          this.rowGroups[this.rowGroups.length - 1].cells[1].type = 'textNew';
+          this.rowGroups[this.rowGroups.length - 1].cells[1].combo = null;
+          this.rowGroups[this.rowGroups.length - 1].cells[2].type = 'linkNew';
+          this.rowGroups[this.rowGroups.length - 1].cells[2].combo = null;
+          //console.log(this.rowGroups)
+          this.disableGen.emit(true);
+        }
+
         this.getComboTurno();
         let newCells: Cell[] = [
           { type: 'input', value: '', combo: null, hiddenValue:'', required:false},
@@ -1180,7 +1183,7 @@ this.totalRegistros = this.rowGroups.length;
           this.rowGroups.unshift(rowObject);
           this.rowGroupsAux = this.rowGroups;
           this.totalRegistros = this.rowGroups.length;
-          //this.to = this.totalRegistros;
+          this.to = this.totalRegistros <= this.numperPage ? this.totalRegistros : this.numperPage;
           this.cd.detectChanges();
       }
 
@@ -1431,6 +1434,12 @@ this.totalRegistros = this.rowGroups.length;
     );
     //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
     this.router.navigate(["/guardiasSaltosCompensaciones"]); 
+  }
+
+  // Deshabilita el botón de Nuevo si ya existe una nueva línea
+  existeNuevaLinea() {
+    return this.rowGroups && this.rowGroups.length != 0 
+      && this.rowGroups[0].cells && this.rowGroups[0].cells.length <= 5;
   }
 }
 

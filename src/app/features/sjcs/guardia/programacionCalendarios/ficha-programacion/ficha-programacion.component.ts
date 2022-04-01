@@ -71,7 +71,7 @@ export class FichaProgramacionComponent implements OnInit {
     'nombre': '',
     'generado': '',
     'numGuardias': '',
-    'listaGuarias': {label: '', value: ''},
+    'listaGuarias': {label: '', value: undefined},
     'fechaDesde': '',
     'fechaHasta': '',
     'fechaProgramacion': null,
@@ -160,41 +160,34 @@ export class FichaProgramacionComponent implements OnInit {
       this.rowGroupsSaved = this.persistenceService.getDatos().tabla;
       //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
       this.datosGenerales = this.persistenceService.getDatos();
-      this.datosGeneralesIniciales = Object.assign({},this.datosGenerales );
+      this.datosGeneralesIniciales = deepCopy(this.datosGenerales);
       this.duplicar = this.dataToReceive.duplicar;
       //this.search();
       this.modoEdicion = true;
+    } else if (sessionStorage.getItem('guardiaColegiadoData')) { //si el origen es guardias de colegiado
+      this.dataToReceive = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
+    
+
+      if (this.dataToReceive.idCalendarioProgramado != null){
+        this.disableGenerar = false;
+        this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
+      }else{
+        this.disableGenerar = true;
+        this.dataReady = true;
+      }
+
+      this.rowGroupsSaved = this.dataToReceive.tabla;
+      //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
+      this.datosGenerales = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
+      this.datosGeneralesIniciales = deepCopy(this.datosGenerales);
+      this.duplicar = this.dataToReceive.duplicar;
+      //this.search();
+
+      this.modoEdicion = true;
+      sessionStorage.removeItem('guardiaColegiadoData');
     } else {
       this.modoEdicion = false;
     }
-//si el origen es guardias de colegiado
-
-  if (sessionStorage.getItem('guardiaColegiadoData')) {
-    this.dataToReceive = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
-    
-
-    if (this.dataToReceive.idCalendarioProgramado != null){
-      this.disableGenerar = false;
-      this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
-    }else{
-      this.disableGenerar = true;
-      this.dataReady = true;
-    }
-    this.rowGroupsSaved = this.dataToReceive.tabla;
-    //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
-    this.datosGenerales = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
-    this.datosGeneralesIniciales = Object.assign({},this.datosGenerales );
-    this.duplicar = this.dataToReceive.duplicar;
-    //this.search();
-    this.modoEdicion = true;
-    sessionStorage.removeItem('guardiaColegiadoData');
-  } else {
-    this.modoEdicion = false;
-  }
-
-  
-
-    
 
     this.obtenerPermisos();
 
@@ -205,16 +198,18 @@ export class FichaProgramacionComponent implements OnInit {
         sessionStorage.getItem("filtrosBusquedaGuardias")
       );
     }
-this.estado = this.datosGeneralesIniciales.estado;
-
   
+    this.estado = this.datosGeneralesIniciales.estado;
 
   }
+
   ngOnDestroy(){
     this.suscription.unsubscribe();
    }
   ngOnChanges(changes: SimpleChanges) {
-    this.enviarEnlacesTarjeta();
+    setTimeout(() => {
+      this.enviarEnlacesTarjeta();
+    }, 2000);
   }
   search() {
     this.progressSpinner = true;
@@ -742,7 +737,7 @@ this.estado = this.datosGeneralesIniciales.estado;
     })
     if (this.wrongList.length == 0){
       //console.log('datosGeneralesToSave.idCalendarioProgramado: ', datosGeneralesToSave.idCalendarioProgramado)
-      if (datosGeneralesToSave.idCalendarioProgramado != null && datosGeneralesToSave.idCalendarioProgramado != '0'){
+      if (datosGeneralesToSave.idCalendarioProgramado != null && datosGeneralesToSave.idCalendarioProgramado != '0' && datosGeneralesToSave.idCalendarioProgramado.length != 0){
         //actualizar existente
         //console.log('****UPDATE')
         this.updateCalendarData(dataToSave);
@@ -880,16 +875,19 @@ this.estado = this.datosGeneralesIniciales.estado;
   }
 
   updateCalendarData(datos){
+    this.progressSpinner = true;
        this.sigaServices.post(
       "guardiaCalendario_updateCalendarioProgramado",  datos).subscribe(
         data => {
           this.showMessage('info', "Se ha actualizado correctamente", "Se ha actualizado correctamente");
+          this.progressSpinner = false;
         }, err => {
           if(err.status = "409"){
             this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");
           }else {
             this.showMessage('error', "No se ha actualizado correctamente", "No se ha actualizado correctamente");
           }
+          this.progressSpinner = false;
           //console.log(err);
         });
        
@@ -898,11 +896,15 @@ this.estado = this.datosGeneralesIniciales.estado;
 
   newCalendarProg(datos){
    console.log('datos ana: ', datos)
+   this.dataReady = false;
+   this.progressSpinner = true;
+   
     this.sigaServices.post(
    "guardiaCalendario_newCalendarioProgramado",  datos).subscribe(
      data => {
 
       //console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
+      
       if (this.persistenciaGuardia != undefined) {
         sessionStorage.setItem(
           "filtrosBusquedaGuardiasFichaGuardia",
@@ -914,8 +916,10 @@ this.estado = this.datosGeneralesIniciales.estado;
       }else{
         this.router.navigate(["/programacionCalendarios"]);
       }
-        this.progressSpinner = false;
-     }, err => {
+      
+      this.dataReady = true;
+      this.progressSpinner = false;
+    }, err => {
       this.progressSpinner = false;
       //this.showMessage('error', JSON.stringify(data.body.error.message), JSON.stringify(data.body.error.message));
       if(err.status = "409"){
@@ -923,8 +927,10 @@ this.estado = this.datosGeneralesIniciales.estado;
       }else {
         this.showMessage('error', "No se ha generado correctamente", "No se ha generado correctamente");
       }
+
+      this.dataReady = true;
        //console.log(err);
-     });
+    });
 }
 
 descargarLog(event){
@@ -1119,4 +1125,38 @@ descargarLog(event){
     this.router.navigate(["/buscadorColegiados"]);
     
   }
+}
+
+function deepCopy(obj) {
+  var copy;
+
+  // Handle the 3 simple types, and null or undefined
+  if (null == obj || "object" != typeof obj) return obj;
+
+  // Handle Date
+  if (obj instanceof Date) {
+      copy = new Date();
+      copy.setTime(obj.getTime());
+      return copy;
+  }
+
+  // Handle Array
+  if (obj instanceof Array) {
+      copy = [];
+      for (var i = 0, len = obj.length; i < len; i++) {
+          copy[i] = deepCopy(obj[i]);
+      }
+      return copy;
+  }
+
+  // Handle Object
+  if (obj instanceof Object) {
+      copy = {};
+      for (var attr in obj) {
+          if (obj.hasOwnProperty(attr)) copy[attr] = deepCopy(obj[attr]);
+      }
+      return copy;
+  }
+
+  throw new Error("Unable to copy obj! Its type isn't supported.");
 }

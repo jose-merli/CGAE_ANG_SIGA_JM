@@ -48,7 +48,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'nombre': '',
     'generado': '',
     'numGuardias': '',
-    'listaGuarias': {},
+    'listaGuarias': { value: undefined },
     'fechaDesde': '',
     'fechaHasta': '',
     'fechaProgramacion': null,
@@ -312,7 +312,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
 
   rest() {
     //this.datosGenerales = Object.assign(datosInicialesCopy, {});
-    this.reloadDatos.emit(this.datosGeneralesIniciales);
+    this.reloadDatos.emit(deepCopy(this.datosGeneralesIniciales));
   }
 
 
@@ -386,6 +386,11 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
                 //Al guardar con Fecha de programación rellena, se pasará al estado Programada. 
                 this.datosGenerales.estado = "Programada";
               }
+
+              // Actualizamos la tarjeta Guardias Calendario en caso de que este vacía
+              if (this.datosGenerales.listaGuarias.value == undefined) {
+                this.changeListaGuardia(this.datosGenerales.listaGuarias);
+              }
               //GUARDAMOS
               this.guardarDatosCalendario.emit(this.datosGenerales)
               this.progressSpinner = false;
@@ -444,7 +449,9 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
       "fromCombo": true,
       "minimoLetradosCola": 0
     };
-    this.globalGuardiasService.emitConf(configuracionCola);
+    if (!this.modoEdicion) {
+      this.globalGuardiasService.emitConf(configuracionCola);
+    }
   }
 
 }
@@ -485,4 +492,38 @@ function compare(a: Date, b: Date, isAsc: boolean) {
   } else {
     return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
+}
+
+function deepCopy(obj) {
+  var copy;
+
+  // Handle the 3 simple types, and null or undefined
+  if (null == obj || "object" != typeof obj) return obj;
+
+  // Handle Date
+  if (obj instanceof Date) {
+      copy = new Date();
+      copy.setTime(obj.getTime());
+      return copy;
+  }
+
+  // Handle Array
+  if (obj instanceof Array) {
+      copy = [];
+      for (var i = 0, len = obj.length; i < len; i++) {
+          copy[i] = deepCopy(obj[i]);
+      }
+      return copy;
+  }
+
+  // Handle Object
+  if (obj instanceof Object) {
+      copy = {};
+      for (var attr in obj) {
+          if (obj.hasOwnProperty(attr)) copy[attr] = deepCopy(obj[attr]);
+      }
+      return copy;
+  }
+
+  throw new Error("Unable to copy obj! Its type isn't supported.");
 }

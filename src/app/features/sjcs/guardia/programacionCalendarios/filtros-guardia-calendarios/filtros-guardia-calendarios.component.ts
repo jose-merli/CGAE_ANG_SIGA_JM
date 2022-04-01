@@ -366,8 +366,10 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       "fromCombo": false,
       "minimoLetradosCola": 0
     };
-     this.globalGuardiasService.emitConf(configuracionCola);
-    let dataToSend = {
+
+    this.globalGuardiasService.emitConf(configuracionCola);
+
+    /* let dataToSend = {
       'duplicar' : '',
       'tabla': [],
       'turno':'',
@@ -383,10 +385,11 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       'idCalendarioProgramado': null,
       'idTurno': '',
       'idGuardia': '',
-    };
-    this.persistenceService.setDatos(dataToSend);
+    }; */
 
+    this.persistenceService.clearDatos();
     this.router.navigate(["/fichaProgramacion"]);
+
     /*if (this.permisoEscritura) {
       this.persistenceService.clearDatos();
       this.router.navigate(["/gestionGuardias"]);
