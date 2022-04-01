@@ -911,9 +911,11 @@ export class FichaProgramacionComponent implements OnInit {
           JSON.stringify(this.persistenciaGuardia)
         );
       }
-      if (datos.idCalG == null){
+
+      // Se tiene en cuenta la creación de un calendario sin lista de guardias
+      if (datos.idCalG == null && (datos.idTurno == '' || datos.idGuardia == '')) {
         this.showMessage('info', "Debe asociar alguna guardia", "Debe asociar alguna guardia");
-      }else{
+      } else {
         this.router.navigate(["/programacionCalendarios"]);
       }
       
