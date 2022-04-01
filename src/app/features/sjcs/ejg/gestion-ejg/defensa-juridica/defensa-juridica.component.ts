@@ -64,14 +64,15 @@ export class DefensaJuridicaComponent implements OnInit {
     private location: Location) { }
 
   ngOnInit() {
+    this.body = this.persistenceService.getDatos();
+    //Valor inicial a reestablecer
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
     //Se obtiene la designacion si hay una designacion entre las relaciones
     setTimeout(() => {
       this.cargarDatosDefensaJuridica();
       
-      this.body = this.persistenceService.getDatos();
-
       this.getEjgItem();
 
       //Se sobreescribe la informacion de pre designacion (Primera mitad de la tarjeta) 
@@ -107,8 +108,6 @@ export class DefensaJuridicaComponent implements OnInit {
           nombreProcedimiento: ""
           observaciones  */
       }
-      //Valor inicial a reestablecer
-      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 
       //this.progressSpinner = true;
       this.getComboPreceptivo();
@@ -569,7 +568,9 @@ export class DefensaJuridicaComponent implements OnInit {
 
   cargarDatosDefensaJuridica() {
 		//this.progressSpinner = true;
-		let relaciones = this.persistenceService.getDatosRelaciones();
+		let relaciones = [];
+    let aux = this.persistenceService.getDatosRelaciones();
+    relaciones.push(aux);
 		//Comprobamos si entre la relaciones hay una designacion
 		let foundDesigna = relaciones.find(element =>
 		  element.sjcs == "DESIGNACIÓN"
@@ -636,7 +637,6 @@ export class DefensaJuridicaComponent implements OnInit {
 			}
 		  );
 		}
-		else this.router.navigate(["/ficha-pre-designacion"]);
 	  }
 	
 	
