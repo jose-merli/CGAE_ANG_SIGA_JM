@@ -5,7 +5,7 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Cell, Row, TablaResultadoOrderCGService } from '../../../../../../commons/tabla-resultado-order/tabla-resultado-order-cg.service';
-import { GlobalGuardiasService } from '../../../guardiasGlobal.service';
+import { ConfiguracionCola, GlobalGuardiasService } from '../../../guardiasGlobal.service';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
 
@@ -139,77 +139,89 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
       this.dataReady = false;
     }
 
-    if (!this.modoEdicion) {
-      this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
-        this.dataReady = false;
-        this.idConjuntoGuardiaElegido = confValue.idConjuntoGuardia;
-        if (this.idConjuntoGuardiaElegido != null){
-          if (this.datosTarjetaGuardiasCalendarioIni.length == 0){
-          this.datosTarjetaGuardiasCalendario = [];
-          this.rowGroups = [];
-          this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, confValue.fromCombo);
+    // Evita que se carguen automáticamente las guardias de la ficha de creación
+    if (this.modoEdicion) {
+      let configuracionCola: ConfiguracionCola = {
+        'manual': false,
+        'porGrupos': false,
+        'idConjuntoGuardia': 0,
+        "fromCombo": false,
+        "minimoLetradosCola": 0
+      };
+
+      this.globalGuardiasService.emitConf(configuracionCola);
+    }
+
+    this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
+      this.dataReady = false;
+      this.idConjuntoGuardiaElegido = confValue.idConjuntoGuardia;
+      if (this.idConjuntoGuardiaElegido != null){
+        if (this.datosTarjetaGuardiasCalendarioIni.length == 0){
+        this.datosTarjetaGuardiasCalendario = [];
+        this.rowGroups = [];
+        this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, confValue.fromCombo);
+        }else{
+          if (this.idConjuntoGuardiaElegido != 0){
+            this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
+            this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, confValue.fromCombo);
           }else{
-            if (this.idConjuntoGuardiaElegido != 0){
-              this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
-              this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, confValue.fromCombo);
-            }else{
-              this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
-              this.jsonToRow(confValue.fromCombo);
-              this.dataReady = true;
-            }
-            
+            this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
+            this.jsonToRow(confValue.fromCombo);
+            this.dataReady = true;
           }
           
+        }
+        
 
 
-          //this.jsonToRow(); //PROVISIONAL
+        //this.jsonToRow(); //PROVISIONAL
 
-          this.resaltadoDatos=true;
+        this.resaltadoDatos=true;
 
-          this.getCols();
-          this.historico = this.persistenceService.getHistorico()
-          this.getComboTipoGuardia();
+        this.getCols();
+        this.historico = this.persistenceService.getHistorico()
+        this.getComboTipoGuardia();
 
-          this.getComboTurno();
+        this.getComboTurno();
 
-          // this.progressSpinner = true;
-          this.sigaService.datosRedy$.subscribe(
-            data => {
-              data = JSON.parse(data.body);
-              this.body.idGuardia = data.idGuardia;
-              this.body.descripcionFacturacion = data.descripcionFacturacion;
-              this.body.descripcion = data.descripcion;
-              this.body.descripcionPago = data.descripcionPago;
-              this.body.idTipoGuardia = data.idTipoGuardia;
-              this.body.idTurno = data.idTurno;
-              this.body.nombre = data.nombre;
-              this.body.envioCentralita = data.envioCentralita;
-              //Informamos de la guardia de la que hereda si existe.
-              if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
-                this.datos.push({
-                  vinculacion: 'Principal',
-                  turno: data.idTurnoPrincipal,
-                  guardia: data.idGuardiaPrincipal
-                })
-              if (data.idGuardiaVinculada && data.idTurnoVinculada) {
-                let guardias = data.idGuardiaVinculada.split(",");
-                let turno = data.idTurnoVinculada.split(",");
-                this.datos = guardias.map(function (x, i) {
-                  return { vinculacion: "Vinculada", guardia: x, turno: turno[i] }
-                });
-                this.datos.pop()
-              }
-              this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-              this.progressSpinner = false;
-            });
-            }else {
-              this.datos = [];
-              this.datosTarjetaGuardiasCalendario = [];
-              this.jsonToRow(confValue.fromCombo);
-              this.dataReady = true;
+        // this.progressSpinner = true;
+        this.sigaService.datosRedy$.subscribe(
+          data => {
+            data = JSON.parse(data.body);
+            this.body.idGuardia = data.idGuardia;
+            this.body.descripcionFacturacion = data.descripcionFacturacion;
+            this.body.descripcion = data.descripcion;
+            this.body.descripcionPago = data.descripcionPago;
+            this.body.idTipoGuardia = data.idTipoGuardia;
+            this.body.idTurno = data.idTurno;
+            this.body.nombre = data.nombre;
+            this.body.envioCentralita = data.envioCentralita;
+            //Informamos de la guardia de la que hereda si existe.
+            if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
+              this.datos.push({
+                vinculacion: 'Principal',
+                turno: data.idTurnoPrincipal,
+                guardia: data.idGuardiaPrincipal
+              })
+            if (data.idGuardiaVinculada && data.idTurnoVinculada) {
+              let guardias = data.idGuardiaVinculada.split(",");
+              let turno = data.idTurnoVinculada.split(",");
+              this.datos = guardias.map(function (x, i) {
+                return { vinculacion: "Vinculada", guardia: x, turno: turno[i] }
+              });
+              this.datos.pop()
             }
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+            this.progressSpinner = false;
           });
-    }
+          }else {
+            this.datos = [];
+            this.datosTarjetaGuardiasCalendario = [];
+            this.jsonToRow(confValue.fromCombo);
+            this.dataReady = true;
+          }
+        });
+    
   }
   ngOnDestroy(){
     this.suscription.unsubscribe();
