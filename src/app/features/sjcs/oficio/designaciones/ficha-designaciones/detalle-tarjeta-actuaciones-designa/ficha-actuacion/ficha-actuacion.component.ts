@@ -475,7 +475,7 @@ export class FichaActuacionComponent implements OnInit {
       });
     }
 
-    if (this.listaAcciones.length > 0) {
+    if (this.modoLecturaHistorico && this.listaAcciones.length > 0) {
       let tarj = this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiHist');
 
       tarj.campos = [];
@@ -573,48 +573,56 @@ export class FichaActuacionComponent implements OnInit {
       this.tarjetaFija.campos[3].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
     }
     // Se rellenan los campos de la tarjeta de Datos Generales plegada
-    this.listaTarjetas[0].campos[0].value = this.actuacionDesigna.actuacion.nombreJuzgado;
-    this.listaTarjetas[0].campos[1].value = this.actuacionDesigna.actuacion.modulo;
-    this.listaTarjetas[0].campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
+    if (this.modoLecturaDatosGenerales) {
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').campos[0].value = this.actuacionDesigna.actuacion.nombreJuzgado;
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').campos[1].value = this.actuacionDesigna.actuacion.modulo;
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
+    }
 
     // Se rellenan los campos de la tarjeta de Justificación plegada
+    if (this.modoLecturaJustificacion) {
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
-      this.listaTarjetas[1].campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
     } else {
-      this.listaTarjetas[1].campos[0].value = null;
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[0].value = null;
     }
-    this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+    this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+    }
 
     // Se rellenan los campos de la tarjeta Relaciones plegada
-    if (this.relaciones == undefined || this.relaciones == null || this.relaciones.length == 0) {
-      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
-        "key": null,
-        "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
-      }];
-    } else if (this.relaciones.length > 0) {
-      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
-        "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-        "value": this.relaciones[0].sjcs
-      },
-      {
-        "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
-        "value": this.relaciones.length
-      }];
+    if (this.modoLecturaRelaciones) {
+      if (this.relaciones == undefined || this.relaciones == null || this.relaciones.length == 0) {
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
+          "key": null,
+          "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
+        }];
+      } else if (this.relaciones.length > 0) {
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
+          "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+          "value": this.relaciones[0].sjcs
+        },
+        {
+          "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
+          "value": this.relaciones.length
+        }];
+      }
     }
 
     // Se rellenan los campos de la tarjeta Datos Facturación plegada
-    if (this.actuacionDesigna.actuacion.idPartidaPresupuestaria == undefined || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == null || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == '') {
-      let campos = [{
-        "key": "Partida Presupuestaria",
-        "value": ""
-      }];
-      this.listaTarjetas[2].campos = campos;
-    } else {
-      let campos = [{
-        "key": "Partida Presupuestaria",
-        "value": this.actuacionDesigna.actuacion.partidaPresupuestaria
-      }];
-      this.listaTarjetas[2].campos = campos;
+    if (this.modoLecturaDatosFacturacion) {
+      if (this.actuacionDesigna.actuacion.idPartidaPresupuestaria == undefined || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == null || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == '') {
+        let campos = [{
+          "key": "Partida Presupuestaria",
+          "value": ""
+        }];
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatFac').campos = campos;
+      } else {
+        let campos = [{
+          "key": "Partida Presupuestaria",
+          "value": this.actuacionDesigna.actuacion.partidaPresupuestaria
+        }];
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatFac').campos = campos;
+      }
     }
 
     this.getAccionesActuacion();
