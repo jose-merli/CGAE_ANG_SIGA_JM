@@ -382,191 +382,6 @@ export class GestionJusticiablesComponent implements OnInit {
       }
 
     });
-    // Obtener permisos para Enlaces de Tarjeta resumen.
-    this.obtenerPermisos();
-    this.progressSpinner = false;
-  }
-
-  // Obtener los permisos para las tarjetas.
-  async obtenerPermisos() {
-    let recibidos = 0; //Determina cuantos servicios de los permisos se han terminado
-    //Tarjetagenerales
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosGenerales)
-      .then(respuesta => {
-        this.permisoDatosGenerales = respuesta;
-        recibidos++;
-        if (recibidos == 8) this.enviarEnlacesTarjeta();
-      }
-      ).catch(error => console.error(error));
-
-    //Tarjetapersonales
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosPersonales)
-      .then(respuesta => {
-        this.permisoDatosPersonales = respuesta;
-        recibidos++;
-        if (recibidos == 8) this.enviarEnlacesTarjeta();
-      }
-      ).catch(error => console.error(error));
-
-    //Tarjetasolicitud
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosSolicitud)
-      .then(respuesta => {
-        this.permisoSolicitud = respuesta;
-        recibidos++;
-        if (recibidos == 8) this.enviarEnlacesTarjeta();
-      }
-      ).catch(error => console.error(error));
-
-    //Tarjetarepresentante
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosRepresentante)
-      .then(respuesta => {
-        this.permisoRepresentantes = respuesta;
-        recibidos++;
-        if (recibidos == 8) this.enviarEnlacesTarjeta();
-      }
-      ).catch(error => console.error(error));
-
-    //Tarjetaasuntos
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaAsuntos)
-      .then(respuesta => {
-        this.permisoAsuntos = respuesta;
-        recibidos++;
-        if (recibidos == 8) this.enviarEnlacesTarjeta();
-      }
-      ).catch(error => console.error(error));
-
-    //Tarjetaabogado
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaAbogadoContrario)
-      .then(respuesta => {
-        this.progressSpinner = true;
-        this.permisoAbogado = respuesta;
-        recibidos++;
-        if (recibidos == 8) this.enviarEnlacesTarjeta();
-        this.progressSpinner = false;
-      }
-      ).catch(error => console.error(error));
-    //Tarjetaprocurador
-    this.commonsService.checkAcceso(procesos_justiciables.tarjetaProcuradorContrario)
-      .then(respuesta => {
-        this.progressSpinner = true;
-        this.permisoProcurador = respuesta;
-        recibidos++;
-        if (recibidos == 8) this.enviarEnlacesTarjeta();
-        this.progressSpinner = false;
-      }
-      ).catch(error => console.error(error));
-    //TarjetaunidadFamiliar
-    this.commonsService.checkAcceso(procesos_ejg.unidadFamiliar)
-      .then(respuesta => {
-        this.progressSpinner = true;
-        this.permisoUnidadFamiliar = respuesta;
-        recibidos++;
-        if (recibidos == 8) this.enviarEnlacesTarjeta();
-        this.progressSpinner = false;
-      }
-      ).catch(error => console.error(error));
-  }
-
-  // Metódo para enviar los datos de enlaces que hacen referencia a las tarjetas.
-  // Controlamos que tengan el permiso y la tarjeta este visible.
-  enviarEnlacesTarjeta() {
-
-    this.enlacesTarjetaResumen = [];
-
-    let pruebaTarjeta;
-
-    setTimeout(() => {
-
-      if (this.permisoDatosGenerales != undefined &&
-        this.showDatosGenerales == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "general.message.datos.generales",
-          value: document.getElementById("datosGenerales"), 
-          nombre: "datosGenerales",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      if (this.permisoUnidadFamiliar != undefined &&
-        this.showDatosUF == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "justiciaGratuita.justiciables.rol.unidadFamiliar",
-          value: document.getElementById("unidadFamiliar"), 
-          nombre: "unidadFamiliar",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      if (this.permisoDatosPersonales != undefined &&
-        this.showDatosPersonales == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "formacion.fichaInscripcion.datosPersonales.cabecera",
-          value: document.getElementById("DivDatosPersonales"),
-          nombre: "Personales",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      if (this.permisoSolicitud != undefined &&
-        this.showDatosSolicitudes == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "censo.nuevaSolicitud.headerSolicitud",
-          value: document.getElementById("DivSolicitud"),
-          nombre: "Solicitud",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      if (this.permisoRepresentantes != undefined &&
-        this.showDatosRepresentantes == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "justiciaGratuita.oficio.designas.interesados.abogado",
-          value: document.getElementById("DivRepresentantes"),
-          nombre: "Representantes",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      if (this.permisoAsuntos != undefined &&
-        this.showAsuntos == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "justiciaGratuita.justiciables.literal.asuntos",
-          value: document.getElementById("DivAsuntos"),
-          nombre: "Asuntos",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      if (this.permisoAbogado != undefined &&
-        this.showAbogadoContrario == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "justiciaGratuita.oficio.designas.contrarios.abogado",
-          value: document.getElementById("DivIdAbogado"),
-          nombre: "Abogados",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      if (this.permisoProcurador != undefined &&
-        this.showProcuradorContrario == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "menu.facturacionSJCS.mantenimientoProcurador",
-          value: document.getElementById("procuradorJusticiable"),
-          nombre: "Procuradores",
-        };
-
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
-
-      //this.enlacesTarjetaResumen.push(pruebaTarjeta);
-    }, 5)
     this.progressSpinner = false;
   }
 
@@ -631,94 +446,131 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   checkAccesoTarjetasDetalleContrarios() {
+    let recibidos = 0; //Determina cuantos servicios de los permisos se han terminado
     this.commonsService.checkAcceso(procesos_ejg.datosGeneralesContrarios)
       .then(respuesta => {
         this.showDatosGenerales = respuesta;
+        recibidos++;
+        if (recibidos == 7) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosSolicitudesContrarios)
       .then(respuesta => {
         this.showDatosSolicitudes = respuesta;
+        recibidos++;
+        if (recibidos == 7) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosDireccionContactoContrarios)
       .then(respuesta => {
         this.showDatosPersonales = respuesta;
+        recibidos++;
+        if (recibidos == 7) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosRepresentantesLegal)
       .then(respuesta => {
         this.showDatosRepresentantes = respuesta;
+        recibidos++;
+        if (recibidos == 7) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.asuntosContrarios)
       .then(respuesta => {
         this.showAsuntos = respuesta;
+        recibidos++;
+        if (recibidos == 7) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosAbogadoContrario)
       .then(respuesta => {
         this.showAbogadoContrario = respuesta;
+        recibidos++;
+        if (recibidos == 7) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosProcuradorContrario)
       .then(respuesta => {
         this.showProcuradorContrario = respuesta;
+        recibidos++;
+        if (recibidos == 7) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
   }
 
   checkAccesoTarjetasUF() {
+    let recibidos = 0; //Determina cuantos servicios de los permisos se han terminado
     this.commonsService.checkAcceso(procesos_ejg.datosGeneralesUF)
       .then(respuesta => {
         this.showDatosGenerales = respuesta;
+        recibidos++;
+        if (recibidos == 6) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosSolicitudesUF)
       .then(respuesta => {
         this.showDatosSolicitudes = respuesta;
+        recibidos++;
+        if (recibidos == 6) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosDireccionContactoUF)
       .then(respuesta => {
         this.showDatosPersonales = respuesta;
+        recibidos++;
+        if (recibidos == 6) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosAdicionalesUF)
       .then(respuesta => {
         this.showDatosUF = respuesta;
+        recibidos++;
+        if (recibidos == 6) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.datosRepresentanteLegalUF)
       .then(respuesta => {
         this.showDatosRepresentantes = respuesta;
+        recibidos++;
+        if (recibidos == 6) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.asuntosUF)
       .then(respuesta => {
         this.showAsuntos = respuesta;
+        recibidos++;
+        if (recibidos == 6) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
   }
 
   checkAccesoTarjetas() {
+    let recibidos = 0; //Determina cuantos servicios de los permisos se han terminado
     this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosGenerales)
       .then(respuesta => {
         this.showDatosGenerales = respuesta;
         this.showDatosPersonales = respuesta;
+        recibidos++;
+        if (recibidos == 4) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosSolicitud)
       .then(respuesta => {
         this.showDatosSolicitudes = respuesta;
+        recibidos++;
+        if (recibidos == 4) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosRepresentante)
       .then(respuesta => {
         this.showDatosSolicitudes = respuesta;
+        recibidos++;
+        if (recibidos == 4) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_justiciables.tarjetaAsuntos)
       .then(respuesta => {
         this.showAsuntos = respuesta;
+        recibidos++;
+        if (recibidos == 4) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
   }
 
@@ -1068,7 +920,7 @@ export class GestionJusticiablesComponent implements OnInit {
     this.fromContrario = true;
   }
 
-  
+
   contrarioEJG(event) {
     this.fromContrarioEJG = true;
   }
@@ -1081,7 +933,6 @@ export class GestionJusticiablesComponent implements OnInit {
 
   // Método para abrir las Tarjetas al pulsar en el enlace.
   isOpenReceive(event) {
-
     if (event != undefined) {
       switch (event) {
         case "datosGenerales":
@@ -1114,7 +965,6 @@ export class GestionJusticiablesComponent implements OnInit {
 
   // Método para cerrar las Tarjetas al pulsar en el enlace.
   isCloseReceive(event) {
-
     if (event != undefined) {
       switch (event) {
         case "datosGenerales":
@@ -1174,5 +1024,97 @@ export class GestionJusticiablesComponent implements OnInit {
     }
   }
 
+  // Metódo para enviar los datos de enlaces que hacen referencia a las tarjetas.
+  // Controlamos que tengan el permiso y la tarjeta este visible.
+  enviarEnlacesTarjeta() {
+
+    this.enlacesTarjetaResumen = [];
+
+    let pruebaTarjeta;
+
+    setTimeout(() => {
+
+      if (this.showDatosGenerales == true) { // Comprobar si esta activada la Tarjeta
+        pruebaTarjeta = {
+          label: "general.message.datos.generales",
+          value: document.getElementById("datosGenerales"),
+          nombre: "datosGenerales",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.showDatosUF == true) { // Comprobar si esta activada la Tarjeta
+        pruebaTarjeta = {
+          label: "justiciaGratuita.justiciables.rol.unidadFamiliar",
+          value: document.getElementById("unidadFamiliar"),
+          nombre: "unidadFamiliar",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.showDatosPersonales == true) { // Comprobar si esta activada la Tarjeta
+        pruebaTarjeta = {
+          label: "formacion.fichaInscripcion.datosPersonales.cabecera",
+          value: document.getElementById("DivDatosPersonales"),
+          nombre: "Personales",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.showDatosSolicitudes == true) { // Comprobar si esta activada la Tarjeta
+        pruebaTarjeta = {
+          label: "censo.nuevaSolicitud.headerSolicitud",
+          value: document.getElementById("DivSolicitud"),
+          nombre: "Solicitud",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.showDatosRepresentantes == true) { // Comprobar si esta activada la Tarjeta
+        pruebaTarjeta = {
+          label: "justiciaGratuita.oficio.designas.interesados.abogado",
+          value: document.getElementById("DivRepresentantes"),
+          nombre: "Representantes",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.showAsuntos == true) { // Comprobar si esta activada la Tarjeta
+        pruebaTarjeta = {
+          label: "justiciaGratuita.justiciables.literal.asuntos",
+          value: document.getElementById("DivAsuntos"),
+          nombre: "Asuntos",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.showAbogadoContrario == true) { // Comprobar si esta activada la Tarjeta
+        pruebaTarjeta = {
+          label: "justiciaGratuita.oficio.designas.contrarios.abogado",
+          value: document.getElementById("DivIdAbogado"),
+          nombre: "Abogados",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+
+      if (this.showProcuradorContrario == true) { // Comprobar si esta activada la Tarjeta
+        pruebaTarjeta = {
+          label: "justiciaGratuita.oficio.designas.contrarios.procurador",
+          value: document.getElementById("procuradorJusticiable"),
+          nombre: "Procuradores",
+        };
+
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+    }, 5)
+    this.progressSpinner = false;
+  }
 
 }
