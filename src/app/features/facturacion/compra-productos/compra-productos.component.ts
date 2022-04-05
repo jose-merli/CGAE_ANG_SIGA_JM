@@ -57,11 +57,25 @@ export class CompraProductosComponent implements OnInit {
     this.subscriptionProductosBusqueda = this.sigaServices.post("PyS_getListaCompraProductos", filtrosProductos).subscribe(
       listaCompraProductosDTO => {
 
-
-        if (JSON.parse(listaCompraProductosDTO.body).error.code == 200) {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        let error = JSON.parse(listaCompraProductosDTO.body).error;
+        if (error.code == 200) {
 
           this.listaCompraProductos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
+
+          if (!error.message || error.message.trim().length == 0) {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          } else {
+            let translatedMessage = this.translateService.instant(error.message);
+
+            // Se sustituye el el número de registros por defecto (200)
+            if (translatedMessage && this.listaCompraProductos.length != undefined) {
+              translatedMessage = translatedMessage.replace(/200/g, this.listaCompraProductos.length.toString());
+            }
+
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), translatedMessage);            
+          }
+
+          
 
           this.muestraTablaCompraProductos= true;
           this.listaCompraProductos.forEach(e => {
