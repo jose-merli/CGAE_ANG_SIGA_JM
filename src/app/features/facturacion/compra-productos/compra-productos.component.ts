@@ -69,7 +69,7 @@ export class CompraProductosComponent implements OnInit {
 
             // Se sustituye el el número de registros por defecto (200)
             if (translatedMessage && this.listaCompraProductos.length != undefined) {
-              translatedMessage = translatedMessage.replace(/200/g, this.listaCompraProductos.length.toString());
+              translatedMessage = translatedMessage.replace(/\d+/g, this.listaCompraProductos.length.toString());
             }
 
             this.showMessage("info", this.translateService.instant("general.message.informacion"), translatedMessage);            
