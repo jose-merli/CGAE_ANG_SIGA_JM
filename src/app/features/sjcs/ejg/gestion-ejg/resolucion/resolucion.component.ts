@@ -171,14 +171,18 @@ export class ResolucionComponent implements OnInit {
 
   getComboActaAnnio() {
 
-    this.sigaServices.getParam("gestionejg_comboActaAnnio", `?anioacta=${this.resolucion.annioActa}&idacta=${this.resolucion.idActa}`).subscribe(
-      n => {
-        this.comboActaAnnio = n.combooItems;
-        this.commonsServices.arregloTildesCombo(this.comboActaAnnio);
-      },
-      err => {
-      }
-    );
+    if(this.resolucion.annioActa != undefined && this.resolucion.idActa != undefined){
+      this.sigaServices.getParam("gestionejg_comboActaAnnio", `?anioacta=${this.resolucion.annioActa}&idacta=${this.resolucion.idActa}`).subscribe(
+        n => {
+          this.comboActaAnnio = n.combooItems;
+          this.commonsServices.arregloTildesCombo(this.comboActaAnnio);
+        },
+        err => {
+        }
+      );
+    }
+
+  
   }
 
   getHabilitarActasComision() {
