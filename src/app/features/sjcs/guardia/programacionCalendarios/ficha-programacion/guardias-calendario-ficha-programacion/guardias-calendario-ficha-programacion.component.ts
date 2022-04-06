@@ -117,6 +117,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'guardias': []
   };
   @Output() guardarDatosCalendario = new EventEmitter<{}>();
 
@@ -697,8 +698,7 @@ setGuardiasCalendario(guardiaCalendario){
             //console.log(err);
           });
     } else if (lista && lista.length > 0) {
-      this.datosGenerales.idGuardia = lista[0].guardia;
-      this.datosGenerales.idTurno = lista[0].turno;
+      this.datosGenerales.guardias = lista;
 
       this.saveNewCalendario();
     }
@@ -747,7 +747,6 @@ setGuardiasCalendario(guardiaCalendario){
         if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada") {
           if (this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null) {
             //Al guardar con Fecha de programación vacía, se pasará al estado Pendiente y fechaProgramacion = hoy
-            this.datosGenerales.fechaProgramacion = new Date();
             this.datosGenerales.estado = "Pendiente";
           } else {
             //Al guardar con Fecha de programación rellena, se pasará al estado Programada. 

@@ -80,6 +80,7 @@ export class FichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'guardias': [],
   };
   
   datosGeneralesIniciales = {
@@ -98,6 +99,7 @@ export class FichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'guardias': []
   };
   rowGroupsSaved: Row[];
   dataToReceive = {
@@ -667,6 +669,7 @@ export class FichaProgramacionComponent implements OnInit {
           'idCalendarioProgramado': '',
           'idTurno': '',
           'idGuardia': '',
+          'guardias': [],
         };
 
       datosGeneralesToSave = datGen;
@@ -725,6 +728,7 @@ export class FichaProgramacionComponent implements OnInit {
         'idCalG': datosGeneralesToSave.listaGuarias.value,
         'listaGuardias': datosGeneralesToSave.listaGuarias.label,
         'idCalendarioProgramado': datosGeneralesToSave.idCalendarioProgramado,
+        'guardias': datosGeneralesToSave.guardias
         //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
       };
@@ -913,7 +917,7 @@ export class FichaProgramacionComponent implements OnInit {
       }
 
       // Se tiene en cuenta la creación de un calendario sin lista de guardias
-      if (datos.idCalG == null && (datos.idTurno == '' || datos.idGuardia == '')) {
+      if (datos.idCalG == null && (!datos.guardias || datos.guardias.length == 0)) {
         this.showMessage('info', "Debe asociar alguna guardia", "Debe asociar alguna guardia");
       } else {
         this.router.navigate(["/programacionCalendarios"]);
