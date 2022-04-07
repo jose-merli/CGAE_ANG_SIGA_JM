@@ -14,6 +14,7 @@ import { GlobalGuardiasService } from '../../guardiasGlobal.service';
 import { saveAs } from "file-saver/FileSaver";
 import { CalendarioProgramadoItem } from '../../../../../models/guardia/CalendarioProgramadoItem';
 import * as moment from 'moment';
+import { CalendariosDatosEntradaItem } from '../CalendariosDatosEntradaItem.model';
 
 @Component({
   selector: 'app-ficha-programacion',
@@ -131,6 +132,16 @@ export class FichaProgramacionComponent implements OnInit {
   suscription: Subscription;
   wrongList = [];
   fromCombo = false;
+
+  comboEstados = [
+    { label: "Pendiente", value: "4" },
+    { label: "Programada", value: "0" },
+    { label: "En proceso", value: "1" },
+    { label: "Procesada con Errores", value: "2" },
+    { label: "Generada", value: "3" },
+    { label: "Reprogramada", value: "5" }
+  ];
+
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
     private commonService: CommonsService,
@@ -885,6 +896,8 @@ export class FichaProgramacionComponent implements OnInit {
         data => {
           this.showMessage('info', "Se ha actualizado correctamente", "Se ha actualizado correctamente");
           this.progressSpinner = false;
+          
+          this.findFichaProgramacion(datos);
         }, err => {
           if(err.status = "409"){
             this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");
@@ -916,11 +929,13 @@ export class FichaProgramacionComponent implements OnInit {
         );
       }
 
+      let body =  JSON.parse(data.body);
+
       // Se tiene en cuenta la creación de un calendario sin lista de guardias
       if (datos.idCalG == null && (!datos.guardias || datos.guardias.length == 0)) {
         this.showMessage('info', "Debe asociar alguna guardia", "Debe asociar alguna guardia");
-      } else {
-        this.router.navigate(["/programacionCalendarios"]);
+      } else if (body && body.id) {
+        this.findFichaProgramacion({ idCalendarioProgramado: body.id });
       }
       
       this.dataReady = true;
@@ -1130,6 +1145,73 @@ descargarLog(event){
     sessionStorage.setItem("calendarioSeleccinoado", JSON.stringify(anadirLetrado));
     this.router.navigate(["/buscadorColegiados"]);
     
+  }
+
+  // Busca la programación por idCalendarioProgramado, para actualizar los datos de la ficha
+  findFichaProgramacion(datos){
+    this.progressSpinner = true;
+    //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
+    let datosEntrada = 
+      { 
+        'idCalendarioProgramado': datos.idCalendarioProgramado,
+      };
+  
+    this.sigaServices.post("guardiaCalendario_buscar", datosEntrada).subscribe(
+      data => {
+        let error = JSON.parse(data.body).error;
+        let datos = JSON.parse(data.body);
+      
+        console.log(datos)
+        // this.comboGuardiasIncompatibles = [];
+        if (datos.length > 0) {
+
+          let dataToSend = {
+            'duplicar': false,
+            'tabla': [],
+            'turno':datos[0].turno,
+            'nombre': datos[0].nombre,
+            'generado': datos[0].generado,
+            'numGuardias': datos[0].numGuardias,
+            'listaGuarias': {label: datos[0].listaGuardias, value: datos[0].idCalG },
+            'fechaDesde': this.changeDateFormat(datos[0].fechaDesde),
+            'fechaHasta': this.changeDateFormat(datos[0].fechaHasta),
+            'fechaProgramacion': datos[0].fechaProgramacion,
+            'estado': this.getStatusValue(datos[0].estado),
+            'observaciones': datos[0].observaciones,
+            'idCalendarioProgramado': datos[0].idCalendarioProgramado,
+            'idTurno':  datos[0].idTurno,
+            'idGuardia': datos[0].idGuardia
+          }
+
+          this.progressSpinner = false;
+          this.persistenceService.setDatos(dataToSend);
+          this.router.navigate(["/fichaProgramacion"]);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        //console.log(err);
+    });
+  }
+
+  getStatusValue(id){
+    let status;
+    this.comboEstados.forEach(estado => {
+      if (estado.value != null && id != null){
+        if ( estado.value.toString() == id.toString()){
+          status = estado.label;
+        }
+      }
+    })
+    return status;
+  }
+
+  changeDateFormat(date1){
+    let year = date1.substring(0, 4)
+    let month = date1.substring(5,7)
+    let day = date1.substring(8, 10)
+    let date2 = day + '/' + month + '/' + year;
+    return date2;
   }
 }
 
