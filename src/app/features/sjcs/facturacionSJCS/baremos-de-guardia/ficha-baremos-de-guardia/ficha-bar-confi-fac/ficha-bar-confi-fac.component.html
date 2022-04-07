@@ -95,7 +95,7 @@
                             </p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.baremosDeGuardia.minimo' | currency:'EUR'}}</label>
+                            <label>{{ 'facturacionSJCS.baremosDeGuardia.minimo' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" (input)="onChangeMinimo($event.target.value)" [(ngModel)]="filtrosDis.importeMinDis"
                                 class="form-control" />
                         </div>
@@ -103,22 +103,22 @@
                            
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>{{ 'facturacionSJCS.baremos.dipsAsuntos' | currency:'EUR' }}</label>
+                            <label>{{ 'facturacionSJCS.baremos.dipsAsuntos' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.dispAsuntosDis"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.baremos.aPartir' | currency:'EUR'}}</label>
+                            <label>{{ 'facturacionSJCS.baremos.aPartir' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.aPartirDis"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.baremosDeGuardia.maximo' | currency:'EUR'}}</label>
+                            <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.importeMaxDis"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.baremos.aPartir' | currency:'EUR'}}</label>
+                            <label>{{ 'facturacionSJCS.baremos.aPartir' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.aPartirMax"
                                 class="form-control" />
                         </div>
@@ -188,21 +188,21 @@
                                 (click)="changePrecio()" name="precioAsAc" label="Precio por tipos"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.facturacionesYPagos.importe' | currency:'EUR'}}</label>
+                            <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate | currency:'EUR' }}</label>
                             <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.importeAsAc"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6 verticalAlign">
-                            <a class="enlace" (click)="irAtipos()" *ngIf="modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
-                            <a *ngIf="!modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
+                            <a class="enlace" (click)="irAtipos()" *ngIf="modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
+                            <a *ngIf="!modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
                         </div>       
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.baremosDeGuardia.minimo' | currency:'EUR'}}</label>
+                            <label>{{ 'facturacionSJCS.baremosDeGuardia.minimo' | translate }}</label>
                             <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.importeMinAsAc"
                                 class="form-control" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.baremosDeGuardia.maximo' | currency:'EUR'}}</label>
+                            <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
                             <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.importeMaxAsAc"
                                 class="form-control" />
                         </div>
