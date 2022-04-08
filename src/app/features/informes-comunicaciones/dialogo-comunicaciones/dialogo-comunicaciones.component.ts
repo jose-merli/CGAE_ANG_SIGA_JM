@@ -395,7 +395,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 						this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.envio.generado')
 					);
 					this.showValores = false;
-					this.backTo();
+					//this.backTo();
 				},
 				(err) => {
 					if (JSON.parse(err.error).description != undefined && JSON.parse(err.error).description != null) {

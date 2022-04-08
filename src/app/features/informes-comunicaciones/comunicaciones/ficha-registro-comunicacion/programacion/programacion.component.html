@@ -46,6 +46,13 @@
               [(ngModel)]="body.idEstado" class="select-form no-edit">
             </p-dropdown>
           </div>
+
+          <div class="form-group col-lg-2 col-md-2" style="padding-top: 20px;"
+            *ngIf="body.idEstado==2 || body.idEstado==3">
+            <button (click)="downloadLogFile()" pButton type="button" icon="fa fa-download" iconPos="left"
+              label="{{'enviosMasivos.literal.descargaLog' | translate}}"></button>
+          </div>
+
           <div class="form-group col-lg-4 col-md-4">
             <label>{{'enviosMasivos.literal.fechaProgramacion' | translate}} (*)</label>
             <app-fecha [inputStyleClass]="styleObligatorio(body.fechaProgramada)" [(value)]="body.fechaProgramada"
