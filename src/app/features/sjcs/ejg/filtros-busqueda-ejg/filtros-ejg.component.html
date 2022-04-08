@@ -396,26 +396,28 @@
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.NIF" | translate}}</label>
-            <input type="text" class="form-control" maxLength="20" [(ngModel)]='body.nif' pInputText>
+            <input type="text" class="form-control" maxLength="20" [(ngModel)]='body.nif' pInputText (ngModelChange)="onChangeRol()">
 
           </div>
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}</label>
-            <input type="text" class="form-control" maxLength="201" [(ngModel)]='body.apellidos' pInputText>
+            <input type="text" class="form-control" maxLength="201" [(ngModel)]='body.apellidos' pInputText (ngModelChange)="onChangeRol()">
 
           </div>
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
-            <input type="text" class="form-control" maxLength="100" pInputText [(ngModel)]="body.nombre">
+            <input type="text" class="form-control" maxLength="100" pInputText [(ngModel)]="body.nombre" (ngModelChange)="onChangeRol()">
 
           </div>
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{"administracion.usuarios.literal.rol" | translate}}</label>
-            <p-dropdown class="select-form" [(ngModel)]='body.rol' placeholder="Seleccionar" [options]="comboRol"
-              [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-            </p-dropdown>
+            <p-multiSelect  class="select-form" [(ngModel)]='body.estadosRoles'
+              defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboRol" [filter]="true"
+              maxSelectedLabels="10"  filterBy="label,labelSinTilde" styleClass="widthAll" (onPanelShow)="focusInputField(rol)"
+              [(disabled)]="selectRoles"  >
+            </p-multiSelect>
           </div>
 
           <div class="form-group-interlineado col-lg-3 col-md-3">
