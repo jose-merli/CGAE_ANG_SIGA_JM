@@ -11,6 +11,7 @@ import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncor
 import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
+import { EjgService } from '../services/ejg.service';
 
 @Component({
   selector: 'app-expedientes-economicos',
@@ -63,7 +64,8 @@ export class ExpedientesEconomicosComponent implements OnInit {
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private ejgService : EjgService) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -87,12 +89,15 @@ export class ExpedientesEconomicosComponent implements OnInit {
         this.openFicha = !this.openFicha;
       }
     }
+    this.ejgService.$eventEmitter.subscribe( () => { 
+      this.getExpedientesEconomicos(this.item);
+    });
   }
 
   esFichaActiva(key) {
-
     return this.fichaPosible.activa;
   }
+
   abreCierraFicha(key) {
     this.resaltadoDatosGenerales = true;
     if (

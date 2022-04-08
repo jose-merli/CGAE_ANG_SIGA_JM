@@ -25,9 +25,9 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   @Output() reloadDatos = new EventEmitter<{}>();
   @Input() tarjetaDatosGenerales;
   @Input() datosGeneralesIniciales = {
-    'duplicar' : '',
+    'duplicar': '',
     'tabla': [],
-    'turno':'',
+    'turno': '',
     'nombre': '',
     'generado': '',
     'numGuardias': '',
@@ -42,13 +42,13 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'idGuardia': '',
   };
   @Input() datosGenerales = {
-    'duplicar' : '',
+    'duplicar': '',
     'tabla': [],
-    'turno':'',
+    'turno': '',
     'nombre': '',
     'generado': '',
     'numGuardias': '',
-    'listaGuarias': {},
+    'listaGuarias': { value: undefined },
     'fechaDesde': '',
     'fechaHasta': '',
     'fechaProgramacion': null,
@@ -58,7 +58,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'idTurno': '',
     'idGuardia': '',
   };
-  
+
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
@@ -86,98 +86,98 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     private translateService: TranslateService,
     private datepipe: DatePipe,
     private globalGuardiasService: GlobalGuardiasService) {
-     }
+  }
 
 
   ngOnInit() {
     this.openFicha = true;
-    if (this.datosGenerales != undefined){
-    if (this.datosGenerales.fechaProgramacion != null){
-      this.datosGenerales.fechaProgramacion = new Date(this.datosGenerales.fechaProgramacion.toString());
-    }
-    if(this.datosGenerales.observaciones==null){
-      this.datosGenerales.observaciones="";
-    }
-    
-  
-    //this.getComboListaGuardia();
-    this.getComboConjuntouardia();
-    if (this.datosGenerales.fechaDesde != undefined && this.datosGenerales.fechaDesde != null && this.datosGenerales.fechaHasta != undefined && this.datosGenerales.fechaHasta){
-      this.resaltadoDatos=false;
-    }else{
-      this.resaltadoDatos=true;
+    if (this.datosGenerales != undefined) {
+      if (this.datosGenerales.fechaProgramacion != null) {
+        this.datosGenerales.fechaProgramacion = new Date(this.datosGenerales.fechaProgramacion.toString());
+      }
+      if (this.datosGenerales.observaciones == null) {
+        this.datosGenerales.observaciones = "";
+      }
+
+
+      //this.getComboListaGuardia();
+      this.getComboConjuntouardia();
+      if (this.datosGenerales.fechaDesde != undefined && this.datosGenerales.fechaDesde != null && this.datosGenerales.fechaHasta != undefined && this.datosGenerales.fechaHasta) {
+        this.resaltadoDatos = false;
+      } else {
+        this.resaltadoDatos = true;
+      }
+
+      this.getCols();
+      this.historico = this.persistenceService.getHistorico()
+      this.getComboTipoGuardia();
+
+      this.getComboTurno();
+
+      // this.progressSpinner = true;
+      this.sigaService.datosRedy$.subscribe(
+        data => {
+          data = JSON.parse(data.body);
+          this.body.idGuardia = data.idGuardia;
+          this.body.descripcionFacturacion = data.descripcionFacturacion;
+          this.body.descripcion = data.descripcion;
+          this.body.descripcionPago = data.descripcionPago;
+          this.body.idTipoGuardia = data.idTipoGuardia;
+          this.body.idTurno = data.idTurno;
+          this.body.nombre = data.nombre;
+          this.body.envioCentralita = data.envioCentralita;
+          //Informamos de la guardia de la que hereda si existe.
+          if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
+            this.datos.push({
+              vinculacion: 'Principal',
+              turno: data.idTurnoPrincipal,
+              guardia: data.idGuardiaPrincipal
+            })
+          if (data.idGuardiaVinculada && data.idTurnoVinculada) {
+            let guardias = data.idGuardiaVinculada.split(",");
+            let turno = data.idTurnoVinculada.split(",");
+            this.datos = guardias.map(function (x, i) {
+              return { vinculacion: "Vinculada", guardia: x, turno: turno[i] }
+            });
+            this.datos.pop()
+          }
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.progressSpinner = false;
+        });
     }
 
-    this.getCols();
-    this.historico = this.persistenceService.getHistorico()
-    this.getComboTipoGuardia();
 
-    this.getComboTurno();
-
-    // this.progressSpinner = true;
-    this.sigaService.datosRedy$.subscribe(
-      data => {
-        data = JSON.parse(data.body);
-        this.body.idGuardia = data.idGuardia;
-        this.body.descripcionFacturacion = data.descripcionFacturacion;
-        this.body.descripcion = data.descripcion;
-        this.body.descripcionPago = data.descripcionPago;
-        this.body.idTipoGuardia = data.idTipoGuardia;
-        this.body.idTurno = data.idTurno;
-        this.body.nombre = data.nombre;
-        this.body.envioCentralita = data.envioCentralita;
-        //Informamos de la guardia de la que hereda si existe.
-        if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
-          this.datos.push({
-            vinculacion: 'Principal',
-            turno: data.idTurnoPrincipal,
-            guardia: data.idGuardiaPrincipal
-          })
-        if (data.idGuardiaVinculada && data.idTurnoVinculada) {
-          let guardias = data.idGuardiaVinculada.split(",");
-          let turno = data.idTurnoVinculada.split(",");
-          this.datos = guardias.map(function (x, i) {
-            return { vinculacion: "Vinculada", guardia: x, turno: turno[i] }
-          });
-          this.datos.pop()
-        }
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.progressSpinner = false;
-      });
-    }
-
-   
   }
 
   fillFechaCalendarioDesde(event) {
-    
-    if (this.formatDate2(event) != null){
+
+    if (this.formatDate2(event) != null) {
       this.resaltadoDatos = false;
       this.datosGenerales.fechaDesde = this.changeDateFormat(this.formatDate2(event).toString());
     }
   }
   fillFechaCalendarioHasta(event) {
-    if (this.formatDate2(event) != null){
+    if (this.formatDate2(event) != null) {
       this.resaltadoDatos = false;
       this.datosGenerales.fechaHasta = this.changeDateFormat(this.formatDate2(event).toString());
     }
   }
   fillFechaProgramada(event) {
-   
-    if (event == null){
+
+    if (event == null) {
       this.datosGenerales.fechaProgramacion = null;
-    }else{
+    } else {
       this.datosGenerales.fechaProgramacion = new Date(event.toString());
     }
   }
-  
-formatDate2(date) {
-  const pattern = 'yyyy-MM-dd';
+
+  formatDate2(date) {
+    const pattern = 'yyyy-MM-dd';
     return this.datepipe.transform(date, pattern);
   }
-  changeDateFormat(date1){
+  changeDateFormat(date1) {
     let year = date1.substring(0, 4)
-    let month = date1.substring(5,7)
+    let month = date1.substring(5, 7)
     let day = date1.substring(8, 10)
     let date2 = day + '/' + month + '/' + year;
     return date2;
@@ -213,15 +213,15 @@ formatDate2(date) {
       )
 
   }
-  styleObligatorio(evento){
-    if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
+  styleObligatorio(evento) {
+    if (this.resaltadoDatos && (evento == undefined || evento == null || evento == "")) {
       return this.commonServices.styleObligatorio(evento);
     }
   }
 
-  muestraCamposObligatorios(){
-    this.msgs = [{severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios')}];
-    this.resaltadoDatos=true;
+  muestraCamposObligatorios() {
+    this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+    this.resaltadoDatos = true;
   }
 
   abreCierraFicha(key) {
@@ -233,8 +233,8 @@ formatDate2(date) {
 
 
   disabledSave() {
-    if (this.permisoEscritura){
-          if (this.datosGenerales.fechaHasta && this.datosGenerales.fechaDesde) {
+    if (this.permisoEscritura) {
+      if (this.datosGenerales.fechaHasta && this.datosGenerales.fechaDesde) {
         return false;
       } else return true;
     }
@@ -312,7 +312,7 @@ formatDate2(date) {
 
   rest() {
     //this.datosGenerales = Object.assign(datosInicialesCopy, {});
-    this.reloadDatos.emit(this.datosGeneralesIniciales);
+    this.reloadDatos.emit(deepCopy(this.datosGeneralesIniciales));
   }
 
 
@@ -361,61 +361,61 @@ formatDate2(date) {
     let compareDateOk = compareDate(this.datosGenerales.fechaDesde, this.datosGenerales.fechaHasta, true);
     let compareDateFuture1 = compareDate(this.datosGenerales.fechaDesde, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);
     let compareDateFuture2 = compareDate(this.datosGenerales.fechaHasta, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);
- 
-      if (compareDateOk == 1) {
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Rango de fechas incorrecto. Debe cumplir que la fecha desde sea menor o igual que la fecha hasta");
+
+    if (compareDateOk == 1) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Rango de fechas incorrecto. Debe cumplir que la fecha desde sea menor o igual que la fecha hasta");
       //}else if (compareDateFuture1 != -1 || compareDateFuture2 != -1){
-        //this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen guardias asociadas a una programación con fechas futuras");
-      }else{
+      //this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen guardias asociadas a una programación con fechas futuras");
+    } else {
 
+      this.progressSpinner = true;
+      if (this.datosGenerales.duplicar) {
+        this.dataToDuplicate.emit(this.datosGenerales);
 
-    this.progressSpinner = true;
-    if (this.datosGenerales.duplicar){
-      this.dataToDuplicate.emit(this.datosGenerales);
+        //TO DO
+      } else {
+        if (!this.disabledSave()) {
+          if (this.permisoEscritura && !this.historico) {
+            //Guardar sólo actualizará el estado si no tiene estado (creación) o es Pendiente/Programada
+            if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada") {
+              if (this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null) {
+                //Al guardar con Fecha de programación vacía, se pasará al estado Pendiente y fechaProgramacion = hoy
+                //this.datosGenerales.fechaProgramacion = new Date();
+                this.datosGenerales.estado = "Pendiente";
+              } else {
+                //Al guardar con Fecha de programación rellena, se pasará al estado Programada. 
+                this.datosGenerales.estado = "Programada";
+              }
 
-//TO DO
-    }else{
-    if(!this.disabledSave()){
-      if (this.permisoEscritura && !this.historico) {
-        //Guardar sólo actualizará el estado si no tiene estado (creación) o es Pendiente/Programada
-        if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada"){
-          if(this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null){
-            //Al guardar con Fecha de programación vacía, se pasará al estado Pendiente y fechaProgramacion = hoy
-            this.datosGenerales.fechaProgramacion = new Date();
-          this.datosGenerales.estado = "Pendiente";
-          }else {
-            //Al guardar con Fecha de programación rellena, se pasará al estado Programada. 
-            this.datosGenerales.estado = "Programada";
+              // Actualizamos la tarjeta Guardias Calendario en caso de que este vacía
+              if (this.datosGenerales.listaGuarias.value == undefined) {
+                this.changeListaGuardia(this.datosGenerales.listaGuarias);
+              }
+              //GUARDAMOS
+              this.guardarDatosCalendario.emit(this.datosGenerales)
+              this.progressSpinner = false;
+            } else {
+              this.showMessage('error', 'Error. Debido al estado de la programación, no es posible guardar', '')
+              this.progressSpinner = false;
+            }
+
+            let url = "";
+
+            /*if (!this.modoEdicion && this.permisoEscritura) {
+              url = "busquedaGuardias_createGuardia";
+              this.callSaveService(url);
+    
+            } else if (this.permisoEscritura) {
+              url = "busquedaGuardias_updateGuardia";
+              this.callSaveService(url);
+            }*/
           }
-          //GUARDAMOS
-          this.guardarDatosCalendario.emit(this.datosGenerales)
-          this.progressSpinner = false;
-        } else{
-          this.showMessage('error', 'Error. Debido al estado de la programación, no es posible guardar', '')
-          this.progressSpinner = false;
+        } else {
+          this.muestraCamposObligatorios();
         }
-     
-
-
-
-        
-        let url = "";
-
-        /*if (!this.modoEdicion && this.permisoEscritura) {
-          url = "busquedaGuardias_createGuardia";
-          this.callSaveService(url);
-
-        } else if (this.permisoEscritura) {
-          url = "busquedaGuardias_updateGuardia";
-          this.callSaveService(url);
-        }*/
       }
-    }else{
-      this.muestraCamposObligatorios();
+      this.progressSpinner = false;
     }
-  }
-  this.progressSpinner = false;
-}
   }
 
   showMessage(severity, summary, msg) {
@@ -436,36 +436,38 @@ formatDate2(date) {
   }
 
   formatDate(date) {
-  const pattern = 'yyyy-MM-dd HH:mm:ss-SS';
+    const pattern = 'yyyy-MM-dd HH:mm:ss-SS';
     return this.datepipe.transform(date, pattern);
   }
 
-  changeListaGuardia(event){
-     let idConjuntoGuardiaElegido = event.value;
-     let configuracionCola: ConfiguracionCola = {
+  changeListaGuardia(event) {
+    let idConjuntoGuardiaElegido = event.value;
+    let configuracionCola: ConfiguracionCola = {
       'manual': false,
       'porGrupos': false,
       'idConjuntoGuardia': idConjuntoGuardiaElegido,
       "fromCombo": true,
       "minimoLetradosCola": 0
     };
-     this.globalGuardiasService.emitConf(configuracionCola);
+    if (!this.modoEdicion) {
+      this.globalGuardiasService.emitConf(configuracionCola);
+    }
   }
 
 }
-function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+function compareDate(fechaA: any, fechaB: any, isAsc: boolean) {
 
   let dateA = null;
   let dateB = null;
-  if (fechaA!=null){
-    const dayA = fechaA.substr(0, 2) ;
+  if (fechaA != null) {
+    const dayA = fechaA.substr(0, 2);
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
     dateA = new Date(yearA, monthA, dayA);
   }
 
-  if (fechaB!=null){
-    const dayB = fechaB.substr(0, 2) ;
+  if (fechaB != null) {
+    const dayB = fechaB.substr(0, 2);
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
     dateB = new Date(yearB, monthB, dayB);
@@ -477,17 +479,51 @@ function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
 }
 
 function compare(a: Date, b: Date, isAsc: boolean) {
- 
 
-  if (a==null && b!=null){
-    return ( 1 ) * (isAsc ? 1 : -1);
+
+  if (a == null && b != null) {
+    return (1) * (isAsc ? 1 : -1);
   }
-  if (a!=null && b==null){
-    return ( -1 ) * (isAsc ? 1 : -1);
+  if (a != null && b == null) {
+    return (-1) * (isAsc ? 1 : -1);
   }
-    if ( a.getTime() === b.getTime() ){
-      return 0
-    }else{
-      return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-    }
+  if (a.getTime() === b.getTime()) {
+    return 0
+  } else {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
+  }
+}
+
+function deepCopy(obj) {
+  var copy;
+
+  // Handle the 3 simple types, and null or undefined
+  if (null == obj || "object" != typeof obj) return obj;
+
+  // Handle Date
+  if (obj instanceof Date) {
+      copy = new Date();
+      copy.setTime(obj.getTime());
+      return copy;
+  }
+
+  // Handle Array
+  if (obj instanceof Array) {
+      copy = [];
+      for (var i = 0, len = obj.length; i < len; i++) {
+          copy[i] = deepCopy(obj[i]);
+      }
+      return copy;
+  }
+
+  // Handle Object
+  if (obj instanceof Object) {
+      copy = {};
+      for (var attr in obj) {
+          if (obj.hasOwnProperty(attr)) copy[attr] = deepCopy(obj[attr]);
+      }
+      return copy;
+  }
+
+  throw new Error("Unable to copy obj! Its type isn't supported.");
 }

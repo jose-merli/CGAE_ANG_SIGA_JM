@@ -14,11 +14,10 @@
 
                 <div class="col-lg-11 col-md-10">
                     <div class="d-flex justify-content-start mb-1" (click)="onHideTarjeta()">
-                        <label class="mr-auto title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiAdi' | translate }}
-                        </label>
+                        <label class="mr-auto title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiAdi' | translate }}</label>
                     </div>
                     <div class="d-flex justify-content-between">
-                      <!--   <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
+                        <!--   <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }}:
                             <span>A</span>
                         </label> -->
                         <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
@@ -32,7 +31,7 @@
                 <div class="img-colegiado">
                     <i class="fa fa-user icon-ficha"></i>
                 </div>
-                <label class="title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiAdi' | translate }} </label>
+                <label class="title-ficha">{{ 'facturacionSJCS.baremosDeGuardia.confiAdi' | translate }}</label>
                 <i class="fa fa-angle-up ml-auto"></i>
             </div>
 
@@ -45,54 +44,79 @@
                 <div class="bloque col-lg-6 col-md-6 col-sm-6 py-2 pl-2">
                     <div class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox name="facActuaciones" [disabled]="!permisoEscritura" [(ngModel)]="facActuaciones" value="facActuaciones" (onChange)="onChangeFacActuaciones($event)" binary="true" label="{{'facturacionSJCS.baremos.facActuacionesFuera' | translate}}"
-                                class="ml-0"></p-checkbox>
+                            <p-checkbox name="facActuaciones" [disabled]="!permisoEscritura"
+                                [(ngModel)]="facActuaciones" value="facActuaciones"
+                                (onChange)="onChangeFacActuaciones($event)" binary="true"
+                                label="{{'facturacionSJCS.baremos.facActuacionesFuera' | translate}}" class="ml-0">
+                            </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="unico" label="{{'facturacionSJCS.baremos.precioUnico' | translate}}"></p-radioButton>
+                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" (click)="changePrecio()"
+                                [(ngModel)]="precio" name="precio" value="unico"
+                                label="{{'facturacionSJCS.baremos.precioUnico' | translate}}"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" (click)="changePrecio()" [(ngModel)]="precio" name="precio" value="porTipos" label="{{'facturacionSJCS.baremos.precioTipos' | translate}}"></p-radioButton>
+                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" (click)="changePrecio()"
+                                [(ngModel)]="precio" name="precio" value="porTipos"
+                                label="{{'facturacionSJCS.baremos.precioTipos' | translate}}"></p-radioButton>
                         </div>
-                        <div  class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.facturacionesYPagos.importe' | currency:'EUR'}}</label>
-                            <input [disabled]="!disableImput || !permisoEscritura" type="number"  [(ngModel)]="filtrosAdi.importe" class="form-control" />
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }}</label>
+                            <input [disabled]="!disableImput || !permisoEscritura" type="number"
+                                [(ngModel)]="filtrosAdi.importe" class="form-control" />
                         </div>
-                        <div  class="form-group col-lg-6 col-md-6 verticalAlign">
-                            <a [ngClass]="{ 'enlace': contAsAc== 'asi' || contAsAc== 'act'}" (click)="show($event)" *ngIf="modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
-                            <a *ngIf="!modalTipos">{{'facturacionSJCS.baremos.irAtipos' | translate}}</a>
+                        <div class="form-group col-lg-6 col-md-6 verticalAlign">
+                            <a [ngClass]="{ 'enlace': contAsAc== 'asi' || contAsAc== 'act'}" (click)="show($event)"
+                                *ngIf="modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
+                            <a *ngIf="!modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
                         </div>
-                        <div  class="form-group col-lg-6 col-md-6">
-                            <label>{{'facturacionSJCS.baremosDeGuardia.maximo' | currency:'EUR'}}</label>
-                            <input type="number" [disabled]="!disableImput || !permisoEscritura" [(ngModel)]="filtrosAdi.importeMax" class="form-control" />
+                        <div class="form-group col-lg-6 col-md-6">
+                            <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
+                            <input type="number" [disabled]="!disableImput || !permisoEscritura"
+                                [(ngModel)]="filtrosAdi.importeMax" class="form-control" />
                         </div>
                     </div>
                 </div>
 
                 <div class="bloque col-lg-6 col-md-6 col-sm-6">
-                    <div  class="form-row">
+                    <div class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox [disabled]="!permisoEscritura" [(ngModel)]="facAsuntosAntiguos" value="facAsuntosAntiguos" name="porDispo" (onChange)="onChangeFacAsuntosAntiguos($event)" binary="true" label="{{'facturacionSJCS.baremos.facAsuntosAntiguos' | translate}}"
-                                class="ml-0">n
+                            <p-checkbox [disabled]="!permisoEscritura" [(ngModel)]="facAsuntosAntiguos"
+                                value="facAsuntosAntiguos" name="porDispo"
+                                (onChange)="onChangeFacAsuntosAntiguos($event)" binary="true"
+                                label="{{'facturacionSJCS.baremos.facAsuntosAntiguos' | translate}}" class="ml-0">n
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-12 col-md-12 ">
-                            <p-checkbox [disabled]="!disableConfAdi || !permisoEscritura" [(ngModel)]="procesoFac2014" value="procesoFac2014" name="porDispo" (onChange)="onChangeProcesoFac2014($event)" binary="true" label="{{'facturacionSJCS.baremos.procFac2014' | translate}}"
+                            <p-checkbox [disabled]="!disableConfAdi || !permisoEscritura" [(ngModel)]="procesoFac2014"
+                                value="procesoFac2014" name="porDispo" (onChange)="onChangeProcesoFac2014($event)"
+                                binary="true" label="{{'facturacionSJCS.baremos.procFac2014' | translate}}"
                                 class="ml-0 checkboxexRightCard">
                             </p-checkbox>
-                            <i class="fas fa-info-circle" pTooltip="{{'sjcs.facturacionsjcs.baremoshitostooltipfac2014' | translate}}" tooltipPosition="right"></i>
+                            <i class="fas fa-info-circle"
+                                pTooltip="{{'sjcs.facturacionsjcs.baremoshitostooltipfac2014' | translate}}"
+                                tooltipPosition="right"></i>
                         </div>
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox [disabled]="!disableConfAdi || !disJuiciosRapidos || !permisoEscritura" [(ngModel)]="descontar" value="descontar" name="porDispo" (onChange)="onChangeDescontar($event)" binary="true" label="{{'facturacionSJCS.baremos.descontarGuar' | translate}}"
+                            <p-checkbox [disabled]="!disableConfAdi || !disJuiciosRapidos || !permisoEscritura"
+                                [(ngModel)]="descontar" value="descontar" name="porDispo"
+                                (onChange)="onChangeDescontar($event)" binary="true"
+                                label="{{'facturacionSJCS.baremos.descontarGuar' | translate}}"
                                 class="ml-0 checkboxexRightCard">
                             </p-checkbox>
-                            <i class="fas fa-info-circle" pTooltip="{{'sjcs.facturacionsjcs.baremoshitostooltipenjuiciosrapidos' | translate}}" tooltipPosition="right"></i>
+                            <i class="fas fa-info-circle"
+                                pTooltip="{{'sjcs.facturacionsjcs.baremoshitostooltipenjuiciosrapidos' | translate}}"
+                                tooltipPosition="right"></i>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableConfAdi || !permisoEscritura" value="asi" [(ngModel)]="contAsAc" binary="true" name="contAsAc"  (click)="changeContAsAc()" label="{{'facturacionSJCS.baremos.contAsistencias' | translate}}"></p-radioButton>
+                            <p-radioButton [disabled]="!disableConfAdi || !permisoEscritura" value="asi"
+                                [(ngModel)]="contAsAc" binary="true" name="contAsAc" (click)="changeContAsAc()"
+                                label="{{'facturacionSJCS.baremos.contAsistencias' | translate}}"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableConfAdi || !permisoEscritura" value="act" [(ngModel)]="contAsAc" binary="true" name="contAsAc" (click)="changeContAsAc()" label="{{'facturacionSJCS.baremos.contActuaciones' | translate}}"></p-radioButton>
+                            <p-radioButton [disabled]="!disableConfAdi || !permisoEscritura" value="act"
+                                [(ngModel)]="contAsAc" binary="true" name="contAsAc" (click)="changeContAsAc()"
+                                label="{{'facturacionSJCS.baremos.contActuaciones' | translate}}"></p-radioButton>
                         </div>
                     </div>
                 </div>
@@ -101,11 +125,11 @@
 
             <div class="row">
                 <div class="form-group col-lg-6 col-md-6">
-                    <label>{{'menu.justiciaGratuita.soj' | currency:'EUR'}}</label>
+                    <label>{{ 'menu.justiciaGratuita.soj' | translate }}</label>
                     <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeSOJ" class="form-control" />
                 </div>
                 <div class="form-group col-lg-6 col-md-6">
-                    <label>{{'menu.justiciaGratuita.ejg' | currency:'EUR'}}</label>
+                    <label>{{ 'menu.justiciaGratuita.ejg' | translate }}</label>
                     <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeEJG" class="form-control" />
                 </div>
             </div>
@@ -117,12 +141,13 @@
 </div>
 <p-overlayPanel class="overlayPanelPrueba" (onBeforeHide)="hideOverlay($event)" [dismissable]="true"
     [showCloseIcon]="true" #op>
-<!-- <p-dialog width="1300" height ="1200" responsive="true" modal="modal" [draggable]="false" resizable="true" [(visible)]="showModal" -->
+    <!-- <p-dialog width="1300" height ="1200" responsive="true" modal="modal" [draggable]="false" resizable="true" [(visible)]="showModal" -->
     <!-- (onHide)="cerrarDialog()"> -->
     <!-- <p-scrollPanel width="auto" height="auto"> -->
-        <app-gestion-tiposasistencia *ngIf="contAsAc == 'asi' && showModal" [origenBaremos]="origenBaremos">
-        </app-gestion-tiposasistencia>
-        <app-gestion-tiposactuacion *ngIf="contAsAc == 'act' && showModal" [origenBaremos]="origenBaremos"></app-gestion-tiposactuacion>
+    <app-gestion-tiposasistencia *ngIf="contAsAc == 'asi' && showModal" [origenBaremos]="origenBaremos">
+    </app-gestion-tiposasistencia>
+    <app-gestion-tiposactuacion *ngIf="contAsAc == 'act' && showModal" [origenBaremos]="origenBaremos">
+    </app-gestion-tiposactuacion>
     <!-- </p-scrollPanel> -->
 </p-overlayPanel>
 <!-- </p-dialog> -->

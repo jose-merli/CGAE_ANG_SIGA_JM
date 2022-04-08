@@ -135,7 +135,7 @@
           <tr class="justify-content-start">
             <td [attr.colspan]="columns.length">
               <div (click)="toggleGrupo(rowIndex)" class="d-flex justify-content-start align-items-center">
-                <label>{{ (grupo['key'] != numeroAbono ? 'facturacionSJCS.facturacionesYPagos.factura' 
+                <label>{{ (numeroAbono == null || grupo['key'] != numeroAbono ? 'facturacionSJCS.facturacionesYPagos.factura' 
                   : 'facturacionPyS.facturas.facturaRect.literal' ) | translate }} {{ grupo['key'] }}</label>
                 <i class="fa fa-{{ grupo['activo'] ? 'angle-up' : 'angle-down' }} ml-auto"></i>
               </div>
@@ -143,7 +143,7 @@
           </tr>
 
           <!-- Columnas de la factura -->
-          <ng-container *ngIf="grupo['activo'] && grupo['key'] != numeroAbono">
+          <ng-container *ngIf="grupo['activo'] && (numeroAbono == null || grupo['key'] != numeroAbono)">
             <tr *ngFor="let dato of grupo['values']">
               <td *ngFor="let col of columns">
                 <div [ngSwitch]="col.field">
@@ -211,7 +211,7 @@
           </ng-container>
 
           <!-- Columnas del abono -->
-          <ng-container *ngIf="grupo['activo'] && grupo['key'] == numeroAbono">
+          <ng-container *ngIf="grupo['activo'] && numeroAbono != null && grupo['key'] == numeroAbono">
             <tr *ngFor="let dato of grupo['values']">
               <td *ngFor="let col of columns">
                 <div [ngSwitch]="col.field">

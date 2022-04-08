@@ -58,90 +58,7 @@ export class FichaActuacionComponent implements OnInit {
     enlaces: []
   };
 
-  listaTarjetas = [
-    {
-      id: 'sjcsDesigActuaOfiDatosGen',
-      nombre: "Datos Generales",
-      imagen: "",
-      icono: 'far fa-address-book',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: [
-        {
-          "key": "Juzgado",
-          "value": ""
-        },
-        {
-          "key": "Módulo",
-          "value": ""
-        },
-        {
-          "key": "Acreditación",
-          "value": ""
-        },
-      ]
-    },
-    {
-      id: 'sjcsDesigActuaOfiJustifi',
-      nombre: "Justificación",
-      imagen: "",
-      icono: 'fa fa-gavel',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: [
-        {
-          "key": "Fecha Justificación",
-          "value": ""
-        },
-        {
-          "key": "Estado",
-          "value": ""
-        },
-      ]
-    },
-    {
-      id: 'sjcsDesigActuaOfiDatFac',
-      nombre: "Datos Facturación",
-      imagen: "",
-      icono: 'fa fa-usd',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: []
-    },
-    {
-      id: 'sjcsDesigActuaOfiRela',
-      nombre: "Relaciones",
-      imagen: "",
-      icono: 'fas fa-link',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: []
-    },
-    {
-      id: 'sjcsDesigActuaOfiHist',
-      nombre: "Histórico",
-      imagen: "",
-      icono: 'fas fa-table',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: []
-    },
-    {
-      id: 'sjcsDesigActuaOfiDoc',
-      nombre: "Documentación",
-      imagen: "",
-      icono: 'fa fa-briefcase',
-      fixed: false,
-      detalle: true,
-      opened: false,
-      campos: []
-    }
-  ];
+  listaTarjetas: any[];
 
   institucionActual: string = '';
   actuacionDesigna: Actuacion;
@@ -154,7 +71,15 @@ export class FichaActuacionComponent implements OnInit {
   relaciones: any;
   isColegiado;
   documentos: DocumentoDesignaItem[] = [];
+
   modoLectura: boolean = false;
+  modoLecturaDocumentacion: boolean = false;
+  modoLecturaDatosGenerales: boolean = false;
+  modoLecturaJustificacion: boolean = false;
+  modoLecturaDatosFacturacion: boolean = false;
+  modoLecturaRelaciones: boolean = false;
+  modoLecturaHistorico: boolean = false;
+
   permiteTurno: boolean;
   openTarjetaFac: Boolean = false;
 
@@ -166,9 +91,15 @@ export class FichaActuacionComponent implements OnInit {
     private commonsService: CommonsService,
     private router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    // Obtener los permisos de las tarjetas
+    await this.getVisibilidadTarjetas();
 
-    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+    // Añadimos las tarjetas plegadas a la ficha (permisos ya obtenidos)
+    this.getTarjetasPlegadas();
+
+    // Información de la ficha y las tarjetas plegadas
+    await this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
         let permisoEscritura = respuesta;
 
@@ -236,6 +167,25 @@ export class FichaActuacionComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
+    this.goTop();
+
+    this.listaTarjetas.forEach(tarj => {
+      let tarjTmp = {
+        id: tarj.id,
+        ref: document.getElementById(tarj.id),
+        nombre: tarj.nombre
+      };
+
+      this.tarjetaFija.enlaces.push(tarjTmp);
+    });
+
+    let tarjTmp = {
+      id: 'facSJCSTarjFacGene',
+      ref: document.getElementById('facSJCSTarjFacGene'),
+      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+    };
+
+    this.tarjetaFija.enlaces.push(tarjTmp);
   }
 
   cargaInicial() {
@@ -258,28 +208,108 @@ export class FichaActuacionComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit() {
+  getTarjetasPlegadas() {
+    this.listaTarjetas = [];
 
-    this.goTop();
+    if (this.modoLecturaDatosGenerales) {
+      this.listaTarjetas.push({
+        id: 'sjcsDesigActuaOfiDatosGen',
+        nombre: "Datos Generales",
+        imagen: "",
+        icono: 'far fa-address-book',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: [
+          {
+            "key": "Juzgado",
+            "value": ""
+          },
+          {
+            "key": "Módulo",
+            "value": ""
+          },
+          {
+            "key": "Acreditación",
+            "value": ""
+          },
+        ]
+      });
+    }
 
-    this.listaTarjetas.forEach(tarj => {
-      let tarjTmp = {
-        id: tarj.id,
-        ref: document.getElementById(tarj.id),
-        nombre: tarj.nombre
-      };
+    if (this.modoLecturaJustificacion) {
+      this.listaTarjetas.push({
+        id: 'sjcsDesigActuaOfiJustifi',
+        nombre: "Justificación",
+        imagen: "",
+        icono: 'fa fa-gavel',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: [
+          {
+            "key": "Fecha Justificación",
+            "value": ""
+          },
+          {
+            "key": "Estado",
+            "value": ""
+          },
+        ]
+      });
+    }
 
-      this.tarjetaFija.enlaces.push(tarjTmp);
-    });
+    if (this.modoLecturaDatosFacturacion) {
+      this.listaTarjetas.push({
+        id: 'sjcsDesigActuaOfiDatFac',
+        nombre: "Datos Facturación",
+        imagen: "",
+        icono: 'fa fa-usd',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: []
+      });
+    }
 
-    let tarjTmp = {
-      id: 'facSJCSTarjFacGene',
-      ref: document.getElementById('facSJCSTarjFacGene'),
-      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
-    };
+    if (this.modoLecturaRelaciones) {
+      this.listaTarjetas.push({
+        id: 'sjcsDesigActuaOfiRela',
+        nombre: "Relaciones",
+        imagen: "",
+        icono: 'fas fa-link',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: []
+      });
+    }
 
-    this.tarjetaFija.enlaces.push(tarjTmp);
+    if (this.modoLecturaHistorico) {
+      this.listaTarjetas.push({
+        id: 'sjcsDesigActuaOfiHist',
+        nombre: "Histórico",
+        imagen: "",
+        icono: 'fas fa-table',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: []
+      });
+    }
 
+    if (this.modoLecturaDocumentacion) {
+      this.listaTarjetas.push({
+        id: 'sjcsDesigActuaOfiDoc',
+        nombre: "Documentación",
+        imagen: "",
+        icono: 'fa fa-briefcase',
+        fixed: false,
+        detalle: true,
+        opened: false,
+        campos: []
+      });
+    }
   }
 
   isOpenReceive(event) {
@@ -445,7 +475,7 @@ export class FichaActuacionComponent implements OnInit {
       });
     }
 
-    if (this.listaAcciones.length > 0) {
+    if (this.modoLecturaHistorico && this.listaAcciones.length > 0) {
       let tarj = this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiHist');
 
       tarj.campos = [];
@@ -543,52 +573,64 @@ export class FichaActuacionComponent implements OnInit {
       this.tarjetaFija.campos[3].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaActuacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
     }
     // Se rellenan los campos de la tarjeta de Datos Generales plegada
-    this.listaTarjetas[0].campos[0].value = this.actuacionDesigna.actuacion.nombreJuzgado;
-    this.listaTarjetas[0].campos[1].value = this.actuacionDesigna.actuacion.modulo;
-    this.listaTarjetas[0].campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
+    if (this.modoLecturaDatosGenerales) {
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').campos[0].value = this.actuacionDesigna.actuacion.nombreJuzgado;
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').campos[1].value = this.actuacionDesigna.actuacion.modulo;
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').campos[2].value = this.actuacionDesigna.actuacion.acreditacion;
+    }
 
     // Se rellenan los campos de la tarjeta de Justificación plegada
+    if (this.modoLecturaJustificacion) {
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
-      this.listaTarjetas[1].campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
     } else {
-      this.listaTarjetas[1].campos[0].value = null;
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[0].value = null;
     }
-    this.listaTarjetas[1].campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+    this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+    }
 
     // Se rellenan los campos de la tarjeta Relaciones plegada
-    if (this.relaciones == undefined || this.relaciones == null || this.relaciones.length == 0) {
-      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
-        "key": null,
-        "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
-      }];
-    } else if (this.relaciones.length > 0) {
-      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
-        "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
-        "value": this.relaciones[0].sjcs
-      },
-      {
-        "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
-        "value": this.relaciones.length
-      }];
+    if (this.modoLecturaRelaciones) {
+      if (this.relaciones == undefined || this.relaciones == null || this.relaciones.length == 0) {
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
+          "key": null,
+          "value": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.vacio')
+        }];
+      } else if (this.relaciones.length > 0) {
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiRela').campos = [{
+          "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+          "value": this.relaciones[0].sjcs
+        },
+        {
+          "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
+          "value": this.relaciones.length
+        }];
+      }
     }
 
     // Se rellenan los campos de la tarjeta Datos Facturación plegada
-    if (this.actuacionDesigna.actuacion.idPartidaPresupuestaria == undefined || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == null || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == '') {
-      let campos = [{
-        "key": "Partida Presupuestaria",
-        "value": ""
-      }];
-      this.listaTarjetas[2].campos = campos;
-    } else {
-      let campos = [{
-        "key": "Partida Presupuestaria",
-        "value": this.actuacionDesigna.actuacion.partidaPresupuestaria
-      }];
-      this.listaTarjetas[2].campos = campos;
+    if (this.modoLecturaDatosFacturacion) {
+      if (this.actuacionDesigna.actuacion.idPartidaPresupuestaria == undefined || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == null || this.actuacionDesigna.actuacion.idPartidaPresupuestaria == '') {
+        let campos = [{
+          "key": "Partida Presupuestaria",
+          "value": ""
+        }];
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatFac').campos = campos;
+      } else {
+        let campos = [{
+          "key": "Partida Presupuestaria",
+          "value": this.actuacionDesigna.actuacion.partidaPresupuestaria
+        }];
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatFac').campos = campos;
+      }
     }
 
     this.getAccionesActuacion();
-    this.getDocumentosPorActDesigna();
+
+    // Información de la tarjeta plegada de Documentación
+    if (this.modoLecturaDocumentacion) {
+      this.getDocumentosPorActDesigna();
+    }
   }
 
   getDocumentosPorActDesigna() {
@@ -662,6 +704,71 @@ export class FichaActuacionComponent implements OnInit {
       }
     );
 
+  }
+
+  getVisibilidadTarjetas() {
+    return Promise.all([
+      this.getVisibilidadDatosGenerales(),
+      this.getVisibilidadJustificacion(),
+      this.getVisibilidadDatosFacturacion(),
+      this.getVisibilidadRelaciones(),
+      this.getVisibilidadHistorico(),
+      this.getVisibilidadDocumentacion()
+    ]);
+  }
+
+  getVisibilidadDatosGenerales() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDatosGenerales)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaDatosGenerales = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  getVisibilidadJustificacion() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesJustificacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaJustificacion = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  getVisibilidadDatosFacturacion() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesFacturacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaDatosFacturacion = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  getVisibilidadRelaciones() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesRelaciones)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaRelaciones = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  getVisibilidadHistorico() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesHistorico)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaHistorico = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
+  }
+
+  getVisibilidadDocumentacion() {
+    return this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDocumentacion)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
+        this.modoLecturaDocumentacion = permisoEscritura != undefined;
+      }
+      ).catch(error => console.error(error));
   }
 
   guardarDatos() {

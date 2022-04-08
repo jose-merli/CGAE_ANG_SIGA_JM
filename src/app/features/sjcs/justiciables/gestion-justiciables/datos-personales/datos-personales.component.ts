@@ -83,6 +83,9 @@ export class DatosPersonalesComponent implements OnInit {
   @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
   @Output() newJusticiable = new EventEmitter<any>();
   @Output() searchJusticiableOverwritten = new EventEmitter<any>();
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<String>();
+  @Input() tarjetaDatosPersonales;
 
   @Input() showTarjeta;
   @Input() fromJusticiable: boolean = false;
@@ -182,6 +185,8 @@ export class DatosPersonalesComponent implements OnInit {
     if (this.body.nif != undefined && this.body.nif != null && this.body.nif != "") {
       this.compruebaDNI();
     }
+
+    if (this.tarjetaDatosPersonales == true) this.showTarjeta = this.tarjetaDatosPersonales;
   }
   parseFechas() {
     if (this.body.fechanacimiento != undefined && this.body.fechanacimiento != null) {
@@ -1234,7 +1239,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onHideTarjeta() {
-    this.showTarjeta = !this.showTarjeta;
+    this.showTarjeta = !this.showTarjeta; // Funcionalidad para mostrar contenido de la Tarjeta pulsando a la misma.
+    this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Personales.
+    this.idOpened.emit('Personales'); // Constante para abrir la Tarjeta de Personales.
   }
 
   changeEmail(value) {

@@ -11,6 +11,7 @@ import { DataTable, Dialog } from 'primeng/primeng';
 import { DatePipe } from '@angular/common';
 import { saveAs } from "file-saver/FileSaver";
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
+import { EjgService } from '../services/ejg.service';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -75,7 +76,8 @@ export class UnidadFamiliarComponent implements OnInit {
     private persistenceService: PersistenceService, private router: Router,
     private datepipe: DatePipe,
     private commonsService: CommonsService, private translateService: TranslateService,
-    private sigaServices: SigaServices) { }
+    private sigaServices: SigaServices,
+    private ejgService : EjgService) { }
 
   ngOnInit() {
 
@@ -558,6 +560,7 @@ export class UnidadFamiliarComponent implements OnInit {
         this.progressSpinner = false;
         this.selectDatos = [];
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.ejgService.emitirEvento();
       },
       err => {
         //console.log(err);

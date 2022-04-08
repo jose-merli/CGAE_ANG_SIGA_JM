@@ -41,8 +41,11 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 
 	@Output() modoEdicionSend = new EventEmitter<any>();
 	@Output() createJusticiableByUpdateSolicitud = new EventEmitter<any>();
+	@Output() opened = new EventEmitter<Boolean>();
+	@Output() idOpened = new EventEmitter<String>();
 	@Input() showTarjeta;
 	@Input() body: JusticiableItem;
+	@Input() tarjetaDatosSolicitud;
 
 	constructor(
 		private sigaServices: SigaServices,
@@ -117,6 +120,8 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 		} else {
 			this.modoEdicion = true;
 		}
+
+		if (this.tarjetaDatosSolicitud == true) this.showTarjeta = this.tarjetaDatosSolicitud;
 	}
 
 	tratamientoDescripcionesTarjeta() {
@@ -354,5 +359,8 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 		if (this.modoEdicion) {
 			this.showTarjeta = !this.showTarjeta;
 		}
+		
+		this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Solicitud.
+		this.idOpened.emit('Solicitud'); // Constante para abrir la Tarjeta de Solicitud.
 	}
 }

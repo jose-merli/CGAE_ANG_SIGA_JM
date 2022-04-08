@@ -1,18 +1,18 @@
 import { Component, OnInit, Input, EventEmitter, Output, ViewEncapsulation, SimpleChanges, ViewChild } from '@angular/core';
-import { EJGItem } from '../../../../../../../models/sjcs/EJGItem';
-import { PersistenceService } from '../../../../../../../_services/persistence.service';
-import { SigaServices } from '../../../../../../../_services/siga.service';
-import { CommonsService } from '../../../../../../../_services/commons.service';
-import { TranslateService } from '../../../../../../../commons/translate';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { TranslateService } from '../../../../../commons/translate';
 import { Router } from '@angular/router';
 import { MultiSelect } from 'primeng/multiselect';
 import { noComponentFactoryError } from '@angular/core/src/linker/component_factory_resolver';
 import { Message } from 'primeng/components/common/api';
-import { Location } from '@angular/common';
-import { DesignaItem } from '../../../../../../../models/sjcs/DesignaItem';
-import { AuthenticationService } from "../../../../../../../_services/authentication.service";
+import { DatePipe, Location } from '@angular/common';
+import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
+import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { flattenStyles } from '@angular/platform-browser/src/dom/dom_renderer';
-import { ParametroRequestDto } from '../../../../../../../models/ParametroRequestDto';
+import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 
 @Component({
   selector: 'app-defensa-juridica',
@@ -23,7 +23,7 @@ export class DefensaJuridicaComponent implements OnInit {
 
   progressSpinner: boolean = false;
   body: EJGItem = new EJGItem();
-  designa = null;
+  designa = new DesignaItem();
   bodyInicial: EJGItem;
   @Input() permisoEscritura: boolean;
   @Input() permisoDefensaJuridica:boolean;
@@ -60,67 +60,73 @@ export class DefensaJuridicaComponent implements OnInit {
     private translateService: TranslateService,
     private router: Router,
     private authenticationService: AuthenticationService,
+    private datePipe: DatePipe,
     private location: Location) { }
 
   ngOnInit() {
+    this.body = this.persistenceService.getDatos();
+    //Valor inicial a reestablecer
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
     //Se obtiene la designacion si hay una designacion entre las relaciones
-    if (sessionStorage.getItem("Designa")){
-       this.designa = JSON.parse(sessionStorage.getItem("Designa"));
-    }
+    setTimeout(() => {
+      this.cargarDatosDefensaJuridica();
+      
+      this.getEjgItem();
 
-    this.body = this.persistenceService.getDatos();
+      //Se sobreescribe la informacion de pre designacion (Primera mitad de la tarjeta) 
+      //en this.body en el caso de que haya una designacion
+      if (this.designa != null) {
+        this.body.numAnnioProcedimiento = this.body.procedimiento;
+        if(this.designa.nig!=null && this.designa.nig!= undefined){
+          this.body.nig = this.designa.nig.toString();
+        }
+        if(this.designa.observaciones!=null && this.designa.observaciones!= undefined){
+          this.body.observaciones = this.designa.observaciones.toString();
+        }
+        if(this.designa.idCalidad!=null && this.designa.idCalidad!= undefined){
+          this.body.calidad = this.designa.idCalidad.toString();
+        }
+        this.body.idPretension = this.designa.idPretension;
+        if(this.designa.idJuzgado!=null && this.designa.idJuzgado!= undefined){
+          this.body.juzgado = this.designa.idJuzgado.toString();
+        }
 
-    this.getEjgItem();
+        //Variables de designacion que nos interesa representar
+        /* ano: "D2021/42"
+          delitos: null
+          idCalidad: null
+          idJuzgado: 0
+          idJuzgados: null
+          idPretension: 0
+          idProcedimiento: ""
+          idProcedimientos: null
+          idRol: 0
+          nig: null
+          nombreJuzgado: ""
+          nombreProcedimiento: ""
+          observaciones  */
+      }
 
-    //Se sobreescribe la informacion de pre designacion (Primera mitad de la tarjeta) 
-    //en this.body en el caso de que haya una designacion
-    if (this.designa != null) {
-      //this.body = this.designa;
-      this.body.numAnnioProcedimiento = this.body.procedimiento;
-      this.body.nig = this.designa.nig;
-      this.body.observaciones = this.designa.observaciones;
-      this.body.calidad = this.designa.idCalidad;
-      this.body.idPretension = this.designa.idPretension;
-      this.body.juzgado = this.designa.idJuzgado;
+      //this.progressSpinner = true;
+      this.getComboPreceptivo();
+      this.getComboRenuncia();
+      this.getComboSituaciones();
+      this.getComboCDetencion();
+      this.getComboCalidad();
+      this.getComboJuzgado();
+      if (this.body.juzgado != null) this.getComboProcedimiento();
+      this.getComboDelitos();
+      this.progressSpinner = false;
+      if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
-      //Variables de designacion que nos interesa representar
-      /* ano: "D2021/42"
-        delitos: null
-        idCalidad: null
-        idJuzgado: 0
-        idJuzgados: null
-        idPretension: 0
-        idProcedimiento: ""
-        idProcedimientos: null
-        idRol: 0
-        nig: null
-        nombreJuzgado: ""
-        nombreProcedimiento: ""
-        observaciones  */
-    }
-    //Valor inicial a reestablecer
-    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-
-    this.progressSpinner = true;
-    this.getComboPreceptivo();
-    this.getComboRenuncia();
-    this.getComboSituaciones();
-    this.getComboCDetencion();
-    this.getComboCalidad();
-    this.getComboJuzgado();
-    if (this.body.juzgado != null) this.getComboProcedimiento();
-    this.getComboDelitos();
-    this.progressSpinner = false;
-    if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
-
-    if(this.permisoEscritura){
-      this.perEscritura = true;
-    }else{
-      this.perEscritura = false;
-    }
-
+      if(this.permisoEscritura){
+        this.perEscritura = true;
+      }else{
+        this.perEscritura = false;
+      }
+    }, 1000);
   }
   ngOnChanges(changes: SimpleChanges): void {
 		if(this.permisoEscritura){
@@ -138,7 +144,7 @@ export class DefensaJuridicaComponent implements OnInit {
     parametro.modulo = "SCS";
     parametro.parametrosGenerales = "NIG_VALIDADOR";
     if (nig != null && nig != '') {
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
        this.sigaServices
         .postPaginado("parametros_search", "?numPagina=1", parametro)
         .toPromise().then(
@@ -167,7 +173,7 @@ export class DefensaJuridicaComponent implements OnInit {
                 }
               }
             });
-            this.progressSpinner = false;
+            //this.progressSpinner = false;
           }).catch(error => {
             let severity = "error";
             let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
@@ -179,7 +185,7 @@ export class DefensaJuridicaComponent implements OnInit {
             });
             ret = false;
           });
-          this.progressSpinner = false;
+          //this.progressSpinner = false;
     }
 
     if (!ret) this.save();
@@ -559,4 +565,169 @@ export class DefensaJuridicaComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-}
+
+  cargarDatosDefensaJuridica() {
+		//this.progressSpinner = true;
+		let relaciones = [];
+    let aux = this.persistenceService.getDatosRelaciones();
+    relaciones.push(aux);
+		//Comprobamos si entre la relaciones hay una designacion
+		let foundDesigna = relaciones.find(element =>
+		  element.sjcs == "DESIGNACIÓN"
+		)
+		if (foundDesigna != undefined) {
+		  this.designa.ano = parseInt(foundDesigna.anio.toString());
+		  this.designa.codigo = foundDesigna.numero.toString();
+	
+		  if (this.designa.numColegiado == "") {
+        this.designa.numColegiado = null;
+		  }
+		  this.sigaServices.post("designaciones_busqueda", this.designa).subscribe(
+			n => {
+			  let datos = JSON.parse(n.body);
+			  let error;
+	
+			  if (datos[0] != null && datos[0] != undefined) {
+          if (datos[0].error != null) {
+            error = datos[0].error;
+          }
+			  }
+	
+			  datos.forEach(designa => {
+          designa.factConvenio = designa.ano;
+          designa.anio = designa.ano;
+          designa.ano = 'D' + designa.ano + '/' + designa.codigo;
+          //  element.fechaEstado = new Date(element.fechaEstado);
+          designa.fechaEstado = this.formatDate(designa.fechaEstado);
+          designa.fechaFin = this.formatDate(designa.fechaFin);
+          designa.fechaAlta = this.formatDate(designa.fechaAlta);
+          designa.fechaEntradaInicio = this.formatDate(designa.fechaEntradaInicio);
+          if (designa.estado == 'V') {
+            designa.sufijo = designa.estado;
+            designa.estado = 'Activo';
+          } else if (designa.estado == 'F') {
+            designa.sufijo = designa.estado;
+            designa.estado = 'Finalizado';
+          } else if (designa.estado == 'A') {
+            designa.sufijo = designa.estado;
+            designa.estado = 'Anulada';
+          }
+          designa.nombreColegiado = designa.apellido1Colegiado + " " + designa.apellido2Colegiado + ", " + designa.nombreColegiado;
+          if (designa.nombreInteresado != null) {
+            designa.nombreInteresado = designa.apellido1Interesado + " " + designa.apellido2Interesado + ", " + designa.nombreInteresado;
+          }
+          if (designa.art27 == "1") {
+            designa.art27 = "Si";
+          } else {
+            designa.art27 = "No";
+          }
+    
+          const params = {
+            anio: designa.factConvenio,
+            idTurno: designa.idTurno,
+            numero: designa.numero,
+            historico: false
+          };
+    
+          this.getDatosAdicionales(designa);
+			  });
+			},
+			err => {
+			  //this.progressSpinner = false;
+			}
+		  );
+		}
+	  }
+	
+	
+	  getDatosAdicionales(item) {
+		//this.progressSpinner = true;
+		let designaAdicionales = new DesignaItem();
+		let anio = item.ano.split("/");
+		designaAdicionales.ano = Number(anio[0].substring(1, 5));
+		designaAdicionales.numero = item.numero;
+		designaAdicionales.idTurno = item.idTurno;
+		this.sigaServices.post("designaciones_getDatosAdicionales", designaAdicionales).subscribe(
+		  n => {
+	
+			let datosAdicionales = JSON.parse(n.body);
+			if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
+			  item.delitos = datosAdicionales[0].delitos;
+			  item.fechaOficioJuzgado = datosAdicionales[0].fechaOficioJuzgado;
+			  item.observaciones = datosAdicionales[0].observaciones;
+			  item.fechaRecepcionColegio = datosAdicionales[0].fechaRecepcionColegio;
+			  item.defensaJuridica = datosAdicionales[0].defensaJuridica;
+			  item.fechaJuicio = datosAdicionales[0].fechaJuicio;
+			}
+			this.getDatosPre(item);
+	
+		  },
+		  err => {
+			//this.progressSpinner = false;
+		  }, () => {
+		  }
+		);
+	  }
+	
+	  getDatosPre(item) {
+		
+		let dataProcedimiento: DesignaItem = new DesignaItem();
+		dataProcedimiento.ano = item.factConvenio;
+		dataProcedimiento.idPretension = item.idPretension;
+		dataProcedimiento.idTurno = item.idTurno;
+		dataProcedimiento.numero = item.numero;
+		this.sigaServices.post("designaciones_busquedaProcedimiento", dataProcedimiento).subscribe(
+		  n => {
+			let datosProcedimiento = JSON.parse(n.body);
+			if (datosProcedimiento.length == 0) {
+			  item.nombreProcedimiento = "";
+			  item.idProcedimiento = "";
+			} else {
+			  item.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
+			  item.idProcedimiento = dataProcedimiento.idPretension;
+			}
+	
+			let dataModulo = new DesignaItem();
+			dataModulo.idProcedimiento = item.idProcedimiento;
+			dataModulo.idTurno = item.idTurno;
+			dataModulo.ano = item.factConvenio;
+			dataModulo.numero = item.numero
+			this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
+			  n => {
+				let datosModulo = JSON.parse(n.body);
+				if (datosModulo.length == 0) {
+				  item.modulo = "";
+				  item.idModulo = "";
+				} else {
+				  item.modulo = datosModulo[0].modulo;
+				  item.idModulo = datosModulo[0].idModulo;
+				}
+				this.sigaServices.post("designaciones_busquedaJuzgado", item.idJuzgado).subscribe(
+				  n => {
+					item.nombreJuzgado = n.body;
+					//this.progressSpinner = false;
+					this.designa = item;
+				  },
+				  err => {
+					item.nombreJuzgado = "";
+					//this.progressSpinner = false;
+					this.designa = item;
+				  });
+			  },
+			  err => {
+				//this.progressSpinner = false;
+        this.designa = item;
+			  });
+		  },
+		  err => {
+			//this.progressSpinner = false;
+      this.designa = item;
+		  });
+	  }
+
+	  formatDate(date) {
+		const pattern = 'dd/MM/yyyy';
+		return this.datePipe.transform(date, pattern);
+	  }
+
+ }

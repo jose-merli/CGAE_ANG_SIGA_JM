@@ -80,9 +80,9 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
           if(n.caracteristicasAsistenciaItems.length > 0){
             this.caracteristica = n.caracteristicasAsistenciaItems[0];
             this.caracteristicaAux = Object.assign({},this.caracteristica);
-            if(this.caracteristica.asesoramiento.toString() == '0'){
+            if(this.caracteristica.asesoramiento != undefined && this.caracteristica.asesoramiento.toString() == '0'){
               this.caracteristica.asesoramiento = false;
-            }else if(this.caracteristica.asesoramiento.toString() == '1'){
+            }else if(this.caracteristica.asesoramiento != undefined && this.caracteristica.asesoramiento.toString() == '1'){
               this.caracteristica.asesoramiento = true;
             }
           }

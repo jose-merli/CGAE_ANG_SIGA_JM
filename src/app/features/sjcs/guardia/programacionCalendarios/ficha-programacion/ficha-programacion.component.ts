@@ -14,6 +14,8 @@ import { GlobalGuardiasService } from '../../guardiasGlobal.service';
 import { saveAs } from "file-saver/FileSaver";
 import { CalendarioProgramadoItem } from '../../../../../models/guardia/CalendarioProgramadoItem';
 import * as moment from 'moment';
+import { CalendariosDatosEntradaItem } from '../CalendariosDatosEntradaItem.model';
+import { Message } from 'primeng/primeng';
 
 @Component({
   selector: 'app-ficha-programacion',
@@ -71,7 +73,7 @@ export class FichaProgramacionComponent implements OnInit {
     'nombre': '',
     'generado': '',
     'numGuardias': '',
-    'listaGuarias': {label: '', value: ''},
+    'listaGuarias': {label: '', value: undefined},
     'fechaDesde': '',
     'fechaHasta': '',
     'fechaProgramacion': null,
@@ -80,6 +82,7 @@ export class FichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'guardias': [],
   };
   
   datosGeneralesIniciales = {
@@ -98,6 +101,7 @@ export class FichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'guardias': []
   };
   rowGroupsSaved: Row[];
   dataToReceive = {
@@ -129,6 +133,16 @@ export class FichaProgramacionComponent implements OnInit {
   suscription: Subscription;
   wrongList = [];
   fromCombo = false;
+
+  comboEstados = [
+    { label: "Pendiente", value: "4" },
+    { label: "Programada", value: "0" },
+    { label: "En proceso", value: "1" },
+    { label: "Procesada con Errores", value: "2" },
+    { label: "Generada", value: "3" },
+    { label: "Reprogramada", value: "5" }
+  ];
+
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
     private commonService: CommonsService,
@@ -160,41 +174,34 @@ export class FichaProgramacionComponent implements OnInit {
       this.rowGroupsSaved = this.persistenceService.getDatos().tabla;
       //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
       this.datosGenerales = this.persistenceService.getDatos();
-      this.datosGeneralesIniciales = Object.assign({},this.datosGenerales );
+      this.datosGeneralesIniciales = deepCopy(this.datosGenerales);
       this.duplicar = this.dataToReceive.duplicar;
       //this.search();
       this.modoEdicion = true;
+    } else if (sessionStorage.getItem('guardiaColegiadoData')) { //si el origen es guardias de colegiado
+      this.dataToReceive = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
+    
+
+      if (this.dataToReceive.idCalendarioProgramado != null){
+        this.disableGenerar = false;
+        this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
+      }else{
+        this.disableGenerar = true;
+        this.dataReady = true;
+      }
+
+      this.rowGroupsSaved = this.dataToReceive.tabla;
+      //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
+      this.datosGenerales = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
+      this.datosGeneralesIniciales = deepCopy(this.datosGenerales);
+      this.duplicar = this.dataToReceive.duplicar;
+      //this.search();
+
+      this.modoEdicion = true;
+      sessionStorage.removeItem('guardiaColegiadoData');
     } else {
       this.modoEdicion = false;
     }
-//si el origen es guardias de colegiado
-
-  if (sessionStorage.getItem('guardiaColegiadoData')) {
-    this.dataToReceive = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
-    
-
-    if (this.dataToReceive.idCalendarioProgramado != null){
-      this.disableGenerar = false;
-      this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
-    }else{
-      this.disableGenerar = true;
-      this.dataReady = true;
-    }
-    this.rowGroupsSaved = this.dataToReceive.tabla;
-    //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
-    this.datosGenerales = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
-    this.datosGeneralesIniciales = Object.assign({},this.datosGenerales );
-    this.duplicar = this.dataToReceive.duplicar;
-    //this.search();
-    this.modoEdicion = true;
-    sessionStorage.removeItem('guardiaColegiadoData');
-  } else {
-    this.modoEdicion = false;
-  }
-
-  
-
-    
 
     this.obtenerPermisos();
 
@@ -205,16 +212,26 @@ export class FichaProgramacionComponent implements OnInit {
         sessionStorage.getItem("filtrosBusquedaGuardias")
       );
     }
-this.estado = this.datosGeneralesIniciales.estado;
-
   
+    this.estado = this.datosGeneralesIniciales.estado;
+
+    // Mensaje mostrado tras acualizar o guardar correctamente
+    if (sessionStorage.getItem("mensaje")) {
+      let message: Message = JSON.parse(sessionStorage.getItem("mensaje"));
+      if (message)
+        this.showMessage(message.severity, message.summary, message.detail);
+      sessionStorage.removeItem("mensaje");
+    }
 
   }
+
   ngOnDestroy(){
     this.suscription.unsubscribe();
    }
   ngOnChanges(changes: SimpleChanges) {
-    this.enviarEnlacesTarjeta();
+    setTimeout(() => {
+      this.enviarEnlacesTarjeta();
+    }, 2000);
   }
   search() {
     this.progressSpinner = true;
@@ -672,6 +689,7 @@ this.estado = this.datosGeneralesIniciales.estado;
           'idCalendarioProgramado': '',
           'idTurno': '',
           'idGuardia': '',
+          'guardias': [],
         };
 
       datosGeneralesToSave = datGen;
@@ -730,6 +748,7 @@ this.estado = this.datosGeneralesIniciales.estado;
         'idCalG': datosGeneralesToSave.listaGuarias.value,
         'listaGuardias': datosGeneralesToSave.listaGuarias.label,
         'idCalendarioProgramado': datosGeneralesToSave.idCalendarioProgramado,
+        'guardias': datosGeneralesToSave.guardias
         //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
       };
@@ -742,7 +761,7 @@ this.estado = this.datosGeneralesIniciales.estado;
     })
     if (this.wrongList.length == 0){
       //console.log('datosGeneralesToSave.idCalendarioProgramado: ', datosGeneralesToSave.idCalendarioProgramado)
-      if (datosGeneralesToSave.idCalendarioProgramado != null && datosGeneralesToSave.idCalendarioProgramado != '0'){
+      if (datosGeneralesToSave.idCalendarioProgramado != null && datosGeneralesToSave.idCalendarioProgramado != '0' && datosGeneralesToSave.idCalendarioProgramado.length != 0){
         //actualizar existente
         //console.log('****UPDATE')
         this.updateCalendarData(dataToSave);
@@ -880,16 +899,25 @@ this.estado = this.datosGeneralesIniciales.estado;
   }
 
   updateCalendarData(datos){
+    this.progressSpinner = true;
        this.sigaServices.post(
       "guardiaCalendario_updateCalendarioProgramado",  datos).subscribe(
         data => {
           this.showMessage('info', "Se ha actualizado correctamente", "Se ha actualizado correctamente");
+          sessionStorage.setItem("mensaje", JSON.stringify({
+            severity: "info", summary: "Se ha actualizado correctamente", detail: "Se ha actualizado correctamente"
+          }));
+          this.progressSpinner = false;
+          
+          this.findFichaProgramacion(datos);
         }, err => {
-          if(err.status = "409"){
-            this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");
-          }else {
+          let error = JSON.parse(err.error);
+          if (err.status = "409" && error.error && error.error.message) {
+            this.showMessage('error', this.translateService.instant("general.message.incorrect"), error.error.message);
+          } else {
             this.showMessage('error', "No se ha actualizado correctamente", "No se ha actualizado correctamente");
           }
+          this.progressSpinner = false;
           //console.log(err);
         });
        
@@ -898,33 +926,49 @@ this.estado = this.datosGeneralesIniciales.estado;
 
   newCalendarProg(datos){
    console.log('datos ana: ', datos)
+   this.dataReady = false;
+   this.progressSpinner = true;
+   
     this.sigaServices.post(
    "guardiaCalendario_newCalendarioProgramado",  datos).subscribe(
      data => {
 
       //console.log('this.persistenciaGuardia: ', this.persistenciaGuardia)
+      
       if (this.persistenciaGuardia != undefined) {
         sessionStorage.setItem(
           "filtrosBusquedaGuardiasFichaGuardia",
           JSON.stringify(this.persistenciaGuardia)
         );
       }
-      if (datos.idCalG == null){
+
+      let body =  JSON.parse(data.body);
+
+      // Se tiene en cuenta la creación de un calendario sin lista de guardias
+      if (datos.idCalG == null && (!datos.guardias || datos.guardias.length == 0)) {
         this.showMessage('info', "Debe asociar alguna guardia", "Debe asociar alguna guardia");
-      }else{
-        this.router.navigate(["/programacionCalendarios"]);
+      } else if (body && body.id) {
+        sessionStorage.setItem("mensaje", JSON.stringify({
+          severity: "info", summary: "Se ha creado correctamente", detail: "Se ha creado correctamente"
+        }));
+        this.findFichaProgramacion({ idCalendarioProgramado: body.id });
       }
-        this.progressSpinner = false;
-     }, err => {
+      
+      this.dataReady = true;
+      this.progressSpinner = false;
+    }, err => {
       this.progressSpinner = false;
       //this.showMessage('error', JSON.stringify(data.body.error.message), JSON.stringify(data.body.error.message));
-      if(err.status = "409"){
-        this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");
-      }else {
+      let error = JSON.parse(err.error);
+      if (err.status = "409" && error.error && error.error.message) {
+        this.showMessage('error', this.translateService.instant("general.message.incorrect"), error.error.message);
+      } else {
         this.showMessage('error', "No se ha generado correctamente", "No se ha generado correctamente");
       }
+
+      this.dataReady = true;
        //console.log(err);
-     });
+    });
 }
 
 descargarLog(event){
@@ -1119,4 +1163,109 @@ descargarLog(event){
     this.router.navigate(["/buscadorColegiados"]);
     
   }
+
+  // Busca la programación por idCalendarioProgramado, para actualizar los datos de la ficha
+  findFichaProgramacion(datos){
+    this.progressSpinner = true;
+    //let jsonEntrada  = JSON.parse(JSON.stringify(datosEntrada))
+    let datosEntrada = 
+      { 
+        'idCalendarioProgramado': datos.idCalendarioProgramado,
+      };
+  
+    this.sigaServices.post("guardiaCalendario_buscar", datosEntrada).subscribe(
+      data => {
+        let error = JSON.parse(data.body).error;
+        let datos = JSON.parse(data.body);
+      
+        console.log(datos)
+        // this.comboGuardiasIncompatibles = [];
+        if (datos.length > 0) {
+
+          let dataToSend = {
+            'duplicar': false,
+            'tabla': [],
+            'turno':datos[0].turno,
+            'nombre': datos[0].nombre,
+            'generado': datos[0].generado,
+            'numGuardias': datos[0].numGuardias,
+            'listaGuarias': {label: datos[0].listaGuardias, value: datos[0].idCalG },
+            'fechaDesde': this.changeDateFormat(datos[0].fechaDesde),
+            'fechaHasta': this.changeDateFormat(datos[0].fechaHasta),
+            'fechaProgramacion': datos[0].fechaProgramacion,
+            'estado': this.getStatusValue(datos[0].estado),
+            'observaciones': datos[0].observaciones,
+            'idCalendarioProgramado': datos[0].idCalendarioProgramado,
+            'idTurno':  datos[0].idTurno,
+            'idGuardia': datos[0].idGuardia
+          }
+
+          this.progressSpinner = false;
+          this.persistenceService.setDatos(dataToSend);
+          this.router.navigate(["/fichaProgramacion"]);
+        } else {
+          sessionStorage.removeItem("mensaje");
+          this.progressSpinner = false;
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        sessionStorage.removeItem("mensaje");
+        //console.log(err);
+    });
+  }
+
+  getStatusValue(id){
+    let status;
+    this.comboEstados.forEach(estado => {
+      if (estado.value != null && id != null){
+        if ( estado.value.toString() == id.toString()){
+          status = estado.label;
+        }
+      }
+    })
+    return status;
+  }
+
+  changeDateFormat(date1){
+    let year = date1.substring(0, 4)
+    let month = date1.substring(5,7)
+    let day = date1.substring(8, 10)
+    let date2 = day + '/' + month + '/' + year;
+    return date2;
+  }
+}
+
+function deepCopy(obj) {
+  var copy;
+
+  // Handle the 3 simple types, and null or undefined
+  if (null == obj || "object" != typeof obj) return obj;
+
+  // Handle Date
+  if (obj instanceof Date) {
+      copy = new Date();
+      copy.setTime(obj.getTime());
+      return copy;
+  }
+
+  // Handle Array
+  if (obj instanceof Array) {
+      copy = [];
+      for (var i = 0, len = obj.length; i < len; i++) {
+          copy[i] = deepCopy(obj[i]);
+      }
+      return copy;
+  }
+
+  // Handle Object
+  if (obj instanceof Object) {
+      copy = {};
+      for (var attr in obj) {
+          if (obj.hasOwnProperty(attr)) copy[attr] = deepCopy(obj[attr]);
+      }
+      return copy;
+  }
+
+  throw new Error("Unable to copy obj! Its type isn't supported.");
 }

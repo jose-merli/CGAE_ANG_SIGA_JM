@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component,EventEmitter, Input, OnChanges, Output, OnInit, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
@@ -15,7 +15,7 @@ import { datos_combos } from '../../../../../utils/datos_combos';
   templateUrl: './datos-unidad-familiar.component.html',
   styleUrls: ['./datos-unidad-familiar.component.scss']
 })
-export class DatosUnidadFamiliarComponent implements OnInit {
+export class DatosUnidadFamiliarComponent implements OnInit, OnChanges  {
 
   solicitanteCabecera: String = "";
   parentescoCabecera: String = "";
@@ -50,6 +50,10 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   @Input() navigateToJusticiable: boolean = false;
   @Input() fromUniFamiliar: boolean = false;
   @Input() solicitante: JusticiableItem = null;
+  @Input() tarjetaDatosUnidadFamiliar;
+
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<String>();
 
 
   constructor(private router: Router,
@@ -118,10 +122,13 @@ export class DatosUnidadFamiliarComponent implements OnInit {
 
   ngOnChanges(simpleChanges: SimpleChanges){
     if(this.solicitante != null && this.solicitante.idpersona != this.generalBody.uf_idPersona)this.disableSol = true;
+    if (this.tarjetaDatosUnidadFamiliar == true) this.showTarjeta = this.tarjetaDatosUnidadFamiliar;
   }
 
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
+    this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta unidadFamiliar.
+    this.idOpened.emit('unidadFamiliar'); // Constante para abrir la Tarjeta de unidadFamiliar.
   }
 
   checkSave(){
@@ -372,4 +379,5 @@ export class DatosUnidadFamiliarComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+
 }

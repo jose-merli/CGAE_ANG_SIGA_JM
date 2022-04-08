@@ -36,10 +36,10 @@
       (click)="anular()" [disabled]="!editable"></button>
     <button *ngIf="reactivable" pButton type="button" icon="" iconPos="left" label="{{'general.boton.reactivar' | translate}}"
       (click)="reactivar();"></button>
-    <button pButton type="button" icon="" iconPos="left" label="Desvalidar" [disabled]="(!validada  && isLetrado) || isLetrado"
+    <button pButton type="button" icon="" iconPos="left" label="Desvalidar" [disabled]="desactivar"
       (click)="desvalidar()"></button>
     <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.validar' | translate}}"
-      (click)="validar()" [disabled] = "(validada && isLetrado) || !editable || isLetrado" ></button>
+    (click)="validar()" [disabled] = "(validada && isLetrado) || !editable || isLetrado" ></button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
       (click)="restablecer()" [disabled]="!editable"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"

@@ -97,6 +97,7 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
   }
 
   getFacturasPeticion(){
+    if(this.comboEstadosFac == undefined ) this.getComboEstadosFactura(); 
     this.sigaServices.getParam("PyS_getFacturasPeticion","?idPeticion="+this.ficha.nSolicitud).subscribe(
       listaFacturasPeticionDTO => {
 

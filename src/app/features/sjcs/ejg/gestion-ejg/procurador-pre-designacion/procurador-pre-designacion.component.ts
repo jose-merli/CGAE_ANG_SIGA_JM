@@ -1,23 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationService, Message } from 'primeng/components/common/api';
-import { TranslateService } from '../../../../../../../commons/translate';
-import { JusticiableBusquedaItem } from '../../../../../../../models/sjcs/JusticiableBusquedaItem';
-import { JusticiableItem } from '../../../../../../../models/sjcs/JusticiableItem';
-import { JusticiableTelefonoItem } from '../../../../../../../models/sjcs/JusticiableTelefonoItem';
-import { CommonsService } from '../../../../../../../_services/commons.service';
-import { PersistenceService } from '../../../../../../../_services/persistence.service';
-import { SigaServices } from '../../../../../../../_services/siga.service';
-import { Subject } from 'rxjs';
-import { AuthenticationService } from '../../../../../../../_services/authentication.service';
+import { TranslateService } from '../../../../../commons/translate';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { PersistenceService } from '../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '@angular/router';
-import { SigaConstants } from '../../../../../../../utils/SigaConstants';
-import { procesos_maestros } from '../../../../../../../permisos/procesos_maestros';
-import { procesos_justiciables } from '../../../../../../../permisos/procesos_justiciables';
-import { Checkbox, ConfirmDialog } from '../../../../../../../../../node_modules/primeng/primeng';
-import { Dialog } from 'primeng/primeng';
-import { ColegiadoItem } from "../../../../../../../models/ColegiadoItem";
-import { EJGItem } from '../../../../../../../models/sjcs/EJGItem';
-import { ProcuradorItem } from '../../../../../../../models/sjcs/ProcuradorItem';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
 import { DatePipe } from '@angular/common';
 
 @Component({
@@ -59,15 +48,9 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 		private translateService: TranslateService,
 		private persistenceService: PersistenceService,
 		private commonsService: CommonsService,
-		private confirmationService: ConfirmationService,
-		private authenticationService: AuthenticationService,
-		private router: Router,
-		private changeDetectorRef: ChangeDetectorRef,
-		private datepipe: DatePipe) { }
+		private router: Router) { }
 
 	ngOnInit() {
-
-		this.progressSpinner = true;
 
 		this.ejg = this.persistenceService.getDatos();
 
@@ -104,10 +87,10 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 					this.generalBody.nColegiado = data.nColegiado;
 					this.generalBody.nombre = data.apellido1 + " " + data.apellido2 + ", " + data.nombre;
 					this.nombreCabecera = this.generalBody.nombre;
-					this.progressSpinner = false;
+					
 				},
 				err => {
-					this.progressSpinner = false;
+					
 				});
 			this.fechaCabecera = this.generalBody.fechaDesigna;
 		}
@@ -118,7 +101,6 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			this.perEscritura = false;
 		  }
 		
-		this.progressSpinner = false;
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
@@ -332,6 +314,8 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	clear() {
 		this.msgs = [];
 	}
+
+	
 
 }
 

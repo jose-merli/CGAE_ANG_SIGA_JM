@@ -172,10 +172,11 @@ export class RelacionesComponent implements OnInit {
         // this.nExpedientes = this.expedientesEcon.length;
         // this.persistenceService.setFiltrosAux(this.expedientesEcon);
         // this.router.navigate(['/gestionEjg']);
-        let pre = new RelacionesItem();
+        /* let pre = new RelacionesItem();
         pre.sjcs = "PRE-DESIGNACION";
-        this.relaciones.push(pre);
+        this.relaciones.push(pre); */
         // this.progressSpinner = false;
+        this.persistenceService.setDatosRelaciones(this.relaciones);
       },
       err => {
         //console.log(err);
@@ -219,9 +220,9 @@ export class RelacionesComponent implements OnInit {
     if (!this.selectAll && !this.selectMultiple) {
       // this.progressSpinner = true;
       // this.datosEJG();
-      if (evento.data.sjcs == "PRE-DESIGNACION") {
+      /*if (evento.data.sjcs == "PRE-DESIGNACION") {
         this.navigateToFichaPre();
-      }
+      }*/
 
     } else {
       if (evento.data.fechabaja == undefined && this.historico) {
@@ -535,10 +536,10 @@ export class RelacionesComponent implements OnInit {
                 this.router.navigate(['/fichaDesignaciones']);
                       });
         break;
-      case 'PRE-DESIGNACION':
+      /*case 'PRE-DESIGNACION':
 
         this.router.navigate(['/ficha-pre-designacion']);
-        break;
+        break; */
 
       default:
         //Introducir en la BBDD
@@ -703,7 +704,7 @@ export class RelacionesComponent implements OnInit {
         }
       );
     }
-    else this.router.navigate(["/ficha-pre-designacion"]);
+    //else this.router.navigate(["/ficha-pre-designacion"]); 
   }
 
 
@@ -784,13 +785,13 @@ export class RelacionesComponent implements OnInit {
                 item.nombreJuzgado = n.body;
                 this.progressSpinner = false;
                 sessionStorage.setItem("Designa", JSON.stringify(item));
-                this.router.navigate(["/ficha-pre-designacion"]);
+                //this.router.navigate(["/ficha-pre-designacion"]);
               },
               err => {
                 item.nombreJuzgado = "";
                 this.progressSpinner = false;
                 sessionStorage.setItem("Designa", JSON.stringify(item));
-                this.router.navigate(["/ficha-pre-designacion"]);
+                //this.router.navigate(["/ficha-pre-designacion"]);
               });
           },
           err => {

@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, SimpleChanges, EventEmitter, Output } from '@angular/core';
-import { SigaServices } from '../../../../../../../_services/siga.service';
-import { TranslateService } from '../../../../../../../commons/translate';
-import { PersistenceService } from '../../../../../../../_services/persistence.service';
+import { SigaServices } from '../../../../../_services/siga.service';
+import { TranslateService } from '../../../../../commons/translate';
+import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
-import { JusticiableBusquedaItem } from '../../../../../../../models/sjcs/JusticiableBusquedaItem';
-import { EJGItem } from '../../../../../../../models/sjcs/EJGItem';
+import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { Message } from 'primeng/components/common/api';
 
 
@@ -183,7 +183,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   }
 
   searchContrariosEJG() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     let item = [this.ejg.numero.toString(), this.ejg.annio, this.ejg.tipoEJG, this.historicoContrario];
 
@@ -206,11 +206,11 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       if (error != null && error.description != null) {
         this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
       }
-      this.progressSpinner = false;
+      //this.progressSpinner = false;
     },
       err => {
       });
-      this.progressSpinner = false;
+      //this.progressSpinner = false;
   }
 
   NewContrario() {
@@ -275,6 +275,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
             })
         }
         else {
+          sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
           this.router.navigate(["/gestionJusticiables"]);
         }
       },

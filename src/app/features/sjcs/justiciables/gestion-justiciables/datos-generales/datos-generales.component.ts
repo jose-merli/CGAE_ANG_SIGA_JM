@@ -1,4 +1,3 @@
-
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationService } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../commons/translate';
@@ -24,7 +23,7 @@ import { EJGItem } from '../../../../../models/sjcs/EJGItem';
   templateUrl: './datos-generales.component.html',
   styleUrls: ['./datos-generales.component.scss']
 })
-export class DatosGeneralesComponent implements OnInit, OnChanges {
+export class DatosGeneralesComponent implements OnInit, OnChanges{
 
   bodyInicial;
   datosInicial;
@@ -89,6 +88,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   @Output() notifySearchJusticiableByNif = new EventEmitter<any>();
   @Output() newJusticiable = new EventEmitter<any>();
   @Output() searchJusticiableOverwritten = new EventEmitter<any>();
+  @Output() opened = new EventEmitter<Boolean>();  // Evento para abrir la tarjeta
+  @Output() idOpened = new EventEmitter<String>(); // Evento para pasar la Información.
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
@@ -96,6 +97,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   @Input() body: JusticiableItem;
   @Input() modoRepresentante;
   @Input() checkedViewRepresentante;
+  @Input() tarjetaDatosGenerales;  // Tarjeta Datos Generales para comprobar su estado.
 
   confirmationSave: boolean = false;
   confirmationUpdate: boolean = false;
@@ -198,6 +200,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.compruebaDNI();
     }
 
+    // Comprobar que la tarjeta general venga rellena y la mostramos.
+    if (this.tarjetaDatosGenerales == true) this.showTarjeta = this.tarjetaDatosGenerales;
   }
 
   parseFechas() {
@@ -1285,7 +1289,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   onHideTarjeta() {
-    this.showTarjeta = !this.showTarjeta;
+    this.showTarjeta = !this.showTarjeta; // Funcionalidad para mostrar contenido de la Tarjeta pulsando a la misma.
+    this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Resumen.
+    this.idOpened.emit('datosGenerales'); // Constante para abrir la Tarjeta de Resumen.
   }
 
   changeEmail(value) {

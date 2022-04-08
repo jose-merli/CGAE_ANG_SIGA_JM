@@ -23,7 +23,7 @@ import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 	templateUrl: './datos-abogado-contrario.component.html',
 	styleUrls: ['./datos-abogado-contrario.component.scss']
 })
-export class DatosAbogadoContrarioComponent implements OnInit {
+export class DatosAbogadoContrarioComponent implements OnInit, OnChanges {
 
 	generalBody: ColegiadoItem = new ColegiadoItem();
 
@@ -38,6 +38,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	@Input() navigateToJusticiable: boolean = false;
 	@Input() fromContrario;
 	@Input() fromContrarioEJG;
+	@Input() tarjetaDatosAbogado;
 
 	searchRepresentanteGeneral: boolean = false;
 	showEnlaceRepresentante: boolean = false;
@@ -58,6 +59,8 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	@Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
 	@Output() contrario = new EventEmitter<boolean>();
 	@Output() contrarioEJG = new EventEmitter<boolean>();
+	@Output() opened = new EventEmitter<Boolean>();
+	@Output() idOpened = new EventEmitter<String>();
 
 	confirmationSave: boolean = false;
 	confirmationUpdate: boolean = false;
@@ -90,7 +93,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					top.scrollIntoView();
 					top = null;
 				}
-				}, 10);
+			}, 10);
 
 			let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
 			sessionStorage.removeItem("abogado");
@@ -102,7 +105,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 			this.generalBody.idPersona = data.idPersona;
 
 			this.permisoEscritura = true;
-			if(sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
+			if (sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
 			else this.contrario.emit(true);
 			this.Associate();
 		}
@@ -119,9 +122,9 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 					this.generalBody.nif = data.nif;
 					this.generalBody.idPersona = data.idPersona;
 
-					if(sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
+					if (sessionStorage.getItem("EJGItem")) this.contrarioEJG.emit(true);
 					else this.contrario.emit(true);
-					this.permisoEscritura = true; 
+					this.permisoEscritura = true;
 				},
 				err => {
 					this.progressSpinner = false;
@@ -139,14 +142,14 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 				this.translateService.instant('general.message.noTienePermisosRealizarAccion')
 			);
 		} else {
-			if(this.fromContrario) sessionStorage.setItem("origin", "AbogadoContrario");
-      		else if(this.fromContrarioEJG) sessionStorage.setItem("origin", "AbogadoContrarioEJG");
+			if (this.fromContrario) sessionStorage.setItem("origin", "AbogadoContrario");
+			else if (this.fromContrarioEJG) sessionStorage.setItem("origin", "AbogadoContrarioEJG");
 			this.router.navigate(['/busquedaGeneral']);
 		}
 	}
 
 	Disassociate() {
-		if(!sessionStorage.getItem("EJGItem")){
+		if (!sessionStorage.getItem("EJGItem")) {
 			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
 			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, "", ""]
 			this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
@@ -167,7 +170,7 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 				}
 			);
 		}
-		else{
+		else {
 			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
 			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, "", ""]
 			this.sigaServices.post('gestionejg_updateAbogadoContrarioEJG', request).subscribe(
@@ -191,26 +194,26 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	}
 
 	Associate() {
-		if(!sessionStorage.getItem("EJGItem")){
-		let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-		let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.idPersona, this.generalBody.nombre]
-		this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
-			(n) => {
-				this.progressSpinner = false;
-				this.showMessage(
-					'success',
-					this.translateService.instant('general.message.correct'),
-					this.translateService.instant('general.message.accion.realizada')
-				);
-				this.persistenceService.setBody(this.generalBody);
-			},
-			(err) => {
-				this.progressSpinner = false;
-				this.translateService.instant('general.message.error.realiza.accion');
-			}
-		);
+		if (!sessionStorage.getItem("EJGItem")) {
+			let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+			let request = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.idTurno, designa.numero, this.generalBody.idPersona, this.generalBody.nombre]
+			this.sigaServices.post('designaciones_updateAbogadoContrario', request).subscribe(
+				(n) => {
+					this.progressSpinner = false;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+					this.persistenceService.setBody(this.generalBody);
+				},
+				(err) => {
+					this.progressSpinner = false;
+					this.translateService.instant('general.message.error.realiza.accion');
+				}
+			);
 		}
-		else{
+		else {
 			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
 			let request = [sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.idPersona, this.generalBody.nombre]
 			this.sigaServices.post('gestionejg_updateAbogadoContrarioEJG', request).subscribe(
@@ -231,12 +234,14 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 		}
 	}
 
-	navigateToAbogado(){
+	navigateToAbogado() {
 
 	}
-	
+
 	onHideTarjeta() {
 		this.showTarjeta = !this.showTarjeta;
+		this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Abogados.
+   	    this.idOpened.emit('Abogados'); // Constante para abrir la Tarjeta de Abogados.
 	}
 
 	disabledSave() {
@@ -279,6 +284,11 @@ export class DatosAbogadoContrarioComponent implements OnInit {
 	rejectDisassociate() {
 
 	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (this.tarjetaDatosAbogado == true) this.showTarjeta = this.tarjetaDatosAbogado;
+	}
+	
 
 
 }

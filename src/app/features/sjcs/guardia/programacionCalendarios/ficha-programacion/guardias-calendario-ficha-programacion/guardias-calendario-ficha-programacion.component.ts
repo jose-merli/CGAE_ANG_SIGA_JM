@@ -1,12 +1,13 @@
-import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output, ChangeDetectorRef, OnChanges } from '@angular/core';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { Cell, Row, TablaResultadoOrderCGService } from '../../../../../../commons/tabla-resultado-order/tabla-resultado-order-cg.service';
-import { GlobalGuardiasService } from '../../../guardiasGlobal.service';
+import { ConfiguracionCola, GlobalGuardiasService } from '../../../guardiasGlobal.service';
 import { Subscription } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 
 @Component({
@@ -14,7 +15,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './guardias-calendario-ficha-programacion.component.html',
   styleUrls: ['./guardias-calendario-ficha-programacion.component.scss']
 })
-export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
+export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnChanges {
 
   body: GuardiaItem = new GuardiaItem();
   bodyInicial: GuardiaItem = new GuardiaItem();
@@ -100,21 +101,37 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   comboGuardiaConjunto = [];
   isDisabledNuevo;
   @Input() duplicar = false;
+  @Input() datosGenerales = {
+    'duplicar': '',
+    'tabla': [],
+    'turno': '',
+    'nombre': '',
+    'generado': '',
+    'numGuardias': '',
+    'listaGuarias': { value: undefined },
+    'fechaDesde': '',
+    'fechaHasta': '',
+    'fechaProgramacion': null,
+    'estado': '',
+    'observaciones': '',
+    'idCalendarioProgramado': '',
+    'idTurno': '',
+    'idGuardia': '',
+    'guardias': []
+  };
+  @Output() guardarDatosCalendario = new EventEmitter<{}>();
+
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
     private translateService: TranslateService,
     private trmService: TablaResultadoOrderCGService,
     private globalGuardiasService: GlobalGuardiasService,
-    private cd: ChangeDetectorRef) { }
+    private cd: ChangeDetectorRef,
+    private datepipe: DatePipe) { }
 
 
   ngOnInit() {
-    if(this.estado == "Pendiente" || this.estado == "Programada"){
-      this.isDisabledNuevo = false;
-    }else{
-      this.isDisabledNuevo = true;
-    }
     if (this.datosTarjetaGuardiasCalendarioIni.length != 0){
       //this.datosTarjetaGuardiasCalendario = Object.assign({},this.datosTarjetaGuardiasCalendarioIni);
       this.jsonToRow(false);
@@ -122,6 +139,20 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
     }else{
       this.dataReady = false;
     }
+
+    // Evita que se carguen automáticamente las guardias de la ficha de creación
+    if (this.modoEdicion) {
+      let configuracionCola: ConfiguracionCola = {
+        'manual': false,
+        'porGrupos': false,
+        'idConjuntoGuardia': 0,
+        "fromCombo": false,
+        "minimoLetradosCola": 0
+      };
+
+      this.globalGuardiasService.emitConf(configuracionCola);
+    }
+
     this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
       this.dataReady = false;
       this.idConjuntoGuardiaElegido = confValue.idConjuntoGuardia;
@@ -145,50 +176,53 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
 
 
         //this.jsonToRow(); //PROVISIONAL
- 
-    this.resaltadoDatos=true;
 
-    this.getCols();
-    this.historico = this.persistenceService.getHistorico()
-    this.getComboTipoGuardia();
+        this.resaltadoDatos=true;
 
-    this.getComboTurno();
+        this.getCols();
+        this.historico = this.persistenceService.getHistorico()
+        this.getComboTipoGuardia();
 
-    // this.progressSpinner = true;
-    this.sigaService.datosRedy$.subscribe(
-      data => {
-        data = JSON.parse(data.body);
-        this.body.idGuardia = data.idGuardia;
-        this.body.descripcionFacturacion = data.descripcionFacturacion;
-        this.body.descripcion = data.descripcion;
-        this.body.descripcionPago = data.descripcionPago;
-        this.body.idTipoGuardia = data.idTipoGuardia;
-        this.body.idTurno = data.idTurno;
-        this.body.nombre = data.nombre;
-        this.body.envioCentralita = data.envioCentralita;
-        //Informamos de la guardia de la que hereda si existe.
-        if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
-          this.datos.push({
-            vinculacion: 'Principal',
-            turno: data.idTurnoPrincipal,
-            guardia: data.idGuardiaPrincipal
-          })
-        if (data.idGuardiaVinculada && data.idTurnoVinculada) {
-          let guardias = data.idGuardiaVinculada.split(",");
-          let turno = data.idTurnoVinculada.split(",");
-          this.datos = guardias.map(function (x, i) {
-            return { vinculacion: "Vinculada", guardia: x, turno: turno[i] }
+        this.getComboTurno();
+
+        // this.progressSpinner = true;
+        this.sigaService.datosRedy$.subscribe(
+          data => {
+            data = JSON.parse(data.body);
+            this.body.idGuardia = data.idGuardia;
+            this.body.descripcionFacturacion = data.descripcionFacturacion;
+            this.body.descripcion = data.descripcion;
+            this.body.descripcionPago = data.descripcionPago;
+            this.body.idTipoGuardia = data.idTipoGuardia;
+            this.body.idTurno = data.idTurno;
+            this.body.nombre = data.nombre;
+            this.body.envioCentralita = data.envioCentralita;
+            //Informamos de la guardia de la que hereda si existe.
+            if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
+              this.datos.push({
+                vinculacion: 'Principal',
+                turno: data.idTurnoPrincipal,
+                guardia: data.idGuardiaPrincipal
+              })
+            if (data.idGuardiaVinculada && data.idTurnoVinculada) {
+              let guardias = data.idGuardiaVinculada.split(",");
+              let turno = data.idTurnoVinculada.split(",");
+              this.datos = guardias.map(function (x, i) {
+                return { vinculacion: "Vinculada", guardia: x, turno: turno[i] }
+              });
+              this.datos.pop()
+            }
+            this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+            this.progressSpinner = false;
           });
-          this.datos.pop()
-        }
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.progressSpinner = false;
-      });
-      }else{
-        this.dataReady = true;
-      }
-    });
-      
+          }else {
+            this.datos = [];
+            this.datosTarjetaGuardiasCalendario = [];
+            this.jsonToRow(confValue.fromCombo);
+            this.dataReady = true;
+          }
+        });
+    
   }
   ngOnDestroy(){
     this.suscription.unsubscribe();
@@ -274,17 +308,25 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
     );
   }
     ngOnChanges(changes){
-      //console.log('changes ', changes)
+      if(this.permisoEscritura && (!this.modoEdicion || this.estado == "Pendiente" || this.estado == "Programada")){
+        this.isDisabledNuevo = false;
+      }else{
+        this.isDisabledNuevo = true;
+      }
     }
+
     getGuardiasFromConjunto(idConjunto, fromCombo) {
       this.dataReady = false;
       if (this.datosTarjetaGuardiasCalendario.length != this.datosTarjetaGuardiasCalendarioIni.length){
       this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
       }
+
+      console.log(this.datosTarjetaGuardiasCalendario)
       this.progressSpinner = true;
       this.sigaService.getParam(
         "guardiaCalendario_guardiaFromConjunto", "?idConjunto=" + idConjunto).subscribe(
           response => {
+            console.log(response)
             if (!fromCombo){
             this.datosTarjetaGuardiasCalendario = [];
             }
@@ -346,6 +388,13 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit {
   }
 
   rest() {
+    
+    if(this.permisoEscritura && (!this.modoEdicion || this.estado == "Pendiente" || this.estado == "Programada")){
+      this.isDisabledNuevo = false;
+    }else{
+      this.isDisabledNuevo = true;
+    }
+
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
     this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
     this.jsonToRow(false);
@@ -601,11 +650,13 @@ setGuardiasCalendario(guardiaCalendario){
           'turno': nrg.cells[1].value,
           'guardia': nrg.cells[2].value,
           'generado': nrg.cells[3].value,
-          'idGuardia': nrg.cells[2].value
+          'idGuardia': nrg.cells[2].value,
+          'nuevo': nrg.cells.length <= 5
         });
         newList.push(responseObject);
     })
-    if (this.idConjuntoGuardiaElegido != 0){
+
+    if (this.idConjuntoGuardiaElegido != 0 && this.idConjuntoGuardiaElegido != undefined){
       this.saveGuardiasConjunto(newList);  
     }else{
       this.saveGuardiasCalendario(newList, event2.update);  
@@ -614,30 +665,43 @@ setGuardiasCalendario(guardiaCalendario){
   }
 
   saveGuardiasConjunto(lista){
+    this.progressSpinner = true;
     this.sigaService.postPaginado(
       "guardiaCalendario_guardarGuardiaConjunto" ,"?idConjuntoGuardia=" + this.idConjuntoGuardiaElegido.toString() + "&fechaDesde=" + this.tarjetaDatosGenerales.fechaDesde + "&fechaHasta=" + this.tarjetaDatosGenerales.fechaHasta + "&idTurno=" + this.tarjetaDatosGenerales.idTurno + "&idGuardia=" + this.tarjetaDatosGenerales.idGuardia, lista, ).subscribe(
         data => {
+          this.progressSpinner = false;
           this.getGuardiasFromConjunto(this.idConjuntoGuardiaElegido, true);
         }, err => {
+          this.progressSpinner = false;
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
           //console.log(err);
         });
   }
   saveGuardiasCalendario(lista, update){
-    this.sigaService.postPaginado(
-      "guardiaCalendario_guardarGuardiaCalendar", "?idCalendar=" +this.idCal + "&update=" + update , lista).subscribe(
-        data => {
-          let dat = {
-            'idCal': this.idCal,
-            'fechaDesde' : this.tarjetaDatosGenerales.fechaDesde,
-            'fechaHasta' : this.tarjetaDatosGenerales.fechaHasta
-          }
-          this.searchGuardiasFromCal.emit(dat);
-        }, err => {
-          this.jsonToRow(false);
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
-          //console.log(err);
-        });
+    
+    if (this.datosGenerales.idCalendarioProgramado != undefined && this.datosGenerales.idCalendarioProgramado.trim().length != 0) {
+      this.progressSpinner = true;
+      this.sigaService.postPaginado(
+        "guardiaCalendario_guardarGuardiaCalendar", "?idCalendar=" +this.idCal + "&update=" + update , lista).subscribe(
+          data => {
+            let dat = {
+              'idCal': this.idCal,
+              'fechaDesde' : this.tarjetaDatosGenerales.fechaDesde,
+              'fechaHasta' : this.tarjetaDatosGenerales.fechaHasta
+            }
+            this.progressSpinner = false;
+            this.searchGuardiasFromCal.emit(dat);
+          }, err => {
+            this.progressSpinner = false;
+            this.jsonToRow(false);
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
+            //console.log(err);
+          });
+    } else if (lista && lista.length > 0) {
+      this.datosGenerales.guardias = lista;
+
+      this.saveNewCalendario();
+    }
   }
 
   descargaLog1(event){
@@ -651,5 +715,104 @@ setGuardiasCalendario(guardiaCalendario){
   }
   linkGuardiaColegiado(event){
     this.linkGuardiaColegiado2.emit(event);
+  }
+
+  formatDate2(date) {
+    const pattern = 'yyyy-MM-dd';
+    return this.datepipe.transform(date, pattern);
+  }
+  changeDateFormat(date1) {
+    let year = date1.substring(0, 4)
+    let month = date1.substring(5, 7)
+    let day = date1.substring(8, 10)
+    let date2 = day + '/' + month + '/' + year;
+    return date2;
+  }
+
+  saveNewCalendario() {
+    let compareDateOk = compareDate(this.datosGenerales.fechaDesde, this.datosGenerales.fechaHasta, true);
+    let compareDateFuture1 = compareDate(this.datosGenerales.fechaDesde, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);
+    let compareDateFuture2 = compareDate(this.datosGenerales.fechaHasta, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);
+
+    if (compareDateOk == 1) {
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Rango de fechas incorrecto. Debe cumplir que la fecha desde sea menor o igual que la fecha hasta");
+      //}else if (compareDateFuture1 != -1 || compareDateFuture2 != -1){
+      //this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No existen guardias asociadas a una programación con fechas futuras");
+    } else {
+
+      this.progressSpinner = true;
+
+      if (this.permisoEscritura && this.datosGenerales.fechaHasta && this.datosGenerales.fechaDesde) {
+        //Guardar sólo actualizará el estado si no tiene estado (creación) o es Pendiente/Programada
+        if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada") {
+          if (this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null) {
+            //Al guardar con Fecha de programación vacía, se pasará al estado Pendiente y fechaProgramacion = hoy
+            this.datosGenerales.estado = "Pendiente";
+          } else {
+            //Al guardar con Fecha de programación rellena, se pasará al estado Programada. 
+            this.datosGenerales.estado = "Programada";
+          }
+
+          //GUARDAMOS
+          this.guardarDatosCalendario.emit(this.datosGenerales)
+          this.progressSpinner = false;
+        } else {
+          this.showMessage('error', 'Error. Debido al estado de la programación, no es posible guardar', '')
+          this.progressSpinner = false;
+        }
+
+        let url = "";
+
+        /*if (!this.modoEdicion && this.permisoEscritura) {
+          url = "busquedaGuardias_createGuardia";
+          this.callSaveService(url);
+
+        } else if (this.permisoEscritura) {
+          url = "busquedaGuardias_updateGuardia";
+          this.callSaveService(url);
+        }*/
+      }
+    }
+
+    this.progressSpinner = false;
+  }
+}
+
+function compareDate(fechaA: any, fechaB: any, isAsc: boolean) {
+
+  let dateA = null;
+  let dateB = null;
+  if (fechaA != null) {
+    const dayA = fechaA.substr(0, 2);
+    const monthA = fechaA.substr(3, 2);
+    const yearA = fechaA.substr(6, 10);
+    dateA = new Date(yearA, monthA, dayA);
+  }
+
+  if (fechaB != null) {
+    const dayB = fechaB.substr(0, 2);
+    const monthB = fechaB.substr(3, 2);
+    const yearB = fechaB.substr(6, 10);
+    dateB = new Date(yearB, monthB, dayB);
+  }
+
+
+  return compare(dateA, dateB, isAsc);
+
+}
+
+function compare(a: Date, b: Date, isAsc: boolean) {
+
+
+  if (a == null && b != null) {
+    return (1) * (isAsc ? 1 : -1);
+  }
+  if (a != null && b == null) {
+    return (-1) * (isAsc ? 1 : -1);
+  }
+  if (a.getTime() === b.getTime()) {
+    return 0
+  } else {
+    return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
   }
 }

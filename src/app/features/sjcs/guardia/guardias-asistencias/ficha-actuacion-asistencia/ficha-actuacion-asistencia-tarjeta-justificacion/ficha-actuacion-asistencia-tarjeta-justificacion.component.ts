@@ -26,6 +26,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
   progressSpinner : boolean = false;
   reactivable : boolean = false;
   validada : boolean = false;
+  desactivar : boolean = false;
 
   constructor(private datepipe : DatePipe,
     private sigaServices : SigaServices,
@@ -119,6 +120,8 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
   validar(){
     this.datosJustificacion.validada = '1';
     this.updateEstadoActuacion();
+    // Activar Desvalidar ya que hemos dado al botón de Validar
+    this.desactivar = false;
   }
 
   desvalidar(){
@@ -127,6 +130,8 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
     }else{
     this.datosJustificacion.validada = '0';
     this.updateEstadoActuacion();
+    // Desactivar Desvalidar ya que hemos dado al botón
+    this.desactivar = true;
     }
   }
 

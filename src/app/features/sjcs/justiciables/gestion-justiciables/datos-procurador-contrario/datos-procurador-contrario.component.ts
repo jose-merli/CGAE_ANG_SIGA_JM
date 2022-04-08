@@ -27,8 +27,8 @@ import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
 	templateUrl: './datos-procurador-contrario.component.html',
 	styleUrls: ['./datos-procurador-contrario.component.scss']
 })
-export class DatosProcuradorContrarioComponent implements OnInit {
-	generalBody:ProcuradorItem = new ProcuradorItem();
+export class DatosProcuradorContrarioComponent implements OnInit, OnChanges {
+	generalBody: ProcuradorItem = new ProcuradorItem();
 
 	tipoIdentificacion;
 	progressSpinner: boolean = false;
@@ -44,6 +44,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 	@Input() navigateToJusticiable: boolean = false;
 	@Input() fromContrario;
 	@Input() fromContrarioEJG;
+	@Input() tarjetaDatosProcurador;
 
 	searchRepresentanteGeneral: boolean = false;
 	showEnlaceRepresentante: boolean = false;
@@ -63,6 +64,8 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 
 	@Output() contrario = new EventEmitter<boolean>();
 	@Output() contrarioEJG = new EventEmitter<boolean>();
+	@Output() opened = new EventEmitter<Boolean>();
+	@Output() idOpened = new EventEmitter<String>();
 
 	confirmationSave: boolean = false;
 	confirmationUpdate: boolean = false;
@@ -95,12 +98,12 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			//Para que se muestre la tarjeta una vez vuelve de buscar un procurador
 			//El timer es para que de tiempo a que se cargue la tarjeta
 			setTimeout(() => {
-			this.onHideTarjeta();
-			let top = document.getElementById("procuradorJusticiable");
-			if (top) {
-				top.scrollIntoView();
-				top = null;
-			}
+				this.onHideTarjeta();
+				let top = document.getElementById("procuradorJusticiable");
+				if (top) {
+					top.scrollIntoView();
+					top = null;
+				}
 			}, 10);
 			this.generalBody.idProcurador = data.idProcurador;
 			this.generalBody.nColegiado = data.nColegiado;
@@ -115,10 +118,10 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 		/* Procede de ficha pre-designacion */
 		// else if (sessionStorage.getItem("procuradorFicha")) {
 		// 	let data = sessionStorage.getItem("procuradorFicha");
-			//sessionStorage.removeItem("procuradorFicha");
+		//sessionStorage.removeItem("procuradorFicha");
 		else if (sessionStorage.getItem("contrarioEJG")) {
 			let data = JSON.parse(sessionStorage.getItem("contrarioEJG"));
-			if(data.idprocurador!=null){
+			if (data.idprocurador != null) {
 				this.generalBody.nColegiado = data.procurador.split(",")[0];
 				this.generalBody.nombre = data.procurador.split(",")[1].concat(",", data.procurador.split(",")[2]);
 				this.generalBody.idProcurador = data.idprocurador;
@@ -126,12 +129,12 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			}
 
 			this.contrarioEJG.emit(true);
-			
+
 			this.permisoEscritura = true;
 
 			this.nColegiadoCabecera = this.generalBody.nColegiado;
 			this.nombreCabecera = this.generalBody.nombre;
-			
+
 
 			// this.generalBody.idInstitucion = data.idInstitucionProc.toString();
 			// this.generalBody.idProcurador = data.idProcurador;
@@ -146,43 +149,43 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			// 	err => {
 			// 		this.progressSpinner = false;
 			// 	});
-		//Procede de gicha designacion
-		}else if (sessionStorage.getItem("contrarioDesigna")) {
-				let data = JSON.parse(sessionStorage.getItem("contrarioDesigna"));
-				// sessionStorage.removeItem("contrarioDesigna");
-				// this.generalBody.nColegiado = data.split(",")[0];
-				// this.generalBody.nombre = data.split(",")[1].concat(",", data.split(",")[2]);
-				// this.generalBody.idProcurador = data.idprocurador;
-				// this.generalBody.idInstitucion = data.idInstitucionProc;
-				if(data.idprocurador!=null){
-					this.generalBody.nColegiado = data.procurador.split(",")[0];
-					this.generalBody.nombre = data.procurador.split(",")[1].concat(",", data.procurador.split(",")[2]);
-					this.generalBody.idProcurador = data.idprocurador;
-					this.generalBody.idInstitucion = data.idInstitucionProc;
-				}
-	
-				this.contrario.emit(true);
-				this.permisoEscritura = true;
-	
-				this.nColegiadoCabecera = this.generalBody.nColegiado;
-				this.nombreCabecera = this.generalBody.nombre;
-				
-	
-				// this.generalBody.idInstitucion = data.idInstitucionProc.toString();
-				// this.generalBody.idProcurador = data.idProcurador;
-				// this.sigaServices.post("gestionejg_busquedaProcuradorEJG", this.ejg).subscribe(
-				// 	n => {
-				// 		let data = JSON.parse(n.body).procuradorItems[0];
-				// 		this.generalBody.nColegiado = data.nColegiado;
-				// 		this.generalBody.nombre = data.apellido1 + " " + data.apellido2 + ", " + data.nombre;
-				// 		this.nombreCabecera = this.generalBody.nombre;
-				// 		this.progressSpinner = false;
-				// 	},
-				// 	err => {
-				// 		this.progressSpinner = false;
-				// 	});
-				
+			//Procede de gicha designacion
+		} else if (sessionStorage.getItem("contrarioDesigna")) {
+			let data = JSON.parse(sessionStorage.getItem("contrarioDesigna"));
+			// sessionStorage.removeItem("contrarioDesigna");
+			// this.generalBody.nColegiado = data.split(",")[0];
+			// this.generalBody.nombre = data.split(",")[1].concat(",", data.split(",")[2]);
+			// this.generalBody.idProcurador = data.idprocurador;
+			// this.generalBody.idInstitucion = data.idInstitucionProc;
+			if (data.idprocurador != null) {
+				this.generalBody.nColegiado = data.procurador.split(",")[0];
+				this.generalBody.nombre = data.procurador.split(",")[1].concat(",", data.procurador.split(",")[2]);
+				this.generalBody.idProcurador = data.idprocurador;
+				this.generalBody.idInstitucion = data.idInstitucionProc;
 			}
+
+			this.contrario.emit(true);
+			this.permisoEscritura = true;
+
+			this.nColegiadoCabecera = this.generalBody.nColegiado;
+			this.nombreCabecera = this.generalBody.nombre;
+
+
+			// this.generalBody.idInstitucion = data.idInstitucionProc.toString();
+			// this.generalBody.idProcurador = data.idProcurador;
+			// this.sigaServices.post("gestionejg_busquedaProcuradorEJG", this.ejg).subscribe(
+			// 	n => {
+			// 		let data = JSON.parse(n.body).procuradorItems[0];
+			// 		this.generalBody.nColegiado = data.nColegiado;
+			// 		this.generalBody.nombre = data.apellido1 + " " + data.apellido2 + ", " + data.nombre;
+			// 		this.nombreCabecera = this.generalBody.nombre;
+			// 		this.progressSpinner = false;
+			// 	},
+			// 	err => {
+			// 		this.progressSpinner = false;
+			// 	});
+
+		}
 
 		this.progressSpinner = false;
 	}
@@ -196,8 +199,8 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			);
 		} else {
 			sessionStorage.setItem("nuevoProcurador", "true");
-			if(this.fromContrario) sessionStorage.setItem("origin", "Contrario");
-			else if(this.fromContrarioEJG) sessionStorage.setItem("origin", "ContrarioEJG");
+			if (this.fromContrario) sessionStorage.setItem("origin", "Contrario");
+			else if (this.fromContrarioEJG) sessionStorage.setItem("origin", "ContrarioEJG");
 			this.router.navigate(['/busquedaGeneral']);
 		}
 	}
@@ -216,7 +219,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			// contrarioPeticion.numero = designa.numero;
 			// contrarioPeticion.idprocurador = null;
 			// contrarioPeticion.idinstitucionProcu = null;
-			let request: string [] = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.numero, designa.idTurno, null, null]
+			let request: string[] = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.numero, designa.idTurno, null, null]
 			this.sigaServices.post('designaciones_updateProcuradorContrario', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -236,10 +239,10 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 					this.showMessage(
 						'error',
 						this.translateService.instant('general.message.error'),
-					this.translateService.instant('general.message.error.realiza.accion'));
+						this.translateService.instant('general.message.error.realiza.accion'));
 				}
 			);
-			
+
 		}
 		else {
 			let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
@@ -251,7 +254,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			// contrarioPeticion.numero = Number(ejg.numero);
 			// contrarioPeticion.idprocurador = null;
 			// contrarioPeticion.idinstitucionProcu = null;
-			let request: string [] = [ejg.idInstitucion, sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, null, null];
+			let request: string[] = [ejg.idInstitucion, sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, null, null];
 			this.sigaServices.post('gestionejg_updateProcuradorContrarioEJG', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -271,10 +274,10 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 					this.showMessage(
 						'error',
 						this.translateService.instant('general.message.error'),
-					this.translateService.instant('general.message.error.realiza.accion'));
+						this.translateService.instant('general.message.error.realiza.accion'));
 				}
 			);
-			
+
 		}
 	}
 
@@ -289,7 +292,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			// contrarioPeticion.numero = designa.numero;
 			// contrarioPeticion.idprocurador = Number(this.generalBody.idProcurador);
 			// contrarioPeticion.idinstitucionProcu = Number(this.generalBody.idInstitucion);
-			let request: string [] = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.numero, designa.idTurno, this.generalBody.idProcurador, this.generalBody.idInstitucion]
+			let request: string[] = [designa.idInstitucion, sessionStorage.getItem("personaDesigna"), designa.ano, designa.numero, designa.idTurno, this.generalBody.idProcurador, this.generalBody.idInstitucion]
 			this.sigaServices.post('designaciones_updateProcuradorContrario', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -298,8 +301,8 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 						this.translateService.instant('general.message.correct'),
 						this.translateService.instant('general.message.accion.realizada')
 					);
-					let procurador:string = this.generalBody.nColegiado + ","+this.generalBody.nombreApe;
-					sessionStorage.setItem("procuradorFicha",procurador);
+					let procurador: string = this.generalBody.nColegiado + "," + this.generalBody.nombreApe;
+					sessionStorage.setItem("procuradorFicha", procurador);
 					this.nColegiadoCabecera = this.generalBody.nColegiado;
 					this.nombreCabecera = this.generalBody.nombre;
 					//this.persistenceService.setBody(this.generalBody);
@@ -309,7 +312,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 					this.showMessage(
 						'error',
 						this.translateService.instant('general.message.error'),
-					this.translateService.instant('general.message.error.realiza.accion'));
+						this.translateService.instant('general.message.error.realiza.accion'));
 				}
 			);
 		}
@@ -323,7 +326,7 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 			// contrarioPeticion.numero = Number(ejg.numero);
 			// contrarioPeticion.idprocurador = Number(this.generalBody.idProcurador);
 			// contrarioPeticion.idinstitucionProcu = Number(this.generalBody.idInstitucion);
-			let request: string [] = [ejg.idInstitucion, sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.idProcurador, this.generalBody.idInstitucion];
+			let request: string[] = [ejg.idInstitucion, sessionStorage.getItem("personaDesigna"), ejg.annio, ejg.numero, ejg.tipoEJG, this.generalBody.idProcurador, this.generalBody.idInstitucion];
 			this.sigaServices.post('gestionejg_updateProcuradorContrarioEJG', request).subscribe(
 				(n) => {
 					this.progressSpinner = false;
@@ -332,8 +335,8 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 						this.translateService.instant('general.message.correct'),
 						this.translateService.instant('general.message.accion.realizada')
 					);
-					let procurador:string = this.generalBody.nColegiado + ","+this.generalBody.nombreApe;
-					sessionStorage.setItem("procuradorFicha",procurador);
+					let procurador: string = this.generalBody.nColegiado + "," + this.generalBody.nombreApe;
+					sessionStorage.setItem("procuradorFicha", procurador);
 					this.nColegiadoCabecera = this.generalBody.nColegiado;
 					this.nombreCabecera = this.generalBody.nombre;
 					//this.persistenceService.setBody(this.generalBody);
@@ -343,15 +346,17 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 					this.showMessage(
 						'error',
 						this.translateService.instant('general.message.error'),
-					this.translateService.instant('general.message.error.realiza.accion'));
+						this.translateService.instant('general.message.error.realiza.accion'));
 				}
 			);
-			
+
 		}
 	}
 
 	onHideTarjeta() {
 		this.showTarjeta = !this.showTarjeta;
+		this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Procuradores.
+    	this.idOpened.emit('Procuradores'); // Constante para abrir la Tarjeta de Procuradores.
 	}
 
 	disabledSave() {
@@ -394,4 +399,8 @@ export class DatosProcuradorContrarioComponent implements OnInit {
 	rejectDisassociate() {
 
 	}
+
+	ngOnChanges(changes: SimpleChanges) {
+		if (this.tarjetaDatosProcurador == true) this.showTarjeta = this.tarjetaDatosProcurador;
+	  }
 }

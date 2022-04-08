@@ -215,7 +215,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
       return true;
     }
 
-    if (Object.keys(datosEntrada.asistencia).length > 0 && !datosEntrada.isNew) {
+    if (datosEntrada && datosEntrada.asistencia && Object.keys(datosEntrada.asistencia).length > 0 && !datosEntrada.isNew) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     }
 
@@ -238,11 +238,11 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   checkPayloadActuacionAsistencia(datosEntrada: { asistencia: TarjetaAsistenciaItem, actuacion: ActuacionAsistenciaItem, isNew: boolean }): boolean {
 
     if (datosEntrada && !datosEntrada.isNew && this.checkCampo(datosEntrada.asistencia.anio) && this.checkCampo(datosEntrada.asistencia.numero)
-      && this.checkCampo(datosEntrada.actuacion.idActuacion)) {
+      && datosEntrada.actuacion && this.checkCampo(datosEntrada.actuacion.idActuacion)) {
       return true;
     }
 
-    if (Object.keys(datosEntrada.actuacion).length > 0 && Object.keys(datosEntrada.asistencia).length > 0 && !datosEntrada.isNew) {
+    if (datosEntrada && datosEntrada.actuacion && Object.keys(datosEntrada.actuacion).length > 0 && Object.keys(datosEntrada.asistencia).length > 0 && !datosEntrada.isNew) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     }
 

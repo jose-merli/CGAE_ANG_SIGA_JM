@@ -160,7 +160,6 @@ import { ComunicaResolucionesComponent } from './features/sjcs/comunicaciones/co
 import { ComunicaDesignacionesComponent } from './features/sjcs/comunicaciones/comunica-designaciones/comunica-designaciones.component';
 import { DesignacionesComponent } from './features/sjcs/oficio/designaciones/designaciones.component';
 import { CargasMasivasOficioComponent } from './features/sjcs/oficio/cargas-masivas-oficio/cargas-masivas-oficio.component';
-import { FichaPreDesignacionComponent } from './features/sjcs/ejg/gestion-ejg/relaciones/ficha-pre-designacion/ficha-pre-designacion.component';
 
 //Consultas
 import { RecuperarConsultasComponent } from './features/consultas/recuperar-consultas/recuperar-consultas.component';
@@ -1010,29 +1009,14 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'ficha-pre-designacion',
-		component: FichaPreDesignacionComponent,
-		canActivate: [ AuthGuard ]
-	},
-	{
 		path: 'gestionActas',
 		component: ActasComponent,
 		canActivate: [ AuthGuard ]
-
-
-
-
-
 	},
 	{
 		path: 'fichaGestionActas',
 		component: GestionActasComponent,
 		canActivate: [AuthGuard]
-	},
-	{
-		path: 'ficha-pre-designacion',
-		component: FichaPreDesignacionComponent,
-		canActivate: [ AuthGuard ]
 	},
 	{
 		path: 'movimientosVarios',

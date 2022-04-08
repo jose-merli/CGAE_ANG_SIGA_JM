@@ -21,6 +21,7 @@ import { CookieService } from '../../../../../node_modules/ngx-cookie-service';
 import { BusquedaColegiadoExpressModule } from '../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.module';
 import { TarjetaResumenFijaModule } from '../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { DialogModule } from 'primeng/dialog';
+import { EjgService } from './gestion-ejg/services/ejg.service';
 
 @NgModule({
   imports: [
@@ -41,7 +42,7 @@ import { DialogModule } from 'primeng/dialog';
     FechaModule,
     ConfirmDialogModule,
     BusquedaColegiadoExpressModule,
-    TarjetaResumenFijaModule,
+    TarjetaResumenFijaModule
   ],
   declarations: [
   ],
@@ -57,7 +58,7 @@ import { DialogModule } from 'primeng/dialog';
     MessageService,
     AuthenticationService,
     ConfirmationService,
-
+    EjgService,
     AuthGuard,
     {
       provide: APP_BASE_HREF,

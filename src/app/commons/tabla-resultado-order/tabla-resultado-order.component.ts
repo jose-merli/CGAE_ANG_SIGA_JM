@@ -1141,6 +1141,7 @@ this.totalRegistros = this.rowGroups.length;
       //this.to = this.totalRegistros;
       }
       nuevo(){
+        /*
         this.comboTurno.forEach(cT=> {
           if (cT.value == this.rowGroups[0].cells[1].value){
             this.rowGroups[0].cells[1].value = cT.label;
@@ -1150,7 +1151,7 @@ this.totalRegistros = this.rowGroups.length;
         
         });
         this.comboGuardia.forEach(cG=> {
-           if (cG.value == this.rowGroups[0].cells[2].value){
+          if (cG.value == this.rowGroups[0].cells[2].value){
             this.rowGroups[0].cells[2].value = cG.label;
           }else if (cG.value == this.rowGroups[this.rowGroups.length - 1].cells[2].value){
             this.rowGroups[this.rowGroups.length - 1].cells[2].value = cG.label;
@@ -1166,22 +1167,28 @@ this.totalRegistros = this.rowGroups.length;
         this.rowGroups[this.rowGroups.length - 1].cells[2].type = 'linkNew';
         this.rowGroups[this.rowGroups.length - 1].cells[2].combo = null;
         //console.log(this.rowGroups)
+        //this.disableGen.emit(true);
+        */
+
         this.disableGen.emit(true);
+
         this.getComboTurno();
         let newCells: Cell[] = [
-          { type: 'input', value: '', combo: null, hiddenValue:'', required:false},
-          { type: 'selectDependency', value: '' , combo: this.comboTurno, hiddenValue:'', required:false},
-          { type: 'selectDependency2', value: '', combo: this.comboGuardia, hiddenValue:'', required:false},
-          { type: 'text', value: '', combo: null, hiddenValue:'', required:false},
-          { type: 'text', value: '', combo: null, hiddenValue:'', required:false}
+          { type: 'input', value: '', combo: null, hiddenValue:'', required:false },
+          { type: 'selectDependency', value: '' , combo: this.comboTurno, hiddenValue:'', required:false },
+          { type: 'selectDependency2', value: '', combo: this.comboGuardia, hiddenValue:'', required:false },
+          { type: 'text', value: '', combo: null, hiddenValue:'', required:false },
+          { type: 'text', value: '', combo: null, hiddenValue:'', required:false }
           ];
           let rowObject: Row = new Row();
           rowObject.cells = newCells;
           this.rowGroups.unshift(rowObject);
           this.rowGroupsAux = this.rowGroups;
           this.totalRegistros = this.rowGroups.length;
-          //this.to = this.totalRegistros;
+          this.to = this.totalRegistros <= this.numperPage ? this.totalRegistros : this.numperPage;
           this.cd.detectChanges();
+
+          console.log(this.rowGroups);
       }
 
     getComboTurno() {
@@ -1202,12 +1209,13 @@ this.totalRegistros = this.rowGroups.length;
   }
   
   onChangeTurno(idTurno, row : Row) {
-    this.getComboGuardia(idTurno);
+    this.getComboGuardia(idTurno, row);
     //console.log('idTurno: ', idTurno)
+    /*
     this.comboGuardia = [];
     if(this.listaGuardias){
       row.cells[3].value = '';
-    }
+    }*/
 
   }
 
@@ -1241,28 +1249,17 @@ this.totalRegistros = this.rowGroups.length;
     }
   }
   
-  setCombouardia(){
-    this.rowGroups.forEach((row, r) => {
-      row.cells.forEach((cell, c) => {
-        if (cell.type == 'selectDependency2'){
-          
-          //console.log('this.comboGuardia: ', this.comboGuardia)
-          this.rowGroups[r].cells[c].combo = this.comboGuardia;
-          //console.log('row.cells: ', row.cells)
-        }
-      })
-    })
-  }
   
-    getComboGuardia(idTurno) {
+  
+    getComboGuardia(idTurno, row) {
       this.progressSpinner = true;
     this.sigaServices.getParam(
       "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
         data => {
           this.progressSpinner = false;
-          this.comboGuardia = data.combooItems;
-          this.setCombouardia();
-          this.commonServices.arregloTildesCombo(this.comboGuardia);
+          let comboGuardia = data.combooItems;
+          this.commonServices.arregloTildesCombo(comboGuardia);
+          row.cells.find(c => c.type == 'selectDependency2').combo = comboGuardia;
         },
         err => {
           this.progressSpinner = false;

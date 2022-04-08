@@ -44,6 +44,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	@Input() fromContrario;
 	@Input() fromContrarioEJG;
 	@Input() fromUniFamiliar;
+    @Input() tarjetaDatosRepresentante;
+
 
 	searchRepresentanteGeneral: boolean = false;
 	showEnlaceRepresentante: boolean = false;
@@ -63,6 +65,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	@Output() newRepresentante = new EventEmitter<JusticiableItem>();
 	@Output() viewRepresentante = new EventEmitter<JusticiableItem>();
 	@Output() createJusticiableByUpdateRepresentante = new EventEmitter<JusticiableItem>();
+	@Output() opened = new EventEmitter<Boolean>();
+    @Output() idOpened = new EventEmitter<String>();
+
 
 	constructor(
 		private router: Router,
@@ -180,6 +185,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			this.modoEdicion = true;
 			this.validateShowEnlaceepresentante();
 		});
+
+		if (this.tarjetaDatosRepresentante == true) this.showTarjeta = this.tarjetaDatosRepresentante;
+
 	}
 
 	validateShowEnlaceepresentante() {
@@ -198,6 +206,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		if (this.modoEdicion && !this.checkedViewRepresentante) {
 			this.showTarjeta = !this.showTarjeta;
 		}
+		this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Representantes.
+    	this.idOpened.emit('Representantes'); // Constante para abrir la Tarjeta de Representantes.
 	}
 
 	searchJusticiable() {

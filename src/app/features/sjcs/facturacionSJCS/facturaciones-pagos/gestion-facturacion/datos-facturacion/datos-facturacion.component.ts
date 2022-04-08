@@ -11,6 +11,7 @@ import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_fa
 import { Router } from '@angular/router';
 import { Enlace } from '../gestion-facturacion.component'
 import { saveAs } from "file-saver/FileSaver";
+import { PersistenceService } from '../../../../../../_services/persistence.service';
 
 @Component({
   selector: 'app-datos-facturacion',
@@ -58,6 +59,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private persistenceService: PersistenceService,
     private router: Router) {
     super(USER_VALIDATIONS);
   }
@@ -166,7 +168,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
 
   historicoEstados() {
     let idFac;
-
+    let i = 0;
     if (this.modoEdicion) {
       idFac = this.idFacturacion;
     } else if (!this.modoEdicion && undefined != this.body.idFacturacion) {
@@ -180,6 +182,19 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         data => {
           this.estadosFacturacion = data.facturacionItem;
           this.progressSpinnerDatos = false;
+          this.estadosFacturacion.forEach(estadoFac => {
+            // Comprobar que son estados automáticos de la APP Web.
+            if ((estadoFac.desEstado == this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.programada").toUpperCase() || 
+                estadoFac.desEstado  == this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.ejecutada").toUpperCase()  || 
+                estadoFac.desEstado  == this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.abierta").toUpperCase()    || 
+                estadoFac.desEstado  == this.translateService.instant("facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado.ejecucion").toUpperCase())   
+                && (estadoFac.nombreUsuModificacion === null) ) {
+                
+                // Nombre para Estado automáticos = 'Automático, SIGA'
+                this.estadosFacturacion[i].nombreUsuModificacion = this.translateService.instant("generico.usuario.automatico").toUpperCase();
+            }
+            i += 1;
+          });
         },
         err => {
           if (null != err.error) {
@@ -189,6 +204,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         }
       );
     }
+
   }
 
   comboPartidasPresupuestarias() {
@@ -338,6 +354,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         this.changeCerrada.emit(true);
         this.historicoEstados();
         this.progressSpinnerDatos = false;
+        this.actualizarDatoAlmacenado();
       },
       err => {
 
@@ -364,6 +381,15 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         this.changeFacturacion.emit(true);
       }
     );
+  }
+
+  actualizarDatoAlmacenado() {
+
+    let dato : FacturacionItem = this.persistenceService.getDatos();
+    dato.idEstado = "50";
+    dato.desEstado = "PROGRAMADA";
+    this.persistenceService.setDatos(dato);
+
   }
 
   reabrir() {
