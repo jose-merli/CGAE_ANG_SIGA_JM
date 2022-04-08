@@ -15,6 +15,7 @@ import { saveAs } from "file-saver/FileSaver";
 import { CalendarioProgramadoItem } from '../../../../../models/guardia/CalendarioProgramadoItem';
 import * as moment from 'moment';
 import { CalendariosDatosEntradaItem } from '../CalendariosDatosEntradaItem.model';
+import { Message } from 'primeng/primeng';
 
 @Component({
   selector: 'app-ficha-programacion',
@@ -213,6 +214,14 @@ export class FichaProgramacionComponent implements OnInit {
     }
   
     this.estado = this.datosGeneralesIniciales.estado;
+
+    // Mensaje mostrado tras acualizar o guardar correctamente
+    if (sessionStorage.getItem("mensaje")) {
+      let message: Message = JSON.parse(sessionStorage.getItem("mensaje"));
+      if (message)
+        this.showMessage(message.severity, message.summary, message.detail);
+      sessionStorage.removeItem("mensaje");
+    }
 
   }
 
@@ -895,13 +904,17 @@ export class FichaProgramacionComponent implements OnInit {
       "guardiaCalendario_updateCalendarioProgramado",  datos).subscribe(
         data => {
           this.showMessage('info', "Se ha actualizado correctamente", "Se ha actualizado correctamente");
+          sessionStorage.setItem("mensaje", JSON.stringify({
+            severity: "info", summary: "Se ha actualizado correctamente", detail: "Se ha actualizado correctamente"
+          }));
           this.progressSpinner = false;
           
           this.findFichaProgramacion(datos);
         }, err => {
-          if(err.status = "409"){
-            this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");
-          }else {
+          let error = JSON.parse(err.error);
+          if (err.status = "409" && error.error && error.error.message) {
+            this.showMessage('error', this.translateService.instant("general.message.incorrect"), error.error.message);
+          } else {
             this.showMessage('error', "No se ha actualizado correctamente", "No se ha actualizado correctamente");
           }
           this.progressSpinner = false;
@@ -935,6 +948,9 @@ export class FichaProgramacionComponent implements OnInit {
       if (datos.idCalG == null && (!datos.guardias || datos.guardias.length == 0)) {
         this.showMessage('info', "Debe asociar alguna guardia", "Debe asociar alguna guardia");
       } else if (body && body.id) {
+        sessionStorage.setItem("mensaje", JSON.stringify({
+          severity: "info", summary: "Se ha creado correctamente", detail: "Se ha creado correctamente"
+        }));
         this.findFichaProgramacion({ idCalendarioProgramado: body.id });
       }
       
@@ -943,9 +959,10 @@ export class FichaProgramacionComponent implements OnInit {
     }, err => {
       this.progressSpinner = false;
       //this.showMessage('error', JSON.stringify(data.body.error.message), JSON.stringify(data.body.error.message));
-      if(err.status = "409"){
-        this.showMessage('error', "No existen guardias asociadas a esta programación", "No existen guardias asociadas a esta programación");
-      }else {
+      let error = JSON.parse(err.error);
+      if (err.status = "409" && error.error && error.error.message) {
+        this.showMessage('error', this.translateService.instant("general.message.incorrect"), error.error.message);
+      } else {
         this.showMessage('error', "No se ha generado correctamente", "No se ha generado correctamente");
       }
 
@@ -1186,10 +1203,14 @@ descargarLog(event){
           this.progressSpinner = false;
           this.persistenceService.setDatos(dataToSend);
           this.router.navigate(["/fichaProgramacion"]);
+        } else {
+          sessionStorage.removeItem("mensaje");
+          this.progressSpinner = false;
         }
       },
       err => {
         this.progressSpinner = false;
+        sessionStorage.removeItem("mensaje");
         //console.log(err);
     });
   }
