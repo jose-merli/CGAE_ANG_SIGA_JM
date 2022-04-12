@@ -118,15 +118,15 @@
       <div class="card-footer">
         <div class="text-right main-button">
           <button pButton
-            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura || !volverSolicitarEejg"
+            [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura || isRepresentante || !volverSolicitarEejg"
             (click)="checkPermisosSolicitarEEJ()" type="button"
             label="{{'general.boton.volver.solicitudEejg' | translate}}"></button>
           <button pButton
-            [disabled]="!permisoEscritura || selectedDatos.length==0 || isRepresentante"
+            [disabled]="!permisoEscritura || selectedDatos.length==0 || isRepresentante || !descargarEEJG"
             (click)="downloadEEJ()" type="button" icon="fa fa-download" iconPos="left"
             label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
           <button pButton
-            [disabled]="!permisoEscritura || isRepresentante || selectedDatos.length!=1"
+            [disabled]="!permisoEscritura || isRepresentante || selectedDatos.length!=1 || !solicitarEEJG"
             (click)="checkPermisosSolicitarEEJ()" type="button"
             label="{{'general.boton.solicitudEejg' | translate}}"></button>
           <button [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura  || isRepresentante"

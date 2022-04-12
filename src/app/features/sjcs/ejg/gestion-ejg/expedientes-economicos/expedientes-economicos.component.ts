@@ -241,6 +241,10 @@ export class ExpedientesEconomicosComponent implements OnInit {
     this.msgs = [];
   }
 
+  disabledDownload(): boolean {
+    return this.selectDatos == undefined || this.selectedDatos.length == 0 || this.selectedDatos.some(d => d.idEstado != "30");
+  }
+
   downloadEEJ() {
     this.progressSpinner=true;
 

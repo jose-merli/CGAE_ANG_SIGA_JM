@@ -47,6 +47,8 @@ export class UnidadFamiliarComponent implements OnInit {
   numSelected: number = 0;
   selectedItem: number = 10;
   volverSolicitarEejg: boolean = false;
+  solicitarEEJG: boolean = false;
+  descargarEEJG: boolean = false;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   openFicha: boolean = false;
@@ -71,6 +73,18 @@ export class UnidadFamiliarComponent implements OnInit {
     key: "unidadFamiliar",
     activa: false
   }
+
+  comboEstadosExpEco = [
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.inicial'), value: "10" },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.inicialEsperando'), value: "15" },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.espera'), value: "20" },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.esperaEsperando'), value: "25" },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.pendienteInfo'), value: "23" },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.finalizado'), value: "30" },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.errorSolicitud'), value: "40" },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.errorConsultaInfo'), value: "50" },
+    { label: this.translateService.instant('justiciaGratuita.ejg.solicitante.solicitudExpEconomico.estado.caducado'), value: "60" }
+  ];
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private confirmationService: ConfirmationService,
     private persistenceService: PersistenceService, private router: Router,
@@ -130,16 +144,9 @@ export class UnidadFamiliarComponent implements OnInit {
         this.datosFamiliares.forEach(element => {
           element.nombreApeSolicitante = nombresol;
           //Introducir entrada en la base de datos
-          if (element.estado == 30) {
-            element.estadoDes = "Denegada";
-          } else if (element.estado == 40) {
-            element.estadoDes = "Suspendida";
-          } else if (element.estado == 50) {
-            element.estadoDes = "Aprobada";
-          } else if (element.estado == 10) {
-            element.estadoDes = "Pendiente documentación";
-          } else if (element.estado == 20) {
-            element.estadoDes = "Pendiente aprobación";
+          const estadoExp = this.comboEstadosExpEco.find(c => c.value == element.estado);
+          if (estadoExp && estadoExp.label && estadoExp.label.length != 0) {
+            element.estadoDes = estadoExp.label;
           }
 
           if (element.estadoDes != undefined && element.fechaSolicitud != undefined) {
@@ -298,16 +305,37 @@ export class UnidadFamiliarComponent implements OnInit {
     }
   }
 
+  expedienteEconomDisponible(dato): boolean {
+    return dato.expedienteEconom != undefined && dato.expedienteEconom.trim() != "";
+  }
+
   isVolverSolicitarEEJG(datos) {
     if (datos.length != 1) {
       this.volverSolicitarEejg = false
     } else {
-      if ((datos[0].expedienteEconom == "" || datos[0].expedienteEconom == undefined || datos[0].expedienteEconom == null)
-        && (datos[0].estado != "30" || datos[0].estado != "40" || datos[0].estado != "50")) {
-        this.volverSolicitarEejg = false
-      } else {
-        this.volverSolicitarEejg = true
-      }
+      const dato = datos[0];
+      this.volverSolicitarEejg = this.expedienteEconomDisponible(dato) 
+          && dato.estado != undefined && dato.estado.length != 0 && +dato.estado >= 30;
+    }
+  }
+
+  isSolicitarEEJG(datos) {
+    if (datos.length != 1) {
+      this.solicitarEEJG = false
+    } else {
+      const dato = datos[0];
+      this.solicitarEEJG = !this.expedienteEconomDisponible(dato) 
+          && (dato.estado == undefined || dato.estado.length == 0);
+    }
+  }
+
+  isDescargarEEJG(datos) {
+    if (datos.length != 1) {
+      this.descargarEEJG = false
+    } else {
+      const dato = datos[0];
+      this.descargarEEJG = this.expedienteEconomDisponible(dato) 
+          && dato.estado != undefined && dato.estado.length != 0 && +dato.estado == 30;
     }
   }
 
@@ -347,6 +375,8 @@ export class UnidadFamiliarComponent implements OnInit {
 
   actualizaSeleccionados(selectedDatos) {
     this.isVolverSolicitarEEJG(selectedDatos);
+    this.isSolicitarEEJG(selectedDatos);
+    this.isDescargarEEJG(selectedDatos);
     this.numSelected = selectedDatos.length;
     this.seleccion = false;
     let repre = this.selectedDatos.find(
