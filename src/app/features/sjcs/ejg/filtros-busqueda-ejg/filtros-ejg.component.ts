@@ -9,6 +9,7 @@ import { datos_combos } from '../../../../utils/datos_combos';
 import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 import { MultiSelect } from 'primeng/multiselect';
 import { ThrowStmt } from '@angular/compiler';
+import { underscore } from '@angular-devkit/core/src/utils/strings';
 
 @Component({
   selector: 'app-filtros-ejg',
@@ -80,6 +81,14 @@ export class FiltrosEjgComponent implements OnInit {
   isDisabledGuardia: boolean = true;
   tipoLetrado;
 
+  //Variables para Combo Rol
+  selectedItemsRol = [];
+  selectedRolVisible = [];
+  dropdownList = [];
+  selectRoles: boolean = true;
+
+
+
   bodyDictamen = [];
   @Input() permisos;
   @Input() remesa;
@@ -96,7 +105,7 @@ export class FiltrosEjgComponent implements OnInit {
   usuarioBusquedaExpress = {
     numColegiado: '',
     nombreAp: '',
-    idPersona:''
+    idPersona: ''
   };
 
   constructor(private router: Router,
@@ -106,14 +115,17 @@ export class FiltrosEjgComponent implements OnInit {
     private _elementRef: ElementRef,
     private commonServices: CommonsService) { }
 
+
   ngOnInit() {
     this.progressSpinner = true;
     this.getCombos();
 
-    if(this.remesa != null || this.remesa != undefined){
+    if (this.remesa != null || this.remesa != undefined) {
       this.remesaFicha = true;
       this.body.informacionEconomica = this.remesa.informacionEconomica;
     }
+
+
 
     console.log("Viene de la ficha de una remesa? -> ", this.remesaFicha);
     console.log("Remesa -> ", this.remesa);
@@ -144,7 +156,7 @@ export class FiltrosEjgComponent implements OnInit {
     } else {
       this.body = new EJGItem();
       this.body.annio = new Date().getFullYear().toString();
-      if(this.remesa != null || this.remesa != undefined){
+      if (this.remesa != null || this.remesa != undefined) {
         this.body.informacionEconomica = this.remesa.informacionEconomica;
       }
     }
@@ -205,6 +217,8 @@ export class FiltrosEjgComponent implements OnInit {
     }
   }
 
+
+
   onChangeTipoLetrado() {
     this.comboTurno = [];
     this.tipoLetrado = 0;
@@ -253,12 +267,12 @@ export class FiltrosEjgComponent implements OnInit {
       && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
       this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
       this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
-    }else{
+    } else {
       this.usuarioBusquedaExpress.numColegiado = " ";
       this.body.numColegiado = "";
       this.body.idPersona = "";
       sessionStorage.removeItem("numColegiado");
-      this.numColegiadoRelleno=false;
+      this.numColegiadoRelleno = false;
     }
   }
 
@@ -281,7 +295,7 @@ export class FiltrosEjgComponent implements OnInit {
       n => {
         this.comboDictamen.push({ label: "Indiferente", value: "-1" });
         this.comboDictamen.push({ label: "Sin dictamen", value: "0" });
-        if(n.combooItems!=null && n.combooItems != undefined){
+        if (n.combooItems != null && n.combooItems != undefined) {
           n.combooItems.forEach(element => {
             this.comboDictamen.push(element);
           });
@@ -295,10 +309,22 @@ export class FiltrosEjgComponent implements OnInit {
     );
   }
   getComboRol() {
+
     this.sigaServices.get("busquedaJusticiables_comboRoles").subscribe(
       n => {
         this.comboRol = n.combooItems;
+        // Inicializar Estados Roles.
+        this.body.estadosRoles = [];
+
+        this.comboRol.forEach(element => {
+          // Verificar los Roles (SOLICITANTE Y UNIDAD FAMILIAR)
+          if (element.value == 1 || element.value == 4) {
+            // Añadir en estados roles visibles.
+            this.body.estadosRoles.push(element.value);
+          }
+        });
         this.commonServices.arregloTildesCombo(this.comboRol);
+
       },
       err => {
         //console.log(err);
@@ -457,15 +483,15 @@ export class FiltrosEjgComponent implements OnInit {
         this.comboEstadoEJG = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboEstadoEJG);
 
-        if(this.remesaFicha){
+        if (this.remesaFicha) {
           let comboItem = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '7');
           let comboItem2 = this.comboEstadoEJG.find(comboEstadoEJG => comboEstadoEJG.value == '17');
 
           this.comboEstadoEJG[0] = comboItem;
           this.comboEstadoEJG[1] = comboItem2;
 
-          for(; this.comboEstadoEJG.length > 2;){
-              this.comboEstadoEJG.pop();
+          for (; this.comboEstadoEJG.length > 2;) {
+            this.comboEstadoEJG.pop();
           }
         }
         console.log("comboEstadoEJG -> ", this.comboEstadoEJG);
@@ -480,7 +506,7 @@ export class FiltrosEjgComponent implements OnInit {
     if (this.body.tipoLetrado == "E") {
       this.tipoLetrado = "1";
     } else if (this.body.tipoLetrado == "D" || this.body.tipoLetrado == "A") {
-      this.tipoLetrado = "2"; 
+      this.tipoLetrado = "2";
     }
     this.sigaServices.getParam("filtrosejg_comboTurno",
       "?idTurno=" + this.tipoLetrado).subscribe(
@@ -695,21 +721,29 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
         }
 
-        if(sessionStorage.getItem("numColegiado") != undefined && sessionStorage.getItem("numColegiado") != null 
-          && sessionStorage.getItem("numColegiado").trim() != ""){
-            this.body.numColegiado = sessionStorage.getItem("numColegiado");
+        if (sessionStorage.getItem("numColegiado") != undefined && sessionStorage.getItem("numColegiado") != null
+          && sessionStorage.getItem("numColegiado").trim() != "") {
+          this.body.numColegiado = sessionStorage.getItem("numColegiado");
         }
 
         if (this.bodyDictamen.toString() != undefined && this.bodyDictamen.toString() != null && this.bodyDictamen.toString() != "") {
           this.body.dictamen = this.bodyDictamen.toString()
         }
 
+        // Verificar que los estados Roles no esten vacios.
+        if (this.body.estadosRoles != undefined) {
+          // Convertir Array a String para enviar roles.
+          this.body.rol = this.body.estadosRoles.sort().toString();
+        }
+
         this.busqueda.emit(false);
         this.body.dictamen = "";
+        this.selectRoles = false;
+
       }
     }
   }
-  
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -736,8 +770,12 @@ export class FiltrosEjgComponent implements OnInit {
 
     this.clearFiltersTramitador();
     this.getComboColegio();
+    // Actualizar Items por defectos.
+    this.getComboRol();
+    // Desactivar Roles por defectos.
+    this.selectRoles = true;
 
-    if(this.remesa != null || this.remesa != undefined){
+    if (this.remesa != null || this.remesa != undefined) {
       this.body.informacionEconomica = this.remesa.informacionEconomica;
     }
 
@@ -881,5 +919,35 @@ export class FiltrosEjgComponent implements OnInit {
       someMultiselect.filterInputChild.nativeElement.focus();
     }, 300);
   }
+
+  onChangeRol() {
+    if (this.body.nombre == undefined) {
+      this.body.nombre = "";
+    }
+    if (this.body.apellidos == undefined) {
+      this.body.apellidos = "";
+    }
+    if (this.body.nif == undefined) {
+      this.body.nif = "";
+    }
+
+    if (this.body.nombre.length != 0 ||
+      this.body.apellidos.length != 0 ||
+      this.body.nif.length != 0) {
+      this.selectRoles = false;
+    } else {
+      this.selectRoles = true;
+      this.body.estadosRoles = [];
+    }
+
+    if(this.body.nombre.length == 0 ||
+      this.body.apellidos.length == 0 ||
+      this.body.nif.length == 0) {
+      this.getComboRol();
+      }
+    
+  }
+
+
 
 }
