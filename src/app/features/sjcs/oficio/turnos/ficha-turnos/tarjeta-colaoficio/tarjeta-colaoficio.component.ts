@@ -278,6 +278,7 @@ export class TarjetaColaOficio implements OnInit {
           err => {
           }, () => {
             this.turnosItem.idpersonaUltimo = this.turnosItem2.idpersonaUltimo;
+            this.turnosItem.idpersona_ultimo = this.turnosItem2.idpersona_ultimo;
             this.getColaOficio();
           }
         );

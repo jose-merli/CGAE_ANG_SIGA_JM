@@ -63,5 +63,6 @@ export class TurnosItems {
   fechaActual: Date;
   numeroInscritos;
   partidoJudicial: string;
+  idpersona_ultimo: string;
   constructor() { }
 }
