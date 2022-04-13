@@ -856,19 +856,19 @@ export class FichaProgramacionComponent implements OnInit {
     let estadoNumerico = "0";
       switch (this.datosGenerales.estado) {
 				case "Pendiente":
-					estadoNumerico = "5";
+					estadoNumerico = "4";
 					break;
 				case "Programada":
-					estadoNumerico = "1";
+					estadoNumerico = "0";
 					break;
 				default:
-					estadoNumerico = "0";
+					estadoNumerico = "1";
 					break;
       }
       this.datosGenerales.estado = estadoNumerico;
       //Al generar, pasará al estado Programada
       if (this.datosGenerales.estado == "Pendiente"){
-        estadoNumerico = "1";
+        estadoNumerico = "0";
       }
 
       let dataToGenerate = {
