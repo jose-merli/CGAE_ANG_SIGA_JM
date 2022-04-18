@@ -357,7 +357,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
 
   }
 
-  save() {
+  async save() {
     let compareDateOk = compareDate(this.datosGenerales.fechaDesde, this.datosGenerales.fechaHasta, true);
     let compareDateFuture1 = compareDate(this.datosGenerales.fechaDesde, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);
     let compareDateFuture2 = compareDate(this.datosGenerales.fechaHasta, this.changeDateFormat(this.formatDate2(new Date()).toString()), true);

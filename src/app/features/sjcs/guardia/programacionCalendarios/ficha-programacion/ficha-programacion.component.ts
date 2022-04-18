@@ -157,7 +157,11 @@ export class FichaProgramacionComponent implements OnInit {
          this.dataReady = false;
       this.idConjuntoGuardiaElegido = confValue.idConjuntoGuardia;
       this.fromCombo = confValue.fromCombo;
-      this.dataReady = true;});
+
+      if (this.modoEdicion) {
+        this.dataReady = true;
+      }
+    });
   
     //console.log('this.persistenceService.getDatos(): ', this.persistenceService.getDatos())
     this.infoResumen = [];
@@ -200,6 +204,7 @@ export class FichaProgramacionComponent implements OnInit {
       this.modoEdicion = true;
       sessionStorage.removeItem('guardiaColegiadoData');
     } else {
+      this.dataReady = false;
       this.modoEdicion = false;
     }
 
@@ -622,18 +627,18 @@ export class FichaProgramacionComponent implements OnInit {
   this.newCalendarProg(dataToDuplicate);
   }
 
-    searchGuardiasFromCal(event){
+    searchGuardiasFromCal(event): Promise<any>{
       this.datosTarjetaGuardiasCalendario = [];
-      this.getGuardiasFromCal(event.idCal, event.fechaDesde, event.fechaHasta );
+      return this.getGuardiasFromCal(event.idCal, event.fechaDesde, event.fechaHasta );
     }
-   getGuardiasFromCal(idCalendarioProgramado, fechaDesde, fechaHasta){
+   getGuardiasFromCal(idCalendarioProgramado, fechaDesde, fechaHasta): Promise<any> {
      if (!this.fromCombo){
     this.datosTarjetaGuardiasCalendarioIni = [];
      }
     this.dataReady = false;
     this.progressSpinner = true;
-    this.sigaServices.getParam(
-      "guardiaCalendario_getGuardiasFromCalendar" , `?idCalendar=${idCalendarioProgramado}&fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`).subscribe(
+    return this.sigaServices.getParam(
+      "guardiaCalendario_getGuardiasFromCalendar" , `?idCalendar=${idCalendarioProgramado}&fechaDesde=${fechaDesde}&fechaHasta=${fechaHasta}`).toPromise().then(
         data => {
 
           let datosTarjetaGuardiasCalendario2 = data;
@@ -669,7 +674,7 @@ export class FichaProgramacionComponent implements OnInit {
   }
 
 
-  guardarDatosCalendario(datGen){
+  async guardarDatosCalendario(datGen){
     this.wrongList = [];
       if (datGen != undefined){
         //Boton guardar tarjeta Datos generales
@@ -726,7 +731,7 @@ export class FichaProgramacionComponent implements OnInit {
         'fechaDesde' : datosGeneralesToSave.fechaDesde,
         'fechaHasta' : datosGeneralesToSave.fechaHasta
       }
-      this.searchGuardiasFromCal(dat);
+      await this.searchGuardiasFromCal(dat);
       let idCalG;
       if (this.idConjuntoGuardiaElegido == 0){
         idCalG = null;
@@ -755,8 +760,8 @@ export class FichaProgramacionComponent implements OnInit {
       this.fInicioElegida = datosGeneralesToSave.fechaDesde;
       this.fFinElegida = datosGeneralesToSave.fechaHasta;
       
-      this.datosTarjetaGuardiasCalendario.forEach(datTarjetaGuardias => {
-      this.getFechasProgramacion(datTarjetaGuardias.idGuardia, dataToSave);
+      this.datosTarjetaGuardiasCalendario.forEach(async datTarjetaGuardias => {
+      await this.getFechasProgramacion(datTarjetaGuardias.idGuardia, dataToSave);
        
     })
     if (this.wrongList.length == 0){
@@ -777,13 +782,13 @@ export class FichaProgramacionComponent implements OnInit {
   }
 
 
-  getFechasProgramacion(idGuardia, dataToSave){
+  getFechasProgramacion(idGuardia, dataToSave): Promise<any> {
     this.disableGenerar = true;
     let go;
     this.progressSpinner = true;
     let fechasArr = [{fechaDesde : '', fechaHasta: ''}];
-    this.sigaServices.getParam(
-      "guardiaCalendario_getFechasProgFromGuardia", "?idGuardia=" + idGuardia).subscribe(
+    return this.sigaServices.getParam(
+      "guardiaCalendario_getFechasProgFromGuardia", "?idGuardia=" + idGuardia).toPromise().then(
         data => {
           fechasArr = data;
           //console.log('fechasArr: ', fechasArr)
