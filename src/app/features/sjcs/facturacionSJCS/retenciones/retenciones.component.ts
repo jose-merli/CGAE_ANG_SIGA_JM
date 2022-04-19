@@ -77,7 +77,7 @@ export class RetencionesComponent implements OnInit, AfterViewChecked {
       this.buscarDesdeEnlace();
       sessionStorage.removeItem("datosColegiado");
 
-    }else{
+    } else if (!this.sigaStorageService.isLetrado) {
       this.buscarDesdeEnlace();
     }
 

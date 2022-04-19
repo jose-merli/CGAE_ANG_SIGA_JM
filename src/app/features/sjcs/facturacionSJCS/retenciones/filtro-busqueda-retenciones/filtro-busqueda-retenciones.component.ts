@@ -34,7 +34,8 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
   comboPagos: SelectItem[] = [];
   usuarioBusquedaExpress = {
     numColegiado: '',
-    nombreAp: ''
+    nombreAp: '',
+    idPersona: ''
   };
 
   @Input() isLetrado: boolean;
@@ -184,6 +185,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
       const { numColegiado, nombre , idPersona} = JSON.parse(usr.body).colegiadoItem[0];
       this.usuarioBusquedaExpress.numColegiado = numColegiado;
       this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+      this.usuarioBusquedaExpress.idPersona = idPersona;
       this.filtros.ncolegiado = numColegiado;
       this.filtros.nombreApellidoColegiado = nombre.replace(/,/g, "");
       this.filtros.idPersona = idPersona;
@@ -376,13 +378,18 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
     
     this.retencionesService.filtrosRetenciones = new RetencionesRequestDto();
     this.filtros  = new RetencionesRequestDto();
+
+    if (!this.sigaStorageService.isLetrado) {
 			this.usuarioBusquedaExpress = {
         numColegiado: "",
-        nombreAp: ""
-      
+        nombreAp: "",
+        idPersona: ""
 		  }
-    
-    
+    } else {
+      this.filtros.nombreApellidoColegiado = this.usuarioBusquedaExpress.nombreAp;
+      this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
+      this.filtros.idPersona = this.usuarioBusquedaExpress.idPersona;
+    }
   }
 
   botonBuscarColegiadoExpress() {
