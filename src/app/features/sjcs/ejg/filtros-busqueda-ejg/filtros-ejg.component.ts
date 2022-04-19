@@ -317,11 +317,16 @@ export class FiltrosEjgComponent implements OnInit {
         this.body.estadosRoles = [];
 
         this.comboRol.forEach(element => {
-          // Verificar los Roles (SOLICITANTE Y UNIDAD FAMILIAR)
-          if (element.value == 1 || element.value == 4) {
-            // Añadir en estados roles visibles.
-            this.body.estadosRoles.push(element.value);
+
+          // Combo rol esta activo pasar por defecto los valores sino por defecto
+          if (this.selectRoles == false) {
+            // Verificar los Roles (SOLICITANTE Y UNIDAD FAMILIAR)
+            if (element.value == 1 || element.value == 4) {
+              // Añadir en estados roles visibles.
+              this.body.estadosRoles.push(element.value);
+            }
           }
+
         });
         this.commonServices.arregloTildesCombo(this.comboRol);
 
@@ -940,12 +945,12 @@ export class FiltrosEjgComponent implements OnInit {
       this.body.estadosRoles = [];
     }
 
-    if(this.body.nombre.length == 0 ||
+    if (this.body.nombre.length == 0 ||
       this.body.apellidos.length == 0 ||
       this.body.nif.length == 0) {
       this.getComboRol();
-      }
-    
+    }
+
   }
 
 
