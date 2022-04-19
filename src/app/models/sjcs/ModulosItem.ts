@@ -21,5 +21,6 @@ export class ModulosItem {
   complementoCheck: boolean;
   permitiraniadirletradoCheck: boolean;
   jurisdiccionDes: string;
+  verSoloAlta: boolean;
   constructor() { }
 }

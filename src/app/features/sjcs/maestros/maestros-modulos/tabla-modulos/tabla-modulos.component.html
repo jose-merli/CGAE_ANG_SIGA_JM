@@ -31,10 +31,10 @@
 
             <div *ngIf="col.field == 'fechadesdevigor' || col.field == 'fechahastavigor'">
               <div *ngIf="setItalic(dato)">
-                <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] }}</label>
               </div>
               <div *ngIf="!setItalic(dato)">
-                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                <label>{{ dato[col.field] }}</label>
               </div>
             </div>
 

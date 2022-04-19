@@ -36,6 +36,7 @@ export class FiltrosModulosComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
+
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
@@ -117,6 +118,10 @@ export class FiltrosModulosComponent implements OnInit {
 
   clearFilters() {
     this.filtros = new ModulosItem();
+  }
+
+  onChangeVerSoloAltaCheck(event) {
+    //
   }
 
   //búsqueda con enter
