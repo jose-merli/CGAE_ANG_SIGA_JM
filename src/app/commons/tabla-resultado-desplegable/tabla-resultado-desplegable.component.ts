@@ -89,7 +89,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   //@Output() cargaJuzgados = new EventEmitter<boolean>();
   progressSpinner: boolean = false;
   rowValidadas = [];
-  comboJuzgados = [];
+  @Input() comboJuzgados = [];
   @Input() comboModulos = [];
   @Input()comboAcreditacion = [];
   dataToUpdateArr: RowGroup[] = [];

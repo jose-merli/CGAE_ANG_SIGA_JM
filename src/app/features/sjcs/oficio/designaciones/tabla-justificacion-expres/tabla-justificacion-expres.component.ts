@@ -384,15 +384,25 @@ export class TablaJustificacionExpresComponent implements OnInit {
         moduloValue = designacion.idProcedimiento;
         moduloCombo = this.comboModulos;
       }
+
+      let numJuzType = 'multiselect1';
+      let juzgadoType = "select";
+      let juzgadoValue = designacion.idJuzgado;
+      let juzgadoCombo = this.comboJuzgados;
+
       let arrDesignacion = [];
       if (!this.colegiado){
       arrDesignacion = 
       [
       { type: 'checkboxPermisos', value: [finalizada, ""], size: 120, combo: null},
-      { type: listaClienteType, value: listaCliente, size: 400, combo: listaClienteCombo },
+      //{ type: listaClienteType, value: listaCliente, size: 400, combo: listaClienteCombo },
+      { type: juzgadoType, value: juzgadoValue, size: 400 , combo: juzgadoCombo }, //moduloç
+      //{ type: numJuzType, value: designacion.idJuzgado, size: 200 , combo: null},
       { type: 'input', value: designacion.nig, size: 200, combo: null},
       { type: numProcType, value: designacion.numProcedimiento, size: 200 , combo: null},
-      { type: moduloType, value: moduloValue, size: 400 , combo: moduloCombo }, //modulo
+      { type: moduloType, value: moduloValue, size: 400 , combo: moduloCombo }, //moduloç
+     
+     // { type: juzgadoType, value: juzgadoValue, size: 400 , combo: juzgadoCombo }, //moduloç
       { type: 'invisible', value: this.formatDate(designacion.fechaActuacion), size: 200 , combo: null},
       { type: 'invisible', value: '' , size: 200, combo: null},
       { type: 'invisible', value: designacion.tipoAcreditacion , size: 200, combo: null},
