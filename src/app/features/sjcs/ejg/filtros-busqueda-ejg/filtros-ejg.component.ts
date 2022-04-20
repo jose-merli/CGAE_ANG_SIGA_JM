@@ -741,9 +741,19 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.rol = this.body.estadosRoles.sort().toString();
         }
 
+        // Comprobar que Rol esta vacio.
+        if(this.body.estadosRoles.length == 0) {
+          // Desactivar Rol
+          this.selectRoles = true;
+          this.body.estadosRoles = [];
+        }else{
+          this.selectRoles = false;
+        }
+  
+
         this.busqueda.emit(false);
         this.body.dictamen = "";
-        this.selectRoles = false;
+        
 
       }
     }
