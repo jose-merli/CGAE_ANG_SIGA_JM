@@ -629,6 +629,7 @@ export class FichaProgramacionComponent implements OnInit {
 
     searchGuardiasFromCal(event): Promise<any>{
       this.datosTarjetaGuardiasCalendario = [];
+      if(event.idCal != "")
       return this.getGuardiasFromCal(event.idCal, event.fechaDesde, event.fechaHasta );
     }
    getGuardiasFromCal(idCalendarioProgramado, fechaDesde, fechaHasta): Promise<any> {
@@ -965,9 +966,12 @@ export class FichaProgramacionComponent implements OnInit {
       this.progressSpinner = false;
       //this.showMessage('error', JSON.stringify(data.body.error.message), JSON.stringify(data.body.error.message));
       let error = JSON.parse(err.error);
-      if (err.status = "409" && error.error && error.error.message) {
+      if ( error.error.message == "messages.factSJCS.error.solapamientoRango" ) {
+        this.showMessage('error', this.translateService.instant("general.message.incorrect"), 
+        this.translateService.instant(error.error.message));
+      } else if(err.status = "409" && error.error && error.error.message){
         this.showMessage('error', this.translateService.instant("general.message.incorrect"), error.error.message);
-      } else {
+      }else {
         this.showMessage('error', "No se ha generado correctamente", "No se ha generado correctamente");
       }
 
