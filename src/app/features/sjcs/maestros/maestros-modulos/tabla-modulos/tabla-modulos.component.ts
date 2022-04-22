@@ -21,6 +21,7 @@ import { SortEvent } from '../../../../../../../node_modules/primeng/api';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ProcedimientoObject } from '../../../../../models/sjcs/ProcedimientoObject';
 import { JuzgadoItem } from '../../../../../models/sjcs/JuzgadoItem';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-tabla-modulos',
@@ -67,7 +68,8 @@ export class TablaModulosComponent implements OnInit {
 		private sigaServices: SigaServices,
 		private persistenceService: PersistenceService,
 		private confirmationService: ConfirmationService,
-		private commonsService: CommonsService
+		private commonsService: CommonsService,
+		private pipe: DatePipe
 	) { }
 
 	ngOnInit() {
@@ -202,8 +204,6 @@ export class TablaModulosComponent implements OnInit {
 
 		this.modulosDelete.modulosItem = this.selectedDatos;
 
-		let modulosAux = JSON.parse(JSON.stringify(this.modulosDelete.modulosItem));
-
 		this.modulosDelete.modulosItem.forEach( modulo => {
 			if (modulo.fechadesdevigor != null && !(typeof(modulo.fechadesdevigor) == 'number')) {
 				modulo.fechadesdevigor = this.formatDate(modulo.fechadesdevigor).getTime();
@@ -243,7 +243,20 @@ export class TablaModulosComponent implements OnInit {
 			}
 		);
 
-		this.modulosDelete.modulosItem = modulosAux;
+		this.selectedDatos.forEach( modulo => {
+			const pattern = 'dd/MM/yyyy';
+
+			if (modulo.fechadesdevigor != null && typeof(modulo.fechadesdevigor) == 'number') {
+				modulo.fechadesdevigor = this.formatDate(modulo.fechadesdevigor);
+				modulo.fechadesdevigor = this.pipe.transform(modulo.fechadesdevigor, pattern);
+			}
+		
+			if (modulo.fechahastavigor != null && typeof(modulo.fechahastavigor) == 'number') {
+				modulo.fechahastavigor = this.formatDate(modulo.fechahastavigor);
+				modulo.fechahastavigor = this.pipe.transform(modulo.fechahastavigor, pattern);
+			}
+
+		});
 	}
 
 	onChangeSelectAll() {
@@ -400,10 +413,20 @@ export class TablaModulosComponent implements OnInit {
 		this.juzgados.forEach(juzgado => {
 			let procedimientoDTO = new ProcedimientoObject();
 		
+			this.selectedDatos.forEach( modulo => {
+				if (modulo.fechadesdevigor != null && !(typeof(modulo.fechadesdevigor) == 'number')) {
+					modulo.fechadesdevigor = this.formatDate(modulo.fechadesdevigor).getTime();
+				  }
+			  
+				  if (modulo.fechahastavigor != null && !(typeof(modulo.fechahastavigor) == 'number')) {
+					modulo.fechahastavigor = this.formatDate(modulo.fechahastavigor).getTime();
+				  }
+			});
+
 			procedimientoDTO.procedimientosItems = this.selectedDatos;
 			procedimientoDTO.idJuzgado = juzgado;
-		
-		
+
+
 			this.sigaServices.post("gestionJuzgados_asociarModulosAJuzgados", procedimientoDTO).subscribe(
 				data => {
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -426,7 +449,20 @@ export class TablaModulosComponent implements OnInit {
 				}
 			);
 		
+			this.selectedDatos.forEach( modulo => {
+				const pattern = 'dd/MM/yyyy';
+
+				if (modulo.fechadesdevigor != null && typeof(modulo.fechadesdevigor) == 'number') {
+					modulo.fechadesdevigor = this.formatDate(modulo.fechadesdevigor);
+					modulo.fechadesdevigor = this.pipe.transform(modulo.fechadesdevigor, pattern);
+				}
 			
+				if (modulo.fechahastavigor != null && typeof(modulo.fechahastavigor) == 'number') {
+					modulo.fechahastavigor = this.formatDate(modulo.fechahastavigor);
+					modulo.fechahastavigor = this.pipe.transform(modulo.fechahastavigor, pattern);
+				}
+
+			});
 		});
 			
 	}
