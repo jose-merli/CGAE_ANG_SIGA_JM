@@ -201,6 +201,19 @@ export class TablaModulosComponent implements OnInit {
 		}
 
 		this.modulosDelete.modulosItem = this.selectedDatos;
+
+		let modulosAux = JSON.parse(JSON.stringify(this.modulosDelete.modulosItem));
+
+		this.modulosDelete.modulosItem.forEach( modulo => {
+			if (modulo.fechadesdevigor != null && !(typeof(modulo.fechadesdevigor) == 'number')) {
+				modulo.fechadesdevigor = this.formatDate(modulo.fechadesdevigor).getTime();
+			  }
+		  
+			  if (modulo.fechahastavigor != null && !(typeof(modulo.fechahastavigor) == 'number')) {
+				modulo.fechahastavigor = this.formatDate(modulo.fechahastavigor).getTime();
+			  }
+		});
+
 		this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", this.modulosDelete).subscribe(
 			data => {
 				this.selectedDatos = [];
@@ -229,6 +242,8 @@ export class TablaModulosComponent implements OnInit {
 				this.selectAll = false;
 			}
 		);
+
+		this.modulosDelete.modulosItem = modulosAux;
 	}
 
 	onChangeSelectAll() {
@@ -262,9 +277,16 @@ export class TablaModulosComponent implements OnInit {
 	}
 
 	formatDate(date) {
-		var parts = date.split("/");
-   		var formattedDate = new Date(parts[1] + "/" + parts[0] + "/" + parts[2]);
-   		return formattedDate;
+
+		if (date instanceof Date) {
+			return date; 
+		} else if (typeof(date) == 'number'){
+			return new Date(date.valueOf());
+		} else {
+			var parts = date.split("/");
+			var formattedDate = new Date(parts[1] + "/" + parts[0] + "/" + parts[2]);
+			return formattedDate;
+		}
 	}
 
 	getCols() {
