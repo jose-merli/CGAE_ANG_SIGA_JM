@@ -116,8 +116,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             // }
             this.procedimientoValue = this.campos.idProcedimiento;
             this.moduloValue = this.campos.idModulo;
-            this.datePickers[0].value = this.campos.fechaEstado;
-            this.datePickers[1].value = this.campos.fechaFin;
+            this.datePickers[0].value = this.formatDate(this.campos.fechaEstado);
+            this.datePickers[1].value = this.formatDate(this.campos.fechaFin);
             if (this.valorParametro == 1) {
               this.getComboProcedimientosConJuzgado(this.juzgadoValue);
               if (this.procedimientoValue != null && this.procedimientoValue != "" && this.procedimientoValue != undefined) {
@@ -252,8 +252,16 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   }
 
   formatDate(date) {
-    const pattern = 'dd/MM/yyyy';
-    return this.datepipe.transform(date, pattern);
+    if (date != undefined && (!this.isString(date) || this.isString(date) && !date.includes("/"))) {
+      const pattern = 'dd/MM/yyyy';
+      return this.datepipe.transform(date, pattern);
+    } else {
+      return date;
+    }
+  }
+
+  isString(value): boolean {
+    return typeof value === 'string' || value instanceof String;
   }
 
   changeJuzgado() {
@@ -345,7 +353,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         designaUpdate.estado = "V";
       } else if (this.estadoValue == "Anulada") {
         designaUpdate.estado = "A";
-      } else {
+      } else if (this.estadoValue) {
         designaUpdate.estado = this.estadoValue[0];
       }
       // if(designaUpdate.nig != "" && designaUpdate.nig!= undefined){
@@ -425,7 +433,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.moduloOpciones = [];
         this.inputs[0].value = this.datosInicial.nig;
         this.inputs[1].value = this.datosInicial.numProcedimiento;
-        this.datePickers[0].value = this.datosInicial.fechaEstado;
+        this.datePickers[0].value = this.formatDate(this.datosInicial.fechaEstado);
         this.delitosValue = this.initDelitos;
         let designaUpdate = new DesignaItem();
         designaUpdate.ano = this.datosInicial.factConvenio;
@@ -714,7 +722,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
         let i;
         let x;
-        for (i = 0; i < e.label.length; i++) {
+        for (i = 0; e.label != undefined && i < e.label.length; i++) {
           if ((x = accents.indexOf(e.label[i])) != -1) {
             e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
             return e.labelSinTilde;
