@@ -969,7 +969,11 @@ export class FichaProgramacionComponent implements OnInit {
       if ( error.error.message == "messages.factSJCS.error.solapamientoRango" ) {
         this.showMessage('error', this.translateService.instant("general.message.incorrect"), 
         this.translateService.instant(error.error.message));
-      } else if(err.status = "409" && error.error && error.error.message){
+      }else if(error.error.message == "messages.factSJCS.error.listaVacia"){
+        //Error a mostrar si la lista esta vacia, puede ser innecesario un mensaje.
+        //  this.showMessage('error', this.translateService.instant("general.message.incorrect"), "Lista vacia.");
+      } 
+      else if(err.status = "409" && error.error && error.error.message){
         this.showMessage('error', this.translateService.instant("general.message.incorrect"), error.error.message);
       }else {
         this.showMessage('error', "No se ha generado correctamente", "No se ha generado correctamente");
