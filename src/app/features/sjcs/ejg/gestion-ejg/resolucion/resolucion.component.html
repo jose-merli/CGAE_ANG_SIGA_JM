@@ -37,7 +37,7 @@
     </div>
 
     <div *ngIf="esFichaActiva('resolucion')" class="card-body card-body-ficha">
-      <div *ngIf = "resolucion != undefined" class="row">
+      <div *ngIf="resolucion != undefined" class="row">
         <div class="form-group col-lg-4 col-md-4">
           <label style="font-weight: bold; padding-bottom: 5px"> {{
             "justiciaGratuita.ejg.gestionejg.DatosResolucion" | translate}} </label>
@@ -68,23 +68,23 @@
                 filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
-                <label>{{ 'justiciaGratuita.ejg.datosGenerales.annioCAJG' | translate}}</label>
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.annioCAJG' | translate}}</label>
               <input type="text" class="form-control" maxLength="50" pInputText [(ngModel)]="resolucion.anioCAJG"
-              (keypress)="numberOnly($event)" maxlength="4">
+                (keypress)="numberOnly($event)" maxlength="4">
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label> / {{'justiciaGratuita.sjcs.designas.DatosIden.numero' | translate}}</label>
               <input type="text" class="form-control" maxLength="20" pInputText [(ngModel)]="resolucion.numeroCAJG">
             </div>
-            <div *ngIf="resolucion.docResolucion != undefined && resolucion.docResolucion!=null && permisoEscritura" class="form-group col-lg-6 col-md-6">
+            <div *ngIf="resolucion.docResolucion != undefined && resolucion.docResolucion!=null && permisoEscritura"
+              class="form-group col-lg-6 col-md-6">
               <label> {{'justiciaGratuita.ejg.resolucion.documentoResolucion' | translate}}</label>
-            </div>
-            <div style="display: flex;" *ngIf="resolucion.docResolucion != undefined && resolucion.docResolucion!=null && permisoEscritura" class="form-group col-lg-6 col-md-6">
-              <label> {{ resolucion.docResolucion }}</label> &nbsp;
               <div class="main-button">
-                <button (click)="descargarDocumentoResolucion()" pButton type="button" icon="fa fa-download" iconPos="center"></button>
+                <button (click)="descargarDocumentoResolucion()" pButton type="button" icon="fa fa-download"
+                  iconPos="left" label="{{ resolucion.docResolucion }}"></button>
               </div>
             </div>
+
           </div>
         </div>
         <div class="col-lg-4 col-md-4 bordes">
@@ -113,7 +113,7 @@
               <p-dropdown class="select-form" [(ngModel)]='resolucion.idPonente' placeholder="Seleccionar"
                 [options]="comboPonente" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
             </div>
-            
+
             <div class="form-group col-lg-6 col-md-6">
               <label>{{"justiciaGratuita.ejg.datosGenerales.FechaPresPonente" | translate}}</label>
               <app-fecha [(value)]="resolucion.fechaPresentacionPonente"

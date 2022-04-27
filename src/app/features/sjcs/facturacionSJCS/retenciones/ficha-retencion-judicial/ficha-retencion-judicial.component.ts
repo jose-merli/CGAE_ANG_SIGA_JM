@@ -82,6 +82,7 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
     this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaRetenciones).then(respuesta => {
 
       const permisoEscritura = respuesta;
+      this.permisoEscrituraDatosRetencion = permisoEscritura;
 
       if (permisoEscritura == undefined) {
         sessionStorage.setItem("codError", "403");
@@ -97,8 +98,8 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
     //   this.permisoEscrituraDatosRetencion = respuesta;
 
     // }).catch(error => console.error(error));
-    console.log(this.retencionesService.permisoEscrituraDatosRetencion);
-    this.permisoEscrituraDatosRetencion = this.retencionesService.permisoEscrituraDatosRetencion;
+    //console.log(this.retencionesService.permisoEscrituraDatosRetencion);
+    
   }
 
   isOpenReceive(event) {

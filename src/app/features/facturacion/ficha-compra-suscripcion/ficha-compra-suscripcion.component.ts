@@ -63,7 +63,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
     }
   }
 
-  actualizarFicha(){
+  actualizarFicha(event: boolean = true){
     this.progressSpinner = true;
 
     this.sigaServices.post('PyS_getFichaCompraSuscripcion', this.ficha).subscribe(
@@ -72,7 +72,9 @@ export class FichaCompraSuscripcionComponent implements OnInit {
         if( n.status != 200) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          if (event) {
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          }
 
           let newF:FichaCompraSuscripcionItem = JSON.parse(n.body);
           //newF.facturas= this.ficha.facturas;

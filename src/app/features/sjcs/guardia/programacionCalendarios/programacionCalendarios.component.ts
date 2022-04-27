@@ -278,7 +278,7 @@ let datosEntrada =
         data => {
           let error = JSON.parse(data.body).error;
           this.datos = JSON.parse(data.body);
-        
+
           this.respuestaCalendario = [];
          // this.comboGuardiasIncompatibles = [];
           this.datos.forEach((dat, i) => {
@@ -704,9 +704,9 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
           case "Generada":
             estadoNumerico = "3";
             break;
-            case "Reprogramada":
-              estadoNumerico = "5";
-              break;
+          case "Reprogramada":
+            estadoNumerico = "5";
+            break;
           default:
             estadoNumerico = "4";
             break;

@@ -528,7 +528,8 @@ export class RelacionesComponent implements OnInit {
                 datos.idTurno = desItem.idTurno;
                 desItem = datos;
                 desItem.anio = desItem.ano;
-                desItem.numProcedimiento = desItem.numprocedimiento;
+                desItem.idProcedimiento = desItem.idProcedimiento;
+                desItem.numProcedimiento = desItem.numProcedimiento;
                 desItem.ano = 'D' + desItem.anio + '/' + desItem.codigo;
                 if (this.art27) sessionStorage.setItem("Art27", "true");
                 sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
