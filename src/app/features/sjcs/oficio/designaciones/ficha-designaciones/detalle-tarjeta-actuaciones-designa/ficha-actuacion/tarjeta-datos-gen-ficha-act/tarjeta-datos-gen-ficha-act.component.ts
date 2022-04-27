@@ -321,7 +321,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   // Inicio combos Modulo
   getComboModulos() {
     this.progressSpinner = true;
-    this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
+    let fecha = null;
+    if(this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null){
+      fecha = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy')
+    }
+    this.sigaServices.getParam("combo_comboModulosDesignaciones","?fecha=" + fecha).subscribe(
       n => {
         this.comboModulos = n.combooItems;
 
@@ -361,7 +365,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   getComboModulosPorJuzgado($event) {
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
+    let fecha = null;
+    if(this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null){
+      fecha = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy')
+    }
+    this.sigaServices.getParam("combo_comboModulosConJuzgado","?idJuzgado=" +$event + "&fecha=" + fecha).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
 
@@ -402,7 +410,11 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   getComboModulosConProcedimientos(idPretension) {
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboModulosConProcedimientos", idPretension).subscribe(
+    let fecha = null;
+    if(this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null){
+      fecha = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy')
+    }
+    this.sigaServices.getParam("combo_comboModulosConProcedimientos","?idPretension=" + idPretension + "&fecha=" + fecha).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
 

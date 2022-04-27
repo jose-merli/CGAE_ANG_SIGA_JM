@@ -1684,7 +1684,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
   cargaModulosPorJuzgado($event, designacion, rowGroup){
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboModulosConJuzgado", $event).subscribe(
+    this.sigaServices.getParam("combo_comboModulosConJuzgado","?idJuzgado=" +$event).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
         this.commonsService.arregloTildesCombo(this.comboModulos);

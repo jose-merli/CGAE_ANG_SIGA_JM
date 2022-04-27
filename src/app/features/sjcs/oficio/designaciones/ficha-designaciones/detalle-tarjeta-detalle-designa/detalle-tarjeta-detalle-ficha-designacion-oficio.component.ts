@@ -121,13 +121,13 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             if (this.valorParametro == 1) {
               this.getComboProcedimientosConJuzgado(this.juzgadoValue);
               if (this.procedimientoValue != null && this.procedimientoValue != "" && this.procedimientoValue != undefined) {
-                this.getcCmboModulosConProcedimientos(this.procedimientoValue);
+                this.getcCmboModulosConProcedimientos(this.procedimientoValue,this.datosInicial.fechaEntradaInicio);
               }else if(this.campos.modulo != "" && this.campos.modulo != null && this.campos.modulo != undefined){
                 this.moduloOpciones.push({ label: this.campos.modulo, value: this.campos.idModulo });
               }
             }
             if (this.valorParametro == 2) {
-              this.getComboModulosConJuzgado(this.juzgadoValue);
+              this.getComboModulosConJuzgado(this.juzgadoValue, this.datosInicial.fechaEntradaInicio);
               if (this.moduloValue != null && this.moduloValue != "" && this.moduloValue != undefined) {
                 this.getComboProcedimientosConModulo(this.moduloValue);
               }else if(this.campos.nombreProcedimiento != "" && this.campos.nombreProcedimiento != null && this.campos.nombreProcedimiento != undefined){
@@ -135,7 +135,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
               }
             }
             if (this.valorParametro == 3) {
-              this.getComboModulosConJuzgado(this.juzgadoValue);
+              this.getComboModulosConJuzgado(this.juzgadoValue,this.datosInicial.fechaEntradaInicio);
               this.getComboProcedimientos();
             }
             if (this.valorParametro == 4) {
@@ -260,18 +260,18 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     if (this.valorParametro == 1) {
       this.getComboProcedimientosConJuzgado(this.juzgadoValue);
       if (this.procedimientoValue != null && this.procedimientoValue != "" && this.procedimientoValue != undefined) {
-        this.getcCmboModulosConProcedimientos(this.procedimientoValue);
+        this.getcCmboModulosConProcedimientos(this.procedimientoValue,this.datosInicial.fechaEntradaInicio);
       }
 
     }
     if (this.valorParametro == 2) {
-      this.getComboModulosConJuzgado(this.juzgadoValue);
+      this.getComboModulosConJuzgado(this.juzgadoValue,this.datosInicial.fechaEntradaInicio);
       if (this.moduloValue != null && this.moduloValue != "" && this.moduloValue != undefined) {
         this.getComboProcedimientosConModulo(this.moduloValue);
       }
     }
     if (this.valorParametro == 3) {
-      this.getComboModulosConJuzgado(this.juzgadoValue);
+      this.getComboModulosConJuzgado(this.juzgadoValue,this.datosInicial.fechaEntradaInicio);
       this.getComboProcedimientos();
     }
     if (this.valorParametro == 4) {
@@ -292,7 +292,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   changeProcedimiento() {
     if (this.valorParametro == 1) {
-      this.getcCmboModulosConProcedimientos(this.procedimientoValue);
+      this.getcCmboModulosConProcedimientos(this.procedimientoValue,this.datosInicial.fechaEntradaInicio);
     }
   }
 
@@ -535,7 +535,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   getComboModulos() {
     this.progressSpinner = true;
-    this.sigaServices.get("combo_comboModulosDesignaciones").subscribe(
+    this.sigaServices.getParam("combo_comboModulosDesignaciones","?fecha="+this.datosInicial.fechaEntradaInicio).subscribe(
       n => {
         this.moduloOpciones = n.combooItems;
         if (this.campos.modulo != "") {
@@ -644,9 +644,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     );
   }
 
-  getComboModulosConJuzgado(idJuzgado) {
+  getComboModulosConJuzgado(idJuzgado,fecha) {
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboModulosConJuzgado", idJuzgado).subscribe(
+    this.sigaServices.getParam("combo_comboModulosConJuzgado","?idJuzgado="+ idJuzgado +"&fecha="+fecha).subscribe(
       n => {
         this.moduloOpciones = JSON.parse(n.body).combooItems;
         if (this.campos.modulo != "") {
@@ -675,9 +675,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     );
   }
 
-  getcCmboModulosConProcedimientos(idPretension) {
+  getcCmboModulosConProcedimientos(idPretension,fecha) {
     this.progressSpinner = true;
-    this.sigaServices.post("combo_comboModulosConProcedimientos", idPretension).subscribe(
+    this.sigaServices.getParam("combo_comboModulosConProcedimientos", "?idPretension="+idPretension+"&fecha="+fecha).subscribe(
       n => {
         this.moduloOpciones = JSON.parse(n.body).combooItems;
         if (this.campos.modulo != "") {

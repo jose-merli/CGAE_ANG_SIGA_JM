@@ -314,7 +314,7 @@ export class SelectorComponent implements OnInit {
   
     getComboModulosConJuzgado(idJuzgado) {
       this.progressSpinner = true;
-      this.sigaServices.post("combo_comboModulosConJuzgado", idJuzgado).subscribe(
+      this.sigaServices.getParam("combo_comboModulosConJuzgado","?idJuzgado=" +  idJuzgado).subscribe(
         n => {
           this.selector[3].opciones = JSON.parse(n.body).combooItems;
           this.progressSpinner = false;
@@ -331,7 +331,7 @@ export class SelectorComponent implements OnInit {
   
     getcCmboModulosConProcedimientos(idPretension) {
       this.progressSpinner = true;
-      this.sigaServices.post("combo_comboModulosConProcedimientos", idPretension).subscribe(
+      this.sigaServices.getParam("combo_comboModulosConProcedimientos","?idPretension="+ idPretension).subscribe(
         n => {
           this.selector[3].opciones = JSON.parse(n.body).combooItems;
           this.progressSpinner = false;
