@@ -419,7 +419,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           
           //Se actualiza la información de la ficha
-          this.actualizaFicha.emit();
+          this.actualizaFicha.emit(true);
         }
 				this.progressSpinner = false;
 			},
@@ -444,7 +444,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           
           //Se actualiza la información de la ficha
-          this.actualizaFicha.emit();
+          this.actualizaFicha.emit(true);
         }
 				this.progressSpinner = false;
 			},
@@ -471,7 +471,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           //Se actualiza la información de la ficha y se obtiene su historico actualizado
-          this.actualizaFicha.emit();
+          this.actualizaFicha.emit(true);
         }
 				this.progressSpinner = false;
 			},
@@ -498,7 +498,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           //Se actualiza la información de la ficha y se obtiene su historico actualizado
-          this.actualizaFicha.emit();
+          this.actualizaFicha.emit(true);
         }
 				this.progressSpinner = false;
 			},
@@ -521,7 +521,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
             
             if(this.esColegiado) this.location.back();
             //Se actualiza la información de la ficha
-            else this.actualizaFicha.emit();
+            else this.actualizaFicha.emit(true);
           }
           this.progressSpinner = false;
         },
@@ -543,7 +543,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           
           //Se actualiza la información de la ficha
-          this.actualizaFicha.emit();
+          this.actualizaFicha.emit(true);
         }
         this.progressSpinner = false;
       },
@@ -690,16 +690,22 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     this.sigaServices.postDownloadFilesWithFileName2('PyS_facturarCompra', compra).subscribe(
       (data: { file: Blob, filename: string, status: number }) => {
 
-        if (data.status != 200) {
+        if (data.status != 200 && data.status != 204) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
+          if (data.status == 200) {
+            let filename = data.filename.split('=')[1];
+            saveAs(data.file, filename);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
-          let filename = data.filename.split('=')[1];
-          saveAs(data.file, filename);
-          this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          //Se actualiza la información de la ficha incluyendo las facturas asociadas
-          this.actualizaFicha.emit();
+            //Se actualiza la información de la ficha
+            this.actualizaFicha.emit(true);
+          } else {
+            this.showMessage("warn", this.translateService.instant("general.message.warn"), this.translateService.instant("factPyS.mensaje.noExisteComunicacion"));
+
+            //Se actualiza la información de la ficha
+            this.actualizaFicha.emit(false);
+          }
         }
 
       },

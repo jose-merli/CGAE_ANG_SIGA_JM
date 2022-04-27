@@ -587,15 +587,23 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     this.sigaServices.postDownloadFilesWithFileName2('PyS_facturarCompra', compra).subscribe(
       (data: { file: Blob, filename: string, status: number }) => {
 
-        if (data.status != 200) {
+        if (data.status != 200 && data.status != 204) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
+          if (data.status == 200) {
+            let filename = data.filename.split('=')[1];
+            saveAs(data.file, filename);
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
-          let filename = data.filename.split('=')[1];
-          saveAs(data.file, filename);
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          //Se actualiza la información de la ficha
-          this.actualizarLista.emit(true);
+            //Se actualiza la información de la ficha
+            this.actualizarLista.emit(true);
+          } else {
+            this.showMessage("warn", this.translateService.instant("general.message.warn"), this.translateService.instant("factPyS.mensaje.noExisteComunicacion"));
+
+            //Se actualiza la información de la ficha
+            this.actualizarLista.emit(false);
+          }
+          
         }
 
         this.selectedRows = [];

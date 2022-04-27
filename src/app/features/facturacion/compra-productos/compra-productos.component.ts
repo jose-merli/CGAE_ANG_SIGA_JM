@@ -62,7 +62,7 @@ export class CompraProductosComponent implements OnInit {
 
           this.listaCompraProductos = JSON.parse(listaCompraProductosDTO.body).listaCompraProductosItems;
 
-          if (!error.message || error.message.trim().length == 0) {
+          if ((!error.message || error.message.trim().length == 0) && event) {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           } else {
             let translatedMessage = this.translateService.instant(error.message);
@@ -72,7 +72,8 @@ export class CompraProductosComponent implements OnInit {
               translatedMessage = translatedMessage.replace(/\d+/g, this.listaCompraProductos.length.toString());
             }
 
-            this.showMessage("info", this.translateService.instant("general.message.informacion"), translatedMessage);            
+            if (event)
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), translatedMessage);            
           }
 
           

@@ -96,8 +96,8 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
     this.router.navigate(["/gestionFacturas"]); 
   }
 
-  getFacturasPeticion(){
-    if(this.comboEstadosFac == undefined ) this.getComboEstadosFactura(); 
+  async getFacturasPeticion(){
+    if(this.comboEstadosFac == undefined ) await this.getComboEstadosFactura(); 
     this.sigaServices.getParam("PyS_getFacturasPeticion","?idPeticion="+this.ficha.nSolicitud).subscribe(
       listaFacturasPeticionDTO => {
 
@@ -123,19 +123,16 @@ export class TarjetaFacturaCompraSuscripcionComponent implements OnInit {
   }
 
   //Metodo para obtener los valores del combo estadosFactura
-  getComboEstadosFactura() {
+  getComboEstadosFactura(): Promise<any> {
     this.progressSpinner = true;
 
-    this.sigaServices.get("PyS_comboEstadosFactura").subscribe(
+    return this.sigaServices.get("PyS_comboEstadosFactura").toPromise().then(
       TipoSelectValues => {
         this.progressSpinner = false;
 
         this.comboEstadosFac = TipoSelectValues.combooItems;
       },
       err => {
-        this.progressSpinner = false;
-      },
-      () => {
         this.progressSpinner = false;
       }
     );
