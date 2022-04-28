@@ -260,7 +260,7 @@ export class FichaDesignacionesComponent implements OnInit {
       }
 
       if (this.campos.idJuzgado == undefined || this.campos.idJuzgado == null || this.campos.idJuzgado == 0) {
-        this.campos.idJuzgado = Number(dataRefresh.idJuzgado);
+        this.campos.idJuzgado = dataRefresh.idJuzgado == undefined ? Number(dataRefresh.idJuzgado) : null;
       }
 
       if (this.campos.idModulos == undefined || this.campos.idModulos == null) {
@@ -268,7 +268,7 @@ export class FichaDesignacionesComponent implements OnInit {
       }
 
       if (this.campos.idProcedimiento == undefined || this.campos.idProcedimiento == null || this.campos.idProcedimiento == 0) {
-        this.campos.idProcedimiento = Number(dataRefresh.idPretension);
+        this.campos.idProcedimiento = dataRefresh.idPretension == undefined ? Number(dataRefresh.idPretension): null;
       }
 
       if (this.campos.nombreJuzgado == undefined || this.campos.nombreJuzgado == null || this.campos.nombreJuzgado.trim().length == 0) {

@@ -322,9 +322,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       let validaProcedimiento = true;
       designaUpdate.nig = this.inputs[0].value;
       designaUpdate.numProcedimiento = this.inputs[1].value;
-      designaUpdate.idJuzgado = Number(this.juzgadoValue);
-      designaUpdate.idPretension = Number(this.procedimientoValue);
-      designaUpdate.idProcedimiento = Number(this.moduloValue);
+      designaUpdate.idJuzgado = this.juzgadoValue;
+      designaUpdate.idPretension = this.procedimientoValue;
+      designaUpdate.idProcedimiento = this.moduloValue;
 
       if (this.delitosValue == undefined || this.delitosValue == null || this.delitosValue.length == 0) {
         designaUpdate.delitos = null;
