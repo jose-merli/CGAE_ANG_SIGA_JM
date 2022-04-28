@@ -61,3 +61,47 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
+@media (min-width: 768px){
+.divfacturacionesImporte{
+    margin-top: 0.90rem;
+}
+}
+.overlayPanelPrueba > .ui-overlaypanel{
+    //   top: 50% !important;
+    //   left: 40% !important;
+      // width: 30em !important;
+      left: 5% !important;
+      // border-radius: 2em;
+      width: 90%;
+     }
+    
+     .overlayPanelCount > .ui-overlaypanel > .ui-overlaypanel-content{
+      text-align: center;
+      // vertical-align: middle;
+      // line-height: 4em;
+     }
+    
+    .overlayPanelPrueba{
+      max-width: 60%;
+      max-height: 60%;
+      margin-right: 40%;
+      // position:absolute;
+      // margin-left:50%;
+      text-align: center;
+    }
+    
+    .ui-overlaypanel{
+      border-radius: 2em;
+      width: auto;
+    }
+
+    ::ng-deep div.ui-overlaypanel{
+        left: 0px !important;
+        margin-left: 6%;
+        margin-right: 6%;
+    }
+
+
+
+
+

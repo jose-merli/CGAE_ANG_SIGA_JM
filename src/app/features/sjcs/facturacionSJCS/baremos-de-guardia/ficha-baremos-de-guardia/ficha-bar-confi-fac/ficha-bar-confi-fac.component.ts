@@ -1,5 +1,5 @@
-import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ChangeDetectorRef } from '@angular/core';
-import { Checkbox } from 'primeng/primeng';
+import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ChangeDetectorRef,ViewChild } from '@angular/core';
+import { OverlayPanel } from 'primeng/primeng';
 import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
 
@@ -23,7 +23,6 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   diasDis: String[] = [];
   //diasAsiAct:String[]=[];
-
   checkAsAcL: boolean = false;
   checkDisL: boolean = true;
 
@@ -49,6 +48,7 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   disableAsAc: boolean = false;
   disableImputDis: boolean = false;
   disableImputAct: boolean = false;
+  displayBoolean: boolean = false;
   url;
   origenBaremos = true;
   modalTipos = false;
@@ -60,6 +60,9 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   @Output() disProc2014 = new EventEmitter<boolean>();
   @Input() permisoEscritura: boolean = false;
   showModal: boolean = false;
+
+  @ViewChild("op")
+  op: OverlayPanel;
 
   constructor(private changeDetectorRef: ChangeDetectorRef) { }
 
@@ -217,8 +220,11 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   }
 
-  irAtipos() {
-    this.showModal = true;
+  irAtipos(event) {
+    if(this.contAsAc== 'asi' || this.contAsAc== 'act'){
+      this.showModal = true;
+      this.op.toggle(event);
+    }
   }
 
   cerrarDialog() {
@@ -230,6 +236,11 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
      this.disProc2014.emit(true)
     }
   }
+
+  hideOverlay(event) {
+    this.displayBoolean = false;
+  }
+  
 
 
 

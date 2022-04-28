@@ -23,9 +23,9 @@
 //   top: 50% !important;
 //   left: 40% !important;
   // width: 30em !important;
-  left: 5% !important;
+  //left: 5% !important;
   // border-radius: 2em;
-  width: 90%;
+  width: auto;
  }
 
  .overlayPanelCount > .ui-overlaypanel > .ui-overlaypanel-content{
@@ -42,11 +42,13 @@
   // margin-left:50%;
   text-align: center;
 }
-
 .ui-overlaypanel{
   // left: 5% !important;
   border-radius: 2em;
   // width: 90%;
+  left: 0px !important;
+  margin-left: 6%;
+  margin-right: 6%;
 }
 .imagenEye{
   width: 1.7em;
