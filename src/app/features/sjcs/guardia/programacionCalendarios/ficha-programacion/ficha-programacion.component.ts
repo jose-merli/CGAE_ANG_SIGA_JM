@@ -844,7 +844,7 @@ export class FichaProgramacionComponent implements OnInit {
   }
 
   formatDate4(date: string) {
-    return moment(date, "DD/MM/YYYY hh:mm:ss").format();
+      return moment(date, "DD/MM/YYYY hh:mm:ss").format();
   }
 
   fillDatosTarjetaGuardiasCalendario(event) {
@@ -1207,9 +1207,12 @@ export class FichaProgramacionComponent implements OnInit {
         let error = JSON.parse(data.body).error;
         let datos = JSON.parse(data.body);
 
-        console.log("Datos antes: ", datos)
         // this.comboGuardiasIncompatibles = [];
+
         if (datos.length > 0) {
+
+          //Extraemos la fecha de programación
+          let fechaProgramacion = datos[0].fechaProgramacion;
 
           let dataToSend = {
             'duplicar': false,
@@ -1221,7 +1224,7 @@ export class FichaProgramacionComponent implements OnInit {
             'listaGuarias': { label: datos[0].listaGuardias, value: datos[0].idCalG },
             'fechaDesde': this.changeDateFormat(datos[0].fechaDesde),
             'fechaHasta': this.changeDateFormat(datos[0].fechaHasta),
-            'fechaProgramacion': this.formatDate4(datos[0].fechaProgramacion),
+            'fechaProgramacion': (fechaProgramacion != null) ? this.formatDate4(fechaProgramacion) : null,
             'estado': this.getStatusValue(datos[0].estado),
             'observaciones': datos[0].observaciones,
             'idCalendarioProgramado': datos[0].idCalendarioProgramado,
