@@ -135,11 +135,13 @@ export class TablaJustificacionExpresComponent implements OnInit {
     private translateService: TranslateService,) 
   { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     this.progressSpinner=true;
 
     this.datosJustificacionAux = this.datosJustificacion;
+
+    await this.getJuzgados();
 
     this.sigaServices.get("combo_comboModulos").subscribe(
       n => {
@@ -155,7 +157,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
       }
     );
 
-    this.getJuzgados();
     this.checkPermisos();
   }
 
@@ -182,10 +183,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
       this.getJuzgados();
     }
   }*/
-  getJuzgados(){
+  async getJuzgados(){
     this.progressSpinner = true;
 
-    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+    return this.sigaServices.get("combo_comboJuzgadoDesignaciones").toPromise().then(
       n => {
         this.comboJuzgados = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboJuzgados);
