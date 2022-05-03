@@ -264,7 +264,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
 
   disabledRestablecer() {
     if (this.modoEdicion) {
-      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && (this.idEstadoPago == "10" || this.idEstadoPago == "20")) {
+      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && (this.idEstadoPago == "10" || this.idEstadoPago == "20" || this.idEstadoPago == "40")) {
         return false;
       } else {
         return true;
@@ -296,7 +296,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
   }
 
   disabledEjecutar() {
-    if ((this.modoEdicion && this.idEstadoPago != "30" && this.idEstadoPago != "20") && this.disabledRestablecer()) {
+    if ((this.modoEdicion && this.idEstadoPago != "40" && this.idEstadoPago != "30" && this.idEstadoPago != "20") && this.disabledRestablecer()) {
       return false;
     } else {
       return true;
@@ -322,7 +322,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
           if (resp.status == 'KO' && error && null != error && null != error.description) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description));
           } else if (resp.status == 'OK') {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.ejecutando"));
             this.historicoEstados();
             this.idEstadoPago = "20";
             this.compensacionFactEvent.emit(true);
@@ -543,7 +543,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
           if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description));
           } else {
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("messages.facturacionSJCS.pago.simulado"));
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.simulando"));
           }
 
         },
@@ -611,6 +611,10 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
 
   isPagoEjecutado() {
     return this.idEstadoPago == '20';
+  }
+
+  isPagoEjecutando() {
+    return this.idEstadoPago == '40';
   }
 
   getCols() {

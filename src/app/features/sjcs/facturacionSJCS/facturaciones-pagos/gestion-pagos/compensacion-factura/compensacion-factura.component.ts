@@ -184,7 +184,7 @@ export class CompensacionFacturaComponent implements OnInit, AfterViewInit {
 
   marcar() {
 
-    if (this.paramDeducirCobroAutom.valor == '0' && !this.isPagoCerrado()) {
+    if (this.paramDeducirCobroAutom.valor == '0' && !this.isPagoCerrado() && !this.isPagoEjecutando()) {
       this.selectedDatos.forEach(el => {
         el.compensar = true;
       });
@@ -200,7 +200,7 @@ export class CompensacionFacturaComponent implements OnInit, AfterViewInit {
 
   desmarcar() {
 
-    if (this.paramDeducirCobroAutom.valor == '0' && !this.isPagoCerrado()) {
+    if (this.paramDeducirCobroAutom.valor == '0' && !this.isPagoCerrado() && !this.isPagoEjecutando()) {
       this.selectedDatos.forEach(el => {
         el.compensar = false;
       });
@@ -216,6 +216,10 @@ export class CompensacionFacturaComponent implements OnInit, AfterViewInit {
 
   isPagoCerrado() {
     return (this.idEstadoPago == '30');
+  }
+
+  isPagoEjecutando() {
+    return (this.idEstadoPago == '40');
   }
 
   ngAfterViewInit() {

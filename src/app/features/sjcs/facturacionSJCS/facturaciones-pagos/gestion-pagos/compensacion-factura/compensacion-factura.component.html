@@ -115,9 +115,9 @@
     <div class="card-footer" *ngIf="showFicha">
       <div class="text-right main-button">
         <button (click)="marcar()" pButton type="button" label="{{ 'facturacionSJCS.boton.marcar' | translate }}"
-          [disabled]="!permisos || paramDeducirCobroAutom.valor == '1' || compensaciones == undefined || isPagoCerrado()"></button>
+          [disabled]="!permisos || paramDeducirCobroAutom.valor == '1' || compensaciones == undefined || isPagoCerrado() || isPagoEjecutando()"></button>
         <button (click)="desmarcar()" pButton type="button" label="{{ 'facturacionSJCS.boton.desmarcar' | translate }}"
-          [disabled]="!permisos || paramDeducirCobroAutom.valor == '1' || compensaciones == undefined || isPagoCerrado()"></button>
+          [disabled]="!permisos || paramDeducirCobroAutom.valor == '1' || compensaciones == undefined || isPagoCerrado() || isPagoEjecutando()"></button>
       </div>
     </div>
   </div>

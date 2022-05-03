@@ -41,7 +41,7 @@
             <label>{{ "facturacionSJCS.facturacionesYPagos.iban" | translate }} (*)</label>
             <p-dropdown [options]="comboCuentasBanc" [(ngModel)]="configuracionFicheros.codBanco" class="select-form"
               [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-              [showClear]="true" [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado()'
+              [showClear]="true" [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado() || isPagoEjecutando()'
               [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.codBanco)}">
             </p-dropdown>
           </div>
@@ -49,7 +49,7 @@
             <label>{{ "facturacionSJCS.facturacionesYPagos.sufijo" | translate }} (*)</label>
             <p-dropdown [options]="comboSufijos" [(ngModel)]="configuracionFicheros.idSufijo" class="select-form"
               [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-              [showClear]="true" [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado()'
+              [showClear]="true" [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado() || isPagoEjecutando()'
               [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.idSufijo)}">
             </p-dropdown>
           </div>
@@ -58,7 +58,7 @@
             <p-dropdown [options]="comboPropTransSepa" [(ngModel)]="configuracionFicheros.idPropSepa"
               class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
               filterBy="label,labelSinTilde" [showClear]="true"
-              [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado()'
+              [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado() || isPagoEjecutando()'
               [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.idPropSepa)}">
             </p-dropdown>
           </div>
@@ -67,7 +67,7 @@
             <p-dropdown [options]="comboPropOtrTrans" [(ngModel)]="configuracionFicheros.idPropOtros"
               class="select-form" [filter]="true" placeholder="{{'general.boton.seleccionar' | translate}}"
               filterBy="label,labelSinTilde" [showClear]="true"
-              [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado()'
+              [disabled]='!permisos || isPagoCerrado() || isPagoEjecutado() || isPagoEjecutando()'
               [ngClass]="{'camposObligatorios': marcarObligatorio(configuracionFicheros.idPropOtros)}">
             </p-dropdown>
           </div>

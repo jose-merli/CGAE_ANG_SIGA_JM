@@ -8,6 +8,7 @@ import { Error } from '../../../../../../models/Error';
 import { PagosjgItem } from '../../../../../../models/sjcs/PagosjgItem';
 import { PagosjgDTO } from '../../../../../../models/sjcs/PagosjgDTO';
 import { Enlace } from '../gestion-pagos.component';
+import { t } from '@angular/core/src/render3';
 @Component({
   selector: 'app-configuracion-ficheros',
   templateUrl: './configuracion-ficheros.component.html',
@@ -278,15 +279,15 @@ export class ConfiguracionFicherosComponent implements OnInit, OnChanges, AfterV
   }
 
   disableRestablecer() {
-    return (JSON.stringify(this.configuracionFicheros) == JSON.stringify(this.configuracionFicherosAux)) || this.isPagoCerrado();
+    return (JSON.stringify(this.configuracionFicheros) == JSON.stringify(this.configuracionFicherosAux)) || this.isPagoCerrado() || this.isPagoEjecutando();
   }
 
   disableGuardar() {
-    return (JSON.stringify(this.configuracionFicheros) == JSON.stringify(this.configuracionFicherosAux)) || this.isPagoCerrado();
+    return (JSON.stringify(this.configuracionFicheros) == JSON.stringify(this.configuracionFicherosAux)) || this.isPagoCerrado() || this.isPagoEjecutando();
   }
 
   restablecer() {
-    if (!this.isPagoCerrado()) {
+    if (!this.isPagoCerrado() && !this.isPagoEjecutando()) {
       this.configuracionFicheros = JSON.parse(JSON.stringify(this.configuracionFicherosAux));
     }
   }
@@ -303,6 +304,10 @@ export class ConfiguracionFicherosComponent implements OnInit, OnChanges, AfterV
 
   getIban() {
     return this.comboCuentasBanc.find(el => el.value == this.configuracionFicheros.codBanco).label;
+  }
+
+  isPagoEjecutando() {
+    return (this.idEstadoPago == '40');
   }
 
   isPagoCerrado() {
