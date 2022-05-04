@@ -245,11 +245,11 @@ export class TablaResultadoOrderComponent implements OnInit {
       const i = this.selectedArray.indexOf(rowId);
       this.selectedArray.splice(i, 1);
     }else{
-      if (this.calendarios){
+      /*if (this.calendarios){
         this.positionSelected = Number(rowId) + 1;
-      }else{
+      }else{*/
         this.positionSelected = rowId;
-      }
+      
       
       this.selectedArray.push(rowId);
     }
@@ -743,7 +743,7 @@ valueChange(i, z, $event){
     }else if (z == 2){
       this.rowGroups[posicion].cells[z].type = 'position';
       this.xArr[posicion] = $event.target.value;
-    }else if(!this.listaGuardias){
+    }else if(!this.listaGuardias && this.pantalla != 'calendarios'){
       this.rowGroups[posicion].cells[z].type = $event.target.type;
     }
   }else{
@@ -758,7 +758,7 @@ valueChange(i, z, $event){
     }else if (z == 2){
       this.rowGroups[i].cells[z].type = 'position';
       this.xArr[i] = $event.target.value;
-    }else if(!this.listaGuardias){
+    }else if(!this.listaGuardias && this.pantalla != 'calendarios'){
       this.rowGroups[i].cells[z].type = $event.target.type;
     }
   }
@@ -895,17 +895,29 @@ this.totalRegistros = this.rowGroups.length;
     this.disableGen.emit(true);
     let groupSelected;
     if (this.calendarios){
-      groupSelected = this.rowGroups[this.positionSelected - 1].cells[1].value;
+      //groupSelected = this.rowGroups[this.positionSelected - 1].cells[1].value;
       //this.rowGroupsAux.forEach((row, index)=> {
-      
+        let ordenSelected = this.rowGroups[this.positionSelected].cells[0].value;
         if (movement == 'up'){
-          let first = this.rowGroups[this.positionSelected - 1];
+         /* let first = this.rowGroups[this.positionSelected - 1];
           this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected - 2];
-          this.rowGroups[this.positionSelected - 2] = first;
-        } else if (movement == 'down'){
-          let first = this.rowGroups[this.positionSelected - 1];
+          this.rowGroups[this.positionSelected - 2] = first;*/
+          let aboveRow = this.rowGroups[this.positionSelected - 1];
+          let aboveOrden = aboveRow.cells[0].value;
           this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
-          this.rowGroups[this.positionSelected] = first;
+          this.rowGroups[this.positionSelected - 1].cells[0].value = aboveOrden;
+          this.rowGroups[this.positionSelected] = aboveRow;
+          this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
+        } else if (movement == 'down'){
+          //let first = this.rowGroups[this.positionSelected - 1];
+          //this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
+          //this.rowGroups[this.positionSelected] = first;
+          let belowRow = this.rowGroups[this.positionSelected + 1];
+          let belowOrden = belowRow.cells[0].value;
+          this.rowGroups[this.positionSelected + 1] = this.rowGroups[this.positionSelected];
+          this.rowGroups[this.positionSelected + 1].cells[0].value = belowOrden;
+          this.rowGroups[this.positionSelected] = belowRow;
+          this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
         }
       //});
     }else if(this.listaGuardias){
@@ -1026,24 +1038,25 @@ this.totalRegistros = this.rowGroups.length;
     } else {
       this.unavailableUp = false;
     }
-    if((this.listaGuardias || !this.calendarios) && posicion == 0){
+    if((this.listaGuardias || this.calendarios) && posicion == 0){
       this.unavailableUp = true;
-    }else if ((this.listaGuardias || !this.calendarios) && posicion > 0){
+    }else if ((this.listaGuardias || this.calendarios) && posicion > 0){
       this.unavailableUp = false;
     }
-    if (this.calendarios){
+
+   /* if (this.calendarios){
       if (posicion== this.grupos.length || this.grupos[posicion]  >= this.maxGroup){
         this.unavailableDown = true;
       } else {
         this.unavailableDown = false;
       }
-    }else{
+    }else{*/
       if (posicion == this.grupos.length - 1 || this.grupos[posicion]  >= this.maxGroup && this.grupos[posicion] != null){
         this.unavailableDown = true;
       } else {
         this.unavailableDown = false;
       }
-    }
+    //}
 
 
     if ( this.selectedArray.length != 1 || (this.unavailableUp && type == 'up')){
@@ -1170,19 +1183,19 @@ this.totalRegistros = this.rowGroups.length;
         //this.disableGen.emit(true);
         */
 
-        this.disableGen.emit(true);
+        this.disableGen.emit(false);
 
         this.getComboTurno();
         let newCells: Cell[] = [
-          { type: 'input', value: '', combo: null, hiddenValue:'', required:false },
-          { type: 'selectDependency', value: '' , combo: this.comboTurno, hiddenValue:'', required:false },
-          { type: 'selectDependency2', value: '', combo: this.comboGuardia, hiddenValue:'', required:false },
+          { type: 'inputNumber', value: '', combo: null, hiddenValue:'', required:true},
+          { type: 'selectDependency', value: '' , combo: this.comboTurno, hiddenValue:'', required:true },
+          { type: 'selectDependency2', value: '', combo: this.comboGuardia, hiddenValue:'', required:true },
           { type: 'text', value: '', combo: null, hiddenValue:'', required:false },
           { type: 'text', value: '', combo: null, hiddenValue:'', required:false }
           ];
           let rowObject: Row = new Row();
           rowObject.cells = newCells;
-          this.rowGroups.unshift(rowObject);
+          this.rowGroups.push(rowObject);
           this.rowGroupsAux = this.rowGroups;
           this.totalRegistros = this.rowGroups.length;
           this.to = this.totalRegistros <= this.numperPage ? this.totalRegistros : this.numperPage;

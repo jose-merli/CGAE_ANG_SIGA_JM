@@ -544,7 +544,7 @@ jsonToRow(fromCombo){
         ord = dat.orden;
       }
     let objCells:Cell[] = [
-    { type: 'input', value: ord , combo: null, hiddenValue:'', required : false},
+    { type: 'text', value: ord , combo: null, hiddenValue:'', required : false},
     { type: 'text', value: dat.turno , combo: null, hiddenValue:'', required : false},
     { type: 'link', value: dat.guardia , combo: null, hiddenValue:'', required : false},
     { type: 'text', value: dat.generado, combo: null, hiddenValue:'', required : false},
@@ -656,10 +656,26 @@ setGuardiasCalendario(guardiaCalendario){
         newList.push(responseObject);
     })
 
-    if (this.idConjuntoGuardiaElegido != 0 && this.idConjuntoGuardiaElegido != undefined){
-      this.saveGuardiasConjunto(newList);  
+    //Comprobación de los datos de guaridas Calendario
+    //Lista para guardar el orden y que sea unico.
+    let numsOrden = [];
+    let guardiasErroneas:number = 0
+    newList.forEach(guardiaItem =>{
+      if(guardiaItem.orden == "" || guardiaItem.turno == "" || guardiaItem.guardia == ""){
+        guardiasErroneas++
+      }else{
+        numsOrden.push(guardiaItem.orden)
+      }
+    });
+    
+    if(guardiasErroneas > 0){
+      this.muestraCamposObligatorios()
     }else{
-      this.saveGuardiasCalendario(newList, event2.update);  
+      if (this.idConjuntoGuardiaElegido != 0 && this.idConjuntoGuardiaElegido != undefined){
+        this.saveGuardiasConjunto(newList);  
+      }else{
+        this.saveGuardiasCalendario(newList, event2.update);  
+      }
     }
       
   }
@@ -692,9 +708,16 @@ setGuardiasCalendario(guardiaCalendario){
             this.progressSpinner = false;
             this.searchGuardiasFromCal.emit(dat);
           }, err => {
+            let error = JSON.parse(err.error);
             this.progressSpinner = false;
             this.jsonToRow(false);
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
+            if (error.error.message == "messages.factSJCS.error.solapamientoRango") {
+              this.showMessage('error', this.translateService.instant("general.message.incorrect"),
+                this.translateService.instant(error.error.message));
+            }else{
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), "No se ha podido insertar/actualizar correctamente");
+            }
+            
             //console.log(err);
           });
     } else if (lista && lista.length > 0) {

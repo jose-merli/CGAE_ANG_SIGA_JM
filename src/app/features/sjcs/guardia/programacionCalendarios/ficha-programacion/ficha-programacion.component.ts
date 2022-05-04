@@ -961,14 +961,14 @@ export class FichaProgramacionComponent implements OnInit {
 
           // Se tiene en cuenta la creación de un calendario sin lista de guardias
           if (datos.idCalG == null && (!datos.guardias || datos.guardias.length == 0)) {
-            this.showMessage('info', "Debe asociar alguna guardia", "Debe asociar alguna guardia");
+            this.showMessage('info', this.translateService.instant("messages.factSJCS.info.listaVacia"), this.translateService.instant("messages.factSJCS.info.listaVacia"));
           } else if (body && body.id) {
             sessionStorage.setItem("mensaje", JSON.stringify({
               severity: "info", summary: "Se ha creado correctamente", detail: "Se ha creado correctamente"
             }));
             this.findFichaProgramacion({ idCalendarioProgramado: body.id });
           }
-
+          
           this.dataReady = true;
           this.progressSpinner = false;
 
@@ -979,7 +979,9 @@ export class FichaProgramacionComponent implements OnInit {
           if (error.error.message == "messages.factSJCS.error.solapamientoRango") {
             this.showMessage('error', this.translateService.instant("general.message.incorrect"),
               this.translateService.instant(error.error.message));
-          } else if (err.status = "409" && error.error && error.error.message) {
+          } else if(error.error.message == "messages.factSJCS.error.listaVacia"){
+            this.showMessage('info', this.translateService.instant("messages.factSJCS.info.listaVacia"), this.translateService.instant("messages.factSJCS.info.listaVacia"));
+          }else if (err.status = "409" && error.error && error.error.message) {
             this.showMessage('error', this.translateService.instant("general.message.incorrect"), error.error.message);
           } else {
             this.showMessage('error', "No se ha generado correctamente", "No se ha generado correctamente");
