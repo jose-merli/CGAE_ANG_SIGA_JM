@@ -406,13 +406,15 @@ export class TablaResultadoOrderComponent implements OnInit {
                     'newRowGroups': this.rowGroups,
                     'update': true
                   }
-                  this.guardarGuardiasEnConjunto.emit(event);
+                  if(this.checkOrdern())
+                    this.guardarGuardiasEnConjunto.emit(event);
                 }else{
                   event = {
                     'newRowGroups': newRowGroups,
                     'update': false
                   }
-                  this.guardarGuardiasEnConjunto.emit(event);
+                  if(this.checkOrdern())
+                    this.guardarGuardiasEnConjunto.emit(event);
                 }
             },
             err => {
@@ -1383,11 +1385,32 @@ this.totalRegistros = this.rowGroups.length;
       this.cd.detectChanges();
    }
   saveGuardias(){
-
     if(this.checkOrdenAndCamposObligatorios()){
       this.saveGuardiasEnLista.emit(this.rowGroups);
     }
 
+  }
+  checkOrdern(){
+    let ok : boolean = true;
+    if(ok){
+      this.rowGroups.forEach(row => {
+        if(ok){
+          let numero = row.cells[0].value;
+          let frecuencia = 0;
+
+          this.rowGroups.forEach( rowAux => {
+            if(numero == rowAux.cells[0].value){
+              frecuencia ++ ;
+            }
+            if(frecuencia >= 2 && ok){  
+              ok = false;
+              this.showFail('No pueden haber dos campos Orden con el mismo valor');
+            }
+          });
+        }
+      })
+    }
+    return ok;
   }
 
   checkOrdenAndCamposObligatorios (){
