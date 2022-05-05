@@ -324,7 +324,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
           } else if (resp.status == 'OK') {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.ejecutando"));
             this.historicoEstados();
-            this.idEstadoPago = "20";
+            this.idEstadoPago = "40";
             this.compensacionFactEvent.emit(true);
             this.changePago.emit(true);
           }

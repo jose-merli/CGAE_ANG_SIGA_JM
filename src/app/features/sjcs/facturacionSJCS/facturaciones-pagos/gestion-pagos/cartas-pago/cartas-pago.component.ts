@@ -90,7 +90,7 @@ export class CartasPagoComponent implements OnInit, OnChanges, AfterViewInit {
 
   linkCartasPago() {
 
-    if (this.idEstadoPago == '30' && this.modoEdicion && this.idPago != undefined && this.idPago != null && this.idEstadoPago != undefined && this.idEstadoPago != null) {
+    if ((this.idEstadoPago == '20' || this.idEstadoPago == '30') && this.modoEdicion && this.idPago != undefined && this.idPago != null && this.idEstadoPago != undefined && this.idEstadoPago != null) {
 
       const datosCartasPago: CartasFacturacionPagosItem = new CartasFacturacionPagosItem();
       datosCartasPago.idPago = [this.idPago];

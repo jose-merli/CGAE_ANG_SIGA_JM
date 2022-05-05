@@ -255,6 +255,7 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(error.description.toString()));
         } else {
           this.pago = resp;
+          this.idEstadoPago = this.pago.idEstado;
         }
 
         this.establecerDatosTarjetaResumen();
