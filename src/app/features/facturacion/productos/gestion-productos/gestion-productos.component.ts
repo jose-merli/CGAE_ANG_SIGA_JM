@@ -63,7 +63,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
-    if(this.localStorageService.isLetrado){
+    if (this.localStorageService.isLetrado) {
       this.esColegiado = true;
     } else {
       this.esColegiado = false;
@@ -92,27 +92,27 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
 
   //INICIO METODOS PERMISOS
 
-  checkPermisos() {
+  checkPermisos() {
     this.getPermisoEliminarReactivarProducto();
     this.getPermisoMostrarHistorico();
   }
 
-  getPermisoEliminarReactivarProducto() {
+  getPermisoEliminarReactivarProducto() {
     this.commonsService
-       .checkAcceso(procesos_PyS.eliminarReactivarProductos)
-        .then((respuesta) => {
-           this.eliminarReactivarProductos = respuesta;
-        })
-    .catch((error) => console.error(error));
+      .checkAcceso(procesos_PyS.eliminarReactivarProductos)
+      .then((respuesta) => {
+        this.eliminarReactivarProductos = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
-  getPermisoMostrarHistorico() {
+  getPermisoMostrarHistorico() {
     this.commonsService
-       .checkAcceso(procesos_PyS.mostrarHistorico)
-        .then((respuesta) => {
-           this.permisoMostrarHistorico = respuesta;
-        })
-    .catch((error) => console.error(error));
+      .checkAcceso(procesos_PyS.mostrarHistorico)
+      .then((respuesta) => {
+        this.permisoMostrarHistorico = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
   //FIN METODOS SERVICIOS
@@ -189,8 +189,8 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
       else if (value1 == null && value2 == null)
         result = 0;
       else if (['valor', 'precioiva'].includes(event.field)) {
-        value1 = parseFloat(value1.replace('€','').replace(/\./g,'').replace(',', '.')); // Número con comas en lugar de puntos
-        value2 = parseFloat(value2.replace('€','').replace(/\./g,'').replace(',', '.')); // Número con comas en lugar de puntos
+        value1 = parseFloat(value1.replace('€', '').replace(/\./g, '').replace(',', '.')); // Número con comas en lugar de puntos
+        value2 = parseFloat(value2.replace('€', '').replace(/\./g, '').replace(',', '.')); // Número con comas en lugar de puntos
         result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
       } else if (typeof value1 === 'string' && typeof value2 === 'string')
         result = value1.localeCompare(value2);
@@ -272,26 +272,26 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
 
 
   //INICIO METODOS COMPONENTE
-  checkMostrarHistorico(){
-    let msg = this.commonsService.checkPermisos(this.permisoMostrarHistorico, undefined);
+  checkMostrarHistorico() {
+    let msg = this.commonsService.checkPermisos(this.permisoMostrarHistorico, undefined);
 
-	  if (msg != null) {
-	    this.msgs = msg;
-	  } else if (!this.esColegiado) {
-      this.getListaProductosHistorico();
-      this.selectedRows=[]
-	  }
+    if (msg != null) {
+      this.msgs = msg;
+    } else if (!this.esColegiado) {
+      this.getListaProductosHistorico();
+      this.selectedRows = []
+    }
   }
 
-  checkOcultarHistorico(){
-    let msg = this.commonsService.checkPermisos(this.permisoMostrarHistorico, undefined);
+  checkOcultarHistorico() {
+    let msg = this.commonsService.checkPermisos(this.permisoMostrarHistorico, undefined);
 
-	  if (msg != null) {
-	    this.msgs = msg;
-	  } else {
-      this.getListaProductos(); 
-      this.selectedRows=[]
-	  } 
+    if (msg != null) {
+      this.msgs = msg;
+    } else {
+      this.getListaProductos();
+      this.selectedRows = []
+    }
   }
 
   //Metodo para obtener los datos de la tabla productos activos
@@ -334,10 +334,26 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   }
 
   openTab(selectedRow) {
-    this.progressSpinner = true;
     let productoItem: ListaProductosItems = selectedRow;
-    sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
-    this.router.navigate(["/fichaProductos"]);
+    // Funcionalidad para verificar si Solicitar por internet viene activado o no
+    // En caso de ser abogado y no estar activado no mostramos tarjeta y error de ello.
+    if (this.localStorageService.isLetrado == true) {
+      if (productoItem.solicitarAlta == 1) {
+        this.progressSpinner = true;
+        sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
+        this.router.navigate(["/fichaProductos"]);
+      } else {
+        this.showMessage("error",
+          this.translateService.instant("general.message.incorrect"),
+          this.translateService.instant("facturacion.productos.avisocomprarproductosinactivos"))
+      }
+    } else {
+      this.progressSpinner = true;
+      sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
+      this.router.navigate(["/fichaProductos"]);
+    }
+
+
   }
 
   //Borra el mensaje de notificacion p-growl mostrado en la esquina superior derecha cuando pasas el puntero del raton sobre el
@@ -357,13 +373,13 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
   //FIN METODOS COMPONENTE
 
   //INICIO SERVICIOS
-  checkActivarDesactivar(selectedRows){ 
-    let msg = this.commonsService.checkPermisos(this.eliminarReactivarProductos, undefined);
-      if (msg != null) {
-        this.msgs = msg;
-      } else {
-        this.activarDesactivar(selectedRows);
-      }   
+  checkActivarDesactivar(selectedRows) {
+    let msg = this.commonsService.checkPermisos(this.eliminarReactivarProductos, undefined);
+    if (msg != null) {
+      this.msgs = msg;
+    } else {
+      this.activarDesactivar(selectedRows);
+    }
   }
 
   //Metodo para activar/desactivar productos mediante borrado logico (es decir fechabaja == null esta activo lo contrario inactivo) en caso de que tengan una transaccion pendiente de compra o compras ya existentes, en caso contrario se hara borrado fisico (DELETE)
@@ -386,13 +402,13 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         listaProductosDTO.listaProductosItems = selectedRows
         this.subscriptionActivarDesactivarProductos = this.sigaServices.post("productosBusqueda_activarDesactivar", listaProductosDTO).subscribe(
           response => {
-            
+
             if (response.status == 200) {
               this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
             } else {
               this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
             }
-       
+
           },
           err => {
             this.progressSpinner = false;
@@ -437,22 +453,28 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     if (msg != undefined) {
       this.msgs = msg;
     }
-    else{
-      let hayInactivo: boolean = false;
-      this.filterSolicitadoPorInternet();
-      this.selectedRows.forEach(producto => {
-        if(producto.fechabaja != null){
-          hayInactivo = true;
-        }
-      });
+    else {
+      // Funcionalidad para verificar si Solicitar por internet viene activado o no
+      // En caso de ser abogado y no estar activado no mostramos tarjeta y error de ello.
+      if (this.localStorageService.isLetrado == true) {
+        let hayInactivo: boolean = false;
+        this.filterSolicitadoPorInternet();
+        this.selectedRows.forEach(producto => {
+          if (producto.fechabaja != null) {
+            hayInactivo = true;
+          }
+        });
 
-      if(!hayInactivo && this.checkProductosCompra()){
+        if (!hayInactivo && this.checkProductosCompra()) {
           this.nuevaCompra();
-      }else{
-        sessionStorage.removeItem("mensaje");
-        this.showMessage("error",
-        this.translateService.instant("general.message.incorrect"),
-        this.translateService.instant("facturacion.productos.avisocomprarproductosinactivos"))
+        } else {
+          sessionStorage.removeItem("mensaje");
+          this.showMessage("error",
+            this.translateService.instant("general.message.incorrect"),
+            this.translateService.instant("facturacion.productos.avisocomprarproductosinactivos"))
+        }
+      } else {
+        this.nuevaCompra();
       }
     }
   }
@@ -471,7 +493,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
       }
       else {
         if (producto.noFacturable == "1") {
-          producto.formapago += ", "+this.translateService.instant("facturacion.productos.noFacturable");
+          producto.formapago += ", " + this.translateService.instant("facturacion.productos.noFacturable");
         }
       }
     });
@@ -484,15 +506,15 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         }
         else {
           this.showMessage("error",
-          this.translateService.instant("facturacion.productos.productoIvaDerogado"),
-          this.translateService.instant("facturacion.productos.productoIvaDerogadoDesc"));
+            this.translateService.instant("facturacion.productos.productoIvaDerogado"),
+            this.translateService.instant("facturacion.productos.productoIvaDerogadoDesc"));
           return false;
         }
       }
       else {
         this.showMessage("error",
-        this.translateService.instant("facturacion.productos.productoSinFormaPago"),
-        this.translateService.instant("facturacion.productos.productoSinFormaPago"));
+          this.translateService.instant("facturacion.productos.productoSinFormaPago"),
+          this.translateService.instant("facturacion.productos.productoSinFormaPago"));
         return false;
       }
     }
@@ -506,20 +528,21 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
 
   filterSolicitadoPorInternet(): void {
     let numOriginal = this.selectedRows.length;
-    this.selectedRows = (this.selectedRows as any[]).filter(r => r.solicitarAlta == '1');
 
+    this.selectedRows = (this.selectedRows as any[]).filter(r => r.solicitarAlta == '1');
     if (this.selectedRows.length == 0) {
       this.showMessage("error",
-          this.translateService.instant("general.message.incorrect"),
-          this.translateService.instant("facturacion.productos.comprar.error.ningunoSolicitarInternet")
-        );
+        this.translateService.instant("general.message.incorrect"),
+        this.translateService.instant("facturacion.productos.comprar.error.ningunoSolicitarInternet")
+      );
     } else if (numOriginal != this.selectedRows.length) {
       sessionStorage.setItem("mensaje", JSON.stringify({
-        severity: "warn", 
-        summary: this.translateService.instant("general.message.warn"), 
+        severity: "warn",
+        summary: this.translateService.instant("general.message.warn"),
         detail: this.translateService.instant("facturacion.productos.comprar.error.algunosSolicitarInternet")
       }));
     }
+
   }
 
   checkFormasPagoComunes(productosLista: any[]) {
@@ -571,9 +594,9 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
         }
         else {
           let index = prod.idFormasPago.split(",").indexOf(idpago);
-         let  esColegiado: boolean = this.localStorageService.isLetrado;
+          let esColegiado: boolean = this.localStorageService.isLetrado;
           if ((esColegiado && prod.formasPagoInternet.split(",")[index] == "A") ||
-            ((!esColegiado && prod.formasPagoInternet.split(",")[index] == "S")) ) {
+            ((!esColegiado && prod.formasPagoInternet.split(",")[index] == "S"))) {
             resultUsu.push(prod.idFormasPago.split(",")[index]);
           }
         }
@@ -618,8 +641,12 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
 
   nuevaCompra() {
     this.progressSpinner = true;
+    // Funcionalidad para verificar si Solicitar por internet viene activado o no
+    // En caso de ser abogado y no estar activado no mostramos tarjeta y error de ello.
+    if (this.localStorageService.isLetrado == true) {
+      sessionStorage.removeItem("FichaCompraSuscripcion");
+    }
 
-    sessionStorage.removeItem("FichaCompraSuscripcion");
     let nuevaCompra = new FichaCompraSuscripcionItem();
     nuevaCompra.productos = this.selectedRows;
 
@@ -639,7 +666,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
       },
       (err) => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-        
+
         sessionStorage.removeItem("mensaje");
         this.progressSpinner = false;
       }
@@ -661,7 +688,7 @@ export class GestionProductosComponent implements OnInit, OnDestroy {
     }
   }
 
-  
+
 
 
   //FIN SERVICIOS

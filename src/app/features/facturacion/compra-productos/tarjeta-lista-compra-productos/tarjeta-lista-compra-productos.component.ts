@@ -139,7 +139,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
   checkAprobar() {
     let msg = this.commonsService.checkPermisos(this.permisoAprobarCompra, undefined);
 
-    if (msg != null) {
+    if (msg != undefined) {
       this.msgs = msg;
     } else {
       this.aprobarCompra();

@@ -17,6 +17,7 @@ export class ListaProductosItems {
     fechaBajaIva: Date;
 	idFormasPago: string; // Ids de las formas de pago disponibles. 
     formasPagoInternet: string;// Personal del colegio = pago por secretaria ("S"), colegiado = formas de pago por internet ("A").
+    solicitarAlta: number; // Solicitar por internet
 
     constructor() { }
 }
