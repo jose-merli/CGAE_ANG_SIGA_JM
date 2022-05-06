@@ -32,7 +32,7 @@
             <div
               *ngIf="col.field == 'importeOficio' || col.field == 'importeGuardia' || col.field == 'importeEjg' || col.field == 'totalImportesjcs' || col.field == 'importeTotalMovimientos' || col.field == 'totalImporteBruto'
             || col.field == 'totalImporteIrpf' || col.field == 'importeTotalRetenciones' || col.field == 'importeTotal' || col.field == 'importeSoj'">
-              <span>{{dato[col.field] | numberPipe }} €</span>
+              <span>{{dato[col.field] | number: '.2' : 'es-ES' }} €</span>
             </div>
           </td>
         </tr>
