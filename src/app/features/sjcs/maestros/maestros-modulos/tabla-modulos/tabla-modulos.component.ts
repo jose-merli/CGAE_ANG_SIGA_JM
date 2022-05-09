@@ -42,6 +42,7 @@ export class TablaModulosComponent implements OnInit {
 	selectMultiple: boolean = false;
 	seleccion: boolean = false;
 	historico: boolean = false;
+	hayModulosUsados = false;
 
 	message;
 	permisos: boolean = false;
@@ -133,9 +134,49 @@ export class TablaModulosComponent implements OnInit {
 			if (!this.permisos || (!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0) {
 				this.msgs = this.commonsService.checkPermisoAccion();
 			} else {
-				this.dialogBajaLogicaFisica();
+
+				this.checkModuloUsado();
 			}
 		}
+	}
+
+	checkModuloUsado() {
+
+		this.modulosDelete.modulosItem = this.selectedDatos;
+		this.hayModulosUsados = false;
+
+		this.sigaServices.post("modulosybasesdecompensacion_checkModulos", this.modulosDelete).subscribe(
+			data => {
+				this.showModalBajaLogicaFisica = false;
+				this.progressSpinner = false;
+				this.selectedDatos = JSON.parse(data.body).modulosItem;
+
+				this.selectedDatos.forEach(element => {
+					if (element.usado) {
+						this.hayModulosUsados = true;
+					}
+				});
+
+				if (!this.hayModulosUsados) {
+					this.dialogBajaLogicaFisica();
+				} else {
+					this.modulosDelete.baja = "bajalogica";
+					this.delete();
+				}
+			},
+			err => {
+				if (err != undefined && JSON.parse(err.error).error.description != "") {
+					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+				} else {
+					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+				}
+				this.progressSpinner = false;
+			},
+			() => {
+				this.progressSpinner = false;
+				this.selectAll = false;
+			}
+		);
 	}
 
 	showModalBajaLogicaFisica: boolean = false;
@@ -146,6 +187,7 @@ export class TablaModulosComponent implements OnInit {
 
 	cancelarDialogBajaLogicaFisica() {
 		this.showModalBajaLogicaFisica = false;
+		this.selectedDatos = [];
 	}
 
 	fechaBajaLogica: Date;
