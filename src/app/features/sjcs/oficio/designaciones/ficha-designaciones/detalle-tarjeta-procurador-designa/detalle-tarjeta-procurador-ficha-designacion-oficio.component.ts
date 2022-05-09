@@ -104,7 +104,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     //Reasignamos las fechas al traerse del back en formato string
     //No se realiza directamente ya que la conversion de new Date con strings se realiza desde MM/DD/YYYY y se nos devuelve DD/MM/YYY desde el back
     //Esto se realiza en ngOnChanges()
-    else if(this.rowGroups[0]!=undefined){
+    else if (this.rowGroups[0] != undefined) {
       this.fechaDesigna = this.rowGroups[0].cells[0].value;
 
       this.initDate = this.fechaDesigna;
@@ -246,7 +246,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     //Cuando se actualiza la tabla
     //Reasignamos las fechas al traerse del back en formato string
     //No se realiza directamente ya que la conversion de new Date con strings se realiza desde MM/DD/YYYY y se nos devuelve DD/MM/YYY desde el back
-    if(this.rowGroups[0]!=undefined){
+    if (this.rowGroups[0] != undefined) {
       //Fecha designacion
       var dateString = this.rowGroups[0].cells[0].value;
 
@@ -267,7 +267,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
         // month is 0-based, that's why we need dataParts[1] - 1
         this.rowGroups[0].cells[6].value = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
       }
-      
+
       this.datosProcurador = this.procuradores[0];
     }
   }
@@ -408,10 +408,10 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   checkEJGDesignas() {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"))
 
-    this.sigaServices.getParam("designaciones_getEjgDesigna", "?idTurno="+designa.idTurno+"&ano="+designa.anio+"&numero="+designa.numero+"").subscribe(
+    this.sigaServices.getParam("designaciones_getEjgDesigna", "?idTurno=" + designa.idTurno + "&ano=" + designa.anio + "&numero=" + designa.numero + "").subscribe(
       n => {
         let ejgDesignas = n.ejgDesignaItems;
-        if(ejgDesignas.length==0) this.isAssociated = false;
+        if (ejgDesignas.length == 0) this.isAssociated = false;
         else this.isAssociated = true;
       }
     );
@@ -424,46 +424,68 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     //Esto se realiza para prevenir que si se comprueba la fecha de designacion de todos los procuradores,
     //no se tenga en cuenta el procurador que se esta modificacndo.
     let initValues = JSON.parse(sessionStorage.getItem("rowGroupsInitProcurador"));
-    if (this.rowGroups.length == 1 || (!this.nuevoProcurador && this.initDate==this.rowGroups[0].cells[0].value)) {
-      if(this.isAssociated){
-        this.confirmUpdateProcEJG();
-      }
-      else {
-        this.guardarProc();
+    // Fecha nueva a importar
+    var fechaNueva = new Date(this.rowGroups[0].cells[0].value);
+    // Bandera para controla error de fechas
+    var checkFechas = false;
+    // Controlar que existan más de un Procurados.
+    if (initValues.length > 1) {
+      // Cambiar formato de fecha para la creacion del formato DATE.
+      var dia = this.rowGroups[1].cells[0].value.substring(0, 2);
+      var mes = this.rowGroups[1].cells[0].value.substring(3, 5);
+      var anio = this.rowGroups[1].cells[0].value.substring(6, 10);
+      // Convertir Fecha actual a DATE.
+      var fechaActual = new Date(anio + "-" + mes + "-" + dia);// Validar que la fecha Nueva sea mayor a las anteriores.
+      if (fechaNueva.valueOf() > fechaActual.valueOf()) {
+        checkFechas = true;
       }
     }
-    else {
-
-      let procuradorPeticion: ProcuradorItem = new ProcuradorItem();
-
-      //Se asignan los valores de la designa.
-      let designa = JSON.parse(sessionStorage.getItem("designaItemLink"))
-      procuradorPeticion.idTurno = designa.idTurno.toString();
-      procuradorPeticion.anio = designa.anio;
-      procuradorPeticion.numero = designa.numero.toString();
-
-      //Se asignan los valores asignados en la tabla.
-      procuradorPeticion.fechaDesigna = this.rowGroups[0].cells[0].value;
-
-
-      this.sigaServices.post("designaciones_comprobarFechaProcurador", procuradorPeticion).subscribe(
-        data => {
-
-          //Se comprueba si se ha devuelto algún procurador que tenga la misma fecha de designacion
-          if (JSON.parse(data.body).procuradorItems.length > 0) {
-            this.confirmDelete();
-          } else if(this.isAssociated){
-            this.confirmUpdateProcEJG();
-          }
-          else {
-            this.guardarProc();
-          }
-        },
-        err => {
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          this.progressSpinner = false;
+    // Chekear que la fecha sea mayor a la fecha mas actual.
+    if (checkFechas == true) {
+      if (this.rowGroups.length == 1 || (!this.nuevoProcurador && this.initDate == this.rowGroups[0].cells[0].value)) {
+        if (this.isAssociated) {
+          this.confirmUpdateProcEJG();
         }
-      );
+        else {
+          this.guardarProc();
+        }
+      }
+      else {
+
+        let procuradorPeticion: ProcuradorItem = new ProcuradorItem();
+
+        //Se asignan los valores de la designa.
+        let designa = JSON.parse(sessionStorage.getItem("designaItemLink"))
+        procuradorPeticion.idTurno = designa.idTurno.toString();
+        procuradorPeticion.anio = designa.anio;
+        procuradorPeticion.numero = designa.numero.toString();
+
+        //Se asignan los valores asignados en la tabla.
+        procuradorPeticion.fechaDesigna = this.rowGroups[0].cells[0].value;
+
+
+        this.sigaServices.post("designaciones_comprobarFechaProcurador", procuradorPeticion).subscribe(
+          data => {
+
+            //Se comprueba si se ha devuelto algún procurador que tenga la misma fecha de designacion
+            if (JSON.parse(data.body).procuradorItems.length > 0) {
+              this.confirmDelete();
+            } else if (this.isAssociated) {
+              this.confirmUpdateProcEJG();
+            }
+            else {
+              this.guardarProc();
+            }
+          },
+          err => {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            this.progressSpinner = false;
+          }
+        );
+      }
+    } else {
+      this.showMessage("error", "generico.error.fechaMenor", this.translateService.instant("general.message.error.realiza.accion"));
+      this.progressSpinner = false;
     }
   }
 
@@ -479,7 +501,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       icon: icon,
       accept: () => {
         this.cdGuardar.hide();
-        if(this.isAssociated) this.confirmUpdateProcEJG();
+        if (this.isAssociated) this.confirmUpdateProcEJG();
         else this.guardarProc();
       },
       reject: () => {
