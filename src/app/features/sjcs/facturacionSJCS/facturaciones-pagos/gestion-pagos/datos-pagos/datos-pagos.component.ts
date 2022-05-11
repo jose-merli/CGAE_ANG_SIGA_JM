@@ -357,16 +357,14 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
         message: this.translateService.instant("messages.factSJCS.compensarConfirmation"),
         icon: "fa fa-search",
         accept: () => {
-          // this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
-          this.cerrarPagoManual();
+          this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
         },
         reject: () => {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.message.accion.cancelada'));
         }
       });
     } else {
-      // this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
-      this.cerrarPagoManual();
+      this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
     }
 
   }
@@ -616,7 +614,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
   }
 
   isPagoEjecutando() {
-    return this.idEstadoPago == '40';
+    return this.idEstadoPago == '40' || this.idEstadoPago == '50';
   }
 
   getCols() {
