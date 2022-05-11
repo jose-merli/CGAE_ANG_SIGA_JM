@@ -264,7 +264,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
 
   disabledRestablecer() {
     if (this.modoEdicion) {
-      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && (this.idEstadoPago == "10" || this.idEstadoPago == "20" || this.idEstadoPago == "40")) {
+      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && (this.idEstadoPago == "10" || this.idEstadoPago == "20" || this.idEstadoPago == "40" || this.idEstadoPago == "50")) {
         return false;
       } else {
         return true;
@@ -296,7 +296,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
   }
 
   disabledEjecutar() {
-    if ((this.modoEdicion && this.idEstadoPago != "40" && this.idEstadoPago != "30" && this.idEstadoPago != "20") && this.disabledRestablecer()) {
+    if ((this.modoEdicion && this.idEstadoPago != "50" && this.idEstadoPago != "40" && this.idEstadoPago != "30" && this.idEstadoPago != "20") && this.disabledRestablecer()) {
       return false;
     } else {
       return true;
@@ -357,14 +357,16 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
         message: this.translateService.instant("messages.factSJCS.compensarConfirmation"),
         icon: "fa fa-search",
         accept: () => {
-          this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
+          // this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
+          this.cerrarPagoManual();
         },
         reject: () => {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant('general.message.accion.cancelada'));
         }
       });
     } else {
-      this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
+      // this.paramDeducirCobroAutom.valor == '0' ? this.cerrarPagoManual() : this.cerrarPago();
+      this.cerrarPagoManual();
     }
 
   }
@@ -602,7 +604,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
   }
 
   isVisibleDelete(): boolean {
-    return (this.modoEdicion && !this.histEstados.map(el => el.idEstado).includes("30"));
+    return (this.modoEdicion && !["30", "40", "50"].includes(this.idEstadoPago));
   }
 
   isPagoCerrado() {
