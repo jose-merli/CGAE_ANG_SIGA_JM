@@ -45,7 +45,7 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
   seleccionarTodo : boolean = false;
   progressSpinner : boolean = false;
   numSeleccionado : number = 0;
-  selectedDatos : ActuacionAsistenciaItem [] = [];
+  selectedDatos : ActuacionAsistenciaItem[] = [];
   actuaciones : ActuacionAsistenciaItem [] = [];
   disableDelete : boolean = true;
   @ViewChild("table") table: DataTable;

@@ -21,6 +21,7 @@ import { SortEvent } from '../../../../../../../node_modules/primeng/api';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { ProcedimientoObject } from '../../../../../models/sjcs/ProcedimientoObject';
 import { JuzgadoItem } from '../../../../../models/sjcs/JuzgadoItem';
+import { DatePipe } from '@angular/common';
 
 @Component({
 	selector: 'app-tabla-modulos',
@@ -41,6 +42,7 @@ export class TablaModulosComponent implements OnInit {
 	selectMultiple: boolean = false;
 	seleccion: boolean = false;
 	historico: boolean = false;
+	hayModulosUsados = false;
 
 	message;
 	permisos: boolean = false;
@@ -67,7 +69,8 @@ export class TablaModulosComponent implements OnInit {
 		private sigaServices: SigaServices,
 		private persistenceService: PersistenceService,
 		private confirmationService: ConfirmationService,
-		private commonsService: CommonsService
+		private commonsService: CommonsService,
+		private pipe: DatePipe
 	) { }
 
 	ngOnInit() {
@@ -131,9 +134,49 @@ export class TablaModulosComponent implements OnInit {
 			if (!this.permisos || (!this.selectMultiple || !this.selectAll) && this.selectedDatos.length == 0) {
 				this.msgs = this.commonsService.checkPermisoAccion();
 			} else {
-				this.dialogBajaLogicaFisica();
+
+				this.checkModuloUsado();
 			}
 		}
+	}
+
+	checkModuloUsado() {
+
+		this.modulosDelete.modulosItem = this.selectedDatos;
+		this.hayModulosUsados = false;
+
+		this.sigaServices.post("modulosybasesdecompensacion_checkModulos", this.modulosDelete).subscribe(
+			data => {
+				this.showModalBajaLogicaFisica = false;
+				this.progressSpinner = false;
+				this.selectedDatos = JSON.parse(data.body).modulosItem;
+
+				this.selectedDatos.forEach(element => {
+					if (element.usado) {
+						this.hayModulosUsados = true;
+					}
+				});
+
+				if (!this.hayModulosUsados) {
+					this.dialogBajaLogicaFisica();
+				} else {
+					this.modulosDelete.baja = "bajalogica";
+					this.delete();
+				}
+			},
+			err => {
+				if (err != undefined && JSON.parse(err.error).error.description != "") {
+					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+				} else {
+					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+				}
+				this.progressSpinner = false;
+			},
+			() => {
+				this.progressSpinner = false;
+				this.selectAll = false;
+			}
+		);
 	}
 
 	showModalBajaLogicaFisica: boolean = false;
@@ -144,6 +187,7 @@ export class TablaModulosComponent implements OnInit {
 
 	cancelarDialogBajaLogicaFisica() {
 		this.showModalBajaLogicaFisica = false;
+		this.selectedDatos = [];
 	}
 
 	fechaBajaLogica: Date;
@@ -201,6 +245,17 @@ export class TablaModulosComponent implements OnInit {
 		}
 
 		this.modulosDelete.modulosItem = this.selectedDatos;
+
+		this.modulosDelete.modulosItem.forEach( modulo => {
+			if (modulo.fechadesdevigor != null && !(typeof(modulo.fechadesdevigor) == 'number')) {
+				modulo.fechadesdevigor = this.formatDate(modulo.fechadesdevigor).getTime();
+			  }
+		  
+			  if (modulo.fechahastavigor != null && !(typeof(modulo.fechahastavigor) == 'number')) {
+				modulo.fechahastavigor = this.formatDate(modulo.fechahastavigor).getTime();
+			  }
+		});
+
 		this.sigaServices.post("modulosybasesdecompensacion_deleteModulos", this.modulosDelete).subscribe(
 			data => {
 				this.selectedDatos = [];
@@ -229,6 +284,21 @@ export class TablaModulosComponent implements OnInit {
 				this.selectAll = false;
 			}
 		);
+
+		this.selectedDatos.forEach( modulo => {
+			const pattern = 'dd/MM/yyyy';
+
+			if (modulo.fechadesdevigor != null && typeof(modulo.fechadesdevigor) == 'number') {
+				modulo.fechadesdevigor = this.formatDate(modulo.fechadesdevigor);
+				modulo.fechadesdevigor = this.pipe.transform(modulo.fechadesdevigor, pattern);
+			}
+		
+			if (modulo.fechahastavigor != null && typeof(modulo.fechahastavigor) == 'number') {
+				modulo.fechahastavigor = this.formatDate(modulo.fechahastavigor);
+				modulo.fechahastavigor = this.pipe.transform(modulo.fechahastavigor, pattern);
+			}
+
+		});
 	}
 
 	onChangeSelectAll() {
@@ -257,8 +327,21 @@ export class TablaModulosComponent implements OnInit {
 	}
 
 	setItalic(dato) {
-		if (dato.fechadesdevigor <= new Date() && (dato.fechahastavigor > new Date() || dato.fechahastavigor == null)) return false;
+		if (this.formatDate(dato.fechadesdevigor) <= new Date() && (dato.fechahastavigor == null || this.formatDate(dato.fechahastavigor) > new Date())) return false;
 		else return true;
+	}
+
+	formatDate(date) {
+
+		if (date instanceof Date) {
+			return date; 
+		} else if (typeof(date) == 'number'){
+			return new Date(date.valueOf());
+		} else {
+			var parts = date.split("/");
+			var formattedDate = new Date(parts[1] + "/" + parts[0] + "/" + parts[2]);
+			return formattedDate;
+		}
 	}
 
 	getCols() {
@@ -372,10 +455,20 @@ export class TablaModulosComponent implements OnInit {
 		this.juzgados.forEach(juzgado => {
 			let procedimientoDTO = new ProcedimientoObject();
 		
+			this.selectedDatos.forEach( modulo => {
+				if (modulo.fechadesdevigor != null && !(typeof(modulo.fechadesdevigor) == 'number')) {
+					modulo.fechadesdevigor = this.formatDate(modulo.fechadesdevigor).getTime();
+				  }
+			  
+				  if (modulo.fechahastavigor != null && !(typeof(modulo.fechahastavigor) == 'number')) {
+					modulo.fechahastavigor = this.formatDate(modulo.fechahastavigor).getTime();
+				  }
+			});
+
 			procedimientoDTO.procedimientosItems = this.selectedDatos;
 			procedimientoDTO.idJuzgado = juzgado;
-		
-		
+
+
 			this.sigaServices.post("gestionJuzgados_asociarModulosAJuzgados", procedimientoDTO).subscribe(
 				data => {
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -398,7 +491,20 @@ export class TablaModulosComponent implements OnInit {
 				}
 			);
 		
+			this.selectedDatos.forEach( modulo => {
+				const pattern = 'dd/MM/yyyy';
+
+				if (modulo.fechadesdevigor != null && typeof(modulo.fechadesdevigor) == 'number') {
+					modulo.fechadesdevigor = this.formatDate(modulo.fechadesdevigor);
+					modulo.fechadesdevigor = this.pipe.transform(modulo.fechadesdevigor, pattern);
+				}
 			
+				if (modulo.fechahastavigor != null && typeof(modulo.fechahastavigor) == 'number') {
+					modulo.fechahastavigor = this.formatDate(modulo.fechahastavigor);
+					modulo.fechahastavigor = this.pipe.transform(modulo.fechahastavigor, pattern);
+				}
+
+			});
 		});
 			
 	}
