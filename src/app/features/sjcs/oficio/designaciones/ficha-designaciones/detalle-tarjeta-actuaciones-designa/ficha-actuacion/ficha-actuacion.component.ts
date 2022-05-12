@@ -130,9 +130,12 @@ export class FichaActuacionComponent implements OnInit {
             }
             let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
 
-            this.usuarioLogado = new UsuarioLogado();
-            this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
-            this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
+            if (colegiadoLog != undefined) {
+              this.usuarioLogado = new UsuarioLogado();
+              this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
+              this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
+            }
+            
           },
           (err) => {
             //console.log(err);
@@ -145,9 +148,9 @@ export class FichaActuacionComponent implements OnInit {
           let actuacionJE = JSON.parse(sessionStorage.getItem("actuacionDesignaJE"));
           sessionStorage.removeItem("actuacionDesignaJE");
           actuacionJE.designaItem.ano = "D" + actuacionJE.designaItem.ano;
-          this.actuacionDesigna = actuacionJE;
 
-          if (this.actuacionDesigna.isNew) {
+          if (actuacionJE.isNew) {
+            this.actuacionDesigna = actuacionJE;
             this.getPermiteTurno();
           } else {
             this.getActuacionDesigna('0', actuacionJE);
@@ -519,7 +522,14 @@ export class FichaActuacionComponent implements OnInit {
           this.showMsg('error', 'Error', this.translateService.instant(object.error.description.toString()));
         } else {
           let resp = object.actuacionesDesignaItems[0];
-          let designa = JSON.parse(JSON.stringify(this.actuacionDesigna.designaItem));
+
+          let designa;
+          if (actuacionJE) { 
+            designa = JSON.parse(JSON.stringify(actuacionJE.designaItem));
+          } else {
+            designa = JSON.parse(JSON.stringify(this.actuacionDesigna.designaItem));
+          }
+
           this.actuacionDesigna = new Actuacion();
           let relaciones = null;
 
