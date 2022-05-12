@@ -888,13 +888,36 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ocultarColumna(event) {
-    if (this.pantalla == 'JE' && event.itemValue.id == "clientes" || event.itemValue.id == "ejgs"){
+    if (event.itemValue != undefined) {
+      // Se muestran o ocuntan las columnas de 1 en 1
+      this.ocultarColumnaItem(event, [event.itemValue]);
+    } else {
+      // Se muestran o ocultan todas las columnas
+
+      // Busco las columnas a mostrar
+      let shownElements = event.value
+        .filter(element => document.getElementById(element.id).classList.contains("collapse"))
+        .filter(element => event.value.some(e => e.id == element.id));
+
+      // Busco las columnas a ocultar
+      let hiddenElements = this.cabeceras
+        .filter(element => !document.getElementById(element.id).classList.contains("collapse"))
+        .filter(element => !event.value.some(e => e.id == element.id));
+
+      // Muestro u oculto los cambios
+      shownElements.forEach(columna => this.ocultarColumnaItem(event, columna));
+      hiddenElements.forEach(columna => this.ocultarColumnaItem(event, columna));
+    }
+  }
+  
+  ocultarColumnaItem(event, columna) {
+    if (this.pantalla == 'JE' && columna.id == "clientes" || columna.id == "ejgs"){
       this.showMsg('error', "Clientes y EJG's pertenecen a la columna Año/Número Designación, no pueden ocultarse/mostrarse por sí solas", '')
     }else{
 
     let tabla = document.getElementById("tablaResultadoDesplegable");
 
-    if (event.itemValue == undefined && event.value.length == 0) {
+    if (columna == undefined && event.value.length == 0) {
       this.cabeceras.forEach(element => {
         this.renderer.addClass(document.getElementById(element.id), "collapse");
       });
@@ -903,7 +926,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       tabla.setAttribute("style", 'width: 0px !important');
     }
 
-    if (event.itemValue == undefined && event.value.length > 0) {
+    if (columna == undefined && event.value.length > 0) {
       this.cabeceras.forEach(element => {
         this.renderer.removeClass(document.getElementById(element.id), "collapse");
       });
@@ -913,43 +936,43 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       tabla.setAttribute("style", `width: ${this.tamanioTablaResultados}px !important`);
     }
 
-    if (event.itemValue != undefined && event.value.length >= 0) {
+    if (columna != undefined && event.value.length >= 0) {
       let ocultar = true;
       event.value.forEach(element => {
-        if (element.id == event.itemValue.id) {
+        if (element.id == columna.id) {
           ocultar = false;
         }
       });
       if (this.pantalla == 'JE' ){
-        /*if (event.itemValue.id == "ejgs" || event.itemValue.id == "clientes"){
-          event.itemValue.id = "anio";
+        /*if (columna.id == "ejgs" || columna.id == "clientes"){
+          columna.id = "anio";
         }
-        //console.log('event.itemValue.id: ', event.itemValue.id)*/
-        if (ocultar && event.itemValue.id == "anio"){
+        //console.log('columna.id: ', columna.id)*/
+        if (ocultar && columna.id == "anio"){
           this.ocultarItem("clientes");
           this.ocultarItem("ejgs");
-        }else if (!ocultar && event.itemValue.id == "anio"){
+        }else if (!ocultar && columna.id == "anio"){
           this.mostrarItem("clientes");
           this.mostrarItem("ejgs");
         }
       }
       if (ocultar) {
-        this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
-        this.itemsaOcultar.push(event.itemValue);
+        this.renderer.addClass(document.getElementById(columna.id), "collapse");
+        this.itemsaOcultar.push(columna);
         if(this.columnsSizes.length != 0){
-          tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
+          tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == columna.id).size}px !important`);
         }
         
        
       } else {
-        this.renderer.removeClass(document.getElementById(event.itemValue.id), "collapse");
+        this.renderer.removeClass(document.getElementById(columna.id), "collapse");
         this.itemsaOcultar.forEach((element, index) => {
-          if (element.id == event.itemValue.id) {
+          if (element.id == columna.id) {
             this.itemsaOcultar.splice(index, 1);
           }
         });
         if(this.columnsSizes.length != 0){ 
-        tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
+        tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == columna.id).size}px !important`);
         }
       }
       this.getPosition(this.itemsaOcultar);
@@ -962,6 +985,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
     }
   }
+
     mostrarItem(id){
       let tabla = document.getElementById("tablaResultadoDesplegable");
       this.renderer.removeClass(document.getElementById(id), "collapse");
