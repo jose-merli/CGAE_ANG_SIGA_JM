@@ -130,11 +130,9 @@ export class FichaActuacionComponent implements OnInit {
             }
             let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
 
-            if (this.isColegiado) {
-              this.usuarioLogado = new UsuarioLogado();
-              this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
-              this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
-            }
+            this.usuarioLogado = new UsuarioLogado();
+            this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
+            this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
           },
           (err) => {
             //console.log(err);
