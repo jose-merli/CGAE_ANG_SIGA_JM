@@ -890,7 +890,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   ocultarColumna(event) {
     if (event.itemValue != undefined) {
       // Se muestran o ocuntan las columnas de 1 en 1
-      this.ocultarColumnaItem(event, [event.itemValue]);
+      this.ocultarColumnaItem(event, event.itemValue);
     } else {
       // Se muestran o ocultan todas las columnas
 
