@@ -2,190 +2,222 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
-  <div class="card-body">
-    <div class="row w-100 m-0">
-      <div class="form-group col-lg-6 col-md-6">
-        <label>{{ 'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.origencontacto' | translate}} </label> &nbsp;&nbsp;
-        <p-dropdown class="select-form"
-        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-        [showClear]="true" [(ngModel)]="caracteristica.idOrigenContacto"  [disabled] ="!permisoEscritura || !editable"
+<div class="card-body">
+  <div class="row w-100 m-0">
+    <div class="form-group col-lg-6 col-md-6">
+      <label>{{ 'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.origencontacto' | translate}} </label>
+      &nbsp;&nbsp;
+      <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+        [showClear]="true" [(ngModel)]="caracteristica.idOrigenContacto" [disabled]="!permisoEscritura || !editable"
         [ngModelOptions]="{standalone: true}" [options]="comboOrigenContacto">
       </p-dropdown>
-      </div>
-      <div class="form-group col-lg-12 col-md-12">
-        <label>Temas de Actuaciones: </label> &nbsp;&nbsp;
-        <div class="form-check col-lg-4 col-md-4">
-          <br>
-          <div class="inline">
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.violenciaDomestica" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.violenciadomestica' | translate}}</b></label>
-          </div>
-        </div>
-        <div class="form-check col-lg-4 col-md-4">
-          <br>
-          <div class="inline">
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.violenciaGenero" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.violenciagenero' | translate}}</b></label>
-          </div>
-        </div>
-        <div class="form-check col-lg-4 col-md-4">
-          <br>
-          <div class="inline">
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.contraLibertadSexual" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.contralibertadsexual' | translate}}</b></label>
-          </div>
-        </div>
-        <div class="form-check col-lg-4 col-md-4">
-          <br>
-          <div class="inline">
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.menorAbuso" [ngModelOptions]="{standalone: true}" [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.menorabuso' | translate}}</b></label>
-          </div>
-        </div>
-        <div class="form-check col-lg-4 col-md-4">
-          <br>
-          <div class="inline">
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.discapacidadPsiquicaAbuso" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.discapacidad' | translate}}</b></label>
-          </div>
+    </div>
+    <div class="form-group col-lg-12 col-md-12">
+      <label>Temas de Actuaciones: </label> &nbsp;&nbsp;
+      <div class="form-check col-lg-4 col-md-4">
+        <br>
+        <div class="inline">
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.violenciaDomestica"
+            [ngModelOptions]="{standalone: true}" [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label
+            class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.violenciadomestica' |
+              translate}}</b></label>
         </div>
       </div>
-      <div class="form-row w-100">
-        <div class="form-group col-lg-12 col-md-12 inline">
-          <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.judicial" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-          <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.judicial' | translate}}</b></label>
-        </div>
-        <div class="form-group col-lg-10 col-md-10 pl-3">
-          <div class="form-group col-lg-6 col-md-6 inline">
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.penal" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.penal' | translate}}</b></label>
-          </div>
-          <div class="form-check col-lg-12 col-md-12 inline pl-5">
-            <br>
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.interposicionDenuncia" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.interposiciondenuncia' | translate}}</b></label>
-          </div>
-          <div class="form-check col-lg-12 col-md-12 inline pl-5">
-            <br>
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.medidasCautelares" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.medidascautelares' | translate}}</b></label>
-          </div>
-          <div class="form-check col-lg-12 col-md-12 inline pl-5">
-            <br>
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.ordenProteccion" [ngModelOptions]="{standalone: true}"   [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.ordenproteccion' | translate}}</b></label>
-          </div>
-          <br>
-          <div class="inline col-lg-5 col-md-5 pl-5">
-            <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.otras" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-            <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.otras' | translate}}</b></label>&nbsp;&nbsp;
-            <input type="text" class="form-control" pInputText [(ngModel)]="caracteristica.otrasDesc" [ngModelOptions]="{standalone: true}"
-            [disabled]="!caracteristica.otras ||  !permisoEscritura">
-          </div>
-        </div>
-        <div class="form-group col-lg-2 col-md-2 inline">
-          <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.civil" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-          <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.civil' | translate}}</b></label>
+      <div class="form-check col-lg-4 col-md-4">
+        <br>
+        <div class="inline">
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.violenciaGenero" [ngModelOptions]="{standalone: true}"
+            [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.violenciagenero'
+              | translate}}</b></label>
         </div>
       </div>
-      <div class="form-row w-100">
-        <div class="form-group col-lg-12 col-md-12 inline">
-          <p-checkbox binary="true" 
-            [(ngModel)]="caracteristica.asesoramiento" [ngModelOptions]="{standalone: true}"  [disabled] ="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
-          <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.aseasoramiento' | translate}}</b></label>
-        </div>
-        <div class="col-lg-12 col-md-12 d-flex justify-content-between">
-          <div class="form-group col-lg-6 col-md-6">{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.ministeriofiscal' | translate}}</div>
-          <div class="form-group col-lg-6 col-md-6 inline">
-            <p-radioButton name="ministerioFiscal" value="S" label="{{'messages.si' | translate}}" [(ngModel)]="caracteristica.ministerioFiscal"  [disabled] ="!permisoEscritura || !editable"></p-radioButton>&nbsp;&nbsp;<p-radioButton name="ministerioFiscal" value="N" label="{{'general.boton.no' | translate}}" [(ngModel)]="caracteristica.ministerioFiscal"  [disabled] ="!permisoEscritura || !editable"></p-radioButton>
-          </div>
-        </div>
-        <div class="col-lg-12 col-md-12 d-flex justify-content-between">
-          <div class="form-group col-lg-6 col-md-6">{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.medicoforense' | translate}}</div>
-          <div class="form-group col-lg-6 col-md-6 inline">
-            <p-radioButton name="medicoForense" value="S" label="{{'messages.si' | translate}}" [(ngModel)]="caracteristica.medicoForense"  [disabled] ="!permisoEscritura || !editable"></p-radioButton>&nbsp;&nbsp;<p-radioButton name="medicoForense" value="N" label="{{'general.boton.no' | translate}}" [(ngModel)]="caracteristica.medicoForense"  [disabled] ="!permisoEscritura || !editable"></p-radioButton>
-          </div>
-        </div>
-
-      </div>
-      <div class="card form-row w-100">
-        <div class="card-box">
-          <mat-accordion class="example-headers-align" multi>
-            <mat-expansion-panel (opened)="loadLetrado();">
-              <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                <div>{{'busquedaSanciones.detalleSancion.letrado.literal' | translate}}</div>
-              </mat-expansion-panel-header>
-              <ng-template matExpansionPanelContent>
-                <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                                    [pantalla]="'guardia'"  [disabled] ="!permisoEscritura || !editable"
-                                    [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
-                </app-busqueda-colegiado-express>
-              </ng-template>
-            </mat-expansion-panel>
-          </mat-accordion>
+      <div class="form-check col-lg-4 col-md-4">
+        <br>
+        <div class="inline">
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.contraLibertadSexual"
+            [ngModelOptions]="{standalone: true}" [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label
+            class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.contralibertadsexual'
+              | translate}}</b></label>
         </div>
       </div>
-      <div class="card form-row w-100">
-        <div class="card-box">
-          <mat-accordion class="example-headers-align" multi>
-            <mat-expansion-panel>
-              <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
-                <div>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</div>
-              </mat-expansion-panel-header>
-              <ng-template matExpansionPanelContent>
-                <div>
-                  <div class="form-row w-100">
-                    <div class="form-group col-lg-3 col-md-3 w-100">
-                      <label>{{'justiciaGratuita.maestros.Procedimientos' | translate}}</label>&nbsp;&nbsp;
-                      <p-dropdown class="select-form"
-                      placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                      [showClear]="true" [(ngModel)]="caracteristica.idProcedimiento"  [disabled] ="!permisoEscritura || !editable"
-                      [ngModelOptions]="{standalone: true}" [options]="comboProcedimientos"></p-dropdown>
-                    </div>
-
-                    <div class="form-group col-lg-3 col-md-3 w-100">
-                      <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
-                      <p-dropdown   placeholder="{{'general.boton.seleccionar' | translate}}" autoWidth="false" [(ngModel)]='caracteristica.idJuzgado'
-                      [options]="comboJuzgados"  [showClear]="true" 
-                      styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeJuzgado($event);" [disabled] ="!permisoEscritura || !editable"></p-dropdown>
-                    </div>
-                  </div>
-                  <div class="form-row w-100">
-                    <div class="form-group col-lg-3 col-md-3 w-100">
-                      <label>Nº Proc (Nº/Año)</label>
-                      <input type="text" class="form-control" [(ngModel)]="caracteristica.numeroProcedimiento" pInputText [disabled] ="!permisoEscritura || !editable">
-                    </div>
-                    <div class="form-group col-lg-3 col-md-3 w-100">
-                      <label>{{'justiciaGratuita.ejg.datosGenerales.NIG' | translate}}</label>
-                      <input type="text" class="form-control" [(ngModel)]="caracteristica.nig" pInputText [disabled] ="!permisoEscritura || !editable">
-                    </div>
-                  </div>
-                </div>
-              </ng-template>
-            </mat-expansion-panel>
-          </mat-accordion>
+      <div class="form-check col-lg-4 col-md-4">
+        <br>
+        <div class="inline">
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.menorAbuso" [ngModelOptions]="{standalone: true}"
+            [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.menorabuso' |
+              translate}}</b></label>
         </div>
       </div>
-
-
-    <div class="card-footer w100">
-      <div class="text-right main-button">
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
-          (click)="restablecer()" [disabled] = "asistencia == null || asistencia == undefined || !permisoEscritura || !editable || modoLectura"></button>
-        <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
-          (click)="saveCaracteristicas()" [disabled] = "asistencia == null || asistencia == undefined || !permisoEscritura || !editable || modoLectura"></button>
+      <div class="form-check col-lg-4 col-md-4">
+        <br>
+        <div class="inline">
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.discapacidadPsiquicaAbuso"
+            [ngModelOptions]="{standalone: true}" [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.discapacidad' |
+              translate}}</b></label>
+        </div>
       </div>
     </div>
+    <div class="form-row w-100">
+      <div class="form-group col-lg-12 col-md-12 inline">
+        <p-checkbox binary="true" [(ngModel)]="caracteristica.judicial" [ngModelOptions]="{standalone: true}"
+          [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+        <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.judicial' |
+            translate}}</b></label>
+      </div>
+      <div class="form-group col-lg-10 col-md-10 pl-3">
+        <div class="form-group col-lg-6 col-md-6 inline">
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.penal" [ngModelOptions]="{standalone: true}"
+            [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.penal' |
+              translate}}</b></label>
+        </div>
+        <div class="form-check col-lg-12 col-md-12 inline pl-5">
+          <br>
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.interposicionDenuncia"
+            [ngModelOptions]="{standalone: true}" [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label
+            class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.interposiciondenuncia'
+              | translate}}</b></label>
+        </div>
+        <div class="form-check col-lg-12 col-md-12 inline pl-5">
+          <br>
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.medidasCautelares" [ngModelOptions]="{standalone: true}"
+            [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label
+            class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.medidascautelares' |
+              translate}}</b></label>
+        </div>
+        <div class="form-check col-lg-12 col-md-12 inline pl-5">
+          <br>
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.ordenProteccion" [ngModelOptions]="{standalone: true}"
+            [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.ordenproteccion'
+              | translate}}</b></label>
+        </div>
+        <br>
+        <div class="inline col-lg-5 col-md-5 pl-5">
+          <p-checkbox binary="true" [(ngModel)]="caracteristica.otras" [ngModelOptions]="{standalone: true}"
+            [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+          <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.otras' |
+              translate}}</b></label>&nbsp;&nbsp;
+          <input type="text" class="form-control" pInputText [(ngModel)]="caracteristica.otrasDesc"
+            [ngModelOptions]="{standalone: true}" [disabled]="!caracteristica.otras ||  !permisoEscritura">
+        </div>
+      </div>
+      <div class="form-group col-lg-2 col-md-2 inline">
+        <p-checkbox binary="true" [(ngModel)]="caracteristica.civil" [ngModelOptions]="{standalone: true}"
+          [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+        <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.civil' |
+            translate}}</b></label>
+      </div>
+    </div>
+    <div class="form-row w-100">
+      <div class="form-group col-lg-12 col-md-12 inline">
+        <p-checkbox binary="true" [(ngModel)]="caracteristica.asesoramiento" [ngModelOptions]="{standalone: true}"
+          [disabled]="!permisoEscritura || !editable"></p-checkbox> &nbsp;&nbsp;
+        <label class="form-group-label"><b>{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.aseasoramiento' |
+            translate}}</b></label>
+      </div>
+      <div class="col-lg-12 col-md-12 d-flex justify-content-between">
+        <div class="form-group col-lg-6 col-md-6">
+          {{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.ministeriofiscal' | translate}}</div>
+        <div class="form-group col-lg-6 col-md-6 inline">
+          <p-radioButton name="ministerioFiscal" value="S" label="{{'messages.si' | translate}}"
+            [(ngModel)]="caracteristica.ministerioFiscal" [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="ministerioFiscal" value="N" label="{{'general.boton.no' | translate}}"
+            [(ngModel)]="caracteristica.ministerioFiscal" [disabled]="!permisoEscritura || !editable"></p-radioButton>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 d-flex justify-content-between">
+        <div class="form-group col-lg-6 col-md-6">
+          {{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.medicoforense' | translate}}</div>
+        <div class="form-group col-lg-6 col-md-6 inline">
+          <p-radioButton name="medicoForense" value="S" label="{{'messages.si' | translate}}"
+            [(ngModel)]="caracteristica.medicoForense" [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="medicoForense" value="N" label="{{'general.boton.no' | translate}}"
+            [(ngModel)]="caracteristica.medicoForense" [disabled]="!permisoEscritura || !editable"></p-radioButton>
+        </div>
+      </div>
+
+    </div>
+    <div class="card form-row w-100">
+      <div class="card-box">
+        <mat-accordion class="example-headers-align" multi>
+          <mat-expansion-panel (opened)="loadLetrado();">
+            <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+              <div>{{'busquedaSanciones.detalleSancion.letrado.literal' | translate}}</div>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
+                [pantalla]="'guardia'" [disabled]="!permisoEscritura || !editable"
+                [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
+              </app-busqueda-colegiado-express>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+    <div class="card form-row w-100">
+      <div class="card-box">
+        <mat-accordion class="example-headers-align" multi>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
+              <div>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</div>
+            </mat-expansion-panel-header>
+            <ng-template matExpansionPanelContent>
+              <div>
+                <div class="form-row w-100">
+                  <div class="form-group col-lg-3 col-md-3 w-100">
+                    <label>{{'justiciaGratuita.maestros.Procedimientos' | translate}}</label>&nbsp;&nbsp;
+                    <p-dropdown class="select-form" placeholder="{{'general.boton.seleccionar' | translate}}"
+                      [filter]="true" [showClear]="true" [(ngModel)]="caracteristica.idProcedimiento"
+                      [disabled]="!permisoEscritura || !editable" [ngModelOptions]="{standalone: true}"
+                      [options]="comboProcedimientos"></p-dropdown>
+                  </div>
+
+                  <div class="form-group col-lg-3 col-md-3 w-100">
+                    <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
+                    <p-dropdown placeholder="{{'general.boton.seleccionar' | translate}}" autoWidth="false"
+                      [(ngModel)]='caracteristica.idJuzgado' [options]="comboJuzgados" [showClear]="true"
+                      styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+                      (onChange)="onChangeJuzgado($event);" [disabled]="!permisoEscritura || !editable"></p-dropdown>
+                  </div>
+                </div>
+                <div class="form-row w-100">
+                  <div class="form-group col-lg-3 col-md-3 w-100">
+                    <label>Nº Proc (Nº/Año)</label>
+                    <input type="text" class="form-control" [(ngModel)]="caracteristica.numeroProcedimiento" pInputText
+                      [disabled]="!permisoEscritura || !editable">
+                  </div>
+                  <div class="form-group col-lg-3 col-md-3 w-100">
+                    <label>{{'justiciaGratuita.ejg.datosGenerales.NIG' | translate}}</label>
+                    <input type="text" class="form-control" [(ngModel)]="caracteristica.nig" pInputText
+                      [disabled]="!permisoEscritura || !editable">
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </div>
+
+
   </div>
+</div>
+
+<div class="card-footer w100">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
+      (click)="restablecer()"
+      [disabled]="asistencia == null || asistencia == undefined || !permisoEscritura || !editable || modoLectura"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}"
+      (click)="saveCaracteristicas()"
+      [disabled]="asistencia == null || asistencia == undefined || !permisoEscritura || !editable || modoLectura"></button>
+  </div>
+</div>
