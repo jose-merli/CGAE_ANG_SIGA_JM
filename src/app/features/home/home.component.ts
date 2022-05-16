@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
 		this.getLetrado();
 		this.getColegiadoLogeado();
 		//this.getMantenerSesion();
-		//this.oldSigaLogin();
+		this.oldSigaLogin();
 		this.getDataLoggedUser();
 		this.getInstitucionActual();
 	}
