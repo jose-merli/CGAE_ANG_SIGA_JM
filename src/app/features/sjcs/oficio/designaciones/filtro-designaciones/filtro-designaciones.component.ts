@@ -273,7 +273,15 @@ export class FiltroDesignacionesComponent implements OnInit {
     if (this.localStorageService.institucionActual == "2003") {
       this.isButtonVisible = false;
     }
-    this.filtroJustificacion = new JustificacionExpressItem();
+
+    if (sessionStorage.getItem("filtroJustificacionExpres") && sessionStorage.getItem("volver")) {
+      this.filtroJustificacion = JSON.parse(sessionStorage.getItem("filtroJustificacionExpres"));
+      this.cargarFiltrosJustificacionExpres();
+    } else {
+      this.filtroJustificacion = new JustificacionExpressItem();
+    }
+
+   
     this.showJustificacionExpress = true;
     this.esColegiado = false;
     this.progressSpinner = true;
@@ -290,7 +298,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.disabledBusquedaExpress = true;
       this.getDataLoggedUser();
       this.disableRestricciones = true;
-    } else {
+    } else if(!sessionStorage.getItem("volver")) {
       this.disableRestricciones = false;
       this.disabledBusquedaExpress = false;
       this.filtroJustificacion.ejgSinResolucion = "2";
@@ -310,10 +318,65 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.showColegiado = true;
     }
 
+    sessionStorage.removeItem("filtroJustificacionExpres");
+    sessionStorage.removeItem("volver");
+
     //combo comun
     this.getComboEstados();
     this.progressSpinner = false;
   }
+
+  guardarFiltrosJustificacion() {
+    if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
+      && this.usuarioBusquedaExpress.numColegiado.trim().length != 0) {
+      this.filtroJustificacion.nColegiado = this.usuarioBusquedaExpress.numColegiado;
+      this.filtroJustificacion.nombreAp = this.usuarioBusquedaExpress.nombreAp;
+    }
+
+    this.filtroJustificacion.muestraPendiente = this.checkMostrarPendientes;
+    this.filtroJustificacion.restriccionesVisualizacion = this.checkRestricciones;
+
+    
+    sessionStorage.removeItem("filtroDesignas");
+    sessionStorage.setItem("filtroJustificacionExpres", JSON.stringify(this.filtroJustificacion));
+  }
+
+  cargarFiltrosJustificacionExpres() {
+
+    if (this.filtroJustificacion.justificacionDesde != undefined && this.filtroJustificacion.justificacionDesde != null) {
+      this.filtroJustificacion.justificacionDesde = new Date(this.filtroJustificacion.justificacionDesde);
+    }
+
+    if (this.filtroJustificacion.justificacionHasta != undefined && this.filtroJustificacion.justificacionHasta != null) {
+      this.filtroJustificacion.justificacionHasta = new Date(this.filtroJustificacion.justificacionHasta);
+    }
+
+    if (this.filtroJustificacion.designacionDesde != undefined && this.filtroJustificacion.designacionDesde != null) {
+      this.filtroJustificacion.designacionDesde = new Date(this.filtroJustificacion.designacionDesde);
+    }
+
+    if (this.filtroJustificacion.designacionHasta != undefined && this.filtroJustificacion.designacionHasta != null) {
+      this.filtroJustificacion.designacionHasta = new Date(this.filtroJustificacion.designacionHasta);
+    }
+
+    if (this.filtroJustificacion.nColegiado != undefined && this.filtroJustificacion.nColegiado != null) {
+      this.usuarioBusquedaExpress.numColegiado = this.filtroJustificacion.nColegiado.toString();
+    }
+
+    if (this.filtroJustificacion.nombreAp != undefined && this.filtroJustificacion.nombreAp != null) {
+      this.usuarioBusquedaExpress.nombreAp = this.filtroJustificacion.nombreAp.toString();
+    }
+
+    if (this.filtroJustificacion.muestraPendiente != undefined && this.filtroJustificacion.muestraPendiente != null){
+      this.checkMostrarPendientes = this.filtroJustificacion.muestraPendiente;
+    }
+
+    if (this.filtroJustificacion.restriccionesVisualizacion != undefined && this.filtroJustificacion.restriccionesVisualizacion != null){
+      this.checkRestricciones = this.filtroJustificacion.restriccionesVisualizacion;
+    }
+
+  }
+
   checkAccesoFichaActuacion() {
     this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
       .then(respuesta => {
@@ -332,7 +395,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     controlAcceso.idProceso = procesos_oficio.designa;
 
     this.sigaServices.post("acces_control", controlAcceso).subscribe(
-      data => {
+      async data => {
         const permisos = JSON.parse(data.body);
         const permisosArray = permisos.permisoItems;
         const derechoAcceso = permisosArray[0].derechoacceso;
@@ -356,13 +419,22 @@ export class FiltroDesignacionesComponent implements OnInit {
         if (
           sessionStorage.getItem("filtroDesignas") != null
         ) {
-          if (sessionStorage.getItem("volver") != null && sessionStorage.getItem("volver") != undefined && sessionStorage.getItem("volver") == 'true') {
+          if (sessionStorage.getItem("volver") != null && sessionStorage.getItem("volver") != undefined) {
             this.cargarFiltros();
             this.buscar();
             sessionStorage.removeItem("volver");
           } //else {
             //this.body = new DesignaItem();
           //}
+        } else if (
+          sessionStorage.getItem("filtroJustificacionExpres") != null
+        ) {
+          if (sessionStorage.getItem("volver") != null && sessionStorage.getItem("volver") != undefined) {
+            await this.changeFilters('justificacion');
+            this.radioTarjeta = 'justificacion';
+            this.buscar();
+            
+          }
         }
       },
       err => {
@@ -375,7 +447,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     let controlAcceso = new ControlAccesoDto();
     controlAcceso.idProceso = procesos_oficio.je;
 
-    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+    return this.sigaServices.post("acces_control", controlAcceso).toPromise().then(
       data => {
         const permisos = JSON.parse(data.body);
         const permisosArray = permisos.permisoItems;
@@ -403,7 +475,7 @@ export class FiltroDesignacionesComponent implements OnInit {
       }
     );
   }
-  changeFilters(event) {
+  async changeFilters(event) {
 
     if (event == 'designas') {
       this.radioTarjeta = 'justificacion';
@@ -436,7 +508,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     }
 
     if (event == 'justificacion') {
-      this.checkAccesoJE();
+      await this.checkAccesoJE();
       sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
       this.showDesignas = false;
       this.showJustificacionExpress = true;
@@ -752,55 +824,55 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   guardarFiltros(){
     let designa = new DesignaItem();
-        designa.ano = this.body.ano;
-        designa.codigo = this.body.codigo;
-        designa.fechaEntradaInicio = this.fechaAperturaDesdeSelect;
-        designa.fechaEntradaFin = this.fechaAperturaHastaSelect;
-        designa.estados = this.body.estados;
-        designa.idTipoDesignaColegios = (this.body.idTipoDesignaColegios);
-        designa.idTurnos = this.body.idTurnos;
-        if (designa.idTurno != null) {
-          designa.nombreTurno = this.comboTurno.find(
-            item => item.value == designa.idTurno
-          ).label;
-        }
-        designa.documentacionActuacion = this.body.documentacionActuacion;
-        designa.idActuacionesV = this.body.idActuacionesV;
-        designa.idArt27 = this.body.idArt27;
-        designa.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+    designa.ano = this.body.ano;
+    designa.codigo = this.body.codigo;
+    designa.fechaEntradaInicio = this.fechaAperturaDesdeSelect;
+    designa.fechaEntradaFin = this.fechaAperturaHastaSelect;
+    designa.estados = this.body.estados;
+    designa.idTipoDesignaColegios = (this.body.idTipoDesignaColegios);
+    designa.idTurnos = this.body.idTurnos;
+    if (designa.idTurno != null) {
+      designa.nombreTurno = this.comboTurno.find(
+        item => item.value == designa.idTurno
+      ).label;
+    }
+    designa.documentacionActuacion = this.body.documentacionActuacion;
+    designa.idActuacionesV = this.body.idActuacionesV;
+    designa.idArt27 = this.body.idArt27;
+    designa.numColegiado = this.usuarioBusquedaExpress.numColegiado;
 
-        designa.idJuzgados = this.body.idJuzgados;
-        designa.idModulos = this.body.idModulos;
-        designa.idCalidad = this.body.idCalidad;
-        if (this.body.anoProcedimiento != null && this.body.anoProcedimiento != undefined) {
-          designa.numProcedimiento = this.body.anoProcedimiento.toString();
-        }
-        designa.idProcedimientos = this.body.idProcedimientos;
-        designa.nig = this.body.nig;
-        designa.asunto = this.body.asunto;
+    designa.idJuzgados = this.body.idJuzgados;
+    designa.idModulos = this.body.idModulos;
+    designa.idCalidad = this.body.idCalidad;
+    if (this.body.anoProcedimiento != null && this.body.anoProcedimiento != undefined) {
+      designa.numProcedimiento = this.body.anoProcedimiento.toString();
+    }
+    designa.idProcedimientos = this.body.idProcedimientos;
+    designa.nig = this.body.nig;
+    designa.asunto = this.body.asunto;
 
-        designa.idJuzgadoActu = this.body.idJuzgadoActu;
-        // if (designa.idJuzgadoActu != null) {
-        //   designa.nombreJuzgadoActu = this.comboJuzgados.find(
-        //     item => item.value == designa.idJuzgadoActu
-        //   ).label;
-        // }
-        if (this.body.idAcreditacion != undefined) {
-          designa.idAcreditacion = this.body.idAcreditacion;
-        }
-        designa.idOrigen = this.body.idOrigen;
-        designa.fechaJustificacionDesde = this.fechaJustificacionDesdeSelect;
-        designa.fechaJustificacionHasta = this.fechaJustificacionHastaSelect;
-        designa.idModuloActuaciones = this.body.idModuloActuaciones;
-        designa.idProcedimientoActuaciones = this.body.idProcedimientoActuaciones;
-        designa.nif = this.body.nif;
-        designa.apellidosInteresado = this.body.apellidosInteresado;
-        designa.nombreInteresado = this.body.nombreInteresado;
-        designa.rol = this.body.rol;
+    designa.idJuzgadoActu = this.body.idJuzgadoActu;
+    // if (designa.idJuzgadoActu != null) {
+    //   designa.nombreJuzgadoActu = this.comboJuzgados.find(
+    //     item => item.value == designa.idJuzgadoActu
+    //   ).label;
+    // }
+    if (this.body.idAcreditacion != undefined) {
+      designa.idAcreditacion = this.body.idAcreditacion;
+    }
+    designa.idOrigen = this.body.idOrigen;
+    designa.fechaJustificacionDesde = this.fechaJustificacionDesdeSelect;
+    designa.fechaJustificacionHasta = this.fechaJustificacionHastaSelect;
+    designa.idModuloActuaciones = this.body.idModuloActuaciones;
+    designa.idProcedimientoActuaciones = this.body.idProcedimientoActuaciones;
+    designa.nif = this.body.nif;
+    designa.apellidosInteresado = this.body.apellidosInteresado;
+    designa.nombreInteresado = this.body.nombreInteresado;
+    designa.rol = this.body.rol;
 
-        sessionStorage.setItem(
-          "filtroDesignas",
-          JSON.stringify(designa));
+    sessionStorage.setItem(
+      "filtroDesignas",
+      JSON.stringify(designa));
   }
 
   cargarFiltros(){
@@ -863,21 +935,17 @@ export class FiltroDesignacionesComponent implements OnInit {
     } else {
       //es la busqueda de justificacion
       if (this.showJustificacionExpress) {
-        if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null
-          && this.usuarioBusquedaExpress.numColegiado.trim().length != 0) {
-          this.filtroJustificacion.nColegiado = this.usuarioBusquedaExpress.numColegiado;
-        }
-
-        this.filtroJustificacion.muestraPendiente = this.checkMostrarPendientes;
-        this.filtroJustificacion.restriccionesVisualizacion = this.checkRestricciones;
+        this.guardarFiltrosJustificacion();
 
         if (this.compruebaFiltroJustificacion()) {
           this.showTablaJustificacionExpres.emit(false);
           this.busquedaJustificacionExpres.emit(true);
         }
+
       } else {
         if (this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != null) {
           this.filtroJustificacion.nColegiado = this.usuarioBusquedaExpress.numColegiado;
+          this.filtroJustificacion.nombreAp = this.usuarioBusquedaExpress.nombreAp;
         }
 
         this.progressSpinner = true;
