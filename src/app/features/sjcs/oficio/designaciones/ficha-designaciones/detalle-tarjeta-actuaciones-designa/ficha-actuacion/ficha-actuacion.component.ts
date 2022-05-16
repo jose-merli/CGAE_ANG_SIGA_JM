@@ -335,6 +335,7 @@ export class FichaActuacionComponent implements OnInit {
   }
 
   backTo() {
+    sessionStorage.setItem("volver", "true");
     this.location.back();
   }
 

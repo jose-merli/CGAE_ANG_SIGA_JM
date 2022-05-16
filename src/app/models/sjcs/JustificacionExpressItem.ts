@@ -3,6 +3,7 @@ import { ActuacionesJustificacionExpressItem } from "./ActuacionesJustificacionE
 export class JustificacionExpressItem {
   
   nColegiado: String;
+  nombreAp: string;
   nombre: String;
   apellidos: String;
   anioEJG: String;
