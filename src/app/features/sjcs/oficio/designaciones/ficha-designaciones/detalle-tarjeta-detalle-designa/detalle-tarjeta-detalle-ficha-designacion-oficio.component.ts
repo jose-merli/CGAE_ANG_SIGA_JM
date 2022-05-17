@@ -543,7 +543,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   getComboModulos() {
     this.progressSpinner = true;
-    this.sigaServices.getParam("combo_comboModulosDesignaciones","?fecha="+this.datosInicial.fechaEntradaInicio).subscribe(
+    console.log(this.datosInicial)
+    this.sigaServices.getParam("combo_comboModulosDesignaciones","?numero=" + this.datosInicial.numero 
+    + "&anio=" + this.datosInicial.anio + "&idTurno=" + this.datosInicial.idTurno).subscribe(
       n => {
         this.moduloOpciones = n.combooItems;
         if (this.campos.modulo != "") {

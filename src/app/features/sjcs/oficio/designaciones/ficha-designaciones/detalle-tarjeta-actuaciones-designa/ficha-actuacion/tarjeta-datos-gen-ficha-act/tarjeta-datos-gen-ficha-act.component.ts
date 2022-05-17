@@ -325,7 +325,9 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     if(this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null){
       fecha = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy')
     }
-    this.sigaServices.getParam("combo_comboModulosDesignaciones","?fecha=" + fecha).subscribe(
+    console.log(this.actuacionDesigna)
+    this.sigaServices.getParam("combo_comboModulosDesignaciones", "?numero=" + this.actuacionDesigna.actuacion.numero 
+    + "&anio=" + this.actuacionDesigna.actuacion.anio + "&idTurno=" + this.actuacionDesigna.actuacion.idTurno + "&numeroAsunto=" + this.actuacionDesigna.actuacion.numeroAsunto).subscribe(
       n => {
         this.comboModulos = n.combooItems;
 
