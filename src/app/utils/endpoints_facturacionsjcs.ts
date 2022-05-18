@@ -140,8 +140,10 @@ export let endpoints_facturacionsjcs: any = {
     certificaciones_descargarCertificacionesXunta: "certificaciones/descargarCertificacionesXunta",
     certificaciones_descargarLogReintegrosXunta: "certificaciones/descargarLogReintegrosXunta",
     certificaciones_descargarInformeIncidencias: "certificaciones/descargarInformeIncidencias",
+    certificaciones_descargaGeneral: "certificaciones/descargaGeneral",
     certificaciones_accionXuntaEnvios: "certificaciones/accionXuntaEnvios",
     certificaciones_subirFicheroCAM: "certificaciones/subirFicheroCAM",
     certificaciones_descargaInformeCAM: "certificaciones/descargaInformeCAM",
     certificaciones_perteneceInstitucionCAMoXunta: "certificaciones/perteneceInstitucionCAMoXunta",
+    certificaciones_buscarErroresCAM:"certificaciones/buscarErroresCAM",
 }

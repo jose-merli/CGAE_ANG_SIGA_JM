@@ -671,11 +671,11 @@ setGuardiasCalendario(guardiaCalendario){
     if(guardiasErroneas > 0){
       this.muestraCamposObligatorios()
     }else{
-      if (this.idConjuntoGuardiaElegido != 0 && this.idConjuntoGuardiaElegido != undefined){
+     /* if (this.idConjuntoGuardiaElegido != 0 && this.idConjuntoGuardiaElegido != undefined){
         this.saveGuardiasConjunto(newList);  
-      }else{
+      }else{*/
         this.saveGuardiasCalendario(newList, event2.update);  
-      }
+      //}
     }
       
   }
