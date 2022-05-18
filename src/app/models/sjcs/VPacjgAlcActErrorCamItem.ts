@@ -1,4 +1,4 @@
-import internal = require("assert");
+import * as internal from "assert";
 
 export class VPacjgAlcActErrorCamItem {
     idinstitucion: number;
