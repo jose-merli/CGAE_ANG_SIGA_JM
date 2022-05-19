@@ -438,7 +438,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
       { type: 'invisible', value: designacion.apellidos , size: 0, combo: null},
       { type: 'invisible', value: designacion.nombre , size: 0, combo: null},
       { type: 'invisible', value: designacion.nColegiado , size: 0, combo: null},
-      { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null}
+      { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null},
+      { type: 'invisible', value: designacion.letradoActuaciones , size: 0, combo: null}
     ];
   }else{
     arrDesignacion = 
@@ -482,7 +483,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
     { type: 'invisible', value: designacion.apellidos , size: 0, combo: null},
     { type: 'invisible', value: designacion.nombre , size: 0, combo: null},
     { type: 'invisible', value: designacion.nColegiado , size: 0, combo: null},
-    { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null}
+    { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null},
+    { type: 'invisible', value: designacion.letradoActuaciones , size: 0, combo: null}
   ];
   }
 
