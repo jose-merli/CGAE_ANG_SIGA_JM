@@ -326,8 +326,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       fecha = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy')
     }
     console.log(this.actuacionDesigna)
-    this.sigaServices.getParam("combo_comboModulosDesignaciones", "?numero=" + this.actuacionDesigna.actuacion.numero 
-    + "&anio=" + this.actuacionDesigna.actuacion.anio + "&idTurno=" + this.actuacionDesigna.actuacion.idTurno + "&numeroAsunto=" + this.actuacionDesigna.actuacion.numeroAsunto).subscribe(
+    this.sigaServices.getParam("combo_comboModulosDesignaciones", this.buildParams({"numero": this.actuacionDesigna.actuacion.numero, 
+    "anio": this.actuacionDesigna.actuacion.anio, "idTurno": this.actuacionDesigna.actuacion.idTurno, "numeroAsunto": this.actuacionDesigna.actuacion.numeroAsunto })).subscribe(
       n => {
         this.comboModulos = n.combooItems;
 
@@ -363,6 +363,21 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         this.datos.selectores[3].opciones = this.comboModulos;
       }
     );
+  }
+
+  buildParams(params: {}) {
+    let result = "?";
+    for (const item in params) {
+      if (params[item] != undefined) {
+        if (result.length > 1) {
+          result += `&${item}=${params[item]}`;
+        } else {
+          result += `${item}=${params[item]}`;
+        }
+      }
+    }
+
+    return result.length > 1 ? result : "";
   }
 
   getComboModulosPorJuzgado($event) {
