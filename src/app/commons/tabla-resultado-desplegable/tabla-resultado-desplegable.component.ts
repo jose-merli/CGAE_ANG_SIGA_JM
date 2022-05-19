@@ -1208,11 +1208,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         row.cells.forEach(cell => {
           if (cell.type == 'multiselect2') {
             cell.combo = comboModulos;
-            cell.value= comboModulos[0].value;
+
+            if (comboModulos.every(d => d.value != cell.value)) {
+              cell.value= comboModulos[0].value;
+            }
             rowGroupFound = true;
           }else if (cell.type == 'multiselect3'&& comboAcreditacion[0] != undefined) {
             cell.combo = comboAcreditacion;
-            cell.value= comboAcreditacion[0].value;
+
+            if (comboAcreditacion.every(d => d.value != cell.value)) {
+              cell.value= comboAcreditacion[0].value;
+            }
             rowGroupFound = true;
           } 
 
@@ -1554,13 +1560,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           let newArrayCells: Cell[];
             newArrayCells= [
               { type: 'checkbox', value: false, size: 120 , combo: null},
-              { type: 'select', value: "0", size: 400 , combo: []},
+              { type: 'multiselect1', value: "0", size: 400 , combo: []},
               { type: 'input', value: desig[2].value, size: 200, combo: null},
               { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-              { type: 'select', value: "0", size: 400 , combo: []}, //modulo
+              { type: 'multiselect2', value: "0", size: 400 , combo: []}, //modulo
               { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
               { type: 'datePicker', value: this.formatDate(new Date()) , size: 200, combo: null},
-              { type: 'select', value: "0" , size: 200, combo: []},
+              { type: 'multiselect3', value: "0" , size: 200, combo: []},
               { type: 'checkbox', value: validacion, size: 80 , combo: null},
               { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
               { type: 'invisible', value:  '' , size: 0, combo: null},
@@ -1618,13 +1624,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             if(this.comboJuzgados.length != 0){
               newArrayCells= [
                 { type: 'checkbox', value: false, size: 120 , combo: null},
-                { type: 'select', value: this.comboJuzgados[0].value, size: 400 , combo: this.comboJuzgados},
+                { type: 'multiselect1', value: this.comboJuzgados[0].value, size: 400 , combo: this.comboJuzgados},
                 { type: 'input', value: desig[2].value, size: 200, combo: null},
                 { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-                { type: 'select', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
+                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
                 { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
                 { type: 'datePicker', value: this.formatDate(new Date()) , size: 100, combo: null},
-                { type: 'select', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
+                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
                 { type: 'checkbox', value: validacion, size: 80 , combo: null},
                 { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
                 { type: 'invisible', value:  '' , size: 0, combo: null},
@@ -1655,13 +1661,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             }else{
               newArrayCells = [
                 { type: 'checkbox', value: false, size: 120 , combo: null},
-                { type: 'select', value: "0", size: 400 , combo: []},
+                { type: 'multiselect1', value: "0", size: 400 , combo: []},
                 { type: 'input', value: desig[2].value, size: 200, combo: null},
                 { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-                { type: 'select', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
+                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
                 { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
                 { type: 'datePicker', value: this.formatDate(new Date()) , size: 200, combo: null},
-                { type: 'select', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
+                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
                 { type: 'checkbox', value: validacion, size: 80 , combo: null},
                 { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
                 { type: 'invisible', value:  '' , size: 0, combo: null},
