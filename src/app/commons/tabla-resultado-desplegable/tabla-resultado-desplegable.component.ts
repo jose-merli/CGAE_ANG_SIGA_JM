@@ -469,7 +469,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
+      if((this.isLetrado && row.cells[8].value != true/* && this.turnoAllow != "1" */) || (!this.isLetrado)){
         if (row.cells[8].value != true){
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
         if (this.sumar){
@@ -551,7 +551,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else{
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
+      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
         if (row.cells[8].value  != true){
           if (this.sumar){
             this.rowIdsToUpdate.push(rowId);
@@ -626,7 +626,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else{
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
+      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
         if (row.cells[8].value  != true){
           if (this.sumar){
             this.rowIdsToUpdate.push(rowId);
@@ -651,7 +651,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   checkBoxChange2(event, rowId, cell, row, rowGroup, padre, index){
-    if (cell.value == false && row != undefined && row.cells[35].value == "1"){
+    if (cell.value == false && row != undefined && row.cells[35] != undefined && row.cells[35].value == "1"){
       cell.value = !cell.value;
       this.showMsg('error', "No puede desvalidar actuaciones facturadas", '')
     }else{
@@ -706,16 +706,18 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }else{
         //actuacion
         this.turnoAllow = rowGroup.rows[0].cells[39].value;
-        if((this.isLetrado && row.cells[8].value == true && this.turnoAllow) || (!this.isLetrado)){
+        if((this.isLetrado && this.turnoAllow != 1) || (!this.isLetrado)){
           /*if (row.cells[8].value  == true){*/
             if (this.sumar){
               this.rowIdsToUpdate.push(rowId);
             }else{
               this.rowIdsToUpdate = []; //limpiamos
             }
-            /*if (cell != undefined){
+            /*
+            if (cell != undefined){
               cell.value = !cell.value;
-            }*/
+            }
+            */
           /*}else{
             this.rowValidadas.push(row);
             cell.value = !cell.value;
@@ -735,6 +737,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (row != undefined){
           row.cells[6].type = 'text';
           row.cells[5].type = 'text';
+
+          if (row.cells[6].value == undefined || row.cells[6].value == 'false' || row.cells[6].value == false) {
+            row.cells[6].value = this.fechaFiltro;
+          }
+          
         }
         
       }else{
@@ -745,7 +752,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     }
   }
-  changeSelect(row, cell, rowId, rowGroup, padre, index){
+  changeSelect(event, cell, rowId, row, rowGroup, padre, index){
+    console.log(row, cell, rowId, rowGroup, padre, index)
     if ((this.lastChangePadre == rowId && padre) || ( this.lastChangeHijo == index && !padre)){
       if (this.lastChange == "changeSelect"){
         this.sumar = !this.sumar;
@@ -789,8 +797,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
-        if (row.cells[8].value  != true){
+      const isNew = !Array.isArray(row.cells[8].value);
+      if((this.isLetrado && this.turnoAllow != "1") || (!this.isLetrado)){
+        if (isNew || !isNew && row.cells[8].value != true){
           if (this.sumar){
             this.rowIdsToUpdate.push(rowId);
           }else{
@@ -854,7 +863,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
+      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
         if (row.cells[8].value  != true){
           if (this.sumar){
             this.rowIdsToUpdate.push(rowId);
@@ -1448,7 +1457,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           if (rowG.rows[this.childNumber + 1].cells[8].value == false){
             //actuacion No Validada
             //console.log("isListreado")
-            if ((this.isLetrado && this.turnoAllow == "1" ) || (!this.isLetrado)){
+            if ((this.isLetrado && this.turnoAllow != "1" ) || (!this.isLetrado)){
               if (rowG.rows[this.childNumber + 1].cells[35].value == "1"){
                 this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
                 this.refreshData.emit(true);
@@ -1522,6 +1531,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
   cargaAcreditacionesPorModulo($event, designacion, rowGroup){
     let validacion = false;
+    this.turnoAllow = rowGroup.rows[0].cells[39].value;
     if(this.isLetrado){
       //colegiado
       if (this.turnoAllow != "1"){
@@ -1529,8 +1539,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         validacion = true;
       }
     }else {
-    //colegio
-    validacion = true;
+      //colegio
+      validacion = true;
     }
 
 
@@ -1544,13 +1554,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           let newArrayCells: Cell[];
             newArrayCells= [
               { type: 'checkbox', value: false, size: 120 , combo: null},
-              { type: 'multiselect1', value: "0", size: 400 , combo: []},
+              { type: 'select', value: "0", size: 400 , combo: []},
               { type: 'input', value: desig[2].value, size: 200, combo: null},
               { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-              { type: 'multiselect2', value: "0", size: 400 , combo: []}, //modulo
+              { type: 'select', value: "0", size: 400 , combo: []}, //modulo
               { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-              { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
-              { type: 'multiselect3', value: "0" , size: 200, combo: []},
+              { type: 'datePicker', value: this.formatDate(new Date()) , size: 200, combo: null},
+              { type: 'select', value: "0" , size: 200, combo: []},
               { type: 'checkbox', value: validacion, size: 80 , combo: null},
               { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
               { type: 'invisible', value:  '' , size: 0, combo: null},
@@ -1579,7 +1589,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
               { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
         
-            if(!this.isLetrado || (this.isLetrado && newArrayCells[8].value != true && this.turnoAllow == "1")){
+            const newAllow = rowGroup.rows[0].cells[40].value;
+            if(!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")){
               let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
               rowGroup.rows.push(newRow);
               this.newActuacionesArr.push(newRow);
@@ -1607,13 +1618,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             if(this.comboJuzgados.length != 0){
               newArrayCells= [
                 { type: 'checkbox', value: false, size: 120 , combo: null},
-                { type: 'multiselect1', value: this.comboJuzgados[0].value, size: 400 , combo: this.comboJuzgados},
+                { type: 'select', value: this.comboJuzgados[0].value, size: 400 , combo: this.comboJuzgados},
                 { type: 'input', value: desig[2].value, size: 200, combo: null},
                 { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
+                { type: 'select', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
                 { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-                { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
-                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
+                { type: 'datePicker', value: this.formatDate(new Date()) , size: 100, combo: null},
+                { type: 'select', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
                 { type: 'checkbox', value: validacion, size: 80 , combo: null},
                 { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
                 { type: 'invisible', value:  '' , size: 0, combo: null},
@@ -1644,13 +1655,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             }else{
               newArrayCells = [
                 { type: 'checkbox', value: false, size: 120 , combo: null},
-                { type: 'multiselect1', value: "0", size: 400 , combo: []},
+                { type: 'select', value: "0", size: 400 , combo: []},
                 { type: 'input', value: desig[2].value, size: 200, combo: null},
                 { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
+                { type: 'select', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
                 { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-                { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
-                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
+                { type: 'datePicker', value: this.formatDate(new Date()) , size: 200, combo: null},
+                { type: 'select', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
                 { type: 'checkbox', value: validacion, size: 80 , combo: null},
                 { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
                 { type: 'invisible', value:  '' , size: 0, combo: null},
@@ -1680,8 +1691,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                 { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
             }
   
-              if(!this.isLetrado || (this.isLetrado && newArrayCells[8].value != true && this.turnoAllow == "1")){
-                let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
+            const newAllow = rowGroup.rows[0].cells[40].value;
+            if(!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")){
+              let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
                 rowGroup.rows.push(newRow);
                 this.newActuacionesArr.push(newRow);
               }else{
@@ -1957,6 +1969,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+            console.log(actuacion)
             sessionStorage.setItem("actuacionDesignaJE", JSON.stringify(actuacion));
             this.router.navigate(['/fichaActDesigna']);
           }
