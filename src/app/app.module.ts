@@ -888,6 +888,7 @@ import { FichaExpExeaDocumentacionComponent } from './features/expedientes-exea/
 import { FichaExpExeaHistoricoComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-historico/ficha-exp-exea-historico.component';
 import { TablaFacturasSeleccionadasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas-seleccionadas/tabla-facturas-seleccionadas.component';
 import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-seleccionadas/tabla-abonos-seleccionadas.component';
+import { FichaEnvioCamComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-envio-cam/ficha-envio-cam.component';
 
 @NgModule({
 	declarations: [
@@ -1892,6 +1893,7 @@ import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJ
 		DeudorFacturasComponent,
 		FacturacionFacturasComponent,
 		FacturacionesYPagosComponent,
+		FichaEnvioCamComponent,
 		FiltroBusquedaFacturacionComponent,
 		TablaBusquedaFacturacionComponent,
 		GestionFacturacionComponent,
