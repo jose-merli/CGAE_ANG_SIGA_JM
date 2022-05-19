@@ -239,7 +239,7 @@ export class FichaEnvioCamComponent implements OnInit {
   }
 
 
-  cerrarEnviar(event) {
+  cerrarEnviar() {
 
       this.progressSpinner = true;
 
