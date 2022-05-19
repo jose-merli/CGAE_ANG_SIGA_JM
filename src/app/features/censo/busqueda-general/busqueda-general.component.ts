@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'
 import { esCalendar } from '../../../utils/calendar';
 import { SigaServices } from '../../../_services/siga.service';
 import { TranslateService } from '../../../commons/translate/translation.service';
-import { Router } from '@angular/router';
+import { Router, RoutesRecognized } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { ComboItem } from '../../../models/ComboItem';
 import { DatePipe, Location } from '@angular/common';
@@ -102,7 +102,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
   migaPan2: string = '';
   menuProcede: string = '';
   dosMigas: boolean = false;
-
   fichasPosibles = [
     {
       key: 'generales',
@@ -162,8 +161,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
     this.currentRoute = this.router.url;
     this.getMigaPan();
     this.getInstitucion();
-
-
 
     if (sessionStorage.getItem("vuelveForm") != undefined)
       if (sessionStorage.getItem("vuelveForm") == "false") {
@@ -1179,6 +1176,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     }
   }
 
+
   noDataFoundWithDNI() {
     let mess = '';
     if (this.persona == 'f') {
@@ -1186,7 +1184,6 @@ export class BusquedaGeneralComponent implements OnDestroy {
     } else {
       mess = 'No existe ningun elemento con el CIF seleccionado, ¿Desea crear un elemento?';
     }
-
     let icon = 'fa fa-edit';
 
     if (sessionStorage.getItem('nuevaSancion') == undefined) {
@@ -1194,8 +1191,13 @@ export class BusquedaGeneralComponent implements OnDestroy {
         message: mess,
         icon: icon,
         accept: () => {
+          
           let enviar = new SolicitudIncorporacionItem();
-          if (sessionStorage.getItem('nuevoNoColegiadoGen') == 'true') {
+          if (sessionStorage.getItem('nuevoNoColegiadoGen') == 'true' || sessionStorage.getItem("busquedaColegiadoDesigna") == 'true') {
+            if(sessionStorage.getItem("busquedaColegiadoDesigna") ){
+              sessionStorage.removeItem('busquedaColegiadoDesigna')
+              sessionStorage.setItem("nuevoNoColegiadoDesigna",'true') 
+          }
             sessionStorage.setItem('nuevoNoColegiado', JSON.stringify(enviar));
             sessionStorage.setItem('esColegiado', 'false');
             sessionStorage.setItem('esNuevoNoColegiado', 'true');

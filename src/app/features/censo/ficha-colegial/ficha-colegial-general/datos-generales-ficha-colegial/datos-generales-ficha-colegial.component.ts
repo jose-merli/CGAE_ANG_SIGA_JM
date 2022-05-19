@@ -20,6 +20,7 @@ import { esCalendar, catCalendar, euCalendar, glCalendar } from '../../../../../
 import { MultiSelect } from 'primeng/multiselect';
 import { StringObject } from "../../../../../models/StringObject";
 import { RevisionAutLetradoItem } from '../../../../../models/RevisionAutLetradoItem';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-datos-generales-ficha-colegial',
   templateUrl: './datos-generales-ficha-colegial.component.html',
@@ -197,6 +198,7 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
     private translateService: TranslateService,
     private confirmationService: ConfirmationService,
     private sanitizer: DomSanitizer,
+    private router: Router,
 
   ) { }
 
@@ -907,6 +909,9 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
             }
           },
           () => {
+
+            
+
             this.bodyDirecciones = new DatosDireccionesItem();
             this.bodyDatosBancarios = new DatosBancariosItem();
             sessionStorage.setItem("esNuevoNoColegiado", "false");
@@ -966,6 +971,12 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
                 },
               ];
               this.datosTarjetaResumenEmit.emit(this.datosTarjetaResumen);
+            }
+
+            if(sessionStorage.getItem('nuevoNoColegiadoDesigna')){
+              sessionStorage.removeItem('nuevoNoColegiadoDesigna')
+              sessionStorage.setItem("colegiadoGeneralDesignaNuevo", JSON.stringify(this.generalBody));
+              this.router.navigate(['/fichaDesignaciones']);
             }
           }
         );

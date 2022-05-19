@@ -223,7 +223,21 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[1].disable = true;
       this.inputs[2].disable = true;
 
-    } else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
+    } else if (sessionStorage.getItem("colegiadoGeneralDesignaNuevo")) {
+      let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesignaNuevo"));
+      this.inputs[1].value = colegiadoGeneral.apellidos1 + " "+ colegiadoGeneral.apellidos2;
+      this.inputs[2].value = colegiadoGeneral.nombre;
+      this.inputs[0].disable = true;
+      this.inputs[1].disable = true;
+      this.inputs[2].disable = true;
+      this.nif = colegiadoGeneral.nif;
+      this.nombreColegiado = colegiadoGeneral.nombre;
+      this.apellido1Colegiado = colegiadoGeneral.apellidos1
+      this.apellido2Colegiado = colegiadoGeneral.apellidos2;
+      this.institucionColegiado = this.campos.idInstitucion
+      sessionStorage.removeItem("colegiadoGeneralDesignaNuevo");
+    }
+      else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
       if(this.campos.idInstitucion == colegiadoGeneral[0].numeroInstitucion){
         this.inputs[0].value = colegiadoGeneral[0].numeroColegiado;
@@ -676,6 +690,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   searchColegiado() {
     sessionStorage.removeItem("datosGeneralesDesigna");
     sessionStorage.setItem("Art27Activo", "true");
+    sessionStorage.setItem("busquedaColegiadoDesigna", "true");
     sessionStorage.setItem("datosGeneralesDesigna", JSON.stringify([Number(this.selectores[0].value), Number(this.selectores[1].value), this.checkArt]));
     let datosDesigna = new DesignaItem();
     datosDesigna.idTurno = Number(this.selectores[0].value);
