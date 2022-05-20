@@ -27,7 +27,7 @@ export class SOJComponent implements OnInit {
 
       this.url = this.oldSigaServices.getOldSigaUrl('soj');
 
-      sessionStorage.removeItem('reload');
+      /*sessionStorage.removeItem('reload');
       sessionStorage.setItem('reload', 'no');
       setTimeout(() => {
         this.url = JSON.parse(sessionStorage.getItem('url'));
