@@ -426,7 +426,13 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
           } else {
             this.getCertificacion(res.id);
             this.getListaEstadosEvent(res.id);
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            if(res.error.code == "3"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"),this.translateService.instant("messages.certificacion.info.noValidada"));
+            }else{
+              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            }
+          
+          
           }
         },
         err => {

@@ -318,7 +318,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     //Guardar
     if (detail == "Guardar") {
       designaUpdate.estado = "";
-      let validaNIG = true;
       let validaProcedimiento = true;
       designaUpdate.nig = this.inputs[0].value;
       designaUpdate.numProcedimiento = this.inputs[1].value;
@@ -364,13 +363,13 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         validaProcedimiento = this.validarNProcedimiento(designaUpdate.numProcedimiento);
       }
 
-      if (validaNIG == true && validaProcedimiento == true) {
+      if ( validaProcedimiento != false) {
         designaUpdate.fechaAnulacion = new Date();
         this.checkDesignaJuzgadoProcedimiento(designaUpdate);
       } else {
         this.progressSpinner = false;
         let severity = "error";
-        let summary = "No se ha podido guardar el detalle de la designación";
+        let summary = this.translateService.instant('justiciaGratuita.oficio.designa.numProcedimientoNoValido');;
         let detail = "";
         this.msgs.push({
           severity,
