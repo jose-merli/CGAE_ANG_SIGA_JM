@@ -250,7 +250,7 @@ export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
   }
 
   onClickEnlace(asistencia : TarjetaAsistenciaItem){
-      sessionStorage.setItem("filtroAsistencia",JSON.stringify(this.filtro));
+      sessionStorage.setItem("filtroAsistencia",JSON.stringify(asistencia));
       sessionStorage.setItem("modoBusqueda","a");
       sessionStorage.setItem("idAsistencia",asistencia.anio+"/"+asistencia.numero);
       this.router.navigate(["/fichaAsistencia"]);
