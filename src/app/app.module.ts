@@ -889,6 +889,7 @@ import { FichaExpExeaHistoricoComponent } from './features/expedientes-exea/fich
 import { TablaFacturasSeleccionadasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas-seleccionadas/tabla-facturas-seleccionadas.component';
 import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-seleccionadas/tabla-abonos-seleccionadas.component';
 import { FichaEnvioCamComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-envio-cam/ficha-envio-cam.component';
+import { DetalleSOJComponent } from './features/sjcs/soj/detalle-soj/detalle-soj.component';
 
 @NgModule({
 	declarations: [
@@ -1059,7 +1060,7 @@ import { FichaEnvioCamComponent } from './features/sjcs/facturacionSJCS/certific
 		ResultadoAsistenciaExpresComponent,
 		VolanteExpresComponent,
 		SOJComponent,
-
+		DetalleSOJComponent,
 		//Guardia Colegiado
 		GuardiaColegiadoComponent,
 		GestionGuardiaColegiadoComponent,
@@ -1540,26 +1541,7 @@ import { FichaEnvioCamComponent } from './features/sjcs/facturacionSJCS/certific
 		GuardiasSaltosCompensacionesComponent,
 		DefinirListasGuardiasComponent,
 		GuardiasAsistenciasComponent,
-
-
-
-
 		VolanteExpresComponent,
-		SOJComponent,
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		//EJG
 		// EJGComponent,
 		FiltrosEjgComponent,

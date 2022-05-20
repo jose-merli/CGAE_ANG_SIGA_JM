@@ -494,7 +494,7 @@ export class RelacionesComponent implements OnInit {
         sessionStorage.removeItem("reload");
         sessionStorage.setItem("reload", "si");
 
-        this.router.navigate(['/soj']);
+        this.router.navigate(['/detalle-soj']);
         break;
       case 'DESIGNACIÓN':
         let desItem: any = new DesignaItem();
