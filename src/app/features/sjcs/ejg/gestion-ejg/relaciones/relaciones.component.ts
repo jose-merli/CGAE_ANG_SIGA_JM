@@ -159,7 +159,7 @@ export class RelacionesComponent implements OnInit {
           //     break;
           // }
           //relacion.idsjcs = "D"+relacion.anio+"/"+relacion.codigo;
-          if(relacion.sjcs == 'DESIGNACIÓN' && resumen == false){
+          if (relacion.sjcs == 'DESIGNACIÓN' && resumen == false) {
             resumen = true;
             this.actLetradoDesignado.emit(relacion.letrado);
           }
@@ -463,25 +463,23 @@ export class RelacionesComponent implements OnInit {
 
     switch (identificador) {
       case 'ASISTENCIA':
-        /**
-         * TODO: enlazar una vez este creada la pagina.
-         */
-
-        this.router.navigate(['/rutaSinDefinir']);
+        sessionStorage.setItem("idAsistencia",dato.anio+"/"+dato.numero);
+        sessionStorage.setItem("vieneDeFichaDesigna", "true");
+        this.router.navigate(["/fichaAsistencia"]);
 
         break;
       case 'SOJ':
 
-        
+
 
         let us = this.oldSigaServices.getOldSigaUrl('detalleSOJ');
         //us +='&granotmp=1630574876868&numeroSOJ=922&IDTIPOSOJ=2&ANIO=2018&idPersonaJG=552608&idInstitucionJG=2005&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ&NUMERO=922&anioSOJ=2018&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=2005&idTipoSOJ=2&idInstitucionSOJ=2005&accionE=editar';
 
-        us +='&granotmp=1630574876868&numeroSOJ' + dato.numero + "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
-        this.sigaStorageService.institucionActual + "&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ" +
-        "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
-        "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";
-      
+        us += '&granotmp=1630574876868&numeroSOJ' + dato.numero + "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
+          this.sigaStorageService.institucionActual + "&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ" +
+          "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
+          "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";
+
 
         /*let us = undefined;
         us = this.sigaServices.getOldSigaUrl() + "JGR_PestanaSOJDatosGenerales.do?numeroSOJ=" + dato.numero +
@@ -513,29 +511,29 @@ export class RelacionesComponent implements OnInit {
         desItem.nombreColegiado = dato.letrado;
         desItem.ano = 'D' + desItem.ano + '/' + desItem.codigo;
         let request = [desItem.ano, desItem.idTurno, desItem.numero];
-            this.sigaServices.post("designaciones_busquedaDesignacionActual", request).subscribe(
-              data => {
-                let datos = JSON.parse(data.body);
-                //Se cambia el valor del campo ano para que se procese de forma adecuada 
-                //En la ficha en las distintas tarjetas para obtener sus valores
-                //
-                datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
-                datos.fechaEntradaInicio = desItem.fechaEntradaInicio;
-                datos.nombreColegiado = desItem.nombreColegiado;
-                datos.nombreProcedimiento = desItem.nombreProcedimiento;
-                datos.nombreTurno = desItem.nombreTurno;
-                datos.idInstitucion = desItem.idInstitucion;
-                datos.idTurno = desItem.idTurno;
-                desItem = datos;
-                desItem.anio = desItem.ano;
-                desItem.idProcedimiento = desItem.idProcedimiento;
-                desItem.numProcedimiento = desItem.numProcedimiento;
-                desItem.ano = 'D' + desItem.anio + '/' + desItem.codigo;
-                if (this.art27) sessionStorage.setItem("Art27", "true");
-                sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
-                sessionStorage.setItem("nuevaDesigna", "false");
-                this.router.navigate(['/fichaDesignaciones']);
-                      });
+        this.sigaServices.post("designaciones_busquedaDesignacionActual", request).subscribe(
+          data => {
+            let datos = JSON.parse(data.body);
+            //Se cambia el valor del campo ano para que se procese de forma adecuada 
+            //En la ficha en las distintas tarjetas para obtener sus valores
+            //
+            datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
+            datos.fechaEntradaInicio = desItem.fechaEntradaInicio;
+            datos.nombreColegiado = desItem.nombreColegiado;
+            datos.nombreProcedimiento = desItem.nombreProcedimiento;
+            datos.nombreTurno = desItem.nombreTurno;
+            datos.idInstitucion = desItem.idInstitucion;
+            datos.idTurno = desItem.idTurno;
+            desItem = datos;
+            desItem.anio = desItem.ano;
+            desItem.idProcedimiento = desItem.idProcedimiento;
+            desItem.numProcedimiento = desItem.numProcedimiento;
+            desItem.ano = 'D' + desItem.anio + '/' + desItem.codigo;
+            if (this.art27) sessionStorage.setItem("Art27", "true");
+            sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
+            sessionStorage.setItem("nuevaDesigna", "false");
+            this.router.navigate(['/fichaDesignaciones']);
+          });
         break;
       /*case 'PRE-DESIGNACION':
 

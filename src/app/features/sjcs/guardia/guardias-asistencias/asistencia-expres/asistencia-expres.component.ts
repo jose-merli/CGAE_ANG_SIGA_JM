@@ -152,6 +152,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       sessionStorage.removeItem("filtroAsistencia");
       sessionStorage.removeItem("volver");
     }
+    
 
   }
   
@@ -793,6 +794,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     }
 
     buscarAE(){
+      this.progressSpinner = true;
       this.getComboComisariasOnly();
       this.getComboJuzgados();
       this.show = true;

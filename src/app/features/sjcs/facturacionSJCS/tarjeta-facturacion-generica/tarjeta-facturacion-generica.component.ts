@@ -215,7 +215,8 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
       return true;
     }
 
-    if (datosEntrada && datosEntrada.asistencia && Object.keys(datosEntrada.asistencia).length > 0 && !datosEntrada.isNew) {
+    //if (datosEntrada && datosEntrada.asistencia && Object.keys(datosEntrada.asistencia).length > 0 && !datosEntrada.isNew) {
+    if (!datosEntrada.asistencia && datosEntrada.isNew) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     }
 
@@ -348,16 +349,16 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         } else {
           if (resp.datosFacturacionAsuntoDTOList.length > 0) {
             resp.datosFacturacionAsuntoDTOList.forEach(el => {
-              if(el.datosPagoAsuntoDTOList != null){
+              if (el.datosPagoAsuntoDTOList != null) {
                 el.datosPagoAsuntoDTOList.forEach(pago => {
-                  if(pago.tipo == 'Pago'){
+                  if (pago.tipo == 'Pago') {
                     var importePago = Number(pago.importe);
                     var importeFacturacion = Number(el.importe);
-                    pago.nombre = pago.nombre + " - " + (100*importePago)/importeFacturacion +"%";
-                   }
+                    pago.nombre = pago.nombre + " - " + (100 * importePago) / importeFacturacion + "%";
+                  }
                 });
-               }
-              });
+              }
+            });
             this.datos = JSON.parse(JSON.stringify(resp.datosFacturacionAsuntoDTOList));
           }
           if (resp.datosMovimientoVarioDTO != null) {
@@ -367,10 +368,10 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
             } else {
               this.datos = JSON.parse(JSON.stringify(resp.datosMovimientoVarioDTO));
             }
-          }else{
-            this.hayMV=false;
+          } else {
+            this.hayMV = false;
           }
-          
+
           this.procesaDatos();
         }
 
@@ -414,7 +415,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
     await this.getMovimientoVarioPorId(rowData.idObjeto).then(
       (data: MovimientosVariosFacturacionDTO) => {
-        if(data.facturacionItem!=null && data.facturacionItem[0]!=null){
+        if (data.facturacionItem != null && data.facturacionItem[0] != null) {
           sessionStorage.setItem("datosEdicionMovimiento", JSON.stringify(rowData));
           this.router.navigate(["/fichaMovimientosVarios"]);
         }
@@ -550,7 +551,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         };
       }
 
-      sessionStorage.setItem("datosEntrada",JSON.stringify(this.datosEntrada));
+      sessionStorage.setItem("datosEntrada", JSON.stringify(this.datosEntrada));
       sessionStorage.setItem("datosNuevoMovimiento", JSON.stringify(datos));
       this.router.navigate(["/fichaMovimientosVarios"]);
 
@@ -621,7 +622,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.movimientosVarios.errorEliminarMov"));
       }
 
-      if(deleteList.length > 0){
+      if (deleteList.length > 0) {
         this.callDeleteService(deleteList);
       }
     }
@@ -661,7 +662,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
 
-    if(this.datosEntrada==undefined || this.datosEntrada == null){
+    if (this.datosEntrada == undefined || this.datosEntrada == null) {
       if (sessionStorage.getItem("datosEntrada")) {
         this.datosEntrada = JSON.parse(sessionStorage.getItem("datosEntrada"));
         sessionStorage.removeItem("datosEntrada");

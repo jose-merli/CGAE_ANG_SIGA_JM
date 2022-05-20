@@ -291,7 +291,6 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
     switch (identificador) {
       case 'A':
         this.progressSpinner = true;
-        
         sessionStorage.setItem("idAsistencia",dato.anio+"/"+dato.numero);
         sessionStorage.setItem("vieneDeFichaDesigna", "true");
         this.router.navigate(["/fichaAsistencia"]);
