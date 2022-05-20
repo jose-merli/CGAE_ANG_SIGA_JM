@@ -1009,28 +1009,17 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
   }
 
   setNumActuacionesModificadas(event){
-    if (event == true){
-      this.numActuacionesModificadas = Number(this.numActuacionesModificadas) + 1;
-    }else if (event == false){
-      this.numActuacionesModificadas = Number(this.numActuacionesModificadas) - Number(1);
-    }else{
-      this.numActuacionesModificadas = event;
-    }
+      this.numActuacionesModificadas = Number(event);
   }
 
   setnumDesignasModificadas(event){
-    if (event == true){
-      this.numDesignasModificadas = Number(this.numDesignasModificadas) + 1;
-    }else if (event == false){
-      this.numDesignasModificadas = Number(this.numDesignasModificadas) - Number(1);
-    }else{
-      this.numDesignasModificadas = event;
-    }
+    this.numDesignasModificadas = Number(event);
   }
 
   settotalActuaciones(event){
     this.totalActuaciones = this.totalActuaciones + event;
   }
+
   getrefreshData(event){
     if (event){
       this.cargaInicial();

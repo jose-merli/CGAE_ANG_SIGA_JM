@@ -73,6 +73,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   childNumber = 0 ;
   newActuacionesArr: Row[] = [];
   rowIdsToUpdate = [];
+  indicesToUpdate: [string, string][] = [];
   numperPage = 10;
   from = 0;
   to = 10;
@@ -418,27 +419,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   fillFecha(event, cell, rowId, row, rowGroup, padre, index) {
-    if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
-      if (this.lastChange == "fillFecha"){
-        this.sumar = !this.sumar;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
-    }else{
-      this.sumar = true;
-      if (padre){
-        this.lastChangePadre = rowId;
-        this.numDesignasModificadas.emit(this.sumar);
-      }else{
-        this.lastChangeHijo = index;
-        this.numActuacionesModificadas.emit(this.sumar);
-      }
-    }
+
     this.rowValidadas = [];
     if (row == undefined){
       //designacion
@@ -449,18 +430,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.refreshData.emit(true);
         }else{
           cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-          if (this.sumar){
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
             this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
           }
         }
       }else if(this.pantalla == 'JE'){
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-        if (this.sumar){
-          this.rowIdsToUpdate.push(rowId);
-        }else{
-          this.rowIdsToUpdate = []; //limpiamos
+        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+          this.indicesToUpdate.push([rowId, index]);
         }
       }else{
         cell.value = event;
@@ -469,14 +446,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true/* && this.turnoAllow != "1" */) || (!this.isLetrado)){
+      if((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)){
         if (row.cells[8].value != true){
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-        if (this.sumar){
-          this.rowIdsToUpdate.push(rowId);
-        }else{
-          this.rowIdsToUpdate = []; //limpiamos
+        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+          this.indicesToUpdate.push([rowId, index]);
         }
+
         } else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
@@ -489,6 +465,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       cell.value = event;
       this.rowIdsToUpdate.push(rowId);
     }
+
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
 
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "fillFecha";
@@ -576,27 +555,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.lastChange = "checkBoxDateChange";
   }
   checkBoxChange(event, rowId, cell, row, rowGroup, padre, index){
-    if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
-      if (this.lastChange == "checkBoxChange"){
-        this.sumar = !this.sumar;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
-    }else{
-      this.sumar = true;
-      if (padre){
-        this.lastChangePadre = rowId;
-        this.numDesignasModificadas.emit(this.sumar);
-      }else{
-        this.lastChangeHijo = index;
-        this.numActuacionesModificadas.emit(this.sumar);
-      }
-    }
+
     this.rowValidadas = [];
     if (row == undefined){
       //designacion
@@ -604,20 +563,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
         }else{
-          if (this.sumar){
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
             this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
           }
           if (cell != undefined){
             cell.value[0] = event;
           }
         }
       }else{
-        if (this.sumar){
+        if (this.rowIdsToUpdate.indexOf(rowId) == -1){
           this.rowIdsToUpdate.push(rowId);
-        }else{
-          this.rowIdsToUpdate = []; //limpiamos
         }
           if (cell != undefined){
             cell.value[0] = event;
@@ -628,10 +583,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
         if (row.cells[8].value  != true){
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
           }
           if (cell != undefined){
             cell.value[0] = event;
@@ -646,6 +599,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     }
 
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "checkBoxChange";
   }
@@ -655,27 +611,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       cell.value = !cell.value;
       this.showMsg('error', "No puede desvalidar actuaciones facturadas", '')
     }else{
-      if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
-        if (this.lastChange == "checkBoxChange2"){
-          this.sumar = !this.sumar;
-          if (padre){
-            this.lastChangePadre = rowId;
-            this.numDesignasModificadas.emit(this.sumar);
-          }else{
-            this.lastChangeHijo = index;
-            this.numActuacionesModificadas.emit(this.sumar);
-          }
-        }
-      }else{
-        this.sumar = true;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
       this.rowValidadas = [];
       if (row == undefined){
         //designacion
@@ -684,40 +619,22 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             cell.value = !cell.value;
             this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
           }else{
-            if (this.sumar){
-              this.rowIdsToUpdate.push(rowId);
-            }else{
-              this.rowIdsToUpdate = []; //limpiamos
-            }
-            if (cell != undefined){
-              cell.value = !cell.value;
-            }
-          }
-        }else{
-          if (this.sumar){
+            if (this.rowIdsToUpdate.indexOf(rowId) == -1){
             this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+            }
           }
-            /*if (cell != undefined){
-              cell.value = !cell.value;
-            }*/
+          } else {
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+            this.rowIdsToUpdate.push(rowId);
+          }
         }
       }else{
         //actuacion
         this.turnoAllow = rowGroup.rows[0].cells[39].value;
         if((this.isLetrado && this.turnoAllow != 1) || (!this.isLetrado)){
-          /*if (row.cells[8].value  == true){*/
-            if (this.sumar){
-              this.rowIdsToUpdate.push(rowId);
-            }else{
-              this.rowIdsToUpdate = []; //limpiamos
-            }
-            /*
-            if (cell != undefined){
-              cell.value = !cell.value;
-            }
-            */
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
+          }
           /*}else{
             this.rowValidadas.push(row);
             cell.value = !cell.value;
@@ -729,6 +646,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.refreshData.emit(true);
         }
       }
+
+      this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+      this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
 
       sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
       this.lastChange = "checkBoxChange2";
@@ -753,45 +673,20 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   changeSelect(event, cell, rowId, row, rowGroup, padre, index){
-    console.log(row, cell, rowId, rowGroup, padre, index)
-    if ((this.lastChangePadre == rowId && padre) || ( this.lastChangeHijo == index && !padre)){
-      if (this.lastChange == "changeSelect"){
-        this.sumar = !this.sumar;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
-    }else{
-      this.sumar = true;
-      if (padre){
-        this.lastChangePadre = rowId;
-        this.numDesignasModificadas.emit(this.sumar);
-      }else{
-        this.lastChangeHijo = index;
-        this.numActuacionesModificadas.emit(this.sumar);
-      }
-    }
     if (row == undefined){
       //designacion
       if(this.isLetrado){
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
+          this.refreshData.emit(true);
         }else{
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+          this.rowIdsToUpdate.push(rowId);
           }
         }
-      }else{
-        if (this.sumar){
+        } else {
+        if (this.rowIdsToUpdate.indexOf(rowId) == -1){
           this.rowIdsToUpdate.push(rowId);
-        }else{
-          this.rowIdsToUpdate = []; //limpiamos
         }
       }
     }else if(this.pantalla == 'JE'){
@@ -800,14 +695,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       const isNew = !Array.isArray(row.cells[8].value);
       if((this.isLetrado && this.turnoAllow != "1") || (!this.isLetrado)){
         if (isNew || !isNew && row.cells[8].value != true){
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
           }
         }else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+          this.refreshData.emit(true);
         }
       }else{
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
@@ -816,63 +710,45 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else{
       this.rowIdsToUpdate.push(rowId);
     }
+
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "changeSelect";
   }
 
   inputChange(event, rowId, row, rowGroup, padre, index){
-    if ((this.lastChangePadre == rowId && padre) || ( this.lastChangeHijo == index && !padre)){
-      if (this.lastChange == "inputChange"){
-        this.sumar = !this.sumar;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
-    }else{
-      this.sumar = true;
-      if (padre){
-        this.lastChangePadre = rowId;
-        this.numDesignasModificadas.emit(this.sumar);
-      }else{
-        this.lastChangeHijo = index;
-        this.numActuacionesModificadas.emit(this.sumar);
-      }
-    }
+
     this.rowValidadas = [];
     if (row == undefined){
       //designacion
       if(this.isLetrado){
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
+          this.refreshData.emit(true);
         }else{
-          if (this.sumar){
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
             this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
           }
         }
       }else{
-      
+        if (this.rowIdsToUpdate.indexOf(rowId) == -1){
           this.rowIdsToUpdate.push(rowId);
-     
+        }
       }
     }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
+      if((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)){
         if (row.cells[8].value  != true){
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
           }
         } else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+          this.refreshData.emit(true);
         }
       }else{
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
@@ -881,6 +757,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else{
       this.rowIdsToUpdate.push(rowId);
     }
+
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "inputChange";
   }
@@ -1404,24 +1284,25 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
     this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
     this.rowGroups.forEach(row => {
-      if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0){
+      if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0 || this.indicesToUpdate.some(d => d[0] == row.id.toString())){
         let rowGroupToUpdate = row;
-        actuaciones = row.rows.slice(1, row.rows.length - 1);
+        actuaciones = row.rows.filter(d => Array.isArray(d[0]) && d[0].length > 1 && d[0][1] != 'Nuevo');
           this.rowValidadas.forEach(rowValid => {
             if (rowGroupToUpdate.rows.includes(rowValid)){
             }
           })
           this.rowValidadas = [];
-        
-
 
         this.dataToUpdateArr.push(row);
       }
     })
     if (this.dataToUpdateArr.length != 0){
-    this.dataToUpdate.emit(this.dataToUpdateArr);
-    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
-    this.numActuacionesModificadas.emit(actuaciones.length);
+      this.dataToUpdate.emit(this.dataToUpdateArr);
+
+      this.rowIdsToUpdate = [];
+      this.indicesToUpdate = [];
+      this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+      this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
     }
 
 
