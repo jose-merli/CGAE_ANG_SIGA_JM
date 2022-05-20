@@ -398,6 +398,13 @@ export class EdicionModulosComponent implements OnInit {
       }
     );
 
+    if (this.modulosItem.fechadesdevigor != undefined) {
+      this.modulosItem.fechadesdevigor = new Date(this.modulosItem.fechadesdevigor);
+    }
+    
+    if (this.modulosItem.fechahastavigor != undefined) {
+      this.modulosItem.fechahastavigor = new Date(this.modulosItem.fechahastavigor);
+    }
   }
 
   clear() {
