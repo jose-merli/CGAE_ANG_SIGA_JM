@@ -116,6 +116,14 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
     this.tabla.reset();
   }
 
+  disabledSubirFichero(){
+    if(this.esCAM &&  ["7"].includes(this.certificacion.idEstadoCertificacion)){
+      return false
+    }
+    return true;
+  }
+
+
   getListEstados(idCertificacion: string) {
     if (idCertificacion && idCertificacion != null && idCertificacion.trim().length > 0) {
       this.getListaEstadosEvent.emit(idCertificacion);

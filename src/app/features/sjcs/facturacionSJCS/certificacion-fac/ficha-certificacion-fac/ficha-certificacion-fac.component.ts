@@ -536,6 +536,9 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
   }
 
   descargar(event: boolean) {
+    if(this.esXunta){
+      this.XuntaDescargar()
+    }else{
     let url = "certificaciones_descargaGeneral"
    // if(this.esXunta) url = "certificaciones_descargarCertificacionesXunta";
 
@@ -578,6 +581,7 @@ export class FichaCertificacionFacComponent implements OnInit, AfterViewChecked 
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacionSJCS.certificaciones.error.asociar.facturaciones"));
     }
+  }
   }
 
   descargarLogReintegrosXunta(event) {
