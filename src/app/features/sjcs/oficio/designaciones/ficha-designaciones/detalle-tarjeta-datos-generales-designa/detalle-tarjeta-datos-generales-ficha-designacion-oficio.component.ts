@@ -225,7 +225,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
     } else if (sessionStorage.getItem("colegiadoGeneralDesignaNuevo")) {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesignaNuevo"));
-      this.inputs[1].value = colegiadoGeneral.apellidos1 + " "+ colegiadoGeneral.apellidos2;
+      this.inputs[1].value = colegiadoGeneral.apellidos1 
+
+      if(colegiadoGeneral.apellidos2 != null){
+        this.apellido2Colegiado = colegiadoGeneral.apellidos2; 
+        this.inputs[1].value = colegiadoGeneral.apellidos1 + " "+ colegiadoGeneral.apellidos2;
+      }else{
+        this.inputs[1].value = colegiadoGeneral.apellidos1
+      }
       this.inputs[2].value = colegiadoGeneral.nombre;
       this.inputs[0].disable = true;
       this.inputs[1].disable = true;
@@ -233,7 +240,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.nif = colegiadoGeneral.nif;
       this.nombreColegiado = colegiadoGeneral.nombre;
       this.apellido1Colegiado = colegiadoGeneral.apellidos1
-      this.apellido2Colegiado = colegiadoGeneral.apellidos2;
       this.institucionColegiado = this.campos.idInstitucion
       sessionStorage.removeItem("colegiadoGeneralDesignaNuevo");
     }
