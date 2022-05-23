@@ -101,7 +101,10 @@ export class TablaResultadoMixComponent implements OnInit {
   last;
   entra = false;
   comboTurnos = [];
-
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
 
   @Input() firstColumn: number = 0;
   @Input() lastColumn: number = 10;
@@ -132,7 +135,7 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.currentRoute = this.router.url;
     //console.log('AÑADIR DATA TO DUPLICATE: ', this.dataToDuplicate)
 //console.log('this.rowGroups: tabla ', this.rowGroups)
 //console.log("VALOR DE MI INPUT: ",this.inscripciones)
@@ -1337,6 +1340,68 @@ export class TablaResultadoMixComponent implements OnInit {
         'datos': this.infoParaElPadre}
       this.resultado.emit(this.jsonParaEnviar);  
     }
+  }
+
+  navigateComunicar(dato) {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.selectedArray.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (element[key.nombre.toLowerCase()] != undefined) {
+                      keysValues.push(element[key.nombre.toLowerCase()]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
   }
 }
 

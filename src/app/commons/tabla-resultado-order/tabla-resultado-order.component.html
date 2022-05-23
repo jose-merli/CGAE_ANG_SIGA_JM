@@ -90,7 +90,7 @@
             <button [disabled]="(!anySelectedBol && !isLetrado)  || isLetrado" *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="" iconPos="left" label="Marcar último"
                   (click)="moveToLast(); showMsg('success', 'Se ha marcado el último correctamente', '')"></button>
             <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar" [disabled]="isLetrado"
-                  (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
+                (click)="navigateComunicar(selectedArray)"></button>
             <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
                   (click)="restablecer()" [disabled]="!permisosEscritura || isLetrado"></button>
             <button *ngIf="listaGuardias" [disabled]="(!anySelectedBol  || !permisosEscritura)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Eliminar"

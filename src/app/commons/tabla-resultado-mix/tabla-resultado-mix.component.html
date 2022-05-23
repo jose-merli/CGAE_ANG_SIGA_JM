@@ -156,6 +156,9 @@
           (click)="denegar()"></button>
         <button *ngIf='inscripciones' pButton type="button" label="Solicitar Baja" [disabled]="habilitadoSolicitarBaja"
           (click)="solicitarBaja()"></button>
+        <button *ngIf="selectedArray && selectedArray.length > 0" (click)="navigateComunicar(selectedArray)"
+            pButton type="button" icon="fa fa-comment" iconPos="left"
+            label="{{'general.boton.comunicar' | translate }}"></button>
         <button *ngIf='inscripciones' pButton type="button" label="Cambiar Fecha" [disabled]="habilitadoCambiarFecha"
           (click)="cambiarFecha()"></button>
 
