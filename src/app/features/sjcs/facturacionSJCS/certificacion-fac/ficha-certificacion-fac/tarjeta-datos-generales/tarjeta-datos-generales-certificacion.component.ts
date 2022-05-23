@@ -139,7 +139,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
         respuesta = false;
       }
 
-      if (this.esCAM && ["4","6","3"].includes(this.certificacion.idEstadoCertificacion)) {
+      if (this.esCAM && ["7","6","3"].includes(this.certificacion.idEstadoCertificacion)) {
         respuesta = false;
       }
       
