@@ -51,7 +51,7 @@ export class EdicionModulosComponent implements OnInit {
         this.modulosItem.fechahastavigor = undefined;
       }
       if (this.modulosItem.idjurisdiccion != undefined) {
-        this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idJurisdiccion=" + this.modulosItem.idjurisdiccion).subscribe(
+        this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + this.modulosItem.idProcedimiento).subscribe(
           n => {
             this.procedimientos = n.combooItems;
             /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
@@ -167,7 +167,7 @@ export class EdicionModulosComponent implements OnInit {
 
   getProcedimientos(id) {
 
-    this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idJurisdiccion=" + id).subscribe(
+    this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + this.modulosItem.idProcedimiento).subscribe(
       n => {
         this.procedimientos = n.combooItems;
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
@@ -398,6 +398,13 @@ export class EdicionModulosComponent implements OnInit {
       }
     );
 
+    if (this.modulosItem.fechadesdevigor != undefined) {
+      this.modulosItem.fechadesdevigor = new Date(this.modulosItem.fechadesdevigor);
+    }
+    
+    if (this.modulosItem.fechahastavigor != undefined) {
+      this.modulosItem.fechahastavigor = new Date(this.modulosItem.fechahastavigor);
+    }
   }
 
   clear() {
