@@ -773,6 +773,7 @@ export class TablaInscripcionesComponent implements OnInit {
   }
 
   actualizaBotones(selectedDatos) {
+
     this.selectedDatos = selectedDatos;
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
@@ -791,22 +792,31 @@ export class TablaInscripcionesComponent implements OnInit {
       else {
         if (currentDateString != selectedDateString) {
           this.disabledSolicitarBaja = true;
+        } else {
+          this.disabledSolicitarBaja = false;
         }
-        this.disabledSolicitarBaja = false;
+
       }
       let findDato2 = this.selectedDatos.filter(this.esPendienteAltaOpendienteBaja);
       if (findDato2.length == 0) {
         this.disabledValidar = true;
+        this.disabledDenegar = true;
+        this.selectAll = false;
+        this.selectMultiple = false;
       } else {
-        this.validarDirecciones(selectedDatos[0].idpersona, findDato2);
+        this.disabledValidar = false;
+        this.disabledDenegar = false;
+        this.selectAll = true;
+        this.selectMultiple = true;
+        //this.validarDirecciones(selectedDatos[0].idpersona, findDato2);
       }
-
+      /*
       if (findDato2 != null) {
         this.disabledDenegar = true;
       }
       else {
         this.disabledDenegar = false;
-      }
+      }*/
       let findDato3 = this.selectedDatos.find(item => item.estado != "1" && item.estado != 2 && item.estado != "3");
       if (findDato3 != null) {
         this.disabledCambiarFecha = true;
@@ -823,6 +833,18 @@ export class TablaInscripcionesComponent implements OnInit {
           this.checkValidarInscripciones = true;
         }
       });
+    }
+
+  }
+
+  desactBotones(selectedDatos) {
+    if (selectedDatos.length == 0) {
+      this.selectMultiple = false;
+      this.selectAll = false;
+      this.disabledValidar = true;
+      this.checkValidarInscripciones = true;
+      this.disabledCambiarFecha = true;
+      this.disabledDenegar = true;
     }
 
   }
@@ -893,10 +915,10 @@ export class TablaInscripcionesComponent implements OnInit {
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de SJCS es 10
     sessionStorage.setItem("idModulo", '10');
-    
+
     this.getDatosComunicar();
   }
-  
+
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
       data => {
@@ -910,64 +932,64 @@ export class TablaInscripcionesComponent implements OnInit {
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {
-        let value1 = data1[event.field];
-        let value2 = data2[event.field];
-        let result = null;
+      let value1 = data1[event.field];
+      let value2 = data2[event.field];
+      let result = null;
 
-        if (value1!=null && value2!=null){
-          if(isNaN(parseInt(value1))){ //Checked for numeric
-            const dayA = value1.substr(0, 2) ;
-            const monthA = value1.substr(3, 2);
-            const yearA = value1.substr(6, 10);
-            //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
-            var dt=new Date(yearA, monthA, dayA);
-            if(!isNaN(dt.getTime())){ //Checked for date
-              result = this.compareDate(value1, value2);
-              return (event.order * result);
-            }
+      if (value1 != null && value2 != null) {
+        if (isNaN(parseInt(value1))) { //Checked for numeric
+          const dayA = value1.substr(0, 2);
+          const monthA = value1.substr(3, 2);
+          const yearA = value1.substr(6, 10);
+          //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+          var dt = new Date(yearA, monthA, dayA);
+          if (!isNaN(dt.getTime())) { //Checked for date
+            result = this.compareDate(value1, value2);
+            return (event.order * result);
           }
         }
+      }
 
-        if (value1 == null && value2 != null){
-            result = -1;
-        }else if (value1 != null && value2 == null){
-            result = 1;
-        }else if (value1 == null && value2 == null){
-            result = 0;
-        }else if (typeof value1 === 'string' && typeof value2 === 'string'){
-            result = value1.localeCompare(value2);
-        }else{
-            result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
-        }
-        return (event.order * result);
+      if (value1 == null && value2 != null) {
+        result = -1;
+      } else if (value1 != null && value2 == null) {
+        result = 1;
+      } else if (value1 == null && value2 == null) {
+        result = 0;
+      } else if (typeof value1 === 'string' && typeof value2 === 'string') {
+        result = value1.localeCompare(value2);
+      } else {
+        result = (value1 < value2) ? -1 : (value1 > value2) ? 1 : 0;
+      }
+      return (event.order * result);
     });
-}
-
-compareDate (fechaA:  any, fechaB:  any){
-
-  let dateA = null;
-  let dateB = null;
-  if (fechaA!=null){
-    const dayA = fechaA.substr(0, 2) ;
-    const monthA = fechaA.substr(3, 2);
-    const yearA = fechaA.substr(6, 10);
-    //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
-    dateA = new Date(yearA, monthA, dayA);
   }
 
-  if (fechaB!=null){
-    const dayB = fechaB.substr(0, 2) ;
-    const monthB = fechaB.substr(3, 2);
-    const yearB = fechaB.substr(6, 10);
-    //console.log("fecha b:"+ yearB+","+monthB+","+dayB);
-    dateB = new Date(yearB, monthB, dayB);
+  compareDate(fechaA: any, fechaB: any) {
+
+    let dateA = null;
+    let dateB = null;
+    if (fechaA != null) {
+      const dayA = fechaA.substr(0, 2);
+      const monthA = fechaA.substr(3, 2);
+      const yearA = fechaA.substr(6, 10);
+      //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+      dateA = new Date(yearA, monthA, dayA);
+    }
+
+    if (fechaB != null) {
+      const dayB = fechaB.substr(0, 2);
+      const monthB = fechaB.substr(3, 2);
+      const yearB = fechaB.substr(6, 10);
+      //console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+      dateB = new Date(yearB, monthB, dayB);
+    }
+
+
+    return (dateA < dateB ? -1 : 1);
+
+
   }
-
-
-  return (dateA < dateB ? -1 : 1);
-
-
-}
 
 
   getDatosComunicar() {
