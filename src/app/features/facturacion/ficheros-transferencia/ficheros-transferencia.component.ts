@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '../../../commons/translate';
+import { procesos_facturacionPyS } from '../../../permisos/procesos_facturacionPyS';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { FiltrosBusquedaTransferenciasComponent } from './filtros-busqueda-transferencias/filtros-busqueda-transferencias.component';
@@ -35,12 +36,21 @@ export class FicherosTransferenciaComponent implements OnInit {
 
   ngOnInit() {
     this.buscar = false;
-    this.permisoEscritura=true //cambiar cuando se implemente los permisos
+    this.permisosFicherosTransferencia() 
 
     if (this.activatedRoute.snapshot.queryParamMap.get('fcs')
         && this.activatedRoute.snapshot.queryParamMap.get('fcs') == '1') {
       this.fcs = true;
     }
+  }
+
+  permisosFicherosTransferencia(){
+    this.commonsService
+    .checkAcceso(procesos_facturacionPyS.ficheroTransferencia)
+    .then((respuesta) => {
+      this.permisoEscritura = respuesta;
+    })
+    .catch((error) => console.error(error));
   }
 
   buscarFicheros(event) {

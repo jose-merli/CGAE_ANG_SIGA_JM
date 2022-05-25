@@ -15,8 +15,7 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
   
   msgs: Message[] = [];
   progressSpinner: boolean = false;
-  permisoEscritura: boolean = true;
-
+  @Input() permisoEscritura;
   //Resultados de la busqueda
   @Input() datos: FicherosDevolucionesItem[];
   @Input() filtro;
@@ -40,10 +39,6 @@ export class TablaFicherosDevolucionesComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
-
     this.getCols();
   }
 

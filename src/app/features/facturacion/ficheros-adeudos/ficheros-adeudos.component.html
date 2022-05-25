@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-filtros-busqueda-adeudos (buscarFicherosAdeudos)="buscarFicherosAdeudos($event)" [permisoEscritura] = "this.permisoEscritura"></app-filtros-busqueda-adeudos>
-    <app-tabla-adeudos *ngIf="buscar" [filtro]="filtro" [datos]="datos"></app-tabla-adeudos>
+    <app-filtros-busqueda-adeudos (buscarFicherosAdeudos)="buscarFicherosAdeudos($event)" [permisoEscritura] = "permisoEscritura"></app-filtros-busqueda-adeudos>
+    <app-tabla-adeudos *ngIf="buscar" [filtro]="filtro" [datos]="datos" [permisoEscritura] = "permisoEscritura"></app-tabla-adeudos>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

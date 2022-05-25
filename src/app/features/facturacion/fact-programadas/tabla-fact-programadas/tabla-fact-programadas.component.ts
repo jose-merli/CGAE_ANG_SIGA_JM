@@ -80,7 +80,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   // Permiso del menú FIchero de Adeudos
   getPermisoFicheroAdeudos() {
     this.commonsService
-      .checkAcceso(procesos_facturacionPyS.disqueteCargos)
+      .checkAcceso(procesos_facturacionPyS.ficheroAdeudos)
       .then((respuesta) => {
         this.permisoDisqueteCargos = respuesta;
       })

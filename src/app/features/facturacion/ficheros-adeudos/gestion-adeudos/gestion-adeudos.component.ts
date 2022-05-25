@@ -4,6 +4,8 @@ import { TranslateService } from '../../../../commons/translate';
 import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
+import { procesos_facturacionPyS } from '../../../../permisos/procesos_facturacionPyS';
+import { CommonsService } from '../../../../_services/commons.service';
 
 @Component({
   selector: 'app-gestion-adeudos',
@@ -22,8 +24,8 @@ export class GestionAdeudosComponent implements OnInit {
   openTarjetaDatosGeneracion: boolean = true;
   openTarjetaFacturas: boolean = false;
 
-  permisoEscrituraDatosGeneracion:boolean = true; //cambiar con los permisos
-  permisoEscrituraFacturas: boolean = true; //cambiar con los permisos
+  permisoEscrituraDatosGeneracion:boolean = false;
+  permisoEscrituraFacturas: boolean = false; 
 
   permisos;
   nuevo;
@@ -37,11 +39,12 @@ export class GestionAdeudosComponent implements OnInit {
   constructor(private translateService: TranslateService,
     private location: Location,
     private persistenceService: PersistenceService,
-    private sigaServices: SigaServices) { }
+    private sigaServices: SigaServices,
+    private commonsService: CommonsService) { }
 
   async ngOnInit() {
     this.progressSpinner = true;
-
+    this.permisosFicheroAdeudos()
     if (sessionStorage.getItem("Nuevo")) {
       sessionStorage.removeItem("Nuevo");
       if (sessionStorage.getItem("FicherosAdeudosItem")) {
@@ -74,13 +77,23 @@ export class GestionAdeudosComponent implements OnInit {
         this.muestraFacturacion=true;
       }
     }
-
+    
     setTimeout(() => {
       this.updateEnlacesTarjetaResumen();
     }, 5);
 
     this.progressSpinner = false;
     this.goTop();
+  }
+
+  permisosFicheroAdeudos(){
+    this.commonsService
+    .checkAcceso(procesos_facturacionPyS.ficheroAdeudos)
+    .then((respuesta) => {
+      this.permisoEscrituraDatosGeneracion = respuesta;
+      this.permisoEscrituraFacturas = respuesta;
+    })
+    .catch((error) => console.error(error));
   }
 
   // Función para guardar o actualizar
