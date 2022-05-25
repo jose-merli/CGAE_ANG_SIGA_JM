@@ -41,17 +41,17 @@ export class EdicionModulosComponent implements OnInit {
     if (this.modulosItem != undefined) {
       this.modulosItem.importe = this.modulosItem.importe.replace(".", ",");
       if (this.modulosItem.fechadesdevigor != undefined) {
-        this.modulosItem.fechadesdevigor = this.transformaFecha(new Date(this.modulosItem.fechadesdevigor));
+        this.modulosItem.fechadesdevigor = this.transformaFecha(this.modulosItem.fechadesdevigor);
       } else {
         this.modulosItem.fechadesdevigor = undefined;
       }
       if (this.modulosItem.fechahastavigor != undefined) {
-        this.modulosItem.fechahastavigor = this.transformaFecha(new Date(this.modulosItem.fechahastavigor));
+        this.modulosItem.fechahastavigor = this.transformaFecha(this.modulosItem.fechahastavigor);
       } else {
         this.modulosItem.fechahastavigor = undefined;
       }
       if (this.modulosItem.idjurisdiccion != undefined) {
-        this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idJurisdiccion=" + this.modulosItem.idjurisdiccion).subscribe(
+        this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + this.modulosItem.idProcedimiento).subscribe(
           n => {
             this.procedimientos = n.combooItems;
             /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
@@ -167,7 +167,7 @@ export class EdicionModulosComponent implements OnInit {
 
   getProcedimientos(id) {
 
-    this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idJurisdiccion=" + id).subscribe(
+    this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + this.modulosItem.idProcedimiento).subscribe(
       n => {
         this.procedimientos = n.combooItems;
         /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
@@ -352,6 +352,15 @@ export class EdicionModulosComponent implements OnInit {
     if (this.modulosItem.observaciones != undefined) this.modulosItem.observaciones = this.modulosItem.observaciones.trim();
 
     this.modulosItem.importe = this.modulosItem.importe.replace(",", ".");
+    
+    if (this.modulosItem.fechadesdevigor != null) {
+      this.modulosItem.fechadesdevigor = this.modulosItem.fechadesdevigor.getTime() + 86400000;
+    }
+
+    if (this.modulosItem.fechahastavigor != null) {
+      this.modulosItem.fechahastavigor = this.modulosItem.fechahastavigor.getTime() + 86400000;
+    }
+    
     this.sigaServices.post(url, this.modulosItem).subscribe(
       data => {
         this.esComa = false;
@@ -389,6 +398,13 @@ export class EdicionModulosComponent implements OnInit {
       }
     );
 
+    if (this.modulosItem.fechadesdevigor != undefined) {
+      this.modulosItem.fechadesdevigor = new Date(this.modulosItem.fechadesdevigor);
+    }
+    
+    if (this.modulosItem.fechahastavigor != undefined) {
+      this.modulosItem.fechahastavigor = new Date(this.modulosItem.fechahastavigor);
+    }
   }
 
   clear() {
@@ -415,6 +431,12 @@ export class EdicionModulosComponent implements OnInit {
   fillFechaHastaCalendar(event) {
     this.modulosItem.fechahastavigor = event;
   }
+
+  formatDate(date) {
+		var parts = date.split("/");
+   		var formattedDate = new Date(parts[1] + "/" + parts[0] + "/" + parts[2]);
+   		return formattedDate;
+	}
 
   disabledSave() {
 

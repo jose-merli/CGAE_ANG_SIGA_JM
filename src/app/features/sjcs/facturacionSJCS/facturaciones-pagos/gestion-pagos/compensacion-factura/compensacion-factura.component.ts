@@ -183,33 +183,36 @@ export class CompensacionFacturaComponent implements OnInit, AfterViewInit {
   }
 
   marcar() {
-
-    if (this.paramDeducirCobroAutom.valor == '0' && !this.isPagoCerrado() && !this.isPagoEjecutando()) {
+    console.log(this.paramDeducirCobroAutom, this.idEstadoPago)
+    if (!this.isPagoCerrado() && !this.isPagoEjecutando()) {
       this.selectedDatos.forEach(el => {
         el.compensar = true;
       });
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
 
       let marcadas = this.compensaciones.filter(el => el.compensar);
       this.facturasMarcadasEvent.emit(marcadas);
+
+      
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
     }
 
   }
 
   desmarcar() {
 
-    if (this.paramDeducirCobroAutom.valor == '0' && !this.isPagoCerrado() && !this.isPagoEjecutando()) {
+    if (!this.isPagoCerrado() && !this.isPagoEjecutando()) {
       this.selectedDatos.forEach(el => {
         el.compensar = false;
       });
-      this.selectAll = false;
-      this.selectedDatos = [];
-      this.numSelected = 0;
 
       let marcadas = this.compensaciones.filter(el => el.compensar);
       this.facturasMarcadasEvent.emit(marcadas);
+
+      this.selectAll = false;
+      this.selectedDatos = [];
+      this.numSelected = 0;
     }
 
   }
@@ -219,7 +222,7 @@ export class CompensacionFacturaComponent implements OnInit, AfterViewInit {
   }
 
   isPagoEjecutando() {
-    return (this.idEstadoPago == '40');
+    return (this.idEstadoPago == '40' || this.idEstadoPago == '50');
   }
 
   ngAfterViewInit() {

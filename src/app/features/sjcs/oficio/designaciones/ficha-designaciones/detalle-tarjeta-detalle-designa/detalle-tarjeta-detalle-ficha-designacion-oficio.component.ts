@@ -318,7 +318,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     //Guardar
     if (detail == "Guardar") {
       designaUpdate.estado = "";
-      let validaNIG = true;
       let validaProcedimiento = true;
       designaUpdate.nig = this.inputs[0].value;
       designaUpdate.numProcedimiento = this.inputs[1].value;
@@ -364,13 +363,13 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         validaProcedimiento = this.validarNProcedimiento(designaUpdate.numProcedimiento);
       }
 
-      if (validaNIG == true && validaProcedimiento == true) {
+      if ( validaProcedimiento != false) {
         designaUpdate.fechaAnulacion = new Date();
         this.checkDesignaJuzgadoProcedimiento(designaUpdate);
       } else {
         this.progressSpinner = false;
         let severity = "error";
-        let summary = "No se ha podido guardar el detalle de la designación";
+        let summary = this.translateService.instant('justiciaGratuita.oficio.designa.numProcedimientoNoValido');;
         let detail = "";
         this.msgs.push({
           severity,
@@ -543,7 +542,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   getComboModulos() {
     this.progressSpinner = true;
-    this.sigaServices.getParam("combo_comboModulosDesignaciones","?fecha="+this.datosInicial.fechaEntradaInicio).subscribe(
+    console.log(this.datosInicial)
+
+    this.sigaServices.getParam("combo_comboModulosDesignaciones", this.buildParams({"numero": this.datosInicial.numero, 
+    "anio": this.datosInicial.anio, "idTurno": this.datosInicial.idTurno})).subscribe(
       n => {
         this.moduloOpciones = n.combooItems;
         if (this.campos.modulo != "") {
@@ -681,6 +683,21 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.progressSpinner = false;
       }
     );
+  }
+
+  buildParams(params: {}) {
+    let result = "?";
+    for (const item in params) {
+      if (params[item] != undefined) {
+        if (result.length > 1) {
+          result += `&${item}=${params[item]}`;
+        } else {
+          result += `${item}=${params[item]}`;
+        }
+      }
+    }
+
+    return result.length > 1 ? result : "";
   }
 
   getcCmboModulosConProcedimientos(idPretension,fecha) {

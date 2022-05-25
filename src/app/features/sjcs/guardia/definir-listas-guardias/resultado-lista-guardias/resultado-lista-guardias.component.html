@@ -2,7 +2,7 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
-<p-dataTable #table [value]="listas" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" loadingIcon="fa-spinner"
+<p-dataTable #table [value]="listas" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" loadingIcon="fa-spinner" sortField="nombre"
 class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="multiple" (onRowSelect)="onSelectRow($event.data)"
 (onRowUnselect)="actualizaSeleccionados()">
   <p-column field="tipoDesc" header="{{'facturacion.productos.tipo' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">

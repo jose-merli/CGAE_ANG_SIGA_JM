@@ -19,12 +19,12 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 })
 export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
 
-  msgs : Message [] = [];
+  msgs: Message[] = [];
   @Input() modoLectura: boolean;
-  @Input() asistencia : TarjetaAsistenciaItem;
-  @Input() editable : boolean;
+  @Input() asistencia: TarjetaAsistenciaItem;
+  @Input() editable: boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();
-  rows : number = 10;
+  rows: number = 10;
   rowsPerPage = [
     {
       label: 10,
@@ -44,37 +44,37 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
     }
   ];
   columnas = [];
-  seleccionMultiple : boolean = false;
-  seleccionarTodo : boolean = false;
-  progressSpinner : boolean = false;
-  numSeleccionado : number = 0;
-  selectedDatos : RelacionesItem [] = [];
-  relaciones : RelacionesItem [] = [];
-  disableDelete : boolean = true;
-  disableDesigna : boolean = false;
-  disableEJG : boolean = false;
+  seleccionMultiple: boolean = false;
+  seleccionarTodo: boolean = false;
+  progressSpinner: boolean = false;
+  numSeleccionado: number = 0;
+  selectedDatos: RelacionesItem[] = [];
+  relaciones: RelacionesItem[] = [];
+  disableDelete: boolean = true;
+  disableDesigna: boolean = false;
+  disableEJG: boolean = false;
   @ViewChild("table") table: DataTable;
-  constructor(private changeDetectorRef : ChangeDetectorRef,
-    private sigaServices : SigaServices,
-    private router : Router,
-    private confirmationService : ConfirmationService,
-    private translateService : TranslateService,
-    private datePipe : DatePipe,
-    private persistenceService : PersistenceService,
-    private commonsService : CommonsService) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices,
+    private router: Router,
+    private confirmationService: ConfirmationService,
+    private translateService: TranslateService,
+    private datePipe: DatePipe,
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   ngOnInit() {
-console.log('modoLectura RELACIONES: ', this.modoLectura)
+    console.log('modoLectura RELACIONES: ', this.modoLectura)
     this.getRelaciones();
 
   }
 
-  getRelaciones(){
+  getRelaciones() {
 
-    if(this.asistencia){
+    if (this.asistencia) {
 
       this.progressSpinner = true;
-      this.sigaServices.getParam("busquedaGuardias_searchRelaciones","?anioNumero="+this.asistencia.anioNumero).subscribe(
+      this.sigaServices.getParam("busquedaGuardias_searchRelaciones", "?anioNumero=" + this.asistencia.anioNumero).subscribe(
         n => {
           this.relaciones = n.relacionesItem;
         },
@@ -90,81 +90,86 @@ console.log('modoLectura RELACIONES: ', this.modoLectura)
     }
 
   }
-  checkRelaciones(){
+  checkRelaciones() {
 
-    if(this.relaciones){
-      if(this.relaciones.find(relacion => relacion.sjcs.charAt(0)=='E')){ //Si hay algun EJG asociado no permitimos que se asocien mas
+    if (this.relaciones) {
+      if (this.relaciones.find(relacion => relacion.sjcs.charAt(0) == 'E')) { //Si hay algun EJG asociado no permitimos que se asocien mas
         this.disableEJG = true;
-      }else{
+      } else {
         this.disableEJG = false;
       }
-      if(this.relaciones.find(relacion => relacion.sjcs.charAt(0)=='D')){ //Si hay alguna Designa asociada no permitimos que se asocien mas
+      if (this.relaciones.find(relacion => relacion.sjcs.charAt(0) == 'D')) { //Si hay alguna Designa asociada no permitimos que se asocien mas
         this.disableDesigna = true;
-      }else{
+      } else {
         this.disableDesigna = false;
       }
-    }else{
+    } else {
       this.disableEJG = false;
       this.disableDesigna = false;
     }
 
   }
 
-  onClickEnlace(relacion : RelacionesItem){
+  onClickEnlace(relacion: RelacionesItem) {
 
     let tipoAsunto = relacion.sjcs.charAt(0);
 
-    if('D' == tipoAsunto){ //Si empieza por D es una Designacion, redirigimos a la ficha
+    if ('D' == tipoAsunto) { //Si empieza por D es una Designacion, redirigimos a la ficha
 
-      let desItem : any = new DesignaItem(); 
+      let desItem: any = new DesignaItem();
       let ape = relacion.letrado.split(',')[0].split(' - ')[1];
       desItem.ano = relacion.anio;
       desItem.numero = relacion.numero;
       desItem.idInstitucion = relacion.idinstitucion;
-      desItem.idTurno = relacion.idturno;
+      desItem.idTurno = relacion.idturnodesigna;
       desItem.codigo = relacion.codigo;
       desItem.descripcionTipoDesigna = relacion.destipo
-      desItem.fechaEntradaInicio = this.datePipe.transform(relacion.fechaasunto,'dd/MM/yyyy');
+      desItem.fechaEntradaInicio = this.datePipe.transform(relacion.fechaasunto, 'dd/MM/yyyy');
       desItem.nombreTurno = relacion.descturno;
       desItem.nombreProcedimiento = relacion.dilnigproc.split(' / ')[2];
       desItem.nombreColegiado = relacion.letrado;
-      desItem.apellido1Colegiado =ape.split(' ')[0];
-      desItem.apellido2Colegiado =ape.split(' ')[1];
+      desItem.apellido1Colegiado = ape.split(' ')[0];
+      desItem.apellido2Colegiado = ape.split(' ')[1];
       //Se cambia el valor del campo ano para que se procese de forma adecuada 
       //En la ficha en las distintas tarjetas para obtener sus valores
       desItem.ano = 'D' + desItem.ano + '/' + desItem.codigo;
 
-      sessionStorage.setItem('designaItemLink',JSON.stringify(desItem));
+      sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
       sessionStorage.setItem("nuevaDesigna", "false");
       sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
       this.router.navigate(['/fichaDesignaciones']);
 
-    }else if('E' == tipoAsunto){ //Si empieza por E es un EJG, redirigimos a la ficha
+    } else if ('E' == tipoAsunto) { //Si empieza por E es un EJG, redirigimos a la ficha
+      this.progressSpinner = true;
       let ejgItem = new EJGItem();
       ejgItem.annio = relacion.anio;
-      ejgItem.numero = relacion.numero; //ID ejg junto al anio
+      ejgItem.numero = relacion.codigo;
+      ejgItem.idInstitucion = relacion.idinstitucion;
       ejgItem.tipoEJG = relacion.idtipo;
-      this.progressSpinner = true;
-    
-      this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
+
+      let result;
+      // al no poder obtener todos los datos del EJG necesarios para obtener su informacion
+      //se hace una llamada a al base de datos pasando las claves primarias y obteniendo los datos necesarios
+      this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
         n => {
-          let ejgObject : any []= JSON.parse(n.body).ejgItems;
-          let datosItem : EJGItem = ejgObject[0];
-          this.persistenceService.setDatos(datosItem);
-          this.consultaUnidadFamiliar(ejgItem);
-          this.commonsService.scrollTop();
+          result = JSON.parse(n.body).ejgItems;
+          sessionStorage.setItem("EJGItemDesigna", JSON.stringify(result[0]));
+          let error = JSON.parse(n.body).error;
+
           this.progressSpinner = false;
+          if (error != null && error.description != null) {
+            this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
+          }
         },
         err => {
-          console.error(err);
-          this.showMsg('error', 'Error al consultar el EJG','');
           this.progressSpinner = false;
+          //console.log(err);
         },
-        ()=>{
-          this.progressSpinner = false;
+        () => {
+          this.router.navigate(["/gestionEjg"]);
         }
       );
-      
+
     }
 
   }
@@ -174,88 +179,17 @@ console.log('modoLectura RELACIONES: ', this.modoLectura)
 
     this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
       n => {
-        let datosFamiliares : any[] = JSON.parse(n.body).unidadFamiliarEJGItems;
+        let datosFamiliares: any[] = JSON.parse(n.body).unidadFamiliarEJGItems;
         this.persistenceService.setBodyAux(datosFamiliares);
 
-        if(sessionStorage.getItem("EJGItem")){
+        if (sessionStorage.getItem("EJGItem")) {
           sessionStorage.removeItem("EJGItem");
         }
 
         sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
         this.router.navigate(['/gestionEjg']);
-        this.progressSpinner = false;
         this.commonsService.scrollTop();
-      },
-      err => {
-        //console.log(err);
         this.progressSpinner = false;
-      },
-      () =>{
-        this.progressSpinner = false;
-      }
-    );
-  }
-
-  asociarDesignacion(){
-    sessionStorage.setItem("radioTajertaValue", 'des');
-    sessionStorage.setItem("Asistencia", JSON.stringify(this.asistencia));
-    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
-    this.router.navigate(["/busquedaAsuntos"]);
-  }
-
-  asociarEJG(){
-    sessionStorage.setItem("radioTajertaValue", 'ejg');
-    sessionStorage.setItem("Asistencia", JSON.stringify(this.asistencia));
-    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
-    this.router.navigate(["/busquedaAsuntos"]);
-  }
-
-  crearEJG(){
-    sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
-    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
-    sessionStorage.setItem("Nuevo","true");
-    this.router.navigate(["/gestionEjg"]);
-  }
-
-  crearDesignacion(){
-    sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
-    sessionStorage.setItem("nuevaDesigna", "true");
-    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
-    this.router.navigate(["/fichaDesignaciones"]);
-  }
-
-  eliminarRelacion(){
-    this.confirmationService.confirm({
-      key: "confirmEliminar",
-      message: this.translateService.instant("messages.deleteConfirmation"),
-      icon: "fa fa-question-circle",
-      accept: () => {this.executeEliminarRelacion();},
-      reject: () =>{this.showMsg('info',"Cancel",this.translateService.instant("general.message.accion.cancelada"));}
-    });
-  }
-
-  executeEliminarRelacion(){
-    this.progressSpinner = true;
-    let relaciones : RelacionesItem[] = [];
-    if(Array.isArray(this.selectedDatos)){
-      relaciones = this.selectedDatos;
-    }else{
-      relaciones.push(this.selectedDatos);
-    }
-
-    this.sigaServices
-    .postPaginado("busquedaGuardias_eliminarRelacion", "?anioNumero="+this.asistencia.anioNumero, relaciones)
-    .subscribe(
-      n => {
-        let result = JSON.parse(n["body"]);
-        if(result.error){
-          this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-        }else{
-          this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
-          this.getRelaciones();
-          this.refreshTarjetas.emit(result.id);
-        }
-        
       },
       err => {
         //console.log(err);
@@ -267,17 +201,88 @@ console.log('modoLectura RELACIONES: ', this.modoLectura)
     );
   }
 
+  asociarDesignacion() {
+    sessionStorage.setItem("radioTajertaValue", 'des');
+    sessionStorage.setItem("Asistencia", JSON.stringify(this.asistencia));
+    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
+    this.router.navigate(["/busquedaAsuntos"]);
+  }
+
+  asociarEJG() {
+    sessionStorage.setItem("radioTajertaValue", 'ejg');
+    sessionStorage.setItem("Asistencia", JSON.stringify(this.asistencia));
+    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
+    this.router.navigate(["/busquedaAsuntos"]);
+  }
+
+  crearEJG() {
+    sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
+    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
+    sessionStorage.setItem("Nuevo", "true");
+    this.router.navigate(["/gestionEjg"]);
+  }
+
+  crearDesignacion() {
+    sessionStorage.setItem("asistencia", JSON.stringify(this.asistencia));
+    sessionStorage.setItem("nuevaDesigna", "true");
+    sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
+    this.router.navigate(["/fichaDesignaciones"]);
+  }
+
+  eliminarRelacion() {
+    this.confirmationService.confirm({
+      key: "confirmEliminar",
+      message: this.translateService.instant("messages.deleteConfirmation"),
+      icon: "fa fa-question-circle",
+      accept: () => { this.executeEliminarRelacion(); },
+      reject: () => { this.showMsg('info', "Cancel", this.translateService.instant("general.message.accion.cancelada")); }
+    });
+  }
+
+  executeEliminarRelacion() {
+    this.progressSpinner = true;
+    let relaciones: RelacionesItem[] = [];
+    if (Array.isArray(this.selectedDatos)) {
+      relaciones = this.selectedDatos;
+    } else {
+      relaciones.push(this.selectedDatos);
+    }
+
+    this.sigaServices
+      .postPaginado("busquedaGuardias_eliminarRelacion", "?anioNumero=" + this.asistencia.anioNumero, relaciones)
+      .subscribe(
+        n => {
+          let result = JSON.parse(n["body"]);
+          if (result.error) {
+            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+          } else {
+            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
+            this.getRelaciones();
+            this.refreshTarjetas.emit(result.id);
+          }
+
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+  }
+
   onChangeRowsPerPages(event) {
     this.rows = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
   }
 
-  onChangeSeleccionMultiple(){
-    if(this.table.selectionMode == 'single'){
+  onChangeSeleccionMultiple() {
+    if (this.table.selectionMode == 'single') {
       this.table.selectionMode = 'multiple';
       this.seleccionMultiple = true;
-    }else{
+    } else {
       this.table.selectionMode = 'single';
       this.seleccionMultiple = false;
     }
@@ -286,35 +291,35 @@ console.log('modoLectura RELACIONES: ', this.modoLectura)
     this.disableDelete = true;
   }
 
-  onChangeSeleccionarTodo(){
-    if(this.seleccionarTodo){
+  onChangeSeleccionarTodo() {
+    if (this.seleccionarTodo) {
       this.selectedDatos = this.relaciones;
       this.numSeleccionado = this.selectedDatos.length;
       this.disableDelete = true;
-    }else{
+    } else {
       this.selectedDatos = [];
       this.numSeleccionado = 0;
       this.disableDelete = true;
     }
   }
 
-  onSelectRow(relacion : RelacionesItem){
+  onSelectRow(relacion: RelacionesItem) {
 
-    if(this.table.selectionMode == 'single'){
+    if (this.table.selectionMode == 'single') {
       this.numSeleccionado = 1;
-    }else{
+    } else {
       this.numSeleccionado = this.selectedDatos.length;
     }
     this.disableDelete = false;
   }
 
-  actualizaSeleccionados(){
-    if(this.table.selectionMode == 'single'){
+  actualizaSeleccionados() {
+    if (this.table.selectionMode == 'single') {
       this.numSeleccionado = 0;
       this.disableDelete = true;
-    }else{
+    } else {
       this.numSeleccionado = this.selectedDatos.length;
-      if(this.numSeleccionado <= 0){
+      if (this.numSeleccionado <= 0) {
         this.disableDelete = true;
       }
     }
@@ -324,7 +329,7 @@ console.log('modoLectura RELACIONES: ', this.modoLectura)
     this.msgs = [];
   }
 
-  showMsg(severityParam : string, summaryParam : string, detailParam : string) {
+  showMsg(severityParam: string, summaryParam: string, detailParam: string) {
     this.msgs = [];
     this.msgs.push({
       severity: severityParam,

@@ -31,10 +31,10 @@
 
             <div *ngIf="col.field == 'fechadesdevigor' || col.field == 'fechahastavigor'">
               <div *ngIf="setItalic(dato)">
-                <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                <label [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{ dato[col.field] }}</label>
               </div>
               <div *ngIf="!setItalic(dato)">
-                <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
+                <label>{{ dato[col.field] }}</label>
               </div>
             </div>
 
@@ -158,14 +158,14 @@
 <p-dialog width="auto" height="auto" responsive="true" modal="modal" [draggable]="false" resizable="false"
   [(visible)]="showModalBajaLogicaFisica" (onHide)="cancelarDialogBajaLogicaFisica()">
   <p-header class="title">
-     <label>{{ "justiciaGratuita.oficio.bajasTemporales.tipoBaja" | translate}}</label>
+     <label>{{ "sjcs.maestros.modulos.preferenciaborradomodulo" | translate}}</label>
   </p-header>
   <div class="form-row">
 
     
     <div class="form-group-interlineado col-lg-6 col-md-6 pb-lg-2 pb-md-2">
       <span class="mr-4">
-        <p-radioButton value="bajalogica" name="bajaModulo" label="{{'sjcs.maestros.modulos.bajasegunfecha' | translate}}" [(ngModel)]='bajaLogicaFisicaModuloRadioButton'
+        <p-radioButton value="bajalogica" name="bajaModulo" label="{{'sjcs.maestros.modulos.bajalogica' | translate}}" [(ngModel)]='bajaLogicaFisicaModuloRadioButton'
         ></p-radioButton>
       </span>
     </div>
@@ -179,7 +179,7 @@
 
     <div class="form-group-interlineado col-lg-12 col-md-12 pb-lg-2 pb-md-2">
       <span class="mr-4">
-        <p-radioButton value="bajaFisica" name="bajaModulo" label="{{'sjcs.maestros.modulos.eliminacionfisica' | translate}}" [(ngModel)]='bajaLogicaFisicaModuloRadioButton'
+        <p-radioButton value="bajaFisica" name="bajaModulo" label="{{'sjcs.maestros.modulos.eliminaciondefinitiva' | translate}}" [(ngModel)]='bajaLogicaFisicaModuloRadioButton'
         ></p-radioButton>
       </span>
     </div>

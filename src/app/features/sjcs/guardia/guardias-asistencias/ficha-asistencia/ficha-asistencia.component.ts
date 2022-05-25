@@ -146,28 +146,25 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     private commonServices: CommonsService) { }
 
   ngOnInit() {
-
+    this.nuevaAsistencia = true;
     this.preasistencia = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
     this.rutas = ['SJCS', this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia")];
     if (sessionStorage.getItem("nuevaAsistencia")) {
       this.nuevaAsistencia = true;
+      this.msgs = [];
       sessionStorage.removeItem("nuevaAsistencia");
     }
-  }
-
-  ngAfterViewInit() {
-
-    this.goTop();
-
+    // Recargar las tarjetas por defectos.
     this.commonServices.checkAcceso(procesos_guardia.tarjeta_caracteristicas_asistencias)
-      .then(respuesta => {
+    .then(respuesta => {
+      this.visibleTarjetaCaract = respuesta; //Si es undefined se oculta, si es false la mostramos pero ineditable
+      this.listaTarjetas.find(tarj => tarj.id == 'caracteristicas').visible = this.visibleTarjetaCaract;
+      this.initTarjetas();
+    }).catch(error => console.error(error));
 
-        this.visibleTarjetaCaract = respuesta; //Si es undefined se oculta, si es false la mostramos pero ineditable
-        this.listaTarjetas.find(tarj => tarj.id == 'caracteristicas').visible = this.visibleTarjetaCaract;
-        this.initTarjetas();
-      }).catch(error => console.error(error));
-
+    // Cargar datos para las tarjetas de Asistencias.
     if (sessionStorage.getItem("idAsistencia")) {
+      // Controlar el MSG de error pasando TRUE la asistencia
       this.nuevaAsistencia = false;
       let idAsistencia = sessionStorage.getItem("idAsistencia");
       this.datosTarjetaFacGenerica = sessionStorage.getItem("idAsistencia");
@@ -178,6 +175,10 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
       this.searchTarjetaAsistencia(idAsistencia);
     }
 
+  }
+
+  ngAfterViewInit() {
+    this.goTop();
   }
 
   ngOnDestroy(){
@@ -456,7 +457,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           && n.error.code === 500) {
           this.showMsg("error", "Error", n.error.description.toString());
         } else {
-          let newAsistenciaData: TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
+          var newAsistenciaData: TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
           this.editable = newAsistenciaData.estado == '1';
           this.tarjetaFija.campos[0]["value"] = newAsistenciaData.anioNumero;
           this.tarjetaFija.campos[1]["value"] = newAsistenciaData.fechaAsistencia.substr(0, 11);
@@ -666,6 +667,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           });
 
           this.asistencia = newAsistenciaData;
+          this.progressSpinner = false;
         }
       },
       err => {
@@ -689,7 +691,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           && n.error.code === 500) {
           this.showMsg("error", "Error", n.error.description.toString());
         } else {
-          let newAsistenciaData: TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
+          var newAsistenciaData: TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
           console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
           console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
           if (newAsistenciaData.estado == '2'){

@@ -350,7 +350,7 @@
                             class="center width70 showFull"
                             [options]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]" showClear="true"
                             filterBy="label,labelSinTilde" styleClass="widthAll"
-                            (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
+                            (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, false, i)"></p-dropdown>
                     </span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">
                         <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{ cell.value[1] }}</span>

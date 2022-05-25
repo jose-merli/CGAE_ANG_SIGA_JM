@@ -3,6 +3,8 @@ import { TranslateService } from '../../../../commons/translate';
 import { FicherosAbonosItem } from '../../../../models/sjcs/FicherosAbonosItem';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { Location } from '@angular/common';
+import { procesos_facturacionPyS } from '../../../../permisos/procesos_facturacionPyS';
+import { CommonsService } from '../../../../_services/commons.service';
 
 @Component({
   selector: 'app-gestion-ficheros-transferencias',
@@ -20,8 +22,8 @@ export class GestionFicherosTransferenciasComponent implements OnInit {
   openTarjetaDatosGeneracion: boolean = true;
   openTarjetaFacturas: boolean = false;
 
-  permisoEscrituraDatosGeneracion:boolean = true; //cambiar con los permisos
-  permisoEscrituraFacturas: boolean = true; //cambiar con los permisos
+  permisoEscrituraDatosGeneracion:boolean = false;
+  permisoEscrituraFacturas: boolean = false;
 
   permisos;
   nuevo;
@@ -34,7 +36,8 @@ export class GestionFicherosTransferenciasComponent implements OnInit {
 
   constructor(private translateService: TranslateService,
     private location: Location,
-    private persistenceService: PersistenceService) { }
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService) { }
 
   async ngOnInit() {
     this.progressSpinner = true;
@@ -78,6 +81,16 @@ export class GestionFicherosTransferenciasComponent implements OnInit {
     }
   }
 
+    permisosFicherosTransferencia(){
+    this.commonsService
+    .checkAcceso(procesos_facturacionPyS.ficheroTransferencia)
+    .then((respuesta) => {
+      this.permisoEscrituraDatosGeneracion = respuesta;
+      this.permisoEscrituraFacturas = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+  
   clear() {
     this.msgs = [];
   }

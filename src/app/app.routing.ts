@@ -280,6 +280,8 @@ import { FichaColegialGeneralComponent } from "./features/censo/ficha-colegial/f
 import { FichaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/ficha-abonos-sjcs.component';
 import { BusquedaAsuntosComponent } from "./commons/busqueda-asuntos/busqueda-asuntos.component";
 import { GestionActasComponent } from "./features/sjcs/actas/gestion-actas/gestion-actas.component";
+import { FichaEnvioCamComponent } from "./features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-envio-cam/ficha-envio-cam.component";
+import { DetalleSOJComponent } from "./features/sjcs/soj/detalle-soj/detalle-soj.component";
 
 
 
@@ -592,6 +594,12 @@ const appRoutes: Routes = [
 	{
 		path: 'fichaFacturaciones',
 		component: FichaFactProgramadasComponent,
+		canActivate: [AuthGuard]
+	},
+	
+	{
+		path: 'fichaEnvioCam',
+		component: FichaEnvioCamComponent,
 		canActivate: [AuthGuard]
 	},
 	{
@@ -996,6 +1004,11 @@ const appRoutes: Routes = [
 	{
 		path: 'soj',
 		component: SOJComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'detalle-soj',
+		component: DetalleSOJComponent,
 		canActivate: [AuthGuard]
 	},
 	{

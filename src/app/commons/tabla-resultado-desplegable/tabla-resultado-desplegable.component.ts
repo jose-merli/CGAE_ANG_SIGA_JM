@@ -73,6 +73,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   childNumber = 0 ;
   newActuacionesArr: Row[] = [];
   rowIdsToUpdate = [];
+  indicesToUpdate: [string, string][] = [];
   numperPage = 10;
   from = 0;
   to = 10;
@@ -418,27 +419,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   fillFecha(event, cell, rowId, row, rowGroup, padre, index) {
-    if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
-      if (this.lastChange == "fillFecha"){
-        this.sumar = !this.sumar;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
-    }else{
-      this.sumar = true;
-      if (padre){
-        this.lastChangePadre = rowId;
-        this.numDesignasModificadas.emit(this.sumar);
-      }else{
-        this.lastChangeHijo = index;
-        this.numActuacionesModificadas.emit(this.sumar);
-      }
-    }
+
     this.rowValidadas = [];
     if (row == undefined){
       //designacion
@@ -449,18 +430,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.refreshData.emit(true);
         }else{
           cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-          if (this.sumar){
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
             this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
           }
         }
       }else if(this.pantalla == 'JE'){
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-        if (this.sumar){
-          this.rowIdsToUpdate.push(rowId);
-        }else{
-          this.rowIdsToUpdate = []; //limpiamos
+        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+          this.indicesToUpdate.push([rowId, index]);
         }
       }else{
         cell.value = event;
@@ -469,14 +446,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
+      if((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)){
         if (row.cells[8].value != true){
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-        if (this.sumar){
-          this.rowIdsToUpdate.push(rowId);
-        }else{
-          this.rowIdsToUpdate = []; //limpiamos
+        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+          this.indicesToUpdate.push([rowId, index]);
         }
+
         } else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
@@ -489,6 +465,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       cell.value = event;
       this.rowIdsToUpdate.push(rowId);
     }
+
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
 
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "fillFecha";
@@ -551,7 +530,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else{
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
+      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
         if (row.cells[8].value  != true){
           if (this.sumar){
             this.rowIdsToUpdate.push(rowId);
@@ -576,27 +555,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.lastChange = "checkBoxDateChange";
   }
   checkBoxChange(event, rowId, cell, row, rowGroup, padre, index){
-    if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
-      if (this.lastChange == "checkBoxChange"){
-        this.sumar = !this.sumar;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
-    }else{
-      this.sumar = true;
-      if (padre){
-        this.lastChangePadre = rowId;
-        this.numDesignasModificadas.emit(this.sumar);
-      }else{
-        this.lastChangeHijo = index;
-        this.numActuacionesModificadas.emit(this.sumar);
-      }
-    }
+
     this.rowValidadas = [];
     if (row == undefined){
       //designacion
@@ -604,20 +563,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
         }else{
-          if (this.sumar){
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
             this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
           }
           if (cell != undefined){
             cell.value[0] = event;
           }
         }
       }else{
-        if (this.sumar){
+        if (this.rowIdsToUpdate.indexOf(rowId) == -1){
           this.rowIdsToUpdate.push(rowId);
-        }else{
-          this.rowIdsToUpdate = []; //limpiamos
         }
           if (cell != undefined){
             cell.value[0] = event;
@@ -626,12 +581,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else{
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
+      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
         if (row.cells[8].value  != true){
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
           }
           if (cell != undefined){
             cell.value[0] = event;
@@ -646,36 +599,18 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     }
 
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "checkBoxChange";
   }
 
   checkBoxChange2(event, rowId, cell, row, rowGroup, padre, index){
-    if (cell.value == false && row != undefined && row.cells[35].value == "1"){
+    if (cell.value == false && row != undefined && row.cells[35] != undefined && row.cells[35].value == "1"){
       cell.value = !cell.value;
       this.showMsg('error', "No puede desvalidar actuaciones facturadas", '')
     }else{
-      if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
-        if (this.lastChange == "checkBoxChange2"){
-          this.sumar = !this.sumar;
-          if (padre){
-            this.lastChangePadre = rowId;
-            this.numDesignasModificadas.emit(this.sumar);
-          }else{
-            this.lastChangeHijo = index;
-            this.numActuacionesModificadas.emit(this.sumar);
-          }
-        }
-      }else{
-        this.sumar = true;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
       this.rowValidadas = [];
       if (row == undefined){
         //designacion
@@ -684,38 +619,22 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             cell.value = !cell.value;
             this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
           }else{
-            if (this.sumar){
-              this.rowIdsToUpdate.push(rowId);
-            }else{
-              this.rowIdsToUpdate = []; //limpiamos
-            }
-            if (cell != undefined){
-              cell.value = !cell.value;
-            }
-          }
-        }else{
-          if (this.sumar){
+            if (this.rowIdsToUpdate.indexOf(rowId) == -1){
             this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+            }
           }
-            /*if (cell != undefined){
-              cell.value = !cell.value;
-            }*/
+          } else {
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+            this.rowIdsToUpdate.push(rowId);
+          }
         }
       }else{
         //actuacion
         this.turnoAllow = rowGroup.rows[0].cells[39].value;
-        if((this.isLetrado && row.cells[8].value == true && this.turnoAllow) || (!this.isLetrado)){
-          /*if (row.cells[8].value  == true){*/
-            if (this.sumar){
-              this.rowIdsToUpdate.push(rowId);
-            }else{
-              this.rowIdsToUpdate = []; //limpiamos
-            }
-            /*if (cell != undefined){
-              cell.value = !cell.value;
-            }*/
+        if((this.isLetrado && this.turnoAllow != 1) || (!this.isLetrado)){
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
+          }
           /*}else{
             this.rowValidadas.push(row);
             cell.value = !cell.value;
@@ -728,6 +647,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       }
 
+      this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+      this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+
       sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
       this.lastChange = "checkBoxChange2";
 
@@ -735,6 +657,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (row != undefined){
           row.cells[6].type = 'text';
           row.cells[5].type = 'text';
+
+          if (row.cells[6].value == undefined || row.cells[6].value == 'false' || row.cells[6].value == false) {
+            row.cells[6].value = this.fechaFiltro;
+          }
+          
         }
         
       }else{
@@ -745,60 +672,36 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     }
   }
-  changeSelect(row, cell, rowId, rowGroup, padre, index){
-    if ((this.lastChangePadre == rowId && padre) || ( this.lastChangeHijo == index && !padre)){
-      if (this.lastChange == "changeSelect"){
-        this.sumar = !this.sumar;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
-    }else{
-      this.sumar = true;
-      if (padre){
-        this.lastChangePadre = rowId;
-        this.numDesignasModificadas.emit(this.sumar);
-      }else{
-        this.lastChangeHijo = index;
-        this.numActuacionesModificadas.emit(this.sumar);
-      }
-    }
+  changeSelect(event, cell, rowId, row, rowGroup, padre, index){
     if (row == undefined){
       //designacion
       if(this.isLetrado){
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
+          this.refreshData.emit(true);
         }else{
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+          this.rowIdsToUpdate.push(rowId);
           }
         }
-      }else{
-        if (this.sumar){
+        } else {
+        if (this.rowIdsToUpdate.indexOf(rowId) == -1){
           this.rowIdsToUpdate.push(rowId);
-        }else{
-          this.rowIdsToUpdate = []; //limpiamos
         }
       }
     }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
-        if (row.cells[8].value  != true){
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+      const isNew = !Array.isArray(row.cells[8].value);
+      if((this.isLetrado && this.turnoAllow != "1") || (!this.isLetrado)){
+        if (isNew || !isNew && row.cells[8].value != true){
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
           }
         }else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+          this.refreshData.emit(true);
         }
       }else{
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
@@ -807,63 +710,45 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else{
       this.rowIdsToUpdate.push(rowId);
     }
+
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "changeSelect";
   }
 
   inputChange(event, rowId, row, rowGroup, padre, index){
-    if ((this.lastChangePadre == rowId && padre) || ( this.lastChangeHijo == index && !padre)){
-      if (this.lastChange == "inputChange"){
-        this.sumar = !this.sumar;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
-    }else{
-      this.sumar = true;
-      if (padre){
-        this.lastChangePadre = rowId;
-        this.numDesignasModificadas.emit(this.sumar);
-      }else{
-        this.lastChangeHijo = index;
-        this.numActuacionesModificadas.emit(this.sumar);
-      }
-    }
+
     this.rowValidadas = [];
     if (row == undefined){
       //designacion
       if(this.isLetrado){
         if (this.justActivarDesigLetrado != "1"){
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
+          this.refreshData.emit(true);
         }else{
-          if (this.sumar){
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
             this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
           }
         }
       }else{
-      
+        if (this.rowIdsToUpdate.indexOf(rowId) == -1){
           this.rowIdsToUpdate.push(rowId);
-     
+        }
       }
     }else if(this.pantalla == 'JE'){
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow) || (!this.isLetrado)){
+      if((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)){
         if (row.cells[8].value  != true){
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
           }
         } else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+          this.refreshData.emit(true);
         }
       }else{
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
@@ -872,6 +757,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else{
       this.rowIdsToUpdate.push(rowId);
     }
+
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "inputChange";
   }
@@ -888,13 +777,36 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   ocultarColumna(event) {
-    if (this.pantalla == 'JE' && event.itemValue.id == "clientes" || event.itemValue.id == "ejgs"){
+    if (event.itemValue != undefined) {
+      // Se muestran o ocuntan las columnas de 1 en 1
+      this.ocultarColumnaItem(event, event.itemValue);
+    } else {
+      // Se muestran o ocultan todas las columnas
+
+      // Busco las columnas a mostrar
+      let shownElements = event.value
+        .filter(element => document.getElementById(element.id).classList.contains("collapse"))
+        .filter(element => event.value.some(e => e.id == element.id));
+
+      // Busco las columnas a ocultar
+      let hiddenElements = this.cabeceras
+        .filter(element => !document.getElementById(element.id).classList.contains("collapse"))
+        .filter(element => !event.value.some(e => e.id == element.id));
+
+      // Muestro u oculto los cambios
+      shownElements.forEach(columna => this.ocultarColumnaItem(event, columna));
+      hiddenElements.forEach(columna => this.ocultarColumnaItem(event, columna));
+    }
+  }
+  
+  ocultarColumnaItem(event, columna) {
+    if (this.pantalla == 'JE' && columna.id == "clientes" || columna.id == "ejgs"){
       this.showMsg('error', "Clientes y EJG's pertenecen a la columna Año/Número Designación, no pueden ocultarse/mostrarse por sí solas", '')
     }else{
 
     let tabla = document.getElementById("tablaResultadoDesplegable");
 
-    if (event.itemValue == undefined && event.value.length == 0) {
+    if (columna == undefined && event.value.length == 0) {
       this.cabeceras.forEach(element => {
         this.renderer.addClass(document.getElementById(element.id), "collapse");
       });
@@ -903,7 +815,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       tabla.setAttribute("style", 'width: 0px !important');
     }
 
-    if (event.itemValue == undefined && event.value.length > 0) {
+    if (columna == undefined && event.value.length > 0) {
       this.cabeceras.forEach(element => {
         this.renderer.removeClass(document.getElementById(element.id), "collapse");
       });
@@ -913,43 +825,43 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       tabla.setAttribute("style", `width: ${this.tamanioTablaResultados}px !important`);
     }
 
-    if (event.itemValue != undefined && event.value.length >= 0) {
+    if (columna != undefined && event.value.length >= 0) {
       let ocultar = true;
       event.value.forEach(element => {
-        if (element.id == event.itemValue.id) {
+        if (element.id == columna.id) {
           ocultar = false;
         }
       });
       if (this.pantalla == 'JE' ){
-        /*if (event.itemValue.id == "ejgs" || event.itemValue.id == "clientes"){
-          event.itemValue.id = "anio";
+        /*if (columna.id == "ejgs" || columna.id == "clientes"){
+          columna.id = "anio";
         }
-        //console.log('event.itemValue.id: ', event.itemValue.id)*/
-        if (ocultar && event.itemValue.id == "anio"){
+        //console.log('columna.id: ', columna.id)*/
+        if (ocultar && columna.id == "anio"){
           this.ocultarItem("clientes");
           this.ocultarItem("ejgs");
-        }else if (!ocultar && event.itemValue.id == "anio"){
+        }else if (!ocultar && columna.id == "anio"){
           this.mostrarItem("clientes");
           this.mostrarItem("ejgs");
         }
       }
       if (ocultar) {
-        this.renderer.addClass(document.getElementById(event.itemValue.id), "collapse");
-        this.itemsaOcultar.push(event.itemValue);
+        this.renderer.addClass(document.getElementById(columna.id), "collapse");
+        this.itemsaOcultar.push(columna);
         if(this.columnsSizes.length != 0){
-          tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
+          tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == columna.id).size}px !important`);
         }
         
        
       } else {
-        this.renderer.removeClass(document.getElementById(event.itemValue.id), "collapse");
+        this.renderer.removeClass(document.getElementById(columna.id), "collapse");
         this.itemsaOcultar.forEach((element, index) => {
-          if (element.id == event.itemValue.id) {
+          if (element.id == columna.id) {
             this.itemsaOcultar.splice(index, 1);
           }
         });
         if(this.columnsSizes.length != 0){ 
-        tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == event.itemValue.id).size}px !important`);
+        tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == columna.id).size}px !important`);
         }
       }
       this.getPosition(this.itemsaOcultar);
@@ -962,6 +874,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.totalRegistros = this.rowGroups.length;
     }
   }
+
     mostrarItem(id){
       let tabla = document.getElementById("tablaResultadoDesplegable");
       this.renderer.removeClass(document.getElementById(id), "collapse");
@@ -1175,11 +1088,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         row.cells.forEach(cell => {
           if (cell.type == 'multiselect2') {
             cell.combo = comboModulos;
-            cell.value= comboModulos[0].value;
+
+            if (comboModulos.every(d => d.value != cell.value)) {
+              cell.value= comboModulos[0].value;
+            }
             rowGroupFound = true;
           }else if (cell.type == 'multiselect3'&& comboAcreditacion[0] != undefined) {
             cell.combo = comboAcreditacion;
-            cell.value= comboAcreditacion[0].value;
+
+            if (comboAcreditacion.every(d => d.value != cell.value)) {
+              cell.value= comboAcreditacion[0].value;
+            }
             rowGroupFound = true;
           } 
 
@@ -1365,24 +1284,25 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
     this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
     this.rowGroups.forEach(row => {
-      if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0){
+      if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0 || this.indicesToUpdate.some(d => d[0] == row.id.toString())){
         let rowGroupToUpdate = row;
-        actuaciones = row.rows.slice(1, row.rows.length - 1);
+        actuaciones = row.rows.filter(d => Array.isArray(d[0]) && d[0].length > 1 && d[0][1] != 'Nuevo');
           this.rowValidadas.forEach(rowValid => {
             if (rowGroupToUpdate.rows.includes(rowValid)){
             }
           })
           this.rowValidadas = [];
-        
-
 
         this.dataToUpdateArr.push(row);
       }
     })
     if (this.dataToUpdateArr.length != 0){
-    this.dataToUpdate.emit(this.dataToUpdateArr);
-    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
-    this.numActuacionesModificadas.emit(actuaciones.length);
+      this.dataToUpdate.emit(this.dataToUpdateArr);
+
+      this.rowIdsToUpdate = [];
+      this.indicesToUpdate = [];
+      this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+      this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
     }
 
 
@@ -1424,7 +1344,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           if (rowG.rows[this.childNumber + 1].cells[8].value == false){
             //actuacion No Validada
             //console.log("isListreado")
-            if ((this.isLetrado && this.turnoAllow == "1" ) || (!this.isLetrado)){
+            if ((this.isLetrado && this.turnoAllow != "1" ) || (!this.isLetrado)){
               if (rowG.rows[this.childNumber + 1].cells[35].value == "1"){
                 this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
                 this.refreshData.emit(true);
@@ -1498,6 +1418,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
   cargaAcreditacionesPorModulo($event, designacion, rowGroup){
     let validacion = false;
+    this.turnoAllow = rowGroup.rows[0].cells[39].value;
     if(this.isLetrado){
       //colegiado
       if (this.turnoAllow != "1"){
@@ -1505,8 +1426,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         validacion = true;
       }
     }else {
-    //colegio
-    validacion = true;
+      //colegio
+      validacion = true;
     }
 
 
@@ -1525,7 +1446,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
               { type: 'multiselect2', value: "0", size: 400 , combo: []}, //modulo
               { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-              { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
+              { type: 'datePicker', value: this.formatDate(new Date()) , size: 200, combo: null},
               { type: 'multiselect3', value: "0" , size: 200, combo: []},
               { type: 'checkbox', value: validacion, size: 80 , combo: null},
               { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
@@ -1555,7 +1476,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
               { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
         
-            if(!this.isLetrado || (this.isLetrado && newArrayCells[8].value != true && this.turnoAllow == "1")){
+            const newAllow = rowGroup.rows[0].cells[40].value;
+            if(!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")){
               let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
               rowGroup.rows.push(newRow);
               this.newActuacionesArr.push(newRow);
@@ -1588,7 +1510,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                 { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
                 { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
                 { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-                { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
+                { type: 'datePicker', value: this.formatDate(new Date()) , size: 100, combo: null},
                 { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
                 { type: 'checkbox', value: validacion, size: 80 , combo: null},
                 { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
@@ -1625,7 +1547,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                 { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
                 { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
                 { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-                { type: 'checkbox', value: this.formatDate(new Date()) , size: 200, combo: null},
+                { type: 'datePicker', value: this.formatDate(new Date()) , size: 200, combo: null},
                 { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
                 { type: 'checkbox', value: validacion, size: 80 , combo: null},
                 { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
@@ -1656,8 +1578,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                 { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
             }
   
-              if(!this.isLetrado || (this.isLetrado && newArrayCells[8].value != true && this.turnoAllow == "1")){
-                let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
+            const newAllow = rowGroup.rows[0].cells[40].value;
+            if(!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")){
+              let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
                 rowGroup.rows.push(newRow);
                 this.newActuacionesArr.push(newRow);
               }else{
@@ -1933,6 +1856,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
+            console.log(actuacion)
             sessionStorage.setItem("actuacionDesignaJE", JSON.stringify(actuacion));
             this.router.navigate(['/fichaActDesigna']);
           }

@@ -238,7 +238,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       this.progressSpinner = true;
       this.sigaServices.get("combo_comboModulos").subscribe(
         n => {
-          this.comboModulos = JSON.parse(n).combooItems;
+          this.comboModulos = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboModulos);
           this.progressSpinner = false;
         },
@@ -438,7 +438,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
       { type: 'invisible', value: designacion.apellidos , size: 0, combo: null},
       { type: 'invisible', value: designacion.nombre , size: 0, combo: null},
       { type: 'invisible', value: designacion.nColegiado , size: 0, combo: null},
-      { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null}
+      { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null},
+      { type: 'invisible', value: designacion.letradoActuaciones , size: 0, combo: null}
     ];
   }else{
     arrDesignacion = 
@@ -482,7 +483,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
     { type: 'invisible', value: designacion.apellidos , size: 0, combo: null},
     { type: 'invisible', value: designacion.nombre , size: 0, combo: null},
     { type: 'invisible', value: designacion.nColegiado , size: 0, combo: null},
-    { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null}
+    { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null},
+    { type: 'invisible', value: designacion.letradoActuaciones , size: 0, combo: null}
   ];
   }
 
@@ -522,7 +524,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
           
         } else{
           fechaJust = false;
-          fechaJustType = 'checkboxDate';
+          fechaJustType = 'datePicker';
         }
         if(this.permisosFichaAct){
           linkOrText = 'link';
@@ -680,16 +682,15 @@ export class TablaJustificacionExpresComponent implements OnInit {
        
      })
 //console.log('designacion.actuaciones: ', designacion.actuaciones)
-    // if (actuacion.permitirAniadirLetrado == "1"){ 
-      if (designacion.actuaciones.length != 0){
+    //if (actuacion.permitirAniadirLetrado == "1"){ 
+    if (!this.isLetrado || designacion.letradoActuaciones == "1") {
       let numProcType2 = 'input';
       if(this.isLetrado){
         numProcType2 = 'text';
       }else{
         numProcType2 = 'input';
       }
-      this.arrNuevo = 
-      [
+    this.arrNuevo = [
       { type: 'checkboxPermisos', value: [false, 'Nuevo'], size: 120, combo: null },
       { type: 'invisible', value: '', size: 400 , combo: null},
       { type: 'invisible', value: '', size: 200, combo: null},
@@ -726,7 +727,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       { type: 'invisible', value:  '' , size: 0, combo: null},
       { type: 'invisible', value:  '' , size: 0, combo: null},
       { type: 'invisible', value:  '' , size: 0, combo: null}
-  ];
+    ];
 
      let lastNum = designacion.actuaciones.length + 2;
      this.totalActuaciones = this.totalActuaciones + 1;
@@ -1008,28 +1009,17 @@ desigCellToJson(designacionesCells, codigoDesignacionParam, expedientesDesignaci
   }
 
   setNumActuacionesModificadas(event){
-    if (event == true){
-      this.numActuacionesModificadas = Number(this.numActuacionesModificadas) + 1;
-    }else if (event == false){
-      this.numActuacionesModificadas = Number(this.numActuacionesModificadas) - Number(1);
-    }else{
-      this.numActuacionesModificadas = event;
-    }
+      this.numActuacionesModificadas = Number(event);
   }
 
   setnumDesignasModificadas(event){
-    if (event == true){
-      this.numDesignasModificadas = Number(this.numDesignasModificadas) + 1;
-    }else if (event == false){
-      this.numDesignasModificadas = Number(this.numDesignasModificadas) - Number(1);
-    }else{
-      this.numDesignasModificadas = event;
-    }
+    this.numDesignasModificadas = Number(event);
   }
 
   settotalActuaciones(event){
     this.totalActuaciones = this.totalActuaciones + event;
   }
+
   getrefreshData(event){
     if (event){
       this.cargaInicial();

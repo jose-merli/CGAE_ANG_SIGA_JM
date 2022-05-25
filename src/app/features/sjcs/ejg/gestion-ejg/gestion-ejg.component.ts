@@ -133,14 +133,14 @@ export class GestionEjgComponent implements OnInit {
 
     } else {
       this.body = this.persistenceService.getDatos();
-      if(this.body != null && this.body.annio == null && sessionStorage.getItem("EJGItem")!= null){
-          this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
-          sessionStorage.removeItem("EJGItem");
-          this.persistenceService.setDatos(this.body);
-          this.updateTarjResumen();
-          this.modoEdicion = true;
+      if (this.body != null && this.body.annio == null && sessionStorage.getItem("EJGItem") != null) {
+        this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
+        sessionStorage.removeItem("EJGItem");
+        this.persistenceService.setDatos(this.body);
+        this.updateTarjResumen();
+        this.modoEdicion = true;
       }
-      if (this.body!=null && this.body!= undefined ) {
+      if (this.body != null && this.body != undefined) {
         this.body.apellidosYNombre = "";
       }
 
@@ -244,7 +244,7 @@ export class GestionEjgComponent implements OnInit {
     }
   }
 
-  goResol(){
+  goResol() {
     document.children[document.children.length - 1]
     let resol = document.getElementById("resol");
     if (resol) {
@@ -293,13 +293,17 @@ export class GestionEjgComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearDatos();
-    if(sessionStorage.getItem("filtroAsistencia")){
-      sessionStorage.setItem("volver","true");
+    // Vovlver a asistencia.
+    if (sessionStorage.getItem("filtroAsistencia")) {
+      var asistencia = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
+      sessionStorage.setItem("idAsistencia", asistencia.anio + "/" + asistencia.numero);
+      sessionStorage.setItem("vieneDeFichaDesigna", "true");
+      this.router.navigate(['/fichaAsistencia']);
     }
     //Para evitar complicaciones según se acceda desde la pantalla de busqueda de EJGs de comision o 
     //desde una ficha de acta directamente
-    if(sessionStorage.getItem("actasItemAux") && sessionStorage.getItem("actasItem") == null){
-      sessionStorage.setItem("actasItem",sessionStorage.getItem("actasItemAux"));
+    if (sessionStorage.getItem("actasItemAux") && sessionStorage.getItem("actasItem") == null) {
+      sessionStorage.setItem("actasItem", sessionStorage.getItem("actasItemAux"));
       sessionStorage.removeItem("actasItemAux");
     }
     this.location.back();
@@ -361,12 +365,12 @@ export class GestionEjgComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
-      this.commonsService.checkAcceso(procesos_ejg.defensaJuridica)
+    this.commonsService.checkAcceso(procesos_ejg.defensaJuridica)
       .then(respuesta => {
         this.progressSpinner = true;
         this.permisoDefensaJuridica = respuesta;
         recibidos++;
-        if(recibidos==16)this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
         this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
@@ -376,7 +380,7 @@ export class GestionEjgComponent implements OnInit {
         this.progressSpinner = true;
         this.permisoProcurador = respuesta;
         recibidos++;
-        if(recibidos==16)this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
         this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
@@ -386,11 +390,11 @@ export class GestionEjgComponent implements OnInit {
         this.progressSpinner = true;
         this.permisoContrarios = respuesta;
         recibidos++;
-        if(recibidos==16)this.enviarEnlacesTarjeta();
+        if (recibidos == 16) this.enviarEnlacesTarjeta();
         this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
-      this.progressSpinner = false;
+    this.progressSpinner = false;
 
     //Estados
     this.commonsService.checkAcceso(procesos_ejg.estados)
@@ -454,14 +458,14 @@ export class GestionEjgComponent implements OnInit {
         if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
-    
+
     //Comprobar si el EJG tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
     this.checkEJGDesignas();
   }
 
   enviarEnlacesTarjeta() {
-    if(sessionStorage.getItem("actasItem")){
+    if (sessionStorage.getItem("actasItem")) {
       this.goResol();
     }
 
@@ -682,12 +686,12 @@ export class GestionEjgComponent implements OnInit {
     this.sigaServices.post("gestionejg_getEjgDesigna", this.body).subscribe(
       n => {
         let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;
-        if (ejgDesignas.length == 0){
+        if (ejgDesignas.length == 0) {
           this.permisoContrarios = true;
           this.permisoDefensaJuridica = true;
           this.permisoProcurador = true;
-        } 
-        else{
+        }
+        else {
           this.permisoContrarios = false;
           this.permisoDefensaJuridica = false;
           this.permisoProcurador = -false;

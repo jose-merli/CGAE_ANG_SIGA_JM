@@ -268,7 +268,7 @@ export class FichaDesignacionesComponent implements OnInit {
       }
 
       if (this.campos.idProcedimiento == undefined || this.campos.idProcedimiento == null || this.campos.idProcedimiento == 0) {
-        this.campos.idProcedimiento = dataRefresh.idPretension == undefined ? Number(dataRefresh.idPretension): null;
+        this.campos.idProcedimiento = dataRefresh.idPretension == undefined ? Number(dataRefresh.idPretension) : null;
       }
 
       if (this.campos.nombreJuzgado == undefined || this.campos.nombreJuzgado == null || this.campos.nombreJuzgado.trim().length == 0) {
@@ -600,8 +600,8 @@ export class FichaDesignacionesComponent implements OnInit {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
       this.tarjetaFija.campos[1].value = busquedaColegiado.numeroColegiado;
     }
-    if(this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == ''){
-      if(this.primerLetrado!= null && this.primerLetrado != undefined && this.primerLetrado.apellidosNombre != ''){
+    if (this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == '') {
+      if (this.primerLetrado != null && this.primerLetrado != undefined && this.primerLetrado.apellidosNombre != '') {
         this.tarjetaFija.campos[1].value = this.primerLetrado.apellidosNombre;
       }
     }
@@ -662,9 +662,15 @@ export class FichaDesignacionesComponent implements OnInit {
     }
   }
   backTo() {
-    sessionStorage.setItem("volver", 'true');
-    //this.router.navigate(['/designaciones']);
-    this.location.back();
+    // Vovlver a asistencia.
+    if (sessionStorage.getItem("filtroAsistencia")) {
+      var asistencia = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
+      sessionStorage.setItem("idAsistencia", asistencia.anio + "/" + asistencia.numero);
+      sessionStorage.setItem("vieneDeFichaDesigna", "true");
+      this.router.navigate(['/fichaAsistencia']);
+    }else{
+      this.router.navigate(['/designaciones']);
+    }
   }
 
   transformaFecha(fecha) {
@@ -690,8 +696,7 @@ export class FichaDesignacionesComponent implements OnInit {
     return this.datepipe.transform(date, pattern);
   }
 
-  formatDateWithHours(date)
-  {
+  formatDateWithHours(date) {
     const pattern = 'dd/MM/yyyy hh:mm';
     return this.datepipe.transform(date, pattern);
   }
@@ -909,7 +914,7 @@ export class FichaDesignacionesComponent implements OnInit {
             //Se introduce la informacion basica en el primer lugar del array
             //que posteriormente sera el editable.
             this.procurador.unshift({
-              fechaDesigna:  null,
+              fechaDesigna: null,
               numerodesignacion: null,
               nColegiado: newProcurador.nColegiado,
               nombre: newProcurador.nombre,
@@ -952,7 +957,7 @@ export class FichaDesignacionesComponent implements OnInit {
             { type: 'text', value: element.fechabaja }
           ];
         }
-        else{
+        else {
           obj = [
             { type: 'datePicker', value: element.fechaDesigna },
             { type: 'input', value: element.numerodesignacion },
@@ -974,7 +979,7 @@ export class FichaDesignacionesComponent implements OnInit {
       } else {
         let comboValue;
         this.comboRenuncia.forEach(renun => {
-          if(renun.value==element.motivosRenuncia)element.motivosRenuncia = renun.label;
+          if (renun.value == element.motivosRenuncia) element.motivosRenuncia = renun.label;
         });
         let obj = [
           { type: 'text', value: element.fechaDesigna },
@@ -997,7 +1002,7 @@ export class FichaDesignacionesComponent implements OnInit {
     this.rowGroups = this.gbtservice.getTableData(arr);
     this.rowGroupsAux = this.gbtservice.getTableData(arr);
     if (sessionStorage.getItem("datosProcurador")) {
-      
+
       this.listaTarjetas[5].opened = true;
     }
     this.totalRegistros = this.rowGroups.length;
@@ -1156,7 +1161,7 @@ export class FichaDesignacionesComponent implements OnInit {
       );
     }
   }
-  searchRelacionesAs(nueva){
+  searchRelacionesAs(nueva) {
     this.nuevaDesigna = false;
     this.searchRelaciones();
   }
@@ -1577,8 +1582,8 @@ export class FichaDesignacionesComponent implements OnInit {
                 if (datos != [] && datos.length != 0) {
                   this.letrados = datos;
                   this.primerLetrado = this.letrados[0];
-                  if(this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == ''){
-                    if(this.primerLetrado!= null && this.primerLetrado != undefined && this.primerLetrado.apellidosNombre != ''){
+                  if (this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == '') {
+                    if (this.primerLetrado != null && this.primerLetrado != undefined && this.primerLetrado.apellidosNombre != '') {
                       this.tarjetaFija.campos[1].value = this.primerLetrado.apellidosNombre;
                     }
                   }
@@ -1598,7 +1603,7 @@ export class FichaDesignacionesComponent implements OnInit {
                   ]
                   this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
                   this.listaTarjetas[6].letrado = datos[0];
-                }else if (datos.length == 0){
+                } else if (datos.length == 0) {
                   this.listaTarjetas[6].campos = [
                     {
                       "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
@@ -1636,8 +1641,8 @@ export class FichaDesignacionesComponent implements OnInit {
           if (datos != [] && datos.length != 0) {
             this.letrados = datos;
             this.primerLetrado = this.letrados[0];
-            if(this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == ''){
-              if(this.primerLetrado!= null && this.primerLetrado != undefined && this.primerLetrado.apellidosNombre != ''){
+            if (this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == '') {
+              if (this.primerLetrado != null && this.primerLetrado != undefined && this.primerLetrado.apellidosNombre != '') {
                 this.tarjetaFija.campos[1].value = this.primerLetrado.apellidosNombre;
               }
             }
@@ -1655,7 +1660,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
             this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') }
             this.listaTarjetas[6].letrado = datos[0];
-          }else if (datos.length == 0){
+          } else if (datos.length == 0) {
             this.listaTarjetas[6].campos = [
               {
                 "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/message';
 import { TranslateService } from '../../../../../commons/translate';
@@ -16,8 +16,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 export class FiltrosFicherosDevolucionesComponent implements OnInit {
 
   @Output() busqueda = new EventEmitter<boolean>();
-  
-  permisoEscritura: boolean;
+  @Input() permisoEscritura;
   showDatosGenerales: boolean = true;
   showSumatorios: boolean = true;
   progressSpinner: boolean = false;  
@@ -39,10 +38,6 @@ export class FiltrosFicherosDevolucionesComponent implements OnInit {
 
   ngOnInit() {
     this.getComboCuentaBancaria()
-
-    if (this.persistenceService.getPermisos() != undefined) {
-      this.permisoEscritura = this.persistenceService.getPermisos();
-    }
 
     // Opción para volver desde la ficha
     if (sessionStorage.getItem("mensaje") && sessionStorage.getItem("volver")) {

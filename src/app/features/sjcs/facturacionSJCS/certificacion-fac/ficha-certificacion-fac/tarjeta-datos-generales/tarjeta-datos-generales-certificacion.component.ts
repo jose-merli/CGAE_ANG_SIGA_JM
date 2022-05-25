@@ -45,6 +45,7 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
 
   @ViewChild("tabla") tabla: Table;
   @ViewChild("pUploadFile") pUploadFile: FileUpload;
+  filtrosAux;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private commonsService: CommonsService, private translateService: TranslateService,
     private router: Router, private sigaServices: SigaServices) { }
@@ -70,7 +71,9 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
       }
 
     }).catch(error => console.error(error));
-
+    if(sessionStorage.getItem("filtrosBusquedaCerti")){
+      this.filtrosAux = JSON.parse(sessionStorage.getItem("filtrosBusquedaCerti"));
+    }
   }
 
   onHideDatosGenerales() {
@@ -113,6 +116,14 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
     this.tabla.reset();
   }
 
+  disabledSubirFichero(){
+    if(this.esCAM &&  ["7"].includes(this.certificacion.idEstadoCertificacion)){
+      return false
+    }
+    return true;
+  }
+
+
   getListEstados(idCertificacion: string) {
     if (idCertificacion && idCertificacion != null && idCertificacion.trim().length > 0) {
       this.getListaEstadosEvent.emit(idCertificacion);
@@ -124,13 +135,14 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
 
     if (this.permisoEscritura && this.modoEdicion) {
 
-      if (this.esXunta && ["7", "3"].includes(this.certificacion.idEstadoCertificacion)) {
+      if (!this.esCAM && ["7", "3"].includes(this.certificacion.idEstadoCertificacion)) {
         respuesta = false;
       }
 
-      if (this.esCAM && ["6"].includes(this.certificacion.idEstadoCertificacion)) {
+      if (this.esCAM && ["7","6","3"].includes(this.certificacion.idEstadoCertificacion)) {
         respuesta = false;
       }
+      
 
     }
 
@@ -205,7 +217,13 @@ export class TarjetaDatosGeneralesCertificacionComponent implements OnInit, OnCh
   cerrarEnviar() {
 
     if (!this.disabledCerrar()) {
-      this.cerrarEvent.emit(true);
+      if(this.certificacion.idEstadoCertificacion == "6"   && this.esCAM){
+            sessionStorage.setItem("fichaCAM", JSON.stringify(this.certificacion));
+            this.router.navigate(['/fichaEnvioCam']);
+            
+      }else{
+        this.cerrarEvent.emit(true);
+      }
     }
   }
 

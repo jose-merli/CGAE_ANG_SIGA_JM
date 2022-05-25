@@ -16,12 +16,12 @@ import { SigaStorageService } from '../../../../../../siga-storage.service';
 })
 export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnChanges {
 
-  msgs : Message [] = [];
+  msgs: Message[] = [];
   @Input() modoLectura: boolean;
-  @Input() idAsistencia : string;
+  @Input() idAsistencia: string;
   @Input() editable: boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();
-  rows : number = 10;
+  rows: number = 10;
   rowsPerPage = [
     {
       label: 10,
@@ -43,47 +43,48 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
   columnas = [
   ];
 
-  seleccionMultiple : boolean = false;
-  seleccionarTodo : boolean = false;
-  progressSpinner : boolean = false;
-  numSeleccionado : number = 0;
-  selectedDatos : DocumentacionAsistenciaItem [] = [];
-  documentaciones : DocumentacionAsistenciaItem [] = [];
-  disableDelete : boolean = true;
+  seleccionMultiple: boolean = false;
+  seleccionarTodo: boolean = false;
+  progressSpinner: boolean = false;
+  numSeleccionado: number = 0;
+  selectedDatos: DocumentacionAsistenciaItem[] = [];
+  selectedDatosPadre: DocumentacionAsistenciaItem[] = [];
+  documentaciones: DocumentacionAsistenciaItem[] = [];
+  disableDelete: boolean = true;
   comboTipoDoc = [];
   comboAsociado = [];
-  isLetrado : boolean;
-  idPersonaUsuario : string;
+  isLetrado: boolean;
+  idPersonaUsuario: string;
 
   @ViewChild("table") table: DataTable;
-  constructor(private changeDetectorRef : ChangeDetectorRef,
-    private translateService : TranslateService,
-    private sigaServices : SigaServices,
-    private commonServices : CommonsService,
-    private datePipe : DatePipe,
-    private confirmationService : ConfirmationService,
-    private sigaStorageService : SigaStorageService) { }
-  
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService,
+    private sigaServices: SigaServices,
+    private commonServices: CommonsService,
+    private datePipe: DatePipe,
+    private confirmationService: ConfirmationService,
+    private sigaStorageService: SigaStorageService) { }
+
 
   ngOnInit() {
     this.isLetrado = this.sigaStorageService.isLetrado;
     this.idPersonaUsuario = this.sigaStorageService.idPersona;
     this.getComboTipoDoc();
-    if(this.idAsistencia){
+    if (this.idAsistencia) {
       this.getDocumentacion();
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.idAsistencia){ //En caso de que el valor del idAsistencia cambie si ya está inicializado el componente
+    if (changes.idAsistencia) { //En caso de que el valor del idAsistencia cambie si ya está inicializado el componente
       this.getComboAsociado();
     }
   }
 
-  getDocumentacion(){
+  getDocumentacion() {
 
     this.progressSpinner = true;
-    this.sigaServices.getParam("busquedaGuardias_searchDocumentacion","?anioNumero="+this.idAsistencia).subscribe(
+    this.sigaServices.getParam("busquedaGuardias_searchDocumentacion", "?anioNumero=" + this.idAsistencia).subscribe(
       n => {
         this.documentaciones = n.documentacionAsistenciaItems;
       },
@@ -96,7 +97,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
     );
   }
 
-  getComboTipoDoc(){
+  getComboTipoDoc() {
 
     this.sigaServices.get("combo_comboTipoDocAsistencia").subscribe(
       n => {
@@ -111,18 +112,18 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
     );
 
   }
-  getComboAsociado(){
-    if(this.idAsistencia){
+  getComboAsociado() {
+    if (this.idAsistencia) {
       this.comboAsociado.push({
-        label:'Asistencia',
-        value:'0'
+        label: 'Asistencia',
+        value: '0'
       });
       //Llamada servicio
-      this.sigaServices.getParam("combo_comboAsociadoAsistencia","?anioNumero="+this.idAsistencia).subscribe(
+      this.sigaServices.getParam("combo_comboAsociadoAsistencia", "?anioNumero=" + this.idAsistencia).subscribe(
         n => {
-          let comboItems : any [] = n.combooItems;
-          if(comboItems){
-            comboItems.forEach(comboItem =>{
+          let comboItems: any[] = n.combooItems;
+          if (comboItems) {
+            comboItems.forEach(comboItem => {
               this.comboAsociado.push(comboItem);
             });
           }
@@ -137,21 +138,21 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
     }
   }
 
-  save(){
+  save() {
 
-    if(this.isLetrado && this.documentaciones.find(documento => !documento.nuevoRegistro && documento.idPersona != this.idPersonaUsuario)){
+    if (this.isLetrado && this.documentaciones.find(documento => !documento.nuevoRegistro && documento.idPersona != this.idPersonaUsuario)) {
       this.showMsg('error', 'Error', 'No puede editar documentación de la que usted no es su creador');
       this.progressSpinner = false;
-    }else{
-    
+    } else {
+
       this.progressSpinner = true;
       this.sigaServices.postSendFileAndIdAsistencia("busquedaGuardias_subirDocumentoAsistencia", this.documentaciones, this.idAsistencia).subscribe(
         n => {
           this.progressSpinner = false;
           let result = n;
-          if(result.error){
+          if (result.error) {
             this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-          }else{
+          } else {
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             this.getDocumentacion();
             this.refreshTarjetas.emit(result.id);
@@ -166,46 +167,95 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
         }
       );
     }
-    
+
   }
 
-  delete(){
+  delete() {
     this.confirmationService.confirm({
       key: "confirmEliminar",
       message: this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.seguroEliminarDocumentos"),
       icon: "fa fa-question-circle",
-      accept: () => {this.executeDelete();},
-      reject: () =>{this.showMsg('info',"Cancelado",this.translateService.instant("general.message.accion.cancelada"));}
+      accept: () => { this.executeDelete(); },
+      reject: () => { this.showMsg('info', "Cancelado", this.translateService.instant("general.message.accion.cancelada")); }
     });
   }
 
-  executeDelete(){
+  executeDelete() {
 
     this.progressSpinner = true;
-    let documentos : DocumentacionAsistenciaItem[] = [];
-    if(Array.isArray(this.selectedDatos)){
+    let documentos: DocumentacionAsistenciaItem[] = [];
+    if (Array.isArray(this.selectedDatos)) {
       documentos = this.selectedDatos;
-    }else{
+    } else {
       documentos.push(this.selectedDatos);
     }
 
-    if( this.isLetrado && documentos.find(documento => documento.idPersona != this.idPersonaUsuario)){
+    if (this.isLetrado && documentos.find(documento => documento.idPersona != this.idPersonaUsuario)) {
       this.showMsg('error', 'Error', 'No puede borrar documentos de los que usted no es su creador');
       this.progressSpinner = false;
-    }else{
+    } else {
       this.sigaServices
-      .postPaginado("busquedaGuardias_eliminarDocumentoAsistencia", "?anioNumero="+this.idAsistencia, documentos)
-      .subscribe(
-        n => {
-          let result = n;
-          if(result.error){
-            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-          }else{
-            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
-            this.getDocumentacion();
-            this.refreshTarjetas.emit(this.idAsistencia);
-            this.disableDelete = true;
+        .postPaginado("busquedaGuardias_eliminarDocumentoAsistencia", "?anioNumero=" + this.idAsistencia, documentos)
+        .subscribe(
+          n => {
+            let result = n;
+            if (result.error) {
+              this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            } else {
+              this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
+              this.getDocumentacion();
+              this.refreshTarjetas.emit(this.idAsistencia);
+              this.disableDelete = true;
+            }
+          },
+          err => {
+            //console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
           }
+        );
+    }
+
+  }
+
+  download() {
+
+    this.progressSpinner = true;
+    let documentos: DocumentacionAsistenciaItem[] = [];
+    if (Array.isArray(this.selectedDatos)) {
+      documentos = this.selectedDatos;
+    } else {
+      documentos.push(this.selectedDatos);
+    }
+
+    this.sigaServices
+      .postDownloadFiles("busquedaGuardias_descargarDocumentosAsistencia", documentos)
+      .subscribe(
+        data => {
+          let blob = null;
+
+          if (data.size == 0) { //Si size es 0 es que no trae nada
+            this.showMsg('error', 'Error al descargar el documento', 'No se ha encontrado el documento indicado');
+          } else if (documentos.length == 1) {
+
+            let nombreFichero = documentos[0].nombreFichero;
+            if (!nombreFichero) {
+              nombreFichero = "default.pdf";
+            }
+            let mime = this.getMimeType(nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length));
+            blob = new Blob([data], { type: mime });
+            saveAs(blob, documentos[0].nombreFichero);
+          } else {
+
+            blob = new Blob([data], { type: "application/zip" });
+            saveAs(blob, "documentos.zip");
+          }
+          this.selectedDatos = [];
+          this.numSeleccionado = 0;
+          this.progressSpinner = false;
+          this.disableDelete = true;
         },
         err => {
           //console.log(err);
@@ -215,77 +265,28 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
           this.progressSpinner = false;
         }
       );
-    }
 
   }
 
-  download(){
+  isDatosObligatoriosRellenos() {
 
-    this.progressSpinner = true;
-    let documentos : DocumentacionAsistenciaItem[] = [];
-    if(Array.isArray(this.selectedDatos)){
-      documentos = this.selectedDatos;
-    }else{
-      documentos.push(this.selectedDatos);
-    }
+    let ok: boolean = true;
 
-    this.sigaServices
-    .postDownloadFiles("busquedaGuardias_descargarDocumentosAsistencia", documentos)
-    .subscribe(
-      data => {
-        let blob = null;
+    if (this.documentaciones) {
+      let nuevosDocumentos: DocumentacionAsistenciaItem[] = this.documentaciones.filter(documento => documento.nuevoRegistro);
 
-        if(data.size == 0){ //Si size es 0 es que no trae nada
-          this.showMsg('error', 'Error al descargar el documento', 'No se ha encontrado el documento indicado');
-        }else if (documentos.length == 1) {
-          
-          let nombreFichero = documentos[0].nombreFichero;
-          if(!nombreFichero){
-            nombreFichero = "default.pdf";
-          }
-          let mime = this.getMimeType(nombreFichero.substring(nombreFichero.lastIndexOf("."), nombreFichero.length));
-          blob = new Blob([data], { type: mime });
-          saveAs(blob, documentos[0].nombreFichero);
-        } else {
-
-          blob = new Blob([data], { type: "application/zip" });
-          saveAs(blob, "documentos.zip");
-        }
-        this.selectedDatos = [];
-        this.numSeleccionado = 0;
-        this.progressSpinner = false;
-        this.disableDelete = true;
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      },
-      () => {
-        this.progressSpinner = false;
-      }
-    );
-
-  }
-
-  isDatosObligatoriosRellenos(){
-
-    let ok : boolean = true;
-
-    if(this.documentaciones){
-      let nuevosDocumentos : DocumentacionAsistenciaItem [] =  this.documentaciones.filter(documento => documento.nuevoRegistro);
-
-      if(nuevosDocumentos){ //Comprobamos si se han rellenado los dos combos
+      if (nuevosDocumentos) { //Comprobamos si se han rellenado los dos combos
         ok = nuevosDocumentos.every(documento => documento.idTipoDoc != ''
-                                                 && documento.idTipoDoc != null
-                                                 && documento.idTipoDoc != undefined
-                                                 && documento.asociado != ''
-                                                 && documento.asociado != null
-                                                 && documento.asociado != undefined);
-        if(!ok){
+          && documento.idTipoDoc != null
+          && documento.idTipoDoc != undefined
+          && documento.asociado != ''
+          && documento.asociado != null
+          && documento.asociado != undefined);
+        if (!ok) {
           this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant('general.message.camposObligatorios'));
-        }else if (!nuevosDocumentos.every(documento => documento.nombreFichero != null
-                                                      && documento.nombreFichero != ''
-                                                      && documento.nombreFichero != undefined)){ //Comprobamos si se ha adjuntado fichero
+        } else if (!nuevosDocumentos.every(documento => documento.nombreFichero != null
+          && documento.nombreFichero != ''
+          && documento.nombreFichero != undefined)) { //Comprobamos si se ha adjuntado fichero
           this.showMsg('error', 'Error', this.translateService.instant('general.boton.adjuntarFichero'));
           ok = false;
         }
@@ -297,11 +298,11 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
   }
 
   validateSizeFile() {
-    if(this.idAsistencia && this.documentaciones && this.isDatosObligatoriosRellenos()){
+    if (this.idAsistencia && this.documentaciones && this.isDatosObligatoriosRellenos()) {
       this.progressSpinner = true;
-      let nuevoDocumento : DocumentacionAsistenciaItem = this.documentaciones.find(documento => documento.nuevoRegistro);
-      if(nuevoDocumento){
-        let fileData : File = nuevoDocumento.fileData;
+      let nuevoDocumento: DocumentacionAsistenciaItem = this.documentaciones.find(documento => documento.nuevoRegistro);
+      if (nuevoDocumento) {
+        let fileData: File = nuevoDocumento.fileData;
         this.sigaServices.get("plantillasDoc_sizeFichero")
           .subscribe(
             response => {
@@ -310,22 +311,22 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
               if (fileData.size < tamBytes) {
                 this.save();
               } else {
-                this.showMsg('error','Error',this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargarArchivo") + tam + " MB");
+                this.showMsg('error', 'Error', this.translateService.instant("informesYcomunicaciones.modelosComunicaciones.plantillaDocumento.mensaje.error.cargarArchivo") + tam + " MB");
                 this.progressSpinner = false;
               }
             });
-        }else {
-          this.save();
-        }
+      } else {
+        this.save();
+      }
     }
   }
 
 
-  nuevoDoc(){
+  nuevoDoc() {
 
-    let nuevoDoc : DocumentacionAsistenciaItem = new DocumentacionAsistenciaItem();
+    let nuevoDoc: DocumentacionAsistenciaItem = new DocumentacionAsistenciaItem();
     nuevoDoc.nuevoRegistro = true;
-    nuevoDoc.fechaEntrada = this.datePipe.transform(new Date(),'dd/MM/yyyy');
+    nuevoDoc.fechaEntrada = this.datePipe.transform(new Date(), 'dd/MM/yyyy');
     nuevoDoc.asociado = '';
     nuevoDoc.descAsociado = '';
     nuevoDoc.idDocumentacion = '';
@@ -371,7 +372,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
     return mime;
   }
 
-  getFile(dato : DocumentacionAsistenciaItem, pUploadFile: any, event: any) {
+  getFile(dato: DocumentacionAsistenciaItem, pUploadFile: any, event: any) {
     let fileList: FileList = event.files;
     let nombreCompletoArchivo = fileList[0].name;
     dato.nombreFichero = fileList[0].name;
@@ -379,14 +380,14 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
     pUploadFile.chooseLabel = nombreCompletoArchivo;
   }
 
-  onChangeAsociado(documento : DocumentacionAsistenciaItem){
-    if(documento.asociado
-        && documento.asociado != '0'){
+  onChangeAsociado(documento: DocumentacionAsistenciaItem) {
+    if (documento.asociado
+      && documento.asociado != '0') {
 
-          documento.disableIdTipoDoc = true;
-          documento.idTipoDoc = '2';
+      documento.disableIdTipoDoc = true;
+      documento.idTipoDoc = '2';
 
-    }else{
+    } else {
       documento.disableIdTipoDoc = false;
       documento.idTipoDoc = '';
     }
@@ -398,11 +399,11 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
     this.table.reset();
   }
 
-  onChangeSeleccionMultiple(){
-    if(this.table.selectionMode == 'single'){
+  onChangeSeleccionMultiple() {
+    if (this.table.selectionMode == 'single') {
       this.table.selectionMode = 'multiple';
       this.seleccionMultiple = true;
-    }else{
+    } else {
       this.table.selectionMode = 'single';
       this.seleccionMultiple = false;
     }
@@ -411,19 +412,19 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
     this.disableDelete = true;
   }
 
-  onChangeSeleccionarTodo(){
-    if(this.seleccionarTodo){
+  onChangeSeleccionarTodo() {
+    if (this.seleccionarTodo) {
       this.selectedDatos = this.documentaciones;
       this.numSeleccionado = this.selectedDatos.length;
       this.disableDelete = false;
-    }else{
+    } else {
       this.selectedDatos = [];
       this.numSeleccionado = 0;
       this.disableDelete = true;
     }
   }
 
-  onSelectRow(documentacion : DocumentacionAsistenciaItem){
+  onSelectRow(documentacion: DocumentacionAsistenciaItem) {
 
     if(this.table.selectionMode == 'single'){
       this.numSeleccionado = 1;
@@ -431,22 +432,24 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
       this.numSeleccionado = this.selectedDatos.length;
     }
     this.disableDelete = false;
+
+
   }
 
-  actualizaSeleccionados(){
-    if(this.table.selectionMode == 'single'){
+  actualizaSeleccionados() {
+    if (this.table.selectionMode == 'single') {
       this.numSeleccionado = 0;
       this.disableDelete = true;
-    }else{
+    } else {
       this.numSeleccionado = this.selectedDatos.length;
-      if(this.numSeleccionado <= 0){
+      if (this.numSeleccionado <= 0) {
         this.disableDelete = true;
       }
     }
   }
 
-  styleObligatorio(evento){
-    if((evento==undefined || evento==null || evento=="")){
+  styleObligatorio(evento) {
+    if ((evento == undefined || evento == null || evento == "")) {
       return this.commonServices.styleObligatorio(evento);
     }
   }
@@ -455,7 +458,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
     this.msgs = [];
   }
 
-  showMsg(severityParam : string, summaryParam : string, detailParam : string) {
+  showMsg(severityParam: string, summaryParam: string, detailParam: string) {
     this.msgs = [];
     this.msgs.push({
       severity: severityParam,
@@ -463,5 +466,8 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
       detail: detailParam
     });
   }
+
+
+
 
 }
