@@ -16,6 +16,7 @@ import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgram
 import { SigaServices } from '../../_services/siga.service';
 import { CommonsService } from '../../_services/commons.service';
 import { PaginadorComponent } from '../paginador/paginador.component';
+import { r } from '@angular/core/src/render3';
 
 
 /*interface Cabecera {
@@ -1115,8 +1116,12 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   HabilitarBotones(){
+    // Creamos Array con todas las filas selecionadas
+    var rowsSelecteds =  [];
     let validarInscripciones = '';
     let estadoNombre = '';
+    rowsSelecteds.push(this.selectedRowValue);
+    
     if (this.selectedRowValue[22] != undefined){
       validarInscripciones = this.selectedRowValue[23].value;
     }
