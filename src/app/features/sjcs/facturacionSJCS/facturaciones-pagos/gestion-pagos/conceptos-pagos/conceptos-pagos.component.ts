@@ -383,7 +383,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
     });
   }
 
-  changePorcentajeApagar(cantidad, dato: ConceptoPagoItem) {
+  changePorcentajeApagar(cantidad, dato) {
 
     if (cantidad.trim().length > 0 && !isNaN(cantidad) && parseFloat(cantidad) >= 0) {
       const porcentaje = cantidad * 100 / dato.importeFacturado;
@@ -401,10 +401,12 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
       dato.cantidadApagar = 0.00;
     }
 
-    dato.cantidadRestante = dato.importePendiente - dato.cantidadApagar;
+    dato.cantidadRestante   = (dato.importePendiente - parseFloat(dato.cantidadApagar)).toFixed(2);
     dato.porcentajeRestante = (dato.cantidadRestante * 100 / dato.importeFacturado).toFixed(2);
 
   }
+
+  
 
   modificaPorcentaje(porcentaje: number, dato: ConceptoPagoItem) {
 
@@ -434,7 +436,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
       dato.cantidadApagar = cantidad.toFixed(2);
     }
 
-    dato.cantidadRestante = dato.importePendiente - dato.cantidadApagar;
+    dato.cantidadRestante   = (dato.importePendiente - parseFloat(dato.cantidadApagar)).toFixed(2);
     dato.porcentajeRestante = (dato.cantidadRestante * 100 / dato.importeFacturado).toFixed(2);
 
   }
