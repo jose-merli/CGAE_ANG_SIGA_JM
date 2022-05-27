@@ -57,15 +57,15 @@
         <div class="card-footer h50 pt-5">
             <div class="text-right main-button butBottom mt10">
                 <button pButton (click)="checkAnular()"
-                    [disabled]="isLetrado || historico || !isAnySelected() || isDisabled" type="button" iconPos="left"
+                    [disabled]="isLetrado || historico || !isAnySelected() || disableAll" type="button" iconPos="left"
                     label="{{ 'general.boton.anular' | translate}}"></button>
 
                 <button pButton (click)="checkValidar()"
-                    [disabled]="isLetrado || historico || !isAnySelected() || isDisabled" type="button" iconPos="left"
+                    [disabled]="isLetrado || historico || !isAnySelected() || disableAll " type="button" iconPos="left"
                     label="{{ 'general.boton.validar' | translate}}"></button>
 
                 <button pButton (click)="checkDenegar()"
-                    [disabled]="isLetrado || historico || !isAnySelected() || isDisabled" type="button" iconPos="left"
+                    [disabled]="isLetrado || historico || !isAnySelected() || disableAll " type="button" iconPos="left"
                     label="{{ 'general.boton.denegar' | translate}}"></button>
 
                 <button *ngIf="!historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-history"
