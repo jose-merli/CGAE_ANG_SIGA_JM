@@ -86,7 +86,7 @@
                                     class="buttomStyle" pButton type="button" iconPos="left"
                                     [label]="cell.value"></button></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkboxPermisos'">
-                                <p-checkbox
+                                <p-checkbox *ngIf="cell.value[0] != undefined"
                                     (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, true, z)"
                                     [disabled]="colegiado" [(ngModel)]="cell.value[0]" binary="true">
                                 </p-checkbox>
@@ -254,7 +254,8 @@
                             (click)="toDoButton(cell.value, rowGroup.id, rowGroup, rowGroupEl)" class="buttomStyle"
                             pButton type="button" iconPos="left" [label]="cell.value"></button></span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'checkboxPermisos'">
-                        <p-checkbox (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, false, i)"
+                        <p-checkbox *ngIf="cell.value[0] != undefined" 
+                            (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, false, i)"
                             [disabled]="colegiado" [(ngModel)]="cell.value[0]" binary="true">
                         </p-checkbox>
                         <div *ngIf="cell.value[1] == 'Nuevo'"><button

@@ -47,7 +47,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Output() anySelected = new EventEmitter<any>();
   @Output() designasToDelete = new EventEmitter<any[]>();
   @Output() actuacionesToDelete = new EventEmitter<any[]>();
-  @Output() actuacionToAdd = new EventEmitter<Row>();
+  @Output() actuacionesToAdd = new EventEmitter<Row[]>();
   @Output() dataToUpdate = new EventEmitter<RowGroup[]>();
   @Output() totalActuaciones = new EventEmitter<Number>();
   @Output() numDesignasModificadas = new EventEmitter<any>();
@@ -451,11 +451,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
         if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
           this.indicesToUpdate.push([rowId, index]);
+
+          if ((row.cells[0].value[1] == undefined || row.cells[0].value[1].length == 0) && row.cells[6].value != undefined) {
+            this.newActuacionesArr.push(row);
+          }
         }
 
         } else{
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+          this.refreshData.emit(true);
         }
       }else{
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
@@ -474,45 +479,28 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   checkBoxDateChange(event, rowId, cell, row, rowGroup, padre, index){
-    if ((this.lastChangePadre == rowId && padre) || (this.lastChangeHijo == index && !padre)){
-      if (this.lastChange == "checkBoxDateChange"){
-        this.sumar = !this.sumar;
-        if (padre){
-          this.lastChangePadre = rowId;
-          this.numDesignasModificadas.emit(this.sumar);
-        }else{
-          this.lastChangeHijo = index;
-          this.numActuacionesModificadas.emit(this.sumar);
-        }
-      }
-    }else{
-      this.sumar = true;
-      if (padre){
-        this.lastChangePadre = rowId;
-        this.numDesignasModificadas.emit(this.sumar);
-      }else{
-        this.lastChangeHijo = index;
-        this.numActuacionesModificadas.emit(this.sumar);
-      }
-    }
     this.rowValidadas = [];
     if (row == undefined){
       //designacion
       if(this.isLetrado){
-        if (this.justActivarDesigLetrado != "1"){
-          this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
-        }else{
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
+        if(this.isLetrado){
+          if (this.justActivarDesigLetrado != "1"){
+            this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
           }else{
-            this.rowIdsToUpdate = []; //limpiamos
-          }
-          if (cell != undefined){
-            if (event == true){
-              /*Aquellas actuaciones sin fecha de justificación activando el check de las actuaciones se aplicará como fecha de justificación la fecha cumplimentada en el componente de acciones generales del listado*/
-              cell.value = this.fechaFiltro;
+            if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+              this.rowIdsToUpdate.push(rowId);
+            }
+            if (cell != undefined){
+              cell.value[0] = event;
             }
           }
+        }else{
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+            this.rowIdsToUpdate.push(rowId);
+          }
+            if (cell != undefined){
+              cell.value[0] = event;
+            }
         }
       }else{
         if (this.sumar){
@@ -532,14 +520,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
         if (row.cells[8].value  != true){
-          if (this.sumar){
-            this.rowIdsToUpdate.push(rowId);
-          }else{
-            this.rowIdsToUpdate = []; //limpiamos
-          }
-          if (event == true){
-            /*Aquellas actuaciones sin fecha de justificación activando el check de las actuaciones se aplicará como fecha de justificación la fecha cumplimentada en el componente de acciones generales del listado*/
-            cell.value = this.fechaFiltro;
+          if (row.cells[0].value[1] != undefined && row.cells[0].value[1].length != 0 && !this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
           }
         }else{
           this.rowValidadas.push(row);
@@ -550,6 +532,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.refreshData.emit(true);
       }
     }
+
+    this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+      this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
 
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "checkBoxDateChange";
@@ -655,10 +640,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
       if (cell.value == true){
         if (row != undefined){
-          row.cells[6].type = 'text';
-          row.cells[5].type = 'text';
 
-          if (row.cells[6].value == undefined || row.cells[6].value == 'false' || row.cells[6].value == false) {
+          if (row.cells[6].type == 'checkboxDate') {
+            row.cells[6].value = true;
+          } else if (row.cells[6].value == undefined || row.cells[6].value == 'false' || row.cells[6].value == false) {
+            row.cells[6].type = 'text';
+            row.cells[5].type = 'text';
             row.cells[6].value = this.fechaFiltro;
           }
           
@@ -694,7 +681,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       const isNew = !Array.isArray(row.cells[8].value);
       if((this.isLetrado && this.turnoAllow != "1") || (!this.isLetrado)){
-        if (isNew || !isNew && row.cells[8].value != true){
+        if (row.cells[8].value != true){
           if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
             this.indicesToUpdate.push([rowId, index]);
           }
@@ -1100,7 +1087,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               cell.value= comboAcreditacion[0].value;
             }
             rowGroupFound = true;
-          } 
+          }
 
         })
         if (comboModulos != [] && comboAcreditacion != [] && rowGroupFound == true){
@@ -1256,22 +1243,44 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   guardar(){
     let esPosibleCrearNuevo = true;
     let actuaciones;
+
+    // Obtenemos todas las nuevas actuaciones creadas a partir de los checkbox de justificación
+    this.rowGroups.forEach(rowGroup => {
+      this.newActuacionesArr = this.newActuacionesArr.concat(rowGroup.rows.filter(row => row.cells[6].type == 'checkboxDate' && row.cells[6].value));
+    });
+    
+
     //1. Guardar nuevos
     if (this.newActuacionesArr.length != 0){
 
       let newActuacionesArrNOT_REPEATED = new Set(this.newActuacionesArr);
       this.newActuacionesArr = Array.from(newActuacionesArrNOT_REPEATED);
 
-    this.newActuacionesArr.forEach( newAct => {
-      let idAcreditacionNew = newAct.cells[7].value;
-      esPosibleCrearNuevo = this.searchActuacionwithSameNumDesig(idAcreditacionNew, this.rowGroupWithNew);
-      if(esPosibleCrearNuevo){
-        this.actuacionToAdd.emit(newAct);
-        this.totalActuaciones.emit(this.newActuacionesArr.length);
-      } else{
-        this.showMsg('error', "No es posible crear otra actuación con valor de acreditación Inicio/Fin", '')
+      let newActuacionesToSend = [];
+    
+      this.newActuacionesArr.forEach( newAct => {
+        // Si las actuaciones han sido creadas a partir de los checkbox de actuacion,
+        // se establece la fecha de justificación con la fecha del selector y se cambian los
+        // valores de las columnas donde deberían ir los ids de los combos.
+        if (newAct.cells[6].type == 'checkboxDate' && newAct.cells[6].value) newAct.cells[6].value = this.fechaFiltro;
+        if (newAct.cells[1].type != 'multiselect1') newAct.cells[1].value = newAct.cells[21].value;
+        if (newAct.cells[4].type != 'multiselect2') newAct.cells[4].value = newAct.cells[20].value;
+        if (newAct.cells[7].type != 'multiselect3') newAct.cells[7].value = newAct.cells[10].value;
+        
+        
+        let idAcreditacionNew = newAct.cells[7].value;
+        esPosibleCrearNuevo = this.searchActuacionwithSameNumDesig(idAcreditacionNew, this.rowGroupWithNew);
+        if(esPosibleCrearNuevo){
+          newActuacionesToSend.push(newAct);
+        } else{
+          this.showMsg('error', "No es posible crear otra actuación con valor de acreditación Inicio/Fin", '')
+        }
+      });
+
+      if (newActuacionesToSend.length != 0) {
+        this.actuacionesToAdd.emit(newActuacionesToSend);
+        this.totalActuaciones.emit(newActuacionesToSend.length);
       }
-    });
     }
     
 
@@ -1286,8 +1295,21 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.rowGroups.forEach(row => {
       if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0 || this.indicesToUpdate.some(d => d[0] == row.id.toString())){
         let rowGroupToUpdate = row;
-        actuaciones = row.rows.filter(d => Array.isArray(d[0]) && d[0].length > 1 && d[0][1] != 'Nuevo');
-          this.rowValidadas.forEach(rowValid => {
+
+        let rowsToUpdate = [];
+
+        // Línea que actualiza la designación
+        rowsToUpdate.push(row.rows[0]);
+
+        // Se agregan las actuaciones modificadas
+        rowsToUpdate = rowsToUpdate.concat(row.rows.slice(1).filter(d => Array.isArray(d.cells[0].value) 
+          && d.cells[0].value.length > 1 
+          && d.cells[0].value[1] != undefined && d.cells[0].value[1] != 'Nuevo' 
+          && (d.cells[0].value[1] != undefined || d.cells[0].value[1] != '')));
+          
+        row.rows = rowsToUpdate;
+
+        this.rowValidadas.forEach(rowValid => {
             if (rowGroupToUpdate.rows.includes(rowValid)){
             }
           })
@@ -1440,7 +1462,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           let id = Object.keys(rowGroup.rows)[0];
           let newArrayCells: Cell[];
             newArrayCells= [
-              { type: 'checkbox', value: false, size: 120 , combo: null},
+              { type: 'checkboxPermisos', value: [undefined, ""], size: 120 , combo: null},
               { type: 'multiselect1', value: "0", size: 400 , combo: []},
               { type: 'input', value: desig[2].value, size: 200, combo: null},
               { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
@@ -1505,10 +1527,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             if(this.comboJuzgados.length != 0){
               newArrayCells= [
                 { type: 'checkbox', value: false, size: 120 , combo: null},
-                { type: 'multiselect1', value: this.comboJuzgados[0].value, size: 400 , combo: this.comboJuzgados},
+                { type: 'multiselect1', value: desig[1].value, size: 400 , combo: this.comboJuzgados},
                 { type: 'input', value: desig[2].value, size: 200, combo: null},
                 { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
+                { type: 'multiselect2', value: desig[21].value, size: 400 , combo: this.comboModulos}, //modulo
                 { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
                 { type: 'datePicker', value: this.formatDate(new Date()) , size: 100, combo: null},
                 { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},

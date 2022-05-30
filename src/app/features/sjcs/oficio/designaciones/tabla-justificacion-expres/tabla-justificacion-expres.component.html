@@ -4,7 +4,7 @@
     <div *ngIf="!progressSpinner" class="card-body p-0">
         <app-tabla-resultado-desplegable *ngIf="dataReady" [fechaFiltro]="fechaFiltro"
             [permisosFichaAct]="permisosFichaAct" [isLetrado]="isLetrado" (dataToUpdate)="getDataToUpdate($event)"
-            (actuacionToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)"
+            (actuacionesToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)"
             [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras"
             [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos"
             [comboJuzgados]="comboJuzgados"
@@ -28,7 +28,7 @@
             <div class="setPosition center col-lg-2 col-md-2 ajustar setDiv">
                 <div class="form-inline">
                     <label class="mr-3 textoAlineado form-group">Fecha Justificación</label>
-                    <app-fecha [(value)]='fechaFiltro' [utc]="false" (valueChangeSelected)="fillFechaFiltro($event)"
+                    <app-fecha [(value)]='fechaFiltro' [utc]="false" (valueChangeSelected)="fillFechaFiltro($event)" [disabled]="isLetrado"
                         (valueChangeInput)="fillFechaFiltro($event)"></app-fecha>
                 </div>
             </div>

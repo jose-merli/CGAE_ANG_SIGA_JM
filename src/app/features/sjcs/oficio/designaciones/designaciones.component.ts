@@ -154,7 +154,7 @@ export class DesignacionesComponent implements OnInit {
   insercionJustificacionExpres(event){
     this.muestraTablaJustificacion=false;
     this.progressSpinner = true;
-    this.sigaServicesNew.post("justificacionExpres_insercion", event).subscribe(
+    return this.sigaServicesNew.post("justificacionExpres_insercion", event).toPromise().then(
       data => {
         //refrescamos tabla
         this.busquedaJustificacionExpres();
@@ -166,6 +166,12 @@ export class DesignacionesComponent implements OnInit {
         this.progressSpinner = false;
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       },);
+  }
+
+  async insercionJustificacionExpresVarios(event: any[]){
+    for (const just of event) {
+      await this.insercionJustificacionExpres(just);
+    };
   }
 
   
@@ -340,7 +346,8 @@ export class DesignacionesComponent implements OnInit {
     this.progressSpinner=false;
   }
   newActuacionItem(event){
-    this.insercionJustificacionExpres(event);
+    // Se recorre la lista de nuevas actuaciones de forma secuencial
+    this.insercionJustificacionExpresVarios(event);
   }
   dataToUpdateArr(event){
     this.actualizacionJustificacionExpres(event);
