@@ -96,10 +96,10 @@
                     </div>
                   </div>
                   <div *ngIf="col.field == 'cantidadApagar' && !dato.nuevo">
-                    {{ dato[col.field] }} €
+                    {{ dato[col.field] | currency:'EUR' }}
                   </div>
                   <div *ngIf="col.field == 'cantidadRestante'">
-                    {{ dato[col.field] }} € <span
+                   {{ dato[col.field] | currency:'EUR' }}<span
                       *ngIf="dato['porcentajeRestante'] && null != dato['porcentajeRestante']">({{dato['porcentajeRestante']}}%)</span>
                   </div>
                 </td>

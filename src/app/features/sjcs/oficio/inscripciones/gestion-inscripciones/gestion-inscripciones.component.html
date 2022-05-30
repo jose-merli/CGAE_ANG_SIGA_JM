@@ -5,7 +5,7 @@
 
     <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple" [responsive]="true"
       [first]="first" #table class="tabla-listado" [paginator]="true" [rows]="selectedItem"
-      (onRowUnselect)="actualizaBotones(selectedDatos)" (onRowSelect)="actualizaBotones(selectedDatos)"
+      (onRowUnselect)="desactBotones(selectedDatos)" (onRowSelect)="actualizaBotones(selectedDatos)"
       [ngClass]="{ 'customCursor': selectMultiple}" paginatorPosition="both" (sortFunction)="customSort($event)" [customSort]="true">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
@@ -111,7 +111,7 @@
           </label>
           <!-- [disabled]="!permisos || ((!selectMultiple || !selectAll) && selectedDatos.length == 0 || disabledValidar || !isLetrado)" -->
           <button *ngIf="!historico" pButton
-            [disabled]="((!selectMultiple || !selectAll) && (selectedDatos.length == 0 || disabledValidar || checkValidarInscripciones))"
+            [disabled]="((!selectMultiple || !selectAll) && (selectedDatos.length == 0 || disabledValidar || checkValidarInscripciones)) || isLetrado"
             (click)="validar(selectedDatos)" type="button" label="{{ 'general.boton.validar' | translate}}"></button>
 
         </div>

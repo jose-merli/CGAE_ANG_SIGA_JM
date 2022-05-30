@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '../../../commons/translate';
+import { procesos_facturacionPyS } from '../../../permisos/procesos_facturacionPyS';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
 import { FiltrosBusquedaAdeudosComponent } from './filtros-busqueda-adeudos/filtros-busqueda-adeudos.component';
@@ -32,9 +33,17 @@ export class FicherosAdeudosComponent implements OnInit {
 
   ngOnInit() {
     this.buscar = false;
-    this.permisoEscritura=true //cambiar cuando se implemente los permisos
+    this.permisosFicheroAdeudos()
   }
 
+  permisosFicheroAdeudos(){
+    this.commonsService
+    .checkAcceso(procesos_facturacionPyS.ficheroAdeudos)
+    .then((respuesta) => {
+      this.permisoEscritura = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
   buscarFicherosAdeudos(event) {
     this.filtro = JSON.parse(JSON.stringify(this.filtros.body));
 

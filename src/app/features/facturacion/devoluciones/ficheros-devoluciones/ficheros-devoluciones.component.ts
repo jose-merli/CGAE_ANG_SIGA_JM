@@ -3,6 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Message } from 'primeng/components/common/message';
 import { TranslateService } from '../../../../commons/translate';
 import { FicherosDevolucionesItem } from '../../../../models/FicherosDevolucionesItem';
+import { procesos_facturacionPyS } from '../../../../permisos/procesos_facturacionPyS';
 import { CommonsService } from '../../../../_services/commons.service';
 import { OldSigaServices } from '../../../../_services/oldSiga.service'
 import { SigaServices } from '../../../../_services/siga.service';
@@ -20,7 +21,7 @@ export class FicherosDevolucionesComponent implements OnInit {
 
   msgs: Message[] = [];
   progressSpinner: boolean = false;
-
+  permisoEscritura:boolean = false;
   buscar: boolean = false;
   datos: FicherosDevolucionesItem[] = [];
 
@@ -38,7 +39,17 @@ export class FicherosDevolucionesComponent implements OnInit {
 
   ngOnInit() {
     this.buscar = false;
-    // this.permisoEscritura=true //cambiar cuando se implemente los permisos
+    this.permisosFicherosDevoluciones()
+  }
+
+  permisosFicherosDevoluciones(){
+    this.commonsService
+    .checkAcceso(procesos_facturacionPyS.ficheroDevoluciones)
+    .then((respuesta) => {
+      this.permisoEscritura = respuesta;
+
+    })
+    .catch((error) => console.error(error));
   }
 
   searchFicherosDevoluciones() {

@@ -26,7 +26,7 @@ export class TablaFicherosTransferenciasComponent implements OnInit {
   selectMultiple: boolean = false;
   selectAll: boolean = false;
   historico: boolean = false;
-  permisoEscritura: boolean = true;
+  @Input() permisoEscritura;
   progressSpinner: boolean = false;
 
   @Input() datos;

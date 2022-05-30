@@ -3,6 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { FicherosDevolucionesItem } from '../../../../../models/FicherosDevolucionesItem';
+import { procesos_facturacionPyS } from '../../../../../permisos/procesos_facturacionPyS';
+import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 
 @Component({
@@ -22,8 +24,8 @@ export class FichaFicherosDevolucionesComponent implements OnInit {
   openTarjetaDatosCarga: boolean = true;
   openTarjetaFacturas: boolean = false;
 
-  permisoEscrituraDatosGeneracion:boolean = true; //cambiar con los permisos
-  permisoEscrituraFacturas: boolean = true; //cambiar con los permisos
+  permisoEscrituraDatosGeneracion:boolean = false; 
+  permisoEscrituraFacturas: boolean = false; 
 
   permisos;
   nuevo;
@@ -37,12 +39,13 @@ export class FichaFicherosDevolucionesComponent implements OnInit {
 
   constructor(private translateService: TranslateService,
     private location: Location,
-    private persistenceService: PersistenceService
+    private persistenceService: PersistenceService,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
     this.progressSpinner = true;
-
+    this.permisosFicherosDevoluciones()
     if (sessionStorage.getItem("FicherosDevolucionesItem")) {
       this.body = JSON.parse(sessionStorage.getItem("FicherosDevolucionesItem")); 
       sessionStorage.removeItem("FicherosDevolucionesItem");
@@ -85,6 +88,16 @@ export class FichaFicherosDevolucionesComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
+  permisosFicherosDevoluciones(){
+    this.commonsService
+    .checkAcceso(procesos_facturacionPyS.ficheroDevoluciones)
+    .then((respuesta) => {
+      this.permisoEscrituraFacturas = respuesta;
+      this.permisoEscrituraDatosGeneracion = respuesta;
+    })
+    .catch((error) => console.error(error));
+  }
+
 
   goTop() {
     document.children[document.children.length - 1]

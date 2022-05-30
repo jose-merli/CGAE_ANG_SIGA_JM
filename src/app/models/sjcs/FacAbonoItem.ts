@@ -38,6 +38,7 @@ export class FacAbonoItem {
     pagoHasta:Date;
     identificadorFicheroT:number;
     grupoPago:String;
+    grupoPagoHasta:String;
 
     //Filtros - Colegiado
     colegioNombre:String;
