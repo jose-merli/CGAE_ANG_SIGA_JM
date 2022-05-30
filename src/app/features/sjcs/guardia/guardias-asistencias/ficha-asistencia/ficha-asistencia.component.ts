@@ -26,7 +26,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   editable: boolean = true;
   nuevaAsistencia: boolean = false;
   tarjetaFija = {
-    nombre: this.translateService.instant('justiciaGratuita.oficio.designas.resumen.asistencias'),
+    nombre: 'Resumen Asistencia',
     icono: 'fas fa-clipboard',
     detalle: false,
     fixed: true,
@@ -35,7 +35,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   };
   listaTarjetas = [{
     id: 'datosgenerales',
-    nombre: this.translateService.instant('justiciaGratuita.oficio.designas.datos.generales'),
+    nombre: 'Datos Generales',
     icono: 'fa fa-user',
     detalle: true,
     fixed: false,
@@ -46,7 +46,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   },
   {
     id: 'asistido',
-    nombre: this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.asistido'),
+    nombre: 'Asistido',
     icono: 'fa fa-user',
     detalle: true,
     fixed: false,
@@ -58,7 +58,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   },
   {
     id: 'contrarios',
-    nombre: this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.contrarios'),
+    nombre: 'Contrarios',
     icono: 'fa fa-users',
     detalle: true,
     fixed: false,
@@ -80,7 +80,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   },
   {
     id: 'observaciones',
-    nombre: this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.observaciones'),
+    nombre: "Observaciones",
     imagen: "",
     icono: "fa fa-university",
     detalle: true,
@@ -91,7 +91,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   },
   {
     id: 'relaciones',
-    nombre: this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.relaciones'),
+    nombre: "Relaciones",
     imagen: "",
     icono: "fas fa-link icon-ficha",
     detalle: true,
@@ -102,7 +102,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   },
   {
     id: 'documentacion',
-    nombre: this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.documentacion'),
+    nombre: "Documentación",
     imagen: "",
     icono: "fa fa-briefcase",
     detalle: true,
@@ -113,7 +113,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   },
   {
     id: 'caracteristicas',
-    nombre: this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.caracteristicas'),
+    nombre: "Caracteristicas",
     imagen: "",
     icono: 'fa fa-briefcase',
     detalle: false,
@@ -124,7 +124,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   },
   {
     id: 'actuaciones',
-    nombre: this.translateService.instant('justiciaGratuita.oficio.designas.actuaciones.actuaciones'),
+    nombre: "Actuaciones",
     imagen: "",
     icono: 'fa fa-map-marker',
     detalle: true,
