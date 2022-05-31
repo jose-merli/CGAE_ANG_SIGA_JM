@@ -7,10 +7,10 @@ export class ConceptoPagoItem {
     idGrupoFacturacion: string;
     importeFacturado: number;
     importePendiente: number;
-    porcentajePendiente: number;
-    porcentajeApagar: number | string;
+    porcentajePendiente: string;
+    porcentajeApagar: string;
     cantidadApagar: number;
     nuevo: boolean;
     cantidadRestante: number;
-    porcentajeRestante: number | string;
+    porcentajeRestante: string;
 }
