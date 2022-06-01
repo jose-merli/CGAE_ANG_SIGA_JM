@@ -93,6 +93,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() comboJuzgados = [];
   @Input() comboModulos = [];
   @Input()comboAcreditacion = [];
+  comboTipoDesigna = [];
   dataToUpdateArr: RowGroup[] = [];
   rowGroupWithNew = "";
   valorParametro: AnalyserNode;
@@ -349,6 +350,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.modalStateDisplay = true;
       }
     }
+
+    // Muesta o oculta las actuaciones de cada designación
+    let rowGroup = this.rowGroups.find(rowGroup => rowGroup.id == rowGroupId);
+    if (rowGroup != undefined) {
+      rowGroup.rows.forEach(row => {
+        row.position = row.position != 'collapse' ? 'collapse' : 'noCollapse';
+      });
+    }
   }
   searchChange(j: any) {
     if (this.pantalla == 'JE' || this.pantalla == 'AE') {
@@ -519,13 +528,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
-        if (row.cells[8].value  != true){
+        if (row.cells[8].value  != true) {
           if (row.cells[0].value[1] != undefined && row.cells[0].value[1].length != 0 && !this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
             this.indicesToUpdate.push([rowId, index]);
           }
         }else{
           this.rowValidadas.push(row);
-          this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
+          row.cells[8].value = false;
         }
       }else{
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
@@ -643,18 +652,25 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
           if (row.cells[6].type == 'checkboxDate') {
             row.cells[6].value = true;
-          } else if (row.cells[6].value == undefined || row.cells[6].value == 'false' || row.cells[6].value == false) {
+          } else if (row.cells[6].value == undefined) {
             row.cells[6].type = 'text';
             row.cells[5].type = 'text';
             row.cells[6].value = this.fechaFiltro;
+          } else {
+            row.cells[6].type = 'text';
+            row.cells[5].type = 'text';
           }
           
         }
         
       }else{
         if (row != undefined){
-        row.cells[6].type = 'datePicker';
-        row.cells[5].type = 'datePicker';
+          if (row.cells[6].type == 'checkboxDate') {
+            row.cells[6].value = true;
+          } else {
+            row.cells[6].type = 'datePicker';
+            row.cells[5].type = 'datePicker';
+          }
         }
       }
     }
@@ -1306,7 +1322,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           && d.cells[0].value.length > 1 
           && d.cells[0].value[1] != undefined && d.cells[0].value[1] != 'Nuevo' 
           && (d.cells[0].value[1] != undefined || d.cells[0].value[1] != '')));
-          
+
         row.rows = rowsToUpdate;
 
         this.rowValidadas.forEach(rowValid => {
@@ -1526,7 +1542,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             let newArrayCells: Cell[];
             if(this.comboJuzgados.length != 0){
               newArrayCells= [
-                { type: 'checkbox', value: false, size: 120 , combo: null},
+                { type: 'checkboxPermisos', value: [undefined, ''], size: 120 , combo: null},
                 { type: 'multiselect1', value: desig[1].value, size: 400 , combo: this.comboJuzgados},
                 { type: 'input', value: desig[2].value, size: 200, combo: null},
                 { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
@@ -1563,7 +1579,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                 { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
             }else{
               newArrayCells = [
-                { type: 'checkbox', value: false, size: 120 , combo: null},
+                { type: 'checkboxPermisos', value: [undefined, ''], size: 120 , combo: null},
                 { type: 'multiselect1', value: "0", size: 400 , combo: []},
                 { type: 'input', value: desig[2].value, size: 200, combo: null},
                 { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
@@ -1783,6 +1799,196 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     }
 
+    linkFichaDesigna(rowGroup: RowGroup, id: string) {
+      if (this.pantalla == "JE" && id) {
+        id = id.split("\n")[0];
+
+        this.busquedaDesignaciones(id);
+      }
+    }
+
+    busquedaDesignaciones(id) {
+      this.progressSpinner = true;
+      
+      let designaItem = new DesignaItem();
+      designaItem.ano = id.split("/")[0];
+      designaItem.codigo = id.split("/")[1];
+      let datos = [];
+
+      this.sigaServices.post("designaciones_busqueda", designaItem).subscribe(
+        n => {
+          let error = null;
+          datos = JSON.parse(n.body);
+          
+          if(datos[0] != null && datos[0] != undefined){
+            if(datos[0].error != null){
+              error = datos[0].error;
+            }
+          }
+  
+          datos.forEach(async element => {
+           element.factConvenio = element.ano;
+           element.anio = element.ano;
+           element.ano = 'D' +  element.ano + '/' + element.codigo;
+          //  element.fechaEstado = new Date(element.fechaEstado);
+          element.fechaEstado = this.formatDate(element.fechaEstado);
+          element.fechaFin = this.formatDate(element.fechaFin);
+          element.fechaAlta = this.formatDate(element.fechaAlta);
+          element.fechaEntradaInicio = this.formatDate(element.fechaEntradaInicio);
+           if(element.estado == 'V'){
+             element.sufijo = element.estado;
+            element.estado = 'Activo';
+           }else if(element.estado == 'F'){
+            element.sufijo = element.estado;
+            element.estado = 'Finalizado';
+           }else if(element.estado == 'A'){
+            element.sufijo = element.estado;
+            element.estado = 'Anulada';
+           }
+           element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
+           if(element.nombreInteresado != null){
+            element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
+           }
+           if(element.art27 == "1"){
+            element.art27 = "Si";
+           }else{
+            element.art27 = "No";
+           }
+           await this.getDatosAdicionales(element);
+           await this.getComboTipoDesignas();
+
+          this.progressSpinner = false;
+
+          this.enlaceADesignacion(element);
+          
+        },
+        err => {
+          this.progressSpinner = false;
+        });
+      },
+      err => {
+        this.progressSpinner = false;
+      });
+    }
+
+    getDatosAdicionales(element) {
+      this.progressSpinner = true;
+      let desginaAdicionales = new DesignaItem();
+      let anio = element.ano.split("/");
+      desginaAdicionales.ano = Number(anio[0].substring(1, 5));
+      desginaAdicionales.numero = element.numero;
+      desginaAdicionales.idTurno = element.idTurno;
+      return this.sigaServices.post("designaciones_getDatosAdicionales", desginaAdicionales).toPromise().then(
+        n => {
+         
+          let datosAdicionales = JSON.parse(n.body);
+          if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
+            element.delitos = datosAdicionales[0].delitos;
+            element.fechaOficioJuzgado =datosAdicionales[0].fechaOficioJuzgado;
+            element.observaciones = datosAdicionales[0].observaciones;
+            element.fechaRecepcionColegio = datosAdicionales[0].fechaRecepcionColegio;
+            element.defensaJuridica = datosAdicionales[0].defensaJuridica;
+            element.fechaJuicio = datosAdicionales[0].fechaJuicio;
+          }
+        },
+        err => {
+        }
+      );
+    }
+
+    enlaceADesignacion(dato) {
+      this.progressSpinner = true;
+      let idProcedimiento = dato.idProcedimiento;
+      let datosProcedimiento;
+      let datosModulo;
+      
+      if (dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined && this.comboTipoDesigna != undefined) {
+        this.comboTipoDesigna.forEach(element => {
+          if (element.value == dato.idTipoDesignaColegio) {
+            dato.descripcionTipoDesigna = element.label;
+          }
+        });
+      }
+      
+      let designaProcedimiento = new DesignaItem();
+      let data = sessionStorage.getItem("designaItem");
+      let dataProcedimiento = JSON.parse(data);
+      dataProcedimiento.idPretension = dato.idPretension;
+      dataProcedimiento.idTurno = dato.idTurno;
+      dataProcedimiento.ano = dato.factConvenio;
+      dataProcedimiento.numero = dato.numero
+      this.sigaServices.post("designaciones_busquedaProcedimiento", dataProcedimiento).subscribe(
+        n => {
+          datosProcedimiento = JSON.parse(n.body);
+          if (datosProcedimiento.length == 0) {
+            dato.nombreProcedimiento = "";
+            dato.idProcedimiento = "";
+          } else {
+            dato.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
+            dato.idProcedimiento = dataProcedimiento.idPretension;
+          }
+  
+          let designaModulo = new DesignaItem();
+          let dataModulo = JSON.parse(data);
+          dataModulo.idProcedimiento = idProcedimiento;
+          dataModulo.idTurno = dato.idTurno;
+          dataModulo.ano = dato.factConvenio;
+          dataModulo.numero = dato.numero
+          this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
+            n => {
+              datosModulo = JSON.parse(n.body);
+              if (datosModulo.length == 0) {
+                dato.modulo = "";
+                dato.idModulo = "";
+              } else {
+                dato.modulo = datosModulo[0].modulo;
+                dato.idModulo = datosModulo[0].idModulo;
+              }
+              this.sigaServices.post("designaciones_busquedaJuzgado", dato.idJuzgado).subscribe(
+                n => {
+                  dato.nombreJuzgado = n.body;
+                  sessionStorage.setItem("nuevaDesigna", "false");
+                  sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+                  this.router.navigate(["/fichaDesignaciones"]);
+      
+                },
+                err => {
+                  this.progressSpinner = false;
+                  dato.nombreJuzgado = "";
+                  sessionStorage.setItem("nuevaDesigna", "false");
+                  sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+                  this.router.navigate(["/fichaDesignaciones"]);
+                }, () => {
+                  this.progressSpinner = false;
+                });
+            },
+            err => {
+              this.progressSpinner = false;
+  
+              //console.log(err);
+            }, () => {
+              this.progressSpinner = false;
+            });
+        },
+        err => {
+          this.progressSpinner = false;
+          //console.log(err);
+        }, () => {
+          this.progressSpinner = false;
+        });
+    }
+
+    getComboTipoDesignas() {
+      this.progressSpinner = true;
+  
+      return this.sigaServices.get("designas_tipoDesignas").toPromise().then(
+        n => {
+          this.comboTipoDesigna = n.combooItems;
+        },
+        err => {
+        }
+      );
+    }
     
     linkFichaAsistencia(id){
       let idAsistencia : string = id;
@@ -1824,6 +2030,31 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           }
         );
 
+      } else if (this.pantalla == "JE" && idEJG) {
+        idEJG = idEJG.split("\n")[0];
+        // sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtro));
+        // sessionStorage.setItem("modoBusqueda","b");
+        let ejgItem = new EJGItem();
+        ejgItem.numAnnioProcedimiento = idEJG;
+        ejgItem.annio = idEJG.split("/")[0];
+        ejgItem.numero = idEJG.split("/")[1];
+        //ejgItem.tipoEJG = rowGroup.rows[0].cells[6].value;
+        this.progressSpinner = true;
+    
+        this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
+          n => {
+            let ejgObject : any []= JSON.parse(n.body).ejgItems;
+            let datosItem : EJGItem = ejgObject[0];
+            this.persistenceService.setDatos(datosItem);
+            this.consultaUnidadFamiliar(ejgItem);
+            this.commonsService.scrollTop();
+          },
+          err => {
+            console.error(err);
+            this.showMsg('error', 'Error al consultar el EJG','');
+            this.progressSpinner = false;
+          }
+        );
       }
     }
 

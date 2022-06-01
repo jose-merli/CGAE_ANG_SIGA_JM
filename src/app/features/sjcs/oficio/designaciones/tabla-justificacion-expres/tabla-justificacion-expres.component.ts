@@ -381,36 +381,51 @@ export class TablaJustificacionExpresComponent implements OnInit {
         ]
       };
       let numProcType = 'input';
+      let nigType = 'input';
       let moduloType = "select";
       let moduloValue = "";
       let moduloCombo = [];
-      if(this.isLetrado){
+      if(this.isLetrado || finalizada){
         numProcType = 'text';
+        nigType = 'text';
         moduloType = 'tooltip';
         moduloValue = designacion.categoriaProcedimiento;
         moduloCombo = designacion.procedimiento;
         
       }else{
         numProcType = 'input';
+        nigType = 'input';
         moduloType = 'select';
         moduloValue = designacion.idProcedimiento;
         moduloCombo = this.comboModulos;
       }
 
+      
+      let juzgadoType;
+      let juzgadoValue;
+      let juzgadoCombo;
+
+      if (this.isLetrado || finalizada) {
+        juzgadoType = "tooltip";
+        juzgadoValue = designacion.categoriaJuzgado;
+        juzgadoCombo = designacion.nombreJuzgado;
+      } else {
+        juzgadoType = "select";
+        juzgadoValue = designacion.idJuzgado;
+        juzgadoCombo = this.comboJuzgados;
+      }
+
       let numJuzType = 'multiselect1';
-      let juzgadoType = "select";
-      let juzgadoValue = designacion.idJuzgado;
-      let juzgadoCombo = this.comboJuzgados;
 
       let arrDesignacion = [];
       if (!this.colegiado){
       arrDesignacion = 
       [
-      { type: 'checkboxPermisos', value: [finalizada, ""], size: 120, combo: null},
+      { type: 'checkboxPermisos', value: [finalizada, ""], size: 120, combo: finalizada},
       //{ type: listaClienteType, value: listaCliente, size: 400, combo: listaClienteCombo },
       { type: juzgadoType, value: juzgadoValue, size: 400 , combo: juzgadoCombo }, //moduloç
       //{ type: numJuzType, value: designacion.idJuzgado, size: 200 , combo: null},
-      { type: 'input', value: designacion.nig, size: 200, combo: null},
+      { type: nigType, value: designacion.nig, size: 200, combo: null},
       { type: numProcType, value: designacion.numProcedimiento, size: 200 , combo: null},
       { type: moduloType, value: moduloValue, size: 400 , combo: moduloCombo }, //moduloç
      
@@ -418,7 +433,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       { type: 'invisible', value: this.formatDate(designacion.fechaActuacion), size: 200 , combo: null},
       { type: 'invisible', value: '' , size: 200, combo: null},
       { type: 'invisible', value: designacion.tipoAcreditacion , size: 200, combo: null},
-      { type: 'checkbox', value: validada, size: 80 , combo: null},
+      { type: 'invisible', value: validada, size: 80 , combo: null},
       { type: 'invisible', value: this.formatDate(designacion.fechaDesignacion) , size: 200, combo: null},
       { type: 'invisible', value: designacion.anioDesignacion , size: 0, combo: null},
       { type: 'invisible', value: designacion.anioProcedimiento , size: 0, combo: null},
@@ -463,7 +478,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     { type: 'invisible', value: this.formatDate(designacion.fechaActuacion), size: 200 , combo: null},
     { type: 'invisible', value: '' , size: 200, combo: null},
     { type: 'invisible', value: designacion.tipoAcreditacion , size: 200, combo: null},
-    { type: 'checkbox', value: validada, size: 80 , combo: null},
+    { type: 'invisible', value: validada, size: 80 , combo: null},
     { type: 'invisible', value: this.formatDate(designacion.fechaDesignacion) , size: 200, combo: null},
     { type: 'invisible', value: designacion.anioDesignacion , size: 0, combo: null},
     { type: 'invisible', value: designacion.anioProcedimiento , size: 0, combo: null},
@@ -560,7 +575,47 @@ export class TablaJustificacionExpresComponent implements OnInit {
           moduloValue2 = actuacion.idProcedimiento;
           moduloCombo2 = this.comboModulos;
         }
-        if (!this.colegiado){
+
+        if (finalizada) {
+          arr1 = [
+            { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto], size: 120, combo: null },
+            { type: 'tooltip', value: actuacion.categoriaJuzgado, size: 400 , combo: actuacion.nombreJuzgado},
+            { type: 'text', value: actuacion.nig, size: 200, combo: null},
+            { type: 'text', value: actuacion.numProcedimiento, size: 200 , combo: null},
+            { type: 'tooltip', value: actuacion.categoriaProcedimiento, size: 400 , combo: actuacion.procedimiento,}, //modulo
+            { type: 'text', value:  this.formatDate(actuacion.fecha), size: 200 , combo: null},
+            { type: 'text', value:  fechaJust , size: 200, combo: null},
+            { type: linkOrText, value: acreditacionPorcentaje , size: 200, combo: null},
+            { type: 'checkbox', value: validaAct, size: 80 , combo: finalizada },
+            { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idTipoAcreditacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.porcentaje , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.categoriaProcedimiento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idJurisdiccion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.complemento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.permitirAniadirLetrado , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.numAsunto , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idProcedimiento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idJuzgado , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.nombreJuzgado , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.fechaJustificacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.validada , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idFacturacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.anioProcedimiento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.descripcionFacturacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.docJustificacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.anulacion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.nigNumProcedimiento , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.permitirLetrado , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.anio , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idTurno , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.idInstitucion , size: 0, combo: null},
+            { type: 'invisible', value:  actuacion.facturado , size: 0, combo: null}
+          ];
+        } else if (!this.colegiado){
          arr1 = 
           [
           { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto], size: 120, combo: null },
@@ -695,7 +750,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
 //console.log('designacion.actuaciones: ', designacion.actuaciones)
     //if (actuacion.permitirAniadirLetrado == "1"){ 
 
-    if ((!this.isLetrado || designacion.letradoActuaciones == "1") && designacion.actuaciones.length == 0 && designacion.idProcedimiento != undefined && designacion.idProcedimiento.length != 0) {
+    if ((!this.isLetrado || designacion.letradoActuaciones == "1") && designacion.actuaciones.length == 0 && designacion.idProcedimiento != undefined && designacion.idProcedimiento.length != 0 && !finalizada) {
       
       let validaAct = false;
       if (designacion.validada == "1"){
@@ -792,7 +847,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       
     }
 
-    if (!this.isLetrado || designacion.letradoActuaciones == "1") {
+    if ((!this.isLetrado || designacion.letradoActuaciones == "1") && !finalizada) {
       let numProcType2 = 'input';
       if(this.isLetrado){
         numProcType2 = 'text';

@@ -669,6 +669,7 @@ export class FichaDesignacionesComponent implements OnInit {
       sessionStorage.setItem("vieneDeFichaDesigna", "true");
       this.router.navigate(['/fichaAsistencia']);
     }else{
+      sessionStorage.setItem("volver", "true");
       this.router.navigate(['/designaciones']);
     }
   }

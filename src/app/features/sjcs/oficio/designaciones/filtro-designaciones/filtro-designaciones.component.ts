@@ -498,6 +498,30 @@ export class FiltroDesignacionesComponent implements OnInit {
           }
         });
       } else {
+        if (!sessionStorage.getItem("volver")) {
+          if (this.filtroJustificacion.numDesignacion && this.filtroJustificacion.numDesignacion.trim().length != 0)
+            this.body.codigo = this.filtroJustificacion.numDesignacion;
+          if (this.filtroJustificacion.anioDesignacion && this.filtroJustificacion.anioDesignacion.trim().length != 0)
+            this.body.ano = parseInt(this.filtroJustificacion.anioDesignacion.toString());
+          if (this.filtroJustificacion.nombre && this.filtroJustificacion.nombre.trim().length != 0)
+            this.body.nombreInteresado = this.filtroJustificacion.nombre;
+          if (this.filtroJustificacion.apellidos && this.filtroJustificacion.apellidos.trim().length != 0)
+            this.body.apellidosInteresado = this.filtroJustificacion.apellidos;
+          if (this.filtroJustificacion.actuacionesValidadas && this.filtroJustificacion.actuacionesValidadas.trim().length != 0)
+            this.body.idActuacionesV = this.filtroJustificacion.actuacionesValidadas;
+          if (this.filtroJustificacion.estado && this.filtroJustificacion.estado.trim().length != 0)
+            this.body.estados = [this.filtroJustificacion.estado];
+
+          if (this.filtroJustificacion.designacionDesde != undefined)
+            this.fechaAperturaDesdeSelect = new Date(this.filtroJustificacion.designacionDesde);
+          if (this.filtroJustificacion.designacionHasta != undefined)
+            this.fechaAperturaHastaSelect = new Date(this.filtroJustificacion.designacionHasta);
+          if (this.filtroJustificacion.justificacionDesde != undefined)
+            this.fechaJustificacionDesdeSelect = new Date(this.filtroJustificacion.justificacionDesde);
+          if (this.filtroJustificacion.justificacionHasta != undefined)
+            this.fechaJustificacionHastaSelect = new Date(this.filtroJustificacion.justificacionHasta);
+        }
+
         this.checkAccesoDesigna();
         this.radioTarjeta = 'designas';
         this.showDesignas = true;
@@ -508,6 +532,33 @@ export class FiltroDesignacionesComponent implements OnInit {
     }
 
     if (event == 'justificacion') {
+      if (!sessionStorage.getItem("volver")) {
+        if (this.body.codigo && this.body.codigo.trim().length != 0)
+          this.filtroJustificacion.numDesignacion = this.body.codigo;
+        if (this.body.ano && this.body.ano.toString().trim().length != 0)
+          this.filtroJustificacion.anioDesignacion = new String(this.body.ano).toString();
+        if (this.body.nombreInteresado && this.body.nombreInteresado.trim().length != 0)
+          this.filtroJustificacion.nombre = this.body.nombreInteresado;
+        if (this.body.apellidosInteresado && this.body.apellidosInteresado.trim().length != 0)
+          this.filtroJustificacion.apellidos = this.body.apellidosInteresado;
+        if (this.body.idActuacionesV && this.body.idActuacionesV.trim().length != 0)
+          this.filtroJustificacion.actuacionesValidadas = this.body.idActuacionesV;
+        if (this.body.estados && this.body.estados.length != 0)
+          this.filtroJustificacion.estado = this.body.estados[0];
+
+        if (this.fechaAperturaDesdeSelect != undefined)
+          this.filtroJustificacion.designacionDesde = this.fechaAperturaDesdeSelect;
+        if (this.fechaAperturaHastaSelect != undefined)
+          this.filtroJustificacion.designacionHasta = this.fechaAperturaHastaSelect;
+        if (this.fechaJustificacionDesdeSelect != undefined)
+          this.filtroJustificacion.justificacionDesde = this.fechaJustificacionDesdeSelect;
+        if (this.fechaJustificacionHastaSelect != undefined)
+          this.filtroJustificacion.justificacionHasta = this.fechaJustificacionHastaSelect;
+
+        sessionStorage.setItem("filtroJustificacionExpres", JSON.stringify(this.filtroJustificacion));
+        sessionStorage.setItem("volver", "true");
+      }
+
       await this.checkAccesoJE();
       sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
       this.showDesignas = false;

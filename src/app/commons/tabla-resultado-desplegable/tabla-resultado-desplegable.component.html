@@ -38,11 +38,10 @@
                     [ngClass]="{'hoverBlue2': isSelected(rowGroup.id), 'fixedBlue': seleccionarTodo}" #rowSelected>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla != 'JE'"
-                        (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)"
                         class="table-row-header p-2 selectedRowClass mw81"
                         [ngClass]="{'hoverToClick': rowGroup.rows.length > 1}" [id]="rowGroup.id">
                         <span class="w100 cell-value enlace"><a
-                                (click)="linkFichaAsistencia(rowGroup.id)">{{rowGroup.id}}</a></span>
+                                (click)="linkFichaDesigna(rowGroup, rowGroup.id)">{{rowGroup.id}}</a></span>
                     </div>
                     <!--<div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id">
                         <span [ngClass]="{'color-red': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'red', 'color-blue': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'blue', 'color-green': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'green', 'color-black': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'black'}">D{{rowGroup.id}} </span>
@@ -50,8 +49,8 @@
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"
                         [ngClass]="{'hoverToClick': rowGroup.rows.length > 1}"
                         class="table-row-header p-2 selectedRowClass mw80" [id]="rowGroup.id"
-                        (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
-                        <span>D{{rowGroup.id}} </span>
+                        (click)="linkFichaDesigna(rowGroup, rowGroup.id)">
+                        <span class="enlace">D{{rowGroup.id}} </span>
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"
@@ -79,7 +78,7 @@
                             class="cell-wrapper selectedRowClass w-100">
                             <span class="column-title">{{cabeceras[z+1].name}}</span>
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'text'">{{cell.value}}</span>
-                            <span class="w100 cell-value selectWrap tooltip" *ngIf="cell.type == 'tooltip'"
+                            <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'tooltip'"
                                 [pTooltip]="cell.combo" tooltipPosition="bottom">{{cell.value}} </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button
                                     (click)="toDoButton(cell.value, rowGroup.id, rowGroup, rowGroupEl)"
@@ -88,7 +87,7 @@
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkboxPermisos'">
                                 <p-checkbox *ngIf="cell.value[0] != undefined"
                                     (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, true, z)"
-                                    [disabled]="colegiado" [(ngModel)]="cell.value[0]" binary="true">
+                                    [disabled]="colegiado || cell.combo" [(ngModel)]="cell.value[0]" binary="true">
                                 </p-checkbox>
                                 <div *ngIf="cell.value[1] == 'Nuevo'"><button
                                         (click)="toDoButton(cell.value[1], rowGroup.id, rowGroup, rowGroupEl)"
@@ -100,8 +99,8 @@
                                 <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}</div>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                                <p-checkbox (click)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, true, z)"
-                                    [(ngModel)]="cell.value" binary="true" [disabled]="colegiado">
+                                <p-checkbox (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, true, z)"
+                                    [(ngModel)]="cell.value" binary="true" [disabled]="colegiado || cell.combo">
                                 </p-checkbox>
                             </span>
 
@@ -226,8 +225,9 @@
                 </div>
             </div>
 
-            <div *ngFor="let row of rowGroup.rows | slice:1; let i = index" class="table-row child"  [ngClass]="{'collapse': row.position == 'collapse'}">
-                <div (click)="selectRow(rowSelected, rowGroup.id + i, i)" class="table-row-wrapper hoverBlue"
+            <div *ngFor="let row of rowGroup.rows | slice:1; let i = index" class="table-row child" [ngClass]="{'collapse': row.position == 'collapse'}">
+                <div *ngIf="row.position != 'collapse'"
+                    (click)="selectRow(rowSelected, rowGroup.id + i, i)" class="table-row-wrapper hoverBlue"
                     [ngClass]="{'hoverBlue2': isSelected(rowGroup.id + i), 'fixedBlue': seleccionarTodo}"
                     [id]="rowGroup.id" #rowSelected>
 
@@ -267,8 +267,8 @@
                         <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}</div>
                     </span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                        <p-checkbox (click)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, false, i)"
-                            [(ngModel)]="cell.value" binary="true" [disabled]="colegiado">
+                        <p-checkbox (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, false, i)"
+                            [(ngModel)]="cell.value" binary="true" [disabled]="colegiado || cell.combo">
                         </p-checkbox>
                     </span>
 
