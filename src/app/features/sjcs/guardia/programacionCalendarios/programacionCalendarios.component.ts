@@ -265,8 +265,8 @@ buscarCal(){
 let datosEntrada = 
     { 'idTurno': this.filtrosValues.idTurno,
       'idConjuntoGuardia': (this.filtrosValues.listaGuardias && this.filtrosValues.listaGuardias.length > 0) ? this.filtrosValues.listaGuardias.toString() : "",
-     'idGuardia': (this.filtrosValues.idGuardia  && this.filtrosValues.idGuardia.length > 0) ? this.filtrosValues.idGuardia.toString() : "",
-     'estado': (this.filtrosValues.estado  && this.filtrosValues.estado.length > 0) ? this.filtrosValues.estado.toString() : "",
+      'idGuardia': (this.filtrosValues.idGuardia  && this.filtrosValues.idGuardia.length > 0) ? this.filtrosValues.idGuardia.toString() : "",
+      'estado': (this.filtrosValues.estado  && this.filtrosValues.estado.length > 0) ? this.filtrosValues.estado.toString() : "",
       'fechaCalendarioDesde': this.filtrosValues.fechaCalendarioDesde,
       'fechaCalendarioHasta': this.filtrosValues.fechaCalendarioHasta,
       'fechaProgramadaDesde': this.filtrosValues.fechaProgramadaDesde,
@@ -478,6 +478,7 @@ delete(indexToDelete){
   let idGuardia;
   let idTurno;
   let idCalendarioProgramado;
+  let fechaDesde;
   let toDelete:Row[] = [];
   indexToDelete.forEach(index => {
     toDelete.push(this.rowGroups[index]);
@@ -495,13 +496,16 @@ delete(indexToDelete){
       if (index == 11){
         idTurno = c.value;
       }
-     /* if(c.type == "multiselect"){
+      if (index == 2) {
+        fechaDesde = c.value;
+      }
+      /* if(c.type == "multiselect"){
         c.combo.forEach(comboValue => {
           comboValue.value
         })
       }*/
     })
-    this.eliminarCal(idCalendarioProgramado, idGuardia, idTurno)
+    this.eliminarCal(idCalendarioProgramado, idGuardia, idTurno, fechaDesde)
   })
   this.rowGroupsAux = this.rowGroups;
   this.totalRegistros = this.rowGroups.length;
@@ -509,13 +513,14 @@ delete(indexToDelete){
 
 
 
-  eliminarCal(idCalendarioProgramado, idGuardia, idTurno){
+  eliminarCal(idCalendarioProgramado, idGuardia, idTurno, fechaDesde){
     let idInstitucion = this.authenticationService.getInstitucionSession();
- let deleteParams = 
+    let deleteParams = 
     { 'idTurno': idTurno,
       'idGuardia': idGuardia,
       'idCalendarioProgramado': idCalendarioProgramado,
-      'idInstitucion': idInstitucion
+      'idInstitucion': idInstitucion,
+      'fechaDesde': fechaDesde
     }
 ;  this.progressSpinner = true;
     this.sigaServices.post(

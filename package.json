@@ -59,7 +59,7 @@
 		"fullcalendar": "^3.9.0",
 		"jquery-ui": "^1.13.0",
 		"jwt-decode": "^2.2.0",
-		"moment": "^2.24.0",
+		"moment": "^2.29.3",
 		"ngx-cookie-service": "^1.0.10",
 		"ngx-device-detector": "^1.1.7",
 		"primeng": "^5.2.7",

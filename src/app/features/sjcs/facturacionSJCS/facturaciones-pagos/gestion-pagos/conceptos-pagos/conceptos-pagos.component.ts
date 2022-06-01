@@ -340,7 +340,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
 
     this.progressSpinner = true;
 
-    this.sigaService.getParam("pagosjcs_comboConceptoPago", `?idFacturacion=${this.idFacturacion}&idPago=${this.idPago}`).subscribe(
+    this.sigaService.getParam("pagosjcs_comboConceptoPago",  "?idFacturacion=" + this.idFacturacion).subscribe(
       (data: ConceptoPagoObject) => {
         this.progressSpinner = false;
 
@@ -415,7 +415,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
       if (porcentaje > 100 || porcentaje < 0) {
         dato.porcentajeApagar = Number.parseFloat("0").toFixed(2);
       } else {
-        dato.porcentajeApagar = porcentaje.toFixed(2);
+        dato.porcentajeApagar = porcentaje.toString();
       }
 
     } else {
@@ -428,7 +428,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
   changeCantidadApagar(dato) {
 
     let porcentaje = parseFloat(dato.porcentajeApagar);
-    let cantidad = porcentaje * dato.importeFacturado / 100;
+    let cantidad = porcentaje * dato.importePendiente / 100;
 
     if (cantidad > dato.importePendiente) {
       dato.cantidadApagar = 0.00;
@@ -437,7 +437,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
     }
 
     dato.cantidadRestante   = (dato.importePendiente - parseFloat(dato.cantidadApagar)).toFixed(2);
-    dato.porcentajeRestante = (dato.cantidadRestante * 100 / dato.importeFacturado).toFixed(2);
+    dato.porcentajeRestante = (dato.cantidadRestante * 100 / dato.importePendiente).toFixed(2);
 
   }
 

@@ -73,7 +73,7 @@
                   <div *ngIf="col.field == 'importePendiente'">
                     {{ dato[col.field] | currency:'EUR' }} <span
                       *ngIf="dato['porcentajePendiente'] && null != dato['porcentajePendiente']">({{
-                      dato['porcentajePendiente']
+                      dato['porcentajePendiente'] | number : '1.2-2'
                       }}%)</span>
                   </div>
                   <div
@@ -85,7 +85,7 @@
                     </div>
                   </div>
                   <div *ngIf="col.field == 'porcentajeApagar' && !dato.nuevo">
-                    {{ dato[col.field] }}%
+                    {{dato[col.field] | number : '1.2-2'}}%
                   </div>
                   <div
                     *ngIf="col.field == 'cantidadApagar' && dato.nuevo && dato.idConcepto && null != dato.idConcepto">
@@ -100,7 +100,7 @@
                   </div>
                   <div *ngIf="col.field == 'cantidadRestante'">
                    {{ dato[col.field] | currency:'EUR' }}<span
-                      *ngIf="dato['porcentajeRestante'] && null != dato['porcentajeRestante']">({{dato['porcentajeRestante']}}%)</span>
+                      *ngIf="dato['porcentajeRestante'] && null != dato['porcentajeRestante']">({{dato['porcentajeRestante'] | number : '1.2-2'}}%)</span>
                   </div>
                 </td>
               </tr>

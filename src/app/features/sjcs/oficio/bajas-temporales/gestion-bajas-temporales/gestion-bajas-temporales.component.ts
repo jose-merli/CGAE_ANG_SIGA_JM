@@ -266,42 +266,42 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
       for (let i = 0; i < this.cabeceras.length; i++) {
         let nombreCabecera = this.cabeceras[i].id;
-        if (nombreCabecera == sort.active){
+        if (nombreCabecera == sort.active) {
           //console.log("a.cells["+i+"].type:"+a.cells[i].type);
 
-          if (a.cells[i].type=='datePickerFin' && b.cells[i].type=='datePickerFin'){
+          if (a.cells[i].type == 'datePickerFin' && b.cells[i].type == 'datePickerFin') {
             return compareDate(a.cells[i].value[0], b.cells[i].value[0], isAsc);
           }
 
           let valorA = a.cells[i].value;
           let valorB = b.cells[i].value;
-          if (valorA!=null && valorB!=null){
-            if(isNaN(valorA)){ //Checked for numeric
-              const dayA = valorA.substr(0, 2) ;
+          if (valorA != null && valorB != null) {
+            if (isNaN(valorA)) { //Checked for numeric
+              const dayA = valorA.substr(0, 2);
               const monthA = valorA.substr(3, 2);
               const yearA = valorA.substr(6, 10);
               //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
-              var dt=new Date(yearA, monthA, dayA);
-              if(!isNaN(dt.getTime())){ //Checked for date
+              var dt = new Date(yearA, monthA, dayA);
+              if (!isNaN(dt.getTime())) { //Checked for date
                 return compareDate(a.cells[i].value, b.cells[i].value, isAsc);
-              }else{
+              } else {
               }
-            } else{
+            } else {
             }
           }
 
           return compare(a.cells[i].value, b.cells[i].value, isAsc);
-          
+
         }
       }
- 
+
     });
 
   }
 
-  getComboLabel(key: string){
-    for (let i = 0; i < this.comboTipo.length; i++){
-      if (this.comboTipo[i].value == key){
+  getComboLabel(key: string) {
+    for (let i = 0; i < this.comboTipo.length; i++) {
+      if (this.comboTipo[i].value == key) {
         return this.comboTipo[i].label;
       }
     }
@@ -313,30 +313,30 @@ export class GestionBajasTemporalesComponent implements OnInit {
     let isReturnArr = [];
     this.rowGroups = this.rowGroupsAux.filter((row) => {
       let isReturn = true;
-      for(let j=0; j<this.cabeceras.length;j++){
-        if (this.searchText[j] != " " &&  this.searchText[j] != undefined){
-          if (row.cells[j].value){
+      for (let j = 0; j < this.cabeceras.length; j++) {
+        if (this.searchText[j] != " " && this.searchText[j] != undefined) {
+          if (row.cells[j].value) {
             //console.log("tipo de celda:"+row.cells[j].type);
-            if(row.cells[j].type == 'select'){
+            if (row.cells[j].type == 'select') {
               let labelCombo = this.getComboLabel(row.cells[j].value);
               //console.log("valor de celda:"+labelCombo);
-              if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())){
+              if (!labelCombo.toLowerCase().includes(this.searchText[j].toLowerCase())) {
                 isReturn = false;
                 break;
               }
-            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())){
+            } else if (!row.cells[j].value.toString().toLowerCase().includes(this.searchText[j].toLowerCase())) {
               isReturn = false;
               break;
             }
-          }else{
-              if (this.searchText[j]!=""){
-                isReturn = false;
-                break;
-              }
+          } else {
+            if (this.searchText[j] != "") {
+              isReturn = false;
+              break;
+            }
           }
         }
       }
-      if (isReturn){
+      if (isReturn) {
         return row;
       }
 
@@ -519,14 +519,13 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   searchHistorical() {
-    this.historico = !this.historico;
-    this.persistenceService.setHistorico(this.historico);
+    this.historico = !this.persistenceService.getHistorico();
     this.searchHistorico.emit(this.historico);
   }
 
   checkGuardar() {
     if (this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" &&
-        this.rowGroups[0].cells[4].value != "" && (this.rowGroups[0].cells[5].value != null && this.rowGroups[0].cells[5].value[0] != "")) {
+      this.rowGroups[0].cells[4].value != "" && (this.rowGroups[0].cells[5].value != null && this.rowGroups[0].cells[5].value[0] != "")) {
       let mess = this.translateService.instant('sjcs.oficio.bajastemporales.nuevo.mensajeConfirmacion');
       let icon = "fa fa-question-circle";
       let keyConfirmation = "deleteTurnosGuardias";
@@ -579,20 +578,20 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 }
 
-function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+function compareDate(fechaA: any, fechaB: any, isAsc: boolean) {
 
   let dateA = null;
   let dateB = null;
-  if (fechaA!=null){
-    const dayA = fechaA.substr(0, 2) ;
+  if (fechaA != null) {
+    const dayA = fechaA.substr(0, 2);
     const monthA = fechaA.substr(3, 2);
     const yearA = fechaA.substr(6, 10);
     //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
     dateA = new Date(yearA, monthA, dayA);
   }
 
-  if (fechaB!=null){
-    const dayB = fechaB.substr(0, 2) ;
+  if (fechaB != null) {
+    const dayB = fechaB.substr(0, 2);
     const monthB = fechaB.substr(3, 2);
     const yearB = fechaB.substr(6, 10);
     //console.log("fecha b:"+ yearB+","+monthB+","+dayB);
@@ -617,11 +616,11 @@ function compare(a: number | string | Date, b: number | string | Date, isAsc: bo
 
   //console.log("compare isAsc:"+ isAsc+";");
 
-  if (a==null && b!=null){
-    return ( 1 ) * (isAsc ? 1 : -1);
+  if (a == null && b != null) {
+    return (1) * (isAsc ? 1 : -1);
   }
-  if (a!=null && b==null){
-    return ( -1 ) * (isAsc ? 1 : -1);
+  if (a != null && b == null) {
+    return (-1) * (isAsc ? 1 : -1);
   }
 
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

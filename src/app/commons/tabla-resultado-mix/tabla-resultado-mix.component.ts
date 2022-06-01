@@ -986,27 +986,24 @@ export class TablaResultadoMixComponent implements OnInit {
 
 
   }
+  
   eliminar(){
     let entra = false;
     if(!this.incompatibilidades){
       this.selectedArray.forEach((index) => {
           let fechaDesdeSelected = this.rowGroups[index].cells[2].value;
-          let idTurnoSelected = this.rowGroups[index].cells[11].value;
           let idGuardiaSelected = this.rowGroups[index].cells[12].value;
+          let idTurnoSelected = this.rowGroups[index].cells[11].value;
           let facturadoSelected = this.rowGroups[index].cells[13].value;
           let asistenciasSelected = this.rowGroups[index].cells[14].value;
-          this.rowGroups.forEach(rg => {
-            let fechaDesde = rg.cells[2].value;
-            let idGuardia = rg.cells[12].value;
-            this.getLastCalendario(idTurnoSelected, idGuardiaSelected, fechaDesdeSelected, idGuardiaSelected);
-            
-          });
+
+          this.getLastCalendario(idTurnoSelected, idGuardiaSelected, fechaDesdeSelected, idGuardiaSelected);
         
           if (entra || this.entra){
             //fechaDesde > fechaDesdeSelected: Calendarios seleccionados no son los últimos generados (por fecha desde) para la misma guardia.
             let errorcalPosterior = "No puede eliminarse el calendario con fecha desde " + fechaDesdeSelected + " , ya que existen calendarios posteriores para esta guardia";
-              let mess = 'Se van a borrar ' + this.selectedArray.length + ' calendarios ya generados en la programación seleccionada. ¿Desea continuar?';
-              this.confirmDelete(errorcalPosterior, mess);
+            let mess = 'Se van a borrar ' + this.selectedArray.length + ' calendarios ya generados en la programación seleccionada. ¿Desea continuar?';
+            this.confirmDelete(errorcalPosterior, mess);
           }else{
             this.eliminarCheck(facturadoSelected, asistenciasSelected);
           }

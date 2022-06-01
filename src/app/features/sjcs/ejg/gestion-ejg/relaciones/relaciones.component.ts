@@ -517,13 +517,14 @@ export class RelacionesComponent implements OnInit {
             //Se cambia el valor del campo ano para que se procese de forma adecuada 
             //En la ficha en las distintas tarjetas para obtener sus valores
             //
-            datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
+            /*datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
             datos.fechaEntradaInicio = desItem.fechaEntradaInicio;
             datos.nombreColegiado = desItem.nombreColegiado;
             datos.nombreProcedimiento = desItem.nombreProcedimiento;
             datos.nombreTurno = desItem.nombreTurno;
             datos.idInstitucion = desItem.idInstitucion;
-            datos.idTurno = desItem.idTurno;
+            datos.idTurno = desItem.idTurno;*/
+            // Mapear datos de BD a Designaciones.
             desItem = datos;
             desItem.anio = desItem.ano;
             desItem.idProcedimiento = desItem.idProcedimiento;
