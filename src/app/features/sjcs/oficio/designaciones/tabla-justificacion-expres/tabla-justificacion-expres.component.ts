@@ -146,10 +146,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
     await this.getJuzgados();
 
     this.sigaServices.get("combo_comboModulos").subscribe(
-      n => {
+      async n => {
         this.comboModulos = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboModulos);
-        this.cargaInicial();
+        await this.cargaInicial();
         this.progressSpinner = false;
        
       },
@@ -806,7 +806,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
           { type: 'tooltip', value: designacion.categoriaProcedimiento, size: 400 , combo: designacion.procedimiento }, //modulo
           { type: fechaActType, value:  this.formatDate(new Date()), size: 200 , combo: null},
           { type: 'checkboxDate', value:  false, size: 200, combo: null},
-          { type: linkOrText, value: acreditacion.label, size: 200, combo: null},
+          { type: "text", value: acreditacion.label, size: 200, combo: null},
           { type: 'checkbox', value: validaAct, size: 80 , combo: null },
           { type: 'invisible', value:  designacion.numDesignacion , size: 0, combo: null},
           { type: 'invisible', value:  acreditacion.value, size: 0, combo: null},

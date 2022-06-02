@@ -360,7 +360,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   searchChange(j: any) {
-    if (this.pantalla == 'JE' || this.pantalla == 'AE') {
+    if (this.pantalla == 'AE') {
       let isReturn = true;
       let sT;
       let isReturnArr = [];
@@ -402,6 +402,160 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
         }
     
+      });
+    } else if (this.pantalla == 'JE') {
+      this.rowGroups = this.rowGroupsAux.filter(rowGroup => {
+        let isReturn = true;
+
+        for (let j = 0; j < this.searchText.length && isReturn; j++) {
+          if (this.searchText[j] == undefined || this.searchText[j].trim().length == 0) continue;
+
+          if (this.cabeceras[j].id == "finalizado" && ["s", "si", "1"].includes(this.searchText[j].toLowerCase().trim())) {
+            isReturn = rowGroup.rows[0].cells[0].type == 'checkboxPermisos' && Array.isArray(rowGroup.rows[0].cells[0].value) && rowGroup.rows[0].cells[0].value[0];
+          } else if (this.cabeceras[j].id == "finalizado" && ["n", "no", "0"].includes(this.searchText[j].toLowerCase().trim())) {
+            isReturn = rowGroup.rows[0].cells[0].type == 'checkboxPermisos' && Array.isArray(rowGroup.rows[0].cells[0].value) && !rowGroup.rows[0].cells[0].value[0];
+          }
+  
+          if (this.cabeceras[j].id == "validar" && ["s", "si", "1"].includes(this.searchText[j].toLowerCase().trim())) {
+            isReturn = rowGroup.rows.some(row => row.cells[8].type == 'checkbox' && row.cells[8].value);
+          } else if (this.cabeceras[j].id == "validar" && ["n", "no", "0"].includes(this.searchText[j].toLowerCase().trim())) {
+            isReturn = rowGroup.rows.some(row => row.cells[8].type == 'checkbox' && !row.cells[8].value);
+          }
+  
+          if (["actuacion", "justificacion", "acreditacion"].includes(this.cabeceras[j].id)) {
+            if (this.cabeceras[j].id == "actuacion") {
+              isReturn = rowGroup.rows.some(row => (row.cells[5].type == 'text' || row.cells[5].type == 'datePicker') && row.cells[5].value.includes(this.searchText[j].trim()));
+            } else if (this.cabeceras[j].id == "justificacion") {
+              isReturn = rowGroup.rows.some(row => (row.cells[6].type == 'text' || row.cells[6].type == 'datePicker') && row.cells[6].value.includes(this.searchText[j].trim()));
+            } else if (this.cabeceras[j].id == "acreditacion") {
+              isReturn = rowGroup.rows.some(row => (row.cells[7].type == 'text' || row.cells[7].type == 'link') && row.cells[7].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim()));
+            }
+          }
+
+          if (["nig", "nproced"].includes(this.cabeceras[j].id)) {
+            if (this.cabeceras[j].id == "nig") {
+              isReturn = rowGroup.rows.some(row => (row.cells[2].type == 'text' || row.cells[2].type == 'input') && row.cells[2].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim()));
+            } else if (this.cabeceras[j].id == "nproced") {
+              isReturn = rowGroup.rows.some(row => (row.cells[3].type == 'text' || row.cells[3].type == 'input') && row.cells[3].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim()));
+            }
+          }
+
+          if (["juzgado", "modulo"].includes(this.cabeceras[j].id)) {
+            if (this.cabeceras[j].id == "juzgado") {
+              isReturn = rowGroup.rows.some(row => row.cells[1].type == 'tooltip' && (row.cells[1].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim()) || (row.cells[1].combo as any).toLowerCase().includes(this.searchText[j].toLowerCase().trim())));
+            } else if (this.cabeceras[j].id == "modulo") {
+              isReturn = rowGroup.rows.some(row => row.cells[4].type == 'tooltip' && (row.cells[4].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim()) || (row.cells[4].combo as any).toLowerCase().includes(this.searchText[j].toLowerCase().trim())));
+            }
+
+            if (!isReturn && this.cabeceras[j].id == "juzgado") {
+              isReturn = rowGroup.rows.some(row => {
+                if (row.cells[1].type == 'select' && row.cells[1].combo != undefined) {
+                  let item = row.cells[1].combo.find(e => e.value == row.cells[1].value);
+                  if (item != undefined && item.label != undefined) {
+                    return item.label.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+                  }
+                }
+                
+                return false;
+              });
+            } else if (!isReturn && this.cabeceras[j].id == "modulo") {
+              isReturn = rowGroup.rows.some(row => {
+                if (row.cells[1].type == 'select' && row.cells[1].combo != undefined) {
+                  let item = row.cells[1].combo.find(e => e.value == row.cells[1].value);
+                  if (item != undefined && item.label != undefined) {
+                    return item.label.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+                  }
+                }
+                
+                return false;
+              });
+            }
+          }
+
+          if (["anio", "ejgs", "clientes", ].includes(this.cabeceras[j].id)) {
+            if (this.cabeceras[j].id == "anio") {
+              isReturn = rowGroup.id.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+            } else if (this.cabeceras[j].id == "ejgs") {
+              isReturn = rowGroup.id2.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+            } else if (this.cabeceras[j].id == "clientes") {
+              isReturn = rowGroup.id3.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+            }
+          }
+        }
+        
+        return isReturn;
+      });
+
+      this.rowGroups.forEach(rowGroup => {
+        rowGroup.rows = rowGroup.rows.filter((row, rowIndex) => {
+          let isReturn = true;
+
+          for (let j = 0; j < this.searchText.length && isReturn; j++) {
+            if (this.searchText[j] == undefined || this.searchText[j].trim().length == 0) continue;
+
+            if (this.cabeceras[j].id == "validar" && ["s", "si", "1"].includes(this.searchText[j].toLowerCase().trim())) {
+              isReturn = row.cells[8].type == 'checkbox' && row.cells[8].value;
+            } else if (this.cabeceras[j].id == "validar" && ["n", "no", "0"].includes(this.searchText[j].toLowerCase().trim())) {
+              isReturn = row.cells[8].type == 'checkbox' && !row.cells[8].value;
+            }
+  
+            if (["actuacion", "justificacion", "acreditacion"].includes(this.cabeceras[j].id)) {
+              if (this.cabeceras[j].id == "actuacion") {
+                isReturn = (row.cells[5].type == 'text' || row.cells[5].type == 'datePicker') && row.cells[5].value.includes(this.searchText[j].trim());
+              } else if (this.cabeceras[j].id == "justificacion") {
+                isReturn = (row.cells[6].type == 'text' || row.cells[6].type == 'datePicker') && row.cells[6].value.includes(this.searchText[j].trim());
+              } else if (this.cabeceras[j].id == "acreditacion") {
+                isReturn = (row.cells[7].type == 'text' || row.cells[7].type == 'link') && row.cells[7].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+              }
+            }
+
+            if (["nig", "nproced"].includes(this.cabeceras[j].id)) {
+              if (this.cabeceras[j].id == "nig") {
+                isReturn = (row.cells[2].type == 'text' || row.cells[2].type == 'input') && row.cells[2].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+              } else if (this.cabeceras[j].id == "nproced") {
+                isReturn = (row.cells[3].type == 'text' || row.cells[3].type == 'input') && row.cells[3].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+              }
+            }
+
+            if (["juzgado", "modulo"].includes(this.cabeceras[j].id)) {
+              if (this.cabeceras[j].id == "juzgado") {
+                isReturn = row.cells[1].type == 'tooltip' && (row.cells[1].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim()) || (row.cells[1].combo as any).toLowerCase().includes(this.searchText[j].toLowerCase().trim()));
+              } else if (this.cabeceras[j].id == "modulo") {
+                isReturn = row.cells[4].type == 'tooltip' && (row.cells[4].value.toLowerCase().includes(this.searchText[j].toLowerCase().trim()) || (row.cells[4].combo as any).toLowerCase().includes(this.searchText[j].toLowerCase().trim()));
+              }
+
+              if (!isReturn && this.cabeceras[j].id == "juzgado") {
+                if (row.cells[1].type == 'select' && row.cells[1].combo != undefined) {
+                  let item = row.cells[1].combo.find(e => e.value == row.cells[1].value);
+                  if (item != undefined && item.label != undefined) {
+                    isReturn = item.label.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+                  }else {
+                    isReturn = false;
+                  }
+                } else {
+                  isReturn = false;
+                }           
+              } else if (!isReturn && this.cabeceras[j].id == "modulo") {
+                if (row.cells[4].type == 'select' && row.cells[4].combo != undefined) {
+                  let item = row.cells[4].combo.find(e => e.value == row.cells[4].value);
+                  if (item != undefined && item.label != undefined) {
+                    isReturn = item.label.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
+                  } else {
+                    isReturn = false;
+                  }
+                } else {
+                  isReturn = false;
+                }
+              }
+            }
+          }
+
+          if (rowIndex == 0 || Array.isArray(row.cells[0].value) && row.cells[0].value[1] == 'Nuevo') {
+            return true;
+          }
+
+          return isReturn;
+        });
       });
     }
     //let self = this;
