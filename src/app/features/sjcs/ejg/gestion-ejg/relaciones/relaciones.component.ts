@@ -480,6 +480,25 @@ export class RelacionesComponent implements OnInit {
           "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
           "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";
 
+          /*
+        let detalleSOJ: DetalleSOJItem;
+        detalleSOJ.numeroSOJ = dato.numero;
+        detalleSOJ.IDTIPOSOJ = dato.idtipo;
+        detalleSOJ.ANIO = dato.anio;
+        detalleSOJ.idPersonaJG = dato.idpersonajg;
+        detalleSOJ.idInstitucionJG = this.sigaStorageService.institucionActual;
+        detalleSOJ.actionE = "/JGR_PestanaSOJBeneficiarios.do"
+        detalleSOJ.tituloE="pestana.justiciagratuitasoj.solicitante";
+        detalleSOJ.conceptoE="SOJ";
+        detalleSOJ.NUMERO= dato.numero;
+        detalleSOJ.anioSOJ = dato.anio;
+        detalleSOJ.localizacionE = "gratuita.busquedaSOJ.localizacion";
+        detalleSOJ.IDINSTITUCION= this.sigaStorageService.institucionActual;
+        detalleSOJ.idTipoSOJ = dato.idtipo;
+        detalleSOJ.idInstitucionSOJ=dato.idinstitucion;
+        detalleSOJ.accionE="editar";
+        sessionStorage.setItem("detalleSOJ",JSON.stringify(detalleSOJ));
+          */
 
         /*let us = undefined;
         us = this.sigaServices.getOldSigaUrl() + "JGR_PestanaSOJDatosGenerales.do?numeroSOJ=" + dato.numero +
@@ -517,14 +536,13 @@ export class RelacionesComponent implements OnInit {
             //Se cambia el valor del campo ano para que se procese de forma adecuada 
             //En la ficha en las distintas tarjetas para obtener sus valores
             //
-            /*datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
+            datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
             datos.fechaEntradaInicio = desItem.fechaEntradaInicio;
             datos.nombreColegiado = desItem.nombreColegiado;
             datos.nombreProcedimiento = desItem.nombreProcedimiento;
             datos.nombreTurno = desItem.nombreTurno;
             datos.idInstitucion = desItem.idInstitucion;
-            datos.idTurno = desItem.idTurno;*/
-            // Mapear datos de BD a Designaciones.
+            datos.idTurno = desItem.idTurno;
             desItem = datos;
             desItem.anio = desItem.ano;
             desItem.idProcedimiento = desItem.idProcedimiento;
