@@ -28,7 +28,7 @@
         <div *ngFor="let rowGroup of rowGroups | slice:from:to" class="table-row-group" #rowGroupEl>
             <div class="table-row parent">
 
-                <span *ngIf="rowGroup.rows.length > 1" class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
+                <span *ngIf="rowGroup.rows.length > 1 && pantalla != 'JE'" class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
                     <span (click)="iconClickChange(iconrightEl, icondownEl)" #iconrightEl><i
                             class="fas fa-chevron-right"></i></span>
                     <span class="collapse" (click)="iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i
@@ -47,10 +47,15 @@
                         <span [ngClass]="{'color-red': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'red', 'color-blue': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'blue', 'color-green': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'green', 'color-black': colorByStateDesigmacion(rowGroup.estadoDesignacion) == 'black'}">D{{rowGroup.id}} </span>
                     </div>-->
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"
-                        [ngClass]="{'hoverToClick': rowGroup.rows.length > 1}"
-                        class="table-row-header p-2 selectedRowClass mw80" [id]="rowGroup.id"
-                        (click)="linkFichaDesigna(rowGroup, rowGroup.id)">
-                        <span class="enlace">D{{rowGroup.id}} </span>
+                        class="table-row-header p-2 selectedRowClass mw80" [id]="rowGroup.id">
+                        <span *ngIf="rowGroup.rows.length > 1" class="arrow2" [ngClass]="{'hoverToClick': rowGroup.rows.length > 1}">
+                            <span class="arrow2" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id); iconClickChange(iconrightEl, icondownEl)" #iconrightEl><i
+                                    class="fas fa-chevron-right"></i></span>
+                            <span class="collapse arrow2" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id); iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i
+                                    class="fas fa-chevron-down"></i></span>
+                        </span>
+                        
+                        <span class="enlace" (click)="linkFichaDesigna(rowGroup, rowGroup.id)">D{{rowGroup.id}} </span>
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"

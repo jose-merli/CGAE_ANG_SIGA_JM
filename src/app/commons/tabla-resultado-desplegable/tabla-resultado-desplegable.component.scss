@@ -146,6 +146,13 @@
   left: -20px;
 }
 
+.arrow2 {
+  height: 100%;
+  padding-right: 5px;
+  align-items: center;
+  display: flex;
+}
+
 .borderBottom {
   border-bottom: 1px solid #595959;
 }
@@ -298,6 +305,13 @@
     top: 8px;
   }
 
+  .arrow2 {
+    height: 100%;
+    padding-right: 5px;
+    align-items: center;
+    display: flex;
+  }
+
   ::ng-deep .mat-sort-header-arrow {
     margin: 0 !important;
   }
@@ -438,6 +452,13 @@
 .arrow {
   position: absolute;
   left: -20px;
+}
+
+.arrow2 {
+  height: 100%;
+  padding-right: 5px;
+  align-items: center;
+  display: flex;
 }
 
 ::ng-deep {

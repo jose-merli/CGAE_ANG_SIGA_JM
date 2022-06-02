@@ -550,10 +550,13 @@ export class FiltroDesignacionesComponent implements OnInit {
           this.filtroJustificacion.designacionDesde = this.fechaAperturaDesdeSelect;
         if (this.fechaAperturaHastaSelect != undefined)
           this.filtroJustificacion.designacionHasta = this.fechaAperturaHastaSelect;
-        if (this.fechaJustificacionDesdeSelect != undefined)
-          this.filtroJustificacion.justificacionDesde = this.fechaJustificacionDesdeSelect;
-        if (this.fechaJustificacionHastaSelect != undefined)
-          this.filtroJustificacion.justificacionHasta = this.fechaJustificacionHastaSelect;
+
+        if (!this.checkMostrarPendientes) {
+          if (this.fechaJustificacionDesdeSelect != undefined)
+            this.filtroJustificacion.justificacionDesde = this.fechaJustificacionDesdeSelect;
+          if (this.fechaJustificacionHastaSelect != undefined)
+            this.filtroJustificacion.justificacionHasta = this.fechaJustificacionHastaSelect;
+        }
 
         sessionStorage.setItem("filtroJustificacionExpres", JSON.stringify(this.filtroJustificacion));
         sessionStorage.setItem("volver", "true");
