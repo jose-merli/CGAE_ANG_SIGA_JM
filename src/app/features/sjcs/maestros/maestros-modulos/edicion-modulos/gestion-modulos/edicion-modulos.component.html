@@ -77,7 +77,7 @@
               <label>{{'menu.justiciaGratuita.maestros.Jurisdiccion' | translate }} (*)</label>
               <!-- <p-checkbox [(ngModel)]="modulosItem.jurisdiccionCheck" binary="true" label="{{'menu.justiciaGratuita.maestros.Jurisdiccion' | translate }}"
                 name="groupname"></p-checkbox> (*) -combo- -->
-              <p-dropdown [disabled]="modulosItem.historico || disableJurisdiccion()" [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
+              <p-dropdown [disabled]="modulosItem.historico" [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                 [showClear]="true" [(ngModel)]='modulosItem.idjurisdiccion' (onChange)="onChangeJurisdiccion($event)" placeholder="{{ 'general.boton.seleccionar' | translate }}"
                 [options]="jurisdicciones">
               </p-dropdown>

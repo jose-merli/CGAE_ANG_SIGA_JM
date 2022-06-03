@@ -643,7 +643,10 @@
                         <input type="text" class="form-control"
                             [disabled]="consulta" [(ngModel)]="solicitudEditar.iban" (ngModelChange)="autogenerarDatos()"
                             pInputText>
-                        <div *ngIf="(!validarIban() || solicitudEditar.banco == '' || solicitudEditar.banco == undefined) && solicitudEditar.iban != undefined && solicitudEditar.iban != '' && solicitudEditar.iban != ' '">
+                        <div *ngIf="(validarIban() && (solicitudEditar.banco == '' || solicitudEditar.banco == undefined)) && solicitudEditar.iban != undefined && solicitudEditar.iban != '' && solicitudEditar.iban != ' '">
+                            <small class="input-error">No existe banco para dicho IBAN</small>
+                        </div>
+                        <div *ngIf="!validarIban() && solicitudEditar.iban != undefined && solicitudEditar.iban != '' && solicitudEditar.iban != ' '">
                             <small class="input-error">IBAN incorrecto</small>
                         </div>
                     </div>
