@@ -2,6 +2,8 @@ import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ChangeDe
 import { OverlayPanel } from 'primeng/primeng';
 import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
+import { TranslateService } from '../../../../../../commons/translate/translation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ficha-bar-confi-fac',
@@ -53,21 +55,35 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   origenBaremos = true;
   modalTipos = false;
   disPrecio = false;
+  msgs: any[];
 
 
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Input() datos;
   @Output() disProc2014 = new EventEmitter<boolean>();
   @Input() permisoEscritura: boolean = false;
+  @Input() permisoAsistencias;
+  @Input() permisoActuaciones;
   showModal: boolean = false;
 
   @ViewChild("op")
   op: OverlayPanel;
 
-  constructor(private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private router: Router) { }
 
   ngOnInit() {
 
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   ngAfterViewInit() {
@@ -221,9 +237,22 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   }
 
   irAtipos(event) {
-    if(this.contAsAc== 'asi' || this.contAsAc== 'act'){
-      this.showModal = true;
-      this.op.toggle(event);
+    if (!this.permisoAsistencias && this.contAsAc== 'asi') {
+      // Acceso Denegado para acceder a Asistencia.
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+    }else if (!this.permisoActuaciones && this.contAsAc== 'act'){
+      // Acceso Denegado para acceder a Actuación.
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+    }else{
+      // Redirigir a Asistencia
+      if(this.contAsAc== 'asi'){
+        this.router.navigate(["/tiposAsistencia"]);
+      // Redirigir a Actuación.
+      }else{
+        this.router.navigate(["/tiposActuacion"]);
+        this.showModal = true;
+        this.op.toggle(event);
+      }
     }
   }
 

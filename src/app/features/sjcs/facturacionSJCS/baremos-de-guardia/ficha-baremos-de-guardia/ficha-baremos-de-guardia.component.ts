@@ -11,6 +11,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
+import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 
 export interface Enlace {
   id: string;
@@ -73,6 +74,9 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
   datos: BaremosGuardiaItem = new BaremosGuardiaItem();
   datosFichaBaremos;
   permisoEscritura;
+  permisoTipoEscritura;
+  permisoTiposAsistencia;
+  permisoTiposActuaciones;
   hitos:string[]=[]
   @ViewChild(FichaBarDatosGeneralesComponent) tarjetaDatosGenerales: FichaBarDatosGeneralesComponent;
   @ViewChild(FichaBarConfiFacComponent) tarjetaConfigFac: FichaBarConfiFacComponent;
@@ -90,15 +94,24 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
     this.commonsService.checkAcceso(procesos_facturacionSJCS.busquedaBaremosDeGuardia).then(respuesta => {
 
-      this.permisoEscritura = respuesta;
+      this.permisoTipoEscritura = respuesta;
 
-      if (this.permisoEscritura == undefined) {
+      if (this.permisoTipoEscritura == undefined) {
         sessionStorage.setItem("codError", "403");
         sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
         this.router.navigate(["/errorAcceso"]);
       }
 
     }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_maestros.tiposActuaciones).then(respuesta => {
+      this.permisoTiposActuaciones = respuesta;
+    }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_maestros.tiposAsistencias).then(respuesta => {
+      this.permisoTiposAsistencia = respuesta;
+    }).catch(error => console.error(error));
+
 
     if (sessionStorage.getItem('modoEdicionBaremo') != undefined) {
       this.modoEdicion = JSON.parse(sessionStorage.getItem('modoEdicionBaremo'));
@@ -134,9 +147,12 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.getBaremo(this.datos)
           this.progressSpinner = false
           
-          
-        
-          
+        }else{
+          this.datos = JSON.parse(sessionStorage.getItem('datos'));
+          //obtiene la configuracion de los baremos
+          this.progressSpinner = true
+          this.getBaremo(this.datos)
+          this.progressSpinner = false
         }
       } else {
         //this.getGuardiasByConf(true);

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { MultiSelect } from '../../../../../../node_modules/primeng/primeng';
 import { ConfirmationService } from "primeng/api";
 import { TiposAsistenciaObject } from '../../../../models/sjcs/TiposAsistenciaObject';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -68,7 +69,8 @@ export class TiposAsistenciaComponent implements OnInit {
     private sigaServices: SigaServices, private translateService: TranslateService,
     private commonsService: CommonsService,
     private router: Router,
-    private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -1074,5 +1076,8 @@ export class TiposAsistenciaComponent implements OnInit {
     this.msgs = [];
   }
 
+  backTo(){
+    this.location.back()
+  }
 
 }

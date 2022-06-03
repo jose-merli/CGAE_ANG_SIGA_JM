@@ -7,6 +7,7 @@ import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
 import { MultiSelect, ConfirmationService } from '../../../../../../node_modules/primeng/primeng';
 import { TiposActuacionObject } from '../../../../models/sjcs/TiposActuacionObject';
+import { Location } from '@angular/common';
 
 
 @Component({
@@ -58,7 +59,8 @@ export class TiposActuacionComponent implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef, private persistenceService: PersistenceService,
     private sigaServices: SigaServices, private translateService: TranslateService,
     private commonsService: CommonsService, private router: Router,
-    private confirmationService: ConfirmationService) { }
+    private confirmationService: ConfirmationService,
+    private location: Location) { }
 
   ngOnInit() {
     this.getComboTiposAsistencia();
@@ -869,6 +871,10 @@ export class TiposActuacionComponent implements OnInit {
     dato.onPanelShow;
     // dato.overlayVisible = true;
 
+  }
+
+  backTo(){
+    this.location.back()
   }
 
 }

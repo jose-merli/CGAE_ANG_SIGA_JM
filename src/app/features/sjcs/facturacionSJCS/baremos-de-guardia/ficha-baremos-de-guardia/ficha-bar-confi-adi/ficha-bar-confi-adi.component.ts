@@ -3,7 +3,8 @@ import { OverlayPanel } from 'primeng/primeng';
 import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
-
+import { Router } from '@angular/router';
+import { TranslateService } from '../../../../../../commons/translate/translation.service';
 
 
 @Component({
@@ -31,17 +32,21 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Input() disProc2014;
   @Input() permisoEscritura: boolean = false;
+  @Input() permisoActuaciones: boolean = false;
   showModal: boolean = false;
   origenBaremos = true;
   modalTipos = false;
   disPrecio: boolean = false;
   disableImput: boolean = false;
   disJuiciosRapidos: boolean = false;
+  msgs: any[];
 
   @ViewChild("op")
   op: OverlayPanel;
   
-  constructor(private localStorageService: SigaStorageService) { }
+  constructor(private localStorageService: SigaStorageService,
+    private translateService: TranslateService,
+    private router: Router) { }
 
   ngOnInit() {
   }
@@ -132,10 +137,22 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   }
 
   show(event) {
-    if(this.contAsAc== 'asi' || this.contAsAc== 'act'){
-      this.showModal = true;
-      this.op.toggle(event);
-    }
+  if (!this.permisoActuaciones && this.contAsAc== 'act'){
+    // Acceso Denegado para acceder a Actuación.
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+  }else{
+     // Redirigir a Actuación.
+    this.router.navigate(["/tiposActuacion"]);
+  }
+  }
+  
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
 }

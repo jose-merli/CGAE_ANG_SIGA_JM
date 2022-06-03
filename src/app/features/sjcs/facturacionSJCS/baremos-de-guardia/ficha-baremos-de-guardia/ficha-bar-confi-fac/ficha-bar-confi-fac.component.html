@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div id="facSJCSFichaBarConfiFac">
 
     <div class="card">
@@ -97,7 +98,7 @@
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.minimo' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" (input)="onChangeMinimo($event.target.value)" [(ngModel)]="filtrosDis.importeMinDis"
-                                class="form-control" />
+                                class="form-control importesBaremos" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                            
@@ -105,22 +106,22 @@
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremos.dipsAsuntos' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.dispAsuntosDis"
-                                class="form-control" />
+                                class="form-control importesBaremos" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremos.aPartir' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.aPartirDis"
-                                class="form-control" />
+                                class="form-control importesBaremos" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.importeMaxDis"
-                                class="form-control" />
+                                class="form-control importesBaremos" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremos.aPartir' | translate }}</label>
                             <input type="number" [disabled]="!disableImputDis || !permisoEscritura" [(ngModel)]="filtrosDis.aPartirMax"
-                                class="form-control" />
+                                class="form-control importesBaremos" />
                         </div>
                     </div>
                 </div>
@@ -128,7 +129,7 @@
                 <div class="bloque col-lg-6 col-md-6 col-sm-6">
                     <div class="form-row">
                         <div class="form-group col-lg-12 col-md-12">
-                            <p-checkbox name="porAsisActu" [(ngModel)]="asiac || !permisoEscritura" value="asiac" binary="true" (onChange)="onChangeAsAc($event)"
+                            <p-checkbox name="porAsisActu" [(ngModel)]="asiac" value="asiac" binary="true" (onChange)="onChangeAsAc($event)"
                                 label="Por asistencia / actuaciones" class="ml-0">
                             </p-checkbox>
                         </div>
@@ -190,7 +191,7 @@
                         <div class="form-group col-lg-6 col-md-6 divfacturacionesImporte">
                             <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }}</label>
                             <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.importeAsAc"
-                                class="form-control" />
+                                class="form-control importesBaremos" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6 align-self-center m-md-0 pt-md-2">
                             <a [ngClass]="{ 'enlace': contAsAc== 'asi' || contAsAc== 'act'}" (click)="irAtipos($event)"
@@ -200,12 +201,12 @@
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.minimo' | translate }}</label>
                             <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.importeMinAsAc"
-                                class="form-control" />
+                                class="form-control importesBaremos" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
                             <input type="number" [disabled]="!disableImputAct || !permisoEscritura" [(ngModel)]="filtrosAsAc.importeMaxAsAc"
-                                class="form-control" />
+                                class="form-control importesBaremos" />
                         </div>
                     </div>
                 </div>

@@ -1,3 +1,4 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div id="facSJCSFichaBarConfiAdi">
 
     <div class="card">
@@ -60,20 +61,20 @@
                                 [(ngModel)]="precio" name="precio" value="porTipos"
                                 label="{{'facturacionSJCS.baremos.precioTipos' | translate}}"></p-radioButton>
                         </div>
-                        <div class="form-group col-lg-6 col-md-6">
+                        <div class="form-group col-lg-6 col-md-6 ">
                             <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }}</label>
                             <input [disabled]="!disableImput || !permisoEscritura" type="number"
-                                [(ngModel)]="filtrosAdi.importe" class="form-control" />
+                                [(ngModel)]="filtrosAdi.importe" class="form-control importesBaremos" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6 align-self-center mt-md-3">
-                            <a [ngClass]="{ 'enlace': contAsAc== 'asi' || contAsAc== 'act'}" (click)="show($event)"
+                            <a [ngClass]="{ 'enlace': this.precio == 'porTipos'}" (click)="show($event)"
                                 *ngIf="modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
                             <a *ngIf="!modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
                             <input type="number" [disabled]="!disableImput || !permisoEscritura"
-                                [(ngModel)]="filtrosAdi.importeMax" class="form-control" />
+                                [(ngModel)]="filtrosAdi.importeMax" class="form-control importesBaremos" />
                         </div>
                     </div>
                 </div>
@@ -126,11 +127,11 @@
             <div class="row">
                 <div class="form-group col-lg-6 col-md-6">
                     <label>{{ 'menu.justiciaGratuita.soj' | translate }}</label>
-                    <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeSOJ" class="form-control" />
+                    <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeSOJ" class="form-control importesBaremos" />
                 </div>
                 <div class="form-group col-lg-6 col-md-6">
                     <label>{{ 'menu.justiciaGratuita.ejg' | translate }}</label>
-                    <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeEJG" class="form-control" />
+                    <input type="number" [disabled]="!permisoEscritura" [(ngModel)]="importeEJG" class="form-control importesBaremos" />
                 </div>
             </div>
 

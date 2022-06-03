@@ -34,16 +34,18 @@
 
       </div>
 
-      <app-ficha-bar-datos-generales *ngIf = "tieneDatos" [permisoEscritura] = "permisoEscritura" (addEnlace)="addEnlace($event)" (guardiasByConf)="getGuardiasByConf($event)" (rest)="restablecerDatosGenerales($event)" [datos] = "datosFichDatGenerales" (disProc2014)="disProc2014($event)" [modoEdicion] = "modoEdicion"></app-ficha-bar-datos-generales>
+      <app-ficha-bar-datos-generales *ngIf = "tieneDatos" [permisoEscritura] = "permisoTipoEscritura" (addEnlace)="addEnlace($event)" (guardiasByConf)="getGuardiasByConf($event)" (rest)="restablecerDatosGenerales($event)" [datos] = "datosFichDatGenerales" (disProc2014)="disProc2014($event)" [modoEdicion] = "modoEdicion"></app-ficha-bar-datos-generales>
 
-      <app-ficha-bar-confi-fac  [permisoEscritura] = "permisoEscritura" (addEnlace)="addEnlace($event)" [datos] = "datosFichConfiFac"></app-ficha-bar-confi-fac>
+      <app-ficha-bar-confi-fac  [permisoEscritura] = "permisoTipoEscritura" [permisoActuaciones] = "permisoTiposActuaciones" [permisoAsistencias] = "permisoTiposAsistencia" 
+      (addEnlace)="addEnlace($event)" [datos] = "datosFichConfiFac"></app-ficha-bar-confi-fac>
 
-      <app-ficha-bar-confi-adi  [permisoEscritura] = "permisoEscritura" (addEnlace)="addEnlace($event)" [disProc2014]="proceso2014"></app-ficha-bar-confi-adi>
+      <app-ficha-bar-confi-adi  [permisoEscritura] = "permisoTipoEscritura" [permisoActuaciones] = "permisoTiposActuaciones" 
+      (addEnlace)="addEnlace($event)" [disProc2014]="proceso2014"></app-ficha-bar-confi-adi>
 
       <div class="text-right main-button">
         <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
           label="{{ 'general.boton.volver' | translate}}"></button>
-        <button pButton type="button" [disabled]="!permisoEscritura" icon="fa fa-edit" iconPos="left" (click)="guardarCerrar()"
+        <button pButton type="button" [disabled]="!permisoTipoEscritura" icon="fa fa-edit" iconPos="left" (click)="guardarCerrar()"
         label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
 
