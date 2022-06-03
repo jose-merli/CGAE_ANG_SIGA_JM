@@ -271,6 +271,10 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   }
   
 
+  clear() {
+    this.msgs = [];
+  }
+
 
 
 }

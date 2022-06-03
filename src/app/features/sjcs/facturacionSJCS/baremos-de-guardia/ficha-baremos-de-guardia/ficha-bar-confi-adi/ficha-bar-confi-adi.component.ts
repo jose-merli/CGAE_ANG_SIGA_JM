@@ -155,4 +155,8 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
     });
   }
 
+  clear() {
+    this.msgs = [];
+  }
+
 }
