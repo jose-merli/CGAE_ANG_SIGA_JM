@@ -39,7 +39,7 @@
     <div *ngIf="esFichaActiva('documentacion')" class="px-0 pt-0 pb-0 card-body card-body-ficha">
       <!--  <div *ngIf="esFichaActiva('documentacion')" class="card-body card-body-ficha">-->
       <!-- TABLA RESULTADOS -->
-      <p-table [value]="documentos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="multiple"
+      <p-table [value]="documentos" [columns]="cols" [(selection)]="selectedDatos"
         [responsive]="true" #tableDocumentacion class="tabla-listado" [paginator]="true" [rows]="selectedItem"
         (onRowUnselect)="actualizaSeleccionados(selectedDatos)" [ngClass]="{ 'customCursor': selectMultiple}"
         selectionMode="multiple" paginatorPosition="both">
@@ -232,7 +232,7 @@
   <!-- <div class="bloque col-lg-6 col-md-6"> -->
   <div class="form-row">
     <p-table [value]="ficheros" [columns]="colsModal" [responsive]="true" #tableFicheros class="tabla-listado"
-      [paginator]="false" [rows]="selectedItem" selectionMode="single" [(selection)]="selectedDatos"
+      [paginator]="false" [rows]="selectedItem" selectionMode="multiple" [(selection)]="selectedDatos"
       [responsive]="true">
       <!-- (onRowSelect)="onRowSelect($event)" -->
       <ng-template pTemplate="colgroup" let-columns>
@@ -265,9 +265,9 @@
       </ng-template>
     </p-table>
     <div class="text-right form-group main-button col-lg-12 col-md-12 pt-2">
-      <button [disabled]="body.idFichero==null" (click)="download()" pButton type="button" icon="fa fa-download"
+      <button [disabled]="selectedDatos.length == 0" (click)="download()" pButton type="button" icon="fa fa-download"
         iconPos="left" label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
-      <button [disabled]="body.idFichero==null" (click)="deleteDocumentos()" pButton type="button" icon="fa fa-trash"
+      <button [disabled]="selectedDatos.length == 0" (click)="deleteDocumentos()" pButton type="button" icon="fa fa-trash"
         iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
       <p-fileUpload #pUploadFile icon="fa fa-plus" iconPos="left" chooseLabel="{{ 'general.boton.new' | translate}}"
         [disabled]="body.idFichero!=null" name="file" mode="basic"  class="edit my-0 mx-auto main-button"

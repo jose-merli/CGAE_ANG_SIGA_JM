@@ -44,7 +44,7 @@ export class DocumentacionComponent implements OnInit {
 
   colsModal = [
     { field: 'fecha', header: "dato.jgr.guardia.saltcomp.fecha" },
-    { field: 'nombre', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
+    { field: 'nombreFichero', header: "censo.cargaMasivaDatosCurriculares.literal.nombreFichero" }
   ];
 
   progressSpinner: boolean;
@@ -337,6 +337,8 @@ export class DocumentacionComponent implements OnInit {
           this.body.nombreFichero = null;
           this.bodyInicial = JSON.parse(JSON.stringify(this.body));
           this.ficheros = [];
+          this.selectedDatos = [];
+          this.numSelected = 0;
         } else {
           if (error != null && error.description != null && error.description != '') {
             this.showMsg('error', 'Error', this.translateService.instant(error.description));
@@ -377,12 +379,14 @@ export class DocumentacionComponent implements OnInit {
     if (this.bodyInicial.f_presentacion != null && this.bodyInicial.f_presentacion != undefined) {
       this.ficheros = [{
         "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
-        "nombre": this.body.nombreFichero
+        "nombreFichero": this.body.nombreFichero,
+        "idFichero": this.body.idFichero
       }]
     } else {
       this.ficheros = [{
         "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
-        "nombre": this.body.nombreFichero
+        "nombreFichero": this.body.nombreFichero,
+        "idFichero": this.body.idFichero
       }]
     }
   }
@@ -416,8 +420,6 @@ export class DocumentacionComponent implements OnInit {
             this.selectedDatos = [];
             this.numSelected = 0;
 
-            
-            
             if(this.body.idDocumento == -1){
               this.body.idDocumento = this.documentos[this.documentos.length-1].idDocumento;
             }
