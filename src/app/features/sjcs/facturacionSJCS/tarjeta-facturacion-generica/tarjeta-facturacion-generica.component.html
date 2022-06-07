@@ -29,7 +29,7 @@
             </label>
             <label
               *ngIf="datos && datos != null && datos.length > 0">{{ 'facturacionSJCS.tarjGenFac.pagado' | translate }}:
-              <span>{{ totalPagado | currency: 'EUR'}}</span>
+              <span>{{ totalPagado | number : '1.2-2'}} %</span>
             </label>
             <i *ngIf="!showTarjeta && (datos && datos != null && datos.length > 0)" class="fa fa-angle-down float-right" (click)="onHideTarjeta()"></i>
           </div>
@@ -88,17 +88,16 @@
             <td *ngFor="let col of columns">
               <div class="d-flex">
                 <a [pRowToggler]="rowData">
-                  <div *ngIf="col.field =='id'">
-                    <i
-                      [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                    <a *ngIf="rowData['tipo'] == TIPOMOVIMIENTO " [ngClass]="{'enlace': rowData['tipo'] == TIPOMOVIMIENTO }"
-                      (click)="openFicha(rowData)"><span>{{rowData['nombre']}}</span></a>
-                      <a *ngIf="rowData['tipo'] != TIPOMOVIMIENTO "><span>{{rowData['nombre']}}</span></a>
+                  <div *ngIf="col.field =='id'" (click)="openFicha(rowData)" class="d-flex">
+                    <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'" class="mt-1 mr-1">
+                    </i>
+                    <p *ngIf="rowData['tipo'] == TIPOMOVIMIENTO "><span>{{rowData['nombre']}}</span></p>
+                    <p *ngIf="rowData['tipo'] != TIPOMOVIMIENTO "><span>{{rowData['nombre']}}</span></p>
                   </div>
                 </a>
               </div>
 
-              <div *ngIf="col.field =='importe'">
+              <div *ngIf="col.field =='importe'" class="text-right">
                 <span>{{rowData[col.field] | currency: 'EUR'}}</span>
               </div>
 
@@ -113,17 +112,20 @@
 
           <tr *ngFor="let pago of dato.datosPagoAsuntoDTOList">
             <td *ngFor="let col of columns">
+              
               <div *ngIf="col.field == 'id'" class="displayMargin">
                 <span>{{ pago['nombre'] }}</span>
               </div>
-
-              <div *ngIf="col.field =='importe'">
-                <span>{{pago[col.field] | currency: 'EUR'}}</span>
-              </div>
-
+              
               <div *ngIf="col.field !='id' && col.field != 'importe'">
                 <span>{{pago[col.field]}}</span>
               </div>
+
+              <div *ngIf="col.field =='importe'" class="text-right">
+                <span>{{pago['importe'] }}%</span>
+              </div>
+
+              
             </td>
           </tr>
 

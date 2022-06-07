@@ -15,6 +15,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { procesos_facturacionSJCS } from '../../../../permisos/procesos_facturacionSJCS';
 import { MovimientosVariosFacturacionDTO } from '../../../../models/sjcs/MovimientosVariosFacturacionDTO';
 import { DatePipe } from '@angular/common';
+import { Console } from 'console';
 
 export enum PANTALLAS {
   ACTUACIONDESIGNA = "ACTUACIONDESIGNA",
@@ -68,6 +69,9 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   @Output() opened = new EventEmitter<boolean>();
   @Output() idOpened = new EventEmitter<string>();
 
+  // Controlar estado para no repetir llamada Facturacion en Actuación.
+  changeEstado: boolean = false;
+
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -86,18 +90,30 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
         this.router.navigate(["/errorAcceso"]);
       }
-
       this.getCols();
     }).catch(error => console.error(error));
+  }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    /*if (this.datosEntrada == undefined || this.datosEntrada == null) {
+      if (sessionStorage.getItem("datosEntrada")) {
+        this.datosEntrada = JSON.parse(sessionStorage.getItem("datosEntrada"));
+        sessionStorage.removeItem("datosEntrada");
+        this.getDatos(this.pantalla);
+    }
+    }*/
+
+    if (changes.datosEntrada != undefined && changes.datosEntrada.currentValue && !this.changeEstado) {
+      this.getDatos(this.pantalla);
+    }
   }
 
   getCols() {
 
     this.cols = [
-      { field: "id", header: "facturacionSJCS.tarjGenFac.facPagMov", width: '10%' },
-      { field: "tipo", header: "facturacionSJCS.tarjGenFac.tipo", width: '10%' },
-      { field: "importe", header: "facturacionSJCS.tarjGenFac.importe", width: '10%' }
+      { field: "id", header: "facturacionSJCS.tarjGenFac.facPagMov", width: '60%' },
+      { field: "tipo", header: "facturacionSJCS.tarjGenFac.tipo", width: '20%' },
+      { field: "importe", header: "facturacionSJCS.tarjGenFac.importe", width: '20%' }
     ];
 
     this.rowsPerPage = [
@@ -118,6 +134,8 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         value: 40
       }
     ];
+
+    //this.getDatos(this.pantalla);
   }
 
   onChangeRowsPerPages(event) {
@@ -224,9 +242,9 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   }
 
   getDatosAsistencia() {
-
+    
     if (this.checkPayloadAsistencia(this.datosEntrada)) {
-
+      console.log(" Peticion para obtener consulta BACK");
       const payload = {
         anio: this.datosEntrada.asistencia.anio,
         numero: this.datosEntrada.asistencia.numero
@@ -255,7 +273,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     this.ejecutado = true;
 
     if (this.checkPayloadActuacionAsistencia(this.datosEntrada)) {
-
+      console.log(" Peticion para obtener consulta BACK Actuacion");
       const payload = {
         anio: this.datosEntrada.asistencia.anio,
         numero: this.datosEntrada.asistencia.numero,
@@ -267,8 +285,6 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   }
 
   checkPayloadGuardia(datosEntrada: GuardiaItem): boolean {
-
-    console.log(datosEntrada);
 
     if (datosEntrada && this.checkCampo(datosEntrada.idTurno) && this.checkCampo(datosEntrada.idGuardia) && this.checkCampo(datosEntrada.idPersona) && this.checkCampo(datosEntrada.fechadesde)) {
       return true;
@@ -318,9 +334,9 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     if (this.checkPayloadEJG(this.datosEntrada)) {
 
       const payload = {
-        idtipoejg: this.datosEntrada.ejg.tipoEJG,
-        anio: this.datosEntrada.ejg.annio,
-        numero: this.datosEntrada.ejg.numero
+        idtipoejg: this.datosEntrada.tipoEJG,
+        anio: this.datosEntrada.annio,
+        numero: this.datosEntrada.numero
       };
 
       this.callService("tarjGenFac_getFacturacionesPorEJG", payload);
@@ -344,6 +360,10 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
       data => {
         const resp: FacturacionesAsuntoDTO = JSON.parse(data.body);
 
+        var importeTotalFacturacion = 0;
+        var importePago = 0;
+        var porcentaje = "";
+
         if (resp.error && resp.error != null && resp.error.description != null) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description.toString()));
         } else {
@@ -352,9 +372,17 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
               if (el.datosPagoAsuntoDTOList != null) {
                 el.datosPagoAsuntoDTOList.forEach(pago => {
                   if (pago.tipo == 'Pago') {
-                    var importePago = Number(pago.importe);
-                    var importeFacturacion = Number(el.importe);
-                    pago.nombre = pago.nombre + " - " + (100 * importePago) / importeFacturacion + "%";
+                     importePago = Number(pago.importe);
+                    if (el.importeOficio != null) {
+                       importeTotalFacturacion = Number(el.importeOficio);
+                    }else if(el.importeGuardia != null){
+                       importeTotalFacturacion = Number(el.importeGuardia);
+                    }else if(el.importeEjg != null){
+                       importeTotalFacturacion = Number(el.importeEjg);
+                    }
+
+                    porcentaje = ((importePago / importeTotalFacturacion) * 100).toFixed(2);
+                    pago.importe = porcentaje;
                   }
                 });
               }
@@ -400,12 +428,12 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
             });
           }
         }
-
         if (el.tipo == this.TIPOMOVIMIENTO) {
           this.totalFacturado += parseFloat(el.importe);
           this.totalPagado += parseFloat(el.importe);
         }
       }
+      this.changeEstado = true;
 
     });
   }
@@ -657,20 +685,6 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         }
       );
 
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-
-    if (this.datosEntrada == undefined || this.datosEntrada == null) {
-      if (sessionStorage.getItem("datosEntrada")) {
-        this.datosEntrada = JSON.parse(sessionStorage.getItem("datosEntrada"));
-        sessionStorage.removeItem("datosEntrada");
-        this.getDatos(this.pantalla);
-      }
-    }
-    if (changes.datosEntrada != undefined && changes.datosEntrada.currentValue /*&& !this.ejecutado*/) {
-      this.getDatos(this.pantalla);
     }
   }
 

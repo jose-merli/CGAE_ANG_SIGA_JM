@@ -69,7 +69,7 @@
                         <div class="form-group col-lg-6 col-md-6 align-self-center mt-md-3">
                             <a [ngClass]="{ 'enlace': this.precio == 'porTipos'}" (click)="show($event)"
                                 *ngIf="modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
-                            <a *ngIf="!modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
+                            <p *ngIf="!modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</p>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>

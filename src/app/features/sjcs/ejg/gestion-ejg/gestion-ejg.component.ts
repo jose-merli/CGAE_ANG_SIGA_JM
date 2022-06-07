@@ -182,7 +182,7 @@ export class GestionEjgComponent implements OnInit {
 
     //sessionStorage.removeItem("EJGItem");
     //this.updateTarjResumen();
-
+    this.datosEntradaTarjGenerica = this.body;
     this.obtenerPermisos();
 
 

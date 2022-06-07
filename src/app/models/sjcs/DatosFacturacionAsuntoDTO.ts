@@ -6,5 +6,8 @@ export class DatosFacturacionAsuntoDTO {
     nombre: string;
     tipo: string;
     idPartidaPresupuestaria: string;
+    importeOficio: string;
+    importeGuardia: string;
+    importeEjg: string;
     datosPagoAsuntoDTOList: DatosPagoAsuntoDTO[] = [];
 }
