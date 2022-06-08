@@ -526,8 +526,8 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     if(!this.asistencia.idGuardia
       || !this.asistencia.idTurno
       || !this.asistencia.fechaAsistencia
-      || !this.asistencia.idTipoAsistenciaColegio
-      || !this.asistencia.idLetradoGuardia){
+      || !this.asistencia.idTipoAsistenciaColegio){
+      //|| !this.asistencia.idLetradoGuardia){
 
         ok = false;
 

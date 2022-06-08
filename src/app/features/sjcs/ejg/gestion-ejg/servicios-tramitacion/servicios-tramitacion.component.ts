@@ -274,8 +274,9 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.msgs = [];
   }
   getComboTurno() {
-    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG").subscribe(
+    this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno="+this.body.idTurno).subscribe(
       n => {
+        
         this.comboTurno = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTurno);
         //if (!this.buscandoCol) this.progressSpinner = false;

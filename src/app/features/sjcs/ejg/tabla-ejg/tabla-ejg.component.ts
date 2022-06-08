@@ -169,7 +169,7 @@ export class TablaEjgComponent implements OnInit {
       { field: "apellidosYNombre", header: "busquedaSanciones.detalleSancion.letrado.literal", width: "20%" },
       { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: "10%" },
       { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG", width: "15%" },
-      { field: "nombreApeSolicitante", header: "administracion.parametrosGenerales.literal.nombre.apellidos", width: "20%" },
+      { field: "nombreApeSolicitante", header: "justiciaGratuita.justiciables.rol.solicitante", width: "20%" },
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
