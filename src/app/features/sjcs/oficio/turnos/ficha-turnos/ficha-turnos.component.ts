@@ -59,8 +59,8 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 	}
 
 
-	ngOnInit() {
-		
+	async ngOnInit() {
+		this.progressSpinner = true;
 		this.datosTarjetaResumen = [];
 		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
 		.then(respuesta => {
@@ -71,19 +71,19 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 			this.permisosTarjetaResumen = true;
 		  }
 		}).catch(error => console.error(error));
-		this.route.queryParams
-			.subscribe(params => {
-				this.idTurno = params.idturno;
+		this.idTurno = this.route.snapshot.queryParams.idturno;
 			
-				if (this.idTurno != undefined) {
-					this.newTurno = false;
-					if(sessionStorage.getItem("idGuardiaFromFichaGuardia")){
-						this.idGuardia = sessionStorage.getItem("idGuardiaFromFichaGuardia");
-						sessionStorage.removeItem("idGuardiaFromFichaGuardia");
-					}
-					this.searchTurnos();
-				}
-			});
+		if (this.idTurno != undefined) {
+			this.newTurno = false;
+			if(sessionStorage.getItem("idGuardiaFromFichaGuardia")){
+				this.idGuardia = sessionStorage.getItem("idGuardiaFromFichaGuardia");
+				sessionStorage.removeItem("idGuardiaFromFichaGuardia");
+			}
+			await this.searchTurnos();
+		}
+
+		this.progressSpinner = false;
+
 		this.fichasPosibles = [
 			{
 				key: 'generales',
@@ -155,17 +155,18 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 		if (this.persistenceService.getHistorico() != undefined) {
 			filtros.historico = this.persistenceService.getHistorico();
 		}
-		this.sigaServices.post("turnos_busquedaFichaTurnos", filtros).subscribe(
+		return this.sigaServices.post("turnos_busquedaFichaTurnos", filtros).toPromise().then(
 			n => {
 				this.turnosItem = JSON.parse(n.body).turnosItem[0];
 				this.turnosItem2 = this.turnosItem;
 				if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
 					this.turnosItem.historico = true;
 				}
+
+				this.persistenceService.setDatos(this.turnosItem2);
+				this.progressSpinner = false;
 			},
 			err => {
-			}, () => {
-				this.persistenceService.setDatos(this.turnosItem2);
 				this.progressSpinner = false;
 			}
 		);
