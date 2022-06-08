@@ -314,13 +314,13 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     }
   }
 
-  checkPayloadEJG(datosEntrada: { ejg: EJGItem, isNew: boolean }): boolean {
+  checkPayloadEJG(datosEntrada: EJGItem ): boolean {
 
-    if (datosEntrada && !datosEntrada.isNew && this.checkCampo(datosEntrada.ejg.tipoEJG) && this.checkCampo(datosEntrada.ejg.annio) && this.checkCampo(datosEntrada.ejg.numero)) {
+    if (datosEntrada && this.checkCampo(datosEntrada.tipoEJG) && this.checkCampo(datosEntrada.annio) && this.checkCampo(datosEntrada.numero)) {
       return true;
     }
 
-    if (Object.keys(datosEntrada.ejg).length > 0 && !datosEntrada.isNew) {
+    if (Object.keys(datosEntrada).length > 0) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     }
 
