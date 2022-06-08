@@ -73,7 +73,7 @@
     <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
     label="{{ 'general.boton.volver' | translate}}"></button>
 
-    <button (click)="cerrarEnviar()"  [disabled] = "selectedDatos && selectedDatos.length > 1" pButton type="button"
+    <button (click)="cerrarEnviar()"  [disabled] = "selectedDatos.length > 1 || selectedDatos.length == 0" pButton type="button"
           label="{{ 'general.boton.close' | translate }} y {{ 'general.boton.enviar' | translate }}" icon="fas fa-share"
           iconPos="left"></button>
   </div>

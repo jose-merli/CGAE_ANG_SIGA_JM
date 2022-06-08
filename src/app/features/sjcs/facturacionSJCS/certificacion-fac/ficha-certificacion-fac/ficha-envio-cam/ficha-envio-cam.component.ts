@@ -106,11 +106,12 @@ export class FichaEnvioCamComponent implements OnInit {
     this.progressSpinner = true
     this.sigaService.post("certificaciones_buscarErroresCAM", idCertificacion).subscribe(
       data => {
+        this.datosDefault();
       let listaErrores= JSON.parse(data.body).listaPcajgAlcActErrorCam;
       listaErrores.forEach(x =>{
         this.datos.push(x);
       });
-      this.datosDefault();
+     
       console.log( JSON.parse(data.body))  
       //this.buscar = true;
         this.progressSpinner = false;
