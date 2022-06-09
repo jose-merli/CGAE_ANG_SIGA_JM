@@ -417,6 +417,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         }
       });
   }
+  showMsgError(mensaje : String){
+    this.showMessage("error", this.translateService.instant("general.message.incorrect"), mensaje) ;
+  }
 
   showMsg(severity, summary, detail) {
     sessionStorage.removeItem("datosGeneralesDesigna");
