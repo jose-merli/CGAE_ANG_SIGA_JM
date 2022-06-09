@@ -336,7 +336,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
       const payload = {
         idtipoejg: this.datosEntrada.tipoEJG,
         anio: this.datosEntrada.annio,
-        numero: this.datosEntrada.numEjg
+        numero: this.datosEntrada.numero
       };
 
       this.callService("tarjGenFac_getFacturacionesPorEJG", payload);
