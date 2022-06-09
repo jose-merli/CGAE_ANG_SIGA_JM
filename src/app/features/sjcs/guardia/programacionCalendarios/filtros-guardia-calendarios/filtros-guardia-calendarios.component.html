@@ -10,12 +10,13 @@
     <!-- CAMPOS COMPONEN FILTROS BUSQUEDA-->
     <div class="module vista-simple">
       <div class="form-row">
+        <!-- SIGARNV-2833 eromanlopez Inicio en el desplegable cerrado salen listados todos los seleccionados -->
 
         <!-- TURNO -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"dato.jgr.guardia.guardias.turno" | translate}}</label>
           <p-multiSelect #multiSelectTurno [defaultLabel]="textFilter" autoWidth="false" (onChange)="onChangeTurno($event)" [(ngModel)]='filtros.idTurno'
-            [options]="comboTurno" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [options]="comboTurno" maxSelectedLabels="3" [selectedItemsLabel]="textSelected" styleClass="widthAll"
             [filter]="true" filterBy="label,labelSinTilde" (onPanelShow)="focusInputField(multiSelectTurno)">
           </p-multiSelect>
         </div>
@@ -24,7 +25,7 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"dato.jgr.guardia.inscripciones.guardia" | translate}}</label>
           <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" (onChange)="checkFilters()" [(ngModel)]='filtros.idGuardia'
-            [options]="comboGuardia" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [options]="comboGuardia" maxSelectedLabels="3" [selectedItemsLabel]="textSelected" styleClass="widthAll"
             [filter]="true" filterBy="label,labelSinTilde">
           </p-multiSelect>
         </div>
@@ -33,7 +34,7 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.calendarios.ListaGuardias" | translate}}</label>
           <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" (onChange)="checkFilters()" [(ngModel)]='filtros.listaGuardias'
-            [options]="comboConjuntoGuardias" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [options]="comboConjuntoGuardias" maxSelectedLabels="3" [selectedItemsLabel]="textSelected" styleClass="widthAll"
             [filter]="true" filterBy="label,labelSinTilde">
           </p-multiSelect>
         </div>
@@ -42,10 +43,11 @@
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{"menu.justiciaGratuita.calendarios.Estado" | translate}}</label>
           <p-multiSelect [defaultLabel]="textFilter" autoWidth="false" (onChange)="checkFilters()" [(ngModel)]='filtros.estado'
-            [options]="comboEstado" maxSelectedLabels="10" [selectedItemsLabel]="textSelected" styleClass="widthAll"
+            [options]="comboEstado" maxSelectedLabels="3" [selectedItemsLabel]="textSelected" styleClass="widthAll"
             [filter]="true" filterBy="label,labelSinTilde">
           </p-multiSelect>
         </div>
+        <!-- SIGARNV-2833 eromanlopez Fin -->
 
         <!-- FECHA CALENDARIO DESDE -->
         <div class="form-group-interlineado col-lg-3 col-md-3">
