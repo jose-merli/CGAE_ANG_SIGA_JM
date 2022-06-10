@@ -439,6 +439,17 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       if (fechaNueva.valueOf() > fechaActual.valueOf()) {
         checkFechas = true;
       }
+    }else if (initValues.length == 1) {
+      // Cambiar formato de fecha para la creacion del formato DATE.
+      var hoy = new Date();
+      var diaactual = hoy.getDate();
+      var mesactual = hoy.getMonth();
+      var anioactual= hoy.getFullYear();
+      // Convertir Fecha actual a DATE.
+      var fechaActual = new Date(anioactual + "-" + mesactual + "-" + diaactual);// Validar que la fecha Nueva sea mayor a las anteriores.
+      if (fechaNueva.valueOf() > fechaActual.valueOf()) {
+        checkFechas = true;
+      }
     }
     // Chekear que la fecha sea mayor a la fecha mas actual.
     if (checkFechas == true) {
@@ -484,7 +495,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
         );
       }
     } else {
-      this.showMessage("error", "generico.error.fechaMenor", this.translateService.instant("general.message.error.realiza.accion"));
+      this.showMessage("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("generico.error.fechaMenor"));
       this.progressSpinner = false;
     }
   }
