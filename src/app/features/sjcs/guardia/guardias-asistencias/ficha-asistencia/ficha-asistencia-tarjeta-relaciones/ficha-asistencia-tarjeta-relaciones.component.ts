@@ -64,7 +64,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
-    console.log('modoLectura RELACIONES: ', this.modoLectura)
+    //console.log('modoLectura RELACIONES: ', this.modoLectura)
     this.getRelaciones();
 
   }

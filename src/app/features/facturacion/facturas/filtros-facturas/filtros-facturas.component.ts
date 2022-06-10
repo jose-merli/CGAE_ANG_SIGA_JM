@@ -186,7 +186,7 @@ export class FiltrosFacturasComponent implements OnInit {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner=false;
       }
@@ -231,7 +231,7 @@ export class FiltrosFacturasComponent implements OnInit {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner=false;
       }
@@ -248,7 +248,7 @@ export class FiltrosFacturasComponent implements OnInit {
         this.progressSpinner=false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         this.progressSpinner=false;
       }

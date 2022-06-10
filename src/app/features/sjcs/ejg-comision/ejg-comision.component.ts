@@ -80,7 +80,7 @@ export class EjgComisionComponent implements OnInit {
       if(sessionStorage.getItem("actasItem") != null){
         this.acta = JSON.parse(sessionStorage.getItem("actasItem"));
         sessionStorage.removeItem("actasItem");
-        console.log("El acta es -> ", this.acta);
+        //console.log("El acta es -> ", this.acta);
       }
 
       if(sessionStorage.getItem("msgActa") != null){
@@ -141,7 +141,7 @@ export class EjgComisionComponent implements OnInit {
       n => {
         this.datos = JSON.parse(n.body).ejgItems;
         let error = JSON.parse(n.body).error;
-        console.log("Resultados de la busqueda de EJG's Comision -> ", this.datos);
+        //console.log("Resultados de la busqueda de EJG's Comision -> ", this.datos);
         this.buscar = true;
         if (this.tabla != null && this.tabla != undefined) {
           this.tabla.historico = event;

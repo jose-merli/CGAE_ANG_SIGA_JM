@@ -45,7 +45,7 @@ export class DatosGeneracionFichTransferenciasComponent implements OnInit {
 
     if(undefined!=this.body.fechaCreacion)
       this.body.fechaCreacion= new Date(this.body.fechaCreacion);
-      console.log(this.bodyInicial);
+      //console.log(this.bodyInicial);
   }
 
   ngOnChanges(changes: SimpleChanges): void {

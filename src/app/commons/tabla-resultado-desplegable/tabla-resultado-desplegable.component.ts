@@ -2260,7 +2260,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           },
           () => {
             this.progressSpinner = false;
-            console.log(actuacion)
+            //console.log(actuacion)
             sessionStorage.setItem("actuacionDesignaJE", JSON.stringify(actuacion));
             this.router.navigate(['/fichaActDesigna']);
           }

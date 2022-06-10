@@ -51,7 +51,7 @@ export class GestionAdeudosComponent implements OnInit {
         this.body = JSON.parse(sessionStorage.getItem("FicherosAdeudosItem")); 
         sessionStorage.removeItem("FicherosAdeudosItem");
 
-        console.log(`Facturas para generación: ${this.body.facturasGeneracion}`);
+        //console.log(`Facturas para generación: ${this.body.facturasGeneracion}`);
       } else {
         this.body = new FicherosAdeudosItem();
       }
@@ -199,7 +199,7 @@ export class GestionAdeudosComponent implements OnInit {
           let error = JSON.parse(err.error);
           if (error && error.error && error.error.message) {
             let message = this.translateService.instant(error.error.message);
-            console.log(message);
+            //console.log(message);
             if (message && message.trim().length != 0) {
               Promise.reject({ descripcion: message });
             }

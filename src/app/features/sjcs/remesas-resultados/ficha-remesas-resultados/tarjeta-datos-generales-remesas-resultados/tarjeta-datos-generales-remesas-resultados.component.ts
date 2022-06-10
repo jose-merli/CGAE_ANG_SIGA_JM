@@ -139,9 +139,9 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("Empieza;")
-    console.log(this.remesaItem)
-    console.log("FIN")
+    //console.log("Empieza;")
+    //console.log(this.remesaItem)
+    //console.log("FIN")
     this.StringFichero = this.translateService.instant("facturacionSJCS.fichaCertificacion.subirFichero")+"*";
     if(this.remesaItem.idRemesa == null){
       this.getUltimoRegitroRemesa();
@@ -151,7 +151,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
     }
     if( this.remesaItem.nombreFichero != undefined && this.remesaItem.nombreFichero.length > 0){
         this.conFichero = true;
-        console.log("Tiene fichero")
+        //console.log("Tiene fichero")
     }
     this.checkDatosGenerales();
     this.resaltadoDatosGenerales = true;
@@ -180,12 +180,12 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
 	}
 
   getUltimoRegitroRemesa() {
-    console.log("Dentro del getUltimoRegistroRemesa");
+    //console.log("Dentro del getUltimoRegistroRemesa");
     this.sigaServices
       .get("remesasResultados_recuperarDatosContador")
       .subscribe(
         n => {
-          console.log("Dentro de la respuesta. Contenido --> ", n.contador);
+          //console.log("Dentro de la respuesta. Contenido --> ", n.contador);
           this.remesaItem.prefijoRemesa = n.prefijo;
           let num:string = (n.contador+1)+"";
           this.remesaItem.numeroRemesa = this.numeroTransform(num);
@@ -354,7 +354,7 @@ export class TarjetaDatosGeneralesRemesasResultadosComponent implements OnInit {
           }
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-          console.log(err);
+          //console.log(err);
         }
         this.progressSpinner = false;
       },

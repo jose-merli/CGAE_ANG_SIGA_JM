@@ -157,14 +157,14 @@ export class FichaExpExeaDocumentacionComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             }
           );
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
         this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
       },

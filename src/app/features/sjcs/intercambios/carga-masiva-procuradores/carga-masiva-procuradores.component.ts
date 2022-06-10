@@ -80,7 +80,7 @@ export class CargaMasivaProcuradoresComponent implements OnInit {
   }
 
   search() {
-    console.log("Dentro del search del padre");
+    //console.log("Dentro del search del padre");
     this.cargaMasivaDatosEntradaItem =
     {
       'fechaCarga': (this.filtrosValues.fechaCarga != null && this.filtrosValues.fechaCarga != undefined) ? this.filtrosValues.fechaCarga : this.filtrosValues.fechaCarga,
@@ -88,24 +88,24 @@ export class CargaMasivaProcuradoresComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("intercambios_buscarCargaMasivaProcuradores", this.cargaMasivaDatosEntradaItem).subscribe(
       n => {
-        console.log("Dentro del servicio del padre que llama al busqueda de Carga Masiva Procuradores");
+        //console.log("Dentro del servicio del padre que llama al busqueda de Carga Masiva Procuradores");
         this.datos = JSON.parse(n.body).cargaMasivaProcuradorItem;
  
-        console.log("Contenido de la respuesta del back de Carga Masiva Procuradores--> ", this.datos);
+        //console.log("Contenido de la respuesta del back de Carga Masiva Procuradores--> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
 
         this.resetSelect();
 
         if (this.datos.length == 200) {
-          console.log("Dentro del if del mensaje con mas de 200 resultados");
+          //console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), "La consulta devuelve más de 200 resultados.");
         }
       },
       err => {
         this.progressSpinner = false;
         this.resultadoBusqueda.error = err;
-        console.log(err);
+        //console.log(err);
       },
       () =>{
         this.progressSpinner = false;

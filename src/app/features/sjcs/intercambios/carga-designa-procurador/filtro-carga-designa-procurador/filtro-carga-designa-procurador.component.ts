@@ -153,7 +153,7 @@ obtenerOperacionTipoAccion(){
   .get("intercambios_obtenerOperacionTipoAccion")
   .subscribe(
     data => {
-      console.log(data);
+      //console.log(data);
       if(data.error.description == "Empty" && data.error.code == 404) {
         this.buttonNew = true;
       }else if(data.ecomOperacionTipoaccion[0].idoperacion != null &&  data.error.code == 200) {

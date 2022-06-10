@@ -40,15 +40,15 @@ export class FichaRemesasResolucionesComponent implements OnInit {
     private datepipe: DatePipe) { }
 
   ngOnInit() {
-    console.log("321: ")
+    //console.log("321: ")
     if(localStorage.getItem('fichaRemesaResolucion') == "registro"){
       this.item = localStorage.getItem('remesaItem');
-      console.log("Item -> ", this.item);
+      //console.log("Item -> ", this.item);
       this.remesaItem = JSON.parse(this.item);
-      console.log(this.remesaItem)
+      //console.log(this.remesaItem)
       localStorage.removeItem('remesaItem');
       this.remesaTabla = JSON.parse(this.item);
-      console.log("Item en JSON -> ", this.remesaTabla);
+      //console.log("Item en JSON -> ", this.remesaTabla);
       this.remesaAuxiliar = JSON.parse(this.item);
       this.fichaRemesaResolucion = localStorage.getItem('fichaRemesaResolucion');
     }else if(localStorage.getItem('fichaRemesaResolucion') == "nuevo"){

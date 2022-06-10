@@ -176,7 +176,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -194,7 +194,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         this.datosInit = JSON.parse(JSON.stringify(this.grupos));
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );
@@ -677,7 +677,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     ).then(() => this.progressSpinner = false).then(() => {
@@ -744,7 +744,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     ).then(() => this.progressSpinner = false).then(() => {

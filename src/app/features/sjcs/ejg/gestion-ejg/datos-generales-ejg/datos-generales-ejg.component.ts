@@ -81,7 +81,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    console.log('nuevo 2: ', this.nuevo)
+    //console.log('nuevo 2: ', this.nuevo)
     this.resaltadoDatos = true;
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();

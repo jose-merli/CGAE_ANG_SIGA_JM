@@ -139,9 +139,9 @@ export class TarjetaDatosCargaDesignaProcuradorComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("Empieza;")
-    console.log(this.remesaItem)
-    console.log("FIN")
+    //console.log("Empieza;")
+    //console.log(this.remesaItem)
+    //console.log("FIN")
     this.StringFichero = this.translateService.instant("facturacionSJCS.fichaCertificacion.subirFichero")+"*";
     if(this.remesaItem.idRemesaResolucion == null){
       this.getUltimoRegitroRemesa();
@@ -152,7 +152,7 @@ export class TarjetaDatosCargaDesignaProcuradorComponent implements OnInit {
     }
     if(this.remesaItem.nombreFichero != undefined && this.remesaItem.nombreFichero.length > 0){
         this.conFichero = true;
-        console.log("Tiene fichero")
+        //console.log("Tiene fichero")
     }
     this.resaltadoDatosGenerales = true;
     // this.abreCierraFicha('datosGenerales');
@@ -180,12 +180,12 @@ export class TarjetaDatosCargaDesignaProcuradorComponent implements OnInit {
 	}
 
   getUltimoRegitroRemesa() {
-    console.log("Dentro del getUltimoRegistro Designa Contadores");
+    //console.log("Dentro del getUltimoRegistro Designa Contadores");
     this.sigaServices
       .get("intercambios_contadorCargaDesignaProcuradores")
       .subscribe(
         n => {
-          console.log("Dentro de la respuesta. Contenido --> ", n.contador);
+          //console.log("Dentro de la respuesta. Contenido --> ", n.contador);
           //this.remesaItem.numero = n.contador + 1;
           this.remesaItem.numRemesaPrefijo = n.prefijo;
           let num = (n.contador+1)+"";
@@ -432,7 +432,7 @@ export class TarjetaDatosCargaDesignaProcuradorComponent implements OnInit {
           }
         } else {
           this.showFail(this.translateService.instant("informesycomunicaciones.comunicaciones.mensaje.errorSubirDocumento"));
-          console.log(err);
+          //console.log(err);
         }
         this.progressSpinner = false;
       },

@@ -778,7 +778,7 @@ export class TablaResultadoMixComponent implements OnInit {
      if (!this.seleccionarTodo && this.selectedArray.length <= 1) {
        //this.progressSpinner = true;
        this.persistenceService.setDatos(dataToSend);
-       console.log('dataToSend: ', dataToSend)
+       //console.log('dataToSend: ', dataToSend)
        //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
        this.router.navigate(["/fichaInscripcionesGuardia"]);
  

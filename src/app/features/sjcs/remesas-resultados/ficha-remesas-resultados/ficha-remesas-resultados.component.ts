@@ -68,15 +68,15 @@ export class FichaRemesasResultadosComponent implements OnInit {
     private datepipe: DatePipe) { }
 
   ngOnInit() {
-    console.log("321: ")
+    //console.log("321: ")
     if(localStorage.getItem('fichaRemesaResultado') == "registro"){
       this.item = localStorage.getItem('remesaResultadoItem');
-      console.log("Item -> ", this.item);
+      //console.log("Item -> ", this.item);
       this.remesaItem = JSON.parse(this.item);
-      console.log(this.remesaItem);
+      //console.log(this.remesaItem);
       localStorage.removeItem('remesaResultadoItem');
       this.remesaTabla = JSON.parse(this.item);
-      console.log("Item en JSON -> ", this.remesaTabla);
+      //console.log("Item en JSON -> ", this.remesaTabla);
       this.remesaAuxiliar = JSON.parse(this.item);
       this.fichaRemesaResultado = localStorage.getItem('fichaRemesaResultado');
     }else if(localStorage.getItem('fichaRemesaResultado') == "nuevo"){
@@ -117,12 +117,12 @@ export class FichaRemesasResultadosComponent implements OnInit {
 
 
   recuperarDatosContador(){
-    console.log("Dentro del recuperarDatosContador");
+    //console.log("Dentro del recuperarDatosContador");
     this.sigaServices
       .get("remesasResultados_recuperarDatosContador")
       .subscribe(
         data => {
-          console.log(data);
+          //console.log(data);
           this.rellenarDatosNuevo(data);
         },
         error => { },

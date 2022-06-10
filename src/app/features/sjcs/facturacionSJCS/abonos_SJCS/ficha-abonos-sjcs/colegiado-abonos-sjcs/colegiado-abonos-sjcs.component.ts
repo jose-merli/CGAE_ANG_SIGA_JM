@@ -33,8 +33,8 @@ export class ColegiadoAbonosSJCSComponent implements OnInit {
      }
 
   ngOnInit() {
-    console.log("si va")
-    console.log(this.datos)
+    //console.log("si va")
+    //console.log(this.datos)
 
     
    }

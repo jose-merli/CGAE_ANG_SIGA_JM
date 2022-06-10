@@ -940,7 +940,7 @@ export class FichaProgramacionComponent implements OnInit {
 
 
   newCalendarProg(datos) {
-    console.log('datos ana: ', datos)
+    //console.log('datos ana: ', datos)
     this.dataReady = false;
     this.progressSpinner = true;
 

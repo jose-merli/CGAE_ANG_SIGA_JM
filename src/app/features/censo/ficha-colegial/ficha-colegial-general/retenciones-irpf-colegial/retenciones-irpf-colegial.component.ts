@@ -420,7 +420,7 @@ export class RetencionesIrpfColegialComponent implements OnInit {
           // this.changeSort(event);
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
           this.showFail();
           let event = { field: "fechaFin", order: 1, multisortmeta: undefined };
@@ -734,7 +734,7 @@ export class RetencionesIrpfColegialComponent implements OnInit {
         err => {
            this.progressSpinner = false;
          
-          console.log(err);
+          //console.log(err);
         },
         () => {
           if (this.datos.length > 0) {

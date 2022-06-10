@@ -103,7 +103,7 @@ export class RemesasResultadosComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("remesasResultados_buscarRemesasResultados", this.filtrosValues).subscribe(
       n => {
-        console.log("Dentro del servicio que llama al buscarRemesasResultado");
+        //console.log("Dentro del servicio que llama al buscarRemesasResultado");
         this.datos = JSON.parse(n.body).remesasResultadosItems;
 
         this.datos.forEach(element => {
@@ -113,12 +113,12 @@ export class RemesasResultadosComponent implements OnInit {
           element.numRemesaCompleto = this.formatNumRemesaCompleto(element);
         });
 
-        console.log("Contenido de la respuesta del back --> ", this.datos);
+        //console.log("Contenido de la respuesta del back --> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
         this.progressSpinner = false;
         if (this.datos.length == 200) {
-          console.log("Dentro del if del mensaje con mas de 200 resultados");
+          //console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
         }
         // this.resetSelect();
@@ -126,7 +126,7 @@ export class RemesasResultadosComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         // this.resultadoBusqueda.error = err;
-        console.log(err);
+        //console.log(err);
       });
     
   }

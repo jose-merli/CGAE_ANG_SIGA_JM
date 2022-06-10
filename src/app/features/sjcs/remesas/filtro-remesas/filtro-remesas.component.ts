@@ -82,12 +82,12 @@ export class FiltroRemesasComponent implements OnInit {
   }
 
   getComboEstados() {
-    console.log("Dentro del comboEstado");
+    //console.log("Dentro del comboEstado");
     this.sigaServices
       .get("filtrosremesas_comboEstadoRemesa")
       .subscribe(
         n => {
-          console.log("Dentro de la respuesta");
+          //console.log("Dentro de la respuesta");
           this.comboEstados = n.combooItems;
         },
         error => { },

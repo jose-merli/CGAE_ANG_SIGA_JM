@@ -321,12 +321,12 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
       this.datosTarjetaGuardiasCalendario = this.datosTarjetaGuardiasCalendarioIni.map(x => Object.assign({}, x));
       }
 
-      console.log(this.datosTarjetaGuardiasCalendario)
+      //console.log(this.datosTarjetaGuardiasCalendario)
       this.progressSpinner = true;
       this.sigaService.getParam(
         "guardiaCalendario_guardiaFromConjunto", "?idConjunto=" + idConjunto).subscribe(
           response => {
-            console.log(response)
+            //console.log(response)
             if (!fromCombo){
             this.datosTarjetaGuardiasCalendario = [];
             }

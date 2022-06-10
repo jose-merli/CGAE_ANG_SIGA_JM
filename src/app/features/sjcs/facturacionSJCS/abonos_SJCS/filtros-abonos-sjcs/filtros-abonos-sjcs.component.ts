@@ -219,7 +219,7 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   }
   clearFilters(){
     this.filtros = new FacAbonoItem();
-    console.log(this.filtros)
+    //console.log(this.filtros)
   }
 
   searchAbonosSJCS(){}

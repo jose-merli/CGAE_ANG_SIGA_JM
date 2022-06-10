@@ -114,7 +114,7 @@ export class DatosColaGuardiaComponent implements OnInit {
         this.manual = confValue.manual;
         this.porGrupos= confValue.porGrupos;
         this.minimoLetrado = confValue.minimoLetradosCola
-        console.log("MANUAL: ", this.manual)
+        //console.log("MANUAL: ", this.manual)
        
         //this.getColaGuardia();
       });

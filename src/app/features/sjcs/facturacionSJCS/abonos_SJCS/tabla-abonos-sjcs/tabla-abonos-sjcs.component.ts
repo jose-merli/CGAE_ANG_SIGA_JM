@@ -89,7 +89,7 @@ export class TablaAbonosSCJSComponent implements OnInit {
   // Se actualiza cada vez que cambien los inputs
   ngOnChanges() {
     this.selectedDatos = [];
-    console.log("CA")
+    //console.log("CA")
   }
 
   // Definición de las columnas
@@ -137,7 +137,7 @@ export class TablaAbonosSCJSComponent implements OnInit {
 
   // Abrir ficha de fichero de devoluciones
   openTab(evento) {
-    console.log("evento -> ", evento);
+    //console.log("evento -> ", evento);
 
     this.progressSpinner = true;
 

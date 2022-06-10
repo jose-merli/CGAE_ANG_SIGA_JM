@@ -100,8 +100,8 @@ export class DatosGeneralesActasComponent implements OnInit {
      }
 
   ngOnInit() {
-    console.log("Este es el objeto que se supone tiene los datos de la tabla", this.datos);
-    console.log(this.datos)
+    //console.log("Este es el objeto que se supone tiene los datos de la tabla", this.datos);
+    //console.log(this.datos)
     if(this.datos.anioacta == null || this.datos.anioacta == undefined ){
       this.datosFiltro.anioacta = this.getAnio();
       this.getNumActa();
@@ -141,7 +141,7 @@ export class DatosGeneralesActasComponent implements OnInit {
    }
 
    onChangeSufijo(){
-    console.log(this.datosFiltro.sufijo);
+    //console.log(this.datosFiltro.sufijo);
     this.progressSpinner = true;
       this.sigaServices.post("filtrosacta_getNumAca", this.datosFiltro).subscribe(
         data => {

@@ -79,12 +79,12 @@ export class TablaAbonosSeleccionadasComponent implements OnInit,OnChanges {
       ),
       toArray()
     ).subscribe(grupos => this.grupos = grupos);
-    console.log(this.grupos)
+    //console.log(this.grupos)
 
     this.grupos.forEach(element => {
       let item:FacturaSeleccionada=new FacturaSeleccionada();
       let grupitos:FacAbonoItem[] = element.values;
-      console.log(grupitos)
+      //console.log(grupitos)
       item.total = 0;
       item.totalPendiente = 0;
       item.numFacturas = 0; 
@@ -110,7 +110,7 @@ export class TablaAbonosSeleccionadasComponent implements OnInit,OnChanges {
   }
  
   ngOnInit() {
-    console.log(this.bodyInicial)
+    //console.log(this.bodyInicial)
     this.getCols();
    }
 

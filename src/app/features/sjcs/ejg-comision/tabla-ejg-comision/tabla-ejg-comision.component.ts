@@ -121,7 +121,7 @@ export class TablaEjgComisionComponent implements OnInit {
     this.getComboRemesa();
     this.getObligatoriedadResolucion();
 
-    console.log("Acta en el componente tabla -> ", this.acta);
+    //console.log("Acta en el componente tabla -> ", this.acta);
 
     this.obligatorioFundamento();
   }
@@ -129,13 +129,13 @@ export class TablaEjgComisionComponent implements OnInit {
 
   styleObligatorioFechaPonente(event) {
     if (this.resaltadoDatosFechaPonente && this.valuePonente != null) {
-      console.log("styleObligatorioFechaPonente");
+      //console.log("styleObligatorioFechaPonente");
       return this.commonServices.styleObligatorio(event); 
     }
   }
 
   muestraCampoObligatorioFechaPonente() {
-    console.log("muestraCampoObligatorioFechaPonente");
+    //console.log("muestraCampoObligatorioFechaPonente");
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatosFechaPonente = true;
   }
@@ -144,13 +144,13 @@ export class TablaEjgComisionComponent implements OnInit {
 
   styleObligatorioPonente(event) {
     if (this.resaltadoDatosPonente && this.valueFechaPonente != null) {
-      console.log("styleObligatorioPonente");
+      //console.log("styleObligatorioPonente");
       return this.commonServices.styleObligatorio(event);
     }
   }
 
   muestraCampoObligatorioPonente() {
-    console.log("muestraCampoObligatorioPonente");
+    //console.log("muestraCampoObligatorioPonente");
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatosPonente = true;
 
@@ -159,13 +159,13 @@ export class TablaEjgComisionComponent implements OnInit {
 
   styleObligatorioResolucion(event) {
     if (this.resaltadoDatosResolucion && this.valueFundamento != null) {
-      console.log("styleObligatorioResolucion");
+      //console.log("styleObligatorioResolucion");
       return this.commonServices.styleObligatorio(event);
     }
   }
 
   muestraCampoObligatorioResolucion() {
-    console.log("muestraCampoObligatorioResolucion");
+    //console.log("muestraCampoObligatorioResolucion");
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatosResolucion = true;
 
@@ -173,7 +173,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
   styleObligatorioFundamento(evento) {
     if (this.resaltadoDatosFundamento && this.valueResolucion != null) {
-      console.log("styleObligatorioFundamento");
+      //console.log("styleObligatorioFundamento");
       return this.commonServices.styleObligatorio(event);
     }
   }
@@ -183,7 +183,7 @@ export class TablaEjgComisionComponent implements OnInit {
     .subscribe(
       n => {
         this.num= n;
-        console.log(n.body);
+        //console.log(n.body);
       },
       err => {
         console.log(err);
@@ -192,7 +192,7 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   muestraCampoObligatorioFundamento() {
-    console.log("muestraCampoObligatorioFundamento");
+    //console.log("muestraCampoObligatorioFundamento");
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatosFundamento = true;
 
@@ -200,22 +200,22 @@ export class TablaEjgComisionComponent implements OnInit {
 
 
   checkPonente() {
-    console.log("********************************checkPonente");
-    console.log(this.valuePonente);
+    //console.log("********************************checkPonente");
+    //console.log(this.valuePonente);
     if (this.valuePonente == null) {
       this.muestraCampoObligatorioPonente();
     }
   }
   checkPonenteFecha() {
-    console.log("********************************checkPonente");
-    console.log(this.valueFechaPonente);
+    //console.log("********************************checkPonente");
+    //console.log(this.valueFechaPonente);
     if (this.valueFechaPonente == null) {
       this.muestraCampoObligatorioFechaPonente();
     }
   }
 
   checkResolucion() {
-    console.log("********************************checkResolucion");
+    //console.log("********************************checkResolucion");
     if(parseInt(this.num) != 0){
       this.styleObligatorioFundamento(this.valueFundamento);
     }
@@ -225,16 +225,16 @@ export class TablaEjgComisionComponent implements OnInit {
   }
 
   checkFundamento() {
-    console.log("********************************checkFundamento");
-    console.log(this.valueFundamento);
+    //console.log("********************************checkFundamento");
+    //console.log(this.valueFundamento);
     if (this.valueFundamento == null && parseInt(this.num) != 0) {
       this.muestraCampoObligatorioResolucion();
     }
   }
 
   fillFechaPrueba(event) {
-    console.log("********************************fillFechaPrueba");
-    console.log(event);
+    //console.log("********************************fillFechaPrueba");
+    //console.log(event);
     this.valueFechaPonente = event;
     if (this.valueFechaPonente == null ) {
       this.muestraCampoObligatorioPonente();
@@ -250,7 +250,7 @@ export class TablaEjgComisionComponent implements OnInit {
     this.sigaServices.get("obligatoriedadResolucion").subscribe(
       n => {
         this.obligatoriedadResolucion = n.combooItems;
-        console.log("****************************************" + this.obligatoriedadResolucion);
+        //console.log("****************************************" + this.obligatoriedadResolucion);
       },
       err => {
         console.log(err);
@@ -266,7 +266,7 @@ export class TablaEjgComisionComponent implements OnInit {
   getComboAnioActa() {
     this.sigaServices.get("filtrosejgcomision_comboAnioActaComision").subscribe(
       n => {
-        console.log("******************comboanioacta**********************");
+        //console.log("******************comboanioacta**********************");
         this.comboAnioActa = n.combooItems;
 
         /*if(this.acta != null || this.acta != undefined){
@@ -294,7 +294,7 @@ export class TablaEjgComisionComponent implements OnInit {
   getComboPonente() {
     this.sigaServices.get("filtrosejgcomision_comboPonenteComision").subscribe(
       n => {
-        console.log("******************getComboPonente**********************");
+        //console.log("******************getComboPonente**********************");
         this.comboPonente = n.combooItems;
       },
       err => {
@@ -306,7 +306,7 @@ export class TablaEjgComisionComponent implements OnInit {
   getComboResolucion() {
     this.sigaServices.get("filtrosejgcomision_comboResolucionComision").subscribe(
       n => {
-        console.log("******************************************getComboResolucion");
+        //console.log("******************************************getComboResolucion");
         this.comboResolucion = n.combooItems;
       },
       err => {
@@ -451,7 +451,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
     for (let i = 0; this.selectedDatos.length > i; i++) {
       ejg = this.selectedDatos[i];
-      console.log("NumActa " + ejg.numActa, ", Annio Acta ", ejg.annioActa, ", Institucion ejg ", ejg.idInstitucion, ", FundamentoJurid" + ejg.fundamentoJuridico + " , ratificaciones " + ejg.tipoEJG + " , numero ejg" + ejg.numero + " , anio ejg" + ejg.annio)
+      //console.log("NumActa " + ejg.numActa, ", Annio Acta ", ejg.annioActa, ", Institucion ejg ", ejg.idInstitucion, ", FundamentoJurid" + ejg.fundamentoJuridico + " , ratificaciones " + ejg.tipoEJG + " , numero ejg" + ejg.numero + " , anio ejg" + ejg.annio)
       data.push(ejg);
     }
 
@@ -562,7 +562,7 @@ export class TablaEjgComisionComponent implements OnInit {
     this.valueAnioActa = null;
     this.styleObligatorioPonente(event);
     this.styleObligatorioFechaPonente(event);
-    console.log(this.selectAnioActa);
+    //console.log(this.selectAnioActa);
   }
 
 
@@ -570,13 +570,13 @@ export class TablaEjgComisionComponent implements OnInit {
   onChangeBorrarPonenteFecha(event: any) {
     this.valueFechaPonente = null;
     this.valuePonente = null;
-    console.log(this.selectPonente);
+    //console.log(this.selectPonente);
   }
 
   onChangeBorrarResolucionFundamento(event: any) {
     this.valueResolucion = null;
     this.valueFundamento = null;
-    console.log(this.selectResolucionFundamento);
+    //console.log(this.selectResolucionFundamento);
   }
 
   showMessage(severity, summary, msg) {
@@ -652,7 +652,7 @@ export class TablaEjgComisionComponent implements OnInit {
 
     do {
       ejg = this.selectedDatos[i];
-      console.log("Institucion ejg = " + ejg.idInstitucion + " , numero ejg = " + ejg.numero + " , anio ejg = " + ejg.annio + ", editableComision = " + ejg.editableComision)
+      //console.log("Institucion ejg = " + ejg.idInstitucion + " , numero ejg = " + ejg.numero + " , anio ejg = " + ejg.annio + ", editableComision = " + ejg.editableComision)
       
       if(ejg.editableComision != 1){
         botonEditar = false;
@@ -725,7 +725,7 @@ export class TablaEjgComisionComponent implements OnInit {
       )
       .subscribe(
         n => {
-          console.log("******************************************getComboFundamento");
+          //console.log("******************************************getComboFundamento");
           this.comboFundamento = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboFundamento);
         },

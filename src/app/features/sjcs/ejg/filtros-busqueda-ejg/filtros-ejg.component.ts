@@ -129,8 +129,8 @@ export class FiltrosEjgComponent implements OnInit {
 
 
 
-    console.log("Viene de la ficha de una remesa? -> ", this.remesaFicha);
-    console.log("Remesa -> ", this.remesa);
+    //console.log("Viene de la ficha de una remesa? -> ", this.remesaFicha);
+    //console.log("Remesa -> ", this.remesa);
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
@@ -501,10 +501,10 @@ export class FiltrosEjgComponent implements OnInit {
             this.comboEstadoEJG.pop();
           }
         }
-        console.log("comboEstadoEJG -> ", this.comboEstadoEJG);
+        //console.log("comboEstadoEJG -> ", this.comboEstadoEJG);
       },
       err => {
-        //console.log(err);
+        console.log(err);
       }
     );
   }

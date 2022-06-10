@@ -60,7 +60,7 @@ export class TablaActasComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
 
-    console.log("Tabla Actas, this.datos -> ", this.datos);
+    //console.log("Tabla Actas, this.datos -> ", this.datos);
 
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
@@ -73,7 +73,7 @@ export class TablaActasComponent implements OnInit {
   openTab(evento) {
 
 
-    console.log("evento -> ", evento);
+    //console.log("evento -> ", evento);
 
     this.progressSpinner = true;
 

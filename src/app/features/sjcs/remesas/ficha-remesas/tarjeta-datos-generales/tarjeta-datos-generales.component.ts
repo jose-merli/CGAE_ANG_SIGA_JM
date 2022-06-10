@@ -124,12 +124,12 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 	}
 
   getUltimoRegitroRemesa() {
-    console.log("Dentro del getUltimoRegistroRemesa");
+    //console.log("Dentro del getUltimoRegistroRemesa");
     this.sigaServices
       .get("ficharemesas_getUltimoRegistroRemesa")
       .subscribe(
         n => {
-          console.log("Dentro de la respuesta. Contenido --> ", n.contador);
+          //console.log("Dentro de la respuesta. Contenido --> ", n.contador);
           let contador: string = "";
 
            contador = String(n.contador);
@@ -143,7 +143,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
           }
 
           this.remesaItem.numero = contador;
-          console.log("remesaItem -> ", this.remesaItem);
+          //console.log("remesaItem -> ", this.remesaItem);
         },
         error => { },
         () => { }
@@ -186,7 +186,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
     };
     this.sigaServices.post("ficharemesas_listadoEstadosRemesa", this.remesasDatosEntradaItem).subscribe(
       n => {
-        console.log("Dentro del servicio del padre que llama al listadoEstadosRemesa");
+        //console.log("Dentro del servicio del padre que llama al listadoEstadosRemesa");
         this.resultado = JSON.parse(n.body).estadoRemesaItem;
 
         if(padre){
@@ -199,14 +199,14 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
         
         this.remesaItem.estado = this.resultado[this.resultado.length-1].estado;
 
-        console.log("Contenido de la respuesta del back --> ", this.resultado);
+        //console.log("Contenido de la respuesta del back --> ", this.resultado);
         this.progressSpinner = false;
 
       },
       err => {
         this.progressSpinner = false;
         let error = err;
-        console.log(err);
+        //console.log(err);
       });
   }
 

@@ -90,7 +90,7 @@ export class ConfiguracionCuentaBancariaComponent implements OnInit, OnChanges {
           
           if(data[i].value=="SEPA_TIPO_FICHEROS"){
             this.tipoFicheros = data[i].label;
-            console.log(this.tipoFicheros)
+            //console.log(this.tipoFicheros)
           }
         }
 

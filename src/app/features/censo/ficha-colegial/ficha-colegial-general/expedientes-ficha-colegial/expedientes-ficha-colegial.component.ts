@@ -189,7 +189,7 @@ export class ExpedientesFichaColegialComponent implements OnInit, OnChanges {
   
           },
           err => {
-            console.log(err);
+            //console.log(err);
             this.showMessage('error','Error',err);
           }
         );

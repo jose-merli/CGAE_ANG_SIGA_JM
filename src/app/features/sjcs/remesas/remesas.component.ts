@@ -113,7 +113,7 @@ export class RemesasComponent implements OnInit {
   }
 
   search() {
-    console.log("Dentro del search del padre");
+    //console.log("Dentro del search del padre");
     this.remesasDatosEntradaItem =
     {
       'annioEJG': (this.filtrosValues.annioEJG != null && this.filtrosValues.annioEJG != undefined) ? this.filtrosValues.annioEJG.toString() : this.filtrosValues.annioEJG,
@@ -134,26 +134,26 @@ export class RemesasComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("filtrosremesas_buscarRemesa", this.remesasDatosEntradaItem).subscribe(
       n => {
-        console.log("Dentro del servicio del padre que llama al buscarRemesas");
+        //console.log("Dentro del servicio del padre que llama al buscarRemesas");
         this.datos = JSON.parse(n.body).remesasItems;
         
-        console.log("Contenido de la respuesta del back --> ", this.datos);
+        //console.log("Contenido de la respuesta del back --> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
 
         this.resetSelect();
 
-        console.log("Registros de this.datos --> ", this.datos.length);
+        //console.log("Registros de this.datos --> ", this.datos.length);
 
         if (this.datos.length == 200) {
-          console.log("Dentro del if del mensaje con mas de 200 resultados");
+          //console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
         }
       },
       err => {
         this.progressSpinner = false;
         this.resultadoBusqueda.error = err;
-        console.log(err);
+        //console.log(err);
       },
       () =>{
         this.progressSpinner = false;

@@ -475,13 +475,13 @@ export class TarjetaLetradoComponent implements OnInit {
   }
 
   navigateToFichaColegial(){
-    console.log('navegamos a ficha colegial con los datos: ', this.datos)
+    //console.log('navegamos a ficha colegial con los datos: ', this.datos)
             sessionStorage.setItem("fromTarjetaLetradoInscripciones", JSON.stringify(this.datos));
             this.router.navigate(["/fichaColegial"]);
   }
 
   ngOnInit() {
-    console.log('this.datos letrado: ', this.datos)
+    //console.log('this.datos letrado: ', this.datos)
     if (this.datos == null || this.datos == undefined){
       this.datos = this.persistenceService.getDatos();
     }

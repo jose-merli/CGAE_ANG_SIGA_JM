@@ -82,7 +82,7 @@ export class ComunicacionesFacturasComponent implements OnInit {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );

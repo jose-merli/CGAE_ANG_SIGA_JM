@@ -39,7 +39,7 @@ export class GestionActasComponent implements OnInit {
    
     if(sessionStorage.getItem('actasItem')){
       this.datos = JSON.parse(sessionStorage.getItem('actasItem'));
-      console.log(this.actaItem);
+      //console.log(this.actaItem);
       sessionStorage.removeItem('actasItem');
     }
   }

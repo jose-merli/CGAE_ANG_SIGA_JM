@@ -211,7 +211,7 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
     });
     sessionStorage.setItem('asistenciaToFichaActuacion',JSON.stringify(this.asistencia));
     sessionStorage.setItem('actuacionAsistencia', JSON.stringify(actuacionParaAbrir));
-    console.log('Enlace a actuacion: ', actuacionParaAbrir);
+    //console.log('Enlace a actuacion: ', actuacionParaAbrir);
     this.router.navigate(['/fichaActuacionAsistencia']);
   }
 

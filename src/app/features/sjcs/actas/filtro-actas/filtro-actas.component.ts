@@ -136,7 +136,7 @@ export class FiltroActasComponent implements OnInit {
   }
 
   search() {
-console.log(this.datosFiltro)
+//console.log(this.datosFiltro)
     this.limpiezaFiltro(this.datosFiltro);
     if (this.checkFilters()) {
       this.persistenceService.setFiltros(this.datosFiltro);

@@ -93,8 +93,8 @@ export class FichaEnvioCamComponent implements OnInit {
       if (sessionStorage.getItem("fichaCAM")) {
         this.certificacion = JSON.parse(sessionStorage.getItem("fichaCAM"));
         sessionStorage.removeItem("fichaCAM");
-        console.log("SI")
-        console.log(this.certificacion)
+        //console.log("SI")
+        //console.log(this.certificacion)
         this.getErroresLista(this.certificacion.idCertificacion)
         this.getFactCertificaciones(this.certificacion.idCertificacion)
         
@@ -112,7 +112,7 @@ export class FichaEnvioCamComponent implements OnInit {
         this.datos.push(x);
       });
      
-      console.log( JSON.parse(data.body))  
+      //console.log( JSON.parse(data.body))  
       //this.buscar = true;
         this.progressSpinner = false;
         //if (this.datos.length != 0) {

@@ -197,9 +197,9 @@ export class RetencionesComponent implements OnInit, AfterViewChecked {
       let restantepunto = event.retenciones[i].restante.replace(',', '.');
       let restante = Number(restantepunto);
       let importe = Number(event.retenciones[i].importe);
-      console.log(importe > restante);
-      console.log(restante > 0);
-      console.log(restante == 0);
+      //console.log(importe > restante);
+      //console.log(restante > 0);
+      //console.log(restante == 0);
       if( (importe > restante) && (restante > 0)){
         contadorRetenciones ++;
       }else if(restante == 0){

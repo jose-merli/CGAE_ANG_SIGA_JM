@@ -286,7 +286,7 @@ onChangeSelectAll() {
 
   eliminarUltimoCobro(){
     let estadosPagosItems:FacturaEstadosPagosItem [] = new Array();
-    console.log("eliminaaa")
+    //console.log("eliminaaa")
     this.selectedDatos.forEach(element => {
       if(element.idAccion == "4"){
         let itemFacturaEstadosPagoItem:FacturaEstadosPagosItem;

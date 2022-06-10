@@ -188,7 +188,7 @@ export class GestionEjgComponent implements OnInit {
 
     //this.commonsService.scrollTop();
     this.goTop();
-    console.log('nuevo 1: ', this.nuevo)
+    //console.log('nuevo 1: ', this.nuevo)
   }
 
   actualizaLetradoDesignado(event) {

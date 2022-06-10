@@ -88,8 +88,8 @@ export class TarjetaEjgsComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-    console.log(changes.tabla);
+    //console.log(changes);
+    //console.log(changes.tabla);
     this.selectedDatos = [];
     if (this.openGen == true) {
       if (this.openFicha == false) {
@@ -116,7 +116,7 @@ export class TarjetaEjgsComponent implements OnInit {
     this.idOpened.emit(key);    
 
     setTimeout(() => {
-      console.log(this.tabla);
+      //console.log(this.tabla);
       if(this.openFicha) {
         this.tabla.filterConstraints['inCollection'] = function inCollection(value: any, filter: any): boolean{
           // value = array con los datos de la fila actual
@@ -256,7 +256,7 @@ export class TarjetaEjgsComponent implements OnInit {
     };
     this.sigaServices.post("ficharemesas_getEJGRemesa", this.remesasDatosEntradaItem).subscribe(
       n => {
-        console.log("Dentro del servicio del padre que llama al getEJGRemesa");
+        //console.log("Dentro del servicio del padre que llama al getEJGRemesa");
         this.datos = JSON.parse(n.body).ejgRemesa;
 
         this.datos.forEach(element => {
@@ -272,11 +272,11 @@ export class TarjetaEjgsComponent implements OnInit {
           this.remesaItem.incidencias = "0 / 0";
         }
 
-        console.log("Contenido de la respuesta del back --> ", this.datos);
+        //console.log("Contenido de la respuesta del back --> ", this.datos);
         this.progressSpinner = false;
 
         if (this.datos.length == 200) {
-          console.log("Dentro del if del mensaje con mas de 200 resultados");
+          //console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
         }
 
@@ -284,7 +284,7 @@ export class TarjetaEjgsComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         let error = err;
-        console.log(err);
+        //console.log(err);
       },
       () => {
         

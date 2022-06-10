@@ -94,12 +94,12 @@ export class CargaDesignaProcuradorComponent implements OnInit {
   }
 
   search(event){
-    console.log("QWEQWE");
-    console.log(this.buscar);
+    //console.log("QWEQWE");
+    //console.log(this.buscar);
     this.progressSpinner = true;
     this.sigaServices.post("intercambios_buscarCargaDesignaProcuradores", this.filtrosValues).subscribe(
       n => {
-        console.log("Dentro del servicio que llama al buscarRemesasResultado");
+        //console.log("Dentro del servicio que llama al buscarRemesasResultado");
         this.datos = JSON.parse(n.body).remesasResolucionItem;
 
         this.datos.forEach(element => {
@@ -109,7 +109,7 @@ export class CargaDesignaProcuradorComponent implements OnInit {
 
         });
 
-        console.log("Contenido de la respuesta del back --> ", this.datos);
+        //console.log("Contenido de la respuesta del back --> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
 
@@ -118,7 +118,7 @@ export class CargaDesignaProcuradorComponent implements OnInit {
       err => {
         this.progressSpinner = false;
         // this.resultadoBusqueda.error = err;
-        console.log(err);
+        //console.log(err);
       });
     
   }

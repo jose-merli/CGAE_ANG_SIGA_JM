@@ -64,7 +64,7 @@ export class EnvioFactProgramadasComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       }
     );

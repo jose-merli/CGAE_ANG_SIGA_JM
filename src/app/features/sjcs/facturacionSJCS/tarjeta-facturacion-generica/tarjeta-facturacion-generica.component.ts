@@ -244,7 +244,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   getDatosAsistencia() {
     
     if (this.checkPayloadAsistencia(this.datosEntrada)) {
-      console.log(" Peticion para obtener consulta BACK");
+      //console.log(" Peticion para obtener consulta BACK");
       const payload = {
         anio: this.datosEntrada.asistencia.anio,
         numero: this.datosEntrada.asistencia.numero
@@ -273,7 +273,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
     this.ejecutado = true;
 
     if (this.checkPayloadActuacionAsistencia(this.datosEntrada)) {
-      console.log(" Peticion para obtener consulta BACK Actuacion");
+      //console.log(" Peticion para obtener consulta BACK Actuacion");
       const payload = {
         anio: this.datosEntrada.asistencia.anio,
         numero: this.datosEntrada.asistencia.numero,

@@ -85,7 +85,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		console.log('this datos ficha: ', this.datos)
+		//console.log('this datos ficha: ', this.datos)
 		sessionStorage.setItem("FichaInscripciones","1");
 		this.sigaServices.get("institucionActual").subscribe(n => {
 			this.institucionActual = n.value;
@@ -151,13 +151,13 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				this.datos = this.persistenceService.getDatos();
 			}
 		
-			console.log('this datos ficha: ', this.datos)
+			//console.log('this datos ficha: ', this.datos)
 		//Comprueba la procedencia
 		if (sessionStorage.getItem("sesion") == "nuevaInscripcion") {
 			this.getDatosTarjetaResumen(this.datos);
 			
 			this.datos.fechasolicitud = this.datepipe.transform(new Date(), 'dd/MM/yyyy'); //formatear la fecha
-			console.log('ana 3: ', this.datos.fechasolicitud )
+			//console.log('ana 3: ', this.datos.fechasolicitud )
 			this.modoEdicion = false;
 		} else {
 			this.modoEdicion = true;
@@ -774,7 +774,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 
 	formatDate(date) {
-		console.log('ana 4: ', date )
+		//console.log('ana 4: ', date )
 		const pattern = 'dd/MM/yyyy';
 		return this.datepipe.transform(date, pattern);
 
@@ -793,7 +793,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		  });
 	  }
 	  datetoString(date) {
-		console.log('ana 5: ', date )
+		//console.log('ana 5: ', date )
 		const pattern = 'dd/MM/yyyy';
 		  return this.datePipe.transform(date, pattern);
 		}
@@ -1288,8 +1288,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		return new ResultadoInscripciones(objeto);
 	}
 	formatDateSol(date) {
-		console.log('ana 1: ', date)
-		console.log('date.includes ',date.includes('/'))
+		//console.log('ana 1: ', date)
+		//console.log('date.includes ',date.includes('/'))
 		const pattern = 'dd/MM/yyyy hh:mm:ss';
 		if (date != undefined && isNaN(Number(date))){
 			if (!date.includes('/')){
@@ -1300,7 +1300,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	  }
 
 	formatDateSol2(date) {
-		console.log('ana 2: ', date)
+		//console.log('ana 2: ', date)
 		const pattern = 'dd/MM/yyyy';
 		if (date != undefined && isNaN(Number(date))){
 			if (!date.includes('/')){

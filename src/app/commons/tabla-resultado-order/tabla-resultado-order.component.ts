@@ -1209,7 +1209,7 @@ this.totalRegistros = this.rowGroups.length;
           this.to = this.totalRegistros <= this.numperPage ? this.totalRegistros : this.numperPage;
           this.cd.detectChanges();
 
-          console.log(this.rowGroups);
+          //console.log(this.rowGroups);
       }
 
     getComboTurno() {

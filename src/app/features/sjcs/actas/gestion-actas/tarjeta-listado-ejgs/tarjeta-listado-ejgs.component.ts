@@ -76,7 +76,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("this.datos -> ", this.datos);
+    //console.log("this.datos -> ", this.datos);
     if(this.datos.numeroacta != null && this.datos.numeroacta != undefined && (this.datos.fecharesolucion == null || this.datos.fecharesolucion == undefined)){
       this.guardado = true;
     }
@@ -104,8 +104,8 @@ export class TarjetaListadoEjgsComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-    console.log(changes.tabla);
+    //console.log(changes);
+    //console.log(changes.tabla);
     this.selectedDatos = [];
     if (this.openGen == true) {
       if (this.openFicha == false) {
@@ -226,7 +226,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     }
     this.sigaServices.post("filtrosejgcomision_busquedaEJGActaComision", this.actaDatosEntradaItem).subscribe(
       n => {
-        console.log("Dentro del servicio del padre que llama al getEJGRemesa");
+        //console.log("Dentro del servicio del padre que llama al getEJGRemesa");
         this.ejgs = JSON.parse(n.body).ejgItems;
 
         this.ejgTotales = this.ejgs.length;
@@ -235,11 +235,11 @@ export class TarjetaListadoEjgsComponent implements OnInit {
           element.numAnnioProcedimiento = this.abreviatura + "-" + element.numAnnioProcedimiento;
         });
 
-        console.log("Contenido de la respuesta del back --> ", this.ejgs);
+        //console.log("Contenido de la respuesta del back --> ", this.ejgs);
         this.progressSpinner = false;
 
         if (this.ejgs.length == 200) {
-          console.log("Dentro del if del mensaje con mas de 200 resultados");
+          //console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
         }
 

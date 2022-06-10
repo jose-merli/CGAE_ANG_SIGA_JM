@@ -57,8 +57,8 @@ export class TarjetaListadoCmcComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("selectMultiple -> ", this.selectMultiple);
-    console.log("selectAll -> ", this.selectAll);
+    //console.log("selectMultiple -> ", this.selectMultiple);
+    //console.log("selectAll -> ", this.selectAll);
     this.selectedDatos = [];
     this.getCols();
 

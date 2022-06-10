@@ -73,7 +73,7 @@ export class EJGComponent implements OnInit {
     if (localStorage.getItem('remesa') != null) {
       this.remesa = JSON.parse(localStorage.getItem('remesa'));
       localStorage.removeItem('remesa');
-      console.log("Remesa -> ", this.remesa);
+      //console.log("Remesa -> ", this.remesa);
     }
 
     if (sessionStorage.getItem("EJG") != null) {

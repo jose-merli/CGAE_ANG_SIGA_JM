@@ -76,7 +76,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
     sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
     this.permisos = this.persistenceService.getPermisos();
-    console.log('this.permisos 1: ', this.permisos)
+    //console.log('this.permisos 1: ', this.permisos)
     this.getComboTurno();
 
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
@@ -284,7 +284,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       /* this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux(); */
-      console.log('this.permisos 2: ', this.permisos)
+      //console.log('this.permisos 2: ', this.permisos)
       this.filtrosValues.emit(this.filtros);
 
     }

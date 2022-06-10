@@ -492,7 +492,7 @@ export class NuevaIncorporacionComponent implements OnInit {
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.errorDocumentacion = true;
         },
         () => {}
@@ -2638,7 +2638,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           }
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         }, () => {
           this.progressSpinner = false;
@@ -2687,7 +2687,7 @@ para poder filtrar el dato con o sin estos caracteres*/
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.progressSpinner = false;
         },
         () => {
@@ -2721,7 +2721,7 @@ para poder filtrar el dato con o sin estos caracteres*/
             this.progressSpinner = false;
           },
           error => {
-            console.log(error);
+            //console.log(error);
             this.progressSpinner = false;
           },
           () => {
@@ -2763,7 +2763,7 @@ para poder filtrar el dato con o sin estos caracteres*/
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {

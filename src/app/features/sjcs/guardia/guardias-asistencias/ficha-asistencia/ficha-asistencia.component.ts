@@ -691,8 +691,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           this.showMsg("error", "Error", n.error.description.toString());
         } else {
           var newAsistenciaData: TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
-          console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
-          console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
+          //console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
+          //console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
           if (newAsistenciaData.estado == '2'){
             //anulada
             this.modoLectura = true;

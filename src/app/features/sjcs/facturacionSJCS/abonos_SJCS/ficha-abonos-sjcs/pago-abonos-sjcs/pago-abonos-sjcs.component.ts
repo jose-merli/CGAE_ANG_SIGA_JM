@@ -32,7 +32,7 @@ export class PagoAbonosSJCSComponent implements OnInit {
      }
 
   ngOnInit() {
-    console.log("si va bn")
+    //console.log("si va bn")
     
    }
    abreCierraFicha(){

@@ -55,7 +55,7 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
     if (changes.body && this.body.idSerieFacturacion != undefined) {
       if (sessionStorage.getItem("destinatarioIndv")) {
         let nuevoDestinatario: any = JSON.parse(sessionStorage.getItem("destinatarioIndv"));
-        console.log(nuevoDestinatario);
+        //console.log(nuevoDestinatario);
         this.guardarDestinarariosSerie(nuevoDestinatario);
   
         sessionStorage.removeItem("destinatarioIndv");

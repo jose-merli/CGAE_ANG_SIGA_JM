@@ -61,14 +61,14 @@ export class TablaCargaDesignaProcuradorComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("selectMultiple -> ", this.selectMultiple);
-    console.log("selectAll -> ", this.selectAll);
+    //console.log("selectMultiple -> ", this.selectMultiple);
+    //console.log("selectAll -> ", this.selectAll);
     this.selectedDatos = [];
     this.getCols();
 
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-    console.log(this.datos)
+    //console.log(this.datos)
 
   }
 
@@ -155,8 +155,8 @@ export class TablaCargaDesignaProcuradorComponent implements OnInit {
     localStorage.setItem('remesaItem', JSON.stringify(evento));
     localStorage.setItem('fichaCargaDesignaProcurador', "registro");
     localStorage.setItem('filtrosCargaDesigna',JSON.stringify(this.filtrosValues))
-    console.log("123 "+ evento)
-    console.log(JSON.stringify(this.selectedDatos))
+    //console.log("123 "+ evento)
+    //console.log(JSON.stringify(this.selectedDatos))
   }
 
   onChangeRowsPerPages(event) {

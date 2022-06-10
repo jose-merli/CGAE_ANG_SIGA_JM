@@ -65,7 +65,7 @@ export class FichaRemesasComponent implements OnInit {
       this.remesaTabla = JSON.parse(localStorage.getItem('remesaItem'));
       localStorage.removeItem('remesaItem');
       this.remesaTabla.informacionEconomica = this.remesaInformacionEconomica;
-      console.log("Item en JSON -> ", this.remesaTabla);
+      //console.log("Item en JSON -> ", this.remesaTabla);
       this.guardado = true;
       this.search();
       this.remesaFromTabla = true;
@@ -143,7 +143,7 @@ export class FichaRemesasComponent implements OnInit {
   }
 
   search() {
-    console.log("Dentro del search de la ficha-remesa");
+    //console.log("Dentro del search de la ficha-remesa");
     let remesasDatosEntradaItem =
     {
       'idRemesa': (this.remesaTabla.idRemesa != null && this.remesaTabla.idRemesa != undefined) ? this.remesaTabla.idRemesa.toString() : this.remesaTabla.idRemesa,
@@ -153,14 +153,14 @@ export class FichaRemesasComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("filtrosremesas_buscarRemesa", remesasDatosEntradaItem).subscribe(
       n => {
-        console.log("Dentro del servicio buscarRemesas para obtener las incidencias");
+        //console.log("Dentro del servicio buscarRemesas para obtener las incidencias");
         this.datos = JSON.parse(n.body).remesasItems;
 
         this.remesaTabla.incidencias = this.datos[0].incidencias;
         this.remesaTabla.descripcion = this.datos[0].descripcion;
         this.remesaTabla.estado = this.datos[0].estado;
 
-        console.log("Contenido de la respuesta del back --> ", this.datos);
+        //console.log("Contenido de la respuesta del back --> ", this.datos);
 
         this.getAcciones("");
 
@@ -168,7 +168,7 @@ export class FichaRemesasComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        console.log(err);
+        //console.log(err);
       },
       () =>{
         this.progressSpinner = false;
@@ -176,7 +176,7 @@ export class FichaRemesasComponent implements OnInit {
   }
 
   getAcciones(event) {
-    console.log("Dentro del getAcciones --> ", this.tarjetaDatosGenerales);
+    //console.log("Dentro del getAcciones --> ", this.tarjetaDatosGenerales);
     let remesaGetAcciones;
 
     if(event != ""){
@@ -202,7 +202,7 @@ export class FichaRemesasComponent implements OnInit {
       .post("ficharemesas_getAcciones", remesaGetAcciones)
       .subscribe(
         n => {
-          console.log("Dentro de la respuesta. Contenido --> ", JSON.parse(n.body).checkAccionesRemesas);
+          //console.log("Dentro de la respuesta. Contenido --> ", JSON.parse(n.body).checkAccionesRemesas);
 
           this.getAccionesRemesas = JSON.parse(n.body).checkAccionesRemesas;
           
@@ -386,7 +386,7 @@ export class FichaRemesasComponent implements OnInit {
   }
 
   confirmDelete(evento) {
-    console.log("Se ha pulsado el botón eliminar. Registro seleccionado -> ", this.tarjetaEJGs.selectedDatos);
+    //console.log("Se ha pulsado el botón eliminar. Registro seleccionado -> ", this.tarjetaEJGs.selectedDatos);
     let mess = this.translateService.instant(
       "messages.deleteConfirmation"
     );
@@ -418,7 +418,7 @@ export class FichaRemesasComponent implements OnInit {
 
   deleteRemesa() {
     let del: RemesasItem[] = [];
-    console.log("Remesa -> ", del);
+    //console.log("Remesa -> ", del);
     if (this.remesaTabla != null) {
       del[0] =
       { 

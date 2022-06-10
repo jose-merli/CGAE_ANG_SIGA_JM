@@ -58,14 +58,14 @@ export class TablaRemesasResultadosComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log("selectMultiple -> ", this.selectMultiple);
-    console.log("selectAll -> ", this.selectAll);
+    //console.log("selectMultiple -> ", this.selectMultiple);
+    //console.log("selectAll -> ", this.selectAll);
     this.selectedDatos = [];
     this.getCols();
 
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
-    console.log(this.datos)
+    //console.log(this.datos)
 
   }
 
@@ -153,8 +153,8 @@ export class TablaRemesasResultadosComponent implements OnInit {
     localStorage.setItem('remesaResultadoItem', JSON.stringify(evento));
     localStorage.setItem('fichaRemesaResultado', "registro");
     localStorage.setItem('filtrosRemesaResultado', JSON.stringify(this.filtrosValues));
-    console.log("123 "+ evento)
-    console.log(JSON.stringify(this.selectedDatos))
+    //console.log("123 "+ evento)
+    //console.log(JSON.stringify(this.selectedDatos))
     this.router.navigate(["/remesasResultadoFicha"]);
   }
 

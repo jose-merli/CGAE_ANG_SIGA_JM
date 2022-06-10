@@ -121,7 +121,7 @@ export class FichaExpedienteExeaComponent implements OnInit {
         
       },
       err => { 
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       } 
     );
@@ -160,7 +160,7 @@ export class FichaExpedienteExeaComponent implements OnInit {
           this.progressSpinner = false;
         },
         err => {
-          console.log(err);
+          //console.log(err);
           this.showMessage('error','Error',err);
           this.progressSpinner = false;
         }
@@ -192,14 +192,14 @@ export class FichaExpedienteExeaComponent implements OnInit {
               this.progressSpinner = false;
             },
             err => {
-              console.log(err);
+              //console.log(err);
               this.progressSpinner = false;
             }
           );
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {}
@@ -341,7 +341,7 @@ export class FichaExpedienteExeaComponent implements OnInit {
         }
       },
       err => {
-        console.log(err);
+        //console.log(err);
         this.progressSpinner = false;
       },
       () => {}

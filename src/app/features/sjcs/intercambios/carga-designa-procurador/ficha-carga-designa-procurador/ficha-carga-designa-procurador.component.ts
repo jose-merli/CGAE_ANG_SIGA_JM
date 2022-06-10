@@ -38,15 +38,15 @@ export class FichaCargaDesignaProcuradorComponent implements OnInit {
     private datepipe: DatePipe) { }
 
   ngOnInit() {
-    console.log("321: ")
+    //console.log("321: ")
     if(localStorage.getItem('fichaCargaDesignaProcurador') == "registro"){
       this.item = localStorage.getItem('remesaItem');
-      console.log("Item -> ", this.item);
+      //console.log("Item -> ", this.item);
       this.remesaItem = JSON.parse(this.item);
-      console.log(this.remesaItem)
+      //console.log(this.remesaItem)
       localStorage.removeItem('remesaItem');
       this.remesaTabla = JSON.parse(this.item);
-      console.log("Item en JSON -> ", this.remesaTabla);
+      //console.log("Item en JSON -> ", this.remesaTabla);
       this.remesaAuxiliar = JSON.parse(this.item);
       this.fichaRemesaResolucion = localStorage.getItem('fichaCargaDesignaProcurador');
     }else if(localStorage.getItem('fichaCargaDesignaProcurador') == "nuevo"){
@@ -87,12 +87,12 @@ export class FichaCargaDesignaProcuradorComponent implements OnInit {
 
 
   recuperarDatosContador(){
-    console.log("Dentro del recuperarDatosContador");
+    //console.log("Dentro del recuperarDatosContador");
     this.sigaServices
       .get("intercambios_contadorCargaDesignaProcuradores")
       .subscribe(
         data => {
-          console.log(data);
+          //console.log(data);
           this.rellenarDatosNuevo(data);
         },
         error => { },

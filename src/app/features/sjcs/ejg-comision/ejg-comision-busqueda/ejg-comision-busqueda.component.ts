@@ -118,7 +118,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
 
     } else {
       this.body = new EJGItem();
-      console.log("Año -> ", new Date().getFullYear().toString());
+      //console.log("Año -> ", new Date().getFullYear().toString());
       this.body.annio = new Date().getFullYear().toString();
     }
 
@@ -602,7 +602,7 @@ export class EjgComisionBusquedaComponent implements OnInit {
         && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
         this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
       }
-      console.log(this.body);
+      //console.log(this.body);
 
       this.busqueda.emit(false);
 

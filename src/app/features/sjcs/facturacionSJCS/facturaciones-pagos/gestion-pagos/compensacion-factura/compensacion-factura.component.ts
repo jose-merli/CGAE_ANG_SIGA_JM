@@ -183,7 +183,7 @@ export class CompensacionFacturaComponent implements OnInit, AfterViewInit {
   }
 
   marcar() {
-    console.log(this.paramDeducirCobroAutom, this.idEstadoPago)
+    //console.log(this.paramDeducirCobroAutom, this.idEstadoPago)
     if (!this.isPagoCerrado() && !this.isPagoEjecutando()) {
       this.selectedDatos.forEach(el => {
         el.compensar = true;

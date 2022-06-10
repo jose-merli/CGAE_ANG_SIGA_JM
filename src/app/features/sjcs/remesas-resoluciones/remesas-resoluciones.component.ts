@@ -133,12 +133,12 @@ export class RemesasResolucionesComponent implements OnInit {
   }
 
   search(event){
-    console.log("QWEQWE");
-    console.log(this.buscar);
+    //console.log("QWEQWE");
+    //console.log(this.buscar);
     this.progressSpinner = true;
     this.sigaServices.post("remesasResolucion_buscarRemesasResolucion", this.filtrosValues).subscribe(
       n => {
-        console.log("Dentro del servicio que llama al buscarRemesasResultado");
+        //console.log("Dentro del servicio que llama al buscarRemesasResultado");
         this.datos = JSON.parse(n.body).remesasResolucionItem;
 
         this.datos.forEach(element => {
@@ -148,11 +148,11 @@ export class RemesasResolucionesComponent implements OnInit {
 
         });
 
-        console.log("Contenido de la respuesta del back --> ", this.datos);
+        //console.log("Contenido de la respuesta del back --> ", this.datos);
         this.buscar = true;
         this.progressSpinner = false;
         if (this.datos.length == 200) {
-          console.log("Dentro del if del mensaje con mas de 200 resultados");
+          //console.log("Dentro del if del mensaje con mas de 200 resultados");
           this.showMessage('info', this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.consulta.resultados"));
         }
         // this.resetSelect();
