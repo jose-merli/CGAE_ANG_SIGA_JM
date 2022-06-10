@@ -63,6 +63,8 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
 
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.getComboContabilizado();
     this.getComboFormaCobroAbono();
     this.getComboGrupoFacturacion();

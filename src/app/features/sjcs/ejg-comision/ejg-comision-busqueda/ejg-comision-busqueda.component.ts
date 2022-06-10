@@ -85,6 +85,8 @@ export class EjgComisionBusquedaComponent implements OnInit {
     private commonServices: CommonsService) { }
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.getCombos();
     
     if (this.persistenceService.getPermisos() != undefined) {

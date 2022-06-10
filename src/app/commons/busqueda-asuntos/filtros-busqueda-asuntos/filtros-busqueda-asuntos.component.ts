@@ -146,7 +146,8 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   selectedDatos;
 
   ngOnInit() {
-
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.currentRoute = this.router.url;
     this.progressSpinner = true;
     this.getCombos();

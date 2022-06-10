@@ -70,6 +70,8 @@ export class FiltrosInscripciones implements OnInit {
     private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
 
     this.isLetrado = this.localStorageService.isLetrado;
 

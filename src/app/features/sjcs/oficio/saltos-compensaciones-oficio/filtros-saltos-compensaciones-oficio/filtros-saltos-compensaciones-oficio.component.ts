@@ -47,6 +47,8 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.isLetrado = this.localStorageService.isLetrado;
     if (this.isLetrado) {
       this.disabledBusquedaExpress = true;

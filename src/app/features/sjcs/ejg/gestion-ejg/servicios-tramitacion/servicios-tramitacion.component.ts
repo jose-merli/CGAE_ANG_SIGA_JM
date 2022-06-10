@@ -66,6 +66,8 @@ export class ServiciosTramitacionComponent implements OnInit {
     private commonServices: CommonsService, private translateService: TranslateService) { }
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });

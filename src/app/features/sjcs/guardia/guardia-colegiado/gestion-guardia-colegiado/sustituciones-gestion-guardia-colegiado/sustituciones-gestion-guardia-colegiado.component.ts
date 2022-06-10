@@ -32,6 +32,8 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
     private translateService: TranslateService,private sigaServices: SigaServices) { }
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     if(this.persistenceService.getDatos()){
       this.body = this.persistenceService.getDatos();
     }

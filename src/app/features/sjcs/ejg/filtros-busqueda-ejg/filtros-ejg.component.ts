@@ -117,6 +117,8 @@ export class FiltrosEjgComponent implements OnInit {
 
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.progressSpinner = true;
     this.getCombos();
 
