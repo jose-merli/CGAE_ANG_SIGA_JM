@@ -45,9 +45,9 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
   seleccionarTodo : boolean = false;
   progressSpinner : boolean = false;
   numSeleccionado : number = 0;
-  selectedDatos : ActuacionAsistenciaItem[] = [];
   actuaciones : ActuacionAsistenciaItem [] = [];
   disableDelete : boolean = true;
+  selectedDatos : ActuacionAsistenciaItem[] = [];
   @ViewChild("table") table: DataTable;
   constructor(private changeDetectorRef : ChangeDetectorRef,
     private sigaServices : SigaServices,
@@ -205,15 +205,14 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
   onClickEnlace(actuacion : ActuacionAsistenciaItem){
     let actuacionParaAbrir: ActuacionAsistenciaItem;
     this.actuaciones.forEach(act => {
-      if(act.numeroAsunto == actuacion.numeroAsunto){
+      if(act.idActuacion == actuacion.idActuacion){
         actuacionParaAbrir = act;
       }
     });
     sessionStorage.setItem('asistenciaToFichaActuacion',JSON.stringify(this.asistencia));
     sessionStorage.setItem('actuacionAsistencia', JSON.stringify(actuacionParaAbrir));
-    console.log('enlace a actuacion: ', actuacionParaAbrir)
+    console.log('Enlace a actuacion: ', actuacionParaAbrir);
     this.router.navigate(['/fichaActuacionAsistencia']);
-
   }
 
   nuevaActuacion(){
