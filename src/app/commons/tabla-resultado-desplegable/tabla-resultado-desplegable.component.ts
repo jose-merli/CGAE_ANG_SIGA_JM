@@ -2065,13 +2065,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
       
       let designaProcedimiento = new DesignaItem();
-      let data = sessionStorage.getItem("designaItem");
-      let dataProcedimiento = JSON.parse(data);
-      dataProcedimiento.idPretension = dato.idPretension;
-      dataProcedimiento.idTurno = dato.idTurno;
-      dataProcedimiento.ano = dato.factConvenio;
-      dataProcedimiento.numero = dato.numero
-      this.sigaServices.post("designaciones_busquedaProcedimiento", dataProcedimiento).subscribe(
+      designaProcedimiento.idPretension = dato.idPretension;
+      designaProcedimiento.idTurno = dato.idTurno;
+      designaProcedimiento.ano = dato.factConvenio;
+      designaProcedimiento.numero = dato.numero
+      this.sigaServices.post("designaciones_busquedaProcedimiento", designaProcedimiento).subscribe(
         n => {
           datosProcedimiento = JSON.parse(n.body);
           if (datosProcedimiento.length == 0) {
@@ -2079,16 +2077,15 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             dato.idProcedimiento = "";
           } else {
             dato.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
-            dato.idProcedimiento = dataProcedimiento.idPretension;
+            dato.idProcedimiento = designaProcedimiento.idPretension;
           }
   
           let designaModulo = new DesignaItem();
-          let dataModulo = JSON.parse(data);
-          dataModulo.idProcedimiento = idProcedimiento;
-          dataModulo.idTurno = dato.idTurno;
-          dataModulo.ano = dato.factConvenio;
-          dataModulo.numero = dato.numero
-          this.sigaServices.post("designaciones_busquedaModulo", dataModulo).subscribe(
+          designaModulo.idProcedimiento = idProcedimiento;
+          designaModulo.idTurno = dato.idTurno;
+          designaModulo.ano = dato.factConvenio;
+          designaModulo.numero = dato.numero
+          this.sigaServices.post("designaciones_busquedaModulo", designaModulo).subscribe(
             n => {
               datosModulo = JSON.parse(n.body);
               if (datosModulo.length == 0) {
