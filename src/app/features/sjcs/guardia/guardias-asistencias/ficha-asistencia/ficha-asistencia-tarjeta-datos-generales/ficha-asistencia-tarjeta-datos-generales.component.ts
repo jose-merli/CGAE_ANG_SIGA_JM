@@ -90,8 +90,6 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
       this.getTurnosByColegiadoFecha();
       this.onChangeTurno();
       this.onChangeGuardia();
-      this.onChangeLetradoGuardia();
-
       this.checkEstado();
       this.getActuaciones();
     }
