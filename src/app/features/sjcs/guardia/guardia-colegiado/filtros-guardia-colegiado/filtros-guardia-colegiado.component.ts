@@ -59,6 +59,8 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     private commonServices: CommonsService) { }
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
 
     this.progressSpinner = true;
     this.showDatosGenerales = true;

@@ -3,9 +3,8 @@
 <div class="card mt-3">
   <div class="card-body p-0">
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
-      [first]="first" class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab(selectedDatos)"
-      (onRowUnselect)="actualizaSeleccionados(selectedDatos)" paginatorPosition="both">
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="none" [responsive]="true" #table
+      [first]="first" class="tabla-listado" [paginator]="true" [rows]="selectedItem" paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">
@@ -25,12 +24,16 @@
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
 
+            <div *ngIf="col.field == 'nif' || col.field == 'nombre'">
+              <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+            </div>
+
             <div *ngIf="col.field == 'fechaModificacion'">
               <div>
                 <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
               </div>
             </div>
-            <div *ngIf="col.field != 'fechaModificacion'">
+            <div *ngIf="col.field != 'nif' && col.field != 'nombre' && col.field != 'fechaModificacion'">
               <span>{{dato[col.field]}}</span>
             </div>
 

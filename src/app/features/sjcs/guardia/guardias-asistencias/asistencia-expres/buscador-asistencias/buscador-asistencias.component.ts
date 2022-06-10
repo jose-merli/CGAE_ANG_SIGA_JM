@@ -73,6 +73,8 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
   }
   ngAfterViewInit(): void {
     if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
+      sessionStorage.removeItem("volver");
+      sessionStorage.removeItem("modoBusqueda");
       this.modoBusqueda = 'a';
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
       this.filtro = oldFiltro;

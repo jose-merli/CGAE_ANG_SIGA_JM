@@ -51,6 +51,8 @@ export class FiltrosSaltosCompensacionesGuardiaComponent implements OnInit {
     private sigaStorageService : SigaStorageService) { }
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
 
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();

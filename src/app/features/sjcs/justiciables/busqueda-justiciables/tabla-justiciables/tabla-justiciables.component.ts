@@ -310,7 +310,8 @@ export class TablaJusticiablesComponent implements OnInit {
             this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           }else{
             this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
-            this.router.navigate(["/fichaAsistencia"]);
+            //this.router.navigate(["/fichaAsistencia"]);
+            this.location.back();
           }
 
         },
@@ -343,7 +344,8 @@ export class TablaJusticiablesComponent implements OnInit {
             this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           }else{
             this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
-            this.router.navigate(["/fichaAsistencia"]);
+            this.location.back();
+            //this.router.navigate(["/fichaAsistencia"]);
           }
 
         },

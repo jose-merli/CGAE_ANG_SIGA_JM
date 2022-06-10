@@ -40,7 +40,8 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
 
   @ViewChild(BusquedaColegiadoExpressComponent) busqColegiado : BusquedaColegiadoExpressComponent;
   ngOnInit() {
-
+    //sessionStorage.removeItem("volver");
+    //sessionStorage.removeItem("modoBusqueda");
     this.checkLastRoute();
     if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('usuarioBusquedaExpress')) {
       this.usuarioBusquedaExpress = JSON.parse(sessionStorage.getItem('usuarioBusquedaExpress'));

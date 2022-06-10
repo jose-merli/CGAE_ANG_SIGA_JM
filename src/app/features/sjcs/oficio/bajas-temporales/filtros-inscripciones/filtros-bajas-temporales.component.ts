@@ -54,6 +54,8 @@ export class FiltrosBajasTemporales implements OnInit {
     private localStorageService: SigaStorageService) { }
 
   ngOnInit() {   
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.clearFilters();
 
     this.isLetrado = this.localStorageService.isLetrado;

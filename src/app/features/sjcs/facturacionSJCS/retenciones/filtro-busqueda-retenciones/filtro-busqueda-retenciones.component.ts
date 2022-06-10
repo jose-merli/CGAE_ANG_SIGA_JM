@@ -56,7 +56,8 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
     private sigaService: SigaServices) { }
 
   ngOnInit() {
-
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.isLetrado = this.sigaStorageService.isLetrado;
 
     if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('buscadorColegiados')) {

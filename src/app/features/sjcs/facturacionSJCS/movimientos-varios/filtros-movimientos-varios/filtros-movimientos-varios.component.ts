@@ -59,7 +59,8 @@ export class FiltrosMovimientosVariosComponent implements OnInit {
 		private movimientosVariosService: MovimientosVariosService) { }
 
   ngOnInit() {
-
+	sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
 	this.isLetrado = this.sigaStorageService.isLetrado;
 
 	if(this.isLetrado){

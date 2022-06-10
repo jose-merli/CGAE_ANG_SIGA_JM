@@ -43,7 +43,8 @@ export class FiltroCartasFacturacionPagoComponent implements OnInit {
     private translateService: TranslateService, private sigaStorageService: SigaStorageService,) { }
 
   ngOnInit() {
-
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.isLetrado = this.sigaStorageService.isLetrado;
 
     if(this.apartado != null && this.apartado != undefined){

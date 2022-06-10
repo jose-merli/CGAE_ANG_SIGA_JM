@@ -43,6 +43,8 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
 
   @ViewChild(BusquedaColegiadoExpressComponent) buscadorColegiado;
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.titulo = this.translateService.instant("general.message.datos.generales");
     this.resaltadoDatos = true;
     this.checkLastRoute();

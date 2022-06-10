@@ -73,6 +73,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   }
 
   ngOnInit() {
+    sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("modoBusqueda");
     this.permisos = this.persistenceService.getPermisos();
     console.log('this.permisos 1: ', this.permisos)
     this.getComboTurno();

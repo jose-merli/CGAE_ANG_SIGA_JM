@@ -105,7 +105,8 @@ export class BuscadorColegiadosComponent implements OnInit {
   }
 
   buscar(){
-
+    sessionStorage.setItem("volver", "true");
+    sessionStorage.setItem("modoBusqueda","a");
 
     let guardia = "";
     let turno = "";

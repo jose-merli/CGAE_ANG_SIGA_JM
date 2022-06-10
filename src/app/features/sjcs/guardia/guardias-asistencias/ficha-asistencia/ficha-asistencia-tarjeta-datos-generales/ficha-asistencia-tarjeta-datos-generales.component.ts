@@ -65,6 +65,8 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     private confirmationService : ConfirmationService) { }
 
   ngOnInit() {
+    //sessionStorage.removeItem("volver");
+    //sessionStorage.removeItem("modoBusqueda");
     this.getDataLoggedUser();
     this.checkLastRoute();
   

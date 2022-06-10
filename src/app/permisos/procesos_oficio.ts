@@ -9,6 +9,7 @@ export const procesos_oficio: any = {
     tarjetaResumen: "92M",
     tarjetaListadoInscripciones: "93M",
     tarjetaPosicionCola: "9S5",
+    CambioNumDesigna:"931",
     //FIN TURNOS
 
 
