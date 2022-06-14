@@ -681,7 +681,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }else{
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
+      const newAllow = rowGroup.rows[0].cells[40].value;
+      if((this.isLetrado && row.cells[8].value != true && newAllow == "1") || (!this.isLetrado)){
         if (row.cells[8].value  != true) {
           if (row.cells[0].value[1] != undefined && row.cells[0].value[1].length != 0 && !this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
             this.indicesToUpdate.push([rowId, index]);
@@ -709,7 +710,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       //designacion
       if(this.isLetrado){
         if (this.justActivarDesigLetrado != "1"){
-          this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
+          this.showMsg('error', "No tiene permiso para actualizar designaciones", '');
+          this.refreshData.emit(true);
         }else{
           if (this.rowIdsToUpdate.indexOf(rowId) == -1){
             this.rowIdsToUpdate.push(rowId);
@@ -779,7 +781,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }else{
         //actuacion
         this.turnoAllow = rowGroup.rows[0].cells[39].value;
-        if((this.isLetrado && this.turnoAllow != 1) || (!this.isLetrado)){
+        const newAllow = rowGroup.rows[0].cells[40].value;
+        if((this.isLetrado && newAllow == "1" && this.turnoAllow != "1") || (!this.isLetrado)){
           if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
             this.indicesToUpdate.push([rowId, index]);
           }
@@ -848,20 +851,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     }else if(this.pantalla == 'JE'){
       //actuacion
-      this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      const isNew = !Array.isArray(row.cells[8].value);
-      if((this.isLetrado && this.turnoAllow != "1") || (!this.isLetrado)){
-        if (row.cells[8].value != true){
-          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
-            this.indicesToUpdate.push([rowId, index]);
-          }
-        }else{
-          this.rowValidadas.push(row);
-          this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
-          this.refreshData.emit(true);
+      if (row.cells[8].value != true){
+        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+          this.indicesToUpdate.push([rowId, index]);
         }
       }else{
-        this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
+        this.rowValidadas.push(row);
+        this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
         this.refreshData.emit(true);
       }
     }else{

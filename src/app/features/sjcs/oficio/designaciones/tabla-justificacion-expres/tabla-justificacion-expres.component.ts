@@ -127,6 +127,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   newActuacionItem = {}; // para enviar a backend -  NUEVO
   dataToUpdateArr = []; // para enviar a backend -  GUARDAR
   permisoEscritura;
+  justActivarDesigLetrado: string = "0"; // Permiso para editar designaciones
 
   constructor(private trdService: TablaResultadoDesplegableJEService, private datepipe: DatePipe,
     private commonsService: CommonsService, private sigaServices: SigaServices,
@@ -144,6 +145,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     // Cargamos la fecha de justificación
     this.fechaFiltro = this.formatDate(new Date());
     await this.getJuzgados();
+    await this.getParams("JUSTIFICACION_EDITAR_DESIGNA_LETRADOS");
 
     this.sigaServices.get("combo_comboModulos").subscribe(
       async n => {
@@ -160,6 +162,32 @@ export class TablaJustificacionExpresComponent implements OnInit {
     );
 
     this.checkPermisos();
+  }
+
+  getParams(param){
+    let parametro = new ParametroRequestDto();
+    let institucionActual;
+    return this.sigaServices.get("institucionActual").toPromise().then(n => {
+      institucionActual = n.value;
+      parametro.idInstitucion = institucionActual;
+      parametro.modulo = "SCS";
+      parametro.parametrosGenerales = param;
+      return this.sigaServices
+          .postPaginado("parametros_search", "?numPagina=1", parametro)
+          .toPromise().then(
+            data => {
+              let searchParametros = JSON.parse(data["body"]);
+              let datosBuscar = searchParametros.parametrosItems;
+              datosBuscar.forEach(element => {
+                if (element.parametro == param && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                  const valorParametro = element.valor;
+                  if (param == "JUSTIFICACION_EDITAR_DESIGNA_LETRADOS"){
+                    this.justActivarDesigLetrado = valorParametro;
+                }
+            }
+        });
+      });
+    });
   }
 
   checkPermisos(){
@@ -385,7 +413,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       let moduloType = "select";
       let moduloValue = "";
       let moduloCombo = [];
-      if(this.isLetrado || finalizada){
+      if((this.isLetrado && this.justActivarDesigLetrado != "1") || finalizada){
         numProcType = 'text';
         nigType = 'text';
         moduloType = 'tooltip';
@@ -405,7 +433,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       let juzgadoValue;
       let juzgadoCombo;
 
-      if (this.isLetrado || finalizada) {
+      if ((this.isLetrado && this.justActivarDesigLetrado != "1") || finalizada) {
         juzgadoType = "tooltip";
         juzgadoValue = designacion.categoriaJuzgado;
         juzgadoCombo = designacion.nombreJuzgado;
@@ -471,10 +499,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
     arrDesignacion = 
     [
     { type: 'checkboxPermisos', value: [finalizada, ""], size: 120, combo: null},
-    { type: 'text', value: listaCliente, size: 400, combo: listaClienteCombo },
-    { type: 'text', value: designacion.nig, size: 200, combo: null},
-    { type: 'text', value: designacion.numProcedimiento, size: 200 , combo: null},
-    { type: 'tooltip', value: designacion.categoriaProcedimiento, size: 400 , combo: designacion.procedimiento }, //modulo
+    { type: juzgadoType, value: juzgadoValue, size: 400, combo: juzgadoCombo },
+    { type: nigType, value: designacion.nig, size: 200, combo: null},
+    { type: numProcType, value: designacion.numProcedimiento, size: 200 , combo: null},
+    { type: moduloType, value: moduloValue, size: 400 , combo: moduloCombo }, //modulo
     { type: 'invisible', value: this.formatDate(designacion.fechaActuacion), size: 200 , combo: null},
     { type: 'invisible', value: '' , size: 200, combo: null},
     { type: 'invisible', value: designacion.tipoAcreditacion , size: 200, combo: null},
@@ -563,18 +591,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
         }else{
           fechaActType = 'text';
         }
-        
 
-        let moduloValue2 = "";
-        let moduloCombo2 = [];
-        if(this.isLetrado){
-          moduloValue2 = actuacion.categoriaProcedimiento;
-          moduloCombo2 = actuacion.procedimiento;
-          
-        }else{
-          moduloValue2 = actuacion.idProcedimiento;
-          moduloCombo2 = this.comboModulos;
-        }
+        let moduloValue2 = actuacion.idProcedimiento;
+        let moduloCombo2 = this.comboModulos;
 
         if (finalizada) {
           arr1 = [
