@@ -52,18 +52,18 @@
                             </p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" (click)="changePrecio()"
-                                [(ngModel)]="precio" name="precio" value="unico"
+                            <p-radioButton [disabled]="!permisoEscritura || !disabledFacActuaciones" (click)="changePrecio()"
+                                [(ngModel)]="precio" name="precio" value="unico" id="radioPrecioUnico"
                                 label="{{'facturacionSJCS.baremos.precioUnico' | translate}}"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disPrecio || !permisoEscritura" (click)="changePrecio()"
-                                [(ngModel)]="precio" name="precio" value="porTipos"
+                            <p-radioButton [disabled]="!permisoEscritura || !disabledFacActuaciones" (click)="changePrecio()"
+                                [(ngModel)]="precio" name="precio" value="porTipos" id="radioPorTipos"
                                 label="{{'facturacionSJCS.baremos.precioTipos' | translate}}"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6 ">
                             <label>{{ 'facturacionSJCS.facturacionesYPagos.importe' | translate }}</label>
-                            <input [disabled]="!disableImput || !permisoEscritura" type="number"
+                            <input [disabled]=" !permisoEscritura || !disabledPrecioUnico || !disabledFacActuaciones" type="number"
                                 [(ngModel)]="filtrosAdi.importe" class="form-control importesBaremos" />
                         </div>
                         <div class="form-group col-lg-6 col-md-6 align-self-center mt-md-3">
@@ -73,8 +73,9 @@
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
                             <label>{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}</label>
-                            <input type="number" [disabled]="!disableImput || !permisoEscritura"
-                                [(ngModel)]="filtrosAdi.importeMax" class="form-control importesBaremos" />
+                            <input type="number" [disabled]="!permisoEscritura || !disabledPrecioUnico || !disabledFacActuaciones"
+                                [(ngModel)]="filtrosAdi.importeMax" class="form-control importesBaremos"
+                                [disabled]="!disableImput || !permisoEscritura || !disabledPrecioUnico" />
                         </div>
                     </div>
                 </div>
@@ -110,12 +111,12 @@
                                 tooltipPosition="right"></i>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableConfAdi || !permisoEscritura" value="asi"
+                            <p-radioButton [disabled]="!permisoEscritura" value="asi"
                                 [(ngModel)]="contAsAc" binary="true" name="contAsAc" (click)="changeContAsAc()"
                                 label="{{'facturacionSJCS.baremos.contAsistencias' | translate}}"></p-radioButton>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">
-                            <p-radioButton [disabled]="!disableConfAdi || !permisoEscritura" value="act"
+                            <p-radioButton [disabled]="!permisoEscritura" value="act"
                                 [(ngModel)]="contAsAc" binary="true" name="contAsAc" (click)="changeContAsAc()"
                                 label="{{'facturacionSJCS.baremos.contActuaciones' | translate}}"></p-radioButton>
                         </div>
