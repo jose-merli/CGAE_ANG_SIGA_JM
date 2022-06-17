@@ -26,6 +26,8 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   descontar: boolean = false;
   disablediratipos: boolean = false;
   disableConfAdi: boolean = false;
+  disabledFacActuaciones: boolean = false;
+  disabledPrecioUnico: boolean = false;
   importeSOJ;
   importeEJG;
   displayBoolean: boolean = false;
@@ -43,7 +45,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
 
   @ViewChild("op")
   op: OverlayPanel;
-  
+
   constructor(private localStorageService: SigaStorageService,
     private translateService: TranslateService,
     private router: Router) { }
@@ -74,24 +76,25 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   changeContAsAc() {
     if (this.disableConfAdi) {
       let institucion = this.localStorageService.institucionActual;
-      let institucionesActuaciones = ['2002','2020','2058','2067','2078','2082'];
-      
-      if(institucion == '2027' && this.contAsAc == 'act'){// se comprueba que se encuentre en la institucion de Gijon.
-          this.disJuiciosRapidos = true
-        }else if(institucionesActuaciones.includes(institucion) && this.contAsAc == 'asi'){
-          this.disJuiciosRapidos = true
-        }else{
-          this.disJuiciosRapidos = false
-        }
+      let institucionesActuaciones = ['2002', '2020', '2058', '2067', '2078', '2082'];
+
+      if (institucion == '2027' && this.contAsAc == 'act') {// se comprueba que se encuentre en la institucion de Gijon.
+        this.disJuiciosRapidos = true
+      } else if (institucionesActuaciones.includes(institucion) && this.contAsAc == 'asi') {
+        this.disJuiciosRapidos = true
+      } else {
+        this.disJuiciosRapidos = false
+      }
     }
-    if(this.contAsAc != 'asi' && this.contAsAc != 'act'){
+    if (this.contAsAc != 'asi' && this.contAsAc != 'act') {
       this.disablediratipos = true;
     }
 
   }
 
   changePrecio() {
-    if (this.disableConfAdi) {
+
+    /*if (this.disableConfAdi) {
       this.precio
       this.disableImput = true
       if (this.precio == 'porTipos') {
@@ -99,13 +102,28 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
       } else {
         this.modalTipos = false;
       }
+    }*/
+    if (this.precio == 'unico') {
+      this.disabledPrecioUnico = true;
+    } else {
+      this.disabledPrecioUnico = false;
+    }
+
+    if (this.precio == 'porTipos') {
+      this.modalTipos = true;
+    } else {
+      this.modalTipos = false;
     }
 
   }
   onChangeFacActuaciones(event) {
     this.facActuaciones = event
-    this.disableConfAdi = event
-    this.disPrecio = true;
+
+    if (this.facActuaciones) {
+      this.disabledFacActuaciones = true
+    } else {
+      this.disabledFacActuaciones = false
+    }
   }
 
   onChangeFacAsuntosAntiguos(event) {
@@ -123,7 +141,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   irAtipos() {
     this.showModal = true;
   }
-  cerrarDialog(){
+  cerrarDialog() {
     this.showModal = false;
   }
 
@@ -137,15 +155,15 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   }
 
   show(event) {
-  if (!this.permisoActuaciones && this.contAsAc== 'act'){
-    // Acceso Denegado para acceder a Actuación.
-    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-  }else{
-     // Redirigir a Actuación.
-    this.router.navigate(["/tiposActuacion"]);
+    if (!this.permisoActuaciones && this.contAsAc == 'act') {
+      // Acceso Denegado para acceder a Actuación.
+      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+    } else {
+      // Redirigir a Actuación.
+      this.router.navigate(["/tiposActuacion"]);
+    }
   }
-  }
-  
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

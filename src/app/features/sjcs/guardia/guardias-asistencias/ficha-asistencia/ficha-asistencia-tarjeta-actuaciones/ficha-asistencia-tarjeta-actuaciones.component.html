@@ -4,7 +4,7 @@
 </div>
 <p-dataTable #table [value]="actuaciones" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" loadingIcon="fa-spinner"
 class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]="true" paginatorPosition="both" [rows]="rows" selectionMode="multiple" (onRowSelect)="onSelectRow($event.data)"
-(onRowUnselect)="actualizaSeleccionados()">
+(onRowUnselect)="actualizaSeleccionados()" [metaKeySelection]="false">
   <p-column field="idActuacion" header="{{'justiciaGratuita.oficio.designas.actuaciones.nActuacion' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
     <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
       <td class="text-center">

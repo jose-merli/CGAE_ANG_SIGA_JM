@@ -116,9 +116,9 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     nombre: this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.caracteristicas'),
     imagen: "",
     icono: 'fa fa-briefcase',
-    detalle: false,
+    detalle: true,
     fixed: false,
-    opened: true,
+    opened: false,
     visible: this.visibleTarjetaCaract,
     campos: []
   },
@@ -433,9 +433,6 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
       if (tarj.nombre != 'Datos Generales') { //Durante la creacion, deshabilitamos las tarjetas que no sean la de datos generales
         tarj.detalle = false;
       }
-      if (tarj.nombre == 'Caracteristicas' && tarj.visible) {
-        tarj.opened = false;
-      }
     });
     let tarjTmp = {
       id: 'facSJCSTarjFacGene',
@@ -659,9 +656,6 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           this.listaTarjetas.forEach(tarj => {
             if (tarj.nombre != 'Datos Generales' && tarj.nombre != 'Caracteristicas') { //Una vez creada la asistencia, dejamos abrir las demas tarjetas
               tarj.detalle = true;
-            }
-            if (tarj.nombre == 'Caracteristicas' && tarj.visible) {
-              tarj.opened = true;
             }
           });
 
@@ -894,11 +888,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           this.asistencia = newAsistenciaData;
 
           this.listaTarjetas.forEach(tarj => {
-            if (tarj.nombre != 'Datos Generales' && tarj.nombre != 'Caracteristicas') { //Una vez creada la asistencia, dejamos abrir las demas tarjetas
+            if (tarj.nombre != 'Datos Generales') { //Una vez creada la asistencia, dejamos abrir las demas tarjetas
               tarj.detalle = true;
-            }
-            if (tarj.nombre == 'Caracteristicas' && tarj.visible) {
-              tarj.opened = true;
             }
           });
 
