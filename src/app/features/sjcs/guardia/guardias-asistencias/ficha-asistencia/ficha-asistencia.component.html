@@ -74,7 +74,8 @@
                                     </app-ficha-asistencia-tarjeta-documentacion>
                                   </div>
                                   <div *ngIf="(tarj.nombre == 'Caracteristicas' || tarj.nombre == 'Caracteristiques') && tarj.visible != undefined" id="caracteristicasTemplate">
-                                      <app-ficha-asistencia-tarjeta-caracteristicas [modoLectura]="modoLectura" [asistencia] = "asistencia" [permisoEscritura]="visibleTarjetaCaract" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable"></app-ficha-asistencia-tarjeta-caracteristicas>
+                                      <app-ficha-asistencia-tarjeta-caracteristicas [modoLectura]="modoLectura" [asistencia] = "asistencia" [permisoEscritura]="visibleTarjetaCaract" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable">
+                                      </app-ficha-asistencia-tarjeta-caracteristicas>
                                   </div>
                                   <div *ngIf="(tarj.nombre == 'Actuaciones' || tarj.nombre == 'Actuacions') && tarj.visible != undefined" id="actuacionesTemplate">
                                     <app-ficha-asistencia-tarjeta-actuaciones [modoLectura]="modoLectura" [asistencia] = "asistencia" (refreshTarjetas)="refreshDatosGenerales($event)" [editable]="editable"></app-ficha-asistencia-tarjeta-actuaciones>

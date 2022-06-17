@@ -14,14 +14,14 @@ import { SigaServices } from '../../../../../../_services/siga.service';
 export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnChanges {
 
 
-  msgs : Message [] = [];
+  msgs: Message[] = [];
   @Input() modoLectura: boolean;
-  @Input() asistencia : TarjetaAsistenciaItem;
-  @Input() editable : boolean;
+  @Input() asistencia: TarjetaAsistenciaItem;
+  @Input() editable: boolean;
   @Output() refreshTarjetas = new EventEmitter<string>();
-  disableReactivar : boolean = false;
-  mostrarHistorico : boolean = false;
-  rows : number = 10;
+  disableReactivar: boolean = false;
+  mostrarHistorico: boolean = false;
+  rows: number = 10;
   rowsPerPage = [
     {
       label: 10,
@@ -41,19 +41,19 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
     }
   ];
   columnas = [];
-  seleccionMultiple : boolean = false;
-  seleccionarTodo : boolean = false;
-  progressSpinner : boolean = false;
-  numSeleccionado : number = 0;
-  actuaciones : ActuacionAsistenciaItem [] = [];
-  disableDelete : boolean = true;
-  selectedDatos : ActuacionAsistenciaItem[] = [];
+  seleccionMultiple: boolean = false;
+  seleccionarTodo: boolean = false;
+  progressSpinner: boolean = false;
+  numSeleccionado: number = 0;
+  actuaciones: ActuacionAsistenciaItem[] = [];
+  disableDelete: boolean = true;
+  selectedDatos: ActuacionAsistenciaItem[] = [];
   @ViewChild("table") table: DataTable;
-  constructor(private changeDetectorRef : ChangeDetectorRef,
-    private sigaServices : SigaServices,
-    private translateService : TranslateService,
-    private confirmationService : ConfirmationService,
-    private router : Router) { }
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+    private sigaServices: SigaServices,
+    private translateService: TranslateService,
+    private confirmationService: ConfirmationService,
+    private router: Router) { }
 
 
   ngOnInit() {
@@ -61,12 +61,12 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.asistencia
-      && changes.asistencia.currentValue){
-        this.getActuaciones();
-      }
+    if (changes.asistencia
+      && changes.asistencia.currentValue) {
+      this.getActuaciones();
+    }
   }
-  changeHistorico(){
+  changeHistorico() {
     this.mostrarHistorico = !this.mostrarHistorico;
     this.selectedDatos = [];
     this.numSeleccionado = 0;
@@ -75,30 +75,30 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
     this.getActuaciones();
   }
 
-  updateEstadoActuacion(newEstado : string){
-   this.selectedDatos.forEach(sD => {
-    if (sD.facturada != null && sD.facturada != undefined){
-      this.showMsg("error", "No se pueden anular actuaciones facturadas.", "No se pueden anular actuaciones facturadas.");
-    }else{
-      this.progressSpinner = true;
-        let actuaciones : ActuacionAsistenciaItem [] = [];
-        if(Array.isArray(this.selectedDatos)){ //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
+  updateEstadoActuacion(newEstado: string) {
+    this.selectedDatos.forEach(sD => {
+      if (sD.facturada != null && sD.facturada != undefined) {
+        this.showMsg("error", "No se pueden anular actuaciones facturadas.", "No se pueden anular actuaciones facturadas.");
+      } else {
+        this.progressSpinner = true;
+        let actuaciones: ActuacionAsistenciaItem[] = [];
+        if (Array.isArray(this.selectedDatos)) { //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
           actuaciones = this.selectedDatos;
-        }else{
+        } else {
           actuaciones.push(this.selectedDatos);
         }
 
         actuaciones.forEach(act => {
           act.estado = newEstado;
-          if (newEstado == '1'){
+          if (newEstado == '1') {
             act.anulada = '1';
-          }else{
+          } else {
             act.anulada = '0';
           }
         })
 
-        if(actuaciones.length > 0 ){
-          this.sigaServices.postPaginado("busquedaGuardias_updateEstadoActuacion","?anioNumero="+this.asistencia.anioNumero, actuaciones).subscribe(
+        if (actuaciones.length > 0) {
+          this.sigaServices.postPaginado("busquedaGuardias_updateEstadoActuacion", "?anioNumero=" + this.asistencia.anioNumero, actuaciones).subscribe(
             n => {
 
               let id = JSON.parse(n.body).id;
@@ -121,23 +121,23 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
             });
 
         }
-    }
-      })
-  
+      }
+    })
+    this.restablecerBotones();
   }
 
-  getActuaciones(){
+  getActuaciones() {
 
-    let mostrarHistorico : string = '';
-    if(this.asistencia){
-      if(this.mostrarHistorico){
+    let mostrarHistorico: string = '';
+    if (this.asistencia) {
+      if (this.mostrarHistorico) {
         mostrarHistorico = 'S'
-      }else{
+      } else {
         mostrarHistorico = 'N'
       }
 
       this.progressSpinner = true;
-      this.sigaServices.getParam("busquedaGuardias_searchActuaciones","?anioNumero="+this.asistencia.anioNumero+"&mostrarHistorico="+mostrarHistorico).subscribe(
+      this.sigaServices.getParam("busquedaGuardias_searchActuaciones", "?anioNumero=" + this.asistencia.anioNumero + "&mostrarHistorico=" + mostrarHistorico).subscribe(
         n => {
           this.actuaciones = n.actuacionAsistenciaItems;
         },
@@ -153,31 +153,31 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
 
   }
 
-  askEliminar(){
+  askEliminar() {
 
     this.confirmationService.confirm({
       key: "confirmEliminar",
       message: "¿Desea eliminar la/s actuacion/es?",
       icon: "fa fa-question-circle",
-      accept: () => {this.eliminarActuaciones();},
-      reject: () =>{this.showMsg('info',"Cancelado",this.translateService.instant("general.message.accion.cancelada"));}
+      accept: () => { this.eliminarActuaciones(); },
+      reject: () => { this.showMsg('info', "Cancelado", this.translateService.instant("general.message.accion.cancelada")); }
     });
 
   }
 
-  eliminarActuaciones(){
+  eliminarActuaciones() {
 
     this.progressSpinner = true;
-    let actuaciones : ActuacionAsistenciaItem [] = [];
-    if(Array.isArray(this.selectedDatos)){ //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
+    let actuaciones: ActuacionAsistenciaItem[] = [];
+    if (Array.isArray(this.selectedDatos)) { //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
       actuaciones = this.selectedDatos;
-    }else{
+    } else {
       actuaciones.push(this.selectedDatos);
     }
 
-    if(actuaciones){
+    if (actuaciones) {
 
-      this.sigaServices.postPaginado("busquedaGuardias_eliminarActuaciones","?anioNumero="+this.asistencia.anioNumero, actuaciones).subscribe(
+      this.sigaServices.postPaginado("busquedaGuardias_eliminarActuaciones", "?anioNumero=" + this.asistencia.anioNumero, actuaciones).subscribe(
         n => {
 
           let error = JSON.parse(n.body).error;
@@ -199,29 +199,29 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
         });
 
     }
-
+    this.restablecerBotones();
   }
 
-  onClickEnlace(actuacion : ActuacionAsistenciaItem){
+  onClickEnlace(actuacion: ActuacionAsistenciaItem) {
     let actuacionParaAbrir: ActuacionAsistenciaItem;
     this.actuaciones.forEach(act => {
-      if(act.idActuacion == actuacion.idActuacion){
+      if (act.idActuacion == actuacion.idActuacion) {
         actuacionParaAbrir = act;
       }
     });
-    sessionStorage.setItem('asistenciaToFichaActuacion',JSON.stringify(this.asistencia));
+    sessionStorage.setItem('asistenciaToFichaActuacion', JSON.stringify(this.asistencia));
     sessionStorage.setItem('actuacionAsistencia', JSON.stringify(actuacionParaAbrir));
     //console.log('Enlace a actuacion: ', actuacionParaAbrir);
     this.router.navigate(['/fichaActuacionAsistencia']);
   }
 
-  nuevaActuacion(){
-    sessionStorage.setItem('nuevaActuacionAsistencia','true');
-    sessionStorage.setItem('asistenciaToFichaActuacion',JSON.stringify(this.asistencia));
+  nuevaActuacion() {
+    sessionStorage.setItem('nuevaActuacionAsistencia', 'true');
+    sessionStorage.setItem('asistenciaToFichaActuacion', JSON.stringify(this.asistencia));
     this.router.navigate(['/fichaActuacionAsistencia']);
   }
 
-  isAnulado(actuacion : ActuacionAsistenciaItem){
+  isAnulado(actuacion: ActuacionAsistenciaItem) {
     return actuacion.anulada == '1';
   }
 
@@ -231,11 +231,11 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
     this.table.reset();
   }
 
-  onChangeSeleccionMultiple(){
-    if(this.table.selectionMode == 'single'){
+  onChangeSeleccionMultiple() {
+    if (this.table.selectionMode == 'single') {
       this.table.selectionMode = 'multiple';
       this.seleccionMultiple = true;
-    }else{
+    } else {
       this.table.selectionMode = 'single';
       this.seleccionMultiple = false;
     }
@@ -244,59 +244,66 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
     this.disableDelete = true;
   }
 
-  onChangeSeleccionarTodo(){
-    if(this.seleccionarTodo){
+  onChangeSeleccionarTodo() {
+    if (this.seleccionarTodo) {
       this.selectedDatos = this.actuaciones;
       this.numSeleccionado = this.selectedDatos.length;
       this.disableDelete = false;
-      if(this.mostrarHistorico && this.actuaciones.every(actuacion => actuacion.anulada == '1')){
+      if (this.mostrarHistorico && this.actuaciones.every(actuacion => actuacion.anulada == '1')) {
         this.disableReactivar = false;
       }
-    
-    }else{
+
+    } else {
       this.selectedDatos = [];
       this.numSeleccionado = 0;
       this.disableDelete = true;
       this.disableReactivar = true;
     }
-      
+
   }
 
-  onSelectRow(actuacion : ActuacionAsistenciaItem){
+  onSelectRow(actuacion: ActuacionAsistenciaItem) {
 
-    if(this.table.selectionMode == 'single'){
+    if (this.table.selectionMode == 'single') {
       this.numSeleccionado = 1;
-      if(actuacion.anulada == '1'){
+      if (actuacion.anulada == '1') {
         this.disableReactivar = false;;
       }
-    }else{
+    } else {
       this.numSeleccionado = this.selectedDatos.length;
-      if(this.mostrarHistorico && this.selectedDatos.every(actuacion => actuacion.anulada == '1')){
+      if (this.mostrarHistorico && this.selectedDatos.every(actuacion => actuacion.anulada == '1')) {
         this.disableReactivar = false;
       }
     }
     this.disableDelete = false;
   }
 
-  actualizaSeleccionados(){
-    if(this.table.selectionMode == 'single'){
+  actualizaSeleccionados() {
+    if (this.table.selectionMode == 'single') {
       this.numSeleccionado = 0;
       this.disableDelete = true;
       this.disableReactivar = true;
-    }else{
+    } else {
       this.numSeleccionado = this.selectedDatos.length;
-      if(this.numSeleccionado <= 0){
+      if (this.numSeleccionado <= 0) {
         this.disableDelete = true;
         this.disableReactivar = true;
       }
     }
   }
 
+  restablecerBotones() {
+    this.selectedDatos = [];
+
+    this.disableDelete = true;
+    this.disableReactivar = true;
+  }
+
   clear() {
     this.msgs = [];
   }
 
-  showMsg(severityParam : string, summaryParam : string, detailParam : string) {
+  showMsg(severityParam: string, summaryParam: string, detailParam: string) {
     this.msgs = [];
     this.msgs.push({
       severity: severityParam,
