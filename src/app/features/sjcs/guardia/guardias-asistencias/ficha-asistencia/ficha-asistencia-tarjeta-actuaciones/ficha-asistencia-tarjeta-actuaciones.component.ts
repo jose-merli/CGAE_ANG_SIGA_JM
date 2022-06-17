@@ -48,6 +48,13 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
   actuaciones: ActuacionAsistenciaItem[] = [];
   disableDelete: boolean = true;
   selectedDatos: ActuacionAsistenciaItem[] = [];
+
+  //Estados Actuaciones
+  VALIDADA: string = "SI"
+  NO_VALIDADA: string = "NO"
+  FACTURADA: string = "1";
+  NO_FACTURADA: string = "0";
+
   @ViewChild("table") table: DataTable;
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -76,10 +83,14 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
   }
 
   updateEstadoActuacion(newEstado: string) {
+    var contFacturadas: number = 0;
     this.selectedDatos.forEach(sD => {
-      if (sD.facturada != null && sD.facturada != undefined) {
-        this.showMsg("error", "No se pueden anular actuaciones facturadas.", "No se pueden anular actuaciones facturadas.");
-      } else {
+      if (sD.facturada != null && ( sD.facturada != this.NO_FACTURADA || sD.facturada == this.FACTURADA)) contFacturadas++;
+    })
+
+    if (contFacturadas > 0) {
+      this.showMsg("error",this.translateService.instant("general.message.incorrect") ,this.translateService.instant("justiciaGratuita.guardia.actuaciones.errorAnular") );
+    } else {
         this.progressSpinner = true;
         let actuaciones: ActuacionAsistenciaItem[] = [];
         if (Array.isArray(this.selectedDatos)) { //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
@@ -122,7 +133,7 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
 
         }
       }
-    })
+
     this.restablecerBotones();
   }
 
@@ -167,6 +178,12 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
 
   eliminarActuaciones() {
 
+    var contActuacionesErroneas: number = 0;
+    this.selectedDatos.forEach(sD => {
+      if (sD.facturada != null || sD.facturada == this.FACTURADA || sD.validada != null || sD.validada == this.VALIDADA) contActuacionesErroneas++;
+    })
+
+    if (contActuacionesErroneas == 0) {
     this.progressSpinner = true;
     let actuaciones: ActuacionAsistenciaItem[] = [];
     if (Array.isArray(this.selectedDatos)) { //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
@@ -197,7 +214,9 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
         }, () => {
           this.progressSpinner = false;
         });
-
+      }
+    }else{
+      this.showMsg("error",this.translateService.instant("general.message.incorrect") ,this.translateService.instant("justiciaGratuita.guardia.actuaciones.errorEliminar") );
     }
     this.restablecerBotones();
   }
