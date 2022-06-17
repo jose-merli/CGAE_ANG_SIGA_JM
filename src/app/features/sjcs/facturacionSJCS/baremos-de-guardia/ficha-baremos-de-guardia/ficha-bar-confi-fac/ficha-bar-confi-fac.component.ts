@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ChangeDetectorRef,ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { OverlayPanel } from 'primeng/primeng';
 import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
@@ -19,7 +19,7 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   agruparDis: boolean = false;
   contDis;
   asiac: boolean = false;
-  agruparAsAc:boolean = false;
+  agruparAsAc: boolean = false;
   contAsAc;
   precio
 
@@ -105,7 +105,7 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
     this.showTarjeta ? this.showTarjeta = false : this.showTarjeta = true;
   }
-  
+
   onChangeDiasDis(event, dia) {
     switch (dia) {
       case 'L':
@@ -137,6 +137,21 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
         this.checkAsAcD = !event
         break;
 
+    }
+
+    // Desabilitar todo en caso de que no haya días seleccionados.
+    if (!this.checkDisL && !this.checkDisM && !this.checkDisX && !this.checkDisJ
+      && !this.checkDisV && !this.checkDisS && !this.checkDisD) {
+      this.disableImputDis = false;
+    } else {
+      this.disableImputDis = true;
+    }
+    // Desabilitar todo en caso de que no haya días seleccionados.
+    if (!this.checkAsAcL && !this.checkAsAcM && !this.checkAsAcX && !this.checkAsAcJ
+      && !this.checkAsAcV && !this.checkAsAcS && !this.checkAsAcD) {
+      this.disableImputAct = false;
+    } else {
+      this.disableImputAct = true;
     }
 
   }
@@ -171,6 +186,23 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
         this.checkDisD = !event;
         this.checkAsAcD = event
         break;
+
+    }
+
+    // Desabilitar todo en caso de que no haya días seleccionados.
+    if (!this.checkAsAcL && !this.checkAsAcM && !this.checkAsAcX && !this.checkAsAcJ
+      && !this.checkAsAcV && !this.checkAsAcS && !this.checkAsAcD) {
+      this.disableImputAct = false;
+    } else {
+      this.disableImputAct = true;
+    }
+
+    // Desabilitar todo en caso de que no haya días seleccionados.
+    if (!this.checkDisL && !this.checkDisM && !this.checkDisX && !this.checkDisJ
+      && !this.checkDisV && !this.checkDisS && !this.checkDisD) {
+      this.disableImputDis = false;
+    } else {
+      this.disableImputDis = true;
     }
   }
 
@@ -237,18 +269,18 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   }
 
   irAtipos(event) {
-    if (!this.permisoAsistencias && this.contAsAc== 'asi') {
+    if (!this.permisoAsistencias && this.contAsAc == 'asi') {
       // Acceso Denegado para acceder a Asistencia.
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    }else if (!this.permisoActuaciones && this.contAsAc== 'act'){
+    } else if (!this.permisoActuaciones && this.contAsAc == 'act') {
       // Acceso Denegado para acceder a Actuación.
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    }else{
+    } else {
       // Redirigir a Asistencia
-      if(this.contAsAc== 'asi'){
+      if (this.contAsAc == 'asi') {
         this.router.navigate(["/tiposAsistencia"]);
-      // Redirigir a Actuación.
-      }else{
+        // Redirigir a Actuación.
+      } else {
         this.router.navigate(["/tiposActuacion"]);
         this.showModal = true;
         this.op.toggle(event);
@@ -260,16 +292,16 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
     this.showModal = false;
   }
 
-  onChangeMinimo(value){
-    if((value != null || value != undefined) && this.contDis == 'asi' && this.disponibilidad == true){
-     this.disProc2014.emit(true)
+  onChangeMinimo(value) {
+    if ((value != null || value != undefined) && this.contDis == 'asi' && this.disponibilidad == true) {
+      this.disProc2014.emit(true)
     }
   }
 
   hideOverlay(event) {
     this.displayBoolean = false;
   }
-  
+
 
   clear() {
     this.msgs = [];
