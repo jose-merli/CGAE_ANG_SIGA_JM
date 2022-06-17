@@ -460,7 +460,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
       if (
         sessionStorage.getItem('AddDestinatarioIndv') == undefined &&
         sessionStorage.getItem('abrirRemitente') == undefined &&
-        sessionStorage.getItem('nuevoNoColegiadoGen') == undefined
+        sessionStorage.getItem('nuevoNoColegiadoGen') == undefined &&
+        sessionStorage.getItem("nuevaDesigna") == undefined
       ) {
         //this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
@@ -474,8 +475,8 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.bodyFisica.primerApellido = '';
       this.bodyFisica.segundoApellido = '';
       this.bodyFisica.numeroColegiado = '';
-    }
-    if (this.persona == 'p') {
+
+    } else if (this.persona == 'p') {
       this.cols = this.colsProcs;
 
       this.datos = [];
@@ -484,15 +485,15 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.bodyProc.apellido1 = '';
       this.bodyProc.nColegiado = '';
 
-    }
-    else {
+    } else {
       this.cols = this.colsJuridicas;
 
       if (
         sessionStorage.getItem('AddDestinatarioIndv') == undefined &&
         sessionStorage.getItem('abrirRemitente') == undefined &&
         sessionStorage.getItem('nuevoNoColegiadoGen') == undefined &&
-        sessionStorage.getItem('crearnuevo') == undefined
+        sessionStorage.getItem('crearnuevo') == undefined &&
+        sessionStorage.getItem("nuevaDesigna") == undefined
       ) {
         //this.colegios_seleccionados = [];
         this.addDestinatarioIndv = false;
