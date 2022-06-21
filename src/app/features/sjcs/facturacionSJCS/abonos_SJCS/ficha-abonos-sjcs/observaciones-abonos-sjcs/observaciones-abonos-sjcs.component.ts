@@ -126,7 +126,7 @@ export class ObservacionesAbonosSJCSComponent implements OnInit, OnChanges {
       n => { 
 
         if(n.status == 200)
-        this.showMessage("error", this.translateService.instant("general.message.correct"), this.translateService.instant("Actualizado Correctamente"));
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("Actualizado Correctamente"));
 
       }, err => { 
         return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
