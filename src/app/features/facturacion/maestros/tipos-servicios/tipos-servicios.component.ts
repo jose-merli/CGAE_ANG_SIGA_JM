@@ -44,7 +44,7 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
 
   //Permisos
   guardarTiposServicios: boolean;
-  eliminarTiposServicios: boolean;
+  eliminarTiposEliminar: boolean;
 
   //Suscripciones
   subscriptionServicesList: Subscription;
@@ -91,9 +91,9 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
 
   getPermisoEliminarTipoServicio() {
     this.commonsService
-       .checkAcceso(procesos_PyS.eliminarTiposServicios)
+       .checkAcceso(procesos_PyS.eliminarTiposEliminar)
         .then((respuesta) => {
-           this.eliminarTiposServicios = respuesta;
+           this.eliminarTiposEliminar = respuesta;
         })
     .catch((error) => console.error(error));
   }
@@ -318,7 +318,7 @@ export class TiposServiciosComponent implements OnInit, OnDestroy {
   }
 
   checkPermisoActivarDesactivar(selectedRows){
-    let msg = this.commonsService.checkPermisos(this.eliminarTiposServicios, undefined);
+    let msg = this.commonsService.checkPermisos(this.eliminarTiposEliminar, undefined);
 
     if (msg != null) {
        this.msgs = msg;

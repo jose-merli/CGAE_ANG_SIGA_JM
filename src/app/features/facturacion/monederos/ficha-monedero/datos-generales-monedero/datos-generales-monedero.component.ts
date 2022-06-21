@@ -158,7 +158,7 @@ export class DatosGeneralesMonederoComponent implements OnInit {
 	}
 
   irFichaColegial(){
-
+    sessionStorage.setItem("FichaMonedero", JSON.stringify(this.ficha));
     this.progressSpinner = true;
 
     let bodyColegiado: DatosColegiadosItem = new DatosColegiadosItem();
@@ -200,6 +200,8 @@ export class DatosGeneralesMonederoComponent implements OnInit {
   }
 
   getNoColegiado() {
+
+    
     let bodyNoColegiado: DatosColegiadosItem = new DatosColegiadosItem();
       bodyNoColegiado.nif = this.ficha.nif;
       bodyNoColegiado.idInstitucion = this.ficha.idInstitucion;

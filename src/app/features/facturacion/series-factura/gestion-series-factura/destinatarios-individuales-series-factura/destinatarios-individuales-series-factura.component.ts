@@ -3,8 +3,10 @@ import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/message';
 import { DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
+import { DatosColegiadosItem } from '../../../../../models/DatosColegiadosItem';
 import { DestinatariosItem } from '../../../../../models/DestinatariosItem';
 import { SerieFacturacionItem } from '../../../../../models/SerieFacturacionItem';
+import { AuthenticationService } from '../../../../../_services/authentication.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -43,6 +45,7 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
+    private authenticationService: AuthenticationService,
     private router: Router
   ) { }
 
@@ -224,6 +227,101 @@ export class DestinatariosIndividualesSeriesFacturaComponent implements OnInit, 
     this.openTarjetaDestinatariosIndividuales = !this.openTarjetaDestinatariosIndividuales;
     this.opened.emit(this.openTarjetaDestinatariosIndividuales);
     this.idOpened.emit(key);
+  }
+
+  irFichaColegial(event){
+    sessionStorage.setItem("serieFacturacionItem", JSON.stringify(this.body));
+    this.progressSpinner = true;
+
+    let bodyColegiado: DatosColegiadosItem = new DatosColegiadosItem();
+      bodyColegiado.nif =event.nif;
+      bodyColegiado.idInstitucion = event.idInstitucion;
+  
+      this.sigaServices
+        .postPaginado(
+          'busquedaCensoGeneral_searchColegiado',
+          '?numPagina=1',
+          bodyColegiado
+        )
+              .subscribe((data) => {
+          let colegiadoSearch = JSON.parse(data['body']);
+          let datosColegiados = colegiadoSearch.colegiadoItem;
+  
+          if (datosColegiados == null || datosColegiados == undefined ||
+            datosColegiados.length == 0) {
+            this.getNoColegiado(event);
+          } else {
+            sessionStorage.setItem(
+              'personaBody',
+              JSON.stringify(datosColegiados[0])
+            );
+            sessionStorage.setItem(
+              'esColegiado',
+              JSON.stringify(true)
+            );
+            this.progressSpinner = false;
+            sessionStorage.setItem("origin", "Cliente"); 
+            sessionStorage.setItem("serieFacturacionItem", JSON.stringify(this.body));
+            this.router.navigate(['/fichaColegial']);
+          }
+        },
+                  (err) => {
+            this.progressSpinner = false;
+  
+          });
+  }
+
+  getNoColegiado(event) {
+
+    
+    let bodyNoColegiado: DatosColegiadosItem = new DatosColegiadosItem();
+      bodyNoColegiado.nif = event.nif;
+      bodyNoColegiado.idInstitucion = event.idInstitucion;
+
+
+    this.sigaServices
+      .postPaginado(
+        'busquedaNoColegiados_searchNoColegiado',
+        '?numPagina=1',
+        bodyNoColegiado
+      )
+            .subscribe((data) => {
+        this.progressSpinner = false;
+        let noColegiadoSearch = JSON.parse(data['body']);
+        let datosNoColegiados = noColegiadoSearch.noColegiadoItem;
+
+          if (datosNoColegiados[0].fechaNacimiento != null) {
+            datosNoColegiados[0].fechaNacimiento = this.personaBodyFecha(
+              datosNoColegiados[0].fechaNacimiento
+            );
+          }
+
+          sessionStorage.setItem(
+            'esColegiado',
+            JSON.stringify(false)
+          );
+
+          sessionStorage.setItem(
+            'personaBody',
+            JSON.stringify(datosNoColegiados[0])
+          );
+          this.progressSpinner = false;
+          sessionStorage.setItem("origin", "Cliente");
+          sessionStorage.setItem("serieFacturacionItem", JSON.stringify(this.body));
+          this.router.navigate(['/fichaColegial']);
+      },
+                 (err) => {
+          this.progressSpinner = false;
+
+        });
+  }
+  personaBodyFecha(fecha) {
+    let f = fecha.substring(0, 10);
+    let year = f.substring(0, 4);
+    let month = f.substring(5, 7);
+    let day = f.substring(8, 10);
+
+    return day + '/' + month + '/' + year;
   }
 
 }

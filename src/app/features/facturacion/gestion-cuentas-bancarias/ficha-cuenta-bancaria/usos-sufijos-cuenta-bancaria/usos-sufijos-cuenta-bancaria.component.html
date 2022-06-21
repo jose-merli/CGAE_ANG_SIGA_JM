@@ -17,15 +17,15 @@
           <div class="d-flex justify-content-between default">
             
             <label>{{ 'facturacion.productos.tipo' | translate }}: 
-                <span>{{ datos[0].tipo }}</span></label>
+                <span>{{ datos.length > 0 ? datos[0].tipo : ''}}</span></label>
             <label>{{ 'administracion.parametrosGenerales.literal.abreviatura' | translate }}: 
-                <span>{{ datos[0].abreviatura }}</span></label>
+                <span>{{ datos.length > 0 ? datos[0].abreviatura : ''}}</span></label>
             <label>{{ 'general.description' | translate }}: 
-              <span>{{ datos[0].descripcion }}</span></label>
+              <span>{{ datos.length > 0 ? datos[0].descripcion : ''}}</span></label>
             <label>{{ 'facturacion.cuentaBancaria.numPendientes' | translate }}: 
-              <span>{{ datos[0].numPendientes }}</span></label>
+              <span>{{ datos.length > 0 ? datos[0].numPendientes : ''}}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.sufijo' | translate }}: 
-                <span>{{ datos[0].sufijo }}</span></label>
+                <span>{{ datos.length > 0 ? datos[0].sufijo : ''}}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total' | translate }}: 
               <span>{{ datos.length }}</span></label>
             
