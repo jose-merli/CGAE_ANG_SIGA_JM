@@ -41,6 +41,7 @@ export class AlterMutuaRetaComponent implements OnInit {
   observaciones: boolean = false;
   mostrarInfo: boolean = false;
   tienePropuesta: boolean = true;
+  muestraMensaje: boolean = false;
   tieneSolicitud: boolean = false;
   showSolicitarSeguro: boolean = false;
   deshabilitarDireccion: boolean = false;
@@ -360,6 +361,7 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   buscarPropuestas() {
+    this.muestraMensaje = false;
     this.progressSpinner = true;
     this.tieneSolicitud = false;
 
@@ -373,9 +375,11 @@ export class AlterMutuaRetaComponent implements OnInit {
     this.sigaServices.post("alterMutua_propuestas", datosPropuesta).subscribe(
       result => {
         this.propuestas = JSON.parse(result.body);
+        if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null") {
+          this.muestraMensaje = true;
+        }
         this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
-          this.propuestas.mensaje
-        );
+          this.propuestas.mensaje);
       },
       error => {
         console.log(error);
@@ -628,6 +632,7 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   enviarDatosAlter() {
+    this.muestraMensaje = false;
     this.progressSpinner = true;
     this.datosAlter.idPaquete = this.modContratacionSelected.value;
     this.asegurado.modContratacion = this.modContratacionSelected.value;
@@ -708,20 +713,22 @@ export class AlterMutuaRetaComponent implements OnInit {
             this.tienePropuesta = true;
           }
           if (this.propuestas.error == false) {
-            if (this.propuestas.mensaje != null) {
+            if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null" && this.tienePropuesta == true) {
               this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
                 this.propuestas.mensaje
               );
+              this.muestraMensaje = true;
             } else {
               this.showSuccess(
                 "La solicitud se ha enviado correctamente a Alter Mútua"
               );
             }
           } else {
-            if (this.propuestas.mensaje != null) {
+            if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null" && this.tienePropuesta == true) {
               this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
                 this.propuestas.mensaje
               );
+              this.muestraMensaje = true;
             } else {
               this.showFail(
                 "La solicitud no se ha enviado correctamente a Alter Mútua"

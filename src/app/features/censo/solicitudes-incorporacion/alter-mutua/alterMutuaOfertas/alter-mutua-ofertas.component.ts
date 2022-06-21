@@ -162,7 +162,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
         tipoIdenficador = 1*/
 
       let estadoSolicitud = {
-        identificador: "38875531B",
+        identificador: this.datosSolicitud.numeroIdentificacion,
         idSolicitud: this.datosSolicitud.idSolicitud,
         duplicado: false
       };

@@ -247,13 +247,13 @@
                         <label>
                             {{"censo.consultaDirecciones.literal.direccion" | translate}} (*)
                         </label>
-                        <inputtype="text" class="form-control" pInputText [(ngModel)]="asegurado.domicilio">
+                        <input type="text" class="form-control" pInputText [(ngModel)]="asegurado.domicilio">
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
                         <label>
                             {{"censo.ws.literal.codigopostal" | translate}} (*)
                         </label>
-                        <inputtype="text" class="form-control" [maxLength]="5" [(ngModel)]="asegurado.cp" (ngModelChange)="onChangeCodigoPostal()"
+                        <input type="text" class="form-control" [maxLength]="5" [(ngModel)]="asegurado.cp" (ngModelChange)="onChangeCodigoPostal()"
                             pInputText>
                     </div>
                     <div class="form-group col-lg-4 col-md-4">
@@ -690,6 +690,12 @@
             <button (click)="backTo()" pButton type="button" icon="fa-check" iconPos="left" label="Aceptar"></button>
         </div>
     </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="muestraMensaje" responsive="true" [draggable]="false" modal="modal" resizable="false"
+    [width]="680">
+    <div *ngIf="propuestas != null" [innerHTML]="propuestas.mensaje" class="col-lg-12 col-md-12 ">
+    </div>
 </p-dialog>
 
 <p-dialog [(visible)]="showSolicitarSeguro" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
