@@ -830,6 +830,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				this.objetoValidacion.push(objVal);
 
 				this.llamadaBackCambiarFecha();
+
+				this.objetoValidacion = [];
 			}
 
 		/*body.inscripcionesItem[0] = this.datos;

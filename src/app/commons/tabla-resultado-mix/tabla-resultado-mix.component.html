@@ -134,7 +134,7 @@
 
       <div *ngIf="inscripciones" class="col-lg-7 col-md-7 col-sm-7 flex2 align">
         <div class="w-50 mr-5">
-          <label class="d-flex align-self-left"> {{ 'dato.jgr.guardia.saltcomp.fecha' | translate }}</label>
+          <label class="d-flex align-self-left"> {{ 'dato.jgr.guardia.saltcomp.fecha' | translate }} </label>
           <app-fecha [disabled]="isDisabled" [(ngModel)]='fechaActual' (valueChangeInput)="changeFecha($event)"
             (valueChangeSelected)="changeFecha($event)" name="fechaActual" ngDefaultControl></app-fecha>
         </div>
@@ -179,9 +179,6 @@
           (click)="duplicar()"></button>
         <button pButton *ngIf="!inscripciones && !incompatibilidades" type="button" icon="fa fa-download" iconPos="left"
           label="Descargar LOG" (click)="descargarLOG()"></button>
-
-
-
         <button pButton [disabled]="!anySelected || this.selectedRowValue.length == 0" *ngIf="calendarios" type="button"
           icon="far fa-save" iconPos="left" label="Comunicar" (click)="comunicar()"></button>
       </div>

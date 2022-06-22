@@ -51,6 +51,7 @@ export class TablaResultadoMixComponent implements OnInit {
   @Output() save = new EventEmitter<Row[]>();
   @Output() delete = new EventEmitter<any>();
   @Output() deleteFromCombo = new EventEmitter<any>();
+
   comboTipos = [
     {
       label: 'Salto',
@@ -324,10 +325,9 @@ export class TablaResultadoMixComponent implements OnInit {
     }
 
     if(!this.incompatibilidades){
-      this.HabilitarBotones();
+      this.habilitarBotones();
     }
-
-
+    
   }
   isSelected(id) {
     if (this.selectedArray.includes(id)) {
@@ -1115,7 +1115,7 @@ export class TablaResultadoMixComponent implements OnInit {
     this.fechaActual = event;
   }
 
-  HabilitarBotones(){
+  habilitarBotones(){
     // Creamos Array con todas las filas selecionadas
     var rowsSelecteds =  [];
     let validarInscripciones = '';
