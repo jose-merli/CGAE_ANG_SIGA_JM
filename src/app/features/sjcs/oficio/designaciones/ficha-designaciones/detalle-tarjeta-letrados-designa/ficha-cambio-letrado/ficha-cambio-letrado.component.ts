@@ -170,8 +170,10 @@ export class FichaCambioLetradoComponent implements OnInit {
 
           }
         });
-      }
-      else if (this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") {
+      } else if (this.entrante.body.idPersona != undefined && this.body.idPersona != undefined
+        && this.entrante.body.idPersona.trim() == this.body.idPersona.trim()) {
+        this.showMessage("error", "Cancel", this.translateService.instant("justiciaGratuita.oficio.designas.letrados.letradoRepetido"));
+      } else if (this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") {
         this.save();
       }
       else{

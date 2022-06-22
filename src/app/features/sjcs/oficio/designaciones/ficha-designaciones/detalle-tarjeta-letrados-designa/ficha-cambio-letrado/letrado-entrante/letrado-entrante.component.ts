@@ -47,7 +47,7 @@ export class LetradoEntranteComponent implements OnInit {
 		}
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    this.minDateDesigna = new Date(designa.fechaAlta.split('/').reverse().join('-'));
+    this.minDateDesigna = new Date(this.entrante.fechaDesignacion.split('/').reverse().join('-'));
     if(designa.art27=="Si") {
       this.body.art27=true;
       this.body.fechaDesignacion = this.entrante.fechaDesignacion;
