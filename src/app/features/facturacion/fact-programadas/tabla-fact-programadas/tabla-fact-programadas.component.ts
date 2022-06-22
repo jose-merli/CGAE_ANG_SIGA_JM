@@ -25,7 +25,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
   //Resultados de la busqueda
   @Input() datos: FacFacturacionprogramadaItem[];
-  
+
   @Output() busqueda = new EventEmitter<boolean>();
 
   datosMostrados: FacFacturacionprogramadaItem[];
@@ -35,7 +35,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   @ViewChild("table") table: DataTable;
   rowsPerPage = [];
   selectedItem: number = 10;
-  selectedDatos = [];
+  selectedDatos: FacFacturacionprogramadaItem[] = [];
   cols = [];
   buscadores = [];
   selectAll: boolean;
@@ -45,9 +45,10 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
   showModalEliminar: boolean = false;
   currentUsername: string;
-  confirmUsername: string;
-  currentDataToDelete: FacFacturacionprogramadaItem;
+  currentDataToDelete: FacFacturacionprogramadaItem[] = [];
   numDeletedItems: number = 0;
+
+  nombreFacturacionDel: string;
 
   constructor(
     private commonsService: CommonsService,
@@ -99,7 +100,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
       { field: "nombreAbreviado", header: "facturacion.factProgramadas.serieFactu", width: "10%" },
       { field: "descripcion", header: "enviosMasivos.literal.descripcion", width: "20%" },
       { field: "compraSuscripcion", header: "menu.productosYServicios.solicitudes.alta", width: "10%" },
-      { field: "fechaCompraSuscripcionDesde", header: "censo.solicitudincorporacion.fechaDesde", width: "5%" }, 
+      { field: "fechaCompraSuscripcionDesde", header: "censo.solicitudincorporacion.fechaDesde", width: "5%" },
       { field: "fechaCompraSuscripcionHasta", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaHasta", width: "5%" },
       { field: "fechaPrevistaGeneracion", header: "facturacion.factProgramadas.fechas.prevGen", width: "5%" },
       { field: "fechaConfirmacion", header: "facturacion.factProgramadas.fechas.conf", width: "5%" },
@@ -137,13 +138,13 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
   // Checkbox de seleccionar todo
   onChangeSelectAll(): void {
-      if (this.selectAll) {
-        this.selectMultiple = true;
-        this.selectedDatos = this.datosMostrados;
-      } else {
-        this.selectedDatos = [];
-        this.selectMultiple = false;
-      }
+    if (this.selectAll) {
+      this.selectMultiple = true;
+      this.selectedDatos = this.datosMostrados;
+    } else {
+      this.selectedDatos = [];
+      this.selectMultiple = false;
+    }
   }
 
   // Botón de ocultar o mostrar histórico
@@ -188,39 +189,39 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
       case 'fac':
         if (idEstado == "1" || idEstado == "18" || idEstado == "19" || idEstado == "17") {
           res = "warning";
-        } else if(idEstado == "2" || idEstado == "3") {
+        } else if (idEstado == "2" || idEstado == "3") {
           res = "success";
-        } else if(idEstado == "4" || idEstado == "20" || idEstado == "21") {
+        } else if (idEstado == "4" || idEstado == "20" || idEstado == "21") {
           res = "danger";
         }
         break;
       case 'pdf':
         if (idEstado == "6" || idEstado == "7" || idEstado == "8") {
           res = "warning";
-        } else if(idEstado == "9") {
+        } else if (idEstado == "9") {
           res = "success";
-        } else if(idEstado == "10") {
+        } else if (idEstado == "10") {
           res = "danger";
         }
         break;
       case 'env':
         if (idEstado == "12" || idEstado == "13" || idEstado == "14") {
           res = "warning";
-        } else if(idEstado == "15") {
+        } else if (idEstado == "15") {
           res = "success";
-        } else if(idEstado == "16") {
+        } else if (idEstado == "16") {
           res = "danger";
         }
         break;
       case 'tra':
         if (idEstado == "23" || idEstado == "24" || idEstado == "25") {
           res = "warning";
-        } else if(idEstado == "26") {
+        } else if (idEstado == "26") {
           res = "success";
-        } else if(idEstado == "27") {
+        } else if (idEstado == "27") {
           res = "danger";
         }
-      break;
+        break;
       default:
         break;
     }
@@ -230,8 +231,6 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
   // Acción del botón de eliminar
   confirmEliminar(firstItem: boolean = true): void {
     if (this.selectedDatos && this.selectedDatos.length > 0) {
-      this.confirmUsername = undefined;
-      this.currentDataToDelete = this.selectedDatos.pop();
       this.confirmEliminar1();
     } else if (!firstItem && this.numDeletedItems > 0) {
       this.busqueda.emit();
@@ -251,24 +250,63 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
       icon: icon,
       acceptLabel: "Sí",
       rejectLabel: "No",
-      accept: () => {
-        this.showModalEliminar = true;
+      accept:async () => {
+
+        for(let e of this.selectedDatos){
+          await this.segundaConf(e)
+        }
+
+        if(this.currentDataToDelete.length == 0){
+          this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
+        }else{
+          this.eliminar(this.currentDataToDelete)
+        }        
+
       },
       reject: () => {
         this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
       }
     });
+
+
+
+
+  }
+
+   segundaConf(dato:FacFacturacionprogramadaItem){
+    let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion") + " " + dato.descripcion ;
+    let icon = "fa fa-eraser";
+    
+    return new Promise<void> ((resolve) => {
+      this.confirmationService.confirm({
+        key: "second",
+        message: mess,
+        icon: icon,
+        acceptLabel: "Sí",
+        rejectLabel: "No",
+        accept: () => {
+          this.currentDataToDelete.push(dato)
+         // this.selectedDatos.shift()
+          resolve()
+        },
+        reject: () => {
+          //this.selectedDatos.shift()
+          resolve()
+        }
+      });
+
+    });
+
+      
   }
 
   // Segunda confirmación
 
   confirmEliminar2(): void {
-    if (!this.disableConfirmEliminar()) {
-      this.showModalEliminar = false;
-      this.eliminar(this.currentDataToDelete);
-    } else {
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), "El usuario introducido no coincide con el usuario actual");
-    }   
+
+    this.showModalEliminar = false;
+    //this.eliminar(this.currentDataToDelete);
+    console.log(this.currentDataToDelete)
   }
 
   rejectEliminar2(): void {
@@ -276,52 +314,53 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     this.showMessage("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
   }
 
-  disableConfirmEliminar(): boolean {
-    return this.confirmUsername != this.currentUsername;
-  }
 
   // Función de eliminar
 
-  eliminar(dato: FacFacturacionprogramadaItem) {
+  eliminar(datos: FacFacturacionprogramadaItem[]) {
     this.progressSpinner = true;
-    this.sigaServices.post("facturacionPyS_eliminarFacturacion", dato).subscribe(
+    this.sigaServices.post("facturacionPyS_eliminarFacturacion", datos).subscribe(
       data => {
+        let dato = JSON.parse(data.body);
+        let facturacionesEliminadas = dato.error.description.split("/");
         this.progressSpinner = false;
-        this.confirmEliminar(false);
+        console.log(data)
+        this.showMessage("success", "Facturaciones Borradas", "Facturaciones Eliminadas : " + facturacionesEliminadas[0]);
+        //this.translateService.instant("general.message.accion.cancelada")
+        this.busqueda.emit();
       },
       err => {
         this.handleServerSideErrorMessage(err);
-        this.progressSpinner = false;
-        this.confirmEliminar(false);
+        this.progressSpinner = false;   
       }
     );
   }
 
   // Obtenemos el nombre del usuario actual para la confirmación
   getDataLoggedUser() {
-		this.sigaServices.get("usuario_logeado").subscribe(n => {
-			const usuario = n.usuarioLogeadoItem;
-			
+    this.sigaServices.get("usuario_logeado").subscribe(n => {
+      const usuario = n.usuarioLogeadoItem;
+
       if (usuario && usuario.length > 0) {
         this.currentUsername = usuario[0].nombre;
       }
-		});
-	}
+    });
+  }
 
-  confirmComunicar(){
+  confirmComunicar() {
 
   }
 
   nuevoFicheroAdeudos() {
     let facturacionesGeneracion = this.selectedDatos;
-    
+
     if (facturacionesGeneracion && facturacionesGeneracion.length != 0) {
       let ficheroAdeudos = new FicherosAdeudosItem();
       ficheroAdeudos.facturacionesGeneracion = facturacionesGeneracion;
       sessionStorage.setItem("FicherosAdeudosItem", JSON.stringify(ficheroAdeudos));
       sessionStorage.setItem("Nuevo", "true");
-      
-      this.router.navigate(["/gestionAdeudos"]); 
+
+      this.router.navigate(["/gestionAdeudos"]);
     }
   }
 
@@ -361,28 +400,28 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
   // Descargar LOG
   descargarLog(): void {
-    let resHead = { 'response' : null, 'header': null };
+    let resHead = { 'response': null, 'header': null };
     this.progressSpinner = true;
 
     let downloadBody = this.selectedDatos.map(d => {
       return { idSerieFacturacion: d.idSerieFacturacion, idProgramacion: d.idProgramacion };
     });
 
-    let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFichaFacturacion", downloadBody);
+    let descarga = this.sigaServices.getDownloadFiles("facturacionPyS_descargarFichaFacturacion", downloadBody);
     descarga.subscribe(response => {
       this.progressSpinner = false;
 
-      const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
-			let filename: string = response.headers.get("Content-Disposition");
+      const file = new Blob([response.body], { type: response.headers.get("Content-Type") });
+      let filename: string = response.headers.get("Content-Disposition");
       filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
 
       saveAs(file, filename);
-      this.showMessage( 'success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+      this.showMessage('success', 'LOG descargado correctamente', 'LOG descargado correctamente');
     },
-    err => {
-      this.progressSpinner = false;
-      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
-    });
+      err => {
+        this.progressSpinner = false;
+        this.showMessage('error', 'El LOG no pudo descargarse', 'El LOG no pudo descargarse');
+      });
   }
 
   // Funciones de utilidad
@@ -391,7 +430,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
     let error = JSON.parse(err.error);
     if (error && error.error && error.error.message) {
       let message = this.translateService.instant(error.error.message);
-  
+
       if (message && message.trim().length != 0) {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), message);
       } else {

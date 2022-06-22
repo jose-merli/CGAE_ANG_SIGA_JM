@@ -545,11 +545,14 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
     ultimaAccion.idFactura = this.bodyInicial.idFactura;
 
+    let envioPeticion:FacturaEstadosPagosItem[] = [];
+    envioPeticion.push(ultimaAccion)
+
     if (this.disabledEliminar()) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.facturas.estadosPagos.eliminar.error"));
     } else {
       this.progressSpinner = true;
-      this.sigaServices.post("facturacionPyS_eliminarEstadosPagos", ultimaAccion).toPromise()
+      this.sigaServices.post("facturacionPyS_eliminarEstadosPagos", envioPeticion).toPromise()
       .then(
         n => { },
         err => {

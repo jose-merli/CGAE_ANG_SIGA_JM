@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { DataTable, Message } from 'primeng/primeng';
 import { FacturasItem } from '../../../../../models/FacturasItem';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -38,7 +38,10 @@ export class ComunicacionesFacturasComponent implements OnInit {
 
   ngOnInit() {
     this.getCols();
-    if (this.bodyInicial != undefined && this.bodyInicial.idFactura != undefined) {
+   
+  }
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.bodyInicial != undefined && this.bodyInicial.idFactura != undefined) {
       this.getComunicacionesCobro();
     }
   }

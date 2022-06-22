@@ -116,12 +116,16 @@ export class FichaAbonosSCJSComponent implements OnInit {
       nombre: "pago",
     });
 
-    this.enlacesTarjetaResumen.push({
-      label: "facturacionSJCS.filtros.abonosSJCS.sociedad",
-      value: document.getElementById("sociedad"),
-      nombre: "sociedad",
-    });
+    if(this.isSociedad){
+      this.enlacesTarjetaResumen.push({
+        label: "facturacionSJCS.filtros.abonosSJCS.sociedad",
+        value: document.getElementById("sociedad"),
+        nombre: "sociedad",
+      });
+  
+    }
 
+   
     this.enlacesTarjetaResumen.push({
       label: "general.message.datos.generales",
       value: document.getElementById("datosGenerales"),

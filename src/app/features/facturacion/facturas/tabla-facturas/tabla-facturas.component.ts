@@ -288,9 +288,10 @@ onChangeSelectAll() {
     let estadosPagosItems:FacturaEstadosPagosItem [] = new Array();
     //console.log("eliminaaa")
     this.selectedDatos.forEach(element => {
-      if(element.idAccion == "4"){
-        let itemFacturaEstadosPagoItem:FacturaEstadosPagosItem;
-        itemFacturaEstadosPagoItem.idFactura = element.idFactura;
+      if(element.idAccionUlt == "4"  ){ //
+        let itemFacturaEstadosPagoItem:FacturaEstadosPagosItem = new FacturaEstadosPagosItem()
+        itemFacturaEstadosPagoItem.idFactura = element.idFactura,
+        itemFacturaEstadosPagoItem.idAccion = element.idAccionUlt,
         estadosPagosItems.push(itemFacturaEstadosPagoItem)
       }
     });
@@ -754,6 +755,7 @@ mensajeCargaMasiva(registrosProcesados,totalRegistros){
           n => {
             this.mensajeCargaMasiva(JSON.parse(n.body).id,this.itemsParaModificar.length)
            // this.guardadoSend.emit(this.bodyInicial);
+           this.busqueda.emit();
           },
           err => {
             return Promise.reject(this.translateService.instant("general.mensaje.error.bbdd"));
@@ -781,6 +783,7 @@ mensajeCargaMasiva(registrosProcesados,totalRegistros){
           this.progressSpinner = false;
           this.mensajeCargaMasiva(JSON.parse(n.body).id,this.itemsParaModificar.length)     
          this.cerrarDialog(false);
+         this.busqueda.emit();
         },
         err => {
           this.progressSpinner = false;
@@ -796,6 +799,7 @@ mensajeCargaMasiva(registrosProcesados,totalRegistros){
         n => {
           this.progressSpinner = false;
           this.mensajeCargaMasiva(JSON.parse(n.body).id,this.itemsParaModificarAbonos.length)
+          this.busqueda.emit();
         },
         err => {
           this.progressSpinner = false;
