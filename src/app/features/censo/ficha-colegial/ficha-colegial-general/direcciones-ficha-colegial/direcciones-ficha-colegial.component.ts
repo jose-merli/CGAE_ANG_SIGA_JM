@@ -512,6 +512,7 @@ export class DireccionesFichaColegialComponent implements OnInit, OnChanges {
               }
             });
             sessionStorage.setItem("numDespacho", JSON.stringify(contador));
+            sessionStorage.setItem("datosDireccionesAlterMutua", JSON.stringify(this.datosDirecciones))
 
             this.progressSpinner = false;
           },

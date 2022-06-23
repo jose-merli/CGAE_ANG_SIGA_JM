@@ -468,6 +468,8 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.obtenerPartidoJudicial();
     }
 
+    sessionStorage.setItem("idiomaPrefAlterMutua", this.generalBody.idLenguaje.toString());
+
     this.getComboTemas();
 
     if (!(this.generalBody.nif != "" && this.generalBody.nif != undefined && this.generalBody.idTipoIdentificacion != "" &&

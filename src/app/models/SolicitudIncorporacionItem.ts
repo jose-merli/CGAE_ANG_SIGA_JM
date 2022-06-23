@@ -68,6 +68,7 @@ export class SolicitudIncorporacionItem {
   idInstitucion: String;
   poblacionExtranjera: string;
   fechaEstadoSolicitud: Date;
+  idiomaPref: string;
 
 
   idestadocivil;
@@ -77,6 +78,7 @@ export class SolicitudIncorporacionItem {
   idsolicitud: string;
   naturalde: string;
   nombreBanco: string;
+  tipoDireccion: string;
 
   constructor() { }
 }

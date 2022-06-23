@@ -50,6 +50,7 @@ export class AlterMutuaRetaComponent implements OnInit {
   estadoSolicitudResponse: any;
   codigoPostalValido: boolean;
   selectedDatos1: any;
+  poblacionYaObtenida: boolean = false;
 
   @ViewChild("table")
   table;
@@ -190,6 +191,27 @@ export class AlterMutuaRetaComponent implements OnInit {
             }
           }
         );
+
+        if (this.datosSolicitud.tipoDireccion == "Residencia") {
+          this.tipoDirSelected = { value: 1 };
+        } else if (this.datosSolicitud.tipoDireccion == "Despacho") {
+          this.tipoDirSelected = { value: 2 };
+        }
+
+        this.comunicacionSelected = { value: 1 };
+
+        switch(this.datosSolicitud.idiomaPref) {
+          case "1":
+            this.idiomaSelected = { value: 1 };
+            break;
+          case "2":
+            this.idiomaSelected = { value: 2 };
+            break;
+          default:
+            this.idiomaSelected = { value: 1 };
+        }
+
+        this.autogenerarDatosInit();
     }
 
     this.colsFisicas = [
@@ -341,8 +363,8 @@ export class AlterMutuaRetaComponent implements OnInit {
     );
 
     this.sigaServices.get("integrantes_provincias").subscribe(
-      result => {
-        this.provincias = result.combooItems;
+      n => {
+        this.provincias = n.combooItems;
       },
       error => {
         console.log(error);
@@ -397,6 +419,7 @@ export class AlterMutuaRetaComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+    this.buscarPoblacionInit(this.datosSolicitud.nombrePoblacion);
   }
 
   tratarDatos() {
@@ -426,7 +449,6 @@ export class AlterMutuaRetaComponent implements OnInit {
       : (this.deshabilitarDireccion = true);
     this.sexoSelected = { value: this.datosSolicitud.sexo };
     this.estadoCivilSelected = { value: this.datosSolicitud.idEstadoCivil };
-    this.provinciaSelected = { value: this.datosSolicitud.idProvincia };
     this.ColegioSelected = { value: this.datosSolicitud.idInstitucion };
     this.tipoEjercicioSelected = { value: this.datosSolicitud.idTipo };
   }
@@ -779,11 +801,17 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   obtenerProvinciaDesc(e) {
-    // this.provinciaDesc = this.provincias.find(item => item.value === e.value);
+    this.provinciaDesc = this.provincias.find(item => item.value === e.value);
   }
 
   obtenerPoblacionDesc(e) {
     this.poblacionDesc = this.poblaciones.find(item => item.value === e.value);
+    if (this.provinciaSelected != undefined) this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected);
+  }
+
+  obtenerPoblacionDescInit(poblacion) {
+    this.poblacionDesc = this.poblaciones.find(item => item.value === poblacion);
+    this.asegurado.poblacion = this.poblacionDesc.label;
     if (this.provinciaSelected != undefined) this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected);
   }
 
@@ -816,6 +844,28 @@ export class AlterMutuaRetaComponent implements OnInit {
       .getParam(
         "direcciones_comboPoblacion",
         "?idProvincia=" + this.asegurado.provincia + "&filtro=" + filtro
+      )
+      .subscribe(
+        n => {
+          this.poblaciones = n.combooItems;
+          this.getLabelbyFilter(this.poblaciones);
+          this.dropdown.filterViewChild.nativeElement.value = poblacionBuscada;
+        },
+        error => { },
+        () => {
+          // this.isDisabledPoblacion = false;
+          this.progressSpinner = false;
+        }
+      );
+  }
+
+  getComboPoblacionInit(filtro: string) {
+    this.progressSpinner = true;
+    let poblacionBuscada = filtro;
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" + this.datosSolicitud.idProvincia + "&filtro=" + filtro
       )
       .subscribe(
         n => {
@@ -890,6 +940,21 @@ export class AlterMutuaRetaComponent implements OnInit {
       this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
   }
+
+  buscarPoblacionInit(poblacion) {
+    if (poblacion !== null) {
+      if (poblacion.length >= 3) {
+        this.getComboPoblacionInit(poblacion);
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
+      } else {
+        this.poblaciones = [];
+        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
+      }
+    } else {
+      this.poblaciones = [];
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
+    }
+  }
   // obtenerProvinciaDesc(e) {
   //   this.provinciaDesc = e.label;
   // }
@@ -923,6 +988,28 @@ export class AlterMutuaRetaComponent implements OnInit {
 
 
   autogenerarDatos() {
+    if (this.asegurado.iban != null && this.asegurado.iban != "") {
+      var ccountry = this.asegurado.iban.substring(0, 2);
+      if (ccountry == "ES") {
+        if (this.isValidIBAN()) {
+          this.recuperarBicBanco();
+
+          this.ibanValido = true;
+        } else {
+          this.asegurado.bic = "";
+
+          this.ibanValido = false;
+        }
+      }
+    } else {
+      this.asegurado.bic = "";
+
+      this.ibanValido = false;
+    }
+  }
+
+  autogenerarDatosInit() {
+    this.asegurado.iban = this.datosSolicitud.iban;
     if (this.asegurado.iban != null && this.asegurado.iban != "") {
       var ccountry = this.asegurado.iban.substring(0, 2);
       if (ccountry == "ES") {
@@ -999,6 +1086,11 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
   mostrarDatosContacto() {
     this.datosContacto = !this.datosContacto;
+    this.onChangeCodigoPostal();
+    if (this.poblacionYaObtenida != true) {
+      this.obtenerPoblacionDescInit(this.datosSolicitud.idPoblacion);
+      this.poblacionYaObtenida = true;
+    }
   }
   mostrarDatosBancarios() {
     this.datosCuentaBancaria = !this.datosCuentaBancaria;
