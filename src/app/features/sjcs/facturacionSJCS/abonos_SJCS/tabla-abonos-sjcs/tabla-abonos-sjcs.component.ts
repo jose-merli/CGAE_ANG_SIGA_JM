@@ -409,9 +409,7 @@ modal(action:string){
 
   }
   this.actionBtn = action;
-  if(action == 'Renegociar'){
 
-  } 
   this.showModal = true;
 }
 
@@ -571,7 +569,9 @@ guardar() {
       n => {
         this.progressSpinner = false;
        //refrescar this.refreshData.emit();
+      this.showModal = false;
        this.mensajeCargaMasiva(JSON.parse(n.body).id,this.itemsParaModificar.length)
+       this.busqueda.emit();
       },
       err => {
         this.progressSpinner = false;
