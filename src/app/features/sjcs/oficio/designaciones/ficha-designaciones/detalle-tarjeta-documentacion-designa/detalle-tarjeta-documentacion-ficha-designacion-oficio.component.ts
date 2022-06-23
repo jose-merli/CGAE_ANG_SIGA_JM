@@ -97,14 +97,14 @@ export class DetalleTarjetaDocumentacionFichaDesignacionOficioComponent implemen
       .then(respuesta => {
         let permisoEscritura = respuesta;
 
-        if (permisoEscritura == undefined) {
+        /*if (permisoEscritura == undefined) {
           sessionStorage.setItem("codError", "403");
           sessionStorage.setItem(
             "descError",
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
-        }
+        }*/
 
         if (!permisoEscritura) {
           this.modoLectura = true;

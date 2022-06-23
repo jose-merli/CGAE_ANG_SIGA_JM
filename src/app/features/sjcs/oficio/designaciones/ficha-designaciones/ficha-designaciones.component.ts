@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnChanges, OnInit, ViewChild } from '@angular/core';
 import { DatePipe, Location } from '@angular/common';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { TranslateService } from '../../../../../commons/translate';
@@ -29,7 +29,7 @@ import { TurnosItem } from '../../../../../models/sjcs/TurnosItem';
   templateUrl: './ficha-designaciones.component.html',
   styleUrls: ['./ficha-designaciones.component.scss']
 })
-export class FichaDesignacionesComponent implements OnInit {
+export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
   designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
   procurador;
@@ -44,6 +44,18 @@ export class FichaDesignacionesComponent implements OnInit {
   esColegiado: boolean = false;
   confirmationSave: boolean = false;
   permiteTurno: boolean;
+  permisoDocumentacion: boolean = false;
+  permisoDatosGenerales: boolean = false;
+  permisoCambLetrado: boolean = false;
+  permisoRelaciones: boolean = false;
+  permisoComunicaciones: boolean = false;
+  permisoActuaciones: boolean = false;
+  permisoFacturacion: boolean = false;
+  permisoInteresados: boolean = false;
+  permisoContrarios: boolean = false;
+  permisoDeDesignas: boolean = false;
+  permisoDeAdicionales: boolean = false;
+  permisoProcurador: boolean = false;
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
   @ViewChild(DetalleTarjetaInteresadosFichaDesignacionOficioComponent) tarjetaInteresados;
@@ -296,6 +308,140 @@ export class FichaDesignacionesComponent implements OnInit {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
       this.listaTarjetas[0].opened = true;
     }
+
+    // Controlar Permiso de Datos Generales
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaDatosGenerales)
+      .then(respuesta => {
+        this.permisoDatosGenerales = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoDatosGenerales) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigaDatosGen');
+          this.ngAfterViewInit();
+        }
+      })
+      .catch(err => console.log(err));
+
+    // Controlar Permiso de Detalle Designas
+    this.commonsService.checkAcceso(procesos_oficio.designasDeDesignas)
+      .then(respuesta => {
+        this.permisoDeDesignas = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoDeDesignas) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigaDet');
+          this.ngAfterViewInit();
+        }
+      })
+    // Controlar Permiso de Detalle Adicionales
+    this.commonsService.checkAcceso(procesos_oficio.designasDeAdicionales)
+      .then(respuesta => {
+        this.permisoDeAdicionales = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoDeAdicionales) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigDatAdicionales');
+          this.ngAfterViewInit();
+        }
+      })
+    // Controlar Permiso de Interesados
+    this.commonsService.checkAcceso(procesos_oficio.designasDefendidos)
+      .then(respuesta => {
+        this.permisoInteresados = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoInteresados) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigInt');
+          this.ngAfterViewInit();
+        }
+      })
+      .catch(err => console.log(err));
+    // Controlar Permiso de Contrarios
+    this.commonsService.checkAcceso(procesos_oficio.designasContrarios)
+      .then(respuesta => {
+        this.permisoContrarios = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoContrarios) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigContra');
+          this.ngAfterViewInit();
+        }
+      })
+      .catch(err => console.log(err));
+    // Controlar Permiso de Procurador
+    this.commonsService.checkAcceso(procesos_oficio.designasProcurador)
+      .then(respuesta => {
+        this.permisoProcurador = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoProcurador) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigProc');
+          this.ngAfterViewInit();
+        }
+      })
+
+    // Controlar Permiso de Cambio Letrado
+    this.commonsService.checkAcceso(procesos_oficio.designasCambiosLetrado)
+      .then(respuesta => {
+        this.permisoCambLetrado = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoCambLetrado) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigCamb');
+          this.ngAfterViewInit();
+        }
+      })
+      .catch(err => console.log(err));
+
+    // Controlar Permiso de Relaciones
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesRelaciones)
+      .then(respuesta => {
+        this.permisoRelaciones = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoRelaciones) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigRel');
+          this.ngAfterViewInit();
+        }
+      })
+      .catch(err => console.log(err));
+    // Controlar Permiso de Comunicaciones
+    this.commonsService.checkAcceso(procesos_oficio.designaComunicaciones)
+      .then(respuesta => {
+        this.permisoComunicaciones = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoComunicaciones) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigCom');
+          this.ngAfterViewInit();
+        }
+      })
+      .catch(err => console.log(err));
+    // Controlar Permiso de Documentación
+    this.commonsService.checkAcceso(procesos_oficio.designasDocumentacion)
+      .then(respuesta => {
+        this.permisoDocumentacion = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoDocumentacion) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigDoc');
+          this.ngAfterViewInit();
+        }
+      })
+      .catch(err => console.log(err));
+    // Controlar Permiso de Actuaciones
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+      .then(respuesta => {
+        this.permisoActuaciones = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoActuaciones) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigAct');
+          this.ngAfterViewInit();
+        }
+      })
+      .catch(err => console.log(err));
+    // Controlar Permiso de Facturacion
+    this.commonsService.checkAcceso(procesos_oficio.designaTarjetaFacturacion)
+      .then(respuesta => {
+        this.permisoFacturacion = respuesta;
+        // Añadir en la lista tarjetas.
+        if (!this.permisoFacturacion) {
+          this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigDatFac');
+          this.ngAfterViewInit();
+        }
+      })
+      .catch(err => console.log(err));
+
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaLetrado)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
@@ -314,6 +460,7 @@ export class FichaDesignacionesComponent implements OnInit {
         this.listaTarjetas[6].detalle = this.closeLetrado;
       }
       ).catch(error => console.error(error));
+
     if (!this.nuevaDesigna) {
 
       this.getPermiteTurno();
@@ -589,6 +736,7 @@ export class FichaDesignacionesComponent implements OnInit {
       this.progressSpinner = false;
     }
 
+
     this.progressSpinner = false;
   }
 
@@ -633,6 +781,7 @@ export class FichaDesignacionesComponent implements OnInit {
 
     this.goTop();
 
+    this.tarjetaFija.enlaces = [];
     this.listaTarjetas.forEach(tarj => {
       let tarjTmp = {
         id: tarj.id,
@@ -668,7 +817,7 @@ export class FichaDesignacionesComponent implements OnInit {
       sessionStorage.setItem("idAsistencia", asistencia.anio + "/" + asistencia.numero);
       sessionStorage.setItem("vieneDeFichaDesigna", "true");
       this.router.navigate(['/fichaAsistencia']);
-    }else{
+    } else {
       sessionStorage.setItem("volver", "true");
       this.router.navigate(['/designaciones']);
     }

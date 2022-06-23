@@ -38,9 +38,15 @@ export const procesos_oficio: any = {
     designaTarjetaDatosGenerales: "960",
     designaTarjetaFacturacion: "962",
     designaTarjetaLetrado: "95I",
+    designaComunicaciones: "95Z",
     designasActuaciones: "95L",
     designasDocumentacion: "95X",
-
+    designasDefendidos: "95G",
+    designasContrarios: "95H",
+    designasCambiosLetrado: "95I",
+    designasProcurador: "96J",
+    designasDeDesignas: "96K",
+    designasDeAdicionales: "96L",
     //ACTUACIONES
     designaTarjetaActuacionesFacturacion: "964",
     designaTarjetaActuacionesDatosGenerales: "96R",
