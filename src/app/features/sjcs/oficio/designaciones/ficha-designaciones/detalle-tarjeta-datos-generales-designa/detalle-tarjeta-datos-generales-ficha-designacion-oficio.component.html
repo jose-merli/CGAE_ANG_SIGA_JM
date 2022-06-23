@@ -33,8 +33,10 @@
 
       <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let inputTitle of inputs">
         <label>{{ inputTitle.nombre }}</label>
-        <input type="text" [(ngModel)]="inputTitle.value" class="form-control" [disabled]="inputTitle.disable"
+        <input *ngIf="inputTitle.nombre != 'Número de colegiado'" type="text" [(ngModel)]="inputTitle.value" class="form-control" [disabled]="inputTitle.disable"
           pInputText>
+        <input *ngIf="inputTitle.nombre == 'Número de colegiado'" type="text" [(ngModel)]="inputTitle.value" class="form-control" [disabled]="inputTitle.disable"
+          (change)="isBuscarColegiado()" pInputText>
       </div>
 
       <div class="form-group col-lg-3 col-md-3 w-100">
@@ -45,7 +47,7 @@
               (onChange)="onChangeArt()"></p-checkbox>
           </div>
           <div class="main-button">
-            <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="disableButtons"></button>
+            <button pButton (click)="eraseColegiado()" type="button" icon="fa fa-eraser" iconPos="left" [disabled]="disableButtons"></button>
             <button pButton (click)="searchColegiado()" type="button" icon="fa fa-search" iconPos="left"
               [disabled]="disableButtons"></button>
           </div>

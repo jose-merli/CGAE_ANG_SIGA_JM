@@ -696,22 +696,74 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   }
 
+  isBuscarColegiado() {
+    if(this.inputs != null && this.inputs.length > 1 && this.inputs[0].value != undefined && !this.inputs[0].disable && this.inputs[0].value.trim().length > 0){
+      let colegiado = new ColegiadoItem();
+      colegiado.numColegiado = this.inputs[0].value;
+
+      this.progressSpinner = true;
+      this.sigaServices
+      .post("busquedaColegiados_searchColegiado", colegiado)
+      .subscribe(
+        data => {
+          let colegiadoItem = JSON.parse(data.body);
+          console.log(colegiadoItem)
+
+          if (colegiadoItem.colegiadoItem.length == 1) {
+            this.inputs[0].value = colegiadoItem.colegiadoItem[0].numColegiado;
+            var apellidosNombre = colegiadoItem.colegiadoItem[0].nombre.split(",");
+            this.inputs[1].value = apellidosNombre[0];
+            this.inputs[2].value = apellidosNombre[1];
+          } else {
+            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
+          }
+          
+          this.progressSpinner = false;
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        },
+
+      );
+    } else if (this.inputs != null && this.inputs.length > 1 && this.inputs[0].value != undefined && !this.inputs[0].disable) {
+      this.inputs[0].value = "";
+      this.inputs[1].value = "";
+      this.inputs[2].value = "";
+    }
+  }
+
   searchColegiado() {
-    sessionStorage.removeItem("datosGeneralesDesigna");
-    sessionStorage.setItem("Art27Activo", "true");
-    sessionStorage.setItem("busquedaColegiadoDesigna", "true");
-    sessionStorage.setItem("datosGeneralesDesigna", JSON.stringify([Number(this.selectores[0].value), Number(this.selectores[1].value), this.checkArt]));
-    let datosDesigna = new DesignaItem();
-    datosDesigna.idTurno = Number(this.selectores[0].value);
-    datosDesigna.fechaAlta = this.fechaGenerales;
-    sessionStorage.setItem("datosDesgina", JSON.stringify(datosDesigna));
-    if (this.nuevaDesigna && this.checkArt) {//BUSQUEDA GENERAL
-      sessionStorage.setItem("nuevaDesigna", "true");
-      this.router.navigate(["/busquedaGeneral"]);
-    } else if (this.nuevaDesigna && !this.checkArt) {//BUSQUEDA SJCS
-      this.router.navigate(["/buscadorColegiados"]);
+    if(this.inputs != null && this.inputs.length > 1 && this.inputs[0].value != undefined && this.inputs[0].value.trim().length > 0){
+      this.isBuscarColegiado();
+    } else {
+      sessionStorage.removeItem("datosGeneralesDesigna");
+      sessionStorage.setItem("Art27Activo", "true");
+      sessionStorage.setItem("busquedaColegiadoDesigna", "true");
+      sessionStorage.setItem("datosGeneralesDesigna", JSON.stringify([Number(this.selectores[0].value), Number(this.selectores[1].value), this.checkArt]));
+      let datosDesigna = new DesignaItem();
+      datosDesigna.idTurno = Number(this.selectores[0].value);
+      datosDesigna.fechaAlta = this.fechaGenerales;
+      sessionStorage.setItem("datosDesgina", JSON.stringify(datosDesigna));
+      if (this.nuevaDesigna && this.checkArt) {//BUSQUEDA GENERAL
+        sessionStorage.setItem("nuevaDesigna", "true");
+        this.router.navigate(["/busquedaGeneral"]);
+      } else if (this.nuevaDesigna && !this.checkArt) {//BUSQUEDA SJCS
+        this.router.navigate(["/buscadorColegiados"]);
+      }
     }
 
+  }
+
+  eraseColegiado() {
+    if (!this.disableButtons) {
+      this.inputs[0].value = "";
+      this.inputs[1].value = "";
+      this.inputs[2].value = "";
+      this.inputs[0].disable = false;
+      this.inputs[1].disable = false;
+      this.inputs[2].disable = false;
+    }
   }
 
   onChangeArt() {
@@ -923,6 +975,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           this.inputs[0].disable = true;
           this.inputs[1].disable = true;
           this.inputs[2].disable = true;
+          this.disableButtons = true;
+          this.disableCheckArt = true;
           element.nombreColegiado = element.apellido1Colegiado + " " + element.apellido2Colegiado + ", " + element.nombreColegiado;
           if (element.art27 == "1") {
             element.art27 = "Si";
