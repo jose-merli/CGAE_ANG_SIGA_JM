@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter, SimpleChanges, OnChanges } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -16,7 +16,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
   templateUrl: './filtros-inscripciones.component.html',
   styleUrls: ['./filtros-inscripciones.component.scss']
 })
-export class FiltrosInscripciones implements OnInit {
+export class FiltrosInscripciones implements OnInit, OnChanges {
 
   progressSpinner: boolean = false;
   showDatosGenerales: boolean = true;
@@ -24,6 +24,7 @@ export class FiltrosInscripciones implements OnInit {
   filtroAux: InscripcionesItems = new InscripcionesItems();
   isDisabledMateria: boolean = true;
   isDisabledSubZona: boolean = true;
+  disableNuevo: boolean = false;
   turnos: any[] = [];
   disabledFechaHasta: boolean = true;
   partidoJudicial: string;
@@ -173,6 +174,14 @@ export class FiltrosInscripciones implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
 
       sessionStorage.removeItem("buscadorColegiados");
+    }
+  }
+
+  ngOnChanges() {
+    if (this.isLetrado && (this.usuarioBusquedaExpress.numColegiado == '' || this.usuarioBusquedaExpress.numColegiado == null || this.usuarioBusquedaExpress.numColegiado == undefined)) {
+      this.disableNuevo = true;
+    } else {
+      this.disableNuevo = false;
     }
   }
 

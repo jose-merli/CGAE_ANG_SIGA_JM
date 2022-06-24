@@ -101,7 +101,7 @@ export class FichaInscripcionesComponent implements OnInit {
 
 		this.datosTarjetaResumen = [];		
 		
-		let isLetrado = this.localStorageService.isLetrado;
+		this.isLetrado = this.localStorageService.isLetrado;
 
 		if (this.persistenceService.getPermisos()) {
 			this.permisos = true;
