@@ -10,6 +10,7 @@ import { CommonsService } from '../../../../../../app/_services/commons.service'
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { concat } from 'rxjs/observable/concat';
 
 @Component({
   selector: 'app-filtrosinscripciones',
@@ -75,6 +76,22 @@ export class FiltrosInscripciones implements OnInit {
 
     this.isLetrado = this.localStorageService.isLetrado;
 
+    // Filtros cuando insertamos nuevas Incripciones
+    if (sessionStorage.getItem("filtroInsertInscripcion")) {
+      var filtroInsertInscripcion = JSON.parse(sessionStorage.getItem("filtroInsertInscripcion"));
+      // Fecha introducida por Usuario cuando no es abogado.
+      if (!this.isLetrado) {
+        this.filtros.fechadesde = new Date(filtroInsertInscripcion.fechaActual);
+      } else {
+        this.filtros.fechadesde = new Date(filtroInsertInscripcion.fechasolicitud);
+      }
+
+      // NColegiado y Nombre Apellidos.
+      this.usuarioBusquedaExpress.numColegiado = filtroInsertInscripcion.nColegiado;
+      this.usuarioBusquedaExpress.nombreAp.concat(filtroInsertInscripcion.apellidos, ", ", filtroInsertInscripcion.nombre);
+      sessionStorage.removeItem("filtroInsertInscripcion");
+    }
+
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
       // this.isBuscar();
@@ -118,6 +135,12 @@ export class FiltrosInscripciones implements OnInit {
       }
       if (this.filtros.afechade != undefined && this.filtros.afechade != null) {
         this.filtros.afechade = new Date(this.filtros.afechade);
+      }
+      // Filtros cuando insertamos nuevas Incripciones
+      if (sessionStorage.getItem("filtroInsertInscripcion")) {
+        var filtroInsertInscripcion = JSON.parse(sessionStorage.getItem("filtroInsertInscripcion"));
+        this.filtros.fechadesde = new Date(filtroInsertInscripcion.fechasolicitud);
+        this.usuarioBusquedaExpress.numColegiado = filtroInsertInscripcion.nColegiado;
       }
       if (sessionStorage.getItem("colegiadoRelleno")) {
         const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
