@@ -99,6 +99,7 @@ export class FichaInscripcionesComponent implements OnInit {
 		});
 
 
+
 		this.datosTarjetaResumen = [];
 
 		this.isLetrado = this.localStorageService.isLetrado;
@@ -195,6 +196,9 @@ export class FichaInscripcionesComponent implements OnInit {
 	ngOnChanges(changes: SimpleChanges) {
 		this.datos.fechaActual = new Date();
 		this.actualizarBotones();
+		
+
+		
 	}
 	modoEdicionSend(event) {
 		this.modoEdicion = event.modoEdicion;
@@ -496,7 +500,7 @@ export class FichaInscripcionesComponent implements OnInit {
 			if (!this.isLetrado) {
 				element.fechasolicitud = this.datos.fechaActual;
 			}
-			
+
 		});
 		this.sigaServices.post("inscripciones_insertSolicitarAlta", body).subscribe(
 			data => {
@@ -652,10 +656,15 @@ export class FichaInscripcionesComponent implements OnInit {
 	actualizarBotones() {
 
 		if (this.datos.estado == undefined) {
-			if (this.inscripcionesSelected == undefined) this.disabledSolicitarAlta = true;
+			if (this.inscripcionesSelected == undefined) { this.disabledSolicitarAlta = true; this.disabledValidar = true; }
 			else {
-				if (this.inscripcionesSelected.inscripcionesSelected.length == 0) this.disabledSolicitarAlta = true;
-				else this.disabledSolicitarAlta = false;
+				if (this.inscripcionesSelected.inscripcionesSelected.length == 0) {
+					this.disabledSolicitarAlta = true;
+					this.disabledValidar = true;
+				} else {
+					this.disabledSolicitarAlta = false;
+					this.disabledValidar = false;
+				}
 			}
 		}
 		else {
@@ -669,21 +678,19 @@ export class FichaInscripcionesComponent implements OnInit {
 			this.disabledSolicitarBaja = true;
 		}
 
-		if (this.datos.estado == "2" || this.datos.estado == "0") {
-			this.disabledValidar = false;
-			this.disabledDenegar = false;
-		}
-		else {
-			this.disabledValidar = true;
-			this.disabledDenegar = true;
-		}
-
 		if (this.datos.estado == "1" || this.datos.estado == "2" || this.datos.estado == "3") {
 			this.disabledCambiarFecha = false;
 		}
 		else {
 			this.disabledCambiarFecha = true;
 		}
+
+		// Letrado desactivar funcionalidad de Validar.
+		if (this.isLetrado ) {
+			this.disabledValidar = true;
+		}
+
+
 	}
 
 	seleccionadosSend(datosSelected) {
