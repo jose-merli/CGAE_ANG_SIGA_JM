@@ -14,3 +14,15 @@
     width: 100%;
     z-index: 2;
 }
+
+.margin-btn{
+    margin: inherit;
+    justify-content: end;
+}
+
+@media (max-width: 1452px) {
+    .margin-btn{
+        justify-content: left;
+        margin-left: 0rem !important;
+    }
+  }

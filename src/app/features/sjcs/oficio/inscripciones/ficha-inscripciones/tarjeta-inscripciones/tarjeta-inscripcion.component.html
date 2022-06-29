@@ -29,24 +29,18 @@
           </ng-template>
           <ng-template pTemplate="header" let-columns>
             <tr>
-              <th *ngFor="let col of columns" [pSortableColumn]="col.field">
+              <th *ngFor="let col of columns; let i = index" [pSortableColumn]="col.field" [ngSwitch]="col.field">
                 {{ col.header | translate }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
-              </th>
-            </tr>
-            <tr>
-              <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field">
                 <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
-                *ngSwitchCase="col.field" pInputText type="text" (input)="
-                  table.filter($event.target.value, col.field, 'contains')
-                " >
+                  *ngSwitchCase="col.field" pInputText type="text" (input)="
+                  table.filter($event.target.value, col.field, 'contains')">
               </th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-columns="columns" let-rowIndex="rowIndex"
             let-expanded="expanded">
             <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header">
-
               <td *ngFor="let col of columns">
                 <div class="displayFlex">
                   <div *ngIf="col.field =='nombre_turno'">

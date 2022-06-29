@@ -196,9 +196,9 @@ export class FichaInscripcionesComponent implements OnInit {
 	ngOnChanges(changes: SimpleChanges) {
 		this.datos.fechaActual = new Date();
 		this.actualizarBotones();
-		
 
-		
+
+
 	}
 	modoEdicionSend(event) {
 		this.modoEdicion = event.modoEdicion;
@@ -302,6 +302,11 @@ export class FichaInscripcionesComponent implements OnInit {
 				data => {
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 					this.progressSpinner = false;
+					// Fecha de Validación para inscripcion.
+					this.datos.fechavalidacion = new Date(this.datos.fechaActual).getTime();
+					sessionStorage.setItem("datos", JSON.stringify(this.datos));
+					// Desactivar Botón de Validación.
+					this.disabledValidar = true;
 					//El redireccionamiento es una solucion temporal hasta que se
 					//decida el método de actualización de la ficha.
 					//this.router.navigate(["/inscripciones"]);
@@ -309,7 +314,7 @@ export class FichaInscripcionesComponent implements OnInit {
 				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {
-						this.showMessage("success", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
 					} else {
 						this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
 					}
@@ -656,14 +661,14 @@ export class FichaInscripcionesComponent implements OnInit {
 	actualizarBotones() {
 
 		if (this.datos.estado == undefined) {
-			if (this.inscripcionesSelected == undefined) { this.disabledSolicitarAlta = true; this.disabledValidar = true; }
+			if (this.inscripcionesSelected == undefined) { this.disabledSolicitarAlta = true; }//this.disabledValidar = true; }
 			else {
 				if (this.inscripcionesSelected.inscripcionesSelected.length == 0) {
 					this.disabledSolicitarAlta = true;
-					this.disabledValidar = true;
+					//this.disabledValidar = true;
 				} else {
 					this.disabledSolicitarAlta = false;
-					this.disabledValidar = false;
+					//this.disabledValidar = false;
 				}
 			}
 		}
@@ -686,10 +691,22 @@ export class FichaInscripcionesComponent implements OnInit {
 		}
 
 		// Letrado desactivar funcionalidad de Validar.
-		if (this.isLetrado ) {
+		if (this.isLetrado) {
 			this.disabledValidar = true;
 		}
 
+		// Verificar si ya esta validado la inscripción.
+		if (this.datosTarjetaResumen) {
+
+		}
+
+		this.datosTarjetaResumen.forEach(element => {
+			if (element.label == "Fecha Efec. Alta") {
+				if (element.value != null || element.value != undefined) {
+					this.disabledValidar = true;
+				}
+			}
+		});
 
 	}
 
