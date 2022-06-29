@@ -253,6 +253,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[0].disable = true;
       this.inputs[1].disable = true;
       this.inputs[2].disable = true;
+      this.disableCheckArt = true;
       this.nif = colegiadoGeneral[0].nif;
       this.nombreColegiado = colegiadoGeneral[0].nombre;
       let apellidos =  colegiadoGeneral[0].apellidos.split(' ');
@@ -760,9 +761,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[0].value = "";
       this.inputs[1].value = "";
       this.inputs[2].value = "";
+      this.checkArt = false;
       this.inputs[0].disable = false;
       this.inputs[1].disable = false;
       this.inputs[2].disable = false;
+      this.disableCheckArt = false;
     }
   }
 
