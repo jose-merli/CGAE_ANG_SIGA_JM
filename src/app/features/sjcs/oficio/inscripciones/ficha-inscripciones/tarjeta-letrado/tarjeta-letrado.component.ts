@@ -28,7 +28,7 @@ import { ParametroDto } from '../../../../../../models/ParametroDto';
 })
 export class TarjetaLetradoComponent implements OnInit {
   // datos;
-  openFicha: boolean = true;
+  openFicha: boolean = false;
   body: InscripcionesItems = new InscripcionesItems();
   bodyInicial;
   progressSpinner: boolean = false;
@@ -76,6 +76,8 @@ export class TarjetaLetradoComponent implements OnInit {
   disableDirecciones: boolean = true;
   searchParametros: ParametroDto = new ParametroDto();
   valorParametroDirecciones: any;
+  datoMovil: string;
+  datoTelefono: string;
   fichasPosibles = [
     {
       key: "generales",
@@ -86,6 +88,8 @@ export class TarjetaLetradoComponent implements OnInit {
       activa: false
     },
   ];
+
+
 
   datosBody: any[];
   @Output() datosSend = new EventEmitter<any>();
@@ -130,17 +134,16 @@ export class TarjetaLetradoComponent implements OnInit {
     }
   }
 
-  navigateToFichaColegial(){
-            this.router.navigate(["/fichaColegial"]);
+  navigateToFichaColegial() {
+    this.router.navigate(["/fichaColegial"]);
   }
 
   ngOnInit() {
-    
-   let origen =  sessionStorage.getItem("origin");
-   if(origen == "newInscrip"){
-    this.disableDirecciones = false;
-   }
-  //  sessionStorage.removeItem("origin");
+    let origen = sessionStorage.getItem("origin");
+    if (origen == "newInscrip") {
+      this.disableDirecciones = false;
+    }
+    //  sessionStorage.removeItem("origin");
     this.commonsService.checkAcceso(procesos_oficio.tarjetaLetrado)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
@@ -151,7 +154,7 @@ export class TarjetaLetradoComponent implements OnInit {
         }
       }).catch(error => console.error(error));
 
-      this.commonsService.checkAcceso(procesos_oficio.modificacionDirecciones)
+    this.commonsService.checkAcceso(procesos_oficio.modificacionDirecciones)
       .then(respuesta => {
         this.permisosModificacionDirecciones = respuesta;
         this.persistenceService.setPermisos(this.permisosTarjeta);
@@ -162,147 +165,156 @@ export class TarjetaLetradoComponent implements OnInit {
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
-          
+
           this.permisosModificacionDirecciones = respuesta;
         }/*else if(this.persistenceService.getPermisos() != true){
           this.permisosModificacionDirecciones = true;
         }*/
       }
       ).catch(error => console.error(error));
-      this.sigaServices.get("institucionActual").subscribe(n => {
-        this.institucionActual = n.value;
-        let parametro = new ParametroRequestDto();
-        parametro.idInstitucion = this.institucionActual;
-        parametro.modulo = "CEN";
-        parametro.parametrosGenerales = "SOLICITUDES_MODIF_CENSO";
-        this.sigaServices
-          .postPaginado("parametros_search", "?numPagina=1", parametro)
-          .subscribe(
-            data => {
-              this.searchParametros = JSON.parse(data["body"]);
-              let datosBuscar = this.searchParametros.parametrosItems;
-              datosBuscar.forEach(element => {
-                if (element.parametro == "SOLICITUDES_MODIF_CENSO") {
-                  this.valorParametroDirecciones = element.valor;
-                }
-              });
-          
-            },
-            err => {
-              //console.log(err);
-            },
-            () => {
-            }
-          );
-      });
-      this.cols = [
-        {
-          field: "tipo",
-          header: "censo.consultaDatosGenerales.literal.tipoCliente"
-        },
-        {
-          field: "valor",
-          header: "administracion.parametrosGenerales.literal.valor"
-        }
-      ];
-  
-      this.rowsPerPage = [
-        {
-          label: 10,
-          value: 10
-        },
-        {
-          label: 20,
-          value: 20
-        },
-        {
-          label: 30,
-          value: 30
-        },
-        {
-          label: 40,
-          value: 40
-        }
-      ];
-
-
-      this.colegiadoInscripcion.numColegiado = this.letradoItem.ncolegiado;
-      if(this.letradoItem.nColegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.nColegiado;
-      if(this.letradoItem.numColegiado != undefined)this.colegiadoInscripcion.numColegiado = this.letradoItem.numColegiado;
-      this.colegiadoInscripcion.idPersona = this.letradoItem.idpersona;
-      if(this.letradoItem.idPersona != undefined)this.colegiadoInscripcion.idPersona = this.letradoItem.idPersona;
-      this.colegiadoInscripcion.idInstitucion = this.letradoItem.idinstitucion;
-      if(this.letradoItem.idInstitucion != undefined)this.colegiadoInscripcion.idInstitucion = this.letradoItem.idInstitucion;
-        this.sigaServices
-        .post("busquedaColegiados_searchColegiadoFicha", this.colegiadoInscripcion)
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+      let parametro = new ParametroRequestDto();
+      parametro.idInstitucion = this.institucionActual;
+      parametro.modulo = "CEN";
+      parametro.parametrosGenerales = "SOLICITUDES_MODIF_CENSO";
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
         .subscribe(
           data => {
-            let colegiadoItem = JSON.parse(data.body);
-            sessionStorage.setItem("personaBody", JSON.stringify(colegiadoItem.colegiadoItem[0]));
-            sessionStorage.setItem("disabledAction", "false");
+            this.searchParametros = JSON.parse(data["body"]);
+            let datosBuscar = this.searchParametros.parametrosItems;
+            datosBuscar.forEach(element => {
+              if (element.parametro == "SOLICITUDES_MODIF_CENSO") {
+                this.valorParametroDirecciones = element.valor;
+              }
+            });
 
-            this.datos.ncolegiado = colegiadoItem.colegiadoItem[0].numColegiado;
-            this.datos.apellidosnombre = colegiadoItem.colegiadoItem[0].nombre;
-            this.datos.nifcif = colegiadoItem.colegiadoItem[0].nif;
-
-            //Buscamos los datos de contacto asociados a la direccion de guardia del colegiado
-            this.bodyDirecciones = new DatosDireccionesItem();
-            this.bodyDirecciones.idPersona = colegiadoItem.colegiadoItem[0].idPersona;
-            this.bodyDirecciones.historico = false;
-            if (this.bodyDirecciones.idPersona != undefined && this.bodyDirecciones.idPersona != null) {
-              this.sigaServices
-                .postPaginado(
-                  "fichaDatosDirecciones_datosDireccionesSearch",
-                  "?numPagina=1",
-                  this.bodyDirecciones
-                )
-                .subscribe(
-                  data => {
-                    this.searchDireccionIdPersona = JSON.parse(data["body"]);
-                    this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
-                    let contador = 0;
-                    this.datosDirecciones.forEach(element => {
-                             
-                      if (element.tipoDireccion != undefined)  {
-                        var index = element.tipoDireccion.indexOf( "Guardia" ); 
-                        if(index != -1){
-                          this.datosContacto = [
-                            { tipo: "censo.ws.literal.telefono", value: "tlf", valor: element.telefono},
-                            { tipo: "censo.datosDireccion.literal.movil", value: "mvl", valor:  element.movil},
-                          ];
-                        }
-                        
-                      }
-                    });
-                    sessionStorage.setItem("numDespacho", JSON.stringify(contador));
-        
-                    if (this.datos != undefined) {
-                      this.body = this.datos;
-                      this.bodyInicial = JSON.parse(JSON.stringify(this.datos));
-                    } else {
-                      this.datos = new InscripcionesItems();
-                    }
-                    if (this.body.idturno == undefined) {
-                      this.modoEdicion = false;
-                    } else {
-                      this.modoEdicion = true;
-                    }
-                    this.progressSpinner = false;
-                  },
-                  err => {
-                    //console.log(err);
-                    this.progressSpinner = false;
-                  },
-                );
-            }
           },
           err => {
             //console.log(err);
           },
-
+          () => {
+          }
         );
-      
-     
+    });
+    this.cols = [
+      {
+        field: "tipo",
+        header: "censo.consultaDatosGenerales.literal.tipoCliente"
+      },
+      {
+        field: "valor",
+        header: "administracion.parametrosGenerales.literal.valor"
+      }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+
+
+    this.colegiadoInscripcion.numColegiado = this.letradoItem.ncolegiado;
+    if (this.letradoItem.nColegiado != undefined) this.colegiadoInscripcion.numColegiado = this.letradoItem.nColegiado;
+    if (this.letradoItem.numColegiado != undefined) this.colegiadoInscripcion.numColegiado = this.letradoItem.numColegiado;
+    this.colegiadoInscripcion.idPersona = this.letradoItem.idpersona;
+    if (this.letradoItem.idPersona != undefined) this.colegiadoInscripcion.idPersona = this.letradoItem.idPersona;
+    this.colegiadoInscripcion.idInstitucion = this.letradoItem.idinstitucion;
+    if (this.letradoItem.idInstitucion != undefined) this.colegiadoInscripcion.idInstitucion = this.letradoItem.idInstitucion;
+    this.sigaServices
+      .post("busquedaColegiados_searchColegiadoFicha", this.colegiadoInscripcion)
+      .subscribe(
+        data => {
+          let colegiadoItem = JSON.parse(data.body);
+          sessionStorage.setItem("personaBody", JSON.stringify(colegiadoItem.colegiadoItem[0]));
+          sessionStorage.setItem("disabledAction", "false");
+
+          this.datos.ncolegiado = colegiadoItem.colegiadoItem[0].numColegiado;
+          this.datos.apellidosnombre = colegiadoItem.colegiadoItem[0].nombre;
+          this.datos.nifcif = colegiadoItem.colegiadoItem[0].nif;
+
+          //Buscamos los datos de contacto asociados a la direccion de guardia del colegiado
+          this.bodyDirecciones = new DatosDireccionesItem();
+          this.bodyDirecciones.idPersona = colegiadoItem.colegiadoItem[0].idPersona;
+          this.bodyDirecciones.historico = false;
+          if (this.bodyDirecciones.idPersona != undefined && this.bodyDirecciones.idPersona != null) {
+            this.sigaServices
+              .postPaginado(
+                "fichaDatosDirecciones_datosDireccionesSearch",
+                "?numPagina=1",
+                this.bodyDirecciones
+              )
+              .subscribe(
+                data => {
+                  this.searchDireccionIdPersona = JSON.parse(data["body"]);
+                  this.datosDirecciones = this.searchDireccionIdPersona.datosDireccionesItem;
+                  let contador = 0;
+                  this.datosDirecciones.forEach(element => {
+
+                    if (element.tipoDireccion != undefined) {
+                      var index = element.tipoDireccion.indexOf("Guardia");
+                      if (index != -1) {
+                        this.datosContacto = [
+                          { tipo: "censo.ws.literal.telefono", value: "tlf", valor: element.telefono },
+                          { tipo: "censo.datosDireccion.literal.movil", value: "mvl", valor: element.movil },
+                        ];
+                      }
+
+                    }
+                  });
+
+                  this.datosContacto.forEach(element => {
+                    if (element.value == 'tlf') {
+                      this.datoTelefono = element.valor;
+                    }
+                    if (element.value == 'mvl') {
+                      this.datoMovil = element.valor;
+                    }
+                  })
+                  sessionStorage.setItem("numDespacho", JSON.stringify(contador));
+
+                  if (this.datos != undefined) {
+                    this.body = this.datos;
+                    this.bodyInicial = JSON.parse(JSON.stringify(this.datos));
+                  } else {
+                    this.datos = new InscripcionesItems();
+                  }
+                  if (this.body.idturno == undefined) {
+                    this.modoEdicion = false;
+                  } else {
+                    this.modoEdicion = true;
+                  }
+                  this.progressSpinner = false;
+                },
+                err => {
+                  //console.log(err);
+                  this.progressSpinner = false;
+                },
+              );
+          }
+        },
+        err => {
+          //console.log(err);
+        },
+
+      );
+
+
     if (this.persistenceService.getPermisos() != true) {
       this.disableAll = true;
     }
@@ -332,8 +344,8 @@ export class TarjetaLetradoComponent implements OnInit {
   }
 
   getPartidosJudiciales() {
-    let fechaSolicitud =this.datepipe.transform(this.datos.fechasolicitud, 'dd/MM/yyyy');
-    let fechaEfectAlta =this.datepipe.transform(this.datos.fechavalidacion, 'dd/MM/yyyy');
+    let fechaSolicitud = this.datepipe.transform(this.datos.fechasolicitud, 'dd/MM/yyyy');
+    let fechaEfectAlta = this.datepipe.transform(this.datos.fechavalidacion, 'dd/MM/yyyy');
 
     for (let i = 0; i < this.partidasJudiciales.length; i++) {
       this.partidasJudiciales[i].partidosJudiciales = [];
@@ -341,32 +353,32 @@ export class TarjetaLetradoComponent implements OnInit {
         this.partidoJudicial = this.partidasJudiciales[i].nombrePartidosJudiciales.split(";").join("; ");
       });
       if (this.modoEdicion) {
-      this.datos2 = [
-        {
-          label: "Turno",
-          value: this.datos.nombreturno
-        },
-        {
-          label: "Partido Judicial",
-          value: this.partidoJudicial
-        },
-        {
-          label: "Fecha Sol Alta",
-          value: fechaSolicitud
-        },
-        {
-          label: "Fecha Efec.Alta",
-          value: fechaEfectAlta
-        },
-        {
-          label: "Estado",
-          value: this.datos.estadonombre
-        },
-      ]
-     
-      this.datosSend.emit(this.datos2);
+        this.datos2 = [
+          {
+            label: "Turno",
+            value: this.datos.nombreturno
+          },
+          {
+            label: "Partido Judicial",
+            value: this.partidoJudicial
+          },
+          {
+            label: "Fecha Sol Alta",
+            value: fechaSolicitud
+          },
+          {
+            label: "Fecha Efec.Alta",
+            value: fechaEfectAlta
+          },
+          {
+            label: "Estado",
+            value: this.datos.estadonombre
+          },
+        ]
+
+        this.datosSend.emit(this.datos2);
+      }
     }
-  }
 
   }
 
@@ -510,4 +522,31 @@ export class TarjetaLetradoComponent implements OnInit {
     }
     return {};
   }
+
+
+
+  isOpenReceive(event) {
+    let fichaPosible = this.esFichaActiva(event);
+    if (fichaPosible == false) {
+      this.abreCierraFicha(event);
+    }
+    // window.scrollTo(0,0);
+  }
+
+
+
+  abreCierraFicha(key) {
+    if (key == "tarjetaLetrado" && !this.openLetrado
+    ) {
+      this.openFicha = !this.openFicha;
+      this.openLetrado = true;
+    } else {
+      this.openFicha = !this.openFicha;
+      this.openLetrado = false;
+    }
+
+  }
 }
+
+
+

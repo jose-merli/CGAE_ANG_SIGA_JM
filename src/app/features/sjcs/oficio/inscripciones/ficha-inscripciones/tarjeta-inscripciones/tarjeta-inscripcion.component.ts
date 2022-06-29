@@ -74,6 +74,7 @@ export class TarjetaInscripcion implements OnInit {
   pesosSeleccionadosTarjeta2;
   updateCombo;
   rowGroupMetadata;
+  buscadores = [];
   //Resultados de la busqueda
   @Input() datos: InscripcionesItems;
   @Input() modoEdicion;
@@ -496,6 +497,8 @@ export class TarjetaInscripcion implements OnInit {
       // { field: "ncolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
     ];
 
+    this.cols.forEach(it => this.buscadores.push(""));
+
     this.rowsPerPage = [
       {
         label: 10,
@@ -755,4 +758,5 @@ export class TarjetaInscripcion implements OnInit {
    }
     this.seleccionadosSend.emit(send);
   }
+  
 }
