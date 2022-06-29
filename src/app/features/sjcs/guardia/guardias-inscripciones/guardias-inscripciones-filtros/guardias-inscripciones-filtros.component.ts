@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, HostListener, Output, EventEmitter, SimpleChanges, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, HostListener, Output, EventEmitter, SimpleChanges, AfterViewInit, OnChanges } from '@angular/core';
 import { TranslateService } from '../../../../../commons/translate';
 import { KEY_CODE } from '../../../../censo/busqueda-no-colegiados/busqueda-no-colegiados.component';
 import { Router } from '../../../../../../../node_modules/@angular/router';
@@ -15,7 +15,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
   styleUrls: ['./guardias-inscripciones-filtros.component.scss']
 })
 
-export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewInit {
+export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges, AfterViewInit {
 
   progressSpinner: boolean = false;
   showDatosGenerales: boolean = true;
@@ -24,6 +24,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
   disabledFechaHasta: boolean = true;
   disabledguardia: boolean = true;
   disabledestado: boolean = false;
+  desactivarNuevo: boolean = false;
   resultadosTurnos: any;
   msgs: any[] = [];
   filtros: InscripcionesItems = new InscripcionesItems();
@@ -136,6 +137,14 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, AfterViewI
       this.filtros.ncolegiado = this.usuarioBusquedaExpress.numColegiado;
 
       sessionStorage.removeItem("buscadorColegiados");
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.isLetrado && (this.usuarioBusquedaExpress.numColegiado == '' || this.usuarioBusquedaExpress.numColegiado == null || this.usuarioBusquedaExpress.numColegiado == undefined)) {
+      this.desactivarNuevo = true;
+    } else {
+      this.desactivarNuevo = false;
     }
   }
 

@@ -829,7 +829,7 @@ export class TablaInscripcionesComponent implements OnInit {
     if (this.selectedDatos && this.selectedDatos != null) {
       this.checkValidarInscripciones = false;
       this.selectedDatos.forEach(el => {
-        if (this.isLetrado && el.validarinscripciones && el.validarinscripciones != null && el.validarinscripciones.toUpperCase() == 'N') {
+        if (this.isLetrado && el.validarinscripciones && el.validarinscripciones != null && el.validarinscripciones.toUpperCase() != 'N') {
           this.checkValidarInscripciones = true;
         }
       });
