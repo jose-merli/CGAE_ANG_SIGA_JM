@@ -752,6 +752,7 @@ export class AlterMutuaRetaComponent implements OnInit {
                 "La solicitud se ha enviado correctamente a Alter Mútua"
               );
             }
+            this.existeSolicitud = true;
           } else {
             if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null" && this.tienePropuesta == true) {
               this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
@@ -763,6 +764,7 @@ export class AlterMutuaRetaComponent implements OnInit {
                 "La solicitud no se ha enviado correctamente a Alter Mútua"
               );
             }
+            this.existeSolicitud = false;
           }
           this.progressSpinner = false;
         }
@@ -818,9 +820,11 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   obtenerPoblacionDescInit(poblacion) {
-    this.poblacionDesc = this.poblaciones.find(item => item.value === poblacion);
-    this.asegurado.poblacion = this.poblacionDesc.label;
-    if (this.provinciaSelected != undefined) this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected);
+    if (this.poblaciones != null || this.poblaciones != undefined) {
+      this.poblacionDesc = this.poblaciones.find(item => item.value === poblacion);
+      this.asegurado.poblacion = this.poblacionDesc.label;
+      if (this.provinciaSelected != undefined) this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected);
+    }
   }
 
   onchangeModalidad(event) {

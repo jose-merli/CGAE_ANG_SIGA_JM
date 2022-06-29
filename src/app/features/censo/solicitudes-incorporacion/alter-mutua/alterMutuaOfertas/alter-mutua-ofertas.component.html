@@ -457,11 +457,11 @@
             <div class="text-right main-button">
                 <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
                                             iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>-->
-                <button (click)="confirmEdit()" [disabled]="!isCrearA || isInvalidFamiliar()" pButton type="button" icon="far fa-save " iconPos="left"
+                <button (click)="confirmEdit()" [disabled]="!isCrearA || isInvalidFamiliar() || existeSolicitud" pButton type="button" icon="far fa-save " iconPos="left"
                     label="{{ 'general.boton.guardar' | translate}}"></button>
                 <!--<button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
                                             iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>-->
-                <button (click)="crear()" [disabled]="isCrearA" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                <button (click)="crear()" [disabled]="isCrearA || existeSolicitud" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
             </div>
         </p-footer>
     </div>
@@ -507,7 +507,7 @@
         <div class="form-row">
             <div class="col-lg-3 col-md-3">
                 <label>{{"censo.alterMutua.literal.tipoBenef" | translate}}</label>
-                <p-dropdown class="select-form" [options]="comboBeneficiario" [(ngModel)]="beneficiarioSelected" optionLabel="label" dataKey="value"
+                <p-dropdown [disabled]="existeSolicitud" class="select-form" [options]="comboBeneficiario" [(ngModel)]="beneficiarioSelected" optionLabel="label" dataKey="value"
                     (onChange)="onChangeTipoBenef($event)"></p-dropdown>
             </div>
             <div *ngIf="beneficiarioSelected != undefined && beneficiarioSelected.value == '3'" class="col-lg-12 col-md-12">
@@ -598,11 +598,11 @@
                     <div class="text-right main-button">
                         <!--<button (click)="volver();" [(disabled)]="isVolver" pButton type="button" icon="fa fa-undo"
                                                 iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>-->
-                        <button (click)="confirmEditB()" [disabled]="!isCrearB || isInvalidHeredero()" pButton type="button" icon="far fa-save "
+                        <button (click)="confirmEditB()" [disabled]="!isCrearB || isInvalidHeredero() ||existeSolicitud" pButton type="button" icon="far fa-save "
                             iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
                         <!--<button (click)="confirmarBorrar()" [(disabled)]="isEliminar" pButton type="button" icon="fa fa-trash-alt"
                                                 iconPos="left" label="{{'general.boton.eliminar'  | translate}}"></button>-->
-                        <button (click)="crearB()" [(disabled)]="isCrearB" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
+                        <button (click)="crearB()" [(disabled)]="isCrearB || existeSolicitud" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"></button>
                     </div>
                 </p-footer>
             </div>
@@ -646,7 +646,7 @@
     <div [hidden]="!observaciones" class="card-body card-body-ficha">
         <div class="form-group col-lg-7 col-md-7">
             <label>{{"gratuita.mantenimientoLG.literal.observaciones" | translate}}</label>
-            <textarea [rows]="10" [(ngModel)]="datosAlter.observaciones" pInputTextarea></textarea>
+            <textarea [disabled]="existeSolicitud" [rows]="10" [(ngModel)]="datosAlter.observaciones" pInputTextarea></textarea>
         </div>
     </div>
 
@@ -693,20 +693,20 @@
     [width]="680">
     <p-header class="title">
         <label>
-            <strong>{{"solicitudes.literal.titulo.solicitarSeguro" | translate}}</strong>
+            <strong>{{"censo.alterMutua.solicitarModalidadesDisponibles" | translate}}</strong>
         </label>
     </p-header>
     <div *ngIf="estadoSolicitudResponse != null" [innerHTML]="estadoSolicitudResponse.mensaje" class="col-lg-12 col-md-12 ">
     </div>
     <p-footer>
         <div class="text-right main-button ">
-            <button (click)="buscarPropuestas()" pButton type="button" icon="fa-check" iconPos="left" label="Solicitar"></button>
-            <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+            <button (click)="buscarPropuestas()" pButton type="button" icon="fa-check" iconPos="left" label="{{'censo.alterMutua.solicitarModalidades' | translate}}"></button>
+            <button (click)="backTo()" pButton type="button " icon="fa fa-angle-left" iconPos="left" label="{{'general.boton.volver' | translate}}"></button>
         </div>
     </p-footer>
 </p-dialog>
 
-<p-dialog [(visible)]="tieneSolicitud" [closable]="false" responsive="true" [draggable]="false" modal="modal" resizable="false"
+<p-dialog [(visible)]="tieneSolicitud" responsive="true" [draggable]="false" modal="modal" resizable="false"
     [width]="680">
     <p-header class="title">
         <label>
