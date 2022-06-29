@@ -396,7 +396,9 @@ export class DatosBancariosFichaColegialComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
             this.searchDatosBancariosIdPersona = JSON.parse(data["body"]);
             this.datosBancarios = this.searchDatosBancariosIdPersona.datosBancariosItem;
-            sessionStorage.setItem("ibanAlterMutua", this.datosBancarios[0].iban.toString());
+            if (this.datosBancarios.length > 0) {
+              sessionStorage.setItem("ibanAlterMutua", this.datosBancarios[0].iban.toString());
+            }
           },
           error => {
             this.mostrarNumero = true;

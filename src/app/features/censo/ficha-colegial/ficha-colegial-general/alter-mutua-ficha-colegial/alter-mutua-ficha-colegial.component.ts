@@ -70,17 +70,20 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
     this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
     this.solicitudEditar.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
     this.solicitudEditar.tratamiento = this.tratamientoDesc;
-    this.solicitudEditar.iban = sessionStorage.getItem("ibanAlterMutua");
-    this.solicitudEditar.codigoPostal = direccion.codigoPostal;
-    this.solicitudEditar.domicilio = direccion.domicilio;
-    this.solicitudEditar.fax1 = direccion.fax;
-    this.solicitudEditar.correoElectronico = direccion.correoElectronico;
-    this.solicitudEditar.telefono1 = direccion.telefono;
-    this.solicitudEditar.telefono2 = direccion.telefono2;
-    this.solicitudEditar.tipoDireccion = direccion.tipoDireccion;
-    this.solicitudEditar.idProvincia = direccion.idProvincia;
-    this.solicitudEditar.idPoblacion = direccion.idPoblacion;
-    this.solicitudEditar.nombrePoblacion = direccion.nombrePoblacion;
+
+    if (direccion != null) {
+      this.solicitudEditar.codigoPostal = direccion.codigoPostal;
+      this.solicitudEditar.domicilio = direccion.domicilio;
+      this.solicitudEditar.fax1 = direccion.fax;
+      this.solicitudEditar.correoElectronico = direccion.correoElectronico;
+      this.solicitudEditar.telefono1 = direccion.telefono;
+      this.solicitudEditar.telefono2 = direccion.telefono2;
+      this.solicitudEditar.tipoDireccion = direccion.tipoDireccion;
+      this.solicitudEditar.idProvincia = direccion.idProvincia;
+      this.solicitudEditar.idPoblacion = direccion.idPoblacion;
+      this.solicitudEditar.nombrePoblacion = direccion.nombrePoblacion;
+    }
+    
     this.solicitudEditar.iban = sessionStorage.getItem("ibanAlterMutua");
     this.solicitudEditar.idiomaPref = sessionStorage.getItem("idiomaPrefAlterMutua");
 
@@ -123,19 +126,23 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
     this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
     this.solicitudEditar.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
     this.solicitudEditar.tratamiento = this.tratamientoDesc;
-    this.solicitudEditar.iban = sessionStorage.getItem("ibanAlterMutua");
-    this.solicitudEditar.codigoPostal = direccion.codigoPostal;
-    this.solicitudEditar.domicilio = direccion.domicilio;
-    this.solicitudEditar.fax1 = direccion.fax;
-    this.solicitudEditar.correoElectronico = direccion.correoElectronico;
-    this.solicitudEditar.telefono1 = direccion.telefono;
-    this.solicitudEditar.telefono2 = direccion.telefono2;
-    this.solicitudEditar.tipoDireccion = direccion.tipoDireccion;
-    this.solicitudEditar.idProvincia = direccion.idProvincia;
-    this.solicitudEditar.idPoblacion = direccion.idPoblacion;
-    this.solicitudEditar.nombrePoblacion = direccion.nombrePoblacion;
+    
+    if (direccion != null) {
+      this.solicitudEditar.codigoPostal = direccion.codigoPostal;
+      this.solicitudEditar.domicilio = direccion.domicilio;
+      this.solicitudEditar.fax1 = direccion.fax;
+      this.solicitudEditar.correoElectronico = direccion.correoElectronico;
+      this.solicitudEditar.telefono1 = direccion.telefono;
+      this.solicitudEditar.telefono2 = direccion.telefono2;
+      this.solicitudEditar.tipoDireccion = direccion.tipoDireccion;
+      this.solicitudEditar.idProvincia = direccion.idProvincia;
+      this.solicitudEditar.idPoblacion = direccion.idPoblacion;
+      this.solicitudEditar.nombrePoblacion = direccion.nombrePoblacion;
+    }
+    
     this.solicitudEditar.iban = sessionStorage.getItem("ibanAlterMutua");
     this.solicitudEditar.idiomaPref = sessionStorage.getItem("idiomaPrefAlterMutua");
+
     this.sigaServices
       .get("solicitudIncorporacion_tipoIdentificacion")
       .subscribe(
@@ -173,28 +180,30 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
   }
 
   buscaDireccionPorPrioridad(direcciones) {
-    let direccion;
+    let direccion = null;
     let encontradaPrioridad = false;
     
-    direcciones.forEach(element => {
+    if (direcciones.length != 0) {
+      direcciones.forEach(element => {
 
-      if (encontradaPrioridad == false) {
-        if (element.tipoDireccion.includes("Despacho")) {
-          element.tipoDireccion = "Despacho";
-          direccion = element;
-          encontradaPrioridad = true;
+        if (encontradaPrioridad == false) {
+          if (element.tipoDireccion.includes("Despacho")) {
+            element.tipoDireccion = "Despacho";
+            direccion = element;
+            encontradaPrioridad = true;
+          }
         }
-      }
-    });
-
-    if (encontradaPrioridad == false) {
-      direccion = direcciones[0];
-      if (direccion.tipoDireccion.includes("Residencia")) {
-        direccion.tipoDireccion = "Residencia";
-      } else {
-        direccion.tipoDireccion = "";
-      }
-    } 
+      });
+  
+      if (encontradaPrioridad == false) {
+        direccion = direcciones[0];
+        if (direccion.tipoDireccion.includes("Residencia")) {
+          direccion.tipoDireccion = "Residencia";
+        } else {
+          direccion.tipoDireccion = "";
+        }
+      } 
+    }
 
     return direccion;
   }

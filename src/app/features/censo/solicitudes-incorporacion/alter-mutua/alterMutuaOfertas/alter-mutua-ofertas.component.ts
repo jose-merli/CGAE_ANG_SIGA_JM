@@ -50,6 +50,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
   codigoPostalValido: boolean;
   selectedDatos1: any;
   poblacionYaObtenida: boolean = false;
+  existeSolicitud: boolean = false;
 
   @ViewChild("table")
   table;
@@ -182,9 +183,9 @@ export class AlterMutuaOfertasComponent implements OnInit {
           () => {
             if (this.estadoSolicitudResponse.error == false) {
               this.tieneSolicitud = true;
+              this.existeSolicitud = true;
+              this.buscarPropuestas();
             } else {
-              // this.estadoSolicitudResponse.mensaje =
-              //   "No existe una solicitud de Alter Mutua para este colegiado.";
               this.showSolicitarSeguro = true;
             }
           }
@@ -365,6 +366,9 @@ export class AlterMutuaOfertasComponent implements OnInit {
       },
       error => {
         console.log(error);
+      },
+      () => {
+        this.mostrarDatosContacto();
       }
     );
 
@@ -381,7 +385,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
 
   buscarPropuestas() {
     this.progressSpinner = true;
-    this.tieneSolicitud = false;
+    //this.tieneSolicitud = false;
 
     let datosPropuesta = {
       tipoIdentificador: this.datosSolicitud.tipoIdentificacion,
@@ -410,10 +414,13 @@ export class AlterMutuaOfertasComponent implements OnInit {
         }
         this.cargarCombos();
         this.tratarDatos();
+        this.modalidadInit();
         this.progressSpinner = false;
       }
     );
     this.buscarPoblacionInit(this.datosSolicitud.nombrePoblacion);
+    this.mostarDatosPropuesta();
+    this.mostrarDatosBancarios();
   }
 
   tratarDatos() {
@@ -784,7 +791,8 @@ export class AlterMutuaOfertasComponent implements OnInit {
       this.asegurado.iban != "" &&
       this.asegurado.iban != undefined &&
       this.tipoEjercicioSelected != null &&
-      this.tipoEjercicioSelected != ""
+      this.tipoEjercicioSelected != "" &&
+      this.existeSolicitud != true
     ) {
       return true;
     } else {
@@ -828,6 +836,22 @@ export class AlterMutuaOfertasComponent implements OnInit {
     }
   }
 
+  modalidadInit() {
+    if (this.propuestas.propuestas.length > 0) {
+      let modalidad = this.propuestas.propuestas[0];
+
+      this.modContratacionSelected = { value: modalidad.idPaquete };
+
+      this.tarifa = modalidad.tarifa;
+      this.infoPropuesta = {
+        tarifa: modalidad.tarifa,
+        breve: modalidad.breve,
+        descripcion: this.domSanitizer.bypassSecurityTrustHtml(
+          modalidad.descripcion
+        )
+      };
+    }
+  }
 
   getComboPoblacion(filtro: string) {
     this.progressSpinner = true;
