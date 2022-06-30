@@ -427,7 +427,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.progressSpinner = true;
     this.msgs = [];
     if (detail == "save" && ((this.inputs[0].value == "" && this.inputs[0].disable == false) || this.inputs[0].value == undefined)) {
-      this.confirmarActivar(severity, summary, detail);
+      if (this.inputs[0].value == "" && this.inputs[0].disable == false && this.checkArt == true) {
+        this.showMsgError(this.translateService.instant("justiciaGratuita.oficio.designa.busquedaManualObligatoria"));
+        this.progressSpinner = false;
+        this.resaltadoDatos = true;
+      } else {
+        this.confirmarActivar(severity, summary, detail);
+      }
     } else { 
       
       if (detail == "save" && (this.anio.value == "") ) {
