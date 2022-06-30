@@ -7,12 +7,27 @@
       <i class="fa fa-angle-right"></i>{{ 'formacion.fichaCurso.inscripciones.cabecera' | translate}}
     </p>
   </div>
+  <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
+  <div *ngIf="modoEdicion" id="fijoInscripciones">
+    <app-tarjeta-resumen-fija class="pb-50" *ngIf="permisosTarjetaResumen" [chincheta]="true" icono="far fa-file-alt"
+      [enlaces]="enlacesTarjetaResumen" titulo="justiciaGratuita.oficio.turnos.inforesumen"
+      [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" (isOpen)="isOpenReceive($event)"
+      [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
+  </div>
   <div *ngFor="let ficha of fichasPosibles" [ngSwitch]="ficha.key">
     <app-tarjeta-letrado (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
       [tarjetaLetrado]="tarjetaLetrado" [letradoItem]="letradoItem" (modoEdicionSend)="modoEdicionSend($event)"
-      *ngSwitchCase="'letrado'" [openLetrado]="openLetrado" (isOpen)="isOpenReceive($event)" ></app-tarjeta-letrado>
+      *ngSwitchCase="'letrado'" [openLetrado]="openLetrado" (isOpen)="isOpenReceive($event)"></app-tarjeta-letrado>
     <app-tarjeta-inscripcion [datos]="datos" [idPersona]="idPersona" (seleccionadosSend)="seleccionadosSend($event)"
       [modoEdicion]="modoEdicion" *ngSwitchCase="'inscripcion' "></app-tarjeta-inscripcion>
+    <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
+    <div *ngIf="modoEdicion">
+      <app-tarjeta-cola-fija class="pb-50" *ngIf="permisosTarjetaCola && ficha.key == 'cola'" chincheta="true"
+        icono="far fa-file-alt" titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3">
+      </app-tarjeta-cola-fija>
+      <app-tarjeta-gestion-inscripcion [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion"
+        *ngSwitchCase="'gestioninscripcion'"></app-tarjeta-gestion-inscripcion>
+    </div>
   </div>
 
 </div>
@@ -26,30 +41,44 @@
         <app-fecha [(value)]="datos.fechaActual" [disabledDelete]="true" (valueChangeInput)="fillFechaCalendar($event)"
           (valueChangeSelected)="fillFechaCalendar($event)"></app-fecha>
       </div>
-
-      <div class="form-group col-4">
+      <div class="form-group col-xl-3 ">
         <label>
           {{"gratuita.mantenimientoLG.literal.observaciones" | translate}}
         </label>
-        <textarea [(ngModel)]="datos.observaciones" class="textareains" name="observaciones" class="form-control"
-          pInputTextarea autoResize="autoResize" maxLength="1024"></textarea>
+        <input [(ngModel)]="datos.observaciones"  type="text" class="form-control" [maxLength]="1024"
+        pInputText>
       </div>
-      <!-- <div class="form-group prueba"> -->
-      <div class="form-group">
-        <label>
-        </label>
-        <button pButton [disabled]="disabledSolicitarAlta" (click)="solicitarAlta()" type="button"
-          label="{{ 'general.boton.solicitaralta' | translate}}"></button>
-
-      </div>
-
-      <div class="form-group">
-        <label>
-        </label>
-        
-        <button pButton [disabled]="disabledValidar" (click)="validar()" type="button"
+      <div class="form-group col-xl-6  d-flex margin-btn ml-1">
+        <!-- <div class="form-group prueba"> -->
+        <div class="form-group ">
+          <button pButton [disabled]="disabledSolicitarAlta" (click)="solicitarAlta()" type="button"
+            label="{{ 'general.boton.solicitaralta' | translate}}"></button>
+        </div>
+        <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
+        <div class="form-group" *ngIf="modoEdicion">
+          <button pButton [disabled]="isLetrado || disabledValidar " (click)="validar()" type="button" 
           label="{{ 'general.boton.validar' | translate}}"></button>
-
+        </div>
+        <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
+        <div class="form-group" *ngIf="modoEdicion">
+          <button pButton [disabled]="isLetrado || disabledDenegar " (click)="denegar()" type="button"
+          label="{{ 'general.boton.denegar' | translate}}"></button>
+        </div>
+        <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
+        <div class="form-group" *ngIf="modoEdicion">
+          <button *ngIf="!historico" pButton [disabled]="disabledSolicitarBaja" (click)="solicitarBaja()" type="button"
+            label="{{ 'general.boton.solicitarbaja' | translate}}"></button>
+        </div>
+        <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
+        <div class="form-group" *ngIf="modoEdicion">
+          <button pButton [disabled]="disabledCambiarFecha || isLetrado" (click)="cambiarFecha()" type="button"
+            label="{{ 'justiciaGratuita.oficio.inscripciones.cambiarfecha' | translate}}"></button>
+        </div>
+        <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
+        <div class="form-group" *ngIf="modoEdicion">
+          <button *ngIf="!historico" pButton [disabled]="!permisos " (click)="comunicar(selectedDatos)" type="button"
+            label="{{ 'general.boton.comunicar' | translate}}"></button>
+        </div>
       </div>
     </div>
   </div>
