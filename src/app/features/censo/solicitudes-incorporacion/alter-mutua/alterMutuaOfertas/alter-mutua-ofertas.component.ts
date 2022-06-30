@@ -41,6 +41,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
   observaciones: boolean = false;
   mostrarInfo: boolean = false;
   tienePropuesta: boolean = true;
+  muestraMensaje: boolean = false;
   tieneSolicitud: boolean = false;
   showSolicitarSeguro: boolean = false;
   deshabilitarDireccion: boolean = false;
@@ -384,6 +385,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
   }
 
   buscarPropuestas() {
+    this.muestraMensaje = false;
     this.progressSpinner = true;
     //this.tieneSolicitud = false;
 
@@ -397,6 +399,9 @@ export class AlterMutuaOfertasComponent implements OnInit {
     this.sigaServices.post("alterMutua_propuestas", datosPropuesta).subscribe(
       result => {
         this.propuestas = JSON.parse(result.body);
+        if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null") {
+          this.muestraMensaje = true;
+        }
         this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
           this.propuestas.mensaje
         );
@@ -656,6 +661,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
   }
 
   enviarDatosAlter() {
+    this.muestraMensaje = false;
     this.progressSpinner = true;
     this.datosAlter.idPaquete = this.modContratacionSelected.value;
     this.asegurado.modContratacion = this.modContratacionSelected.value;
@@ -676,7 +682,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
     if (this.datosSolicitud.tipoIdentificacion.lastIndexOf("NIF") == 0)
       this.asegurado.tipoIdentificador = 0;
     else this.asegurado.tipoIdentificador = 1;
-    this.asegurado.identificador = "40919463W";
+    //this.asegurado.identificador = "40919463W";
 
     this.datosAlter.asegurado = this.asegurado;
 
@@ -736,10 +742,11 @@ export class AlterMutuaOfertasComponent implements OnInit {
             this.tienePropuesta = true;
           }
           if (this.propuestas.error == false) {
-            if (this.propuestas.mensaje != null) {
+            if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null" && this.tienePropuesta == true) {
               this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
                 this.propuestas.mensaje
               );
+              this.muestraMensaje = true;
             } else {
               this.showSuccess(
                 "La solicitud se ha enviado correctamente a Alter Mútua"
@@ -747,7 +754,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
             }
             this.existeSolicitud = true;
           } else {
-            if (this.propuestas.mensaje != null) {
+            if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null" && this.tienePropuesta == true) {
               this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
                 this.propuestas.mensaje
               );
