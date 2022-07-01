@@ -20,8 +20,8 @@
         <!-- <div class="form-row"> -->
         <p-table #table [columns]="cols" [value]="inscripcionesItem" [(selection)]="selectedDatos"
           [selectionMode]="selectionMode" [responsive]="true" class="tabla-listado" [paginator]="true"
-          [rows]="selectedItem" paginatorPosition="both" dataKey="nombre_turno" (onRowSelect)="actualizaSeleccionados()"
-          sortMode="multiple" (onRowUnselect)="actualizaSeleccionados()">
+          [rows]="selectedItem" paginatorPosition="both" dataKey="nombre_turno" (onRowSelect)="actualizaSeleccionados(selectedDatos)"
+          sortMode="multiple" (onRowUnselect)="actualizaSeleccionados(selectedDatos)">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of columns" [style.width]="col.width">
