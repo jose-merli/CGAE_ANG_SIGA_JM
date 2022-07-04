@@ -233,7 +233,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   }
   ordenValue(i){
   if(this.grupos[i-1] != undefined){
-    if ((this.grupos[i-1].value != this.grupos[i].value)){
+    if ((this.grupos[i] != undefined && this.grupos[i-1].value != this.grupos[i].value)){
       this.x = 1;
     } else {
       this.x = this.x + 1;
@@ -273,7 +273,7 @@ export class TablaResultadoOrderComponent implements OnInit {
 
   guardar(ultimo){
       this.rowGroups.forEach(rG=>{
-      if (rG.cells[0].value.toString().startsWith('U')){
+      if (rG.cells[0].value != undefined && rG.cells[0].value.toString().startsWith('U')){
         rG.cells[0].value = rG.cells[0].value.substring(1);
       }
     })
@@ -553,7 +553,7 @@ checkLetrados(){
     let err2 = false;
     let arrNumbers : Number[] = [];
     this.rowGroups.forEach((row, i) => { 
-      if (this.rowGroups[i].cells[j].value.toString().startsWith('U')){
+      if (this.rowGroups[i].cells[j].value != undefined && this.rowGroups[i].cells[j].value.toString().startsWith('U')){
         this.rowGroups[i].cells[j].value = this.rowGroups[i].cells[j].value.substring(1);
       }
       if (i < this.rowGroups.length - 1){
@@ -806,7 +806,7 @@ this.totalRegistros = this.rowGroups.length;
   }*/
   moveToLast(){
     this.rowGroups.forEach(rG=>{
-      if (rG.cells[0].value.toString().startsWith('U')){
+      if (rG.cells[0].value != undefined && rG.cells[0].value.toString().startsWith('U')){
         rG.cells[0].value = rG.cells[0].value.substring(1);
       }
     })
@@ -847,17 +847,17 @@ this.totalRegistros = this.rowGroups.length;
       }
       groupSelected = this.rowGroups[posicionEntabla].cells[0].value;
        this.rowGroupsAux.forEach((row, index)=> {
-      if(groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) == Number(groupSelected)){
-        this.rowGroups[index].cells[0].value = lastGroup;
-      } else if (groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) > Number(groupSelected)){
-        this.rowGroups[index].cells[0].value = Number(row.cells[0].value) - 1;
-      }else if (groupSelected != null && row.cells[0].value == null){
-        let last = this.rowGroups[this.rowGroups.length - 1];
-        this.rowGroups[this.rowGroups.length - 1] = this.rowGroups[index];
-        this.rowGroups[this.rowGroups.length - 2] = last;
-        //this.rowGroups[index].cells[0].value = Number(row.cells[0].value);
-      }
-  });
+          if(groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) == Number(groupSelected)){
+            this.rowGroups[index].cells[0].value = lastGroup;
+          } else if (groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) > Number(groupSelected)){
+            this.rowGroups[index].cells[0].value = Number(row.cells[0].value) - 1;
+          }else if (groupSelected != null && row.cells[0].value == null){
+            let last = this.rowGroups[this.rowGroups.length - 1];
+            this.rowGroups[this.rowGroups.length - 1] = this.rowGroups[index];
+            this.rowGroups[this.rowGroups.length - 2] = last;
+            //this.rowGroups[index].cells[0].value = Number(row.cells[0].value);
+          }
+      });
   if (groupSelected == null){
       let selected = this.rowGroups[posicionEntabla];
           let ordenColaSeleccionado = Object.assign({},selected.cells[12]);
@@ -893,9 +893,10 @@ this.totalRegistros = this.rowGroups.length;
   this.totalRegistros = this.rowGroups.length;
   this.guardar(true);
   }
+  
   moveRow(movement){
     this.rowGroups.forEach(rG=>{
-      if (rG.cells[0].value.toString().startsWith('U')){
+      if (rG.cells[0].value != undefined && rG.cells[0].value.toString().startsWith('U')){
         rG.cells[0].value = rG.cells[0].value.substring(1);
       }
     })
