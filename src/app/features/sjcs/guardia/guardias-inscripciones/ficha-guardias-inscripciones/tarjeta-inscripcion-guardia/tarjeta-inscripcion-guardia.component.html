@@ -18,50 +18,39 @@
           <!-- <div class="bloque col-lg-4 col-md-4"> -->
   
             <!-- <div class="form-row"> -->
-        <p-table #table class="tabla-listado" [responsive]="true" [(selection)]="selectedDatos" [selectionMode]="selectionMode" 
-        [value]="inscripcionesItem" dataKey="nombreTurno" [columns]="cols" [rows]="selectedItem">
+        <p-table #table [columns]="cols" [value]="inscripcionesItem" [(selection)]="selectedDatos"  
+        [selectionMode]="selectionMode"  [responsive]="true"  class="tabla-listado" [paginator]="true" 
+        [rows]="selectedItem"  paginatorPosition="both" dataKey="nombreTurno" sortMode="multiple">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of cols" [style.width]="col.width">
             </colgroup>
           </ng-template>
           <ng-template pTemplate="header" let-columns>
-            <tr class="selectAllHeader"> 
-              <th>
-                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-                label="Seleccionar todo" name="groupname"></p-checkbox>
-              </th>
-            </tr>
             <tr>
-              <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
-                <div class="text-center"
-                  *ngIf="col.field != 'colegiadoGrupo'">
-                  <span>{{ col.header | translate }}</span> 
-                </div>
-                <div class="text-center"
-                  *ngIf="col.field == 'colegiadoGrupo'">
-                  <span><strong>{{ col.header | translate }}</strong></span>
-                </div>
+              <th *ngFor="let col of columns; let i = index" [pSortableColumn]="col.field" [ngSwitch]="col.field">
+                {{ col.header | translate }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+                <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()"
+                  *ngSwitchCase="col.field" pInputText type="text" (input)="
+                  table.filter($event.target.value, col.field, 'contains')">
               </th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded"
             let-columns="columns">
-            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header" *ngIf="rowGroupMetadata[rowData.nombreTurno].index === rowIndex">
-                
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header">
               <td *ngFor="let col of columns">   
                 <div class= "displayFlex">
                   <div *ngIf="col.field =='nombreTurno'">       
-                  <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' [disabled]="disableAll" (onChange)="seleccionarPadre(rowData,$event)" binary="true"></p-checkbox>      
+                  <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' (onChange)="seleccionarPadre(rowData,$event)" binary="true"></p-checkbox>      
                   </div>                     
                 <a [pRowToggler]="rowData">
-                   
                   <div class="text-center" *ngIf="col.field =='nombreTurno'">                       
                       <i
                       [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
                       <a (click)="openTab(rowData, 'Turno')"><span >{{rowData[col.field]}}</span></a>
                   </div>
-                
                 </a>
               </div>
                 <div class="text-center"
@@ -74,6 +63,30 @@
                 </div>
               </td>
             </tr>
+          </ng-template>
+          <ng-template pTemplate="paginatorleft">
+            <div class="mostrar d-flex text-right justify-content-end">
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros'
+                |
+                translate }}{{table.first + 1}}
+                al {{table.first
+                + table.rows}}
+                {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                {{table.totalRecords}}</label>
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length >= 0">{{
+                'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+                {{selectedDatos.length}}
+              </label>
+              <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length == undefined">{{
+                'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}:
+                1
+              </label>
+              <label>{{"general.message.mostrar" | translate}}</label>
+              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+              </p-dropdown>
+              <label class="pl-1">
+                {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+            </div>
           </ng-template>
           <ng-template pTemplate="rowexpansion" let-dato let-columns="columns">
             <tr [pSelectableRow]="dato">        
@@ -89,34 +102,6 @@
 
             </tr>
           </ng-template>
-
-
-
-
-          <!--<ng-template pTemplate="paginatorleft">
-            <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' |
-                translate}}
-                {{table.first + 1}} al {{table.first
-                + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
-                {{table.totalRecords}}
-              </label>
-              <label class="pr-3 numSeleccionados">{{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' |
-                translate}}:
-                {{selectedDatos.length}}
-              </label>
-              <label>{{"general.message.mostrar" | translate}}</label>
-              <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
-              </p-dropdown>
-              <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-              <div class="ml-3 selectAll">
-                <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true"
-                  label="Seleccionar todo" name="groupname"></p-checkbox>
-              </div>
-            </div>
-          </ng-template>-->
-
-
         </p-table>
       <!-- </div> -->
     <!-- </div> -->
@@ -126,13 +111,6 @@
     
   </div>
 </div>
-
-<!-- <p-confirmDialog header=" Confirmación"  icon="fa fa-question-circle"  width="425"  #cd>
-                <p-footer>
-                  <button type="button"  pButton icon="fa-check"  label="Si"  (click)="cd.accept()"></button>
-                  <button type="button"  pButton icon="fa-close"  label="No"  (click)="cd.reject()"></button>
-                </p-footer>
-                </p-confirmDialog> -->
 
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>

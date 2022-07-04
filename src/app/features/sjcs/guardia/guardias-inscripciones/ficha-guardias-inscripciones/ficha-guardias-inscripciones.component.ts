@@ -86,7 +86,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 	ngOnInit() {
 		//console.log('this datos ficha: ', this.datos)
-		sessionStorage.setItem("FichaInscripciones","1");
+		sessionStorage.setItem("FichaInscripciones", "1");
 		this.sigaServices.get("institucionActual").subscribe(n => {
 			this.institucionActual = n.value;
 			let parametro = new ParametroRequestDto();
@@ -146,16 +146,16 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			}).catch(error => console.error(error));
 		//this.turno = JSON.parse(sessionStorage.getItem("turno"));
 		//if (this.persistenceService.getDatos() != undefined) {
-			
-			if (this.persistenceService.getDatos() != undefined && this.persistenceService.getDatos() != null){
-				this.datos = this.persistenceService.getDatos();
-			}
-		
-			//console.log('this datos ficha: ', this.datos)
+
+		if (this.persistenceService.getDatos() != undefined && this.persistenceService.getDatos() != null) {
+			this.datos = this.persistenceService.getDatos();
+		}
+
+		//console.log('this datos ficha: ', this.datos)
 		//Comprueba la procedencia
 		if (sessionStorage.getItem("sesion") == "nuevaInscripcion") {
 			this.getDatosTarjetaResumen(this.datos);
-			
+
 			this.datos.fechasolicitud = this.datepipe.transform(new Date(), 'dd/MM/yyyy'); //formatear la fecha
 			//console.log('ana 3: ', this.datos.fechasolicitud )
 			this.modoEdicion = false;
@@ -209,8 +209,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		this.HabilitarBotones();
 		setTimeout(() => {
 			this.enviarEnlacesTarjeta();
-		  }, 2000);
-		
+		}, 2000);
+
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -308,6 +308,11 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				"guardiasInscripciones_validarInscripciones", objetoValidacion).subscribe(
 					data => {
 						//console.log("entra en el data");
+						// Fecha de Validación para inscripcion.
+						this.datos.fechavalidacion = new Date(this.datos.fechaActual).getTime();
+						sessionStorage.setItem("datos", JSON.stringify(this.datos));
+						this.ngOnInit();
+						this.disabledValidar = true;
 						this.progressSpinner = false;
 						//console.log(data);
 						//mensaje de okey
@@ -457,7 +462,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			data => {
 
 				this.datos = data.body;
-			
+
 
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 				this.progressSpinner = false;
@@ -482,15 +487,15 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		this.sigaServices.post(
 			"guardiasInscripciones_buscarsaltoscompensaciones", this.objetoValidacion).subscribe(
 				data => {
-					
+
 					this.progressSpinner = false;
 					let existeSaltosCompensaciones = data.body;
-					
+
 
 					if (existeSaltosCompensaciones == true) {
 						//mensaje de diálogo de que hay saltos y compensaciones que si está seguro de eliminarlos
 						this.confirmDelete();
-					} 
+					}
 
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
@@ -498,7 +503,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				err => {
 					this.progressSpinner = false;
 					//console.log(err);
-					
+
 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
 				},
@@ -558,16 +563,16 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		this.sigaServices.post(
 			"guardiasInscripciones_denegarInscripciones", this.objetoValidacion).subscribe(
 				data => {
-				
+
 					this.progressSpinner = false;
-				
+
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
 				},
 				err => {
 					this.progressSpinner = false;
 					//console.log(err);
-			
+
 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
 				},
@@ -616,7 +621,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	getColaOficio() {
 		this.datos.historico = this.historico;
 		this.progressSpinner = true;
-		if(this.datos.idguardia!= null && this.datos.idguardia!= undefined){
+		if (this.datos.idguardia != null && this.datos.idguardia != undefined) {
 			this.sigaServices.post("guardiasInscripciones_TarjetaColaGuardia", this.datos.idguardia).subscribe(
 				n => {
 					// this.datos = n.turnosItem;
@@ -624,7 +629,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 					this.datosColaOficio.forEach(element => {
 						element.orden = +element.orden;
 					});
-					
+
 					this.progressSpinner = false;
 
 				},
@@ -782,21 +787,21 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 	botonesInfo(event) {
 		this.infoParaElPadre = event;
-		
+
 	}
 	mensajeCambioFecha() {
 		this.msgs = [];
-		  this.msgs.push({
+		this.msgs.push({
 			severity: "error",
 			summary: "Incorrecto",
 			detail: "La fecha cumplimentada debe ser igual o anterior a la fecha efectiva de alta a todas las inscripciones de guardia de este turno y colegiado"
-		  });
-	  }
-	  datetoString(date) {
+		});
+	}
+	datetoString(date) {
 		//console.log('ana 5: ', date )
 		const pattern = 'dd/MM/yyyy';
-		  return this.datePipe.transform(date, pattern);
-		}
+		return this.datePipe.transform(date, pattern);
+	}
 	cambiarFecha() {
 		this.progressSpinner = true;
 
@@ -807,32 +812,32 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		body2.fechasolicitudNUEVA = this.datos.fechaActual;
 		body2.observacionessolicitudNUEVA = this.datos.observaciones;
 
-		  let fechaEfectivaAlta = this.datosTarjetaResumen[3].value;
-		  let resultComparacion = compareDate(this.datetoString(this.datos.fechaActual), fechaEfectivaAlta, true);
-		if(resultComparacion != -1 ){ //  la seleccionada fechasolicitudNUEVA > fechaEfectivaAlta
-            this.mensajeCambioFecha();
-          }else{
-				if (this.datos.estado == "2" || this.datos.estado == "1") {
-					//cambiar fecha efectiva de alta
-					if (this.datos.fechaActual <= this.datos.fechavalidacion) {
-						body2.fechavalidacion = this.datos.fechaActual;
-					}
-
-				} else if (this.datos.estado == "3") {
-					//cambiar fecha efectiva de baja
-					if (this.datos.fechaActual >= this.datos.fechabaja) {
-						body2.fechabaja = this.datos.fechaActual;
-					}
+		let fechaEfectivaAlta = this.datosTarjetaResumen[3].value;
+		let resultComparacion = compareDate(this.datetoString(this.datos.fechaActual), fechaEfectivaAlta, true);
+		if (resultComparacion != -1) { //  la seleccionada fechasolicitudNUEVA > fechaEfectivaAlta
+			this.mensajeCambioFecha();
+		} else {
+			if (this.datos.estado == "2" || this.datos.estado == "1") {
+				//cambiar fecha efectiva de alta
+				if (this.datos.fechaActual <= this.datos.fechavalidacion) {
+					body2.fechavalidacion = this.datos.fechaActual;
 				}
 
-				let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBackBOTONES(body2);
-
-				this.objetoValidacion.push(objVal);
-
-				this.llamadaBackCambiarFecha();
-
-				this.objetoValidacion = [];
+			} else if (this.datos.estado == "3") {
+				//cambiar fecha efectiva de baja
+				if (this.datos.fechaActual >= this.datos.fechabaja) {
+					body2.fechabaja = this.datos.fechaActual;
+				}
 			}
+
+			let objVal: ResultadoInscripcionesBotones = this.rellenarObjetoBackBOTONES(body2);
+
+			this.objetoValidacion.push(objVal);
+
+			this.llamadaBackCambiarFecha();
+
+			this.objetoValidacion = [];
+		}
 
 		/*body.inscripcionesItem[0] = this.datos;
 			body.inscripcionesItem[0].fechaActual = this.datos.fechaActual;
@@ -901,13 +906,13 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			"guardiasInscripciones_cambiarFechaInscripciones", this.objetoValidacion).subscribe(
 				data => {
 					this.progressSpinner = false;
-					
+
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 					this.ngOnInit();
 				},
 				err => {
 					this.progressSpinner = false;
-					
+
 					this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
 
 				},
@@ -1024,6 +1029,10 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				element.idpersona = this.idPersona;
 				//element.idguardia = this.datos.idGuardia;
 				element.observacionessolicitud = this.datos.observaciones;
+				// Fecha introducida por Usuario cuando no es abogado.
+				if (!this.isLetrado) {
+					element.fechasolicitud = this.datos.fechaActual;
+				}
 			});
 
 			this.sigaServices.post("guardiasInscripciones_insertSolicitarAlta", body).subscribe(
@@ -1031,8 +1040,9 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada")
 						+ ". Se ha dado de alta en " + body.inscripcionesItem.length + " guardias");
 					this.progressSpinner = false;
+					sessionStorage.setItem("filtroInsertInscripcionGuardias", JSON.stringify(this.datos));
 					//Como se puede solicitar el alta para varias guardias no se puede refrescar la pantalla
-					this.location.back;
+					//this.location.back;
 				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -1112,9 +1122,9 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				case "tarjetaLetrado":
 					this.openLetrado = this.manuallyOpened;
 					break;
-				 case "gestioninscripcion":
-				 this.gestioninscripcion = this.manuallyOpened;
-				 break;
+				case "gestioninscripcion":
+					this.gestioninscripcion = this.manuallyOpened;
+					break;
 				// case "configColaOficio":
 				// this.openConfigColaOficio = this.manuallyOpened;
 				// break;
@@ -1141,9 +1151,9 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 				case "tarjetaLetrado":
 					this.openLetrado = true;
 					break;
-				 case "gestioninscripcion":
-				   this.gestioninscripcion = true;
-				   break;
+				case "gestioninscripcion":
+					this.gestioninscripcion = true;
+					break;
 				// case "configColaOficio":
 				//   this.openConfigColaOficio = true;
 				//   break;
@@ -1216,9 +1226,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	}
 
 	backTo() {
-			sessionStorage.setItem("volver", "true");
-			this.router.navigate(['/inscripcionesGuardia']);
-		
+		sessionStorage.setItem("volver", "true");
+		this.router.navigate(['/inscripcionesGuardia']);
 
 	}
 
@@ -1241,12 +1250,12 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 	changeDateFormat(date1) {
 		let date1C = date1;
-    // date1 dd/MM/yyyy
-    if (!isNaN(Number(date1))){
-      date1C = date1.split("/").reverse().join("-");
-    }
-     
-    return date1C;
+		// date1 dd/MM/yyyy
+		if (!isNaN(Number(date1))) {
+			date1C = date1.split("/").reverse().join("-");
+		}
+
+		return date1C;
 	}
 
 	//CAMBIAR ESTA FUNCIÓN, EL OBJETO ES EL MOD CON LAS FECHAS NUEVAS... PARA REUTILIZAR EL CÓDIGO DEL BACK
@@ -1293,24 +1302,24 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		//console.log('ana 1: ', date)
 		//console.log('date.includes ',date.includes('/'))
 		const pattern = 'dd/MM/yyyy hh:mm:ss';
-		if (date != undefined && isNaN(Number(date))){
-			if (!date.includes('/')){
+		if (date != undefined && isNaN(Number(date))) {
+			if (!date.includes('/')) {
 				return this.datepipe.transform(date, pattern);
 			}
 		}
-	
-	  }
+
+	}
 
 	formatDateSol2(date) {
 		//console.log('ana 2: ', date)
 		const pattern = 'dd/MM/yyyy';
-		if (date != undefined && isNaN(Number(date))){
-			if (!date.includes('/')){
+		if (date != undefined && isNaN(Number(date))) {
+			if (!date.includes('/')) {
 				return this.datepipe.transform(date, pattern);
 			}
 		}
-	
-	  }
+
+	}
 	callSaveService(url) {
 
 		let objVal: ResultadoInscripciones = this.rellenarObjetoBack(this.datos);
@@ -1356,50 +1365,59 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 		}
 	}
+
+	clear() {
+		this.msgs = [];
+	}
 }
-function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
+
+
+function compareDate(fechaA: any, fechaB: any, isAsc: boolean) {
 
 	let dateA = null;
 	let dateB = null;
-	if (fechaA!=null){
-	  const dayA = fechaA.substr(0, 2) ;
-	  const monthA = fechaA.substr(3, 2);
-	  const yearA = fechaA.substr(6, 10);
-	  //console.log("fecha a:"+ yearA+","+monthA+","+dayA);
-	  dateA = new Date(yearA, monthA, dayA);
+	if (fechaA != null) {
+		const dayA = fechaA.substr(0, 2);
+		const monthA = fechaA.substr(3, 2);
+		const yearA = fechaA.substr(6, 10);
+		//console.log("fecha a:"+ yearA+","+monthA+","+dayA);
+		dateA = new Date(yearA, monthA, dayA);
 	}
-  
-	if (fechaB!=null){
-	  const dayB = fechaB.substr(0, 2) ;
-	  const monthB = fechaB.substr(3, 2);
-	  const yearB = fechaB.substr(6, 10);
-	  //console.log("fecha b:"+ yearB+","+monthB+","+dayB);
-	  dateB = new Date(yearB, monthB, dayB);
+
+	if (fechaB != null) {
+		const dayB = fechaB.substr(0, 2);
+		const monthB = fechaB.substr(3, 2);
+		const yearB = fechaB.substr(6, 10);
+		//console.log("fecha b:"+ yearB+","+monthB+","+dayB);
+		dateB = new Date(yearB, monthB, dayB);
 	}
-  
+
 	//console.log("comparacionDate isAsc:"+ isAsc+";");
-  
+
 	return compare(dateA, dateB, isAsc);
-  
-  
-  }
-  function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
+
+
+
+
+}
+function compare(a: number | string | Date, b: number | string | Date, isAsc: boolean) {
 	//console.log("comparacion  a:"+ a+"; b:"+ b);
-  
+
 	if (typeof a === "string" && typeof b === "string") {
-	  //console.log("comparacion  de cadenas");
-	  a = a.toLowerCase();
-	  b = b.toLowerCase();
+		//console.log("comparacion  de cadenas");
+		a = a.toLowerCase();
+		b = b.toLowerCase();
 	}
-  
+
 	//console.log("compare isAsc:"+ isAsc+";");
-  
-	if (a==null && b!=null){
-	  return ( 1 ) * (isAsc ? 1 : -1);
+
+	if (a == null && b != null) {
+		return (1) * (isAsc ? 1 : -1);
 	}
-	if (a!=null && b==null){
-	  return ( -1 ) * (isAsc ? 1 : -1);
+	if (a != null && b == null) {
+		return (-1) * (isAsc ? 1 : -1);
 	}
-  
+
 	return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
-  }			
+}
+

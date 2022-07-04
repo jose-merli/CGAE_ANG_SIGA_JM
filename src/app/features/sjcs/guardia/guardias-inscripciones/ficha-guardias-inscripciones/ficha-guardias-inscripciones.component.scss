@@ -17,3 +17,15 @@
 textarea{
     height: 55px !important;
 }
+/* Controlar margen de los botones y campos en la sección de Inscripción */
+.margin-btn{
+    margin: inherit;
+    justify-content: end;
+}
+
+@media (max-width: 1452px) {
+    .margin-btn{
+        justify-content: left;
+        margin-left: 0rem !important;
+    }
+  }

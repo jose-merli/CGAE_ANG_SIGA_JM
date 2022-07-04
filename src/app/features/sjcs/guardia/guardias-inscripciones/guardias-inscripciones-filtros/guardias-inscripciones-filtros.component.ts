@@ -55,11 +55,11 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
     private translateService: TranslateService,
     private commonsService: CommonsService,
     private persistenceService: PersistenceService,
-    private sigaStorageService : SigaStorageService) { }
-  
+    private sigaStorageService: SigaStorageService) { }
+
   ngAfterViewInit(): void {
     this.permisos = this.persistenceService.getPermisos();
-    if(sessionStorage.getItem("filtroFromFichaGuardia")){
+    if (sessionStorage.getItem("filtroFromFichaGuardia")) {
       let filtrosFromGuardia = {
         idTurno: '',
         idGuardia: ''
@@ -90,21 +90,21 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
       this.permisos = this.persistenceService.getPermisos();
     }
     //console.log('this.permisos: ', this.permisos)
-    if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("FichaInscripciones")!= undefined) {
+    if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("FichaInscripciones") != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      if(this.filtros.afechade!=null && this.filtros.afechade != undefined){
+      if (this.filtros.afechade != null && this.filtros.afechade != undefined) {
         this.filtros.afechade = this.transformaFecha(this.filtros.afechade);
       }
-      if(this.filtros.fechadesde!=null && this.filtros.fechadesde != undefined){
+      if (this.filtros.fechadesde != null && this.filtros.fechadesde != undefined) {
         this.filtros.fechadesde = this.transformaFecha(this.filtros.fechadesde);
       }
-      if(this.filtros.fechahasta!=null && this.filtros.fechahasta != undefined){
+      if (this.filtros.fechahasta != null && this.filtros.fechahasta != undefined) {
         this.filtros.fechahasta = this.transformaFecha(this.filtros.fechahasta);
       }
       this.persistenceService.clearFiltros();
       sessionStorage.removeItem("FichaInscripciones");
       //this.isBuscar();
-    }else{
+    } else {
       sessionStorage.removeItem("FichaInscripciones");
       this.persistenceService.clearFiltros();
     }
@@ -130,7 +130,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
 
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
 
-      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
+      this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + " " + busquedaColegiado.nombre;
 
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
 
@@ -138,6 +138,24 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
 
       sessionStorage.removeItem("buscadorColegiados");
     }
+
+    // Filtros cuando insertamos nuevas Incripciones
+    if (sessionStorage.getItem("filtroInsertInscripcionGuardias")) {
+      var filtroInsertInscripcion = JSON.parse(sessionStorage.getItem("filtroInsertInscripcionGuardias"));
+      // Fecha introducida por Usuario cuando no es abogado.
+      if (!this.isLetrado) {
+        this.filtros.fechadesde = new Date(filtroInsertInscripcion.fechaActual);
+      } else {
+        this.filtros.fechadesde = new Date(filtroInsertInscripcion.fechasolicitud);
+      }
+
+      // NColegiado y Nombre Apellidos.
+      this.filtros.ncolegiado = filtroInsertInscripcion.nColegiado;
+      this.usuarioBusquedaExpress.numColegiado = filtroInsertInscripcion.nColegiado;
+      this.usuarioBusquedaExpress.nombreAp = filtroInsertInscripcion.apellidos  + " " +  filtroInsertInscripcion.nombre;
+      sessionStorage.removeItem("filtroInsertInscripcionGuardias");
+    }
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -334,8 +352,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
       this.filtros.afechade = this.transformaFecha(event);
       // Ignora el error provocado por la estructura de datos de InscripcionesItem
       //@ts-ignore
-       this.filtros.estado = ["1","2"];
-       this.disabledestado = true;
+      this.filtros.estado = ["1", "2"];
+      this.disabledestado = true;
     } else {
       this.filtros.estado = null;
       this.filtros.afechade = undefined;
@@ -376,7 +394,7 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
     if (event.keyCode === KEY_CODE.ENTER) {
-      setTimeout( () => { this.isBuscar(); }, 2000 );
+      setTimeout(() => { this.isBuscar(); }, 2000);
     }
   }
 
