@@ -176,7 +176,6 @@ export class AlterMutuaOfertasComponent implements OnInit {
         .subscribe(
           result => {
             this.estadoSolicitudResponse = JSON.parse(result.body);
-            this.progressSpinner = false;
           },
           error => {
             console.log(error);
@@ -212,6 +211,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
         }
 
         this.autogenerarDatosInit();
+        this.progressSpinner = false;
     }
 
     this.colsFisicas = [
@@ -376,7 +376,6 @@ export class AlterMutuaOfertasComponent implements OnInit {
     this.sigaServices.get("solicitudIncorporacion_tipoSolicitud").subscribe(
       result => {
         this.comboTiposSolicitud = result.combooItems;
-        this.progressSpinner = false;
       },
       error => {
         console.log(error);
@@ -848,7 +847,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
   }
 
   modalidadInit() {
-    if (this.propuestas.propuestas.length > 0) {
+    if (this.propuestas != null && this.propuestas.propuestas != null && this.propuestas.propuestas.length > 0) {
       let modalidad = this.propuestas.propuestas[0];
 
       this.modContratacionSelected = { value: modalidad.idPaquete };
@@ -865,7 +864,6 @@ export class AlterMutuaOfertasComponent implements OnInit {
   }
 
   getComboPoblacion(filtro: string) {
-    this.progressSpinner = true;
     let poblacionBuscada = filtro;
     this.sigaServices
       .getParam(
@@ -881,13 +879,11 @@ export class AlterMutuaOfertasComponent implements OnInit {
         error => { },
         () => {
           // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
         }
       );
   }
 
   getComboPoblacionInit(filtro: string) {
-    this.progressSpinner = true;
     let poblacionBuscada = filtro;
     this.sigaServices
       .getParam(
@@ -903,7 +899,6 @@ export class AlterMutuaOfertasComponent implements OnInit {
         error => { },
         () => {
           // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
         }
       );
   }
@@ -1005,7 +1000,6 @@ export class AlterMutuaOfertasComponent implements OnInit {
       .subscribe(
         result => {
           this.poblaciones = result.combooItems;
-          this.progressSpinner = false;
         },
         error => {
           console.log(error);

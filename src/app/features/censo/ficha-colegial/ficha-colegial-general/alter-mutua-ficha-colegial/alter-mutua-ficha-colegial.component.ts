@@ -82,6 +82,7 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
       this.solicitudEditar.idProvincia = direccion.idProvincia;
       this.solicitudEditar.idPoblacion = direccion.idPoblacion;
       this.solicitudEditar.nombrePoblacion = direccion.nombrePoblacion;
+      this.solicitudEditar.movil = direccion.movil;
     }
     
     this.solicitudEditar.iban = sessionStorage.getItem("ibanAlterMutua");
@@ -138,6 +139,7 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
       this.solicitudEditar.idProvincia = direccion.idProvincia;
       this.solicitudEditar.idPoblacion = direccion.idPoblacion;
       this.solicitudEditar.nombrePoblacion = direccion.nombrePoblacion;
+      this.solicitudEditar.movil = direccion.movil;
     }
     
     this.solicitudEditar.iban = sessionStorage.getItem("ibanAlterMutua");
