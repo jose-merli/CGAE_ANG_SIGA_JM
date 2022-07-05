@@ -1920,6 +1920,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   irAlterMutuaReta() {
+    this.solicitudEditar.iban = this.iban;
+    this.solicitudEditar.soloNombre = this.solicitudEditar.nombre;
+
     sessionStorage.setItem(
       "datosSolicitud",
       JSON.stringify(this.solicitudEditar)
@@ -1929,6 +1932,9 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   irOfertas() {
+    this.solicitudEditar.iban = this.iban;
+    this.solicitudEditar.soloNombre = this.solicitudEditar.nombre;
+    
     sessionStorage.setItem(
       "datosSolicitud",
       JSON.stringify(this.solicitudEditar)

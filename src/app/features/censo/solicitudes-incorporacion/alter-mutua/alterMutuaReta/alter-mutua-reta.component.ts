@@ -821,7 +821,11 @@ export class AlterMutuaRetaComponent implements OnInit {
   obtenerPoblacionDescInit(poblacion) {
     if (this.poblaciones != null || this.poblaciones != undefined) {
       this.poblacionDesc = this.poblaciones.find(item => item.value === poblacion);
-      this.asegurado.poblacion = this.poblacionDesc.label;
+
+      if (this.poblacionDesc  != null && this.poblacionDesc != undefined) {
+        this.asegurado.poblacion = this.poblacionDesc.label;
+      }
+      
       if (this.provinciaSelected != undefined) this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected);
     }
   }
@@ -965,7 +969,7 @@ export class AlterMutuaRetaComponent implements OnInit {
   }
 
   buscarPoblacionInit(poblacion) {
-    if (poblacion !== null) {
+    if (poblacion !== null && poblacion != undefined) {
       if (poblacion.length >= 3) {
         this.getComboPoblacionInit(poblacion);
         this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
