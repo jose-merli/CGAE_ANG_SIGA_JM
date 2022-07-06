@@ -19,6 +19,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
   asistencia: TarjetaAsistenciaItem;
   actuacion: ActuacionAsistenciaItem;
   editable: boolean = true;
+  actuacionValidada : boolean = false;
   nuevaActuacion: boolean;
   tarjetaFija = {
     nombre: "Resumen Actuación",
@@ -351,6 +352,13 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
         n => {
           this.actuacion = n.actuacionAsistenciaItems[0];
           this.initTarjetas();
+          if(this.actuacion.validada != undefined && this.actuacion.validada != null){
+            if(this.actuacion.validada == "SÍ"){
+              this.actuacionValidada = true;
+            }else{
+              this.actuacionValidada = false;
+            }
+          }
         },
         err => {
           //console.log(err);

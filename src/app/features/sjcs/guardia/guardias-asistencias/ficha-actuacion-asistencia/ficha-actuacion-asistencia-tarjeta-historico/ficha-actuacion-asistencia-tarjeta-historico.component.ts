@@ -13,9 +13,39 @@ export class FichaActuacionAsistenciaTarjetaHistoricoComponent implements OnInit
   progressSpinner : boolean;
   @Input() idAsistencia : string;
   @Input() idActuacion : string;
+  @Input() validada : boolean;
   historicoItems : HistoricoActuacionAsistenciaItem [] = [];
   selectedDatos : HistoricoActuacionAsistenciaItem [] = [];
   rows : number = 10;
+  selectedItem: number = 10;
+
+  columnasTabla = [
+    {
+      field: "fecha",
+      header: "justiciaGratuita.oficio.designas.actuaciones.fechaJustificacion"
+      ,width : "25%"
+    },
+    {
+      field: "accion",
+      header: "justiciaGratuita.oficio.inscripciones.accion"
+      ,width : "25%"
+    },
+    {
+      field: "usuario",
+      header: "censo.usuario.usuario"
+      ,width : "25%"
+    },
+    {
+      field: "observaciones",
+      header: "justiciaGratuita.Calendarios.Observaciones"
+      ,width : "25%"
+    }
+
+
+  ];
+  buscadores=[]
+
+
   rowsPerPage = [
     {
       label: 10,
@@ -40,6 +70,7 @@ export class FichaActuacionAsistenciaTarjetaHistoricoComponent implements OnInit
     private sigaServices : SigaServices) { }
 
   ngOnInit() {
+    this.columnasTabla.forEach(it => this.buscadores.push(""));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
