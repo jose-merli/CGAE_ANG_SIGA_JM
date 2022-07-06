@@ -239,7 +239,7 @@ export class DesignacionesComponent implements OnInit {
          }else{
           element.art27 = "No";
          }
-         this.getDatosAdicionales(element);
+         //this.getDatosAdicionales(element);
          const params = {
           anio: element.factConvenio,
           idTurno: element.idTurno,
