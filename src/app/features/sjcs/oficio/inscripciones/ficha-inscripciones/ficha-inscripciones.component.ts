@@ -191,6 +191,11 @@ export class FichaInscripcionesComponent implements OnInit {
 
 		this.getColaOficio();
 
+		// Controlar boton denegar por si esta validada la inscripcion
+		if (this.datosTarjetaResumen[2].value) {
+			this.disabledDenegar = true;
+		}
+
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
