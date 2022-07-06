@@ -211,6 +211,12 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			this.enviarEnlacesTarjeta();
 		}, 2000);
 
+
+		// Controlar boton denegar por si esta validada la inscripcion
+		if (this.datosTarjetaResumen[3].value) {
+			this.disabledDenegar = true;
+		}
+
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
