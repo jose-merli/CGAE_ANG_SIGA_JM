@@ -78,7 +78,13 @@ export class FichaCambioLetradoComponent implements OnInit {
       data = JSON.parse(sessionStorage.getItem("Oldletrado"));
       sessionStorage.removeItem("Oldletrado");
       this.body = data;
-      this.body.fechaSolRenuncia = new Date();
+      //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@INICIO
+      if (data.fechaSolRenuncia == null) {
+        this.body.fechaSolRenuncia = new Date();
+      } else{
+        this.body.fechaSolRenuncia = new Date(this.body.fechaSolRenuncia);
+      }
+      //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@FIN
     }
     else {
       data = JSON.parse(sessionStorage.getItem("letrado"));
@@ -89,7 +95,13 @@ export class FichaCambioLetradoComponent implements OnInit {
       this.body.apellidos = data.apellidosNombre.split(", ")[0];
       this.body.fechaDesignacion = data.fechaDesignacion;
       this.body.idPersona = data.idPersona;
-      if (data.fechaSolRenuncia == null) this.body.fechaSolRenuncia = new Date();
+      //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@INICIO
+      if (data.fechaSolRenuncia == null) {
+        this.body.fechaSolRenuncia = new Date();
+      } else{
+        this.body.fechaSolRenuncia = new Date(this.body.fechaSolRenuncia); 
+      }
+      //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@FIN
     }
 
 

@@ -83,7 +83,7 @@
 
     <div *ngIf="esFichaActiva('datosGeneracion')" class="card-footer">
       <div class="text-right main-button ">
-        <button pButton type="button" icon="fas fa-download" iconPos="left" [disabled]="!permisoEscritura || !modoEdicion" (click)="descargarLog()" label="{{'general.boton.download' | translate }}"></button>
+        <button pButton type="button" icon="fas fa-download" iconPos="left" [disabled]="!modoEdicion" (click)="descargarLog()" label="{{'general.boton.download' | translate }}"></button>
 
         <button pButton type="button" icon="fa fa-eraser" iconPos="left" [disabled]="!permisoEscritura || !modoEdicion" (click)="confirmEliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
 
