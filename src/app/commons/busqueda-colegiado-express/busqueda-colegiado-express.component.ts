@@ -72,12 +72,17 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   clearForm() {
-    this.colegiadoForm.reset();
-    this.styleObligatory = true;
-    this.obligatorio = true;
-    this.colegiadoForm.get('numColegiado').setValue("");
-    this.colegiadoForm.get('nombreAp').setValue("");
-    this.changeValue();
+    if(!this.isLetrado){
+      this.colegiadoForm.reset();
+      this.styleObligatory = true;
+      this.obligatorio = true;
+      this.colegiadoForm.get('numColegiado').setValue("");
+      this.colegiadoForm.get('nombreAp').setValue("");
+      this.changeValue();
+      if (sessionStorage.getItem("datosColegiado")) {
+        sessionStorage.removeItem("datosColegiado");
+      }
+    }
   }
 
   isBuscar(form) {

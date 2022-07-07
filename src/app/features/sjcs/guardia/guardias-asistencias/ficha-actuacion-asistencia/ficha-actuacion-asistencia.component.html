@@ -52,7 +52,7 @@
                                       </app-ficha-actuacion-asistencia-tarjeta-justificacion>
                                   </div>
                                   <div *ngIf="tarj.nombre == 'Histórico de la Actuación'">
-                                      <app-ficha-actuacion-asistencia-tarjeta-historico [idActuacion]="actuacion.idActuacion" [idAsistencia]="asistencia.anioNumero">
+                                      <app-ficha-actuacion-asistencia-tarjeta-historico [idActuacion]="actuacion.idActuacion" [idAsistencia]="asistencia.anioNumero" [validada]="actuacionValidada">
                                       </app-ficha-actuacion-asistencia-tarjeta-historico>
                                   </div>
                                   <div *ngIf="tarj.nombre == 'Documentación'">
