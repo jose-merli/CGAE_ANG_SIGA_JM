@@ -69,25 +69,31 @@ export class LoginMultipleComponent implements OnInit {
 		this.sigaServices.getBackend("institucionesUsuario").subscribe(n => {
 			this.instituciones = n.combooItems;
 
-			/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
-	  para poder filtrar el dato con o sin estos caracteres*/
-			this.instituciones.map(e => {
-				let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
-				let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-				let i;
-				let x;
-				for (i = 0; i < e.label.length; i++) {
-					if ((x = accents.indexOf(e.label[i])) != -1) {
-						e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-						return e.labelSinTilde;
-					}
-				}
-			});
-			//this.progressSpinner = false;
-			this.form.controls["location"].setValue(this.instituciones[0].value);
-			this.form.controls['tmpLoginInstitucion'].setValue(this.instituciones[0].value);
-			this.onChangeInstitucion(this.instituciones[0]);
-
+			if (n.error) {
+				console.log('ERROR', n.error.message);
+				sessionStorage.setItem('codError', n.error.code);
+				sessionStorage.setItem('descError', n.error.message);
+				this.router.navigate(['/errorAcceso']);
+			} else {
+				/*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
+					para poder filtrar el dato con o sin estos caracteres*/
+					this.instituciones.map(e => {
+						let accents = 'ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž';
+						let accentsOut = "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+						let i;
+						let x;
+						for (i = 0; i < e.label.length; i++) {
+							if ((x = accents.indexOf(e.label[i])) != -1) {
+								e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+								return e.labelSinTilde;
+							}
+						}
+					});
+					//this.progressSpinner = false;
+					this.form.controls["location"].setValue(this.instituciones[0].value);
+					this.form.controls['tmpLoginInstitucion'].setValue(this.instituciones[0].value);
+					this.onChangeInstitucion(this.instituciones[0]);
+			}
 		});
 		this.ocultar = true;
 		this.form = this.fb.group({
@@ -152,7 +158,14 @@ export class LoginMultipleComponent implements OnInit {
 		// this.form.controls["tmpLoginInstitucion"].setValue(newValue.value);
 		this.sigaServices.getPerfil('rolesColegioUsuario', newValue.value).subscribe((n) => {
 			this.roles = n.combooItems;
-			this.onChangeRol(this.roles[0]);
+			if (n.error) {
+				console.log('ERROR', n.error.message);
+				sessionStorage.setItem('codError', n.error.code);
+				sessionStorage.setItem('descError', n.error.message);
+				this.router.navigate(['/errorAcceso']);
+			} else {
+				this.onChangeRol(this.roles[0]);
+			}
 		});
 	}
 	onChangeRol(newValue) {
