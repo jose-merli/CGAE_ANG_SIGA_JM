@@ -1,7 +1,10 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { FacturasItem } from '../../../../../models/FacturasItem';
+import { procesos_facturacionPyS } from '../../../../../permisos/procesos_facturacionPyS';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { SigaServices } from '../../../../../_services/siga.service';
 
 @Component({
   selector: 'app-observaciones-facturas',
@@ -53,10 +56,10 @@ export class ObservacionesFacturasComponent implements OnInit, OnChanges {
     }
   };
 
-  permisoEscritura: boolean = true;
+  permisoEscritura: boolean = false;
 
   constructor(
-    private localStorageService : SigaStorageService,
+    private localStorageService : SigaStorageService, private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
@@ -65,7 +68,7 @@ export class ObservacionesFacturasComponent implements OnInit, OnChanges {
     if (this.localStorageService.isLetrado)
       this.permisoEscritura = false;
     else
-      this.permisoEscritura = true;
+      this.getPermisoFacturas();
 
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
@@ -77,6 +80,15 @@ export class ObservacionesFacturasComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.bodyInicial != undefined)
       this.restablecer();
+  }
+
+  getPermisoFacturas() {
+    this.commonsService
+      .checkAcceso(procesos_facturacionPyS.facturasTarjetaObservaciones)
+      .then((respuesta) => {
+        this.permisoEscritura = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
   // Restablecer

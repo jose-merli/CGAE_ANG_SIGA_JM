@@ -6,6 +6,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ComboItem } from '../../../../../models/ComboItem';
 import { FacturaLineaItem } from '../../../../../models/FacturaLineaItem';
 import { FacturasItem } from '../../../../../models/FacturasItem';
+import { procesos_facturacionPyS } from '../../../../../permisos/procesos_facturacionPyS';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -55,18 +56,23 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
-    private localStorageService: SigaStorageService
+    private localStorageService: SigaStorageService,
   ) { }
 
   ngOnInit() {
-    if (this.localStorageService.isLetrado)
-      this.permisoEscritura = false;
-    else
-      this.permisoEscritura = true;
+    
   }
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined) {
+
+      if (this.localStorageService.isLetrado)
+        this.permisoEscritura = false;
+      else if (this.bodyInicial != undefined && this.bodyInicial.tipo == "FACTURA")
+        this.getPermisoFacturas();
+      else
+        this.permisoEscritura = true;
+
       this.getParametrosFACTURACION();
       this.getComboTiposIVA();
       if (this.bodyInicial.tipo == "FACTURA") {
@@ -76,6 +82,15 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       }
     }
       
+  }
+
+  getPermisoFacturas() {
+    this.commonsService
+      .checkAcceso(procesos_facturacionPyS.facturasTarjetaLineas)
+      .then((respuesta) => {
+        this.permisoEscritura = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
   // Combo de tipos IVA
