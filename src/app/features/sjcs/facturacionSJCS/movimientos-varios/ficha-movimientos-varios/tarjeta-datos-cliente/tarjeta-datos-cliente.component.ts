@@ -30,7 +30,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
   idpersona;
   ncolegiado: string = "";
   progressSpinner: boolean = false;
-  bodyAux: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
 
   filtros: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
   bodyFisica: BusquedaFisicaItem = null;
@@ -59,6 +58,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
   datosCliente: MovimientosVariosFacturacionItem = new MovimientosVariosFacturacionItem();
 
   nuevo: boolean = false;
+  idPersona: any;
 
   constructor(private router: Router,
     private sigaStorageService: SigaStorageService, private sigaService: SigaServices, private translateService: TranslateService, private persistenceService: PersistenceService, private movimientosVariosService: MovimientosVariosService) { }
@@ -80,7 +80,6 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
     this.isLetrado = this.sigaStorageService.isLetrado;
 
-    this.bodyAux = new MovimientosVariosFacturacionItem();
     this.datosFicha = new MovimientosVariosFacturacionItem();
 
 
@@ -134,8 +133,13 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
     if (this.modoEdicion) {
       this.datosFicha = this.datos;
-      this.recogerDatos(this.datosFicha);
-      this.bodyAux = JSON.parse(JSON.stringify(this.datosFicha)); //para que cuando se copie un objeto no se modifique en los dos, y solo en uno.
+      
+      if (this.bodyFisica != null && this.bodyFisica != undefined) {
+        this.recogerDatosBúsqueda(this.bodyFisica);
+      } else {
+        this.recogerDatos(this.datosFicha);
+      }
+
     } else {
       if (this.bodyFisica != null && this.bodyFisica != undefined) {
         this.mandarDatos(this.bodyFisica);
@@ -146,6 +150,16 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
     this.actualizarTarjetaResumen();
 
+  }
+  recogerDatosBúsqueda(datos) {
+    this.nif = datos.nif;
+    this.nombre = datos.nombre;
+    this.apellido1 = datos.primerApellido;
+    this.apellido2 = datos.segundoApellido;
+    this.ncolegiado = datos.numeroColegiado;
+    this.idPersona = datos.idPersona;
+
+    this.datosClienteEmit.emit(datos);
   }
 
   mandarDatos(datos) {
@@ -210,6 +224,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
     this.apellido1 = datos.apellido1;
     this.apellido2 = datos.apellido2;
     this.ncolegiado = datos.ncolegiado;
+    this.idPersona = datos.idPersona;
 
 
     this.datosClienteEmit.emit(datos);
@@ -248,19 +263,13 @@ export class TarjetaDatosClienteComponent implements OnInit {
 
   restablecer() {
 
-    if (!this.modoEdicion) {
-      this.nif = this.movimientosVariosService.datosColegiadoAux.nif;
-      this.nombre = this.movimientosVariosService.datosColegiadoAux.nombre;
-      let apellidos = this.movimientosVariosService.datosColegiadoAux.apellidos.split(' ');
-      this.apellido1 = apellidos[0];
-      this.apellido2 = apellidos[1];
-      this.ncolegiado = this.movimientosVariosService.datosColegiadoAux.nColegiado;
-    } else {
-      this.nif = this.bodyAux.nif.toString();
-      this.nombre = this.bodyAux.nombre.toString();
-      this.apellido1 = this.bodyAux.apellido1.toString();
-      this.apellido2 = this.bodyAux.apellido2.toString();
+    if (this.bodyFisica != null && this.bodyFisica != undefined) {
+      this.nif = this.datosFicha.nif.toString();
+      this.nombre = this.datosFicha.nombre.toString();
+      this.apellido1 = this.datosFicha.apellido1.toString();
+      this.apellido2 = this.datosFicha.apellido2.toString();
       this.ncolegiado = this.datosFicha.ncolegiado.toString();
+      this.idPersona = this.datosFicha.idPersona.toString();
 
     }
 
@@ -304,6 +313,7 @@ export class TarjetaDatosClienteComponent implements OnInit {
     this.datosCliente.apellido2 = this.apellido2;
     this.datosCliente.nombre = this.nombre;
     this.datosCliente.ncolegiado = this.ncolegiado;
+    this.datosCliente.idPersona = this.idPersona;
 
 
     if (this.datosCliente.idMovimiento == null || this.datosCliente.idMovimiento == undefined) {

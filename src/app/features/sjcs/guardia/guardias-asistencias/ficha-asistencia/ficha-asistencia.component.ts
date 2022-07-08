@@ -654,7 +654,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           }
 
           this.listaTarjetas.forEach(tarj => {
-            if (tarj.nombre != 'Datos Generales' && tarj.nombre != 'Caracteristicas') { //Una vez creada la asistencia, dejamos abrir las demas tarjetas
+            if (tarj.id != 'datosgenerales' && tarj.id != 'caracteristicas') { //Una vez creada la asistencia, dejamos abrir las demas tarjetas
               tarj.detalle = true;
             }
           });

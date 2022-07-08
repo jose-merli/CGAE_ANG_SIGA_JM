@@ -65,12 +65,13 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   ngOnInit() {
     sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
+    
     this.getComboContabilizado();
     this.getComboFormaCobroAbono();
     this.getComboGrupoFacturacion();
     this.getComboEstados();
     this.getComboPago();
-    
+    this.getInstitucion();
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       this.getComboColegios();
@@ -105,6 +106,12 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
       this.idPersona = busquedaColegiado.idPersona;
       if (this.idPersona == undefined) this.idPersona = busquedaColegiado.idpersona;
     }
+  }
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.filtros.idInstitucion = n.value;
+    });
+
   }
 
   getDataLoggedUser() {
@@ -219,6 +226,7 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   }
   clearFilters(){
     this.filtros = new FacAbonoItem();
+    this.getInstitucion();
     //console.log(this.filtros)
   }
 

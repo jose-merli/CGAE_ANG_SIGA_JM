@@ -350,8 +350,8 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     }
     //Se comprueba que todos los servicios de la peticion son manuales ya que los servicios automaticos no se pueden anular
     else if(this.esColegiado && this.ficha.servicios != null && (this.ficha.servicios.find(el => el.automatico == "1") != undefined)){
-      this.showMessage("error", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudAnularError ") + this.ficha.nSolicitud);
-    }
+      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), 
+      this.translateService.instant("messages.facturacion.error.estadoAuto"));}
     //Se comprueba si hay alguna factura asociada cuando el personal del colegio va a anular una petición
     //REVISAR: Revisar concepto de factura anulada y no anulada y su anulación.
     //Por ahora, e comprueba si la ultima entrada de la tarjeta facturas es una anulación o una factura

@@ -44,8 +44,9 @@ export class LetradoSalienteComponent implements OnInit {
     this.body.compensacion = false;
     this.body.motivoRenuncia = false;
     this.body.observaciones=""; */
-
-    this.body.fechaSolRenuncia = new Date();
+    //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@INICIO
+    if(this.body.fechaSolRenuncia == null) this.body.fechaSolRenuncia = new Date();
+    //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@FIN
 
     this.motivosRenuncia();
 

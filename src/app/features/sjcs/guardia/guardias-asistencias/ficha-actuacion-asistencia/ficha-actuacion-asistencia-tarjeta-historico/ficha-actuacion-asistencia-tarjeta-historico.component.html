@@ -1,32 +1,46 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+<p-table [value]="historicoItems" [columns]="columnasTabla" [(selection)]="selectedDatos" [responsive]="true" #table
+class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem" 
+selectionMode="single"  id="tablaFoco" >
 
- <p-dataTable #table [value]="historicoItems" emptyMessage="{{ 'general.message.no.registros' | translate}}" [responsive] = "true" [loading]="loading" loadingIcon="fa-spinner"
-  class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [rows]="rows" selectionMode="single">
-    <p-column field="fecha" header="{{'dato.jgr.guardia.saltcomp.fecha' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
-      <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
-        <td class="text-center">
-          <div>
-            <span>{{dato[col.field] | date : 'dd/MM/yyyy'}}</span>
+
+  <ng-template pTemplate="colgroup" let-columns>
+    <colgroup>
+      <col *ngFor="let col of columnasTabla" [style.width]="col.width">
+    </colgroup>
+  </ng-template>
+
+  <ng-template pTemplate="header" let-columns>
+    <tr>
+      <th *ngFor="let col of columnasTabla; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+        {{ col.header | translate }}
+        <p-sortIcon [field]="col.field"></p-sortIcon>
+        <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+          type="text" (input)="
+            table.filter($event.target.value, col.field, 'contains')
+          " />
+      </th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+    <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+      <td class="text-center" *ngFor="let col of columns">
+        <div [ngSwitch]="col.field">
+          <div *ngSwitchCase="'fecha'">  
+            <span *ngIf="dato['accion'] == 'Validar' && !validada" [ngClass]="{ historico: true }" > {{dato[col.field] | date : 'dd/MM/yyyy'}}</span>
+            <span *ngIf="dato['accion'] != 'Validar' || validada">{{dato[col.field] | date : 'dd/MM/yyyy'}}</span>
+
           </div>
-        </td>
-      </ng-template>
-    </p-column>
-    <p-column field="accion" header="{{'justiciaGratuita.oficio.inscripciones.accion' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
-    </p-column>
-    <p-column field="usuario" header="{{'general.boton.usuario' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
-    </p-column>
-    <p-column field="observaciones" header="{{'censo.nuevaSolicitud.observaciones' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
-    </p-column>
-    <ng-template pTemplate="paginatorLeft">
-      <div class="mostrar d-flex text-right justify-content-end">
-          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first
-              + 1}} al {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe'
-              | translate }} {{table.totalRecords}} {{'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate}} : {{numSeleccionado}}</label>
-          <label>{{ 'general.message.mostrar' | translate}}</label>
-          <p-dropdown [(ngModel)]="rows" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-          <label class="pl-1">{{'cargaMasivaDatosCurriculares.numRegistros.literal' | translate}}</label>
-      </div>
-    </ng-template>
-  </p-dataTable>
+
+          <div *ngSwitchDefault>
+            <span *ngIf="dato['accion'] == 'Validar' && !validada" [ngClass]="{ historico: true }">{{ dato[col.field] }}</span>
+            <span *ngIf="dato['accion'] != 'Validar' || validada" >{{ dato[col.field] }}</span>
+          </div>
+        </div>
+
+      </td>
+    </tr>
+  </ng-template>
+  </p-table>

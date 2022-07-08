@@ -163,32 +163,41 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
   // REVISAR: Añadir comprobación de facturación
   checkAnularSuscripcion(){
     let msg = this.commonsService.checkPermisos(this.permisoAnularSuscripcion, undefined);
-
+    let numAutos:number = 0;
+    //Se comprueba si hay algún servicio automatico ya que entonces no se puede realizar la accion
+    this.selectedRows.forEach(e => {
+      if(e.automatico == "1"){
+        numAutos++;
+      }
+    })
+    
     
     if (msg != null) {
       this.msgs = msg;
     }  
     else {
 
-      let susShow : ListaSuscripcionesItem[] = [];
+      if(numAutos > 0){
+        this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), 
+        this.translateService.instant("messages.facturacion.error.estadoAuto"));
+      }else{
+        let susShow : ListaSuscripcionesItem[] = [];
 
-      //Se comprueban los estados de las solicitudes
-      if(this.selectedRows.filter(el => !((el.fechaEfectiva != null && el.fechaSolicitadaAnulacion != null) && el.fechaAnulada == null)) != undefined){
-        susShow.concat(this.selectedRows.filter(el => !((el.fechaEfectiva != null && el.fechaSolicitadaAnulacion != null) && el.fechaAnulada == null)));
-        this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
-      } 
-      //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
-      //Este parametro "solicitarBaja" de este objeto tiene una logica distinta a la de los servicios
-      if(this.esColegiado && (this.selectedRows.filter(el => el.solicitarBaja != "0") != undefined)){
-        susShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
-        this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
+        //Se comprueban los estados de las solicitudes
+        if(this.selectedRows.filter(el => !((el.fechaEfectiva != null && el.fechaSolicitadaAnulacion != null) && el.fechaAnulada == null)) != undefined){
+          susShow.concat(this.selectedRows.filter(el => !((el.fechaEfectiva != null && el.fechaSolicitadaAnulacion != null) && el.fechaAnulada == null)));
+          this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
+        } 
+        //Se comprueba que todos los servicios de la peticion tienen la propiedad ‘Solicitar baja por internet’ si el que lo solicita es un colegiado
+        //Este parametro "solicitarBaja" de este objeto tiene una logica distinta a la de los servicios
+        if(this.esColegiado && (this.selectedRows.filter(el => el.solicitarBaja != "0") != undefined)){
+          susShow.concat(this.selectedRows.filter(el => el.solicitarBaja != "0"));
+          this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
+        }
+  
+        this.confirmAnular(susShow);
       }
-      //Se comprueba si hay algún servicio automatico ya que entonces no se puede realizar la accion
-      if(this.selectedRows.filter(el => el.automatico == "1") != undefined){
-        susShow.concat(this.selectedRows.filter(el => el.automatico = "1"));
-        this.selectedRows = this.selectedRows.filter( ( el ) => !susShow.includes( el ) );
-      }
-      this.confirmAnular(susShow);
+      
     }
   }
 

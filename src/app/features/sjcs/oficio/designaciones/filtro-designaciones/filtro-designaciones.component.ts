@@ -1091,6 +1091,9 @@ export class FiltroDesignacionesComponent implements OnInit {
         numColegiado: "",
         nombreAp: ""
       };
+      if (sessionStorage.getItem("datosColegiado")) {
+        sessionStorage.removeItem("datosColegiado");
+      }
     }
 
     //justificacion expres
