@@ -10,7 +10,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { SigaServices } from '../../../../../_services/siga.service';
 import { FiltrosSaltosCompensacionesGuardiaComponent } from './filtros-saltos-compensaciones-guardia/filtros-saltos-compensaciones-guardia.component';
 import { TablaResultadoMixSaltosCompGuardiaComponent } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp-guardia.component';
-import { Row, Cell, TablaResultadoMixSaltosCompService } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp.service';
+import { Row, Cell, TablaResultadoMixSaltosCompService, Combo } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp.service';
 
 export interface Cabecera {
   id: string;
@@ -160,6 +160,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
           let data = {
             idpersona: params.idpersona,
             idturno: params.idturno,
+            idguardia: params.idguardia,
             nombreTurno: params.nombreTurno,
             numerocolegiado: params.numerocolegiado,
             letrado: params.letrado,
@@ -532,57 +533,62 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
 
     if(data.grupo){
       cell1.type = 'select-grupo';
-      cell1.combo = [];
+      cell1.combo = this.comboTurnos as Combo[];
       cell1.value = data.idturno;
       cell1.header = this.cabeceras[0].id;
       cell1.disabled = true;
   
       cell2.type = 'select-grupo';
-      cell2.value = data.idpersona;
+      cell2.value = data.idguardia;
       cell2.combo = [];
       cell2.header = this.cabeceras[1].id;
-      cell2.disabled = false;
+      cell2.disabled = true;
   
       cell3.type = 'text';
-      cell3.value = data.letrado;
+      cell3.value = data.numerocolegiado + "/" + data.grupo;
       cell3.header = this.cabeceras[2].id;
       cell3.disabled = false;
+
+      cell4.type = 'text';
+      cell4.value = data.letrado;
+      cell4.header = this.cabeceras[3].id;
+      cell4.disabled = false;
     } else{
       cell1.type = 'select';
-      cell1.combo = [];
+      cell1.combo = this.comboTurnos as Combo[];
       cell1.value = data.idturno;
       cell1.header = this.cabeceras[0].id;
       cell1.disabled = true;
   
       cell2.type = 'select';
-      cell2.value = data.idpersona;
+      cell2.value = data.idguardia;
       cell2.combo = [];
       cell2.header = this.cabeceras[1].id;
-      cell2.disabled = false;
+      cell2.disabled = true;
   
       cell3.type = 'text';
-      cell3.value = data.letrado;
+      cell3.value = data.numerocolegiado;
       cell3.header = this.cabeceras[2].id;
       cell3.disabled = false;
+
+      cell4.type = 'text';
+      cell4.value = data.letrado;
+      cell4.header = this.cabeceras[3].id;
+      cell4.disabled = false;
     }
 
-    cell4.type = 'select';
-    cell4.combo = [];
-    cell4.value = '';
-    cell4.header = this.cabeceras[3].id;
-    cell4.disabled = false;
-
-    cell5.type = 'datePicker';
-    cell5.value = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
+    cell5.type = 'select';
+    cell5.combo = ((data.grupo == null || data.grupo.trim().length == 0) ? this.comboTipos : this.comboTiposGrupo) as Combo[];
+    cell5.value = '';
     cell5.header = this.cabeceras[4].id;
     cell5.disabled = false;
 
-    cell6.type = 'textarea';
-    cell6.value = '';
+    cell6.type = 'datePicker';
+    cell6.value = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
     cell6.header = this.cabeceras[5].id;
     cell6.disabled = false;
 
-    cell7.type = 'text';
+    cell7.type = 'textarea';
     cell7.value = '';
     cell7.header = this.cabeceras[6].id;
     cell7.disabled = false;
@@ -596,23 +602,23 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     cell9.header = 'idSaltosTurno';
 
     cell10.type = 'invisible';
-    cell10.value = '';
+    cell10.value = data.idturno;
     cell10.header = 'idTurno';
 
     cell11.type = 'invisible';
-    cell11.value = '';
+    cell11.value = data.idpersona;
     cell11.header = 'idPersona';
   
     cell12.type = 'invisible';
-    cell12.value = '';
+    cell12.value = data.idguardia;
     cell12.header = 'idGuardia';
 
     cell13.type = 'invisible';
-    cell13.value = '';
+    cell13.value = data.grupo;
     cell13.header = 'grupo';
 
     cell14.type = 'invisible';
-    cell14.value = '';
+    cell14.value = data.numerocolegiado;
     cell14.header = 'numeroColegiado';
 
     row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12, cell13, cell14];

@@ -1454,21 +1454,36 @@ this.totalRegistros = this.rowGroups.length;
 
   nuevoSaltoComp(){
     let pos = this.from + this.positionSelected;
-    let dataFilterFromColaGuardia = { 'turno': 0,
-    'guardia': 0,
-    'colegiado': 0,
-    'grupo': 0};
+    let dataFilterFromColaGuardia = { 
+      'turno': 0,
+      'guardia': 0,
+      'colegiado': 0,
+      'grupo': 0,
+      'idPersona': 0,
+      'letrado': 0
+    };
+
     dataFilterFromColaGuardia.turno = this.rowGroups[pos].cells[10].value;
     dataFilterFromColaGuardia.guardia = this.rowGroups[pos].cells[11].value;
     dataFilterFromColaGuardia.colegiado = this.rowGroups[pos].cells[2].value;
-    dataFilterFromColaGuardia.grupo = this.rowGroups[pos].cells[0].value;
+    dataFilterFromColaGuardia.grupo = this.rowGroups[pos].cells[14].value;
+    dataFilterFromColaGuardia.idPersona = this.rowGroups[pos].cells[15].value;
+    dataFilterFromColaGuardia.letrado = this.rowGroups[pos].cells[3].value;
     this.persistenceService.setDatos(dataFilterFromColaGuardia);
     sessionStorage.setItem(
       "itemSaltosCompColaGuardia",
       JSON.stringify(dataFilterFromColaGuardia)
     );
     //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
-    this.router.navigate(["/guardiasSaltosCompensaciones"]); 
+    // this.router.navigate(["/guardiasSaltosCompensaciones"]); 
+    this.router.navigate(["/guardiasSaltosCompensaciones"], { queryParams: { 
+      idturno: dataFilterFromColaGuardia.turno, 
+      idguardia: dataFilterFromColaGuardia.guardia, 
+      idpersona: dataFilterFromColaGuardia.idPersona, 
+      numerocolegiado: dataFilterFromColaGuardia.colegiado, 
+      letrado: dataFilterFromColaGuardia.letrado,
+      grupo: dataFilterFromColaGuardia.grupo
+    } });
   }
 
   navigateComunicar(dato) {
