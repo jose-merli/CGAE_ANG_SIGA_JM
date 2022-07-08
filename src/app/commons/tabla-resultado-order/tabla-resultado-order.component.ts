@@ -296,9 +296,9 @@ export class TablaResultadoOrderComponent implements OnInit {
     let errorSecuenciaGrupo = false;
     let errorMismoLetradoEnGrupo = false;
     let errorGrupoNoOrden = false;
-    if (this.pantalla == 'colaGuardias'){
-      errorSecuenciaGrupo = this.checkSequence(0);
-      errorSecuenciaOrden = this.checkSequence(1);
+    if (this.pantalla == 'colaGuardias') {
+      //errorSecuenciaGrupo = this.checkSequence(0);
+      //errorSecuenciaOrden = this.checkSequence(1);
       errorMismoLetradoEnGrupo = this.checkLetrados();
       errorGrupoNoOrden = this.checkOrdeIfGrupo();
     }else{
@@ -558,33 +558,33 @@ checkLetrados(){
       }
       if (i < this.rowGroups.length - 1){
         if (this.rowGroups[i].cells[j].value != null && this.rowGroups[i + 1].cells[j].value != null){
-        if (this.rowGroups[i].cells[j].value != this.rowGroups[i + 1].cells[j].value){
-          arrNumbers.push(Number(row.cells[j].value));
-          //errorSecuencia = numbers.indexOf(positions) === -1;
-          errorSecuencia = this.isIncreasingSequence(arrNumbers);
-          errSeqArr.push(errorSecuencia);
-          if (errorSecuencia == true){
-            //console.log('error true ' , i)
+          if (this.rowGroups[i].cells[j].value != this.rowGroups[i + 1].cells[j].value){
+            arrNumbers.push(Number(row.cells[j].value));
+            //errorSecuencia = numbers.indexOf(positions) === -1;
+            errorSecuencia = this.isIncreasingSequence(arrNumbers);
+            errSeqArr.push(errorSecuencia);
+            if (errorSecuencia == true){
+              //console.log('error true ' , i)
+            }
+          } else {
+            arrNumbers.push(Number(row.cells[j].value));
+            if (j == 0){
+              //Si estamos revisando el orden de grupos j == 0 y dos grupos consecutivos son iguales, revisamos si sus ordenes tambien lo son. En ese caso, error.
+              if (this.rowGroups[i].cells[1].value == this.rowGroups[i + 1].cells[1].value){
+                errorSecuencia = true;
+                errSeqArr.push(errorSecuencia);
+              }
+            }
           }
         } else {
           arrNumbers.push(Number(row.cells[j].value));
-          if (j == 0){
-            //Si estamos revisando el orden de grupos j == 0 y dos grupos consecutivos son iguales, revisamos si sus ordenes tambien lo son. En ese caso, error.
-            if (this.rowGroups[i].cells[1].value == this.rowGroups[i + 1].cells[1].value){
-              errorSecuencia = true;
-              errSeqArr.push(errorSecuencia);
-            }
+          errorSecuencia = this.isIncreasingSequence(positions);
+          if (errorSecuencia == true){
           }
+          //errorSecuencia = numbers.indexOf(positions) === -1;
+          errSeqArr.push(errorSecuencia);
         }
-      } else {
-        arrNumbers.push(Number(row.cells[j].value));
-        errorSecuencia = this.isIncreasingSequence(positions);
-        if (errorSecuencia == true){
-        }
-        //errorSecuencia = numbers.indexOf(positions) === -1;
-        errSeqArr.push(errorSecuencia);
       }
-    }
     });
     //Returns false, if the number is in sequence
     errSeqArr.forEach(err => {
@@ -813,8 +813,6 @@ this.totalRegistros = this.rowGroups.length;
     let posicionEntabla = this.from + this.positionSelected;
     if (this.rowGroups[posicionEntabla].cells[16] != undefined){
       this.rowGroups[posicionEntabla].cells[16].value = 1;
-    }else{
-      this.rowGroups[posicionEntabla].cells[12].value = 1;
     }
     
    
