@@ -28,17 +28,20 @@
                                     (change)="inputValueChange($event, i, z, cell)"></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'input'"><input type="text"
                                     class="form-control mt-2" pInputText [(ngModel)]="cell.value"
-                                    (change)="inputChange($event, i, z)"></span>
+                                    (change)="inputChange($event, i, z)"
+                                    [ngClass]="{'camposObligatorios': (cell.value == '' || cell.value == null)}"></span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'text'"
                                 [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
-                                <app-fecha [(value)]="cell.value" [utc]="false"
+                                <app-fecha [inputStyleClass]="styleObligatorio(cell.value)"
+                                    [(value)]="cell.value" [utc]="false"
                                     (valueChangeSelected)="fillFecha($event, cell, row)"
                                     (valueChangeInput)="fillFecha($event, cell, row)">
                                 </app-fecha>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePickerFin'">
-                                <app-fecha [(value)]="cell.value[0]" [utc]="false"
+                                <app-fecha [inputStyleClass]="styleObligatorio(cell.value[0])"
+                                    [(value)]="cell.value[0]" [utc]="false"
                                     (valueChangeSelected)="fillFecha2($event, cell, row)"
                                     (valueChangeInput)="fillFecha2($event, cell, row)" [minDate]="cell.value[1]">
                                 </app-fecha>
@@ -46,7 +49,8 @@
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                                 <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter"
                                     [(ngModel)]="cell.value" [options]="cell.combo" showClear="true"
-                                    styleClass="widthAll">
+                                    styleClass="widthAll"
+                                    [ngClass]="{'camposObligatorios': ((cell.value == '' || cell.value == null))}">
                                 </p-dropdown>
                             </span>
                         </div>

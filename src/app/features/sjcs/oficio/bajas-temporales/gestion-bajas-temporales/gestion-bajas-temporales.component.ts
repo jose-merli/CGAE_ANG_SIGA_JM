@@ -76,6 +76,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
   isLetrado: boolean = false;
   isDisabled: boolean = true;
 
+  resaltadoDatos: boolean = false;
+
   comboTipo = [
     { label: "Vacaciones", value: "V" },
     { label: "Maternidad", value: "M" },
@@ -111,6 +113,8 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.resaltadoDatos=true;
+
     this.totalRegistros = this.rowGroups.length;
 
     this.numCabeceras = this.cabeceras.length;
@@ -371,22 +375,49 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   fillFecha(event, cell, row) {
-    if (cell.value[0] != undefined) {
-      cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy');
-      row.cells[5].value[1] = new Date(event);
-    } else {
-      cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
-      row.cells[5].value[1] = new Date(event);
+    this.styleObligatorio(event);
+    this.onlyCheckDatos();
+    if(event != null && event != undefined){
+      if (cell.value[0] != undefined) {
+        cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy');
+        row.cells[5].value[1] = new Date(event);
+      } else {
+        cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+        row.cells[5].value[1] = new Date(event);
+      }
+    } else{
+      this.rowGroups[0].cells[4].value = '';
     }
 
   }
 
   fillFecha2(event, cell, row) {
-    if (cell.value[0] != undefined) {
-      cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy');
-      cell.value[1] = new Date(row.cells[4].value);
-    } else {
-      cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+    this.styleObligatorio(event);
+    this.onlyCheckDatos();
+    if(event != null && event != undefined){
+      if (cell.value[0] != undefined) {
+        cell.value[0] = this.pipe.transform(event, 'dd/MM/yyyy');
+        cell.value[1] = new Date(row.cells[4].value);
+      } else {
+        cell.value = this.pipe.transform(event, 'dd/MM/yyyy');
+      }
+    } else{
+      this.rowGroups[0].cells[5].value = '';
+    }
+  }
+
+  styleObligatorio(evento){
+    if(this.resaltadoDatos && (evento == undefined || evento == null || evento == "")){
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
+  onlyCheckDatos(){
+    if(this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" &&
+      this.rowGroups[0].cells[4].value != "" && (this.rowGroups[0].cells[5].value != null && this.rowGroups[0].cells[5].value[0] != "")){
+      this.resaltadoDatos=false;
+    } else{
+      this.resaltadoDatos=true;
     }
   }
 
@@ -524,6 +555,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   checkGuardar() {
+    this.onlyCheckDatos();
     if (this.rowGroups[0].cells[2].value != "" && this.rowGroups[0].cells[3].value != "" &&
       this.rowGroups[0].cells[4].value != "" && (this.rowGroups[0].cells[5].value != null && this.rowGroups[0].cells[5].value[0] != "")) {
       let mess = this.translateService.instant('sjcs.oficio.bajastemporales.nuevo.mensajeConfirmacion');
