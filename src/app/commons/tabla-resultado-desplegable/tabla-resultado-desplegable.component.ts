@@ -410,7 +410,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         for (let j = 0; j < this.searchText.length && isReturn; j++) {
           if (this.searchText[j] == undefined || this.searchText[j].trim().length == 0) continue;
 
-          if (this.cabeceras[j].id == "finalizado" && ["s", "si", "1"].includes(this.searchText[j].toLowerCase().trim())) {
+          if (this.cabeceras[j].id == "finalizado" && ["s", "si", "sí", "1"].includes(this.searchText[j].toLowerCase().trim())) {
             isReturn = rowGroup.rows[0].cells[0].type == 'checkboxPermisos' && Array.isArray(rowGroup.rows[0].cells[0].value) && rowGroup.rows[0].cells[0].value[0];
           } else if (this.cabeceras[j].id == "finalizado" && ["n", "no", "0"].includes(this.searchText[j].toLowerCase().trim())) {
             isReturn = rowGroup.rows[0].cells[0].type == 'checkboxPermisos' && Array.isArray(rowGroup.rows[0].cells[0].value) && !rowGroup.rows[0].cells[0].value[0];
@@ -493,7 +493,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           for (let j = 0; j < this.searchText.length && isReturn; j++) {
             if (this.searchText[j] == undefined || this.searchText[j].trim().length == 0) continue;
 
-            if (this.cabeceras[j].id == "validar" && ["s", "si", "1"].includes(this.searchText[j].toLowerCase().trim())) {
+            if (this.cabeceras[j].id == "validar" && ["s", "si", "sí", "1"].includes(this.searchText[j].toLowerCase().trim())) {
               isReturn = row.cells[8].type == 'checkbox' && row.cells[8].value;
             } else if (this.cabeceras[j].id == "validar" && ["n", "no", "0"].includes(this.searchText[j].toLowerCase().trim())) {
               isReturn = row.cells[8].type == 'checkbox' && !row.cells[8].value;
