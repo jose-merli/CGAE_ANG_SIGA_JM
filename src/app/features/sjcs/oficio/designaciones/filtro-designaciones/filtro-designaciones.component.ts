@@ -502,7 +502,7 @@ export class FiltroDesignacionesComponent implements OnInit {
         if (!sessionStorage.getItem("volver")) {
           if (this.filtroJustificacion.numDesignacion && this.filtroJustificacion.numDesignacion.trim().length != 0)
             this.body.codigo = this.filtroJustificacion.numDesignacion;
-          if (this.filtroJustificacion.anioDesignacion && this.filtroJustificacion.anioDesignacion.trim().length != 0)
+          if (this.filtroJustificacion.anioDesignacion)
             this.body.ano = parseInt(this.filtroJustificacion.anioDesignacion.toString());
           if (this.filtroJustificacion.nombre && this.filtroJustificacion.nombre.trim().length != 0)
             this.body.nombreInteresado = this.filtroJustificacion.nombre;
@@ -593,9 +593,12 @@ export class FiltroDesignacionesComponent implements OnInit {
   }
 
   getBuscadorDesignas() {
-    var today = new Date();
-    var year = today.getFullYear().valueOf();
-    this.body.ano = year;
+    if (this.body.ano == undefined) {
+      var today = new Date();
+      var year = today.getFullYear().valueOf();
+      this.body.ano = year;
+    }
+    
     this.getComboEstados();
     this.getComboTipoDesignas();
     this.getComboTurno();
