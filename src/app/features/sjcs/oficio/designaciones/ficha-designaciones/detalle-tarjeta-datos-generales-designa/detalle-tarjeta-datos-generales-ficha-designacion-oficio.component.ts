@@ -88,12 +88,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   {
     nombre: 'Apellidos',
     value: "",
-    disable: false
+    // disable: false //SIGARNV-2371
+    disable: true //SIGARNV-2371
   },
   {
     nombre: 'Nombre',
     value: "",
-    disable: false
+    // disable: false //SIGARNV-2371
+    disable: true //SIGARNV-2371
   }];
 
   constructor(private sigaServices: SigaServices,
@@ -169,7 +171,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     // this.selectores[1].opciones = [{ label: datosInicial.descripcionTipoDesigna, value: datosInicial.idTipoDesignaColegio }];
     this.getComboTipoDesignas();
     this.selectores[1].value = datosInicial.idTipoDesignaColegio;
-    this.selectores[1].disable = false;
+    // this.selectores[1].disable = false; //SIGARNV-2371
     var anioAnterior = datosInicial.ano.split("/");
     this.anio.value = anioAnterior[0].slice(1);
     this.anio.disable = true;
@@ -266,8 +268,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[1].value = "";
       this.inputs[2].value = "";
       this.inputs[0].disable = false;
-      this.inputs[1].disable = false;
-      this.inputs[2].disable = false;
+      // this.inputs[1].disable = false; //SIGARNV-2371
+      // this.inputs[2].disable = false; //SIGARNV-2371
     }
     this.checkArt = false;
     this.anio.value = "";
@@ -276,7 +278,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.numero.disable = true;
     this.fechaGenerales = new Date();
     this.selectores[0].disable = false;
-    this.selectores[1].disable = false;
+    // this.selectores[1].disable = false; //SIGARNV-2371
     if (this.selectores[0].value == "") {
       this.selectores[0].value = "";
     }
@@ -769,8 +771,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[2].value = "";
       this.checkArt = false;
       this.inputs[0].disable = false;
-      this.inputs[1].disable = false;
-      this.inputs[2].disable = false;
+      // this.inputs[1].disable = false; //SIGARNV-2371
+      // this.inputs[2].disable = false; //SIGARNV-2371
       this.disableCheckArt = false;
     }
   }
