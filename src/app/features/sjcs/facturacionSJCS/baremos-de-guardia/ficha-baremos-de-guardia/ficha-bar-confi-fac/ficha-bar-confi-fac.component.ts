@@ -46,11 +46,14 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
   checkAsAcD: boolean = false;
   checkDisD: boolean = true;
 
+  maxIrTiposAsAc: boolean = false;
+
   disableDis: boolean = false;
   disableAsAc: boolean = false;
   disableImputDis: boolean = false;
   disableImputAct: boolean = false;
   displayBoolean: boolean = false;
+  disableImpAsc: boolean = false;
   url;
   origenBaremos = true;
   modalTipos = false;
@@ -212,8 +215,10 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
       this.disableImputAct = true
       if (this.precio == 'porTipos') {
         this.modalTipos = true;
+        this.disableImpAsc = true;
       } else {
         this.modalTipos = false;
+        this.disableImpAsc = false;
       }
     }
 
@@ -243,6 +248,7 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
       this.disableImputDis = false;
     }
   }
+
 
   onChangeAsAc(event) {
     this.disableAsAc = event;
@@ -305,6 +311,11 @@ export class FichaBarConfiFacComponent implements OnInit, AfterViewInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  onChangeMaxIrTiposAsAc(event) {
+    // Funcionalidad activar o desactivar.
+    this.maxIrTiposAsAc = event;
   }
 
 

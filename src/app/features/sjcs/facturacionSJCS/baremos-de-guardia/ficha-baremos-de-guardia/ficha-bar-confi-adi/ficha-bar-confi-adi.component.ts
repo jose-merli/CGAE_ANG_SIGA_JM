@@ -20,10 +20,12 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   filtrosAdi: BaremosGuardiaItem = new BaremosGuardiaItem();
   contAsi;
   contAsAc;
+  contUnicoFG;
+  contPorTiposAsAc;
   facActuaciones: boolean = false;
   facAsuntosAntiguos: boolean = false;
   procesoFac2014: boolean = false;
-  descontar: boolean = false;
+  descontarGuardAsis;
   disablediratipos: boolean = false;
   disableConfAdi: boolean = false;
   disabledFacActuaciones: boolean = false;
@@ -41,6 +43,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   disPrecio: boolean = false;
   disableImput: boolean = false;
   disJuiciosRapidos: boolean = false;
+  maxIrTiposFG: boolean = false;
   msgs: any[];
 
   @ViewChild("op")
@@ -134,9 +137,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
     this.procesoFac2014 = event
   }
 
-  onChangeDescontar(event) {
-    this.descontar = event
-  }
+ 
 
   irAtipos() {
     this.showModal = true;
@@ -176,5 +177,11 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   clear() {
     this.msgs = [];
   }
+
+  onChangemaxIrTiposFG(event) {
+    // Funcionalidad activar o desactivar.
+    this.maxIrTiposFG = event;
+  }
+
 
 }
