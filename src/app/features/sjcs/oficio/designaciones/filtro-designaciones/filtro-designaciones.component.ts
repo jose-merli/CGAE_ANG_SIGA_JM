@@ -1084,8 +1084,10 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   limpiar() {
     this.filtroJustificacion = new JustificacionExpressItem();
-    this.checkMostrarPendientes = false;
+    this.checkMostrarPendientes = true;
     this.checkRestricciones = false;
+    this.disableRestricciones = false;
+
     if (!this.esColegiado) {
       this.usuarioBusquedaExpress = {
         numColegiado: "",
