@@ -416,7 +416,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             isReturn = rowGroup.rows[0].cells[0].type == 'checkboxPermisos' && Array.isArray(rowGroup.rows[0].cells[0].value) && !rowGroup.rows[0].cells[0].value[0];
           }
   
-          if (this.cabeceras[j].id == "validar" && ["s", "si", "1"].includes(this.searchText[j].toLowerCase().trim())) {
+          if (this.cabeceras[j].id == "validar" && ["s", "si", "sí", "1"].includes(this.searchText[j].toLowerCase().trim())) {
             isReturn = rowGroup.rows.some(row => row.cells[8].type == 'checkbox' && row.cells[8].value);
           } else if (this.cabeceras[j].id == "validar" && ["n", "no", "0"].includes(this.searchText[j].toLowerCase().trim())) {
             isReturn = rowGroup.rows.some(row => row.cells[8].type == 'checkbox' && !row.cells[8].value);
