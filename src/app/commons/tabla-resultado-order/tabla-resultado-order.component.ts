@@ -297,8 +297,8 @@ export class TablaResultadoOrderComponent implements OnInit {
     let errorMismoLetradoEnGrupo = false;
     let errorGrupoNoOrden = false;
     if (this.pantalla == 'colaGuardias') {
-      //errorSecuenciaGrupo = this.checkSequence(0);
-      //errorSecuenciaOrden = this.checkSequence(1);
+      errorSecuenciaGrupo = this.checkSequence(0);
+      errorSecuenciaOrden = this.checkSequence(1);
       errorMismoLetradoEnGrupo = this.checkLetrados();
       errorGrupoNoOrden = this.checkOrdeIfGrupo();
     }else{
@@ -557,6 +557,11 @@ checkLetrados(){
         this.rowGroups[i].cells[j].value = this.rowGroups[i].cells[j].value.substring(1);
       }
       if (i < this.rowGroups.length - 1){
+
+        if (j == 1 && i > 1 && this.rowGroups[i - 1].cells[0].value != this.rowGroups[i].cells[0].value) {
+          arrNumbers = [];
+        }
+
         if (this.rowGroups[i].cells[j].value != null && this.rowGroups[i + 1].cells[j].value != null){
           if (this.rowGroups[i].cells[j].value != this.rowGroups[i + 1].cells[j].value){
             arrNumbers.push(Number(row.cells[j].value));
