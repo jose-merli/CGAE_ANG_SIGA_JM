@@ -103,7 +103,6 @@ export class FiltroDesignacionesComponent implements OnInit {
     private localStorageService: SigaStorageService, private commonsService: CommonsService, private confirmationService: ConfirmationService,) { }
 
   ngOnInit(): void {
-    sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     // let esColegiado = JSON.parse(sessionStorage.getItem("esColegiado"));
