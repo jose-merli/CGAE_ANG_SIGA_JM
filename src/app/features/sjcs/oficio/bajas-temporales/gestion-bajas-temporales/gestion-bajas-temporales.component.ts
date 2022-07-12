@@ -121,6 +121,7 @@ export class GestionBajasTemporalesComponent implements OnInit {
 
     this.numColumnas = this.numCabeceras;
 
+    this.historico = JSON.parse(sessionStorage.getItem("historico"));
     // Si es un colegiado y es un letrado, no podrá guardar/restablecer datos de la inscripcion/personales
     if (sessionStorage.getItem("isLetrado") != null && sessionStorage.getItem("isLetrado") != undefined) {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
@@ -550,7 +551,9 @@ export class GestionBajasTemporalesComponent implements OnInit {
   }
 
   searchHistorical() {
-    this.historico = !this.persistenceService.getHistorico();
+    this.historico = !this.historico;
+    sessionStorage.removeItem("historico");
+    this.persistenceService.setHistorico(this.historico);
     this.searchHistorico.emit(this.historico);
   }
 
