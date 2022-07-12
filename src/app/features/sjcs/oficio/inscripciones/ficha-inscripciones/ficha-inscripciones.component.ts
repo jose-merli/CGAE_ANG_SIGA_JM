@@ -50,11 +50,11 @@ export class FichaInscripcionesComponent implements OnInit {
 	permisos: boolean = false;
 	isLetrado: boolean = false;
 	messageShow: string;
-	permisosTarjetaResumen: boolean = true;
+	permisosTarjetaResumen: boolean = undefined;
 	iconoTarjetaResumen = "clipboard";
 	enlacesTarjetaResumen: any[] = [];
 	manuallyOpened: Boolean;
-	permisosTarjetaCola: boolean = true;
+	permisosTarjetaCola: boolean = undefined;
 	openLetrado: Boolean = false;
 	turno: any;
 	historico: boolean = false;
@@ -113,21 +113,11 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
 			.then(respuesta => {
 				this.permisosTarjetaResumen = respuesta;
-				if (this.permisosTarjetaResumen != true) {
-					this.permisosTarjetaResumen = false;
-				} else {
-					this.permisosTarjetaResumen = true;
-				}
 			}).catch(error => console.error(error));
 
 		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumenCola)
 			.then(respuesta => {
 				this.permisosTarjetaCola = respuesta;
-				if (this.permisosTarjetaCola != true) {
-					this.permisosTarjetaCola = false;
-				} else {
-					this.permisosTarjetaCola = true;
-				}
 			}).catch(error => console.error(error));
 		//this.turno = JSON.parse(sessionStorage.getItem("turno"));
 		//if (this.persistenceService.getDatos() != undefined) {

@@ -9,7 +9,7 @@
   </div>
   <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
   <div *ngIf="modoEdicion" id="fijoInscripciones">
-    <app-tarjeta-resumen-fija class="pb-50" *ngIf="permisosTarjetaResumen" [chincheta]="true" icono="far fa-file-alt"
+    <app-tarjeta-resumen-fija class="pb-50" *ngIf="permisosTarjetaResumen != undefined" [chincheta]="true" icono="far fa-file-alt"
       [enlaces]="enlacesTarjetaResumen" titulo="justiciaGratuita.oficio.turnos.inforesumen"
       [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" (isOpen)="isOpenReceive($event)"
       [manuallyOpened]="manuallyOpened"></app-tarjeta-resumen-fija>
@@ -22,7 +22,7 @@
       [modoEdicion]="modoEdicion" *ngSwitchCase="'inscripcion' "></app-tarjeta-inscripcion>
     <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
     <div *ngIf="modoEdicion">
-      <app-tarjeta-cola-fija class="pb-50" *ngIf="permisosTarjetaCola && ficha.key == 'cola'" chincheta="true"
+      <app-tarjeta-cola-fija class="pb-50" *ngIf="permisosTarjetaCola != undefined && ficha.key == 'cola'" chincheta="true"
         icono="far fa-file-alt" titulo="justiciaGratuita.oficio.inscripciones.posicionenlacola" [datos]="datos3">
       </app-tarjeta-cola-fija>
       <app-tarjeta-gestion-inscripcion [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion"
