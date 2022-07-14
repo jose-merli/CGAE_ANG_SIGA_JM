@@ -96,30 +96,31 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
       this.showFail("Debe rellenar todos los campos obligatorios");
     }
     else{
+
       this.progressSpinner = true;
 
-      let body: CargaMasivaItem = new CargaMasivaItem();
-      body.tipoCarga = this.tipo;
-      body.fechaCarga = this.datePipe.transform(
-        new Date(),
-        "dd/MM/yyyy"
-      );
-      if (this.fechaSolicitud != undefined && this.fechaSolicitud != null) {
-        /*body.fechaCarga = this.datePipe.transform(
-          this.fechaSolicitud,
+        let body: CargaMasivaItem = new CargaMasivaItem();
+        body.tipoCarga = this.tipo;
+        body.fechaCarga = this.datePipe.transform(
+          new Date(),
           "dd/MM/yyyy"
-        );*/
-
-     
-       /* }else if (this.fechaDesde != undefined && this.fechaDesde != null){
-          body.fechaCarga = this.datePipe.transform(
+        );
+        if(this.tipo == 'C'){
+          body.fechaCargaDesde = this.datePipe.transform(
             this.fechaDesde,
             "dd/MM/yyyy"
-          );*/
-        } else {
-          body.fechaCarga = null;
+          );
+  
+          body.fechaCargaHasta = this.datePipe.transform(
+            this.fechaHasta,
+            "dd/MM/yyyy"
+          );
+        }else if(this.tipo == 'I'){
+          body.fechaSolicitudDesde = this.datePipe.transform(
+            this.fechaSolicitud,
+            "dd/MM/yyyy"
+          );
         }
-
       this.sigaServices
         .postPaginado(
           "cargaMasivaDatosCurriculares_searchCV",
