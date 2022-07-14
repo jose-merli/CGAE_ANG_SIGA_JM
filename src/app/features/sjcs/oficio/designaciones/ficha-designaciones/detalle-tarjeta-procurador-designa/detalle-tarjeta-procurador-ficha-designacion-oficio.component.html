@@ -55,8 +55,9 @@
                             </span>
                             <!-- combo motivo -->
                             <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
-                                <p-dropdown autoWidth="false" class="center" [placeholder]="'Motivos'"
+                                <p-dropdown autoWidth="false" class="center select-form" [placeholder]="'Seleccionar'"
                                     [(ngModel)]="cell.value" [options]="cell.combo" showClear="true"
+                                    [filter]="true"
                                     styleClass="widthAll">
                                 </p-dropdown>
                             </span>
