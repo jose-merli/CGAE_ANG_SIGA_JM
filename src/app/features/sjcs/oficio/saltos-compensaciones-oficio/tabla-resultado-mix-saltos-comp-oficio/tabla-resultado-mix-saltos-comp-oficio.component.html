@@ -19,7 +19,7 @@
         </div>
       </div>
       <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
-        <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
+        <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue" 
           [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo && ((!historico && !isNew(row)) || (historico && isSelectableInHistorical(row)))}"
           #rowSelected>
           <div *ngFor="let cell of row['cells'] | slice:0:7" class="table-cell p-2 selectedRowClass"
@@ -39,7 +39,7 @@
               <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                 <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
                   [options]="cell.combo" showClear="true" styleClass="widthAll" filter="true"
-                  filterBy="label,labelSinTilde" (onChange)="changeSelect(row, cell)" [disabled]="cell.disabled">
+                  filterBy="label,labelSinTilde" (onChange)="changeSelect(row, cell)" [disabled]="(disabledCheck && (disabledRow &lt; i ||  (disabledRow != i && contadorNuevo == 1))) || isDisabled2">
                 </p-dropdown>
               </span>
 

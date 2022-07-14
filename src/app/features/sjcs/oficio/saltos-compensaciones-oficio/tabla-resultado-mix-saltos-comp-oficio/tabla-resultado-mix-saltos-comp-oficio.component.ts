@@ -55,6 +55,10 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   comboColegiados = [];
   progressSpinner: boolean = false;
   isDisabled: boolean = true;
+  isDisabled2: boolean = true;
+  disabledCheck: boolean = false;
+  disabledRow = 0;
+  contadorNuevo = 0;
 
   constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService) {
     this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -232,6 +236,12 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   }
 
   nuevo() {
+    this.disabledCheck = true;
+    this.isDisabled2 = false;
+    this.contadorNuevo = this.contadorNuevo + 1;
+    if ((this.contadorNuevo - 1) != 0) {
+      this.disabledRow = this.disabledRow + 1;
+    }
 
     let row: Row = new Row();
 
@@ -301,11 +311,14 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       this.rowGroups.pop();
       this.emptyResults = false;
     }
-
+    
   }
 
   guardar() {
-
+    this.disabledRow = 0;
+    this.contadorNuevo = 0;
+    this.isDisabled2 = true;
+    this.disabledCheck = false;
     let error = false;
 
     this.rowGroups.forEach(row => {
@@ -368,6 +381,10 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   }
 
   restablecer() {
+    this.disabledRow = 0;
+    this.contadorNuevo = 0;
+    this.isDisabled2 = true;
+    this.disabledCheck = false;
     this.selectedArray = [];
     this.progressSpinner = true;
     this.rowGroups = [];
@@ -402,6 +419,10 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   }
 
   anular() {
+    this.disabledRow = 0;
+    this.contadorNuevo = 0;
+    this.isDisabled2 = true;
+    this.disabledCheck = false;
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.anularEvent.emit(this.selectedArray);
       this.selectedArray = [];
@@ -514,3 +535,4 @@ function compare(a: number | string | Date, b: number | string | Date, isAsc: bo
 
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
+
