@@ -301,9 +301,8 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
   descargarLog(){
     let resHead ={ 'response' : null, 'header': null };
 
-    if (this.bodyInicial.logError) {
       this.progressSpinner = true;
-      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargarFichaFacturacion", [{ idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idProgramacion }]);
+      let descarga =  this.sigaServices.getDownloadFiles("facturacionPyS_descargaLogFacturacion", [{ idSerieFacturacion: this.bodyInicial.idSerieFacturacion, idProgramacion: this.bodyInicial.idProgramacion }]);
       descarga.subscribe(response => {
         this.progressSpinner = false;
 
@@ -318,9 +317,7 @@ export class DatosGeneralesFactProgramadasComponent implements OnInit, OnChanges
         this.progressSpinner = false;
         this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
       });
-    } else {
-      this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
-    }
+    
   }
 
   // Cambios en fechas

@@ -65,6 +65,7 @@ export let endpoints_facturacionPyS: any = {
     facturacionPyS_validarIBANCuentaBancaria: "facturacionPyS/validarIBANCuentaBancaria",
     facturacionPyS_actualizarProgramacionFactura: "facturacionPyS/actualizarProgramacionFactura",
     facturacionPyS_descargarFichaFacturacion: "facturacionPyS/descargarFichaFacturacion",
+    facturacionPyS_descargaLogFacturacion: "facturacionPyS/descargarLogFacturacion",
     facturacionPyS_getInformeFacturacion: "facturacionPyS/getInformeFacturacion",
     facturacionPyS_getFicherosDevoluciones: "facturacionPyS/getFicherosDevoluciones",
     facturacionPyS_descargarFicheroDevoluciones: "facturacionPyS/descargarFicheroDevoluciones",

@@ -407,7 +407,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
       return { idSerieFacturacion: d.idSerieFacturacion, idProgramacion: d.idProgramacion };
     });
 
-    let descarga = this.sigaServices.getDownloadFiles("facturacionPyS_descargarFichaFacturacion", downloadBody);
+    let descarga = this.sigaServices.getDownloadFiles("facturacionPyS_descargaLogFacturacion", downloadBody);
     descarga.subscribe(response => {
       this.progressSpinner = false;
 
