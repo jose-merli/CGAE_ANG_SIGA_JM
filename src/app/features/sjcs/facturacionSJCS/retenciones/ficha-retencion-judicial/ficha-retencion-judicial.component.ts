@@ -47,6 +47,11 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
         "value": ""
       },
       {
+        //"key": this.translateService.instant('facturacionSJCS.retenciones.importe'),
+        "key": 'estado',
+        "value": ""
+      },
+      {
         "key": this.translateService.instant('facturacionSJCS.retenciones.fechaNoti'),
         "value": ""
       },
@@ -65,6 +70,7 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
   msgs;
   colegiado: Colegiado;
   permisoEscrituraDatosRetencion: boolean;
+  desactivarBotonesColegiado: boolean = false;
   @ViewChild(TarjetaColegiadoComponent) tarjetaColegiado: TarjetaColegiadoComponent;
   @ViewChild(TarjetaDatosRetencionComponent) tarjetaDatosRetJud: TarjetaDatosRetencionComponent;
   @ViewChild(TarjetaAplicacionEnPagosComponent) tarjetaAplEnPag: TarjetaAplicacionEnPagosComponent;
@@ -162,10 +168,22 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
   }
 
   setRetencion(event: RetencionItem) {
-    this.tarjetaFija.campos[2].value = event.tiporetencion;
+    this.tarjetaFija.campos[2].value = event.tipoRetencion;
     this.tarjetaFija.campos[3].value = event.importe;
-    this.tarjetaFija.campos[4].value = this.datePipe.transform(event.fechainicio, 'dd/mm/yyyy');
-    this.tarjetaFija.campos[5].value = event.iddestinatario;
+    this.tarjetaFija.campos[4].value = event.estado;
+    this.tarjetaFija.campos[5].value = this.datePipe.transform(event.fechaInicio, 'dd/mm/yyyy');
+    this.tarjetaFija.campos[6].value = event.idDestinatario;
+    this.activarDesactivarBtn(event.estado);
+  }
+
+  activarDesactivarBtn(estado: string) {
+    if (estado == "Aplicado parcialmente") {
+      this.desactivarBotonesColegiado = true;
+    } else if (estado == "Aplicado totalmente") {
+      this.desactivarBotonesColegiado = true;
+    } else if (estado == "Sin aplicar") {
+      this.desactivarBotonesColegiado = false;
+    }
   }
 
 }

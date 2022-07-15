@@ -36,6 +36,8 @@ export class TarjetaColegiadoComponent implements OnInit, AfterViewInit {
   @Output() addEnlace = new EventEmitter<Enlace>();
   @Output() colegiadoEvent = new EventEmitter<Colegiado>();
 
+  @Input() desactivarBotones: boolean = false;
+
   @ViewChild('nombre') nombre: ElementRef;
   @ViewChild('apellidos1') apellidos1: ElementRef;
   @ViewChild('apellidos2') apellidos2: ElementRef;

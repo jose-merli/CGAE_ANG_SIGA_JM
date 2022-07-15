@@ -1,13 +1,15 @@
 export class RetencionItem {
-    idinstitucion: string;
-    idretencion: string;
-    idpersona: string;
-    iddestinatario: string;
-    fechaalta: Date;
-    fechainicio: Date;
-    fechafin: Date;
-    tiporetencion: string;
+    idInstitucion: string;
+    idRetencion: string;
+    idPersona: string;
+    idDestinatario: string;
+    fechaAlta: Date;
+    fechaInicio: Date;
+    fechaFin: Date;
     importe: string;
     observaciones: string;
-    descdestinatario: string;
+    tipoRetencion: string;
+    restante: string;
+    descDestinatario: string;
+    estado: string;
 }

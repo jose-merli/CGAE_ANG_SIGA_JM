@@ -35,7 +35,7 @@
 
       </div>
 
-      <app-tarjeta-colegiado (addEnlace)="addEnlace($event)" (colegiadoEvent)="setColegiado($event)">
+      <app-tarjeta-colegiado (addEnlace)="addEnlace($event)" (colegiadoEvent)="setColegiado($event)" [desactivarBotones]="desactivarBotonesColegiado">
       </app-tarjeta-colegiado>
 
       <app-tarjeta-datos-retencion (addEnlace)="addEnlace($event)" (showMessage)="showMessage($event)"

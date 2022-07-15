@@ -30,6 +30,8 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   expRegImporte: RegExp = /^\d{1,10}(\.\d{1,2})?$/;
   expRegPorcentaje: RegExp = /^\d{1,2}(\.\d{1,2})?$/;
   disabledImporte: boolean = true;
+  disableEliminar:boolean = false;
+  disablePorEstado: boolean = false;
   minDate: Date;
   permisoEscritura: boolean;
 
@@ -41,7 +43,6 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   @Output() showMessage = new EventEmitter<any>();
   @Output() retencionEvent = new EventEmitter<RetencionItem>();
 
-  disableEliminar:boolean = false;
   isLetrado: boolean = false;
   constructor(private sigaServices: SigaServices,
     private retencionesService: RetencionesService,
@@ -120,34 +121,43 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
         } else {
           Object.assign(this.body, res.retencion);
           Object.assign(this.bodyAux, res.retencion);
+          let estadoRetencion = this.getEstadoTexto(this.body.importe, this.body.restante);
 
           const datosRetencionTarjetaFija = new RetencionItem();
-          datosRetencionTarjetaFija.tiporetencion = this.getTextoTipoRetencion();
+          datosRetencionTarjetaFija.tipoRetencion = this.getTextoTipoRetencion();
           datosRetencionTarjetaFija.importe = this.getTextoImporte();
-          datosRetencionTarjetaFija.fechainicio = res.retencion.fechainicio;
-          datosRetencionTarjetaFija.iddestinatario = this.getTextoDestinatario();
+          datosRetencionTarjetaFija.fechaInicio = res.retencion.fechaInicio;
+          datosRetencionTarjetaFija.estado = this.getEstadoTexto(res.retencion.importe, res.retencion.restante);
+          datosRetencionTarjetaFija.idDestinatario = this.getTextoDestinatario();
 
           this.retencionEvent.emit(datosRetencionTarjetaFija);
 
-          if (undefined != res.retencion.fechainicio && null != res.retencion.fechainicio) {
-            this.body.fechainicio = new Date(res.retencion.fechainicio);
-            this.bodyAux.fechainicio = new Date(res.retencion.fechainicio);
+          if (undefined != res.retencion.fechaInicio && null != res.retencion.fechaInicio) {
+            this.body.fechaInicio = new Date(res.retencion.fechaInicio);
+            this.bodyAux.fechaInicio = new Date(res.retencion.fechaInicio);
           }
 
-          if (undefined != res.retencion.fechafin && null != res.retencion.fechafin) {
-            this.body.fechafin = new Date(res.retencion.fechafin);
-            this.bodyAux.fechafin = new Date(res.retencion.fechafin);
+          if (undefined != res.retencion.fechaFin && null != res.retencion.fechaFin) {
+            this.body.fechaFin = new Date(res.retencion.fechaFin);
+            this.bodyAux.fechaFin = new Date(res.retencion.fechaFin);
           }
 
-          if (this.body.tiporetencion && this.body.tiporetencion.length == 1) {
+          if (this.body.tipoRetencion && this.body.tipoRetencion.length == 1) {
             this.disabledImporte = false;
           } else {
             this.disabledImporte = true;
           }
 
-          if(this.body.fechafin && (Date.now() >= Number(this.body.fechafin))) {
+          if(this.body.fechaFin && (Date.now() >= Number(this.body.fechaFin))) {
             this.disableEliminar = true;
           }
+
+          if (estadoRetencion == "Aplicado parcialmente" || estadoRetencion == "Aplicado totalmente") {
+            this.disablePorEstado = true;
+          } else {
+            this.disablePorEstado = false
+          }
+
         }
       },
       err => {
@@ -202,16 +212,16 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   fillFechaNoti(event) {
-    this.body.fechainicio = event;
+    this.body.fechaInicio = event;
 
-    if (this.body.fechafin < this.body.fechainicio) {
-      this.body.fechafin = undefined;
+    if (this.body.fechaFin < this.body.fechaInicio) {
+      this.body.fechaFin = undefined;
     }
-    this.minDate = this.body.fechainicio;
+    this.minDate = this.body.fechaInicio;
   }
 
   fillFechaFin(event) {
-    this.body.fechafin = event;
+    this.body.fechaFin = event;
   }
 
   isDisabledRestablecer() {
@@ -233,10 +243,10 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   compruebaCamposObligatorios() {
-    if ((this.body.tiporetencion && this.body.tiporetencion.trim().length == 1) &&
+    if ((this.body.tipoRetencion && this.body.tipoRetencion.trim().length == 1) &&
       (this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0) &&
-      (this.body.fechainicio && this.body.fechainicio != null) &&
-      (this.body.iddestinatario && this.body.iddestinatario.toString().trim().length > 0) &&
+      (this.body.fechaInicio && this.body.fechaInicio != null) &&
+      (this.body.idDestinatario && this.body.idDestinatario.toString().trim().length > 0) &&
       (this.colegiado && this.colegiado != null)) {
       return true;
     }
@@ -252,7 +262,7 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
 
     if (this.permisoEscritura && this.compruebaCamposObligatorios()) {
 
-      this.body.idpersona = this.colegiado.idPersona;
+      this.body.idPersona = this.colegiado.idPersona;
 
       this.progressSpinner = true;
 
@@ -268,7 +278,7 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
             });
           } else {
             if (this.retencionesService.modoEdicion) {
-              this.getRetencion(this.body.idretencion);
+              this.getRetencion(this.body.idRetencion);
             } else {
               this.getRetencion(res.id);
               this.retencionesService.modoEdicion = true;
@@ -311,7 +321,7 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
 
   onChangeTipoDeReten() {
     this.body.importe = '';
-    if (this.body.tiporetencion && this.body.tiporetencion.length == 1) {
+    if (this.body.tipoRetencion && this.body.tipoRetencion.length == 1) {
       this.disabledImporte = false;
     } else {
       this.disabledImporte = true;
@@ -327,8 +337,8 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   getTextoTipoRetencion() {
     let cadena = '';
 
-    if (this.body.tiporetencion && this.body.tiporetencion.toString().length == 1) {
-      cadena = this.comboTiposRetencion.find(el => el.value == this.body.tiporetencion).label;
+    if (this.body.tipoRetencion && this.body.tipoRetencion.toString().length == 1) {
+      cadena = this.comboTiposRetencion.find(el => el.value == this.body.tipoRetencion).label;
     }
 
     return cadena;
@@ -338,21 +348,20 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
     let cadena = '';
 
     if (this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0) {
-      if (this.body.tiporetencion == 'F' || this.body.tiporetencion == 'L') {
+      if (this.body.tipoRetencion == 'F' || this.body.tipoRetencion == 'L') {
         cadena = `${this.body.importe.toString()} €`;
-      } else if (this.body.tiporetencion == 'P') {
+      } else if (this.body.tipoRetencion == 'P') {
         cadena = `${this.body.importe.toString()} %`;
       }
     }
-
     return cadena;
   }
 
   getTextoFechaDeNoti() {
     let cadena = '';
 
-    if (this.body.fechainicio && this.body.fechainicio != null) {
-      cadena = this.datePipe.transform(this.body.fechainicio, 'dd/MM/yyyy');
+    if (this.body.fechaInicio && this.body.fechaInicio != null) {
+      cadena = this.datePipe.transform(this.body.fechaInicio, 'dd/MM/yyyy');
     }
 
     return cadena;
@@ -361,8 +370,8 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   getTextoFechaFin() {
     let cadena = '';
 
-    if (this.body.fechafin && this.body.fechafin != null) {
-      cadena = this.datePipe.transform(this.body.fechafin, 'dd/MM/yyyy');
+    if (this.body.fechaFin && this.body.fechaFin != null) {
+      cadena = this.datePipe.transform(this.body.fechaFin, 'dd/MM/yyyy');
     }
 
     return cadena;
@@ -370,13 +379,25 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
 
   getTextoDestinatario() {
     let cadena = '';
+    if (this.comboDestinatarios && this.comboDestinatarios.length > 0 && this.body.idDestinatario && this.body.idDestinatario != null
+      && this.body.idDestinatario.toString().length > 0) {
+      cadena = this.comboDestinatarios.find(el => el.value == this.body.idDestinatario).label;
+    }
+    return cadena;
+  }
 
-    if (this.comboDestinatarios && this.comboDestinatarios.length > 0 && this.body.iddestinatario && this.body.iddestinatario != null
-      && this.body.iddestinatario.toString().length > 0) {
-      cadena = this.comboDestinatarios.find(el => el.value == this.body.iddestinatario).label;
+  getEstadoTexto(importe, restante) {
+    let estado = "";
+
+    if (restante == importe) {
+      estado = "Sin aplicar";
+    } else if (restante > importe) {
+      estado = "Aplicado parcialmente";
+    } else if (restante == '0'){
+      estado = "Aplicado totalmente";
     }
 
-    return cadena;
+    return estado;
   }
 
 }
