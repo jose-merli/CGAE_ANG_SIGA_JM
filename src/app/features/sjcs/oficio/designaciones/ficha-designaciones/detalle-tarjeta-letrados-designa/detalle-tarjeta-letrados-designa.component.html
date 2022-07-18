@@ -24,12 +24,11 @@
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
           <div>
+            <div class="ayuda-btn" *ngIf="col.field == 'motivoRenuncia'" [pTooltip]="dato.observaciones" tooltipPosition="top" style="position: relative;">
+              <i class="fa fa-question" style="position: absolute; top: 1px; right: 0;"></i>
+            </div>
             <span>{{dato[col.field]}}   </span>
-            <div class="ayuda-btn" *ngIf="col.field == 'motivoRenuncia'" [pTooltip]="dato.observaciones" 
-            tooltipPosition="top">
-              <i class="fa fa-question"></i>
-          </div>
-            <i ></i>
+            
           </div>
           <!-- <div *ngIf="isEliminado(dato)">
             <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
