@@ -48,13 +48,10 @@
                       binary="true"></p-checkbox>
                   </div>
                   <a [pRowToggler]="rowData">
-
                     <div class="text-center" *ngIf="col.field =='nombre_turno'">
-                      <i
-                        [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                      <a (click)="openTab(rowData, 'Turno')"><span>{{rowData[col.field]}}</span></a>
+                      <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                      <a style="color: blue;text-decoration: underline;" (click)="openTab(rowData, 'Turno')"><span >{{rowData[col.field]}}</span></a>
                     </div>
-
                   </a>
                 </div>
                 <div class="text-center" *ngIf="col.field !='nombre_turno' ">
