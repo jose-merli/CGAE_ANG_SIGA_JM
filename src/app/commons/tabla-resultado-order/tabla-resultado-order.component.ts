@@ -297,8 +297,10 @@ export class TablaResultadoOrderComponent implements OnInit {
     let errorMismoLetradoEnGrupo = false;
     let errorGrupoNoOrden = false;
     if (this.pantalla == 'colaGuardias') {
-      errorSecuenciaGrupo = this.checkSequence(0);
-      errorSecuenciaOrden = this.checkSequence(1);
+      if (!ultimo){
+        errorSecuenciaGrupo = this.checkSequence(0);
+        errorSecuenciaOrden = this.checkSequence(1);
+      }
       errorMismoLetradoEnGrupo = this.checkLetrados();
       errorGrupoNoOrden = this.checkOrdeIfGrupo();
     }else{
@@ -575,7 +577,7 @@ checkLetrados(){
             arrNumbers.push(Number(row.cells[j].value));
             if (j == 0){
               //Si estamos revisando el orden de grupos j == 0 y dos grupos consecutivos son iguales, revisamos si sus ordenes tambien lo son. En ese caso, error.
-              if (this.rowGroups[i].cells[1].value == this.rowGroups[i + 1].cells[1].value){
+              if (this.rowGroups[i].cells[0].value == this.rowGroups[i + 1].cells[0].value && this.rowGroups[i].cells[1].value == this.rowGroups[i + 1].cells[1].value){
                 errorSecuencia = true;
                 errSeqArr.push(errorSecuencia);
               }
@@ -861,6 +863,7 @@ this.totalRegistros = this.rowGroups.length;
             //this.rowGroups[index].cells[0].value = Number(row.cells[0].value);
           }
       });
+      
   if (groupSelected == null){
       let selected = this.rowGroups[posicionEntabla];
           let ordenColaSeleccionado = Object.assign({},selected.cells[12]);
@@ -977,18 +980,36 @@ this.totalRegistros = this.rowGroups.length;
           this.rowGroupsAux = this.rowGroups;
           this.guardar(true);
         }else{
+          
+
           if (movement == 'up'){
-            let actual = this.rowGroups[posicionEntabla].cells[y].value;
-            //actual = anterior
-            this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla - 1].cells[y].value;
-            //anterior = actual
-            this.rowGroups[posicionEntabla - 1].cells[y].value = actual;
+            let newGroup = parseInt(groupSelected) - 1;
+
+            let actual = this.rowGroups.filter(row => row.cells[y].value == groupSelected);
+            let aDesplazar = this.rowGroups.filter(row => row.cells[y].value == newGroup);
+            
+            this.rowGroups = this.swapElements(this.rowGroups,
+              this.rowGroups.indexOf(actual[0]), this.rowGroups.indexOf(actual[actual.length - 1]) + 1,
+              this.rowGroups.indexOf(aDesplazar[0]), this.rowGroups.indexOf(aDesplazar[aDesplazar.length - 1]) + 1);
+
+            actual.forEach(row => row.cells[y].value = newGroup);
+            aDesplazar.forEach(row => row.cells[y].value = groupSelected);
+
+            this.rowGroupsAux = this.rowGroups;
           } else if (movement == 'down'){
-            let actual = this.rowGroups[posicionEntabla].cells[y].value;
-            //actual = siguiente
-            this.rowGroups[posicionEntabla].cells[y].value = this.rowGroups[posicionEntabla + 1].cells[y].value;
-            //siguiente = actual
-            this.rowGroups[posicionEntabla + 1].cells[y].value = actual;
+            let newGroup = parseInt(groupSelected) + 1;
+
+            let actual = this.rowGroups.filter(row => row.cells[y].value == groupSelected);
+            let aDesplazar = this.rowGroups.filter(row => row.cells[y].value == newGroup);
+
+            this.rowGroups = this.swapElements(this.rowGroups,
+              this.rowGroups.indexOf(actual[0]), this.rowGroups.indexOf(actual[actual.length - 1]) + 1,
+              this.rowGroups.indexOf(aDesplazar[0]), this.rowGroups.indexOf(aDesplazar[aDesplazar.length - 1]) + 1);
+
+            actual.forEach(row => row.cells[y].value = newGroup);
+            aDesplazar.forEach(row => row.cells[y].value = groupSelected);
+
+            this.rowGroupsAux = this.rowGroups;
           }
         }
     }else{
@@ -1018,6 +1039,34 @@ this.totalRegistros = this.rowGroups.length;
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
   }
+
+  swapElements<T>(array: T[], startFirst: number, endFirst: number, startSecond: number, endSecond: number): T[] {
+    const finalArray: T[] = [];
+    let firstIntervalFinished = false;
+    let secondIntervalFinished = false;
+
+    array.forEach((element, index) => {
+      const firstInterval = index >= startFirst && index < endFirst;
+      const secondInterval = index >= startSecond && index < endSecond;
+
+      if (!firstInterval && !secondInterval) {
+        finalArray.push(element);
+      } else if (firstInterval && !secondIntervalFinished) {
+        for (let i = startSecond; i < endSecond; i++) {
+          finalArray.push(array[i]);      
+        }
+        secondIntervalFinished = true;
+      } else if (secondInterval && !firstIntervalFinished) {
+        for (let i = startFirst; i < endFirst; i++) {
+          finalArray.push(array[i]);      
+        }
+        firstIntervalFinished = true;
+      }
+    })
+
+    return finalArray;
+  }
+
 
   isSelected(id){
     if(this.selectedArray.includes(id)){
@@ -1063,10 +1112,23 @@ this.totalRegistros = this.rowGroups.length;
         this.unavailableDown = false;
       }
     }else{*/
+    
       if (posicion == this.grupos.length - 1 || this.grupos[posicion]  >= this.maxGroup && this.grupos[posicion] != null){
         this.unavailableDown = true;
       } else {
         this.unavailableDown = false;
+      }
+
+      //this.grupos = this.grupos.map(g => g.startsWith("U") ? g.substring(1) : g);
+
+      this.unavailableUp = true;
+      for (let i = posicion; i >= 0 && this.unavailableUp; i--) {
+          if (this.grupos[i] < this.grupos[posicion]) this.unavailableUp = false;
+      }
+
+      this.unavailableDown = true;
+      for (let i = posicion; i < this.grupos.length && this.unavailableDown; i++) {
+          if (this.grupos[i] > this.grupos[posicion]) this.unavailableDown = false;
       }
     //}
 
