@@ -12,6 +12,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { Router } from '@angular/router';
 import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
+import { truncate } from 'fs';
 
 export interface Enlace {
   id: string;
@@ -464,7 +465,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
       } else if (ficha.agruparDis == true) {
         obj.agrupar = 0
       } else if (ficha.agruparDis == undefined) {
-        obj.agrupar = 0
+        obj.agrupar = null
       }
 
       if (ficha.checkDisL == true) {
@@ -489,14 +490,14 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
         diasDis += 'D'
       }
       obj.dias = diasDis.toString().trim();
-    } else  if(panel == 'panelAsAc'){
+    } else if (panel == 'panelAsAc') {
       // Agrupar y Dias de Asistencia/ Actuaciones.
-      if (ficha.agruparAsAc == false) {
+      if (ficha.asiac == false) {
         obj.agrupar = 1
-      } else if (ficha.agruparAsAc == true) {
+      } else if (ficha.asiac == true) {
         obj.agrupar = 0
-      } else if (ficha.agruparAsAc == undefined) {
-        obj.agrupar = 0
+      } else if (ficha.asiac == undefined) {
+        obj.agrupar = null
       }
 
       if (ficha.checkAsAcL == true) {
@@ -565,12 +566,9 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
   rellenaConfiguracionBaremo(data: BaremosGuardiaItem[]) {
     let hitosDisponibilidad = [1, 2, 55, 53, 45, 44, 4, 56, 54, 46];
-    let hitosAsAc = [20, 5, 3, 10, 22, 8, 19];
-    let agrupaDis;
+    let hitosAsAc = [20, 5, 3, 10, 22, 8, 19,23];
     let diasDis;
-    let agrupaAsAc;
     let diasAsAc;
-    let descontarGuardAsis;
     let event: boolean = false;
 
     data.forEach(e => {
@@ -582,25 +580,16 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
       // Agrupar De las Tarjetas Disponinibilidad y Asistencia Actuaciones.
       if (e.agrupar == 1 && hitosDisponibilidad.includes(parseInt(e.idHito))) {
-        this.tarjetaConfigFac.onChangeAgruparAsAc(true)
-      }else if(e.agrupar == 0 && hitosDisponibilidad.includes(parseInt(e.idHito))){
-        this.tarjetaConfigFac.onChangeAgruparAsAc(false)
+        this.tarjetaConfigFac.agruparDis = false;
+      } else if (e.agrupar == 0 && hitosDisponibilidad.includes(parseInt(e.idHito))) {
+        this.tarjetaConfigFac.agruparDis = true;
       }
       if (e.agrupar == 1 && hitosAsAc.includes(parseInt(e.idHito))) {
-        this.tarjetaConfigFac.onChangeAgruparAsAc(true)
-      }else if(e.agrupar == 0 && hitosAsAc.includes(parseInt(e.idHito))){
-        this.tarjetaConfigFac.onChangeAgruparAsAc(false)
+        this.tarjetaConfigFac.agruparAsAc = false;
+      } else if (e.agrupar == 0 && hitosAsAc.includes(parseInt(e.idHito))) {
+        this.tarjetaConfigFac.agruparAsAc = true;
       }
     })
-
-    // Check de Tarjeta Configuracion adicional Descontar.
-    if (descontarGuardAsis == 'descontarGuardAsis') {
-      this.tarjetaConfigAdi.descontarGuardAsis = 'descontarGuardAsis';
-    }else {
-      this.tarjetaConfigAdi.descontarGuardAsis = 'descontarGuardAct';
-    }
-
-    this.rellenarDias(diasDis, diasAsAc)
 
     for (let h of data) {
       let hito = parseInt(h.idHito);
@@ -771,14 +760,21 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           this.hitos.push(hito.toString())
           break;
 
-        //para hito principal 25
+        // Hito 25
         case 25:
-          event = true
-          this.tarjetaConfigAdi.facActuaciones = true
-          this.tarjetaConfigAdi.onChangeFacActuaciones(event)
-          this.tarjetaConfigAdi.precio = 'porTipos'
-          this.tarjetaConfigAdi.changePrecio()
-          this.tarjetaConfigAdi.filtrosAdi.importe = 0
+          // Check de Fuera de guardia Por Tipos
+          this.tarjetaConfigAdi.onChangeFacActuaciones(true);
+          this.tarjetaConfigAdi.precio = 'porTipos';
+          this.tarjetaConfigAdi.changePrecio();
+          this.hitos.push(hito.toString())
+          break;
+
+        // Hito 31
+        case 31:
+          // Check de Fuera de guardia Unico
+          this.tarjetaConfigAdi.onChangeFacActuaciones(true);
+          this.tarjetaConfigAdi.precio = 'unico';
+          this.tarjetaConfigAdi.changePrecio();
           this.hitos.push(hito.toString())
           break;
 
@@ -842,11 +838,16 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
           break;
         //para hito 62
         case 62:
-          this.tarjetaConfigAdi.descontarGuardAsis = 'descontarGuardAsis'
+          // Check de Tarjeta Configuracion adicional Descontar.Asis
+          this.tarjetaConfigAdi.descontarCheck = 'descontarGuardAsis'
           this.hitos.push(hito.toString())
           break;
-
-
+        //para hito 64
+        case 64:
+          // Check de Tarjeta Configuracion adicional Descontar.Act
+          this.tarjetaConfigAdi.descontarCheck = 'descontarGuardAct'
+          this.hitos.push(hito.toString())
+          break;
         //para hito 63
         case 63:
           this.tarjetaConfigAdi.facAsuntosAntiguos = true
@@ -877,9 +878,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
       }
     }
     this.getTurnoGuarConf(this.hitos);
-
-
-
+    this.rellenarDias(diasDis, diasAsAc);
   }
 
   configuracionHito(confBaremo, turno, guardia) {
@@ -1031,6 +1030,8 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
     }
 
     if (this.tarjetaConfigAdi.facActuaciones == true) {
+      // Hito 31 Controlar el CheckBok.
+      this.hito(confBaremo, '31', turno, guardia, 0, 'panelAdi')
       //hitos de la tarjeta de configuracion adicional
       if (this.tarjetaConfigAdi.precio == 'unico') {
         if (this.tarjetaConfigAdi.filtrosAdi.importe != null || this.tarjetaConfigAdi.filtrosAdi.importe != undefined) {
@@ -1045,7 +1046,7 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
       if (this.tarjetaConfigAdi.precio == 'porTipos') {
         // Hito 25 Controlar el CheckBok.
-        this.hito(confBaremo, '25', turno, guardia, 0, 'panelAsAc')
+        this.hito(confBaremo, '25', turno, guardia, 0, 'panelAdi')
         if (this.tarjetaConfigAdi.filtrosAdi.importe != null || this.tarjetaConfigAdi.filtrosAdi.importe != undefined) {
           //hito 9
           this.hito(confBaremo, '9', turno, guardia, this.tarjetaConfigAdi.filtrosAdi.importe, 'panelAdi')
@@ -1069,12 +1070,17 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
 
     //hito 61
     if (this.tarjetaConfigFac.filtrosAsAc.importeMinAsAc && this.tarjetaConfigAdi.procesoFac2014 == true) {
-      this.hito(confBaremo, '61', turno, guardia, "0", 'panelAdi')
+      this.hito(confBaremo, '61', turno, guardia, 0, 'panelAdi')
     }
 
     // Hito 62
-    if (this.tarjetaConfigAdi.descontarGuardAsis == 'descontarGuardAsis' ) {
-      this.hito(confBaremo, '62', turno, guardia, "0", 'panelAdi')
+    if (this.tarjetaConfigAdi.descontarCheck == 'descontarGuardAsis') {
+      this.hito(confBaremo, '62', turno, guardia, 0, 'panelAdi')
+    }
+
+    // Hito 64
+    if (this.tarjetaConfigAdi.descontarCheck == 'descontarGuardAct') {
+      this.hito(confBaremo, '64', turno, guardia, 0, 'panelAdi')
     }
 
 
@@ -1178,6 +1184,8 @@ export class FichaBaremosDeGuardiaComponent implements OnInit, AfterViewInit {
             break;
         }
       }
+    }else{
+      this.tarjetaConfigFac.disableImputDis = true;
     }
 
 

@@ -77,7 +77,7 @@
                         </div>
                         <div class="form-group col-lg-3 col-md-3 align-self-center mt-3">
                             <!-- Check maximo al lado de ir a tipos -->
-                            <p-checkbox [disabled]="!modalTipos" (onChange)="onChangemaxIrTiposFG($event)"
+                            <p-checkbox [disabled]="!modalTipos ||!disabledFacActuaciones" (onChange)="onChangemaxIrTiposFG($event)"
                                 [(ngModel)]="maxIrTiposFG" binary="true" name="maxIrTiposFG"
                                 label="{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}" class="ml-0">
                             </p-checkbox>
@@ -113,7 +113,7 @@
                         </div>
                         <div class="form-group col-lg-12 col-md-12">
                             <p-radioButton 
-                                [(ngModel)]="descontarGuardAsis" value="descontarGuardAsis" name="descontarGuardAsis"
+                                [(ngModel)]="descontarCheck" value="descontarGuardAsis" name="descontarCheck"
                                 (onChange)="onChangeDescontar($event)" binary="true"
                                 label="{{'facturacionSJCS.baremos.descontarGuardAsis' | translate}}"
                                 class="ml-0 checkboxexRightCard">  <!-- Descontar Guardias que derivan en juicios rápidos contando Asistencias  -->
@@ -124,7 +124,7 @@
                         </div>
                         <div class="form-group col-lg-12 col-md-12">
                             <p-radioButton 
-                                [(ngModel)]="descontarGuardAsis" value="descontarGuardAct" name="descontarGuardAsis"
+                                [(ngModel)]="descontarCheck" value="descontarGuardAct" name="descontarCheck"
                                 (onChange)="onChangeDescontar($event)" binary="true"
                                 label="{{'facturacionSJCS.baremos.descontarGuardAct' | translate}}" 
                                 class="ml-0 checkboxexRightCard"> <!-- Descontar Guardias que derivan en juicios rápidos contando Actuaciones  -->
@@ -177,15 +177,12 @@
     </div>
 
 </div>
+
+
 <p-overlayPanel class="overlayPanelPrueba" (onBeforeHide)="hideOverlay($event)" [dismissable]="true"
     [showCloseIcon]="true" #op>
-    <!-- <p-dialog width="1300" height ="1200" responsive="true" modal="modal" [draggable]="false" resizable="true" [(visible)]="showModal" -->
-    <!-- (onHide)="cerrarDialog()"> -->
-    <!-- <p-scrollPanel width="auto" height="auto"> -->
     <app-gestion-tiposasistencia *ngIf="contAsAc == 'asi' && showModal" [origenBaremos]="origenBaremos">
     </app-gestion-tiposasistencia>
     <app-gestion-tiposactuacion *ngIf="contAsAc == 'act' && showModal" [origenBaremos]="origenBaremos">
     </app-gestion-tiposactuacion>
-    <!-- </p-scrollPanel> -->
 </p-overlayPanel>
-<!-- </p-dialog> -->

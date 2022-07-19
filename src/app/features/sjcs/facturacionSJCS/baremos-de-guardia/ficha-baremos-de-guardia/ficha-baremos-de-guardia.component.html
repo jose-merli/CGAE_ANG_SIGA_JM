@@ -59,3 +59,10 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="irATiposEnlace" icon="icon" width="425"
+  #irATiposEnlace>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="{{ 'general.boton.submit' | translate }}" (click)="irATiposEnlace.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="{{ 'general.boton.cancel' | translate }}" (click)="irATiposEnlace.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

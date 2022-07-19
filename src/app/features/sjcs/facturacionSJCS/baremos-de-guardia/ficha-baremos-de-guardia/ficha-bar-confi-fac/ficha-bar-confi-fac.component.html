@@ -263,14 +263,14 @@
                         </div>
                         <div class="form-group col-lg-3 col-md-3 align-self-center m-md-0 pt-md-2 d-flex">
                             <i _ngcontent-c15="" class="fas fa-external-link-alt mr-2 mt-1"></i>
-                            <a [ngClass]="{ 'enlace': contAsAc== 'asi' || contAsAc== 'act'}" (click)="irAtipos($event)"
+                            <a [ngClass]="{ 'enlace': contAsAc== 'asi' || contAsAc== 'act'}" (click)="irAtipos($event)" label="Confirm"
                                 *ngIf="modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</a>
                             <p *ngIf="!modalTipos">{{ 'facturacionSJCS.baremos.irAtipos' | translate }}</p>
                         </div>
                         <div class="form-group col-lg-3 col-md-3 align-self-center m-md-0 pt-md-2">
                             <!-- Check maximo al lado de ir a tipos -->
                             <p-checkbox [disabled]="!modalTipos"
-                            (onChange)="onChangeMaxIrTiposAsAc($event)" [(ngModel)]="maxIrTiposAsAc" binary="true"
+                            (onChange)="onChangeMaxIrTiposAsAc($event)" [(ngModel)]="maxIrTiposAsAc" binary="true" [disabled]="!disableAsAc || !permisoEscritura || !modalTipos || !disableImputAct"
                             name="maxIrTiposAsAc" label="{{ 'facturacionSJCS.baremosDeGuardia.maximo' | translate }}" class="ml-0"></p-checkbox>
                         </div>
                         <div class="form-group col-lg-6 col-md-6">

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output, AfterViewInit, Input, ViewChild } from '@angular/core';
-import { OverlayPanel } from 'primeng/primeng';
+import { ConfirmationService, OverlayPanel } from 'primeng/primeng';
 import { BaremosGuardiaItem } from '../../../../../../models/sjcs/BaremosGuardiaItem';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { Enlace } from '../ficha-baremos-de-guardia.component';
@@ -25,7 +25,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   facActuaciones: boolean = false;
   facAsuntosAntiguos: boolean = false;
   procesoFac2014: boolean = false;
-  descontarGuardAsis;
+  descontarCheck;
   disablediratipos: boolean = false;
   disableConfAdi: boolean = false;
   disabledFacActuaciones: boolean = false;
@@ -51,9 +51,12 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
 
   constructor(private localStorageService: SigaStorageService,
     private translateService: TranslateService,
-    private router: Router) { }
+    private router: Router,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
+
+
   }
 
   ngAfterViewInit() {
@@ -97,15 +100,6 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
 
   changePrecio() {
 
-    /*if (this.disableConfAdi) {
-      this.precio
-      this.disableImput = true
-      if (this.precio == 'porTipos') {
-        this.modalTipos = true;
-      } else {
-        this.modalTipos = false;
-      }
-    }*/
     if (this.precio == 'unico') {
       this.disabledPrecioUnico = true;
     } else {
@@ -121,12 +115,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   }
   onChangeFacActuaciones(event) {
     this.facActuaciones = event
-
-    if (this.facActuaciones) {
-      this.disabledFacActuaciones = true
-    } else {
-      this.disabledFacActuaciones = false
-    }
+    this.disabledFacActuaciones = event
   }
 
   onChangeFacAsuntosAntiguos(event) {
@@ -137,7 +126,7 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
     this.procesoFac2014 = event
   }
 
- 
+
 
   irAtipos() {
     this.showModal = true;
@@ -156,13 +145,33 @@ export class FichaBarConfiAdiComponent implements OnInit, AfterViewInit {
   }
 
   show(event) {
-    if (!this.permisoActuaciones && this.contAsAc == 'act') {
-      // Acceso Denegado para acceder a Actuación.
-      this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-    } else {
-      // Redirigir a Actuación.
-      this.router.navigate(["/tiposActuacion"]);
-    }
+    let keyConfirmation = "irATiposEnlace";
+    this.confirmationService.confirm({
+      key: keyConfirmation,
+      message: this.translateService.instant("baremos.message.tittle.tipoBaremos"), // Se va a acceder al maestro de tipos, pero ha realizado cambios en el baremo que se perderán. ¿Desea continuar sin guardar?
+      icon: 'fas fa-external-link-alt',
+      accept: () => {
+        // Accedemos a la ruta especifícada en Ir a Tipos.
+        if (!this.permisoActuaciones && this.contAsAc == 'act') {
+          // Acceso Denegado para acceder a Actuación.
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+        } else {
+          // Redirigir a Actuación.
+          this.router.navigate(["/tiposActuacion"]);
+        }
+      },
+      reject: () => {
+        this.msgs = [
+          {
+            severity: 'info',
+            summary: 'info',
+            detail: this.translateService.instant(
+              "general.message.accion.cancelada"
+            )
+          }
+        ];
+      }
+    });
   }
 
   showMessage(severity, summary, msg) {
