@@ -267,7 +267,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[0].value = "";
       this.inputs[1].value = "";
       this.inputs[2].value = "";
-      this.inputs[0].disable = false;
+      this.inputs[0].disable = true;
       // this.inputs[1].disable = false; //SIGARNV-2371
       // this.inputs[2].disable = false; //SIGARNV-2371
     }

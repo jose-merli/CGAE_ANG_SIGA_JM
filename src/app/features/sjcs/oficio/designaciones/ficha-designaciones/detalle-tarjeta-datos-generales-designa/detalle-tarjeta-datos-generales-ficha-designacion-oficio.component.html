@@ -33,9 +33,9 @@
 
       <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let inputTitle of inputs">
         <label>{{ inputTitle.nombre }}</label>
-        <input *ngIf="inputTitle.nombre != 'Número de colegiado'" type="text" [(ngModel)]="inputTitle.value" class="form-control" [disabled]="inputTitle.disable"
+        <input *ngIf="inputTitle.nombre != 'Número de colegiado'" type="text" [(ngModel)]="inputTitle.value" class="form-control" [disabled]="true"
           pInputText>
-        <input *ngIf="inputTitle.nombre == 'Número de colegiado'" type="text" [(ngModel)]="inputTitle.value" class="form-control" [disabled]="inputTitle.disable"
+        <input *ngIf="inputTitle.nombre == 'Número de colegiado'" type="text" [(ngModel)]="inputTitle.value" class="form-control" [disabled]="true"
           (change)="isBuscarColegiado()" pInputText>
       </div>
 
