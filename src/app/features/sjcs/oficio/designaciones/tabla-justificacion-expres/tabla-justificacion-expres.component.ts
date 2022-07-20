@@ -162,6 +162,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     );
 
     this.checkPermisos();
+    this.checkAccesoFichaActuacion();
   }
 
   getParams(param){
@@ -188,6 +189,17 @@ export class TablaJustificacionExpresComponent implements OnInit {
         });
       });
     });
+  }
+
+  checkAccesoFichaActuacion() {
+    this.commonsService.checkAcceso(procesos_oficio.designasActuaciones)
+      .then(respuesta => {
+        if (respuesta != undefined) {
+          this.permisosFichaAct = true;
+        }
+      }
+      ).catch(error => console.error(error));
+
   }
 
   checkPermisos(){
