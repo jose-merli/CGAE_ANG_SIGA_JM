@@ -249,6 +249,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     this.datos.historico = this.historico;
     this.progressSpinner = true;
     let body = new InscripcionesItems();
+    let nombreTurnoAux;
     body = this.datos;
     body.idpersona = this.idPersona;
     // body.fechaActual = this.datos.fechaActual;
@@ -273,6 +274,16 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
               }
             });
           }
+          
+          this.inscripcionesItem.forEach(item => {
+            if (nombreTurnoAux != item.nombreTurno) {
+              item.turnoPrincipal = true;
+            } else {
+              item.turnoPrincipal = false;
+            }
+            nombreTurnoAux = item.nombreTurno;
+          });
+
           this.rowGroupMetadata = {};
           if (this.inscripcionesItem) {
             for (let i = 0; i < this.inscripcionesItem.length; i++) {
@@ -317,26 +328,36 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
               }
             });
           }
+          
+          this.inscripcionesItem.forEach(item => {
+            if (nombreTurnoAux != item.nombreTurno) {
+              item.turnoPrincipal = true;
+            } else {
+              item.turnoPrincipal = false;
+            }
+            nombreTurnoAux = item.nombreTurno;
+          });
 
           this.rowGroupMetadata = {};
           if (this.inscripcionesItem) {
             for (let i = 0; i < this.inscripcionesItem.length; i++) {
-
               let rowData = this.inscripcionesItem[i];
               let inscripcion = rowData.nombreTurno;
               if (i == 0) {
-                this.rowGroupMetadata[inscripcion] = { index: 0, size: 1 };
+                this.rowGroupMetadata[inscripcion] = { index: 0, guardias: [rowData] };
               }
               else {
                 let previousRowData = this.inscripcionesItem[i - 1];
                 let previousRowGroup = previousRowData.nombreTurno;
                 if (inscripcion === previousRowGroup)
-                  this.rowGroupMetadata[inscripcion].size++;
+                  this.rowGroupMetadata[inscripcion].guardias.push(rowData);
                 else
-                  this.rowGroupMetadata[inscripcion] = { index: i, size: 1 };
+                  this.rowGroupMetadata[inscripcion] = { index: i, guardias: [rowData] };
               }
             }
           }
+
+
           this.progressSpinner = false;
         },
         err => {

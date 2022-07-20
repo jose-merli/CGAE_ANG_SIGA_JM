@@ -225,6 +225,7 @@ export class TarjetaInscripcion implements OnInit {
     this.datos.historico = this.historico;
     this.progressSpinner = true;
     let body = new InscripcionesItems();
+    let nombreTurnoAux;
     body = this.datos;
     body.idpersona = this.idPersona;
     body.fechaActual = this.datos.fechaActual;
@@ -243,6 +244,15 @@ export class TarjetaInscripcion implements OnInit {
             element.selectedBooleanPadre = false;
           }
         });
+        this.inscripcionesItem.forEach(item => {
+          if (nombreTurnoAux != item.nombreTurno) {
+            item.turnoPrincipal = true;
+          } else {
+            item.turnoPrincipal = false;
+          }
+          nombreTurnoAux = item.nombreTurno;
+        });
+
         this.rowGroupMetadata = {};
         if (this.inscripcionesItem) {
           for (let i = 0; i < this.inscripcionesItem.length; i++) {

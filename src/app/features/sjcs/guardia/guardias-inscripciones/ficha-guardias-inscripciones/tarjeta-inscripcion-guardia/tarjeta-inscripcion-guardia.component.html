@@ -37,16 +37,16 @@
               </th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded"
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" 
             let-columns="columns">
-            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header">
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header" *ngIf="rowData.turnoPrincipal">
               <td *ngFor="let col of columns">   
                 <div class= "displayFlex">
                   <div *ngIf="col.field =='nombreTurno'">       
                   <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' (onChange)="seleccionarPadre(rowData,$event)" binary="true"></p-checkbox>      
                   </div>                     
                 <a [pRowToggler]="rowData">
-                  <div class="text-center" *ngIf="col.field =='nombreTurno'">                       
+                  <div class="text-center" *ngIf="col.field == 'nombreTurno'">                       
                       <i
                       [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
                       <a (click)="openTab(rowData, 'Turno')"><span >{{rowData[col.field]}}</span></a>
@@ -91,7 +91,7 @@
           <ng-template pTemplate="rowexpansion" let-dato let-columns="columns">
             <tr [pSelectableRow]="dato">        
               <td *ngFor="let col of columns">
-                <div *ngIf="col.field=='nombreTurno'" class="displayMargin">    
+                <div *ngIf="col.field == 'nombreTurno'" class="displayMargin">    
                     <p-checkbox [disabled]="disabledGuardias || disableAll" [(ngModel)]="dato.selectedBoolean" (onChange)="seleccionarFila(dato, $event)" binary="true"></p-checkbox>    
                     <span (click)="openTab(dato, 'Guardia')" class="form-group-label">{{dato.nombreGuardia}}</span>
                 </div>
@@ -99,7 +99,6 @@
                     <span class="form-group-label font-weight-bold">{{dato.colegiadoGrupo}}</span> <!--?????-->
                 </div>
               </td>
-
             </tr>
           </ng-template>
         </p-table>
