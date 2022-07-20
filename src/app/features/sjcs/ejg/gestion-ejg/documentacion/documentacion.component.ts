@@ -681,7 +681,7 @@ export class DocumentacionComponent implements OnInit {
   }
 
   getComboPresentador() {
-    //this.progressSpinner = true;
+    this.progressSpinner = true;
 
     this.sigaServices.get("gestionejg_comboPresentadores").subscribe(
       n => {
@@ -693,7 +693,7 @@ export class DocumentacionComponent implements OnInit {
           n => {
 
             let familiares = JSON.parse(n.body).unidadFamiliarEJGItems;
-            this.progressSpinner = false;
+            // this.progressSpinner = false;
 
             if (familiares != undefined) {
               familiares.forEach(element => {
@@ -748,16 +748,16 @@ export class DocumentacionComponent implements OnInit {
             //Se ubica aqui la llamada al método para obtener la tabla para evitar que
             //no se tenga el comboPresentador definido a la hora de obtener su columna
             if(!this.showModal)this.getDocumentos(this.item);
-            // this.progressSpinner = false;
+            this.progressSpinner = false;
           },
           err => {
-            // this.progressSpinner = false;
+            this.progressSpinner = false;
           }
         );
 
       },
       err => {
-        // this.progressSpinner = false;
+        this.progressSpinner = false;
       }
     );
   }
