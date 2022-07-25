@@ -463,7 +463,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
   }
 
   isPagoCerradoOejecutado() {
-    return (this.idEstadoPago == '50' || this.idEstadoPago == '40' || this.idEstadoPago == '30' || this.idEstadoPago == '20');
+    return (this.idEstadoPago == '60' || this.idEstadoPago == '50' || this.idEstadoPago == '40' || this.idEstadoPago == '30' || this.idEstadoPago == '20');
   }
 
   ngOnChanges(changes: SimpleChanges): void {

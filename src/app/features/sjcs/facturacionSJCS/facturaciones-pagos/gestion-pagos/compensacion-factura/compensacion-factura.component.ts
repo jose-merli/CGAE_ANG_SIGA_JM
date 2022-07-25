@@ -222,7 +222,7 @@ export class CompensacionFacturaComponent implements OnInit, AfterViewInit {
   }
 
   isPagoEjecutando() {
-    return (this.idEstadoPago == '40' || this.idEstadoPago == '50');
+    return (this.idEstadoPago == '40' || this.idEstadoPago == '50' || this.idEstadoPago == '60');
   }
 
   ngAfterViewInit() {

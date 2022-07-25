@@ -307,7 +307,7 @@ export class ConfiguracionFicherosComponent implements OnInit, OnChanges, AfterV
   }
 
   isPagoEjecutando() {
-    return (this.idEstadoPago == '40' || this.idEstadoPago == '50');
+    return (this.idEstadoPago == '40' || this.idEstadoPago == '50' || this.idEstadoPago == '60');
   }
 
   isPagoCerrado() {

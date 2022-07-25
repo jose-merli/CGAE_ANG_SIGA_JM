@@ -264,7 +264,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
 
   disabledRestablecer() {
     if (this.modoEdicion) {
-      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && (this.idEstadoPago == "10" || this.idEstadoPago == "20" || this.idEstadoPago == "40" || this.idEstadoPago == "50")) {
+      if (JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && (this.idEstadoPago == "10" || this.idEstadoPago == "20" || this.idEstadoPago == "40" || this.idEstadoPago == "50" || this.idEstadoPago == "60")) {
         return false;
       } else {
         return true;
@@ -296,7 +296,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
   }
 
   disabledEjecutar() {
-    if ((this.modoEdicion && this.idEstadoPago != "50" && this.idEstadoPago != "40" && this.idEstadoPago != "30" && this.idEstadoPago != "20") && this.disabledRestablecer()) {
+    if ((this.modoEdicion && this.idEstadoPago != "60" && this.idEstadoPago != "50" && this.idEstadoPago != "40" && this.idEstadoPago != "30" && this.idEstadoPago != "20") && this.disabledRestablecer()) {
       return false;
     } else {
       return true;
@@ -387,8 +387,8 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
           if (resp.status == 'KO' && resp.error != null && resp.error.description != null) {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description));
           } else {
-            this.idEstadoPago = '30';
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.idEstadoPago = '40';
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.cerrando"));
             this.changePago.emit(true);
           }
 
@@ -428,7 +428,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
             this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(resp.error.description));
           } else {
             this.idEstadoPago = '30';
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.cerrando"));
             this.changePago.emit(true);
           }
 
@@ -494,7 +494,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
             this.idEstadoPago = '20';
             this.idEstadoPagoChange.emit(this.idEstadoPago);
             this.changePago.emit(true);
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("facturacionSJCS.facturacionesYPagos.deshaciendoCierre"));
           }
 
           this.progressSpinner = false;
@@ -604,7 +604,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
   }
 
   isVisibleDelete(): boolean {
-    return (this.modoEdicion && !["30", "40", "50"].includes(this.idEstadoPago));
+    return (this.modoEdicion && !["30", "40", "50", "60"].includes(this.idEstadoPago));
   }
 
   isPagoCerrado() {
@@ -616,7 +616,7 @@ export class DatosPagosComponent implements OnInit, AfterViewInit {
   }
 
   isPagoEjecutando() {
-    return this.idEstadoPago == '40' || this.idEstadoPago == '50';
+    return this.idEstadoPago == '40' || this.idEstadoPago == '50' || this.idEstadoPago == '60';
   }
 
   getCols() {
