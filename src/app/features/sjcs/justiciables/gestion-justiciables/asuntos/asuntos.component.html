@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-<div  class="ficha-container" id="DivAsuntos">
+<div class="ficha-container" id="DivAsuntos">
   <div class="card">
     <div class="card-header header-ficha" (click)="onHideTarjeta()">
       <div *ngIf="showTarjeta" class="header-ficha-open d-flex justify-content-start align-items-center">
@@ -43,8 +43,8 @@
     </div>
     <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
       <div class="row">
-        <p-table [value]="datos" [rows]="selectedItem" [columns]="cols" selectionMode="single" (onRowSelect)="openTab()" [responsive]="true"
-          #table class="tabla-listado" [paginator]="true" paginatorPosition="both">
+        <p-table [value]="datos" [rows]="selectedItem" [columns]="cols" selectionMode="single" (onRowSelect)="openTab()"
+          [responsive]="true" #table class="tabla-listado" [paginator]="true" paginatorPosition="both">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of cols" [style.width]="col.width">
@@ -55,7 +55,8 @@
               <th *ngFor="let col of columns" [ngSwitch]="col.field" [pSortableColumn]="col.field">
                 {{ col.header | translate }}
                 <p-sortIcon [field]="col.field"></p-sortIcon>
-                <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText type="text" (input)="
+                <input pDroppable="false" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+                  type="text" (input)="
                   table.filter($event.target.value, col.field, 'contains')
                 " />
               </th>
@@ -88,10 +89,13 @@
           </ng-template>
           <ng-template pTemplate="paginatorleft">
             <div class="mostrar d-flex text-right justify-content-end">
-              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
-                + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+              <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros'
+                | translate }}{{table.first + 1}} al {{table.first
+                + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }}
+                {{table.totalRecords}}</label>
               <label>{{"general.message.mostrar" | translate}}</label>
-              <p-dropdown class="dropdownTable" [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+              <p-dropdown class="dropdownTable" [(ngModel)]="selectedItem" [options]="rowsPerPage"
+                (onChange)="onChangeRowsPerPages($event)">
               </p-dropdown>
               <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             </div>
@@ -100,7 +104,41 @@
       </div>
       <br />
     </div>
-    <div [hidden]="!showTarjeta" class="card-footer "></div>
+    <div [hidden]="!showTarjeta" class="card-footer ">
+      <div class="text-right main-button">
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noCreaDes"
+          (click)="checkPermisosCrearEJG()" type="button" iconPos="left"
+          label="{{'general.boton.crearEJG' | translate}}">
+        </button>
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaSOJ"
+          (click)="checkPermisosAsociarEJG()" type="button" iconPos="left"
+          label="{{'general.boton.asociarEJG' | translate}}">
+        </button>
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noCreaDes"
+          (click)="checkPermisosCrearDesignacion()" type="button" iconPos="left"
+          label="{{'general.boton.crearDesignacion' | translate}}">
+        </button>
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaDES"
+          (click)="checkPermisosAsociarDesignacion()" type="button" iconPos="left"
+          label="{{'general.boton.AsociarDesignacion' | translate}}">
+        </button>
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaASI"
+          (click)="checkPermisosCrearAsistencia()" type="button" iconPos="left"
+          label="{{ 'general.boton.crearAsistencia' | translate }}">
+        </button>
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noCreaDes"
+          (click)="checkPermisosAsociarAsistencia()" type="button" iconPos="left"
+          label="{{'general.boton.AsociarAsistencia' | translate}}">
+        </button>
+        
+      </div>
+    </div>
   </div>
 
 </div>

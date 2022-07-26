@@ -23,6 +23,7 @@ import { Dialog } from 'primeng/dialog';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { TurnosItem } from '../../../../../models/sjcs/TurnosItem';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 
 @Component({
   selector: 'app-ficha-designaciones',
@@ -56,6 +57,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
   permisoDeDesignas: boolean = false;
   permisoDeAdicionales: boolean = false;
   permisoProcurador: boolean = false;
+  datosJusticiables: JusticiableItem;
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
   @ViewChild(DetalleTarjetaInteresadosFichaDesignacionOficioComponent) tarjetaInteresados;
@@ -734,6 +736,18 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       }] */
 
       this.progressSpinner = false;
+      // Rellenar Nombre de Justiciable Tarjeta Resumen.
+      if (sessionStorage.getItem("justiciable")) {
+        this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
+        if (this.datosJusticiables) {
+          this.listaTarjetas[3].campos = [{
+            "key": null,
+            "value": this.datosJusticiables.nombre
+          },]
+          this.tarjetaFija.campos[3].value = this.datosJusticiables.nombre;
+          this.nombreInteresado = this.datosJusticiables.nombre;
+        }
+      }
     }
 
 

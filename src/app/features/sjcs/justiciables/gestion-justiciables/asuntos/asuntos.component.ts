@@ -21,6 +21,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
   cols = [];
   msgs;
   progressSpinner: boolean = false;
+  bodyInicial;
 
   selectedItem: number = 10;
   selectAll;
@@ -43,14 +44,112 @@ export class AsuntosComponent implements OnInit, OnChanges {
   @Input() tarjetaDatosAsuntos;
 
   @Output() opened = new EventEmitter<Boolean>();
-  @Output() idOpened = new EventEmitter<String>();
+  @Output() idOpened = new EventEmitter<String>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
-    private commonsService: CommonsService) { }
+    private commonsService: CommonsService,
+    private persistenceService: PersistenceService,
+    private router: Router) { }
 
   ngOnInit() {
     this.getCols();
+  }
+
+  // Comprobar Permisos De Designación
+  checkPermisosCrearDesignacion() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.crearDesignacion();
+    }
+  }
+
+  // Crear una nueva designación.
+  crearDesignacion() {
+    this.progressSpinner = true;
+    //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
+    this.body = this.persistenceService.getDatos();
+    this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
+    sessionStorage.setItem("justiciable", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("nuevaDesigna", "true");
+    this.progressSpinner = false;
+    this.router.navigate(["/fichaDesignaciones"]);
+  }
+
+  // Comprobar Asociar Designación
+  checkPermisosAsociarDesignacion() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociarDesignacion();
+    }
+  }
+
+  // Asociar Designacion
+  asociarDesignacion() {
+    //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
+    sessionStorage.setItem("justiciable", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("radioTajertaValue", 'des');
+    let justiciableDes = JSON.stringify(this.body);
+    sessionStorage.setItem("justiciable", justiciableDes);
+    this.router.navigate(["/busquedaAsuntos"]);
+
+  }
+
+  // Permisos para crear EJG
+  checkPermisosCrearEJG() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.crearEJG();
+    }
+  }
+
+  // Crear EJG
+  crearEJG() {
+    sessionStorage.setItem("justiciableEJG", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("Nuevo", "true");
+    this.router.navigate(["/gestionEjg"]);
+  }
+
+  // Permisos para Asociar EJG
+  checkPermisosAsociarEJG() {
+    this.asociarEJG();
+  }
+
+  // Asociar EJG
+  asociarEJG() {
+    sessionStorage.setItem("justiciableEJG", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("radioTajertaValue", 'ejg');
+    this.router.navigate(["/busquedaAsuntos"]);
+
+  }
+
+  // Permiso para crear Asistencia
+  checkPermisosCrearAsistencia() {
+    this.crearAsistencia();
+  }
+
+  // Crear Asistencia
+  crearAsistencia() {
+
+  }
+
+  // Permiso Asociar Asistencia
+  checkPermisosAsociarAsistencia() {
+    this.asociarAsistencia();
+  }
+
+  // Asociar Asistencia
+  asociarAsistencia() {
+    sessionStorage.setItem("radioTajertaValue", 'asi');
+    sessionStorage.setItem("justiciableEJG", JSON.stringify(this.bodyInicial));
+    this.router.navigate(["/busquedaAsuntos"]);
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -86,7 +185,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
       }
     }
     this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Asuntos.
-    this.idOpened.emit('Asuntos'); // Constante para abrir la Tarjeta de Asuntos.
+    this.idOpened.emit('Asuntos'); // Constante para abrir la Tarjeta de Asuntos.
   }
 
   getCols() {
