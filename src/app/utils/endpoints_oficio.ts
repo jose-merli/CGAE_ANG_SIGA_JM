@@ -150,6 +150,7 @@ export let endpoints_oficio: any = {
     designacion_asociarEjgDesigna: "oficio/designas/asociarEjgDesigna",
     designacion_asociarAsistenciaDesigna: "oficio/designas/asociarAsistenciaDesigna",
     designacion_getPreDesignaEJG: "oficio/designas/getPreDesignaEJG",
+  
 
     //SALTOS Y COMPENSACIONES
     saltosCompensacionesOficio_buscar: "oficio/saltosCompensaciones/buscarSaltosOCompensaciones",

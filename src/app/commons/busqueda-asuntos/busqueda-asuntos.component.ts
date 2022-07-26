@@ -25,6 +25,7 @@ import { TarjetaAsistenciaItem } from "../../models/guardia/TarjetaAsistenciaIte
 import { DesignaItem } from "../../models/sjcs/DesignaItem";
 import { AsuntosJusticiableItem } from "../../models/sjcs/AsuntosJusticiableItem";
 import { EJGItem } from "../../models/sjcs/EJGItem";
+import { ScsDefendidosDesignasItem } from '../../models/sjcs/ScsDefendidosDesignasItem';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -57,9 +58,11 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
   fromEJG: boolean = false;
   fromDES: boolean = false;
   fromASI: boolean = false;
+  fromJust: boolean = false;
   datosAsociar;
   datosDesigna;
-  datosAsistencia : TarjetaAsistenciaItem;
+  datosJusticiable;
+  datosAsistencia: TarjetaAsistenciaItem;
   radioTarjeta;
 
   es: any = esCalendar;
@@ -111,23 +114,37 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       sessionStorage.removeItem('Asistencia');
     }
 
+    if (sessionStorage.getItem("justiciable")) {
+      this.datosJusticiable = JSON.parse(sessionStorage.getItem('justiciable'));
+      this.fromJust = true;
+      sessionStorage.removeItem('justiciable');
+    }
+
 
   }
 
   asociarElement(event) {
     if (!(event == null || event == undefined)) {
       this.datosAsociar = event;
-      if (this.fromEJG){
+
+      if (this.fromEJG) {
         this.confirmCopiarEJG(this.datosAsociar);
-      }else if (this.fromDES){
+      } else if (this.fromDES) {
         this.confirmCopiarDES(this.datosAsociar);
-      }else if(this.fromASI){
+      } else if (this.fromASI) {
         this.confirmCopiarASI(this.datosAsociar);
       }
-      if (this.fromEJG) 
+
+      if (this.fromEJG) {
         this.confirmAsociarEJG(this.datosAsociar);
-      else if (this.fromDES) 
-        this.confirmAsociarDES(this.datosAsociar);
+      } else if (this.fromDES) {
+        this.confirmAsociarDES(this.datosAsociar)
+      }
+
+      if (this.fromJust) {
+        this.confirmCopiarJust(this.datosAsociar);
+      }
+
     }
   }
 
@@ -176,6 +193,22 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     });
   }
 
+  confirmCopiarJust(data) {
+    //Introducir etiqueta en la BBDD
+    let mess = "¿Desea copiar los datos de la justiciable en el asunto seleccionado?";
+    let icon = "fa fa-edit";
+    this.confirmationService.confirm({
+      key: "copy",
+      message: mess,
+      icon: icon,
+      accept: () => {
+        this.asociarJust(data, true);
+      },
+      reject: () => {
+        this.asociarJust(data, false);
+      }
+    });
+  }
 
   confirmCopiarEJG(data) {
     //Introducir etiqueta en la BBDD
@@ -366,6 +399,48 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     });
   }
 
+  asociarJust(data, copy) {
+    if (this.datosJusticiable != null) {
+      let radioValue = sessionStorage.getItem("radioTajertaValue");
+      switch (radioValue) {
+          case 'des':
+             let datosJusDesignas = new ScsDefendidosDesignasItem;
+                datosJusDesignas.idturno = data.idTurno;
+                datosJusDesignas.anio = data.anio;
+                datosJusDesignas.numero = data.numero;
+                datosJusDesignas.idpersona = this.datosJusticiable.idpersona;
+                // Objeto Asocicación de Justiciables y Designas.
+                this.sigaServices.post("gestionJusticiables_asociarJusticiableDesgina", datosJusDesignas).subscribe(
+                  m => {
+                    //Se debe añadir a la BBDD estos mensajes (etiquetas)
+                    if (JSON.parse(m.body).error.code == 200) {
+                      this.progressSpinner = false;
+                      this.showMesg('success', 
+                      this.translateService.instant("general.message.accion.realizada"),  
+                      this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
+                      this.location.back();
+                    } else {
+                      this.progressSpinner = false;
+                      this.showMesg("error",  
+                      this.translateService.instant("general.message.error.realiza.accion"),
+                      this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
+                      this.location.back();
+                    }
+                  },
+                  err => {
+                    //console.log(err);
+                    this.progressSpinner = false;
+                  }, () => {
+                    this.progressSpinner = false;
+                    sessionStorage.removeItem("justiciables");
+                  }
+                );
+            break;
+      }
+    }
+  }
+  
+
   asociarDES(data, copy) {
 
     let asunto = this.datosDesigna.ano.split("/");
@@ -491,7 +566,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
            }
          ); */
 
-          break;
+          break;3
       }
     }
   }
@@ -512,28 +587,28 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     });
   }
 
-  asociarASI(data : AsuntosJusticiableItem, copiarDatos : boolean){
+  asociarASI(data: AsuntosJusticiableItem, copiarDatos: boolean) {
 
-    if(this.datosAsistencia){
+    if (this.datosAsistencia) {
 
       let anioNumeroASI = this.datosAsistencia.anioNumero;
       let copyData = copiarDatos ? 'S' : 'N';
       let radioValue = sessionStorage.getItem("radioTajertaValue");
       switch (radioValue) {
-      
+
         case 'ejg':
-          let ejgItem : EJGItem = new EJGItem();
+          let ejgItem: EJGItem = new EJGItem();
           ejgItem.annio = String(data.anio);
           ejgItem.numero = String(data.numero);
           ejgItem.tipoEJG = String(data.idTipoEjg);
 
-          this.sigaServices.postPaginado("busquedaGuardias_asociarEjg","?anioNumero="+anioNumeroASI+"&copiarDatos="+copyData, ejgItem).subscribe(
+          this.sigaServices.postPaginado("busquedaGuardias_asociarEjg", "?anioNumero=" + anioNumeroASI + "&copiarDatos=" + copyData, ejgItem).subscribe(
             n => {
-    
+
               let error = JSON.parse(n.body).error;
               this.progressSpinner = false;
               sessionStorage.removeItem("radioTajertaValue");
-    
+
               if (error != null && error.description != null) {
                 this.showMesg("error", "Error al asociar el EJG con la Asistencia", error.description);
               } else {
@@ -552,18 +627,18 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
           break;
         case 'des':
-          let designaItem : DesignaItem = new DesignaItem();
+          let designaItem: DesignaItem = new DesignaItem();
           designaItem.ano = Number(data.anio);
           designaItem.codigo = data.numero;
           designaItem.nombreTurno = data.turnoGuardia;
-          
-          this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna","?anioNumero="+anioNumeroASI+"&copiarDatos="+copyData, designaItem).subscribe(
+
+          this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna", "?anioNumero=" + anioNumeroASI + "&copiarDatos=" + copyData, designaItem).subscribe(
             n => {
-    
+
               let error = JSON.parse(n.body).error;
               this.progressSpinner = false;
               sessionStorage.removeItem("radioTajertaValue");
-    
+
               if (error != null && error.description != null) {
                 this.showMesg("error", "Error al asociar la Designacion con la Asistencia", error.description);
               } else {
@@ -581,7 +656,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
           );
 
           break;
-      
+
       }
 
 
@@ -595,8 +670,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     this.buscar = true;
     this.selectMultiple = false;
     this.selectedDatos = "";
-    this.radioTarjeta=event;
-    
+    this.radioTarjeta = event;
+
     if (event == "ejg") {
       this.sigaServices
         .post(
