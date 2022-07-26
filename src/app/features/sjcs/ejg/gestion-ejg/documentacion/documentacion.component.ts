@@ -425,7 +425,7 @@ export class DocumentacionComponent implements OnInit {
             }
             
             this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-            
+            this.showModal = false;
           } else if (data["error"].code == null) {
             this.showMessage("info", this.translateService.instant("general.message.informacion"), data["error"].message);
           }
