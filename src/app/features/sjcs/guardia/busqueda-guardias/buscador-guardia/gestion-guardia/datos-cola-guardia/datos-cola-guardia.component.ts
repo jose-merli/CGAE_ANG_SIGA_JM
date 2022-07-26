@@ -32,8 +32,11 @@ export class DatosColaGuardiaComponent implements OnInit {
   progressSpinner: boolean = false;
   updateInscripciones = [];
   selectionMode = "single";
-  resumenColaGuardia = "";
-  resumenColaGuardiaLast = "";
+  primerLetrado :String ="";
+  nombreApellidosPrimerLetrado:String ="";
+  ultimoLetrado:String ="";
+  apeyNombreUltimo:String ="";
+  nInscritos:String ="";
   botActivos: boolean = true;
   editable: boolean = true;
   rowGroups: Row[];
@@ -391,15 +394,15 @@ inicio(){
           this.transformData();
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           if (this.datos && this.datos.length > 0){
-            this.resumenColaGuardia = this.datos[0].nColegiado + " " + this.datos[0].nombreApe +  ', ' + this.datos[1].nColegiado + " " + this.datos[1].nombreApe +  ', ' + this.datos[2].nColegiado + " " + this.datos[2].nombreApe + ', ' + this.datos[3].nColegiado + " " + this.datos[3].nombreApe ; 
-            this.resumenColaGuardiaLast = this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe;
-            /*if (this.datosInicial.length > 0)
-            this.resumenColaGuardia = this.resumenColaGuardia.concat(" ... " + this.datos[this.datos.length - 1].nColegiado + " " + this.datos[this.datos.length - 1].nombreApe
-              + " ... " + this.datos.length, " inscritos");*/
-          if (this.datosInicial.length > 0)
-            this.resumenColaGuardiaLast = this.resumenColaGuardiaLast.concat(" ... " + this.datos.length, " inscritos");
-          else
-            this.resumenColaGuardia = "0 inscritos";
+
+
+            this.primerLetrado = this.datos[0].nColegiado
+            this.nombreApellidosPrimerLetrado = this.datos[0].nombreApe 
+            this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado
+            this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
+
+            this.nInscritos = this.datos.length;
+
           if (this.body.idPersonaUltimo && this.datos.length > 0)
             this.body.idGrupoUltimo = this.datos[this.datos.length - 1].idGrupoGuardia;
           }
@@ -413,6 +416,11 @@ inicio(){
         }
       );
   }
+  existenDatos(){
+    if (this.datos != undefined) return this.datos.length > 0;
+    else return false;
+  }
+  
   transformData(){
     let arr = [];
     let arrLast = [];
