@@ -115,10 +115,18 @@
             (click)="nuevaFila()" type="button" iconPos="left"
             label="{{ 'general.boton.new' | translate }}"></button>
 
-          <button pButton
+          <button pButton *ngIf="esLetrado && esColegiado"
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || !clickPermuta)"
+            (click)="checkPermutar()" type="button" iconPos="left"
+            label="{{ 'general.boton.solicitarPermuta' | translate }}"></button>
+
+
+            <button pButton *ngIf="!esLetrado && esColegiado"
           [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0 || !clickPermuta)"
             (click)="checkPermutar()" type="button" iconPos="left"
             label="{{ 'general.boton.permutar' | translate }}"></button>
+
+
 
             <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0 || clickPermuta)" (click)="checkValidar()"
             type="button" icon="fa fa-save" iconPos="left" label="{{'general.boton.validar' | translate}}"></button>

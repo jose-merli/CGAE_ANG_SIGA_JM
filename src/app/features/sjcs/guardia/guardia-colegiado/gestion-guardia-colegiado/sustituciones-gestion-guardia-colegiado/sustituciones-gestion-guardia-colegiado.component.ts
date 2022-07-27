@@ -30,11 +30,15 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
   comensustitucion = "";
   newLetrado;
   saltoOcompensacion;
+  esLetrado: boolean=true;
+  esColegiado: boolean=true;
   constructor(private datepipe:DatePipe,private persistenceService: PersistenceService,
     private translateService: TranslateService,private sigaServices: SigaServices, private sigaStorageService: SigaStorageService, 
     private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
+    this.esLetrado = JSON.parse(sessionStorage.getItem('isLetrado'));
+    this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
     sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
     if(this.persistenceService.getDatos()){

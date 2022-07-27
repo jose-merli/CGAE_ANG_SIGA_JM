@@ -34,6 +34,8 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   valueComboGuardia
   motivos: any;
   permutasAux;
+  esLetrado: boolean=true;
+  esColegiado: boolean=true;
   constructor(private translateService: TranslateService,
     private router: Router,
     private sigaServices: SigaServices,
@@ -44,6 +46,8 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
 
   ngOnInit() {
     this.progressSpinner = true;
+    this.esLetrado = JSON.parse(sessionStorage.getItem('isLetrado'));
+    this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
     if(this.persistenceService.getDatos()){
       this.body = this.persistenceService.getDatos();
      this.getPermutas();
