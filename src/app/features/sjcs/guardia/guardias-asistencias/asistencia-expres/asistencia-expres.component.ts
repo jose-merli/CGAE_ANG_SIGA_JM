@@ -255,10 +255,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             this.showMsg('error', this.translateService.instant("informesycomunicaciones.modelosdecomunicacion.errorResultados"), asistenciasDTO.error.description);
           }else if(asistenciasDTO.tarjetaAsistenciaItems2 != undefined){
             if(asistenciasDTO.tarjetaAsistenciaItems2.length === 0){
-            this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
-            }else{
-              this.fromJsonToRowGroups(asistenciasDTO.tarjetaAsistenciaItems2);
-            }  
+              this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
+            }
+            this.fromJsonToRowGroups(asistenciasDTO.tarjetaAsistenciaItems2);
           } else{
             this.showMsg('info','Info',this.translateService.instant("informesYcomunicaciones.consultas.mensaje.sinResultados"));
           } 
