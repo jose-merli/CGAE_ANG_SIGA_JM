@@ -131,10 +131,10 @@ export class ConsultaComponent implements OnInit {
   }
 
   getMode() {
-    if (sessionStorage.getItem("soloLectura") === 'true') {
-      this.editMode = true;
-    } else {
+    if (sessionStorage.getItem("soloLectura") != 'undefined') {
       this.editMode = false;
+    } else {
+      this.editMode = true;
     }
   }
 
