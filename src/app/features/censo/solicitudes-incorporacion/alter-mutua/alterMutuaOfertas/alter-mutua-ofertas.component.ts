@@ -41,6 +41,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
   observaciones: boolean = false;
   mostrarInfo: boolean = false;
   tienePropuesta: boolean = true;
+  muestraMensaje: boolean = false;
   tieneSolicitud: boolean = false;
   showSolicitarSeguro: boolean = false;
   deshabilitarDireccion: boolean = false;
@@ -49,6 +50,8 @@ export class AlterMutuaOfertasComponent implements OnInit {
   estadoSolicitudResponse: any;
   codigoPostalValido: boolean;
   selectedDatos1: any;
+  poblacionYaObtenida: boolean = false;
+  existeSolicitud: boolean = false;
 
   @ViewChild("table")
   table;
@@ -153,8 +156,8 @@ export class AlterMutuaOfertasComponent implements OnInit {
       this.datosSolicitud.nombre = this.datosSolicitud.soloNombre;
       this.datosSolicitud.apellidos = this.datosSolicitud.apellido1 + " " + this.datosSolicitud.apellido2;
       //Reta es tipo 1
-      this.tipoPropuesta = 1;
       //ofertas es tipo 3
+      this.tipoPropuesta = 3;
 
       /*if (this.datosSolicitud.tipoIdentificacion.lastIndexOf("NIF") == 0)
         tipoIdenficador = 0
@@ -162,7 +165,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
         tipoIdenficador = 1*/
 
       let estadoSolicitud = {
-        identificador: "38875531B",
+        identificador: this.datosSolicitud.numeroIdentificacion,
         idSolicitud: this.datosSolicitud.idSolicitud,
         duplicado: false
       };
@@ -173,7 +176,6 @@ export class AlterMutuaOfertasComponent implements OnInit {
         .subscribe(
           result => {
             this.estadoSolicitudResponse = JSON.parse(result.body);
-            this.progressSpinner = false;
           },
           error => {
             //console.log(error);
@@ -181,13 +183,35 @@ export class AlterMutuaOfertasComponent implements OnInit {
           () => {
             if (this.estadoSolicitudResponse.error == false) {
               this.tieneSolicitud = true;
+              this.existeSolicitud = true;
+              this.buscarPropuestas();
             } else {
-              // this.estadoSolicitudResponse.mensaje =
-              //   "No existe una solicitud de Alter Mutua para este colegiado.";
               this.showSolicitarSeguro = true;
             }
           }
         );
+        
+        if (this.datosSolicitud.tipoDireccion == "Residencia") {
+          this.tipoDirSelected = { value: 1 };
+        } else if (this.datosSolicitud.tipoDireccion == "Despacho") {
+          this.tipoDirSelected = { value: 2 };
+        }
+
+        this.comunicacionSelected = { value: 1 };
+
+        switch(this.datosSolicitud.idiomaPref) {
+          case "1":
+            this.idiomaSelected = { value: 1 };
+            break;
+          case "2":
+            this.idiomaSelected = { value: 2 };
+            break;
+          default:
+            this.idiomaSelected = { value: 1 };
+        }
+
+        this.autogenerarDatosInit();
+        this.progressSpinner = false;
     }
 
     this.colsFisicas = [
@@ -338,18 +362,20 @@ export class AlterMutuaOfertasComponent implements OnInit {
     );
 
     this.sigaServices.get("integrantes_provincias").subscribe(
-      result => {
-        this.provincias = result.combooItems;
+      n => {
+        this.provincias = n.combooItems;
       },
       error => {
         //console.log(error);
+      },
+      () => {
+        this.mostrarDatosContacto();
       }
     );
 
     this.sigaServices.get("solicitudIncorporacion_tipoSolicitud").subscribe(
       result => {
         this.comboTiposSolicitud = result.combooItems;
-        this.progressSpinner = false;
       },
       error => {
         //console.log(error);
@@ -358,8 +384,9 @@ export class AlterMutuaOfertasComponent implements OnInit {
   }
 
   buscarPropuestas() {
+    this.muestraMensaje = false;
     this.progressSpinner = true;
-    this.tieneSolicitud = false;
+    //this.tieneSolicitud = false;
 
     let datosPropuesta = {
       tipoIdentificador: this.datosSolicitud.tipoIdentificacion,
@@ -371,6 +398,9 @@ export class AlterMutuaOfertasComponent implements OnInit {
     this.sigaServices.post("alterMutua_propuestas", datosPropuesta).subscribe(
       result => {
         this.propuestas = JSON.parse(result.body);
+        if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null") {
+          this.muestraMensaje = true;
+        }
         this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
           this.propuestas.mensaje
         );
@@ -388,9 +418,13 @@ export class AlterMutuaOfertasComponent implements OnInit {
         }
         this.cargarCombos();
         this.tratarDatos();
+        this.modalidadInit();
         this.progressSpinner = false;
       }
     );
+    this.buscarPoblacionInit(this.datosSolicitud.nombrePoblacion);
+    this.mostarDatosPropuesta();
+    this.mostrarDatosBancarios();
   }
 
   tratarDatos() {
@@ -626,6 +660,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
   }
 
   enviarDatosAlter() {
+    this.muestraMensaje = false;
     this.progressSpinner = true;
     this.datosAlter.idPaquete = this.modContratacionSelected.value;
     this.asegurado.modContratacion = this.modContratacionSelected.value;
@@ -646,7 +681,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
     if (this.datosSolicitud.tipoIdentificacion.lastIndexOf("NIF") == 0)
       this.asegurado.tipoIdentificador = 0;
     else this.asegurado.tipoIdentificador = 1;
-    this.asegurado.identificador = "40919463W";
+    //this.asegurado.identificador = "40919463W";
 
     this.datosAlter.asegurado = this.asegurado;
 
@@ -706,17 +741,19 @@ export class AlterMutuaOfertasComponent implements OnInit {
             this.tienePropuesta = true;
           }
           if (this.propuestas.error == false) {
-            if (this.propuestas.mensaje != null) {
+            if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null" && this.tienePropuesta == true) {
               this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
                 this.propuestas.mensaje
               );
+              this.muestraMensaje = true;
             } else {
               this.showSuccess(
                 "La solicitud se ha enviado correctamente a Alter Mútua"
               );
             }
+            this.existeSolicitud = true;
           } else {
-            if (this.propuestas.mensaje != null) {
+            if (this.propuestas.mensaje != null && this.propuestas.mensaje != "null" && this.tienePropuesta == true) {
               this.propuestas.mensaje = this.domSanitizer.bypassSecurityTrustHtml(
                 this.propuestas.mensaje
               );
@@ -725,6 +762,7 @@ export class AlterMutuaOfertasComponent implements OnInit {
                 "La solicitud no se ha enviado correctamente a Alter Mútua"
               );
             }
+            this.existeSolicitud = false;
           }
           this.progressSpinner = false;
         }
@@ -761,7 +799,8 @@ export class AlterMutuaOfertasComponent implements OnInit {
       this.asegurado.iban != "" &&
       this.asegurado.iban != undefined &&
       this.tipoEjercicioSelected != null &&
-      this.tipoEjercicioSelected != ""
+      this.tipoEjercicioSelected != "" &&
+      this.existeSolicitud != true
     ) {
       return true;
     } else {
@@ -770,12 +809,20 @@ export class AlterMutuaOfertasComponent implements OnInit {
   }
 
   obtenerProvinciaDesc(e) {
-    // this.provinciaDesc = this.provincias.find(item => item.value === e.value);
+    this.provinciaDesc = this.provincias.find(item => item.value === e.value);
   }
 
   obtenerPoblacionDesc(e) {
     this.poblacionDesc = this.poblaciones.find(item => item.value === e.value);
     if (this.provinciaSelected != undefined) this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected);
+  }
+
+  obtenerPoblacionDescInit(poblacion) {
+    if (this.poblaciones != null || this.poblaciones != undefined) {
+      this.poblacionDesc = this.poblaciones.find(item => item.value === poblacion);
+      this.asegurado.poblacion = this.poblacionDesc.label;
+      if (this.provinciaSelected != undefined) this.provinciaDesc = this.provincias.find(item => item.value === this.provinciaSelected);
+    }
   }
 
   onchangeModalidad(event) {
@@ -799,9 +846,24 @@ export class AlterMutuaOfertasComponent implements OnInit {
     }
   }
 
+  modalidadInit() {
+    if (this.propuestas != null && this.propuestas.propuestas != null && this.propuestas.propuestas.length > 0) {
+      let modalidad = this.propuestas.propuestas[0];
+
+      this.modContratacionSelected = { value: modalidad.idPaquete };
+
+      this.tarifa = modalidad.tarifa;
+      this.infoPropuesta = {
+        tarifa: modalidad.tarifa,
+        breve: modalidad.breve,
+        descripcion: this.domSanitizer.bypassSecurityTrustHtml(
+          modalidad.descripcion
+        )
+      };
+    }
+  }
 
   getComboPoblacion(filtro: string) {
-    this.progressSpinner = true;
     let poblacionBuscada = filtro;
     this.sigaServices
       .getParam(
@@ -817,7 +879,26 @@ export class AlterMutuaOfertasComponent implements OnInit {
         error => { },
         () => {
           // this.isDisabledPoblacion = false;
-          this.progressSpinner = false;
+        }
+      );
+  }
+
+  getComboPoblacionInit(filtro: string) {
+    let poblacionBuscada = filtro;
+    this.sigaServices
+      .getParam(
+        "direcciones_comboPoblacion",
+        "?idProvincia=" + this.datosSolicitud.idProvincia + "&filtro=" + filtro
+      )
+      .subscribe(
+        n => {
+          this.poblaciones = n.combooItems;
+          this.getLabelbyFilter(this.poblaciones);
+          this.dropdown.filterViewChild.nativeElement.value = poblacionBuscada;
+        },
+        error => { },
+        () => {
+          // this.isDisabledPoblacion = false;
         }
       );
   }
@@ -881,6 +962,21 @@ export class AlterMutuaOfertasComponent implements OnInit {
       this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
     }
   }
+
+  buscarPoblacionInit(poblacion) {
+    if (poblacion !== null) {
+      if (poblacion.length >= 3) {
+        this.getComboPoblacionInit(poblacion);
+        this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
+      } else {
+        this.poblaciones = [];
+        this.resultadosPoblaciones = this.translateService.instant("censo.consultarDirecciones.mensaje.introducir.almenosTres");
+      }
+    } else {
+      this.poblaciones = [];
+      this.resultadosPoblaciones = this.translateService.instant("censo.busquedaClientesAvanzada.literal.sinResultados");
+    }
+  }
   // obtenerProvinciaDesc(e) {
   //   this.provinciaDesc = e.label;
   // }
@@ -904,7 +1000,6 @@ export class AlterMutuaOfertasComponent implements OnInit {
       .subscribe(
         result => {
           this.poblaciones = result.combooItems;
-          this.progressSpinner = false;
         },
         error => {
           //console.log(error);
@@ -914,6 +1009,28 @@ export class AlterMutuaOfertasComponent implements OnInit {
 
 
   autogenerarDatos() {
+    if (this.asegurado.iban != null && this.asegurado.iban != "") {
+      var ccountry = this.asegurado.iban.substring(0, 2);
+      if (ccountry == "ES") {
+        if (this.isValidIBAN()) {
+          this.recuperarBicBanco();
+
+          this.ibanValido = true;
+        } else {
+          this.asegurado.bic = "";
+
+          this.ibanValido = false;
+        }
+      }
+    } else {
+      this.asegurado.bic = "";
+
+      this.ibanValido = false;
+    }
+  }
+
+  autogenerarDatosInit() {
+    this.asegurado.iban = this.datosSolicitud.iban;
     if (this.asegurado.iban != null && this.asegurado.iban != "") {
       var ccountry = this.asegurado.iban.substring(0, 2);
       if (ccountry == "ES") {
@@ -990,6 +1107,11 @@ export class AlterMutuaOfertasComponent implements OnInit {
   }
   mostrarDatosContacto() {
     this.datosContacto = !this.datosContacto;
+    this.onChangeCodigoPostal();
+    if (this.poblacionYaObtenida != true) {
+      this.obtenerPoblacionDescInit(this.datosSolicitud.idPoblacion);
+      this.poblacionYaObtenida = true;
+    }
   }
   mostrarDatosBancarios() {
     this.datosCuentaBancaria = !this.datosCuentaBancaria;
