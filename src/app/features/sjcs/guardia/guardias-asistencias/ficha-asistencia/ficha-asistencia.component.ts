@@ -9,6 +9,7 @@ import { FichaAsistenciaTarjetaDatosGeneralesComponent } from './ficha-asistenci
 import { Router } from '@angular/router';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
+import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 
 @Component({
   selector: 'app-ficha-asistencia',
@@ -136,6 +137,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   datosTarjetaFacGenerica: string;
   openTarjetaFac: Boolean = false;
   modoLectura: Boolean = false;
+  datosJusticiables: JusticiableItem;
 
   @ViewChild(FichaAsistenciaTarjetaDatosGeneralesComponent) datosGenerales: FichaAsistenciaTarjetaDatosGeneralesComponent;
   constructor(private location: Location,
@@ -156,11 +158,11 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     }
     // Recargar las tarjetas por defectos.
     this.commonServices.checkAcceso(procesos_guardia.tarjeta_caracteristicas_asistencias)
-    .then(respuesta => {
-      this.visibleTarjetaCaract = respuesta; //Si es undefined se oculta, si es false la mostramos pero ineditable
-      this.listaTarjetas.find(tarj => tarj.id == 'caracteristicas').visible = this.visibleTarjetaCaract;
-      this.initTarjetas();
-    }).catch(error => console.error(error));
+      .then(respuesta => {
+        this.visibleTarjetaCaract = respuesta; //Si es undefined se oculta, si es false la mostramos pero ineditable
+        this.listaTarjetas.find(tarj => tarj.id == 'caracteristicas').visible = this.visibleTarjetaCaract;
+        this.initTarjetas();
+      }).catch(error => console.error(error));
 
     // Cargar datos para las tarjetas de Asistencias.
     if (sessionStorage.getItem("idAsistencia")) {
@@ -175,14 +177,19 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
       this.searchTarjetaAsistencia(idAsistencia);
     }
 
+    // Datos Justiciables
+    if (sessionStorage.getItem("justiciable")) {
+      this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
+    }
+
   }
 
   ngAfterViewInit() {
     this.goTop();
   }
 
-  ngOnDestroy(){
-    if(sessionStorage.getItem("vieneDeFichaDesigna")) sessionStorage.removeItem("vieneDeFichaDesigna");
+  ngOnDestroy() {
+    if (sessionStorage.getItem("vieneDeFichaDesigna")) sessionStorage.removeItem("vieneDeFichaDesigna");
   }
 
   clear() {
@@ -233,6 +240,10 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
 
     this.tarjetaFija.campos = camposResumen;
 
+    if (sessionStorage.getItem("justiciable")) {
+      this.tarjetaFija.campos[3].value = this.datosJusticiables.apellidos + ", " + this.datosJusticiables.nombre;
+    }
+
     //TARJETA DATOS GENERALES
     let camposDatosGenerales = [
       {
@@ -260,14 +271,22 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     //TARJETA ASISTIDO
     let camposAsistido = [];
     if (this.preasistencia || this.nuevaAsistencia) {
-
-      camposAsistido = [
-        {
-          "key": null,
-          "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
-        }
-      ]
-
+      // Crear ASISTENCIA y asociar Justiciable
+      if (sessionStorage.getItem("justiciable")) {
+        camposAsistido = [
+          {
+            "key": null,
+            "value": this.datosJusticiables.apellidos + ", " + this.datosJusticiables.nombre
+          }
+        ]
+      } else {
+        camposAsistido = [
+          {
+            "key": null,
+            "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
+          }
+        ]
+      }
     } else {
       camposAsistido = [
         {
@@ -470,33 +489,33 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
 
           let camposAsistido = [];
           let asistenciaDuplicada = sessionStorage.getItem("asistenciaCopy");
-          if(asistenciaDuplicada == undefined || asistenciaDuplicada == null){
-          if(!newAsistenciaData.idPersonaJg){
+          if (asistenciaDuplicada == undefined || asistenciaDuplicada == null) {
+            if (!newAsistenciaData.idPersonaJg) {
               camposAsistido = [
                 {
                   "key": null,
                   "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noasistidos")
                 }
               ]
-          }else{
-            camposAsistido = [
-              {
-                "key": this.translateService.instant("censo.fichaCliente.literal.identificacion"),
-                "value": newAsistenciaData.nif
-              },
-              {
-                "key": this.translateService.instant("gratuita.mantenimientoTablasMaestra.literal.apellidos"),
-                "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2
-              },
-              {
-                "key": this.translateService.instant("administracion.parametrosGenerales.literal.nombre"),
-                "value": newAsistenciaData.nombre
-              }
-            ]
+            } else {
+              camposAsistido = [
+                {
+                  "key": this.translateService.instant("censo.fichaCliente.literal.identificacion"),
+                  "value": newAsistenciaData.nif
+                },
+                {
+                  "key": this.translateService.instant("gratuita.mantenimientoTablasMaestra.literal.apellidos"),
+                  "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2
+                },
+                {
+                  "key": this.translateService.instant("administracion.parametrosGenerales.literal.nombre"),
+                  "value": newAsistenciaData.nombre
+                }
+              ]
+            }
+          } else {
+            sessionStorage.removeItem("asistenciaCopy");
           }
-        }else{
-          sessionStorage.removeItem("asistenciaCopy");
-        }
           this.listaTarjetas[1].campos = camposAsistido;
 
           let camposContrarios = [];
@@ -687,7 +706,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           var newAsistenciaData: TarjetaAsistenciaItem = n.tarjetaAsistenciaItems[0];
           //console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
           //console.log('newAsistenciaData.estado: ', newAsistenciaData.estado)
-          if (newAsistenciaData.estado == '2'){
+          if (newAsistenciaData.estado == '2') {
             //anulada
             this.modoLectura = true;
           }
@@ -931,7 +950,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
   }
 
   backTo() {
-    if(sessionStorage.getItem("vieneDeFichaDesigna")) this.location.back();
+    if (sessionStorage.getItem("vieneDeFichaDesigna")) this.location.back();
 
     if (this.preasistencia) {
       this.router.navigate(['/fichaPreasistencia']);
@@ -945,7 +964,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     sessionStorage.setItem("idAsistencia", this.datosTarjetaFacGenerica);
   }
 
-  eventoAnular(anular){
+  eventoAnular(anular) {
     this.modoLectura = anular;
     //to do: pasarselo a el resto de tarjetas para anular botones
   }

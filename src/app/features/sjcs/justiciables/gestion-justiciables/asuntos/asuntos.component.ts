@@ -92,7 +92,6 @@ export class AsuntosComponent implements OnInit, OnChanges {
   // Asociar Designacion
   asociarDesignacion() {
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
-    sessionStorage.setItem("justiciable", JSON.stringify(this.bodyInicial));
     sessionStorage.setItem("radioTajertaValue", 'des');
     let justiciableDes = JSON.stringify(this.body);
     sessionStorage.setItem("justiciable", justiciableDes);
@@ -112,43 +111,67 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
   // Crear EJG
   crearEJG() {
-    sessionStorage.setItem("justiciableEJG", JSON.stringify(this.bodyInicial));
+    if (sessionStorage.getItem("EJGItem")) {
+      sessionStorage.removeItem("EJGItem");
+    }
+    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+    this.persistenceService.clearDatos();
     sessionStorage.setItem("Nuevo", "true");
     this.router.navigate(["/gestionEjg"]);
   }
 
   // Permisos para Asociar EJG
   checkPermisosAsociarEJG() {
-    this.asociarEJG();
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociarEJG();
+    }
   }
 
   // Asociar EJG
   asociarEJG() {
-    sessionStorage.setItem("justiciableEJG", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     sessionStorage.setItem("radioTajertaValue", 'ejg');
     this.router.navigate(["/busquedaAsuntos"]);
 
   }
 
+  
+
   // Permiso para crear Asistencia
   checkPermisosCrearAsistencia() {
-    this.crearAsistencia();
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.crearAsistencia();
+    }
   }
 
   // Crear Asistencia
   crearAsistencia() {
-
+    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
+    sessionStorage.setItem("nuevaAsistencia","true");
+    this.router.navigate(["/fichaAsistencia"]);
   }
 
   // Permiso Asociar Asistencia
   checkPermisosAsociarAsistencia() {
-    this.asociarAsistencia();
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociarAsistencia();
+    }
+    
   }
 
   // Asociar Asistencia
   asociarAsistencia() {
     sessionStorage.setItem("radioTajertaValue", 'asi');
-    sessionStorage.setItem("justiciableEJG", JSON.stringify(this.bodyInicial));
+    sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     this.router.navigate(["/busquedaAsuntos"]);
   }
 

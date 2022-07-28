@@ -23,5 +23,7 @@ export let endpoints_justiciables: any = {
     gestionJusticiables_updateUnidadFamiliar: "justiciables/gestionJusticiables/updateUnidadFamiliar",
     gestionJusticiables_getSolicitante: "justiciables/gestionJusticiables/getSolicitante",
     gestionJusticiables_asociarJusticiableDesgina: "justiciables/gestionJusticiableService/asociarDesignacion",
+    gestionJusticiables_asociarJusticiableEjg: "justiciables/gestionJusticiableService/asociarEJG",
+    gestionJusticiables_asociarJusticiableAsistencia:"justiciables/gestionJusticiableService/asociarAsistencia" 
 
 }

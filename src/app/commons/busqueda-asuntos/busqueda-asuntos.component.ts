@@ -401,45 +401,74 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
 
   asociarJust(data, copy) {
     if (this.datosJusticiable != null) {
+      this.progressSpinner = true;
       let radioValue = sessionStorage.getItem("radioTajertaValue");
       switch (radioValue) {
-          case 'des':
-             let datosJusDesignas = new ScsDefendidosDesignasItem;
-                datosJusDesignas.idturno = data.idTurno;
-                datosJusDesignas.anio = data.anio;
-                datosJusDesignas.numero = data.numero;
-                datosJusDesignas.idpersona = this.datosJusticiable.idpersona;
-                // Objeto Asocicación de Justiciables y Designas.
-                this.sigaServices.post("gestionJusticiables_asociarJusticiableDesgina", datosJusDesignas).subscribe(
-                  m => {
-                    //Se debe añadir a la BBDD estos mensajes (etiquetas)
-                    if (JSON.parse(m.body).error.code == 200) {
-                      this.progressSpinner = false;
-                      this.showMesg('success', 
-                      this.translateService.instant("general.message.accion.realizada"),  
-                      this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
-                      this.location.back();
-                    } else {
-                      this.progressSpinner = false;
-                      this.showMesg("error",  
-                      this.translateService.instant("general.message.error.realiza.accion"),
-                      this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
-                      this.location.back();
-                    }
-                  },
-                  err => {
-                    //console.log(err);
-                    this.progressSpinner = false;
-                  }, () => {
-                    this.progressSpinner = false;
-                    sessionStorage.removeItem("justiciables");
-                  }
-                );
-            break;
+        case 'des':
+          let datosJusDesignas = new ScsDefendidosDesignasItem;
+          datosJusDesignas.idturno = data.idTurno;
+          datosJusDesignas.anio = data.anio;
+          datosJusDesignas.numero = data.numero;
+          datosJusDesignas.idpersona = this.datosJusticiable.idpersona;
+          // Objeto Asocicación de Justiciables y Designas.
+          this.sigaServices.post("gestionJusticiables_asociarJusticiableDesgina", datosJusDesignas).subscribe(
+            m => {
+              //Se debe añadir a la BBDD estos mensajes (etiquetas)
+              if (JSON.parse(m.body).error.code == 200) {
+                this.progressSpinner = false;
+                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
+                this.location.back();
+              }
+            },
+            err => {
+              this.progressSpinner = false;
+              this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
+              //this.location.back();
+            }
+          );
+          break;
+        case 'asi':
+          let requestAsi = [data.anio, data.numero, this.datosJusticiable.idpersona];
+          // Objeto Asociación de Justiciables y Asistencia.
+          this.sigaServices.post("gestionJusticiables_asociarJusticiableAsistencia", requestAsi).subscribe(
+            m => {
+              //Se debe añadir a la BBDD estos mensajes (etiquetas)
+              if (JSON.parse(m.body).error.code == 200) {
+                this.progressSpinner = false;
+                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
+                this.location.back();
+              }
+            },
+            err => {
+              this.progressSpinner = false;
+              this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
+              //this.location.back();
+            }
+          );
+          break;
+        case 'ejg':
+          let requestEjg = [data.anio, data.numero, this.datosAsociar.idTipoEjg, this.datosJusticiable.idpersona];
+          // Objeto Asocicación de Justiciables y EJG.
+          this.sigaServices.post("gestionJusticiables_asociarJusticiableEjg", requestEjg).subscribe(
+            m => {
+              //Se debe añadir a la BBDD estos mensajes (etiquetas)
+              if (JSON.parse(m.body).error.code == 200) {
+                this.progressSpinner = false;
+                this.showMesg('success', this.translateService.instant("general.message.accion.realizada"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.correctAsociar"));
+                this.location.back();
+              }
+            },
+            err => {
+              this.progressSpinner = false;
+              this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
+              //this.location.back();
+            }
+          );
+          break;
       }
     }
   }
-  
+
 
   asociarDES(data, copy) {
 
@@ -566,7 +595,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
            }
          ); */
 
-          break;3
+          break; 3
       }
     }
   }
