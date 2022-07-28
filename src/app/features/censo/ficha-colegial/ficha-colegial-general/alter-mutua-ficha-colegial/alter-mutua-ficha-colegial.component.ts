@@ -4,6 +4,7 @@ import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncor
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
+import { DatosDireccionesItem } from '../../../../../models/DatosDireccionesItem';
 
 @Component({
   selector: 'app-alter-mutua-ficha-colegial',
@@ -16,6 +17,8 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
   solicitudEditar: SolicitudIncorporacionItem = new SolicitudIncorporacionItem();
   generalBody: FichaColegialGeneralesItem = new FichaColegialGeneralesItem();
   tratamientoDesc: String;
+
+  datosDirecciones: DatosDireccionesItem[] = [];
 
   @Input() datosTratamientos;
 
@@ -34,7 +37,6 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
       this.generalBody = new FichaColegialGeneralesItem();
       this.generalBody = JSON.parse(sessionStorage.getItem("personaBody"));
     }
-
   }
 
   ngOnChanges() {
@@ -51,6 +53,12 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
     }
   }
   irAlterMutuaReta() {
+    if (sessionStorage.getItem("datosDireccionesAlterMutua")) {
+      this.datosDirecciones = JSON.parse(sessionStorage.getItem("datosDireccionesAlterMutua"));
+    }
+
+    let direccion = this.buscaDireccionPorPrioridad(this.datosDirecciones);
+
     this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
     this.solicitudEditar.idPais = "191";
     this.solicitudEditar.identificador = this.generalBody.nif;
@@ -60,8 +68,26 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
     this.solicitudEditar.apellido2 = this.generalBody.apellidos2;
     this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
     this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
-    this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+    this.solicitudEditar.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
     this.solicitudEditar.tratamiento = this.tratamientoDesc;
+
+    if (direccion != null) {
+      this.solicitudEditar.codigoPostal = direccion.codigoPostal;
+      this.solicitudEditar.domicilio = direccion.domicilio;
+      this.solicitudEditar.fax1 = direccion.fax;
+      this.solicitudEditar.correoElectronico = direccion.correoElectronico;
+      this.solicitudEditar.telefono1 = direccion.telefono;
+      this.solicitudEditar.telefono2 = direccion.telefono2;
+      this.solicitudEditar.tipoDireccion = direccion.tipoDireccion;
+      this.solicitudEditar.idProvincia = direccion.idProvincia;
+      this.solicitudEditar.idPoblacion = direccion.idPoblacion;
+      this.solicitudEditar.nombrePoblacion = direccion.nombrePoblacion;
+      this.solicitudEditar.movil = direccion.movil;
+    }
+    
+    this.solicitudEditar.iban = sessionStorage.getItem("ibanAlterMutua");
+    this.solicitudEditar.idiomaPref = sessionStorage.getItem("idiomaPrefAlterMutua");
+
     this.sigaServices
       .get("solicitudIncorporacion_tipoIdentificacion")
       .subscribe(
@@ -84,6 +110,12 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
 
 
   irOfertas() {
+    if (sessionStorage.getItem("datosDireccionesAlterMutua")) {
+      this.datosDirecciones = JSON.parse(sessionStorage.getItem("datosDireccionesAlterMutua"));
+    }
+
+    let direccion = this.buscaDireccionPorPrioridad(this.datosDirecciones);
+
     this.solicitudEditar = JSON.parse(JSON.stringify(this.generalBody));
     this.solicitudEditar.idPais = "191";
     this.solicitudEditar.identificador = this.generalBody.nif;
@@ -93,8 +125,26 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
     this.solicitudEditar.apellido2 = this.generalBody.apellidos2;
     this.solicitudEditar.idEstadoCivil = this.generalBody.idEstadoCivil;
     this.solicitudEditar.estadoCivil = this.generalBody.idEstadoCivil;
-    this.solicitudEditar.fechaNacimiento = this.generalBody.fechaNacimientoDate;
+    this.solicitudEditar.fechaNacimiento = this.arreglarFecha(this.generalBody.fechaNacimiento);
     this.solicitudEditar.tratamiento = this.tratamientoDesc;
+    
+    if (direccion != null) {
+      this.solicitudEditar.codigoPostal = direccion.codigoPostal;
+      this.solicitudEditar.domicilio = direccion.domicilio;
+      this.solicitudEditar.fax1 = direccion.fax;
+      this.solicitudEditar.correoElectronico = direccion.correoElectronico;
+      this.solicitudEditar.telefono1 = direccion.telefono;
+      this.solicitudEditar.telefono2 = direccion.telefono2;
+      this.solicitudEditar.tipoDireccion = direccion.tipoDireccion;
+      this.solicitudEditar.idProvincia = direccion.idProvincia;
+      this.solicitudEditar.idPoblacion = direccion.idPoblacion;
+      this.solicitudEditar.nombrePoblacion = direccion.nombrePoblacion;
+      this.solicitudEditar.movil = direccion.movil;
+    }
+    
+    this.solicitudEditar.iban = sessionStorage.getItem("ibanAlterMutua");
+    this.solicitudEditar.idiomaPref = sessionStorage.getItem("idiomaPrefAlterMutua");
+
     this.sigaServices
       .get("solicitudIncorporacion_tipoIdentificacion")
       .subscribe(
@@ -115,5 +165,48 @@ export class AlterMutuaFichaColegialComponent implements OnInit, OnChanges {
       );
   }
 
+  arreglarFecha(fecha) {
 
+    if (fecha != undefined && fecha != null) {
+      let jsonDate = JSON.stringify(fecha);
+      let rawDate = jsonDate.slice(1, -1);
+      if (rawDate.length < 14) {
+        let splitDate = rawDate.split("/");
+        let arrayDate = splitDate[2] + "-" + splitDate[1] + "-" + splitDate[0];
+        fecha = new Date((arrayDate += "T00:00:00.001Z"));
+      } else {
+        fecha = new Date(rawDate);
+      }
+    }
+    return fecha;
+  }
+
+  buscaDireccionPorPrioridad(direcciones) {
+    let direccion = null;
+    let encontradaPrioridad = false;
+    
+    if (direcciones.length != 0) {
+      direcciones.forEach(element => {
+
+        if (encontradaPrioridad == false) {
+          if (element.tipoDireccion.includes("Despacho")) {
+            element.tipoDireccion = "Despacho";
+            direccion = element;
+            encontradaPrioridad = true;
+          }
+        }
+      });
+  
+      if (encontradaPrioridad == false) {
+        direccion = direcciones[0];
+        if (direccion.tipoDireccion.includes("Residencia")) {
+          direccion.tipoDireccion = "Residencia";
+        } else {
+          direccion.tipoDireccion = "";
+        }
+      } 
+    }
+
+    return direccion;
+  }
 }

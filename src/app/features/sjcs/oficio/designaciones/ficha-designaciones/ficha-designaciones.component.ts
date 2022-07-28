@@ -316,7 +316,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoDatosGenerales = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoDatosGenerales) {
+        if (this.permisoDatosGenerales==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigaDatosGen');
           this.ngAfterViewInit();
         }
@@ -328,7 +328,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoDeDesignas = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoDeDesignas) {
+        if (this.permisoDeDesignas==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigaDet');
           this.ngAfterViewInit();
         }
@@ -338,7 +338,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoDeAdicionales = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoDeAdicionales) {
+        if (this.permisoDeAdicionales==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigDatAdicionales');
           this.ngAfterViewInit();
         }
@@ -348,7 +348,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoInteresados = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoInteresados) {
+        if (this.permisoInteresados==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigInt');
           this.ngAfterViewInit();
         }
@@ -359,7 +359,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoContrarios = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoContrarios) {
+        if (this.permisoContrarios==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigContra');
           this.ngAfterViewInit();
         }
@@ -370,7 +370,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoProcurador = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoProcurador) {
+        if (this.permisoProcurador==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigProc');
           this.ngAfterViewInit();
         }
@@ -381,7 +381,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoCambLetrado = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoCambLetrado) {
+        if (this.permisoCambLetrado==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigCamb');
           this.ngAfterViewInit();
         }
@@ -393,7 +393,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoRelaciones = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoRelaciones) {
+        if (this.permisoRelaciones==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigRel');
           this.ngAfterViewInit();
         }
@@ -404,7 +404,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoComunicaciones = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoComunicaciones) {
+        if (this.permisoComunicaciones==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigCom');
           this.ngAfterViewInit();
         }
@@ -415,7 +415,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoDocumentacion = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoDocumentacion) {
+        if (this.permisoDocumentacion==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigDoc');
           this.ngAfterViewInit();
         }
@@ -426,7 +426,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoActuaciones = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoActuaciones) {
+        if (this.permisoActuaciones==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigAct');
           this.ngAfterViewInit();
         }
@@ -437,7 +437,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       .then(respuesta => {
         this.permisoFacturacion = respuesta;
         // Añadir en la lista tarjetas.
-        if (!this.permisoFacturacion) {
+        if (this.permisoFacturacion==undefined) {
           this.listaTarjetas = this.listaTarjetas.filter((tarjeta) => tarjeta.id !== 'sjcsDesigDatFac');
           this.ngAfterViewInit();
         }

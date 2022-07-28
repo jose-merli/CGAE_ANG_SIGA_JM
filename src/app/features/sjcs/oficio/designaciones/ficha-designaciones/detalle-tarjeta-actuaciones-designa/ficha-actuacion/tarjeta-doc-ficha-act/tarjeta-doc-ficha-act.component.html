@@ -36,7 +36,7 @@
       <td style="text-align: center !important;" *ngFor="let col of columns">
 
         <span *ngIf="col.field == 'observaciones'">
-          <textarea class="form-control" pInputTextarea [(ngModel)]="dato[col.field]"></textarea>
+          <textarea [disabled]="modoLectura" class="form-control" pInputTextarea [(ngModel)]="dato[col.field]"></textarea>
         </span>
 
         <span *ngIf="col.field == 'nombreFichero' && dato.nuevo" class="text-center">
