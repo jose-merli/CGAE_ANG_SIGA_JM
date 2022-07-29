@@ -33,13 +33,13 @@
               </app-fecha>
             </div>
             <div class="form-group-interlineado col-lg-3 col-md-3">
-              <p-checkbox [disabled] = "modoLectura || (esLetrado && esColegiado)" (onChange)="onChangeCheckSalto($event)" [(ngModel)]="salto" binary="true"
+              <p-checkbox [disabled] = "modoLectura || (esLetrado)" (onChange)="onChangeCheckSalto($event)" [(ngModel)]="salto" binary="true"
                 label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate }}" name="groupname"
                 ></p-checkbox>
 
             </div>
             <div class="form-group-interlineado col-lg-3 col-md-3">
-              <p-checkbox [disabled] = "modoLectura || (esLetrado && esColegiado)" (onChange)="onChangeCheckCompensacion($event)" [(ngModel)]="compensacion" binary="true"
+              <p-checkbox [disabled] = "modoLectura || (esLetrado)" (onChange)="onChangeCheckCompensacion($event)" [(ngModel)]="compensacion" binary="true"
                 label="{{ 'justiciaGratuita.oficio.designas.letrados.compensacion' | translate }}" name="groupname"
                 ></p-checkbox>
 
@@ -68,11 +68,11 @@
 
     <div class="card-footer" >
       <div class="text-right main-button ">
-        <button *ngIf="esLetrado && esColegiado" [disabled]="modoLectura || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button *ngIf="esLetrado && esColegiado" [disabled]="modoLectura || esLetrado || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
           label="{{ 'general.boton.solicitarSustitucion' | translate}}"></button>
 
-          <button *ngIf="!esLetrado && esColegiado" [disabled]="modoLectura || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.sustituir' | translate}}"></button>
+        <button *ngIf="!esLetrado && esColegiado" [disabled]="modoLectura || esLetrado || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
+        label="{{ 'general.boton.sustituir' | translate}}"></button>
       </div>
     </div>
   </div>
