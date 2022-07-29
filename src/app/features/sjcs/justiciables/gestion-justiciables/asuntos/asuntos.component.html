@@ -65,7 +65,7 @@
           <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
             <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
               <td class="text-center" *ngFor="let col of columns">
-                <div *ngIf="col.field != 'fecha' && col.field != 'datosInteres'">
+                <div *ngIf="col.field != 'fecha' && col.field != 'datosInteres' && col.field != 'asunto'">
                   <span>{{dato[col.field]}}</span>
                 </div>
                 <div *ngIf="col.field == 'fecha'">
@@ -73,6 +73,11 @@
                     <label>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</label>
                   </div>
                 </div>
+                
+                <div *ngIf="col.field == 'asunto'">
+                  <span class="enlace" (click) = "openTab(dato)">{{dato[col.field]}}</span>
+                </div>
+
                 <div *ngIf="col.field == 'datosInteres'">
                   <div [innerHTML]="dato[col.field]"></div>
                 </div>

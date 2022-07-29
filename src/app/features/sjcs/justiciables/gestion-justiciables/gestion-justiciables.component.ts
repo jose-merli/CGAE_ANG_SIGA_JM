@@ -353,12 +353,18 @@ export class GestionJusticiablesComponent implements OnInit {
     } else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
       this.modoEdicion = true;
       this.justiciableBusquedaItem = this.persistenceService.getDatos();
+      sessionStorage.setItem("fichaJusticiable", JSON.stringify(this.justiciableBusquedaItem));
       this.search();
 
     } else if (this.fromAsistenciaAsistido && sessionStorage.getItem("Nuevo")) {
       this.modoEdicion = false;
       this.body = new JusticiableItem();
       sessionStorage.removeItem("Nuevo");
+    }else if(sessionStorage.getItem("fichaJusticiable") && this.persistenceService.getDatos() == null && !this.modoRepresentante){
+      this.modoEdicion = true;
+      this.justiciableBusquedaItem = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
+      this.search();
+
     } else {
       sessionStorage.removeItem("Nuevo");
       this.modoEdicion = false;

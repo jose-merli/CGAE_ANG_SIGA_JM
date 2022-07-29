@@ -831,7 +831,11 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       sessionStorage.setItem("idAsistencia", asistencia.anio + "/" + asistencia.numero);
       sessionStorage.setItem("vieneDeFichaDesigna", "true");
       this.router.navigate(['/fichaAsistencia']);
-    } else {
+    } else if(sessionStorage.getItem("vieneDeFichaJusticiable")){
+      sessionStorage.removeItem("vieneDeFichaJusticiable")
+      this.location.back();
+    } 
+    else {
       sessionStorage.setItem("volver", "true");
       this.router.navigate(['/designaciones']);
     }

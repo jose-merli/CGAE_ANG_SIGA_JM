@@ -8,6 +8,9 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../commons/translate/translation.service';
+import { SigaStorageService } from '../../../../../siga-storage.service';
+import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-asuntos',
@@ -49,6 +52,8 @@ export class AsuntosComponent implements OnInit, OnChanges {
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
     private commonsService: CommonsService,
+    private translateServices: TranslateService,
+    private sigaStorageService: SigaStorageService,
     private persistenceService: PersistenceService,
     private router: Router) { }
 
@@ -293,7 +298,95 @@ export class AsuntosComponent implements OnInit, OnChanges {
     this.msgs = [];
   }
 
-  openTab() {
+  openTab(dato) {
+    let identificador = dato.tipo;
+    switch (identificador) {
+      case 'A':
+        sessionStorage.setItem("idAsistencia",dato.anio+"/"+dato.numero);
+        sessionStorage.setItem("vieneDeFichaDesigna", "true");
+        this.router.navigate(["/fichaAsistencia"]);
+
+        break;
+
+      case 'D':
+        let desItem: any = new DesignaItem();
+
+        desItem.ano = dato.anio;
+        desItem.numero = dato.numero;
+        desItem.codigo = dato.codigo;
+        desItem.idTurno = dato.clave;
+        /*desItem.idInstitucion = dato.idinstitucion;
+        desItem.codigo = dato.codigo;
+        desItem.descripcionTipoDesigna = dato.destipo
+        desItem.fechaEntradaInicio = dato.fechaasunto;
+        desItem.nombreTurno = dato.descturno;
+        desItem.nombreProcedimiento = dato.dilnigproc.split('-')[2];
+        desItem.nombreColegiado = dato.letrado;*/
+        desItem.ano = 'D' + desItem.ano + '/' + desItem.codigo;
+        let request = [desItem.ano, desItem.idTurno, desItem.numero];
+        this.sigaServices.post("designaciones_busquedaDesignacionActual", request).subscribe(
+          data => {
+            let datos = JSON.parse(data.body);
+            //Se cambia el valor del campo ano para que se procese de forma adecuada 
+            //En la ficha en las distintas tarjetas para obtener sus valores
+            //
+            datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
+            datos.fechaEntradaInicio = desItem.fechaEntradaInicio;
+            datos.nombreColegiado = desItem.nombreColegiado;
+            datos.nombreProcedimiento = desItem.nombreProcedimiento;
+            datos.nombreTurno = desItem.nombreTurno;
+            datos.idInstitucion = desItem.idInstitucion;
+            datos.idTurno = desItem.idTurno;
+
+            desItem = datos;
+            desItem.anio = desItem.ano;
+            desItem.idProcedimiento = desItem.idProcedimiento;
+            desItem.numProcedimiento = desItem.numProcedimiento;
+            desItem.ano = 'D' + desItem.anio + '/' + desItem.codigo;
+            sessionStorage.setItem("vieneDeFichaJusticiable", "true");
+            sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
+            sessionStorage.setItem("nuevaDesigna", "false");
+            this.router.navigate(['/fichaDesignaciones']);
+          });
+        break;
+      case 'E':
+        this.progressSpinner = true;
+        let ejgItem = new EJGItem();
+        ejgItem.annio = dato.anio;
+        // ejgItem.numero = dato.numero;
+        ejgItem.numero = dato.numero;
+        ejgItem.idInstitucion = dato.idinstitucion;
+        ejgItem.tipoEJG = dato.clave;
+
+        let result;
+        // al no poder obtener todos los datos del EJG necesarios para obtener su informacion
+        //se hace una llamada a al base de datos pasando las claves primarias y obteniendo los datos necesarios
+        this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
+          n => {
+            result = JSON.parse(n.body).ejgItems;
+            sessionStorage.setItem("EJGItemDesigna", JSON.stringify(result[0]));
+            let error = JSON.parse(n.body).error;
+
+            this.progressSpinner = false;
+            if (error != null && error.description != null) {
+              this.showMessage("info", this.translateServices.instant("general.message.informacion"), error.description);
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+            //console.log(err);
+          },
+          () => {
+            this.router.navigate(["/gestionEjg"]);
+          }
+        );
+        break; 
+
+      default:
+        //Introducir en la BBDD
+        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
+        break;
+    }
 
   }
 }
