@@ -205,7 +205,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         this.asociarJust(data, true);
       },
       reject: () => {
-        this.asociarJust(data, false);
+        this.showMesg("info", "Cancelar", this.translateService.instant("general.message.accion.cancelada"));
       }
     });
   }
@@ -462,6 +462,40 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
               this.progressSpinner = false;
               this.showMesg("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
               //this.location.back();
+            }
+          );
+          break;
+        case 'soj':
+          let requestSoj = [data.anio, data.numero, data.idTipoSoj, this.datosJusticiable.idpersona];
+          this.sigaServices.post("gestionJusticiables_asociarJusticiableSOJ", requestSoj).subscribe(
+            m => {
+
+              this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+              sessionStorage.removeItem("radioTajertaValue");
+
+              if (!copy) {
+                this.progressSpinner = false;
+                this.location.back();
+              }
+              else {
+                this.sigaServices.post("gestionJusticiables_copyEjg2Soj", requestSoj).subscribe(
+                  x => {
+                    this.progressSpinner = false;
+                    this.showMesg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+                    this.location.back();
+                  },
+                  err => {
+                    //Crear etiqueta en la BBDD
+                    this.showMesg("error", this.translateService.instant("general.message.incorrect"), "Se ha producido un error al copiar los datos del EJG al SOJ seleccionado");
+                    this.location.back();
+                  }
+                );
+              }
+            },
+            err => {
+              this.showMesg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+              // this.location.back();
+              this.progressSpinner = false;
             }
           );
           break;

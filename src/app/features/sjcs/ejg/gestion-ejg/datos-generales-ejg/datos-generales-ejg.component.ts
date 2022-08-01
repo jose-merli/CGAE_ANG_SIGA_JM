@@ -435,12 +435,19 @@ export class DatosGeneralesEjgComponent implements OnInit {
                       //Se debe añadir a la BBDD estos mensajes (etiquetas)
                       if (JSON.parse(m.body).error.code == 200) {
                         this.progressSpinner = false;
+
                       }
                     },
                     err => {
                       this.progressSpinner = false;
                       //this.location.back();
+                    }, () => {
+                      this.progressSpinner = false;
+                      sessionStorage.setItem("volver", "true");
+                      sessionStorage.removeItem("justiciable");
+                      this.location.back();
                     }
+                    
                   );
                 
               } else if (this.datosAsistencia) {

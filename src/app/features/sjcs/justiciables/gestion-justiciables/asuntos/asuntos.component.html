@@ -141,6 +141,16 @@
           (click)="checkPermisosAsociarAsistencia()" type="button" iconPos="left"
           label="{{'general.boton.AsociarAsistencia' | translate}}">
         </button>
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaASI"
+          (click)="checkPermisosCrearSOJ()" type="button" iconPos="left"
+          label="{{ 'general.boton.crearSOJ' | translate }}">
+        </button>
+        <button pButton
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaASI"
+          (click)="checkPermisosAsociarSOJ()" type="button" iconPos="left"
+          label="{{ 'general.boton.asociarSOJ' | translate }}">
+        </button>
         
       </div>
     </div>

@@ -565,13 +565,16 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                         this.translateService.instant("general.message.error.realiza.accion"),
                         this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
                     }
+                    sessionStorage.removeItem("justiciables");
+                    this.location.back();
                   },
                   err => {
                     //console.log(err);
                     this.progressSpinner = false;
                   }, () => {
                     this.progressSpinner = false;
-                    sessionStorage.removeItem("justiciables");
+
+                    this.location.back();
                   }
                 );
               }

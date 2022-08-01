@@ -143,7 +143,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
   }
 
-  
+
 
   // Permiso para crear Asistencia
   checkPermisosCrearAsistencia() {
@@ -158,7 +158,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
   // Crear Asistencia
   crearAsistencia() {
     sessionStorage.setItem("justiciable", JSON.stringify(this.body));
-    sessionStorage.setItem("nuevaAsistencia","true");
+    sessionStorage.setItem("nuevaAsistencia", "true");
     this.router.navigate(["/fichaAsistencia"]);
   }
 
@@ -170,7 +170,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     } else {
       this.asociarAsistencia();
     }
-    
+
   }
 
   // Asociar Asistencia
@@ -178,6 +178,41 @@ export class AsuntosComponent implements OnInit, OnChanges {
     sessionStorage.setItem("radioTajertaValue", 'asi');
     sessionStorage.setItem("justiciable", JSON.stringify(this.body));
     this.router.navigate(["/busquedaAsuntos"]);
+  }
+
+  // Permisos para asociar SOJ
+  checkPermisosAsociarSOJ() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.asociarSOJ();
+    }
+  }
+
+  // Asociar SOJ
+  asociarSOJ() {
+    sessionStorage.setItem("radioTajertaValue", 'soj');
+    let justiciable = JSON.stringify(this.body);
+    sessionStorage.setItem("justiciable", justiciable);
+    this.router.navigate(["/busquedaAsuntos"]);
+  }
+
+  // Permisos para asociar SOJ
+  checkPermisosCrearSOJ() {
+    let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
+    if (msg != undefined) {
+      this.msgs = msg;
+    } else {
+      this.crearSOJ();
+    }
+  }
+
+  // Crear SOJ
+  crearSOJ() {
+    let justiciable = JSON.stringify(this.body);
+    sessionStorage.setItem("justiciable", justiciable);
+    this.router.navigate(["/soj"]);
   }
 
   ngOnChanges(changes: SimpleChanges) {
