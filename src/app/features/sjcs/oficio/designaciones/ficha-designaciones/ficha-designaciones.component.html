@@ -22,7 +22,7 @@
                         <mat-expansion-panel [disabled]="true">
                             <mat-expansion-panel-header class="h-100" [collapsedHeight]="'auto'"
                                 [expandedHeight]="'auto'">
-                                <app-tarjeta [image]="tarjetaFija.imagen" [cardTitle]="tarjetaFija.nombre"
+                                <app-tarjeta [cardTitle]="tarjetaFija.nombre"
                                     [campos]="tarjetaFija.campos" [icon]="tarjetaFija.icono"
                                     [enlaces]="tarjetaFija.enlaces" [fixed]="tarjetaFija.fixed" class="w-100"
                                     (isOpen)="isOpenReceive($event)">
@@ -92,7 +92,7 @@
                                             [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
                                             [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
                                             [procuradores]="procurador"
-                                            (modDatos)="modDatos($event)" (mostrar)="mostrar()"
+                                            (mostrar)="mostrar()"
                                             (restablecer)="restablecer()">
                                         </app-detalle-tarjeta-procurador-ficha-designacion-oficio>
                                     </div>

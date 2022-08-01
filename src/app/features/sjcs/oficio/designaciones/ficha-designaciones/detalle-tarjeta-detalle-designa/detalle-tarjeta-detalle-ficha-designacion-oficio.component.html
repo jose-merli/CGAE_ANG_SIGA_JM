@@ -2,6 +2,7 @@
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
+<div id="sjcsDesigaDet">
 <div class="row w-100 m-0 padding-interior">
   <div class="form-row w-100">
 
@@ -65,6 +66,23 @@
   </div>
 </div>
 
+<div class="card-footer">
+  <div class="text-right main-button">
+    <button pButton type="button" icon="" iconPos="left" label="Finalizar" [disabled]="disableFinalizar || isLetrado"
+      (click)="showMsg('success', 'Se ha finalizado correctamente', 'Finalizar')"></button>
+    <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Anular"
+      [disabled]="disableAnular || isLetrado"
+      (click)="showMsg('success', 'Se ha anulado correctamente', 'Anular')"></button>
+    <button pButton type="button" icon="" iconPos="left" label="Reactivar" [disabled]="disableReactivar || isLetrado"
+      (click)="showMsg('success', 'Se ha anulado correctamente', 'Reactivar')"></button>
+    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
+      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')"
+      [disabled]="disableRestablecer"></button>
+    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+      (click)="showMsg('success', 'Se ha guardado correctamente', 'Guardar')" [disabled]="disableGuardar"></button>
+  </div>
+</div>
+</div>
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardar" width="425"
   #confirmGuardar>
   <p-footer>
@@ -91,21 +109,3 @@
       (click)="confirmGuardarCompensacion.reject()"></button>
   </p-footer>
 </p-confirmDialog>
-
-
-<div class="card-footer">
-  <div class="text-right main-button">
-    <button pButton type="button" icon="" iconPos="left" label="Finalizar" [disabled]="disableFinalizar || isLetrado"
-      (click)="showMsg('success', 'Se ha finalizado correctamente', 'Finalizar')"></button>
-    <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Anular"
-      [disabled]="disableAnular || isLetrado"
-      (click)="showMsg('success', 'Se ha anulado correctamente', 'Anular')"></button>
-    <button pButton type="button" icon="" iconPos="left" label="Reactivar" [disabled]="disableReactivar || isLetrado"
-      (click)="showMsg('success', 'Se ha anulado correctamente', 'Reactivar')"></button>
-    <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-      (click)="showMsg('success', 'Se ha restablecido correctamente', 'Restablecer')"
-      [disabled]="disableRestablecer"></button>
-    <button pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-      (click)="showMsg('success', 'Se ha guardado correctamente', 'Guardar')" [disabled]="disableGuardar"></button>
-  </div>
-</div>

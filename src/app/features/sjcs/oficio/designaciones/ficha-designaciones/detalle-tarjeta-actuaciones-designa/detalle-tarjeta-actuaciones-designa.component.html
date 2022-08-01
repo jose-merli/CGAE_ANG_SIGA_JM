@@ -9,6 +9,7 @@
 <!-- Spinner -->
 
 <!-- Tabla de actuaciones -->
+<div id="sjcsDesigAct">
 <p-table [value]="actuacionesDesignaItems" [columns]="cols" [responsive]="true" #table class="tabla-listado"
   selectionMode="multiple" [(selection)]="actuacionesSeleccionadas" (onRowSelect)="onRowSelected($event)">
 
@@ -68,5 +69,6 @@
     <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
       (click)="nuevo()" [disabled]="(isLetrado && !permiteTurno) || modoLectura"></button>
   </div>
+</div>
 </div>
 <!-- Tabla de actuaciones -->

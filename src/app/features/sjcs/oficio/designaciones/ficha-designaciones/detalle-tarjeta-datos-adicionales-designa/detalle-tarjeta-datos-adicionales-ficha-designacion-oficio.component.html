@@ -1,5 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
+<div id="sjcsDesigDatAdicionales">
 <div class="row w-100 m-0 padding-interior">
 
     <div class="bloque col-lg-4 col-md-4 mb-3" *ngFor="let bloque of bloques; let i = index;"
@@ -40,7 +41,7 @@
             (click)="showMsg('success', 'Se ha guardado correctamente', 'Guardar')"></button>
     </div>
 </div>
-
+</div>
 <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
   </div>

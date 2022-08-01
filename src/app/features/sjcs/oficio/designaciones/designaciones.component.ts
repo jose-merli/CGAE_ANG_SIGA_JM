@@ -12,6 +12,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { OldSigaServices } from '../../../../_services/oldSiga.service';
 import { SigaServices } from '../../../../_services/siga.service';
 import { FiltroDesignacionesComponent } from './filtro-designaciones/filtro-designaciones.component';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-designaciones',
@@ -230,9 +231,10 @@ export class DesignacionesComponent implements OnInit {
           element.sufijo = element.estado;
           element.estado = 'Anulada';
          }
-         element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
+         element.nombreColegiado = this.nombreType(element);
+
          if(element.nombreInteresado != null){
-          element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
+          element.nombreInteresado = this.interesadoType(element);
          }
          if(element.art27 == "1"){
           element.art27 = "Si";
@@ -275,6 +277,33 @@ export class DesignacionesComponent implements OnInit {
         }, 5);
       });;
      
+  }
+
+  nombreType(element){
+    var textReturn = ""
+    if(element.apellido1Colegiado != null) textReturn += element.apellido1Colegiado + " "
+
+    if(element.apellido2colegiado != null) textReturn += element.apellido2Colegiado 
+
+    if(element.nombreColegiado != null && (element.apellido2colegiado != null || element.apellido1Colegiado != null ) ) textReturn += ", " + element.nombreColegiado
+
+    if(element.nombreColegiado != null && (element.apellido2colegiado == null && element.apellido1Colegiado == null ) ) textReturn +=  element.nombreColegiado
+
+    return textReturn;
+
+  }
+  interesadoType(element){
+    var textReturn = ""
+    if(element.apellido1Interesado != null) textReturn += element.apellido1Interesado + " "
+
+    if(element.apellido2Interesado != null) textReturn += element.apellido2Interesado 
+
+    if(element.nombreInteresado != null && (element.apellido2Interesado != null || element.apellido1Interesado != null ) ) textReturn += ", " + element.nombreInteresado
+
+    if(element.nombreInteresado != null && (element.apellido2Interesado == null && element.apellido1Interesado == null ) ) textReturn +=  element.nombreInteresado
+
+    return textReturn;
+
   }
 
   getDatosAdicionales(element) {
