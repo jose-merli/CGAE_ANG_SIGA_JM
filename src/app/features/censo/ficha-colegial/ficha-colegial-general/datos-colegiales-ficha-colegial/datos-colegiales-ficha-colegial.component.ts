@@ -133,6 +133,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
   icon: string;
   msgDir = "";
   generalEstadoCivil: any[] = [];
+  cuentaContableSJCS: string;
 
   comboSexo = [
     { label: "Hombre", value: "H" },
@@ -258,6 +259,8 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       this.resaltadoDatosColegiales=true;
         this.abreCierraFicha('colegiales');
       }
+
+    this.getCuentaContableSJCS();
   }
 
   ngOnChanges() {
@@ -2198,4 +2201,14 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     );
   }
 
+  getCuentaContableSJCS() {
+    this.sigaServices.post("fichaDatosColegiales_cuentaContableSJCSSearch", this.generalBody).subscribe(
+      data => {
+        this.cuentaContableSJCS = JSON.parse(data.body).valor;
+      },
+      err => {
+        //console.log(err);
+      }
+    )
+  }
 }
