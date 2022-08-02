@@ -182,6 +182,8 @@ export class TablaGuardiasComponent implements OnInit {
       this.datos.idGuardia = evento.idGuardia;
       this.datos.idTurno = evento.idTurno;
       this.persistenceService.setDatos(this.datos);
+      // Informar datos De Guardias.
+      sessionStorage.setItem('saltos-compesacionesItem',JSON.stringify(this.datos));
       this.persistenceService.setHistorico(evento.fechabaja ? true : false);
       this.router.navigate(["/gestionGuardias"]);
     } else {

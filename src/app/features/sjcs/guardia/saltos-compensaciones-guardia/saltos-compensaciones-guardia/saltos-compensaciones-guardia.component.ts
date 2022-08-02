@@ -11,7 +11,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { FiltrosSaltosCompensacionesGuardiaComponent } from './filtros-saltos-compensaciones-guardia/filtros-saltos-compensaciones-guardia.component';
 import { TablaResultadoMixSaltosCompGuardiaComponent } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp-guardia.component';
 import { Row, Cell, TablaResultadoMixSaltosCompService, Combo } from './tabla-resultado-mix-saltos-comp-guardia/tabla-resultado-mix-saltos-comp.service';
-
+import { Location } from '@angular/common';
 export interface Cabecera {
   id: string;
   name: string;
@@ -119,7 +119,8 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private datepipe: DatePipe,
-    private trmService: TablaResultadoMixSaltosCompService
+    private trmService: TablaResultadoMixSaltosCompService,
+    private location: Location
 ) { }
 
 
@@ -147,7 +148,9 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
 
     this.dataFilterFromColaGuardia = JSON.parse(sessionStorage.getItem("itemSaltosCompColaGuardia"));
   }
-
+  volver() {
+    this.location.back();
+  }
   getComboTurno() {
 
     this.sigaServices.get("busquedaGuardia_turno").subscribe(
