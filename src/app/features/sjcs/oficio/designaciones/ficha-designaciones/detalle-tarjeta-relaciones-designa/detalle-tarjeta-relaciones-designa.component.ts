@@ -90,12 +90,14 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
 
   getCols() {
     this.cols = [
-      { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '6%' },
-      { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
+      { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '120px' },
+      { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '120px' },
       { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
+      { field: "nColLetrado", header: "justiciaGratuita.designas.relaciones.numColegiado", width: '120px'},
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
+      { field: "nifInteresado", header: "justiciaGratuita.designas.relaciones.numIdentificador", width: '120px'},
       { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
-      { field: "dilnigproc", header: 'justiciaGratuita.ejg.busquedaAsuntos.nigNumProc' },
+      { field: "dilnigproc", header: 'justiciaGratuita.designas.relaciones.dilnigproc' },
       { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
 
     ];

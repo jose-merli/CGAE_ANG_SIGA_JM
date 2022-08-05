@@ -1356,7 +1356,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
                 }
               ]
             }
-            this.tarjetaFija.campos[3].value = primero.apellidosnombre;
+            this.tarjetaFija.campos[3].value = primero.apellidosnombre + " (Total:"+this.interesados.length+")";
             this.nombreInteresado = primero.apellidosnombre;
           }
           if (this.tarjetaInteresados != undefined) {
