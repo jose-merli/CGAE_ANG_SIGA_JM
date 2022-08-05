@@ -643,9 +643,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               this.progressSpinner = false;
             },
             err => {
+              detail = this.translateService.instant('justiciaGratuita.oficio.designa.yaexiste');
               severity = "error";
               if (err.status == 400) {
-                summary = this.translateService.instant('justiciaGratuita.oficio.designa.yaexiste');
+                summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
               } else {
                 summary = "No se han podido modificar los datos";
               }

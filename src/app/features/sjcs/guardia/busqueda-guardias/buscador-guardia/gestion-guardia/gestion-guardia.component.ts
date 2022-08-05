@@ -58,18 +58,22 @@ export class GestionGuardiaComponent implements OnInit {
   tarjetaInscripcionesGuardias: string;
   tarjetaTurnoGuardias: string;
   persistenciaGuardia: GuardiaItem;
-  origenGuarColeg:boolean;
+  origenGuarColeg: boolean;
   guardiaCole: any;
   idTurnoFromFichaTurno = null;
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
     private commonService: CommonsService,
     private translateService: TranslateService,
-    private router : Router) { }
+    private router: Router) { }
 
 
   ngOnInit() {
     this.infoResumen = [];
+    // Comprobar si venimos de Saltos de Compesaciones para informar Datos de Guardias.
+    if (sessionStorage.getItem("saltos-compesacionesItem")) {
+      this.persistenceService.setDatos(sessionStorage.getItem("saltos-compesacionesItem"));
+    }
     if (this.persistenceService.getDatos() != undefined) {
       this.search();
       this.modoEdicion = true;
@@ -80,7 +84,7 @@ export class GestionGuardiaComponent implements OnInit {
     this.obtenerPermisos();
 
     if (sessionStorage.getItem("crearGuardiaFromFichaTurno")) {
-     
+
       this.persistenciaGuardia = new GuardiaItem();
       this.persistenciaGuardia = JSON.parse(
         sessionStorage.getItem("crearGuardiaFromFichaTurno")
@@ -89,7 +93,7 @@ export class GestionGuardiaComponent implements OnInit {
       this.idTurnoFromFichaTurno = this.persistenciaGuardia.idTurno;
     }
     if (sessionStorage.getItem("filtrosBusquedaGuardias")) {
-     
+
       this.persistenciaGuardia = new GuardiaItem();
       this.persistenciaGuardia = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaGuardias")
@@ -99,8 +103,8 @@ export class GestionGuardiaComponent implements OnInit {
     }
 
     //en caso de que la guardia venga desde Guardias de Colegiado.
-    if(sessionStorage.getItem("originGuarCole") == "true"){
-      if(sessionStorage.getItem("datosGuardiaGuardiaColeg")){
+    if (sessionStorage.getItem("originGuarCole") == "true") {
+      if (sessionStorage.getItem("datosGuardiaGuardiaColeg")) {
 
         this.guardiaCole = JSON.parse(sessionStorage.getItem("datosGuardiaGuardiaColeg"));
         this.guardiaCole = true;
@@ -117,13 +121,13 @@ export class GestionGuardiaComponent implements OnInit {
   }
   search() {
     this.progressSpinner = true;
-    if(this.origenGuarColeg){
+    if (this.origenGuarColeg) {
       this.datos = JSON.parse(sessionStorage.getItem("datosGuardiaGuardiaColeg"));
       this.origenGuarColeg = false
-    }else{
+    } else {
       this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
     }
-    
+
     this.sigaServices.post("busquedaGuardias_getGuardia", this.datos).subscribe(
       n => {
         this.datos = JSON.parse(n.body);
@@ -144,35 +148,35 @@ export class GestionGuardiaComponent implements OnInit {
     if (sessionStorage.getItem("crearGuardiaFromFichaTurno")) {
       this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: this.idTurnoFromFichaTurno } });
       sessionStorage.removeItem("crearGuardiaFromFichaTurno");
-    }else{
-    if (this.persistenciaGuardia != undefined) {
-      sessionStorage.setItem(
-        "filtrosBusquedaGuardiasFichaGuardia",
-        JSON.stringify(this.persistenciaGuardia)
-      );
-    }
-       /*let dataToSend = {
-         'duplicar': false,
-         'tabla': [],
-         'turno':row.cells[0].value,
-         'nombre': row.cells[1].value,
-         'generado': row.cells[8].value,
-         'numGuardias': row.cells[9].value,
-         'listaGuarias': row.cells[5].value,
-         'fechaDesde': row.cells[2].value,
-         'fechaHasta': row.cells[3].value,
-         'fechaProgramacion': row.cells[4].value.value,
-         'estado': row.cells[7].value,
-         'observaciones': row.cells[6].value,
-         'idCalendarioProgramado': row.cells[10].value,
-         'idTurno': row.cells[11].value,
-         'idGuardia': row.cells[12].value
-       }*/
-        let datosFichaProgramacion = this.persistenceService.getDatos();
-        this.persistenceService.setDatos(datosFichaProgramacion);
-         //this.router.navigate(["/fichaProgramacion"]);
-        this.location.back();
+    } else {
+      if (this.persistenciaGuardia != undefined) {
+        sessionStorage.setItem(
+          "filtrosBusquedaGuardiasFichaGuardia",
+          JSON.stringify(this.persistenciaGuardia)
+        );
       }
+      /*let dataToSend = {
+        'duplicar': false,
+        'tabla': [],
+        'turno':row.cells[0].value,
+        'nombre': row.cells[1].value,
+        'generado': row.cells[8].value,
+        'numGuardias': row.cells[9].value,
+        'listaGuarias': row.cells[5].value,
+        'fechaDesde': row.cells[2].value,
+        'fechaHasta': row.cells[3].value,
+        'fechaProgramacion': row.cells[4].value.value,
+        'estado': row.cells[7].value,
+        'observaciones': row.cells[6].value,
+        'idCalendarioProgramado': row.cells[10].value,
+        'idTurno': row.cells[11].value,
+        'idGuardia': row.cells[12].value
+      }*/
+      let datosFichaProgramacion = this.persistenceService.getDatos();
+      this.persistenceService.setDatos(datosFichaProgramacion);
+      //this.router.navigate(["/fichaProgramacion"]);
+      this.location.back();
+    }
   }
 
   modoEdicionSend(event) {
