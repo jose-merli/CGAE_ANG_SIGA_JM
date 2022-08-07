@@ -43,7 +43,7 @@
     </div>
     <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
       <div class="row">
-        <p-table [value]="datos" [rows]="selectedItem" [columns]="cols" selectionMode="single" (onRowSelect)="openTab()"
+        <p-table [value]="datos" [rows]="selectedItem" [columns]="cols" selectionMode="single" (onRowSelect)="openTab($event)"
           [responsive]="true" #table class="tabla-listado" [paginator]="true" paginatorPosition="both">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
@@ -142,12 +142,12 @@
           label="{{'general.boton.AsociarAsistencia' | translate}}">
         </button>
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaASI"
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
           (click)="checkPermisosCrearSOJ()" type="button" iconPos="left"
           label="{{ 'general.boton.crearSOJ' | translate }}">
         </button>
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || noAsociaASI"
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
           (click)="checkPermisosAsociarSOJ()" type="button" iconPos="left"
           label="{{ 'general.boton.asociarSOJ' | translate }}">
         </button>
