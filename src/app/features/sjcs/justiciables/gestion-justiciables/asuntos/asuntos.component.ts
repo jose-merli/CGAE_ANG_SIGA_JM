@@ -11,6 +11,7 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { DatePipe } from '@angular/common'
 
 @Component({
   selector: 'app-asuntos',
@@ -55,10 +56,12 @@ export class AsuntosComponent implements OnInit, OnChanges {
     private translateServices: TranslateService,
     private sigaStorageService: SigaStorageService,
     private persistenceService: PersistenceService,
-    private router: Router) { }
+    private router: Router,
+    private datepipe: DatePipe) { }
 
   ngOnInit() {
     this.getCols();
+
   }
 
   // Comprobar Permisos De Designación
@@ -365,19 +368,19 @@ export class AsuntosComponent implements OnInit, OnChanges {
             //Se cambia el valor del campo ano para que se procese de forma adecuada 
             //En la ficha en las distintas tarjetas para obtener sus valores
             //
-            datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
+            /*datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
             datos.fechaEntradaInicio = desItem.fechaEntradaInicio;
             datos.nombreColegiado = desItem.nombreColegiado;
             datos.nombreProcedimiento = desItem.nombreProcedimiento;
             datos.nombreTurno = desItem.nombreTurno;
             datos.idInstitucion = desItem.idInstitucion;
-            datos.idTurno = desItem.idTurno;
+            datos.idTurno = desItem.idTurno;*/
 
             desItem = datos;
             desItem.anio = desItem.ano;
-            desItem.idProcedimiento = desItem.idProcedimiento;
-            desItem.numProcedimiento = desItem.numProcedimiento;
+            desItem.fechaEntradaInicio = this.datepipe.transform(new Date(datos.fechaEntradaInicio), 'dd/MM/yyyy');
             desItem.ano = 'D' + desItem.anio + '/' + desItem.codigo;
+
             sessionStorage.setItem("vieneDeFichaJusticiable", "true");
             sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
             sessionStorage.setItem("nuevaDesigna", "false");
