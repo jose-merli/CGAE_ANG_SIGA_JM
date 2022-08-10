@@ -60,11 +60,11 @@ export class TablaBusquedaBaremosComponent implements OnInit {
       { field: "nDias", header: "facturacionSJCS.baremosDeGuardia.nDias", width: '5%' },
       { field: "baremo", header: "facturacionSJCS.baremosDeGuardia.tipoBaremo", width: '15%' },
       { field: "diasGuardia", header: "facturacionSJCS.baremosDeGuardia.diasAplicar", width: '5%' },
-      { field: "numMinimoSimple", header: "facturacionSJCS.baremosDeGuardia.minimo", width: '5%' },
+      { field: "disponibilidad", header: "facturacionSJCS.baremosDeGuardia.minimo", width: '5%' },
+      { field: "numMinimoSimple", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
       { field: "simpleOImporteIndividual", header: "facturacionSJCS.baremosDeGuardia.dispImporte", width: '5%' },
       { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
       { field: "maximo", header: "facturacionSJCS.baremosDeGuardia.maximo", width: '5%' },
-      { field: "naPartir", header: "facturacionSJCS.baremosDeGuardia.naPartir", width: '5%' },
       { field: "porDia", header: "facturacionSJCS.baremosDeGuardia.porDia", width: '5%' }
     ];
 

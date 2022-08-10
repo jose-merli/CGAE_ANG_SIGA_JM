@@ -32,7 +32,7 @@
             <span (click)="openFichaBaremos(rowData, historico)" class="enlace" [ngClass]="{'enlace': !setItalic(rowData), 'historico': setItalic(rowData)}">{{rowData[col.field]}}</span>
           </div>
 
-          <div *ngIf="col.field =='simpleOImporteIndividual' || col.field == 'maximo'">
+          <div *ngIf="col.field =='simpleOImporteIndividual' || col.field == 'maximo' || col.field == 'disponibilidad'">
             <span [ngClass]="{'historico': setItalic(rowData)}">{{rowData[col.field] | currency: 'EUR'}}</span>
           </div>
 
