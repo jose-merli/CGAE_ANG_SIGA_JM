@@ -227,7 +227,7 @@ export class GestionCostesfijosComponent implements OnInit {
       this.msgs = msg;
     } else {
 
-      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || this.editMode || !this.permisoEscritura || this.nuevo) {
+      if (((!this.selectMultiple || !this.selectAll) && (this.selectedDatos == undefined || this.selectedDatos.length == 0)) || !this.permisoEscritura || this.nuevo) {
         this.msgs = this.commonsService.checkPermisoAccion();
       } else {
         this.confirmDelete();
