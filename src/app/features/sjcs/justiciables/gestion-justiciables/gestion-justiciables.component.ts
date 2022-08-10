@@ -360,7 +360,7 @@ export class GestionJusticiablesComponent implements OnInit {
       this.modoEdicion = false;
       this.body = new JusticiableItem();
       sessionStorage.removeItem("Nuevo");
-    }else if(sessionStorage.getItem("fichaJusticiable") && this.persistenceService.getDatos() == null && !this.modoRepresentante){
+    } else if (sessionStorage.getItem("fichaJusticiable") && this.persistenceService.getDatos() == null && !this.modoRepresentante) {
       this.modoEdicion = true;
       this.justiciableBusquedaItem = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
       this.search();
@@ -688,8 +688,16 @@ export class GestionJusticiablesComponent implements OnInit {
 
     //VISTA JUSTICIABLE
     if (!this.checkedViewRepresentante) {
-      let justiciableBusqueda = this.justiciableBusquedaItem;
-      this.callServiceSearch(justiciableBusqueda);
+      let justiciableBusqueda;
+      if (sessionStorage.getItem("ejgJusticiableView")) {
+        justiciableBusqueda = JSON.parse(sessionStorage.getItem("ejgJusticiableView"));
+        this.callServiceSearch(justiciableBusqueda);
+        sessionStorage.removeItem("ejgJusticiableView");
+      } else {
+        justiciableBusqueda = this.justiciableBusquedaItem;
+        this.callServiceSearch(justiciableBusqueda);
+      }
+
       //VISTA REPRESENTANTE
     } else {
       let representanteBusqueda = this.representanteBusquedaItem;

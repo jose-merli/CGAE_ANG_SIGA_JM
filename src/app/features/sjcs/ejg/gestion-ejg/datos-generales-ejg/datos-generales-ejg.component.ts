@@ -435,6 +435,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
                       //Se debe añadir a la BBDD estos mensajes (etiquetas)
                       if (JSON.parse(m.body).error.code == 200) {
                         this.progressSpinner = false;
+                        sessionStorage.setItem("ejgJusticiableView",JSON.stringify(this.datosJusticiables));
 
                       }
                     },
@@ -443,8 +444,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
                       //this.location.back();
                     }, () => {
                       this.progressSpinner = false;
-                      sessionStorage.setItem("volver", "true");
-                      sessionStorage.removeItem("justiciable");
                       this.location.back();
                     }
                     

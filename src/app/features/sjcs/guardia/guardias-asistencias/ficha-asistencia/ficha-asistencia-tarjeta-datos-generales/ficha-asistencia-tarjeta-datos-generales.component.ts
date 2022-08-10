@@ -15,6 +15,7 @@ import { SigaStorageService } from '../../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { JusticiableItem } from '../../../../../../models/sjcs/JusticiableItem';
+import { Location } from '@angular/common'
 
 @Component({
   selector: 'app-ficha-asistencia-tarjeta-datos-generales',
@@ -64,6 +65,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     private commonServices: CommonsService,
     private router: Router,
     private sigaStorageService: SigaStorageService,
+    private location: Location,
     private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
@@ -536,13 +538,14 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           //Se debe añadir a la BBDD estos mensajes (etiquetas)
           if (JSON.parse(m.body).error.code == 200) {
             this.progressSpinner = false;
+            this.location.back();
           }
         },
         err => {
           this.progressSpinner = false;
+          this.location.back();
         },
         () => {
-          sessionStorage.removeItem("justiciable");
         }
       );
     }

@@ -571,9 +571,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                   err => {
                     //console.log(err);
                     this.progressSpinner = false;
-                  }, () => {
-                    this.progressSpinner = false;
-
                     this.location.back();
                   }
                 );
