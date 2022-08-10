@@ -36,7 +36,7 @@
             <span [ngClass]="{'historico': setItalic(rowData)}">{{rowData[col.field] | currency: 'EUR'}}</span>
           </div>
 
-          <div *ngIf="col.field !='simpleOImporteIndividual' && col.field !='nombre' && col.field != 'maximo'">
+          <div *ngIf="col.field !='simpleOImporteIndividual' && col.field !='nombre' && col.field != 'maximo' && col.field != 'disponibilidad'">
             <span [ngClass]="{'historico': setItalic(rowData)}">{{rowData[col.field] }}</span>
           </div>
         </td>
