@@ -46,6 +46,8 @@ export class TarjetaFacturacionComponent implements OnInit {
   permisos
   datos = [];
   comboFactByPartida: any;
+  ESTADO_FAC_CERRADO = '30'
+  ESTADO_FAC_ABIERTO = '10'
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private router: Router,
@@ -117,14 +119,20 @@ export class TarjetaFacturacionComponent implements OnInit {
 
   reabrir() {
     let reabrir: CertificacionesItem[] = []
-
+    let abiertos: CertificacionesItem[] = []
     for (let fact of this.selectedDatos) {
       let estadoFact = fact.idEstado
-      if (this.certificacion.estado == "CERRADA" && estadoFact == "20") {
+      if (this.certificacion.estado == "CERRADA" && estadoFact == this.ESTADO_FAC_CERRADO) {
         let obj: CertificacionesItem = new CertificacionesItem();
         obj.idFacturacion = fact.idFacturacion
         obj.nombre = fact.nombre
         reabrir.push(obj);
+      }
+      if(this.certificacion.estado == "CERRADA" && estadoFact == this.ESTADO_FAC_ABIERTO){
+        let obj: CertificacionesItem = new CertificacionesItem();
+        obj.idFacturacion = fact.idFacturacion
+        obj.nombre = fact.nombre
+        abiertos.push(obj);
       }
     }
     if (reabrir.length != 0) {
@@ -162,7 +170,10 @@ export class TarjetaFacturacionComponent implements OnInit {
 
         }
       )
-    } else {
+    } else if(abiertos.length > 0 && this.selectedDatos.length == abiertos.length){
+      this.showMessage("warn",  this.translateService.instant("general.message.informacion"), this.translateService.instant("messages.facturacion.error.estadoAbrir"));
+   
+    }else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
     }
 
