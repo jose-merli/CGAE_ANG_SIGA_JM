@@ -35,32 +35,31 @@
     <!-- esFichaActiva('tablacolaguardias') && -->
     <div *ngIf="  openFicha" class="card-body card-body-ficha">
       <div class="form-row">
-        <div class="form-group col-lg-2 col-md-2">
-          <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
+        <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-12 col-md-12">
+            <label>{{ "justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate }}
           </label>
           <app-fecha [(value)]="turnosItem.fechaActual" (valueChangeInput)="fillFechaDesdeCalendar($event)" (valueChangeSelected)="fillFechaDesdeCalendar($event)"></app-fecha>
-        </div>
-        <div class="form-group col-lg-2 col-md-2">
+    </div></div>
+          
+        <div class="form-group col-lg-3 col-md-3">
+          <div class="form-row">
           <label>{{ "justiciaGratuita.oficio.turnos.seleccionarguardia" | translate }}
           </label>
-          <p-dropdown class="select-form" (onChange)="cargarTabla($event)" [(ngModel)]='turnosItem.idcomboguardias' [filter]="true"
+          <p-dropdown class="select-form" id="texto_cola_guardia" (onChange)="cargarTabla($event)" [(ngModel)]='turnosItem.idcomboguardias' [filter]="true"
             filterBy="label,labelSinTilde" filterMatchMode="contains" [options]="guardias" placeholder="{{'general.boton.seleccionar' | translate}}"
             [showClear]="true">
           </p-dropdown>
+      </div>
+    </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}</label>
+          <input type="text" id="texto_cola_guardia" value="{{ultimoLetrado}}"  disabled>
         </div>
         <div class="form-group col-lg-3 col-md-3">
-          <br>
-          <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}
-          </label>
-          <strong>{{ ultimoLetrado }}</strong>
-        </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <br>
-          <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}
-          </label>
-          <br>
-          <strong>{{ apeyNombreUltimo }}</strong>
-        </div>
+          <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}</label>
+          <input type="text" id="texto_cola_guardia" value="{{apeyNombreUltimo}}"  disabled>
+      </div>
       </div>
       <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [selectionMode]="selectionMode" [responsive]="true"
         #table class="tabla-listado" [paginator]="true" [rows]="selectedItem" (onRowSelect)="openTab($event)" (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
