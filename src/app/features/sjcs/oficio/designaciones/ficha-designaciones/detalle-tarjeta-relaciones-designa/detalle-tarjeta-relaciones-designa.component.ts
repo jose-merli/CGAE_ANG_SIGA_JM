@@ -91,7 +91,7 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
   getCols() {
     this.cols = [
       { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '120px' },
-      { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '120px' },
+      { field: "fechaasunto", header: "justiciaGratuita.designas.relaciones.fecha", width: '120px' },
       { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
       { field: "nColLetrado", header: "justiciaGratuita.designas.relaciones.numColegiado", width: '120px'},
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },

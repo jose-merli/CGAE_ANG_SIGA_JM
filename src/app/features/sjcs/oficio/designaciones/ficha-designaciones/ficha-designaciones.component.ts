@@ -1356,7 +1356,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
                 }
               ]
             }
-            this.tarjetaFija.campos[3].value = primero.apellidosnombre + " (Total:"+this.interesados.length+")";
+            this.tarjetaFija.campos[3].value = primero.apellidosnombre + " (Total:" + this.interesados.length + ")";
             this.nombreInteresado = primero.apellidosnombre;
           }
           if (this.tarjetaInteresados != undefined) {
@@ -1396,11 +1396,31 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
           if (this.relaciones.length > 0) {
             let tarjRelaciones = this.listaTarjetas.find(tarjRelaciones => tarjRelaciones.id === 'sjcsDesigRel');
+            // Convertir fecha a Date.
+            let fechaAsunto = this.datepipe.transform(new Date(this.relaciones[0].fechaasunto), 'dd/MM/yyyy');
+
             if (tarjRelaciones != undefined) {
+              // IDENTIFICACION RELACION
               tarjRelaciones.campos = [{
-                "key": this.translateService.instant('justiciaGratuita.oficio.justificacionExpres.numeroEJG'),
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.interesados.identificador'),
                 "value": this.relaciones[0].sjcs
               },
+              // FECHA RELACION
+              {
+                "key": this.translateService.instant('justiciaGratuita.designas.relaciones.fecha'),
+                "value": fechaAsunto
+              },
+              // DILNUMPROC RELACION
+              {
+                "key": this.translateService.instant('justiciaGratuita.designas.relaciones.dilnigproc'),
+                "value": this.relaciones[0].dilnigproc
+              },
+              // RESOLUCION RELACION
+              {
+                "key": this.translateService.instant('justiciaGratuita.maestros.fundamentosResolucion.resolucion'),
+                "value": this.relaciones[0].resolucion
+              },
+              // TOTAL RELACIONES
               {
                 "key": this.translateService.instant('justiciaGratuita.oficio.designas.relaciones.total'),
                 "value": this.relaciones.length
@@ -1816,7 +1836,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
             this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
               data => {
                 let datos = JSON.parse(data.body);
-                if ( datos.length != 0) {
+                if (datos.length != 0) {
                   this.letrados = datos;
                   this.primerLetrado = this.letrados[0];
                   if (this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == '') {
@@ -1844,7 +1864,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
                     tarj.letrado = datos[0];
                   }
 
-                  
+
 
                 } else if (datos.length == 0) {
                   let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigCamb');
@@ -1884,7 +1904,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
         data => {
           let datos = JSON.parse(data.body);
-          if ( datos.length != 0) {
+          if (datos.length != 0) {
             this.letrados = datos;
             this.primerLetrado = this.letrados[0];
             if (this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == '') {
@@ -1909,7 +1929,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
             }
 
           } else if (datos.length == 0) {
-         
+
             let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigCamb');
             if (tarj != undefined) {
               tarj.campos = [
