@@ -47,3 +47,9 @@ input:disabled {
 .ui-inputtext .camposObligatorios{
   border: 1px solid red !important;
 }
+
+::ng-deep {
+  .ui-growl-message p{
+    text-align: left;
+  }
+}

@@ -207,7 +207,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
               form.numColegiado = "";
               this.idPersona.emit("");
 
-              this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
+              this.showMessage("warn", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.justificacionExpres.colegiadoNoEncontrado"));
             }
             this.changeValue();
           },
