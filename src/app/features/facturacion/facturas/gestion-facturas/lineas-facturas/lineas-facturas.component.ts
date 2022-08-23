@@ -63,15 +63,13 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
     
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  async ngOnChanges(changes: SimpleChanges) {
     if (changes.bodyInicial != undefined && changes.bodyInicial.currentValue != undefined) {
 
       if (this.localStorageService.isLetrado)
         this.permisoEscritura = false;
-      else if (this.bodyInicial != undefined && this.bodyInicial.tipo == "FACTURA")
-        this.getPermisoFacturas();
       else
-        this.permisoEscritura = true;
+        await this.getPermisoFacturas();
 
       this.getParametrosFACTURACION();
       this.getComboTiposIVA();
@@ -84,9 +82,12 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
       
   }
 
-  getPermisoFacturas() {
-    this.commonsService
-      .checkAcceso(procesos_facturacionPyS.facturasTarjetaLineas)
+  async getPermisoFacturas() {
+    const permiso = (this.bodyInicial != undefined && this.bodyInicial.tipo == "FACTURA") 
+        ? procesos_facturacionPyS.facturasTarjetaLineas : procesos_facturacionPyS.facturasRectificativasTarjetaLineas;
+
+    await this.commonsService
+      .checkAcceso(permiso)
       .then((respuesta) => {
         this.permisoEscritura = respuesta;
       })

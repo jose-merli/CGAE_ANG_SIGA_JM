@@ -62,17 +62,19 @@ export class ObservacionesFacturasComponent implements OnInit, OnChanges {
     private localStorageService : SigaStorageService, private commonsService: CommonsService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.progressSpinner = true;
 
     if (this.localStorageService.isLetrado)
       this.permisoEscritura = false;
     else
-      this.getPermisoFacturas();
+      await this.getPermisoFacturas();
 
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
     }
+
+    console.log(this.permisoEscritura)
   
     this.progressSpinner = false;
   }
@@ -82,8 +84,8 @@ export class ObservacionesFacturasComponent implements OnInit, OnChanges {
       this.restablecer();
   }
 
-  getPermisoFacturas() {
-    this.commonsService
+  async getPermisoFacturas() {
+    await this.commonsService
       .checkAcceso(procesos_facturacionPyS.facturasTarjetaObservaciones)
       .then((respuesta) => {
         this.permisoEscritura = respuesta;

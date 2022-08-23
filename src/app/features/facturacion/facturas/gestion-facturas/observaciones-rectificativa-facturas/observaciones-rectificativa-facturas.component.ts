@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Message } from 'primeng/primeng';
 import { FacturasItem } from '../../../../../models/FacturasItem';
+import { procesos_facturacionPyS } from '../../../../../permisos/procesos_facturacionPyS';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-observaciones-rectificativa-facturas',
@@ -56,16 +58,17 @@ export class ObservacionesRectificativaFacturasComponent implements OnInit, OnCh
   permisoEscritura: boolean = true;
 
   constructor(
-    private localStorageService: SigaStorageService
+    private localStorageService: SigaStorageService,
+    private commonsService: CommonsService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.progressSpinner = true;
 
     if (this.localStorageService.isLetrado)
       this.permisoEscritura = false;
     else
-      this.permisoEscritura = true;
+      await this.getPermisoFacturas();
 
     if (sessionStorage.getItem("tinyApiKey") != null) {
       this.apiKey = sessionStorage.getItem("tinyApiKey");
@@ -77,6 +80,15 @@ export class ObservacionesRectificativaFacturasComponent implements OnInit, OnCh
   ngOnChanges(changes: SimpleChanges) {
     if (changes.bodyInicial != undefined)
       this.restablecer();
+  }
+
+  async getPermisoFacturas() {
+    await this.commonsService
+      .checkAcceso(procesos_facturacionPyS.facturasRectificativasTarjetaObservaciones)
+      .then((respuesta) => {
+        this.permisoEscritura = respuesta;
+      })
+      .catch((error) => console.error(error));
   }
 
   // Restablecer
