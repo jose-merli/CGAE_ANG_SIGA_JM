@@ -36,18 +36,18 @@ export class MenuComponent implements OnInit {
   ngOnInit() {
     this.progressSpinner = true;
     //this.sigaServices.get("diccionarios").subscribe(response => {
-      //response.DiccionarioItems;
-      //this.sigaServices.get("menu").subscribe(response => {
-          
+    //response.DiccionarioItems;
+    //this.sigaServices.get("menu").subscribe(response => {
+
     this.translateService.getTranslations().then(
-      items=>{
+      items => {
         this.items = items;
-  
-      this.progressSpinner = false;
-//        this.items = response.menuItems;
-//        return this.items;
-//      });
-//    });
+
+        this.progressSpinner = false;
+        //        this.items = response.menuItems;
+        //        return this.items;
+        //      });
+        //    });
       }
     );
   }
@@ -55,7 +55,7 @@ export class MenuComponent implements OnInit {
     if (!this.bloquedMenu) {
       this.closeMenu = !this.closeMenu;
       this.sigaServices.notifyMenuToggled();
-     }
+    }
   }
 
   onFixedMenu() {
@@ -77,7 +77,7 @@ export class MenuComponent implements OnInit {
 
   navigateTo(ruta) {
     let keyConfirmation = "confirmacionGuardarJustificacionExpress";
-    if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
+    if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
       //console.log('if')
       this.confirmationService.confirm({
         key: keyConfirmation,
@@ -89,15 +89,18 @@ export class MenuComponent implements OnInit {
         reject: () => {
         }
       });
-    }else{
+    } else {
       //console.log('else')
       this.navigate(ruta);
     }
- 
+
   }
-  navigate(ruta : string) {
+  navigate(ruta: string) {
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify([]));
     sessionStorage.removeItem("disabledPlantillaEnvio");
+    // Método para eliminar sesiones temporales.
+    this.eliminarOrigenNav();
+
     if (ruta !== " ") {
       if (ruta !== "opcionMenu" && ruta !== "permisos") {
         // this.closeMenu = !this.closeMenu;
@@ -110,19 +113,19 @@ export class MenuComponent implements OnInit {
           sessionStorage.removeItem("fichaColegialByMenu");
         }
 
-        if(ruta.includes("guardiasAsistencias")){
-          let searchMode : string = ruta.split("=")[1];
+        if (ruta.includes("guardiasAsistencias")) {
+          let searchMode: string = ruta.split("=")[1];
           this.onCloseMenu();
           this.router.navigate(["/guardiasAsistencias"], { queryParams: { searchMode: searchMode } });
-        }else if (ruta.includes("ficherosTransferencia") && ruta.includes("fcs")) {
-          let fcs : string = ruta.split("=")[1];
+        } else if (ruta.includes("ficherosTransferencia") && ruta.includes("fcs")) {
+          let fcs: string = ruta.split("=")[1];
           this.onCloseMenu();
           this.router.navigate(["/ficherosTransferencia"], { queryParams: { fcs: fcs } });
         } else {
           this.onCloseMenu();
           this.router.navigate([ruta]);
         }
-        
+
       }
 
       if (ruta == "permisos") {
@@ -158,5 +161,14 @@ export class MenuComponent implements OnInit {
 
   backMenuChild() {
     this.showChildOfChild = false;
+  }
+
+  eliminarOrigenNav(){
+    let rutasTemporales = ["contrariosEJG", "asistenciaAsistido","contrarios","datosFamiliares","interesados"];
+
+    for (let index = 0; index < rutasTemporales.length; index++) {
+      sessionStorage.removeItem(rutasTemporales[index]);
+    }
+    
   }
 }

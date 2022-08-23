@@ -3,8 +3,9 @@
 <div class="card mt-3">
   <div class="card-body p-0">
 
-    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="none" [responsive]="true" #table
-      [first]="first" class="tabla-listado" [paginator]="true" [rows]="selectedItem" paginatorPosition="both">
+    <p-table [value]="datos" [columns]="cols" [(selection)]="selectedDatos" selectionMode="single" [responsive]="true" #table
+      [first]="first" class="tabla-listado " [paginator]="true" [rows]="selectedItem" paginatorPosition="both"  (onRowUnselect)="actualizaSeleccionados(selectedDatos)"
+      (onRowSelect)="asociarJusticiable(selectedDatos)" id="tablaFoco" >
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of cols" [style.width]="col.width">

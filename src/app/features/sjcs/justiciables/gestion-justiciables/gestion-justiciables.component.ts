@@ -694,7 +694,11 @@ export class GestionJusticiablesComponent implements OnInit {
         this.callServiceSearch(justiciableBusqueda);
         sessionStorage.removeItem("ejgJusticiableView");
       } else {
-        justiciableBusqueda = this.justiciableBusquedaItem;
+        if (this.persistenceService.getBody()) {
+          justiciableBusqueda = this.persistenceService.getBody();
+        }else{
+          justiciableBusqueda = this.justiciableBusquedaItem;
+        }
         this.callServiceSearch(justiciableBusqueda);
       }
 
@@ -715,8 +719,8 @@ export class GestionJusticiablesComponent implements OnInit {
         this.body = JSON.parse(n.body).justiciable;
 
         if (!this.modoRepresentante && !this.justiciableOverwritten && !this.justiciableCreateByUpdate) {
-          this.body.numeroAsuntos = this.justiciableBusquedaItem.numeroAsuntos;
-          this.body.ultimoAsunto = this.justiciableBusquedaItem.ultimoAsunto;
+          this.body.numeroAsuntos = justiciableBusqueda.numeroAsuntos;
+          this.body.ultimoAsunto = justiciableBusqueda.ultimoAsunto;
         } else if (this.justiciableOverwritten) {
           this.justiciableOverwritten = false;
           this.modoEdicion = true;
@@ -842,7 +846,7 @@ export class GestionJusticiablesComponent implements OnInit {
     //Para solucionarlo se recomienda que se eliminen los else if.
     this.persistenceService.clearFiltrosAux();
     //Se elimina aqui para evitar que afecte el comportamiento de las tarjetas despues devolver de una pantalla de busqueda.
-    sessionStorage.removeItem('origin');
+    //sessionStorage.removeItem('origin');
     sessionStorage.removeItem("Familiar");
     //Si estamos en vista representante o en la creacion de nuevo representante, al volver buscamos el justiciable asociado a ese representante
     if (this.navigateToJusticiable || this.checkedViewRepresentante || this.nuevoRepresentante) {

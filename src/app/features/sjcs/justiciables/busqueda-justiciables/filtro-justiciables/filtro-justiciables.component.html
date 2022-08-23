@@ -96,7 +96,8 @@
   <div class="card-footer">
     <!-- BOTONES TARJETA -->
     <div class="text-right main-button">
-      <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
+     
+      <button *ngIf="checkOrigenAsuntos" (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate}}"></button>
       <button (click)="clearFilters()" pButton type="button" icon="fa fa-eraser" iconPos="left" label="{{ 'general.boton.clear' | translate}}"></button>
       <button (click)="search()" pButton type="button" icon="fa fa-search" iconPos="left" label="{{ 'general.boton.search' | translate }}"></button>
       <button [disabled]="!permisoEscritura" (click)="checkPermisosNuevo()" pButton type="button" icon="fa fa-plus" iconPos="left"
