@@ -19,6 +19,7 @@ export class FiltroJusticiablesComponent implements OnInit {
   showDatosDirecciones: boolean = false;
   showAsuntos: boolean = false;
   msgs = [];
+  checkOrigenAsuntos: boolean = false;
 
   filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
   filtroAux: JusticiableBusquedaItem = new JusticiableBusquedaItem();
@@ -61,6 +62,12 @@ export class FiltroJusticiablesComponent implements OnInit {
         this.filtros = new JusticiableBusquedaItem();
       }
     }
+
+    // Comprobar botón ATRAS en caso de Asociar Justiciable con EJG. Designas..
+    if (sessionStorage.getItem("contrariosEJG") || sessionStorage.getItem("asistenciaAsistido") || sessionStorage.getItem("contrarios")
+      || sessionStorage.getItem("datosFamiliares") || sessionStorage.getItem("interesados")) {
+      this.checkOrigenAsuntos = true;
+    }
     this.clearFilters();
   }
 
@@ -79,9 +86,9 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   backTo() {
-    if(sessionStorage.getItem("EJGItem") && this.nuevaUniFamiliar){
-       this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
-       sessionStorage.removeItem("EJGItem");
+    if (sessionStorage.getItem("EJGItem") && this.nuevaUniFamiliar) {
+      this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
+      sessionStorage.removeItem("EJGItem");
     }
     sessionStorage.removeItem("fichaJust");
     this.location.back();
@@ -188,14 +195,16 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   nuevo() {
+    this.modoRepresentante = true;
+    sessionStorage.setItem("nuevoJusticiable", "true");
     if (this.modoRepresentante) {
       this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });
     } else {
       this.persistenceService.clearDatos();
       this.persistenceService.clearBody();
-      if(this.nuevaUniFamiliar){
-         sessionStorage.setItem("origin","UnidadFamiliar");
-         sessionStorage.setItem("Nuevo","true");
+      if (this.nuevaUniFamiliar) {
+        sessionStorage.setItem("origin", "UnidadFamiliar");
+        sessionStorage.setItem("Nuevo", "true");
       }
       this.router.navigate(["/gestionJusticiables"]);
     }

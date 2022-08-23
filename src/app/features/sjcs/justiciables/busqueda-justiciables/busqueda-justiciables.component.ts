@@ -103,22 +103,18 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
     }
 
     if(sessionStorage.getItem("origin")=="newAsistido"){
-      sessionStorage.removeItem('origin');
       this.nuevoAsistido=true;
     }
 
     if(sessionStorage.getItem("origin")=="newContrarioAsistencia"){
-      sessionStorage.removeItem('origin');
       this.nuevoContrarioAsistencia=true;
     }
     if(sessionStorage.getItem("origin")=="UnidadFamiliar"){
       this.nuevaUniFamiliar=true;
-      sessionStorage.removeItem("origin");
     }
 
     if(sessionStorage.getItem("origin")=="newContrarioEJG"){
       this.nuevoContrarioEJG = true;
-      sessionStorage.removeItem("origin");
     }
     
 
