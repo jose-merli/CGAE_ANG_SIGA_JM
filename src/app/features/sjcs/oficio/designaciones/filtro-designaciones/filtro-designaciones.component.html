@@ -337,7 +337,7 @@
                         </div>
 
                         <div class="form-group-interlineado col-lg-3 col-md-3 vertical-center">
-                            <p-checkbox binary="true"
+                            <p-checkbox binary="true" [disabled]="isLetrado"
                                 label="{{ 'justiciaGratuita.oficio.justificacionExpres.activarRestriccionesVisualizacion' | translate }}"
                                 class="ml-0" [(ngModel)]="checkRestricciones"
                                 (onChange)="onChangeCheckRestricciones($event)">
