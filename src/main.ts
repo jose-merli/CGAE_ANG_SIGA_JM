@@ -1,17 +1,12 @@
-
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { registerLicense } from '@syncfusion/ej2-base';
-
-// Registering Syncfusion license key
-registerLicense('GTIlMmhhY31hfWN9YGVoYGJ8YmF8ampqanNhYGlmamlmamg5Jj86Mj1iZ2JqamoTND4yOj99MDw+');
 
 if (environment.production) {
   enableProdMode();
 }
 
 platformBrowserDynamic().bootstrapModule(AppModule)
-  .catch(err => console.error(err));
+  .catch(err => console.log(err));
