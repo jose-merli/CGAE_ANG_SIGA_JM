@@ -110,10 +110,13 @@
             (idOpened)="isCloseReceive($event)">
         </app-tarjeta-facturacion-generica>
 
-        <app-lista-intercambios-alta-ejg
+        <!-- Listas de intercabios - Integración Pericles -->
+        <app-lista-intercambios-alta-ejg [body]="body"
+            [openTarjetaListaIntercambiosAltaEjg]="openTarjetaListaIntercambiosAltaEjg"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
         </app-lista-intercambios-alta-ejg>
-        <app-lista-intercambios-documentacion-ejg
+        <app-lista-intercambios-documentacion-ejg [body]="body"
+            [openTarjetaListaIntercambiosDocumentacionEjg]="openTarjetaListaIntercambiosDocumentacionEjg"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
         </app-lista-intercambios-documentacion-ejg>
     </div>

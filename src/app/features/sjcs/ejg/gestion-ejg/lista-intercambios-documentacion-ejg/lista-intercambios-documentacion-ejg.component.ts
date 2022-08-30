@@ -1,4 +1,6 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { t } from '@angular/core/src/render3';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { ListaIntercambiosEjgItem } from '../../../../../models/sjcs/ListaIntercambiosEjgItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -7,11 +9,12 @@ import { SigaServices } from '../../../../../_services/siga.service';
   templateUrl: './lista-intercambios-documentacion-ejg.component.html',
   styleUrls: ['./lista-intercambios-documentacion-ejg.component.scss']
 })
-export class ListaIntercambiosDocumentacionEjgComponent implements OnInit {
+export class ListaIntercambiosDocumentacionEjgComponent implements OnInit, OnChanges {
 
   @Input() modoEdicion;
   @Input() permisoEscritura;
   @Input() tarjetaListaIntercambiosDocumentacionEjg: string;
+  @Input() body: EJGItem;
 
   openFicha: boolean = false;
   textFilter: string = "Seleccionar";
@@ -52,10 +55,24 @@ export class ListaIntercambiosDocumentacionEjgComponent implements OnInit {
   async ngOnInit() {
     try {
       this.getCols();
-      this.datos = await this.getListaIntercambiosDocumentacionEjg();
-      
+      if (this.body != undefined) {
+        console.log(this.body);
+      }
+      // const request = { idInstitucion: 2014, annio: 2022, tipoEJG: 1, numero: 2 };
+      const request = { idInstitucion: this.body.idInstitucion, annio: this.body.annio, tipoEJG: this.body.tipoEJG, numero: this.body.numero };
+      console.log(request);
+      this.datos = await this.getListaIntercambiosDocumentacionEjg(request);
     } catch (error) {
       console.error(error);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.openTarjetaListaIntercambiosDocumentacionEjg == true) {
+      if (this.openFicha == false) {
+        this.fichaPosible.activa = !this.fichaPosible.activa;
+        this.openFicha = !this.openFicha;
+      }
     }
   }
 
@@ -98,9 +115,8 @@ export class ListaIntercambiosDocumentacionEjgComponent implements OnInit {
     
   }
 
-  getListaIntercambiosDocumentacionEjg(): Promise<ListaIntercambiosEjgItem[]> {
-    const ejg = { idInstitucion: 2014, annio: 2022, tipoEJG: 1, numero: 2 };
-    return this.sigaServices.post("gestionejg_getListaIntercambiosDocumentacionEjg", ejg).toPromise().then(
+  getListaIntercambiosDocumentacionEjg(request): Promise<ListaIntercambiosEjgItem[]> {
+    return this.sigaServices.post("gestionejg_getListaIntercambiosDocumentacionEjg", request).toPromise().then(
       n => {
         const body = JSON.parse(n.body);
         const items: ListaIntercambiosEjgItem[] = body.ejgListaIntercambiosItems;

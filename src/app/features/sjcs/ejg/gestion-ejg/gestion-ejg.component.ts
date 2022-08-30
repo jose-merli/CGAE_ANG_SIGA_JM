@@ -636,7 +636,7 @@ export class GestionEjgComponent implements OnInit {
       this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
       pruebaTarjeta = {
-        label: "facturacionSJCS.tarjGenFac.",
+        label: "justiciaGratuita.ejg.listaIntercambios.listaExpedientes",
         value: document.getElementById("listaIntercambiosAltaEjg"),
         nombre: "listaIntercambiosAltaEjg",
       };
@@ -644,7 +644,7 @@ export class GestionEjgComponent implements OnInit {
       this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
       pruebaTarjeta = {
-        label: "facturacionSJCS.tarjGenFac.",
+        label: "justiciaGratuita.ejg.listaIntercambios.listaDocumentacion",
         value: document.getElementById("listaIntercambiosDocumentacionEjg"),
         nombre: "listaIntercambiosDocumentacionEjg",
       };
@@ -696,10 +696,10 @@ export class GestionEjgComponent implements OnInit {
         case "facturaciones":
           this.openTarjetaFac = this.manuallyOpened;
           break;
-        case "listaIntercabiosAltaEjg":
+        case "listaIntercambiosAltaEjg":
           this.openTarjetaListaIntercambiosAltaEjg = this.manuallyOpened;
           break;
-        case "listaIntercabiosDocumentacionEjg":
+        case "listaIntercambiosDocumentacionEjg":
           this.openTarjetaListaIntercambiosDocumentacionEjg = this.manuallyOpened;
           break;
       }
@@ -777,6 +777,12 @@ export class GestionEjgComponent implements OnInit {
           break;
         case "facturaciones":
           this.openTarjetaFac = true;
+        case "listaIntercambiosAltaEjg":
+          this.openTarjetaListaIntercambiosAltaEjg = true;
+          break;
+        case "listaIntercambiosDocumentacionEjg":
+          this.openTarjetaListaIntercambiosDocumentacionEjg = true;
+          break;
       }
     }
   }
