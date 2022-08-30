@@ -109,6 +109,13 @@
             (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac" (opened)="manuallyOpened = $event"
             (idOpened)="isCloseReceive($event)">
         </app-tarjeta-facturacion-generica>
+
+        <app-lista-intercambios-alta-ejg
+            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
+        </app-lista-intercambios-alta-ejg>
+        <app-lista-intercambios-documentacion-ejg
+            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
+        </app-lista-intercambios-documentacion-ejg>
     </div>
 
 </div>

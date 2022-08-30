@@ -87,6 +87,8 @@ export class GestionEjgComponent implements OnInit {
   openTarjetaDefensaJuridica: boolean;
   openTarjetaContrariosPreDesigna: boolean;
   openTarjetaProcuradorPreDesigna: boolean;
+  openTarjetaListaIntercambiosAltaEjg: Boolean;
+  openTarjetaListaIntercambiosDocumentacionEjg: Boolean;
 
   enlacesTarjetaResumen = [];
 
@@ -632,6 +634,22 @@ export class GestionEjgComponent implements OnInit {
       };
 
       this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+      pruebaTarjeta = {
+        label: "facturacionSJCS.tarjGenFac.",
+        value: document.getElementById("listaIntercambiosAltaEjg"),
+        nombre: "listaIntercambiosAltaEjg",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+
+      pruebaTarjeta = {
+        label: "facturacionSJCS.tarjGenFac.",
+        value: document.getElementById("listaIntercambiosDocumentacionEjg"),
+        nombre: "listaIntercambiosDocumentacionEjg",
+      };
+
+      this.enlacesTarjetaResumen.push(pruebaTarjeta);
     }, 5)
     this.progressSpinner = false;
   }
@@ -677,6 +695,13 @@ export class GestionEjgComponent implements OnInit {
           break;
         case "facturaciones":
           this.openTarjetaFac = this.manuallyOpened;
+          break;
+        case "listaIntercabiosAltaEjg":
+          this.openTarjetaListaIntercambiosAltaEjg = this.manuallyOpened;
+          break;
+        case "listaIntercabiosDocumentacionEjg":
+          this.openTarjetaListaIntercambiosDocumentacionEjg = this.manuallyOpened;
+          break;
       }
     }
   }

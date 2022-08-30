@@ -111,5 +111,9 @@ export let endpoints_EJG: any = {
 	gestionejg_insertCollectionEjg: 'ejg/gestion-ejg/insertCollectionEjg',
 
     //comunicaciones
-    gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones"
+    gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones",
+
+    // Listas de intercambios JG
+    gestionejg_getListaIntercambiosAltaEjg: "ejg/gestion-ejg/getListadoIntercambiosAltaEJG",
+    gestionejg_getListaIntercambiosDocumentacionEjg: "ejg/gestion-ejg/getListadoIntercambiosDocumentacionEJG"
 }

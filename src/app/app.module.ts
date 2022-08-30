@@ -890,6 +890,8 @@ import { TablaFacturasSeleccionadasComponent } from './features/facturacion/fact
 import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-seleccionadas/tabla-abonos-seleccionadas.component';
 import { FichaEnvioCamComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-envio-cam/ficha-envio-cam.component';
 import { DetalleSOJComponent } from './features/sjcs/soj/detalle-soj/detalle-soj.component';
+import { ListaIntercambiosAltaEjgComponent } from './features/sjcs/ejg/gestion-ejg/lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
+import { ListaIntercambiosDocumentacionEjgComponent } from './features/sjcs/ejg/gestion-ejg/lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
 
 @NgModule({
 	declarations: [
@@ -1566,6 +1568,8 @@ import { DetalleSOJComponent } from './features/sjcs/soj/detalle-soj/detalle-soj
 		ProcuradorPreDesignacionComponent,
  		ContrariosPreDesignacionComponent,
 		GestionActasComponent,
+		ListaIntercambiosAltaEjgComponent,
+		ListaIntercambiosDocumentacionEjgComponent,
 
 
 
