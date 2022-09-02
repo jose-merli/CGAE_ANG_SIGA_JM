@@ -235,6 +235,10 @@
 
           <button *ngIf="historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"
             label="{{'general.message.ocultarHistorico' | translate}}"></button>
+
+          <button *ngIf="esColegioZonaComun" 
+            (click)="consultarEstadoPericles()" pButton type="button" icon="fa fa-save" iconPos="left"
+            label="{{ 'justiciaGratuita.ejg.listaIntercambios.consultarEstadoPericles' | translate }}"></button>
         </div>
       </div>
     </div>

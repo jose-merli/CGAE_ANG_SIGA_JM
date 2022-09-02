@@ -148,6 +148,10 @@
           <button [disabled]="selectedDatos.length == 0 || !permisoEscritura" (click)="checkPermisosPrint()" pButton
             type="button" icon="fa fa-print" iconPos="left" label="{{ 'general.boton.imprimir' | translate}}"></button>
 
+          <button *ngIf="esColegioZonaComun && esIdentificadorPericlesDisponible" 
+            [disabled]="selectedDatos.length == 0 || !permisoEscritura" 
+            (click)="enviarDocumentacionAdicional()" pButton type="button" icon="fa fa-save" iconPos="left"
+            label="{{ 'justiciaGratuita.ejg.listaIntercambios.enviarDocAdicional' | translate }}"></button>
         </div>
       </div>
     </div>
@@ -168,7 +172,7 @@
 
 
 
-<p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+<p-confirmDialog key="envioDocumentacionAdicional" header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
   <p-footer>
     <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
     <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>

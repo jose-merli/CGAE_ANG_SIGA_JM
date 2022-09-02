@@ -77,6 +77,7 @@ export class EstadosComponent implements OnInit {
   restablecer: boolean;
 
   //[x: string]: any;
+  esColegioZonaComun: boolean = false;
 
 
   constructor(private sigaServices: SigaServices,
@@ -100,6 +101,9 @@ export class EstadosComponent implements OnInit {
     }
 
     this.getComboEstado();
+
+    this.esZonaComun().then(value => this.esColegioZonaComun = value)
+        .catch(() => this.esColegioZonaComun = false);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -634,5 +638,73 @@ export class EstadosComponent implements OnInit {
     if(i!= undefined){
       this.datosEstados[i].fechaInicio = this.fechaIni;
     }
+  }
+
+  
+
+  async consultarEstadoPericles() {
+    try {
+      if (this.esColegioZonaComun) {
+        if (await this.confirmConsultarEstadoPericles()) {
+          await this.accionConsultarEstadoPericles();
+          this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+        } else {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      } else {
+        this.showMessage("error", "Error", "El colegio no pertenece a la zona común");
+      }
+    } catch (error) {
+      this.showMessage('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+    }
+  }
+
+  confirmConsultarEstadoPericles(): Promise<boolean> {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmConsultarEstadoPericles");
+    let icon = "fa fa-edit";
+    return new Promise((accept1, reject1) => {
+      this.confirmationService.confirm({
+        key: "addEstado",
+        message: mess,
+        icon: icon,
+        accept: () => accept1(true),
+        reject: () => accept1(false)
+      });
+    })
+  }
+
+  accionConsultarEstadoPericles(): Promise<any> {
+    const body = { idInstitucion: this.body.idInstitucion, annio: this.body.annio, tipoEJG: this.body.tipoEJG, numero: this.body.numero };
+
+    this.progressSpinner = true;
+    return this.sigaServices.post("gestionejg_consultarEstadoPericles", body).toPromise().then(
+      n => {
+        this.progressSpinner = false;
+        const body = JSON.parse(n.body);
+        if (body.error != undefined) {
+          Promise.reject(n.error);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        return Promise.reject();
+      }
+    );
+  }
+
+  esZonaComun(): Promise<boolean> {
+    return this.sigaServices.get("gestionejg_esColegioZonaComun").toPromise().then(
+      n => {
+        if (n.error != undefined) {
+          return Promise.reject();
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
+        return Promise.reject();
+      }
+    )
   }
 }

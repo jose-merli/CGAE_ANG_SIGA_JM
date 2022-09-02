@@ -73,6 +73,9 @@ export class DocumentacionComponent implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   @Input() openTarjetaDocumentacion;
 
+  esColegioZonaComun: boolean = false;
+  esIdentificadorPericlesDisponible: boolean = false;
+
   constructor(private sigaServices: SigaServices, private persistenceService: PersistenceService,
     private translateService: TranslateService, private confirmationService: ConfirmationService,
     private commonsServices: CommonsService, private changeDetectorRef: ChangeDetectorRef,
@@ -88,6 +91,10 @@ export class DocumentacionComponent implements OnInit {
       this.getCols();
       this.getComboPresentador();
       this.getComboTipoDocumentacion();
+
+       this.esZonaComun().then(value => this.esColegioZonaComun = value)
+        .catch(() => this.esColegioZonaComun = false);
+      this.esIdentificadorPericlesDisponible = this.item.idExpedienteExt != undefined;
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -870,6 +877,72 @@ export class DocumentacionComponent implements OnInit {
     }
 
     return mime;
+  }
+
+  async enviarDocumentacionAdicional() {
+    try {
+      if (this.esColegioZonaComun) {
+        if (this.selectedDatos != undefined && this.selectedDatos.length != 0 && await this.confirmEnviarDocumentacionAdicional()) {          
+          let requests = this.selectedDatos.map(d => {
+            return { anio: d.anio, idTipoEjg: d.idTipoEjg, numero: d.numero, idDocumentacion: d.idDocumentacion };
+          });
+
+          console.log(requests);
+          
+          await Promise.all(requests.map(d => this.accionEnviarDocumentacionAdicional(d)));
+          this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+        } else {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      } else {
+        this.showMessage("error", "Error", "El colegio no pertenece a la zona común");
+      }
+    } catch (error) {
+      this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+    }
+  }
+
+  confirmEnviarDocumentacionAdicional(): Promise<boolean> {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmEnviarDocAdicional");
+    let icon = "fa fa-edit";
+    return new Promise((accept1, reject1) => {
+      this.confirmationService.confirm({
+        key: "envioDocumentacionAdicional",
+        message: mess,
+        icon: icon,
+        accept: () => accept1(true),
+        reject: () => accept1(false)
+      });
+    })
+  }
+
+  accionEnviarDocumentacionAdicional(body): Promise<any> {
+    this.progressSpinner = true;
+    return this.sigaServices.post("gestionejg_enviaDocumentacionAdicional", body).toPromise().then(
+      n => {
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+        return Promise.reject();
+      }
+    );
+  }
+
+  esZonaComun(): Promise<boolean> {
+    return this.sigaServices.get("gestionejg_esColegioZonaComun").toPromise().then(
+      n => {
+        if (n.error != undefined) {
+          return Promise.reject();
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
+        return Promise.reject();
+      }
+    )
   }
 }
 
