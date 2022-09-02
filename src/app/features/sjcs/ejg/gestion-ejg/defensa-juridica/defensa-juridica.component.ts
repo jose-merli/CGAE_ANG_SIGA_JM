@@ -88,7 +88,9 @@ export class DefensaJuridicaComponent implements OnInit {
         if(this.designa.idCalidad!=null && this.designa.idCalidad!= undefined){
           this.body.calidad = this.designa.idCalidad.toString();
         }
-        this.body.idPretension = this.designa.idPretension;
+        if(this.designa.idPretension!=null && this.designa.idPretension != undefined){
+          this.body.idPretension = this.designa.idPretension;
+        }
         if(this.designa.idJuzgado!=null && this.designa.idJuzgado!= undefined){
           this.body.juzgado = this.designa.idJuzgado.toString();
         }
@@ -498,7 +500,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   getComboProcedimiento() {
-    this.sigaServices.post("combo_comboProcedimientosConJuzgado", this.body.juzgado)//combo_comboProcedimientosConJuzgado
+    this.sigaServices.post("combo_comboProcedimientosConJuzgadoEjg", this.body)//combo_comboProcedimientosConJuzgado
       .subscribe(
         n => {
           this.comboProcedimiento = JSON.parse(n.body).combooItems;
