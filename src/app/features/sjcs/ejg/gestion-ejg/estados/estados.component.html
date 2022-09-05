@@ -213,6 +213,10 @@
 
       <div class="card-footer">
         <div class="text-right main-button">
+          <button *ngIf="!historico && esUltimoEstadoRemitidoComision && esColegioZonaComun" 
+            (click)="consultarEstadoPericles()" pButton type="button" icon="fa fa-save" iconPos="left"
+            label="{{ 'justiciaGratuita.ejg.listaIntercambios.consultarEstadoPericles' | translate }}"></button>
+            
           <button *ngIf="!historico"
             [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura || estadoAutomatico"
             (click)="confirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left"
@@ -235,10 +239,6 @@
 
           <button *ngIf="historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"
             label="{{'general.message.ocultarHistorico' | translate}}"></button>
-
-          <button *ngIf="esColegioZonaComun" 
-            (click)="consultarEstadoPericles()" pButton type="button" icon="fa fa-save" iconPos="left"
-            label="{{ 'justiciaGratuita.ejg.listaIntercambios.consultarEstadoPericles' | translate }}"></button>
         </div>
       </div>
     </div>

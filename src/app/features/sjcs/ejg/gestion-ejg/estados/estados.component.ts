@@ -78,6 +78,7 @@ export class EstadosComponent implements OnInit {
 
   //[x: string]: any;
   esColegioZonaComun: boolean = false;
+  esUltimoEstadoRemitidoComision: boolean = false;
 
 
   constructor(private sigaServices: SigaServices,
@@ -103,7 +104,7 @@ export class EstadosComponent implements OnInit {
     this.getComboEstado();
 
     this.esZonaComun().then(value => this.esColegioZonaComun = value)
-        .catch(() => this.esColegioZonaComun = false);
+      .catch(() => this.esColegioZonaComun = false);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -126,6 +127,10 @@ export class EstadosComponent implements OnInit {
         // this.router.navigate(['/gestionEjg']);
         this.checkEstados = JSON.parse(JSON.stringify(this.estados));
         //this.progressSpinner = false;
+
+        if (this.estados != undefined && this.estados.length > 0) {
+          this.esUltimoEstadoRemitidoComision = this.estados[0].idEstadoejg == 9;
+        }
       },
       err => {
         //console.log(err);
@@ -644,7 +649,7 @@ export class EstadosComponent implements OnInit {
 
   async consultarEstadoPericles() {
     try {
-      if (this.esColegioZonaComun) {
+      if (!this.historico && this.esUltimoEstadoRemitidoComision && this.esColegioZonaComun) {
         if (await this.confirmConsultarEstadoPericles()) {
           await this.accionConsultarEstadoPericles();
           this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
@@ -682,7 +687,7 @@ export class EstadosComponent implements OnInit {
         this.progressSpinner = false;
         const body = JSON.parse(n.body);
         if (body.error != undefined) {
-          Promise.reject(n.error);
+          return Promise.reject(n.error);
         }
       },
       err => {

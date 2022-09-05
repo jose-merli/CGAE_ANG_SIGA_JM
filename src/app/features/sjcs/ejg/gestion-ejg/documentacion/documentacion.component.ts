@@ -92,7 +92,7 @@ export class DocumentacionComponent implements OnInit {
       this.getComboPresentador();
       this.getComboTipoDocumentacion();
 
-       this.esZonaComun().then(value => this.esColegioZonaComun = value)
+      this.esZonaComun().then(value => this.esColegioZonaComun = value)
         .catch(() => this.esColegioZonaComun = false);
       this.esIdentificadorPericlesDisponible = this.item.idExpedienteExt != undefined;
     } else {
@@ -886,8 +886,6 @@ export class DocumentacionComponent implements OnInit {
           let requests = this.selectedDatos.map(d => {
             return { anio: d.anio, idTipoEjg: d.idTipoEjg, numero: d.numero, idDocumentacion: d.idDocumentacion };
           });
-
-          console.log(requests);
           
           await Promise.all(requests.map(d => this.accionEnviarDocumentacionAdicional(d)));
           this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
@@ -921,6 +919,10 @@ export class DocumentacionComponent implements OnInit {
     return this.sigaServices.post("gestionejg_enviaDocumentacionAdicional", body).toPromise().then(
       n => {
         this.progressSpinner = false;
+        const body = JSON.parse(n.body);
+        if (body.error != undefined) {
+          return Promise.reject(n.error);
+        }
       },
       err => {
         this.progressSpinner = false;
