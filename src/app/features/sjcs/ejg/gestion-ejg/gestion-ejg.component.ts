@@ -54,6 +54,7 @@ export class GestionEjgComponent implements OnInit {
   permisoContrarios;
   permisoProcurador;
   permisoDefensaJuridica;
+  mostrarListaIntercambios;
 
   iconoTarjetaResumen = "clipboard";
 
@@ -185,7 +186,9 @@ export class GestionEjgComponent implements OnInit {
     //sessionStorage.removeItem("EJGItem");
     //this.updateTarjResumen();
     this.datosEntradaTarjGenerica = this.body;
+    this.mostrarListaIntercambios = await this.esZonaComun();
     this.obtenerPermisos();
+    
 
 
     //this.commonsService.scrollTop();
@@ -635,21 +638,24 @@ export class GestionEjgComponent implements OnInit {
 
       this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
-      pruebaTarjeta = {
-        label: "justiciaGratuita.ejg.listaIntercambios.listaExpedientes",
-        value: document.getElementById("listaIntercambiosAltaEjg"),
-        nombre: "listaIntercambiosAltaEjg",
-      };
+      if (this.mostrarListaIntercambios) {
+        pruebaTarjeta = {
+          label: "justiciaGratuita.ejg.listaIntercambios.listaExpedientes",
+          value: document.getElementById("listaIntercambiosAltaEjg"),
+          nombre: "listaIntercambiosAltaEjg",
+        };
 
-      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
-      pruebaTarjeta = {
-        label: "justiciaGratuita.ejg.listaIntercambios.listaDocumentacion",
-        value: document.getElementById("listaIntercambiosDocumentacionEjg"),
-        nombre: "listaIntercambiosDocumentacionEjg",
-      };
+        pruebaTarjeta = {
+          label: "justiciaGratuita.ejg.listaIntercambios.listaDocumentacion",
+          value: document.getElementById("listaIntercambiosDocumentacionEjg"),
+          nombre: "listaIntercambiosDocumentacionEjg",
+        };
 
-      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+      
     }, 5)
     this.progressSpinner = false;
   }
@@ -791,4 +797,22 @@ export class GestionEjgComponent implements OnInit {
     this.persistenceService.setDatos(this.body);
   }
 
+  esZonaComun(): Promise<boolean> {
+    this.progressSpinner = true;
+    return this.sigaServices.get("gestionejg_esColegioZonaComun").toPromise().then(
+      n => {
+        this.progressSpinner = false;
+        if (n.error != undefined) {
+          return Promise.resolve(false);
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        return Promise.resolve(false);
+      }
+    )
+  }
 }
