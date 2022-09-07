@@ -45,17 +45,17 @@
             (actLetradoDesignado)="actualizaLetradoDesignado($event)">
         </app-relaciones>
 
-        <app-defensa-juridica [permisoEscritura]="modoEdicion" 
+        <app-defensa-juridica *ngIf="permisoDefensaJuridica != undefined && modoEdicion" [permisoEscritura]="modoEdicion" 
             [permisoDefensaJuridica]="permisoDefensaJuridica" 
             id="defensaJuridica">
         </app-defensa-juridica>
         
-        <app-contrarios-pre-designacion [permisoEscritura]="modoEdicion"
+        <app-contrarios-pre-designacion *ngIf="permisoContrarios != undefined && modoEdicion" [permisoEscritura]="modoEdicion"
             [permisoContrarios]="permisoContrarios" 
             id="contrariosPreDesigna">
         </app-contrarios-pre-designacion>
         
-        <app-procurador-pre-designacion [permisoEscritura]="modoEdicion" 
+        <app-procurador-pre-designacion *ngIf="permisoProcurador != undefined && modoEdicion" [permisoEscritura]="modoEdicion" 
             [permisoProcurador]="permisoProcurador" 
             id="procuradorPreDesigna">
         </app-procurador-pre-designacion>
@@ -105,7 +105,7 @@
             [openTarjetaComunicaciones]="openTarjetaComunicaciones">
         </app-comunicaciones-ejg>
 
-        <app-tarjeta-facturacion-generica [datosEntrada]="datosEntradaTarjGenerica" [pantalla]="'EJG'"
+        <app-tarjeta-facturacion-generica *ngIf="permisoEscrituraFacturaciones != undefined && modoEdicion" [datosEntrada]="datosEntradaTarjGenerica" [pantalla]="'EJG'"
             (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac" (opened)="manuallyOpened = $event"
             (idOpened)="isCloseReceive($event)">
         </app-tarjeta-facturacion-generica>

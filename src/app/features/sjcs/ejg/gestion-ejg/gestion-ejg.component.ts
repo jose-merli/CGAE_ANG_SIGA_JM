@@ -102,6 +102,7 @@ export class GestionEjgComponent implements OnInit {
   @ViewChild(ProcuradorPreDesignacionComponent) procuradorPreDesigna;
 
   datosEntradaTarjGenerica: any;
+  permisoEscrituraFacturaciones: any;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -311,6 +312,7 @@ export class GestionEjgComponent implements OnInit {
       sessionStorage.setItem("actasItem", sessionStorage.getItem("actasItemAux"));
       sessionStorage.removeItem("actasItemAux");
     }
+    sessionStorage.setItem("volver", 'true');
     this.location.back();
   }
 
@@ -463,6 +465,15 @@ export class GestionEjgComponent implements OnInit {
         if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
+
+    //   //Facturaciones
+    // this.commonsService.checkAcceso(procesos_ejg.facturaciones)
+    // .then(respuesta => {
+    //   this.permisoEscrituraFacturaciones = respuesta;
+    //   recibidos++;
+    //   if (recibidos == 16) this.enviarEnlacesTarjeta();
+    // }
+    // ).catch(error => console.error(error));
 
     //Comprobar si el EJG tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.

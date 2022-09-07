@@ -117,7 +117,7 @@ export class FiltrosEjgComponent implements OnInit {
 
 
   ngOnInit() {
-    sessionStorage.removeItem("volver");
+    //sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
     this.progressSpinner = true;
     this.getCombos();
@@ -135,33 +135,47 @@ export class FiltrosEjgComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-    if (this.persistenceService.getFiltros() != undefined) {
-      this.body = this.persistenceService.getFiltros();
-      if (this.body.dictamen != undefined && this.body.dictamen != null && this.body.dictamen != "") this.bodyDictamen = Array.from(this.body.dictamen);
+    //if (this.persistenceService.getFiltros() != undefined) {
 
-      this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
-      this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
-      this.body.fechaEstadoDesd = this.transformDate(this.body.fechaEstadoDesd);
-      this.body.fechaEstadoHast = this.transformDate(this.body.fechaEstadoHast);
-      this.body.fechaLimiteDesd = this.transformDate(this.body.fechaLimiteDesd);
-      this.body.fechaLimiteHast = this.transformDate(this.body.fechaLimiteHast);
-      this.body.fechaDictamenDesd = this.transformDate(this.body.fechaDictamenDesd);
-      this.body.fechaDictamenHast = this.transformDate(this.body.fechaDictamenHast);
-      this.body.fechaImpugnacionDesd = this.transformDate(this.body.fechaImpugnacionDesd);
-      this.body.fechaImpugnacionHast = this.transformDate(this.body.fechaImpugnacionHast);
-      this.body.fechaPonenteDesd = this.transformDate(this.body.fechaPonenteDesd);
-      this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
+        if (sessionStorage.getItem("filtrosEJG") != null) {
+          if(sessionStorage.getItem("volver") == 'true'){
+          this.body = JSON.parse(
+            sessionStorage.getItem("filtrosEJG")
+          );
+        
+          this.isBuscar();
+          sessionStorage.removeItem("volver");
+          
 
-      this.persistenceService.clearFiltros();
-      this.busqueda.emit(this.historico);
-
-    } else {
-      this.body = new EJGItem();
-      this.body.annio = new Date().getFullYear().toString();
-      if (this.remesa != null || this.remesa != undefined) {
-        this.body.informacionEconomica = this.remesa.informacionEconomica;
-      }
-    }
+        }else if(sessionStorage.getItem("filtrosEJG") == null){
+          this.body = this.persistenceService.getFiltros();
+          if (this.body.dictamen != undefined && this.body.dictamen != null && this.body.dictamen != "") this.bodyDictamen = Array.from(this.body.dictamen);
+    
+          this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
+          this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
+          this.body.fechaEstadoDesd = this.transformDate(this.body.fechaEstadoDesd);
+          this.body.fechaEstadoHast = this.transformDate(this.body.fechaEstadoHast);
+          this.body.fechaLimiteDesd = this.transformDate(this.body.fechaLimiteDesd);
+          this.body.fechaLimiteHast = this.transformDate(this.body.fechaLimiteHast);
+          this.body.fechaDictamenDesd = this.transformDate(this.body.fechaDictamenDesd);
+          this.body.fechaDictamenHast = this.transformDate(this.body.fechaDictamenHast);
+          this.body.fechaImpugnacionDesd = this.transformDate(this.body.fechaImpugnacionDesd);
+          this.body.fechaImpugnacionHast = this.transformDate(this.body.fechaImpugnacionHast);
+          this.body.fechaPonenteDesd = this.transformDate(this.body.fechaPonenteDesd);
+          this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
+    
+          this.persistenceService.clearFiltros();
+          this.busqueda.emit(this.historico);
+    
+        } else {
+          this.body = new EJGItem();
+          this.body.annio = new Date().getFullYear().toString();
+          if (this.remesa != null || this.remesa != undefined) {
+            this.body.informacionEconomica = this.remesa.informacionEconomica;
+          }
+        }
+        }
+      
 
 
     if (sessionStorage.getItem("tarjeta")) {
@@ -752,6 +766,10 @@ export class FiltrosEjgComponent implements OnInit {
           this.selectRoles = false;
         }
   
+        sessionStorage.setItem(
+          "filtrosEJG",
+          JSON.stringify(this.body));
+
 
         this.busqueda.emit(false);
         this.body.dictamen = "";
