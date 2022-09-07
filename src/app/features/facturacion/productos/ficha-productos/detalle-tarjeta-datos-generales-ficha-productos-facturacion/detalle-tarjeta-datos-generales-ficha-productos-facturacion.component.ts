@@ -72,6 +72,7 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   subscriptionEditarProductoInstitucion: Subscription;
   subscriptionActivarDesactivarProductos: Subscription;
   subscriptionCodesByInstitution: Subscription;
+  codigoLargo: boolean = false;
 
   constructor(private commonsService: CommonsService, private sigaServices: SigaServices, 
     private translateService: TranslateService, private confirmationService: ConfirmationService, 
@@ -204,7 +205,10 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
         if (this.listaCodigosPorInstitucionObject.listaCodigosPorColegio.includes(this.producto.codigoext) && this.producto.codigoext != this.productoOriginal.codigoext) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.fichaproductos.datosgenerales.mensajeerrorcodigo"))
         } else {
+          if(this.producto.codigoext.length >20 )
+           this.codigoLargo = true;
           this.checkGuardar();
+           this.codigoLargo = false;
         }
       } else {
         this.checkGuardar();
@@ -217,9 +221,11 @@ export class DetalleTarjetaDatosGeneralesFichaProductosFacturacionComponent impl
   //Comprueba si tienes permisos para guardar un producto.
   checkGuardar(){
      let msg = this.commonsService.checkPermisos(this.guardarPermiso, undefined);
-	    if (msg != null) {
-	      this.msgs = msg;
-	    } else {
+	    if (this.codigoLargo ) {
+         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("facturacion.productos.errorCodigo"));
+	    } else if (msg != null) {
+          this.msgs = msg;
+      } else {
 	      this.guardarProducto();
 	    }
   }
