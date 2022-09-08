@@ -32,6 +32,7 @@ import { DatosDireccionesObject } from '../../../models/DatosDireccionesObject';
 import { OverlayPanelModule, OverlayPanel, MultiSelect } from 'primeng/primeng';
 import { CommonsService } from '../../../_services/commons.service';
 import { AuthenticationService } from "../../../_services/authentication.service";
+import { procesos_censo } from "../../../permisos/procesos_censo";
 export enum KEY_CODE {
   ENTER = 13
 }
@@ -126,6 +127,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   colegiosSeleccionados: any[] = [];
   count: string = "";
   countClicado: boolean = false;
+  permisoExcel: boolean = false;
 
   @HostListener('document:click', ['$event'])
   documentClick(event: MouseEvent) {
@@ -217,6 +219,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     
   }
   ngOnInit() {
+    
+    this.commonsService.checkAcceso(procesos_censo.generarExcel)
+      .then(respuesta => {
+        if(respuesta != undefined){
+          this.permisoExcel = respuesta;
+        }
+      }).catch(error => console.error(error));
 
     sessionStorage.removeItem('consultasSearch');
 
