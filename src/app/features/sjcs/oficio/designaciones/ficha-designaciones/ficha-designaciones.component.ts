@@ -723,6 +723,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         "value": this.translateService.instant('justiciaGratuita.oficio.designas.contrarios.vacio')
       },]
 
+
       this.tarjetaFija.campos = camposResumen;
 
       let tarjDatosGeneral = this.listaTarjetas.find(tarjDatosGeneral => tarjDatosGeneral.id === 'sjcsDesigaDatosGen');
@@ -742,6 +743,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       if (tarjContrarios != undefined) {
         tarjContrarios.campos = contrariosVacio;
       }
+
       let tarjDatosFacturacion = this.listaTarjetas.find(tarjDatosFacturacion => tarjDatosFacturacion.id === 'sjcsDesigDatFac');
       if (tarjDatosFacturacion != undefined) {
         tarjDatosFacturacion.campos = datosFacturacion;
@@ -1073,7 +1075,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
               },
               {
                 "key": this.translateService.instant('censo.usuario.nombre'),
-                "value": this.procurador[0].nombre + " " + this.procurador[0].apellido1 + " " + this.procurador[0].apellido2
+                "value": this.procurador[0].apellido1 + " " + this.procurador[0].apellido2 + "," + this.procurador[0].nombre  
               },
               {
                 "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.fechaDesignacion'),
@@ -1116,6 +1118,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
               fechabaja: null
             });
           }
+
           this.jsonToRow(this.procurador);
           this.progressSpinner = false;
         },
