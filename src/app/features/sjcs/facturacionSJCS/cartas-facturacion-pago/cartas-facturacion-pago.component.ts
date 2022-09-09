@@ -120,6 +120,15 @@ export class CartasFacturacionPagoComponent implements OnInit, OnDestroy {
       }
     }
 
+    // Modificaciones para pasar de select a multiselect por usabilidad
+    if (undefined != filtersCopy.idPago) {
+      if (filtersCopy.idPago.length == 0) {
+        filtersCopy.idPago = undefined;
+      } else {
+        filtersCopy.idPago = filtersCopy.idPago.toString();
+      }
+    }
+
     if (undefined != filtersCopy.idConcepto) {
       if (filtersCopy.idConcepto.length == 0) {
         filtersCopy.idConcepto = undefined;
