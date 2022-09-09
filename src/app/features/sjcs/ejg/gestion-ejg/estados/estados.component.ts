@@ -78,7 +78,6 @@ export class EstadosComponent implements OnInit {
 
   //[x: string]: any;
   esColegioZonaComun: boolean = false;
-  esUltimoEstadoRemitidoComision: boolean = false;
 
 
   constructor(private sigaServices: SigaServices,
@@ -129,7 +128,6 @@ export class EstadosComponent implements OnInit {
         //this.progressSpinner = false;
 
         if (this.estados != undefined && this.estados.length > 0) {
-          this.esUltimoEstadoRemitidoComision = this.estados[0].idEstadoejg == 9;
         }
       },
       err => {
@@ -398,7 +396,7 @@ export class EstadosComponent implements OnInit {
 
   }
 
-  anadirEstado() {
+  async anadirEstado() {
 
     if (this.creaEstado == true) {
       let estadoNew = new EstadoEJGItem();
@@ -413,10 +411,15 @@ export class EstadosComponent implements OnInit {
       estadoNew.idinstitucion = this.item.idInstitucion;
       estadoNew.idtipoejg = this.item.tipoEJG;
 
+      if (this.esColegioZonaComun && estadoNew.idEstadoejg === "7" && !(await this.confirmacionEnviarCAJGCambiarEstado())) {
+        this.getEstados(this.item);
+        return;
+      }
 
 
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
 
+      
       this.sigaServices.post("gestionejg_nuevoEstado", estadoNew).subscribe(
         n => {
           this.progressSpinner = false;
@@ -433,7 +436,8 @@ export class EstadosComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
         }
       );
-      this.creaEstado = false;
+      
+      //this.creaEstado = false;
     } else {
 
       this.progressSpinner = true;
@@ -470,6 +474,31 @@ export class EstadosComponent implements OnInit {
 
     this.activarRestablecerEstados();
 
+  }
+
+  confirmacionEnviarCAJGCambiarEstado(): Promise<boolean> {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmEnviarDoc");
+    let icon = "fa fa-edit";
+
+    return new Promise((accept1, reject1) => {
+      this.confirmationService.confirm({
+        key: "confirmCAJG",
+        message: mess,
+        icon: icon,
+        accept: () => {
+          accept1(true);
+        },
+        reject: () => {
+          this.msgs = [{
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant("general.message.accion.cancelada")
+          }];
+          this.activarRestablecerEstados();
+          accept1(false);
+        }
+      });
+    });
   }
 
   searchHistorical() {
@@ -643,58 +672,6 @@ export class EstadosComponent implements OnInit {
     if(i!= undefined){
       this.datosEstados[i].fechaInicio = this.fechaIni;
     }
-  }
-
-  
-
-  async consultarEstadoPericles() {
-    try {
-      if (!this.historico && this.esUltimoEstadoRemitidoComision && this.esColegioZonaComun) {
-        if (await this.confirmConsultarEstadoPericles()) {
-          await this.accionConsultarEstadoPericles();
-          this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
-        } else {
-          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
-        }
-      } else {
-        this.showMessage("error", "Error", "El colegio no pertenece a la zona común");
-      }
-    } catch (error) {
-      this.showMessage('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
-    }
-  }
-
-  confirmConsultarEstadoPericles(): Promise<boolean> {
-    let mess = this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmConsultarEstadoPericles");
-    let icon = "fa fa-edit";
-    return new Promise((accept1, reject1) => {
-      this.confirmationService.confirm({
-        key: "addEstado",
-        message: mess,
-        icon: icon,
-        accept: () => accept1(true),
-        reject: () => accept1(false)
-      });
-    })
-  }
-
-  accionConsultarEstadoPericles(): Promise<any> {
-    const body = { idInstitucion: this.body.idInstitucion, annio: this.body.annio, tipoEJG: this.body.tipoEJG, numero: this.body.numero };
-
-    this.progressSpinner = true;
-    return this.sigaServices.post("gestionejg_consultarEstadoPericles", body).toPromise().then(
-      n => {
-        this.progressSpinner = false;
-        const body = JSON.parse(n.body);
-        if (body.error != undefined) {
-          return Promise.reject(n.error);
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        return Promise.reject();
-      }
-    );
   }
 
   esZonaComun(): Promise<boolean> {

@@ -213,10 +213,6 @@
 
       <div class="card-footer">
         <div class="text-right main-button">
-          <button *ngIf="!historico && esUltimoEstadoRemitidoComision && esColegioZonaComun" 
-            (click)="consultarEstadoPericles()" pButton type="button" icon="fa fa-save" iconPos="left"
-            label="{{ 'justiciaGratuita.ejg.listaIntercambios.consultarEstadoPericles' | translate }}"></button>
-            
           <button *ngIf="!historico"
             [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura || estadoAutomatico"
             (click)="confirmDelete()" pButton type="button" icon="fa fa-trash" iconPos="left"
@@ -253,6 +249,12 @@
     <p-footer>
       <button type="button" pButton icon="fa-check" label="Si" (click)="addEstado.accept()"></button>
       <button type="button" pButton icon="fa-close" label="No" (click)="addEstado.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="confirmCAJG" #confirmCAJG>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="confirmCAJG.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="confirmCAJG.reject()"></button>
     </p-footer>
   </p-confirmDialog>
 </div>

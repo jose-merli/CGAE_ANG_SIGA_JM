@@ -116,7 +116,6 @@ export let endpoints_EJG: any = {
 
     // Listas de intercambios JG esColegioZonaComun
     gestionejg_esColegioZonaComun: "ejg/gestion-ejg/esColegioZonaComun",
-    gestionejg_consultarEstadoPericles: "ejg/gestion-ejg/consultarEstadoPericles",
     gestionejg_enviaDocumentacionAdicional: "ejg/gestion-ejg/enviaDocumentacionAdicional",
     gestionejg_getListaIntercambiosAltaEjg: "ejg/gestion-ejg/getListadoIntercambiosAltaEJG",
     gestionejg_getListaIntercambiosDocumentacionEjg: "ejg/gestion-ejg/getListadoIntercambiosDocumentacionEJG"
