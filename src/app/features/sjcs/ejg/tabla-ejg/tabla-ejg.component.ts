@@ -202,29 +202,78 @@ export class TablaEjgComponent implements OnInit {
     this.showModalAnadirRemesa = false;
   }
 
-  checkCambiarEstados() {
+  async checkCambiarEstados() {
+    let cambiarEstado: boolean = await this.confirmacionCambiarEstado();
+    let enviarExpDoc: boolean = true;
+
+    let zonaComun = await this.esZonaComun();
+    if (cambiarEstado && zonaComun && this.valueComboEstado == "7") {
+      enviarExpDoc = await this.confirmacionEnviarCAJGCambiarEstado();
+    }
+
+    if (cambiarEstado && enviarExpDoc) {
+      console.log("Procede a cambiar el estado", this.valueComboEstado);
+       this.cambiarEstados();
+    }
+
+    this.showModalCambioEstado = false;
+    this.selectedDatos = [];
+  }
+
+  confirmacionCambiarEstado(): Promise<boolean> {
     let mess = this.translateService.instant("justiciaGratuita.ejg.message.cambiarEstado");
     let icon = "fa fa-edit";
 
-    this.confirmationService.confirm({
-      message: mess,
-      icon: icon,
-      accept: () => {
-        this.cambiarEstados();
-        this.cdCambioEstado.hide();
-      },
-      reject: () => {
-        this.msgs = [{
-          severity: "info",
-          summary: "Cancel",
-          detail: this.translateService.instant("general.message.accion.cancelada")
-        }];
-
-        this.cancelaCambiarEstados();
-        this.cdCambioEstado.hide();
-      }
+    return new Promise((accept1, reject1) => {
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.cdCambioEstado.hide();
+          accept1(true);
+        },
+        reject: () => {
+          this.msgs = [{
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant("general.message.accion.cancelada")
+          }];
+  
+          this.cancelaCambiarEstados();
+          this.cdCambioEstado.hide();
+          accept1(false);
+        }
+      });
     });
   }
+
+  confirmacionEnviarCAJGCambiarEstado(): Promise<boolean> {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmEnviarDoc");
+    let icon = "fa fa-edit";
+
+    return new Promise((accept1, reject1) => {
+      this.confirmationService.confirm({
+        message: mess,
+        icon: icon,
+        accept: () => {
+          this.cdCambioEstado.hide();
+          accept1(true);
+        },
+        reject: () => {
+          this.msgs = [{
+            severity: "info",
+            summary: "Cancel",
+            detail: this.translateService.instant("general.message.accion.cancelada")
+          }];
+  
+          this.cancelaCambiarEstados();
+          this.cdCambioEstado.hide();
+          accept1(false);
+        }
+      });
+    });
+  }
+
 
   cambiarEstados() {
     this.progressSpinner = true;
@@ -240,7 +289,7 @@ export class TablaEjgComponent implements OnInit {
     }
 
     this.sigaServices.post("gestionejg_cambioEstadoMasivo", data).subscribe(
-      n => {
+      async n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
       },
       err => {
@@ -254,6 +303,25 @@ export class TablaEjgComponent implements OnInit {
         this.selectedDatos = [];
       }
     );
+  }
+
+  esZonaComun(): Promise<boolean> {
+    this.progressSpinner = true;
+    return this.sigaServices.get("gestionejg_esColegioZonaComun").toPromise().then(
+      n => {
+        this.progressSpinner = false;
+        if (n.error != undefined) {
+          return Promise.resolve(false);
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        return Promise.resolve(false);
+      }
+    )
   }
 
   isSelectMultiple() {
