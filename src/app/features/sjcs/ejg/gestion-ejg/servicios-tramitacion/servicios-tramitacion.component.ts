@@ -340,12 +340,12 @@ export class ServiciosTramitacionComponent implements OnInit {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      if (this.disabledSave()) {
+      /*if (this.disabledSave()) {
         this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
         this.resaltadoDatos = true;
-      } else {
+      } else {*/
         this.save();
-      }
+      //}
     }
   }
 
