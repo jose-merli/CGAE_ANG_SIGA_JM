@@ -105,6 +105,7 @@ export let endpoints_EJG: any = {
     gestionejg_getDelitosEJG: "ejg/gestion-ejg/getDelitosEJG",
     gestionejg_actualizarDelitosEJG: "ejg/gestion-ejg/actualizarDelitosEJG",
     gestionejg_busquedaProcuradores: "ejg/gestion-ejg/busquedaProcuradores",
+    combo_comboProcedimientosConJuzgadoEjg: "ejg/gestion-ejg/comboProcedimientosConJuzgado",
 
     //REGTEL
     gestionejg_searchListDocEjg: 'ejg/gestion-ejg/searchListDocEjg',
@@ -115,7 +116,6 @@ export let endpoints_EJG: any = {
 
     // Listas de intercambios JG esColegioZonaComun
     gestionejg_esColegioZonaComun: "ejg/gestion-ejg/esColegioZonaComun",
-    gestionejg_consultarEstadoPericles: "ejg/gestion-ejg/consultarEstadoPericles",
     gestionejg_enviaDocumentacionAdicional: "ejg/gestion-ejg/enviaDocumentacionAdicional",
     gestionejg_getListaIntercambiosAltaEjg: "ejg/gestion-ejg/getListadoIntercambiosAltaEJG",
     gestionejg_getListaIntercambiosDocumentacionEjg: "ejg/gestion-ejg/getListadoIntercambiosDocumentacionEJG"

@@ -235,10 +235,6 @@
 
           <button *ngIf="historico" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"
             label="{{'general.message.ocultarHistorico' | translate}}"></button>
-
-          <button *ngIf="esColegioZonaComun" 
-            (click)="consultarEstadoPericles()" pButton type="button" icon="fa fa-save" iconPos="left"
-            label="{{ 'justiciaGratuita.ejg.listaIntercambios.consultarEstadoPericles' | translate }}"></button>
         </div>
       </div>
     </div>
@@ -253,6 +249,12 @@
     <p-footer>
       <button type="button" pButton icon="fa-check" label="Si" (click)="addEstado.accept()"></button>
       <button type="button" pButton icon="fa-close" label="No" (click)="addEstado.reject()"></button>
+    </p-footer>
+  </p-confirmDialog>
+  <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" key="confirmCAJG" #confirmCAJG>
+    <p-footer>
+      <button type="button" pButton icon="fa-check" label="Si" (click)="confirmCAJG.accept()"></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="confirmCAJG.reject()"></button>
     </p-footer>
   </p-confirmDialog>
 </div>

@@ -54,6 +54,7 @@ export class GestionEjgComponent implements OnInit {
   permisoContrarios;
   permisoProcurador;
   permisoDefensaJuridica;
+  mostrarListaIntercambios;
 
   iconoTarjetaResumen = "clipboard";
 
@@ -101,6 +102,7 @@ export class GestionEjgComponent implements OnInit {
   @ViewChild(ProcuradorPreDesignacionComponent) procuradorPreDesigna;
 
   datosEntradaTarjGenerica: any;
+  permisoEscrituraFacturaciones: any;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -185,7 +187,9 @@ export class GestionEjgComponent implements OnInit {
     //sessionStorage.removeItem("EJGItem");
     //this.updateTarjResumen();
     this.datosEntradaTarjGenerica = this.body;
+    this.mostrarListaIntercambios = await this.esZonaComun();
     this.obtenerPermisos();
+    
 
 
     //this.commonsService.scrollTop();
@@ -308,6 +312,7 @@ export class GestionEjgComponent implements OnInit {
       sessionStorage.setItem("actasItem", sessionStorage.getItem("actasItemAux"));
       sessionStorage.removeItem("actasItemAux");
     }
+    sessionStorage.setItem("volver", 'true');
     this.location.back();
   }
 
@@ -460,6 +465,15 @@ export class GestionEjgComponent implements OnInit {
         if (recibidos == 16) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
+
+    //   //Facturaciones
+    // this.commonsService.checkAcceso(procesos_ejg.facturaciones)
+    // .then(respuesta => {
+    //   this.permisoEscrituraFacturaciones = respuesta;
+    //   recibidos++;
+    //   if (recibidos == 16) this.enviarEnlacesTarjeta();
+    // }
+    // ).catch(error => console.error(error));
 
     //Comprobar si el EJG tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
@@ -635,21 +649,24 @@ export class GestionEjgComponent implements OnInit {
 
       this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
-      pruebaTarjeta = {
-        label: "justiciaGratuita.ejg.listaIntercambios.listaExpedientes",
-        value: document.getElementById("listaIntercambiosAltaEjg"),
-        nombre: "listaIntercambiosAltaEjg",
-      };
+      if (this.mostrarListaIntercambios) {
+        pruebaTarjeta = {
+          label: "justiciaGratuita.ejg.listaIntercambios.listaExpedientes",
+          value: document.getElementById("listaIntercambiosAltaEjg"),
+          nombre: "listaIntercambiosAltaEjg",
+        };
 
-      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
-      pruebaTarjeta = {
-        label: "justiciaGratuita.ejg.listaIntercambios.listaDocumentacion",
-        value: document.getElementById("listaIntercambiosDocumentacionEjg"),
-        nombre: "listaIntercambiosDocumentacionEjg",
-      };
+        pruebaTarjeta = {
+          label: "justiciaGratuita.ejg.listaIntercambios.listaDocumentacion",
+          value: document.getElementById("listaIntercambiosDocumentacionEjg"),
+          nombre: "listaIntercambiosDocumentacionEjg",
+        };
 
-      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
+      
     }, 5)
     this.progressSpinner = false;
   }
@@ -791,4 +808,22 @@ export class GestionEjgComponent implements OnInit {
     this.persistenceService.setDatos(this.body);
   }
 
+  esZonaComun(): Promise<boolean> {
+    this.progressSpinner = true;
+    return this.sigaServices.get("gestionejg_esColegioZonaComun").toPromise().then(
+      n => {
+        this.progressSpinner = false;
+        if (n.error != undefined) {
+          return Promise.resolve(false);
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        return Promise.resolve(false);
+      }
+    )
+  }
 }
