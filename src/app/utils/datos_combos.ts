@@ -31,16 +31,16 @@ export const datos_combos: any = {
     ],
     comboCreadoDesde: [
         {
-            label: "Manual",
-            value: "M"
-        },
-        {
             label: "Asistencia",
             value: "A"
         },
         {
             label: "Designa",
             value: "O"
+        },
+        {
+            label: "Manual",
+            value: "M"
         },
         {
             label: "SOJ",
