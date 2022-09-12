@@ -34,85 +34,113 @@
         <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
-    <div *ngIf="openDef" class="card-body card-body-ficha">
-      <div class="form-group col-lg-12 col-md-1 input-ayuda">
-        <label style="font-weight: bold;">{{ 'justiciaGratuita.ejg.preDesigna.datosPre' | translate }}</label>
-      </div>
-      <div class="form-row">
-        <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{'gratuita.busquedaDesignas.literal.numProcedimiento' |translate}}</label>
-          <input type="text" class="form-control" pInputText 
-            [(ngModel)]="body.procedimiento" [disabled]="!perEscritura">
-        </div>
-        <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{'justiciaGratuita.ejg.datosGenerales.NIG'|translate}}</label>
-          <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="body.nig" [disabled]="!perEscritura">
-        </div>
-        <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.juzgado' placeholder="Seleccionar"
-            [options]="comboJuzgado" (onChange)="onChangeJuzgado()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura"></p-dropdown>
-        </div>
-        <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{'justiciaGratuita.maestros.Procedimiento'|translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.idPretension' placeholder="Seleccionar"
-            [options]="comboProcedimiento" [(disabled)]="isDisabledProcedimiento || !perEscritura" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
-          </p-dropdown>
-        </div>
 
-        <div class="form-group-interlineado col-lg-3 col-md-3">
-          <label>{{"justiciaGratuita.Calendarios.Observaciones" | translate}}</label>
-          <input type="text" class="form-control" maxLength="1023" pInputText [(ngModel)]="body.observaciones" [disabled]="!perEscritura">
+    <div *ngIf="openDef" class="card-body card-body-ficha">
+      <div class="row"> 
+        <div class="bloque col-6">
+          <div class="form-row">
+            <div class="form-group col-lg-12 col-md-1 input-ayuda">
+              <label style="font-weight: bold;">{{ 'justiciaGratuita.ejg.preDesigna.datosPre' | translate }}</label>
+            </div>
+      
+           
+           
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
+              <p-dropdown class="select-form" [(ngModel)]='body.juzgado' placeholder="Seleccionar"
+                [options]="comboJuzgado" (onChange)="onChangeJuzgado()" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{'justiciaGratuita.ejg.datosGenerales.NIG'|translate}}</label>
+              <input type="text" class="form-control" maxLength="49" pInputText [(ngModel)]="body.nig" [disabled]="!perEscritura">
+            </div>
+            
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{'justiciaGratuita.maestros.Procedimiento'|translate}}</label>
+              <p-dropdown class="select-form" [(ngModel)]='body.idPretension' placeholder="Seleccionar"
+                [options]="comboProcedimiento" [(disabled)]="isDisabledProcedimiento || !perEscritura" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+              </p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{'gratuita.busquedaDesignas.literal.numProcedimiento' |translate}}</label>
+              <input type="text" class="form-control" pInputText 
+                [(ngModel)]="body.procedimiento" [disabled]="!perEscritura">
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{"gratuita.volantesExpres.literal.centroDetencion" | translate}}</label>
+              <p-dropdown class="select-form" [(ngModel)]='body.comisaria'
+                placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboComisaria" [filter]="true"
+                filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura"></p-dropdown>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{'gratuita.mantAsistencias.literal.numeroDiligenciasolo'|translate}}</label>
+              <input type="text" [(ngModel)]="body.numerodiligencia" class="form-control" (keypress)="numberOnly($event)"
+                maxLength="10" [disabled]="!perEscritura" pInputText>
+            </div>
+           
+            <div class="form-group col-lg-12 col-md-12">
+              <label>{{'enviosMasivos.literal.asunto' | translate}}</label>
+              <textarea [rows]="4" [cols]="10" pInputTextarea [(ngModel)]="body.observaciones" [disabled]="!perEscritura"
+                 class="form-control ui-inputtext" autoResize="autoResize"
+                maxLength="1023"></textarea>
+            </div>
+           
+          </div>
         </div>
-        <div class="form-group col-lg-3 col-md-3 w-100">
-          <label>{{"justiciaGratuita.ejg.preDesigna.delitos" | translate}}</label>
-          <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='delitosValue'
-                [options]="comboDelitos" [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true"
-                filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimits="10"
-                [panelStyle]="{width:'100%'}" [disabled]="!perEscritura"></p-multiSelect>
+       
+     
+   
+    
+      <div class="bloque col-6">
+        <div class="form-group col-lg-12 col-md-1 input-ayuda">
+          <label style="font-weight: bold;">{{ 'justiciaGratuita.ejg.preDesigna.defensaJuridica' | translate }}</label>
+        </div>
+  
+        <div class="form-row">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.Perceptivo'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.perceptivo' placeholder="Seleccionar"
+              [options]="comboPreceptivo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura">
+            </p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{'justiciaGratuita.ejg.datosGenerales.Renuncia'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.renuncia' placeholder="Seleccionar"
+              [options]="comboRenuncia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura">
+            </p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{'censo.fichaCliente.situacion.cabecera'|translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idsituacion' placeholder="Seleccionar"
+              [options]="comboSituacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura">
+            </p-dropdown>
+          </div>
+         
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{"justiciaGratuita.ejg.datosGenerales.calidad" | translate}}</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.calidad'
+              placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboCalidad" [filter]="true"
+              filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-12 col-md-12 w-100">
+            <label>{{"justiciaGratuita.ejg.preDesigna.delitos" | translate}}</label>
+            <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='delitosValue'
+                  [options]="comboDelitos" [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true"
+                  filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimits="10"
+                  [panelStyle]="{width:'100%'}" [disabled]="!perEscritura"></p-multiSelect>
+          </div>
+          <div class="form-group col-lg-12 col-md-12">
+            <label>{{'justiciaGratuita.ejg.defensaJuridica.comentario' | translate}}</label>
+            <textarea [rows]="4" [cols]="10" pInputTextarea [(ngModel)]="body.delitos" [disabled]="!perEscritura"
+               class="form-control ui-inputtext" autoResize="autoResize"
+              maxLength="1023"></textarea>
+          </div>
+          <!-- <app-input-dividido [anio]="anio" [numero]="numero" titulo="Año / Número"></app-input-dividido> -->
         </div>
       </div>
-      <div class="form-group col-lg-12 col-md-1 input-ayuda">
-        <label style="font-weight: bold;">{{ 'justiciaGratuita.ejg.preDesigna.defensaJuridica' | translate }}</label>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{'justiciaGratuita.ejg.datosGenerales.Perceptivo'|translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.perceptivo' placeholder="Seleccionar"
-            [options]="comboPreceptivo" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura">
-          </p-dropdown>
-        </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{'justiciaGratuita.ejg.datosGenerales.Renuncia'|translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.renuncia' placeholder="Seleccionar"
-            [options]="comboRenuncia" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura">
-          </p-dropdown>
-        </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{'censo.fichaCliente.situacion.cabecera'|translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.idsituacion' placeholder="Seleccionar"
-            [options]="comboSituacion" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura">
-          </p-dropdown>
-        </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{'gratuita.mantAsistencias.literal.numeroDiligenciasolo'|translate}}</label>
-          <input type="text" [(ngModel)]="body.numerodiligencia" class="form-control" (keypress)="numberOnly($event)"
-            maxLength="10" [disabled]="!perEscritura" pInputText>
-        </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{"gratuita.volantesExpres.literal.centroDetencion" | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.comisaria'
-            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboComisaria" [filter]="true"
-            filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura"></p-dropdown>
-        </div>
-        <div class="form-group col-lg-3 col-md-3">
-          <label>{{"justiciaGratuita.ejg.datosGenerales.calidad" | translate}}</label>
-          <p-dropdown class="select-form" [(ngModel)]='body.calidad'
-            placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboCalidad" [filter]="true"
-            filterBy="label,labelSinTilde" [showClear]="true" [disabled]="!perEscritura"></p-dropdown>
-        </div>
-        <!-- <app-input-dividido [anio]="anio" [numero]="numero" titulo="Año / Número"></app-input-dividido> -->
-      </div>
+
+    </div>
+
     </div>
 
     <div *ngIf="openDef" class="card-footer">
