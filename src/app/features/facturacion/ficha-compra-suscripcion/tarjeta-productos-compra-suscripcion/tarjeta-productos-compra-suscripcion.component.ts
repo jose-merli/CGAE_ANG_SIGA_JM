@@ -85,6 +85,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
   @Input("resaltadoDatos") resaltadoDatos: boolean;
   @Input("esColegiado") esColegiado: boolean;
+  @Input("permisoAbogado") permisoAbogado: boolean;
   @Output() actualizaFicha = new EventEmitter<Boolean>();
   @ViewChild("productsTable") tablaProductos;
 
@@ -111,6 +112,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
     private translateService: TranslateService,
     private cdRef: ChangeDetectorRef,
     private localStorageService: SigaStorageService,
+    
     private router: Router) {}
 
   ngOnInit() {
@@ -140,6 +142,8 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
       this.subscriptionProductosBusqueda.unsubscribe();
     }
   }
+
+ 
 
   //INICIO SERVICIOS
   getProductosCompra() {
@@ -273,6 +277,13 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
             }
           }
         });
+
+        if(this.esColegiado && this.permisoAbogado){
+          this.comboProductos = this.comboProductos.filter(function (e) {
+            return e.solicitarAlta > 0;
+        });
+        }
+       
 
         if(this.ficha.fechaPendiente == null && this.ficha.productos.length > 0){
           this.initProductos();

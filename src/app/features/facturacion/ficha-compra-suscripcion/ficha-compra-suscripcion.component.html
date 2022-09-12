@@ -13,7 +13,7 @@
       [tarjProductos]="tarjProductos" [esColegiado]="esColegiado" [tarjServicios]="tarjServicios" >
       </app-tarjeta-solicitud-compra-suscripcion>
       <app-tarjeta-productos-compra-suscripcion #productos *ngIf="ficha.productos != null" [(ficha)]="ficha" [resaltadoDatos]="resaltadoDatos" 
-      (actualizaFicha)="actualizarFicha()" [esColegiado]="esColegiado" id="productos"> 
+      (actualizaFicha)="actualizarFicha()" [permisoAbogado]="permisoAbogado" [esColegiado]="esColegiado" id="productos"> 
       </app-tarjeta-productos-compra-suscripcion>
       <app-tarjeta-servicios-compra-suscripcion #servicios *ngIf="ficha.servicios != null" [(ficha)]="ficha" [resaltadoDatos]="resaltadoDatos" 
       (actualizaFicha)="actualizarFicha()" [esColegiado]="esColegiado" id="servicios"> 

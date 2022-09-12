@@ -25,6 +25,9 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   comboComun: any[] = [];
   desFormaPagoSelecc: string;
 
+  usuario: any[] = [];
+  permisoAbogado:boolean = false;
+
 
   @ViewChild("cliente") tarjCliente;
   @ViewChild("productos") tarjProductos;
@@ -45,8 +48,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
     else{
       this.esColegiado = false;
     }
-
-    if (sessionStorage.getItem("mensaje")) {
+    this.compruebaAbogado();    if (sessionStorage.getItem("mensaje")) {
       let message: Message = JSON.parse(sessionStorage.getItem("mensaje"));
       if (message)
         this.showMessage(message.severity, message.summary, message.detail);
@@ -62,6 +64,14 @@ export class FichaCompraSuscripcionComponent implements OnInit {
       // this.getComboFormaPago();
     }
   }
+
+  compruebaAbogado(){  this.sigaServices.get("usuario_logeado").subscribe(n => {
+    this.usuario = n.usuarioLogeadoItem;
+    if (this.usuario[0].idPerfiles.indexOf("ABG") > -1 ) {
+      this.permisoAbogado = true;
+    }
+
+  });}
 
   actualizarFicha(event: boolean = true){
     this.progressSpinner = true;
