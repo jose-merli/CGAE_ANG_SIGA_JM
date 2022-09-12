@@ -1075,7 +1075,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
               },
               {
                 "key": this.translateService.instant('censo.usuario.nombre'),
-                "value": this.procurador[0].apellido1 + " " + this.procurador[0].apellido2 + "," + this.procurador[0].nombre  
+                "value":  this.procurador[0].apellido1 + " " + this.procurador[0].apellido2+ " " + this.procurador[0].nombre 
               },
               {
                 "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.fechaDesignacion'),
