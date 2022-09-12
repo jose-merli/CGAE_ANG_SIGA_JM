@@ -49,10 +49,6 @@ export const datos_combos: any = {
     ],
     comboTipoLetrado: [
         {
-            label: "Letrado Tramitador",
-            value: "E"
-        },
-        {
             label: "Letrado Asistencias",
             value: "A"
         },
@@ -60,6 +56,10 @@ export const datos_combos: any = {
             label: "Letrado Designas",
             value: "D"
         },
+        {
+            label: "Letrado Tramitador",
+            value: "E"
+        }
     ],
 
     pesos_existentes: [
