@@ -115,7 +115,7 @@
             [openTarjetaListaIntercambiosAltaEjg]="openTarjetaListaIntercambiosAltaEjg"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
         </app-lista-intercambios-alta-ejg>
-        <app-lista-intercambios-documentacion-ejg *ngIf="mostrarListaIntercambios && modoEdicion" [body]="body"
+        <app-lista-intercambios-documentacion-ejg *ngIf="mostrarListaIntercambiosDocumentacion && modoEdicion" [body]="body"
             [openTarjetaListaIntercambiosDocumentacionEjg]="openTarjetaListaIntercambiosDocumentacionEjg"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
         </app-lista-intercambios-documentacion-ejg>

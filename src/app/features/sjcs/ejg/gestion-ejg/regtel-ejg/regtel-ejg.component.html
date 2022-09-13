@@ -97,6 +97,11 @@
           <button [disabled]="buttonVisibleRegtelDescargar"
             (click)="checkPermisosDownload()" pButton type="button" icon="fa fa-download" iconPos="left"
             label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
+
+          <button *ngIf="buttonVisibleEnvioDocumentacionAdicional && esIdentificadorPericlesDisponible"
+            [disabled]="selectedDatosRegtel == undefined || !permisoEscritura" 
+            (click)="enviarDocumentacionAdicional()" pButton type="button" icon="fa fa-save" iconPos="left"
+            label="{{ 'justiciaGratuita.ejg.listaIntercambios.enviarDocAdicional' | translate }}"></button>
         </div>
       </div>
     </div>

@@ -9,9 +9,10 @@ import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableB
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { SolicitudIncorporacionItem } from '../../../../../models/SolicitudIncorporacionItem';
 import { AuthenticationService } from '../../../../../_services/authentication.service';
-import { DataTable } from 'primeng/primeng';
+import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { EjgService } from '../services/ejg.service';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-expedientes-economicos',
@@ -49,6 +50,10 @@ export class ExpedientesEconomicosComponent implements OnInit {
   resaltadoDatosGenerales: boolean = false;
   resaltadoDatos: boolean = false;
 
+  buttonVisibleEnvioDocumentacionAdicional: boolean = false;
+  esIdentificadorPericlesDisponible: boolean = false;
+  IDINSTITUCION_PERICLES_NO_ZONA_COMUN = ["2055", "2032"];
+
   fichaPosible = {
     key: "expedientesEconomicos",
     activa: false
@@ -65,7 +70,9 @@ export class ExpedientesEconomicosComponent implements OnInit {
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private commonsService: CommonsService,
-    private ejgService : EjgService) { }
+    private ejgService: EjgService,
+    private confirmationService: ConfirmationService,
+    private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -75,6 +82,13 @@ export class ExpedientesEconomicosComponent implements OnInit {
       this.item = this.body;
       this.getExpedientesEconomicos(this.item);
       this.getCols();
+
+      // Acción para el envío de documentación Adicional
+      // this.esColegioConfiguradoEnvioCAJG()
+      //  .then(value => this.buttonVisibleEnvioDocumentacionAdicional = value);
+      console.log(this.sigaStorageService.institucionActual)
+      this.buttonVisibleEnvioDocumentacionAdicional = this.IDINSTITUCION_PERICLES_NO_ZONA_COMUN.includes(this.sigaStorageService.institucionActual);
+      this.esIdentificadorPericlesDisponible = this.item.idExpedienteExt != undefined;
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -300,5 +314,77 @@ export class ExpedientesEconomicosComponent implements OnInit {
         }
       );
     }
+  }
+
+  disableEnviarDocumentacionAdicional(): boolean {
+    return this.selectedDatos == undefined || this.selectedDatos.some(d => d.csv == undefined || d.csv.length == 0 || d.idEstado == "40");
+  }
+
+  async enviarDocumentacionAdicional() {
+    try {
+      if (this.buttonVisibleEnvioDocumentacionAdicional) {
+        if (this.selectedDatos != undefined && this.selectedDatos.length != 0 && await this.confirmEnviarDocumentacionAdicional()) {          
+          let requests = this.selectedDatos.filter(d => d.csv != undefined && d.csv.length != 0 && d.idEstado != "40").map(d => {
+            return { idPeticion: d.idPeticion };
+          });
+          
+          await Promise.all(requests.map(d => this.accionEnviarDocumentacionAdicional(d)));
+          this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+        } else {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      } else {
+        this.showMessage("error", "Error", "La acción no se encuentra disponible");
+      }
+    } catch (error) {
+      this.showMessage('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+    }
+  }
+
+  confirmEnviarDocumentacionAdicional(): Promise<boolean> {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmEnviarDocAdicional");
+    let icon = "fa fa-edit";
+    return new Promise((accept1, reject1) => {
+      this.confirmationService.confirm({
+        key: "confirmEnvioExpEconomico",
+        message: mess,
+        icon: icon,
+        accept: () => accept1(true),
+        reject: () => accept1(false)
+      });
+    })
+  }
+
+  accionEnviarDocumentacionAdicional(body): Promise<any> {
+    this.progressSpinner = true;
+    return this.sigaServices.post("gestionejg_enviaDocumentacionAdicionalExpEconomico", body).toPromise().then(
+      n => {
+        this.progressSpinner = false;
+        const body = JSON.parse(n.body);
+        if (body.error != undefined) {
+          return Promise.reject(n.error);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        return Promise.reject();
+      }
+    );
+  }
+
+  esColegioConfiguradoEnvioCAJG(): Promise<boolean> {
+    return this.sigaServices.get("gestionejg_esColegioConfiguradoEnvioCAJG").toPromise().then(
+      n => {
+        if (n.error != undefined) {
+          return Promise.resolve(false);
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
+        return Promise.resolve(false);
+      }
+    )
   }
 }

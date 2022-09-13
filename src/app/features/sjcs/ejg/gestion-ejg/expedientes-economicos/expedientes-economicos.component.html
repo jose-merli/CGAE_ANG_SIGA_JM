@@ -112,9 +112,13 @@
          <div class="card-footer">
           <div class="text-right main-button">
             <button pButton [disabled]="(selectedDatos.length == 0 || disabledDownload()) || !permisoEscritura" (click)="downloadEEJ()" type="button" icon="fas fa-download" iconPos="left" label="{{'justiciaGratuita.ejg.datosGenerales.DescargarEEJ' | translate}}"></button>
+            <button *ngIf="buttonVisibleEnvioDocumentacionAdicional && esIdentificadorPericlesDisponible"
+              [disabled]="selectedDatos.length == 0 || disableEnviarDocumentacionAdicional() || !permisoEscritura" 
+              (click)="enviarDocumentacionAdicional()" pButton type="button" icon="fa fa-save" iconPos="left"
+              label="{{ 'justiciaGratuita.ejg.listaIntercambios.enviarDocAdicional' | translate }}"></button>
           </div>
         </div>
-        <p-confirmDialog header="Confirmación" icon="fa fa-question-circle" width="425" #cd>
+        <p-confirmDialog header="Confirmación" key="confirmEnvioExpEconomico" icon="fa fa-question-circle" width="425" #cd>
           <p-footer>
             <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
             <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
@@ -122,4 +126,8 @@
         </p-confirmDialog>
       </div>
     </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
 </div>

@@ -9,6 +9,7 @@ import { DataTable } from "primeng/datatable";
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
 import { DocushareObject } from '../../../../../models/DocushareObject';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-regtel-ejg',
@@ -45,6 +46,10 @@ export class RegtelEjgComponent implements OnInit {
   buttonVisibleRegtelDescargar: boolean = true;
   buttonVisibleRegtelAtras: boolean = true;
 
+  buttonVisibleEnvioDocumentacionAdicional: boolean = false;
+  esIdentificadorPericlesDisponible: boolean = false;
+  IDINSTITUCION_PERICLES_NO_ZONA_COMUN = ["2055", "2032"];
+
   resaltadoDatosGenerales: boolean = false;
   progressSpinner: boolean;
   selectedDatosRegtel: DocushareItem;
@@ -71,7 +76,8 @@ export class RegtelEjgComponent implements OnInit {
     private commonsServices: CommonsService,
     private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
-    private confirmationService: ConfirmationService) { }
+    private confirmationService: ConfirmationService,
+    private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
     if (this.persistenceService.getDatos()) {
@@ -83,6 +89,13 @@ export class RegtelEjgComponent implements OnInit {
       //que se actualizara correspondientemente en el servicio si tuviera una asociada.
       this.getRegtel();
       this.getCols();
+
+      // Acción para el envío de documentación Adicional
+      // this.esColegioConfiguradoEnvioCAJG()
+      //  .then(value => this.buttonVisibleEnvioDocumentacionAdicional = value);
+      console.log(this.sigaStorageService.institucionActual)
+      this.buttonVisibleEnvioDocumentacionAdicional = this.IDINSTITUCION_PERICLES_NO_ZONA_COMUN.includes(this.sigaStorageService.institucionActual);
+      this.esIdentificadorPericlesDisponible = this.item.idExpedienteExt != undefined;
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -331,6 +344,7 @@ export class RegtelEjgComponent implements OnInit {
     this.selectedDatosRegtel.anio = this.item.annio;
     let selectedRegtel: DocushareItem = JSON.parse(JSON.stringify(this.selectedDatosRegtel));
     selectedRegtel.fechaModificacion = undefined;
+
     this.sigaServices
       .postDownloadFiles(
         "fichaColegialRegTel_downloadDoc",
@@ -474,5 +488,72 @@ export class RegtelEjgComponent implements OnInit {
   activarPaginacionRegTel() {
     if (!this.regtel || this.regtel.length == 0) return false;
     else return true;
+  }
+
+  async enviarDocumentacionAdicional() {
+    try {
+      if (this.buttonVisibleEnvioDocumentacionAdicional) {
+        if (this.selectedDatosRegtel != undefined && this.selectedDatosRegtel.id != undefined && await this.confirmEnviarDocumentacionAdicional()) {          
+          let request = { identificadords: this.selectedDatosRegtel.id, annio: this.item.annio, 
+            tipoEJG: this.item.tipoEJG, numero: this.item.numero };
+          
+          await this.accionEnviarDocumentacionAdicional(request);
+          this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+        } else {
+          this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
+        }
+      } else {
+        this.showMessage("error", "Error", "La acción no se encuentra disponible");
+      }
+    } catch (error) {
+      this.showMessage('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+    }
+  }
+
+  confirmEnviarDocumentacionAdicional(): Promise<boolean> {
+    let mess = this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.confirmEnviarDocAdicional");
+    let icon = "fa fa-edit";
+    return new Promise((accept1, reject1) => {
+      this.confirmationService.confirm({
+        key: "regtelFicha",
+        message: mess,
+        icon: icon,
+        accept: () => accept1(true),
+        reject: () => accept1(false)
+      });
+    })
+  }
+
+  accionEnviarDocumentacionAdicional(body): Promise<any> {
+    this.progressSpinner = true;
+    return this.sigaServices.post("gestionejg_enviaDocumentacionAdicionalRegtel", body).toPromise().then(
+      n => {
+        this.progressSpinner = false;
+        const body = JSON.parse(n.body);
+        if (body.error != undefined) {
+          return Promise.reject(n.error);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        return Promise.reject();
+      }
+    );
+  }
+
+  esColegioConfiguradoEnvioCAJG(): Promise<boolean> {
+    return this.sigaServices.get("gestionejg_esColegioConfiguradoEnvioCAJG").toPromise().then(
+      n => {
+        if (n.error != undefined) {
+          return Promise.resolve(false);
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
+        return Promise.resolve(false);
+      }
+    )
   }
 }

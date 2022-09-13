@@ -114,9 +114,12 @@ export let endpoints_EJG: any = {
     //comunicaciones
     gestionejg_getComunicaciones: "ejg/gestion-ejg/getComunicaciones",
 
-    // Listas de intercambios JG esColegioZonaComun
+    // Listas de intercambios JG
     gestionejg_esColegioZonaComun: "ejg/gestion-ejg/esColegioZonaComun",
+    gestionejg_esColegioConfiguradoEnvioCAJG: "ejg/gestion-ejg/esColegioConfiguradoEnvioCAJG",
     gestionejg_enviaDocumentacionAdicional: "ejg/gestion-ejg/enviaDocumentacionAdicional",
+    gestionejg_enviaDocumentacionAdicionalExpEconomico: "ejg/gestion-ejg/enviaDocumentacionAdicionalExpEconomico",
+    gestionejg_enviaDocumentacionAdicionalRegtel: "ejg/gestion-ejg/enviaDocumentacionAdicionalRegtel",
     gestionejg_getListaIntercambiosAltaEjg: "ejg/gestion-ejg/getListadoIntercambiosAltaEJG",
     gestionejg_getListaIntercambiosDocumentacionEjg: "ejg/gestion-ejg/getListadoIntercambiosDocumentacionEJG"
 }

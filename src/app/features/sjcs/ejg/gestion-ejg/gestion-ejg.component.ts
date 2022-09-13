@@ -55,6 +55,7 @@ export class GestionEjgComponent implements OnInit {
   permisoProcurador;
   permisoDefensaJuridica;
   mostrarListaIntercambios;
+  mostrarListaIntercambiosDocumentacion;
 
   iconoTarjetaResumen = "clipboard";
 
@@ -188,6 +189,7 @@ export class GestionEjgComponent implements OnInit {
     //this.updateTarjResumen();
     this.datosEntradaTarjGenerica = this.body;
     this.mostrarListaIntercambios = await this.esZonaComun();
+    this.mostrarListaIntercambiosDocumentacion = await this.esColegioConfiguradoEnvioCAJG();
     this.obtenerPermisos();
     
 
@@ -657,7 +659,9 @@ export class GestionEjgComponent implements OnInit {
         };
 
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
 
+      if (this.mostrarListaIntercambiosDocumentacion) {
         pruebaTarjeta = {
           label: "justiciaGratuita.ejg.listaIntercambios.listaDocumentacion",
           value: document.getElementById("listaIntercambiosDocumentacionEjg"),
@@ -822,6 +826,22 @@ export class GestionEjgComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
+        return Promise.resolve(false);
+      }
+    )
+  }
+
+  esColegioConfiguradoEnvioCAJG(): Promise<boolean> {
+    return this.sigaServices.get("gestionejg_esColegioConfiguradoEnvioCAJG").toPromise().then(
+      n => {
+        if (n.error != undefined) {
+          return Promise.resolve(false);
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
         return Promise.resolve(false);
       }
     )

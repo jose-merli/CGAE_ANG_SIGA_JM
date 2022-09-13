@@ -92,9 +92,10 @@ export class DocumentacionComponent implements OnInit {
       this.getComboPresentador();
       this.getComboTipoDocumentacion();
 
-      this.esZonaComun().then(value => this.esColegioZonaComun = value)
+      this.esColegioConfiguradoEnvioCAJG().then(value => this.esColegioZonaComun = value)
         .catch(() => this.esColegioZonaComun = false);
       this.esIdentificadorPericlesDisponible = this.item.idExpedienteExt != undefined;
+      console.log(this.esColegioZonaComun, this.esIdentificadorPericlesDisponible);
     } else {
       this.nuevo = true;
       this.modoEdicion = false;
@@ -943,6 +944,22 @@ export class DocumentacionComponent implements OnInit {
       },
       err => {
         return Promise.reject();
+      }
+    )
+  }
+
+  esColegioConfiguradoEnvioCAJG(): Promise<boolean> {
+    return this.sigaServices.get("gestionejg_esColegioConfiguradoEnvioCAJG").toPromise().then(
+      n => {
+        if (n.error != undefined) {
+          return Promise.resolve(false);
+        } else {
+          const result = n.data === 'true';
+          return Promise.resolve(result);
+        }
+      },
+      err => {
+        return Promise.resolve(false);
       }
     )
   }
