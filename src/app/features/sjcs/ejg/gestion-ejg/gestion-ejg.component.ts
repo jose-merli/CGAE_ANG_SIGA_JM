@@ -203,10 +203,10 @@ export class GestionEjgComponent implements OnInit {
   }
 
   updateTarjResumen() {
-    if (!this.nuevo)
-      //this.body = this.persistenceService.getDatos();
-
-      if (this.body != null && this.body != undefined) {
+    if (!this.nuevo || (this.body != null && this.body != undefined)) {
+      if(this.body.numAnnioProcedimiento== null || this.body.numAnnioProcedimiento == undefined){
+        this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+      }
         this.datos = [
           {
             label: "Año/Numero EJG",
