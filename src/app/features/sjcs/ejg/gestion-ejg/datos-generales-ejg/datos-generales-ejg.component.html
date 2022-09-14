@@ -106,7 +106,7 @@
               <label>{{ "justiciaGratuita.ejg.datosGenerales.Prestaciones" | translate }}</label>
               <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.prestacion'
                 [options]="comboPrestaciones" [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true"
-                filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimits="10"
+                filterBy="label,labelSinTilde" maxSelectedLabels="1"
                 (onPanelShow)="focusInputField()" [panelStyle]="{width:'100%'}"></p-multiSelect>
             </div>
           </div>
