@@ -504,7 +504,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   getComboJuzgados() {
     this.progressSpinner = true;
-    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+    if (this.nuevaDesigna.idJuzgado == null || this.nuevaDesigna.idJuzgado == undefined) {
+      this.nuevaDesigna.idJuzgado = 0;
+    }
+    this.sigaServices.post("combo_comboJuzgadoDesignaciones",this.nuevaDesigna.idJuzgado).subscribe(
       n => {
         this.juzgadoOpciones = n.combooItems;
         //this.progressSpinner = false;
@@ -519,6 +522,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(this.juzgadoOpciones);
+        this.juzgadoOpciones.sort( (a, b) => {
+          return a.label.localeCompare(b.label);
+        });
         this.progressSpinner = false;
       }
     );

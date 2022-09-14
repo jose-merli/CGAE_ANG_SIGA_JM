@@ -49,6 +49,9 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboJuzgados);
+        this.comboJuzgados.sort( (a, b) => {
+          return a.label.localeCompare(b.label);
+        });
       }
     );
 

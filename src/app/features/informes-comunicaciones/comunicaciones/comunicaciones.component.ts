@@ -523,7 +523,7 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   getComboJuzgado() {
-    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+    this.sigaServices.post("combo_comboJuzgadoDesignaciones",'0').subscribe(
       n => {
         this.comboJuzgado = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboJuzgado);

@@ -228,7 +228,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   async getJuzgados(){
     this.progressSpinner = true;
 
-    return this.sigaServices.get("combo_comboJuzgadoDesignaciones").toPromise().then(
+    return this.sigaServices.post("combo_comboJuzgadoDesignaciones",'0').toPromise().then(
       n => {
         this.comboJuzgados = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboJuzgados);

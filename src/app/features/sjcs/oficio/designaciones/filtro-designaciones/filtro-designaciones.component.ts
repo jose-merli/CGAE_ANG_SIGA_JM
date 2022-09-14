@@ -759,8 +759,11 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   getComboJuzgados() {
     this.progressSpinner = true;
+    if (this.body.idJuzgado == null || this.body.idJuzgado == undefined) {
+      this.body.idJuzgado = 0;
+    }
 
-    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+    this.sigaServices.post("combo_comboJuzgadoDesignaciones",this.body.idJuzgado).subscribe(
       n => {
         this.comboJuzgados = n.combooItems;
         this.progressSpinner = false;
@@ -769,6 +772,9 @@ export class FiltroDesignacionesComponent implements OnInit {
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(this.comboTurno);
+        this.comboJuzgados.sort( (a, b) => {
+          return a.label.localeCompare(b.label);
+        });
       }
     );
   }

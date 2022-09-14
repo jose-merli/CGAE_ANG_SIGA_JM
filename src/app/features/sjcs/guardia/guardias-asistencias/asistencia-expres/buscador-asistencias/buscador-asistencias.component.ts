@@ -302,12 +302,16 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     this.sigaServices.get("combo_comboJuzgado").subscribe(
       n => {
         this.comboJuzgados = n.combooItems;
+        
       },
       err => {
         //console.log(err);
 
       }, () => {
         this.commonsService.arregloTildesCombo(this.comboJuzgados);
+        this.comboJuzgados.sort( (a, b) => {
+          return a.label.localeCompare(b.label);
+        });
       }
     );
 

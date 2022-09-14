@@ -141,7 +141,7 @@ export class SelectorComponent implements OnInit {
   }
   getComboJuzgados(selectorJuzgado) {
     this.progressSpinner = true;
-    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+    this.sigaServices.post("combo_comboJuzgadoDesignaciones",'0').subscribe(
       n => {
         selectorJuzgado.opciones = n.combooItems;
         this.progressSpinner = false;
@@ -151,6 +151,9 @@ export class SelectorComponent implements OnInit {
         this.progressSpinner = false;
       }, () => {
         this.arregloTildesCombo(selectorJuzgado.opciones);
+        selectorJuzgado.opciones.sort( (a, b) => {
+          return a.label.localeCompare(b.label);
+        });
         this.progressSpinner = false;
       }
     );

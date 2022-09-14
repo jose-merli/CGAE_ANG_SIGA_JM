@@ -1313,7 +1313,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.idTurno = desig[17].value;
       this.progressSpinner = true;
 
-      this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+      this.sigaServices.post("combo_comboJuzgadoDesignaciones",'0').subscribe(
         n => {
             this.comboJuzgados = n.combooItems;
             if(this.comboJuzgados[0] != undefined){

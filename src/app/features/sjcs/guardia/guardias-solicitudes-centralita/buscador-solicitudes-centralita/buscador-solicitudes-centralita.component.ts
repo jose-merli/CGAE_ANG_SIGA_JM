@@ -153,6 +153,9 @@ export class BuscadorSolicitudesCentralitaComponent implements OnInit, AfterView
 
       }, () => {
         this.commonServices.arregloTildesCombo(this.comboJuzgados);
+        this.comboJuzgados.sort( (a, b) => {
+          return a.label.localeCompare(b.label);
+        });
       }
     );
 

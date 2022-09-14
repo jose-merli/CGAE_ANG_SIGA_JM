@@ -215,7 +215,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.getComboMotivosCambio();
 
     // La selección de Juzgado carga el combo de Procedimientos, y la selección de procedimientos carga el combo de módulos.
-    if(this.parametroConfigCombos != null && this.parametroConfigCombos.valor != null ){
+    if (this.parametroConfigCombos != null && this.parametroConfigCombos.valor != null) {
       if (this.parametroConfigCombos.valor == '1') {
         if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
           this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
@@ -295,12 +295,18 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   // Inicio combos Juzgado
   getComboJuzgados() {
     this.progressSpinner = true;
-
-    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+    if (this.designaItem.idJuzgado == null || this.designaItem.idJuzgado == undefined) {
+      this.designaItem.idJuzgado = 0;
+    }
+    this.sigaServices.post("combo_comboJuzgadoDesignaciones", this.designaItem.idJuzgado).subscribe(
       n => {
         this.comboJuzgados = n.combooItems;
         if (this.comboJuzgados) {
           this.commonsService.arregloTildesCombo(this.comboJuzgados);
+          //Valor de la cabecera para juzagado
+          this.comboJuzgados.sort( (a, b) => {
+            return a.label.localeCompare(b.label);
+          });
         }
         this.progressSpinner = false;
       },
@@ -322,12 +328,14 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   getComboModulos() {
     this.progressSpinner = true;
     let fecha = null;
-    if(this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null){
+    if (this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null) {
       fecha = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy')
     }
     //console.log(this.actuacionDesigna)
-    this.sigaServices.getParam("combo_comboModulosDesignaciones", this.buildParams({"numero": this.actuacionDesigna.actuacion.numero, 
-    "anio": this.actuacionDesigna.actuacion.anio, "idTurno": this.actuacionDesigna.actuacion.idTurno, "numeroAsunto": this.actuacionDesigna.actuacion.numeroAsunto })).subscribe(
+    this.sigaServices.getParam("combo_comboModulosDesignaciones", this.buildParams({
+      "numero": this.actuacionDesigna.actuacion.numero,
+      "anio": this.actuacionDesigna.actuacion.anio, "idTurno": this.actuacionDesigna.actuacion.idTurno, "numeroAsunto": this.actuacionDesigna.actuacion.numeroAsunto
+    })).subscribe(
       n => {
         this.comboModulos = n.combooItems;
 
@@ -383,10 +391,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   getComboModulosPorJuzgado($event) {
     this.progressSpinner = true;
     let fecha = null;
-    if(this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null){
+    if (this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null) {
       fecha = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy')
     }
-    this.sigaServices.getParam("combo_comboModulosConJuzgado","?idJuzgado=" +$event + "&fecha=" + fecha).subscribe(
+    this.sigaServices.getParam("combo_comboModulosConJuzgado", "?idJuzgado=" + $event + "&fecha=" + fecha).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
 
@@ -428,10 +436,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   getComboModulosConProcedimientos(idPretension) {
     this.progressSpinner = true;
     let fecha = null;
-    if(this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null){
+    if (this.datos.datePicker != null && this.datos.datePicker.value != undefined && this.datos.datePicker.value != null) {
       fecha = this.datePipe.transform(new Date(this.datos.datePicker.value), 'dd/MM/yyyy')
     }
-    this.sigaServices.getParam("combo_comboModulosConProcedimientos","?idPretension=" + idPretension + "&fecha=" + fecha).subscribe(
+    this.sigaServices.getParam("combo_comboModulosConProcedimientos", "?idPretension=" + idPretension + "&fecha=" + fecha).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
 
@@ -1199,10 +1207,10 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     //IDMODULO de SJCS es 10
     sessionStorage.setItem("idModulo", '10');
-    
+
     this.getDatosComunicar();
   }
-  
+
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
       data => {
@@ -1230,17 +1238,17 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
             .subscribe(
               data => {
                 this.keys = JSON.parse(data["body"]).keysItem;
-            //    this.actuacionesSeleccionadas.forEach(element => {
-                  let keysValues = [];
-                  this.keys.forEach(key => {
-                    if (this.actuacionDesigna.actuacion[key.nombre] != undefined) {
-                      keysValues.push(this.actuacionDesigna.actuacion[key.nombre]);
-                    }else if(key.nombre == "num" && this.actuacionDesigna.actuacion["numero"] != undefined){
-                      keysValues.push(this.actuacionDesigna.actuacion["numero"]);
-                    }
-                  });
-                  datosSeleccionados.push(keysValues);
-             //   });
+                //    this.actuacionesSeleccionadas.forEach(element => {
+                let keysValues = [];
+                this.keys.forEach(key => {
+                  if (this.actuacionDesigna.actuacion[key.nombre] != undefined) {
+                    keysValues.push(this.actuacionDesigna.actuacion[key.nombre]);
+                  } else if (key.nombre == "num" && this.actuacionDesigna.actuacion["numero"] != undefined) {
+                    keysValues.push(this.actuacionDesigna.actuacion["numero"]);
+                  }
+                });
+                datosSeleccionados.push(keysValues);
+                //   });
 
                 sessionStorage.setItem(
                   "datosComunicar",

@@ -485,10 +485,16 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   getComboJuzgado() {
-    this.sigaServices.get("combo_comboJuzgadoDesignaciones").subscribe(
+    if (this.bodyInicial.juzgado == null || this.bodyInicial.juzgado == undefined) {
+      this.bodyInicial.juzgado = '0';
+    }
+    this.sigaServices.post("combo_comboJuzgadoDesignaciones",this.bodyInicial.juzgado).subscribe(
       n => {
-        this.comboJuzgado = n.combooItems;
+        this.comboJuzgado = JSON.parse(n.body).combooItems;
         this.commonsServices.arregloTildesCombo(this.comboJuzgado);
+        this.comboJuzgado.sort( (a, b) => {
+          return a.label.localeCompare(b.label);
+        });
         //Valor de la cabecera para juzagado
         this.comboJuzgado.forEach(element => {
           if (element.value == this.bodyInicial.juzgado) this.juzgadoCabecera = element.label;
