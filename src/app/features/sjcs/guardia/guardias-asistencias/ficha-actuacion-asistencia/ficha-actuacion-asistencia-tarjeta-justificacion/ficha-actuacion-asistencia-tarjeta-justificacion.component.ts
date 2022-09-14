@@ -148,9 +148,9 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
             this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           } else {
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
-            if (this.datosJustificacion.validada == '0') {
+            if (this.datosJustificacion.validada == '0' || this.datosJustificacion.validada == '') {
               this.datosJustificacion.estado = '';
-            } else {
+            } else if (this.datosJustificacion.validada == '1') {
               this.datosJustificacion.estado = 'VALIDADA';
             }
             if (this.datosJustificacion.anulada == '1') {
