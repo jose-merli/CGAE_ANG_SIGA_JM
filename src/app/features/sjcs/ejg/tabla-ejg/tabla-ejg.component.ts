@@ -163,13 +163,13 @@ export class TablaEjgComponent implements OnInit {
 
   getCols() {
     this.cols = [
-      { field: "turnoDes", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "20%" },
-      { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "10%" },
-      { field: "numAnnioProcedimiento", header: "justiciaGratuita.ejg.datosGenerales.annioNum", width: "5%" },
-      { field: "apellidosYNombre", header: "busquedaSanciones.detalleSancion.letrado.literal", width: "20%" },
+      { field: "turnoDes", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "16%" },
+      { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "16%" },
+      { field: "numAnnioProcedimiento", header: "justiciaGratuita.ejg.datosGenerales.annioNum", width: "10%" },
+      { field: "apellidosYNombre", header: "busquedaSanciones.detalleSancion.letrado.literal", width: "16%" },
       { field: "fechaApertura", header: "gratuita.busquedaEJG.literal.fechaApertura", width: "10%" },
-      { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG", width: "15%" },
-      { field: "nombreApeSolicitante", header: "justiciaGratuita.justiciables.rol.solicitante", width: "20%" },
+      { field: "estadoEJG", header: "justiciaGratuita.ejg.datosGenerales.EstadoEJG", width: "16%" },
+      { field: "nombreApeSolicitante", header: "justiciaGratuita.justiciables.rol.solicitante", width: "16%" },
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
