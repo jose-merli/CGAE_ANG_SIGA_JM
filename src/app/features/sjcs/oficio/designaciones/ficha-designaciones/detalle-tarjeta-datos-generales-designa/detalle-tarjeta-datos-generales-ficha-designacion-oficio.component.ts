@@ -377,7 +377,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   getComboTurno() {
     this.progressSpinner = true;
-    this.sigaServices.get("combo_turnos").subscribe(
+    this.sigaServices.get("combo_turnos_designas").subscribe(
       n => {
         this.selectores[0].opciones = n.combooItems;
         let datosGeneralesDesigna = JSON.parse(sessionStorage.getItem("datosGeneralesDesigna"));
