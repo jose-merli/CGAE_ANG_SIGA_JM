@@ -18,7 +18,8 @@
             <label>{{ "justiciaGratuita.ejg.datosGenerales.numAnnioProcedimiento" | translate }}:
               <span>{{body.numAnnioProcedimiento}}</span></label>
             <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJG" | translate }}: <span>{{tipoEJGDesc}}</span></label>
-            <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate }}: <span>{{tipoEJGColDesc}}</span></label>
+            <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate }}:
+              <span>{{tipoEJGColDesc}}</span></label>
             <label>{{ "justiciaGratuita.ejg.datosGenerales.EstadoEJG" | translate }}:
               <span>{{body.estadoEJG}}</span></label>
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
@@ -56,13 +57,16 @@
             <div class="form-group col-lg-6 col-md-6 pr-0">
               <label>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
               <div style="display: flex;">
-                <input type="text" class="form-control" [disabled]="disabledNumEJG" (keypress)="numberOnly($event)" maxLength="10" pInputText [(ngModel)]="body.numEjg" />
+                <input type="text" class="form-control" [disabled]="disabledNumEJG" (keypress)="numberOnly($event)"
+                  maxLength="10" pInputText [(ngModel)]="body.numEjg" />
                 <div style="padding-top: 4%;" class="pointer">
-                  <i *ngIf="disabledNumEJG" class="candado fa fa-lock col-lg-1 col-md-1" aria-hidden="true" (click)="disableEnableNumEJG()"></i>
-                  <i *ngIf="!disabledNumEJG" class="candado fa fa-unlock col-lg-1 col-md-1" aria-hidden="true" (click)="disableEnableNumEJG()"></i>
+                  <i *ngIf="disabledNumEJG" class="candado fa fa-lock col-lg-1 col-md-1" aria-hidden="true"
+                    (click)="disableEnableNumEJG()"></i>
+                  <i *ngIf="!disabledNumEJG" class="candado fa fa-unlock col-lg-1 col-md-1" aria-hidden="true"
+                    (click)="disableEnableNumEJG()"></i>
                 </div>
               </div>
-          </div>
+            </div>
           </div>
         </div>
         <div class="bloque col-lg-4 col-md-4">
@@ -99,15 +103,15 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.TipoEJGColegio" | translate }}</label>
               <p-dropdown class="select-form" [(ngModel)]='body.tipoEJGColegio' placeholder="Seleccionar"
-                [options]="comboTipoEJGColegio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" >
+                [options]="comboTipoEJGColegio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ "justiciaGratuita.ejg.datosGenerales.Prestaciones" | translate }}</label>
               <p-multiSelect #someDropdown [defaultLabel]="textFilter" autoWidth="false" [(ngModel)]='body.prestacion'
                 [options]="comboPrestaciones" [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true"
-                filterBy="label,labelSinTilde" maxSelectedLabels="1"
-                (onPanelShow)="focusInputField()" [panelStyle]="{width:'100%'}"></p-multiSelect>
+                filterBy="label,labelSinTilde" maxSelectedLabels="1" (onPanelShow)="focusInputField()"
+                [panelStyle]="{width:'100%'}"></p-multiSelect>
             </div>
           </div>
         </div>
@@ -115,25 +119,25 @@
           <label style="text-align:center; font-weight: bold; padding-bottom: 10px">{{
             "justiciaGratuita.ejg.datosGenerales.DatosExpediente" | translate }}</label>
           <div class="form-row">
-              <div class="form-group col-lg-6 col-md-6">
-                <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
-                <input type="text" [(ngModel)]="body.anioexpInsos" [disabled]="true" class="form-control"
-                  (keypress)="numberOnly($event)" maxLength="4" pInputText>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'justiciaGratuita.maestros.calendarioLaboralAgenda.anio' | translate}}</label>
+              <input type="text" [(ngModel)]="body.anioexpInsos" [disabled]="true" class="form-control"
+                (keypress)="numberOnly($event)" maxLength="4" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <label>{{ 'justiciaGratuita.ejg.datosGenerales.NumExpediente' | translate}}</label>
+              <input type="text" [(ngModel)]="body.numeroexpInsos" [disabled]="true" class="form-control"
+                (keypress)="numberOnly($event)" maxLength="10" pInputText>
+            </div>
+            <div class="form-group col-lg-6 col-md-6">
+              <div><label>{{ 'justiciaGratuita.ejg.datosGenerales.TipoExpediente' | translate}}:</label></div>
+              <div>
+                <label *ngIf="showTipoExp">{{tipoExpedienteDes}}</label>
               </div>
-              <div class="form-group col-lg-6 col-md-6">
-                <label>{{ 'justiciaGratuita.ejg.datosGenerales.NumExpediente' | translate}}</label>
-                <input type="text" [(ngModel)]="body.numeroexpInsos" [disabled]="true" class="form-control"
-                  (keypress)="numberOnly($event)" maxLength="10" pInputText>
-              </div>
-              <div class="form-row">
-                <div class="form-group col-lg-6 col-md-6">
-                  <label>{{ 'justiciaGratuita.ejg.datosGenerales.TipoExpediente' | translate}}:</label>
-                  <label *ngIf="showTipoExp">{{tipoExpedienteDes}}</label>
-                  <p-dropdown *ngIf="!showTipoExp" class="select-form" [(ngModel)]='body.idTipoExpInsos'
-                    placeholder="Seleccionar" [options]="comboTipoExpediente" [filter]="true" filterBy="label,labelSinTilde"
-                    [showClear]="true"></p-dropdown>
-                </div>
-              </div>
+              <p-dropdown *ngIf="!showTipoExp" class="select-form" [(ngModel)]='body.idTipoExpInsos'
+                placeholder="Seleccionar" [options]="comboTipoExpediente" [filter]="true" filterBy="label,labelSinTilde"
+                [showClear]="true"></p-dropdown>
+            </div>
           </div>
         </div>
       </div>
@@ -141,14 +145,16 @@
 
     <div *ngIf="esFichaActiva('datosGenerales')" class="card-footer">
       <div class="text-right main-button ">
-        <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion" type="button"
-          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button>
+        <button (click)="checkPermisosAsociarDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion"
+          type="button" icon="fa fa-plus" iconPos="left"
+          label="{{ 'general.boton.AsociarDesignacion' | translate}}"></button>
 
-        <button (click)="checkPermisosCreateDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion" type="button"
-          icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
+        <button (click)="checkPermisosCreateDes()" pButton [disabled]="!permisoEscritura || !noAsocDes || !modoEdicion"
+          type="button" icon="fa fa-download" iconPos="left"
+          label="{{ 'general.boton.crearDesignacion' | translate}}"></button>
 
-        <button (click)="checkPermisosAddExp()" pButton [disabled]="!permisoEscritura || !modoEdicion || noAsocDes" type="button"
-          icon="fa fa-plus" iconPos="left"
+        <button (click)="checkPermisosAddExp()" pButton [disabled]="!permisoEscritura || !modoEdicion || noAsocDes"
+          type="button" icon="fa fa-plus" iconPos="left"
           label="{{'justiciaGratuita.ejg.datosGenerales.AddExpediente' | translate }}"></button>
 
         <button (click)="checkPermisosComunicar()" pButton [disabled]="!permisoEscritura || !modoEdicion" type="button"

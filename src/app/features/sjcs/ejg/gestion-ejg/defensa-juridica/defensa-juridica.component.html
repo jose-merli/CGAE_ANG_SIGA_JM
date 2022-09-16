@@ -146,16 +146,16 @@
     <div *ngIf="openDef" class="card-footer">
       <div class="text-right main-button ">
         <button (click)="checkPermisosAsociarDes()" pButton type="button"
-          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}" [disabled]="!permisoDefensaJuridica"></button>
+          icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.AsociarDesignacion' | translate}}" [disabled]="!perDefensaJuri"></button>
 
         <button (click)="checkPermisosCreateDes()" pButton type="button"
-          icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}" [disabled]="!permisoDefensaJuridica"></button>
+          icon="fa fa-download" iconPos="left" label="{{ 'general.boton.crearDesignacion' | translate}}" [disabled]="!perDefensaJuri"></button>
 
         <button (click)="rest()" pButton type="button" icon="fa fa-undo" iconPos="left"
-          label="{{ 'general.boton.restablecer' | translate}}" [disabled]="!permisoDefensaJuridica"></button>
+          label="{{ 'general.boton.restablecer' | translate}}" [disabled]="!perDefensaJuri"></button>
 
         <button (click)="checkSave()" pButton type="button" icon="fa fa-save" iconPos="left"
-          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!permisoDefensaJuridica"></button>
+          label="{{ 'general.boton.guardar' | translate}}" [disabled]="!perDefensaJuri"></button>
       </div>
     </div>
   </div>
