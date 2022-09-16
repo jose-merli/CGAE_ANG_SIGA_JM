@@ -54,12 +54,9 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit, OnChanges {
   async ngOnInit() {
     try {
       this.getCols();
-      if (this.body != undefined) {
-        console.log(this.body);
-      }
+      
       // const request = { idInstitucion: 2014, annio: 2022, tipoEJG: 1, numero: 2 };
       const request = { idInstitucion: this.body.idInstitucion, annio: this.body.annio, tipoEJG: this.body.tipoEJG, numero: this.body.numero };
-      console.log(request);
       this.datos = await this.getListaIntercambiosAltaEjg(request);
     } catch (error) {
       console.error(error);
@@ -77,11 +74,11 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit, OnChanges {
 
   getCols() {
     this.cols = [
-      { field: "descripcion", header: "justiciaGratuita.ejg.listaIntercambios.intercambio" },
-      { field: "fechaEnvio", header: "justiciaGratuita.ejg.listaIntercambios.fechaEnvio" },
-      { field: "estadoRespuesta", header: "enviosMasivos.literal.estado" },
-      { field: "fechaRespuesta", header: "justiciaGratuita.ejg.listaIntercambios.fechaRespuesta" },
-      { field: "respuesta", header: "justiciaGratuita.ejg.listaIntercambios.respuesta" }
+      { field: "descripcion", header: "justiciaGratuita.ejg.listaIntercambios.intercambio", width: "20%" },
+      { field: "fechaEnvio", header: "justiciaGratuita.ejg.listaIntercambios.fechaEnvio", width: "10%" },
+      { field: "estadoRespuesta", header: "enviosMasivos.literal.estado", width: "10%" },
+      { field: "fechaRespuesta", header: "justiciaGratuita.ejg.listaIntercambios.fechaRespuesta", width: "10%" },
+      { field: "respuesta", header: "justiciaGratuita.ejg.listaIntercambios.respuesta", width: "50%" }
     ];
 
     this.cols.forEach(it => this.buscadores.push(""));
@@ -119,11 +116,9 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit, OnChanges {
       n => {
         const body = JSON.parse(n.body);
         const items: ListaIntercambiosEjgItem[] = body.ejgListaIntercambiosItems;
-        console.log(items)
         return Promise.resolve(items);
       },
       err => {
-        console.log(err);
         return Promise.resolve([]);
       }
     );

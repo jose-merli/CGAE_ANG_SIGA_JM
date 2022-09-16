@@ -54,8 +54,7 @@ export class GestionEjgComponent implements OnInit {
   permisoContrarios;
   permisoProcurador;
   permisoDefensaJuridica;
-  mostrarListaIntercambios;
-  mostrarListaIntercambiosDocumentacion;
+  permisoListasIntercambiosPericles;
 
   iconoTarjetaResumen = "clipboard";
 
@@ -188,8 +187,6 @@ export class GestionEjgComponent implements OnInit {
     //sessionStorage.removeItem("EJGItem");
     //this.updateTarjResumen();
     this.datosEntradaTarjGenerica = this.body;
-    this.mostrarListaIntercambios = await this.esZonaComun();
-    this.mostrarListaIntercambiosDocumentacion = await this.esColegioConfiguradoEnvioCAJG();
     this.obtenerPermisos();
     
 
@@ -325,7 +322,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResumen = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -334,7 +331,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDatosGenerales = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -343,7 +340,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraServiciosTramitacion = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -352,7 +349,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraUnidadFamiliar = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -361,7 +358,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraExpedientesEconomicos = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -370,7 +367,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRelaciones = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -379,7 +376,7 @@ export class GestionEjgComponent implements OnInit {
         this.progressSpinner = true;
         this.permisoDefensaJuridica = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
         this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
@@ -389,7 +386,7 @@ export class GestionEjgComponent implements OnInit {
         this.progressSpinner = true;
         this.permisoProcurador = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
         this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
@@ -399,7 +396,7 @@ export class GestionEjgComponent implements OnInit {
         this.progressSpinner = true;
         this.permisoContrarios = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
         this.progressSpinner = false;
       }
       ).catch(error => console.error(error));
@@ -410,7 +407,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraEstados = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -419,7 +416,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDocumentacion = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -428,7 +425,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraInformeCalif = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -437,7 +434,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResolucion = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -446,7 +443,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraImpugnacion = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -455,7 +452,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRegtel = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -464,7 +461,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraComunicaciones = respuesta;
         recibidos++;
-        if (recibidos == 16) this.enviarEnlacesTarjeta();
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -476,6 +473,14 @@ export class GestionEjgComponent implements OnInit {
     //   if (recibidos == 16) this.enviarEnlacesTarjeta();
     // }
     // ).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_ejg.intercambiosPericles)
+      .then(respuesta => {
+        this.permisoListasIntercambiosPericles = respuesta;
+        recibidos++;
+        if (recibidos == 17) this.enviarEnlacesTarjeta();
+      }
+      ).catch(error => console.error(error));
 
     //Comprobar si el EJG tiene alguna designacion asignada.
     //Si es asi, esta ficha sera unicamente de consulta, no edicion.
@@ -651,7 +656,7 @@ export class GestionEjgComponent implements OnInit {
 
       this.enlacesTarjetaResumen.push(pruebaTarjeta);
 
-      if (this.mostrarListaIntercambios) {
+      if (this.permisoListasIntercambiosPericles != undefined) {
         pruebaTarjeta = {
           label: "justiciaGratuita.ejg.listaIntercambios.listaExpedientes",
           value: document.getElementById("listaIntercambiosAltaEjg"),
@@ -659,9 +664,7 @@ export class GestionEjgComponent implements OnInit {
         };
 
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
 
-      if (this.mostrarListaIntercambiosDocumentacion) {
         pruebaTarjeta = {
           label: "justiciaGratuita.ejg.listaIntercambios.listaDocumentacion",
           value: document.getElementById("listaIntercambiosDocumentacionEjg"),
@@ -812,38 +815,4 @@ export class GestionEjgComponent implements OnInit {
     this.persistenceService.setDatos(this.body);
   }
 
-  esZonaComun(): Promise<boolean> {
-    this.progressSpinner = true;
-    return this.sigaServices.get("gestionejg_esColegioZonaComun").toPromise().then(
-      n => {
-        this.progressSpinner = false;
-        if (n.error != undefined) {
-          return Promise.resolve(false);
-        } else {
-          const result = n.data === 'true';
-          return Promise.resolve(result);
-        }
-      },
-      err => {
-        this.progressSpinner = false;
-        return Promise.resolve(false);
-      }
-    )
-  }
-
-  esColegioConfiguradoEnvioCAJG(): Promise<boolean> {
-    return this.sigaServices.get("gestionejg_esColegioConfiguradoEnvioCAJG").toPromise().then(
-      n => {
-        if (n.error != undefined) {
-          return Promise.resolve(false);
-        } else {
-          const result = n.data === 'true';
-          return Promise.resolve(result);
-        }
-      },
-      err => {
-        return Promise.resolve(false);
-      }
-    )
-  }
 }

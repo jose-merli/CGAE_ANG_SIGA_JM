@@ -111,11 +111,11 @@
         </app-tarjeta-facturacion-generica>
 
         <!-- Listas de intercabios - Integración Pericles -->
-        <app-lista-intercambios-alta-ejg *ngIf="mostrarListaIntercambios && modoEdicion" [body]="body"
+        <app-lista-intercambios-alta-ejg *ngIf="permisoListasIntercambiosPericles != undefined && modoEdicion" [body]="body"
             [openTarjetaListaIntercambiosAltaEjg]="openTarjetaListaIntercambiosAltaEjg"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
         </app-lista-intercambios-alta-ejg>
-        <app-lista-intercambios-documentacion-ejg *ngIf="mostrarListaIntercambiosDocumentacion && modoEdicion" [body]="body"
+        <app-lista-intercambios-documentacion-ejg *ngIf="permisoListasIntercambiosPericles != undefined && modoEdicion" [body]="body"
             [openTarjetaListaIntercambiosDocumentacionEjg]="openTarjetaListaIntercambiosDocumentacionEjg"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
         </app-lista-intercambios-documentacion-ejg>

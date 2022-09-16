@@ -17,6 +17,7 @@ export const procesos_ejg: any = {
     impugnacion: "91O",
     regtel: "94V",
     comunicaciones: "94Z",
+    intercambiosPericles: "940",
 
     //detalle unidad familiar
     detalleUF: "93A",

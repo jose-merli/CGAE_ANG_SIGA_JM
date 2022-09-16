@@ -52,7 +52,6 @@ export class ExpedientesEconomicosComponent implements OnInit {
 
   buttonVisibleEnvioDocumentacionAdicional: boolean = false;
   esIdentificadorPericlesDisponible: boolean = false;
-  IDINSTITUCION_PERICLES_NO_ZONA_COMUN = ["2055", "2032"];
 
   fichaPosible = {
     key: "expedientesEconomicos",
@@ -84,10 +83,8 @@ export class ExpedientesEconomicosComponent implements OnInit {
       this.getCols();
 
       // Acción para el envío de documentación Adicional
-      // this.esColegioConfiguradoEnvioCAJG()
-      //  .then(value => this.buttonVisibleEnvioDocumentacionAdicional = value);
-      console.log(this.sigaStorageService.institucionActual)
-      this.buttonVisibleEnvioDocumentacionAdicional = this.IDINSTITUCION_PERICLES_NO_ZONA_COMUN.includes(this.sigaStorageService.institucionActual);
+      this.esColegioConfiguradoEnvioCAJG()
+        .then(value => this.buttonVisibleEnvioDocumentacionAdicional = value);
       this.esIdentificadorPericlesDisponible = this.item.idExpedienteExt != undefined;
     } else {
       this.nuevo = true;
