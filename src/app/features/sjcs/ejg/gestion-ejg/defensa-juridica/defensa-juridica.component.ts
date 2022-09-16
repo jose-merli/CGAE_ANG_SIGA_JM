@@ -49,6 +49,7 @@ export class DefensaJuridicaComponent implements OnInit {
 
   openDef: boolean = false;
   perEscritura: boolean = false;
+  perDefensaJuri: boolean = false;
 
   delitosValueInicial: any;
   delitosValue: any = [];
@@ -67,6 +68,11 @@ export class DefensaJuridicaComponent implements OnInit {
     this.body = this.persistenceService.getDatos();
     //Valor inicial a reestablecer
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+    if(this.permisoDefensaJuridica){
+      this.perDefensaJuri = true;
+    }else{
+      this.perDefensaJuri = false;
+    }
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
     //Se obtiene la designacion si hay una designacion entre las relaciones
@@ -128,6 +134,8 @@ export class DefensaJuridicaComponent implements OnInit {
       }else{
         this.perEscritura = false;
       }
+
+      
     }, 1000);
   }
   ngOnChanges(changes: SimpleChanges): void {
@@ -250,7 +258,7 @@ export class DefensaJuridicaComponent implements OnInit {
 				this.translateService.instant('general.message.incorrect'),
 				this.translateService.instant('general.message.existeDesignaAsociado')
 			);
-		}else if (!this.permisoDefensaJuridica) {
+		}else if (!this.perDefensaJuri) {
 			this.showMessage(
 				'error',
 				this.translateService.instant('general.message.incorrect'),
@@ -276,7 +284,7 @@ export class DefensaJuridicaComponent implements OnInit {
 				this.translateService.instant('general.message.incorrect'),
 				this.translateService.instant('general.message.existeDesignaAsociado')
 			);
-		}else if (!this.permisoDefensaJuridica) {
+		}else if (!this.perDefensaJuri) {
 			this.showMessage(
 				'error',
 				this.translateService.instant('general.message.incorrect'),
@@ -313,7 +321,7 @@ export class DefensaJuridicaComponent implements OnInit {
 				this.translateService.instant('general.message.incorrect'),
 				this.translateService.instant('general.message.existeDesignaAsociado')
 			);
-		}else if (!this.permisoDefensaJuridica) {
+		}else if (!this.perDefensaJuri) {
 			this.showMessage(
 				'error',
 				this.translateService.instant('general.message.incorrect'),
