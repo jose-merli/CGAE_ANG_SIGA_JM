@@ -24,7 +24,6 @@ export class CommonsService {
     private sigaServices: SigaServices,
     handler: HttpBackend,
     private httpbackend: HttpClient,
-    private sigaServices: SigaServices,
     private translateService: TranslateService
   ) {
     this.httpbackend = new HttpClient(handler);
@@ -358,63 +357,4 @@ export class CommonsService {
     }
   }
 
-  getLetrado = () => {
-		let isLetrado: ComboItem;
-    let respuesta = undefined;
-
-    respuesta = new Promise((resolve, reject) => {
-      this.sigaServices.get('getLetrado').subscribe(
-        (data) => {
-          isLetrado = data;
-          if (isLetrado.value == 'S') {
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        },
-        (err) => {
-          //console.log(err);
-          reject(undefined);
-        }
-        );
-    });
-    return respuesta;
-	}
-
-  checkAcceso = (idProceso) => {
-    let activacionEditar = undefined;
-    let controlAcceso = new ControlAccesoDto();
-    controlAcceso.idProceso = idProceso;
-    let derechoAcceso;
-
-    activacionEditar = new Promise((resolve, reject) => {
-
-      this.sigaServices.post("acces_control", controlAcceso).subscribe(
-        data => {
-          let permisosTree = JSON.parse(data.body);
-          let permisosArray = permisosTree.permisoItems;
-          derechoAcceso = permisosArray[0].derechoacceso;
-        },
-        err => {
-          //console.log(err);
-          reject(undefined);
-        },
-        () => {
-          if (derechoAcceso == 3) {
-            //permiso total
-            resolve(true);
-          } else if (derechoAcceso == 2) {
-            // solo lectura
-            resolve(false);
-          } else {
-            resolve(undefined);
-          }
-
-        }
-      );
-    });
-
-    return activacionEditar;
-
-  }
 }
