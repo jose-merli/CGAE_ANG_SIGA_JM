@@ -5,7 +5,8 @@ import { PersistenceService } from '../../../../../../../../_services/persistenc
 import { Router } from '@angular/router';
 import { Message } from 'primeng/components/common/api';
 import { CamposCambioLetradoItem } from '../../../../../../../../models/sjcs/CamposCambioLetradoItem';
-
+import { Observable } from 'rxjs/Observable';
+import { map, catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-letrado-entrante',
@@ -26,7 +27,7 @@ export class LetradoEntranteComponent implements OnInit {
   @Input() entrante;
   @Output() fillEntrante = new EventEmitter<boolean>();
 
-  constructor(private router: Router,private sigaServices: SigaServices) { }
+  constructor(private router: Router,private sigaServices: SigaServices, private translateService: TranslateService) { }
 
   ngOnInit() {
     this.body.art27=false;
@@ -34,6 +35,9 @@ export class LetradoEntranteComponent implements OnInit {
 			let data = JSON.parse(sessionStorage.getItem("NewLetrado"));
 			sessionStorage.removeItem("NewLetrado");
       this.body=data;
+      
+      // Lanza un mensaje de advertencia si el letrado seleccionado no se encuentra en el turno
+      this.advertenciaLetradoNoInscritoEnTurno();
     }
     if (sessionStorage.getItem("abogado")) {
 			let data = JSON.parse(sessionStorage.getItem("abogado"))[0];
@@ -44,6 +48,9 @@ export class LetradoEntranteComponent implements OnInit {
 			/* this.body.apellidos = data.apellidos1 + " " + data.apellidos2; */
       this.body.apellidos = data.apellidos;
       this.body.idPersona = data.idPersona;
+
+      // Lanza un mensaje de advertencia si el letrado seleccionado no se encuentra en el turno
+      this.advertenciaLetradoNoInscritoEnTurno();
 		}
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
@@ -80,6 +87,36 @@ export class LetradoEntranteComponent implements OnInit {
 
   onHideTarjeta(){
     this.showTarjeta=!this.showTarjeta;
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
+  }
+
+  advertenciaLetradoNoInscritoEnTurno() {
+    this.compruebaEstaLetradoEnTurno().subscribe(value => {
+      if (!value) {
+        this.showMessage("warn", this.translateService.instant("general.message.warn"), 
+          this.translateService.instant("justiciaGratuita.oficio.designas.cambioLetrado.avisoNoEnTurno"));
+      }
+    })
+  }
+
+  compruebaEstaLetradoEnTurno(): Observable<boolean>  {
+    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    let request = { idturno: designa.idTurno, idinstitucion: designa.idInstitucion, idpersona: this.body.idPersona };
+    return this.sigaServices.post("designaciones_compruebaLetradoInscritoEnTurno", request).pipe(
+      map(n => {
+        const body = JSON.parse(n.body);
+        return body.data === "true";
+      },
+      catchError(() => Observable.of(true)))
+    );
   }
 
   clear() {
