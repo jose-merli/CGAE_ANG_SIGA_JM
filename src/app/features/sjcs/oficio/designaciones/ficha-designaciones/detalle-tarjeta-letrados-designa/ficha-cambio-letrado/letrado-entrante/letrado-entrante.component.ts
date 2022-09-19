@@ -99,23 +99,24 @@ export class LetradoEntranteComponent implements OnInit {
   }
 
   advertenciaLetradoNoInscritoEnTurno() {
+    this.progressSpinner = true;
     this.compruebaEstaLetradoEnTurno().subscribe(value => {
+      this.progressSpinner = false;
       if (!value) {
         this.showMessage("warn", this.translateService.instant("general.message.warn"), 
           this.translateService.instant("justiciaGratuita.oficio.designas.cambioLetrado.avisoNoEnTurno"));
       }
-    })
+    }, err => this.progressSpinner = false);
   }
 
   compruebaEstaLetradoEnTurno(): Observable<boolean>  {
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     let request = { idturno: designa.idTurno, idinstitucion: designa.idInstitucion, idpersona: this.body.idPersona };
-    return this.sigaServices.post("designaciones_compruebaLetradoInscritoEnTurno", request).pipe(
-      map(n => {
+    return this.sigaServices.post("designaciones_compruebaLetradoInscritoEnTurno", request).map(
+      n => {
         const body = JSON.parse(n.body);
         return body.data === "true";
-      },
-      catchError(() => Observable.of(true)))
+      }
     );
   }
 
