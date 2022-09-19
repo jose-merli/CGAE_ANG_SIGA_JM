@@ -215,6 +215,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
     
   }
   ngOnInit() {
+    
+    this.commonsService.checkAcceso(procesos_censo.generarExcel)
+      .then(respuesta => {
+        if(respuesta != undefined){
+          this.permisoExcel = respuesta;
+        }
+      }).catch(error => console.error(error));
 
     sessionStorage.removeItem('consultasSearch');
 

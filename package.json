@@ -101,7 +101,7 @@
 		"node-sass": "^4.3.0",
 		"postcss-loader": "^2.1.0",
 		"postcss-url": "^7.1.2",
-		"protractor": "~5.1.2",
+		"protractor": "5.4.2",
 		"raw-loader": "^0.5.1",
 		"require": "^2.4.20",
 		"sass-loader": "^6.0.6",
