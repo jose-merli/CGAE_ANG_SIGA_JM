@@ -72,7 +72,9 @@ export class FiltrosFactProgramadasComponent implements OnInit {
       this.body.fechaConfirmacionDesde = this.transformDate(this.body.fechaConfirmacionDesde);
       this.body.fechaConfirmacionHasta = this.transformDate(this.body.fechaConfirmacionHasta);
 
+      this.progressSpinner = true;
       this.busqueda.emit();
+
     }
 
     this.getCombos();
@@ -91,7 +93,9 @@ export class FiltrosFactProgramadasComponent implements OnInit {
   // Buscar facturaciones
   searchFacturaciones(): void {
     this.persistenceService.setFiltros(this.body);
+    this.progressSpinner = true;
     this.busqueda.emit();
+    this.progressSpinner = false;
   }
 
   // Crear una nueva facturación
