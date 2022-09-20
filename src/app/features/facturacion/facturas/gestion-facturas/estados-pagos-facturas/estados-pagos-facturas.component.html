@@ -296,28 +296,28 @@
 
     <div *ngIf="esFichaActiva()" class="card-footer">
       <div class="text-right main-button">
-        <button pButton [disabled]="nuevoEstado || disabledNuevoAbono()" 
+        <button pButton [disabled]="esColegiado || nuevoEstado || disabledNuevoAbono()" 
           type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoAbono()" label="{{ 'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
-        <button pButton [disabled]="nuevoEstado || disabledAnular()" 
+        <button pButton [disabled]="esColegiado || nuevoEstado || disabledAnular()" 
           type="button" icon="fa fa-undo" iconPos="left"
           (click)="anular()" label="{{ 'general.boton.anular' | translate }}"></button>
-        <button pButton [disabled]="nuevoEstado || disabledDevolverConComision()" 
+        <button pButton [disabled]="esColegiado || nuevoEstado || disabledDevolverConComision()" 
           type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolverConComision()" label="{{ 'facturacion.facturas.estadosPagos.devolverConComision' | translate }}"></button>
-        <button pButton [disabled]="nuevoEstado || disabledDevolver()" 
+        <button pButton [disabled]="esColegiado || nuevoEstado || disabledDevolver()" 
           type="button" icon="fa fa-undo" iconPos="left"
           (click)="devolver()" label="{{ 'facturacion.facturas.estadosPagos.devolver' | translate }}"></button>
-        <button pButton type="button" icon="fa fa-trash" iconPos="left" [disabled]="nuevoEstado || disabledEliminar()"
+        <button pButton type="button" icon="fa fa-trash" iconPos="left" [disabled]="esColegiado || nuevoEstado || disabledEliminar()"
           (click)="eliminar()" label="{{ 'general.boton.eliminar' | translate }}"></button>
-        <button pButton [disabled]="nuevoEstado || disabledNuevoCobro()" 
+        <button pButton [disabled]="esColegiado || nuevoEstado || disabledNuevoCobro()" 
           type="button" icon="fa fa-plus" iconPos="left"
           (click)="nuevoCobro()" label="Nuevo Cobro"></button>
-        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="nuevoEstado || disabledRenegociar()"
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="esColegiado || nuevoEstado || disabledRenegociar()"
           (click)="esUltimoEstadoFactura() ? renegociar() : renegociarAbono()" label="{{ 'general.boton.renegociar' | translate }}"></button>
-        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="!nuevoEstado"
+        <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="esColegiado || !nuevoEstado"
           label="{{'general.boton.restablecer' | translate}}"></button>
-        <button (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="!nuevoEstado || soloLectura"
+        <button (click)="guardar()" pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="esColegiado || !nuevoEstado || soloLectura"
           label="{{'general.boton.guardar' | translate}}"></button>
       </div>
     </div>

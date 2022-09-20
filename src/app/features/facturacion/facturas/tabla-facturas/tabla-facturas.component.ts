@@ -9,6 +9,7 @@ import { DatosColegiadosItem } from '../../../../models/DatosColegiadosItem';
 import { FacturaEstadosPagosItem } from '../../../../models/FacturaEstadosPagosItem';
 import { FacturasItem } from '../../../../models/FacturasItem';
 import { FicherosAdeudosItem } from '../../../../models/sjcs/FicherosAdeudosItem';
+import { SigaStorageService } from '../../../../siga-storage.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { SigaServices } from '../../../../_services/siga.service';
@@ -56,7 +57,7 @@ export class TablaFacturasComponent implements OnInit {
   accionAux:string="";
   resaltadoDatos: boolean = false;
   resaltadoFecha: boolean = false;
-
+  esColegiado: boolean = false;
 
   itemsParaModificar:FacturaEstadosPagosItem[]= [];
   itemsParaModificarAbonos:FacturaEstadosPagosItem[]= [];
@@ -67,11 +68,17 @@ export class TablaFacturasComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private router: Router, 
     private commonsService: CommonsService,
+		private localStorageService: SigaStorageService,
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
     this.selectedDatos = [];
     this.selectAll = false;
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+      }else{
+      this.esColegiado = false;
+      }
 
     this.getCols();
   }

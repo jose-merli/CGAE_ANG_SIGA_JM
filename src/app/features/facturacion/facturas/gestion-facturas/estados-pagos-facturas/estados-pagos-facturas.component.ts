@@ -8,6 +8,7 @@ import { ComboItem } from '../../../../../models/ComboItem';
 import { FacturaEstadosPagosItem } from '../../../../../models/FacturaEstadosPagosItem';
 import { FacturasItem } from '../../../../../models/FacturasItem';
 import { FicherosAdeudosItem } from '../../../../../models/sjcs/FicherosAdeudosItem';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
 
@@ -47,6 +48,8 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
   comboEstados: ComboItem[] = [];
   comboNotas: ComboItem[] = [];
 
+  esColegiado: boolean = false;
+
   resaltadoDatos: boolean = false;
   resaltadoFecha: boolean = true;
   resaltadoEstado: boolean = false;
@@ -73,6 +76,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     private commonsService: CommonsService,
     private changeDetectorRef: ChangeDetectorRef,
     private translateService: TranslateService,
+    private localStorageService: SigaStorageService,
     private router: Router
   ) { }
 
@@ -81,6 +85,12 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     if (sessionStorage.getItem("isLetrado") === "true") {
       this.soloLectura = true;
     }
+    if(this.localStorageService.isLetrado){
+      this.esColegiado = true;
+      }else{
+      this.esColegiado = false;
+      }
+    
 
   }
 
