@@ -58,7 +58,8 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{'justiciaGratuita.maestros.Procedimiento'|translate}}</label>
               <p-dropdown class="select-form" [(ngModel)]='body.idPretension' placeholder="Seleccionar"
-                [options]="comboProcedimiento" [(disabled)]="isDisabledProcedimiento || !perEscritura" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
+                [options]="comboProcedimiento" [(disabled)]="disabledProcedimiento || !perEscritura" 
+                [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
