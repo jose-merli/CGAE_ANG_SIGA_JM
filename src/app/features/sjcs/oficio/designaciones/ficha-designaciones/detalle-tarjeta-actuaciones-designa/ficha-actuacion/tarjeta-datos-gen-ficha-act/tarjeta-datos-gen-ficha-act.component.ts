@@ -980,8 +980,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
          datoNoValido =  boo ? datoNoValido : datoNoValido=+1;
       }else if(value != arraNum[index]){
         datoNoValido = datoNoValido=+1;
-      }else{
-        datoNoValido=+1
       }
     });
 
