@@ -142,6 +142,7 @@ export let endpoints_oficio: any = {
     designaciones_busquedaNueva:"oficio/busquedaNuevaDesigna",
     designacionesBusquedaComunicaciones: "oficio/designas/busquedaComunicaciones",
     designaciones_updateLetradoDesignacion:"oficio/designas/updateLetradoDesigna",
+    designaciones_compruebaLetradoInscritoEnTurno:"oficio/designas/compruebaLetradoInscritoEnTurno",
     designaciones_updateDatosFacturacion: "oficio/designas/updatePartidaPresupuestaria",
     designacion_getDocumentosPorDesigna: "oficio/designas/getDocumentosPorDesigna",
     designacion_subirDocumentoDesigna: "oficio/designas/subirDocumentoDesigna",
