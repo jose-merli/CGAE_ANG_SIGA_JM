@@ -113,6 +113,7 @@ export let endpoints_oficio: any = {
     actuaciones_designacion_eliminar: "oficio/designas/eliminarActDesigna",
     actuaciones_designacion_guardar: "oficio/designas/guardarNewActDesigna",
     actuaciones_designacion_editar: "oficio/designas/actualizarActDesigna",
+    actuaciones_designacion_numProcedimiento : "oficio/desgignas/formatoProcedimiento",
     actuaciones_designacion_validar: "oficio/designas/validarActDesigna",
     actuaciones_designacion_desvalidar: "oficio/designas/desvalidarActDesigna",
     actuaciones_designacion_updateJustiActDesigna: "oficio/designas/updateJustiActDesigna",
