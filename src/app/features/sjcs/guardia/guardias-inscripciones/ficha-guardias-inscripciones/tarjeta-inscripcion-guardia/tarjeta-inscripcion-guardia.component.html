@@ -1,26 +1,40 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 
-
 <!--cuerpo datos generales-->
 <div class="busqueda-container" id="datosInscripcion">
   <div class="card">
-  <div class="card-header header-ficha">
-    <div class=" header-ficha-open d-flex justify-content-start align-items-center">
-      
+    <div class="card-header header-ficha">
+      <div class=" header-ficha-open d-flex justify-content-start align-items-center">
+
         <div class="img-colegiado">
           <i class="fas fa-link icon-ficha"></i>
         </div>
         <label class="title-ficha">{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}</label>
+      </div>
+    </div>
+
+    <div id="gridDatos"></div>
+
+    <div *ngIf="progressSpinner" class="overlay-spinner">
+      <div class="loader"></div>
     </div>
   </div>
-      <div class="card-body card-body-ficha">
-        <div class="row">
-          <!-- <div class="bloque col-lg-4 col-md-4"> -->
-  
-            <!-- <div class="form-row"> -->
-        <p-table #table [columns]="cols" [value]="inscripcionesItem" [(selection)]="selectedDatos"  
-        [selectionMode]="selectionMode"  [responsive]="true"  class="tabla-listado" [paginator]="true" 
-        [rows]="selectedItem"  paginatorPosition="both" dataKey="nombreTurno" sortMode="multiple">
+</div>
+
+<script id="template" type="text/x-template">
+  <a onClick="openTab()" class="pointer-cursor grid-link">${nombreTurno}</a> 
+</script>
+
+
+
+<!-- ANTIGUA TABLA -->
+
+<!--<div class="card-body card-body-ficha">
+      <div class="row">
+         <p-table #table [columns]="cols" [value]="inscripcionesItem" [(selection)]="selectedDatos"
+          [selectionMode]="selectionMode" [responsive]="true" class="tabla-listado" [paginator]="true"
+          [rows]="selectedItem" paginatorPosition="both" dataKey="nombreTurno" sortMode="multiple"
+          (onPage)="getComboColegiados($event)">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of cols" [style.width]="col.width">
@@ -37,28 +51,28 @@
               </th>
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded" 
+          <ng-template pTemplate="body" let-rowData let-rowIndex="rowIndex" let-expanded="expanded"
             let-columns="columns">
-            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header" *ngIf="rowData.turnoPrincipal">
-              <td *ngFor="let col of columns">   
-                <div class= "displayFlex">
-                  <div *ngIf="col.field =='nombreTurno'">       
-                  <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' (onChange)="seleccionarPadre(rowData,$event)" binary="true"></p-checkbox>      
-                  </div>                     
-                <a [pRowToggler]="rowData">
-                  <div class="text-center" *ngIf="col.field == 'nombreTurno'">                       
-                      <i
-                      [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                      <a (click)="openTab(rowData, 'Turno')"><span >{{rowData[col.field]}}</span></a>
+            <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex" class="ui-widget-header"
+              *ngIf="rowData.turnoPrincipal">
+              <td *ngFor="let col of columns">
+                <div class="displayFlex">
+                  <div *ngIf="col.field =='nombreTurno'">
+                    <p-checkbox [(ngModel)]='rowData.selectedBooleanPadre' (onChange)="seleccionarPadre(rowData,$event)"
+                      binary="true"></p-checkbox>
                   </div>
-                </a>
-              </div>
-                <div class="text-center"
-                  *ngIf="col.field !='nombreTurno' && col.field != 'colegiadoGrupo'">
-                  <span>{{rowData[col.field]}}</span> 
+                  <a [pRowToggler]="rowData">
+                    <div class="text-center" *ngIf="col.field == 'nombreTurno'">
+                      <i
+                        [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                      <a (click)="openTab(rowData, 'Turno')"><span>{{rowData[col.field]}}</span></a>
+                    </div>
+                  </a>
                 </div>
-                <div class="text-center"
-                  *ngIf="col.field == 'colegiadoGrupo'">
+                <div class="text-center" *ngIf="col.field !='nombreTurno' && col.field != 'colegiadoGrupo'">
+                  <span>{{rowData[col.field]}}</span>
+                </div>
+                <div class="text-center" *ngIf="col.field == 'colegiadoGrupo'">
                   <span><strong>{{rowData[col.field]}}</strong></span>
                 </div>
               </td>
@@ -88,29 +102,24 @@
                 {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
             </div>
           </ng-template>
-          <ng-template pTemplate="rowexpansion" let-dato let-columns="columns">
-            <tr [pSelectableRow]="dato">        
+          <ng-template pTemplate="rowexpansion" let-rowIndex="rowIndex" let-dato let-columns="columns">
+            <tr [pSelectableRow]="dato">
               <td *ngFor="let col of columns">
-                <div *ngIf="col.field == 'nombreTurno'" class="displayMargin">    
-                    <p-checkbox [disabled]="disabledGuardias || disableAll" [(ngModel)]="dato.selectedBoolean" (onChange)="seleccionarFila(dato, $event)" binary="true"></p-checkbox>    
-                    <span (click)="openTab(dato, 'Guardia')" class="form-group-label">{{dato.nombreGuardia}}</span>
+                <div *ngIf="col.field == 'nombreTurno'" class="displayMargin">
+                  <span (click)="openTab(dato, 'Guardia')" class="form-group-label">{{dato.nombreGuardia}}</span>
                 </div>
-                <div *ngIf="col.field=='colegiadoGrupo'" class="text-center">    
-                    <span class="form-group-label font-weight-bold">{{dato.colegiadoGrupo}}</span> <!--?????-->
+                <div *ngIf="col.field=='colegiadoGrupo'" class="text-center">
+                  <span class="form-group-label font-weight-bold">{{dato.colegiadoGrupo}}</span>
+                </div>
+                <div *ngIf="(col.field == 'colegiadosInscritos') && (dato.colegiadosInscritos.length > 0)">
+                  <p-multiSelect autoWidth="true" [(ngModel)]="colegiadosSelected" [selectedItemsLabel]="textSelected"
+                    [defaultLabel]="textFilter" [options]="dato[col.field]" maxSelectedLabels="10" styleClass="widthAll"
+                    [filter]="true" filterBy="label, labelSinTilde" id="notSelectAll">
+                  </p-multiSelect>
                 </div>
               </td>
             </tr>
           </ng-template>
-        </p-table>
-      <!-- </div> -->
-    <!-- </div> -->
-  </div>
-</div>
-      
-    
-  </div>
-</div>
-
-<div *ngIf="progressSpinner" class="overlay-spinner">
-  <div class="loader"></div>
-</div>
+        </p-table> 
+      </div>
+    </div>-->

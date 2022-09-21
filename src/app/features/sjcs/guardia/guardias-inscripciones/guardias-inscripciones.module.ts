@@ -31,6 +31,9 @@ import { TarjetaLetradoComponent } from './ficha-guardias-inscripciones/tarjeta-
 import { TarjetaColaComponent } from './ficha-guardias-inscripciones/tarjeta-cola/tarjeta-cola.component';
 import { TarjetaInscripcionGuardiaComponent } from './ficha-guardias-inscripciones/tarjeta-inscripcion-guardia/tarjeta-inscripcion-guardia.component';
 import { TarjetaGestionInscripcionGuardiaComponent } from './ficha-guardias-inscripciones/tarjeta-gestion-inscripcion-guardia/tarjeta-gestion-inscripcion-guardia.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { PageService, SortService, FilterService, GroupService } from '@syncfusion/ej2-angular-grids';
 
 @NgModule({
   imports: [
@@ -59,7 +62,9 @@ import { TarjetaGestionInscripcionGuardiaComponent } from './ficha-guardias-insc
     MatSortModule,
     FechaModule,
     PaginadorModule,
-    TablaResultadoMixModule
+    TablaResultadoMixModule,
+    BrowserModule,
+    GridModule
   ],
   declarations: [
     GuardiasInscripcionesComponent,
@@ -84,6 +89,10 @@ import { TarjetaGestionInscripcionGuardiaComponent } from './ficha-guardias-insc
     MessageService,
     AuthenticationService,
     ConfirmationService,
+    PageService,
+    SortService,
+    FilterService,
+    GroupService
     //TablaResultadoMixSaltosCompService
 
   ],
