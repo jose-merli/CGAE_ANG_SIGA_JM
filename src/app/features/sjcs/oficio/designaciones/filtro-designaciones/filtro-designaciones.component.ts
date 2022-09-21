@@ -765,7 +765,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
     this.sigaServices.post("combo_comboJuzgadoDesignaciones",this.body.idJuzgado).subscribe(
       n => {
-        this.comboJuzgados = n.combooItems;
+        this.comboJuzgados = JSON.parse(n.body).combooItems;
         this.progressSpinner = false;
       },
       err => {

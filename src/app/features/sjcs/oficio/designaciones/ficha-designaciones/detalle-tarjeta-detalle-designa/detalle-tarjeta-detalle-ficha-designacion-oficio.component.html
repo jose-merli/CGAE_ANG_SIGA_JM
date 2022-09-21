@@ -4,51 +4,66 @@
 </div>
 <div id="sjcsDesigaDet">
 <div class="row w-100 m-0 padding-interior">
-  <div class="form-row w-100">
 
-    <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let inputTitle of inputs">
-      <label>{{ inputTitle.nombre }}</label>
-      <input type="text" [(ngModel)]="inputTitle.value" class="form-control" pInputText>
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-row">
+        <div class="col-lg-6 col-md-6 pl5" *ngFor="let inputTitle of inputs">
+          <label>{{ inputTitle.nombre }}</label>
+        <input type="text" [(ngModel)]="inputTitle.value" class="form-control" pInputText>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <label>"Asunto"</label>
+      <input type="text" [(ngModel)]="asunto" class="form-control" pInputText>
     </div>
 
-    <!-- <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let selector of selectores">
-      <app-selector [i]="0" [selector]="selector" [textoVisible]="estado"></app-selector> -->
-    <!-- <app-selector [i]="0" [selector]="selector"  [refresh] = "refresh" [refreshProcedimiento] = "refreshProcedimiento"  [refreshModulo] = "refreshModulo" (value)='selector.value=$event' (refreshDataCombos)="refreshDataCombos($event)" (busqueda)="busquedaCombos($event)" (busquedaProcedimiento)="busquedaCombosProcedimiento($event)" (busquedaCombosModulo)="busquedaCombosModulo($event)"></app-selector>
-    </div>  -->
-    <div class="form-group col-lg-3 col-md-3 w-100">
-      <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+    <div class="form-group-interlineado col-lg-3 col-md-3">
       <label>Estado</label>
       <p-dropdown class="select-form" [(ngModel)]="estadoValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [disabled]="disableEstado" [options]="estadosOpciones"
         [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
       </p-dropdown>
     </div>
-    <div class="form-group col-lg-3 col-md-3 w-100">
-      <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+ 
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-row">
+        <div class="col-lg-6 col-md-6 pl5" *ngFor="let datePickerTitle of datePickers; let i = index;">
+          <label>{{ datePickerTitle.nombre }}</label>
+          <app-fecha [utc]="true" [disabled]="i === 0" [(value)]='datePickerTitle.value'
+            (valueChangeInput)="fillFechaHastaCalendar($event, datePickerTitle.nombre)"
+            (valueChangeSelected)="fillFechaHastaCalendar($event, datePickerTitle.nombre)"></app-fecha>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
       <label>Juzgado</label>
       <p-dropdown class="select-form" [(ngModel)]="juzgadoValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="juzgadoOpciones" [filter]="true"
         (onChange)="changeJuzgado()" filterBy="label,labelSinTilde" [showClear]="true">
       </p-dropdown>
     </div>
-    <div class="form-group col-lg-3 col-md-3 w-100">
-      <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
       <label>Procedimiento</label>
       <p-dropdown class="select-form" [(ngModel)]="procedimientoValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="procedimientoOpciones" [filter]="true"
         (onChange)="changeProcedimiento()" filterBy="label,labelSinTilde" [showClear]="true">
       </p-dropdown>
     </div>
-    <div class="form-group col-lg-3 col-md-3 w-100">
-      <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
       <label>Módulo</label>
       <p-dropdown class="select-form" [(ngModel)]="moduloValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="moduloOpciones" [filter]="true"
         (onChange)="changeModulo()" filterBy="label,labelSinTilde" [showClear]="true">
       </p-dropdown>
     </div>
-    <div class="form-group col-lg-3 col-md-3 w-100">
-      <!-- <app-selector [i]="0" [selector]="selector"></app-selector> -->
+
+    <div class="form-group-interlineado col-lg-3 col-md-3">
       <label>Delitos</label>
       <p-multiSelect #someDropdown defaultLabel="{{'general.boton.seleccionar' | translate}}" autoWidth="false"
         [(ngModel)]="delitosValue" [options]="delitosOpciones" maxSelectedLabels="10"
@@ -56,15 +71,10 @@
         (onPanelShow)="focusInputField(someDropdown)">
       </p-multiSelect>
     </div>
-    <div class="form-group col-lg-3 col-md-3 w-100" *ngFor="let datePickerTitle of datePickers; let i = index;">
-      <label>{{ datePickerTitle.nombre }}</label>
-      <app-fecha [utc]="true" [disabled]="i === 0" [(value)]='datePickerTitle.value'
-        (valueChangeInput)="fillFechaHastaCalendar($event, datePickerTitle.nombre)"
-        (valueChangeSelected)="fillFechaHastaCalendar($event, datePickerTitle.nombre)"></app-fecha>
-    </div>
+    <br>
 
   </div>
-</div>
+
 
 <div class="card-footer">
   <div class="text-right main-button">

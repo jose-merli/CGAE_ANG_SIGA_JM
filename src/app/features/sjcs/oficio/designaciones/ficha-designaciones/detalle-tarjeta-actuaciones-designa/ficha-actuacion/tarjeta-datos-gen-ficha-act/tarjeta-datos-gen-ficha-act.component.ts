@@ -304,7 +304,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     }
     this.sigaServices.post("combo_comboJuzgadoDesignaciones", this.designaItem.idJuzgado).subscribe(
       n => {
-        this.comboJuzgados = n.combooItems;
+        this.comboJuzgados = JSON.parse(n.body).combooItems;
         if (this.comboJuzgados) {
           this.commonsService.arregloTildesCombo(this.comboJuzgados);
           //Valor de la cabecera para juzagado
