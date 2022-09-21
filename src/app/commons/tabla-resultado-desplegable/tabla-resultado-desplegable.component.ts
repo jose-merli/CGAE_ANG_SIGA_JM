@@ -1315,7 +1315,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
       this.sigaServices.post("combo_comboJuzgadoDesignaciones",'0').subscribe(
         n => {
-            this.comboJuzgados = n.combooItems;
+            this.comboJuzgados = JSON.parse(n.body).combooItems;
             if(this.comboJuzgados[0] != undefined){
             this.commonsService.arregloTildesCombo(this.comboJuzgados);
             this.progressSpinner = false;
