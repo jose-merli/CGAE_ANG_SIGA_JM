@@ -128,6 +128,7 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
   count: string = "";
   countClicado: boolean = false;
   permisoExcel: boolean = false;
+  permisoComunicar: boolean = false;
 
   @HostListener('document:click', ['$event'])
   documentClick(event: MouseEvent) {
@@ -224,6 +225,13 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
       .then(respuesta => {
         if(respuesta != undefined){
           this.permisoExcel = respuesta;
+        }
+      }).catch(error => console.error(error));
+
+    this.commonsService.checkAcceso(procesos_censo.comunicar)
+      .then(respuesta => {
+        if(respuesta != undefined){
+          this.permisoComunicar = respuesta;
         }
       }).catch(error => console.error(error));
 

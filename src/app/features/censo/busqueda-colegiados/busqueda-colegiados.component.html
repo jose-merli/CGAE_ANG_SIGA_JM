@@ -554,7 +554,7 @@
                     <!-- <button (click)="isCrear()" [disabled]="isEditable" pButton type="button" icon="fa fa-plus" iconPos="left" label="{{'general.boton.new' | translate}}"></button> -->
                     <button *ngIf="datos.length > 0 && permisoExcel" (click)="generarExcels()" pButton type="button" icon="far fa-save"
                         iconPos="left" label="{{ 'general.boton.generarExcels' | translate }}"></button>
-                    <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)"
+                    <button *ngIf="selectedDatos && selectedDatos.length > 0" (click)="navigateComunicar(selectedDatos)" [disabled]="!this.permisoComunicar"
                         pButton type="button" icon="fa fa-comment" iconPos="left"
                         label="{{'general.boton.comunicar' | translate }}"></button>
     
