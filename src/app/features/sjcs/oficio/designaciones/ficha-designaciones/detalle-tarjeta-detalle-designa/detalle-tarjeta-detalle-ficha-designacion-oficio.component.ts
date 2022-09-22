@@ -682,7 +682,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.progressSpinner = true;
     this.sigaServices.getParam("combo_comboModulosConJuzgado", "?idJuzgado=" + idJuzgado + "&fecha=" + fecha).subscribe(
       n => {
-        this.moduloOpciones = JSON.parse(n.body).combooItems;
+        this.moduloOpciones = n.combooItems;
         if (this.campos.modulo != "") {
           this.moduloOpciones.push({ label: this.campos.modulo, value: this.campos.idModulo });
         }
