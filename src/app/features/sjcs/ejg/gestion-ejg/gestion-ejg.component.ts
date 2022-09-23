@@ -13,6 +13,8 @@ import { Message } from 'primeng/components/common/api';
 import { ContrariosPreDesignacionComponent } from './contrarios-pre-designacion/contrarios-pre-designacion.component';
 import { DefensaJuridicaComponent } from './defensa-juridica/defensa-juridica.component';
 import { ProcuradorPreDesignacionComponent } from './procurador-pre-designacion/procurador-pre-designacion.component';
+import { ListaIntercambiosAltaEjgComponent } from './lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
+import { ListaIntercambiosDocumentacionEjgComponent } from './lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
 
 @Component({
   selector: 'app-gestion-ejg',
@@ -100,6 +102,8 @@ export class GestionEjgComponent implements OnInit {
   @ViewChild(ContrariosPreDesignacionComponent) contrariosPreDesigna;
   @ViewChild(DefensaJuridicaComponent) defensaJuridica;
   @ViewChild(ProcuradorPreDesignacionComponent) procuradorPreDesigna;
+  @ViewChild(ListaIntercambiosAltaEjgComponent) listaIntercambiosAltaEjg: ListaIntercambiosAltaEjgComponent;
+  @ViewChild(ListaIntercambiosDocumentacionEjgComponent) listaIntercambiosDocumentacionEjg: ListaIntercambiosDocumentacionEjgComponent;
 
   datosEntradaTarjGenerica: any;
   permisoEscrituraFacturaciones: any;
@@ -813,6 +817,15 @@ export class GestionEjgComponent implements OnInit {
 
   guardarDatos() {
     this.persistenceService.setDatos(this.body);
+  }
+
+  actualizarTarjetasIntercambios() {
+    if (this.listaIntercambiosAltaEjg != undefined) {
+      this.listaIntercambiosAltaEjg.actualizarDatosTarjeta();
+    }
+    if (this.listaIntercambiosDocumentacionEjg != undefined) {
+      this.listaIntercambiosDocumentacionEjg.actualizarDatosTarjeta();
+    }
   }
 
 }

@@ -54,13 +54,16 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit, OnChanges {
   async ngOnInit() {
     try {
       this.getCols();
-      
-      // const request = { idInstitucion: 2014, annio: 2022, tipoEJG: 1, numero: 2 };
-      const request = { idInstitucion: this.body.idInstitucion, annio: this.body.annio, tipoEJG: this.body.tipoEJG, numero: this.body.numero };
-      this.datos = await this.getListaIntercambiosAltaEjg(request);
+      await this.actualizarDatosTarjeta();
     } catch (error) {
       console.error(error);
     }
+  }
+
+  async actualizarDatosTarjeta() {
+    // const request = { idInstitucion: 2014, annio: 2022, tipoEJG: 1, numero: 2 };
+    const request = { idInstitucion: this.body.idInstitucion, annio: this.body.annio, tipoEJG: this.body.tipoEJG, numero: this.body.numero };
+    this.datos = await this.getListaIntercambiosAltaEjg(request);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -112,13 +115,16 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit, OnChanges {
   }
 
   getListaIntercambiosAltaEjg(request): Promise<ListaIntercambiosEjgItem[]> {
+    this.progressSpinner = true;
     return this.sigaServices.post("gestionejg_getListaIntercambiosAltaEjg", request).toPromise().then(
       n => {
+        this.progressSpinner = false;
         const body = JSON.parse(n.body);
         const items: ListaIntercambiosEjgItem[] = body.ejgListaIntercambiosItems;
         return Promise.resolve(items);
       },
       err => {
+        this.progressSpinner = false;
         return Promise.resolve([]);
       }
     );

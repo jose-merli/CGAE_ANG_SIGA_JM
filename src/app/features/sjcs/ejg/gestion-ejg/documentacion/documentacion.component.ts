@@ -76,6 +76,8 @@ export class DocumentacionComponent implements OnInit {
   esColegioZonaComun: boolean = false;
   esIdentificadorPericlesDisponible: boolean = false;
 
+  @Output() actualizarTarjetasIntercambios = new EventEmitter<void>();
+
   constructor(private sigaServices: SigaServices, private persistenceService: PersistenceService,
     private translateService: TranslateService, private confirmationService: ConfirmationService,
     private commonsServices: CommonsService, private changeDetectorRef: ChangeDetectorRef,
@@ -889,6 +891,7 @@ export class DocumentacionComponent implements OnInit {
           
           await Promise.all(requests.map(d => this.accionEnviarDocumentacionAdicional(d)));
           this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+          this.actualizarTarjetasIntercambios.emit();
         } else {
           this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
         }

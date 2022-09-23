@@ -49,6 +49,8 @@ export class RegtelEjgComponent implements OnInit {
   buttonVisibleEnvioDocumentacionAdicional: boolean = false;
   esIdentificadorPericlesDisponible: boolean = false;
 
+  @Output() actualizarTarjetasIntercambios = new EventEmitter<void>();
+
   resaltadoDatosGenerales: boolean = false;
   progressSpinner: boolean;
   selectedDatosRegtel: DocushareItem;
@@ -496,6 +498,7 @@ export class RegtelEjgComponent implements OnInit {
           
           await this.accionEnviarDocumentacionAdicional(request);
           this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+          this.actualizarTarjetasIntercambios.emit();
         } else {
           this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
         }

@@ -78,6 +78,7 @@ export class EstadosComponent implements OnInit {
 
   //[x: string]: any;
   esColegioZonaComun: boolean = false;
+  @Output() actualizarTarjetasIntercambios = new EventEmitter<void>();
 
 
   constructor(private sigaServices: SigaServices,
@@ -428,6 +429,10 @@ export class EstadosComponent implements OnInit {
           this.observacionesEstado = "";
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.getEstados(this.item);
+
+          if (this.esColegioZonaComun && estadoNew.idEstadoejg === "7") {
+            this.actualizarTarjetasIntercambios.emit();
+          }
         },
         err => {
           //console.log(err);
