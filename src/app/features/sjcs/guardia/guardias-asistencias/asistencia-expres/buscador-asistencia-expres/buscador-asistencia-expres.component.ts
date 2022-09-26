@@ -43,6 +43,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   verSeleccion: string = '';
   isLetrado : boolean = false;
   @Output() letradoFillAutomatic = new EventEmitter<boolean>();
+  progressSpinner: boolean = false;
   
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
 
@@ -54,7 +55,6 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     private translateService: TranslateService) {}
 
   ngOnInit(): void {
-     this.getCombos();
     this.checkLastRoute();
     if(this.sigaStorageService.idPersona
       && this.sigaStorageService.isLetrado){
@@ -111,7 +111,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
     if(event){
       this.filtro.diaGuardia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
-      //this.getTurnosByColegiadoFecha();
+      this.getTurnosByColegiadoFecha();
     }else{
       this.filtro.diaGuardia = '';
       this.comboTurnos = [];
@@ -149,9 +149,12 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
     this.comboTurnos = [];
     this.filtro.idTurno = "";
+    this.progressSpinner = true;
     this.sigaServices.getParam("busquedaGuardias_getTurnosByColegiadoFecha", this.fillParams()).subscribe(
       n => {
         this.clear();
+        this.progressSpinner = false;
+
         if(n.error !== null
           && n.error.code === 500){
           this.showMsg("error", "Error", n.error.description.toString());
@@ -165,10 +168,21 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
         }
       },
       err => {
+        this.progressSpinner = false;
         //console.log(err);
       }
     );
+  }
 
+  disabledIfEmptyArgs(...args: any[]): boolean {
+    let res = false;
+    for (const arg of args) {
+      if (arg == undefined || arg.toString().trim().length == 0) {
+        res = true;
+        break;
+      }
+    }
+    return res;
   }
 
   fillParams(){
@@ -207,13 +221,18 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     }else{
       params = "?idTurno=" + this.filtro.idTurno + "&guardiaDia=" + this.filtro.diaGuardia;
     }
+
+    this.progressSpinner = true;
     this.sigaServices.getParam(
       "busquedaGuardias_getGuardiasByTurnoColegiadoFecha", params).subscribe(
         data => {
+          this.progressSpinner = false;
+
           this.comboGuardias = data.combooItems;
           this.commonServices.arregloTildesCombo(this.comboGuardias);
         },
         err => {
+          this.progressSpinner = false;
           //console.log(err);
         }
       );
@@ -291,6 +310,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
   }
+  
   getIdPersonaLetradoManual(event){
     this.filtro.idLetradoManual = event;
   }
