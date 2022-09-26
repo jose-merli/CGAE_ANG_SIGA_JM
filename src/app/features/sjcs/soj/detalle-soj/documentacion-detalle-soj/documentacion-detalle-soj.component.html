@@ -1,0 +1,78 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="documentacion">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+
+      <!--
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('documentacion')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('documentacion')">
+            <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>{{ 'censo.mutualidad.literal.iban' | translate }}: 
+              <span>{{ body.iban }}</span></label>
+            <label>{{ 'general.description' | translate }}: 
+              <span>{{ body.descripcion }}</span></label>
+            <label>{{ 'censo.fichaCliente.datosBancarios.cuentaBancaria.bic' | translate }}: 
+              <span>{{ body.bic }}</span></label>
+            <label>{{ 'censo.tipoAbono.banco' | translate }}: 
+              <span>{{ body.nombre }}</span></label>
+            <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate }}: 
+              <span>{{ estado }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('documentacion')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      -->
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="true" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('documentacion')">
+        <div class="img-colegiado">
+          <i class="far fa-address-book icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'justiciaGratuita.ejg.documentacion.doc' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div *ngIf="true" class="card-body card-body-ficha">
+      
+    </div>
+
+    <div *ngIf="true" class="card-footer">
+      <div class="text-right main-button">
+
+        <button pButton type="button" icon="fa fa-undo" iconPos="left"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left"
+          (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmEliminar" width="425"
+  #confirmEliminar>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="confirmEliminar.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="confirmEliminar.reject()"></button>
+  </p-footer>
+</p-confirmDialog>

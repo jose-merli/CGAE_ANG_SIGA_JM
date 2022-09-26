@@ -1,0 +1,120 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="datosGenerales">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+
+      <!--
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('datosGenerales')">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('datosGenerales')">
+            <label class="mr-auto title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>{{ 'censo.mutualidad.literal.iban' | translate }}: 
+              <span>{{ body.iban }}</span></label>
+            <label>{{ 'general.description' | translate }}: 
+              <span>{{ body.descripcion }}</span></label>
+            <label>{{ 'censo.fichaCliente.datosBancarios.cuentaBancaria.bic' | translate }}: 
+              <span>{{ body.bic }}</span></label>
+            <label>{{ 'censo.tipoAbono.banco' | translate }}: 
+              <span>{{ body.nombre }}</span></label>
+            <label>{{ 'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate }}: 
+              <span>{{ estado }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      -->
+
+    <!-- Cabecera en ficha abierta -->
+    <div *ngIf="true" class=" header-ficha-open d-flex justify-content-start align-items-center"
+      (click)="true">
+      <div class="img-colegiado">
+        <i class="far fa-address-book icon-ficha"></i>
+      </div>
+      <label class="title-ficha pointer">{{ 'general.message.datos.generales' | translate }}</label>
+      <i class="fa fa-angle-up ml-auto"></i>
+    </div>
+  </div>
+
+  <!-- Cuerpo en ficha abierta -->
+  <div *ngIf="true" class="card-body card-body-ficha">
+    <div *ngIf="body != undefined" class="row lg-12 md-12">
+      <div class="bloque col-lg-6 col-md-6">
+        <div class="form-row lg-12 md-12">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Año</label>
+            <input type="text" class="form-control" [(ngModel)]="body.anio" [disabled]="modoEdicion" pInputText>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Número</label>
+            <input type="text" class="form-control" [(ngModel)]="body.numero" [disabled]="modoEdicion" pInputText>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Tipo SOJ</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idTipoSoj' placeholder="Seleccionar" [disabled]="modoEdicion" 
+              [options]="comboTipoSOJ" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Fecha Apertura</label>
+            <app-fecha [(value)]="body.fechaApertura" (valueChangeSelected)="fillFechaApertura($event)"
+                (valueChangeInput)="fillFechaApertura($event)"></app-fecha>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Tipo SOJ Colegio</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idTipoSojColegio' placeholder="Seleccionar"
+              [options]="comboTipoSOJColegio" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+        </div>
+      </div>
+      <div class="vr"></div>
+      <div class="bloque col-lg-6 col-md-6">
+        <div class="form-row lg-12 md-12">
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Tipo Consulta</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idTipoConsulta' placeholder="Seleccionar"
+              [options]="comboTipoConsulta" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Tipo Respuesta</label>
+            <p-dropdown class="select-form" [(ngModel)]='body.idTipoRespuesta' placeholder="Seleccionar"
+              [options]="comboTipoRespuesta" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Descripción Consulta</label>
+            <textarea class="form-control" [(ngModel)]="body.descripcionConsulta" pInputTextarea></textarea>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>Respuesta Letrado</label>
+            <textarea class="form-control" [(ngModel)]="body.respuestaLetrado" pInputTextarea></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="true" class="card-footer">
+    <div class="text-right main-button">
+
+      <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="deshabilitarGuardado()"
+        (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+      <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
+        (click)="checkSave()" label="{{ 'general.boton.guardar' | translate }}"></button>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

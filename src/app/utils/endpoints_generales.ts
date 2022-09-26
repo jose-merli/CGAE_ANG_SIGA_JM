@@ -33,6 +33,8 @@ export let endpoints_generales: any = {
     gestionJusticiables_busquedaClaveAsuntosDesignaciones: "gestionJusticiables/busquedaClaveAsuntosDesignaciones",
     gestionJusticiables_busquedaClaveAsuntosSOJ: "gestionJusticiables/busquedaClaveAsuntosSOJ",
 
+    gestionJusticiables_getDetallesSoj: "soj/getDetallesSoj",
+
     
     gestionJusticiables_copyDesigna2Soj: 'gestionJusticiables/copyDesigna2Soj',
     gestionJusticiables_copyDesigna2Asis: 'gestionJusticiables/copyDesigna2Asis',

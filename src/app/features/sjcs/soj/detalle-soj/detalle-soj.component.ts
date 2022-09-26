@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { OldSigaServices } from '../../../../_services/oldSiga.service'
 import { Location } from '@angular/common';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { SigaServices } from '../../../../_services/siga.service';
+import { Observable } from 'rxjs/Observable';
+import { TranslateService } from '../../../../commons/translate';
 
 
 @Component({
@@ -12,8 +16,130 @@ import { Router } from '@angular/router';
 })
 export class DetalleSOJComponent implements OnInit {
 
-  url;
   progressSpinner: boolean = false;
+  msgs: any[];
+
+  permisoDatosGenerales: boolean;
+  permisoServiciosTramitacion: boolean;
+  permisoSolicitante: boolean;
+  permisoDocumentacion: boolean;
+  modoEdicion: boolean;
+
+  // Datos tarjeta resumen
+  iconoTarjetaResumen = "clipboard";
+  datosTarjetaResumen = [];
+  enlacesTarjetaResumen = [];
+
+  // Apertura y cierre de tarjetas
+  manuallyOpened: boolean;
+  openTarjetaDatosGenerales: boolean = true;
+  openTarjetaComision: boolean = false;
+  openTarjetaConfiguracion: boolean = false;
+  openTarjetaUsoFicheros: boolean = false;
+  openTarjetaUsosSufijos: boolean = false;
+
+  // Parametros de entrada a la ficha
+  paramsSoj;
+
+  // Datos de la ficha
+  body;
+
+  constructor(
+    private location: Location, 
+    private route: ActivatedRoute, 
+    private router: Router, 
+    private sigaServices: SigaServices, 
+    private translateService: TranslateService
+  ) { }
+
+  /**
+   * Query params: ?idInstitucion=1&anio=2&numero=3&idTipoSoj=4
+   */
+  ngOnInit() {
+    this.progressSpinner = true;
+    this.route.queryParams.pipe(
+      map(params => {
+        this.paramsSoj = {
+          idInstitucion: params['idInstitucion'],
+          anio: params['anio'],
+          numero: params['numero'],
+          idTipoSoj: params['idTipoSoj'],
+        };
+
+        return this.paramsSoj;
+      }),
+      switchMap(params => this.getDatosDetalleSoj(params))
+      ).subscribe(n => {
+        this.progressSpinner = false;
+      }, err => {
+        this.progressSpinner = false;
+        this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      });
+    
+    this.testPermisos();
+  }
+
+  eventGuardarFicha(event):void {
+    if (event == undefined)
+      return;
+
+    this.progressSpinner = true;
+    this.guardarDatosDetalleSoj(event)
+      .switchMap(result => this.getDatosDetalleSoj(this.paramsSoj))
+      .subscribe(n => {
+        this.progressSpinner = false;
+        this.showMsg("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+      }, err => {
+        this.progressSpinner = false;
+        this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      });
+  }
+
+  getDatosDetalleSoj(params): Observable<any> {
+    return this.sigaServices.post("gestionJusticiables_getDetallesSoj", params).pipe(tap(n => {
+      console.log(n);
+      let responseBody = JSON.parse(n.body);
+      if (responseBody != undefined && responseBody.fichaSojItems != undefined && responseBody.fichaSojItems.length != 0) {
+        this.body = responseBody.fichaSojItems[0];
+      } else {
+        throw "Error al recuperar los datos";
+      }
+    }));
+  }
+
+  guardarDatosDetalleSoj(data): Observable<any> {
+    return Observable.empty().startWith(5);
+  }
+
+  showMsg(severityParam : string, summaryParam : string, detailParam : string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severityParam,
+      summary: summaryParam,
+      detail: detailParam
+    });
+  }
+
+  clear() {
+    this.msgs = [];
+  }
+
+  backTo() {
+    this.location.back();
+  }
+
+  testPermisos() {
+    this.modoEdicion = true;
+    this.permisoDatosGenerales = true;
+    this.permisoServiciosTramitacion = true;
+    this.permisoSolicitante = true;
+    this.permisoDocumentacion = true;
+  }
+
+
+
+  /*
+  url;
 
   constructor(public oldSigaServices: OldSigaServices, private location: Location, private router: Router) {
     //this.url = this.oldSigaServices.getOldSigaUrl('detalleSOJ');
@@ -42,9 +168,7 @@ export class DetalleSOJComponent implements OnInit {
   ngOnInit() {
     
   }
-
-  backTo() {
-    this.location.back();
-  }
+  */
+  
 
 }
