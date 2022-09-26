@@ -64,7 +64,6 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getCols();
-    this.showTarjeta = true;
 
   }
 

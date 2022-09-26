@@ -14,3 +14,9 @@
   .camposObligatorios > div .ui-multiselect{
     border: 1px solid red !important;
   }
+
+  @media (max-width: 767px) {
+    .hiddenBorder {
+      border-right: none !important;
+    }
+  }

@@ -38,6 +38,42 @@ export class FiltroJusticiablesComponent implements OnInit {
   comboPoblacion = [];
   comboRoles = [];
 
+  fichasPosiblesNew = [
+    {
+      key: "generales",
+      activa: true
+    },
+    {
+      key: "personales",
+      activa: true
+    },
+    {
+      origen: "justiciables",
+      activa: false
+    },
+    {
+      key: "solicitud",
+      activa: false
+    },
+    {
+      key: "representante",
+      activa: false
+    },
+    {
+      key: "asuntos",
+      activa: false
+    },
+    {
+      key: "abogado",
+      activa: false
+    },
+    {
+      key: "procurador",
+      activa: false
+    }
+
+  ];
+
   constructor(private router: Router, private translateService: TranslateService, private sigaServices: SigaServices,
     private persistenceService: PersistenceService, private commonsService: CommonsService, private location: Location) { }
 
@@ -197,7 +233,9 @@ export class FiltroJusticiablesComponent implements OnInit {
   nuevo() {
     this.modoRepresentante = true;
     sessionStorage.setItem("nuevoJusticiable", "true");
+    this.persistenceService.setFichasPosibles(this.fichasPosiblesNew);
     if (this.modoRepresentante) {
+
       this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });
     } else {
       this.persistenceService.clearDatos();
