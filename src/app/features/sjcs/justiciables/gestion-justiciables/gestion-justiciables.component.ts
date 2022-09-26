@@ -107,11 +107,11 @@ export class GestionJusticiablesComponent implements OnInit {
         },
         {
           key: "generales",
-          activa: true
+          activa: false
         },
         {
           key: "personales",
-          activa: true
+          activa: false
         },
         {
           key: "solicitud",
@@ -119,7 +119,7 @@ export class GestionJusticiablesComponent implements OnInit {
         },
         {
           key: "representante",
-          activa: true
+          activa: false
         },
         {
           key: "asuntos",
@@ -155,31 +155,31 @@ export class GestionJusticiablesComponent implements OnInit {
         },
         {
           key: "generales",
-          activa: true
+          activa: false
         },
         {
           key: "personales",
-          activa: true
+          activa: false
         },
         {
           key: "solicitud",
-          activa: true
+          activa: false
         },
         {
           key: "representante",
-          activa: true
+          activa: false
         },
         {
           key: "asuntos",
-          activa: true
+          activa: false
         },
         {
           key: "abogado",
-          activa: true
+          activa: false
         },
         {
           key: "procurador",
-          activa: true
+          activa: false
         },
         {
           key: "unidadFamiliar",
@@ -201,31 +201,31 @@ export class GestionJusticiablesComponent implements OnInit {
         },
         {
           key: "generales",
-          activa: true
+          activa: false
         },
         {
           key: "personales",
-          activa: true
+          activa: false
         },
         {
           key: "solicitud",
-          activa: true
+          activa: false
         },
         {
           key: "representante",
-          activa: true
+          activa: false
         },
         {
           key: "asuntos",
-          activa: true
+          activa: false
         },
         {
           key: "abogado",
-          activa: true
+          activa: false
         },
         {
           key: "procurador",
-          activa: true
+          activa: false
         },
         {
           key: "unidadFamiliar",
@@ -246,27 +246,27 @@ export class GestionJusticiablesComponent implements OnInit {
         },
         {
           key: "generales",
-          activa: true
+          activa: false
         },
         {
           key: "unidadFamiliar",
-          activa: true
-        },
-        {
-          key: "personales",
-          activa: true
-        },
-        {
-          key: "solicitud",
-          activa: true
-        },
-        {
-          key: "representante",
-          activa: true
+          activa: false
         },
         {
           key: "asuntos",
-          activa: true
+          activa: false
+        },
+        {
+          key: "personales",
+          activa: false
+        },
+        {
+          key: "solicitud",
+          activa: false
+        },
+        {
+          key: "representante",
+          activa: false
         },
         {
           key: "abogado",
@@ -290,23 +290,23 @@ export class GestionJusticiablesComponent implements OnInit {
         },
         {
           key: "generales",
-          activa: true
+          activa: false
         },
         {
           key: "personales",
-          activa: true
+          activa: false
         },
         {
           key: "solicitud",
-          activa: true
+          activa: false
         },
         {
           key: "representante",
-          activa: true
+          activa: false
         },
         {
           key: "asuntos",
-          activa: true
+          activa: false
         },
         {
           key: "abogado",
@@ -366,6 +366,7 @@ export class GestionJusticiablesComponent implements OnInit {
       this.search();
 
     } else {
+     
       sessionStorage.removeItem("Nuevo");
       this.modoEdicion = false;
       this.progressSpinner = false;

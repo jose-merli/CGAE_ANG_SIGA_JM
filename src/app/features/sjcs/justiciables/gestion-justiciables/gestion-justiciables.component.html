@@ -7,8 +7,7 @@
     </p>
   </div>
   <div>
-    <app-tarjeta-resumen-fija class="pb-50"
-            [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datos"
+    <app-tarjeta-resumen-fija class="pb-50" [chincheta]="true" [datos]="datos" 
             [icono]="iconoTarjetaResumen" (modoEdicionSend)="modoEdicionSend($event)" [enlaces]="enlacesTarjetaResumen"
             (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
     </app-tarjeta-resumen-fija>
@@ -34,7 +33,7 @@
       y no querer actualizar el justiciable propio-->
 
       <div *ngIf="showDatosPersonales != undefined">
-        <app-datos-personales *ngSwitchCase="'personales'" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosPersonales]="tarjetaDatosPersonales" [showTarjeta]="ficha.activa" [body]="body" [fromUniFamiliar]="fromUniFamiliar" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
+        <app-datos-personales *ngSwitchCase="'personales'" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [body]="body" [tarjetaDatosPersonales]="tarjetaDatosPersonales" [showTarjeta]="ficha.activa"  [fromUniFamiliar]="fromUniFamiliar" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
           (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)"></app-datos-personales>
       </div>
 

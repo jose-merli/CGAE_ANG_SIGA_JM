@@ -18,12 +18,14 @@ export class TarjetaResumenFijaComponent implements OnInit {
   @Input() manuallyOpened;
   @Output() isOpen = new EventEmitter<any>();
   iconClass;
+  checkTitulo;
   enlaceAnterior:any[];
   constructor(private translateService: TranslateService) { }
 
   ngOnInit() {
     this.iconClass = `fas fa-${this.icono} icon-ficha`;
     this.enlaceAnterior = [];
+    this.checkTitulo = this.titulo;
   }
 
   goTop() {

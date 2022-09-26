@@ -24,7 +24,11 @@ export class DatosPersonalesComponent implements OnInit {
   bodyInicial;
   datosInicial;
   progressSpinner: boolean = false;
-
+  direccionPostal: String = "";
+  nombreVia: String = "";
+  poblacion: String = "";
+  provincia: String = "";
+  pais: String = "";
   edadAdulta: number = 18;
   msgs;
   comboTipoIdentificacion;
@@ -41,6 +45,7 @@ export class DatosPersonalesComponent implements OnInit {
   poblacionBuscada;
   comboPoblacion;
   comboTipoVia;
+  direccion;
 
   provinciaSelecionada;
   isDisabledPoblacion: boolean = true;
@@ -85,12 +90,11 @@ export class DatosPersonalesComponent implements OnInit {
   @Output() searchJusticiableOverwritten = new EventEmitter<any>();
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<String>();
+  @Input() body: JusticiableItem;
   @Input() tarjetaDatosPersonales;
-
   @Input() showTarjeta;
   @Input() fromJusticiable: boolean = false;
   @Input() fromUniFamiliar: boolean = false;
-  @Input() body: JusticiableItem;
   @Input() modoRepresentante;
   @Input() checkedViewRepresentante;
 
@@ -128,7 +132,7 @@ export class DatosPersonalesComponent implements OnInit {
     if (this.body.idpersona == undefined) {
       this.modoEdicion = false;
       this.body.fechaalta = new Date();
-      
+
     } else {
       this.modoEdicion = true;
 
@@ -154,9 +158,11 @@ export class DatosPersonalesComponent implements OnInit {
     this.getColsDatosContacto();
     this.getDatosContacto();
 
+
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+
+  ngOnChanges() {
     this.progressSpinner = true;
 
     if (this.body != undefined) {
@@ -180,6 +186,10 @@ export class DatosPersonalesComponent implements OnInit {
       } else {
         this.isDisabledPoblacion = true;
       }
+    }
+
+    if (this.pais != "" && this.poblacion != "" && this.provincia != "") {
+      this.rellenarDireccionPostal();
     }
 
     if (this.body.nif != undefined && this.body.nif != null && this.body.nif != "") {
@@ -245,6 +255,12 @@ export class DatosPersonalesComponent implements OnInit {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.justiciables.message.asociarRepresentante.menorJusticiable"));
     }
 
+    // Rellenar Dirección Postal
+    // Calle XXXX, Nº XX X X, XXXX XXXXX,XXXX(XXXXX)
+    this.getComboPais();
+    this.getComboProvincia();
+    this.rellenarDireccionPostal();
+
     if (!this.modoEdicion) {
       //Si es menor no se guarda la fehca nacimiento hasta que no se le asocie un representante
       if (this.menorEdadJusticiable) {
@@ -287,6 +303,7 @@ export class DatosPersonalesComponent implements OnInit {
         this.progressSpinner = false;
       }
     }
+    this.progressSpinner = false;
   }
 
   validateCampos(url) {
@@ -599,6 +616,9 @@ export class DatosPersonalesComponent implements OnInit {
     this.datos.push(rowCorreoElectronico);
     this.datos.push(rowFax);
 
+    // Rellenar Dirección Postal
+    this.rellenarDireccionPostal();
+
     if (this.body.telefonos != null && this.body.telefonos != undefined && this.body.telefonos.length > 0) {
       this.body.telefonos.forEach(element => {
         element.count = this.count;
@@ -644,7 +664,7 @@ export class DatosPersonalesComponent implements OnInit {
 
 
   getComboPais() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices.get("direcciones_comboPais").subscribe(
       n => {
@@ -652,8 +672,20 @@ export class DatosPersonalesComponent implements OnInit {
         this.comboNacionalidad = n.combooItems;
 
         this.comboNacionalidad.push({ label: "DESCONOCIDO", value: "D" });
+
+        if (this.comboNacionalidad != null || this.comboNacionalidad != undefined) {
+          this.comboNacionalidad.forEach(element => {
+            if (element.value == this.body.idpais) {
+              this.pais = element.label;
+              // Rellenar Dirección Postal
+              this.rellenarDireccionPostal();
+            }
+          });
+        }
+
+
         this.commonsService.arregloTildesCombo(this.comboPais);
-        this.progressSpinner = false;
+        //this.progressSpinner = false;
       },
       err => {
         //console.log(err);
@@ -748,6 +780,10 @@ export class DatosPersonalesComponent implements OnInit {
         this.comboTipoVia = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTipoVia);
 
+        this.comboTipoVia.forEach(element => {
+          if (element.value == this.body.idtipovia) this.nombreVia = element.label;
+        });
+
         this.progressSpinner = false;
       },
       err => {
@@ -792,11 +828,22 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   getComboProvincia() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.get("integrantes_provincias").subscribe(
       n => {
         this.comboProvincia = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboProvincia);
+
+        if (this.comboProvincia != null || this.comboProvincia != undefined) {
+          this.comboProvincia.forEach(element => {
+            if (element.value == this.body.idprovincia) {
+              this.provincia = element.label;
+              // Rellenar Dirección Postal
+              this.rellenarDireccionPostal();
+            }
+          });
+        }
+
 
         if (this.body.idpoblacion != undefined && this.body.idpoblacion != null) {
           this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
@@ -810,7 +857,7 @@ export class DatosPersonalesComponent implements OnInit {
   }
 
   getComboPoblacionByIdPoblacion(idpoblacion) {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices
       .getParam(
@@ -823,12 +870,23 @@ export class DatosPersonalesComponent implements OnInit {
           this.comboPoblacion = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboPoblacion)
 
+          if (this.comboPoblacion != null || this.comboPoblacion != undefined) {
+            this.comboPoblacion.forEach(element => {
+              if (element.value == this.body.idpoblacion) {
+                this.poblacion = element.label;
+                // Rellenar Dirección Postal
+                this.rellenarDireccionPostal();
+              }
+            });
+          }
+
+
         },
         error => {
           this.progressSpinner = false;
 
         }, () => {
-          this.progressSpinner = false;
+          // this.progressSpinner = false;
 
         }
       );
@@ -1424,4 +1482,20 @@ para poder filtrar el dato con o sin estos caracteres*/
     }
 
   }
+
+  rellenarDireccionPostal() {
+
+    if (this.body.codigopostal == null || this.body.codigopostal == undefined) {
+      this.body.codigopostal = "";
+    }
+
+    if (this.body.direccion == null || this.body.direccion == undefined) {
+      this.direccionPostal == "";
+    } else {
+      this.direccionPostal = this.body.direccion + ", " + this.body.codigopostal + ",  " + this.poblacion + ", " +
+        this.provincia + " (" + this.pais + ") ";
+    }
+
+  }
+
 }

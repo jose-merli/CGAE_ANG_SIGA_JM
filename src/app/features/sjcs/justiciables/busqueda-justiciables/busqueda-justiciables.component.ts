@@ -33,16 +33,16 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
 
   fichasPosibles = [
     {
-      origen: "justiciables",
-      activa: true
-    },
-    {
       key: "generales",
-      activa: true
+      activa: false
     },
     {
       key: "personales",
-      activa: true
+      activa: false
+    },
+    {
+      origen: "justiciables",
+      activa: false
     },
     {
       key: "solicitud",
@@ -66,6 +66,7 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
     }
 
   ];
+
 
   permisoEscritura;
   modoRepresentante: boolean = false;
@@ -93,32 +94,34 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
 
     });
 
-    if(sessionStorage.getItem("origin")=="newInteresado"){
-      this.nuevoInteresado=true;
+    if (sessionStorage.getItem("origin") == "newInteresado") {
+      this.nuevoInteresado = true;
     }
 
-    if(sessionStorage.getItem("origin")=="newContrario"){
-      
-      this.nuevoContrario=true;
+    if (sessionStorage.getItem("origin") == "newContrario") {
+
+      this.nuevoContrario = true;
     }
 
-    if(sessionStorage.getItem("origin")=="newAsistido"){
-      this.nuevoAsistido=true;
+    if (sessionStorage.getItem("origin") == "newAsistido") {
+      this.nuevoAsistido = true;
     }
 
-    if(sessionStorage.getItem("origin")=="newContrarioAsistencia"){
-      this.nuevoContrarioAsistencia=true;
+    if (sessionStorage.getItem("origin") == "newContrarioAsistencia") {
+      this.nuevoContrarioAsistencia = true;
     }
-    if(sessionStorage.getItem("origin")=="UnidadFamiliar"){
-      this.nuevaUniFamiliar=true;
+    if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
+      this.nuevaUniFamiliar = true;
     }
 
-    if(sessionStorage.getItem("origin")=="newContrarioEJG"){
+    if (sessionStorage.getItem("origin") == "newContrarioEJG") {
       this.nuevoContrarioEJG = true;
     }
+
+    
+    this.persistenceService.setFichasPosibles(this.fichasPosibles);
     
 
-    this.persistenceService.setFichasPosibles(this.fichasPosibles);
 
     this.commonsService.checkAcceso(procesos_justiciables.justiciables)
       .then(respuesta => {
