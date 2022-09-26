@@ -60,6 +60,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   anio: any;
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} delitos seleccionados";
+  asunto:string;
+
   inputs = [
     { nombre: 'NIG', value: "" },
     { nombre: 'Nº Procedimiento', value: "" }
@@ -82,13 +84,13 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   ngOnInit() {
     this.datosInicial = this.campos;
     this.initDelitos = this.delitosValue;
-    this.getComboJuzgados();
     this.estadosOpciones = [
       { label: 'Activo', value: 'V' },
       { label: 'Finalizado', value: 'F' },
       { label: 'Anulada', value: 'A' }];
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     let parametro = new ParametroRequestDto();
+    this.getComboJuzgados();
     parametro.idInstitucion = this.campos.idInstitucion;
     parametro.modulo = "SCS";
     parametro.parametrosGenerales = "CONFIGURAR_COMBO_DESIGNA";
@@ -162,7 +164,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
 
             // this.procedimientoOpciones.value includes();
-
+           
 
             this.checkAcceso();
             if (this.campos.estado == 'Activo') {
@@ -504,12 +506,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   getComboJuzgados() {
     this.progressSpinner = true;
-    if (this.nuevaDesigna.idJuzgado == null || this.nuevaDesigna.idJuzgado == undefined) {
-      this.nuevaDesigna.idJuzgado = 0;
-    }
-    this.sigaServices.post("combo_comboJuzgadoDesignaciones",this.nuevaDesigna.idJuzgado).subscribe(
+    
+    this.sigaServices.post("combo_comboJuzgadoDesignaciones","0").subscribe(
       n => {
-        this.juzgadoOpciones = n.combooItems;
+        this.juzgadoOpciones = JSON.parse(n.body).combooItems;
         //this.progressSpinner = false;
         // Añadir el Juzgado al buscar designaciones_busquedaProcedimiento.
         if (this.campos.nombreJuzgado != "" && this.campos.nombreJuzgado != null && this.campos.nombreJuzgado != undefined) {
@@ -682,7 +682,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.progressSpinner = true;
     this.sigaServices.getParam("combo_comboModulosConJuzgado", "?idJuzgado=" + idJuzgado + "&fecha=" + fecha).subscribe(
       n => {
-        this.moduloOpciones = JSON.parse(n.body).combooItems;
+        this.moduloOpciones = n.combooItems;
         if (this.campos.modulo != "") {
           this.moduloOpciones.push({ label: this.campos.modulo, value: this.campos.idModulo });
         }

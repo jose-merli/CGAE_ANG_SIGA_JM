@@ -23,7 +23,7 @@ export class FactProgramadasComponent implements OnInit {
 
   controlEmisionFacturasSII: boolean = false;
 
-  @ViewChild(FiltrosFactProgramadasComponent) filtros;
+  @ViewChild(FiltrosFactProgramadasComponent) filtros:FiltrosFactProgramadasComponent;
   @ViewChild(TablaFactProgramadasComponent) tabla;
 
   constructor(
@@ -63,6 +63,7 @@ export class FactProgramadasComponent implements OnInit {
 
     this.sigaServices.post("facturacionPyS_getFacturacionesProgramadas", filtros).subscribe(
       n => {
+        this.progressSpinner = true;
         this.datos = JSON.parse(n.body).facturacionprogramadaItems;
         let error = JSON.parse(n.body).error;
 
@@ -91,10 +92,12 @@ export class FactProgramadasComponent implements OnInit {
         this.progressSpinner = false;
       },
       () => {
-        this.progressSpinner = false;
+        
         setTimeout(() => {
           this.commonsService.scrollTablaFoco('tablaFoco');
           this.commonsService.scrollTop();
+          this.filtros.progressSpinner = false;
+          this.progressSpinner = false;
         }, 5);
       }
     );

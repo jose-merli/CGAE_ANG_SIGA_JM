@@ -13,6 +13,7 @@ import { UsuarioLogado } from '../ficha-actuacion.component';
 import { DesignaItem } from '../../../../../../../../models/sjcs/DesignaItem';
 import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
 import { Router } from '@angular/router';
+import { forEach } from '@angular/router/src/utils/collection';
 
 export interface ComboItemAcreditacion {
   label: string;
@@ -35,6 +36,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   comboMotivosCambio: SelectItem[] = [];
 
   parametroConfigCombos: ParametroItem;
+
+  valorFormatoProc: string;
 
   @Input() institucionActual;
   @Input() isAnulada: boolean;
@@ -209,6 +212,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       this.fechaMaxima = new Date();
     }
 
+    this.formatoProc();
     this.getLetradoActuacion();
     this.getComboJuzgados();
     this.getComboPrisiones();
@@ -300,7 +304,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     }
     this.sigaServices.post("combo_comboJuzgadoDesignaciones", this.designaItem.idJuzgado).subscribe(
       n => {
-        this.comboJuzgados = n.combooItems;
+        this.comboJuzgados = JSON.parse(n.body).combooItems;
         if (this.comboJuzgados) {
           this.commonsService.arregloTildesCombo(this.comboJuzgados);
           //Valor de la cabecera para juzagado
@@ -396,7 +400,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     }
     this.sigaServices.getParam("combo_comboModulosConJuzgado", "?idJuzgado=" + $event + "&fecha=" + fecha).subscribe(
       n => {
-        this.comboModulos = JSON.parse(n.body).combooItems;
+        this.comboModulos = n.combooItems;
 
         if (this.actuacionDesigna.isNew) {
           if (this.actuacionDesigna.designaItem.idProcedimiento != "" && this.actuacionDesigna.designaItem.idProcedimiento != null && this.actuacionDesigna.designaItem.idProcedimiento != undefined) {
@@ -822,6 +826,21 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     }
   }
 
+  
+  formatoProc(){
+    this.sigaServices.get('actuaciones_designacion_numProcedimiento').subscribe(
+      (data) => {
+        console.log("FORMATO PROC")
+        console.log(data)
+       this.valorFormatoProc = data.valor;
+        console.log(this.valorFormatoProc)
+      },
+      (err) => {
+        //console.log(err);
+      }
+    );
+  }
+
   editarEvent() {
     if (!this.compruebaCamposObligatorios()) {
 
@@ -895,7 +914,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     let acreditacion = this.datos.selectores.find(el => el.id == 'acreditacion');
 
     if (!error && !this.validarNProcedimiento(this.datos.inputNumPro.value) || (this.datos.inputNumPro.obligatorio && this.datos.inputNumPro.value.trim().length == 0)) {
-      this.showMsg('error', this.translateService.instant('general.message.incorrect'), 'Formato del campo Nº Procedimiento inválido');
+      this.showMsg('error', this.translateService.instant('general.message.incorrect'), 'Es necesario introducir el campo Nº procedimiento en el formato establecido: ' + this.valorFormatoProc);
       error = true;
     }
 
@@ -944,12 +963,29 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     }
   }
 
-  validarNProcedimiento(nProcedimiento) {
+  validarNProcedimiento(nProcedimiento:string) {
     //Esto es para la validacion de CADECA
 
     let response;
 
-    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
+    let arraNum = nProcedimiento.split("")
+    let arraValidacion= this.valorFormatoProc.split("")
+    var RegExpNum = /^[0-9]/;
+    let datoNoValido:number = 0;
+    if(arraValidacion.length != arraNum.length) return false;
+
+    arraValidacion.forEach(function callback(value, index) {
+      if(value == "y" || value == 'n'){
+        var boo:boolean = RegExpNum.test(arraNum[index])
+         datoNoValido =  boo ? datoNoValido : datoNoValido=+1;
+      }else if(value != arraNum[index]){
+        datoNoValido = datoNoValido=+1;
+      }
+    });
+
+    response = datoNoValido != 0 ? false :true;  
+
+    /*if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
       this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
       if (nProcedimiento != '' && nProcedimiento != null) {
         var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
@@ -966,9 +1002,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       } else {
         response = true;
       }
-    }
-
-
+    }*/
     return response;
 
   }
