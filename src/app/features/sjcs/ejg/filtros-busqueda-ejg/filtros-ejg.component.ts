@@ -117,7 +117,7 @@ export class FiltrosEjgComponent implements OnInit {
 
 
   ngOnInit() {
-    //sessionStorage.removeItem("volver");
+    sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
     this.progressSpinner = true;
     this.getCombos();
@@ -135,21 +135,9 @@ export class FiltrosEjgComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-    //if (this.persistenceService.getFiltros() != undefined) {
-
-        if (sessionStorage.getItem("filtrosEJG") != null) {
-          if(sessionStorage.getItem("volver") == 'true'){
-          this.body = JSON.parse(
-            sessionStorage.getItem("filtrosEJG")
-          );
-        
-          this.isBuscar();
-          sessionStorage.removeItem("volver");
-          
-
-        }else if(sessionStorage.getItem("filtrosEJG") == null){
-          this.body = this.persistenceService.getFiltros();
-          if (this.body.dictamen != undefined && this.body.dictamen != null && this.body.dictamen != "") this.bodyDictamen = Array.from(this.body.dictamen);
+    if (this.persistenceService.getFiltros() != undefined) {
+        this.body = this.persistenceService.getFiltros();
+        if (this.body.dictamen != undefined && this.body.dictamen != null && this.body.dictamen != "") this.bodyDictamen = Array.from(this.body.dictamen);
     
           this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
           this.body.fechaAperturaHast = this.transformDate(this.body.fechaAperturaHast);
@@ -167,15 +155,13 @@ export class FiltrosEjgComponent implements OnInit {
           this.persistenceService.clearFiltros();
           this.busqueda.emit(this.historico);
     
-        } else {
-          this.body = new EJGItem();
-          this.body.annio = new Date().getFullYear().toString();
-          if (this.remesa != null || this.remesa != undefined) {
-            this.body.informacionEconomica = this.remesa.informacionEconomica;
-          }
-        }
-        }
-      
+    } else {
+      this.body = new EJGItem();
+      this.body.annio = new Date().getFullYear().toString();
+      if (this.remesa != null || this.remesa != undefined) {
+        this.body.informacionEconomica = this.remesa.informacionEconomica;
+      }
+    }      
 
 
     if (sessionStorage.getItem("tarjeta")) {
