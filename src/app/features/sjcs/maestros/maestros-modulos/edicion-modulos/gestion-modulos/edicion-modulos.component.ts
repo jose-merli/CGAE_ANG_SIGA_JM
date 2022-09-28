@@ -299,6 +299,13 @@ export class EdicionModulosComponent implements OnInit {
     }
   }
 
+  onFocusOutEvent(event: any){
+    if (this.modulosItem.observaciones == null || this.modulosItem.observaciones == "") {
+      this.modulosItem.observaciones = this.modulosItem.nombre;
+    }
+    
+  }
+
   save() {
     if (this.modulosItem.procedimientosReal != undefined) {
       let procedimientos = "";

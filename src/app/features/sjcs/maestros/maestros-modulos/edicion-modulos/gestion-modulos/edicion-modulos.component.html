@@ -26,7 +26,7 @@
             <div class="form-group col-lg-3 col-md-3">
               <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
               </label>
-              <input [disabled]="modulosItem.historico" type="text" class="form-control" [(ngModel)]="modulosItem.nombre" pInputText maxLength="100"
+              <input [disabled]="modulosItem.historico" type="text" class="form-control" [(ngModel)]="modulosItem.nombre" (focusout)="onFocusOutEvent($event)" pInputText maxLength="100"
               />
             </div>
             <div class="form-group col-lg-3 col-md-3">

@@ -120,10 +120,6 @@ export class FiltrosModulosComponent implements OnInit {
     this.filtros = new ModulosItem();
   }
 
-  onChangeVerSoloAltaCheck(event) {
-    //
-  }
-
   //búsqueda con enter
   @HostListener("document:keypress", ["$event"])
   onKeyPress(event: KeyboardEvent) {
