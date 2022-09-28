@@ -34,7 +34,8 @@
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
             [tarjetaExpedientesEconomicos]="tarjetaExpedientesEconomicos" [modoEdicion]="modoEdicion"
             [permisoEscritura]="permisoEscrituraExpedientesEconomicos" (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaExpedientesEconomicos]="openTarjetaExpedientesEconomicos">
+            [openTarjetaExpedientesEconomicos]="openTarjetaExpedientesEconomicos"
+            (actualizarTarjetasIntercambios)="actualizarTarjetasIntercambios()">
         </app-expedientes-economicos>
 
         <app-relaciones *ngIf="permisoEscrituraRelaciones != undefined && modoEdicion"
@@ -63,14 +64,16 @@
         <app-estados *ngIf="permisoEscrituraEstados != undefined && modoEdicion" (opened)="manuallyOpened = $event"
             (idOpened)="isCloseReceive($event)" [tarjetaEstados]="tarjetaEstados" [modoEdicion]="modoEdicion"
             [permisoEscritura]="permisoEscrituraEstados" (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaEstados]="openTarjetaEstados" #tarjetaEstadosEJG>
+            [openTarjetaEstados]="openTarjetaEstados" (actualizarTarjetasIntercambios)="actualizarTarjetasIntercambios()" 
+            #tarjetaEstadosEJG>
         </app-estados>
 
         <app-documentacion *ngIf="permisoEscrituraDocumentacion != undefined && modoEdicion"
             (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
             [tarjetaDocumentacion]="tarjetaDocumentacion" [modoEdicion]="modoEdicion"
             [permisoEscritura]="permisoEscrituraDocumentacion" (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaDocumentacion]="openTarjetaDocumentacion">
+            [openTarjetaDocumentacion]="openTarjetaDocumentacion"
+            (actualizarTarjetasIntercambios)="actualizarTarjetasIntercambios()">
         </app-documentacion>
 
         <app-informe-calificacion *ngIf="permisoEscrituraInformeCalif != undefined&& modoEdicion"
@@ -95,7 +98,8 @@
         <app-regtel-ejg *ngIf="permisoEscrituraRegtel != undefined && modoEdicion" (opened)="manuallyOpened = $event"
             (idOpened)="isCloseReceive($event)" [tarjetaRegtel]="tarjetaRegtel" [modoEdicion]="modoEdicion"
             [permisoEscritura]="permisoEscrituraRegtel" (modoEdicionSend)="modoEdicionSend($event)"
-            [openTarjetaRegtel]="openTarjetaRegtel">
+            [openTarjetaRegtel]="openTarjetaRegtel"
+            (actualizarTarjetasIntercambios)="actualizarTarjetasIntercambios()">
         </app-regtel-ejg>
 
         <app-comunicaciones-ejg *ngIf="permisoEscrituraComunicaciones != undefined && modoEdicion"

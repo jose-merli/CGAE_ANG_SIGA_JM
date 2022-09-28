@@ -1,4 +1,23 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+
+<div class="ficha-comunicacion-container" id="top">
+    <div class="header-title">
+      <i class="fa fa-square"></i>
+      <p>{{ "menu.justiciaGratuita" | translate }}
+        <i class="fa fa-angle-right"></i>{{ "menu.justiciaGratuita.soj" | translate }}
+      </p>
+    </div>
+
+    <div>
+        <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+        </app-tarjeta-resumen-fija>
+        
+        <app-datos-generales-detalle-soj *ngIf="permisoDatosGenerales && modoEdicion" [bodyInicial]="body" (modoEdicionSend)="eventGuardarFicha($event)"></app-datos-generales-detalle-soj>
+        <app-servicios-tramitacion-detalle-soj *ngIf="permisoServiciosTramitacion && modoEdicion"></app-servicios-tramitacion-detalle-soj>
+        <app-solicitante-detalle-soj *ngIf="permisoSolicitante && modoEdicion"></app-solicitante-detalle-soj>
+        <app-documentacion-detalle-soj *ngIf="permisoDocumentacion && modoEdicion"></app-documentacion-detalle-soj>
+    </div>
+</div>
 
 <div class="mt-3 text-right main-button" id="down">
     <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left"

@@ -12,6 +12,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { DatePipe } from '@angular/common'
+import { Session } from 'protractor';
 
 @Component({
   selector: 'app-asuntos',
@@ -26,6 +27,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
   msgs;
   progressSpinner: boolean = false;
   bodyInicial;
+  justiciableItem: JusticiableItem;
 
   selectedItem: number = 10;
   selectAll;
@@ -40,12 +42,13 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
   idPersona;
 
-  @ViewChild("table") table: DataTable;
+  @Input() body: JusticiableItem;
   @Input() showTarjeta;
-  @Input() body: JusticiableItem = new JusticiableItem();
   @Input() modoEdicion;
   @Input() fromJusticiable;
   @Input() tarjetaDatosAsuntos;
+
+  @ViewChild("table") table: DataTable;
 
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<String>();
@@ -239,6 +242,12 @@ export class AsuntosComponent implements OnInit, OnChanges {
     }
 
     if (this.tarjetaDatosAsuntos == true) this.showTarjeta = this.tarjetaDatosAsuntos;
+
+    if (this.body.idpersona != null || this.body.idpersona != undefined) {
+      this.ngOnInit();
+    }
+    
+
   }
 
   onHideTarjeta() {
@@ -247,7 +256,6 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
       if (!this.datosInicio) {
         this.datosInicio = true;
-        this.search();
       }
     }
     this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Asuntos.
@@ -272,8 +280,8 @@ export class AsuntosComponent implements OnInit, OnChanges {
     }
 
     this.cols = [
-      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "5%" },
-      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
+      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "7%" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "7%" },
       { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
       { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
       { field: fieldRol, header: headerRol, width: widthRol },
@@ -299,6 +307,17 @@ export class AsuntosComponent implements OnInit, OnChanges {
         value: 40
       }
     ];
+
+    // Recoger los valores del Justiciable
+    if (this.body.idpersona == null || this.body.idpersona == undefined) {
+      if (JSON.parse(sessionStorage.getItem("Familiar"))) {
+        let justiciableUF = JSON.parse(sessionStorage.getItem("Familiar"));
+        this.body.idpersona = justiciableUF.uf_idPersona;
+        sessionStorage.removeItem("Familiar");
+      }
+    }
+    this.search();
+
   }
 
   search() {
@@ -340,7 +359,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     let identificador = dato.tipo;
     switch (identificador) {
       case 'A':
-        sessionStorage.setItem("idAsistencia",dato.anio+"/"+dato.numero);
+        sessionStorage.setItem("idAsistencia", dato.anio + "/" + dato.numero);
         sessionStorage.setItem("vieneDeFichaDesigna", "true");
         this.router.navigate(["/fichaAsistencia"]);
 
@@ -418,7 +437,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
             this.router.navigate(["/gestionEjg"]);
           }
         );
-        break; 
+        break;
 
       default:
         //Introducir en la BBDD

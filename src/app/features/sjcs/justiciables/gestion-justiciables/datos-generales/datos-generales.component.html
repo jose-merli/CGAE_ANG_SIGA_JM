@@ -15,25 +15,32 @@
               }}</label>
           </div>
           <div class="row">
-            <div class="col-3">
-              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}
+            <div class="col-2">
+              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }}:
                 <span>{{ body.nif }}</span>
               </label>
             </div>
-            <div class="col-3">
-              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}
+            <div class="col-2">
+              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }}:
                 <span>{{ body.nombre }} {{ body.apellido11 }} {{ body.apellido2 }}</span>
               </label>
             </div>
-            <div class="col-3">
-              <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
+            <div class="col-2">
+              <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}:
                 <span>{{ body.fechanacimiento | date: 'dd/MM/yyyy' }}</span>
               </label>
             </div>
-            <div class="col-3">
-              <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}
+            <div class="col-2">
+              <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }}:
+                <span>{{ body.sexo }}</span>
+              </label>
+            </div>
+            <div class="col-2">
+              <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}:
                 <span>{{ body.fechaalta | date: 'dd/MM/yyyy' }}</span>
               </label>
+            </div>
+            <div class="col-2 d-flex justify-content-end">
               <i *ngIf="!showTarjeta" class="fa fa-angle-down float-right"></i>
             </div>
           </div>
@@ -49,78 +56,141 @@
     </div>
     <!--cuerpo datos generales-->
     <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
-      <div class="row">
-
-        <!-- info identificacion -->
-        <div class="col-lg-12 col-md-12">
-          <div class="row">
-            <div class="form-group col-lg-12 col-md-1 input-ayuda">
-              <label style="font-weight: bold;">{{ 'general.boton.datosIdentificacion' | translate }}</label>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{"censo.busquedaClientesAvanzada.literal.tipoPersona" | translate}}(*)
-              </label>
-              <p-dropdown *ngIf="!nuevoJusticiable" class="select-form" [(ngModel)]="body.tipopersonajg"
-                [options]="comboTipoPersona" [filter]="true" filterBy="label,labelSinTilde"
-                placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"
-                [disabled]="!permisoEscritura"></p-dropdown>
-              <p-dropdown *ngIf="nuevoJusticiable" class="select-form" [(ngModel)]="body.tipopersonajg"
-                [options]="comboTipoPersona" [filter]="true" filterBy="label,labelSinTilde"
-                placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"
-                [disabled]="!permisoEscritura" dataKey="this.comboTipoPersona[0].value"></p-dropdown>
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
-              </label>
-              <input [(ngModel)]="body.nif" type="text" class="form-control" maxLength="18"
-                [ngClass]="styleObligatorio(body.nif)" (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura"
-                pInputText />
-            </div>
-            <div class="form-group col-lg-3 col-md-3">
-              <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)
-              </label>
-              <p-dropdown class="select-form" disabled [(ngModel)]="body.idtipoidentificacion"
-                [options]="comboTipoIdentificacion" [filter]="true" filterBy="label,labelSinTilde"
-                placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"></p-dropdown>
-            </div>
-            <div *ngIf="!fromJusticiable" class="form-group col-lg-3 col-md-3 main-button pt-3">
-              <label></label>
-              <button (click)="searchJusticiableByNif()" pButton type="button" icon="fa fa-search" iconPos="center"
-                [disabled]="!permisoEscritura"></button>
-            </div>
+      <div class="form-row d-flex justify-content-around">
+        <div class="form-group row col-lg-6 col-md-6 border-right hiddenBorder">
+          <!-- info identificacion -->
+          <div class="form-group col-lg-12 col-md-12 input-ayuda">
+            <label style="font-weight: bold;">{{ 'general.boton.datosIdentificacion' | translate }}</label>
           </div>
-          <div class="row">
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
-              </label>
-              <input [(ngModel)]="body.nombre" name="nombre" type="text" class="form-control" [maxLength]="95"
-                [disabled]="!permisoEscritura" pInputText />
-            </div>
-            <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }} (*)
-              </label>
-              <input [(ngModel)]="body.apellido1" name="apellido1" type="text" class="form-control" [maxLength]="95"
-                [disabled]="!permisoEscritura" pInputText />
-            </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ "censo.fichaCliente.literal.identificacion" | translate }} (*)
+            </label>
+            <input [(ngModel)]="body.nif" type="text" class="form-control" maxLength="18"
+              (ngModelChange)="compruebaDNI()" [disabled]="!permisoEscritura" pInputText
+              [ngClass]="styleObligatorio(body.nif)" />
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{"censo.busquedaClientesAvanzada.literal.tipoCliente" | translate}} (*)
+            </label>
+            <p-dropdown class="select-form" disabled [(ngModel)]="body.idtipoidentificacion"
+              [options]="comboTipoIdentificacion" [filter]="true" filterBy="label,labelSinTilde"
+              placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"
+              [ngClass]="styleObligatorio(body.idtipoidentificacion)"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{"censo.busquedaClientesAvanzada.literal.tipoPersona" | translate}}(*)
+            </label>
+            <p-dropdown *ngIf="!nuevoJusticiable" class="select-form" [(ngModel)]="body.tipopersonajg"
+              [options]="comboTipoPersona" [filter]="true" filterBy="label,labelSinTilde"
+              placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"
+              [disabled]="!permisoEscritura" [ngClass]="styleObligatorio(body.tipopersonajg)"></p-dropdown>
+            <p-dropdown *ngIf="nuevoJusticiable" class="select-form" [(ngModel)]="body.tipopersonajg"
+              [options]="comboTipoPersona" [filter]="true" filterBy="label,labelSinTilde"
+              placeholder="{{ 'tablas.literal.seleccionar' | translate }}" showClear="true"
+              [disabled]="!permisoEscritura" dataKey="this.comboTipoPersona[0].value"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ "administracion.parametrosGenerales.literal.nombre" | translate }} (*)
+            </label>
+            <input [(ngModel)]="body.nombre" name="nombre" type="text" class="form-control" [maxLength]="95"
+              [disabled]="!permisoEscritura" pInputText [ngClass]="styleObligatorio(body.nombre)" />
+          </div>
 
-            <div class="form-group col-lg-6 col-md-6 form-group-date">
-              <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
-              </label>
-              <input [(ngModel)]="body.apellido2" name="apellido2" type="text" class="form-control" [maxLength]="95"
-                [disabled]="!permisoEscritura" pInputText />
-            </div>
-            <div class="form-group col-lg-6 col-md-6">
-              <label>{{ 'justiciaGratuita.justiciables.literal.nacionalidad' | translate }}
-              </label>
-              <p-dropdown class="select-form" [(ngModel)]="body.idpais" [options]="comboNacionalidad"
-                placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde"
-                showClear="true" [disabled]="!permisoEscritura"></p-dropdown>
-            </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ "censo.busquedaClientes.literal.apellido1" | translate }} (*)
+            </label>
+            <input [(ngModel)]="body.apellido1" name="apellido1" type="text" class="form-control" [maxLength]="95"
+              [disabled]="!permisoEscritura" pInputText [ngClass]="styleObligatorio(body.apellido1)" />
+          </div>
+
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ "censo.busquedaClientes.literal.apellido2" | translate }}
+            </label>
+            <input [(ngModel)]="body.apellido2" name="apellido2" type="text" class="form-control" [maxLength]="95"
+              [disabled]="!permisoEscritura" pInputText />
+          </div>
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label>{{ "censo.consultaDatosColegiacion.literal.fechaNac" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechanacimiento" (valueChangeInput)="fillFechaNacimiento($event)"
+              (valueChangeSelected)="fillFechaNacimiento($event)" [utc]="false" [disabled]="!permisoEscritura">
+            </app-fecha>
+          </div>
+          <div class="form-group  col-lg-6 col-md-6">
+            <label>{{ "censo.consultaDatosGenerales.literal.edad" | translate }}
+            </label>
+            <input type="text" class="form-control" disabled [(ngModel)]="body.edad" [disabled]="!permisoEscritura"
+              pInputText />
+          </div>
+          
+        </div>
+        <div class="d-flex" style="height: 200px;">
+          <div class="vr"></div>
+        </div>
+        <div class="form-group row col-lg-6 col-md-6">
+          <!-- Otros Datos Personales -->
+          <div class="form-group col-lg-12 col-md-12 input-ayuda">
+            <label style="font-weight: bold;">{{ 'justiciables.personales.literal.otrosDatos' | translate }}</label>
+          </div>
+          <div class="form-group col-lg-6 col-md-6">
+            <label>{{ 'justiciaGratuita.justiciables.literal.nacionalidad' | translate }}
+            </label>
+            <p-dropdown class="select-form" [(ngModel)]="body.idpais" [options]="comboNacionalidad"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde"
+              showClear="true" [disabled]="!permisoEscritura"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label>{{ "administracion.usuarios.literal.fechaAlta" | translate }}
+            </label>
+            <app-fecha [(value)]="body.fechaalta" [disabled]="true" [utc]="false" [disabled]="!permisoEscritura">
+            </app-fecha>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label>{{ 'censo.usuario.idioma' | translate }}
+            </label>
+            <p-dropdown class="select-form" [options]="comboIdiomas" showClear="true"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idlenguaje" [filter]="true"
+              filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label>{{ "censo.busquedaClientesAvanzada.literal.sexo" | translate }}
+            </label>
+            <p-dropdown class="select-form" [(ngModel)]="body.sexo" [options]="comboSexo" [filter]="true"
+              filterBy="label,labelSinTilde" showClear="true" placeholder="{{'general.boton.seleccionar' | translate}}"
+              [disabled]="!permisoEscritura"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label>{{ "censo.consultaDatosGenerales.literal.estadoCivil" | translate }}
+            </label>
+            <p-dropdown class="select-form" [options]="comboEstadoCivil" showClear="true"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" filterBy="label,labelSinTilde"
+              [(ngModel)]="body.idestadocivil" [disabled]="!permisoEscritura"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label>{{ "gratuita.personaJG.literal.regimenConyugal" | translate }}
+            </label>
+            <p-dropdown class="select-form" [options]="comboRegimenConyugal" showClear="true"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.regimenConyugal"
+              [filter]="true" filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label>{{ "gratuita.personaJG.literal.profesion" | translate }}
+            </label>
+            <p-dropdown class="select-form" [options]="comboProfesion" showClear="true"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idprofesion" [filter]="true"
+              filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
+          </div>
+          <div class="form-group col-lg-6 col-md-6 ">
+            <label>{{ "gratuita.busquedaSOJ.literal.minusvalia" | translate }}
+            </label>
+            <p-dropdown class="select-form" [options]="comboMinusvalia" showClear="true"
+              placeholder="{{'general.boton.seleccionar' | translate}}" [(ngModel)]="body.idminusvalia" [filter]="true"
+              filterBy="label,labelSinTilde" [disabled]="!permisoEscritura"></p-dropdown>
           </div>
         </div>
       </div>
-      <div class="row">
-        <!-- info direcciones -->
+      <!--<div class="row">
+
         <div class="col-lg-12 col-md-12">
           <div class="form-row">
             <div class="form-group col-lg-12 col-md-3 input-ayuda">
@@ -201,11 +271,11 @@
               </p-dropdown>
             </div>
 
-            <!-- <div class="form-group col-lg-6 col-md-6">
+            <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'gratuita.personaJG.literal.otraProvincia' | translate }}</label>
               <p-checkbox name="otraProvincia" [(ngModel)]="checkOtraProvincia" #provincia binary="true" (onChange)="onChangeOtherProvincia($event)"
                 [disabled]="!permisoEscritura"></p-checkbox>
-            </div> -->
+            </div> 
 
             <div class="form-group col-lg-6 col-md-6">
               <label>
@@ -217,19 +287,24 @@
                 [emptyFilterMessage]="resultadosPoblaciones" [disabled]="isDisabledPoblacion || !permisoEscritura">
               </p-dropdown>
             </div>
-
-            <!-- <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
+            <div *ngIf="poblacionExtranjera" class="form-group col-lg-6 col-md-6">
               <label>{{"censo.consultaDirecciones.literal.poblacion" | translate}}</label>
               <input [(ngModel)]="body.idpoblacion" type="text" class="form-control" [maxLength]="99" pInputText>
-            </div> -->
+            </div> 
 
           </div>
         </div>
-      </div>
+      </div>-->
     </div>
+    
 
     <div [hidden]="!showTarjeta" class="card-footer">
       <div class="text-right main-button">
+        <!--<div *ngIf="!fromJusticiable" class="form-group col-lg-3 col-md-3 main-button pt-3">
+          <label></label>
+          <button (click)="searchJusticiableByNif()" pButton type="button" icon="fa fa-search" iconPos="center"
+            [disabled]="!permisoEscritura"></button>
+        </div>-->
         <button *ngIf="!fromJusticiable" pButton (click)="search()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.search' | translate}}" [disabled]="!permisoEscritura"></button>
         <button pButton (click)="checkPermisosRest()" type="button" icon="fa fa-undo" iconPos="left"

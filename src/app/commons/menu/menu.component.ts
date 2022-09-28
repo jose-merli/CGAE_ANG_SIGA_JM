@@ -164,7 +164,7 @@ export class MenuComponent implements OnInit {
   }
 
   eliminarOrigenNav(){
-    let rutasTemporales = ["contrariosEJG", "asistenciaAsistido","contrarios","datosFamiliares","interesados"];
+    let rutasTemporales = ["contrariosEJG", "asistenciaAsistido","contrarios","datosFamiliares","interesados","origin"];
 
     for (let index = 0; index < rutasTemporales.length; index++) {
       sessionStorage.removeItem(rutasTemporales[index]);

@@ -892,6 +892,10 @@ import { FichaEnvioCamComponent } from './features/sjcs/facturacionSJCS/certific
 import { DetalleSOJComponent } from './features/sjcs/soj/detalle-soj/detalle-soj.component';
 import { ListaIntercambiosAltaEjgComponent } from './features/sjcs/ejg/gestion-ejg/lista-intercambios-alta-ejg/lista-intercambios-alta-ejg.component';
 import { ListaIntercambiosDocumentacionEjgComponent } from './features/sjcs/ejg/gestion-ejg/lista-intercambios-documentacion-ejg/lista-intercambios-documentacion-ejg.component';
+import { DatosGeneralesDetalleSojComponent } from './features/sjcs/soj/detalle-soj/datos-generales-detalle-soj/datos-generales-detalle-soj.component';
+import { ServiciosTramitacionDetalleSojComponent } from './features/sjcs/soj/detalle-soj/servicios-tramitacion-detalle-soj/servicios-tramitacion-detalle-soj.component';
+import { SolicitanteDetalleSojComponent } from './features/sjcs/soj/detalle-soj/solicitante-detalle-soj/solicitante-detalle-soj.component';
+import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-soj/documentacion-detalle-soj/documentacion-detalle-soj.component';
 
 @NgModule({
 	declarations: [
@@ -1063,6 +1067,10 @@ import { ListaIntercambiosDocumentacionEjgComponent } from './features/sjcs/ejg/
 		VolanteExpresComponent,
 		SOJComponent,
 		DetalleSOJComponent,
+		DatosGeneralesDetalleSojComponent,
+		ServiciosTramitacionDetalleSojComponent,
+		SolicitanteDetalleSojComponent,
+		DocumentacionDetalleSojComponent,
 		//Guardia Colegiado
 		GuardiaColegiadoComponent,
 		GestionGuardiaColegiadoComponent,

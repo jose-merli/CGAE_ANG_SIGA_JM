@@ -400,7 +400,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     }
     this.sigaServices.getParam("combo_comboModulosConJuzgado", "?idJuzgado=" + $event + "&fecha=" + fecha).subscribe(
       n => {
-        this.comboModulos = JSON.parse(n.body).combooItems;
+        this.comboModulos = n.combooItems;
 
         if (this.actuacionDesigna.isNew) {
           if (this.actuacionDesigna.designaItem.idProcedimiento != "" && this.actuacionDesigna.designaItem.idProcedimiento != null && this.actuacionDesigna.designaItem.idProcedimiento != undefined) {

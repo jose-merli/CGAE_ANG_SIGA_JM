@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, HostListener, OnInit, ViewChild } from '@angular/core';
-import { Message } from 'primeng/components/common/api';
+import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BuscadorAsistenciaExpresComponent } from './buscador-asistencia-expres/buscador-asistencia-expres.component';
 import { SigaServices } from '../../../../../_services/siga.service';
@@ -19,6 +19,7 @@ import { FiltroAsistenciaItem } from '../../../../../models/guardia/FiltroAsiste
 import { KEY_CODE } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { BuscadorAsistenciasComponent } from './buscador-asistencias/buscador-asistencias.component';
 import { ResultadoAsistenciasComponent } from '../resultado-asistencias/resultado-asistencias.component';
+import { GuardiaItem } from '../../../../../models/guardia/GuardiaItem';
 
 @Component({
   selector: 'app-asistencia-expres',
@@ -64,7 +65,8 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     private commonServices: CommonsService,
     private persistenceService : PersistenceService,
     private translateService : TranslateService,
-    private router: Router) { }
+    private router: Router,
+    private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
     this.show = false;

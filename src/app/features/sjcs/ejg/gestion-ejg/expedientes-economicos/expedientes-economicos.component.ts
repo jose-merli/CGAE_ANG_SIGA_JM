@@ -53,6 +53,8 @@ export class ExpedientesEconomicosComponent implements OnInit {
   buttonVisibleEnvioDocumentacionAdicional: boolean = false;
   esIdentificadorPericlesDisponible: boolean = false;
 
+  @Output() actualizarTarjetasIntercambios = new EventEmitter<void>();
+
   fichaPosible = {
     key: "expedientesEconomicos",
     activa: false
@@ -327,6 +329,7 @@ export class ExpedientesEconomicosComponent implements OnInit {
           
           await Promise.all(requests.map(d => this.accionEnviarDocumentacionAdicional(d)));
           this.showMessage("info", "Info", this.translateService.instant("justiciaGratuita.ejg.listaIntercambios.peticionEnCurso"));
+          this.actualizarTarjetasIntercambios.emit();
         } else {
           this.showMessage("info", "Info", this.translateService.instant("general.message.accion.cancelada"));
         }

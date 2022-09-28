@@ -23,7 +23,8 @@
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [showClear]="true" [(ngModel)]="filtro.idTurno"
                                     [ngModelOptions]="{standalone: true}" [options]="comboTurnos" [ngClass]="styleObligatorio(filtro.idTurno)"
-                                    (onChange)="onChangeTurno()">
+                                    (onChange)="onChangeTurno()"
+                                    [disabled]="disabledIfEmptyArgs(filtro.diaGuardia)">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -32,7 +33,8 @@
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [showClear]="true" [(ngModel)]="filtro.idGuardia" [ngClass]="styleObligatorio(filtro.idGuardia)"
                                     [ngModelOptions]="{standalone: true}" [options]="comboGuardias"
-                                    (onChange)="onChangeGuardia()">
+                                    (onChange)="onChangeGuardia()"
+                                    [disabled]="disabledIfEmptyArgs(filtro.diaGuardia, filtro.idTurno)">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-3 col-md-3">
@@ -40,7 +42,8 @@
                                 <p-dropdown class="select-form"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
                                     [showClear]="true" [(ngModel)]="filtro.idTipoAsistenciaColegiado"
-                                    [ngModelOptions]="{standalone: true}" [options]="comboTiposAsistencia">
+                                    [ngModelOptions]="{standalone: true}" [options]="comboTiposAsistencia"
+                                    [disabled]="disabledIfEmptyArgs(filtro.diaGuardia, filtro.idTurno, filtro.idGuardia)">
                                 </p-dropdown>
                             </div>
                         </div>
@@ -73,4 +76,8 @@
         </form>
     </div>
 
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
 </div>

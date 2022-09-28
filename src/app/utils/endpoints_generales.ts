@@ -14,6 +14,9 @@ export let endpoints_generales: any = {
     combo_comboEstadoEjg: "combo/comboEstadoEjg",
     combo_TipoDesignacion: "combo/comboTipoDesignacion",
     combo_comboTipoSOJ: "combo/comboTipoSOJ",
+    combo_comboTipoSOJColegio: "combo/combo_comboTipoSOJColegio",
+    combo_comboTipoConsulta: "combo/comboTipoConsulta",
+    combo_comboTipoRespuesta: "combo/comboTipoRespuesta",
     combo_comboComisaria: "combo/comboComisaria",
     combo_comboJuzgado: "combo/comboJuzgado",
     combo_comboComisariaCdgoExt: "combo/comboComisariaCdgoExt",
@@ -29,6 +32,8 @@ export let endpoints_generales: any = {
     gestionJusticiables_busquedaClaveAsuntosAsistencias: "gestionJusticiables/busquedaClaveAsuntosAsistencias",
     gestionJusticiables_busquedaClaveAsuntosDesignaciones: "gestionJusticiables/busquedaClaveAsuntosDesignaciones",
     gestionJusticiables_busquedaClaveAsuntosSOJ: "gestionJusticiables/busquedaClaveAsuntosSOJ",
+
+    gestionJusticiables_getDetallesSoj: "soj/getDetallesSoj",
 
     
     gestionJusticiables_copyDesigna2Soj: 'gestionJusticiables/copyDesigna2Soj',
