@@ -56,7 +56,7 @@
     </div>
 
     <div class="form-group-interlineado col-lg-3 col-md-3">
-      <label>{{'justiciaGratuita.oficio.designas.actuaciones.modulo}}</label>
+      <label>{{'justiciaGratuita.oficio.designas.actuaciones.modulo' | translate}}</label>
       <p-dropdown class="select-form" [(ngModel)]="moduloValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="moduloOpciones" [filter]="true"
         (onChange)="changeModulo()" filterBy="label,labelSinTilde" [showClear]="true">
