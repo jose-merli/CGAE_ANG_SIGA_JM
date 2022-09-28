@@ -27,12 +27,6 @@
           <input type="text" name="codigo" value="" class="box" class="form-control" [(ngModel)]='filtros.codigo' pInputText maxLength="20"
             pInputText>
         </div>
-        <div class="form-check col-lg-3 col-md-3">
-          <br>
-          <label class="form-group-label pt-2"><b>{{"sjcs.maestros.modulos.mostrarSoloAlta" | translate}}</b></label>
-          &nbsp;&nbsp;
-          <p-checkbox (onChange)="onChangeVerSoloAltaCheck($event)" [(ngModel)]='filtros.verSoloAlta' binary="true"></p-checkbox>
-      </div>
       </div>
     </div>
   </div>
