@@ -538,7 +538,8 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         {
           "key": "Módulo",
           "value": designaItem.modulo
-        }
+        },
+        
       ];
       if ((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")
         && (designaItem.delitos == null || designaItem.delitos == undefined || designaItem.delitos == "")
@@ -2120,6 +2121,10 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       {
         "key": "Módulo",
         "value": designaItem.modulo
+      },
+      {
+        "key": "Asunto",
+        "value": designaItem.resumenAsunto
       }
     ];
     if ((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")

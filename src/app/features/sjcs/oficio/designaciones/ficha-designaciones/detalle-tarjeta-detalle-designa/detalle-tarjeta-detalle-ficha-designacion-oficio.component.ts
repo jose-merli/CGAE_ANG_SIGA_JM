@@ -60,20 +60,20 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   anio: any;
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} delitos seleccionados";
-  asunto:string;
+  asuntoValue:string;
 
   inputs = [
-    { nombre: 'NIG', value: "" },
-    { nombre: 'Nº Procedimiento', value: "" }
+    { nombre: this.translateService.instant('justiciaGratuita.sjcs.designas.DatosIden.NIG'), value: "" },
+    { nombre: this.translateService.instant('gratuita.busquedaDesignas.literal.numProcedimiento'), value: "" }
   ];
 
   datePickers = [
     {
-      nombre: 'Fecha estado',
+      nombre: this.translateService.instant('facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado'),
       value: ""
     },
     {
-      nombre: 'Fecha cierre',
+      nombre:  this.translateService.instant('justiciaGratuita.guardia.fichaasistencia.fechacierre'),
       value: ""
     }
   ];
@@ -108,6 +108,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           if (!this.nuevaDesigna) {
             this.inputs[0].value = this.campos.nig;
             this.inputs[1].value = this.campos.numProcedimiento;
+            this.asuntoValue = this.campos.resumenAsunto
             this.estadoValue = this.campos.sufijo;
             this.disableEstado = true;
             this.juzgadoValue = this.campos.idJuzgado;
@@ -333,6 +334,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       let validaProcedimiento = true;
       designaUpdate.nig = this.inputs[0].value;
       designaUpdate.numProcedimiento = this.inputs[1].value;
+      designaUpdate.resumenAsunto = this.asuntoValue
       designaUpdate.idJuzgado = this.juzgadoValue;
       designaUpdate.idPretension = this.procedimientoValue;
       designaUpdate.idProcedimiento = this.moduloValue;
@@ -444,6 +446,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.moduloOpciones = [];
         this.inputs[0].value = this.datosInicial.nig;
         this.inputs[1].value = this.datosInicial.numProcedimiento;
+        this.asuntoValue = this.datosInicial.resumenAsunto;
         this.datePickers[0].value = this.formatDate(this.datosInicial.fechaEstado);
         this.delitosValue = this.initDelitos;
         let designaUpdate = new DesignaItem();
@@ -467,6 +470,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.moduloOpciones = [];
         this.inputs[0].value = "";
         this.inputs[1].value = "";
+        this.asuntoValue = "";
         this.estadoValue = "";
         this.disableEstado = true;
         this.juzgadoValue = "";
@@ -682,7 +686,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.progressSpinner = true;
     this.sigaServices.getParam("combo_comboModulosConJuzgado", "?idJuzgado=" + idJuzgado + "&fecha=" + fecha).subscribe(
       n => {
-        this.moduloOpciones = JSON.parse(n.body).combooItems;
+        this.moduloOpciones = n.combooItems;
         if (this.campos.modulo != "") {
           this.moduloOpciones.push({ label: this.campos.modulo, value: this.campos.idModulo });
         }
@@ -854,6 +858,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           this.datePickers[0].value = this.formatDate(updateDetalle.fechaEstado);
           updateDetalle.nig = this.inputs[0].value;
           updateDetalle.numProcedimiento = this.inputs[1].value;
+          updateDetalle.asuntoResumen = this.asuntoValue
           let aux = this.juzgadoValue;
           if (aux != null && aux != undefined && aux != "") {
             this.juzgadoOpciones.forEach(el => {
