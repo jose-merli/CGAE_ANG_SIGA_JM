@@ -1614,6 +1614,68 @@ this.totalRegistros = this.rowGroups.length;
         }
       );
   }
+
+  navigateComunicar(dato) {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.selectedArray.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (element[key.nombre.toLowerCase()] != undefined) {
+                      keysValues.push(element[key.nombre.toLowerCase()]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
+  }
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
