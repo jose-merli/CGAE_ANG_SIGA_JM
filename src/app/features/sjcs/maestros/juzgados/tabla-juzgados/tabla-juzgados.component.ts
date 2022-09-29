@@ -6,6 +6,7 @@ import { PersistenceService } from '../../../../../_services/persistence.service
 import { DataTable, ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { JuzgadoObject } from '../../../../../models/sjcs/JuzgadoObject';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tabla-juzgados',
@@ -111,12 +112,16 @@ export class TablaJuzgadosComponent implements OnInit {
 
     let judgeDelete = new JuzgadoObject();
     judgeDelete.juzgadoItems = this.selectedDatos;
+    let auxLimpiar=[];
+    
     this.sigaServices.post("busquedaJuzgados_deleteCourt", judgeDelete).subscribe(
 
       data => {
-
+        this.selectedDatos.forEach((e) =>{ auxLimpiar.push(e.idJuzgado) } )
+        this.datos = this.datos.filter((e)=> !auxLimpiar.includes(e.idJuzgado))
         this.selectedDatos = [];
-        this.searchHistoricalSend.emit(false);
+        //this.searchHistoricalSend.emit(false);
+        this.datos.filter((item) => item.idJuzgado)
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
       },

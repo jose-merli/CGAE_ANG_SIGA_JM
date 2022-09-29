@@ -4,11 +4,12 @@ import { TranslateService } from '../../../../../commons/translate/translation.s
 import { ModulosItem } from '../../../../../models/sjcs/ModulosItem';
 import { UpperCasePipe } from '../../../../../../../node_modules/@angular/common';
 import { PartidasObject } from '../../../../../models/sjcs/PartidasObject';
-import { findIndex } from 'rxjs/operators';
+import { findIndex, filter } from 'rxjs/operators';
 import { MultiSelect, ConfirmationService } from 'primeng/primeng';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { CommonsService } from '../../../../../_services/commons.service';
+import { PartidasItems } from '../../../../../models/sjcs/PartidasItems';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class TablaPartidasComponent implements OnInit {
   msgs;
   id;
   datosInicial = [];
+  numberIni = [];
   editMode: boolean = false;
   selectedBefore;
   buscadores = [];
@@ -48,7 +50,7 @@ export class TablaPartidasComponent implements OnInit {
 
   //Resultados de la busqueda
   @Input() datos;
-
+  @Input() datosAux :PartidasItems[]=[];
   @Input() permisos;
   //Combo partidos judiciales
   @Input() comboPJ;
@@ -69,6 +71,7 @@ export class TablaPartidasComponent implements OnInit {
   ngOnInit() {
     this.selectedDatos = [];
     this.datosInicial = JSON.parse(JSON.stringify(this.datos));
+    this.numberIni = this.datos;
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
     this.getCols();
   }
@@ -581,13 +584,17 @@ export class TablaPartidasComponent implements OnInit {
     if (dato.fechabaja == null) return false;
     else return true;
   }
+  filterNumber(valueInput:string) {
+    this.datos = this.numberIni.filter((item:PartidasItems)=> parseInt(valueInput) >= parseInt(item.importepartidaReal)) 
+    if(valueInput.length==0)this.datos = this.numberIni
+  }
 
   getCols() {
 
     this.cols = [
-      { field: "nombrepartida", header: "censo.usuario.nombre" },
-      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
-      { field: "importepartidaReal", header: "formacion.fichaCurso.tarjetaPrecios.importe" }
+      { field: "nombrepartida", header: "censo.usuario.nombre" ,filter: 'agTextColumnFilter' },
+      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion",filter: 'agTextColumnFilter'  },
+      { field: "importepartidaReal", header: "formacion.fichaCurso.tarjetaPrecios.importe",filter: 'agNumberColumnFilter'  }
 
     ];
     this.cols.forEach(it => this.buscadores.push(""));

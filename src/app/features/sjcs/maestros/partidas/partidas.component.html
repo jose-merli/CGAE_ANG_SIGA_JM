@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
     <app-partidasPresupuestarias (busqueda)="searchPartidas($event)"></app-partidasPresupuestarias>
-    <app-gestion-partidaspresupuestarias *ngIf="buscar" [datos]="datos" [permisos]="permisoEscritura" (searchPartidas)="searchPartidas($event)"></app-gestion-partidaspresupuestarias>
+    <app-gestion-partidaspresupuestarias *ngIf="buscar" (datosAux)="datosAux" [datos]="datos" [permisos]="permisoEscritura" (searchPartidas)="searchPartidas($event)"></app-gestion-partidaspresupuestarias>
 </div>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

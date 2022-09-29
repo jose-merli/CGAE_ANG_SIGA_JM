@@ -70,6 +70,7 @@
                 type="text" (input)="
                     tabla.filter($event.target.value, col.field, 'contains')
                   " />
+                  
             </th>
           </tr>
         </ng-template>
@@ -90,13 +91,12 @@
 
               <div *ngIf="dato.editable && col.field == 'abreviaturaDoc'">
                 <input class="form-control paddingInput" [(ngModel)]="dato.abreviaturaDoc" name="abreviaturaDoc" (input)="changeAbreviatura(dato)"
-                  type="text" [(disabled)]="!permisos" maxLength="60" on-focusout="changeAbreviatura(dato)" (onBlur)="changeAbreviatura(dato)"
-                />
+                type="text" [(disabled)]="!permisos" maxLength="60" on-focusout="changeAbreviatura(dato)" (onBlur)="changeAbreviatura(dato)" />
               </div>
               <div *ngIf="dato.editable && col.field == 'descripcionDoc'">
-                <input class="form-control paddingInput" [(ngModel)]="dato.descripcionDoc" name="descripcionDoc" type="text" maxLength="300"
+                <textarea class="form-control paddingInput" [(ngModel)]="dato.descripcionDoc" name="descripcionDoc" type="text" maxLength="300"
                   on-focusout="changeDescripcion(dato)" [(disabled)]="!permisos" (onBlur)="changeDescripcion(dato)" (input)="changeDescripcion(dato)"
-                />
+                ></textarea>
               </div>
               <div *ngIf="dato.editable && col.field == 'codigoExt'">
                 <input class="form-control paddingInput" [(ngModel)]="dato.codigoExt" name="codigoExt" type="text" maxLength="20" on-focusout="changeCodigoExt(dato)"

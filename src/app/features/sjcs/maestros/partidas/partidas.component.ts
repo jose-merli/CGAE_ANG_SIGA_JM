@@ -7,6 +7,7 @@ import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
 import { PartidasPresupuestarias } from './partidasPresupuestarias/partidasPresupuestarias.component';
 import { TablaPartidasComponent } from './gestion-partidas/gestion-partidaspresupuestarias.component';
+import { PartidasItems } from '../../../../models/sjcs/PartidasItems';
 
 @Component({
   selector: 'app-partidas',
@@ -19,6 +20,7 @@ export class PartidasComponent implements OnInit, AfterViewInit {
   messageShow: string;
 
   datos;
+  datosAux :PartidasItems[];
   progressSpinner: boolean = false;
   //Mediante esta sentencia el padre puede acceder a los datos y atributos del hijo
   /*a particularidad de éste método es que tenemos que esperar a que la vista esté totalmente 
@@ -93,6 +95,7 @@ export class PartidasComponent implements OnInit, AfterViewInit {
     this.sigaServices.post("gestionPartidasPres_searchPartidasPres", this.filtros.filtros).subscribe(
       n => {
         this.datos = JSON.parse(n.body).partidasItem;
+       
         this.buscar = true;
         if (this.tablapartida && this.tablapartida.tabla) {
           this.tablapartida.tabla.sortOrder = 0;
@@ -108,7 +111,7 @@ export class PartidasComponent implements OnInit, AfterViewInit {
           if (element.importepartida[0] == ',')
             element.importepartida = "0".concat(element.importepartida)
         });
-
+        this.datosAux = this.datos;
       },
       err => {
         this.progressSpinner = false;

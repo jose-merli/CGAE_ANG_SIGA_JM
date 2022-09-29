@@ -699,7 +699,7 @@ export class GestionCostesfijosComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "descripcion", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoCoste", width: "25%" },
+      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion", width: "25%" },
       { field: "tipoAsistencia", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoAsistencia", width: "40%" },
       { field: "tipoActuacion", header: "justiciaGratuita.maestros.gestionCostesFijos.tipoActuacion", width: "25%" },
       { field: "importeReal", header: "formacion.fichaCurso.tarjetaPrecios.importe", width: "10%" }

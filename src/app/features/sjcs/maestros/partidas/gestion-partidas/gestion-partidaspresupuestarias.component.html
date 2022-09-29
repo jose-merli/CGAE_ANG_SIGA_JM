@@ -17,8 +17,18 @@
           <th *ngFor="let col of columns;let i =index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
             {{ col.header | translate }}
             <p-sortIcon [field]="col.field"></p-sortIcon>
-            <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase=" col.field
+            <span  *ngIf="col.field != 'importepartidaReal'">
+              <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase=" col.field
               " pInputText type="text " (input)=" tabla.filter($event.target.value, col.field, 'contains') " />
+
+            </span>
+            <span  *ngIf="col.field == 'importepartidaReal'">
+              <input pDroppable="false" (click)="$event.stopPropagation()" [(ngModel)]="buscadores[i]" *ngSwitchCase=" col.field
+              " pInputText type="text " (input)=" filterNumber($event.target.value) " />
+
+            </span>
+           
+              
           </th>
         </tr>
       </ng-template>
