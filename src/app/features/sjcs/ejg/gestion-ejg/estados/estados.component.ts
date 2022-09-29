@@ -309,7 +309,7 @@ export class EstadosComponent implements OnInit {
   }
 
   getComboEstado() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices.get("filtrosejg_comboEstadoEJG").subscribe(
       n => {

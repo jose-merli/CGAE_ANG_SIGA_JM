@@ -116,7 +116,7 @@ export class ResolucionComponent implements OnInit {
   }
 
   getResolucion(selected) {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getResolucion", selected).subscribe(
       n => {
         if (n.body != "") {

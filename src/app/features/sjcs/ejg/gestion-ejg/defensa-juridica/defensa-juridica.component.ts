@@ -547,7 +547,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   getComboProcedimiento() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
       n => {
         this.comboProcedimiento = n.combooItems;
