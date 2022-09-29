@@ -430,24 +430,54 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     var checkFechas = false;
     // Controlar que existan más de un Procurados.
     if (initValues.length > 1) {
-      // Cambiar formato de fecha para la creacion del formato DATE.
-      var dia = this.rowGroups[1].cells[0].value.substring(0, 2);
-      var mes = this.rowGroups[1].cells[0].value.substring(3, 5);
-      var anio = this.rowGroups[1].cells[0].value.substring(6, 10);
-      // Convertir Fecha actual a DATE.
-      var fechaActual = new Date(anio + "-" + mes + "-" + dia);// Validar que la fecha Nueva sea mayor a las anteriores.
-      if (fechaNueva.valueOf() > fechaActual.valueOf()) {
+      //Formateo de fecha Original
+      let fechaOriginalString = initValues[0].cells[0].value;
+      let diaAuxA = fechaOriginalString.substring(0, 2);
+      let mesAuxA = fechaOriginalString.substring(3, 5);
+      let anioAuxA = fechaOriginalString.substring(6, 10);
+      let fechaOrignalDate = new Date(anioAuxA + "-" + mesAuxA + "-" + diaAuxA);
+
+      //Formateo de fecha Nueva
+      let diaAux = fechaNueva.getDate().toString();
+      let mesAux = fechaNueva.getMonth() < 10 ?  "0"+(fechaNueva.getMonth() +1) :  fechaNueva.getMonth().toString()
+      let anioAux = fechaNueva.getFullYear().toString();
+
+      let fechaNuevaFormateado = new Date(anioAux + "-" + mesAux + "-" + diaAux);
+
+      // Formateo de fecha Actual 
+      let fechaActualSF = new Date()
+      let dia = fechaActualSF.getUTCDate().toString();
+      let mes = fechaActualSF.getMonth() < 10 ?  "0"+(fechaActualSF.getMonth() +1) :  fechaActualSF.getMonth().toString()
+      let anio = fechaActualSF.getFullYear().toString();
+      let fechaActualF = new Date(anio + "-" + mes + "-" + dia);
+
+  
+      if (fechaNuevaFormateado.valueOf() >= fechaActualF.valueOf() || fechaNuevaFormateado.valueOf() == fechaOrignalDate.valueOf()) {
         checkFechas = true;
       }
     }else if (initValues.length == 1) {
-      // Cambiar formato de fecha para la creacion del formato DATE.
-      var hoy = new Date();
-      var diaactual = hoy.getDate();
-      var mesactual = hoy.getMonth();
-      var anioactual= hoy.getFullYear();
-      // Convertir Fecha actual a DATE.
-      var fechaActual = new Date(anioactual + "-" + mesactual + "-" + diaactual);// Validar que la fecha Nueva sea mayor a las anteriores.
-      if (fechaNueva.valueOf() > fechaActual.valueOf()) {
+      //Formateo de fecha Original
+      let fechaOriginalString = initValues[0].cells[0].value;
+      let dia = fechaOriginalString.substring(0, 2);
+      let mes = fechaOriginalString.substring(3, 5);
+      let anio = fechaOriginalString.substring(6, 10);
+      let fechaOrignalDate = new Date(anio + "-" + mes + "-" + dia);
+
+      // Formateo de fecha Actual 
+      let fechaActualSF = new Date()
+      let diaAux = fechaActualSF.getUTCDate().toString();
+      let mesAux = fechaActualSF.getMonth() < 10 ?  "0"+(fechaActualSF.getMonth() +1) :  fechaActualSF.getMonth().toString()
+      let anioAux = fechaActualSF.getFullYear().toString();
+      let fechaActualF = new Date(anioAux + "-" + mesAux + "-" + diaAux);
+
+      //Formateo de fecha Nueva
+      let diaAuxA = fechaNueva.getDate();
+      let mesAuxA = fechaNueva.getMonth() < 10 ?  "0"+(fechaNueva.getMonth() +1) :  fechaNueva.getMonth().toString()
+      let anioAuxA = fechaNueva.getFullYear().toString();
+      let fechaNuevaFormateado = new Date(anioAuxA + "-" + mesAuxA + "-" + diaAuxA);
+
+
+      if ( fechaNuevaFormateado.valueOf() >= fechaActualF.valueOf() || fechaNuevaFormateado.valueOf() == fechaOrignalDate.valueOf()) {
         checkFechas = true;
       }
     }
