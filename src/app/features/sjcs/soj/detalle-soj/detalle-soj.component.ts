@@ -6,6 +6,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import { SigaServices } from '../../../../_services/siga.service';
 import { Observable } from 'rxjs/Observable';
 import { TranslateService } from '../../../../commons/translate';
+import { DatosBancariosAnexoObject } from '../../../../models/DatosBancariosAnexoObject';
 
 
 @Component({
@@ -136,7 +137,9 @@ export class DetalleSOJComponent implements OnInit {
     this.permisoDocumentacion = true;
   }
 
+  isOpenReceive(dato) {
 
+  }
 
   /*
   url;
