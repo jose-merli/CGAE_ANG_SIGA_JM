@@ -91,7 +91,7 @@
 <div class="card-footer">
   <div class="text-right main-button">
     <button pButton type="button" icon="fa fa-paper-plane" iconPos="left" label="{{'general.boton.comunicar' | translate}}"
-      (click)="showMsg('success', 'Se ha comunicado correctamente', '')"></button>
+      (click)="navigateComunicar()"></button>
     <button pButton type="button" iconPos="left" label="{{'general.boton.anular' | translate}}"
       (click)="anular()" [disabled] = "!anulable || ineditable"></button>
     <button pButton type="button" iconPos="left" label="{{'general.boton.finalizar' | translate}}"

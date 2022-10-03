@@ -58,6 +58,12 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     numColegiado: '',
     nombreAp: ''
   };
+
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
+  
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
   constructor(private datepipe: DatePipe,
     private translateService: TranslateService,
@@ -73,7 +79,11 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     //sessionStorage.removeItem("modoBusqueda");
     this.getDataLoggedUser();
     this.checkLastRoute();
-
+   
+    //this.currentRoute = this.router.url.toString()
+    this.currentRoute = '/guardiasAsistencias'
+   
+    this.getKeysClaseComunicacion();
 
     this.preasistencia = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
     if (this.preasistencia) {
@@ -676,5 +686,68 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
     }
 
+  }
+   
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
+
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                let keysValues = [];
+                this.keys.forEach(key => {
+                  if (this.asistencia[key.nombre] != undefined) {
+                    keysValues.push(this.asistencia[key.nombre]);
+                  } else if (key.nombre == "num" && this.asistencia["numero"] != undefined) {
+                    keysValues.push(this.asistencia["numero"]);
+                  }
+                });
+                datosSeleccionados.push(keysValues);
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
   }
 }

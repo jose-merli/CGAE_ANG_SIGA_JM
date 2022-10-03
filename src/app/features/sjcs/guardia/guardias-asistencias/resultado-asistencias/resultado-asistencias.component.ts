@@ -49,6 +49,12 @@ export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
   @Input() filtro : FiltroAsistenciaItem;
   @ViewChild("table") table: DataTable;
 
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
+  
+
   constructor(private changeDetectorRef : ChangeDetectorRef,
     private router : Router,
     private confirmationService : ConfirmationService,
@@ -62,6 +68,19 @@ export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.currentRoute = this.comprobacionRuta(this.router.url.toString()) 
+    this.getKeysClaseComunicacion();
+  } 
+
+  comprobacionRuta(routerString:string){
+
+    let rutaClaseComunicacion = routerString
+    if(rutaClaseComunicacion.includes("?")){
+      let posicionRuta = rutaClaseComunicacion.indexOf("?");
+      let rutaRaiz = rutaClaseComunicacion.substring(0,posicionRuta)
+      rutaClaseComunicacion = rutaRaiz
+    }
+    return rutaClaseComunicacion
   }
 
   eliminar(){
@@ -286,4 +305,71 @@ export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
       detail: detailParam
     });
   }
+
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString()
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.selectedDatos.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (element[key.nombre] != undefined) {
+                      keysValues.push(element[key.nombre]);
+                    } else if (key.nombre == "num" && element["numero"] != undefined) {
+                      keysValues.push(element["numero"]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
+  }
+  
+  
+  
 }

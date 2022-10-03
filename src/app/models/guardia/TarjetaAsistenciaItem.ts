@@ -57,4 +57,5 @@ export class TarjetaAsistenciaItem{
 	  diaDespuesDisabled : boolean;
 	  idTipoEjg : string;
 	  guardiaRequeridaValidacion : string;
+	  idInstitucion: string;
 }

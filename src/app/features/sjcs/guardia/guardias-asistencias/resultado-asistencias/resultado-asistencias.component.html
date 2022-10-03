@@ -50,7 +50,7 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
   </ng-template>
   <p-footer>
     <div class="text-right main-button">
-      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.comunicar' | translate}}"
+      <button pButton type="button" icon="" iconPos="left" label="{{'general.boton.comunicar' | translate}}" (click)="navigateComunicar()"
       [disabled]="disableDelete"></button>
       <button pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="{{'general.boton.eliminar' | translate}}"
         (click)="eliminar()" [disabled]="disableDelete"></button>
