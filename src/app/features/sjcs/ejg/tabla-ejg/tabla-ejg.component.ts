@@ -67,6 +67,13 @@ export class TablaEjgComponent implements OnInit {
   showModalCambioEstado = false;
   showModalAnadirRemesa = false;
 
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
+  
+ 
+
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private persistenceService: PersistenceService,
     private confirmationService: ConfirmationService, private commonServices: CommonsService) {
@@ -77,6 +84,8 @@ export class TablaEjgComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
+    this.currentRoute = this.router.url;
+    this.getKeysClaseComunicacion();
 
     this.selectedDatos = [];
 
@@ -600,4 +609,74 @@ export class TablaEjgComponent implements OnInit {
   fillFechaEstado(event) {
     this.fechaEstado = event;
   }
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.selectedDatos.forEach(element => {
+                  let keysValues = [];
+                  this.keys.forEach(key => {
+                    if (element[key.nombre] != undefined) {
+                      keysValues.push(element[key.nombre]);
+                    } else if (key.nombre == "num" && element["numEjg"] != undefined) {
+                      keysValues.push(element["numEjg"]);
+                    } else if (key.nombre == "anio" && element["annio"] != undefined) {
+                      keysValues.push(element["annio"]);
+                    } else if (key.nombre == "idtipoejg" && element["tipoEJG"] != undefined) {
+                      keysValues.push(element["tipoEJG"]);
+                    }
+
+
+                  });
+                  datosSeleccionados.push(keysValues);
+                });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
+  }
+  
 }

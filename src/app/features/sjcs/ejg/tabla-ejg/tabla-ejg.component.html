@@ -82,7 +82,7 @@
   </div>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="comunicar()" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}">
+      <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="navigateComunicar()" type="button" icon="fa fa-comment" iconPos="left" label="{{ 'general.boton.comunicar' | translate}}">
       </button>
       
       <button pButton [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length == 0) || !permisoEscritura" (click)="changeEstado()" type="button" icon="fas fa-exchange-alt" iconPos="left" label="{{'general.boton.cambiarEstado' | translate}}">

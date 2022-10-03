@@ -76,6 +76,11 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
   disabledNumEJG: boolean = true;
 
+  currentRoute: String;
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
+
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
     private translateService: TranslateService,
@@ -84,6 +89,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
   ngOnInit() {
     //console.log('nuevo 2: ', this.nuevo)
+    //this.currentRoute = this.router.url;
+    this.currentRoute =  '/ejg'
+    this.getKeysClaseComunicacion();
     this.resaltadoDatos = true;
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();
@@ -533,14 +541,81 @@ export class DatosGeneralesEjgComponent implements OnInit {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      this.comunicar();
+      this.persistenceService.clearDatos();
+      this.navigateComunicar();
     }
   }
 
-  comunicar() {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
+  
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    this.getDatosComunicar();
   }
+  
+  getKeysClaseComunicacion() {
+    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
+      data => {
+        this.keys = JSON.parse(data["body"]);
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
+
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = this.currentRoute.toString();
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                let keysValues = [];
+                this.keys.forEach(key => {
+      this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+
+                  if (this.bodyInicial[key.nombre] != undefined) {
+                    keysValues.push(this.bodyInicial[key.nombre]);
+                  } else if (key.nombre == "num" && this.bodyInicial["numEjg"] != undefined) {
+                    keysValues.push(this.bodyInicial["numEjg"]);
+                  } else if (key.nombre == "anio" && this.bodyInicial["annio"] != undefined) {
+                    keysValues.push(this.bodyInicial["annio"]);
+                  } else if (key.nombre == "idtipoejg" && this.bodyInicial["tipoEJG"] != undefined) {
+                    keysValues.push(this.bodyInicial["tipoEJG"]);
+                  }
+                });
+                datosSeleccionados.push(keysValues);
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
+  }
+  
+
 
   checkPermisosAsociarDes() {
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
