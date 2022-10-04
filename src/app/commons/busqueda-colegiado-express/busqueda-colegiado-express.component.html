@@ -21,7 +21,7 @@
             <button [disabled]="!colegiadoForm.valid || disabled" pButton type="button"  icon="fa fa-eraser"
                  iconPos="left" (click)="clearForm()"></button>
             <button type="submit" [disabled]="!colegiadoForm.valid || disabled" pButton icon="fa fa-search"
-                iconPos="left"></button>
+                iconPos="left" (click)="busquedaColegiadoJE()"></button>
         </div>
     </div>
 </form>
