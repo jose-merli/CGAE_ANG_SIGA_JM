@@ -557,7 +557,7 @@ export class ResolucionComponent implements OnInit {
       },
       err => {
         this.progressSpinner = false;
-        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("messages.general.error.ficheroNoExiste"));
       }
     );
   }
