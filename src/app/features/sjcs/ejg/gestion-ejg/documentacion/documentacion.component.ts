@@ -654,12 +654,12 @@ export class DocumentacionComponent implements OnInit {
         if (this.bodyInicial.f_presentacion != null && this.bodyInicial.f_presentacion != undefined) {
           this.ficheros = [{
             "fecha": this.datepipe.transform(this.bodyInicial.f_presentacion, 'dd/MM/yyyy'),
-            "nombre": this.bodyInicial.nombreFichero
+            "nombreFichero": this.bodyInicial.nombreFichero
           }]
         } else {
           this.ficheros = [{
             "fecha": this.translateService.instant("justiciaGratuita.ejg.documentacion.noFechaPre"),
-            "nombre": this.bodyInicial.nombreFichero
+            "nombreFichero": this.bodyInicial.nombreFichero 
           }]
         }
       }
