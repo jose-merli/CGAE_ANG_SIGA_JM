@@ -395,7 +395,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       }
       let listaClienteType = 'text';
       let listaClienteCombo = null;
-      if (designacion.nombreJuzgado != null && designacion.nombreJuzgado != []){
+      if (designacion.nombreJuzgado != null && designacion.nombreJuzgado != ""){
         /*designacion.nombreJuzgado.forEach(cliente =>{
          listaCliente +=  cliente + '\n';
          })*/

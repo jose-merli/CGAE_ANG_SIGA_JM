@@ -412,7 +412,18 @@ export class FiltroDesignacionesComponent implements OnInit {
           this.permisoDesigna = true;
           this.esColegiado = false;
           this.isColegDesig.emit(false);
-          this.cargaInicial();
+
+          if (sessionStorage.getItem("vieneDeJE") != null) {
+            this.cargaInicialJE();
+
+            await this.changeFilters('justificacion');
+            this.radioTarjeta = 'justificacion';
+            this.buscar();
+
+            sessionStorage.removeItem("vieneDeJE");
+          } else {
+            this.cargaInicial();
+          }
 
           if (
             sessionStorage.getItem("filtroDesignas") != null
@@ -432,22 +443,24 @@ export class FiltroDesignacionesComponent implements OnInit {
               this.radioTarjeta = 'justificacion';
               this.buscar();
               
-            }
-          } else if (
-            sessionStorage.getItem("vieneDeJE") != null
-          ) {
-            if (sessionStorage.getItem("volver") != null && sessionStorage.getItem("volver") != undefined) {
-              await this.changeFilters('justificacion');
-              this.radioTarjeta = 'justificacion';
-              this.buscar();
-              sessionStorage.removeItem("vieneDeJE");
             }
           }
         } else if (derechoAcceso == 2) {//es colegiado y solo lectura
           this.permisoDesigna = true;
           this.esColegiado = true;
           this.isColegDesig.emit(true);
-          this.cargaInicial();
+
+          if (sessionStorage.getItem("vieneDeJE") != null) {
+            this.cargaInicialJE();
+
+            await this.changeFilters('justificacion');
+            this.radioTarjeta = 'justificacion';
+            this.buscar();
+
+            sessionStorage.removeItem("vieneDeJE");
+          } else {
+            this.cargaInicial();
+          }
 
           if (
             sessionStorage.getItem("filtroDesignas") != null
@@ -467,15 +480,6 @@ export class FiltroDesignacionesComponent implements OnInit {
               this.radioTarjeta = 'justificacion';
               this.buscar();
               
-            }
-          } else if (
-            sessionStorage.getItem("vieneDeJE") != null
-          ) {
-            if (sessionStorage.getItem("volver") != null && sessionStorage.getItem("volver") != undefined) {
-              await this.changeFilters('justificacion');
-              this.radioTarjeta = 'justificacion';
-              this.buscar();
-              sessionStorage.removeItem("vieneDeJE");
             }
           }
         } else {
