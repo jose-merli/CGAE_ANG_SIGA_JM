@@ -132,7 +132,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   ngOnInit(): void {
     this.currentRoute = "/justificacionExpres";
-    this.getKeysClaseComunicacion();
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
@@ -150,14 +149,15 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             
       
       //this.cargaJuzgados.emit(false);
-      if (this.comboModulos != undefined && this.comboModulos !== []){
+      if (this.comboModulos != undefined && this.comboModulos.length > 0){
         this.searchNuevo(this.comboModulos, []);
       }
 
-      if (this.comboModulos != undefined && this.comboModulos !== [] && this.comboAcreditacion !== undefined && this.comboAcreditacion !== []){
+      if (this.comboModulos != undefined && this.comboModulos.length > 0 && this.comboAcreditacion !== undefined && this.comboAcreditacion.length > 0){
         this.searchNuevo(this.comboModulos, this.comboAcreditacion);
       }
     }else if(this.pantalla == 'AE'){
+      this.getKeysClaseComunicacion();
       this.fromRowGroup = 0;
       this.toRowGroup = 6;
       this.numCell = 0;

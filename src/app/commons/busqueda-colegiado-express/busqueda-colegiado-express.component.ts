@@ -281,4 +281,9 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     this.colegiado.emit(colegiado);
   }
 
+  busquedaColegiadoJE() {
+    var vieneDeJE = "true";
+    sessionStorage.setItem("vieneDeJE", vieneDeJE);
+  }
+
 }

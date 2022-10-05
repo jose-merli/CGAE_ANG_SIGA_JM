@@ -203,7 +203,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   }
 
   checkPermisos(){
-    this.commonsService.checkAcceso(procesos_oficio.designa)
+    this.commonsService.checkAcceso(procesos_oficio.je)
       .then(respuesta => {
         this.permisoEscritura = respuesta;
         //console.log('JE  this.permisoEscritura: ',  this.permisoEscritura)
@@ -382,7 +382,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         finalizada = false;
       }
 
-      if (designacion.expedientes != null && designacion.expedientes != []){
+      if (designacion.expedientes != null && designacion.expedientes.length > 0){
       /*designacion.expedientes.forEach(exp =>{
        // expedientes += '\n' + exp;
        expedientes +=  exp + '\n';
@@ -395,7 +395,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       }
       let listaClienteType = 'text';
       let listaClienteCombo = null;
-      if (designacion.nombreJuzgado != null && designacion.nombreJuzgado != []){
+      if (designacion.nombreJuzgado != null && designacion.nombreJuzgado != ""){
         /*designacion.nombreJuzgado.forEach(cliente =>{
          listaCliente +=  cliente + '\n';
          })*/

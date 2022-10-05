@@ -4,12 +4,12 @@
     <div class="form-group-interlineado">
         <span class="mr-4">
             <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="designas" (click)="changeFilters('designas')"
-                label="{{ 'justiciaGratuita.oficio.designas' | translate }}"></p-radioButton>
+                label="{{ 'justiciaGratuita.oficio.designas' | translate }}" [disabled]="!this.permisoDesigna"></p-radioButton>
         </span>
         <span class="mr-4">
             <p-radioButton [(ngModel)]='radioTarjeta' name="tarj" value="justificacion"
                 (click)="changeFilters('justificacion')"
-                label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}"></p-radioButton>
+                label="{{ 'justiciaGratuita.oficio.justificacionExpres' | translate}}" [disabled]="!this.permisoJE"></p-radioButton>
         </span>
     </div>
 

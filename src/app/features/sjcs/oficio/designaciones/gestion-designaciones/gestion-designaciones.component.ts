@@ -236,12 +236,7 @@ export class GestionDesignacionesComponent implements OnInit {
           this.esColegio = false;
           this.disableDelete = true;
         } else {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
+          this.checkAccesoJE();
         }
       },
       err => {
@@ -253,6 +248,40 @@ export class GestionDesignacionesComponent implements OnInit {
       }
     );
 
+  }
+
+  checkAccesoJE() {
+    let controlAcceso = new ControlAccesoDto();
+    controlAcceso.idProceso = procesos_oficio.je;
+
+    return this.sigaServices.post("acces_control", controlAcceso).toPromise().then(
+      data => {
+        const permisos = JSON.parse(data.body);
+        const permisosArray = permisos.permisoItems;
+        const derechoAcceso = permisosArray[0].derechoacceso;
+        
+        if (derechoAcceso == 3) {// es un colegio
+          this.esColegio = true;
+          this.disableDelete = false;
+        } else if (derechoAcceso == 2) { //es un colegiado
+          this.esColegio = false;
+          this.disableDelete = true;
+        } else {
+          if (derechoAcceso != 3 && derechoAcceso != 2) {
+            sessionStorage.setItem("codError", "403");
+            sessionStorage.setItem(
+              "descError",
+              this.translateService.instant("generico.error.permiso.denegado")
+            );
+            this.router.navigate(["/errorAcceso"]);
+          }
+        }
+        
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
   }
 
   actualizaSeleccionados(selectedDatos) {
