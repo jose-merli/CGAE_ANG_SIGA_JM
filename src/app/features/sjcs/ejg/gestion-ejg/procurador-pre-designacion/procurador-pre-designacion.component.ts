@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { ProcuradorItem } from '../../../../../models/sjcs/ProcuradorItem';
 import { DatePipe } from '@angular/common';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
 	selector: 'app-procurador-pre-designacion',
@@ -33,7 +34,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 	nombreCabecera: string = "";
 
 	@Input() permisoEscritura:boolean;
-	@Input() permisoProcurador:boolean;
+	permisoProcurador:boolean;
 
 	idPersona;
 	openPro: boolean = false;
@@ -51,6 +52,8 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 		private router: Router) { }
 
 	ngOnInit() {
+
+		this.checkAcceso(procesos_ejg.procurador);
 
 		this.ejg = this.persistenceService.getDatos();
 
@@ -94,17 +97,24 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 				});
 			this.fechaCabecera = this.generalBody.fechaDesigna;
 		}
-
-		if(this.permisoProcurador){
-			this.perEscritura = true;
-		  }else{
-			this.perEscritura = false;
-		  }
 		
 	}
 
+	checkAcceso(procurador: String){
+		this.commonsService.checkAcceso(procurador)
+		.then(respuesta => {
+			this.permisoProcurador = respuesta;
+			if(this.permisoEscritura){
+				this.perEscritura = true;
+			  }else{
+				this.perEscritura = false;
+			  }
+		}
+		).catch(error => console.error(error));
+	}
+
 	ngOnChanges(changes: SimpleChanges): void {
-		if(this.permisoProcurador){
+		if(this.permisoEscritura){
 			this.perEscritura = true;
 		  }else{
 			this.perEscritura = false;

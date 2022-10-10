@@ -375,35 +375,6 @@ export class GestionEjgComponent implements OnInit {
       }
       ).catch(error => console.error(error));
 
-    this.commonsService.checkAcceso(procesos_ejg.defensaJuridica)
-      .then(respuesta => {
-        this.progressSpinner = true;
-        this.permisoDefensaJuridica = respuesta;
-        recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
-        this.progressSpinner = false;
-      }
-      ).catch(error => console.error(error));
-
-    this.commonsService.checkAcceso(procesos_ejg.procurador)
-      .then(respuesta => {
-        this.progressSpinner = true;
-        this.permisoProcurador = respuesta;
-        recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
-        this.progressSpinner = false;
-      }
-      ).catch(error => console.error(error));
-
-    this.commonsService.checkAcceso(procesos_ejg.contrarios)
-      .then(respuesta => {
-        this.progressSpinner = true;
-        this.permisoContrarios = respuesta;
-        recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
-        this.progressSpinner = false;
-      }
-      ).catch(error => console.error(error));
     this.progressSpinner = false;
 
     //Estados
@@ -735,7 +706,7 @@ export class GestionEjgComponent implements OnInit {
   }
 
   checkEJGDesignas() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.post("gestionejg_getEjgDesigna", this.body).subscribe(
       n => {
         let ejgDesignas = JSON.parse(n.body).ejgDesignaItems;

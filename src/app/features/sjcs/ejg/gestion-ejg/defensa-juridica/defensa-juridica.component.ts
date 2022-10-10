@@ -14,6 +14,7 @@ import { AuthenticationService } from '../../../../../_services/authentication.s
 import { flattenStyles } from '@angular/platform-browser/src/dom/dom_renderer';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { ParametroDto } from '../../../../../models/ParametroDto';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-defensa-juridica',
@@ -27,7 +28,7 @@ export class DefensaJuridicaComponent implements OnInit {
   designa = new DesignaItem();
   bodyInicial: EJGItem;
   @Input() permisoEscritura: boolean;
-  @Input() permisoDefensaJuridica: boolean;
+  permisoDefensaJuridica: boolean;
 
   isDisabledProcedimiento: boolean = true;
 
@@ -55,7 +56,6 @@ export class DefensaJuridicaComponent implements OnInit {
 
   openDef: boolean = false;
   perEscritura: boolean = false;
-  perDefensaJuri: boolean = false;
 
   delitosValueInicial: any;
   delitosValue: any = [];
@@ -68,18 +68,16 @@ export class DefensaJuridicaComponent implements OnInit {
     private router: Router,
     private authenticationService: AuthenticationService,
     private datePipe: DatePipe,
-    private location: Location) { }
+    private location: Location,
+		private commonsService: CommonsService) { }
 
   ngOnInit() {
+    this.checkAcceso(procesos_ejg.defensaJuridica);
+
     this.body = this.persistenceService.getDatos();
     //Valor inicial a reestablecer
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-    if (this.permisoDefensaJuridica) {
-      this.perDefensaJuri = true;
-    } else {
-      this.perDefensaJuri = false;
-    }
-
+    
     // Cargar Parametro CONFIGURAR_COMBO_DESIGNA y combo procedimientos.
     this.cargarProcedimiento();
 
@@ -140,15 +138,22 @@ export class DefensaJuridicaComponent implements OnInit {
       this.progressSpinner = false;
       //if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
-      if (this.permisoEscritura) {
-        this.perEscritura = true;
-      } else {
-        this.perEscritura = false;
-      }
-
 
     }, 1000);
   }
+
+  checkAcceso(defesaJuridica:String){
+    this.commonsService.checkAcceso(procesos_ejg.defensaJuridica)
+        .then(respuesta => {
+          this.permisoDefensaJuridica = respuesta;
+          if (this.permisoEscritura) {
+            this.perEscritura = true;
+          } else {
+            this.perEscritura = false;
+          }
+        }
+        ).catch(error => console.error(error));
+    }
   ngOnChanges(changes: SimpleChanges): void {
     if (this.permisoEscritura) {
       this.perEscritura = true;
@@ -269,7 +274,7 @@ export class DefensaJuridicaComponent implements OnInit {
         this.translateService.instant('general.message.incorrect'),
         this.translateService.instant('general.message.existeDesignaAsociado')
       );
-    } else if (!this.perDefensaJuri) {
+    } else if (!this.permisoDefensaJuridica) {
       this.showMessage(
         'error',
         this.translateService.instant('general.message.incorrect'),
@@ -295,7 +300,7 @@ export class DefensaJuridicaComponent implements OnInit {
         this.translateService.instant('general.message.incorrect'),
         this.translateService.instant('general.message.existeDesignaAsociado')
       );
-    } else if (!this.perDefensaJuri) {
+    } else if (!this.permisoDefensaJuridica) {
       this.showMessage(
         'error',
         this.translateService.instant('general.message.incorrect'),
@@ -332,7 +337,7 @@ export class DefensaJuridicaComponent implements OnInit {
         this.translateService.instant('general.message.incorrect'),
         this.translateService.instant('general.message.existeDesignaAsociado')
       );
-    } else if (!this.perDefensaJuri) {
+    } else if (!this.permisoDefensaJuridica) {
       this.showMessage(
         'error',
         this.translateService.instant('general.message.incorrect'),

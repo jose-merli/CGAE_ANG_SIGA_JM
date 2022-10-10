@@ -6,6 +6,8 @@ import { Router } from '@angular/router';
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { Message } from 'primeng/components/common/api';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 
 
@@ -41,7 +43,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   progressSpinner: boolean = false;
 
   @Input() permisoEscritura: boolean = false;
-  @Input() permisoContrarios:boolean = false;
+  permisoContrarios:boolean = false;
 
   @ViewChild("table") tabla;
 
@@ -50,9 +52,12 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private persistenceService: PersistenceService,
     private router: Router,
+    private commonsService: CommonsService
   ) { }
 
   ngOnInit() {
+    this.checkAcceso(procesos_ejg.contrarios);
+
     this.getCols();
     this.ejg = this.persistenceService.getDatos();
 
@@ -63,14 +68,27 @@ export class ContrariosPreDesignacionComponent implements OnInit {
 
     this.searchContrariosEJG();
 
-    if(this.permisoEscritura && this.permisoContrarios){
-      this.nuevo=true;
-      this.eliminar = true;
-    }else{
-      this.nuevo=false;
-      this.eliminar = false;
-    }
+  }
+  checkAcceso(contrarios: String) {
+    this.commonsService.checkAcceso(contrarios)
+      .then(respuesta => {
+        //this.progressSpinner = true;
+        if(respuesta==undefined){
+          this.permisoContrarios = false
+        }
+        else{
+          this.permisoContrarios = respuesta;
+        }
 
+        if(this.permisoEscritura && this.permisoContrarios){
+          this.nuevo=true;
+          this.eliminar = true;
+        }else{
+          this.nuevo=false;
+          this.eliminar = false;
+        }
+      }
+      ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

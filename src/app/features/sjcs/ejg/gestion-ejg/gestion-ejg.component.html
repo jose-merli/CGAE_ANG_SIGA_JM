@@ -46,18 +46,15 @@
             (actLetradoDesignado)="actualizaLetradoDesignado($event)">
         </app-relaciones>
 
-        <app-defensa-juridica *ngIf="permisoDefensaJuridica != undefined && modoEdicion" [permisoEscritura]="modoEdicion" 
-            [permisoDefensaJuridica]="permisoDefensaJuridica" 
+        <app-defensa-juridica *ngIf="permisoDefensaJuridica != undefined && modoEdicion" [permisoEscritura]="modoEdicion"  
             id="defensaJuridica">
         </app-defensa-juridica>
         
         <app-contrarios-pre-designacion *ngIf="permisoContrarios != undefined && modoEdicion" [permisoEscritura]="modoEdicion"
-            [permisoContrarios]="permisoContrarios" 
             id="contrariosPreDesigna">
         </app-contrarios-pre-designacion>
         
         <app-procurador-pre-designacion *ngIf="permisoProcurador != undefined && modoEdicion" [permisoEscritura]="modoEdicion" 
-            [permisoProcurador]="permisoProcurador" 
             id="procuradorPreDesigna">
         </app-procurador-pre-designacion>
 
