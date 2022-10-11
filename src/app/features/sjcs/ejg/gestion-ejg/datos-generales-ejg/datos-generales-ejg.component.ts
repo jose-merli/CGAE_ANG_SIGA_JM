@@ -364,8 +364,11 @@ export class DatosGeneralesEjgComponent implements OnInit {
         },
         err => {
           this.progressSpinner = false;
-
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          if(err.error!=null && err.error !=undefined && err.error.indexOf('description') >0){
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(err.error.substring(err.error.indexOf('message')+10,err.error.indexOf('description')-3)) + " " + err.error.substring(err.error.indexOf('description')+14,err.error.indexOf('infoURL')-3));
+          }else{
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+          }
         }
       );
       this.progressSpinner = false;
