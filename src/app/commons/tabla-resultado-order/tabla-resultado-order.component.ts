@@ -1121,15 +1121,6 @@ this.totalRegistros = this.rowGroups.length;
 
       //this.grupos = this.grupos.map(g => g.startsWith("U") ? g.substring(1) : g);
 
-      this.unavailableUp = true;
-      for (let i = posicion; i >= 0 && this.unavailableUp; i--) {
-          if (this.grupos[i] < this.grupos[posicion]) this.unavailableUp = false;
-      }
-
-      this.unavailableDown = true;
-      for (let i = posicion; i < this.grupos.length && this.unavailableDown; i++) {
-          if (this.grupos[i] > this.grupos[posicion]) this.unavailableDown = false;
-      }
     //}
 
 
