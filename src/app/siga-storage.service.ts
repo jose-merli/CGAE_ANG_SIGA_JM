@@ -8,7 +8,7 @@ export class SigaStorageService {
   numColegiado: any;
   nombreApe: string;
   institucionActual: string;
-  version: string = '1.0.82_6'
+  version: string = '1.0.82_7'
   constructor() { }
 
 }
