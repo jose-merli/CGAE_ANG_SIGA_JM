@@ -4,6 +4,7 @@ import { Injectable } from '../../../node_modules/@angular/core';
 @Injectable()
 export class PersistenceService {
     private filtrosName: string = "filtros";
+    private filtrosEJGName: string = "filtrosEJG";
     private filtrosAuxName: string = "filtroAux";
     private paginacionName: string = "paginacion";
     private datosName: string = "datos";
@@ -29,6 +30,19 @@ export class PersistenceService {
 
     clearFiltros() {
         sessionStorage.removeItem(this.filtrosName);
+    }
+
+    setFiltrosEJG(data: any) {
+        sessionStorage.setItem(this.filtrosEJGName, JSON.stringify(data));
+    }
+
+    getFiltrosEJG() {
+        let data = sessionStorage.getItem(this.filtrosEJGName);
+        return JSON.parse(data);
+    }
+
+    clearFiltrosEJG() {
+        sessionStorage.removeItem(this.filtrosEJGName);
     }
 
     setFiltrosAux(data: any) {

@@ -135,8 +135,8 @@ export class FiltrosEjgComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-    if (this.persistenceService.getFiltros() != undefined) {
-        this.body = this.persistenceService.getFiltros();
+    if (this.persistenceService.getFiltrosEJG() != undefined) {
+        this.body = this.persistenceService.getFiltrosEJG();
         if (this.body.dictamen != undefined && this.body.dictamen != null && this.body.dictamen != "") this.bodyDictamen = Array.from(this.body.dictamen);
     
           this.body.fechaAperturaDesd = this.transformDate(this.body.fechaAperturaDesd);
@@ -152,7 +152,7 @@ export class FiltrosEjgComponent implements OnInit {
           this.body.fechaPonenteDesd = this.transformDate(this.body.fechaPonenteDesd);
           this.body.fechaPonenteHast = this.transformDate(this.body.fechaPonenteHast);
     
-          this.persistenceService.clearFiltros();
+          this.persistenceService.clearFiltrosEJG();
           this.busqueda.emit(this.historico);
     
     } else {
@@ -783,7 +783,7 @@ export class FiltrosEjgComponent implements OnInit {
   }
   clearFilters() {
     this.body = new EJGItem();
-    this.persistenceService.clearFiltros();
+    this.persistenceService.clearFiltrosEJG();
     this.inputNumero.nativeElement.focus();
     this.body.annio = new Date().getFullYear().toString();
 
