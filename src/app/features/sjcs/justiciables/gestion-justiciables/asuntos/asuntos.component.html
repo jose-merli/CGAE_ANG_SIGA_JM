@@ -43,7 +43,7 @@
     </div>
     <div [hidden]="!showTarjeta" class="card-body card-body-ficha">
       <div class="row">
-        <p-table [value]="datos" [rows]="selectedItem" [columns]="cols" selectionMode="single" (onRowSelect)="openTab($event)"
+        <p-table [value]="datos" [rows]="selectedItem" [columns]="cols" selectionMode="single" 
           [responsive]="true" #table class="tabla-listado" [paginator]="true" paginatorPosition="both">
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>

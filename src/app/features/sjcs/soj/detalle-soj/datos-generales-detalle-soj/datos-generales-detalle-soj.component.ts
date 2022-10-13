@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { tap, catchError } from 'rxjs/operators';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { TranslateService } from '../../../../../commons/translate';
 
 @Component({
   selector: 'app-datos-generales-detalle-soj',
@@ -22,22 +23,23 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   comboTipoSOJColegio: ComboItem[] = [];
   comboTipoConsulta: ComboItem[] = [];
   comboTipoRespuesta: ComboItem[] = [];
-
   body: FichaSojItem;
   @Input() bodyInicial: FichaSojItem;
-
+  @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Output() restablecerDatos = new EventEmitter<any>();
+
 
   constructor(
     private commonsService: CommonsService,
-    private sigaServices: SigaServices
+    private sigaServices: SigaServices,
+    private translateService: TranslateService
   ) { }
 
   ngOnInit() {
     if (this.bodyInicial != undefined) {
       this.initBody();
     }
-    
     this.getCombos();
   }
 
@@ -51,9 +53,28 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
     if (this.bodyInicial.fechaApertura != undefined) {
       this.bodyInicial.fechaApertura = new Date(this.bodyInicial.fechaApertura);
     }
-
     this.body = new FichaSojItem();
     Object.assign(this.body, this.bodyInicial);
+    // RellenarCombosEnTarjetaResumen.
+    this.rellenarCombosTarjetaResumen();
+  }
+
+  rellenarCombosTarjetaResumen() {
+    this.comboTipoSOJ.forEach(element => {
+      if (element.value == this.body.idTipoSoj) {
+        this.body.descripcionTipoSoj = element.label.toString();
+      }
+    });
+    this.comboTipoSOJColegio.forEach(element => {
+      if (element.value == this.body.idTipoSojColegio) {
+        this.body.descripcionTipoSojColegio = element.label.toString();
+      }
+    });
+
+    if (this.body.descripcionTipoSoj != undefined ||
+      this.body.descripcionTipoSojColegio != undefined) {
+        this.modoEdicionSend.emit(this.body);
+    }
   }
 
   getCombos(): void {
@@ -72,6 +93,7 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
       tap(data => {
         this.comboTipoSOJ = data.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTipoSOJ);
+
       }),
       catchError(err => Observable.of("Error"))
     );
@@ -108,12 +130,12 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   }
 
   fillFechaApertura(event) {
-
+    this.body.fechaApertura = event;
   }
 
   deshabilitarGuardado(): boolean {
-    return this.body == undefined || this.compareFieldsBody('anio', 'numero', 'idTipoSoj', 
-      'idTipoSojColegio', 'fechaApertura', 'tipoConsulta', 'tipoRespuesta', 'descripcionConsulta', 
+    return this.body == undefined || this.compareFieldsBody('anio', 'numero', 'idTipoSoj',
+      'idTipoSojColegio', 'fechaApertura', 'tipoConsulta', 'tipoRespuesta', 'descripcionConsulta',
       'respuestaLetrado');
   }
 
@@ -129,12 +151,37 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   }
 
   restablecer() {
-    this.body = new FichaSojItem();
-    Object.assign(this.body, this.bodyInicial);
+    // Restablecer Datos de la Base de Datos.
+    if (sessionStorage.getItem("sojItemLink")) {
+      sessionStorage.setItem("sojItemLink", JSON.stringify(this.body));
+      this.restablecerDatos.emit(this.body);
+    }
+    //this.body = new FichaSojItem();
+    //Object.assign(this.body, this.bodyInicial);
   }
 
   checkSave() {
-    this.modoEdicionSend.emit(this.body);
+    // Insertar Cambios de Datos SOJ.
+    this.sigaServices.post("detalleSoj_guardarDatosGenerales", this.body).subscribe(
+      n => {
+
+        if (n.statusText == "OK") {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          // Actualizamos la informacion en el body de la pantalla
+          this
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+        }
+
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      }
+    );
+
+
+
   }
 
   clear() {
@@ -153,6 +200,15 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
     this.comboTipoSOJColegio = values;
     this.comboTipoConsulta = values;
     this.comboTipoRespuesta = values;
+  }
+
+  showMessage(severityParam: string, summaryParam: string, detailParam: string) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severityParam,
+      summary: summaryParam,
+      detail: detailParam
+    });
   }
 
 }

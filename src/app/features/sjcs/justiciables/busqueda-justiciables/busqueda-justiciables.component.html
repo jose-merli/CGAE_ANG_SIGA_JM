@@ -9,7 +9,7 @@
 
 <div class="busqueda-container">
   <app-filtro-justiciables (isOpen)="isOpenReceive($event)" [permisoEscritura]="permisoEscritura" [modoRepresentante]="modoRepresentante" [nuevaUniFamiliar]="nuevaUniFamiliar" [nuevoContrarioEJG]="nuevoContrarioEJG"></app-filtro-justiciables>
-  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" [nuevoInteresado]="nuevoInteresado" [nuevoContrario]="nuevoContrario" [nuevaUniFamiliar]="nuevaUniFamiliar"
+  <app-tabla-justiciables *ngIf="buscar" [datos]="datos" [nuevoInteresado]="nuevoInteresado" [nuevoContrario]="nuevoContrario" [nuevaUniFamiliar]="nuevaUniFamiliar" [nuevoSOJ]="nuevoSoj"
   (searchHistoricalSend)="search($event)" [modoRepresentante]="modoRepresentante" [nuevoContrarioEJG]="nuevoContrarioEJG" [nuevoContrarioAsistencia]="nuevoContrarioAsistencia" 
   [nuevoAsistido]="nuevoAsistido"></app-tabla-justiciables>
 </div>

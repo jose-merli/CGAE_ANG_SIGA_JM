@@ -14,7 +14,7 @@ export let endpoints_generales: any = {
     combo_comboEstadoEjg: "combo/comboEstadoEjg",
     combo_TipoDesignacion: "combo/comboTipoDesignacion",
     combo_comboTipoSOJ: "combo/comboTipoSOJ",
-    combo_comboTipoSOJColegio: "combo/combo_comboTipoSOJColegio",
+    combo_comboTipoSOJColegio: "combo/comboTipoSOJColegio",
     combo_comboTipoConsulta: "combo/comboTipoConsulta",
     combo_comboTipoRespuesta: "combo/comboTipoRespuesta",
     combo_comboComisaria: "combo/comboComisaria",
@@ -34,6 +34,13 @@ export let endpoints_generales: any = {
     gestionJusticiables_busquedaClaveAsuntosSOJ: "gestionJusticiables/busquedaClaveAsuntosSOJ",
 
     gestionJusticiables_getDetallesSoj: "soj/getDetallesSoj",
+    detalleSoj_guardarDatosGenerales: "soj/guardarDatosGenerales",
+    gestionSoj_asociarSOJ: "soj/asociarSOJ",
+    gestionSoj_desasociarSOJ: "soj/desasociarSOJ",
+    gestionSoj_guardarServiciosTramitacion: "soj/guardarServiciosTramitacion",
+    gestionSoj_getDocumentosSOJ: "soj/getDocumentosSOJ",
+    gestionSoj_saveDocumentosSOJ: "soj/subirDocumentoSOJ",
+    gestionSoj_deleteDocumentosSOJ: "soj/eliminarDocumentoSOJ",
 
     
     gestionJusticiables_copyDesigna2Soj: 'gestionJusticiables/copyDesigna2Soj',
@@ -47,4 +54,7 @@ export let endpoints_generales: any = {
     gestionJusticiables_copyAsis2Soj: 'gestionJusticiables/copyAsis2Soj',
     gestionJusticiables_copyAsis2Ejg: 'gestionJusticiables/copyAsis2Ejg',
     gestionJusticiables_copyAsis2Designa: 'gestionJusticiables/copyAsis2Designa',
+
+    
+   
 }

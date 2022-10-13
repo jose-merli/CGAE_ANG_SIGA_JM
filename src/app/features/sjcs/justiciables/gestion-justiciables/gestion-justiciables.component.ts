@@ -342,35 +342,43 @@ export class GestionJusticiablesComponent implements OnInit {
       this.fromJusticiable = this.fichasPosibles[0].activa;
     }
 
-    //Creacion de una nueva unidad familiar
-    if (this.fromUniFamiliar && sessionStorage.getItem("Nuevo")) {
-      this.modoEdicion = true;
-      this.searchSolicitante();
-      //Proviene de la tarjeta de unidad familiar directamente
-    } else if (this.fromUniFamiliar) {
-      this.modoEdicion = true;
-      this.fillJusticiableBuesquedaItemToUnidadFamiliarEJG();
-    } else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
-      this.modoEdicion = true;
-      this.justiciableBusquedaItem = this.persistenceService.getDatos();
-      sessionStorage.setItem("fichaJusticiable", JSON.stringify(this.justiciableBusquedaItem));
-      this.search();
-
-    } else if (this.fromAsistenciaAsistido && sessionStorage.getItem("Nuevo")) {
-      this.modoEdicion = false;
-      this.body = new JusticiableItem();
-      sessionStorage.removeItem("Nuevo");
-    } else if (sessionStorage.getItem("fichaJusticiable") && this.persistenceService.getDatos() == null && !this.modoRepresentante) {
-      this.modoEdicion = true;
-      this.justiciableBusquedaItem = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
-      this.search();
-
+    if (sessionStorage.getItem("solicitanteSOJ")) {
+      this.justiciableBusquedaItem = JSON.parse(sessionStorage.getItem("solicitanteSOJ"));
+      sessionStorage.removeItem("solicitanteSOJ");
+      this.callServiceSearch(this.justiciableBusquedaItem);
     } else {
-     
-      sessionStorage.removeItem("Nuevo");
-      this.modoEdicion = false;
-      this.progressSpinner = false;
+      //Creacion de una nueva unidad familiar
+      if (this.fromUniFamiliar && sessionStorage.getItem("Nuevo")) {
+        this.modoEdicion = true;
+        this.searchSolicitante();
+        //Proviene de la tarjeta de unidad familiar directamente
+      } else if (this.fromUniFamiliar) {
+        this.modoEdicion = true;
+        this.fillJusticiableBuesquedaItemToUnidadFamiliarEJG();
+      } else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
+        this.modoEdicion = true;
+        this.justiciableBusquedaItem = this.persistenceService.getDatos();
+        sessionStorage.setItem("fichaJusticiable", JSON.stringify(this.justiciableBusquedaItem));
+        this.search();
+
+      } else if (this.fromAsistenciaAsistido && sessionStorage.getItem("Nuevo")) {
+        this.modoEdicion = false;
+        this.body = new JusticiableItem();
+        sessionStorage.removeItem("Nuevo");
+      } else if (sessionStorage.getItem("fichaJusticiable") && this.persistenceService.getDatos() == null && !this.modoRepresentante) {
+        this.modoEdicion = true;
+        this.justiciableBusquedaItem = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
+        this.search();
+
+      } else {
+
+        sessionStorage.removeItem("Nuevo");
+        this.modoEdicion = false;
+        this.progressSpinner = false;
+      }
     }
+
+
 
     //Indicar que se han guardado los datos generales de un Representante y hay que mostrar de nuevo al justiciable que tiene asociado el representante creado
     this.sigaServices.guardarDatosGeneralesRepresentante$.subscribe((data) => {
@@ -697,7 +705,7 @@ export class GestionJusticiablesComponent implements OnInit {
       } else {
         if (this.persistenceService.getBody()) {
           justiciableBusqueda = this.persistenceService.getBody();
-        }else{
+        } else {
           justiciableBusqueda = this.justiciableBusquedaItem;
         }
         this.callServiceSearch(justiciableBusqueda);

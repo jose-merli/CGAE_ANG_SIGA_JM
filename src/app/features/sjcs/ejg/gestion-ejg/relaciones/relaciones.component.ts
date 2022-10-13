@@ -14,6 +14,7 @@ import { AsistenciasItem } from '../../../../../models/sjcs/AsistenciasItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { OldSigaServices } from '../../../../../_services/oldSiga.service';
 import { OtrasColegiacionesFichaColegialComponent } from '../../../../censo/ficha-colegial/ficha-colegial-general/otras-colegiaciones-ficha-colegial/otras-colegiaciones-ficha-colegial.component';
+import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
 
 @Component({
   selector: 'app-relaciones',
@@ -475,12 +476,20 @@ export class RelacionesComponent implements OnInit {
         let us = this.oldSigaServices.getOldSigaUrl('detalleSOJ');
         //us +='&granotmp=1630574876868&numeroSOJ=922&IDTIPOSOJ=2&ANIO=2018&idPersonaJG=552608&idInstitucionJG=2005&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ&NUMERO=922&anioSOJ=2018&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=2005&idTipoSOJ=2&idInstitucionSOJ=2005&accionE=editar';
 
-        us += '&granotmp=1630574876868&numeroSOJ' + dato.numero + "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
+       /* us += '&granotmp=1630574876868&numeroSOJ' + dato.numero + "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
           this.sigaStorageService.institucionActual + "&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ" +
           "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
-          "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";
+          "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";*/
 
-          /*
+        //Query params: ?idInstitucion=1&anio=2&numero=3&idTipoSoj=4
+        /*us += '&granotmp=1630574876868&numeroSOJ' + dato.numero + "&IDTIPOSOJ=" + dato.idtipo + "&ANIO=" + dato.anio + "&idPersonaJG=" + dato.idpersonajg + "&idInstitucionJG=" +
+          this.sigaStorageService.institucionActual + "&actionE=/JGR_PestanaSOJBeneficiarios.do&tituloE=pestana.justiciagratuitasoj.solicitante&conceptoE=SOJ" +
+          "&NUMERO=" + dato.numero + "&anioSOJ=" + dato.anio + "&localizacionE=gratuita.busquedaSOJ.localizacion&IDINSTITUCION=" + this.sigaStorageService.institucionActual +
+          "&idTipoSOJ=" + dato.idtipo + "&idInstitucionSOJ=" + dato.idinstitucion + "&accionE=editar";*/
+
+        us += '?idInstitucion=' + dato.idinstitucion + '&anio=' + dato.anio + '&numero=' + dato.numero + '&idTipoSoj=' + dato.idTipoSOJ;
+        /*
+        
         let detalleSOJ: DetalleSOJItem;
         detalleSOJ.numeroSOJ = dato.numero;
         detalleSOJ.IDTIPOSOJ = dato.idtipo;
@@ -512,7 +521,15 @@ export class RelacionesComponent implements OnInit {
         sessionStorage.setItem("url", JSON.stringify(us));
         sessionStorage.removeItem("reload");
         sessionStorage.setItem("reload", "si");
-
+        let detalleSOJ: any = new FichaSojItem();
+        detalleSOJ.numero = dato.numero;
+        detalleSOJ.idInstitucion = dato.idinstitucion;
+        detalleSOJ.anio = dato.anio;
+        detalleSOJ.idTipoSoj = dato.idtipo;
+        detalleSOJ.idTurno = dato.idturno;
+        detalleSOJ.idPersona = dato.idpersonajg;
+        detalleSOJ.idGuardia = dato.idGuardia;
+        sessionStorage.setItem("sojItemLink", JSON.stringify(detalleSOJ));
         this.router.navigate(['/detalle-soj']);
         break;
       case 'DESIGNACIÓN':

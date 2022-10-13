@@ -77,6 +77,7 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
   nuevoContrarioAsistencia: boolean = false;
   nuevaUniFamiliar: boolean = false;
   nuevoContrarioEJG: boolean = false;
+  nuevoSoj: boolean = false;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsService: CommonsService, private translateService: TranslateService, private router: Router,
@@ -116,6 +117,10 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
 
     if (sessionStorage.getItem("origin") == "newContrarioEJG") {
       this.nuevoContrarioEJG = true;
+    }
+
+    if (sessionStorage.getItem("origin") == "newSoj") {
+      this.nuevoSoj = true;
     }
 
     

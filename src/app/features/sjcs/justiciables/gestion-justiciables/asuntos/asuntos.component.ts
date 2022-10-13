@@ -441,7 +441,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
       default:
         //Introducir en la BBDD
-        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede realizar la accion de eliminar. Tipo de Asunto incorrecto.");
+        this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede abrir el Tipo de Asunto, es incorrecto.");
         break;
     }
 

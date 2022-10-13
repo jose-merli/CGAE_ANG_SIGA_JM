@@ -10,6 +10,7 @@ import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableB
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 import { Location } from '@angular/common';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
 
 @Component({
   selector: 'app-tabla-justiciables',
@@ -45,6 +46,7 @@ export class TablaJusticiablesComponent implements OnInit {
   @Input() nuevoContrarioAsistencia;
   @Input() nuevaUniFamiliar;
   @Input() nuevoContrarioEJG;
+  @Input() nuevoSOJ;
   //searchServiciosTransaccion: boolean = false;
 
 
@@ -82,6 +84,8 @@ export class TablaJusticiablesComponent implements OnInit {
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
 
   }
+
+  
 
 
   openTab(evento) {
@@ -241,6 +245,43 @@ export class TablaJusticiablesComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  asociarSOJ(justiciable: JusticiableItem) {
+    let itemSojJusticiable = new FichaSojItem();
+    if (sessionStorage.getItem("sojAsistido")) {
+      let itemSoj = JSON.parse(sessionStorage.getItem("sojAsistido"));
+      itemSojJusticiable.anio = itemSoj.anio;
+      itemSojJusticiable.idTipoSoj = itemSoj.idTipoSoj;
+      itemSojJusticiable.numero = itemSoj.numero;
+      itemSojJusticiable.actualizaDatos = "S";  // Ya viene creado.
+      itemSojJusticiable.justiciable = justiciable; // Justiciable Para Asociar.
+      //sessionStorage.removeItem("sojAsistido");
+    }
+    if (itemSojJusticiable != undefined || itemSojJusticiable != null ) {
+      this.sigaServices
+        .post("gestionSoj_asociarSOJ", itemSojJusticiable)
+        .subscribe(
+          data => {
+            let result = JSON.parse(data["body"]);
+            if (result.error) {
+              this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            } else {
+              this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
+              //this.router.navigate(["/fichaAsistencia"]);
+              this.location.back();
+            }
+
+          },
+          err => {
+            this.showMessage('error', this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
   }
 
   asociarAsistido(justiciable: JusticiableItem) {
@@ -433,6 +474,9 @@ export class TablaJusticiablesComponent implements OnInit {
       } else {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
       }
+      // Asociar para SOJ
+    } else if (this.nuevoSOJ) {
+      this.asociarSOJ(selectedDatos);
       // Asociar para Asistido
     } else if (this.nuevoAsistido) {
       this.asociarAsistido(selectedDatos);

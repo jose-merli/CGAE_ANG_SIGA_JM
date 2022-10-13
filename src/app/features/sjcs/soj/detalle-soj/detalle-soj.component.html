@@ -9,13 +9,12 @@
     </div>
 
     <div>
-        <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="datosTarjetaResumen" [icono]="iconoTarjetaResumen" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
+        <app-tarjeta-resumen-fija class="pb-50" [titulo]="'justiciaGratuita.oficio.turnos.inforesumen'" [chincheta]="true" [datos]="camposResumen" [icono]="iconoTarjetaResumen" [enlaces]="enlacesTarjetaResumen" (isOpen)="isOpenReceive($event)" [manuallyOpened]="manuallyOpened">
         </app-tarjeta-resumen-fija>
-        
-        <app-datos-generales-detalle-soj *ngIf="permisoDatosGenerales && modoEdicion" [bodyInicial]="body" (modoEdicionSend)="eventGuardarFicha($event)"></app-datos-generales-detalle-soj>
-        <app-servicios-tramitacion-detalle-soj *ngIf="permisoServiciosTramitacion && modoEdicion"></app-servicios-tramitacion-detalle-soj>
-        <app-solicitante-detalle-soj *ngIf="permisoSolicitante && modoEdicion"></app-solicitante-detalle-soj>
-        <app-documentacion-detalle-soj *ngIf="permisoDocumentacion && modoEdicion"></app-documentacion-detalle-soj>
+        <app-datos-generales-detalle-soj *ngIf="permisoDatosGenerales && modoEdicion" [bodyInicial]="body" (modoEdicionSend)="eventGuardarFicha($event)" (restablecerDatos)="eventRestablecerFicha($event)" [permisoEscritura]="showTargetDatosGenerales"></app-datos-generales-detalle-soj>
+        <app-servicios-tramitacion-detalle-soj *ngIf="permisoServiciosTramitacion && modoEdicion" [bodyInicial]="body" [permisoEscritura]="showTargetServiciosTramitacion" (restablecerDatos)="eventRestablecerFicha($event)"></app-servicios-tramitacion-detalle-soj>
+        <app-solicitante-detalle-soj *ngIf="permisoSolicitante && modoEdicion" [bodyInicial]="body" [permisoEscritura]="showTargetSolicitante" ></app-solicitante-detalle-soj>
+        <app-documentacion-detalle-soj *ngIf="permisoDocumentacion && modoEdicion" (restablecerDatos)="eventRestablecerFicha($event)" [bodyInicial]="body" [permisoEscritura]="showTargetDocumentacion"></app-documentacion-detalle-soj>
     </div>
 </div>
 
