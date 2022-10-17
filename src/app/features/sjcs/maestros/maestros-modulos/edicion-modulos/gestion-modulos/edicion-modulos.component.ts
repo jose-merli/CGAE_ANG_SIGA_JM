@@ -68,13 +68,14 @@ export class EdicionModulosComponent implements OnInit {
                 }
               }
             });
-
+            this.sortOptions();
           },
           err => {
             //console.log(err);
           }, () => {
             if (this.modulosItem.procedimientos != null && this.modulosItem.procedimientos != "") {
               this.modulosItem.procedimientosReal = this.modulosItem.procedimientos.split(",");
+              this.sortOptions();
             } else {
               this.modulosItem.procedimientosReal = [];
             }
@@ -104,7 +105,6 @@ export class EdicionModulosComponent implements OnInit {
     }
 
     this.arreglaChecks();
-
   }
   ngOnInit() {
 
@@ -164,7 +164,6 @@ export class EdicionModulosComponent implements OnInit {
     this.getProcedimientos(evento.value);
   }
 
-
   getProcedimientos(id) {
 
     this.sigaServices.getParam("modulosybasesdecompensacion_procedimientos", "?idProcedimiento=" + this.modulosItem.idProcedimiento).subscribe(
@@ -184,7 +183,7 @@ export class EdicionModulosComponent implements OnInit {
             }
           }
         });
-
+        this.sortOptions();
       },
       err => {
         //console.log(err);
@@ -195,6 +194,7 @@ export class EdicionModulosComponent implements OnInit {
           //   seleccionadosFinales.push(this.procedimientos.find(x => x.value == element));
           // });
           // this.modulosItem.procedimientosReal = seleccionados;
+          this.sortOptions();
         } else {
           this.modulosItem.procedimientosReal = [];
         }
@@ -456,6 +456,28 @@ export class EdicionModulosComponent implements OnInit {
       } else { return true; }
     } else {
       return true;
+    }
+  }
+
+  private sortOptions() {
+    if (this.procedimientos && this.modulosItem.procedimientosReal) {
+      this.procedimientos.sort((a, b) => {
+        //const includeA = this.etiquetasPersonaJuridicaSelecionados.includes(a);
+        //const includeB = this.etiquetasPersonaJuridicaSelecionados.includes(b);
+        const includeA = this.modulosItem.procedimientosReal.find(item => item == a.value);
+        const includeB = this.modulosItem.procedimientosReal.find(item => item == b.value);
+        if (includeA && !includeB) {
+        //const includeA = this.etiquetasPersonaJuridicaSelecionados.indexOf(a);
+        //const includeB = this.etiquetasPersonaJuridicaSelecionados.indexOf(b);
+        //if ((includeA != -1) && (includeB == -1)) {
+          return -1;
+        }
+        else if (!includeA && includeB) {
+        //else if ((includeA == -1) && (includeB != -1)) {
+          return 1;
+        }
+        return a.label.localeCompare(b.label);
+      });
     }
   }
 
