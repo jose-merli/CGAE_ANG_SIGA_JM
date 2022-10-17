@@ -459,7 +459,7 @@ export class EdicionModulosComponent implements OnInit {
     }
   }
 
-  private sortOptions() {
+  sortOptions() {
     if (this.procedimientos && this.modulosItem.procedimientosReal) {
       this.procedimientos.sort((a, b) => {
         //const includeA = this.etiquetasPersonaJuridicaSelecionados.includes(a);
