@@ -192,6 +192,9 @@ export class FiltrosFacturasComponent implements OnInit {
       }
     );
   }
+  comboEstadosFacturasChange(event){
+    this.estadosSelect = event.value
+  }
 
   getColegios() {
     this.progressSpinner = true;
@@ -296,10 +299,9 @@ export class FiltrosFacturasComponent implements OnInit {
 
   // boton de busqueda
   isBuscar() {
-    
+    this.body.estadosFiltroFac = [];
+    this.body.estadosFiltroAb = [];
     if(this.estadosSelect.length>0){
-      this.body.estadosFiltroFac = [];
-      this.body.estadosFiltroAb = [];
       for(let i=0; this.estadosSelect.length>i; i++){
         if(this.estadosSelect[i].label2=="FACTURA"){
           this.body.estadosFiltroFac.push(this.estadosSelect[i].value);

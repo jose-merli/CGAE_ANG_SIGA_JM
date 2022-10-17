@@ -26,6 +26,7 @@
           <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{ "censo.nuevaSolicitud.estado" | translate }}</label>
             <p-multiSelect #estados class="select-form" [(ngModel)]='estadosSelect'
+            (onChange)="comboEstadosFacturasChange($event)"
               defaultLabel="{{'general.boton.seleccionar' | translate}}" [options]="comboEstadosFacturas"
               optionLabel="label1" [filter]="true" maxSelectedLabels="10"
               [selectedItemsLabel]="'{0} consultas seleccionadas'" filterBy="label,labelSinTilde" styleClass="widthAll"
