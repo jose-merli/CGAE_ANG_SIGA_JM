@@ -95,9 +95,9 @@
           label="{{ 'general.boton.cancel' | translate}}" [disabled]="selectedRows.length == 0"></button>
       <!-- Anular -->
         <button pButton  (click)="checkAnularCompra()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.anular' | translate}}" [disabled]="selectedRows.length == 0"></button>
+          label="{{ 'general.boton.anular' | translate}}" [disabled]="selectedRows.length == 0 || controlAnular()"></button>
       <!-- Facturar -->
-        <button pButton (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left"
+        <button pButton (click)="checkFacturar()" type="button" icon="fa fa-search" iconPos="left" 
           label="{{ 'general.boton.facturar' | translate}}"
           [disabled]="selectedRows == undefined || selectedRows == null || selectedRows.length <= 0 || selectedRows.length > 1 || esColegiado || !permisoFacturarCompra"></button>
       <!-- Descargar facturas -->

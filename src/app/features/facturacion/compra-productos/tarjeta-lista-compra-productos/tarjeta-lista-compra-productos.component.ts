@@ -14,6 +14,7 @@ import { SigaServices } from '../../../../_services/siga.service';
 import { TarjetaHisFichaActComponent } from '../../../sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-actuaciones-designa/ficha-actuacion/tarjeta-his-ficha-act/tarjeta-his-ficha-act.component';
 import { FichaCompraSuscripcionComponent } from '../../ficha-compra-suscripcion/ficha-compra-suscripcion.component';
 import { saveAs } from "file-saver/FileSaver";
+import { Colegiado } from '../../../sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-colegiado/tarjeta-colegiado.component';
 
 @Component({
   selector: 'app-tarjeta-lista-compra-productos',
@@ -156,6 +157,20 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
       this.denegar();
     }
   }
+
+  controlAnular(){
+    if(this.esColegiado){
+      let numEstadoErroneo:number = 0;
+      this.selectedRows.forEach(e => {
+       numEstadoErroneo = e.solicitarBaja != "0" ? numEstadoErroneo + 1 : numEstadoErroneo;
+      })
+      return numEstadoErroneo > 0 ? true : false;
+    }else{
+      return false
+    }
+  
+  }
+
   getLabelbyFilter(string): string {
     /*creamos un labelSinTilde que guarde los labels sin caracteres especiales, 
 	para poder filtrar el dato con o sin estos caracteres*/
