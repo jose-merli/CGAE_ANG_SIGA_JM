@@ -326,7 +326,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResumen = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -335,7 +335,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDatosGenerales = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -344,7 +344,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraServiciosTramitacion = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -353,7 +353,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraUnidadFamiliar = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -362,7 +362,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraExpedientesEconomicos = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -371,7 +371,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRelaciones = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -382,7 +382,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraEstados = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -391,7 +391,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDocumentacion = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -400,7 +400,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraInformeCalif = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -409,7 +409,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResolucion = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -418,7 +418,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraImpugnacion = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -427,7 +427,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRegtel = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -436,7 +436,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraComunicaciones = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -453,7 +453,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoListasIntercambiosPericles = respuesta;
         recibidos++;
-        if (recibidos == 17) this.enviarEnlacesTarjeta();
+        if (recibidos == 14) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
