@@ -539,7 +539,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
           "key": "Módulo",
           "value": designaItem.modulo
         },
-        
+
       ];
       if ((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")
         && (designaItem.delitos == null || designaItem.delitos == undefined || designaItem.delitos == "")
@@ -844,7 +844,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
   }
   backTo() {
     // Vovlver a asistencia.
-    if (sessionStorage.getItem("filtroAsistencia")) {
+    if (sessionStorage.getItem("backAsistencia")) {
       var asistencia = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
       sessionStorage.setItem("idAsistencia", asistencia.anio + "/" + asistencia.numero);
       sessionStorage.setItem("vieneDeFichaDesigna", "true");
@@ -852,10 +852,8 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     } else if (sessionStorage.getItem("vieneDeFichaJusticiable")) {
       sessionStorage.removeItem("vieneDeFichaJusticiable")
       this.location.back();
-    }
-    else {
-      sessionStorage.setItem("volver", "true");
-      this.router.navigate(['/designaciones']);
+    } else {
+      this.location.back();
     }
   }
 
@@ -1076,7 +1074,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
               },
               {
                 "key": this.translateService.instant('censo.usuario.nombre'),
-                "value":  this.procurador[0].apellido1 + " " + this.procurador[0].apellido2+ " " + this.procurador[0].nombre 
+                "value": this.procurador[0].apellido1 + " " + this.procurador[0].apellido2 + " " + this.procurador[0].nombre
               },
               {
                 "key": this.translateService.instant('justiciaGratuita.oficio.designaciones.fechaDesignacion'),

@@ -283,6 +283,7 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
   searchJusticiable(){
     sessionStorage.setItem("origin","newAsistido");
     sessionStorage.setItem("asistenciaAsistido",this.idAsistencia);
+    sessionStorage.setItem("itemDesignas", JSON.stringify(true));
     this.router.navigate(["/justiciables"]);
   }
 

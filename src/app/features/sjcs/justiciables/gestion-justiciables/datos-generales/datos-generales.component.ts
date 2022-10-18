@@ -526,10 +526,18 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       } else {
         this.save();
         // Asociar solo si viene de EJG, Asistencia 
-        if (this.modoRepre || this.searchJusticiable || this.nuevoInteresado ||
-          this.nuevoContrario || this.nuevoAsistido || this.nuevoContrarioAsistencia ||
-          this.nuevaUniFamiliar || this.nuevoContrarioEJG) {
+        // Controlar Justiciable vienen de EJG.
+        if (sessionStorage.getItem("itemEJG") || sessionStorage.getItem("itemAsistencia") || sessionStorage.getItem("itemDesignas")) {
           this.asociarJusticiable();
+          if (sessionStorage.getItem("itemEJG")) {
+            sessionStorage.removeItem("itemEJG");
+          }
+          if (sessionStorage.getItem("itemAsistencia")) {
+            sessionStorage.removeItem("itemAsistencia");
+          }
+          if (sessionStorage.getItem("itemDesignas")) {
+            sessionStorage.removeItem("itemDesignas");
+          }
         }
       }
     }

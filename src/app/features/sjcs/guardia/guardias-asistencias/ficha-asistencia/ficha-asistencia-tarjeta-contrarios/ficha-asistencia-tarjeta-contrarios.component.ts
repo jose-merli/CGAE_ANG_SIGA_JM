@@ -178,6 +178,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
   newContrario(){
     sessionStorage.setItem("origin","newContrarioAsistencia");
     sessionStorage.setItem("contrarios", JSON.stringify(this.contrarios));
+    sessionStorage.setItem("itemDesignas", JSON.stringify(true));
     sessionStorage.setItem("idAsistencia",this.idAsistencia);
     this.router.navigate(["/justiciables"]);
   }

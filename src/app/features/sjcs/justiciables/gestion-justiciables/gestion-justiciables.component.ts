@@ -96,229 +96,235 @@ export class GestionJusticiablesComponent implements OnInit {
 
     this.progressSpinner = true;
 
-    if (sessionStorage.getItem("origin") == "Interesado") {
-      //sessionStorage.removeItem('origin');
-      this.fromInteresado = true;
+    // Comprobar si esta en Creación.
+    if (!sessionStorage.getItem("nuevoJusticiable")) {
 
-      let fichasPosiblesInteresados = [
-        {
-          origen: "justiciables",
-          activa: false
-        },
-        {
-          key: "generales",
-          activa: false
-        },
-        {
-          key: "personales",
-          activa: false
-        },
-        {
-          key: "solicitud",
-          activa: false
-        },
-        {
-          key: "representante",
-          activa: false
-        },
-        {
-          key: "asuntos",
-          activa: false
-        },
-        {
-          key: "abogado",
-          activa: false
-        },
-        {
-          key: "procurador",
-          activa: false
-        },
-        {
-          key: "unidadFamiliar",
-          activa: false
-        }
+      if (sessionStorage.getItem("origin") == "Interesado") {
+        //sessionStorage.removeItem('origin');
+        this.fromInteresado = true;
 
-      ];
+        let fichasPosiblesInteresados = [
+          {
+            origen: "justiciables",
+            activa: false
+          },
+          {
+            key: "generales",
+            activa: false
+          },
+          {
+            key: "personales",
+            activa: false
+          },
+          {
+            key: "solicitud",
+            activa: false
+          },
+          {
+            key: "representante",
+            activa: false
+          },
+          {
+            key: "asuntos",
+            activa: false
+          },
+          {
+            key: "abogado",
+            activa: false
+          },
+          {
+            key: "procurador",
+            activa: false
+          },
+          {
+            key: "unidadFamiliar",
+            activa: false
+          }
+
+        ];
 
 
-      this.persistenceService.setFichasPosibles(fichasPosiblesInteresados);
+        this.persistenceService.setFichasPosibles(fichasPosiblesInteresados);
+      }
+      if (sessionStorage.getItem("origin") == "Contrario") {
+        //sessionStorage.removeItem('origin');
+        this.fromContrario = true;
+
+
+        let fichasPosiblesContrarios = [
+          {
+            origen: "justiciables",
+            activa: false
+          },
+          {
+            key: "generales",
+            activa: false
+          },
+          {
+            key: "personales",
+            activa: false
+          },
+          {
+            key: "solicitud",
+            activa: false
+          },
+          {
+            key: "representante",
+            activa: false
+          },
+          {
+            key: "asuntos",
+            activa: false
+          },
+          {
+            key: "abogado",
+            activa: false
+          },
+          {
+            key: "procurador",
+            activa: false
+          },
+          {
+            key: "unidadFamiliar",
+            activa: false
+          }
+
+        ];
+
+        this.persistenceService.setFichasPosibles(fichasPosiblesContrarios);
+      }
+
+      if (sessionStorage.getItem("origin") == "ContrarioEJG") {
+        //sessionStorage.removeItem('origin');
+        this.fromContrarioEJG = true;
+        let fichasPosiblesContrariosEJG = [
+          {
+            origen: "justiciables",
+            activa: false
+          },
+          {
+            key: "generales",
+            activa: false
+          },
+          {
+            key: "personales",
+            activa: false
+          },
+          {
+            key: "solicitud",
+            activa: false
+          },
+          {
+            key: "representante",
+            activa: false
+          },
+          {
+            key: "asuntos",
+            activa: false
+          },
+          {
+            key: "abogado",
+            activa: false
+          },
+          {
+            key: "procurador",
+            activa: false
+          },
+          {
+            key: "unidadFamiliar",
+            activa: false
+          }
+
+        ];
+        this.persistenceService.setFichasPosibles(fichasPosiblesContrariosEJG);
+      }
+
+      if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
+        //sessionStorage.removeItem('origin');
+        this.fromUniFamiliar = true;
+        let fichasPosiblesUniFami = [
+          {
+            origen: "justiciables",
+            activa: false
+          },
+          {
+            key: "generales",
+            activa: false
+          },
+          {
+            key: "unidadFamiliar",
+            activa: false
+          },
+          {
+            key: "asuntos",
+            activa: false
+          },
+          {
+            key: "personales",
+            activa: false
+          },
+          {
+            key: "solicitud",
+            activa: false
+          },
+          {
+            key: "representante",
+            activa: false
+          },
+          {
+            key: "abogado",
+            activa: false
+          },
+          {
+            key: "procurador",
+            activa: false
+          }
+
+        ];
+        this.persistenceService.setFichasPosibles(fichasPosiblesUniFami);
+      }
+
+      if (sessionStorage.getItem("origin") == "newAsistido") {
+        this.fromAsistenciaAsistido = true;
+        let fichasPosiblesNewAsistido = [
+          {
+            origen: "justiciables",
+            activa: false
+          },
+          {
+            key: "generales",
+            activa: false
+          },
+          {
+            key: "personales",
+            activa: false
+          },
+          {
+            key: "solicitud",
+            activa: false
+          },
+          {
+            key: "representante",
+            activa: false
+          },
+          {
+            key: "asuntos",
+            activa: false
+          },
+          {
+            key: "abogado",
+            activa: false
+          },
+          {
+            key: "procurador",
+            activa: false
+          }
+        ];
+        this.persistenceService.setFichasPosibles(fichasPosiblesNewAsistido);
+      }
     }
-    if (sessionStorage.getItem("origin") == "Contrario") {
-      //sessionStorage.removeItem('origin');
-      this.fromContrario = true;
 
 
-      let fichasPosiblesContrarios = [
-        {
-          origen: "justiciables",
-          activa: false
-        },
-        {
-          key: "generales",
-          activa: false
-        },
-        {
-          key: "personales",
-          activa: false
-        },
-        {
-          key: "solicitud",
-          activa: false
-        },
-        {
-          key: "representante",
-          activa: false
-        },
-        {
-          key: "asuntos",
-          activa: false
-        },
-        {
-          key: "abogado",
-          activa: false
-        },
-        {
-          key: "procurador",
-          activa: false
-        },
-        {
-          key: "unidadFamiliar",
-          activa: false
-        }
-
-      ];
-
-      this.persistenceService.setFichasPosibles(fichasPosiblesContrarios);
-    }
-
-    if (sessionStorage.getItem("origin") == "ContrarioEJG") {
-      //sessionStorage.removeItem('origin');
-      this.fromContrarioEJG = true;
-      let fichasPosiblesContrariosEJG = [
-        {
-          origen: "justiciables",
-          activa: false
-        },
-        {
-          key: "generales",
-          activa: false
-        },
-        {
-          key: "personales",
-          activa: false
-        },
-        {
-          key: "solicitud",
-          activa: false
-        },
-        {
-          key: "representante",
-          activa: false
-        },
-        {
-          key: "asuntos",
-          activa: false
-        },
-        {
-          key: "abogado",
-          activa: false
-        },
-        {
-          key: "procurador",
-          activa: false
-        },
-        {
-          key: "unidadFamiliar",
-          activa: false
-        }
-
-      ];
-      this.persistenceService.setFichasPosibles(fichasPosiblesContrariosEJG);
-    }
-
-    if (sessionStorage.getItem("origin") == "UnidadFamiliar") {
-      //sessionStorage.removeItem('origin');
-      this.fromUniFamiliar = true;
-      let fichasPosiblesUniFami = [
-        {
-          origen: "justiciables",
-          activa: false
-        },
-        {
-          key: "generales",
-          activa: false
-        },
-        {
-          key: "unidadFamiliar",
-          activa: false
-        },
-        {
-          key: "asuntos",
-          activa: false
-        },
-        {
-          key: "personales",
-          activa: false
-        },
-        {
-          key: "solicitud",
-          activa: false
-        },
-        {
-          key: "representante",
-          activa: false
-        },
-        {
-          key: "abogado",
-          activa: false
-        },
-        {
-          key: "procurador",
-          activa: false
-        }
-
-      ];
-      this.persistenceService.setFichasPosibles(fichasPosiblesUniFami);
-    }
-
-    if (sessionStorage.getItem("origin") == "newAsistido") {
-      this.fromAsistenciaAsistido = true;
-      let fichasPosiblesNewAsistido = [
-        {
-          origen: "justiciables",
-          activa: false
-        },
-        {
-          key: "generales",
-          activa: false
-        },
-        {
-          key: "personales",
-          activa: false
-        },
-        {
-          key: "solicitud",
-          activa: false
-        },
-        {
-          key: "representante",
-          activa: false
-        },
-        {
-          key: "asuntos",
-          activa: false
-        },
-        {
-          key: "abogado",
-          activa: false
-        },
-        {
-          key: "procurador",
-          activa: false
-        }
-      ];
-      this.persistenceService.setFichasPosibles(fichasPosiblesNewAsistido);
-    }
 
     await this.checkAcceso();
 
@@ -1061,84 +1067,96 @@ export class GestionJusticiablesComponent implements OnInit {
 
     setTimeout(() => {
 
-      if (this.showDatosGenerales == true) { // Comprobar si esta activada la Tarjeta
+      // Creacion Mostrar solo Datos Generales.
+      if (sessionStorage.getItem("fichasPosibles")) {
         pruebaTarjeta = {
           label: "general.message.datos.generales",
           value: document.getElementById("datosGenerales"),
           nombre: "datosGenerales",
         };
-
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
 
-      if (this.showDatosUF == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "justiciaGratuita.justiciables.rol.unidadFamiliar",
-          value: document.getElementById("unidadFamiliar"),
-          nombre: "unidadFamiliar",
-        };
+        // Visualizar Mostrar las tarjetas Disponibles.
+      } else {
+        if (this.showDatosGenerales == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "general.message.datos.generales",
+            value: document.getElementById("datosGenerales"),
+            nombre: "datosGenerales",
+          };
 
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
 
-      if (this.showDatosPersonales == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "formacion.fichaInscripcion.datosPersonales.cabecera",
-          value: document.getElementById("DivDatosPersonales"),
-          nombre: "Personales",
-        };
+        if (this.showDatosUF == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "justiciaGratuita.justiciables.rol.unidadFamiliar",
+            value: document.getElementById("unidadFamiliar"),
+            nombre: "unidadFamiliar",
+          };
 
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
 
-      if (this.showDatosSolicitudes == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "censo.nuevaSolicitud.headerSolicitud",
-          value: document.getElementById("DivSolicitud"),
-          nombre: "Solicitud",
-        };
+        if (this.showDatosPersonales == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "formacion.fichaInscripcion.datosPersonales.cabecera",
+            value: document.getElementById("DivDatosPersonales"),
+            nombre: "Personales",
+          };
 
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
 
-      if (this.showDatosRepresentantes == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "justiciaGratuita.oficio.designas.interesados.abogado",
-          value: document.getElementById("DivRepresentantes"),
-          nombre: "Representantes",
-        };
+        if (this.showDatosSolicitudes == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "censo.nuevaSolicitud.headerSolicitud",
+            value: document.getElementById("DivSolicitud"),
+            nombre: "Solicitud",
+          };
 
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
 
-      if (this.showAsuntos == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "justiciaGratuita.justiciables.literal.asuntos",
-          value: document.getElementById("DivAsuntos"),
-          nombre: "Asuntos",
-        };
+        if (this.showDatosRepresentantes == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "justiciaGratuita.oficio.designas.interesados.abogado",
+            value: document.getElementById("DivRepresentantes"),
+            nombre: "Representantes",
+          };
 
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
 
-      if (this.showAbogadoContrario == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "justiciaGratuita.oficio.designas.contrarios.abogado",
-          value: document.getElementById("DivIdAbogado"),
-          nombre: "Abogados",
-        };
+        if (this.showAsuntos == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "justiciaGratuita.justiciables.literal.asuntos",
+            value: document.getElementById("DivAsuntos"),
+            nombre: "Asuntos",
+          };
 
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
-      }
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
 
-      if (this.showProcuradorContrario == true) { // Comprobar si esta activada la Tarjeta
-        pruebaTarjeta = {
-          label: "justiciaGratuita.oficio.designas.contrarios.procurador",
-          value: document.getElementById("procuradorJusticiable"),
-          nombre: "Procuradores",
-        };
+        if (this.showAbogadoContrario == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "justiciaGratuita.oficio.designas.contrarios.abogado",
+            value: document.getElementById("DivIdAbogado"),
+            nombre: "Abogados",
+          };
 
-        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
+
+        if (this.showProcuradorContrario == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "justiciaGratuita.oficio.designas.contrarios.procurador",
+            value: document.getElementById("procuradorJusticiable"),
+            nombre: "Procuradores",
+          };
+
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
       }
     }, 5)
     this.progressSpinner = false;

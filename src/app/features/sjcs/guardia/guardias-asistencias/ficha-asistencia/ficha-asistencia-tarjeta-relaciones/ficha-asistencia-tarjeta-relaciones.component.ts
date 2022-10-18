@@ -133,7 +133,8 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
       //Se cambia el valor del campo ano para que se procese de forma adecuada 
       //En la ficha en las distintas tarjetas para obtener sus valores
       desItem.ano = 'D' + desItem.ano + '/' + desItem.codigo;
-
+      // Volver a la ASISTENCIA desde Designas.
+      sessionStorage.setItem('backAsistencia',JSON.stringify(true));
       sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
       sessionStorage.setItem("nuevaDesigna", "false");
       sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);

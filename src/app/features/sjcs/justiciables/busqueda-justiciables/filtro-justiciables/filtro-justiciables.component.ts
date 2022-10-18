@@ -42,34 +42,6 @@ export class FiltroJusticiablesComponent implements OnInit {
     {
       key: "generales",
       activa: true
-    },
-    {
-      key: "personales",
-      activa: true
-    },
-    {
-      origen: "justiciables",
-      activa: false
-    },
-    {
-      key: "solicitud",
-      activa: false
-    },
-    {
-      key: "representante",
-      activa: false
-    },
-    {
-      key: "asuntos",
-      activa: false
-    },
-    {
-      key: "abogado",
-      activa: false
-    },
-    {
-      key: "procurador",
-      activa: false
     }
 
   ];
@@ -122,6 +94,16 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   backTo() {
+    // Quitar para no poder Asociar Justiciables en caso de entrar en Uno.
+    if (sessionStorage.getItem("itemEJG")) {
+      sessionStorage.removeItem("itemEJG");
+    }
+    if (sessionStorage.getItem("itemAsistencia")) {
+      sessionStorage.removeItem("itemAsistencia");
+    }
+    if (sessionStorage.getItem("itemDesignas")) {
+      sessionStorage.removeItem("itemDesignas");
+    }
     if (sessionStorage.getItem("EJGItem") && this.nuevaUniFamiliar) {
       this.persistenceService.setDatos(JSON.parse(sessionStorage.getItem("EJGItem")));
       sessionStorage.removeItem("EJGItem");
@@ -209,6 +191,16 @@ export class FiltroJusticiablesComponent implements OnInit {
   }
 
   search() {
+    // Quitar para no poder Asociar Justiciables en caso de entrar en Uno.
+    if (sessionStorage.getItem("itemEJG")) {
+      sessionStorage.removeItem("itemEJG");
+    }
+    if (sessionStorage.getItem("itemAsistencia")) {
+      sessionStorage.removeItem("itemAsistencia");
+    }
+    if (sessionStorage.getItem("itemDesignas")) {
+      sessionStorage.removeItem("itemDesignas");
+    }
     if (this.checkFilters()) {
       if (this.modoRepresentante) {
         this.persistenceService.setFiltrosAux(this.filtros);
@@ -233,9 +225,9 @@ export class FiltroJusticiablesComponent implements OnInit {
   nuevo() {
     this.modoRepresentante = true;
     sessionStorage.setItem("nuevoJusticiable", "true");
+    sessionStorage.setItem("Nuevo", "true");
     this.persistenceService.setFichasPosibles(this.fichasPosiblesNew);
     if (this.modoRepresentante) {
-
       this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });
     } else {
       this.persistenceService.clearDatos();

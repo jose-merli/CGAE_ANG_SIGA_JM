@@ -90,13 +90,14 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
-		//Comprobamos si se ha seleccionado de la tabla el justiciable y no nos encontramos en la creacion de justiciable/representante
-		if (
+		// Comprobar Si tiene representante el Justiciable Seleccionado.
+		/*if (
 			!this.navigateToJusticiable &&
 			this.persistenceService.getBody() != undefined &&
 			this.body != undefined &&
 			this.body.idpersona != undefined
-		) {
+		)**/
+		if(this.body.idrepresentantejg != null) {
 			this.generalBody = this.persistenceService.getBody();
 
 			//Si tiene nif lo volvemos a buscar
@@ -137,14 +138,15 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		//Se comprueba si proviene del enlace de navegacion del representante, si es ese caso
 		if (this.navigateToJusticiable) {
 			//Se comprueba si ese representante tiene representante asignado, comprobamos que que el cambio de informacion se haya realizado para ver la ficha del representante
-			if (
+			/*if (
 				this.body != undefined &&
 				this.body.idrepresentantejg != undefined &&
 				(this.generalBody.idpersona == undefined || this.generalBody.idpersona == null) &&
 				this.idPersona != undefined &&
 				this.idPersona != null &&
 				this.idPersona == this.body.idpersona
-			) {
+			) */
+			if(this.body.idrepresentantejg != null) {
 				this.showTarjeta = true;
 				this.searchJusticiable();
 			} else if (this.idPersona != undefined && this.idPersona != null && this.idPersona == this.body.idpersona) {

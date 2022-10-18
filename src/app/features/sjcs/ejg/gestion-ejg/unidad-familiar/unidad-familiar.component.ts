@@ -91,7 +91,7 @@ export class UnidadFamiliarComponent implements OnInit {
     private datepipe: DatePipe,
     private commonsService: CommonsService, private translateService: TranslateService,
     private sigaServices: SigaServices,
-    private ejgService : EjgService) { }
+    private ejgService: EjgService) { }
 
   ngOnInit() {
 
@@ -132,7 +132,7 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   consultaUnidadFamiliar(selected) {
-   // this.progressSpinner = true;
+    // this.progressSpinner = true;
 
     let nombresol = this.body.nombreApeSolicitante;
 
@@ -140,7 +140,7 @@ export class UnidadFamiliarComponent implements OnInit {
       n => {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
         this.persistenceService.setBodyAux(this.datosFamiliares);
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
         this.datosFamiliares.forEach(element => {
           element.nombreApeSolicitante = nombresol;
           //Introducir entrada en la base de datos
@@ -171,8 +171,8 @@ export class UnidadFamiliarComponent implements OnInit {
           //Si se selecciona el valor "Solicitante principal" en el desplegable "Rol/Solicitante"
           if (element.uf_idPersona == element.solicitantePpal) {
             element.labelEnCalidad = this.translateService.instant('justiciaGratuita.justiciables.unidadFamiliar.solicitantePrincipal');
-            this.solicitanteP=element;
-            if(element.expedienteEconom!=null && element.expedienteEconom!=undefined){
+            this.solicitanteP = element;
+            if (element.expedienteEconom != null && element.expedienteEconom != undefined) {
               this.estadoEEJG = element.expedienteEconom;
             }
           }
@@ -217,10 +217,10 @@ export class UnidadFamiliarComponent implements OnInit {
         if (this.solicitanteP == undefined) this.solicitanteP = new UnidadFamiliarEJGItem();
         if (this.solicitanteP.pjg_nombrecompleto != undefined) this.apellidosCabecera = this.solicitanteP.pjg_nombrecompleto.split(",")[0];
         else this.apellidosCabecera = "";
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
       },
       err => {
-       // this.progressSpinner = false;
+        // this.progressSpinner = false;
       }
     );
   }
@@ -253,7 +253,6 @@ export class UnidadFamiliarComponent implements OnInit {
   openTab(evento) {
     sessionStorage.setItem("origin", "UnidadFamiliar");
     sessionStorage.setItem("Familiar", JSON.stringify(evento));
-
     this.router.navigate(["/gestionJusticiables"]);
 
   }
@@ -314,8 +313,8 @@ export class UnidadFamiliarComponent implements OnInit {
       this.volverSolicitarEejg = false
     } else {
       const dato = datos[0];
-      this.volverSolicitarEejg = this.expedienteEconomDisponible(dato) 
-          && dato.estado != undefined && dato.estado.length != 0 && +dato.estado >= 30;
+      this.volverSolicitarEejg = this.expedienteEconomDisponible(dato)
+        && dato.estado != undefined && dato.estado.length != 0 && +dato.estado >= 30;
     }
   }
 
@@ -324,8 +323,8 @@ export class UnidadFamiliarComponent implements OnInit {
       this.solicitarEEJG = false
     } else {
       const dato = datos[0];
-      this.solicitarEEJG = !this.expedienteEconomDisponible(dato) 
-          && (dato.estado == undefined || dato.estado.length == 0);
+      this.solicitarEEJG = !this.expedienteEconomDisponible(dato)
+        && (dato.estado == undefined || dato.estado.length == 0);
     }
   }
 
@@ -334,8 +333,8 @@ export class UnidadFamiliarComponent implements OnInit {
       this.descargarEEJG = false
     } else {
       const dato = datos[0];
-      this.descargarEEJG = this.expedienteEconomDisponible(dato) 
-          && dato.estado != undefined && dato.estado.length != 0 && +dato.estado == 30;
+      this.descargarEEJG = this.expedienteEconomDisponible(dato)
+        && dato.estado != undefined && dato.estado.length != 0 && +dato.estado == 30;
     }
   }
 
@@ -442,7 +441,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
       data.push(ejg);
     }
-    
+
     this.sigaServices.post("gestionejg_borrarFamiliar", data).subscribe(
       n => {
         this.progressSpinner = false;
@@ -456,7 +455,7 @@ export class UnidadFamiliarComponent implements OnInit {
           let solP = data.find(
             item => item.uf_enCalidad == "3"
           )
-          if(solP != undefined) {
+          if (solP != undefined) {
             this.body.idPersonajg = null;
             this.body.nombreApeSolicitante = null;
             this.persistenceService.setDatos(this.body);
@@ -517,7 +516,7 @@ export class UnidadFamiliarComponent implements OnInit {
     if (representantes.length > 0) representantes.forEach(element => {
       this.datosFamiliaresActivos.push(element);
     });
-    
+
     this.selectMultiple = false;
     this.selectionMode = "single";
     this.persistenceService.setHistorico(this.historico);
@@ -645,6 +644,8 @@ export class UnidadFamiliarComponent implements OnInit {
   asociar() {
     sessionStorage.setItem("origin", "UnidadFamiliar");
     sessionStorage.setItem("datosFamiliares", JSON.stringify(this.datosFamiliares));
+    // Controlar Justiciable vienen de EJG.
+    sessionStorage.setItem("itemEJG", JSON.stringify(true));
     sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatos()));
     //this.searchContrarios.emit(true);
     this.router.navigate(["/justiciables"]);

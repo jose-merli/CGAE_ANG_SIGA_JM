@@ -137,6 +137,7 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
   NewContrario(){
     sessionStorage.setItem("origin","newContrario");
     sessionStorage.setItem("contrarios",JSON.stringify(this.contrarios));
+    sessionStorage.setItem("itemDesignas", JSON.stringify(true));
     //this.searchContrarios.emit(true);
     this.router.navigate(["/justiciables"]);
   }

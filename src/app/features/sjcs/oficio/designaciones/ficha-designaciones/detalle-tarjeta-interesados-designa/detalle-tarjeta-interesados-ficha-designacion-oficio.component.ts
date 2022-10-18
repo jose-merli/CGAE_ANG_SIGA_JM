@@ -157,7 +157,9 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
 
   NewInteresado() {
     sessionStorage.setItem("origin", "newInteresado");
+    sessionStorage.setItem("itemDesignas", JSON.stringify(true));
     sessionStorage.setItem("interesados", JSON.stringify(this.interesados));
+
     this.router.navigate(["/justiciables"]);
   }
 
