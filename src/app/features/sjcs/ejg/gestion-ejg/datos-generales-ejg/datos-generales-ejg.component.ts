@@ -352,6 +352,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
             this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
 
+            this.body.numEjg = n.body.substring(n.body.indexOf("id")+5,n.body.indexOf("error")-3);
             this.bodyInicial = this.body;
 
             this.persistenceService.setDatos(this.bodyInicial);
