@@ -167,6 +167,9 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
             el.cantidadRestante = el.importePendiente;
             el.porcentajeRestante = el.porcentajePendiente;
 
+            el.importePendiente = el.cantidadRestante + el.cantidadApagar;
+            el.porcentajePendiente = el.porcentajeRestante + el.porcentajeApagar;
+
             // eliminamos los conceptos que ya estén del combo
 
             let indice = this.comboConceptos.findIndex(c => c.value == el.idConcepto);
