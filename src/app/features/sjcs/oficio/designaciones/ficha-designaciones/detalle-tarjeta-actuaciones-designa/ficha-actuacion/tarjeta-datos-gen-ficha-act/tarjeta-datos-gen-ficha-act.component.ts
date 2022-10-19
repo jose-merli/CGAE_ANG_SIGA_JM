@@ -966,24 +966,27 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   validarNProcedimiento(nProcedimiento:string) {
     //Esto es para la validacion de CADECA
 
-    let response;
+    let response:boolean = true;
 
-    let arraNum = nProcedimiento.split("")
-    let arraValidacion= this.valorFormatoProc.split("")
-    var RegExpNum = /^[0-9]/;
-    let datoNoValido:number = 0;
-    if(arraValidacion.length != arraNum.length) return false;
+    if(nProcedimiento != null && nProcedimiento.length > 0){
+      let arraNum = nProcedimiento.split("")
+      let arraValidacion= this.valorFormatoProc.split("")
+      var RegExpNum = /^[0-9]/;
+      let datoNoValido:number = 0;
+      if(arraValidacion.length != arraNum.length) return false;
+  
+      arraValidacion.forEach(function callback(value, index) {
+        if(value == "y" || value == 'n'){
+          var boo:boolean = RegExpNum.test(arraNum[index])
+           datoNoValido =  boo ? datoNoValido : datoNoValido=+1;
+        }else if(value != arraNum[index]){
+          datoNoValido = datoNoValido=+1;
+        }
+      });
+  
+      response = datoNoValido != 0 ? false :true;  
+    }
 
-    arraValidacion.forEach(function callback(value, index) {
-      if(value == "y" || value == 'n'){
-        var boo:boolean = RegExpNum.test(arraNum[index])
-         datoNoValido =  boo ? datoNoValido : datoNoValido=+1;
-      }else if(value != arraNum[index]){
-        datoNoValido = datoNoValido=+1;
-      }
-    });
-
-    response = datoNoValido != 0 ? false :true;  
 
     /*if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
       this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
