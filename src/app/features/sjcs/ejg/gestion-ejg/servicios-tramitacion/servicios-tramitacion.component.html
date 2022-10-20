@@ -32,12 +32,12 @@
 
       <div class="form-row">
         <div class="form-group col-lg-6 col-md-6">
-          <label>{{ "dato.jgr.guardia.guardias.turno" | translate }} (*)</label>
+          <label>{{ "dato.jgr.guardia.guardias.turno" | translate }}</label>
           <p-dropdown class="select-form" (onChange)="onChangeTurnos()" [(ngModel)]='body.idTurno' placeholder="Seleccionar" [options]="comboTurno"
             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" ></p-dropdown>
         </div>
         <div class="form-group col-lg-6 col-md-6">
-          <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }} (*)</label>
+          <label>{{ "menu.justiciaGratuita.GuardiaMenu" | translate }}</label>
           <p-dropdown class="select-form" [(ngModel)]='body.idGuardia' [(disabled)]="isDisabledGuardia" placeholder="Seleccionar" [options]="comboGuardia"
             [filter]="true" filterBy="label,labelSinTilde" [showClear]="true" ></p-dropdown>
         </div>
