@@ -389,9 +389,9 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
   changePorcentajeApagar(cantidad, dato) {
 
     if (cantidad.trim().length > 0 && !isNaN(cantidad) && parseFloat(cantidad) >= 0) {
-      const porcentaje = cantidad * 100 / dato.importeFacturado;
+      const porcentaje = cantidad * 100 / dato.importePendiente;
 
-      if (porcentaje > dato.porcentajePendiente) {
+      if (cantidad > dato.importePendiente) {
         dato.porcentajeApagar = 0.00;
         dato.cantidadApagar = 0.00;
       } else {
@@ -440,7 +440,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
     }
 
     dato.cantidadRestante   = (dato.importePendiente - parseFloat(dato.cantidadApagar)).toFixed(2);
-    dato.porcentajeRestante = (dato.cantidadRestante * 100 / dato.importePendiente).toFixed(2);
+    dato.porcentajeRestante = (dato.cantidadRestante * 100 / dato.importeFacturado).toFixed(2);
 
   }
 

@@ -209,8 +209,12 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
 
   comboPartidasPresupuestarias() {
     this.progressSpinnerDatos = true;
+    let parametro:String = "?importe=1";
+    if(this.modoEdicion){
+      parametro = "?importe=0";
+    }
 
-    this.sigaService.getParam("combo_partidasPresupuestarias", "?importe=1").subscribe(
+    this.sigaService.getParam("combo_partidasPresupuestarias", parametro).subscribe(
       data => {
         this.partidaPresupuestaria = data.combooItems;
         this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
