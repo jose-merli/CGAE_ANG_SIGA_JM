@@ -176,6 +176,8 @@ export class FiltrosEjgComponent implements OnInit {
       this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.nombre + " " + busquedaColegiado.apellidos;
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
       this.usuarioBusquedaExpress.idPersona = busquedaColegiado.idPersona;
+      this.body.tipoLetrado = "E";
+      this.tipoLetrado = "1";
     }
 
     setTimeout(() => {
@@ -269,12 +271,16 @@ export class FiltrosEjgComponent implements OnInit {
       && this.usuarioBusquedaExpress.numColegiado.trim() != "") {
       this.body.numColegiado = this.usuarioBusquedaExpress.numColegiado;
       this.body.idPersona = this.usuarioBusquedaExpress.idPersona;
+      this.body.tipoLetrado = "E";
+      this.tipoLetrado = "1";
     } else {
       this.usuarioBusquedaExpress.numColegiado = " ";
       this.body.numColegiado = "";
       this.body.idPersona = "";
       sessionStorage.removeItem("numColegiado");
       this.numColegiadoRelleno = false;
+      this.body.tipoLetrado = "";
+      this.tipoLetrado = "";
     }
   }
 
@@ -779,7 +785,12 @@ export class FiltrosEjgComponent implements OnInit {
     this.body.numColegiado = "";
     this.body.apellidosYNombre = "";
     this.body.tipoLetrado = "";
-    sessionStorage.removeItem("numColegiado")
+    this.body.idPersona = "";
+    this.numColegiadoRelleno = false;
+    this.tipoLetrado = "";
+    this.usuarioBusquedaExpress.numColegiado = " ";
+    this.usuarioBusquedaExpress.nombreAp = " ";
+    sessionStorage.removeItem("numColegiado");
   }
   clearFilters() {
     this.body = new EJGItem();
