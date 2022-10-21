@@ -2193,7 +2193,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             let ejgObject : any []= JSON.parse(n.body).ejgItems;
             let datosItem : EJGItem = ejgObject[0];
             this.persistenceService.setDatos(datosItem);
-            this.consultaUnidadFamiliar(ejgItem);
+            //this.consultaUnidadFamiliar(ejgItem);
+            if(sessionStorage.getItem("EJGItem")){
+              sessionStorage.removeItem("EJGItem");
+            }
+    
+            this.router.navigate(['/gestionEjg']);
+            this.progressSpinner = false;
             this.commonsService.scrollTop();
           },
           err => {

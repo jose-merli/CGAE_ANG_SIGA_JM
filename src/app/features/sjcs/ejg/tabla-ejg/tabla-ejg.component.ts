@@ -130,8 +130,14 @@ export class TablaEjgComponent implements OnInit {
         this.datosItem = this.ejgObject[0];
         this.persistenceService.setDatos(this.datosItem);
         this.persistenceService.setFiltrosEJG(this.filtro);
-        this.ngOnInit();
-        this.consultaUnidadFamiliar(selected);
+        //this.ngOnInit();
+        //this.consultaUnidadFamiliar(selected);
+        if (sessionStorage.getItem("EJGItem")) {
+          sessionStorage.removeItem("EJGItem");
+        }
+
+        this.router.navigate(['/gestionEjg']);
+        this.progressSpinner = false;
         this.commonServices.scrollTop();
       },
       err => {

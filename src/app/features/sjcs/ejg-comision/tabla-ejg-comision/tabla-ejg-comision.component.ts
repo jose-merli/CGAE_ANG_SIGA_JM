@@ -338,7 +338,12 @@ export class TablaEjgComisionComponent implements OnInit {
         // this.persistenceService.setFiltros(this.filtro);
         sessionStorage.setItem('filtrosEJGCom', JSON.stringify(this.filtro));
         this.ngOnInit();
-        this.consultaUnidadFamiliar(selected);
+        //this.consultaUnidadFamiliar(selected);
+        if(this.acta != null){
+          sessionStorage.setItem('actasItemAux', JSON.stringify(this.acta));
+        }
+        this.router.navigate(['/gestionEjg']);
+        this.progressSpinner = false;
         this.commonServices.scrollTop();
       },
       err => {

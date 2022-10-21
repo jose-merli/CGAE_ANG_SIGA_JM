@@ -117,7 +117,7 @@ export class AddExpedienteComponent implements OnInit {
         let ejgObject = JSON.parse(n.body).ejgItems;
         let datosItem = ejgObject[0];
         this.persistenceService.setDatos(datosItem);
-        this.consultaUnidadFamiliar(this.datos);
+        //this.consultaUnidadFamiliar(this.datos);
         this.location.back();
         this.progressSpinner = false;
       },

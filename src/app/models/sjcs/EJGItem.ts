@@ -46,6 +46,7 @@ export class EJGItem {
     numerodiligencia: string;
     comisaria: number;
     delitos: string;
+    delitosSeleccionados: string;
     idPretension: number;
     observaciones: string;
 

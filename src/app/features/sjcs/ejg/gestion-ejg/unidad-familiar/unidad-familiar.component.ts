@@ -139,7 +139,7 @@ export class UnidadFamiliarComponent implements OnInit {
     this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
       n => {
         this.datosFamiliares = JSON.parse(n.body).unidadFamiliarEJGItems;
-        this.persistenceService.setBodyAux(this.datosFamiliares);
+        //this.persistenceService.setBodyAux(this.datosFamiliares);
         // this.progressSpinner = false;
         this.datosFamiliares.forEach(element => {
           element.nombreApeSolicitante = nombresol;

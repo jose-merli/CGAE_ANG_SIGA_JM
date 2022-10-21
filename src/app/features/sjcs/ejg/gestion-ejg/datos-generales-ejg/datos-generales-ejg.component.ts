@@ -135,7 +135,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.nuevo = true;
       this.modoEdicion = false;
       this.body = new EJGItem();
+      this.body.fechaApertura = new Date();
       this.bodyInicial = new EJGItem();
+      this.bodyInicial.fechaApertura = new Date();
       this.showTipoExp = false;
     }
 
@@ -354,7 +356,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
             this.body.numEjg = n.body.substring(n.body.indexOf("id")+5,n.body.indexOf("error")-3);
             this.bodyInicial = this.body;
-
+            this.nuevo = false;
             this.persistenceService.setDatos(this.bodyInicial);
 
             this.guardadoSend.emit(true);

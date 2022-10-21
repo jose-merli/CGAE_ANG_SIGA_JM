@@ -128,6 +128,7 @@ export class GestionEjgComponent implements OnInit {
         this.body = new EJGItem();
         this.persistenceService.clearDatos();
         this.modoEdicion = false;
+        this.openTarjetaDatosGenerales = true;
       } else {
         //obtiene un EJG desde la tarjeta relaciones de la ficha designacion
         this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
@@ -176,6 +177,7 @@ export class GestionEjgComponent implements OnInit {
           sessionStorage.removeItem("Nuevo");
           this.body = new EJGItem();
           this.modoEdicion = false;
+          this.openTarjetaDatosGenerales = true;
         }
         //vuelve de asociar una unidad familiar
         else {

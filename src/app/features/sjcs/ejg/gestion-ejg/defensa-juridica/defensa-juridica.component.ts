@@ -351,7 +351,7 @@ export class DefensaJuridicaComponent implements OnInit {
   save() {
     this.progressSpinner = true;
 
-    this.body.delitos = null;
+    //this.body.delitos = null;
     this.delitosValue.forEach(delitoEJG => {
       // this.comboDelitos.forEach(delito => {
       //   if (delitoEJG == delito.value) {
@@ -359,8 +359,8 @@ export class DefensaJuridicaComponent implements OnInit {
       //     else this.body.delitos = this.body.delitos + ", " + delito.label;
       //   }
       // })
-      if (this.body.delitos == null) this.body.delitos = delitoEJG.toString();
-      else this.body.delitos = this.body.delitos + "," + delitoEJG.toString();
+      if (this.body.delitosSeleccionados == null) this.body.delitosSeleccionados = delitoEJG.toString();
+      else this.body.delitosSeleccionados = this.body.delitosSeleccionados + "," + delitoEJG.toString();
 
     });
 
@@ -482,7 +482,9 @@ export class DefensaJuridicaComponent implements OnInit {
         this.commonsServices.arregloTildesCombo(this.comboDelitos);
         //Hay un problema con angular que por algún motivo parece que
         //los delitos asociados no se muestran de forma consistente (a veces si, a veces no).
-        if (this.designa == null) this.getDelitosEJG();
+        if (this.designa == null || this.designa.ano == null) {
+          this.getDelitosEJG();
+        }
       },
       err => {
       }, () => {
@@ -581,14 +583,14 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   getDelitosEJG() {
+    console.log("Delitos EJG");
     this.sigaServices.post("gestionejg_getDelitosEJG", this.body)
       .subscribe(
         n => {
           let delitosEjg = JSON.parse(n.body).delitosEjgItem;
-          delitosEjg.forEach(element => {
-            this.delitosValue.push(element.iddelito);
-          });
+          this.delitosValue = delitosEjg.map(it => it.iddelito.toString());
           this.delitosValueInicial = this.delitosValue;
+          this.commonsServices.arregloTildesCombo(this.comboDelitos);
         },
         err => {
         }
