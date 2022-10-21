@@ -102,7 +102,9 @@
 
 
     <p-table #servicesTable [value]="comboServicios" [columns]="colsServs" class="tabla-listado" [paginator]="true"
-      [rows]="10" [first]="first" [responsive]="true" paginatorPosition="both">
+      [rows]="10" [first]="first" [responsive]="true" selectionMode="multiple"
+      [(selection)]="selectedRowsAux" (onRowSelect)="anadirServicio($event)"
+      paginatorPosition="both">
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of colsServs" [style.width]="col.width">
@@ -125,7 +127,7 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div>
-              <a *ngIf="rowData.fechabaja == null" (click)="anadirServicio(rowData)"><span>{{rowData[col.field]}}</span></a>
+              <a *ngIf="rowData.fechabaja == null"><span>{{rowData[col.field]}}</span></a>
               <span *ngIf="rowData.fechabaja != null" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
             </div>
           </td>

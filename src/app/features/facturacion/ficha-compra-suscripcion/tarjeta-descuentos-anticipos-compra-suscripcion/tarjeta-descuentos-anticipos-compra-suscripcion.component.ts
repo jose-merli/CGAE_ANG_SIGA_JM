@@ -37,7 +37,7 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
 
   
   @Input("ficha") ficha: FichaCompraSuscripcionItem;
-
+  @Input("tarjDescuentos") tarjDescuentos : TarjetaDescuentosAnticiposCompraSuscripcionComponent;
   
   colsProd = [
     { field: "desTipo", header: "facturacion.productos.tipo" },
@@ -73,6 +73,8 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
   permisoBorrarAnticipo: boolean = false;
   showModal: boolean = false;
 
+  numberPendiente:number=0;
+
   constructor(public sigaServices: SigaServices,
     private commonsService: CommonsService,
     private translateService: TranslateService,
@@ -80,17 +82,25 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     private router: Router) { }
 
   ngOnInit() {
-    this.ficha.impAnti = 0;
+    this.ficha.impAnti = 0.00;
     if(this.ficha.fechaAceptada != null){
       this.getDescuentosPeticion();
     }
     this.getPermisoNuevoAnticipo();
     this.getPermisoBorrarAnticipo();
+    if(this.ficha.impTotal != null ){
+      let numAux = this.ficha.impTotal.replace(",",".");
+      this.numberPendiente = parseFloat(numAux) - this.ficha.impAnti
+    }
   }
 
   ngOnChange(changes: SimpleChanges){
     if(this.ficha.fechaAceptada != null){
       this.getDescuentosPeticion();
+    }
+    if(this.ficha.impTotal != null ){
+      let numAux = this.ficha.impTotal.replace(",",".");
+      this.numberPendiente = parseFloat(numAux) - this.ficha.impAnti
     }
   }
 
@@ -125,10 +135,11 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
             }
           }
           //Se comprueba si el importe anticipado es mayor que la cuantia a pagar
-          if(Number(this.ficha.impTotal) < Number(this.ficha.impAnti)){
-            this.ficha.impAnti = Number(this.ficha.impTotal);
-            this.descuentosTarjeta[0].importe = Number(this.ficha.impTotal);
+          if(parseFloat(this.ficha.impTotal) < Number(this.ficha.impAnti)){
+            this.ficha.impAnti = parseFloat(this.ficha.impTotal);
+            this.descuentosTarjeta[0].importe = parseFloat(this.ficha.impTotal);
           }
+          this.actualizaImporte();
   }
 
   //REVISAR AÑADIR COMPROBACION DEL ESTADO DE LA COMPRA Y SU FACTURACION
@@ -165,7 +176,10 @@ export class TarjetaDescuentosAnticiposCompraSuscripcionComponent implements OnI
     this.router.navigate(["/fichaMonedero"]);
   }
 
-
+  actualizaImporte(){
+    let numAux = this.ficha.impTotal.replace(",",".");
+    this.numberPendiente = parseFloat(numAux) - this.ficha.impAnti
+  }
   anadirAnticipo(){
     this.progressSpinner = true;
 

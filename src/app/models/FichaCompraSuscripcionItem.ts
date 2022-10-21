@@ -12,6 +12,7 @@ export class FichaCompraSuscripcionItem {
     apellidos: string;
     idtipoidentificacion: string;
     nif: string;
+    numeroColegiado:string;
 
     //TARJETA SOLICITUD
     nSolicitud: string; //Equivaldria al idpeticion de la tabla PYS_PETICIONCOMPRASUSCRIPCION
@@ -45,6 +46,7 @@ export class FichaCompraSuscripcionItem {
     servicios: ListaServiciosSuscripcionItem[]; 
 
     idEstadoPeticion: string;
+    nuevo:boolean;
     
     constructor() {}
   }

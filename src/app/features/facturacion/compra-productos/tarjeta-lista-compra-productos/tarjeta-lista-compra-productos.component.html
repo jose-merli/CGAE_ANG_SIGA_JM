@@ -37,9 +37,10 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div *ngIf="col.field !='fechaSolicitud' && col.field != 'fechaEfectiva'" >
-              <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTab(rowData)">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'nSolicitud'" class="enlace" (click)="openTabFicha(rowData)">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field == 'concepto'" class="enlace" (click)="openTabProducto(rowData)">{{rowData[col.field]}}</span>
               <span *ngIf="col.field == 'idEstadoSolicitud'">{{estadosCompraObject[rowData[col.field]-1].label}}</span>
-              <span *ngIf="col.field != 'concepto' && col.field != 'idEstadoSolicitud' && col.field != 'importe'">{{rowData[col.field]}}</span>
+              <span *ngIf="col.field != 'concepto' && col.field != 'idEstadoSolicitud' && col.field != 'importe' && col.field != 'nSolicitud'">{{rowData[col.field]}}</span>
               <span *ngIf="col.field == 'importe'">{{rowData[col.field]}} €</span>
               <span *ngIf="col.field == apellidosNombreAux">{{rowData['apellidosNombre']}}</span>
             </div>
@@ -89,9 +90,7 @@
         <button pButton *ngIf="!esColegiado"  (click)="checkAprobar()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="selectedRows.length == 0"></button>
       <!-- Denegar/Cancelar -->
-        <button *ngIf="!esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.denegar' | translate}}" [disabled]="selectedRows.length == 0"></button>
-        <button *ngIf="esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
+        <button pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.cancel' | translate}}" [disabled]="selectedRows.length == 0"></button>
       <!-- Anular -->
         <button pButton  (click)="checkAnularCompra()" type="button" icon="fa fa-search" iconPos="left"

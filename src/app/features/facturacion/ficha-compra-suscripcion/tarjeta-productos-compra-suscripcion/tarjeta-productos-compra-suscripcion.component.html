@@ -254,7 +254,8 @@
 
 
     <p-table #productsTable [value]="comboProductos" [columns]="colsProducts" class="tabla-listado" [paginator]="true"
-      [rows]="10" [first]="first" [responsive]="true" paginatorPosition="both">
+      [rows]="10" [first]="first" [responsive]="true"  selectionMode="multiple"
+       [(selection)]="selectedRowsAux" paginatorPosition="both" (onRowSelect)="anadirProducto($event)" >
       <ng-template pTemplate="colgroup" let-columns>
         <colgroup>
           <col *ngFor="let col of colsProducts" [style.width]="col.width">
@@ -277,7 +278,7 @@
         <tr [pSelectableRow]="rowData" [pSelectableRowIndex]="rowIndex">
           <td class="text-center" *ngFor="let col of columns">
             <div>
-              <a *ngIf="rowData.fechabaja == null" (click)="anadirProducto(rowData)"><span>{{rowData[col.field]}}</span></a>
+              <a *ngIf="rowData.fechabaja == null"><span>{{rowData[col.field]}}</span></a>
               <span *ngIf="rowData.fechabaja != null" [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{rowData[col.field]}}</span>
             </div>
           </td>

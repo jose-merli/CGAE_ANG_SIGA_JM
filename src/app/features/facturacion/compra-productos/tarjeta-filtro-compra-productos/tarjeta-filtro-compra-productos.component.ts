@@ -71,6 +71,12 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
       if(this.filtrosCompraProductos.fechaSolicitudDesde != undefined){
         this.filtrosCompraProductos.fechaSolicitudDesde = new Date(this.filtrosCompraProductos.fechaSolicitudDesde);
       }
+      if(this.filtrosCompraProductos.nombreColegiado != null) {
+        this.nombreCliente = this.filtrosCompraProductos.nombreColegiado;
+      }
+      if(this.filtrosCompraProductos.numIdentificacionColegiado != null ){
+        this.nifCifCliente = this.filtrosCompraProductos.numIdentificacionColegiado
+      }
 
       sessionStorage.removeItem("filtroBusqCompra");
       this.busqueda.emit(true);
@@ -292,8 +298,14 @@ export class TarjetaFiltroCompraProductosComponent implements OnInit {
   }
 
   checkBuscar(){
-    if(!this.checkFilters())this.showMessage("error",  this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
-    else this.buscar();
+    if(!this.checkFilters()){
+      this.showMessage("error",  this.translateService.instant("general.message.incorrect"), this.translateService.instant("cen.busqueda.error.busquedageneral"));
+    }
+    else {
+      this.filtrosCompraProductos.numIdentificacionColegiado = this.nifCifCliente != null ? this.nifCifCliente : null;
+      this.filtrosCompraProductos.nombreColegiado = this.nombreCliente != null ? this.nombreCliente : null;
+      this.buscar();
+    }
   }
 
   buscar() {

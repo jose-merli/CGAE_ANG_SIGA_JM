@@ -23,4 +23,7 @@ export class ListaSuscripcionesItem {
 	//Se realiza una resta de los valores con el numero de columnas. Si no es 0, un colegiado no puede solicitar una anulación.
 	facturas: string;
 	automatico: string;
+	idTipoServicios:string;
+	idServicio:string;
+	idServiciosInstitucion:string;
 }

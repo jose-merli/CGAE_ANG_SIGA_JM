@@ -6,6 +6,7 @@ import { TranslateService } from '../../../../commons/translate';
 import { ComboItem } from '../../../../models/ComboItem';
 import { FichaCompraSuscripcionItem } from '../../../../models/FichaCompraSuscripcionItem';
 import { FiltrosSuscripcionesItem } from '../../../../models/FiltrosSuscripcionesItem';
+import { ListaServiciosItems } from '../../../../models/ListaServiciosItems';
 import { ListaSuscripcionesItem } from '../../../../models/ListaSuscripcionesItem';
 import { procesos_PyS } from '../../../../permisos/procesos_PyS';
 import { SigaStorageService } from '../../../../siga-storage.service';
@@ -373,7 +374,7 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
     );
   }
 
-  openTab(rowData) {
+  openTabFicha(rowData) {
     this.progressSpinner = true;
     let suscripcion = new FichaCompraSuscripcionItem();
     suscripcion.nSolicitud = rowData.nSolicitud;
@@ -390,6 +391,18 @@ export class TarjetaListaCuotasSuscripcionesComponent implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  openTabServicio(selectedRow){
+    this.progressSpinner = true;
+    let servicioItem: ListaServiciosItems = new ListaServiciosItems();
+    servicioItem.idtiposervicios = selectedRow.idTipoServicios;
+    servicioItem.idservicio = selectedRow.idServicio;
+    servicioItem.idserviciosinstitucion = selectedRow.idServiciosInstitucion;
+
+    sessionStorage.setItem("origin", "cuotasSuscripciones");
+    sessionStorage.setItem("servicioBuscador", JSON.stringify(servicioItem));
+    this.router.navigate(["/fichaServicios"]);
   }
 
   showMessage(severity, summary, msg) {

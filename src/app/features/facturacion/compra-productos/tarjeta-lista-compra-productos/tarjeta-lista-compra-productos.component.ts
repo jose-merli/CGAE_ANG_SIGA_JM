@@ -15,6 +15,7 @@ import { TarjetaHisFichaActComponent } from '../../../sjcs/oficio/designaciones/
 import { FichaCompraSuscripcionComponent } from '../../ficha-compra-suscripcion/ficha-compra-suscripcion.component';
 import { saveAs } from "file-saver/FileSaver";
 import { Colegiado } from '../../../sjcs/facturacionSJCS/retenciones/ficha-retencion-judicial/tarjeta-colegiado/tarjeta-colegiado.component';
+import { ListaProductosItems } from '../../../../models/ListaProductosItems';
 
 @Component({
   selector: 'app-tarjeta-lista-compra-productos',
@@ -440,7 +441,7 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
     );
   }
 
-  openTab(rowData) {
+  openTabFicha(rowData) {
     this.progressSpinner = true;
     let compra = new FichaCompraSuscripcionItem();
     compra.nSolicitud = rowData.nSolicitud;
@@ -453,6 +454,33 @@ export class TarjetaListaCompraProductosComponent implements OnInit {
         this.router.navigate(["/fichaCompraSuscripcion"]);
       }
     );
+  }
+  openTabProducto(selectedRow) {
+    let productoItem: ListaProductosItems = new ListaProductosItems ;
+    productoItem.idtipoproducto = selectedRow.idTipoProducto
+    productoItem.idproducto = selectedRow.idProducto
+    productoItem.idproductoinstitucion = selectedRow.idProductoInstitucion
+    productoItem.solicitarAlta = selectedRow.solicitarAlta
+
+    // Funcionalidad para verificar si Solicitar por internet viene activado o no
+    // En caso de ser abogado y no estar activado no mostramos tarjeta y error de ello.
+    if (this.localStorageService.isLetrado == true) {
+      if (productoItem.solicitarAlta == 1) {
+        this.progressSpinner = true;
+        sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
+        this.router.navigate(["/fichaProductos"]);
+      } else {
+        this.showMessage("error",
+          this.translateService.instant("general.message.incorrect"),
+          this.translateService.instant("facturacion.productos.avisocomprarproductosinactivos"))
+      }
+    } else {
+      this.progressSpinner = true;
+      sessionStorage.setItem("productoBuscador", JSON.stringify(productoItem));
+      this.router.navigate(["/fichaProductos"]);
+    }
+
+
   }
 
   showMessage(severity, summary, msg) {

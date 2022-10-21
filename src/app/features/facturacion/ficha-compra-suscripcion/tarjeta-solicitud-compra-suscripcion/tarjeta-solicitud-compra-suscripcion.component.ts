@@ -118,19 +118,22 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
   }
 
   checkProductos(){
-    let prods = this.tarjProductos.productosTarjeta;
-    let campoVacio = false;
-    prods.forEach( el => {
-      if(el.cantidad == null || el.cantidad.trim() == '' ||
-      el.descripcion == null || el.descripcion.trim() == '' ||
-      el.precioUnitario == null || el.precioUnitario.trim() == '' ||
-      el.iva == null || el.iva.trim() == '') {
-        campoVacio = true;
+    if( this.tarjProductos != undefined){
+      let prods = this.tarjProductos.productosTarjeta;
+      let campoVacio = false;
+      prods.forEach( el => {
+        if(el.cantidad == null || el.cantidad.trim() == '' ||
+        el.descripcion == null || el.descripcion.trim() == '' ||
+        el.precioUnitario == null || el.precioUnitario.trim() == '' ||
+        el.iva == null || el.iva.trim() == '') {
+          campoVacio = true;
+        }
+      });
+      if(prods.length == 0 || campoVacio) {
+        return true;
       }
-    });
-    if(prods.length == 0 || campoVacio) {
-      return true;
     }
+    
     return false;
   }
 
@@ -355,9 +358,9 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
     //Se comprueba si hay alguna factura asociada cuando el personal del colegio va a anular una petición
     //REVISAR: Revisar concepto de factura anulada y no anulada y su anulación.
     //Por ahora, e comprueba si la ultima entrada de la tarjeta facturas es una anulación o una factura
-    else if(!this.esColegiado && this.ficha.facturas != null && this.ficha.facturas.length > 0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == "Factura"){
-      this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
-    }
+    //else if(!this.esColegiado && this.ficha.facturas != null && this.ficha.facturas.length > 0 && this.ficha.facturas[this.ficha.facturas.length-1].tipo == "Factura"){
+     // this.showMessage("info", this.translateService.instant("facturacion.productos.solicitudesNoAlteradas"), this.translateService.instant("facturacion.productos.solicitudesNoAlteradasDesc") + this.ficha.nSolicitud);
+    // } Se podrá anular si esta en estado aceptada, y si tiene facturas se preguntara para anularlo tambien.
     else{
       this.confirmAnular();
     }
@@ -417,7 +420,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          
+          this.ficha.nSolicitud =JSON.parse(n.body).id;
           //Se actualiza la información de la ficha
           this.actualizaFicha.emit(true);
         }
@@ -442,7 +445,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          
+          this.ficha.nSolicitud  =  JSON.parse(n.body).id;
           //Se actualiza la información de la ficha
           this.actualizaFicha.emit(true);
         }
@@ -469,7 +472,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+          this.ficha.nSolicitud  =  JSON.parse(n.body).id;
           //Se actualiza la información de la ficha y se obtiene su historico actualizado
           this.actualizaFicha.emit(true);
         }
@@ -496,7 +499,7 @@ export class TarjetaSolicitudCompraSuscripcionComponent implements OnInit {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
+          this.ficha.nSolicitud  =  JSON.parse(n.body).id;
           //Se actualiza la información de la ficha y se obtiene su historico actualizado
           this.actualizaFicha.emit(true);
         }

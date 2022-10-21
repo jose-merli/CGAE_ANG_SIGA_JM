@@ -116,10 +116,8 @@
           label="{{ 'facturacion.productos.aprobar' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null 
           || (this.ficha.productos != null && !permisoAprobarCompra) || (this.ficha.servicios != null && !permisoAprobarSuscripcion)"></button>
       <!-- Denegar/Cancelar -->
-        <button *ngIf="!esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.denegar' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || !permisoDenegar"></button>
-        <button *ngIf="esColegiado" pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
-          label="{{ 'general.boton.cancel' | translate}}" [disabled]="ficha.fechaAceptada != null || ficha.fechaDenegada != null || !permisoDenegar"></button>
+        <button pButton  (click)="checkDenegar()" type="button" icon="fa fa-search" iconPos="left"
+          label="{{ 'general.boton.cancel' | translate}}" [disabled]="this.checkProductos() || ficha.fechaAceptada != null || ficha.fechaDenegada != null || !permisoDenegar"></button>
       <!-- Anular -->
         <button pButton  (click)="checkAnular()" type="button" icon="fa fa-search" iconPos="left"
           label="{{ 'general.boton.anular' | translate}}" [disabled]="(ficha.fechaAceptada == null && ficha.fechaSolicitadaAnulacion == null) || ficha.fechaAnulada != null 

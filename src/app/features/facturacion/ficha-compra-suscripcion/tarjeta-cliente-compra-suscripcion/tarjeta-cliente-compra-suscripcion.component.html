@@ -32,6 +32,12 @@
           </div>
           <div class="row">
             <div class="col-3">
+              <label>{{ "censo.busquedaClientesAvanzada.literal.nColegiado" | translate }}
+                <span>{{ ficha.numeroColegiado }}</span>
+              </label>
+
+            </div>
+            <div class="col-3">
               <label>{{ "censo.consultaDatosColegiacion.literal.numIden" | translate }}
                 <span>{{ ficha.nif }}</span>
               </label>
@@ -42,7 +48,7 @@
               </label>
 
             </div>
-            <div *ngIf="showEnlaceCliente" class="col-3">
+            <div *ngIf="showEnlaceCliente" class="col-2">
               <label *ngIf="ficha.idPersona != null && ficha.idPersona != undefined">
                 <i (click)="$event.stopPropagation();irFichaColegial()" class="fas fa-external-link-alt mr-2"></i>
                 <a (click)="$event.stopPropagation();irFichaColegial()">
@@ -56,9 +62,17 @@
                 </span>
               </label>
             </div>
-            <div class="d-flex justify-content-start mb-1 ml-auto">
-              <i class="fa fa-angle-down ml-auto"></i>
+            <div *ngIf="showEnlaceCliente" class="col-1">
+              <div class="d-flex justify-content-start mb-1 ml-auto">
+                <i class="fa fa-angle-down ml-auto"></i>
+              </div>
             </div>
+            <div *ngIf="!showEnlaceCliente" class="col-3">
+              <div class="d-flex justify-content-start mb-1 ml-auto">
+                <i class="fa fa-angle-down ml-auto"></i>
+              </div>
+            </div>
+            
           </div>
         </div>
       </div>

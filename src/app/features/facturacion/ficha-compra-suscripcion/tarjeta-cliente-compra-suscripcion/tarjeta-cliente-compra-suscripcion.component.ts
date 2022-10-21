@@ -47,6 +47,7 @@ export class TarjetaClienteCompraSuscripcionComponent implements OnInit {
 			sessionStorage.removeItem("abogado");
 			this.ficha.nombre = data.nombre;
 			this.ficha.nif = data.nif;
+      this.ficha.numeroColegiado = data.numeroColegiado
 			this.ficha.idPersona = data.idPersona;
       this.ficha.apellidos = data.apellidos;
       this.ficha.idInstitucion = data.numeroInstitucion;

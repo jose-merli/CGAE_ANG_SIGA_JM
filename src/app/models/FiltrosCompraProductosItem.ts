@@ -8,6 +8,8 @@ export class FiltrosCompraProductosItem {
     descProd: string;
     idEstadoSolicitud: string[];
     idEstadoFactura: string[];
+    nombreColegiado: string;
+    numIdentificacionColegiado: string;
 
     constructor() { }
 }

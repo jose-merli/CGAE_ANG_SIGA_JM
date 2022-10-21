@@ -90,6 +90,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   @ViewChild("productsTable") tablaProductos;
 
   selectedRows: ListaProductosCompraItem[] = [];
+  selectedRowsAux: ListaProductosCompraItem[] = [];
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
   selectMultipleRows: boolean = true; //Seleccion multiples filas de la tabla
   selectAllRows: boolean = false; //Selecciona todas las filas de la pagina actual de la tabla
@@ -430,6 +431,7 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   anadirProducto(selectedProducto) {
+    selectedProducto = selectedProducto.data
     if (this.checkProductoSeleccionado(selectedProducto)) {
       this.showModal = false;
       let newProducto: ListaProductosCompraItem = new ListaProductosCompraItem();

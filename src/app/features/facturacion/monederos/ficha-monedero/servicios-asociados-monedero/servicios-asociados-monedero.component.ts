@@ -68,6 +68,7 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
   @ViewChild("servicesMonederoTable") tablaServiciosSuscripcion;
 
   selectedRows: ListaServiciosMonederoItem[] = [];
+  selectedRowsAux: ListaServiciosMonederoItem[] = [];
   numSelectedRows: number = 0; //Se usa para mostrar visualmente el numero de filas seleccionadas
   selectMultipleRows: boolean = true; //Seleccion multiples filas de la tabla
   selectAllRows: boolean = false; //Selecciona todas las filas de la pagina actual de la tabla
@@ -231,7 +232,8 @@ export class ServiciosAsociadosMonederoComponent implements OnInit {
     }
   }
 
-  anadirServicio(selectedServicio: ListaServiciosItems) {
+  anadirServicio($event) {
+    let selectedServicio : ListaServiciosItems = $event.data
     //Se comprueba si el servicio seleccionado ya esta en la tabla
     if(this.serviciosTarjeta.find(el => el.idServicio == selectedServicio.idservicio && el.idTipoServicios == selectedServicio.idtiposervicios 
       && el.idServiciosInstitucion == selectedServicio.idserviciosinstitucion) == undefined){

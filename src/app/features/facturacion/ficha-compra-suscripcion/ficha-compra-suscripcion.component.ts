@@ -33,6 +33,7 @@ export class FichaCompraSuscripcionComponent implements OnInit {
   @ViewChild("productos") tarjProductos;
   @ViewChild("servicios") tarjServicios;
   @ViewChild("facturas") tarjFacturas;
+  @ViewChild("descuentos") tarjDescuentos;
   esColegiado: boolean; // Con esta variable se determina si el usuario conectado es un colegiado o no.
 
 
@@ -98,6 +99,10 @@ export class FichaCompraSuscripcionComponent implements OnInit {
 
           if(this.ficha.servicios != null){
             this.tarjServicios.getServiciosSuscripcion();
+          }
+
+          if(this.ficha.impTotal != null){
+            this.tarjDescuentos.actualizaImporte();
           }
         }
 

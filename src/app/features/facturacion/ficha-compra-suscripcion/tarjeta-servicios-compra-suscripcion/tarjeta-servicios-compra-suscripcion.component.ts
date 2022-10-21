@@ -294,7 +294,7 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
             }
           });
 
-          this.comboServiciosManuales = this.comboServicios.filter(el => el.automatico == "Manual");
+          this.comboServiciosManuales = this.comboServicios.filter(el => el.automatico == "Manual" && el.fechabaja == null);
 
           if(this.ficha.fechaPendiente == null && this.ficha.servicios.length > 0){
             this.initServicios();
@@ -408,7 +408,8 @@ export class TarjetaServiciosCompraSuscripcionComponent implements OnInit {
     this.router.navigate(["/fichaServicios"]);
   }
 
-  anadirServicio(selectedServicio) {
+  anadirServicio($event) {
+    let selectedServicio = $event.data
     if(this.serviciosTarjeta.length==1){
       this.showMessage("error",
       this.translateService.instant("facturacion.suscripcion.limiteServicios"),
