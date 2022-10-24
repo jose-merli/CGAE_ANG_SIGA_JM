@@ -250,7 +250,7 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
 
   //COmprobacion de permisos y condiciones cuando se presiona el boton de guardar.
   checkPermisosSave() {
-    if (!this.permisoEscritura) {
+    if (this.permisoEscritura) {
       this.save();
     }
   }
