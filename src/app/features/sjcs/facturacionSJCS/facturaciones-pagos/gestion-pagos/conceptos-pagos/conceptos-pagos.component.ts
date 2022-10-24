@@ -389,7 +389,7 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
   changePorcentajeApagar(cantidad, dato) {
 
     if (cantidad.trim().length > 0 && !isNaN(cantidad) && parseFloat(cantidad) >= 0) {
-      const porcentaje = cantidad * 100 / dato.importePendiente;
+      const porcentaje = cantidad * 100 / dato.importeFacturado;
 
       if (cantidad > dato.importePendiente) {
         dato.porcentajeApagar = 0.00;
@@ -406,6 +406,13 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
 
     dato.cantidadRestante   = (dato.importePendiente - parseFloat(dato.cantidadApagar)).toFixed(2);
     dato.porcentajeRestante = (dato.cantidadRestante * 100 / dato.importeFacturado).toFixed(2);
+
+    if(dato.porcentajeRestante <= 1){
+      dato.cantidadApagar=dato.importePendiente;
+      dato.porcentajeApagar=dato.porcentajePendiente;
+      dato.cantidadRestante = Number.parseFloat("0").toFixed(2);
+      dato.porcentajeRestante = Number.parseFloat("0").toFixed(2);
+    }
 
   }
 
@@ -431,17 +438,23 @@ export class ConceptosPagosComponent implements OnInit, OnChanges, AfterViewInit
   changeCantidadApagar(dato) {
 
     let porcentaje = parseFloat(dato.porcentajeApagar);
-    let cantidad = porcentaje * dato.importePendiente / 100;
+    let cantidad = porcentaje * dato.importeFacturado / 100;
 
     if (cantidad > dato.importePendiente) {
       dato.cantidadApagar = 0.00;
+      dato.porcentajeApagar = Number.parseFloat("0").toFixed(2);
     } else {
       dato.cantidadApagar = cantidad.toFixed(2);
     }
 
     dato.cantidadRestante   = (dato.importePendiente - parseFloat(dato.cantidadApagar)).toFixed(2);
     dato.porcentajeRestante = (dato.cantidadRestante * 100 / dato.importeFacturado).toFixed(2);
-
+    if(dato.porcentajeRestante <= 1){
+      dato.cantidadApagar=dato.importePendiente;
+      dato.porcentajeApagar=dato.porcentajePendiente;
+      dato.cantidadRestante = Number.parseFloat("0").toFixed(2);
+      dato.porcentajeRestante = Number.parseFloat("0").toFixed(2);
+    }
   }
 
   cambioConcepto(event, dato) {
