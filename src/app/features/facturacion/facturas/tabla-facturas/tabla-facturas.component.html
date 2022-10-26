@@ -108,31 +108,31 @@
     <div class="text-right main-button">
         <!-- Botón modal- RENEGOCIAR" -->
         <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="renegociar()" 
-        [disabled]="selectedDatos.length == 0 || esColegiado"
+        [disabled]="disabledRenegociar() || esColegiado"
         label="{{'general.boton.renegociar' | translate }}"></button>
        <!-- Botón modal- Nuevo Cobro" -->
        <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="nuevoCobro()" 
-       [disabled]="selectedDatos.length == 0 || esColegiado"
+       [disabled]=" disabledNuevoCobro() || esColegiado"
        label="{{'facturacion.facturas.estadosPagos.nuevoCobro' | translate }}"></button>
       <!-- Botón modal- Nuevo Abono" -->
       <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="nuevoAbono()" 
-      [disabled]="selectedDatos.length == 0 || esColegiado"
+      [disabled]=" disabledNuevoAbono() || esColegiado"
       label="{{'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
       <!-- Botón modal- Devolver" -->
       <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="devolver()" 
-      [disabled]="selectedDatos.length == 0 || esColegiado"
+      [disabled]=" disabledDevolver() || esColegiado"
       label="{{'facturacion.facturas.estadosPagos.devolver' | translate }}"></button>
       <!-- Botón modal- Devolver Comision" -->
       <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="devolverComision()" 
-      [disabled]="selectedDatos.length == 0 || esColegiado"
+      [disabled]=" disabledDevolver() || esColegiado"
       label="{{'facturacion.facturas.estadosPagos.devolverConComision' | translate }}"></button>
       <!-- Botón modal- Anular" -->
       <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="anular()" 
-      [disabled]="selectedDatos.length == 0 || esColegiado"
+      [disabled]="disabledAnular() || esColegiado"
       label="{{'general.boton.anular' | translate }}"></button>
       <!-- Botón debería ser "eliminar ultimo cobro" -->
       <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="eliminarUltimoCobro()" 
-      [disabled]="selectedDatos.length == 0 || esColegiado"
+      [disabled]="disabledEliminar() || esColegiado"
       label="{{'facturas.tabla.boton.eliminarUltCobro' | translate }}"></button>
 
 
@@ -208,7 +208,7 @@
         </div>
       </div>
       <!-- Cuerpo en ficha abierta -->
-      <div  *ngIf="openFichaModal" class="card-body card-body-ficha">
+      <div  *ngIf="!openFichaModal" class="card-body card-body-ficha">
         <div class="row">
           <div class="col-lg-12 col-md-12">
             <div class="form-row">

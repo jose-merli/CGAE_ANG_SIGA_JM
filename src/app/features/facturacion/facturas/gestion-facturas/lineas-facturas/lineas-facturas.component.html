@@ -19,15 +19,14 @@
               <label>{{ 'general.description' | translate }}: 
                 <span *ngIf="datos.length != 0">{{ datos[0].descripcion }}</span></label>
               <label>{{ 'facturacion.productos.importeNeto' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].importeNeto + " €" }}</span></label>
+                <span *ngIf="datos.length != 0">{{ ( datos[0].importeNeto  | number: '.2' : 'es-ES') +' €'}}</span></label>
               <label>{{ 'facturacion.productos.importeIva' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].importeIVA + " €" }}</span></label>
+                <span *ngIf="datos.length != 0">{{ (datos[0].importeIVA  | number: '.2' : 'es-ES') +' €' }}</span></label>
               <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}: 
-                <span *ngIf="datos.length != 0">{{ datos[0].importeTotal + " €" }}</span></label>
-
+                <span *ngIf="datos.length != 0">{{ (datos[0].importeTotal  | number: '.2' : 'es-ES') +' €' }}</span></label>
               <ng-container *ngIf="bodyInicial && bodyInicial.tipo == 'FACTURA'">
                 <label>{{ 'facturacion.facturas.datosGenerales.impAnticipado' | translate }}: 
-                  <span *ngIf="datos.length != 0">{{ datos[0].importeAnticipado + " €" }}</span></label>
+                  <span *ngIf="datos.length != 0">{{ (datos[0].importeAnticipado  | number: '.2' : 'es-ES') +' €' }}</span></label>
               </ng-container>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('lineas')"
@@ -98,13 +97,13 @@
               </div>
 
               <div *ngIf="col.field == 'precioUnitario' || col.field == 'importeNeto' || col.field == 'importeNeto' || col.field == 'importeIVA' || col.field == 'importeTotal'">
-                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']" class="pull-right">{{ dato[col.field] ? dato[col.field] + " €" : "-" }}</span>
+                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']" class="pull-right">{{ dato[col.field] ? (dato[col.field]  | number: '.2' : 'es-ES') +' €' : "-" }}</span>
                 
                 <input DigitDecimaNumber *ngIf="col.editable && dato['modoEdicion']" type="text" class="form-control" [ngClass]="styleObligatorio(datos[rowIndex][col.field])" [(ngModel)]="datos[rowIndex][col.field]" maxlength="10" (change)="onChangeImportes(rowIndex)" pInputText>
               </div>
 
               <div *ngIf="col.field == 'importeAnticipado'">
-                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']" class="pull-right">{{ dato[col.field] ? dato[col.field] + " €" : "0 €" }}</span>
+                <span (click)="onRowSelect(dato)" *ngIf="!col.editable || !dato['modoEdicion']" class="pull-right">{{  (dato[col.field]  | number: '.2' : 'es-ES') +' €'  }}</span>
               </div>
               
               <div *ngIf="col.field == 'tipoIVA'">
@@ -130,10 +129,6 @@
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                name="groupname"></p-checkbox>
-            </div>
           </div>
         </ng-template>
 

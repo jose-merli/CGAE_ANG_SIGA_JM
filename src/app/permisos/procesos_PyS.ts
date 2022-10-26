@@ -15,6 +15,7 @@ export const procesos_PyS: any = {
     actualizacionMovimientosMonedero: "52B",
     actualizacioServiciosMonedero: "52C",
 
+    editarPrecioUnitario: "39P",
 
 
     //PERMISOS MAESTROS --> TIPOS PRODUCTOS Y MAESTROS --> TIPOS SERVICIOS

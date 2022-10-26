@@ -270,7 +270,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
   isValid(): boolean {
     if (this.bodyInicial.tipo == "FACTURA" && this.datos.some(d => d.descripcion == undefined 
         || d.descripcion.trim().length == 0 
-        || d.precioUnitario == undefined || d.precioUnitario.trim().length == 0
+        || d.precioUnitario == undefined 
         || d.idTipoIVA == undefined || d.idTipoIVA.trim().length == 0)) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
       return false;
@@ -278,7 +278,7 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
     if (this.bodyInicial.tipo != "FACTURA" && this.datos.some(d => d.descripcion == undefined 
         || d.descripcion.trim().length == 0 
-        || d.precioUnitario == undefined || d.precioUnitario.trim().length == 0)) {
+        || d.precioUnitario == undefined )) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
       return false;
     }
@@ -352,21 +352,21 @@ export class LineasFacturasComponent implements OnInit, OnChanges {
 
   onChangeImportes(index: number) {
     if (this.bodyInicial.tipo == "FACTURA") {
-      if (this.datos[index].precioUnitario != undefined && this.datos[index].precioUnitario.trim() != ""
+      if (this.datos[index].precioUnitario != undefined 
         && this.datos[index].cantidad != undefined && this.datos[index].cantidad.trim() != ""
         && this.datos[index].idTipoIVA != undefined && this.datos[index].idTipoIVA.trim() != "") {
-        this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
+        this.datos[index].importeNeto = parseFloat((this.datos[index].precioUnitario * parseFloat(this.datos[index].cantidad)).toFixed(2));
 
         // Obtiene el iva del combo
         let iva: number = parseFloat(this.comboTiposIVA.find(ti => ti.value === this.datos[index].idTipoIVA).label2);
-        this.datos[index].importeIVA = (parseFloat(this.datos[index].importeNeto) * iva / 100.0).toFixed(2).toString();
+        this.datos[index].importeIVA = parseFloat((this.datos[index].importeNeto * iva / 100.0).toFixed(2));
 
-        this.datos[index].importeTotal = (parseFloat(this.datos[index].importeNeto) + parseFloat(this.datos[index].importeIVA)).toFixed(2).toString();
+        this.datos[index].importeTotal = parseFloat((this.datos[index].importeNeto + this.datos[index].importeIVA).toFixed(2));
       }
     } else {
-      if (this.datos[index].precioUnitario != undefined && this.datos[index].precioUnitario.trim() != ""
+      if (this.datos[index].precioUnitario != undefined 
         && this.datos[index].cantidad != undefined && this.datos[index].cantidad.trim() != "") {
-        this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
+        this.datos[index].importeNeto = parseFloat((this.datos[index].precioUnitario * parseFloat(this.datos[index].cantidad)).toFixed(2));
       }
     }
     

@@ -43,9 +43,9 @@
                   <label>{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}: 
                     <span>{{ getUltimoEstado().iban }}</span></label>
                   <label>{{ 'facturacion.facturas.estadosPagos.movimiento' | translate }}: 
-                    <span>{{ getUltimoEstado().impTotalPagado + " €" }}</span></label>
+                    <span>{{ getUltimoEstado().impTotalPagado  | number: '.2' : 'es-ES' }} €</span></label>
                   <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
-                    <span>{{ getUltimoEstado().impTotalPorPagar + " €" }}</span></label>
+                    <span>{{ getUltimoEstado().impTotalPorPagar  | number: '.2' : 'es-ES' }} €</span></label>
                 </div>
               </ng-container>
 
@@ -70,9 +70,9 @@
                   <label>{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}: 
                     <span>{{ getUltimoEstado().cuentaBancaria }}</span></label>
                   <label>{{ 'facturacion.facturas.estadosPagos.movimiento' | translate }}: 
-                    <span>{{ getUltimoEstado().movimiento + " €" }}</span></label>
+                    <span>{{ getUltimoEstado().movimiento  | number: '.2' : 'es-ES' }} €</span></label>
                   <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
-                    <span>{{ getUltimoEstado().importePendiente + " €" }}</span></label>
+                    <span>{{ getUltimoEstado().importePendiente  | number: '.2' : 'es-ES' }} €</span></label>
                 </div>
               </ng-container>
             </div>
@@ -154,7 +154,7 @@
                     </div>
                   </div>
                   <div *ngSwitchCase="'impTotalPagado'">
-                    <span class="pull-right" *ngIf="!(dato.nuevo && nuevoEstado.idAccion == ACCION_FACTURA_NUEVO_CAJA)">{{ dato[col.field] + ' €' }}</span>
+                    <span class="pull-right" *ngIf="!(dato.nuevo && nuevoEstado.idAccion == ACCION_FACTURA_NUEVO_CAJA)">{{ (dato[col.field] | number: '.2' : 'es-ES') +' €' }}</span>
 
                     <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_FACTURA_NUEVO_CAJA">
                       <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPagado" 
@@ -162,7 +162,7 @@
                     </div>
                   </div>
                   <div *ngSwitchCase="'impTotalPorPagar'">
-                    <span class="pull-right" *ngIf="!(dato.nuevo && nuevoEstado.idAccion == ACCION_FACTURA_NUEVO_CAJA)">{{ dato[col.field] + ' €' }}</span>
+                    <span class="pull-right" *ngIf="!(dato.nuevo && nuevoEstado.idAccion == ACCION_FACTURA_NUEVO_CAJA)">{{ (dato[col.field] | number: '.2' : 'es-ES') +' €' }}</span>
 
                     <div *ngIf="dato.nuevo && nuevoEstado.idAccion == ACCION_FACTURA_NUEVO_CAJA">
                       <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.impTotalPorPagar" [disabled]="true"
@@ -245,7 +245,7 @@
                     </div>
                   </div>
                   <div *ngSwitchCase="'impTotalPagado'">
-                    <span *ngIf="!dato.nuevo" class="pull-right">{{ dato['movimiento'] ? dato['movimiento'] + " €" : "-" }}</span>
+                    <span *ngIf="!dato.nuevo" class="pull-right">{{ dato['movimiento'] ?  (dato['movimiento'] | number: '.2' : 'es-ES') +' €' : "-" }}</span>
                     
                     <div *ngIf="dato.nuevo && nuevoEstado.idAccion != ACCION_ABONO_RENEGOCIACION">
                       <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.movimiento" 
@@ -253,7 +253,7 @@
                     </div>
                   </div>
                   <div *ngSwitchCase="'impTotalPorPagar'">
-                    <span *ngIf="!dato.nuevo" class="pull-right">{{ dato['importePendiente'] ? dato['importePendiente'] + " €" : "-" }}</span>
+                    <span *ngIf="!dato.nuevo" class="pull-right">{{ dato['importePendiente'] ?  (dato['importePendiente'] | number: '.2' : 'es-ES') +' €' : "-" }}</span>
                   
                     <div *ngIf="dato.nuevo && nuevoEstado.idAccion != ACCION_ABONO_RENEGOCIACION">
                       <input DigitDecimaNumber type="text" class="form-control" [(ngModel)]="nuevoEstado.importePendiente" 
@@ -284,10 +284,6 @@
             <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
             </p-dropdown>
             <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-            <div class="ml-3 selectAll">
-              <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
-                name="groupname"></p-checkbox>
-            </div>
           </div>
         </ng-template>
 

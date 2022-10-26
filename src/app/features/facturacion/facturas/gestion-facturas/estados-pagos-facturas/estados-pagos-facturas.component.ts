@@ -237,7 +237,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
     return !this.esUltimoEstadoFactura() || !["2"].includes(ultimaAccion.idEstado) 
-    || ultimaAccion.impTotalPorPagar != undefined && parseFloat(ultimaAccion.impTotalPorPagar) == 0;
+    || ultimaAccion.impTotalPorPagar != undefined && ultimaAccion.impTotalPorPagar == 0;
   }
 
   disabledNuevoAbono(): boolean {
@@ -313,7 +313,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // Si se selecciona  por pago
 
-      this.nuevoEstado.impTotalPagado = "0";
+      this.nuevoEstado.impTotalPagado = 0;
       this.nuevoEstado.impTotalPorPagar = ultimaAccion.impTotalPorPagar;
 
       this.grupos[this.grupos.length - 1].values.push(this.nuevoEstado);
@@ -356,7 +356,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
 
       // El importe pendiente se recalcula
       this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
-      this.nuevoEstado.impTotalPorPagar = "0";
+      this.nuevoEstado.impTotalPorPagar = 0;
 
       this.grupos[this.grupos.length - 1].values.push(this.nuevoEstado);
     }
@@ -435,15 +435,14 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     }
 
     if (this.esUltimoEstadoFactura() && [this.ACCION_FACTURA_NUEVO_CAJA].includes(this.nuevoEstado.idAccion)) {
-      if (this.nuevoEstado.impTotalPagado == undefined || this.nuevoEstado.impTotalPagado.trim().length == 0 
-          || parseFloat(this.nuevoEstado.impTotalPagado) < 0) {
-        this.nuevoEstado.impTotalPagado = "0";
-      } else if (parseFloat(this.nuevoEstado.impTotalPagado) > parseFloat(ultimaAccion.impTotalPorPagar)) {
+      if (this.nuevoEstado.impTotalPagado == undefined || this.nuevoEstado.impTotalPagado < 0) {
+        this.nuevoEstado.impTotalPagado = 0;
+      } else if (this.nuevoEstado.impTotalPagado > ultimaAccion.impTotalPorPagar) {
         this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
       }
 
-      this.nuevoEstado.impTotalPagado = parseFloat(this.nuevoEstado.impTotalPagado).toFixed(2);
-      this.nuevoEstado.impTotalPorPagar = (+ultimaAccion.impTotalPorPagar - +this.nuevoEstado.impTotalPagado).toFixed(2);
+      this.nuevoEstado.impTotalPagado = this.nuevoEstado.impTotalPagado;
+      this.nuevoEstado.impTotalPorPagar = (+ultimaAccion.impTotalPorPagar - +this.nuevoEstado.impTotalPagado);
     }
 
   }
@@ -452,9 +451,9 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     let ultimaAccion: FacturaEstadosPagosItem = this.getUltimoEstado();
 
     if (this.bodyInicial.tipo == "FACTURA") {
-        return parseFloat(ultimaAccion.impTotalPorPagar) == 0;
+        return ultimaAccion.impTotalPorPagar == 0;
     } else {
-      return parseFloat(this.bodyInicial.importeAdeudadoPendienteAb) == 0;
+      return this.bodyInicial.importeAdeudadoPendienteAb == 0;
     }
   }
 
@@ -481,7 +480,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       // Cuenta a la que se le pasó el cargo
       this.nuevoEstado.cuentaBanco = ultimaAccion.cuentaBanco;
 
-      this.nuevoEstado.impTotalPagado = "0";
+      this.nuevoEstado.impTotalPagado = 0;
       this.nuevoEstado.impTotalPorPagar = ultimaAccion.impTotalPagado;
 
       this.grupos[this.grupos.length - 1].values.push(this.nuevoEstado);
@@ -515,7 +514,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       // Cuenta a la que se le pasó el cargo
       this.nuevoEstado.cuentaBanco = ultimaAccion.cuentaBanco;
 
-      this.nuevoEstado.impTotalPagado = "0";
+      this.nuevoEstado.impTotalPagado = 0;
       this.nuevoEstado.impTotalPorPagar = ultimaAccion.impTotalPagado;
 
       this.grupos[this.grupos.length - 1].values.push(this.nuevoEstado);
@@ -544,7 +543,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       this.nuevoEstado.accion = this.translateService.instant("facturacionPyS.facturas.estadosPagos.anulacion");
 
       this.nuevoEstado.impTotalPagado = ultimaAccion.impTotalPorPagar;
-      this.nuevoEstado.impTotalPorPagar = "0";
+      this.nuevoEstado.impTotalPorPagar = 0;
 
       this.grupos[this.grupos.length - 1].values.push(this.nuevoEstado);
     }
@@ -605,7 +604,7 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
       } else if (this.nuevoEstado.idAccion == this.ACCION_FACTURA_DEVOLUCION) {
         valid = this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.comentario != undefined && this.nuevoEstado.comentario.trim().length != 0;
       } else if (this.nuevoEstado.idAccion == this.ACCION_FACTURA_NUEVO_CAJA) {
-        valid = this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.impTotalPagado != undefined && this.nuevoEstado.impTotalPagado.trim().length != 0;
+        valid = this.nuevoEstado.fechaModificaion != undefined && this.nuevoEstado.impTotalPagado != undefined;
       }
     } else {
       if (this.nuevoEstado.idAccion == this.ACCION_ABONO_RENEGOCIACION) {

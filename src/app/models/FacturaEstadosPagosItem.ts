@@ -13,8 +13,8 @@ export class FacturaEstadosPagosItem {
 	cuentaBanco: string;
 	iban: string;
 
-	impTotalPagado: string;
-	impTotalPorPagar: string;
+	impTotalPagado: number;
+	impTotalPorPagar: number;
 
 	IDSJCS: string;
 	

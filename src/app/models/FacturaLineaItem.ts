@@ -3,14 +3,14 @@ export class FacturaLineaItem {
     idFactura: string;
 	numeroLinea: string;
 	descripcion: string;
-	precioUnitario: string;
+	precioUnitario: number;
 	cantidad: string;
-	importeNeto: string;
+	importeNeto: number;
 	tipoIVA: string;
 	idTipoIVA: string;
-	importeIVA: string;
-	importeTotal: string;
-	importeAnticipado: string;
+	importeIVA: number;
+	importeTotal: number;
+	importeAnticipado: number;
 
 	modoEdicion: boolean;
 

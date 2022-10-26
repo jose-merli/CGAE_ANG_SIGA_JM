@@ -21,13 +21,13 @@
             <label>{{ 'facturacion.facturas.datosGenerales.emision' | translate }}: 
                 <span>{{ bodyInicial.fechaEmision | date: "dd/MM/yyyy" }}</span></label>
             <label>{{ 'facturacion.productos.importeNeto' | translate }}: 
-              <span>{{ bodyInicial.importeNeto + " €" }}</span></label>
+              <span>{{ bodyInicial.importeNeto | number: '.2' : 'es-ES' }} €</span></label>
             <label>{{ 'facturacion.productos.importeIva' | translate }}: 
-              <span>{{ bodyInicial.importeIVA + " €" }}</span></label>
+              <span>{{ bodyInicial.importeIVA | number: '.2' : 'es-ES' }} €</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}: 
-              <span>{{ bodyInicial.importefacturado + " €" }}</span></label>
+              <span>{{ bodyInicial.importefacturado  | number: '.2' : 'es-ES' }} €</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
-              <span>{{ (bodyInicial.tipo == "FACTURA" ? bodyInicial.importeAdeudadoPendiente : bodyInicial.importeAdeudadoPendienteAb) + " €" }}</span></label>
+              <span>{{ (bodyInicial.tipo == "FACTURA" ? bodyInicial.importeAdeudadoPendiente : bodyInicial.importeAdeudadoPendienteAb) | number: '.2' : 'es-ES' }} €</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('datosGenerales')"
               *ngIf="!esFichaActiva()"></i>
@@ -62,15 +62,15 @@
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.productos.importeNeto' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeNeto ? bodyInicial.importeNeto + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importeNeto | number: '.2' : 'es-ES' ) + ' €' " disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.productos.importeIva' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeIVA ? bodyInicial.importeIVA + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importeIVA | number: '.2' : 'es-ES' ) + ' €' " disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacionSJCS.facturacionesYPagos.importeTotal' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importefacturado ? bodyInicial.importefacturado + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importefacturado | number: '.2' : 'es-ES' ) + ' €' " disabled pInputText>
             </div>
           </div>
         </div>
@@ -79,27 +79,27 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.facturas.datosGenerales.impAnticipado' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeAnticipado ? bodyInicial.importeAnticipado + ' €': '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]=" (bodyInicial.importeAnticipado | number: '.2' : 'es-ES' ) + ' €' " disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacionSJCS.facturacionesYPagos.importeCompensado' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeCompensado ? bodyInicial.importeCompensado + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]=" (bodyInicial.importeCompensado | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.facturas.datosGenerales.impCaja' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeCaja ? bodyInicial.importeCaja + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importeCaja | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.facturas.datosGenerales.impBanco' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeBanco ? bodyInicial.importeBanco + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importeBanco | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.facturas.datosGenerales.impCobrado' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importePagado ? bodyInicial.importePagado + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importePagado | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeAdeudadoPendiente ? bodyInicial.importeAdeudadoPendiente + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importeAdeudadoPendiente | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
           </div>
         </div>
@@ -108,26 +108,26 @@
           <div class="form-row">
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.facturas.datosGenerales.impAnulado' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeAnuladoAb ? bodyInicial.importeAnuladoAb + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importeAnuladoAb | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
 
             <div class="w-100 d-none d-md-block"></div>
             
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.facturas.datosGenerales.impCaja' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeCajaAb ? bodyInicial.importeCajaAb + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importeCajaAb | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.facturas.datosGenerales.impBanco' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeBancoAb ? bodyInicial.importeBancoAb + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importeBancoAb | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacion.facturas.datosGenerales.impAbTotal' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importePagadoAb ? bodyInicial.importePagadoAb + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importePagadoAb | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}</label>
-              <input type="text" class="form-control" [value]="bodyInicial.importeAdeudadoPendienteAb ? bodyInicial.importeAdeudadoPendienteAb + ' €' : '-'" disabled pInputText>
+              <input type="text" class="form-control" [value]="(bodyInicial.importeAdeudadoPendienteAb | number: '.2' : 'es-ES' ) + ' €'" disabled pInputText>
             </div>
           </div>
         </div>

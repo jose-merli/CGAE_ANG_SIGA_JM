@@ -25,8 +25,8 @@ export class FacturasItem {
 	fechaEmisionDesde: Date;
 	fechaEmisionHasta: Date;
 
-	importeIVA: string;
-	importeNeto: string;
+	importeIVA: number;
+	importeNeto: number;
 
 	importefacturado: number;
 	importefacturadoDesde: string;
@@ -36,19 +36,19 @@ export class FacturasItem {
 	importeAdeudadoDesde: string;
 
 	//importes factura
-	importeAnticipado: string;
-	importeCompensado: string;
-	importeCaja: string;
-	importeBanco: string;
-	importePagado: string;
+	importeAnticipado: number;
+	importeCompensado: number;
+	importeCaja: number;
+	importeBanco: number;
+	importePagado: number;
 	importeAdeudadoPendiente: number;
 
 	//importes abono
-	importeAnuladoAb: string;
-	importeCajaAb: string;
-	importeBancoAb: string;
-	importePagadoAb: string;
-	importeAdeudadoPendienteAb: string;
+	importeAnuladoAb: number;
+	importeCajaAb: number;
+	importeBancoAb: number;
+	importePagadoAb: number;
+	importeAdeudadoPendienteAb: number;
 
 	//facturacion
 	idFacturacion: string;

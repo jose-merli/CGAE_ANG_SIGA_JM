@@ -450,8 +450,8 @@ onChangeSelectAll() {
           item.modo = this.comboSel;
 
           // El importe pendiente se recalcula
-          item.impTotalPagado = "0";
-          item.impTotalPorPagar = element.importePorPagarUlt;
+          item.impTotalPagado = 0;
+          item.impTotalPorPagar = parseFloat(element.importePorPagarUlt);
 
           this.itemsParaModificar.push(item);
         }
@@ -482,8 +482,8 @@ onChangeSelectAll() {
         item.modo = this.comboSel;
 
         // El importe pendiente se recalcula
-        item.impTotalPagado = "0";
-        item.impTotalPorPagar = element.importePorPagarUlt;
+        item.impTotalPagado = 0;
+        item.impTotalPorPagar =  parseFloat(element.importePorPagarUlt);
 
         this.itemsParaModificarAbonos.push(item);
       }
@@ -508,15 +508,15 @@ onChangeSelectAll() {
           item.comentario = this.itemAction.comentario;
           item.notaMaxLength = 256;
 
-          item.impTotalPagado = element.importePorPagarUlt
+          item.impTotalPagado =  parseFloat(element.importePorPagarUlt);
 
           // Acción
           item.idAccion = "4";
           item.accion = this.translateService.instant("facturacion.facturas.estadosPagos.cobroPorCaja");
 
           // El importe pendiente se recalcula
-          item.impTotalPagado = element.importePorPagarUlt;
-          item.impTotalPorPagar = "0";
+          item.impTotalPagado = parseFloat(element.importePorPagarUlt);
+          item.impTotalPorPagar = 0;
 
           this.itemsParaModificar.push(item);
         }
@@ -592,8 +592,8 @@ muestraCamposObligatorios() {
       // Cuenta a la que se le pasó el cargo - ver si es el combo
       //item.cuentaBanco = ultimaAccion.cuentaBanco;
 
-      item.impTotalPagado = "0";
-      item.impTotalPorPagar = element.impTotalPagadoUlt;
+      item.impTotalPagado = 0;
+      item.impTotalPorPagar =  parseFloat(element.importePorPagarUlt);
 
       this.itemsParaModificar.push(item);
       }
@@ -630,8 +630,8 @@ muestraCamposObligatorios() {
         // Cuenta a la que se le pasó el cargo -- MIRARLO, CUENTA BANCO SIEMPRE NULL
         //item.cuentaBanco = ultimaAccion.cuentaBanco;
   
-        item.impTotalPagado = "0";
-        item.impTotalPorPagar = element.impTotalPagadoUlt;
+        item.impTotalPagado = 0;
+        item.impTotalPorPagar =  parseFloat(element.importePorPagarUlt);
 
         this.itemsParaModificar.push(item)
       }
@@ -663,8 +663,8 @@ muestraCamposObligatorios() {
         item.idAccion = "8";
         item.accion = this.translateService.instant("facturacion.facturas.estadosPagos.anulacion");
   
-        item.impTotalPagado = element.importePorPagarUlt;
-        item.impTotalPorPagar = "0";
+        item.impTotalPagado =  parseFloat(element.importePorPagarUlt);
+        item.impTotalPorPagar = 0;
 
         this.itemsParaModificar.push(item)
       }
@@ -816,5 +816,56 @@ mensajeCargaMasiva(registrosProcesados,totalRegistros){
     }
   }
 
+  disabledAnular(){
+    let invalido:number = 0;
+    this.selectedDatos.forEach(element => {
+      if(element.tipo == 'ABONO')  invalido = invalido + 1
+     if( ["7", "8"].includes(element.estadoUlt)) invalido = invalido + 1
+    });
+    return  invalido > 0 ? true : false;
+  }
 
+  disabledRenegociar(){
+    let invalido:number = 0;
+    this.selectedDatos.forEach(element => {
+     if( !["1","2", "4", "5"].includes(element.estadoUlt)) invalido = invalido + 1
+    });
+    return  invalido > 0 ? true : false;
+  }
+
+  disabledNuevoCobro(){
+    let invalido:number = 0;
+    this.selectedDatos.forEach(element => {
+    if(element.tipo == 'ABONO')  invalido = invalido + 1
+     if( !["2"].includes(element.estadoUlt)) invalido = invalido + 1
+    });
+    return  invalido > 0 ? true : false;
+    // ultimaAccion.impTotalPorPagar == 0;
+  }
+
+  disabledNuevoAbono(): boolean {
+    let invalido:number = 0;
+    this.selectedDatos.forEach(element => {
+    if(element.tipo == 'ABONO')  invalido = invalido + 1
+     if( !["6","7"].includes(element.estadoUlt)) invalido = invalido + 1
+    });
+    return  invalido > 0 ? true : false;
+  }
+
+  disabledDevolver(): boolean {
+    let invalido:number = 0;
+    this.selectedDatos.forEach(element => {
+     if( !["5"].includes(element.estadoUlt)) invalido = invalido + 1
+    });
+    return  invalido > 0 ? true : false;
+  }
+
+  disabledEliminar(): boolean {
+    let invalido:number = 0;
+    this.selectedDatos.forEach(element => {
+     if( !["4"].includes(element.estadoUlt)) invalido = invalido + 1
+    });
+    return  invalido > 0 ? true : false;
+
+  }
 }
