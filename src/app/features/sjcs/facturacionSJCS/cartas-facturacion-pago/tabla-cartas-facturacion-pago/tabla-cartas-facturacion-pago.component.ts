@@ -89,7 +89,7 @@ export class TablaCartasFacturacionPagoComponent implements OnInit {
       { field: "nombreCol", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
       { field: "nombrePago", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.pago", width: "20%" },
       { field: "totalImportesjcs", header: "menu.justiciaGratuita", width: "8%" },
-      { field: "importeTotalMovimientos", header: "menu.facturacionSJCS.mantenimientoMovimientos", width: "5%" },
+      { field: "importeTotalMovimientos", header: "facturacionSJCS.tarjGenFac.mv.movimientosVarios", width: "5%" },
       { field: "totalImporteBruto", header: "facturacionSJCS.facturacionesYPagos.literal.bruto", width: "8%" },
       { field: "totalImporteIrpf", header: "facturacionSJCS.facturacionesYPagos.literal.irpf", width: "5%" },
       { field: "importeTotalRetenciones", header: "facturacionSJCS.facturacionesYPagos.literal.retenciones", width: "8%" },
