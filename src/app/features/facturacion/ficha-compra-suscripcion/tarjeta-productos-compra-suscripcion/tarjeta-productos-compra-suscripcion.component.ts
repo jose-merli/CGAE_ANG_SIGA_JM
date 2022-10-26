@@ -202,15 +202,12 @@ export class TarjetaProductosCompraSuscripcionComponent implements OnInit {
   }
 
   getPermisoEditarImporte() {
-    this.subscriptionProductosBusqueda = this.sigaServices.get("PyS_getListaProductosCompra").subscribe(
-      permiso => {
-        if (permiso == "S") this.permisoEditarImporte = true;
-      },
-      err => {
-        this.progressSpinner = false;
-      }, () => {
-        this.progressSpinner = false;
-      });;
+      this.commonsService
+        .checkAcceso(procesos_PyS.editarPrecioUnitario)
+        .then((respuesta) => {
+          if(respuesta != undefined )this.permisoEditarImporte = respuesta;
+        })
+        .catch((error) => console.error(error));
   }
 
 
