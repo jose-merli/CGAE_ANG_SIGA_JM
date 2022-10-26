@@ -204,7 +204,7 @@ export class LineasAbonosComponent implements OnInit, OnChanges {
 
     if (this.bodyInicial.tipo != "FACTURA" && this.datos.some(d => d.descripcion == undefined 
         || d.descripcion.trim().length == 0 
-        || d.precioUnitario == undefined || d.precioUnitario.trim().length == 0)) {
+        || d.precioUnitario == undefined || d.precioUnitario == 0)) {
       this.showMessage("error", "Error", this.translateService.instant('general.message.camposObligatorios'));
       return false;
     }
@@ -258,9 +258,9 @@ export class LineasAbonosComponent implements OnInit, OnChanges {
 
   onChangeImportes(index: number) {
 
-    if (this.datos[index].precioUnitario != undefined && this.datos[index].precioUnitario.trim() != ""
+    if (this.datos[index].precioUnitario != undefined 
       && this.datos[index].cantidad != undefined && this.datos[index].cantidad.trim() != "") {
-      this.datos[index].importeNeto = (parseFloat(this.datos[index].precioUnitario) * parseFloat(this.datos[index].cantidad)).toFixed(2).toString();
+      this.datos[index].importeNeto = parseFloat((this.datos[index].precioUnitario * parseFloat(this.datos[index].cantidad)).toFixed(2));
       }
   }
   
