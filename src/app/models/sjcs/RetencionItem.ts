@@ -4,7 +4,7 @@ export class RetencionItem {
     idPersona: string;
     idDestinatario: string;
     fechaAlta: Date;
-    fechaInicio: Date;
+    fechainicio: Date;
     fechaFin: Date;
     importe: string;
     observaciones: string;

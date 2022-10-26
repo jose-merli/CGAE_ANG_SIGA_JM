@@ -2,7 +2,7 @@ export class RetencionesRequestDto {
     ncolegiado: string;
     tiposRetencion: string | string[];
     idDestinatarios: string | string[];
-    fechaInicio: Date;
+    fechainicio: Date;
     fechaFin: Date;
     idPagos: string | string[];
     fechaAplicacionDesde: Date;

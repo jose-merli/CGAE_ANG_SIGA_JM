@@ -75,7 +75,7 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
       { field: "tipoRetencion", header: "facturacionSJCS.retenciones.tipoRetencion", width: "12%" },
       { field: "importe", header: "facturacionSJCS.retenciones.importeRetener", width: "12%" },
       { field: "restante", header: "facturacionSJCS.retenciones.importeRestante", width: "12%" },
-      { field: "fechaInicio", header: "facturacionSJCS.retenciones.fechaIniNoti", width: "12%" },
+      { field: "fechainicio", header: "facturacionSJCS.retenciones.fechaIniNoti", width: "12%" },
       { field: "fechaFin", header: "facturacionSJCS.retenciones.fechaFinNoti", width: "12%" },
       { field: "nombreDestinatario", header: "facturacionSJCS.retenciones.destinatario", width: "14%" }
     ];
@@ -98,6 +98,15 @@ export class TablaBusquedaRetencionesComponent implements OnInit {
         value: 40
       }
     ];
+  }
+
+  numberParse(event:string){
+    let number:number = 0;
+    if(event != null){
+      let aux = event.replace(".",",")
+      number= parseFloat(aux)
+    }
+    return number;
   }
 
   onChangeSelectAll() {

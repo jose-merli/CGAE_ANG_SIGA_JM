@@ -81,15 +81,6 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = this.filtros.ncolegiado;
       this.usuarioBusquedaExpress.nombreAp = this.filtros.nombreApellidoColegiado
     }
-    if(this.retencionesService.filtrosRetenciones != null && this.retencionesService.filtrosRetenciones != undefined){
-      this.filtros.nombreApellidoColegiado = this.retencionesService.filtrosRetenciones.nombreApellidoColegiado;
-      this.filtros.ncolegiado = this.retencionesService.filtrosRetenciones.ncolegiado;
-      this.filtros.idPersona = this.retencionesService.filtrosRetenciones.idPersona;
-      this.usuarioBusquedaExpress.numColegiado = this.retencionesService.filtrosRetenciones.ncolegiado;
-      this.usuarioBusquedaExpress.nombreAp = this.retencionesService.filtrosRetenciones.nombreApellidoColegiado
-      this.retencionesService.filtrosRetenciones = new RetencionesRequestDto();
-      this.showDestinatarios = true;
-    }
 
     if (this.isLetrado) {
 
@@ -127,16 +118,25 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
     if (this.retencionesService.filtrosRetenciones && this.retencionesService.filtrosRetenciones != null
       && Object.keys(this.retencionesService.filtrosRetenciones).length > 0) {
+       
+      this.usuarioBusquedaExpress.numColegiado = this.retencionesService.filtrosRetenciones.ncolegiado;
+      this.usuarioBusquedaExpress.nombreAp = this.retencionesService.filtrosRetenciones.nombreApellidoColegiado
+
       this.filtros = JSON.parse(JSON.stringify(this.retencionesService.filtrosRetenciones));
+      
+      this.filtros.nombreApellidoColegiado = this.retencionesService.filtrosRetenciones.nombreApellidoColegiado;
+      this.filtros.ncolegiado = this.retencionesService.filtrosRetenciones.ncolegiado;
+      this.filtros.idPersona = this.retencionesService.filtrosRetenciones.idPersona;
 
       if (this.filtros.modoBusqueda && this.filtros.modoBusqueda != null && this.filtros.modoBusqueda.length > 0) {
         this.modoBusqueda = this.filtros.modoBusqueda;
         this.modoBusquedaEvent.emit(this.modoBusqueda);
       }
 
-      if (this.filtros.fechaInicio && this.filtros.fechaInicio != null) {
-        this.filtros.fechaInicio = new Date(this.filtros.fechaInicio);
+      if (this.filtros.fechainicio && this.filtros.fechainicio != null) {
+        this.filtros.fechainicio = new Date(this.filtros.fechainicio);
       }
+
 
       if (this.filtros.fechaFin && this.filtros.fechaFin != null) {
         this.filtros.fechaFin = new Date(this.filtros.fechaFin);
@@ -158,7 +158,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
       if (this.hayDatosGeneralesRellenos()) {
         this.showDatosGenerales = true;
       }
-
+      //this.retencionesService.filtrosRetenciones = new RetencionesRequestDto();
     }
 
     if(this.usuarioBusquedaExpress.numColegiado != null && this.usuarioBusquedaExpress.numColegiado != undefined && this.usuarioBusquedaExpress.numColegiado != ""){
@@ -335,7 +335,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
 
     this.filtros[fecha] = event;
 
-    if (fecha === 'fechaInicio' && this.filtros.fechaFin < this.filtros.fechaInicio) {
+    if (fecha === 'fechainicio' && this.filtros.fechaFin < this.filtros.fechainicio) {
       this.filtros.fechaFin = undefined;
     } else if (fecha === 'fechaAplicacionDesde' && this.filtros.fechaAplicacionHasta < this.filtros.fechaAplicacionDesde) {
       this.filtros.fechaAplicacionHasta = undefined;
@@ -410,7 +410,7 @@ export class FiltroBusquedaRetencionesComponent implements OnInit {
       (this.filtros && this.filtros != null) &&
       ((this.filtros.tiposRetencion && this.filtros.tiposRetencion != null && this.filtros.tiposRetencion.toString().length > 0) ||
         (this.filtros.idDestinatarios && this.filtros.idDestinatarios != null && this.filtros.idDestinatarios.toString().length > 0) ||
-        (this.filtros.fechaInicio && this.filtros.fechaInicio != null) ||
+        (this.filtros.fechainicio && this.filtros.fechainicio != null) ||
         (this.filtros.fechaFin && this.filtros.fechaFin != null) ||
         (this.filtros.idPagos && this.filtros.idPagos != null && this.filtros.idPagos.toString().length > 0) ||
         (this.filtros.fechaAplicacionDesde && this.filtros.fechaAplicacionDesde != null) ||

@@ -45,7 +45,12 @@
               <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
             </div>
 
-            <div *ngIf="col.field != 'fechaInicio' && col.field != 'aplicaciones' && col.field != 'numColegiado'">
+            <div *ngIf="(col.field == 'importeRetenido' || col.field == 'importePago')">
+              <span [ngClass]="{'italic': isHistorico(dato)}">{{ dato[col.field] != '-'  ? ((this.numberParse(dato[col.field]) | number:'1.2-2':'es-ES' ) + ' €') : dato[col.field] }} </span>
+            </div>
+
+
+            <div *ngIf="col.field != 'fechaInicio' && col.field != 'aplicaciones' && col.field != 'numColegiado' && col.field != 'importeRetenido' && col.field != 'importePago' ">
               <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
             </div>
 

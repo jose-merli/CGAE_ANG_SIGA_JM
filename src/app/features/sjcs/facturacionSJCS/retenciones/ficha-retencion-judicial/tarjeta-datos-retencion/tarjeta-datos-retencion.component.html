@@ -60,23 +60,23 @@
               <label>{{ 'facturacionSJCS.retenciones.tipoDeRetencion' | translate }} (*)</label>
               <p-dropdown class="select-form" filterBy="label,labelSinTilde" [showClear]="true" [filter]="true"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboTiposRetencion"
-                [(ngModel)]="body.tiporetencion" [disabled]="!permisoEscritura || disablePorEstado || isLetrado"
-                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.tiporetencion)}"
+                [(ngModel)]="body.tipoRetencion" [disabled]="!permisoEscritura || disablePorEstado || isLetrado"
+                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.tipoRetencion)}"
                 (onChange)="onChangeTipoDeReten()"></p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacionSJCS.retenciones.retencion' | translate }} (*)</label>
-              <input *ngIf="body.tiporetencion == 'F' || body.tiporetencion == 'L'" pInputText class="form-control"
+              <input *ngIf="body.tipoRetencion == 'F' || body.tipoRetencion == 'L'" pInputText class="form-control"
                 type="number" name="retencion" [(ngModel)]="body.importe"
                 [ngClass]="{'camposObligatorios': marcarObligatorio('inputNumber', body.importe)}"
                 (blur)="compruebaImporte(expRegImporte.test(body.importe))" [disabled]="!permisoEscritura || disabledImporte || disablePorEstado || isLetrado" />
 
-              <input *ngIf="body.tiporetencion == 'P'" pInputText class="form-control" type="number" name="retencion"
+              <input *ngIf="body.tipoRetencion == 'P'" pInputText class="form-control" type="number" name="retencion"
                 [(ngModel)]="body.importe"
                 [ngClass]="{'camposObligatorios': marcarObligatorio('inputNumber', body.importe)}"
                 (blur)="compruebaImporte(expRegPorcentaje.test(body.importe))" [disabled]="!permisoEscritura || disabledImporte || disablePorEstado || isLetrado" />
 
-              <input *ngIf="body.tiporetencion != 'F' && body.tiporetencion != 'L' && body.tiporetencion != 'P'"
+              <input *ngIf="body.tipoRetencion != 'F' && body.tipoRetencion != 'L' && body.tipoRetencion != 'P'"
                 pInputText class="form-control" type="number" name="retencion" [(ngModel)]="body.importe"
                 [ngClass]="{'camposObligatorios': marcarObligatorio('inputNumber', body.importe)}"
                 [disabled]="!permisoEscritura || disabledImporte || disablePorEstado || isLetrado" />
@@ -91,20 +91,20 @@
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacionSJCS.retenciones.fechaDeFin' | translate }}</label>
               <app-fecha [utc]="false" (valueChangeSelected)="fillFechaFin($event)" [disabled]="!permisoEscritura || isLetrado"
-                (valueChangeInput)="fillFechaFin($event)" [minDate]="minDate" [(value)]="body.fechafin">
+                (valueChangeInput)="fillFechaFin($event)" [minDate]="minDate" [(value)]="body.fechaFin">
               </app-fecha>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacionSJCS.retenciones.destinatario' | translate }} (*)</label>
               <p-dropdown class="select-form" filterBy="label,labelSinTilde" [showClear]="true" [filter]="true"
                 placeholder="{{'general.boton.seleccionar' | translate}}" [options]="comboDestinatarios"
-                [(ngModel)]="body.iddestinatario" [disabled]="!permisoEscritura || disablePorEstado || isLetrado"
-                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.iddestinatario)}">
+                [(ngModel)]="body.idDestinatario" [disabled]="!permisoEscritura || disablePorEstado || isLetrado"
+                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.idDestinatario)}">
               </p-dropdown>
             </div>
             <div class="form-group col-lg-6 col-md-6">
               <label>{{ 'facturacionSJCS.retenciones.infoDesti' | translate }}</label>
-              <input [disabled]="!permisoEscritura || disablePorEstado || isLetrado" pInputText class="form-control" type="text" name="retencion" [(ngModel)]="body.descdestinatario" />
+              <input [disabled]="!permisoEscritura || disablePorEstado || isLetrado" pInputText class="form-control" type="text" name="retencion" [(ngModel)]="body.descDestinatario" />
             </div>
           </div>
         </div>

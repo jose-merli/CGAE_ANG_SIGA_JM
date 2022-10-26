@@ -70,15 +70,15 @@
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacionSJCS.retenciones.fechaNotiDesde' | translate }}</label>
-          <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDede($event, 'fechaInicio')"
-            (valueChangeInput)="fillFechaDede($event, 'fechaInicio')" [(value)]="filtros.fechaInicio"></app-fecha>
+          <app-fecha [utc]="false" (valueChangeSelected)="fillFechaDede($event, 'fechainicio')"
+            (valueChangeInput)="fillFechaDede($event, 'fechainicio')" [(value)]="filtros.fechainicio"></app-fecha>
         </div>
 
         <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{ 'facturacionSJCS.retenciones.fechaNotiHasta' | translate }}</label>
           <app-fecha [utc]="false" (valueChangeSelected)="fillFechaHasta($event, 'fechaFin')"
             (valueChangeInput)="fillFechaHasta($event, 'fechaFin')" [(value)]="filtros.fechaFin"
-            [minDate]="filtros.fechaInicio"></app-fecha>
+            [minDate]="filtros.fechainicio"></app-fecha>
         </div>
 
       </div>

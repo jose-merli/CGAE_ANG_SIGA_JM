@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { procesos_facturacionSJCS } from '../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
 import { SigaStorageService } from '../../../../../../siga-storage.service';
+import { FcsRetencionesJudicialesItem } from '../../../../../../models/sjcs/FcsRetencionesJudicialesItem';
 
 @Component({
   selector: 'app-tarjeta-datos-retencion',
@@ -126,15 +127,15 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
           const datosRetencionTarjetaFija = new RetencionItem();
           datosRetencionTarjetaFija.tipoRetencion = this.getTextoTipoRetencion();
           datosRetencionTarjetaFija.importe = this.getTextoImporte();
-          datosRetencionTarjetaFija.fechaInicio = res.retencion.fechaInicio;
+          datosRetencionTarjetaFija.fechainicio = res.retencion.fechainicio;
           datosRetencionTarjetaFija.estado = this.getEstadoTexto(res.retencion.importe, res.retencion.restante);
           datosRetencionTarjetaFija.idDestinatario = this.getTextoDestinatario();
 
           this.retencionEvent.emit(datosRetencionTarjetaFija);
 
-          if (undefined != res.retencion.fechaInicio && null != res.retencion.fechaInicio) {
-            this.body.fechaInicio = new Date(res.retencion.fechaInicio);
-            this.bodyAux.fechaInicio = new Date(res.retencion.fechaInicio);
+          if (undefined != res.retencion.fechainicio && null != res.retencion.fechainicio) {
+            this.body.fechainicio = new Date(res.retencion.fechainicio);
+            this.bodyAux.fechainicio = new Date(res.retencion.fechainicio);
           }
 
           if (undefined != res.retencion.fechaFin && null != res.retencion.fechaFin) {
@@ -212,12 +213,12 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   }
 
   fillFechaNoti(event) {
-    this.body.fechaInicio = event;
+    this.body.fechainicio = event;
 
-    if (this.body.fechaFin < this.body.fechaInicio) {
+    if (this.body.fechaFin < this.body.fechainicio) {
       this.body.fechaFin = undefined;
     }
-    this.minDate = this.body.fechaInicio;
+    this.minDate = this.body.fechainicio;
   }
 
   fillFechaFin(event) {
@@ -245,7 +246,7 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   compruebaCamposObligatorios() {
     if ((this.body.tipoRetencion && this.body.tipoRetencion.trim().length == 1) &&
       (this.body.importe && this.body.importe != null && this.body.importe.toString().length > 0) &&
-      (this.body.fechaInicio && this.body.fechaInicio != null) &&
+      (this.body.fechainicio && this.body.fechainicio != null) &&
       (this.body.idDestinatario && this.body.idDestinatario.toString().trim().length > 0) &&
       (this.colegiado && this.colegiado != null)) {
       return true;
@@ -258,6 +259,22 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
     return false;
   }
 
+  parseToObjectRest(event:RetencionItem){
+    let item:FcsRetencionesJudicialesItem = new FcsRetencionesJudicialesItem();
+    item.idretencion = event.idRetencion;
+    item.idpersona = event.idPersona
+    item.iddestinatario = event.idDestinatario
+    item.fechaalta = event.fechaAlta;
+    item.fechainicio = event.fechainicio
+    item.fechafin = event.fechaFin
+    item.tiporetencion = event.tipoRetencion;
+    item.importe = parseFloat(event.importe)
+    item.observaciones = event.observaciones
+    item.descdestinatario = event.descDestinatario
+
+    return item;
+  }
+
   guardar() {
 
     if (this.permisoEscritura && this.compruebaCamposObligatorios()) {
@@ -265,8 +282,9 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
       this.body.idPersona = this.colegiado.idPersona;
 
       this.progressSpinner = true;
+      let objectoRest:FcsRetencionesJudicialesItem = this.parseToObjectRest(this.body);
 
-      this.sigaServices.post("retenciones_saveOrUpdateRetencion", this.body).subscribe(
+      this.sigaServices.post("retenciones_saveOrUpdateRetencion", objectoRest).subscribe(
         data => {
           const res = JSON.parse(data.body);
 
@@ -360,8 +378,8 @@ export class TarjetaDatosRetencionComponent implements OnInit, AfterViewInit {
   getTextoFechaDeNoti() {
     let cadena = '';
 
-    if (this.body.fechaInicio && this.body.fechaInicio != null) {
-      cadena = this.datePipe.transform(this.body.fechaInicio, 'dd/MM/yyyy');
+    if (this.body.fechainicio && this.body.fechainicio != null) {
+      cadena = this.datePipe.transform(this.body.fechainicio, 'dd/MM/yyyy');
     }
 
     return cadena;

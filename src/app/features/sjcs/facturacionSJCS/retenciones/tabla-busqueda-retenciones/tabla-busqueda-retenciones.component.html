@@ -28,15 +28,19 @@
 
           <td class="text-center" *ngFor="let col of columns">
 
-            <div *ngIf="(col.field == 'fechaInicio' || col.field == 'fechaFin')">
+            <div *ngIf="(col.field == 'fechainicio' || col.field == 'fechaFin')">
               <span [ngClass]="{'italic': isHistorico(dato)}">{{dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+
+            <div *ngIf="(col.field == 'importe' || col.field == 'restante')">
+              <span [ngClass]="{'italic': isHistorico(dato)}">{{ dato[col.field] != '-'  ? ((this.numberParse(dato[col.field]) | number:'1.2-2':'es-ES' ) + ' €') : dato[col.field] }} </span>
             </div>
 
             <div *ngIf="col.field == 'ncolegiado'">
               <a class="enlace" (click)="openFicha(dato)"><span>{{dato[col.field]}}</span></a>
             </div>
 
-            <div *ngIf="col.field != 'fechaInicio' && col.field != 'fechaFin' && col.field != 'ncolegiado'">
+            <div *ngIf="col.field != 'fechainicio' && col.field != 'fechaFin' && col.field != 'ncolegiado' && col.field != 'importe' && col.field != 'restante'">
               <span [ngClass]=" {'italic': isHistorico(dato)}">{{dato[col.field]}}</span>
             </div>
 

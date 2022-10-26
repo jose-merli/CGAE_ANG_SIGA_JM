@@ -171,7 +171,7 @@ export class FichaRetencionJudicialComponent implements OnInit, AfterViewInit {
     this.tarjetaFija.campos[2].value = event.tipoRetencion;
     this.tarjetaFija.campos[3].value = event.importe;
     this.tarjetaFija.campos[4].value = event.estado;
-    this.tarjetaFija.campos[5].value = this.datePipe.transform(event.fechaInicio, 'dd/mm/yyyy');
+    this.tarjetaFija.campos[5].value = this.datePipe.transform(event.fechainicio, 'dd/mm/yyyy');
     this.tarjetaFija.campos[6].value = event.idDestinatario;
     this.activarDesactivarBtn(event.estado);
   }
