@@ -135,7 +135,7 @@ export class FichaActuacionComponent implements OnInit {
               this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
               this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
             }
-            
+
           },
           (err) => {
             //console.log(err);
@@ -163,6 +163,10 @@ export class FichaActuacionComponent implements OnInit {
           sessionStorage.removeItem("actuacionDesigna");
           this.actuacionDesigna = actuacion;
           this.getPermiteTurno();
+          // Actuacion Anulada Permiso solo para visualizar Datos de Actuacion.
+          if (this.actuacionDesigna.actuacion.anulada == true) {
+            this.isAnulada = true;
+          }
         }
 
       }
@@ -525,7 +529,7 @@ export class FichaActuacionComponent implements OnInit {
           let resp = object.actuacionesDesignaItems[0];
 
           let designa;
-          if (actuacionJE) { 
+          if (actuacionJE) {
             designa = JSON.parse(JSON.stringify(actuacionJE.designaItem));
           } else {
             designa = JSON.parse(JSON.stringify(this.actuacionDesigna.designaItem));
@@ -590,12 +594,12 @@ export class FichaActuacionComponent implements OnInit {
 
     // Se rellenan los campos de la tarjeta de Justificación plegada
     if (this.modoLecturaJustificacion) {
-    if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
-      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
-    } else {
-      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[0].value = null;
-    }
-    this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+      if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[0].value = this.datePipe.transform(new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-')), 'dd/MM/yyyy');
+      } else {
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[0].value = null;
+      }
+      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
     }
 
     // Se rellenan los campos de la tarjeta Relaciones plegada

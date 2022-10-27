@@ -29,6 +29,7 @@ export class FichaCambioLetradoComponent implements OnInit {
 
   body;
   disableSave: boolean = false;
+  fechaDesigna: Date;
 
   tarjetaResumen = {
     nombre: 'Resumen Cambio Letrado',
@@ -84,7 +85,7 @@ export class FichaCambioLetradoComponent implements OnInit {
       //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@INICIO
       if (data.fechaSolRenuncia == null) {
         this.body.fechaSolRenuncia = new Date();
-      } else{
+      } else {
         this.body.fechaSolRenuncia = new Date(this.body.fechaSolRenuncia);
       }
       //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@FIN
@@ -101,8 +102,8 @@ export class FichaCambioLetradoComponent implements OnInit {
       //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@INICIO
       if (data.fechaSolRenuncia == null) {
         this.body.fechaSolRenuncia = new Date();
-      } else{
-        this.body.fechaSolRenuncia = new Date(this.body.fechaSolRenuncia); 
+      } else {
+        this.body.fechaSolRenuncia = new Date(this.body.fechaSolRenuncia);
       }
       //SIGARNV-2213@DTT.JAMARTIN@06/07/2022@FIN
     }
@@ -161,10 +162,11 @@ export class FichaCambioLetradoComponent implements OnInit {
   clickSave() {
 
     //Campos obligatorios rellenados?
-    if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) && (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
+    if ((this.entrante.body.fechaDesignacion != null || this.entrante.body.fechaDesignacion != undefined) 
+    && (this.saliente.body.motivoRenuncia != undefined || this.saliente.body.motivoRenuncia != null)) {
       //Comprobar requisitos según art 27
-      if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") ) {
-      // && this.entrante.body.art27 == false) {
+      if ((this.entrante.body.numColegiado == undefined || this.entrante.body.numColegiado == "") && this.entrante.body.art27 == false) {
+        // && this.entrante.body.art27 == false) {
         this.confirmationService.confirm({
           key: "deletePlantillaDoc",
           message: "Se va a seleccionar un letrado automáticamente. ¿Desea continuar?",
@@ -191,9 +193,9 @@ export class FichaCambioLetradoComponent implements OnInit {
       } else if (this.entrante.body.numColegiado != undefined && this.entrante.body.numColegiado != "") {
         this.save();
       }
-      else{
+      else {
         this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"));
-      } 
+      }
     }
     else {
       this.showMessage("error", "Cancel", this.translateService.instant("general.message.camposObligatorios"));
@@ -205,39 +207,39 @@ export class FichaCambioLetradoComponent implements OnInit {
     //Definir parametros y construir servicio
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    let request=[];
-    if(this.entrante.body.art27 == true){
+    let request = [];
+    if (this.entrante.body.art27 == true) {
       this.entrante.body.art27 = "Si";
       request = [designa.ano, //0
-        designa.idTurno, //1
-        designa.numero,//2
-        this.body.idPersona,//3
-        this.saliente.body.observaciones, //4
-        this.saliente.body.motivoRenuncia, //5
-        sessionStorage.getItem("FDSaliente"), //6
-        this.saliente.body.fechaSolRenuncia, //7
-        this.entrante.body.fechaDesignacion,//8
-        this.entrante.body.idPersona, //9
-        this.saliente.body.compensacion, //10
-        this.entrante.body.salto, //11
-        this.entrante.body.art27 //12
-        ];
-    }else{
+      designa.idTurno, //1
+      designa.numero,//2
+      this.body.idPersona,//3
+      this.saliente.body.observaciones, //4
+      this.saliente.body.motivoRenuncia, //5
+      sessionStorage.getItem("FDSaliente"), //6
+      this.saliente.body.fechaSolRenuncia, //7
+      this.entrante.body.fechaDesignacion,//8
+      this.entrante.body.idPersona, //9
+      this.saliente.body.compensacion, //10
+      this.entrante.body.salto, //11
+      this.entrante.body.art27 //12
+      ];
+    } else {
       this.entrante.body.art27 = "No";
       request = [designa.ano, //0
-        designa.idTurno, //1
-        designa.numero,//2
-        this.body.idPersona,//3
-        this.saliente.body.observaciones, //4
-        this.saliente.body.motivoRenuncia, //5
-        sessionStorage.getItem("FDSaliente"), //6
-        this.saliente.body.fechaSolRenuncia, //7
-        this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
-        this.entrante.body.idPersona, //9
-        this.saliente.body.compensacion, //10
-        this.entrante.body.salto, //11
-        this.entrante.body.art27 //12
-        ];
+      designa.idTurno, //1
+      designa.numero,//2
+      this.body.idPersona,//3
+      this.saliente.body.observaciones, //4
+      this.saliente.body.motivoRenuncia, //5
+      sessionStorage.getItem("FDSaliente"), //6
+      this.saliente.body.fechaSolRenuncia, //7
+      this.datepipe.transform(this.entrante.body.fechaDesignacion, 'dd/MM/yyyy'),//8
+      this.entrante.body.idPersona, //9
+      this.saliente.body.compensacion, //10
+      this.entrante.body.salto, //11
+      this.entrante.body.art27 //12
+      ];
     }
 
     this.progressSpinner = true;
@@ -245,12 +247,26 @@ export class FichaCambioLetradoComponent implements OnInit {
     this.sigaServices.post("designaciones_updateLetradoDesignacion", request).subscribe(
       n => {
         this.progressSpinner = false;
-        //Mostrar mensaje todo correcto
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-        setTimeout(() => {
-          //this.openTab(this.designaItem);
-          this.busquedaDesignacionesParaVolver();
-        }, 400);
+        let data = JSON.parse(n.body);
+
+        // Controlar el 400 - designaciones_updateLetradoDesignacion
+        if (data.error.code == '200' && data.error.description == 'justiciaGratuita.oficio.designas.letrados.letradoRepetidoAutmatico') {
+          this.showMessage("info", this.translateService.instant("general.message.info"), this.translateService.instant("justiciaGratuita.oficio.designas.letrados.letradoRepetidoAutmatico"));
+          setTimeout(() => {
+            //this.openTab(this.designaItem);
+            this.busquedaDesignacionesParaVolver();
+          }, 400);
+        } else {
+          //Mostrar mensaje todo correcto
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          setTimeout(() => {
+            //this.openTab(this.designaItem);
+            this.busquedaDesignacionesParaVolver();
+          }, 400);
+        }
+
+
+
       },
       err => {
         if (err.error != null
@@ -299,6 +315,12 @@ export class FichaCambioLetradoComponent implements OnInit {
         this.designaItem.idProcedimiento = this.designaItem.idProcedimiento;
         this.designaItem.numProcedimiento = this.designaItem.numProcedimiento;
         this.designaItem.ano = 'D' + this.designaItem.anio + '/' + this.designaItem.codigo;
+        // Controlar Articulo 27-28
+        if (datos.art27 == "1") {
+          this.designaItem.art27 = "Si";
+        } else {
+          this.designaItem.art27 = "No";
+        }
         sessionStorage.setItem('designaItemLink', JSON.stringify(this.designaItem));
         sessionStorage.setItem("nuevaDesigna", "false");
         this.recargarDatos(this.designaItem);
@@ -312,7 +334,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     let idProcedimiento = dato.idProcedimiento;
     let datosProcedimiento;
     let datosModulo;
-    
+
     let designaProcedimiento = new DesignaItem();
     let data = sessionStorage.getItem("designaItem");
     let dataProcedimiento = JSON.parse(data);
@@ -353,7 +375,7 @@ export class FichaCambioLetradoComponent implements OnInit {
                 sessionStorage.setItem("nuevaDesigna", "false");
                 sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
                 this.backTo();
-    
+
               },
               err => {
                 this.progressSpinner = false;

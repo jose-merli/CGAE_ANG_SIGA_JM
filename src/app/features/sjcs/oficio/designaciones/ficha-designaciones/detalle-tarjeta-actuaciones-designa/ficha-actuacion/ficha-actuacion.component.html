@@ -52,7 +52,7 @@
                   <div *ngIf="tarj.nombre == 'Justificación'">
                     <app-tarjeta-jus-ficha-act [actuacionDesigna]="actuacionDesigna" [isColegiado]="isColegiado"
                       [usuarioLogado]="usuarioLogado" (isAnuladaEvent)="isAnulada = $event" [modoLectura2]="modoLectura"
-                      (buscarActuacionEvent)="getActuacionDesigna($event)">
+                      (buscarActuacionEvent)="getActuacionDesigna($event)" [anuladaActuacion]="isAnulada" [validadaActuacion]="actuacionDesigna.actuacion.validada">
                     </app-tarjeta-jus-ficha-act>
                   </div>
                   <div *ngIf="tarj.nombre == 'Datos Facturación'">

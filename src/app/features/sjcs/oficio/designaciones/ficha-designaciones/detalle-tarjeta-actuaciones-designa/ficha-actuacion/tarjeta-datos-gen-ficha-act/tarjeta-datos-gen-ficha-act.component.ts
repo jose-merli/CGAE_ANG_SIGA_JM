@@ -786,6 +786,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       params.idAcreditacion = this.datos.selectores.find(el => el.id == 'acreditacion').value;
       params.idPrision = this.datos.selectores.find(el => el.id == 'prision').value;
       params.idPersonaColegiado = this.idPersonaColegiado;
+      params.idPartidaPresupuestaria = this.actuacionDesigna.designaItem.idPartidaPresupuestaria;
 
       if (params.idJuzgado != undefined && params.idJuzgado != null && params.idJuzgado !== '') {
         params.nombreJuzgado = this.datos.selectores[0].opciones.find(el => el.value == params.idJuzgado).label;

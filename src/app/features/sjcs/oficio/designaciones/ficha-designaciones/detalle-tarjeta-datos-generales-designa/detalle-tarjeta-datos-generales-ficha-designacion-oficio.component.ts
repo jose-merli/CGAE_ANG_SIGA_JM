@@ -162,9 +162,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   cargaDatos(datosInicial) {
     this.progressSpinner = true;
     this.disableCheckArt = true;
-    if (datosInicial.art27 == "No") {
+    if (datosInicial.art27 == "No" || datosInicial.art27 == 0 ) {
       this.checkArt = false;
-    } else if (datosInicial.art27 == "Si") {
+    } else if (datosInicial.art27 == "Si" || datosInicial.art27 == 1 ) {
       this.checkArt = true;
     }
     this.selectores[0].opciones = [{ label: datosInicial.nombreTurno, value: datosInicial.idTurno }];
@@ -493,6 +493,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                       this.showMsg("info", "Error al asociar la Designacion con la Asistencia", error.description);
                     } else {
                       this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
+                      this.router.navigate(["/fichaDesignaciones"]);
+                      
                     }
                   },
                   err => {
@@ -990,7 +992,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     return this.datePipe.transform(date, pattern);
   }
 
-  busquedaDesignaciones(evendesginaItem) {
+  busquedaDesignaciones(evendesginaItem: DesignaItem) {
     this.progressSpinner = true;
     this.numero.disable = false;
     this.sigaServices.post("designaciones_busquedaNueva", evendesginaItem).subscribe(

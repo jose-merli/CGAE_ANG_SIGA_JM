@@ -30,6 +30,8 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   // - Es colegiado y la actuación está validada y el turno no permite la modificación o la actuación no pertenece al colegiado
   // - La actuación está facturada
   @Input() modoLectura2: boolean = false;
+  @Input() anuladaActuacion: boolean;
+  @Input() validadaActuacion: boolean;
   modoLectura: boolean;
   disableAll: boolean = false;
   fechaActuacion: Date;
@@ -72,7 +74,6 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   }
 
   cargaInicial() {
-
     if (this.actuacionDesigna.isNew) {
       this.establecerValoresIniciales();
     } else {
@@ -181,7 +182,14 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   }
 
   establecerValoresIniciales() {
-    this.estado = this.actuacionDesigna.actuacion.validada ? 'Validada' : '';
+    if (this.anuladaActuacion) {
+      this.isAnulada = this.anuladaActuacion;
+      this.estado = 'Anulada';
+    } else if (this.validadaActuacion) {
+      this.estado = 'Validada';
+    } else {
+      this.estado = '';
+    }
 
     this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
 
@@ -194,7 +202,14 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   }
 
   establecerDatosInicialesEditAct() {
-    this.estado = this.actuacionDesigna.actuacion.validada ? 'Validada' : '';
+    if (this.anuladaActuacion) {
+      this.isAnulada = this.anuladaActuacion;
+      this.estado = 'Anulada';
+    } else if (this.validadaActuacion) {
+      this.estado = 'Validada';
+    } else {
+      this.estado = '';
+    }
     this.observaciones = this.actuacionDesigna.actuacion.observacionesJusti;
     if (this.actuacionDesigna.actuacion.fechaJustificacion != undefined && this.actuacionDesigna.actuacion.fechaJustificacion != null && this.actuacionDesigna.actuacion.fechaJustificacion != '') {
       this.fechaJusti = new Date(this.actuacionDesigna.actuacion.fechaJustificacion.split('/').reverse().join('-'));
@@ -238,6 +253,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.anulada = true;
           this.isAnulada = true;
+          this.estado = 'Anulada';
           this.isAnuladaEvent.emit(true);
           sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
@@ -275,6 +291,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.anulada = false;
           this.isAnulada = false;
+          this.estado = '';
           this.isAnuladaEvent.emit(false);
           sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
