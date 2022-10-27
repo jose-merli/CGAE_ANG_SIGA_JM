@@ -158,8 +158,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
 
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (this.isLetrado && (this.usuarioBusquedaExpress.numColegiado == '' || this.usuarioBusquedaExpress.numColegiado == null || this.usuarioBusquedaExpress.numColegiado == undefined)) {
+  ngOnChanges(): void {
+    if (this.isLetrado && (this.usuarioBusquedaExpress.numColegiado == null || this.usuarioBusquedaExpress.numColegiado == undefined || this.usuarioBusquedaExpress.numColegiado == '')) {
       this.desactivarNuevo = true;
     } else {
       this.desactivarNuevo = false;
@@ -315,6 +315,8 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
       this.filtrosValues.emit(this.filtros);
 
     }
+
+    this.ngOnChanges();
   }
 
   transformaFecha(fecha) {

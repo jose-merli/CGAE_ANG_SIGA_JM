@@ -201,7 +201,7 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    if (this.isLetrado && (this.usuarioBusquedaExpress.numColegiado == '' || this.usuarioBusquedaExpress.numColegiado == null || this.usuarioBusquedaExpress.numColegiado == undefined)) {
+    if (this.isLetrado && (this.usuarioBusquedaExpress.numColegiado == null || this.usuarioBusquedaExpress.numColegiado == undefined || this.usuarioBusquedaExpress.numColegiado == '')) {
       this.disableNuevo = true;
     } else {
       this.disableNuevo = false;
@@ -325,6 +325,8 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
       this.busqueda.emit(false);
       this.commonsService.scrollTablaFoco("tablaFoco");
     }
+
+    this.ngOnChanges();
 
   }
 
