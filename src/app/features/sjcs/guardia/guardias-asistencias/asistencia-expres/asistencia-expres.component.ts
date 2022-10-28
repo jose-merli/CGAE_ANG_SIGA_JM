@@ -201,7 +201,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     if(this.validateForm()){
       this.showSustitutoDialog = true;
       if(this.filtrosAE.filtro.isSustituto == 'S'){
-          this.mensajeSustitutoDialog =  this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.refuerzoguardia");
+          this.mensajeSustitutoDialog =  this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.sustituirletradoguardia");
       }else{
           this.mensajeSustitutoDialog = this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.refuerzoguardia2");
       }
@@ -210,11 +210,18 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
   cancelar(){
     this.showSustitutoDialog = false;
+    sessionStorage.removeItem("asistenciasGuardar");
   }
   confirmarSustituto(){
     this.showSustitutoDialog = false;
     this.progressSpinner = true;
-    this.getComboComisarias(); 
+    let rowGroupsToUpdate = JSON.parse(sessionStorage.getItem("asistenciasGuardar"));
+    sessionStorage.removeItem("asistenciasGuardar");
+    if (rowGroupsToUpdate != null) {
+      this.saveTableData(rowGroupsToUpdate);
+    } else {
+      this.getComboComisarias();
+    }
   }
 
   clearForm(){
@@ -227,7 +234,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     this.filtrosAE.filtro.idGuardia = '';
     this.filtrosAE.filtro.idLetradoGuardia = '';
     this.filtrosAE.filtro.idTurno = '';
-    this.filtrosAE.filtro.isSustituto = 'N';
+    this.filtrosAE.filtro.isSustituto = null;
     this.filtrosAE.filtro.idTipoAsistenciaColegiado = '';
     this.filtrosAE.resaltadoDatos = true;
     
@@ -237,10 +244,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     let ok : boolean = true;
     if(!this.filtrosAE.filtro.diaGuardia
       || !this.filtrosAE.filtro.idGuardia
-      || !this.filtrosAE.filtro.idLetradoGuardia
       || !this.filtrosAE.filtro.idTurno){
-        this.showMsg('error', 'Error', this.translateService.instant("general.message.camposObligatorios"));
-        ok = false;
+        if ((this.filtrosAE.filtro.isSustituto == null || this.filtrosAE.filtro.isSustituto == 'S') && !this.filtrosAE.filtro.idLetradoGuardia) {
+          this.showMsg('error', 'Error', this.translateService.instant("general.message.camposObligatorios"));
+          ok = false;
+        }
       }
     return ok;
   }
@@ -539,6 +547,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         if(!this.filtrosAE.filtro.isSustituto){
           tarjetaAsistenciaItem.filtro.isSustituto = 'N';
         }
+
+        if(!this.filtrosAE.filtro.salto){
+          tarjetaAsistenciaItem.filtro.salto = 'S';
+        }
+
         tarjetasAsistenciaItem.push(tarjetaAsistenciaItem);
         
       });
@@ -555,13 +568,13 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           if(result.error){
             this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           }else{
-            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             this.getComboComisarias();
+            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
           }
           
         },
         err => {
-          if(err.status = "409"){
+          if(err.status == "409"){
             this.showMsg('error', 'El usuario es colegiado y no existe una guardia para la fecha seleccionada. No puede continuar', '');
           }else{
             this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), '');
@@ -583,8 +596,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     arrayAsistencias.forEach(asistencia =>{
 
       //Si rellenamos algun dato obligatorio del justiciable y los demas obligatorios no estan rellenos avisamos
-      if((asistencia.nif || asistencia.nombre || asistencia.apellido1) 
-      && (!asistencia.nif || !asistencia.nombre || !asistencia.apellido1)){
+      if(!asistencia.nif || !asistencia.nombre || !asistencia.apellido1){
 
         this.showMsg('error',this.translateService.instant("formacion.mensaje.general.mensaje.error"), this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorjusticiablereq"));
         this.progressSpinner = false;
@@ -798,14 +810,18 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     }
 
     buscarAE(){
-      this.progressSpinner = true;
-      this.getComboComisariasOnly();
-      this.getComboJuzgados();
-      this.show = true;
-      if (this.letradoFillAutomaticamente){
-        this.search();
-      }else{
-        this.checkSustitutoCheckBox();
+      if (this.validateForm()) {
+        if ((this.filtrosAE.filtro.idLetradoGuardia != null && this.filtrosAE.filtro.idLetradoGuardia != '') ||
+        (this.filtrosAE.filtro.idLetradoManual != null && this.filtrosAE.filtro.isSustituto == 'N')) {
+          this.progressSpinner = true;
+          this.getComboComisariasOnly();
+          this.getComboJuzgados();
+          this.show = true;
+
+          this.search();
+        } else {
+          this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
+        }
       }
     }
 }

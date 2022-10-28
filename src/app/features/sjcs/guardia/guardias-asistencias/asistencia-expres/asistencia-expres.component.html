@@ -43,7 +43,7 @@
         <div *ngIf="modoBusqueda == 'b'" class="card-body p-0" id="tablaFoco1">
             <app-resultado-asistencia-expres [filtro]="filtrosAE.filtro" [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
             [comboJuzgadosAE]="comboJuzgados" [comboComisarias]="comboComisarias" [comboDelitos]="comboDelitos" [comboSexo] = "comboSexo"
-            (saveTableData)="saveTableData($event)"></app-resultado-asistencia-expres>
+            (saveTableData)="saveTableData($event)" (checkSustitutoCheckBox)="checkSustitutoCheckBox()"></app-resultado-asistencia-expres>
         </div>
     </div>
 </div>

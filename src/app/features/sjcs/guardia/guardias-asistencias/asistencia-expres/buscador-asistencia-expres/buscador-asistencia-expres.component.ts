@@ -33,11 +33,15 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   @Input() titulo: string;
   msgs: Message[] = [];
   rutas: string[] = ['SJCS', 'Guardia', 'Asistencias'];
+  salto: boolean = false;
+  refuerzoSustitucionSeleccionado: boolean = false;
+  deshabilitarLetradoGuardia: boolean = false;
 
   comboTurnos = [];
   comboGuardias = [];
   comboTiposAsistencia = [];
   comboLetradosGuardia = [];
+  comboRefuerzoSustitucion = [];
   resaltadoDatos: boolean = false;
   opcionSeleccionado: string = '0';
   verSeleccion: string = '';
@@ -71,7 +75,16 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     }
     this.titulo = 'Datos Comunes';
     this.resaltadoDatos = true;
+
+    this.getComboRefuerzoSustitucion();
     //this.getComboTurno();
+  }
+
+  getComboRefuerzoSustitucion() {
+    this.comboRefuerzoSustitucion = [
+      { label: this.translateService.instant('justiciaGratuita.guardia.asistenciasexpress.refuerzo'), value: "N" },
+      { label: this.translateService.instant('justiciaGratuita.guardia.asistenciasexpress.sustitucion'), value: "S" }
+    ];
   }
 
   capturar() {
@@ -111,6 +124,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
     if(event){
       this.filtro.diaGuardia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+      sessionStorage.setItem("diaGuardiaFiltro", this.filtro.diaGuardia + " 00:00");
       this.getTurnosByColegiadoFecha();
     }else{
       this.filtro.diaGuardia = '';
@@ -241,6 +255,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   //Crear servicio para traer tipos asistencia segun idtipoguardia e institución
   onChangeGuardia(){
 
+    this.deshabilitarLetradoGuardia = false;
     this.filtro.idTipoAsistenciaColegiado = '';
     this.filtro.idLetradoGuardia = '';
     this.usuarioBusquedaExpress.nombreAp = '';
@@ -278,6 +293,10 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
                   this.letradoFillAutomatic.emit(false);
                 }
                // this.onChangeLetradoGuardia();
+              } else {
+                this.deshabilitarLetradoGuardia = true;
+                this.filtro.isSustituto = 'N';
+                this.refuerzoSustitucionSeleccionado = true;
               }
   
           },
@@ -309,10 +328,16 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.filtro.idLetradoManual = event.nColegiado;
   }
   
   getIdPersonaLetradoManual(event){
-    this.filtro.idLetradoManual = event;
+    if (event == "") {
+      this.filtro.idLetradoManual = undefined;
+    } else {
+      this.filtro.idLetradoManual = event;
+    }
+    
   }
 
 /*  onChangeLetradoGuardia(){
@@ -350,6 +375,24 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   styleObligatorio(evento){
     if(this.resaltadoDatos && (evento==undefined || evento==null || evento=="")){
       return this.commonServices.styleObligatorio(evento);
+    }
+  }
+
+  onChangeCheckSalto(event){
+    this.salto = event;
+
+    if (this.salto == true) {
+      this.filtro.salto = "S";
+    } else {
+      this.filtro.salto = "N";
+    }
+  }
+
+  onChangeRefuerzoSustitucion(event){
+    if (this.filtro.isSustituto != null) {
+      this.refuerzoSustitucionSeleccionado = true;
+    } else {
+      this.refuerzoSustitucionSeleccionado = false;
     }
   }
 }
