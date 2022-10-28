@@ -56,7 +56,6 @@ export class MonederoComponent implements OnInit {
         if (JSON.parse(listaMonederosDTO.body).error.code == 500) {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         } else {
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.listaMonederos = JSON.parse(listaMonederosDTO.body).monederoItems
           this.muestraTablaMonederos = true;
 

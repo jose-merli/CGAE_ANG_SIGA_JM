@@ -104,7 +104,7 @@ export class GestionFacturasComponent implements OnInit {
       },
       {
         label: "Importe Total",
-        value: `${this.body.importefacturado} €`
+        value: new Intl.NumberFormat('es-ES', { style: 'currency', currency: 'EUR' }).format(this.body.importefacturado)
       }
     ]
   }
