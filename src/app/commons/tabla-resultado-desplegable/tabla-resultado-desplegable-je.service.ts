@@ -21,6 +21,7 @@ export class Cell {
   value: any;
   size: number;
   combo: Combo[];
+  disabled: boolean;
 }
 
 export class Combo {
