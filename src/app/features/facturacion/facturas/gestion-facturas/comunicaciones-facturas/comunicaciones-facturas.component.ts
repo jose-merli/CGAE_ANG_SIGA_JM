@@ -41,7 +41,7 @@ export class ComunicacionesFacturasComponent implements OnInit {
    
   }
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.bodyInicial != undefined && this.bodyInicial.idFactura != undefined) {
+    if (changes.bodyInicial != undefined && this.bodyInicial != undefined && this.bodyInicial.idFactura != undefined) {
       this.getComunicacionesCobro();
     }
   }
