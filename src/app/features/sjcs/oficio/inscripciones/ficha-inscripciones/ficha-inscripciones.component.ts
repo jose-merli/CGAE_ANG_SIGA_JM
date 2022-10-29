@@ -14,6 +14,8 @@ import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { ParametroDto } from '../../../../../models/ParametroDto';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { ResultadoInscripciones } from '../../../guardia/guardias-inscripciones/ResultadoInscripciones.model';
+import { ResultadoInscripcionesBotones } from '../../../guardia/guardias-inscripciones/ResultadoInscripcionesBotones.model';
 
 @Component({
 	selector: 'app-ficha-inscripciones',
@@ -60,10 +62,18 @@ export class FichaInscripcionesComponent implements OnInit {
 	historico: boolean = false;
 	datosColaOficio;
 	valorParametroDirecciones: any;
+	bodyInicial;
+	nuevo: boolean = false;
+	infoParaElPadre: { fechasolicitudbajaSeleccionada: any; fechaActual: any; observaciones: any; id_persona: any; idturno: any, idinstitucion: any, idguardia: any, fechasolicitud: any, fechavalidacion: any, fechabaja: any, observacionessolicitud: any, observacionesbaja: any, observacionesvalidacion: any, observacionesdenegacion: any, fechadenegacion: any, observacionesvalbaja: any, observacionesvalidacionNUEVA: any, fechavalidacionNUEVA: any, observacionesvalbajaNUEVA: any, fechasolicitudbajaNUEVA: any, observacionesdenegacionNUEVA: any, fechadenegacionNUEVA: any, observacionessolicitudNUEVA: any, fechasolicitudNUEVA: any, validarinscripciones: any, estado: any }[] = [];
+	objetoValidacion: ResultadoInscripcionesBotones[] = [];
+	existeTrabajosSJCS: any;
+	existeSaltosCompensaciones: any;
+	
+
 	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute,
 		private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,
 		private router: Router, private commonsService: CommonsService, private confirmationService: ConfirmationService,
-		private localStorageService: SigaStorageService) { }
+		private localStorageService: SigaStorageService, private datePipe: DatePipe) { }
 
 	ngAfterViewInit(): void {
 		this.enviarEnlacesTarjeta();
@@ -71,6 +81,8 @@ export class FichaInscripcionesComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		//console.log('this datos ficha: ', this.datos)
+		sessionStorage.setItem("FichaInscripciones", "1");
 		this.sigaServices.get("institucionActual").subscribe(n => {
 			this.institucionActual = n.value;
 			let parametro = new ParametroRequestDto();
@@ -172,16 +184,23 @@ export class FichaInscripcionesComponent implements OnInit {
 				activa: true
 			},
 		];
-		this.actualizarBotones();
+
 
 		if (sessionStorage.getItem("Inscripciones") != null) {
 			this.datos = JSON.parse(sessionStorage.getItem("Inscripciones"));
 			sessionStorage.removeItem("Inscripciones");
 		}
 
+		//this.actualizarBotones();
 		this.getColaOficio();
+		this.HabilitarBotones();
+		setTimeout(() => {
+			this.enviarEnlacesTarjeta();
+			this.progressSpinner = false;
+		}, 2000);
 
 		// Controlar boton denegar por si esta validada la inscripcion
+		//TODO CONTROLAR SI ES CORRECTO EL INDICE
 		if (this.datosTarjetaResumen[2].value) {
 			this.disabledDenegar = true;
 		}
@@ -191,9 +210,6 @@ export class FichaInscripcionesComponent implements OnInit {
 	ngOnChanges(changes: SimpleChanges) {
 		this.datos.fechaActual = new Date();
 		this.actualizarBotones();
-
-
-
 	}
 	modoEdicionSend(event) {
 		this.modoEdicion = event.modoEdicion;
@@ -481,6 +497,50 @@ export class FichaInscripcionesComponent implements OnInit {
 		);
 	}
 
+	HabilitarBotones() {
+
+
+		if ((this.datos.estado == "0" || this.datos.estado == "2") && !this.isLetrado) {
+			this.disabledValidar = false;
+		} else {
+			this.disabledValidar = true;
+		}
+
+		if ((this.datos.estado == "0" || this.datos.estado == "2") && !this.isLetrado) {
+			this.disabledDenegar = false;
+		} else {
+			this.disabledDenegar = true;
+		}
+
+
+		if (this.datos.estado == "1") {
+			this.disabledSolicitarBaja = false;
+		} else {
+			this.disabledSolicitarBaja = true;
+
+		}
+
+		if (!this.modoEdicion) {
+			this.disabledSolicitarAlta = false;
+			//HACER EN LA FUNCIÓN 
+			// if(this.datos.validarinscripciones == "S"){
+			// 	this.datos.estadoNombre == "Pendiente de Alta";
+			// }else{
+			// 	this.datos.estadoNombre == "Alta";
+			// 	this.datos.fechavalidacion == this.datos.fechaActual;
+			// }
+		} else {
+			this.disabledSolicitarAlta = true;
+
+		}
+
+		if ((this.datos.estado == "1" || this.datos.estado == "2" || this.datos.estado == "3") && !this.isLetrado) {
+			this.disabledCambiarFecha = false;
+		} else {
+			this.disabledCambiarFecha = true;
+		}
+
+	}
 	solicitarAlta() {
 		this.progressSpinner = true;
 
@@ -510,6 +570,7 @@ export class FichaInscripcionesComponent implements OnInit {
 				this.progressSpinner = false;
 				//Como se puede solicitar el alta para varias guardias no se puede refrescar la pantalla
 				//this.location.back();
+				this.router.navigate(['/inscripciones']);
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {

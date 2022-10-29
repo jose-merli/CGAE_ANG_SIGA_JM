@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ChangeDetectorRef, EventEmitter, Output, Input, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { DataTable } from "primeng/datatable";
-import { Location, UpperCasePipe } from "@angular/common";
+import { DatePipe, Location, UpperCasePipe } from "@angular/common";
 import { Message, ConfirmationService } from "primeng/components/common/api";
 import { Subject } from "rxjs/Subject";
 import { DatosGeneralesConsultaItem } from '../../../../../../models/DatosGeneralesConsultaItem';
@@ -23,6 +23,7 @@ import { Table } from 'primeng/table';
 import { Checkbox } from 'primeng/primeng';
 import { Router } from '@angular/router';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
+import { ResultadoInscripciones } from '../../../../guardia/guardias-inscripciones/ResultadoInscripciones.model';
 @Component({
   selector: "app-tarjeta-inscripcion",
   templateUrl: "./tarjeta-inscripcion.component.html",
@@ -31,6 +32,7 @@ import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 })
 export class TarjetaInscripcion implements OnInit {
 
+  infoParaElPadre: { fechasolicitudbajaSeleccionada: any; fechaActual: any; observaciones: any; id_persona: any; idturno: any, idinstitucion: any, idguardia: any, fechasolicitud: any, fechavalidacion: any, fechabaja: any, observacionessolicitud: any, observacionesbaja: any, observacionesvalidacion: any, observacionesdenegacion: any, fechadenegacion: any, observacionesvalbaja: any, fechavaloralta: any, fechavalorbaja: any, validarinscripciones: any, estado: any }[];
 
   openFicha: boolean = false;
   textSelected: String = "{label}";
@@ -47,7 +49,7 @@ export class TarjetaInscripcion implements OnInit {
   historico: boolean = false;
   valorCheckUsuarioAutomatico: boolean = false;
   listaTabla: TurnosItems = new TurnosItems();
-  fechaActual;
+  fechaActual: Date = new Date();
   disableAll: boolean = false;
   comboJurisdicciones: any[] = [];
   bodyInicial: TurnosItems;
@@ -80,6 +82,7 @@ export class TarjetaInscripcion implements OnInit {
   @Input() modoEdicion;
   @Input() idPersona;
   @Output() seleccionadosSend = new EventEmitter<any>();
+  //@Output() resultado = new EventEmitter<{}>(); //mirar que creo que es input
 
   // @Input() pesosSeleccionadosTarjeta;
   //Resultados de la busqueda
@@ -104,9 +107,9 @@ export class TarjetaInscripcion implements OnInit {
   ];
   constructor(private changeDetectorRef: ChangeDetectorRef, private router: Router,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
-    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService) { }
+    private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService, private datepipe: DatePipe) { }
 
-  ngOnChanges(changes: SimpleChanges) {
+  /*  ngOnChanges(changes: SimpleChanges) {
     this.getCols();
     if (this.datos != undefined) {
       this.body = this.datos;
@@ -135,10 +138,10 @@ export class TarjetaInscripcion implements OnInit {
       }
     } else {
       this.datos = new InscripcionesItems();
-    } */
+    } 
     // this.arreglaChecks();
     }
-  }
+  }*/
 
   ngOnInit() {
    
@@ -155,7 +158,7 @@ export class TarjetaInscripcion implements OnInit {
         }
       }).catch(error => console.error(error));
     this.getCols();
-    //this.getInscripciones();
+    this.getInscripciones();
     //Revisar
     /* if (this.idPersona != undefined) {
       this.modoEdicion = true;
@@ -208,6 +211,66 @@ export class TarjetaInscripcion implements OnInit {
     return fichaPosible.activa;
   }
 
+  changeDateFormat(date1) {
+    let date1C = date1;
+    // date1 dd/MM/yyyy
+    if (!isNaN(Number(date1))) {
+      date1C = date1.split("/").reverse().join("-");
+    }
+
+    return date1C;
+  }
+
+  rellenarObjetoBack(obj) {
+    let objeto =
+    {
+      'idturno': obj.idturno,
+      'estado': obj.estado,
+      'abreviatura': obj.abreviatura,
+      'validarinscripciones': obj.validarinscripciones,
+      'validarjustificaciones': null,
+      'nombreGuardia': null,
+      'descripcionGuardia': null,
+      'idguardia': obj.idguardia,
+      'apellidosnombre': obj.apellidosnombre,
+      'ncolegiado': obj.ncolegiado,
+      'nombre': null,
+      'apellidos': obj.apellidos,
+      'apellidos2': obj.apellidos2,
+      'idinstitucion': obj.idinstitucion,
+      'idpersona': obj.idpersona,
+      'fechasolicitud': (obj['fechasolicitud'] != null && obj['fechasolicitud'] != undefined) ? new Date(this.formatDateSol(obj['fechasolicitud'])) : obj['fechasolicitud'],
+      'observacionessolicitud': obj.observacionessolicitud,
+      'fechavalidacion': (obj['fechavalidacion'] != null && obj['fechavalidacion'] != undefined) ? new Date(this.formatDateSol(obj['fechavalidacion'])) : obj['fechavalidacion'],
+      'observacionesvalidacion': obj.observacionesvalidacion,
+      'fechasolicitudbaja': (obj['fechasolicitudbaja'] != null && obj['fechasolicitudbaja'] != undefined) ? new Date(this.formatDateSol(obj['fechasolicitudbaja'])) : obj['fechasolicitudbaja'],
+      'observacionesbaja': obj.observacionesbaja,
+      'fechabaja': (obj['fechabaja'] != null && obj['fechabaja'] != undefined) ? new Date(this.formatDateSol(obj['fechabaja'])) : obj['fechabaja'],
+      'observacionesvalbaja': obj.observacionesvalbaja,
+      'fechadenegacion': (obj['fechadenegacion'] != null && obj['fechadenegacion'] != undefined) ? new Date(this.formatDateSol(obj['fechadenegacion'])) : obj['fechadenegacion'],
+      'observacionesdenegacion': obj.observacionesdenegacion,
+      'fechavaloralta': obj.fechavaloralta, // (obj['fechavaloralta'] != null && obj['fechavaloralta'] != undefined) ? this.formatDate(obj['fechavaloralta']).toString() : this.formatDate(obj['fechavaloralta']),
+      'fechavalorbaja': obj.fechavalorbaja, //(obj['fechavalorbaja'] != null && obj['fechavalorbaja'] != undefined) ? this.formatDate(obj['fechavalorbaja']).toString() : this.formatDate(obj['fechavalorbaja']),
+      'code': null,
+      'message': null,
+      'description': null,
+      'infoURL': null,
+      'errorDetail': null
+    };
+
+    return new ResultadoInscripciones(objeto);
+  }
+  formatDateSol(date) {
+    const pattern = 'dd/MM/yyyy hh:mm:ss';
+    if (date != undefined && isNaN(Number(date))) {
+      if (!date.includes('/')) {
+        return this.datepipe.transform(date, pattern);
+      }
+    }
+
+
+  }
+  
   validateHistorical() {
     // if (this.datos != undefined && this.datos.length > 0) {
 
@@ -228,12 +291,72 @@ export class TarjetaInscripcion implements OnInit {
     let nombreTurnoAux;
     body = this.datos;
     body.idpersona = this.idPersona;
-    body.fechaActual = this.datos.fechaActual;
-    body.observaciones = this.datos.observaciones;
-    this.sigaServices.post("inscripciones_busquedaTarjetaInscripciones", body).subscribe(
+    // body.fechaActual = this.datos.fechaActual;
+    // body.observaciones = this.datos.observaciones;
+    //this.progressSpinner = false;
+
+    if (this.modoEdicion == true) {
+      this.sigaServices.post("inscripciones_busquedaTarjetaInscripciones", body).subscribe(
+//      this.sigaServices.post("guardiasInscripciones_inscripcionPorguardia", objVal).subscribe(
+        n => {
+
+          this.inscripcionesItem = JSON.parse(n.body).accion;
+          if (this.inscripcionesItem != null || this.inscripcionesItem != undefined) {
+            this.inscripcionesItem.forEach(element => {
+              
+              if (this.modoEdicion == true) {
+                element.selectedBoolean = true;
+                element.selectedBooleanPadre = true;
+              } else {
+                element.selectedBoolean = false;
+                element.selectedBooleanPadre = false;
+              }
+            });
+          }
+          
+          this.inscripcionesItem.forEach(item => {
+            if (nombreTurnoAux != item.nombreTurno) {
+              item.turnoPrincipal = true;
+            } else {
+              item.turnoPrincipal = false;
+            }
+            nombreTurnoAux = item.nombreTurno;
+          });
+
+          this.rowGroupMetadata = {};
+          if (this.inscripcionesItem) {
+            for (let i = 0; i < this.inscripcionesItem.length; i++) {
+
+              let rowData = this.inscripcionesItem[i];
+              let inscripcion = rowData.nombreTurno;
+              if (i == 0) {
+                this.rowGroupMetadata[inscripcion] = { index: 0, size: 1 };
+              }
+              else {
+                let previousRowData = this.inscripcionesItem[i - 1];
+                let previousRowGroup = previousRowData.nombreTurno;
+                if (inscripcion === previousRowGroup)
+                  this.rowGroupMetadata[inscripcion].size++;
+                else
+                  this.rowGroupMetadata[inscripcion] = { index: i, size: 1 };
+              }
+            }
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.progressSpinner = false;
+        }
+      );
+    } else {
+      let objVal: ResultadoInscripciones = this.rellenarObjetoBack(this.datos);
+      this.sigaServices.post("guardiasInscripciones_inscripcionesDisponibles", objVal).subscribe(
       n => {
         // this.datos = n.turnosItem;
-        this.inscripcionesItem = JSON.parse(n.body).inscripcionesItem;
+          this.inscripcionesItem = JSON.parse(n.body).accion;
         this.inscripcionesItem.forEach(element => {
           if(this.modoEdicion==true){
           element.selectedBoolean = true;
@@ -242,6 +365,12 @@ export class TarjetaInscripcion implements OnInit {
           else{
             element.selectedBoolean =false;
             element.selectedBooleanPadre = false;
+          }
+          if(element.idTurno == null || element.idTurno == undefined){
+            element.idTurno = element.idturno;
+          }
+          if(element.idturno == null || element.idturno == undefined){
+            element.idturno = element.idTurno;
           }
         });
         this.inscripcionesItem.forEach(item => {
@@ -253,33 +382,38 @@ export class TarjetaInscripcion implements OnInit {
           nombreTurnoAux = item.nombreTurno;
         });
 
-        this.rowGroupMetadata = {};
-        if (this.inscripcionesItem) {
-          for (let i = 0; i < this.inscripcionesItem.length; i++) {
-
-            let rowData = this.inscripcionesItem[i];
-            let inscripcion = rowData.nombre_turno;
-            if (i == 0) {
-              this.rowGroupMetadata[inscripcion] = { index: 0, size: 1 };
-            }
-            else {
-              let previousRowData = this.inscripcionesItem[i - 1];
-              let previousRowGroup = previousRowData.nombre_turno;
-              if (inscripcion === previousRowGroup)
-                this.rowGroupMetadata[inscripcion].size++;
-              else
-                this.rowGroupMetadata[inscripcion] = { index: i, size: 1 };
+          this.rowGroupMetadata = {};
+          if (this.inscripcionesItem) {
+            for (let i = 0; i < this.inscripcionesItem.length; i++) {
+              let rowData = this.inscripcionesItem[i];
+              let inscripcion = rowData.nombreTurno;
+              if (i == 0) {
+                this.rowGroupMetadata[inscripcion] = { index: 0, guardias: [rowData] };
+              }
+              else {
+                let previousRowData = this.inscripcionesItem[i - 1];
+                let previousRowGroup = previousRowData.nombreTurno;
+                if (inscripcion === previousRowGroup)
+                  this.rowGroupMetadata[inscripcion].guardias.push(rowData);
+                else
+                  this.rowGroupMetadata[inscripcion] = { index: i, guardias: [rowData] };
+              }
             }
           }
+
+
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.progressSpinner = false;
         }
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      }, () => {
-        this.progressSpinner = false;
-      }
-    );
+      );
+
+    }
+
   }
 
   save() {
@@ -497,13 +631,13 @@ export class TarjetaInscripcion implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "nombre_turno", header: "justiciaGratuita.oficio.inscripciones.nombreturnoguardia" , width:'25%' },
-      { field: "nombre_zona", header: "justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera",width:'15%' },
-      { field: "nombre_subzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zonas.cabecera", width:'15%' },
-      { field: "nombre_area", header: "menu.justiciaGratuita.maestros.Area",width:'15%' },
-      { field: "nombre_materia", header: "menu.justiciaGratuita.maestros.Materia",width:'15%' },
-      { field: "descripcion_tipo_guardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
-      // { field: "tipoguardias", header: "dato.jgr.guardia.guardias.tipoGuardia",width:'15%' },
+      { field: "nombreTurno", header: "justiciaGratuita.oficio.inscripciones.nombreturnoguardia", width: '25%' },
+      { field: "nombreZona", header: "justiciaGratuita.maestros.zonasYSubzonas.grupoZona.cabecera", width: '15%' },
+      { field: "nombreSubzona", header: "justiciaGratuita.maestros.zonasYSubzonas.zonas.cabecera", width: '15%' },
+      { field: "nombreArea", header: "menu.justiciaGratuita.maestros.Area", width: '15%' },
+      { field: "nombreMateria", header: "menu.justiciaGratuita.maestros.Materia", width: '15%' },
+      // { field: "descripcion_tipo_guardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
+      { field: "descripcionObligatoriedad", header: "dato.jgr.guardia.guardias.tipoGuardia", width: '15%' },
       // { field: "ncolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
     ];
 
@@ -539,13 +673,13 @@ export class TarjetaInscripcion implements OnInit {
   onChangeSelectAll() {
     if (this.selectAll === true) {
       this.selectMultiple = false;
-      this.selectedDatos = this.body;
-      this.numSelected = this.body.length;
-      if (this.historico) {
-        this.selectedDatos = this.body.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
-      } else {
-        this.selectedDatos = this.body;
-      }
+      this.selectedDatos = this.inscripcionesItem;
+      this.numSelected = this.inscripcionesItem.length;
+      /*  if (this.historico) {
+          this.selectedDatos = this.body.filter(dato => dato.fechabaja != undefined && dato.fechabaja != null);
+        } else {
+          this.selectedDatos = this.body;
+        }*/
     } else {
       this.selectedDatos = [];
       this.numSelected = 0;
@@ -584,13 +718,15 @@ export class TarjetaInscripcion implements OnInit {
         guardiaItem.idTurno = evento.idTurno;
         this.persistenceService.setDatos(guardiaItem);
         this.persistenceService.setHistorico(evento.fechabaja ? true : false);
+        this.progressSpinner = false;
         this.router.navigate(["/gestionGuardias"]);
       }else if(turnoGuardia != null && turnoGuardia.indexOf('Turno') != -1){
         this.progressSpinner = true;
         let turnoItem = new TurnosItems();
-        turnoItem.idturno = evento.idturno;
-        turnoItem.nombre = evento.nombre_turno;
+        turnoItem.idturno = evento.idTurno;
+        turnoItem.nombre = evento.nombreTurno;
         this.persistenceService.setDatos(turnoItem);
+        this.progressSpinner = false;
         this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: evento.idturno } });
       }
       
@@ -607,9 +743,7 @@ export class TarjetaInscripcion implements OnInit {
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
     }
-    if (selectedDatos != undefined) {
-      this.numSelected = selectedDatos.length;
-    }
+    
   }
 
   clear() {
@@ -654,38 +788,37 @@ export class TarjetaInscripcion implements OnInit {
             si viene a true: 
                 - se debe de añadir a selecteddatos.
     */
-   //this.selectedDatos = [];
     if (event == true) {
       rowData.selectedBoolean = true;
-      if(rowData.tipoguardias == "Todas o ninguna"){
+      //Guardias Todas o ninguna y Obligatorias, si se marca una se marcan todas
+      if(rowData.obligatoriedadInscripcion == 1 || rowData.obligatoriedadInscripcion == 0){
         this.inscripcionesItem.forEach(element => {
-          if (element.idturno == rowData.idturno) {
+          let findDato = this.inscripcionesSelected.find(item => item.idGuardia == element.idGuardia);
+          if (element.idTurno == rowData.idTurno && (findDato == null || findDato == undefined)) {
             element.selectedBoolean = true;
-            this.inscripcionesSelected.push(element);
+              this.inscripcionesSelected.push(element);
           }
         });
       }
-      else{
+      else{//Guardias a elegir, se selecciona sólo la que se ha marcado
         this.inscripcionesSelected.push(rowData);
       }
       
     } 
     else {
-      if(rowData.tipoguardias == "Todas o ninguna"){
+      //Guardias todas o ninguna y obligatorias: se desmarcan todas
+      if(rowData.obligatoriedadInscripcion == 1 || rowData.obligatoriedadInscripcion == 0){
         rowData.selectedBoolean = false;
         this.inscripcionesItem.forEach(element => {
-          if (element.idturno == rowData.idturno) {
+          if (element.idTurno == rowData.idTurno) {
             element.selectedBoolean = false;
-            /* let findDato = this.inscripcionesSelected.find(item => item.idguardia == element.idguardia);
-            if (findDato != undefined) {
-              this.inscripcionesSelected.splice(this.inscripcionesSelected.indexOf(findDato), 1);
-            } */
+            
           this.inscripcionesSelected.splice(this.inscripcionesSelected.indexOf(element), 1);
           }
         });
-      }else{
+      }else{//Guardias a elegir, se desmarca sólo la desmarcada
         rowData.selectedBoolean = false;
-        let findDato = this.inscripcionesSelected.find(item => item.idguardia == rowData.idguardia);
+        let findDato = this.inscripcionesSelected.find(item => item.idGuardia == rowData.idGuardia);
         if (findDato != undefined) {
           this.inscripcionesSelected.splice(this.inscripcionesSelected.indexOf(findDato), 1);
         }
@@ -698,70 +831,69 @@ export class TarjetaInscripcion implements OnInit {
   }
 
   seleccionarPadre(rowData, event) {
-    //this.selectedDatos = [];
     let turno = new InscripcionesItems;
     turno.descripcion_tipo_guardia = rowData.descripcion_tipo_guardia;
-    turno.idarea = rowData.idarea;
-    turno.idmateria = rowData.idmateria;
-    turno.idsubzona = rowData.idsubzona;
+    turno.idarea = rowData.idArea;
+    turno.idmateria = rowData.idMateria;
+    turno.idsubzona = rowData.idSubzona;
     turno.idturno = rowData.idturno;
-    turno.idzona = rowData.idzona;
-    turno.nombre_area = rowData.nombre_zona;
-    turno.nombre_guardia = rowData.nombre_guardia;
-    turno.nombre_materia = rowData.nombre_materia;
-    turno.nombre_turno = rowData.nombre_turno;
-    turno.nombre_zona = rowData.nombre_zona;
-    turno.obligatoriedad_inscripcion = rowData.obligatoriedad_inscripcion;
-    turno.tipoguardias = rowData.tipoguardias;
+    turno.idzona = rowData.idZona;
+    turno.nombre_area = rowData.nombreZona;
+    turno.nombre_guardia = rowData.nombreGuardia;
+    turno.nombre_materia = rowData.nombreMateria;
+    turno.nombre_turno = rowData.nombreTurno;
+    turno.nombre_zona = rowData.nombreZona;
+    turno.obligatoriedad_inscripcion = rowData.obligatoriedadInscripcion;
+    turno.tipoguardias = rowData.descripcionbligatoriedad;
+    turno.idguardia = rowData.idGuardia;
+    turno.fechasolicitud = rowData.fechasolicitud;
     if (event == true) {
-      if (rowData.tipoguardias == "Obligatorias") {
-        this.disabledGuardias = true;
+      //Guardias Todas o ninguna y obligatorias
+      if(rowData.obligatoriedadInscripcion == 1 || rowData.obligatoriedadInscripcion == 0){ 
         rowData.selectedBooleanPadre = true;
-        this.inscripcionesItem.forEach(element => {
-          if (element.idturno == rowData.idturno) {
-            element.selectedBoolean = true;
-            this.inscripcionesSelected.push(element);
-          }
-      });
+        //Guardias obligatorias: Se marcan todas las guardias
+        if(rowData.obligatoriedadInscripcion == 0){
+          this.disabledGuardias = true;
+          this.inscripcionesItem.forEach(element => {
+            if (element.idTurno == rowData.idTurno){
+              let findDato = this.inscripcionesSelected.find(item => item.idGuardia  == element.idGuardia);
+              if(findDato == null || findDato == undefined) {
+                element.selectedBoolean = true;
+                  this.inscripcionesSelected.push(element);
+              }
+            }
+          });
+        }else{ //Guardias todas o ninguna: se dejan como seleccionables para que se seleccionen manualmente
+          this.disabledGuardias = false;
+        }
       }
-      if (rowData.tipoguardias == "Todas o ninguna") {
+
+      //Guardias a elegir
+      if (rowData.obligatoriedadInscripcion == 2) {
         this.disabledGuardias = false;
         rowData.selectedBooleanPadre = true;
-        this.inscripcionesItem.forEach(element => {
-          if (element.idturno == rowData.idturno) {
-            element.selectedBoolean = true;
-            this.inscripcionesSelected.push(element);
-          }
-        });
       }
-      if(rowData.tipoguardias == "A elegir"){
-        this.disabledGuardias = false;
-        rowData.selectedBooleanPadre = true;
-      }
+      //Se añade el turno a los elementos seleccionados
       this.inscripcionesSelected.push(turno);
-      /* this.inscripcionesSelected[this.inscripcionesSelected.length-1].idguardia=null;
-      this.inscripcionesSelected[this.inscripcionesSelected.length-1].nombre_guardia=null; */
     } else {
+      //Si se desmarca el turno hay que quitar todas sus guardias de los elementos seleccionados
       this.disabledGuardias = true;
       rowData.selectedBooleanPadre = false;
       this.inscripcionesItem.forEach(element => {
-        if (element.idturno == rowData.idturno) {
-          element.selectedBoolean = false;
-          //let findDato = this.inscripcionesSelected.find(item => item.idguardia == element.idguardia);
-          //if (findDato != undefined) {
-          //  this.inscripcionesSelected.splice(this.inscripcionesSelected.indexOf(findDato), 1);
-          //}
-          let n=0;
-          this.inscripcionesSelected.forEach(item => {
-            if(item.idturno==element.idturno){
-              delete this.inscripcionesSelected[this.inscripcionesSelected.indexOf(item)];
-              n++;
-            }
-          })
-          this.inscripcionesSelected  = this.inscripcionesSelected.filter(function () { return true });
+        if (element.idTurno == rowData.idTurno){
+          let findDato = this.inscripcionesSelected.find(item => item.idGuardia == element.idGuardia);
+          if (findDato != undefined) {
+            element.selectedBoolean = false;
+            this.inscripcionesSelected.splice(this.inscripcionesSelected.indexOf(findDato), 1);
+          }
         }
       });
 
+      //quitamos el turno de los elementos seleccionados ya que se ha desmarcado el turno
+      let findDato = this.inscripcionesSelected.find(item => item.idguardia == turno.idguardia);
+      if (findDato != undefined) {
+        this.inscripcionesSelected.splice(this.inscripcionesSelected.indexOf(findDato), 1);
+      }
     }
     let send = {
       inscripcionesSelected: this.inscripcionesSelected,

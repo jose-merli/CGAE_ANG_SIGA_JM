@@ -20,9 +20,8 @@
     <app-tarjeta-letrado (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)"
       [tarjetaLetrado]="tarjetaLetrado" [letradoItem]="letradoItem" (modoEdicionSend)="modoEdicionSend($event)"
       *ngSwitchCase="'letrado'" [openLetrado]="openLetrado" [datos]="datos"></app-tarjeta-letrado>
-    <app-tarjeta-inscripcion-guardia [datos]="datos" [idPersona]="idPersona"
-      (seleccionadosSend)="seleccionadosSend($event)" [modoEdicion]="modoEdicion" *ngSwitchCase="'inscripcion'"
-      (resultado)="BotonesInfo($event)"></app-tarjeta-inscripcion-guardia>
+    <app-tarjeta-inscripcion-guardia [datos]="datos" [idPersona]="idPersona" (seleccionadosSend)="seleccionadosSend($event)"
+	 [modoEdicion]="modoEdicion" *ngSwitchCase="'inscripcion'" (resultado)="BotonesInfo($event)"></app-tarjeta-inscripcion-guardia>
     <!-- Tarjetas solo Disponibles para Editar Inscripciones -->
     <div *ngIf="modoEdicion">
       <app-tarjeta-gestion-inscripcion-guardia [datos]="datos" [idPersona]="idPersona" [modoEdicion]="modoEdicion"

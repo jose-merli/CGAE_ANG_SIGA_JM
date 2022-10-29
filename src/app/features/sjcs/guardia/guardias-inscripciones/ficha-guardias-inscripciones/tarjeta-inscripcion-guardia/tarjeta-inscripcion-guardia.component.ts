@@ -25,17 +25,13 @@ import { Router } from '@angular/router';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { ResultadoInscripciones } from '../../ResultadoInscripciones.model';
-import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
-import { Grid, PageSettingsModel, QueryCellInfoEventArgs, DetailRow, RowSelectEventArgs } from '@syncfusion/ej2-angular-grids';
-import { DropDownList } from '@syncfusion/ej2-dropdowns';
-import { DetailRowService, GridComponent } from '@syncfusion/ej2-angular-grids';
-import { MultiSelectModule } from 'primeng/multiselect';
+
+
 
 @Component({
   selector: 'app-tarjeta-inscripcion-guardia',
   templateUrl: './tarjeta-inscripcion-guardia.component.html',
-  styleUrls: ['./tarjeta-inscripcion-guardia.component.scss'],
-  providers: [DetailRowService]
+  styleUrls: ['./tarjeta-inscripcion-guardia.component.scss']
 })
 export class TarjetaInscripcionGuardiaComponent implements OnInit {
 
@@ -47,6 +43,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   selectedItem: number = 10;
   selectAll;
   selectedDatos = [];
+  inscripcionesSelected = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
@@ -67,6 +64,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   msgs;
   permisosTarjeta: boolean = true;
   body;
+  inscripcionesItem;
   nuevo: boolean = false;
   datosInicial = [];
   updateAreas = [];
@@ -82,15 +80,6 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   updateCombo;
   rowGroupMetadata;
   buscadores = [];
-  listaTurnos = [];
-  inscripcionesItem = [];
-  colegiadosInscritos = [];
-  colegiadosSelected = [];
-  inscripcionesSelected: any[] = [];
-  pageSettings: PageSettingsModel;
-  listaPruebas = [];
-  tablaDesplegable: Grid;
-  
   //Resultados de la busqueda
   @Input() datos: InscripcionesItems;
   @Input() modoEdicion;
@@ -105,7 +94,6 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   @ViewChild("table") table: Table;
   @ViewChild("checkPadre") checkPadre: Checkbox;
   @ViewChild("multiSelect") multiSelect: MultiSelect;
-  @ViewChild('grid') grid: GridComponent;
   fichasPosibles = [
     {
       key: "generales",
@@ -138,7 +126,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
      }
    } */
 
-  async ngOnInit() {
+  ngOnInit() {
 
     this.commonsService.checkAcceso(procesos_oficio.tarjetaInscripcion)
       .then(respuesta => {
@@ -149,56 +137,10 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
           this.permisosTarjeta = true;
         }
       }).catch(error => console.error(error));
+    this.getCols();
 
-    //this.getCols();
-    await this.getInscripciones();
+    this.getInscripciones();
 
-    this.pageSettings = { pageSize: 6 };
-
-    Grid.Inject(DetailRow);
-
-    this.tablaDesplegable = new Grid({
-      dataSource: this.listaTurnos,
-      allowFiltering: true,
-      allowPaging: true,
-      allowSorting: true,
-      pageSettings: { pageSize: 6 },
-      columns: [
-        {
-          //field: 'nombreTurno',
-          headerText: 'Nombre Turno/Guardia',
-          valueAccessor: this.enlaceTurno,
-          textAlign: 'Center',
-          width: 150
-        },
-        { field: 'nombreZona', headerText: 'Grupo Zona', textAlign: 'Center', width: 70 },
-        { field: 'nombreSubzona', headerText: 'Zonas', textAlign: 'Center', width: 70 },
-        { field: 'nombreArea', headerText: 'Area', textAlign: 'Center', width: 150 },
-        { field: 'nombreMateria', headerText: 'Materia', textAlign: 'Center', width: 150 },
-        { field: 'descripcionObligatoriedad', headerText: 'Tipo Guardia', textAlign: 'Center', width: 70 },
-      ],
-      childGrid: {
-        dataSource: this.inscripcionesItem,
-        queryString: 'nombreTurno',
-        allowPaging: true,
-        pageSettings: { pageSize: 10 },
-        selectionSettings: { type: 'Multiple', mode: 'Row' },
-        rowSelected: this.rowSelected,
-        columns: [
-          { field: 'nombreGuardia', headerText: 'Nombre Guardia', textAlign: 'Center', width: 90 },
-          {
-            field: 'colegiadosInscritos',
-            headerText: 'Colegiados Inscritos',
-            //template: `<ejs-dropdownlist value='Order Placed' [dataSource]='listaPruebas' [popupHeight]='150' [popupWidth]='150'></ejs-dropdownlist>`,
-            textAlign: 'Center',
-            width: 250
-          }
-        ]
-      },
-      height: 350,
-    });
-
-    this.tablaDesplegable.appendTo('#gridDatos');
 
     //Revisar
     /* if (this.idPersona != undefined) {
@@ -216,28 +158,6 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
       this.disableAll = true
     }
   }
-
-  rowSelected(args: RowSelectEventArgs) {
-    console.log("Argumentos: ", args);
-    //this.inscripcionesSelected.push({index: args.rowIndex, data: args.data});
-    console.log("Lista Inscripciones: ", this.inscripcionesSelected);
-    //let selectedrowindex: number[] = this.tablaDesplegable.getSelectedRowIndexes();  // get the selected row indexes.
-    //alert(selectedrowindex); // to alert the selected row indexes.
-    //let selectedrecords: Object[] = this.tablaDesplegable.getSelectedRecords();  // get the selected records.*/
-  }
-
-  enlaceTurno(field: string, data: Object, column: Object): string {
-    return data[field];
-    /*return data[field].map(function (s: {LastName: string, FirstName: string}): string {
-      return s.LastName || s.FirstName }).join(' ');*/
-  }
-
-  dropdown(args: QueryCellInfoEventArgs): void {
-    let ele: HTMLSelectElement = args.cell.querySelector('select');
-    let drop: DropDownList = new DropDownList({ popupHeight: 150, popupWidth: 150 });
-    drop.appendTo(ele);
-  }
-
   transformaFecha(fecha) {
     if (fecha != null) {
       let jsonDate = JSON.stringify(fecha);
@@ -322,9 +242,10 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
         return this.datepipe.transform(date, pattern);
       }
     }
-  }
 
-  async getInscripciones() {
+
+  }
+  getInscripciones() {
     this.datos.historico = this.historico;
     this.progressSpinner = true;
     let body = new InscripcionesItems();
@@ -338,140 +259,116 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     let objVal: ResultadoInscripciones = this.rellenarObjetoBack(this.datos);
 
     if (this.modoEdicion == true) {
+      this.sigaServices.post("guardiasInscripciones_inscripcionPorguardia", objVal).subscribe(
+        n => {
 
-      await this.sigaServices.post("guardiasInscripciones_inscripcionPorguardia", objVal).toPromise().then((n) => {
-
-        this.inscripcionesItem = JSON.parse(n.body).accion;
-
-        if (this.inscripcionesItem != null || this.inscripcionesItem != undefined) {
-          this.inscripcionesItem.forEach(element => {
-            if (this.modoEdicion == true) {
-              element.selectedBoolean = true;
-              element.selectedBooleanPadre = true;
+          this.inscripcionesItem = JSON.parse(n.body).accion;
+          if (this.inscripcionesItem != null || this.inscripcionesItem != undefined) {
+            this.inscripcionesItem.forEach(element => {
+              if (this.modoEdicion == true) {
+                element.selectedBoolean = true;
+                element.selectedBooleanPadre = true;
+              } else {
+                element.selectedBoolean = false;
+                element.selectedBooleanPadre = false;
+              }
+            });
+          }
+          
+          this.inscripcionesItem.forEach(item => {
+            if (nombreTurnoAux != item.nombreTurno) {
+              item.turnoPrincipal = true;
             } else {
-              element.selectedBoolean = false;
-              element.selectedBooleanPadre = false;
+              item.turnoPrincipal = false;
             }
+            nombreTurnoAux = item.nombreTurno;
           });
-        }
 
-        this.inscripcionesItem.forEach(item => {
-          if (nombreTurnoAux != item.nombreTurno) {
-            item.turnoPrincipal = true;
-          } else {
-            item.turnoPrincipal = false;
-          }
-          nombreTurnoAux = item.nombreTurno;
-        });
+          this.rowGroupMetadata = {};
+          if (this.inscripcionesItem) {
+            for (let i = 0; i < this.inscripcionesItem.length; i++) {
 
-        this.rowGroupMetadata = {};
-        if (this.inscripcionesItem) {
-          for (let i = 0; i < this.inscripcionesItem.length; i++) {
-
-            let rowData = this.inscripcionesItem[i];
-            let inscripcion = rowData.nombreTurno;
-            if (i == 0) {
-              this.rowGroupMetadata[inscripcion] = { index: 0, size: 1 };
-            }
-            else {
-              let previousRowData = this.inscripcionesItem[i - 1];
-              let previousRowGroup = previousRowData.nombreTurno;
-              if (inscripcion === previousRowGroup)
-                this.rowGroupMetadata[inscripcion].size++;
-              else
-                this.rowGroupMetadata[inscripcion] = { index: i, size: 1 };
+              let rowData = this.inscripcionesItem[i];
+              let inscripcion = rowData.nombreTurno;
+              if (i == 0) {
+                this.rowGroupMetadata[inscripcion] = { index: 0, size: 1 };
+              }
+              else {
+                let previousRowData = this.inscripcionesItem[i - 1];
+                let previousRowGroup = previousRowData.nombreTurno;
+                if (inscripcion === previousRowGroup)
+                  this.rowGroupMetadata[inscripcion].size++;
+                else
+                  this.rowGroupMetadata[inscripcion] = { index: i, size: 1 };
+              }
             }
           }
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.progressSpinner = false;
         }
-        this.progressSpinner = false;
-      }).catch(err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      });
-      this.rellenarTurnos(this.inscripcionesItem);
-      this.getComboColegiados(null);
-      this.progressSpinner = false;
-
+      );
     } else {
+      this.sigaServices.post("guardiasInscripciones_inscripcionesDisponibles", objVal).subscribe(
+        n => {
 
-      await this.sigaServices.post("guardiasInscripciones_inscripcionesDisponibles", objVal).toPromise().then((n) => {
-        this.inscripcionesItem = JSON.parse(n.body).accion;
-        if (this.inscripcionesItem != null || this.inscripcionesItem != undefined) {
-          this.inscripcionesItem.forEach(element => {
-            if (this.modoEdicion == true) {
-              element.selectedBoolean = true;
-              element.selectedBooleanPadre = true;
+          this.inscripcionesItem = JSON.parse(n.body).accion;
+          if (this.inscripcionesItem != null || this.inscripcionesItem != undefined) {
+            this.inscripcionesItem.forEach(element => {
+              if (this.modoEdicion == true) {
+                element.selectedBoolean = true;
+                element.selectedBooleanPadre = true;
+              } else {
+                element.selectedBoolean = false;
+                element.selectedBooleanPadre = false;
+              }
+            });
+          }
+          
+          this.inscripcionesItem.forEach(item => {
+            if (nombreTurnoAux != item.nombreTurno) {
+              item.turnoPrincipal = true;
             } else {
-              element.selectedBoolean = false;
-              element.selectedBooleanPadre = false;
+              item.turnoPrincipal = false;
             }
+            nombreTurnoAux = item.nombreTurno;
           });
-        }
 
-        this.inscripcionesItem.forEach(item => {
-          if (nombreTurnoAux != item.nombreTurno) {
-            item.turnoPrincipal = true;
-          } else {
-            item.turnoPrincipal = false;
-          }
-          nombreTurnoAux = item.nombreTurno;
-        });
-
-        this.rowGroupMetadata = {};
-        if (this.inscripcionesItem) {
-          for (let i = 0; i < this.inscripcionesItem.length; i++) {
-            let rowData = this.inscripcionesItem[i];
-            let inscripcion = rowData.nombreTurno;
-            if (i == 0) {
-              this.rowGroupMetadata[inscripcion] = { index: 0, guardias: [rowData] };
-            }
-            else {
-              let previousRowData = this.inscripcionesItem[i - 1];
-              let previousRowGroup = previousRowData.nombreTurno;
-              if (inscripcion === previousRowGroup)
-                this.rowGroupMetadata[inscripcion].guardias.push(rowData);
-              else
-                this.rowGroupMetadata[inscripcion] = { index: i, guardias: [rowData] };
+          this.rowGroupMetadata = {};
+          if (this.inscripcionesItem) {
+            for (let i = 0; i < this.inscripcionesItem.length; i++) {
+              let rowData = this.inscripcionesItem[i];
+              let inscripcion = rowData.nombreTurno;
+              if (i == 0) {
+                this.rowGroupMetadata[inscripcion] = { index: 0, guardias: [rowData] };
+              }
+              else {
+                let previousRowData = this.inscripcionesItem[i - 1];
+                let previousRowGroup = previousRowData.nombreTurno;
+                if (inscripcion === previousRowGroup)
+                  this.rowGroupMetadata[inscripcion].guardias.push(rowData);
+                else
+                  this.rowGroupMetadata[inscripcion] = { index: i, guardias: [rowData] };
+              }
             }
           }
+
+
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }, () => {
+          this.progressSpinner = false;
         }
-        this.progressSpinner = false;
-      }).catch(err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      });
-      this.rellenarTurnos(this.inscripcionesItem);
-      this.getComboColegiados(null);
-      this.progressSpinner = false;
+      );
+
     }
-  }
-
-  rellenarTurnos(inscripciones) {
-    let ultimoTurno = '';
-
-    inscripciones.forEach(element => {
-      let cabeceraTurno = {
-        'nombreTurno': String,
-        'nombreZona': String,
-        'nombreSubzona': String,
-        'nombreArea': String,
-        'nombreMateria': String,
-        'descripcionObligatoriedad': String
-      };
-
-      if (element.nombreTurno != ultimoTurno) {
-        cabeceraTurno.nombreTurno = element.nombreTurno;
-        cabeceraTurno.nombreZona = element.nombreZona;
-        cabeceraTurno.nombreSubzona = element.nombreSubzona
-        cabeceraTurno.nombreArea = element.nombreArea;
-        cabeceraTurno.nombreMateria = element.nombreMateria;
-        cabeceraTurno.descripcionObligatoriedad = element.descripcionObligatoriedad;
-
-        this.listaTurnos.push(cabeceraTurno);
-
-        ultimoTurno = element.nombreTurno;
-      };
-    });
 
   }
 
@@ -504,7 +401,6 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
       // { field: "descripcion_tipo_guardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
       { field: "descripcionObligatoriedad", header: "dato.jgr.guardia.guardias.tipoGuardia", width: '15%' },
       { field: "colegiadoGrupo", header: "dato.jgr.guardia.saltcomp.ncolegiadoGrupo", width: '15%' },
-      { field: "colegiadosInscritos", header: "dato.jgr.guardia.saltcomp.ncolegiadoGrupo", width: '15%' },
     ];
 
 
@@ -573,17 +469,14 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
       }
     }
   }
-  openTab() {
-
-    console.log("OPEN TAAAAB");
-
-    /*if (!this.selectAll && !this.selectMultiple) {
+  openTab(evento, turnoGuardia: String) {
+    if (!this.selectAll && !this.selectMultiple) {
       sessionStorage.setItem("Inscripciones", JSON.stringify(this.datos));
       if (turnoGuardia != null && turnoGuardia.indexOf('Guardia') != -1) {
         this.progressSpinner = true;
         let guardiaItem = new GuardiaItem();
         guardiaItem.idGuardia = evento.idGuardia;
-        guardiaItem.idTurno = evento.idTurno;
+        guardiaItem.idTurno = evento.idturno;
         this.persistenceService.setDatos(guardiaItem);
         this.persistenceService.setHistorico(evento.fechabaja ? true : false);
         this.progressSpinner = false;
@@ -604,11 +497,10 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
         this.selectedDatos.pop();
       }
 
-    }*/
+    }
   }
 
   actualizaSeleccionados(selectedDatos) {
-    console.log("Selected datos: ", selectedDatos);
     if (this.selectedDatos == undefined) {
       this.selectedDatos = []
     }
@@ -712,7 +604,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     turno.idarea = rowData.idArea;
     turno.idmateria = rowData.idMateria;
     turno.idsubzona = rowData.idSubzona;
-    turno.idturno = rowData.idTurno;
+    turno.idturno = rowData.idturno;
     turno.idzona = rowData.idZona;
     turno.nombre_area = rowData.nombreZona;
     turno.nombre_guardia = rowData.nombreGuardia;
@@ -782,63 +674,5 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     this.seleccionadosSend.emit(send);
   }
 
-  getComboColegiados(event) {
-    let primerRegistro = 0;
-    let ultimoRegistro = 10;
-    let registro = null;
-
-    if (event != null) {
-      primerRegistro = event.first;
-      ultimoRegistro = (event.first + event.rows);
-    }
-
-    for (let i = primerRegistro; i < ultimoRegistro; i++) {
-      registro = this.inscripcionesItem[i];
-      registro.colegiadosInscritos = this.callGetComboColegiados(registro.idTurno, registro.idGuardia);
-    }
-  }
-
-  callGetComboColegiados(idTurno, idGuardia) {
-    let colegiadosInscritos = [];
-    let params = new SaltoCompItem();
-    params.idTurno = idTurno;
-    params.idGuardia = idGuardia;
-
-    this.sigaServices.post(
-      "saltosCompensacionesGuardia_comboColegiados", params).subscribe(
-        data => {
-          let comboColegiados = JSON.parse(data.body).letradosGuardiaItem;
-
-          comboColegiados.forEach(combo => {
-            if (combo.colegiadoGrupo) {
-              colegiadosInscritos.push({
-                label: "[" + combo.colegiadoGrupo + "]" + "(" + combo.numeroColegiado + ") " + combo.apellidos1 + combo.apellidos2 + ", " + combo.nombre,
-                value: combo.colegiadoGrupo + "/" + combo.numeroColegiado
-              });
-            } else {
-              colegiadosInscritos.push({
-                label: "(" + combo.numeroColegiado + ") " + combo.apellidos1 + combo.apellidos2 + ", " + combo.nombre,
-                value: combo.numeroColegiado
-              });
-            }
-          });
-
-        },
-        err => {
-          //console.log(err);
-        }
-      );
-    return colegiadosInscritos;
-  }
-
-  // Quitar seleccion de Fila.
-
-  actualizaSeleccionadosNew(selectedDatos) {
-
-    this.numSelected = selectedDatos.length;
-
-    this.seleccion = false;
-
-  }
 
 }

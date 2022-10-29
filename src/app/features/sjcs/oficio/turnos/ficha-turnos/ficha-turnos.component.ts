@@ -72,7 +72,15 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 		  }
 		}).catch(error => console.error(error));
 		this.idTurno = this.route.snapshot.queryParams.idturno;
-			
+		
+		if(this.idTurno == null || this.idTurno == undefined){
+			let datos = this.persistenceService.getDatos();
+			if(datos!=null && datos!=undefined){
+				this.idTurno = datos.idturno;
+				this.persistenceService.clearDatos();
+			}
+		}
+
 		if (this.idTurno != undefined) {
 			this.newTurno = false;
 			if(sessionStorage.getItem("idGuardiaFromFichaGuardia")){

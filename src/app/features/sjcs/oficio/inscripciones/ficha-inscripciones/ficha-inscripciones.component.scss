@@ -14,7 +14,10 @@
     width: 100%;
     z-index: 2;
 }
-
+textarea{
+    height: 55px !important;
+}
+/* Controlar margen de los botones y campos en la sección de Inscripción */
 .margin-btn{
     margin: inherit;
     justify-content: end;

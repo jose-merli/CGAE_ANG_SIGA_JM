@@ -1,5 +1,4 @@
-import { TarjetaInscripcionGuardiaComponent } from './tarjeta-inscripcion-guardia/tarjeta-inscripcion-guardia.component';
-import { Component, OnInit, ViewEncapsulation, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, SimpleChanges } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Location, DatePipe } from '@angular/common';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -73,8 +72,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	objetoValidacion: ResultadoInscripcionesBotones[] = [];
 	existeTrabajosSJCS: any;
 	existeSaltosCompensaciones: any;
-	@ViewChild(TarjetaInscripcionGuardiaComponent) tablaInscripciones;
-
+	
 
 	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute,
 		private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,
@@ -1022,8 +1020,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	}
 
 	solicitarAlta() {
-		console.log("Inscripciones: ", this.tablaInscripciones.inscripcionesSelected);
-		/*this.progressSpinner = true;
+		this.progressSpinner = true;
 		let body = new InscripcionesObject();
 		if (this.inscripcionesSelected.inscripcionesSelected != undefined) {
 			body.inscripcionesItem = this.inscripcionesSelected.inscripcionesSelected;
@@ -1067,7 +1064,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			);
 		} else {
 			this.showMessage("error", this.translateService.instant("general.message.incorrect"), "Debe seleccionar una inscripcion");
-		}*/
+		}
 
 	}
 
