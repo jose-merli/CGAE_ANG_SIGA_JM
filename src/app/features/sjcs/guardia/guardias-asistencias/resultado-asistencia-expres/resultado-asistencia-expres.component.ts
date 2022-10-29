@@ -28,6 +28,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
   @Input() comboSexo = [];
   @Input() filtro : FiltroAsistenciaItem;
   @Output() saveTableData = new EventEmitter<RowGroup[]>();
+  @Output() checkSustitutoCheckBox = new EventEmitter();
   @Output() search = new EventEmitter<boolean>();
   @Output() refreshInitialRowGroup = new EventEmitter<boolean>();
   showDatos: boolean = false;
@@ -90,7 +91,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       },
       {
         id: "idApNombreSexo",
-        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceraasistido"),
+        name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceraasistido") + " (*)",
         size: 445.5
       },
       {
@@ -105,7 +106,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       },
       {
         id: "actuacion",
-        name: this.translateService.instant("justiciaGratuita.oficio.designas.actuaciones.fechaActuacion"),
+        name: this.translateService.instant("justiciaGratuita.oficio.designas.actuaciones.fechaActuacion") + " (*)",
         size: 200
       },
       {
@@ -189,7 +190,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     cellEJG.size = 100;
 
     cellFechaActuacion.type = 'datePickerAsist';
-    cellFechaActuacion.value = '';
+    cellFechaActuacion.value = this.fechaFormateada(this.filtro.diaGuardia);
     cellFechaActuacion.showTime = true;
     cellFechaActuacion.size = 200;
 
@@ -219,7 +220,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     cellEJG2.size= 100;
 
     cellFechaActuacion2.type = 'datePickerAct';
-    cellFechaActuacion2.value = '';
+    cellFechaActuacion2.value = this.fechaFormateada(this.filtro.diaGuardia);
     cellFechaActuacion2.showTime = true;
     cellFechaActuacion2.size = 200;
 
@@ -272,7 +273,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       cellEJG.size = 100;
 
       cellFechaActuacion.type = 'datePicker';
-      cellFechaActuacion.value = '';
+      cellFechaActuacion.value = this.fechaFormateada(this.filtro.diaGuardia);
       cellFechaActuacion.showTime = true;
       cellFechaActuacion.size = 200;
 
@@ -329,7 +330,17 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
         }
       });
 
-      this.saveTableData.emit(rowGroupsToUpdate);
+      if (this.filtro.isSustituto != null) {
+        if (this.filtro.idLetradoManual != null) {
+          this.checkSustitutoCheckBox.emit();
+          sessionStorage.setItem("asistenciasGuardar", JSON.stringify(rowGroupsToUpdate));
+        } else {
+          this.showMsg('error', 'Debe seleccionar un colegiado para realizar el refuerzo/sustitución' ,'')
+        }
+        
+      } else {
+        this.saveTableData.emit(rowGroupsToUpdate);
+      }
     }
 
     this.tabla.rowIdsToUpdate = [];
@@ -347,5 +358,11 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
   resetTable(){
     this.rowGroups = this.initialRowGroups;
     this.refreshInitialRowGroup.emit(true);
+  }
+
+  fechaFormateada(dateString) {
+    var dateParts = dateString.split("/");
+    var dateObject = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
+    return dateObject;
   }
 }

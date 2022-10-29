@@ -27,6 +27,7 @@ export class FiltroAsistenciaItem{
     nig : string;
     isSustituto : string;
     idLetradoManual : string;
+    salto: string;
 
     constructor(){}
 }

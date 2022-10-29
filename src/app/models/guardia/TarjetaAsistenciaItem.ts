@@ -58,4 +58,5 @@ export class TarjetaAsistenciaItem{
 	  idTipoEjg : string;
 	  guardiaRequeridaValidacion : string;
 	  idInstitucion: string;
+	  salto: string;
 }

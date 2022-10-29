@@ -36,13 +36,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() isLetrado;
   @Input() permisosFichaAct;
   @Input() fechaFiltro;
-  @Input() filtroAsistencia : FiltroAsistenciaItem;
+  @Input() filtroAsistencia: FiltroAsistenciaItem;
   turnoAllow;  //to do
   justActivarDesigLetrado;
   activarSubidaJustDesig;
   lastChangePadre;
   lastChangeHijo;
   lastChange = "";
+  permisoProcedimiento: boolean = true;
   sumar = false;
   @Output() anySelected = new EventEmitter<any>();
   @Output() designasToDelete = new EventEmitter<any[]>();
@@ -70,7 +71,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   textSelected: string = "{0} visibles";
   columnsSizes = [];
   tamanioTablaResultados = 0;
-  childNumber = 0 ;
+  childNumber = 0;
   newActuacionesArr: Row[] = [];
   rowIdsToUpdate = [];
   indicesToUpdate: [string, string][] = [];
@@ -92,7 +93,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   rowValidadas = [];
   @Input() comboJuzgados = [];
   @Input() comboModulos = [];
-  @Input()comboAcreditacion = [];
+  @Input() comboAcreditacion = [];
   comboTipoDesigna = [];
   dataToUpdateArr: RowGroup[] = [];
   rowGroupWithNew = "";
@@ -104,7 +105,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
-  numCell : number;
+  numCell: number;
   constructor(
     private renderer: Renderer2,
     private datepipe: DatePipe,
@@ -135,7 +136,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
-    if (this.pantalla == 'JE'){
+    if (this.pantalla == 'JE') {
       this.fromRowGroup = 0;
       this.toRowGroup = 9;
       this.numCell = 2;
@@ -144,19 +145,19 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.newActuacionesArr = []; //limpiamos
       this.rowValidadas = [];
       sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
-        this.getParams("JUSTIFICACION_EDITAR_DESIGNA_LETRADOS");
-        this.getParams("CONFIGURAR_COMBO_DESIGNA");
-            
-      
+      this.getParams("JUSTIFICACION_EDITAR_DESIGNA_LETRADOS");
+      this.getParams("CONFIGURAR_COMBO_DESIGNA");
+
+
       //this.cargaJuzgados.emit(false);
-      if (this.comboModulos != undefined && this.comboModulos.length > 0){
+      if (this.comboModulos != undefined && this.comboModulos.length > 0) {
         this.searchNuevo(this.comboModulos, []);
       }
 
-      if (this.comboModulos != undefined && this.comboModulos.length > 0 && this.comboAcreditacion !== undefined && this.comboAcreditacion.length > 0){
+      if (this.comboModulos != undefined && this.comboModulos.length > 0 && this.comboAcreditacion !== undefined && this.comboAcreditacion.length > 0) {
         this.searchNuevo(this.comboModulos, this.comboAcreditacion);
       }
-    }else if(this.pantalla == 'AE'){
+    } else if (this.pantalla == 'AE') {
       this.getKeysClaseComunicacion();
       this.fromRowGroup = 0;
       this.toRowGroup = 6;
@@ -166,30 +167,38 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.selectedHeader.push(cab);
       this.cabecerasMultiselect.push(cab.name);
     });
-    if (this.rowGroups != undefined){
+    if (this.rowGroups != undefined) {
       this.totalRegistros = this.rowGroups.length;
-    }else{
+    } else {
       this.totalRegistros = 0;
     }
-    
+
     this.selected = false;
     this.selectedArray = [];
     this.selecteChild = [];
   }
 
   selectRow(rowSelected, rowId, child) {
-    if (child == undefined){
+    // Disabled de Módulo.
+    let filaSeleccionada = this.rowGroups.filter(row => row.id == rowId);
+    if (filaSeleccionada[0].rows[0].cells[4].value === "") {
+      this.permisoProcedimiento = true;
+    } else {
+      this.permisoProcedimiento = false;
+    }
+
+    if (child == undefined) {
       this.disableDelete = true;
-    }else{
+    } else {
       this.disableDelete = false;
     }
     this.selected = true;
-    if (child != undefined){
-      if (this.selecteChild.includes({[rowId] : child})) {
-        const i = this.selecteChild.indexOf({[rowId] : child});
+    if (child != undefined) {
+      if (this.selecteChild.includes({ [rowId]: child })) {
+        const i = this.selecteChild.indexOf({ [rowId]: child });
         this.selecteChild.splice(i, 1);
       } else {
-        this.selecteChild.push({[rowId] : child});
+        this.selecteChild.push({ [rowId]: child });
       }
       if (this.selecteChild.length != 0) {
         this.anySelected.emit(true);
@@ -235,14 +244,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         resultado = compare(a.id, b.id, isAsc);
         return resultado;
       });
-    }else if (this.pantalla == 'JE' && sort.active == "ejgs") {
+    } else if (this.pantalla == 'JE' && sort.active == "ejgs") {
       this.rowGroups = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         let resultado;
         resultado = compare(a.id2, b.id2, isAsc);
         return resultado;
       });
-    }else if (this.pantalla == 'JE' && sort.active == "clientes") {
+    } else if (this.pantalla == 'JE' && sort.active == "clientes") {
       this.rowGroups = data.sort((a, b) => {
         const isAsc = sort.direction === 'asc';
         let resultado;
@@ -256,12 +265,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         let resultado;
         let arr = [];
 
-        if (a.rows.length - 1 < j){
+        if (a.rows.length - 1 < j) {
           arr = b.rows;
         } else {
           arr = a.rows;
         }
-        if ( j <= a.rows.length - 1 && j <= b.rows.length - 1 ){
+        if (j <= a.rows.length - 1 && j <= b.rows.length - 1) {
           for (let i = 0; i < arr[j].cells.length; i++) {
             resultado = compare(a.rows[j].cells[i].value, b.rows[j].cells[i].value, isAsc);
           }
@@ -312,7 +321,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     } else {
       return false;
     }
-    
+
   }
   iconClickChange(iconrightEl, iconDownEl) {
     this.renderer.addClass(iconrightEl, 'collapse');
@@ -323,29 +332,29 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.renderer.addClass(iconDownEl, 'collapse');
 
   }
-  rowGroupArrowClick(rowWrapper, rowGroupId, uncollapse? : boolean) {
+  rowGroupArrowClick(rowWrapper, rowGroupId, uncollapse?: boolean) {
     this.down = !this.down
     this.RGid = rowGroupId;
     const toggle = rowWrapper;
     for (let i = 0; i < rowWrapper.children.length; i++) {
       if (rowWrapper.children[i].className.includes('child')) {
-          this.modalStateDisplay = false;
-          if(uncollapse === undefined){
-            rowWrapper.children[i].className.includes('collapse')
-              ? this.renderer.removeClass(
-                rowWrapper.children[i],
-                'collapse'
-              )
-              : this.renderer.addClass(
-                rowWrapper.children[i],
-                'collapse'
-              );
-          } else if (rowWrapper.children[i].className.includes('collapse')){
-            this.renderer.removeClass(
+        this.modalStateDisplay = false;
+        if (uncollapse === undefined) {
+          rowWrapper.children[i].className.includes('collapse')
+            ? this.renderer.removeClass(
               rowWrapper.children[i],
               'collapse'
             )
-          }
+            : this.renderer.addClass(
+              rowWrapper.children[i],
+              'collapse'
+            );
+        } else if (rowWrapper.children[i].className.includes('collapse')) {
+          this.renderer.removeClass(
+            rowWrapper.children[i],
+            'collapse'
+          )
+        }
       } else {
         this.modalStateDisplay = true;
       }
@@ -366,42 +375,42 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       let isReturnArr = [];
       this.rowGroups = this.rowGroupsAux.filter((row) => {
         isReturnArr = [];
-  
-          for (let r = 0; r < row.rows.length; r++) {
+
+        for (let r = 0; r < row.rows.length; r++) {
           for (let i = 0; i < row.rows[r].cells.length; i++) {
-            if (row.rows[r].cells[i].value != null && i <= 8){
+            if (row.rows[r].cells[i].value != null && i <= 8) {
 
               //this.searchText.forEach(sT => {
-          if ( (i == 8 || i == 0) && (this.searchText[i + 3] == 's' || this.searchText[i + 3] == 'si')){
-            sT  = 'true';
-          }else if ((i == 8 || i == 0) && (this.searchText[i + 3] == 'n' || this.searchText[i + 3] == 'no')){
-            sT  = 'false';
-          }else{
-            sT = this.searchText[i + 3];
+              if ((i == 8 || i == 0) && (this.searchText[i + 3] == 's' || this.searchText[i + 3] == 'si')) {
+                sT = 'true';
+              } else if ((i == 8 || i == 0) && (this.searchText[i + 3] == 'n' || this.searchText[i + 3] == 'no')) {
+                sT = 'false';
+              } else {
+                sT = this.searchText[i + 3];
+              }
+              if (
+                (i == 0 && this.searchText[i] != undefined && !row.id.toLowerCase().includes(this.searchText[0].toLowerCase())) ||
+                (i == 1 && this.searchText[i] != undefined && !row.id2.toLowerCase().includes(this.searchText[1].toLowerCase())) ||
+                (i == 2 && this.searchText[i] != undefined && !row.id3.toLowerCase().includes(this.searchText[2].toLowerCase())) ||
+
+                (sT != " " &&
+                  sT != undefined &&
+                  sT != null &&
+                  !row.rows[0].cells[i].value.toString().toLowerCase().includes(sT.toLowerCase()))
+              ) {
+                isReturn = false;
+              } else {
+                isReturn = true;
+              }
+              //});
+              isReturnArr.push(isReturn);
+            }
           }
-                  if ( 
-                    (i == 0 && this.searchText[i] != undefined && !row.id.toLowerCase().includes(this.searchText[0].toLowerCase())) ||
-                    (i == 1 && this.searchText[i] != undefined && !row.id2.toLowerCase().includes(this.searchText[1].toLowerCase())) ||
-                    (i == 2 && this.searchText[i] != undefined && !row.id3.toLowerCase().includes(this.searchText[2].toLowerCase())) ||
-                   
-                    (sT != " " &&
-                    sT != undefined &&
-                    sT != null &&
-                    !row.rows[0].cells[i].value.toString().toLowerCase().includes(sT.toLowerCase()))
-                  ) {
-                    isReturn = false;
-                  } else {
-                    isReturn = true;
-                  }
-                //});
-            isReturnArr.push(isReturn);
+          if (!isReturnArr.includes(false)) {
+            return row;
           }
-         }
-         if (!isReturnArr.includes(false)) {
-          return row;
         }
-        }
-    
+
       });
     } else if (this.pantalla == 'JE') {
       this.rowGroups = this.rowGroupsAux.filter(rowGroup => {
@@ -415,13 +424,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           } else if (this.cabeceras[j].id == "finalizado" && ["n", "no", "0"].includes(this.searchText[j].toLowerCase().trim())) {
             isReturn = rowGroup.rows[0].cells[0].type == 'checkboxPermisos' && Array.isArray(rowGroup.rows[0].cells[0].value) && !rowGroup.rows[0].cells[0].value[0];
           }
-  
+
           if (this.cabeceras[j].id == "validar" && ["s", "si", "sí", "1"].includes(this.searchText[j].toLowerCase().trim())) {
             isReturn = rowGroup.rows.some(row => row.cells[8].type == 'checkbox' && row.cells[8].value);
           } else if (this.cabeceras[j].id == "validar" && ["n", "no", "0"].includes(this.searchText[j].toLowerCase().trim())) {
             isReturn = rowGroup.rows.some(row => row.cells[8].type == 'checkbox' && !row.cells[8].value);
           }
-  
+
           if (["actuacion", "justificacion", "acreditacion"].includes(this.cabeceras[j].id)) {
             if (this.cabeceras[j].id == "actuacion") {
               isReturn = rowGroup.rows.some(row => (row.cells[5].type == 'text' || row.cells[5].type == 'datePicker') && row.cells[5].value.includes(this.searchText[j].trim()));
@@ -455,7 +464,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                     return item.label.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
                   }
                 }
-                
+
                 return false;
               });
             } else if (!isReturn && this.cabeceras[j].id == "modulo") {
@@ -466,13 +475,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                     return item.label.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
                   }
                 }
-                
+
                 return false;
               });
             }
           }
 
-          if (["anio", "ejgs", "clientes", ].includes(this.cabeceras[j].id)) {
+          if (["anio", "ejgs", "clientes",].includes(this.cabeceras[j].id)) {
             if (this.cabeceras[j].id == "anio") {
               isReturn = rowGroup.id.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
             } else if (this.cabeceras[j].id == "ejgs") {
@@ -482,7 +491,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             }
           }
         }
-        
+
         return isReturn;
       });
 
@@ -498,7 +507,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             } else if (this.cabeceras[j].id == "validar" && ["n", "no", "0"].includes(this.searchText[j].toLowerCase().trim())) {
               isReturn = row.cells[8].type == 'checkbox' && !row.cells[8].value;
             }
-  
+
             if (["actuacion", "justificacion", "acreditacion"].includes(this.cabeceras[j].id)) {
               if (this.cabeceras[j].id == "actuacion") {
                 isReturn = (row.cells[5].type == 'text' || row.cells[5].type == 'datePicker') && row.cells[5].value.includes(this.searchText[j].trim());
@@ -529,12 +538,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   let item = row.cells[1].combo.find(e => e.value == row.cells[1].value);
                   if (item != undefined && item.label != undefined) {
                     isReturn = item.label.toLowerCase().includes(this.searchText[j].toLowerCase().trim());
-                  }else {
+                  } else {
                     isReturn = false;
                   }
                 } else {
                   isReturn = false;
-                }           
+                }
               } else if (!isReturn && this.cabeceras[j].id == "modulo") {
                 if (row.cells[4].type == 'select' && row.cells[4].combo != undefined) {
                   let item = row.cells[4].combo.find(e => e.value == row.cells[4].value);
@@ -564,7 +573,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       self.setTamanioPrimerRegistroGrupo();
     }, 1);*/
     this.totalRegistros = this.rowGroups.length;
-    
+
   }
 
   isPar(numero): boolean {
@@ -577,59 +586,59 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   fillFechaAsist(event, cell, rowId, row, rowGroup, padre, index) {
     cell.value = event;
     this.rowIdsToUpdate.push(rowId);
-    if( rowGroup.rows[1].cells[3].type == 'datePickerAct'){
+    if (rowGroup.rows[1].cells[3].type == 'datePickerAct') {
       rowGroup.rows[1].cells[3].value = event;
     }
   }
   fillFecha(event, cell, rowId, row, rowGroup, padre, index) {
 
     this.rowValidadas = [];
-    if (row == undefined){
+    if (row == undefined) {
       //designacion
-      if(this.isLetrado){
-        if (this.justActivarDesigLetrado != "1"){
+      if (this.isLetrado) {
+        if (this.justActivarDesigLetrado != "1") {
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
           this.rowGroups = this.rowGroupsAux;
           this.refreshData.emit(true);
-        }else{
+        } else {
           cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
             this.rowIdsToUpdate.push(rowId);
           }
         }
-      }else if(this.pantalla == 'JE'){
+      } else if (this.pantalla == 'JE') {
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
         if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
           this.indicesToUpdate.push([rowId, index]);
         }
-      }else{
+      } else {
         cell.value = event;
         this.rowIdsToUpdate.push(rowId);
       }
-    }else if(this.pantalla == 'JE'){
+    } else if (this.pantalla == 'JE') {
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)){
-        if (row.cells[8].value != true){
-        cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
-          this.indicesToUpdate.push([rowId, index]);
+      if ((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)) {
+        if (row.cells[8].value != true) {
+          cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
+            this.indicesToUpdate.push([rowId, index]);
 
-          if ((row.cells[0].value[1] == undefined || row.cells[0].value[1].length == 0) && row.cells[6].value != undefined) {
-            this.newActuacionesArr.push(row);
+            if ((row.cells[0].value[1] == undefined || row.cells[0].value[1].length == 0) && row.cells[6].value != undefined) {
+              this.newActuacionesArr.push(row);
+            }
           }
-        }
 
-        } else{
+        } else {
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
           this.refreshData.emit(true);
         }
-      }else{
+      } else {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
-    }else{
+    } else {
       cell.value = event;
       this.rowIdsToUpdate.push(rowId);
     }
@@ -641,109 +650,109 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.lastChange = "fillFecha";
   }
 
-  checkBoxDateChange(event, rowId, cell, row, rowGroup, padre, index){
+  checkBoxDateChange(event, rowId, cell, row, rowGroup, padre, index) {
     this.rowValidadas = [];
-    if (row == undefined){
+    if (row == undefined) {
       //designacion
-      if(this.isLetrado){
-        if(this.isLetrado){
-          if (this.justActivarDesigLetrado != "1"){
+      if (this.isLetrado) {
+        if (this.isLetrado) {
+          if (this.justActivarDesigLetrado != "1") {
             this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
-          }else{
-            if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+          } else {
+            if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
               this.rowIdsToUpdate.push(rowId);
             }
-            if (cell != undefined){
+            if (cell != undefined) {
               cell.value[0] = event;
             }
           }
-        }else{
-          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+        } else {
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
             this.rowIdsToUpdate.push(rowId);
           }
-            if (cell != undefined){
-              cell.value[0] = event;
-            }
+          if (cell != undefined) {
+            cell.value[0] = event;
+          }
         }
-      }else{
-        if (this.sumar){
+      } else {
+        if (this.sumar) {
           this.rowIdsToUpdate.push(rowId);
-        }else{
+        } else {
           this.rowIdsToUpdate = []; //limpiamos
         }
-          if (cell != undefined){
-            if (event == true){
-              /*Aquellas actuaciones sin fecha de justificación activando el check de las actuaciones se aplicará como fecha de justificación la fecha cumplimentada en el componente de acciones generales del listado*/
-              cell.value = this.fechaFiltro;
-            }
+        if (cell != undefined) {
+          if (event == true) {
+            /*Aquellas actuaciones sin fecha de justificación activando el check de las actuaciones se aplicará como fecha de justificación la fecha cumplimentada en el componente de acciones generales del listado*/
+            cell.value = this.fechaFiltro;
           }
+        }
       }
-    }else{
+    } else {
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       const newAllow = rowGroup.rows[0].cells[40].value;
-      if((this.isLetrado && row.cells[8].value != true && newAllow == "1") || (!this.isLetrado)){
-        if (row.cells[8].value  != true) {
+      if ((this.isLetrado && row.cells[8].value != true && newAllow == "1") || (!this.isLetrado)) {
+        if (row.cells[8].value != true) {
           if (row.cells[0].value[1] != undefined && row.cells[0].value[1].length != 0 && !this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
             this.indicesToUpdate.push([rowId, index]);
           }
-        }else{
+        } else {
           this.rowValidadas.push(row);
           row.cells[8].value = false;
         }
-      }else{
+      } else {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
     }
 
     this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
-      this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+    this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
 
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "checkBoxDateChange";
   }
-  checkBoxChange(event, rowId, cell, row, rowGroup, padre, index){
+  checkBoxChange(event, rowId, cell, row, rowGroup, padre, index) {
 
     this.rowValidadas = [];
-    if (row == undefined){
+    if (row == undefined) {
       //designacion
-      if(this.isLetrado){
-        if (this.justActivarDesigLetrado != "1"){
+      if (this.isLetrado) {
+        if (this.justActivarDesigLetrado != "1") {
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '');
           this.refreshData.emit(true);
-        }else{
-          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+        } else {
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
             this.rowIdsToUpdate.push(rowId);
           }
-          if (cell != undefined){
+          if (cell != undefined) {
             cell.value[0] = event;
           }
         }
-      }else{
-        if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+      } else {
+        if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
           this.rowIdsToUpdate.push(rowId);
         }
-          if (cell != undefined){
-            cell.value[0] = event;
-          }
+        if (cell != undefined) {
+          cell.value[0] = event;
+        }
       }
-    }else{
+    } else {
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)){
-        if (row.cells[8].value  != true){
+      if ((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)) {
+        if (row.cells[8].value != true) {
           if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
             this.indicesToUpdate.push([rowId, index]);
           }
-          if (cell != undefined){
+          if (cell != undefined) {
             cell.value[0] = event;
           }
-        }else{
+        } else {
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
         }
-      }else{
+      } else {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
@@ -756,33 +765,33 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.lastChange = "checkBoxChange";
   }
 
-  checkBoxChange2(event, rowId, cell, row, rowGroup, padre, index){
-    if (cell.value == false && row != undefined && row.cells[35] != undefined && row.cells[35].value == "1"){
+  checkBoxChange2(event, rowId, cell, row, rowGroup, padre, index) {
+    if (cell.value == false && row != undefined && row.cells[35] != undefined && row.cells[35].value == "1") {
       cell.value = !cell.value;
       this.showMsg('error', "No puede desvalidar actuaciones facturadas", '')
-    }else{
+    } else {
       this.rowValidadas = [];
-      if (row == undefined){
+      if (row == undefined) {
         //designacion
-        if(this.isLetrado){
-          if (this.justActivarDesigLetrado != "1"){
+        if (this.isLetrado) {
+          if (this.justActivarDesigLetrado != "1") {
             cell.value = !cell.value;
             this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
-          }else{
-            if (this.rowIdsToUpdate.indexOf(rowId) == -1){
-            this.rowIdsToUpdate.push(rowId);
+          } else {
+            if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
+              this.rowIdsToUpdate.push(rowId);
             }
           }
-          } else {
-          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+        } else {
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
             this.rowIdsToUpdate.push(rowId);
           }
         }
-      }else{
+      } else {
         //actuacion
         this.turnoAllow = rowGroup.rows[0].cells[39].value;
         const newAllow = rowGroup.rows[0].cells[40].value;
-        if((this.isLetrado && newAllow == "1" && this.turnoAllow != "1") || (!this.isLetrado)){
+        if ((this.isLetrado && newAllow == "1" && this.turnoAllow != "1") || (!this.isLetrado)) {
           if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
             this.indicesToUpdate.push([rowId, index]);
           }
@@ -791,7 +800,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             cell.value = !cell.value;
             this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
           }*/
-        }else{
+        } else {
           cell.value = !cell.value;
           this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
           this.refreshData.emit(true);
@@ -804,8 +813,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
       this.lastChange = "checkBoxChange2";
 
-      if (cell.value == true){
-        if (row != undefined){
+      if (cell.value == true) {
+        if (row != undefined) {
 
           if (row.cells[6].type == 'checkboxDate') {
             row.cells[6].value = true;
@@ -817,11 +826,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             row.cells[6].type = 'text';
             row.cells[5].type = 'text';
           }
-          
+
         }
-        
-      }else{
-        if (row != undefined){
+
+      } else {
+        if (row != undefined) {
           if (row.cells[6].type == 'checkboxDate') {
             row.cells[6].value = true;
           } else {
@@ -832,35 +841,35 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     }
   }
-  changeSelect(event, cell, rowId, row, rowGroup, padre, index){
-    if (row == undefined){
+  changeSelect(event, cell, rowId, row, rowGroup, padre, index) {
+    if (row == undefined) {
       //designacion
-      if(this.isLetrado){
-        if (this.justActivarDesigLetrado != "1"){
+      if (this.isLetrado) {
+        if (this.justActivarDesigLetrado != "1") {
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
           this.refreshData.emit(true);
-        }else{
-          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
-          this.rowIdsToUpdate.push(rowId);
+        } else {
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
+            this.rowIdsToUpdate.push(rowId);
           }
         }
-        } else {
-        if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+      } else {
+        if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
           this.rowIdsToUpdate.push(rowId);
         }
       }
-    }else if(this.pantalla == 'JE'){
+    } else if (this.pantalla == 'JE') {
       //actuacion
-      if (row.cells[8].value != true){
+      if (row.cells[8].value != true) {
         if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
           this.indicesToUpdate.push([rowId, index]);
         }
-      }else{
+      } else {
         this.rowValidadas.push(row);
         this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
         this.refreshData.emit(true);
       }
-    }else{
+    } else {
       this.rowIdsToUpdate.push(rowId);
     }
 
@@ -871,43 +880,43 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.lastChange = "changeSelect";
   }
 
-  inputChange(event, rowId, row, rowGroup, padre, index){
+  inputChange(event, rowId, row, rowGroup, padre, index) {
 
     this.rowValidadas = [];
-    if (row == undefined){
+    if (row == undefined) {
       //designacion
-      if(this.isLetrado){
-        if (this.justActivarDesigLetrado != "1"){
+      if (this.isLetrado) {
+        if (this.justActivarDesigLetrado != "1") {
           this.showMsg('error', "No tiene permiso para actualizar designaciones", '')
           this.refreshData.emit(true);
-        }else{
-          if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+        } else {
+          if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
             this.rowIdsToUpdate.push(rowId);
           }
         }
-      }else{
-        if (this.rowIdsToUpdate.indexOf(rowId) == -1){
+      } else {
+        if (this.rowIdsToUpdate.indexOf(rowId) == -1) {
           this.rowIdsToUpdate.push(rowId);
         }
       }
-    }else if(this.pantalla == 'JE'){
+    } else if (this.pantalla == 'JE') {
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
-      if((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)){
-        if (row.cells[8].value  != true){
+      if ((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)) {
+        if (row.cells[8].value != true) {
           if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
             this.indicesToUpdate.push([rowId, index]);
           }
-        } else{
+        } else {
           this.rowValidadas.push(row);
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
           this.refreshData.emit(true);
         }
-      }else{
+      } else {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
       }
-    }else{
+    } else {
       this.rowIdsToUpdate.push(rowId);
     }
 
@@ -917,15 +926,15 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
     this.lastChange = "inputChange";
   }
-  onChangeSelector(event, row, cell, rowId, rowGroup){
+  onChangeSelector(event, row, cell, rowId, rowGroup) {
 
     this.rowIdsToUpdate.push(rowId);
-    if(event){
+    if (event) {
       cell.value[5] = event[0];
-    }else{
+    } else {
       cell.value[5] = 0;
     }
-    
+
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
   }
 
@@ -951,102 +960,102 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       hiddenElements.forEach(columna => this.ocultarColumnaItem(event, columna));
     }
   }
-  
+
   ocultarColumnaItem(event, columna) {
-    if (this.pantalla == 'JE' && columna.id == "clientes" || columna.id == "ejgs"){
+    if (this.pantalla == 'JE' && columna.id == "clientes" || columna.id == "ejgs") {
       this.showMsg('error', "Clientes y EJG's pertenecen a la columna Año/Número Designación, no pueden ocultarse/mostrarse por sí solas", '')
-    }else{
+    } else {
 
-    let tabla = document.getElementById("tablaResultadoDesplegable");
+      let tabla = document.getElementById("tablaResultadoDesplegable");
 
-    if (columna == undefined && event.value.length == 0) {
-      this.cabeceras.forEach(element => {
-        this.renderer.addClass(document.getElementById(element.id), "collapse");
-      });
-      this.getPosition(this.cabeceras);
-      this.itemsaOcultar = this.cabeceras;
-      tabla.setAttribute("style", 'width: 0px !important');
-    }
-
-    if (columna == undefined && event.value.length > 0) {
-      this.cabeceras.forEach(element => {
-        this.renderer.removeClass(document.getElementById(element.id), "collapse");
-      });
-      this.getPosition([]);
-      this.itemsaOcultar = [];
-      this.setTamanioPrimerRegistroGrupo();
-      tabla.setAttribute("style", `width: ${this.tamanioTablaResultados}px !important`);
-    }
-
-    if (columna != undefined && event.value.length >= 0) {
-      let ocultar = true;
-      event.value.forEach(element => {
-        if (element.id == columna.id) {
-          ocultar = false;
-        }
-      });
-      if (this.pantalla == 'JE' ){
-        /*if (columna.id == "ejgs" || columna.id == "clientes"){
-          columna.id = "anio";
-        }
-        //console.log('columna.id: ', columna.id)*/
-        if (ocultar && columna.id == "anio"){
-          this.ocultarItem("clientes");
-          this.ocultarItem("ejgs");
-        }else if (!ocultar && columna.id == "anio"){
-          this.mostrarItem("clientes");
-          this.mostrarItem("ejgs");
-        }
+      if (columna == undefined && event.value.length == 0) {
+        this.cabeceras.forEach(element => {
+          this.renderer.addClass(document.getElementById(element.id), "collapse");
+        });
+        this.getPosition(this.cabeceras);
+        this.itemsaOcultar = this.cabeceras;
+        tabla.setAttribute("style", 'width: 0px !important');
       }
-      if (ocultar) {
-        this.renderer.addClass(document.getElementById(columna.id), "collapse");
-        this.itemsaOcultar.push(columna);
-        if(this.columnsSizes.length != 0){
-          tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == columna.id).size}px !important`);
-        }
-        
-       
-      } else {
-        this.renderer.removeClass(document.getElementById(columna.id), "collapse");
-        this.itemsaOcultar.forEach((element, index) => {
+
+      if (columna == undefined && event.value.length > 0) {
+        this.cabeceras.forEach(element => {
+          this.renderer.removeClass(document.getElementById(element.id), "collapse");
+        });
+        this.getPosition([]);
+        this.itemsaOcultar = [];
+        this.setTamanioPrimerRegistroGrupo();
+        tabla.setAttribute("style", `width: ${this.tamanioTablaResultados}px !important`);
+      }
+
+      if (columna != undefined && event.value.length >= 0) {
+        let ocultar = true;
+        event.value.forEach(element => {
           if (element.id == columna.id) {
-            this.itemsaOcultar.splice(index, 1);
+            ocultar = false;
           }
         });
-        if(this.columnsSizes.length != 0){ 
-        tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == columna.id).size}px !important`);
+        if (this.pantalla == 'JE') {
+          /*if (columna.id == "ejgs" || columna.id == "clientes"){
+            columna.id = "anio";
+          }
+          //console.log('columna.id: ', columna.id)*/
+          if (ocultar && columna.id == "anio") {
+            this.ocultarItem("clientes");
+            this.ocultarItem("ejgs");
+          } else if (!ocultar && columna.id == "anio") {
+            this.mostrarItem("clientes");
+            this.mostrarItem("ejgs");
+          }
         }
-      }
-      this.getPosition(this.itemsaOcultar);
+        if (ocultar) {
+          this.renderer.addClass(document.getElementById(columna.id), "collapse");
+          this.itemsaOcultar.push(columna);
+          if (this.columnsSizes.length != 0) {
+            tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == columna.id).size}px !important`);
+          }
 
-      if (!ocultar) {
-        this.setTamanioPrimerRegistroGrupo();
-      }
 
-    }
-    this.totalRegistros = this.rowGroups.length;
+        } else {
+          this.renderer.removeClass(document.getElementById(columna.id), "collapse");
+          this.itemsaOcultar.forEach((element, index) => {
+            if (element.id == columna.id) {
+              this.itemsaOcultar.splice(index, 1);
+            }
+          });
+          if (this.columnsSizes.length != 0) {
+            tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == columna.id).size}px !important`);
+          }
+        }
+        this.getPosition(this.itemsaOcultar);
+
+        if (!ocultar) {
+          this.setTamanioPrimerRegistroGrupo();
+        }
+
+      }
+      this.totalRegistros = this.rowGroups.length;
     }
   }
 
-    mostrarItem(id){
-      let tabla = document.getElementById("tablaResultadoDesplegable");
-      this.renderer.removeClass(document.getElementById(id), "collapse");
-      this.itemsaOcultar.forEach((element, index) => {
-        if (element.id == id) {
-          this.itemsaOcultar.splice(index, 1);
-        }
-      });
-      if(this.columnsSizes.length != 0){ 
-      tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == id).size}px !important`);
+  mostrarItem(id) {
+    let tabla = document.getElementById("tablaResultadoDesplegable");
+    this.renderer.removeClass(document.getElementById(id), "collapse");
+    this.itemsaOcultar.forEach((element, index) => {
+      if (element.id == id) {
+        this.itemsaOcultar.splice(index, 1);
       }
+    });
+    if (this.columnsSizes.length != 0) {
+      tabla.setAttribute("style", `width: ${tabla.clientWidth + this.columnsSizes.find(el => el.id == id).size}px !important`);
     }
-  ocultarItem(id){
+  }
+  ocultarItem(id) {
     let tabla = document.getElementById("tablaResultadoDesplegable");
     this.renderer.addClass(document.getElementById(id), "collapse");
-        //this.itemsaOcultar.push(event.itemValue);
-        if(this.columnsSizes.length != 0){
-          tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == id).size}px !important`);
-        }
+    //this.itemsaOcultar.push(event.itemValue);
+    if (this.columnsSizes.length != 0) {
+      tabla.setAttribute("style", `width: ${tabla.clientWidth - this.columnsSizes.find(el => el.id == id).size}px !important`);
+    }
   }
   setTamanioPrimerRegistroGrupo() {
     if (this.pantalla == 'AE' || this.pantalla == '') {
@@ -1156,15 +1165,15 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     return (document.getElementsByClassName("openedMenu").length == 0 && document.documentElement.clientWidth > 1812);
   }
 
-  fromReg(event){
+  fromReg(event) {
     this.from = Number(event) - 1;
   }
 
-  toReg(event){
+  toReg(event) {
     this.to = Number(event);
   }
 
-  perPage(perPage){
+  perPage(perPage) {
     this.numperPage = perPage;
   }
 
@@ -1172,51 +1181,51 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.seleccionarTodo = event;
     // this.isDisabled = !event;
   }
-  colorByStateDesigmacion(state){
-    if ( state == 'V'){
+  colorByStateDesigmacion(state) {
+    if (state == 'V') {
       return 'green'; // activa
-    }else if ( state == 'F'){
+    } else if (state == 'F') {
       return 'blue'; // finalizada
-    }else if ( state == 'A'){
+    } else if (state == 'A') {
       return 'red'; // anulada
     } else {
       return 'black';
     }
-  } 
+  }
 
-  onChangeMulti($event, rowId, cell, z, padre, index){
-    if ((padre && this.lastChangePadre == rowId) || ( !padre && this.lastChangeHijo == rowId)){
-      if (this.lastChange == "onChangeMulti"){
+  onChangeMulti($event, rowId, cell, z, padre, index) {
+    if ((padre && this.lastChangePadre == rowId) || (!padre && this.lastChangeHijo == rowId)) {
+      if (this.lastChange == "onChangeMulti") {
         this.sumar = !this.sumar;
-        if (padre){
+        if (padre) {
           this.lastChangePadre = rowId;
           this.numDesignasModificadas.emit(this.sumar);
-        }else{
+        } else {
           this.lastChangeHijo = rowId;
           this.numActuacionesModificadas.emit(this.sumar);
         }
       }
-    }else{
+    } else {
       this.sumar = true;
-      if (padre){
+      if (padre) {
         this.lastChangePadre = rowId;
         this.numDesignasModificadas.emit(this.sumar);
-      }else{
+      } else {
         this.lastChangeHijo = rowId;
         this.numActuacionesModificadas.emit(this.sumar);
       }
     }
-	
+
     if (z == 1) {
       //comboJuzgados
       let juzgado = $event.value;
-      if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3"){
+      if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3") {
         this.cargaModulosPorJuzgado2.emit(juzgado);
-        }else if (this.configComboDesigna == "4" || this.configComboDesigna == "5" ){
-          this.cargaAllModulos.emit(true);
-        }
-      
-    }else if (z == 4){
+      } else if (this.configComboDesigna == "4" || this.configComboDesigna == "5") {
+        this.cargaAllModulos.emit(true);
+      }
+
+    } else if (z == 4) {
       //comboModulos
       let modulo = $event.value;
       let data: String[] = [];
@@ -1224,120 +1233,120 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       data.push(modulo);
       data.push(this.newActuacionesArr[0].cells[33].value);
       this.cargaAcreditacionesPorModulo2.emit(data);
-    }else if (z == 7){
+    } else if (z == 7) {
       //comboAcreditacion
     }
 
     this.lastChange = "onChangeMulti";
 
 
-      this.rowIdsToUpdate.push(rowId);
+    this.rowIdsToUpdate.push(rowId);
   }
 
-  searchNuevo(comboModulos, comboAcreditacion ){
+  searchNuevo(comboModulos, comboAcreditacion) {
     let rowGroupFound = false;
-    this.rowGroups.forEach((rowGroup,i) => {
-      rowGroup.rows.forEach(row =>{
+    this.rowGroups.forEach((rowGroup, i) => {
+      rowGroup.rows.forEach(row => {
         row.cells.forEach(cell => {
           if (cell.type == 'multiselect2') {
             cell.combo = comboModulos;
 
             if (comboModulos.every(d => d.value != cell.value)) {
-              cell.value= comboModulos[0].value;
+              cell.value = comboModulos[0].value;
             }
             rowGroupFound = true;
-          }else if (cell.type == 'multiselect3'&& comboAcreditacion[0] != undefined) {
+          } else if (cell.type == 'multiselect3' && comboAcreditacion[0] != undefined) {
             cell.combo = comboAcreditacion;
 
             if (comboAcreditacion.every(d => d.value != cell.value)) {
-              cell.value= comboAcreditacion[0].value;
+              cell.value = comboAcreditacion[0].value;
             }
             rowGroupFound = true;
           }
 
         })
-        if (comboModulos != [] && comboAcreditacion != [] && rowGroupFound == true){
+        if (comboModulos.length && comboAcreditacion.length && rowGroupFound == true) {
           this.newActuacionesArr.push(row);
         }
       })
-      
-      if (rowGroupFound == true){
-        rowGroup.rows.forEach(row =>{
-        row.position = 'noCollapse';
+
+      if (rowGroupFound == true) {
+        rowGroup.rows.forEach(row => {
+          row.position = 'noCollapse';
         });
       }
       rowGroupFound = false;
     });
   }
 
-  newFromSelected(){
+  newFromSelected() {
     //console.log('sessionStorage.getItem(rowIdsToUpdate) ', sessionStorage.getItem('rowIdsToUpdate') );
-    if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]'){
+    if (sessionStorage.getItem('rowIdsToUpdate') != null && sessionStorage.getItem('rowIdsToUpdate') != 'null' && sessionStorage.getItem('rowIdsToUpdate') != '[]') {
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
-        this.confirmationService.confirm({
-          key: keyConfirmation,
-          message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
-          icon: "fa fa-trash-alt",
-          accept: () => {
-            this.rowGroups.forEach((rowG, i) => {
-              this.selectedArray.forEach(id => {
-              if (rowG.id == id){
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant('justiciaGratuita.oficio.justificacion.reestablecer'),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          this.rowGroups.forEach((rowG, i) => {
+            this.selectedArray.forEach(id => {
+              if (rowG.id == id) {
                 //this.toDoButton('Nuevo', rowG.id, rowG, null)
                 this.linkFichaActIfPermis(null, rowG);
               }
-              });
+            });
           });
-          },
-          reject: () => {
-          }
-        });
-      }else{
+        },
+        reject: () => {
+        }
+      });
+    } else {
       this.rowGroups.forEach((rowG, i) => {
         this.selectedArray.forEach(id => {
-        if (rowG.id == id){
-          //this.toDoButton('Nuevo', rowG.id, rowG, null)
-          this.linkFichaActIfPermis(null, rowG);
-        }
+          if (rowG.id == id) {
+            //this.toDoButton('Nuevo', rowG.id, rowG, null)
+            this.linkFichaActIfPermis(null, rowG);
+          }
         });
-    });
+      });
+    }
   }
-}
-  toDoButton(type, designacion, rowGroup, rowWrapper){
+  toDoButton(type, designacion, rowGroup, rowWrapper) {
     this.turnoAllow = rowGroup.rows[0].cells[39].value;
-    if (type == 'Nuevo'){
+    if (type == 'Nuevo') {
       this.rowGroupWithNew = rowGroup.id;
-     this.rowIdWithNewActuacion = rowGroup.id;
+      this.rowIdWithNewActuacion = rowGroup.id;
       let desig = rowGroup.rows[0].cells;
       //this.getJuzgados(desig[17].value);
 
       this.idTurno = desig[17].value;
       this.progressSpinner = true;
 
-      this.sigaServices.post("combo_comboJuzgadoDesignaciones",'0').subscribe(
+      this.sigaServices.post("combo_comboJuzgadoDesignaciones", '0').subscribe(
         n => {
-            this.comboJuzgados = JSON.parse(n.body).combooItems;
-            if(this.comboJuzgados[0] != undefined){
+          this.comboJuzgados = JSON.parse(n.body).combooItems;
+          if (this.comboJuzgados[0] != undefined) {
             this.commonsService.arregloTildesCombo(this.comboJuzgados);
             this.progressSpinner = false;
-            if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3"){
+            if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3") {
               this.cargaModulosPorJuzgado(this.comboJuzgados[0].value, designacion, rowGroup);
-            }else if (this.configComboDesigna == "4" || this.configComboDesigna == "5" ){
+            } else if (this.configComboDesigna == "4" || this.configComboDesigna == "5") {
               this.cargaModulos(designacion, rowGroup);
             }
-          }else{
-            if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3"){
-                this.comboModulos = [];
-                let data: String[] = [];
-                data.push("0");
-                data.push(this.idTurno);
-                this.cargaAcreditacionesPorModulo(data, designacion, rowGroup); 
-              }else if (this.configComboDesigna == "4" || this.configComboDesigna == "5" ){
-                this.cargaModulos(designacion, rowGroup);
-              }
-            
+          } else {
+            if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3") {
+              this.comboModulos = [];
+              let data: String[] = [];
+              data.push("0");
+              data.push(this.idTurno);
+              this.cargaAcreditacionesPorModulo(data, designacion, rowGroup);
+            } else if (this.configComboDesigna == "4" || this.configComboDesigna == "5") {
+              this.cargaModulos(designacion, rowGroup);
+            }
+
             this.progressSpinner = false;
           }
-         
+
         },
         err => {
           //console.log(err);
@@ -1350,16 +1359,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
 
-  colorByStateExpediente(resolucion){
-     if ( resolucion == 'NO_FAVORABLE'){
+  colorByStateExpediente(resolucion) {
+    if (resolucion == 'NO_FAVORABLE') {
       return 'red';
-    }else if ( resolucion == 'FAVORABLE'){
-      return 'blue'; 
+    } else if (resolucion == 'FAVORABLE') {
+      return 'blue';
     } else {
       return 'black';
     }
 
-  } 
+  }
 
   /* tooltipEJG(state,resolucion){
     if ( (resolucion == '' || resolucion == undefined || resolucion == null || resolucion == 'SIN_RESOLUCION') && (state == "''" || state == undefined || state == null) ){
@@ -1373,40 +1382,40 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   } */
 
-  searchActuacionwithSameNumDesig(idAcreditacionNew, rowGroupWithNew){
+  searchActuacionwithSameNumDesig(idAcreditacionNew, rowGroupWithNew) {
     let esPosibleCrearNuevo = true;
     let nameAcreditacionArr = [];
     let idAcreditacionArr = [];
     this.rowGroups.forEach(rowGroup => {
-        if (rowGroup.id == rowGroupWithNew){
-          let actuaciones = rowGroup.rows.slice(1, rowGroup.rows.length - 1);
-          actuaciones.forEach(rowAct => {
-            let idAcre = rowAct.cells[14].value;
-            nameAcreditacionArr.push(idAcre);
-          })
+      if (rowGroup.id == rowGroupWithNew) {
+        let actuaciones = rowGroup.rows.slice(1, rowGroup.rows.length - 1);
+        actuaciones.forEach(rowAct => {
+          let idAcre = rowAct.cells[14].value;
+          nameAcreditacionArr.push(idAcre);
+        })
       }
     })
-    nameAcreditacionArr.forEach(nameA =>{
-      if (nameA == 'Inic.-Fin'){
+    nameAcreditacionArr.forEach(nameA => {
+      if (nameA == 'Inic.-Fin') {
         idAcreditacionArr.push('1,0')
-      }else if(nameA == 'Inic.'){
+      } else if (nameA == 'Inic.') {
         idAcreditacionArr.push('2,0')
-      }else if(nameA == 'Fin'){
+      } else if (nameA == 'Fin') {
         idAcreditacionArr.push('3,0')
-      }else if(nameA == 'Inic.<2005'){
+      } else if (nameA == 'Inic.<2005') {
         idAcreditacionArr.push('10,0')
-      }else if(nameA == 'Fin<2005'){
+      } else if (nameA == 'Fin<2005') {
         idAcreditacionArr.push('11,0')
-      }else if(nameA == 'Fin sin Inic.'){
+      } else if (nameA == 'Fin sin Inic.') {
         idAcreditacionArr.push('15,0')
       }
     });
-    if (idAcreditacionArr.includes(idAcreditacionNew)){
+    if (idAcreditacionArr.includes(idAcreditacionNew)) {
       esPosibleCrearNuevo = false;
     }
     return esPosibleCrearNuevo;
   }
-  guardar(){
+  guardar() {
     let esPosibleCrearNuevo = true;
     let actuaciones;
 
@@ -1414,17 +1423,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.rowGroups.forEach(rowGroup => {
       this.newActuacionesArr = this.newActuacionesArr.concat(rowGroup.rows.filter(row => row.cells[6].type == 'checkboxDate' && row.cells[6].value));
     });
-    
+
 
     //1. Guardar nuevos
-    if (this.newActuacionesArr.length != 0){
+    if (this.newActuacionesArr.length != 0) {
 
       let newActuacionesArrNOT_REPEATED = new Set(this.newActuacionesArr);
       this.newActuacionesArr = Array.from(newActuacionesArrNOT_REPEATED);
 
       let newActuacionesToSend = [];
-    
-      this.newActuacionesArr.forEach( newAct => {
+
+      this.newActuacionesArr.forEach(newAct => {
         // Si las actuaciones han sido creadas a partir de los checkbox de actuacion,
         // se establece la fecha de justificación con la fecha del selector y se cambian los
         // valores de las columnas donde deberían ir los ids de los combos.
@@ -1432,13 +1441,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if (newAct.cells[1].type != 'multiselect1') newAct.cells[1].value = newAct.cells[21].value;
         if (newAct.cells[4].type != 'multiselect2') newAct.cells[4].value = newAct.cells[20].value;
         if (newAct.cells[7].type != 'multiselect3') newAct.cells[7].value = newAct.cells[10].value;
-        
-        
+
+
         let idAcreditacionNew = newAct.cells[7].value;
         esPosibleCrearNuevo = this.searchActuacionwithSameNumDesig(idAcreditacionNew, this.rowGroupWithNew);
-        if(esPosibleCrearNuevo){
+        if (esPosibleCrearNuevo) {
           newActuacionesToSend.push(newAct);
-        } else{
+        } else {
           this.showMsg('error', "No es posible crear otra actuación con valor de acreditación Inicio/Fin", '')
         }
       });
@@ -1448,53 +1457,53 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.totalActuaciones.emit(newActuacionesToSend.length);
       }
     }
-    
+
 
     //2. Actualizar editados
-    
+
     let rowValidadasNOT_REPEATED = new Set(this.rowValidadas);
     this.rowValidadas = Array.from(rowValidadasNOT_REPEATED);
 
-    if(this.rowIdsToUpdate != [] && this.newActuacionesArr.length == 0){
-    let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
-    this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
-    this.rowGroups.forEach(row => {
-      if(this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0 || this.indicesToUpdate.some(d => d[0] == row.id.toString())){
-        let rowGroupToUpdate = row;
+    if (this.rowIdsToUpdate.length && this.newActuacionesArr.length == 0) {
+      let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
+      this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
+      this.rowGroups.forEach(row => {
+        if (this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0 || this.indicesToUpdate.some(d => d[0] == row.id.toString())) {
+          let rowGroupToUpdate = row;
 
-        let rowsToUpdate = [];
+          let rowsToUpdate = [];
 
-        // Línea que actualiza la designación
-        rowsToUpdate.push(row.rows[0]);
+          // Línea que actualiza la designación
+          rowsToUpdate.push(row.rows[0]);
 
-        // Se agregan las actuaciones modificadas
-        rowsToUpdate = rowsToUpdate.concat(row.rows.slice(1).filter(d => Array.isArray(d.cells[0].value) 
-          && d.cells[0].value.length > 1 
-          && d.cells[0].value[1] != undefined && d.cells[0].value[1] != 'Nuevo' 
-          && (d.cells[0].value[1] != undefined || d.cells[0].value[1] != '')));
+          // Se agregan las actuaciones modificadas
+          rowsToUpdate = rowsToUpdate.concat(row.rows.slice(1).filter(d => Array.isArray(d.cells[0].value)
+            && d.cells[0].value.length > 1
+            && d.cells[0].value[1] != undefined && d.cells[0].value[1] != 'Nuevo'
+            && (d.cells[0].value[1] != undefined || d.cells[0].value[1] != '')));
 
-        row.rows = rowsToUpdate;
+          row.rows = rowsToUpdate;
 
-        this.rowValidadas.forEach(rowValid => {
-            if (rowGroupToUpdate.rows.includes(rowValid)){
+          this.rowValidadas.forEach(rowValid => {
+            if (rowGroupToUpdate.rows.includes(rowValid)) {
             }
           })
           this.rowValidadas = [];
 
-        this.dataToUpdateArr.push(row);
+          this.dataToUpdateArr.push(row);
+        }
+      })
+      if (this.dataToUpdateArr.length != 0) {
+        this.dataToUpdate.emit(this.dataToUpdateArr);
+
+        this.rowIdsToUpdate = [];
+        this.indicesToUpdate = [];
+        this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
+        this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
       }
-    })
-    if (this.dataToUpdateArr.length != 0){
-      this.dataToUpdate.emit(this.dataToUpdateArr);
 
-      this.rowIdsToUpdate = [];
-      this.indicesToUpdate = [];
-      this.numDesignasModificadas.emit(this.rowIdsToUpdate.length);
-      this.numActuacionesModificadas.emit(this.indicesToUpdate.length);
+
     }
-
-
-  }
     this.rowIdsToUpdate = []; //limpiamos
     this.dataToUpdateArr = []; //limpiamos
     this.newActuacionesArr = []; //limpiamos
@@ -1503,94 +1512,94 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.refreshData.emit(true);
   }
 
-  eliminar(){
+  eliminar() {
     let deletedDesig = [];
     let deletedAct = [];
     this.rowGroups.forEach((rowG, i) => {
       //1. Eliminamos designaciones
       this.selectedArray.forEach(idToDelete => {
-      if (rowG.id == idToDelete){
-        this.showMsg('error', "No se pueden eliminar designaciones", '')
-        /*this.rowGroups.splice(i, 1);
-        deletedDesig.push(rowG.id)
-        this.designasToDelete.emit(deletedDesig);*/
-        //NO SE PUEDEN ELIMINAR DESIGNACIONES!!
-      }
-      });
-    //2. Eliminamos actuaciones
-    if(this.selecteChild != []){
-
-
-      this.selecteChild.forEach((child) => {
-      let rowIdChild = Object.keys(child)[0];
-      let rowId = rowIdChild.slice(0, -1);
-       this.childNumber =  Number(Object.values(child)[0]);
-       this.selectedArray.forEach(idToDelete => {
-        if (rowIdChild == idToDelete && rowG.id == rowId){
-          this.turnoAllow = rowG.rows[0].cells[39].value;
-          //rowG.rows.splice(this.childNumber, 1);
-          if (rowG.rows[this.childNumber + 1].cells[8].value == false){
-            //actuacion No Validada
-            //console.log("isListreado")
-            if ((this.isLetrado && this.turnoAllow != "1" ) || (!this.isLetrado)){
-              if (rowG.rows[this.childNumber + 1].cells[35].value == "1"){
-                this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
-                this.refreshData.emit(true);
-              }else{
-                //console.log("push del else");
-                deletedAct.push(rowG.rows[this.childNumber + 1].cells)
-              }
-            }else {
-              this.showMsg('error', "No tiene permiso para eliminar actuaciones", '')
-              this.refreshData.emit(true);
-            }
-          } else {
-            this.showMsg('error', "No se pueden eliminar actuaciones validadas", '')
-            this.refreshData.emit(true);
-          }
-         
-          this.totalActuaciones.emit(-1);
-         
+        if (rowG.id == idToDelete) {
+          this.showMsg('error', "No se pueden eliminar designaciones", '')
+          /*this.rowGroups.splice(i, 1);
+          deletedDesig.push(rowG.id)
+          this.designasToDelete.emit(deletedDesig);*/
+          //NO SE PUEDEN ELIMINAR DESIGNACIONES!!
         }
-        });
-      })
+      });
+      //2. Eliminamos actuaciones
+      if (this.selecteChild.length) {
 
-    }
+
+        this.selecteChild.forEach((child) => {
+          let rowIdChild = Object.keys(child)[0];
+          let rowId = rowIdChild.slice(0, -1);
+          this.childNumber = Number(Object.values(child)[0]);
+          this.selectedArray.forEach(idToDelete => {
+            if (rowIdChild == idToDelete && rowG.id == rowId) {
+              this.turnoAllow = rowG.rows[0].cells[39].value;
+              //rowG.rows.splice(this.childNumber, 1);
+              if (rowG.rows[this.childNumber + 1].cells[8].value == false) {
+                //actuacion No Validada
+                //console.log("isListreado")
+                if ((this.isLetrado && this.turnoAllow != "1") || (!this.isLetrado)) {
+                  if (rowG.rows[this.childNumber + 1].cells[35].value == "1") {
+                    this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
+                    this.refreshData.emit(true);
+                  } else {
+                    //console.log("push del else");
+                    deletedAct.push(rowG.rows[this.childNumber + 1].cells)
+                  }
+                } else {
+                  this.showMsg('error', "No tiene permiso para eliminar actuaciones", '')
+                  this.refreshData.emit(true);
+                }
+              } else {
+                this.showMsg('error', "No se pueden eliminar actuaciones validadas", '')
+                this.refreshData.emit(true);
+              }
+
+              this.totalActuaciones.emit(-1);
+
+            }
+          });
+        })
+
+      }
     });
     this.totalRegistros = this.rowGroups.length;
 
-    if (deletedAct.length != 0){
-      
-    let keyConfirmation = "deletePlantillaDoc";
+    if (deletedAct.length != 0) {
 
-    this.confirmationService.confirm({
-      key: keyConfirmation,
-      message: this.translateService.instant('messages.deleteConfirmation'),
-      icon: "fa fa-trash-alt",
-      accept: () => {
-        let deletedActNOT_REPEATED = new Set(deletedAct);
-        deletedAct = Array.from(deletedActNOT_REPEATED);
-        this.actuacionesToDelete.emit(deletedAct);
-        deletedAct = [];
-        this.selectedArray = [];
-        this.selecteChild = [];
-        this.selected = false;
-      },
-      reject: () => {
-        deletedAct = [];
-        this.msgs = [
-          {
-            severity: "info",
-            summary: "info",
-            detail: this.translateService.instant(
-              "general.message.accion.cancelada"
-            )
-          }
-        ];
-      }
-    });
+      let keyConfirmation = "deletePlantillaDoc";
+
+      this.confirmationService.confirm({
+        key: keyConfirmation,
+        message: this.translateService.instant('messages.deleteConfirmation'),
+        icon: "fa fa-trash-alt",
+        accept: () => {
+          let deletedActNOT_REPEATED = new Set(deletedAct);
+          deletedAct = Array.from(deletedActNOT_REPEATED);
+          this.actuacionesToDelete.emit(deletedAct);
+          deletedAct = [];
+          this.selectedArray = [];
+          this.selecteChild = [];
+          this.selected = false;
+        },
+        reject: () => {
+          deletedAct = [];
+          this.msgs = [
+            {
+              severity: "info",
+              summary: "info",
+              detail: this.translateService.instant(
+                "general.message.accion.cancelada"
+              )
+            }
+          ];
+        }
+      });
     }
-    
+
   }
 
   showMsg(severity, summary, detail) {
@@ -1604,16 +1613,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   clear() {
     this.msgs = [];
   }
-  cargaAcreditacionesPorModulo($event, designacion, rowGroup){
+  cargaAcreditacionesPorModulo($event, designacion, rowGroup) {
     let validacion = false;
     this.turnoAllow = rowGroup.rows[0].cells[39].value;
-    if(this.isLetrado){
+    if (this.isLetrado) {
       //colegiado
-      if (this.turnoAllow != "1"){
+      if (this.turnoAllow != "1") {
         //check desactivado
         validacion = true;
       }
-    }else {
+    } else {
       //colegio
       validacion = true;
     }
@@ -1622,163 +1631,163 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.progressSpinner = true;
     let desig = rowGroup.rows[0].cells;
     this.idTurno = desig[17].value;
-    if($event[0] == "0"){
-      this.rowGroups.forEach((rowGroup,i) => {
-        if (rowGroup.id == designacion){
+    if ($event[0] == "0") {
+      this.rowGroups.forEach((rowGroup, i) => {
+        if (rowGroup.id == designacion) {
           let id = Object.keys(rowGroup.rows)[0];
           let newArrayCells: Cell[];
-            newArrayCells= [
-              { type: 'checkboxPermisos', value: [undefined, ""], size: 120 , combo: null},
-              { type: 'multiselect1', value: "0", size: 400 , combo: []},
-              { type: 'input', value: desig[2].value, size: 200, combo: null},
-              { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-              { type: 'multiselect2', value: "0", size: 400 , combo: []}, //modulo
-              { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-              { type: 'datePicker', value: this.formatDate(new Date()) , size: 200, combo: null},
-              { type: 'multiselect3', value: "0" , size: 200, combo: []},
-              { type: 'checkbox', value: validacion, size: 80 , combo: null},
-              { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  '' , size: 0, combo: null},
-              { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
-              { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
-              { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
-        
-            const newAllow = rowGroup.rows[0].cells[40].value;
-            if(!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")){
-              let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
-              rowGroup.rows.push(newRow);
-              this.newActuacionesArr.push(newRow);
-            }else{
-              this.showMsg('error', "No tiene permiso para añadir actuaciones", '')
-              this.rowGroups = this.rowGroupsAux;
-              this.refreshData.emit(true);
-            }
-      
+          newArrayCells = [
+            { type: 'checkboxPermisos', value: [undefined, ""], size: 120, combo: null, disabled: null },
+            { type: 'multiselect1', value: "0", size: 400, combo: [], disabled: null },
+            { type: 'input', value: desig[2].value, size: 200, combo: null, disabled: null },
+            { type: 'input', value: desig[3].value, size: 200, combo: null, disabled: null },//numProc
+            { type: 'multiselect2', value: "0", size: 400, combo: [], disabled: null }, //modulo
+            { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
+            { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
+            { type: 'multiselect3', value: "0", size: 200, combo: [], disabled: null },
+            { type: 'checkbox', value: validacion, size: 80, combo: null, disabled: null },
+            { type: 'invisible', value: desig[19].value, size: 0, combo: null, disabled: null },//numDesig
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: desig[15].value, size: 0, combo: null, disabled: null },//idJuzgado   
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+            { type: 'invisible', value: desig[10].value, size: 0, combo: null, disabled: null },//anio
+            { type: 'invisible', value: desig[17].value, size: 0, combo: null, disabled: null },//idturno
+            { type: 'invisible', value: desig[13].value, size: 0, combo: null, disabled: null }];//idInstitucion
+
+          const newAllow = rowGroup.rows[0].cells[40].value;
+          if (!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")) {
+            let newRow: Row = { cells: newArrayCells, position: 'noCollapse' };
+            rowGroup.rows.push(newRow);
+            this.newActuacionesArr.push(newRow);
+          } else {
+            this.showMsg('error', "No tiene permiso para añadir actuaciones", '')
+            this.rowGroups = this.rowGroupsAux;
+            this.refreshData.emit(true);
+          }
+
         }
       })
-    }else{
+    } else {
       this.sigaServices.getParam("combo_comboAcreditacionesPorModulo", `?idModulo=${$event[0]}&idTurno=${this.idTurno}`).subscribe(
         n => {
           this.comboAcreditacion = n.combooItems;
           this.commonsService.arregloTildesCombo(this.comboAcreditacion);
           this.progressSpinner = false;
-                          //this.cargaJuzgados.emit(true);
-        //this.comboModulos = [];
-        //this.comboAcreditacion = [];
-        this.rowGroups.forEach((rowGroup,i) => {
-          if (rowGroup.id == designacion){
-            let id = Object.keys(rowGroup.rows)[0];
-            let newArrayCells: Cell[];
-            if(this.comboJuzgados.length != 0){
-              newArrayCells= [
-                { type: 'checkboxPermisos', value: [undefined, ''], size: 120 , combo: null},
-                { type: 'multiselect1', value: desig[1].value, size: 400 , combo: this.comboJuzgados},
-                { type: 'input', value: desig[2].value, size: 200, combo: null},
-                { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-                { type: 'multiselect2', value: desig[21].value, size: 400 , combo: this.comboModulos}, //modulo
-                { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-                { type: 'datePicker', value: this.formatDate(new Date()) , size: 100, combo: null},
-                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
-                { type: 'checkbox', value: validacion, size: 80 , combo: null},
-                { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
-                { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
-                { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
-            }else{
-              newArrayCells = [
-                { type: 'checkboxPermisos', value: [undefined, ''], size: 120 , combo: null},
-                { type: 'multiselect1', value: "0", size: 400 , combo: []},
-                { type: 'input', value: desig[2].value, size: 200, combo: null},
-                { type: 'input', value: desig[3].value, size: 200 , combo: null},//numProc
-                { type: 'multiselect2', value: this.comboModulos[0].value, size: 400 , combo: this.comboModulos}, //modulo
-                { type: 'datePicker', value: this.formatDate(new Date()), size: 200 , combo: null},
-                { type: 'datePicker', value: this.formatDate(new Date()) , size: 200, combo: null},
-                { type: 'multiselect3', value: this.comboAcreditacion[0].value , size: 200, combo: this.comboAcreditacion},
-                { type: 'checkbox', value: validacion, size: 80 , combo: null},
-                { type: 'invisible', value:  desig[19].value , size: 0, combo: null},//numDesig
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  desig[15].value , size: 0, combo: null},//idJuzgado   
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  '' , size: 0, combo: null},
-                { type: 'invisible', value:  desig[10].value , size: 0, combo: null},//anio
-                { type: 'invisible', value:  desig[17].value, size: 0, combo: null},//idturno
-                { type: 'invisible', value:  desig[13].value , size: 0, combo: null}];//idInstitucion
-            }
-  
-            const newAllow = rowGroup.rows[0].cells[40].value;
-            if(!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")){
-              let newRow: Row = {cells: newArrayCells, position: 'noCollapse'};
+          //this.cargaJuzgados.emit(true);
+          //this.comboModulos = [];
+          //this.comboAcreditacion = [];
+          this.rowGroups.forEach((rowGroup, i) => {
+            if (rowGroup.id == designacion) {
+              let id = Object.keys(rowGroup.rows)[0];
+              let newArrayCells: Cell[];
+              if (this.comboJuzgados.length != 0) {
+                newArrayCells = [
+                  { type: 'checkboxPermisos', value: [undefined, ''], size: 120, combo: null, disabled: null },
+                  { type: 'multiselect1', value: desig[1].value, size: 400, combo: this.comboJuzgados, disabled: null },
+                  { type: 'input', value: desig[2].value, size: 200, combo: null, disabled: null },
+                  { type: 'input', value: desig[3].value, size: 200, combo: null, disabled: null },//numProc
+                  { type: 'multiselect2', value: desig[21].value, size: 400, combo: this.comboModulos, disabled: null }, //modulo
+                  { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
+                  { type: 'datePicker', value: this.formatDate(new Date()), size: 100, combo: null, disabled: null },
+                  { type: 'multiselect3', value: this.comboAcreditacion[0].value, size: 200, combo: this.comboAcreditacion, disabled: null },
+                  { type: 'checkbox', value: validacion, size: 80, combo: null, disabled: null },
+                  { type: 'invisible', value: desig[19].value, size: 0, combo: null, disabled: null },//numDesig
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: desig[15].value, size: 0, combo: null, disabled: null },//idJuzgado   
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: desig[10].value, size: 0, combo: null, disabled: null },//anio
+                  { type: 'invisible', value: desig[17].value, size: 0, combo: null, disabled: null },//idturno
+                  { type: 'invisible', value: desig[13].value, size: 0, combo: null, disabled: null }];//idInstitucion
+              } else {
+                newArrayCells = [
+                  { type: 'checkboxPermisos', value: [undefined, ''], size: 120, combo: null, disabled: null },
+                  { type: 'multiselect1', value: "0", size: 400, combo: [], disabled: null },
+                  { type: 'input', value: desig[2].value, size: 200, combo: null, disabled: null },
+                  { type: 'input', value: desig[3].value, size: 200, combo: null, disabled: null },//numProc
+                  { type: 'multiselect2', value: this.comboModulos[0].value, size: 400, combo: this.comboModulos, disabled: null }, //modulo
+                  { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
+                  { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
+                  { type: 'multiselect3', value: this.comboAcreditacion[0].value, size: 200, combo: this.comboAcreditacion, disabled: null },
+                  { type: 'checkbox', value: validacion, size: 80, combo: null, disabled: null },
+                  { type: 'invisible', value: desig[19].value, size: 0, combo: null, disabled: null },//numDesig
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: desig[15].value, size: 0, combo: null, disabled: null },//idJuzgado   
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
+                  { type: 'invisible', value: desig[10].value, size: 0, combo: null, disabled: null },//anio
+                  { type: 'invisible', value: desig[17].value, size: 0, combo: null, disabled: null },//idturno
+                  { type: 'invisible', value: desig[13].value, size: 0, combo: null, disabled: null }];//idInstitucion
+              }
+
+              const newAllow = rowGroup.rows[0].cells[40].value;
+              if (!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")) {
+                let newRow: Row = { cells: newArrayCells, position: 'noCollapse' };
                 rowGroup.rows.push(newRow);
                 this.newActuacionesArr.push(newRow);
-              }else{
+              } else {
                 this.showMsg('error', "No tiene permiso para añadir actuaciones", '')
                 this.rowGroups = this.rowGroupsAux;
                 this.refreshData.emit(true);
               }
-        
-          }
-        })
+
+            }
+          })
         },
         err => {
           //console.log(err);
@@ -1786,16 +1795,16 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       );
     }
-    
+
   }
 
   formatDate(date) {
     const pattern = 'dd/MM/yyyy';
     return this.datepipe.transform(date, pattern);
   }
-  cargaModulosPorJuzgado($event, designacion, rowGroup){
+  cargaModulosPorJuzgado($event, designacion, rowGroup) {
     this.progressSpinner = true;
-    this.sigaServices.getParam("combo_comboModulosConJuzgado","?idJuzgado=" +$event).subscribe(
+    this.sigaServices.getParam("combo_comboModulosConJuzgado", "?idJuzgado=" + $event).subscribe(
       n => {
         this.comboModulos = JSON.parse(n.body).combooItems;
         this.commonsService.arregloTildesCombo(this.comboModulos);
@@ -1804,17 +1813,18 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.idTurno = desig[17].value;
         data.push(this.comboModulos[0].value);
         data.push(this.idTurno);
-        this.cargaAcreditacionesPorModulo(data, designacion, rowGroup); 
+        this.cargaAcreditacionesPorModulo(data, designacion, rowGroup);
         this.progressSpinner = false;
       },
       err => {
         //console.log(err);
         this.progressSpinner = false;
       }
+
     );
   }
 
-  cargaModulos(designacion, rowGroup){
+  cargaModulos(designacion, rowGroup) {
     this.progressSpinner = true;
     this.sigaServices.get("combo_comboModulos").subscribe(
       n => {
@@ -1826,7 +1836,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.idTurno = desig[17].value;
         data.push(this.comboModulos[0].value);
         data.push(this.idTurno);
-        this.cargaAcreditacionesPorModulo(data, designacion, rowGroup); 
+        this.cargaAcreditacionesPorModulo(data, designacion, rowGroup);
         this.progressSpinner = false;
       },
       err => {
@@ -1835,47 +1845,47 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     );
   }
-  
 
-      getParams(param){
-        let parametro = new ParametroRequestDto();
-        let institucionActual;
-        this.sigaServices.get("institucionActual").subscribe(n => {
-          institucionActual = n.value;
-          parametro.idInstitucion = institucionActual;
-          parametro.modulo = "SCS";
-          parametro.parametrosGenerales = param;
-          this.sigaServices
-            .postPaginado("parametros_search", "?numPagina=1", parametro)
-            .subscribe(
-              data => {
-                this.searchParametros = JSON.parse(data["body"]);
-                this.datosBuscar = this.searchParametros.parametrosItems;
-                this.datosBuscar.forEach(element => {
-                  if (element.parametro == param && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
-                    this.valorParametro = element.valor;
-                    if (param == "JUSTIFICACION_EDITAR_DESIGNA_LETRADOS"){
-                      this.justActivarDesigLetrado = this.valorParametro;
-                  }else if (param == "CONFIGURAR_COMBO_DESIGNA"){
-                    this.configComboDesigna = this.valorParametro;
-                  }
+
+  getParams(param) {
+    let parametro = new ParametroRequestDto();
+    let institucionActual;
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      institucionActual = n.value;
+      parametro.idInstitucion = institucionActual;
+      parametro.modulo = "SCS";
+      parametro.parametrosGenerales = param;
+      this.sigaServices
+        .postPaginado("parametros_search", "?numPagina=1", parametro)
+        .subscribe(
+          data => {
+            this.searchParametros = JSON.parse(data["body"]);
+            this.datosBuscar = this.searchParametros.parametrosItems;
+            this.datosBuscar.forEach(element => {
+              if (element.parametro == param && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+                this.valorParametro = element.valor;
+                if (param == "JUSTIFICACION_EDITAR_DESIGNA_LETRADOS") {
+                  this.justActivarDesigLetrado = this.valorParametro;
+                } else if (param == "CONFIGURAR_COMBO_DESIGNA") {
+                  this.configComboDesigna = this.valorParametro;
+                }
               }
+            });
           });
-      });
     });
   }
 
-  onChangeNifJg(value, rowGroupId, row : Row, rowGroup : RowGroup){
+  onChangeNifJg(value, rowGroupId, row: Row, rowGroup: RowGroup) {
 
-    if(value){
-      let justiciableItem : JusticiableBusquedaItem = new JusticiableBusquedaItem();
+    if (value) {
+      let justiciableItem: JusticiableBusquedaItem = new JusticiableBusquedaItem();
       justiciableItem.nif = value;
 
       this.sigaServices.post("gestionJusticiables_getJusticiableByNif", justiciableItem).subscribe(
         n => {
           let justiciableDTO = JSON.parse(n["body"]);
           let justiciableItem = justiciableDTO.justiciable;
-          if(justiciableItem){
+          if (justiciableItem) {
 
             rowGroup.rows[0].cells[0].value[0] = justiciableItem.nif;
             rowGroup.rows[0].cells[0].value[1] = justiciableItem.apellido1;
@@ -1888,34 +1898,34 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         err => {
           //console.log(err);
         },
-        () =>{
+        () => {
           this.progressSpinner = false;
         }
       );
 
     }
   }
-  
-    linkFichaActIfPermis(row, rowGroup){
-      if (this.pantalla == 'JE'){
-       if (this.permisosFichaAct){
-          
-          let des: DesignaItem = new DesignaItem();
-          if (rowGroup != null){
-            des.ano = rowGroup.id.split('\n')[0];
-            des.idTurno = rowGroup.rows[0].cells[17].value;
-            des.numero = rowGroup.rows[0].cells[19].value;
-            des.idInstitucion = rowGroup.rows[0].cells[13].value;
-            des.nig = rowGroup.rows[0].cells[2].value;
-            des.numProcedimiento = rowGroup.rows[0].cells[3].value;
-            des.idJuzgado = rowGroup.rows[0].cells[15].value;
-            des.idProcedimiento = rowGroup.rows[0].cells[21].value;
-            des.numColegiado = rowGroup.rows[0].cells[38].value;
-            des.fechaEntradaInicio = rowGroup.rows[0].cells[9].value;
-          }
-        
-         let act: ActuacionDesignaItem = new ActuacionDesignaItem();
-         if (row != null){
+
+  linkFichaActIfPermis(row, rowGroup) {
+    if (this.pantalla == 'JE') {
+      if (this.permisosFichaAct) {
+
+        let des: DesignaItem = new DesignaItem();
+        if (rowGroup != null) {
+          des.ano = rowGroup.id.split('\n')[0];
+          des.idTurno = rowGroup.rows[0].cells[17].value;
+          des.numero = rowGroup.rows[0].cells[19].value;
+          des.idInstitucion = rowGroup.rows[0].cells[13].value;
+          des.nig = rowGroup.rows[0].cells[2].value;
+          des.numProcedimiento = rowGroup.rows[0].cells[3].value;
+          des.idJuzgado = rowGroup.rows[0].cells[15].value;
+          des.idProcedimiento = rowGroup.rows[0].cells[21].value;
+          des.numColegiado = rowGroup.rows[0].cells[38].value;
+          des.fechaEntradaInicio = rowGroup.rows[0].cells[9].value;
+        }
+
+        let act: ActuacionDesignaItem = new ActuacionDesignaItem();
+        if (row != null) {
           act.idTurno = row.cells[33].value;
           act.anio = row.cells[32].value;
           act.fechaActuacion = row.cells[5].value;
@@ -1925,7 +1935,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           act.numProcedimiento = row.cells[3].value;
           act.idAcreditacion = row.cells[10].value;
           act.numeroAsunto = row.cells[19].value;
-         }else{
+        } else {
           act.idTurno = rowGroup.rows[0].cells[17].value;
           act.anio = rowGroup.rows[0].cells[10].value;
           act.fechaActuacion = rowGroup.rows[0].cells[9].value;
@@ -1935,358 +1945,358 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           act.numProcedimiento = rowGroup.rows[0].cells[3].value;
           //act.idAcreditacion = rowGroup.rows[0].cells[10].value;
           //act.numeroAsunto = rowGroup.rows[0].cells[19].value;
-         }
-
-          let actuacion: Actuacion = {
-            isNew: (row == null),
-            designaItem: des,
-            actuacion: act,
-            relaciones: null
-          };
-          
-          this.searchRelaciones(actuacion);
         }
+
+        let actuacion: Actuacion = {
+          isNew: (row == null),
+          designaItem: des,
+          actuacion: act,
+          relaciones: null
+        };
+
+        this.searchRelaciones(actuacion);
       }
     }
+  }
 
-    linkFichaDesigna(rowGroup: RowGroup, id: string) {
-      if (this.pantalla == "JE" && id) {
-        id = id.split("\n")[0];
+  linkFichaDesigna(rowGroup: RowGroup, id: string) {
+    if (this.pantalla == "JE" && id) {
+      id = id.split("\n")[0];
 
-        this.busquedaDesignaciones(id);
-      }
+      this.busquedaDesignaciones(id);
     }
+  }
 
-    busquedaDesignaciones(id) {
-      this.progressSpinner = true;
-      
-      let designaItem = new DesignaItem();
-      designaItem.ano = id.split("/")[0];
-      designaItem.codigo = id.split("/")[1];
-      let datos = [];
+  busquedaDesignaciones(id) {
+    this.progressSpinner = true;
 
-      this.sigaServices.post("designaciones_busqueda", designaItem).subscribe(
-        n => {
-          let error = null;
-          datos = JSON.parse(n.body);
-          
-          if(datos[0] != null && datos[0] != undefined){
-            if(datos[0].error != null){
-              error = datos[0].error;
-            }
+    let designaItem = new DesignaItem();
+    designaItem.ano = id.split("/")[0];
+    designaItem.codigo = id.split("/")[1];
+    let datos = [];
+
+    this.sigaServices.post("designaciones_busqueda", designaItem).subscribe(
+      n => {
+        let error = null;
+        datos = JSON.parse(n.body);
+
+        if (datos[0] != null && datos[0] != undefined) {
+          if (datos[0].error != null) {
+            error = datos[0].error;
           }
-  
-          datos.forEach(async element => {
-           element.factConvenio = element.ano;
-           element.anio = element.ano;
-           element.ano = 'D' +  element.ano + '/' + element.codigo;
+        }
+
+        datos.forEach(async element => {
+          element.factConvenio = element.ano;
+          element.anio = element.ano;
+          element.ano = 'D' + element.ano + '/' + element.codigo;
           //  element.fechaEstado = new Date(element.fechaEstado);
           element.fechaEstado = this.formatDate(element.fechaEstado);
           element.fechaFin = this.formatDate(element.fechaFin);
           element.fechaAlta = this.formatDate(element.fechaAlta);
           element.fechaEntradaInicio = this.formatDate(element.fechaEntradaInicio);
-           if(element.estado == 'V'){
-             element.sufijo = element.estado;
+          if (element.estado == 'V') {
+            element.sufijo = element.estado;
             element.estado = 'Activo';
-           }else if(element.estado == 'F'){
+          } else if (element.estado == 'F') {
             element.sufijo = element.estado;
             element.estado = 'Finalizado';
-           }else if(element.estado == 'A'){
+          } else if (element.estado == 'A') {
             element.sufijo = element.estado;
             element.estado = 'Anulada';
-           }
-           element.nombreColegiado = element.apellido1Colegiado +" "+ element.apellido2Colegiado+", "+element.nombreColegiado;
-           if(element.nombreInteresado != null){
-            element.nombreInteresado = element.apellido1Interesado +" "+ element.apellido2Interesado+", "+element.nombreInteresado;
-           }
-           if(element.art27 == "1"){
+          }
+          element.nombreColegiado = element.apellido1Colegiado + " " + element.apellido2Colegiado + ", " + element.nombreColegiado;
+          if (element.nombreInteresado != null) {
+            element.nombreInteresado = element.apellido1Interesado + " " + element.apellido2Interesado + ", " + element.nombreInteresado;
+          }
+          if (element.art27 == "1") {
             element.art27 = "Si";
-           }else{
+          } else {
             element.art27 = "No";
-           }
-           await this.getDatosAdicionales(element);
-           await this.getComboTipoDesignas();
+          }
+          await this.getDatosAdicionales(element);
+          await this.getComboTipoDesignas();
 
           this.progressSpinner = false;
 
           this.enlaceADesignacion(element);
-          
+
         },
-        err => {
-          this.progressSpinner = false;
-        });
+          err => {
+            this.progressSpinner = false;
+          });
       },
       err => {
         this.progressSpinner = false;
       });
-    }
+  }
 
-    getDatosAdicionales(element) {
-      this.progressSpinner = true;
-      let desginaAdicionales = new DesignaItem();
-      let anio = element.ano.split("/");
-      desginaAdicionales.ano = Number(anio[0].substring(1, 5));
-      desginaAdicionales.numero = element.numero;
-      desginaAdicionales.idTurno = element.idTurno;
-      return this.sigaServices.post("designaciones_getDatosAdicionales", desginaAdicionales).toPromise().then(
-        n => {
-         
-          let datosAdicionales = JSON.parse(n.body);
-          if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
-            element.delitos = datosAdicionales[0].delitos;
-            element.fechaOficioJuzgado =datosAdicionales[0].fechaOficioJuzgado;
-            element.observaciones = datosAdicionales[0].observaciones;
-            element.fechaRecepcionColegio = datosAdicionales[0].fechaRecepcionColegio;
-            element.defensaJuridica = datosAdicionales[0].defensaJuridica;
-            element.fechaJuicio = datosAdicionales[0].fechaJuicio;
-          }
-        },
-        err => {
+  getDatosAdicionales(element) {
+    this.progressSpinner = true;
+    let desginaAdicionales = new DesignaItem();
+    let anio = element.ano.split("/");
+    desginaAdicionales.ano = Number(anio[0].substring(1, 5));
+    desginaAdicionales.numero = element.numero;
+    desginaAdicionales.idTurno = element.idTurno;
+    return this.sigaServices.post("designaciones_getDatosAdicionales", desginaAdicionales).toPromise().then(
+      n => {
+
+        let datosAdicionales = JSON.parse(n.body);
+        if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
+          element.delitos = datosAdicionales[0].delitos;
+          element.fechaOficioJuzgado = datosAdicionales[0].fechaOficioJuzgado;
+          element.observaciones = datosAdicionales[0].observaciones;
+          element.fechaRecepcionColegio = datosAdicionales[0].fechaRecepcionColegio;
+          element.defensaJuridica = datosAdicionales[0].defensaJuridica;
+          element.fechaJuicio = datosAdicionales[0].fechaJuicio;
         }
-      );
-    }
-
-    enlaceADesignacion(dato) {
-      this.progressSpinner = true;
-      let idProcedimiento = dato.idProcedimiento;
-      let datosProcedimiento;
-      let datosModulo;
-      
-      if (dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined && this.comboTipoDesigna != undefined) {
-        this.comboTipoDesigna.forEach(element => {
-          if (element.value == dato.idTipoDesignaColegio) {
-            dato.descripcionTipoDesigna = element.label;
-          }
-        });
+      },
+      err => {
       }
-      
-      let designaProcedimiento = new DesignaItem();
-      designaProcedimiento.idPretension = dato.idPretension;
-      designaProcedimiento.idTurno = dato.idTurno;
-      designaProcedimiento.ano = dato.factConvenio;
-      designaProcedimiento.numero = dato.numero
-      this.sigaServices.post("designaciones_busquedaProcedimiento", designaProcedimiento).subscribe(
-        n => {
-          datosProcedimiento = JSON.parse(n.body);
-          if (datosProcedimiento.length == 0) {
-            dato.nombreProcedimiento = "";
-            dato.idProcedimiento = "";
-          } else {
-            dato.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
-            dato.idProcedimiento = designaProcedimiento.idPretension;
-          }
-  
-          let designaModulo = new DesignaItem();
-          designaModulo.idProcedimiento = idProcedimiento;
-          designaModulo.idTurno = dato.idTurno;
-          designaModulo.ano = dato.factConvenio;
-          designaModulo.numero = dato.numero
-          this.sigaServices.post("designaciones_busquedaModulo", designaModulo).subscribe(
-            n => {
-              datosModulo = JSON.parse(n.body);
-              if (datosModulo.length == 0) {
-                dato.modulo = "";
-                dato.idModulo = "";
-              } else {
-                dato.modulo = datosModulo[0].modulo;
-                dato.idModulo = datosModulo[0].idModulo;
-              }
-              this.sigaServices.post("designaciones_busquedaJuzgado", dato.idJuzgado).subscribe(
-                n => {
-                  dato.nombreJuzgado = n.body;
-                  sessionStorage.setItem("nuevaDesigna", "false");
-                  sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
-                  this.router.navigate(["/fichaDesignaciones"]);
-      
-                },
-                err => {
-                  this.progressSpinner = false;
-                  dato.nombreJuzgado = "";
-                  sessionStorage.setItem("nuevaDesigna", "false");
-                  sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
-                  this.router.navigate(["/fichaDesignaciones"]);
-                }, () => {
-                  this.progressSpinner = false;
-                });
-            },
-            err => {
-              this.progressSpinner = false;
-  
-              //console.log(err);
-            }, () => {
-              this.progressSpinner = false;
-            });
-        },
-        err => {
-          this.progressSpinner = false;
-          //console.log(err);
-        }, () => {
-          this.progressSpinner = false;
-        });
-    }
+    );
+  }
 
-    getComboTipoDesignas() {
-      this.progressSpinner = true;
-  
-      return this.sigaServices.get("designas_tipoDesignas").toPromise().then(
-        n => {
-          this.comboTipoDesigna = n.combooItems;
-        },
-        err => {
+  enlaceADesignacion(dato) {
+    this.progressSpinner = true;
+    let idProcedimiento = dato.idProcedimiento;
+    let datosProcedimiento;
+    let datosModulo;
+
+    if (dato.idTipoDesignaColegio != null && dato.idTipoDesignaColegio != undefined && this.comboTipoDesigna != undefined) {
+      this.comboTipoDesigna.forEach(element => {
+        if (element.value == dato.idTipoDesignaColegio) {
+          dato.descripcionTipoDesigna = element.label;
         }
-      );
+      });
     }
-    
-    linkFichaAsistencia(id){
-      let idAsistencia : string = id;
-      if(this.pantalla == "AE"){
-        sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
-        sessionStorage.setItem("idAsistencia", idAsistencia.substr(1));
-        sessionStorage.setItem("modoBusqueda","b");
-        this.router.navigate(['/fichaAsistencia']);
-      }
-    }
-    linkToFichaEJG(rowGroup : RowGroup, idEJG : string){
-      if(this.pantalla == "AE" && idEJG){
-        idEJG = idEJG.substring(1);
-        sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
-        sessionStorage.setItem("modoBusqueda","b");
-        let ejgItem = new EJGItem();
-        ejgItem.numAnnioProcedimiento = idEJG;
-        ejgItem.annio = idEJG.split("/")[0];
-        ejgItem.numero = idEJG.split("/")[1];
-        ejgItem.tipoEJG = rowGroup.rows[0].cells[6].value;
-        this.progressSpinner = true;
-    
-        this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
-          n => {
-            let ejgObject : any []= JSON.parse(n.body).ejgItems;
-            let datosItem : EJGItem = ejgObject[0];
-            this.persistenceService.setDatos(datosItem);
-            this.consultaUnidadFamiliar(ejgItem);
-            this.commonsService.scrollTop();
-            this.progressSpinner = false;
-          },
-          err => {
-            console.error(err);
-            this.showMsg('error', 'Error al consultar el EJG','');
-            this.progressSpinner = false;
-          },
-          ()=>{
-            this.progressSpinner = false;
-          }
-        );
 
-      } else if (this.pantalla == "JE" && idEJG) {
-        idEJG = idEJG.split("\n")[0];
-        // sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtro));
-        // sessionStorage.setItem("modoBusqueda","b");
-        let ejgItem = new EJGItem();
-        ejgItem.numAnnioProcedimiento = idEJG;
-        ejgItem.annio = idEJG.split("/")[0];
-        ejgItem.numero = idEJG.split("/")[1];
-        //ejgItem.tipoEJG = rowGroup.rows[0].cells[6].value;
-        this.progressSpinner = true;
-    
-        this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
+    let designaProcedimiento = new DesignaItem();
+    designaProcedimiento.idPretension = dato.idPretension;
+    designaProcedimiento.idTurno = dato.idTurno;
+    designaProcedimiento.ano = dato.factConvenio;
+    designaProcedimiento.numero = dato.numero
+    this.sigaServices.post("designaciones_busquedaProcedimiento", designaProcedimiento).subscribe(
+      n => {
+        datosProcedimiento = JSON.parse(n.body);
+        if (datosProcedimiento.length == 0) {
+          dato.nombreProcedimiento = "";
+          dato.idProcedimiento = "";
+        } else {
+          dato.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
+          dato.idProcedimiento = designaProcedimiento.idPretension;
+        }
+
+        let designaModulo = new DesignaItem();
+        designaModulo.idProcedimiento = idProcedimiento;
+        designaModulo.idTurno = dato.idTurno;
+        designaModulo.ano = dato.factConvenio;
+        designaModulo.numero = dato.numero
+        this.sigaServices.post("designaciones_busquedaModulo", designaModulo).subscribe(
           n => {
-            let ejgObject : any []= JSON.parse(n.body).ejgItems;
-            let datosItem : EJGItem = ejgObject[0];
-            this.persistenceService.setDatos(datosItem);
-            //this.consultaUnidadFamiliar(ejgItem);
-            if(sessionStorage.getItem("EJGItem")){
-              sessionStorage.removeItem("EJGItem");
+            datosModulo = JSON.parse(n.body);
+            if (datosModulo.length == 0) {
+              dato.modulo = "";
+              dato.idModulo = "";
+            } else {
+              dato.modulo = datosModulo[0].modulo;
+              dato.idModulo = datosModulo[0].idModulo;
             }
-    
-            this.router.navigate(['/gestionEjg']);
-            this.progressSpinner = false;
-            this.commonsService.scrollTop();
+            this.sigaServices.post("designaciones_busquedaJuzgado", dato.idJuzgado).subscribe(
+              n => {
+                dato.nombreJuzgado = n.body;
+                sessionStorage.setItem("nuevaDesigna", "false");
+                sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+                this.router.navigate(["/fichaDesignaciones"]);
+
+              },
+              err => {
+                this.progressSpinner = false;
+                dato.nombreJuzgado = "";
+                sessionStorage.setItem("nuevaDesigna", "false");
+                sessionStorage.setItem("designaItemLink", JSON.stringify(dato));
+                this.router.navigate(["/fichaDesignaciones"]);
+              }, () => {
+                this.progressSpinner = false;
+              });
           },
           err => {
-            console.error(err);
-            this.showMsg('error', 'Error al consultar el EJG','');
             this.progressSpinner = false;
-          }
-        );
-      }
-    }
 
-    consultaUnidadFamiliar(selected) {
+            //console.log(err);
+          }, () => {
+            this.progressSpinner = false;
+          });
+      },
+      err => {
+        this.progressSpinner = false;
+        //console.log(err);
+      }, () => {
+        this.progressSpinner = false;
+      });
+  }
+
+  getComboTipoDesignas() {
+    this.progressSpinner = true;
+
+    return this.sigaServices.get("designas_tipoDesignas").toPromise().then(
+      n => {
+        this.comboTipoDesigna = n.combooItems;
+      },
+      err => {
+      }
+    );
+  }
+
+  linkFichaAsistencia(id) {
+    let idAsistencia: string = id;
+    if (this.pantalla == "AE") {
+      sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
+      sessionStorage.setItem("idAsistencia", idAsistencia.substr(1));
+      sessionStorage.setItem("modoBusqueda", "b");
+      this.router.navigate(['/fichaAsistencia']);
+    }
+  }
+  linkToFichaEJG(rowGroup: RowGroup, idEJG: string) {
+    if (this.pantalla == "AE" && idEJG) {
+      idEJG = idEJG.substring(1);
+      sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtroAsistencia));
+      sessionStorage.setItem("modoBusqueda", "b");
+      let ejgItem = new EJGItem();
+      ejgItem.numAnnioProcedimiento = idEJG;
+      ejgItem.annio = idEJG.split("/")[0];
+      ejgItem.numero = idEJG.split("/")[1];
+      ejgItem.tipoEJG = rowGroup.rows[0].cells[6].value;
       this.progressSpinner = true;
-  
-      this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
+
+      this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
         n => {
-          let datosFamiliares : any[] = JSON.parse(n.body).unidadFamiliarEJGItems;
-          this.persistenceService.setBodyAux(datosFamiliares);
-  
-          if(sessionStorage.getItem("EJGItem")){
+          let ejgObject: any[] = JSON.parse(n.body).ejgItems;
+          let datosItem: EJGItem = ejgObject[0];
+          this.persistenceService.setDatos(datosItem);
+          this.consultaUnidadFamiliar(ejgItem);
+          this.commonsService.scrollTop();
+          this.progressSpinner = false;
+        },
+        err => {
+          console.error(err);
+          this.showMsg('error', 'Error al consultar el EJG', '');
+          this.progressSpinner = false;
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+
+    } else if (this.pantalla == "JE" && idEJG) {
+      idEJG = idEJG.split("\n")[0];
+      // sessionStorage.setItem("filtroAsistencia", JSON.stringify(this.filtro));
+      // sessionStorage.setItem("modoBusqueda","b");
+      let ejgItem = new EJGItem();
+      ejgItem.numAnnioProcedimiento = idEJG;
+      ejgItem.annio = idEJG.split("/")[0];
+      ejgItem.numero = idEJG.split("/")[1];
+      //ejgItem.tipoEJG = rowGroup.rows[0].cells[6].value;
+      this.progressSpinner = true;
+
+      this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
+        n => {
+          let ejgObject: any[] = JSON.parse(n.body).ejgItems;
+          let datosItem: EJGItem = ejgObject[0];
+          this.persistenceService.setDatos(datosItem);
+          //this.consultaUnidadFamiliar(ejgItem);
+          if (sessionStorage.getItem("EJGItem")) {
             sessionStorage.removeItem("EJGItem");
           }
-  
+
           this.router.navigate(['/gestionEjg']);
           this.progressSpinner = false;
           this.commonsService.scrollTop();
         },
         err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        },
-        () =>{
+          console.error(err);
+          this.showMsg('error', 'Error al consultar el EJG', '');
           this.progressSpinner = false;
         }
       );
     }
+  }
 
-    searchRelaciones(actuacion: Actuacion) {
+  consultaUnidadFamiliar(selected) {
+    this.progressSpinner = true;
 
-        this.progressSpinner = true;
-  
-        let item = ["D" + actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion, actuacion.designaItem.numero];
-  
-        this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
-          n => {
-  
-            let relaciones = JSON.parse(n.body).relacionesItem;
-            let error = JSON.parse(n.body).error;
-  
-            if (error != null && error.description != null) {
-              this.showMsg('info', this.translateService.instant("general.message.informacion"), error.description);
-            } else {
-              actuacion.relaciones = relaciones;
-            }
-            this.progressSpinner = false;
-            
-          },
-          err => {
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-            //console.log(actuacion)
-            sessionStorage.setItem("actuacionDesignaJE", JSON.stringify(actuacion));
-            this.router.navigate(['/fichaActDesigna']);
-          }
-        );
-    }
-    fillRowGroup(event, rowGroup){
-      rowGroup.id = event;
-    }
-    navigateComunicarJE(rowGroup, identificador) {
-      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
-      if (this.pantalla == 'JE'){
+    this.sigaServices.post("gestionejg_unidadFamiliarEJG", selected).subscribe(
+      n => {
+        let datosFamiliares: any[] = JSON.parse(n.body).unidadFamiliarEJGItems;
+        this.persistenceService.setBodyAux(datosFamiliares);
+
+        if (sessionStorage.getItem("EJGItem")) {
+          sessionStorage.removeItem("EJGItem");
+        }
+
+        this.router.navigate(['/gestionEjg']);
+        this.progressSpinner = false;
+        this.commonsService.scrollTop();
+      },
+      err => {
+        //console.log(err);
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+
+  searchRelaciones(actuacion: Actuacion) {
+
+    this.progressSpinner = true;
+
+    let item = ["D" + actuacion.designaItem.ano, actuacion.designaItem.idTurno, actuacion.designaItem.idInstitucion, actuacion.designaItem.numero];
+
+    this.sigaServices.post("designacionesBusquedaRelaciones", item).subscribe(
+      n => {
+
+        let relaciones = JSON.parse(n.body).relacionesItem;
+        let error = JSON.parse(n.body).error;
+
+        if (error != null && error.description != null) {
+          this.showMsg('info', this.translateService.instant("general.message.informacion"), error.description);
+        } else {
+          actuacion.relaciones = relaciones;
+        }
+        this.progressSpinner = false;
+
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        //console.log(actuacion)
+        sessionStorage.setItem("actuacionDesignaJE", JSON.stringify(actuacion));
+        this.router.navigate(['/fichaActDesigna']);
+      }
+    );
+  }
+  fillRowGroup(event, rowGroup) {
+    rowGroup.id = event;
+  }
+  navigateComunicarJE(rowGroup, identificador) {
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    if (this.pantalla == 'JE') {
       //IDMODULO de SJCS es 10
       sessionStorage.setItem("idModulo", '10');
-      
+
       this.getDatosComunicarJE(rowGroup, identificador);
-      }
-      else this.msgs = [
-        {
-          severity: "info",
-          summary: "En proceso",
-          detail: "Boton no funcional actualmente"
-        }
-      ];
     }
+    else this.msgs = [
+      {
+        severity: "info",
+        summary: "En proceso",
+        detail: "Boton no funcional actualmente"
+      }
+    ];
+  }
 
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
@@ -2300,7 +2310,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
 
-  getDatosComunicarJE(rowGroup,expediente) {
+  getDatosComunicarJE(rowGroup, expediente) {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();
 
@@ -2324,19 +2334,19 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   let aniodes: String = rowGroup.rows[0].cells[10].value;
                   let idTurno: String = rowGroup.rows[0].cells[17].value;
                   let numeroDes: String = rowGroup.rows[0].cells[19].value;
-                  
+
                   this.sigaServices.getParam("justificacionExpres_getEJG", "?numEjg=" + numEJG + "&anioEjg=" + anioEJG).subscribe(
                     ejg => {
                       let keysValues = [];
-                      
+
                       keysValues.push(ejg.idinstitucion);
                       keysValues.push(idTurno);
                       keysValues.push(aniodes);
                       keysValues.push(numeroDes);
-                      keysValues.push(ejg.idtipoejg); 
+                      keysValues.push(ejg.idtipoejg);
                       keysValues.push(anioEJG);
                       keysValues.push(ejg.numero);
-                      
+
                       datosSeleccionados.push(keysValues);
 
                       sessionStorage.setItem(

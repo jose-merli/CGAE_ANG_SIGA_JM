@@ -219,6 +219,13 @@ export class EstadosPagosFacturasComponent implements OnInit, OnChanges {
     return this.numeroAbono == undefined || this.grupos[this.grupos.length - 1].key != this.numeroAbono;
   }
 
+  estadoFacturaActual(){
+    let factura = this.datosInit.filter(p => p.key == this.bodyInicial.numeroFactura);
+    if(factura.length > 0){
+      return factura[0].values[factura[0].values.length-1]
+    } 
+  }
+
   // Visibilidad de las acciones
   disabledRenegociar(): boolean {
     if (this.grupos == undefined || this.grupos.length == 0 || this.grupos[this.grupos.length - 1].values == undefined 

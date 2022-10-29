@@ -29,9 +29,9 @@
             <label>{{ 'facturacion.factProgramadas.serieFactu.numFactu' | translate }}: 
                 <span *ngIf="numeroFacturasTotal != undefined">{{ numeroFacturasTotal }}</span></label>
             <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.total' | translate }}: 
-                <span *ngIf="totalActual != undefined">{{ totalActual }} €</span></label>
+                <span *ngIf="totalActual != undefined">{{ (totalActual | currency:'EUR':true) }}</span></label>
             <label>{{ 'facturacion.factProgramadas.serieFactu.totalPendiente' | translate }}: 
-              <span *ngIf="totalPendienteActual != undefined">{{ totalPendienteActual }} €</span></label>
+              <span *ngIf="totalPendienteActual != undefined">{{ (totalPendienteActual | currency:'EUR':true) }}</span></label>
             
             <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('infoFactura')"
               *ngIf="!esFichaActiva()"></i>
@@ -97,8 +97,8 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div [ngSwitch]="col.field">
-                <div *ngSwitchCase="'total'"><span>{{ dato[col.field] }} €</span></div>
-                <div *ngSwitchCase="'totalPendiente'"><span>{{ dato[col.field] }} €</span></div>
+                <div *ngSwitchCase="'total'"><span>{{ (dato[col.field]  | currency:'EUR':true) }}</span></div>
+                <div *ngSwitchCase="'totalPendiente'"><span>{{ (dato[col.field]  | currency:'EUR':true) }}</span></div>
                 <div *ngSwitchDefault><span>{{ dato[col.field] }}</span></div>
               </div>
             </td>

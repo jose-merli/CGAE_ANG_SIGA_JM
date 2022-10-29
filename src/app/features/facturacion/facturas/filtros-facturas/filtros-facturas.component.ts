@@ -25,9 +25,9 @@ export class FiltrosFacturasComponent implements OnInit {
 
   // variables para desplegar/minimizar secciones del componente
   showDatosGenerales: boolean = true;
-  showDatosAgrupacion: boolean = true;
-  showCliente: boolean = true;
-  showComunicacionesCobrosRecobros: boolean = true;
+  showDatosAgrupacion: boolean = false;
+  showCliente: boolean = false;
+  showComunicacionesCobrosRecobros: boolean = false;
   
   @ViewChild('inputNum') inputNum: ElementRef;
   // crear combo para opciones en un dropdown

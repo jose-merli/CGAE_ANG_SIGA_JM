@@ -18,61 +18,62 @@
 
             <div class="col">
               <!-- Datos para el estado de factura plegado -->
-              <ng-container *ngIf="grupos && grupos.length != 0 && esUltimoEstadoFactura()">
+              <ng-container *ngIf="bodyInicial != undefined && bodyInicial.tipo == 'FACTURA'">
 
                 <div class="d-flex justify-content-between default">
                   <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}: 
-                    <span>{{ getUltimoEstado().fechaModificaion | date: "dd/MM/yyyy" }}</span></label>
+                    <span>{{ estadoFacturaActual() ? (estadoFacturaActual().fechaModificaion | date: "dd/MM/yyyy") : '' }}</span></label>
                   <label>{{ 'facturacion.facturas.estadosPagos.accion' | translate }}: 
-                    <span>{{ getUltimoEstado().accion }}</span></label>
+                    <span>{{ estadoFacturaActual() ? estadoFacturaActual().accion : ''}}</span></label>
 
                   <label>{{ 'facturacion.facturas.estadosPagos.nota' | translate }}: 
-                    <span *ngIf="getUltimoEstado().comentario">{{ getUltimoEstado()['comentario'] }}</span>
-                    <span *ngIf="!getUltimoEstado().comentario && getUltimoEstado()['idCargos']">{{ 'facturacion.cmc.fichero' | translate }} {{ getUltimoEstado()['idCargos'] }}</span>
-                    <span *ngIf="!getUltimoEstado().comentario && getUltimoEstado()['enlaceFactura']">
-                      <span *ngIf="!getUltimoEstado()['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ getUltimoEstado()['numeroFactura'] }}</span>
-                      <span *ngIf="getUltimoEstado()['comisionIdFactura']"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ getUltimoEstado()['comisionFactura'] }}</span>
+                    <span *ngIf="estadoFacturaActual() && estadoFacturaActual().comentario != null">{{ estadoFacturaActual()['comentario'] }}</span>
+                    <span *ngIf=" estadoFacturaActual() && estadoFacturaActual().comentario == null && estadoFacturaActual().idCargos">{{ 'facturacion.cmc.fichero' | translate }} {{ estadoFacturaActual()['idCargos'] }}</span>
+                    <span *ngIf="estadoFacturaActual() && estadoFacturaActual().comentario == null && estadoFacturaActual().enlaceFactura">
+                      <span *ngIf="estadoFacturaActual() && estadoFacturaActual().comisionIdFactura == null"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ estadoFacturaActual()['numeroFactura'] }}</span>
+                      <span *ngIf="estadoFacturaActual() && estadoFacturaActual().comisionIdFactura != null"> {{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ estadoFacturaActual()['comisionFactura'] }}</span>
                     </span>
-                    <span *ngIf="!getUltimoEstado().comentario && getUltimoEstado()['idPagosjg']">Abono {{ getUltimoEstado()['idPagosjg'] }}</span>
-                    <span *ngIf="!getUltimoEstado().comentario && getUltimoEstado()['enlaceAbono']">Rectif. {{ getUltimoEstado()['numeroAbono'] }}</span></label>
+                    <span *ngIf="estadoFacturaActual() && estadoFacturaActual().comentario == null && estadoFacturaActual().idPagosjg">Abono {{ estadoFacturaActual()['idPagosjg'] }}</span>
+                    <span *ngIf="estadoFacturaActual() && estadoFacturaActual().comentario == null && estadoFacturaActual().enlaceAbono">Rectif. {{ estadoFacturaActual()['numeroAbono'] }}</span>
+                  </label>
                 </div>
 
                 <div class="d-flex justify-content-between default">
                   <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}: 
-                    <span>{{ getUltimoEstado().estado }}</span></label>
+                    <span>{{bodyInicial.estado}}</span></label>
                   <label>{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}: 
-                    <span>{{ getUltimoEstado().iban }}</span></label>
+                    <span>{{ estadoFacturaActual() ? estadoFacturaActual().iban : '' }}</span></label>
                   <label>{{ 'facturacion.facturas.estadosPagos.movimiento' | translate }}: 
-                    <span>{{ getUltimoEstado().impTotalPagado  | number: '.2' : 'es-ES' }} €</span></label>
+                    <span>{{ estadoFacturaActual() ? (estadoFacturaActual().impTotalPagado  | number: '.2' : 'es-ES') : '' }} €</span></label>
                   <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
-                    <span>{{ getUltimoEstado().impTotalPorPagar  | number: '.2' : 'es-ES' }} €</span></label>
+                    <span>{{ estadoFacturaActual() ? (estadoFacturaActual().impTotalPorPagar  | number: '.2' : 'es-ES') : '' }} €</span></label>
                 </div>
               </ng-container>
 
               <!-- Datos para el estado de abono plegado -->
-              <ng-container *ngIf="grupos && grupos.length != 0 && !esUltimoEstadoFactura()">
+              <ng-container *ngIf="bodyInicial != undefined && bodyInicial.tipo == 'ABONO'">
 
                 <div class="d-flex justify-content-between default">
                   <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}: 
-                    <span>{{ getUltimoEstado().fecha | date: "dd/MM/yyyy" }}</span></label>
+                    <span>{{ estadoFacturaActual() ? (estadoFacturaActual().fecha | date: "dd/MM/yyyy") : '' }}</span></label>
                   <label>{{ 'facturacion.facturas.estadosPagos.accion' | translate }}: 
-                    <span>{{ getUltimoEstado().accion }}</span></label>
+                    <span>{{ estadoFacturaActual() ? estadoFacturaActual().accion : '' }}</span></label>
                   <label>{{ 'facturacion.facturas.estadosPagos.nota' | translate }}: 
-                    <span *ngIf="getUltimoEstado().comentario">{{ getUltimoEstado()['comentario'] }}</span>
-                    <span *ngIf="getUltimoEstado().numeroAbono">{{ 'facturacion.facturas.estadosPagos.sjcs' | translate }} {{ getUltimoEstado()['numeroAbono'] }}</span>
-                    <span *ngIf="getUltimoEstado().numeroFactura">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ getUltimoEstado()['numeroFactura'] }}</span>
-                    <span *ngIf="tieneFichero(getUltimoEstado())">{{ 'facturacion.cmc.fichero' | translate }} {{ getUltimoEstado()['idDisqueteAbono'] }}</span></label>
+                    <span *ngIf="estadoFacturaActual() && estadoFacturaActual().comentario  != null">{{ estadoFacturaActual().comentario }}</span>
+                    <span *ngIf="estadoFacturaActual() && estadoFacturaActual().numeroAbono != null">{{ 'facturacion.facturas.estadosPagos.sjcs' | translate }} {{ estadoFacturaActual().numeroAbono }}</span>
+                    <span *ngIf="estadoFacturaActual() && estadoFacturaActual().numeroFactura != null">{{ 'facturacionSJCS.facturacionesYPagos.factura' | translate }} {{ estadoFacturaActual().numeroFactura }}</span>
+                    <span *ngIf="estadoFacturaActual() && tieneFichero(estadoFacturaActual())">{{ 'facturacion.cmc.fichero' | translate }} {{ estadoFacturaActual().idDisqueteAbono }}</span></label>
                 </div>
 
                 <div class="d-flex justify-content-between default">
                   <label>{{ 'facturacionSJCS.facturacionesYPagos.buscarFacturacion.estado' | translate }}: 
-                    <span>{{ getUltimoEstado().estado }}</span></label>
+                    <span>{{bodyInicial.estado}}</span></label>
                   <label>{{ 'facturacion.seriesFactura.cuentaBancaria' | translate }}: 
-                    <span>{{ getUltimoEstado().cuentaBancaria }}</span></label>
+                    <span>{{estadoFacturaActual() ? estadoFacturaActual().cuentaBancaria : '' }}</span></label>
                   <label>{{ 'facturacion.facturas.estadosPagos.movimiento' | translate }}: 
-                    <span>{{ getUltimoEstado().movimiento  | number: '.2' : 'es-ES' }} €</span></label>
+                    <span>{{ estadoFacturaActual() ? (estadoFacturaActual().movimiento  | number: '.2' : 'es-ES') : '' }} €</span></label>
                   <label>{{ 'facturacionSJCS.facturacionesYPagos.importePendiente' | translate }}: 
-                    <span>{{ getUltimoEstado().importePendiente  | number: '.2' : 'es-ES' }} €</span></label>
+                    <span>{{estadoFacturaActual() ? (estadoFacturaActual().importePendiente  | number: '.2' : 'es-ES') : '' }} €</span></label>
                 </div>
               </ng-container>
             </div>

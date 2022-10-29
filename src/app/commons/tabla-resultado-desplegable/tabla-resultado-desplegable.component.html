@@ -266,7 +266,7 @@
                         <div *ngIf="cell.value[1] == 'Nuevo'"><button
                                 (click)="toDoButton(cell.value[1], rowGroup.id, rowGroup, rowGroupEl)"
                                 class="buttomStyle" pButton type="button" iconPos="left" [label]="cell.value[1]"
-                                [disabled]="colegiado"></button></div>
+                                [disabled]="colegiado || permisoProcedimiento"></button></div>
                         <div *ngIf="cell.value[1] != 'Nuevo' && permisosFichaAct"><a
                                 (click)="linkFichaActIfPermis(row, rowGroup)" class="enlace">{{cell.value[1]}}</a></div>
                         <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}</div>

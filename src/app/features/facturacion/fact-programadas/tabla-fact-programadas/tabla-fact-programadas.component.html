@@ -57,7 +57,7 @@
                 </div>
 
                 <div *ngSwitchCase="'importe'">
-                  <span *ngIf="dato[col.field] != undefined" class="pull-right" [ngClass]="{ historico: historico }">{{ dato[col.field] }} €</span>
+                  <span *ngIf="dato[col.field] != undefined" class="pull-right" [ngClass]="{ historico: historico }">{{ (dato[col.field] | currency:'EUR':true) }}</span>
                   <span *ngIf="dato[col.field] == undefined" class="pull-right">-</span>
                 </div>
 

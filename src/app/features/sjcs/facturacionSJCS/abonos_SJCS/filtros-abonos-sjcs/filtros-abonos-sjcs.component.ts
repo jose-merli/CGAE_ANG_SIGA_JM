@@ -22,9 +22,9 @@ export class FiltrosAbonosSCJSComponent implements OnInit {
   @Output() busqueda = new EventEmitter<boolean>();
   progressSpinner: boolean = false;
   showDatosGenerales: boolean = true;
-  showDatosAgrupacion: boolean = true;
-  showColegiado: boolean = true;
-  showSociedad:boolean = true;
+  showDatosAgrupacion: boolean = false;
+  showColegiado: boolean = false;
+  showSociedad:boolean = false;
   institucionGeneral:boolean = true;
 
   comboColegios:ComboItem[] = [];
