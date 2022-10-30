@@ -10,16 +10,16 @@
           <i class="fas fa-link icon-ficha"></i>
         </div>
         <label class="title-ficha">{{ 'formacion.fichaCurso.boton.inscripcion' | translate }}</label>
+      </div>
     </div>
-  </div>
-      <div class="card-body card-body-ficha">
-        <div class="row">
-          <!-- <div class="bloque col-lg-4 col-md-4"> -->
-  
-            <!-- <div class="form-row"> -->
-        <p-table #table [columns]="cols" [value]="inscripcionesItem" [(selection)]="selectedDatos"  
-        [selectionMode]="selectionMode"  [responsive]="true"  class="tabla-listado" [paginator]="true" 
-        [rows]="selectedItem"  paginatorPosition="both" dataKey="nombreTurno" sortMode="multiple">
+    <div class="card-body card-body-ficha">
+      <div class="row">
+        <!-- <div class="bloque col-lg-4 col-md-4"> -->
+
+        <!-- <div class="form-row"> -->
+        <p-table #table [columns]="cols" [value]="inscripcionesItem" [(selection)]="selectedDatos"
+          [selectionMode]="none" [responsive]="true" class="tabla-listado" [paginator]="true"
+          [rows]="selectedItem" paginatorPosition="both" dataKey="nombreTurno" sortMode="multiple" >
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>
               <col *ngFor="let col of cols" [style.width]="col.width">
@@ -52,12 +52,9 @@
                   </div>
                 </a>
               </div>
-                <div class="text-center" *ngIf="col.field !='nombreTurno' && col.field != 'colegiadoGrupo'">
-                  <span>{{rowData[col.field]}}</span> 
-                </div>
-                <div class="text-center"
-                  *ngIf="col.field == 'colegiadoGrupo'">
-                  <span><strong>{{rowData[col.field]}}</strong></span>
+                <div class="text-center" *ngIf="col.field !='nombreTurno' ">
+                  <!-- && col.field !='descripcion_tipo_guardia' -->
+                  <span>{{rowData[col.field]}}</span>
                 </div>
               </td>
             </tr>
@@ -91,10 +88,7 @@
               <td *ngFor="let col of columns">
                 <div *ngIf="col.field == 'nombreTurno'" class="displayMargin">    
                     <p-checkbox [disabled]="disabledGuardias || disableAll" [(ngModel)]="dato.selectedBoolean" (onChange)="seleccionarFila(dato, $event)" binary="true"></p-checkbox>    
-                    <span (click)="openTab(dato, 'Guardia')" class="form-group-label">{{dato.nombreGuardia}}</span>
-                </div>
-                <div *ngIf="col.field=='colegiadoGrupo'" class="text-center">    
-                    <span class="form-group-label font-weight-bold">{{dato.colegiadoGrupo}}</span> <!--?????-->
+                    <a style="color: blue;text-decoration: underline;" (click)="openTab(dato, 'Guardia')" class="form-group-label"><span>{{dato.nombreGuardia}}</span></a>
                 </div>
               </td>
             </tr>
