@@ -18,7 +18,7 @@
 
         <!-- <div class="form-row"> -->
         <p-table #table [columns]="cols" [value]="inscripcionesItem" [(selection)]="selectedDatos"
-          [selectionMode]="none" [responsive]="true" class="tabla-listado" [paginator]="true"
+          [selectionMode]="selectionMode" [responsive]="true" class="tabla-listado" [paginator]="true"
           [rows]="selectedItem" paginatorPosition="both" dataKey="nombreTurno" sortMode="multiple" >
           <ng-template pTemplate="colgroup" let-columns>
             <colgroup>

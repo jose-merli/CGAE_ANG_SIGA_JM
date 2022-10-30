@@ -72,7 +72,7 @@ export class TarjetaInscripcion implements OnInit {
   disabledGuardias: boolean = true;
   nletradosGuardias;
   overlayVisible: boolean = false;
-  selectionMode: string = "single";
+  selectionMode: string = "none";
   pesosSeleccionadosTarjeta2;
   updateCombo;
   rowGroupMetadata;

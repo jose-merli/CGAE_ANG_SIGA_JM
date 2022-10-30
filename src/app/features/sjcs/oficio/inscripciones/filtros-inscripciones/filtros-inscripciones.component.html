@@ -20,7 +20,7 @@
         </div>
         <div class="form-group col-lg-3 col-md-3">
           <label>{{'menu.justiciaGratuita.oficio.comboturno'|translate}}</label>
-          <p-multiSelect class="select-form" [(ngModel)]='filtros.idTurno' placeholder="Seleccionar" [options]="turnos"
+          <p-multiSelect class="select-form" [(ngModel)]='filtros.idturno' placeholder="Seleccionar" [options]="turnos"
             [filter]="true" filterBy="label,labelSinTilde" maxSelectedLabels="10" selectionLimit="10" styleClass="widthAll" 
             defaultLabel="{{ 'general.boton.seleccionar' | translate}}"></p-multiSelect>
         </div>
