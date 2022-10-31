@@ -328,7 +328,6 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
-    this.filtro.idLetradoManual = event.nColegiado;
   }
   
   getIdPersonaLetradoManual(event){

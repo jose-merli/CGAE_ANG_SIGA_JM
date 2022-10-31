@@ -544,10 +544,6 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
         })
 
-        if(!this.filtrosAE.filtro.isSustituto){
-          tarjetaAsistenciaItem.filtro.isSustituto = 'N';
-        }
-
         if(!this.filtrosAE.filtro.salto){
           tarjetaAsistenciaItem.filtro.salto = 'S';
         }
