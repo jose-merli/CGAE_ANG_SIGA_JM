@@ -116,16 +116,9 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
       }
       ).catch(error => console.error(error));
 
-    if (
-      sessionStorage.getItem("filtrosInscripciones") != null && sessionStorage.getItem("volver") == "true"
-    ) {
-      this.filtros = JSON.parse(
-        sessionStorage.getItem("filtrosInscripciones")
-      );
-      this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("numColegiado");
-
-      sessionStorage.removeItem("volver");
-      sessionStorage.removeItem("numColegiado");
+    if (sessionStorage.getItem("filtrosInscripciones") != null) {
+      this.filtros = JSON.parse(sessionStorage.getItem("filtrosInscripciones"));
+      sessionStorage.removeItem("filtrosInscripciones");
 
       if (this.filtros.fechadesde != undefined && this.filtros.fechadesde != null) {
         this.filtros.fechadesde = new Date(this.filtros.fechadesde);
@@ -144,22 +137,26 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
         this.usuarioBusquedaExpress.numColegiado = filtroInsertInscripcion.nColegiado;
       }
       if (sessionStorage.getItem("colegiadoRelleno")) {
-        const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
-        this.usuarioBusquedaExpress.numColegiado = numColegiado;
-        this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+        if(sessionStorage.getItem("datosColegiado")){
+          const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
+          this.usuarioBusquedaExpress.numColegiado = numColegiado;
+          this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g, "");
+        }else{
+          if(sessionStorage.getItem("numColegiado")){
+            this.usuarioBusquedaExpress.numColegiado = sessionStorage.getItem("numColegiado");
+          }
+          if(sessionStorage.getItem("nombreAp")){
+            this.usuarioBusquedaExpress.nombreAp = sessionStorage.getItem("nombreAp").replace(/,/g, "");
+          }
+        }
 
         this.isBuscar();
 
         sessionStorage.removeItem("colegiadoRelleno");
         sessionStorage.removeItem("datosColegiado");
       }
-      this.isBuscar();
+      
     }
-    if (this.isLetrado) {
-      this.getDataLoggedUser();
-    }
-
-
 
     this.sigaServices.get("inscripciones_comboTurnos").subscribe(
       n => {
@@ -197,6 +194,14 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
 
       sessionStorage.removeItem("buscadorColegiados");
+    }
+
+    if (this.isLetrado) {
+      this.getDataLoggedUser();
+    }else{
+      setTimeout(() => {
+        this.isBuscar();
+      }, 5);
     }
   }
 
@@ -317,7 +322,13 @@ export class FiltrosInscripciones implements OnInit, OnChanges {
       this.buscar = true;
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
-      sessionStorage.setItem("numColegiado", this.usuarioBusquedaExpress.numColegiado);
+      if(this.usuarioBusquedaExpress.numColegiado!=null
+         && this.usuarioBusquedaExpress.numColegiado!=undefined
+         && this.usuarioBusquedaExpress.numColegiado!= ""){
+          sessionStorage.setItem("colegiadoRelleno","true");
+          sessionStorage.setItem("numColegiado", this.usuarioBusquedaExpress.numColegiado);
+          sessionStorage.setItem("nombreAp", this.usuarioBusquedaExpress.nombreAp);
+      }
       this.filtroAux = this.persistenceService.getFiltrosAux();
       sessionStorage.setItem(
         "filtrosInscripciones",

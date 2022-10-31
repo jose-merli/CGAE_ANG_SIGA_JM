@@ -243,8 +243,7 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.sigaServices.post("inscripciones_checkTrabajosSJCS", selectedDatos).subscribe(
 			n => {
 				let keyConfirmation = "deletePlantillaDoc";
-				//temporal
-				n.body = true;
+				
 				if (n.body == true) {
 					this.progressSpinner = false;
 					this.confirmationService.confirm({
@@ -267,9 +266,10 @@ export class FichaInscripcionesComponent implements OnInit {
 							];
 						}
 					});
+				}else{
+					if (access == 0) this.validar(1);
+					else if (access == 2) this.solicitarBaja(3);
 				}
-				if (access == 0) this.validar(1);
-				else if (access == 2) this.solicitarBaja(3);
 			});
 		this.progressSpinner = false;
 	}
@@ -315,13 +315,21 @@ export class FichaInscripcionesComponent implements OnInit {
 					this.progressSpinner = false;
 					// Fecha de Validación para inscripcion.
 					this.datos.fechavalidacion = new Date(this.datos.fechaActual).getTime();
-					sessionStorage.setItem("datos", JSON.stringify(this.datos));
+					if(this.datos.estado == "0"){
+						this.datos.estado = "1";
+						this.datos.estadonombre = "Alta";
+					}else{
+						this.datos.estado = "3";
+						this.datos.estadonombre = "Baja";
+					}
+					this.persistenceService.setDatos(this.datos);
 					// Desactivar Botón de Validación.
 					this.disabledValidar = true;
 					//El redireccionamiento es una solucion temporal hasta que se
 					//decida el método de actualización de la ficha.
 					//this.router.navigate(["/inscripciones"]);
 					this.ngOnInit();
+					this.actualizarBotones();
 				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -347,11 +355,15 @@ export class FichaInscripcionesComponent implements OnInit {
 		this.sigaServices.post("inscripciones_updateDenegar", body).subscribe(
 			data => {
 				this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+				this.datos.estado = "4";
+				this.datos.estadonombre = "Denegada";
 				this.progressSpinner = false;
+				this.persistenceService.setDatos(this.datos);
 				//El redireccionamiento es una solucion temporal hasta que se
 				//decida el método de actualización de la ficha.
 				//this.router.navigate(["/inscripciones"]);
 				this.ngOnInit();
+				this.actualizarBotones();
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -435,11 +447,15 @@ export class FichaInscripcionesComponent implements OnInit {
 				this.sigaServices.post("inscripciones_updateSolicitarBaja", body).subscribe(
 					data => {
 						this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+						this.datos.estado = "2";
+						this.datos.estadonombre = "Pendiente de Baja";
+						this.persistenceService.setDatos(this.datos);
 						this.progressSpinner = false;
 						//El redireccionamiento es una solucion temporal hasta que se
 						//decida el método de actualización de la ficha.
 						//this.router.navigate(["/inscripciones"]);
 						this.ngOnInit();
+						this.actualizarBotones;
 					},
 					err => {
 						if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -482,6 +498,7 @@ export class FichaInscripcionesComponent implements OnInit {
 				//decida el método de actualización de la ficha.
 				//this.router.navigate(["/inscripciones"]);
 				this.ngOnInit();
+				this.actualizarBotones();
 			},
 			err => {
 				if (err != undefined && JSON.parse(err.error).error.description != "") {
