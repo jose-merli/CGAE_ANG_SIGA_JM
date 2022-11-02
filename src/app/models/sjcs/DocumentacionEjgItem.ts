@@ -12,6 +12,7 @@ export class DocumentacionEjgItem {
   idTipoDocumento: number;
   idDocumento: number;
   labelDocumento: string;
+  idCodigoDescripcion:string;
 //Value del combo del modal. Viene con valor null de back si es un presentador de ejg y relleno si es un solicitante.
   presentador: string;
   //Valor del value de presentador en el caso que no se haya seleccionado
