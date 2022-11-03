@@ -163,10 +163,10 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
 
       let fechaAsistenciaDate = moment([Number(this.asistencia.fechaAsistencia.split('/')[2].split(' ')[0]), Number(this.asistencia.fechaAsistencia.split('/')[1])-1,Number(this.asistencia.fechaAsistencia.split('/')[0])]).toDate();
       if(new Date(event) > fechaAsistenciaDate){
-        this.datosGeneralesActuacion.diaDespues = true;
+        if(this.datosGeneralesActuacion.controlCheckDiaDespues)this.datosGeneralesActuacion.diaDespues = true;
         this.fActuacionvalida = true;
       }else{
-        this.datosGeneralesActuacion.diaDespues = false;
+        if(this.datosGeneralesActuacion.controlCheckDiaDespues)this.datosGeneralesActuacion.diaDespues = false;
         if(new Date(event) < fechaAsistenciaDate){
           this.showMsg('error','Error','La fecha de la Actuacion debe ser mayor a la fecha de la Asistencia');
           this.fActuacionvalida = false;

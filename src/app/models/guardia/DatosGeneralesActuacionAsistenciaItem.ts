@@ -11,5 +11,5 @@ export class DatosGeneralesActuacionAsistenciaItem{
     nig : string;
     prision : string;
     observaciones : string;
-
+    controlCheckDiaDespues:boolean;
 }
