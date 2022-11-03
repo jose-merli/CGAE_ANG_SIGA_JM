@@ -290,7 +290,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       (error) => { }
     );
 
-    this.sigaServices.get("busquedaProcuradores_colegios").subscribe(
+    /*this.sigaServices.get("busquedaProcuradores_colegios").subscribe(
       n => {
         this.comboColegios = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboColegios);
@@ -300,9 +300,28 @@ export class BusquedaGeneralComponent implements OnDestroy {
       err => {
       }, () => {
       }
+    );*/
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+      this.getComboColegios();
+    });
+
+  }
+
+  getComboColegios() {
+    this.progressSpinner = true;
+
+    this.sigaServices.getParam("busquedaCol_colegio", "?idInstitucion=" + this.institucionActual).subscribe(
+      n => {
+        this.comboColegios = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboColegios);
+        this.progressSpinner = false;
+      },
+      err => {
+        //console.log(err);
+        this.progressSpinner = false;
+      }
     );
-
-
   }
 
   ngOnDestroy() {
@@ -556,16 +575,16 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   checkFilterProc() {
-    if (
-      (this.bodyProc.nombre == null ||
+    /*if (
+      (this.bodyProc.nombre == undefined ||
         this.bodyProc.nombre.trim().length < 3) &&
-      (this.bodyProc.apellido1 == null ||
+      (this.bodyProc.apellido1 == undefined ||
         this.bodyProc.apellido1.trim().length < 3) &&
       /* (this.bodyProc.apellido2 == null ||
         this.bodyProc.apellido2.trim().length < 3) && */
-      (this.bodyProc.nColegiado == null 
+      (this.bodyProc.nColegiado == undefined 
       //  || this.bodyProc.nColegiado.trim().length < 3 
-      ) &&
+      ) /*&&
       (this.bodyProc.idColProcurador == undefined ||
         this.bodyProc.idColProcurador == null ||
         this.bodyProc.idColProcurador.length < 1)
@@ -573,7 +592,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       this.showSearchIncorrect();
       this.progressSpinner = false;
       return false;
-    } else {
+    } else { */
       // quita espacios vacios antes de buscar
       if (this.bodyProc.nombre != undefined) {
         this.bodyProc.nombre = this.bodyProc.nombre.trim();
@@ -589,7 +608,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
       }
 
       return true;
-    }
+   // }
   }
 
   checkFilterJuridic() {

@@ -173,12 +173,18 @@
                         <input [(ngModel)]="bodyProc.nColegiado" type="text" class="form-control"
                             [maxLength]="100" pInputText />
                     </div>
-                    <div class="form-group-interlineado col-lg-6 col-md-6">
+                     <!-- <div class="form-group-interlineado col-lg-6 col-md-6">
                         <label>{{"censo.busquedaClientesAvanzada.literal.colegio" | translate}}</label>
                         <p-dropdown class="select-form" [(ngModel)]='bodyProc.idColProcurador' placeholder="Seleccionar"
                             [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true">
                         </p-dropdown>
+                    </div>-->
+                    <div class="form-group-interlineado col-lg-6 col-md-6">
+                        <label>{{ "facturacionSJCS.facturacionesYPagos.colegio" | translate }} </label>
+                        <p-dropdown class="select-form" [disabled]="true" [(ngModel)]='bodyProc.idInstitucion'
+                        [options]="comboColegios" [filter]="true" filterBy="label,labelSinTilde" [showClear]="true"></p-dropdown>
                     </div>
+            
                 </div>
             </div>
 
