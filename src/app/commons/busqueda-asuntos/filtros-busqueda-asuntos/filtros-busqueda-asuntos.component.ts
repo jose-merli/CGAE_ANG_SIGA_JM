@@ -196,15 +196,17 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   }
 
   changeFilters() {
-    sessionStorage.removeItem("radioTajertaValue");
-    sessionStorage.setItem("radioTajertaValue",""+this.radioTarjeta);
-    sessionStorage.removeItem('buscadorColegiados');
-    sessionStorage.removeItem('idGuardia');
-    sessionStorage.removeItem('idTurno');
-    this.usuarioBusquedaExpress.nombreAp='';
-    this.usuarioBusquedaExpress.numColegiado='';
-    this.filtros = new AsuntosJusticiableItem;
-    this.resetTable.emit(true);
+    if(sessionStorage.getItem("radioTajertaValue") != this.radioTarjeta){
+      sessionStorage.removeItem("radioTajertaValue");
+      sessionStorage.setItem("radioTajertaValue",""+this.radioTarjeta);
+      sessionStorage.removeItem('buscadorColegiados');
+      sessionStorage.removeItem('idGuardia');
+      sessionStorage.removeItem('idTurno');
+      this.usuarioBusquedaExpress.nombreAp='';
+      this.usuarioBusquedaExpress.numColegiado='';
+      this.filtros = new AsuntosJusticiableItem;
+      this.resetTable.emit(true);
+    }
     /* let filtrosNuevos = new AsuntosJusticiableItem;
      filtrosNuevos.anio = this.filtros.anio;
     filtrosNuevos.numero = this.filtros.numero;
