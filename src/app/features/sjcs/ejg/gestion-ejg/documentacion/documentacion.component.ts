@@ -458,6 +458,7 @@ export class DocumentacionComponent implements OnInit {
     //this.body.nuevoEJG=!this.modoEdicion;
     let documentos: any[] = [];
     if (this.selectedDatos.length == 0) documentos.push(this.body);
+    else if(this.selectedDatos.length == 1 && this.showModal )documentos.push(this.body)
     else documentos = this.selectedDatos;
 
     this.sigaServices.postDownloadFiles("gestionejg_descargarDocumentosEjg", documentos).subscribe(
