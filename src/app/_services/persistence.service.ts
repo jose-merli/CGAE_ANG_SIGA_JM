@@ -6,6 +6,7 @@ export class PersistenceService {
     private filtrosName: string = "filtros";
     private filtrosEJGName: string = "filtrosEJG";
     private filtrosAuxName: string = "filtroAux";
+    private volverEJGName: string = "volverEJG";
     private paginacionName: string = "paginacion";
     private datosName: string = "datos";
     private datosRelaciones: string = "datos";
@@ -43,6 +44,19 @@ export class PersistenceService {
 
     clearFiltrosEJG() {
         sessionStorage.removeItem(this.filtrosEJGName);
+    }
+    
+    setVolverEJG() {
+        sessionStorage.setItem(this.volverEJGName, "true");
+    }
+
+    getVolverEJG() {
+        let data = sessionStorage.getItem(this.volverEJGName);
+        return JSON.parse(data);
+    }
+
+    clearVolverEJG() {
+        sessionStorage.removeItem(this.volverEJGName);
     }
 
     setFiltrosAux(data: any) {

@@ -317,7 +317,7 @@ export class GestionEjgComponent implements OnInit {
       sessionStorage.setItem("actasItem", sessionStorage.getItem("actasItemAux"));
       sessionStorage.removeItem("actasItemAux");
     }
-    sessionStorage.setItem("volver", 'true');
+    this.persistenceService.setVolverEJG();
     this.location.back();
   }
 
