@@ -82,7 +82,7 @@
       <div class="form-group col-lg-12 col-md-12">
         <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
                                     [pantalla]="'guardia'" [disabled]="ineditable"
-                                    [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
+                                    [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)" (click)="setDatosAsistencia()">
         </app-busqueda-colegiado-express>
       </div>
     </div>

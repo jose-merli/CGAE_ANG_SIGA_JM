@@ -81,7 +81,20 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
           }
         }
 
-        this.progressSpinner = false;
+      if (sessionStorage.getItem("idTurnoAsistencia")) {
+          this.filtro.idTurno = [];
+          this.filtro.idTurno.push(sessionStorage.getItem("idTurnoAsistencia"));
+          this.getComboguardiaPorTurno({ value: this.filtro.idTurno[0] });
+
+          if (sessionStorage.getItem("idGuardiaAsistencia")) {
+            this.filtro.idGuardia = [];
+            this.filtro.idGuardia.push(sessionStorage.getItem("idGuardiaAsistencia"));
+            sessionStorage.removeItem('idGuardiaAsistencia');
+          }
+          sessionStorage.removeItem('idTurnoAsistencia');
+      }
+      
+      this.progressSpinner = false;
 
   }
 
@@ -134,7 +147,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         n => {
           this.comboguardiaPorTurno = n.combooItems;
           this.progressSpinner = false;
-          if (this.comboguardiaPorTurno == []) this.filtro.idGuardia = [];
+          if (this.comboguardiaPorTurno.length == 0) this.filtro.idGuardia = [];
           else if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit" && this.nuevo) {
             if (sessionStorage.getItem("idGuardia")) {
               this.filtro.idGuardia = [];

@@ -81,9 +81,38 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     this.checkLastRoute();
    
     //this.currentRoute = this.router.url.toString()
-    this.currentRoute = '/guardiasAsistencias'
+    this.currentRoute = '/guardiasAsistencias';
    
     this.getKeysClaseComunicacion();
+
+    if (sessionStorage.getItem("buscadorColegiados")) {
+
+      let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
+      sessionStorage.removeItem('buscadorColegiados');
+
+      if (busquedaColegiado.nombreSolo != undefined) this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombreSolo;
+      else this.usuarioBusquedaExpress.nombreAp = busquedaColegiado.apellidos + ", " + busquedaColegiado.nombre;
+
+      this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
+
+      if (sessionStorage.getItem("datosAsistencia")) {
+        this.asistencia = JSON.parse(sessionStorage.getItem("datosAsistencia"));
+        this.disableDataForEdit = true;
+
+        if (this.asistencia.fechaAsistencia) {
+          this.getTurnosByColegiadoFecha();
+          if (this.asistencia.idTurno) {
+            this.onChangeTurno();
+            if (this.asistencia.idGuardia) {
+              this.onChangeGuardia();
+            }
+          }
+        }
+      
+        this.disableDataForEdit = false;
+        sessionStorage.removeItem("datosAsistencia");
+      }
+    }
 
     this.preasistencia = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
     if (this.preasistencia) {
@@ -184,6 +213,8 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     //Si tenemos seleccionado un turno, cargamos las guardias correspondientes
     if (this.asistencia.idTurno) {
 
+      sessionStorage.setItem("idTurnoAsistencia", this.asistencia.idTurno);
+
       this.sigaServices.getParam("combo_guardiaPorTurno", "?idTurno=" + this.asistencia.idTurno).subscribe(
         n => {
           this.comboGuardias = n.combooItems;
@@ -202,6 +233,9 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   onChangeGuardia() {
 
     if (this.asistencia.idTurno && this.asistencia.idGuardia) {
+
+      sessionStorage.setItem("idGuardiaAsistencia", this.asistencia.idGuardia);
+
       this.sigaServices.getParam(
         "busquedaGuardias_getTiposAsistencia", "?idTurno=" + this.asistencia.idTurno + "&idGuardia=" + this.asistencia.idGuardia).subscribe(
           data => {
@@ -707,6 +741,9 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     );
   }
 
+  setDatosAsistencia() {
+    sessionStorage.setItem("datosAsistencia", JSON.stringify(this.asistencia));
+  }
 
   getDatosComunicar() {
     let datosSeleccionados = [];
