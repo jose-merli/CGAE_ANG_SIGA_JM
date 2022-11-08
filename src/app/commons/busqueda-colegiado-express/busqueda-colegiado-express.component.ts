@@ -74,8 +74,9 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   clearForm() {
     if(!this.isLetrado){
       this.colegiadoForm.reset();
-      this.styleObligatory = true;
-      this.obligatorio = true;
+      if(this.obligatorio){
+        this.styleObligatory = true;
+      }
       this.colegiadoForm.get('numColegiado').setValue("");
       this.colegiadoForm.get('nombreAp').setValue("");
       this.changeValue();
