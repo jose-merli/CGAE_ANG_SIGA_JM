@@ -493,8 +493,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                       this.showMsg("info", "Error al asociar la Designacion con la Asistencia", error.description);
                     } else {
                       this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
-                      this.router.navigate(["/fichaDesignaciones"]);
-                      
+                      //this.router.navigate(["/fichaDesignaciones"]);
+                      this.location.back();
                     }
                   },
                   err => {
