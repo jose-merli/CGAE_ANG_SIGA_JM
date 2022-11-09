@@ -104,6 +104,9 @@
 
     <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
+        <button  pButton (click)="descargarLog()" type="button" icon="fa fa-download" iconPos="left"
+        label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
+
         <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
         <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>

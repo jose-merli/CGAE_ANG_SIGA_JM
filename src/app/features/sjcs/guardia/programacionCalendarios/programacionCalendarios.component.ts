@@ -23,6 +23,8 @@ import { FiltrosGuardiaCalendarioComponent } from './filtros-guardia-calendarios
 import { saveAs } from "file-saver/FileSaver";
 import { forEach } from '@angular/router/src/utils/collection';
 import { ControlAccesoDto } from '../../../../models/ControlAccesoDto';
+import { DeleteCalendariosProgDatosEntradaItem } from '../../../../models/guardia/DeleteCalendariosProgDatosEntradaItem';
+import { ConfirmationService } from 'primeng/primeng';
 
 @Component({
   selector: 'app-programacionCalendarios',
@@ -34,6 +36,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
 
   buscar: Boolean;
   historico: boolean = false;
+  incompatibilidades: boolean = true; //Nos saltamos comprobaciones de calendarios para eliminar en front.
   filtrosValues = new CalendarioProgramadoItem();
   url;
   datos;
@@ -47,6 +50,9 @@ export class ProgramacionCalendariosComponent implements OnInit {
   comboGuardiasIncompatibles: GuardiaItem[] = [];
   rowGroups: Row[];
   rowGroupsAux: Row[];
+  listaDel:DeleteCalendariosProgDatosEntradaItem[]=[];
+  currentDataToDelete:DeleteCalendariosProgDatosEntradaItem[]=[]; 
+  showModalEliminar: boolean = false;
   totalRegistros = 0;
   allSelected = false;
   isDisabled = true;
@@ -125,6 +131,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
     private translateService: TranslateService,
     private router: Router,
     public oldSigaServices: OldSigaServices,
+    private confirmationService: ConfirmationService,
     private trmService: TablaResultadoMixIncompService,
     private authenticationService: AuthenticationService,
     private datepipe: DatePipe) {
@@ -152,7 +159,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
           { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 80 , disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0, disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0, disabled: false},
-          { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0, disabled: false}          
+          { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0, disabled: false},           
           ];
       
           let obj: Row = {id: this.rowGroups.length, cells: objCells};
@@ -284,7 +291,8 @@ let datosEntrada =
           this.datos.forEach((dat, i) => {
             let responseObject = new CalendariosDatosEntradaItem(
               {
-
+                'contadorGenerados': dat.contadorGenerados,
+                'idInstitucion': dat.idInstitucion,
                 'turno': dat.turno,
                 'guardia': dat.guardia,
                 'idTurno': dat.idTurno,
@@ -368,8 +376,9 @@ jsonToRow(){
     { type: 'invisible', value: res.idGuardia, size: 0},
     { type: 'invisible', value: res.facturado, size: 0},
     { type: 'invisible', value: res.asistenciasAsociadas, size: 0},
-    { type: 'invisible', value: res.idCalendarioGuardias, size: 0}
-    
+    { type: 'invisible', value: res.idCalendarioGuardias, size: 0},
+    { type: 'invisible', value: res.idInstitucion, size: 0},
+    { type: 'invisible', value: res.contadorGenerados, size: 0}
     ];
     let obj = {id: i, cells: objCells};
     arr.push(obj);
@@ -473,18 +482,93 @@ rowToDelete.cells.forEach((c, index) => {
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
   }*/
+ // Primera confirmación
+ confirmEliminar1(): void {
+  let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
+  let icon = "fa fa-eraser";
+  this.currentDataToDelete = []
+  this.confirmationService.confirm({
+    key: "first",
+    message: mess,
+    icon: icon,
+    acceptLabel: "Sí",
+    rejectLabel: "No",
+    accept:async () => {
+
+      for(let e of this.listaDel){
+        await this.segundaConf(e)
+      }
+
+     if(this.currentDataToDelete.length == 0){
+        this.showMessage({ severity: 'info', summary: 'Cancelar', msg: this.translateService.instant("general.message.accion.cancelada") });
+        
+      }else{
+        this.eliminarCal(this.currentDataToDelete)
+      }      
+
+    },
+    reject: () => {
+      this.showMessage({ severity: 'info', summary: 'Cancelar', msg: this.translateService.instant("general.message.accion.cancelada") });
+    }
+  });
+}
+
+segundaConf(dato:DeleteCalendariosProgDatosEntradaItem){
+  //let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion") + " " + dato.idCalendarioProgramado ;
+  let mess = "Se  van a borrar "+dato.contadorGenerados+" calendarios ya generados en la programación seleccionada. ¿Desea continuar?"
+  let icon = "fa fa-eraser";
+  
+  return new Promise<void> ((resolve) => {
+    this.confirmationService.confirm({
+      key: "second",
+      message: mess,
+      icon: icon,
+      acceptLabel: "Sí",
+      rejectLabel: "No",
+      accept: () => {
+        this.currentDataToDelete.push(dato)
+       // this.selectedDatos.shift()
+        resolve()
+      },
+      reject: () => {
+        //this.selectedDatos.shift()
+        resolve()
+      }
+    });
+
+  });
+
+    
+}
+
+  // Segunda confirmación
+
+  confirmEliminar2(): void {
+
+    this.showModalEliminar = false;
+    //this.eliminar(this.currentDataToDelete);
+    console.log(this.currentDataToDelete)
+  }
+
+  rejectEliminar2(): void {
+    this.showModalEliminar = false;
+    this.showMessage({ severity: 'info', summary: 'Cancelar', msg: this.translateService.instant("general.message.accion.cancelada") });
+   
+  }
 
 delete(indexToDelete){
   let idGuardia;
   let idTurno;
   let idCalendarioProgramado;
   let fechaDesde;
+  let contadorGenerado;
   let toDelete:Row[] = [];
   indexToDelete.forEach(index => {
     toDelete.push(this.rowGroups[index]);
-    this.rowGroups.splice(index, 1); 
+    //this.rowGroups.splice(index, 1); 
   })
-
+  let idInstitucion = this.authenticationService.getInstitucionSession();
+  this.listaDel=[];
   toDelete.forEach(row => {
     row.cells.forEach((c, index) => {
       if (index == 10){
@@ -499,47 +583,45 @@ delete(indexToDelete){
       if (index == 2) {
         fechaDesde = c.value;
       }
+      if(index == 17){
+        contadorGenerado = c.value
+      }
       /* if(c.type == "multiselect"){
         c.combo.forEach(comboValue => {
           comboValue.value
         })
       }*/
     })
-    this.eliminarCal(idCalendarioProgramado, idGuardia, idTurno, fechaDesde)
-  })
-  this.rowGroupsAux = this.rowGroups;
-  this.totalRegistros = this.rowGroups.length;
-  }
-
-
-
-  eliminarCal(idCalendarioProgramado, idGuardia, idTurno, fechaDesde){
-    let idInstitucion = this.authenticationService.getInstitucionSession();
     let deleteParams = 
     { 'idTurno': idTurno,
       'idGuardia': idGuardia,
       'idCalendarioProgramado': idCalendarioProgramado,
       'idInstitucion': idInstitucion,
-      'fechaDesde': fechaDesde
+      'fechaDesde': fechaDesde,
+      'contadorGenerados' : contadorGenerado
     }
+    this.listaDel.push(deleteParams)
+    //this.eliminarCal(lista)
+  })
+  this.confirmEliminar1()
+  this.rowGroupsAux = this.rowGroups;
+  this.totalRegistros = this.rowGroups.length;
+  }
+
+  
+
+
+  eliminarCal(lista){
 ;  this.progressSpinner = true;
     this.sigaServices.post(
-      "guardiaCalendario_eliminar", deleteParams).subscribe(
+      "guardiaCalendario_eliminar", lista).subscribe(
         data => {
           let error = JSON.parse(data.body).error;
-          this.datos = JSON.parse(data.body).guardiaItems;
-          if (this.datos != undefined){
-            this.datos = this.datos.map(it => {
-              it.letradosIns = +it.letradosIns;
-              return it;
-            })
-          }
-          this.progressSpinner = false;
-          /*if (this.tabla != null && this.tabla != undefined) {
-            this.tabla.historico = event;
-          }*/
-          this.resetSelect();
+          let contador = JSON.parse(data.body).id;
 
+          this.progressSpinner = false;
+          this.showMessage({ severity: 'success', summary: this.translateService.instant("general.message.informacion"), msg: "Se eliminaron "+contador + " Programaciones de Calendarios." });
+          this.buscarCal()
           if (error != null && error.description != null) {
             this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
           }

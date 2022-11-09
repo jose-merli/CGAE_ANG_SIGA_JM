@@ -9,6 +9,7 @@ export class CalendarioProgramadoItem {
     fechaCalendarioHasta;
     fechaProgramadaDesde;
     fechaProgramadaHasta;
+    idInstitucion;
     estado;
     volver;
     constructor() { }
