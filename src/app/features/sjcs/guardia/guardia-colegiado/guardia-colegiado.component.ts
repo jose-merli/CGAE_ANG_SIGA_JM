@@ -95,6 +95,7 @@ export class GuardiaColegiadoComponent implements OnInit {
       }else{
         guardiaItem.idGuardia = "";
       }
+      this.persistenceService.setFiltros(this.filtros.filtros)
       this.sigaServices.post("guardiasColegiado_buscarGuardiasColegiado", guardiaItem).subscribe(
         n => {
           let error = JSON.parse(n.body).error;
