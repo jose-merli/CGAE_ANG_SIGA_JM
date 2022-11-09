@@ -248,6 +248,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       sessionStorage.setItem("origin", "newContrarioEJG");
       sessionStorage.setItem("contrariosEJG", JSON.stringify(this.contrariosEJG));
       this.ejg = this.persistenceService.getDatos();
+      sessionStorage.setItem("itemEJG", JSON.stringify(true));
       sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
       //this.searchContrarios.emit(true);
       this.router.navigate(["/justiciables"]);

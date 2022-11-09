@@ -845,8 +845,6 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
   backTo() {
     // Vovlver a asistencia.
     if (sessionStorage.getItem("backAsistencia")) {
-      var asistencia = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
-      sessionStorage.setItem("idAsistencia", asistencia.anio + "/" + asistencia.numero);
       sessionStorage.setItem("vieneDeFichaDesigna", "true");
       this.router.navigate(['/fichaAsistencia']);
     } else if (sessionStorage.getItem("vieneDeFichaJusticiable")) {

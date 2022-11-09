@@ -448,7 +448,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         sessionStorage.removeItem('origin');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
-        this.router.navigate(["/fichaDesignaciones"]);
+        this.router.navigate(["/gestionEjg"]);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -525,20 +525,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.msgs = this.commonsService.checkPermisoAccion();
       } else {
         this.save();
-        // Asociar solo si viene de EJG, Asistencia 
-        // Controlar Justiciable vienen de EJG.
-        if (sessionStorage.getItem("itemEJG") || sessionStorage.getItem("itemAsistencia") || sessionStorage.getItem("itemDesignas")) {
-          this.asociarJusticiable();
-          if (sessionStorage.getItem("itemEJG")) {
-            sessionStorage.removeItem("itemEJG");
-          }
-          if (sessionStorage.getItem("itemAsistencia")) {
-            sessionStorage.removeItem("itemAsistencia");
-          }
-          if (sessionStorage.getItem("itemDesignas")) {
-            sessionStorage.removeItem("itemDesignas");
-          }
-        }
       }
     }
   }
@@ -823,12 +809,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
           }
-
+          this.preAsociarJusticiable();
         } else {
           this.callConfirmationSave(JSON.parse(data.body).id);
           // this.personaRepetida = true;
         }
-
       },
       err => {
 
@@ -848,6 +833,22 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.progressSpinner = false;
       }
     );
+  }
+  preAsociarJusticiable() {
+    // Asociar solo si viene de EJG, Asistencia 
+    // Controlar Justiciable vienen de EJG.
+    if (sessionStorage.getItem("itemEJG") || sessionStorage.getItem("itemAsistencia") || sessionStorage.getItem("itemDesignas")) {
+      this.asociarJusticiable();
+      if (sessionStorage.getItem("itemEJG")) {
+        sessionStorage.removeItem("itemEJG");
+      }
+      if (sessionStorage.getItem("itemAsistencia")) {
+        sessionStorage.removeItem("itemAsistencia");
+      }
+      if (sessionStorage.getItem("itemDesignas")) {
+        sessionStorage.removeItem("itemDesignas");
+      }
+    }
   }
 
   callConfirmationSave(id) {
@@ -875,7 +876,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.body.validacionRepeticion = true;
         this.callSaveService(url);
         this.cdGeneralesSave.hide();
-
       },
       reject: () => {
 
