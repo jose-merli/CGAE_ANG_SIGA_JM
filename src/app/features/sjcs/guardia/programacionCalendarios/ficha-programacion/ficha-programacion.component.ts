@@ -83,6 +83,7 @@ export class FichaProgramacionComponent implements OnInit {
     'idTurno': '',
     'idGuardia': '',
     'guardias': [],
+    'idInstitucion' : '',
   };
 
   datosGeneralesIniciales = {
@@ -101,7 +102,8 @@ export class FichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
-    'guardias': []
+    'guardias': [],
+    'idInstitucion' : '',
   };
   rowGroupsSaved: Row[];
   dataToReceive = {
@@ -120,7 +122,8 @@ export class FichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
-    'filtrosBusqueda': new CalendarioProgramadoItem()
+    'filtrosBusqueda': new CalendarioProgramadoItem(),
+    'idInstitucion' : '',
   }
   estado: string = "";
   dataReady = false;
@@ -622,6 +625,7 @@ export class FichaProgramacionComponent implements OnInit {
       'idCalG': idCalG,
       'listaGuardias': event.listaGuarias.label,
       'idCalendarioProgramado': event.idCalendarioProgramado,
+      'idInstitucion': event.idInstitucion
       //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
     };
@@ -675,7 +679,6 @@ export class FichaProgramacionComponent implements OnInit {
 
 
   }
-
   async guardarDatosCalendario(datGen) {
     this.wrongList = [];
     if (datGen != undefined) {
@@ -697,6 +700,7 @@ export class FichaProgramacionComponent implements OnInit {
         'idTurno': '',
         'idGuardia': '',
         'guardias': [],
+        'idInstitucion': '',
       };
 
       datosGeneralesToSave = datGen;
@@ -757,7 +761,8 @@ export class FichaProgramacionComponent implements OnInit {
         'idCalG': datosGeneralesToSave.listaGuarias.value,
         'listaGuardias': datosGeneralesToSave.listaGuarias.label,
         'idCalendarioProgramado': datosGeneralesToSave.idCalendarioProgramado,
-        'guardias': datosGeneralesToSave.guardias
+        'guardias': datosGeneralesToSave.guardias,
+        'idInstitucion' : datosGeneralesToSave.idInstitucion
         //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
       };
@@ -901,6 +906,7 @@ export class FichaProgramacionComponent implements OnInit {
         'idCalG': this.datosGenerales.listaGuarias.value,
         'listaGuardias': this.datosGenerales.listaGuarias.label,
         'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
+        'idInstitucion': this.datosGenerales.idInstitucion
         //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
       };
@@ -1116,7 +1122,8 @@ export class FichaProgramacionComponent implements OnInit {
               'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
               'idTurno': this.datosGenerales.idTurno,
               'idGuardia': this.datosGenerales.idGuardia,
-              'filtrosBusqueda': this.dataToReceive.filtrosBusqueda
+              'filtrosBusqueda': this.dataToReceive.filtrosBusqueda,
+              'idInstitucion': this.dataToReceive.idInstitucion,
             }
             this.persistenceService.setDatos(dataToSend);
             this.router.navigate(["/fichaProgramacion"]);
@@ -1231,7 +1238,8 @@ export class FichaProgramacionComponent implements OnInit {
             'observaciones': datos[0].observaciones,
             'idCalendarioProgramado': datos[0].idCalendarioProgramado,
             'idTurno': datos[0].idTurno,
-            'idGuardia': datos[0].idGuardia
+            'idGuardia': datos[0].idGuardia,
+            'idInstitucion' : datos[0].idInstitucion
           }
 
           this.progressSpinner = false

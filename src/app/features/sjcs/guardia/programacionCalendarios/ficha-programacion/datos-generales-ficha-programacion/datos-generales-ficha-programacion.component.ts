@@ -6,7 +6,7 @@ import { CommonsService } from '../../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../../commons/translate';
 import { DatePipe } from '@angular/common';
 import { ConfiguracionCola, GlobalGuardiasService } from '../../../guardiasGlobal.service';
-
+import { saveAs } from "file-saver/FileSaver";
 
 @Component({
   selector: 'app-datos-generales-ficha-programacion',
@@ -40,6 +40,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'idInstitucion': ''
   };
   @Input() datosGenerales = {
     'duplicar': '',
@@ -57,6 +58,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'idInstitucion': ''
   };
 
 
@@ -313,6 +315,30 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   rest() {
     //this.datosGenerales = Object.assign(datosInicialesCopy, {});
     this.reloadDatos.emit(deepCopy(this.datosGeneralesIniciales));
+  }
+
+  // Descargar LOG
+  descargarLog(){
+    let resHead ={ 'response' : null, 'header': null };
+
+
+      this.progressSpinner = true;
+      let descarga =  this.sigaService.getDownloadFiles("guardiaCalendario_descargarLogCalendarioProgramado", this.datosGenerales);
+      descarga.subscribe(response => {
+        this.progressSpinner = false;
+
+        const file = new Blob([response.body], {type: response.headers.get("Content-Type")});
+        let filename: string = response.headers.get("Content-Disposition");
+        filename = filename.split(';')[1].split('filename')[1].split('=')[1].trim();
+
+        saveAs(file, filename);
+        this.showMessage('success', 'LOG descargado correctamente',  'LOG descargado correctamente' );
+      },
+      err => {
+        this.progressSpinner = false;
+        this.showMessage('error','El LOG no pudo descargarse',  'El LOG no pudo descargarse' );
+      });
+    
   }
 
 

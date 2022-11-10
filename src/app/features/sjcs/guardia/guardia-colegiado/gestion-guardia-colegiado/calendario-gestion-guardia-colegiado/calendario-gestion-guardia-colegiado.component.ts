@@ -105,6 +105,7 @@ comboListaGuardias =[];
               'estado': this.comboEstado.find(comboItem => comboItem.value == this.calendarioItem.estado).label,
               'generado': this.calendarioItem.generado,
               'numGuardias': this.calendarioItem.numGuardias,
+              'idInstitucion': this.calendarioItem.idInstitucion,
               'idCalG': this.calendarioItem.idCalG,
               'listaGuarias':   {value : this.comboListaGuardias.find(comboItem => comboItem.label == this.calendarioItem.listaGuardias).value},
               'idCalendarioProgramado': this.calendarioItem.idCalendarioProgramado,

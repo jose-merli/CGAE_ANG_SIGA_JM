@@ -13,7 +13,7 @@
   <div class="busqueda-container" >
     <app-filtros-guardia-calendarios  [permisoTotal]="permisoTotal" (isOpen)="isOpenReceive($event)" (filtrosValues)="getFiltrosValues($event)"></app-filtros-guardia-calendarios>
     <app-tabla-resultado-mix *ngIf="buscar" [permisoTotal]="permisoTotal" [dataToDuplicate] = "dataToDuplicate" [calendarios] ="true" [totalRegistros] = "totalRegistros" [seleccionarTodo]="seleccionarTodo"
-    [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardiasIncompatibles]="comboGuardiasIncompatibles" [filtrosValues]="filtrosValues"
+    [cabeceras]="cabeceras" [incompatibilidades]="incompatibilidades" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardiasIncompatibles]="comboGuardiasIncompatibles" [filtrosValues]="filtrosValues"
     (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (save)="save($event)"  (delete)="delete($event)" (deleteFromCombo)="deleteFromCombo($event)" (descargaLOG)="descargaLOG($event)"></app-tabla-resultado-mix>
   </div>
 
@@ -21,3 +21,27 @@
   <div *ngIf="progressSpinner" class="overlay-spinner">
     <div class="loader"></div>
   </div>
+
+  <!-- PRIMERA CONFIRMACIÓN -->
+<p-confirmDialog key="first" header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
+
+<!-- AUX CONFIRMACION-->
+<p-confirmDialog key="second" header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>
+
+<!-- SEGUNDA CONFIRMACIÓN -->
+<div *ngIf="showModalEliminar">
+  <p-dialog  [(visible)]="showModalEliminar" width="425" responsive="true" modal="modal" [draggable]="false" resizable="false">
+    <p-header class="title">
+      <label>{{ 'general.cabecera.confirmacion' | translate }}</label>
+    </p-header>
+  
+    <div class="form-row" *ngIf="currentDataToDelete">
+      <label>¿ Desea eliminar el siguiente CALENDARIO : <span class="text-weight-bold">"test"</span> ?</label>
+    </div>
+  
+    <p-footer class="main-button" *ngIf="currentDataToDelete">
+      <button type="button" pButton icon="fa-check" label="Sí" (click)="confirmEliminar2()" ></button>
+      <button type="button" pButton icon="fa-close" label="No" (click)="rejectEliminar2()"></button>
+    </p-footer>
+  </p-dialog>
+</div>

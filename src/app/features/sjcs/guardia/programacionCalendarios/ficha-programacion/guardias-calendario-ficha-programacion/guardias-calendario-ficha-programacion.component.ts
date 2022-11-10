@@ -40,6 +40,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'idInstitucion': ''
   };
   @Input() datosTarjetaGuardiasCalendarioIni = []
   @Input() idCal;
@@ -117,6 +118,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
+    'idInstitucion': '',
     'guardias': []
   };
   @Output() guardarDatosCalendario = new EventEmitter<{}>();

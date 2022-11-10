@@ -677,7 +677,8 @@ export class TablaResultadoMixComponent implements OnInit {
       'idCalendarioProgramado': row.cells[10].value,
       'idTurno': row.cells[11].value,
       'idGuardia': row.cells[12].value,
-      'filtrosBusqueda' : this.filtrosValues
+      'filtrosBusqueda' : this.filtrosValues,
+      'idInstitucion' : row.cells[16].value
     }
 
 

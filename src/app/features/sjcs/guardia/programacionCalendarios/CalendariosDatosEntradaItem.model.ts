@@ -1,5 +1,6 @@
 export class CalendariosDatosEntradaItem{
-
+  contadorGenerados: number;
+  idInstitucion: string;
   turno: string;
   guardia: string;
   idTurno: string;
@@ -18,7 +19,8 @@ export class CalendariosDatosEntradaItem{
   asistenciasAsociadas: boolean;
   idCalendarioGuardias: string;
   constructor(obj: Object) {
-    
+    this.contadorGenerados = obj['contadorGenerados']
+    this.idInstitucion = obj['idInstitucion']
     this.idCalendarioProgramado = obj['idCalendarioProgramado'];
     this.guardia = obj['guardia'];
     this.turno = obj['turno'];

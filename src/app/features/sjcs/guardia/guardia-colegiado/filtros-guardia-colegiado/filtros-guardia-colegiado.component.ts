@@ -69,9 +69,11 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
       this.permisos = this.permisoEscritura
     }
     this.progressSpinner = false;
+    this.filtros.fechadesde = new Date( new Date().setFullYear(new Date().getFullYear()-1)); 
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      
+      if(this.filtros.fechadesde != null || this.filtros.fechadesde != undefined) this.filtros.fechadesde = new Date(this.changeDateFormat( this.filtros.fechadesde));
+      if(this.filtros.fechahasta != null || this.filtros.fechahasta != undefined) this.filtros.fechahasta = new Date(this.changeDateFormat( this.filtros.fechahasta));
       if (this.filtros.idGuardia != null || this.filtros.idGuardia != undefined) {
         this.getComboGuardia();
       }
@@ -132,6 +134,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
       this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
     }
+     
   }
 
   if (this.isColegiado && sessionStorage.getItem("origin") == "fichaColegial") {
@@ -228,11 +231,13 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   rest() {
     if (this.isColegiado) {
       this.filtros = new GuardiaItem();
+      this.filtros.fechadesde = new Date( new Date().setFullYear(new Date().getFullYear()-1)); 
       this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
     } else {
       this.usuarioBusquedaExpress.nombreAp = '';
       this.usuarioBusquedaExpress.numColegiado = '';
       this.filtros = new GuardiaItem();
+      this.filtros.fechadesde = new Date( new Date().setFullYear(new Date().getFullYear()-1)); 
     }
 
   }
