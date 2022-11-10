@@ -127,11 +127,12 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
     if (!(event == null || event == undefined)) {
       this.datosAsociar = event;
 
-      if (this.fromEJG) {
-        this.confirmCopiarEJG(this.datosAsociar);
-      } else if (this.fromDES) {
-        this.confirmCopiarDES(this.datosAsociar);
-      } else if (this.fromASI) {
+      //if (this.fromEJG) {
+      //  this.confirmCopiarEJG(this.datosAsociar);
+      //} else if (this.fromDES) {
+      //  this.confirmCopiarDES(this.datosAsociar);
+      //} else
+       if (this.fromASI) {
         this.confirmCopiarASI(this.datosAsociar);
       }
 
@@ -145,7 +146,7 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
         this.confirmCopiarJust(this.datosAsociar);
       }
 
-    }
+    } 
   }
 
   searchEvent(event) {
@@ -382,7 +383,8 @@ export class BusquedaAsuntosComponent extends SigaWrapper implements OnInit {
       key: "asoc",
       icon: icon,
       accept: () => {
-        this.asociarDES(data, false);
+        this.confirmCopiarDES(this.datosAsociar);
+        //this.asociarDES(data, false);
 
       },
       reject: () => {
