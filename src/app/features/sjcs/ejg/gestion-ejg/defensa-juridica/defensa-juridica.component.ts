@@ -360,7 +360,7 @@ export class DefensaJuridicaComponent implements OnInit {
       //   }
       // })
       if (this.body.delitosSeleccionados == null) this.body.delitosSeleccionados = delitoEJG.toString();
-      else this.body.delitosSeleccionados = this.body.delitosSeleccionados + "," + delitoEJG.toString();
+      else if(!this.body.delitosSeleccionados.includes(delitoEJG.toString())) this.body.delitosSeleccionados = this.body.delitosSeleccionados + "," + delitoEJG.toString();
 
     });
 
