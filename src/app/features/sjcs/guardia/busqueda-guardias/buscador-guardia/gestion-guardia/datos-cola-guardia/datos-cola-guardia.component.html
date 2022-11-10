@@ -68,15 +68,28 @@
         <div class="form-group col-lg-12 col-md-12">
           <label style="text-align:center; font-weight: bold;">{{ "justiciaGratuita.oficio.turnos.coladeguardias" | translate }}</label>
         </div>
-        <div class="col-3 form-group">
-          <label>{{"justiciaGratuita.oficio.turnos.seleccionarguardia" | translate}}</label>
-          <input [(ngModel)]="body.nombre" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
-        </div>
-        <div class="col-3 form-group">
+        <div class="form-group col-lg-3 col-md-3">
+          <div class="form-group-interlineado col-lg-12 col-md-12">
           <label>{{"justiciaGratuita.oficio.turnos.mostrarinscripciones" | translate}}</label>
           <app-fecha [(value)]="body.letradosIns" (valueChangeSelected)="fillFecha($event)" (valueChangeInput)="fillFecha($event)"
             [disabled]="!permisoEscritura || historico"></app-fecha>
+    	  </div>
+	</div>
+        <div class="form-group col-lg-3 col-md-3">
+          <div class="form-row">
+          <label>{{"justiciaGratuita.oficio.turnos.seleccionarguardia" | translate}}</label>
+          <input [(ngModel)]="body.nombre" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
+      </div>
+    </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.oficio.turnos.ncolegiadoultimo" | translate }}</label>
+          <input id="texto_cola_guardia"  [(ngModel)]="ultimoLetrado" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
         </div>
+        <div class="form-group col-lg-3 col-md-3">
+          <label>{{ "justiciaGratuita.oficio.turnos.apellidosultmletrado" | translate }}</label>
+          <input id="texto_cola_guardia"  [(ngModel)]="apeyNombreUltimo" [disabled]="true" type="text" class="form-control" [maxLength]="300" pInputText>
+        </div>
+      </div>
         <div class="col-12">
          
           <!--<app-tabla-dinamica-cola-guardia [selectionMode]="selectionMode" [editable]="editable" [idUltimo]="body.idPersonaUltimo"
@@ -85,7 +98,7 @@
               [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [fromSlice]="0" [toSlice]="8" [minimoLetrado]="minimoLetrado" [porGrupos]="porGrupos"
               (anySelected)="notifyAnySelected($event)" (selectedRow)="checkSelectedRow($event)" (colaGuardiaModified)="updateColaGuardia($event)" (colaGuardiaOrdenada)="colaGuardiaOrdenada($event)" (rest)="rest($event)" (dupli)="duplicar($event)">
             </app-tabla-resultado-order>
-        </div>
+
       </div>
     </div>
   </div>
