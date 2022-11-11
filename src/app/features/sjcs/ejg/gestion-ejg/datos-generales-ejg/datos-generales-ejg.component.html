@@ -58,7 +58,7 @@
               <label>{{ 'gratuita.busquedaAsistencias.literal.numero' | translate}}</label>
               <div style="display: flex;">
                 <input type="text" class="form-control" [disabled]="disabledNumEJG" (keypress)="numberOnly($event)"
-                  maxLength="10" pInputText [(ngModel)]="body.numEjg" />
+                  [maxLength]="maxLengthNum" pInputText [(ngModel)]="body.numEjg" />
                 <div style="padding-top: 4%;" class="pointer">
                   <i *ngIf="disabledNumEJG" class="candado fa fa-lock col-lg-1 col-md-1" aria-hidden="true"
                     (click)="disableEnableNumEJG()"></i>

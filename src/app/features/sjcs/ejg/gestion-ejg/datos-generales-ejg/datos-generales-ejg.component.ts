@@ -14,6 +14,8 @@ import { Location } from '@angular/common'
 import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
 import * as moment from 'moment';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
+import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
+import { ParametroDto } from '../../../../../models/ParametroDto';
 
 @Component({
   selector: 'app-datos-generales-ejg',
@@ -52,6 +54,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   showTipoExp: boolean = false;
   datosAsistencia: TarjetaAsistenciaItem;
   datosJusticiables: JusticiableItem;
+  maxLengthNum: Number = 5;
 
   institucionActual;
 
@@ -97,7 +100,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.getComboTipoEJGColegio();
     this.getComboPrestaciones();
     this.getComboTipoExpediente();
-
+    
 
     if (this.persistenceService.getDatos()) {
       this.modoEdicion = true;
@@ -143,8 +146,36 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
+      this.getParamMaxLengthNum();
     });
 
+  }
+  getParamMaxLengthNum() {
+    let parametro = new ParametroRequestDto();
+    parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.institucionActual;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "LONGITUD_CODEJG";
+    this.sigaServices
+      .postPaginado("parametros_search", "?numPagina=1", parametro)
+      .subscribe(
+        data => {
+          let searchParametros: ParametroDto = new ParametroDto();
+          searchParametros = JSON.parse(data["body"]);
+          let datosBuscar: any[];
+          datosBuscar = searchParametros.parametrosItems;
+          datosBuscar.forEach(element => {
+            if (element.parametro == "LONGITUD_CODEJG" && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
+              this.maxLengthNum = element.valor;
+            }
+          }); 
+        },
+        err => {
+          //console.log(err);
+        },
+        () => {
+        }
+      );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
