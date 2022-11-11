@@ -397,7 +397,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
     this.sigaServices.getParam("busquedaGuardias_getJuzgados","?idTurno="+this.filtrosAE.filtro.idTurno).subscribe(
       n => {
-        this.clear();
+        //this.clear();
         if(n.error !== null
           && n.error.code === 500){
           this.showMsg("error", "Error", n.error.description.toString());
@@ -421,7 +421,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
     this.sigaServices.getParam("busquedaGuardias_getComisarias","?idTurno="+this.filtrosAE.filtro.idTurno).subscribe(
       n => {
-        this.clear();
+        //this.clear();
         if(n.error !== null
           && n.error.code === 500){
           this.showMsg("error", "Error", n.error.description.toString());
@@ -443,7 +443,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
     this.sigaServices.getParam("busquedaGuardias_getComisarias","?idTurno="+this.filtrosAE.filtro.idTurno).subscribe(
       n => {
-        this.clear();
+        //this.clear();
         if(n.error !== null
           && n.error.code === 500){
           this.showMsg("error", "Error", n.error.description.toString());
@@ -564,7 +564,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           if(result.error){
             this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           }else{
-            this.getComboComisarias();
+            this.buscarAE();
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
           }
           
@@ -807,17 +807,34 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
     buscarAE(){
       if (this.validateForm()) {
-        if ((this.filtrosAE.filtro.idLetradoGuardia != null && this.filtrosAE.filtro.idLetradoGuardia != '') ||
-        (this.filtrosAE.filtro.idLetradoManual != null && this.filtrosAE.filtro.isSustituto == 'N')) {
+        if (this.compruebaColegiadoSinLetrado()){
           this.progressSpinner = true;
           this.getComboComisariasOnly();
           this.getComboJuzgados();
           this.show = true;
 
+          sessionStorage.setItem("filtroAsistenciaExpresBusqueda",JSON.stringify(this.filtrosAE.filtro));
           this.search();
         } else {
           this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
         }
       }
+    }
+
+    compruebaColegiadoSinLetrado(){
+      let valid = false;
+
+      if ((this.filtrosAE.filtro.idLetradoGuardia != null && this.filtrosAE.filtro.idLetradoGuardia != '') ||
+        (this.filtrosAE.filtro.idLetradoManual != null && this.filtrosAE.filtro.isSustituto == 'N')) {
+          if (this.filtrosAE.filtro.isSustituto != null && this.filtrosAE.filtro.idLetradoManual == null) {
+            valid = false;
+          } else {
+            valid = true;
+          }
+        } else {
+          valid = false;
+        }
+
+      return valid;
     }
 }

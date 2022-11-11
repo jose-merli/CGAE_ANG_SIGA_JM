@@ -56,9 +56,10 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
     this.colegiadoForm.controls['nombreAp'].disable();
 
-    if (this.disabled) {
+    if (this.disabled && sessionStorage.getItem("deshabilitarBuscadorColegiadoExpres") == null) {
       this.colegiadoForm.controls['numColegiado'].disable();
     }
+    sessionStorage.removeItem("deshabilitarBuscadorExpres");
     if (this.isLetrado) {
       this.colegiadoForm.controls['numColegiado'].disable();
     }

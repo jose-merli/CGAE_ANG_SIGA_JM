@@ -304,7 +304,13 @@ export class GestionEjgComponent implements OnInit {
 
   backTo() {
     this.persistenceService.clearDatos();
-    // Vovlver a asistencia.
+
+    // Si viene de asistencias expres
+    if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda")){
+      sessionStorage.setItem("vieneDeAsistenciaExpres", "true");
+    }
+
+    // Volver a asistencia.
     if (sessionStorage.getItem("filtroAsistencia")) {
       var asistencia = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
       sessionStorage.setItem("idAsistencia", asistencia.anio + "/" + asistencia.numero);

@@ -52,7 +52,7 @@
                                 <label>{{"sjcs.guardia.asistencia.letradoguardia" | translate}} (*)</label>
                                 <p-dropdown class="select-form"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                                    [showClear]="true" [(ngModel)]="filtro.idLetradoGuardia" [ngClass]="styleObligatorio(filtro.idLetradoGuardia)"
+                                    [showClear]="true" [(ngModel)]="filtro.idLetradoGuardia" (onChange)="onChangeLetradoGuardia($event)"
                                     [ngModelOptions]="{standalone: true}" [options]="comboLetradosGuardia" [disabled]="isLetrado || deshabilitarLetradoGuardia">
                                 </p-dropdown>
                             </div>
@@ -61,13 +61,13 @@
                                 &nbsp;&nbsp;
                                 <p-dropdown class="select-form"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                                    [showClear]="true" [(ngModel)]="filtro.isSustituto" [disabled]="filtro.idPersona"
+                                    [showClear]="true" [(ngModel)]="filtro.isSustituto" [disabled]="!filtro.idLetradoGuardia"
                                     [ngModelOptions]="{standalone: true}" [options]="comboRefuerzoSustitucion" (onChange)="onChangeRefuerzoSustitucion($event)">
                                 </p-dropdown>
                             </div>
                             <div class="form-group-interlineado col-lg-5 col-md-5">
                                 <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                                    [pantalla]="'guardia'" (idPersona)="getIdPersonaLetradoManual($event)" [disabled]="isLetrado"
+                                    [pantalla]="'guardia'" (idPersona)="getIdPersonaLetradoManual($event)" [disabled]="isLetrado || refuerzoSustitucionNoSeleccionado"
                                     [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
                                 </app-busqueda-colegiado-express>
                             </div>

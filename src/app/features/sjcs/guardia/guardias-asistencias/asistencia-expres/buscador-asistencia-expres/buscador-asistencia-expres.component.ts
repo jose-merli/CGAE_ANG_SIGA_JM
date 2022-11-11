@@ -34,7 +34,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   msgs: Message[] = [];
   rutas: string[] = ['SJCS', 'Guardia', 'Asistencias'];
   salto: boolean = false;
-  refuerzoSustitucionSeleccionado: boolean = false;
+  refuerzoSustitucionNoSeleccionado: boolean = true;
   deshabilitarLetradoGuardia: boolean = false;
 
   comboTurnos = [];
@@ -47,6 +47,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   verSeleccion: string = '';
   isLetrado : boolean = false;
   @Output() letradoFillAutomatic = new EventEmitter<boolean>();
+  @Output() buscarAE = new EventEmitter<boolean>();
   progressSpinner: boolean = false;
   
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
@@ -59,6 +60,27 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     private translateService: TranslateService) {}
 
   ngOnInit(): void {
+
+    if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda") && sessionStorage.getItem("vieneDeAsistenciaExpres")){
+      let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistenciaExpresBusqueda"));
+
+      this.filtro.diaGuardia = oldFiltro.diaGuardia;
+      this.getTurnosByColegiadoFecha();
+      this.filtro.idTurno = oldFiltro.idTurno;
+      this.onChangeTurno();
+      this.filtro.idGuardia = oldFiltro.idGuardia;
+      this.onChangeGuardia();
+      this.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
+      this.filtro.idPersona = oldFiltro.idPersona;
+      this.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
+      this.filtro.isSustituto = oldFiltro.isSustituto;
+
+      sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
+      sessionStorage.removeItem("vieneDeAsistenciaExpres");
+
+      this.buscarAE.emit();
+    }
+
     this.checkLastRoute();
     if(this.sigaStorageService.idPersona
       && this.sigaStorageService.isLetrado){
@@ -78,6 +100,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
     this.getComboRefuerzoSustitucion();
     //this.getComboTurno();
+
+    sessionStorage.setItem("deshabilitarBuscadorColegiadoExpres", "true");
   }
 
   getComboRefuerzoSustitucion() {
@@ -296,7 +320,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
               } else {
                 this.deshabilitarLetradoGuardia = true;
                 this.filtro.isSustituto = 'N';
-                this.refuerzoSustitucionSeleccionado = true;
+                this.refuerzoSustitucionNoSeleccionado = false;
               }
   
           },
@@ -328,6 +352,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+    this.buscarAE.emit();
   }
   
   getIdPersonaLetradoManual(event){
@@ -389,9 +414,17 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
   onChangeRefuerzoSustitucion(event){
     if (this.filtro.isSustituto != null) {
-      this.refuerzoSustitucionSeleccionado = true;
+      this.refuerzoSustitucionNoSeleccionado = false;
     } else {
-      this.refuerzoSustitucionSeleccionado = false;
+      this.refuerzoSustitucionNoSeleccionado = true;
+      this.usuarioBusquedaExpress.nombreAp = undefined;
+      this.usuarioBusquedaExpress.numColegiado = undefined;
+      this.filtro.idLetradoManual = undefined;
     }
+    this.buscarAE.emit();
+  }
+
+  onChangeLetradoGuardia(event) {
+    this.buscarAE.emit();
   }
 }

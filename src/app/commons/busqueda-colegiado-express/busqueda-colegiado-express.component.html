@@ -10,12 +10,12 @@
     <div class="form-row margin-form-row">
         <div class="form-group-interlineado col-lg-3 col-md-3">
             <label>{{'justiciaGratuita.general.numColegiado' | translate}}</label>
-            <input type="text" [ngClass]="{'camposObligatorios': styleObligatory}" class="form-control" pInputText formControlName="numColegiado" [(ngModel)]="numColegiado" [disabled]="disabled"
+            <input type="text" [ngClass]="{'camposObligatorios': styleObligatory}" class="form-control" pInputText formControlName="numColegiado" [(ngModel)]="numColegiado" [readonly]="disabled"
                 (change)="isBuscar(colegiadoForm.value)">
         </div>
         <div class="form-group-interlineado col-lg-6 col-md-6">
             <label>{{'justiciaGratuita.general.apeNom' | translate}}</label>
-            <input type="text" class="form-control" pInputText formControlName="nombreAp" [(ngModel)]="nombreAp" [disabled]="disabled">
+            <input type="text" class="form-control" pInputText formControlName="nombreAp" [(ngModel)]="nombreAp" [readonly]="disabled">
         </div>
         <div class="form-group-interlineado text-left main-button pt-3 col-lg-3 col-md-3">
             <button [disabled]="!colegiadoForm.valid || disabled" pButton type="button"  icon="fa fa-eraser"
