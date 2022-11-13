@@ -3,49 +3,16 @@
 <div class="busqueda-container" id="datosGenerales">
   <div class="card">
     <div class="card-header header-ficha">
-      <div *ngIf="!openFicha" class="form-row">
-        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('generales')">
-          <div class="img-colegiado">
-            <i class="fas fa-user icon-ficha"></i>
-          </div>
-        </div>
-        <div class="col-lg-11 col-md-10 cabeza">
-          <div class="d-flex justify-content-end mb-1" (click)="abreCierraFicha('generales')">
-            <label class="mr-auto title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
-          </div>
-          <div class="d-flex justify-content-between sub">
-            <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}:
-              <strong>{{datosGenerales.nombre}}</strong>
-            </label>
-            <label>{{'administracion.parametrosGenerales.literal.descripcion' | translate}}:
-              <strong> {{body.descripcion}}</strong>
-            </label>
-            <label>{{'dato.jgr.guardia.guardias.tipoGuardia' | translate}}:
-              <!--<strong>{{tipoGuardiaResumen.label}}</strong>-->
-            </label>
-            <label>{{'justiciaGratuita.guardia.gestion.sincCentralGuardias' | translate}}:
-              <strong *ngIf="!body.sincCentralGuardias">No</strong>
-              <strong *ngIf="body.sincCentralGuardias">Sí</strong>
-            </label>
-            <i (click)="abreCierraFicha('generales')" [ngClass]="{ 'fa fa-angle-up': openFicha, 'fa fa-angle-down': !openFicha}"></i>
-          </div>
-        </div>
-      </div>
-      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center" (click)="abreCierraFicha('generales')">
+      <div *ngIf="openFicha" class=" header-ficha-open d-flex justify-content-start align-items-center">
         <div class="img-colegiado">
           <i class="fas fa-user icon-ficha"></i>
         </div>
         <label class="title-ficha">{{'administracion.catalogos.titulo.datos.generales' | translate}}</label>
-        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <div *ngIf="openFicha && datosGenerales != undefined" class="card-body card-body-ficha">
       <div class="row col-12">
-        <div class="form-group col-lg-12 col-md-12">
-          <label>Solo generar vacios</label>
-          <input type="checkbox" id="checkedchecky" name="checkedchecky" checked="checked" />
-        </div>
-
+        <!-- ListaGuardias -->
         <div class="form-group col-lg-3 col-md-3">
           <label>
             {{ "menu.justiciaGratuita.calendarios.ListaGuardias" | translate }} 
@@ -54,6 +21,25 @@
           [options]="comboConjuntoGuardias" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
           [showClear]="true" (onChange)="changeListaGuardia($event)">
         </p-dropdown>
+        </div>
+         <!-- check -->
+
+         <div class="form-check col-lg-3 col-md-3">
+          <br />
+          <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold'}">Solo generar vacios</span>
+          &nbsp;&nbsp;
+          <p-checkbox  id="checkedchecky" name="checkedchecky"  binary="true" [(ngModel)]="controlSoloGenerarVacio"></p-checkbox>
+        </div>
+
+        <!-- Observaciones -->
+        <div class="form-group col-lg-6 col-md-6" id="desFact">
+          <label>
+            {{"justiciaGratuita.Calendarios.Observaciones" | translate}} 
+          </label>
+          <textarea *ngIf="datosGenerales.observaciones != null" rows="2" [placeholder] = "datosGenerales.observaciones" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class=" form-control ui-inputtext" pInputTextarea
+            [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
+            <textarea *ngIf="datosGenerales.observaciones == null"  [placeholder] = "" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="  form-control ui-inputtext" pInputTextarea
+            [(ngModel)]="datosGenerales.observaciones" rows="2" autoResize="autoResize" maxlength="3999"></textarea> 
         </div>
         <!-- FechaDesde -->
         <div class="form-group col-lg-3 col-md-3">
@@ -88,21 +74,9 @@
             maxLength="40" disabled pInputText>
             
           </div>
-          <!-- Observaciones -->
-          <div class="form-group col-lg-3 col-md-3" id="desFact">
-            <label>
-              {{"justiciaGratuita.Calendarios.Observaciones" | translate}} 
-            </label>
-            <textarea *ngIf="datosGenerales.observaciones != null" [placeholder] = "datosGenerales.observaciones" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
-              [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
-              <textarea *ngIf="datosGenerales.observaciones == null"  [placeholder] = "" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="form-control ui-inputtext" pInputTextarea
-              [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
-          </div>
+          
 
       </div>
-    </div>
-
-    <div *ngIf="openFicha" class="card-footer">
       <div class="text-right main-button">
         <button  pButton (click)="descargarLog()" type="button" icon="fa fa-download" iconPos="left"
         label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
@@ -112,6 +86,8 @@
         <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
+
+
   </div>
 </div>
 

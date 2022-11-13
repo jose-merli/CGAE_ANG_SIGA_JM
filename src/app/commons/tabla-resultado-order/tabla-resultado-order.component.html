@@ -75,12 +75,12 @@
     </div>
 </div>
 <div *ngIf="pantalla != 'colaGuardias || 'manual" class="col-lg-1 col-md-1 centerAlign row">
-        <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="disableButton('up') || isLetrado" class="pointer p-2" (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
-        <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="disableButton('down') || isLetrado" class="pointer p-2" (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
+        <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="isDisabledByEstado || disableButton('up') || isLetrado" class="pointer p-2" (click)="moveRow('up')"><i class="fas fa-chevron-up"></i></button></div>
+        <div class="col-lg-12 col-md-12"><button class="styledBut" [disabled]="isDisabledByEstado || disableButton('down') || isLetrado" class="pointer p-2" (click)="moveRow('down')"><i class="fas fa-chevron-down"></i></button></div>
 </div>
 </div>
 
-<div class="card-footer h50 pt-5">
+<div class="card-footer pt-5">
         <div class="text-right main-button butBottom">
           <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled || isLetrado"
             (click)="guardar(marcadoultimo)"></button>
@@ -92,7 +92,7 @@
             <button *ngIf="!calendarios && !listaGuardias" pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar" [disabled]="isLetrado"
                 (click)="navigateComunicar(selectedArray)"></button>
             <button pButton type="button" icon="fa fa-undo" iconPos="left" label="Restablecer"
-                  (click)="restablecer()" [disabled]="!permisosEscritura || isLetrado"></button>
+                  (click)="restablecer()" [disabled]="!permisosEscritura || isLetrado || isDisabledByEstado"></button>
             <button *ngIf="listaGuardias" [disabled]="(!anySelectedBol  || !permisosEscritura)" pButton type="button" icon="fa fa-trash-alt" iconPos="left" label="Eliminar"
                   (click)="eliminar()"></button>
             <button *ngIf="listaGuardias" pButton type="button" icon="fa fa-plus" iconPos="left" label="Nuevo"
@@ -100,18 +100,18 @@
             <button *ngIf="listaGuardias" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
                   (click)="saveGuardias()" [disabled]="!permisosEscritura || isLetrado"></button>
             
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabled"
+            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar" [disabled]="isDisabledByEstado ||isDisabled"
                   (click)="saveCal()"></button>
             <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Descargar LOG" [disabled]="(isDisabled || rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0) || selectedArray.length > 1 || selectedArray.length == 0) || estado != 'Generada'"
                   (click)="descargarLog()"></button>
                   <!--<a [href]="'data:application/octet-stream;base64,' + data | safe" download="excel.xls">Download</a>-->
             <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Añadir letrado" [disabled]="(rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)) || estado != 'Generada'"
                   (click)="anadirLetrado()"></button>
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="(rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0) || selectedArray.length > 1 || selectedArray.length == 0) || estado != 'Generada'"
+            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="isDisabledByEstado || (rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0) || selectedArray.length > 1 || selectedArray.length == 0) || estado != 'Generada'"
                   (click)="eliminar()"></button>
               <!--  <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Eliminar" [disabled]="rowwSelected == undefined || (rowwSelected != undefined && rowwSelected.length == 0)|| estado != 'Pendiente' || rowwSelected.length > 1"
                     (click)="eliminar()"></button>-->  
-            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Nuevo" [disabled]="isDisabledNuevo"
+            <button *ngIf="calendarios" pButton type="button" icon="far fa-save" iconPos="left" label="Nuevo" [disabled]="isDisabledByEstado"
                   (click)="nuevo()"></button>
         </div>
 </div>

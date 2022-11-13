@@ -24,6 +24,7 @@ import { SigaStorageService } from '../../siga-storage.service';
 export class TablaResultadoOrderComponent implements OnInit {
   isDisabled = false;
   @Input() isDisabledNuevo = false;
+  @Input() isDisabledByEstado = false;
   info = new FormControl();
   @Input() cabeceras = [];  
   @Input() rowGroups: Row[];

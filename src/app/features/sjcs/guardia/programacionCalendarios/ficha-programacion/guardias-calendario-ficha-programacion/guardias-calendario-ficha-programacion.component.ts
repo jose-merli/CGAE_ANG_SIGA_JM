@@ -100,7 +100,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
   seleccionarTodo = false;
   idConjuntoGuardiaElegido: number;
   comboGuardiaConjunto = [];
-  isDisabledNuevo;
+  isDisabledByEstado;
   @Input() duplicar = false;
   @Input() datosGenerales = {
     'duplicar': '',
@@ -311,9 +311,9 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
   }
     ngOnChanges(changes){
       if(this.permisoEscritura && (!this.modoEdicion || this.estado == "Pendiente" || this.estado == "Programada")){
-        this.isDisabledNuevo = false;
+        this.isDisabledByEstado = false;
       }else{
-        this.isDisabledNuevo = true;
+        this.isDisabledByEstado = true;
       }
     }
 
@@ -392,9 +392,9 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
   rest() {
     
     if(this.permisoEscritura && (!this.modoEdicion || this.estado == "Pendiente" || this.estado == "Programada")){
-      this.isDisabledNuevo = false;
+      this.isDisabledByEstado = false;
     }else{
-      this.isDisabledNuevo = true;
+      this.isDisabledByEstado = true;
     }
 
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));

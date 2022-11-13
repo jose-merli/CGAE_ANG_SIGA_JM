@@ -5,7 +5,10 @@ export class DeleteCalendariosProgDatosEntradaItem {
     idCalendarioProgramado;
     idInstitucion;
     fechaDesde;
+    fechaHasta;
     contadorGenerados;
+    facturado:boolean;
+    asociadoAsistencias:boolean;
     constructor() { }
 
 }

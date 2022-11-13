@@ -678,7 +678,8 @@ export class TablaResultadoMixComponent implements OnInit {
       'idTurno': row.cells[11].value,
       'idGuardia': row.cells[12].value,
       'filtrosBusqueda' : this.filtrosValues,
-      'idInstitucion' : row.cells[16].value
+      'idInstitucion' : row.cells[16].value,
+      'soloGenerarVacio' : row.cells[18].value
     }
 
 

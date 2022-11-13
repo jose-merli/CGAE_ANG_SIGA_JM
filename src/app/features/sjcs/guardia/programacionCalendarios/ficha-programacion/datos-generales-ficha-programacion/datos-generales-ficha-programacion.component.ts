@@ -40,7 +40,8 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
-    'idInstitucion': ''
+    'idInstitucion': '',
+    'soloGenerarVacio': ''
   };
   @Input() datosGenerales = {
     'duplicar': '',
@@ -58,12 +59,10 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
-    'idInstitucion': ''
+    'idInstitucion': '',
+    'soloGenerarVacio': '',
   };
-
-
-  @Output() opened = new EventEmitter<Boolean>();
-  @Output() idOpened = new EventEmitter<Boolean>();
+  controlSoloGenerarVacio: boolean = false;
   @Output() guardarDatosCalendario = new EventEmitter<{}>();
   tipoGuardiaResumen = {
     label: "",
@@ -101,6 +100,9 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
         this.datosGenerales.observaciones = "";
       }
 
+      if(this.datosGenerales.soloGenerarVacio == 'S'){
+        this.controlSoloGenerarVacio = true
+      }
 
       //this.getComboListaGuardia();
       this.getComboConjuntouardia();
@@ -224,13 +226,6 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   muestraCamposObligatorios() {
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     this.resaltadoDatos = true;
-  }
-
-  abreCierraFicha(key) {
-    this.openFicha = !this.openFicha;
-
-    this.opened.emit(this.openFicha);
-    this.idOpened.emit(key);
   }
 
 
@@ -417,6 +412,10 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
               if (this.datosGenerales.listaGuarias.value == undefined) {
                 this.changeListaGuardia(this.datosGenerales.listaGuarias);
               }
+
+              //Control Check Solo Generar Vacios
+              this.datosGenerales.soloGenerarVacio = this.controlSoloGenerarVacio ? 'S' : 'N';
+
               //GUARDAMOS
               this.guardarDatosCalendario.emit(this.datosGenerales)
               this.progressSpinner = false;

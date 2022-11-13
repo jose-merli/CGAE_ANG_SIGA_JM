@@ -84,6 +84,7 @@ export class FichaProgramacionComponent implements OnInit {
     'idGuardia': '',
     'guardias': [],
     'idInstitucion' : '',
+    'soloGenerarVacio' : ''
   };
 
   datosGeneralesIniciales = {
@@ -104,6 +105,7 @@ export class FichaProgramacionComponent implements OnInit {
     'idGuardia': '',
     'guardias': [],
     'idInstitucion' : '',
+    'soloGenerarVacio' : ''
   };
   rowGroupsSaved: Row[];
   dataToReceive = {
@@ -124,6 +126,7 @@ export class FichaProgramacionComponent implements OnInit {
     'idGuardia': '',
     'filtrosBusqueda': new CalendarioProgramadoItem(),
     'idInstitucion' : '',
+    'soloGenerarVacio' : ''
   }
   estado: string = "";
   dataReady = false;
@@ -249,7 +252,6 @@ export class FichaProgramacionComponent implements OnInit {
       n => {
         this.datos = JSON.parse(n.body);
         this.sigaServices.notifysendDatosRedy(n);
-        this.getDatosResumen();
 
         this.progressSpinner = false;
       },
@@ -287,31 +289,6 @@ export class FichaProgramacionComponent implements OnInit {
       this.search();
       this.modoEdicion = true;
     }
-  }
-
-  getDatosResumen() {
-    this.sigaServices.post("busquedaGuardias_resumenGuardia", this.datos).subscribe(
-      r => {
-        this.infoResumen = [
-          {
-            label: "Turno",
-            value: JSON.parse(r.body).turno
-          },
-          {
-            label: "Guardia",
-            value: JSON.parse(r.body).nombre
-          },
-          {
-            label: "Tipo de guardia",
-            value: JSON.parse(r.body).idTipoGuardia
-          },
-          {
-            label: "Número de inscritos",
-            value: JSON.parse(r.body).letradosGuardia
-          }
-        ]
-      });
-
   }
 
   obtenerPermisos() {
@@ -544,32 +521,6 @@ export class FichaProgramacionComponent implements OnInit {
 
   }
 
-  isCloseReceive(event) {
-    if (event != undefined) {
-      switch (event) {
-        case "datosGenerales":
-          this.openGen = this.manuallyOpened;
-          break;
-        case "calendarioGuardia":
-          this.openCalendarioGuardia = this.manuallyOpened;
-          break;
-      }
-    }
-  }
-
-  isOpenReceive(event) {
-    if (event != undefined) {
-      switch (event) {
-        case "datosGenerales":
-          this.openGen = true;
-          break;
-        case "calendarioGuardia":
-          this.openCalendarioGuardia = true;
-          break;
-      }
-    }
-  }
-
   getdataToDuplicate(event) {
     //console.log('DATA TO DUPLICATE: ', event)
     //console.log('this.rowGroupsSaved: ', this.rowGroupsSaved)
@@ -625,7 +576,8 @@ export class FichaProgramacionComponent implements OnInit {
       'idCalG': idCalG,
       'listaGuardias': event.listaGuarias.label,
       'idCalendarioProgramado': event.idCalendarioProgramado,
-      'idInstitucion': event.idInstitucion
+      'idInstitucion': event.idInstitucion,
+      'soloGenerarVacio' : event.soloGenerarVacio
       //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
     };
@@ -701,6 +653,7 @@ export class FichaProgramacionComponent implements OnInit {
         'idGuardia': '',
         'guardias': [],
         'idInstitucion': '',
+        'soloGenerarVacio' : ''
       };
 
       datosGeneralesToSave = datGen;
@@ -762,7 +715,8 @@ export class FichaProgramacionComponent implements OnInit {
         'listaGuardias': datosGeneralesToSave.listaGuarias.label,
         'idCalendarioProgramado': datosGeneralesToSave.idCalendarioProgramado,
         'guardias': datosGeneralesToSave.guardias,
-        'idInstitucion' : datosGeneralesToSave.idInstitucion
+        'idInstitucion' : datosGeneralesToSave.idInstitucion,
+        'soloGenerarVacio' : datosGeneralesToSave.soloGenerarVacio
         //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
       };
@@ -906,7 +860,8 @@ export class FichaProgramacionComponent implements OnInit {
         'idCalG': this.datosGenerales.listaGuarias.value,
         'listaGuardias': this.datosGenerales.listaGuarias.label,
         'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
-        'idInstitucion': this.datosGenerales.idInstitucion
+        'idInstitucion': this.datosGenerales.idInstitucion,
+        'soloGenerarVacio': this.datosGenerales.soloGenerarVacio,
         //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
 
       };
@@ -1124,6 +1079,7 @@ export class FichaProgramacionComponent implements OnInit {
               'idGuardia': this.datosGenerales.idGuardia,
               'filtrosBusqueda': this.dataToReceive.filtrosBusqueda,
               'idInstitucion': this.dataToReceive.idInstitucion,
+              'soloGenerarVacio': this.dataToReceive.soloGenerarVacio,
             }
             this.persistenceService.setDatos(dataToSend);
             this.router.navigate(["/fichaProgramacion"]);
@@ -1239,7 +1195,8 @@ export class FichaProgramacionComponent implements OnInit {
             'idCalendarioProgramado': datos[0].idCalendarioProgramado,
             'idTurno': datos[0].idTurno,
             'idGuardia': datos[0].idGuardia,
-            'idInstitucion' : datos[0].idInstitucion
+            'idInstitucion' : datos[0].idInstitucion,
+            'soloGenerarVacio' : datos[0].soloGenerarVacio
           }
 
           this.progressSpinner = false

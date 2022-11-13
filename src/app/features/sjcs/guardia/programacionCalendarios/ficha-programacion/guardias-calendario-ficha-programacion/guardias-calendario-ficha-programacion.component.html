@@ -8,12 +8,11 @@
           <i class="fas fa-user icon-ficha"></i>
         </div>
         <label class="title-ficha">Guardias Calendario</label>
-        <i class="fa fa-angle-up ml-auto"></i>
       </div>
     </div>
     <div class="card-body card-body-ficha">
       <div class="row col-12">
-        <app-tabla-resultado-order *ngIf="dataReady" (descargaLog)="descargaLog1($event)" [pantalla] = "'calendarios'"  [tarjetaDatosGenerales]="tarjetaDatosGenerales" [isDisabledNuevo]="isDisabledNuevo" [estado]="tarjetaDatosGenerales.estado" [duplicar]="duplicar" [calendarios]="true" [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
+        <app-tabla-resultado-order *ngIf="dataReady" (descargaLog)="descargaLog1($event)" [pantalla] = "'calendarios'"  [tarjetaDatosGenerales]="tarjetaDatosGenerales" [isDisabledByEstado]="isDisabledByEstado" [estado]="tarjetaDatosGenerales.estado" [duplicar]="duplicar" [calendarios]="true" [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
         [cabeceras]="cabeceras" [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [comboGuardia]="comboGuardiaConjunto" [fromSlice]="0" [toSlice]="5"
         (anySelected)="notifyAnySelected($event)" (disableGen)="disableGen($event)" (selectedRow)="checkSelectedRow($event)" (colaGuardiaModified)="updateColaGuardia($event)" (guardiasCalendarioModified)="updateGuardiasCalendario($event)" (rest)="rest($event)" (dupli)="duplicar($event)" (delete)="delete($event)" (guardarGuardiasEnConjunto)="guardarGuardiasEnConjunto($event)" (linkGuardiaColegiado)="linkGuardiaColegiado($event)">
       </app-tabla-resultado-order>

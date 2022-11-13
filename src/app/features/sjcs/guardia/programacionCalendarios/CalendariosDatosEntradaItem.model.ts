@@ -1,4 +1,5 @@
 export class CalendariosDatosEntradaItem{
+  soloGenerarVacio:string;
   contadorGenerados: number;
   idInstitucion: string;
   turno: string;
@@ -19,6 +20,7 @@ export class CalendariosDatosEntradaItem{
   asistenciasAsociadas: boolean;
   idCalendarioGuardias: string;
   constructor(obj: Object) {
+    this.soloGenerarVacio = obj['soloGenerarVacio']
     this.contadorGenerados = obj['contadorGenerados']
     this.idInstitucion = obj['idInstitucion']
     this.idCalendarioProgramado = obj['idCalendarioProgramado'];

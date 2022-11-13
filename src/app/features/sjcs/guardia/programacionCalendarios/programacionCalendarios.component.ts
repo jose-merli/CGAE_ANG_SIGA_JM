@@ -159,7 +159,8 @@ export class ProgramacionCalendariosComponent implements OnInit {
           { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 80 , disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0, disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0, disabled: false},
-          { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0, disabled: false},           
+          { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0, disabled: false},   
+          { type: 'invisible', value: this.dataToDuplicate.soloGenerarVacio, combo: null, size: 0, disabled: false},           
           ];
       
           let obj: Row = {id: this.rowGroups.length, cells: objCells};
@@ -291,6 +292,7 @@ let datosEntrada =
           this.datos.forEach((dat, i) => {
             let responseObject = new CalendariosDatosEntradaItem(
               {
+                'soloGenerarVacio' : dat.soloGenerarVacio,
                 'contadorGenerados': dat.contadorGenerados,
                 'idInstitucion': dat.idInstitucion,
                 'turno': dat.turno,
@@ -378,7 +380,8 @@ jsonToRow(){
     { type: 'invisible', value: res.asistenciasAsociadas, size: 0},
     { type: 'invisible', value: res.idCalendarioGuardias, size: 0},
     { type: 'invisible', value: res.idInstitucion, size: 0},
-    { type: 'invisible', value: res.contadorGenerados, size: 0}
+    { type: 'invisible', value: res.contadorGenerados, size: 0},
+    { type: 'invisible', value: res.soloGenerarVacio, size: 0},
     ];
     let obj = {id: i, cells: objCells};
     arr.push(obj);
@@ -484,28 +487,28 @@ rowToDelete.cells.forEach((c, index) => {
   }*/
  // Primera confirmación
  confirmEliminar1(): void {
-  let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion");
-  let icon = "fa fa-eraser";
   this.currentDataToDelete = []
+  let contadorGenerados:number = 0;
+  let entreFechas = "";
+  this.listaDel.forEach(element => {
+      if(element.contadorGenerados > 0) contadorGenerados = contadorGenerados + element.contadorGenerados
+      entreFechas += "<br/>"+element.fechaDesde+" y "+element.fechaHasta+"\n"
+      if(!element.facturado || !element.asociadoAsistencias) this.currentDataToDelete.push(element)
+  });
+  
+
+  let mess = "Se  van a borrar "+contadorGenerados+" calendarios ya generados en la programación seleccionada entre :"+entreFechas+"<br/>¿Desea continuar?"
+  
+  let icon = "fa fa-eraser";
+ 
   this.confirmationService.confirm({
     key: "first",
     message: mess,
     icon: icon,
     acceptLabel: "Sí",
     rejectLabel: "No",
-    accept:async () => {
-
-      for(let e of this.listaDel){
-        await this.segundaConf(e)
-      }
-
-     if(this.currentDataToDelete.length == 0){
-        this.showMessage({ severity: 'info', summary: 'Cancelar', msg: this.translateService.instant("general.message.accion.cancelada") });
-        
-      }else{
+    accept:() => {
         this.eliminarCal(this.currentDataToDelete)
-      }      
-
     },
     reject: () => {
       this.showMessage({ severity: 'info', summary: 'Cancelar', msg: this.translateService.instant("general.message.accion.cancelada") });
@@ -513,43 +516,9 @@ rowToDelete.cells.forEach((c, index) => {
   });
 }
 
-segundaConf(dato:DeleteCalendariosProgDatosEntradaItem){
-  //let mess = this.translateService.instant("justiciaGratuita.ejg.message.eliminarDocumentacion") + " " + dato.idCalendarioProgramado ;
-  let mess = "Se  van a borrar "+dato.contadorGenerados+" calendarios ya generados en la programación seleccionada. ¿Desea continuar?"
-  let icon = "fa fa-eraser";
-  
-  return new Promise<void> ((resolve) => {
-    this.confirmationService.confirm({
-      key: "second",
-      message: mess,
-      icon: icon,
-      acceptLabel: "Sí",
-      rejectLabel: "No",
-      accept: () => {
-        this.currentDataToDelete.push(dato)
-       // this.selectedDatos.shift()
-        resolve()
-      },
-      reject: () => {
-        //this.selectedDatos.shift()
-        resolve()
-      }
-    });
 
-  });
 
-    
-}
-
-  // Segunda confirmación
-
-  confirmEliminar2(): void {
-
-    this.showModalEliminar = false;
-    //this.eliminar(this.currentDataToDelete);
-    console.log(this.currentDataToDelete)
-  }
-
+ 
   rejectEliminar2(): void {
     this.showModalEliminar = false;
     this.showMessage({ severity: 'info', summary: 'Cancelar', msg: this.translateService.instant("general.message.accion.cancelada") });
@@ -561,7 +530,10 @@ delete(indexToDelete){
   let idTurno;
   let idCalendarioProgramado;
   let fechaDesde;
+  let fechaHasta;
   let contadorGenerado;
+  let facturado:boolean;
+  let asociadoAsistencias:boolean;
   let toDelete:Row[] = [];
   indexToDelete.forEach(index => {
     toDelete.push(this.rowGroups[index]);
@@ -580,8 +552,19 @@ delete(indexToDelete){
       if (index == 11){
         idTurno = c.value;
       }
+      if(index == 13){
+        if(c.value == true )facturado= true
+        else facturado = false
+      }
+      if(index == 14){
+        if(c.value == true )asociadoAsistencias= true
+        else asociadoAsistencias = false
+      }
       if (index == 2) {
         fechaDesde = c.value;
+      }
+      if (index == 3) {
+        fechaHasta = c.value;
       }
       if(index == 17){
         contadorGenerado = c.value
@@ -598,6 +581,9 @@ delete(indexToDelete){
       'idCalendarioProgramado': idCalendarioProgramado,
       'idInstitucion': idInstitucion,
       'fechaDesde': fechaDesde,
+      'fechaHasta': fechaHasta,
+      'facturado': facturado,
+      'asociadoAsistencias' : asociadoAsistencias,
       'contadorGenerados' : contadorGenerado
     }
     this.listaDel.push(deleteParams)
