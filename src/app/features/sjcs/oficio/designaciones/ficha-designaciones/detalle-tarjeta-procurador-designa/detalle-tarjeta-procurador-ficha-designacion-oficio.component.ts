@@ -416,7 +416,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       }
     );
   }
-
+//procurador restringe fechas y mirar designaciones
   comprobarFechaProcurador() {
     this.progressSpinner = true;
 
@@ -439,7 +439,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
       //Formateo de fecha Nueva
       let diaAux = fechaNueva.getDate().toString();
-      let mesAux = fechaNueva.getMonth() < 10 ?  "0"+(fechaNueva.getMonth() +1) :  fechaNueva.getMonth().toString()
+      let mesAux = fechaNueva.getMonth() < 9 ?  "0"+(fechaNueva.getMonth() +1) :  (fechaNueva.getMonth() +1).toString()
       let anioAux = fechaNueva.getFullYear().toString();
 
       let fechaNuevaFormateado = new Date(anioAux + "-" + mesAux + "-" + diaAux);
@@ -447,7 +447,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       // Formateo de fecha Actual 
       let fechaActualSF = new Date()
       let dia = fechaActualSF.getUTCDate().toString();
-      let mes = fechaActualSF.getMonth() < 10 ?  "0"+(fechaActualSF.getMonth() +1) :  fechaActualSF.getMonth().toString()
+      let mes = fechaActualSF.getMonth() < 9 ?  "0"+(fechaActualSF.getMonth() +1) :  (fechaActualSF.getMonth() +1).toString()
       let anio = fechaActualSF.getFullYear().toString();
       let fechaActualF = new Date(anio + "-" + mes + "-" + dia);
 
@@ -466,13 +466,13 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       // Formateo de fecha Actual 
       let fechaActualSF = new Date()
       let diaAux = fechaActualSF.getUTCDate().toString();
-      let mesAux = fechaActualSF.getMonth() < 10 ?  "0"+(fechaActualSF.getMonth() +1) :  fechaActualSF.getMonth().toString()
+      let mesAux = fechaActualSF.getMonth() < 9 ?  "0"+(fechaActualSF.getMonth() +1) :  (fechaActualSF.getMonth() +1).toString()
       let anioAux = fechaActualSF.getFullYear().toString();
       let fechaActualF = new Date(anioAux + "-" + mesAux + "-" + diaAux);
 
       //Formateo de fecha Nueva
       let diaAuxA = fechaNueva.getDate();
-      let mesAuxA = fechaNueva.getMonth() < 10 ?  "0"+(fechaNueva.getMonth() +1) :  fechaNueva.getMonth().toString()
+      let mesAuxA = fechaNueva.getMonth() < 9 ?  "0"+(fechaNueva.getMonth() +1) :  (fechaNueva.getMonth() +1).toString()
       let anioAuxA = fechaNueva.getFullYear().toString();
       let fechaNuevaFormateado = new Date(anioAuxA + "-" + mesAuxA + "-" + diaAuxA);
 
