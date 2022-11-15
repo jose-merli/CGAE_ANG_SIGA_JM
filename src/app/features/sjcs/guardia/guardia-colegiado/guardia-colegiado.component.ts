@@ -64,8 +64,7 @@ export class GuardiaColegiadoComponent implements OnInit {
       }
       ).catch(error => console.error(error));
       
-      if(this.localStorageService.isLetrado
-          && this.localStorageService.idPersona){
+      if(this.localStorageService.isLetrado){
           
           this.isColegiado = true;
 

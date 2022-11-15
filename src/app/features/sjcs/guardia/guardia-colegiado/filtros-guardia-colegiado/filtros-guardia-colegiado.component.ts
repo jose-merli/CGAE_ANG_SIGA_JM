@@ -9,6 +9,7 @@ import { MultiSelect } from 'primeng/primeng';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 import { BusquedaColegiadoExpressComponent } from '../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
 import { ViewChild } from '@angular/core';
+import { SigaStorageService } from '../../../../../siga-storage.service';
 
 @Component({
   selector: 'app-filtros-guardia-colegiado',
@@ -56,12 +57,13 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
-    private commonServices: CommonsService) { }
+    private commonServices: CommonsService,
+    private localStorageService: SigaStorageService) { }
 
   ngOnInit() {
     sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
-
+    this.isColegiado = this.localStorageService.isLetrado;
     this.progressSpinner = true;
     this.showDatosGenerales = true;
     this.getCombos()
@@ -92,25 +94,6 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
         }
       }
       this.search();
-      
-    if (this.isColegiado) {
-      this.progressSpinner = true
-      this.sigaServices.get("usuario_logeado").subscribe(n => {
-        const usuario = n.usuarioLogeadoItem;
-        const colegiadoItem = new ColegiadoItem();
-        colegiadoItem.nif = usuario[0].dni;
-        this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
-          usr => {
-            let usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
-            if (usuarioLogado) {
-              this.usuarioBusquedaExpress.numColegiado = usuarioLogado.numColegiado;
-              this.usuarioBusquedaExpress.nombreAp = usuarioLogado.nombre;
-              this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
-            }
-            this.progressSpinner = false;
-          });
-      });
-    }
   
 
     this.getCombos()
@@ -137,7 +120,11 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
      
   }
 
-  if (this.isColegiado && sessionStorage.getItem("origin") == "fichaColegial") {
+  if (this.isColegiado) {
+    this.getDataLoggedUser();
+  }
+
+  /*if (this.isColegiado && sessionStorage.getItem("origin") == "fichaColegial") {
     sessionStorage.removeItem("origin");
     this.progressSpinner = true
     this.sigaServices.get("usuario_logeado").subscribe(n => {
@@ -156,8 +143,37 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
           this.progressSpinner = false;
         });
     });
-  }
+  }*/
 }
+
+getDataLoggedUser() {
+  this.progressSpinner = true;
+
+  this.sigaServices.get("usuario_logeado").subscribe(n => {
+
+    const usuario = n.usuarioLogeadoItem;
+    const colegiadoItem = new ColegiadoItem();
+    colegiadoItem.nif = usuario[0].dni;
+
+    this.sigaServices.post("busquedaColegiados_searchColegiado", colegiadoItem).subscribe(
+      usr => {
+        const { numColegiado, nombre } = JSON.parse(usr.body).colegiadoItem[0];
+        this.usuarioBusquedaExpress.numColegiado = numColegiado;
+        this.usuarioBusquedaExpress.nombreAp = nombre.replace(/,/g,"");
+
+        this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
+        this.progressSpinner = false;
+
+       }, err =>{
+        this.progressSpinner = false;
+      },
+      ()=>{
+        this.progressSpinner = false;
+        this.search();
+      });
+    });
+}
+
   changeDateFormat(date1){
     let date1C = date1;
     // date1 dd/MM/yyyy
