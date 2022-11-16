@@ -843,16 +843,15 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     }
   }
   backTo() {
-    // Vovlver a asistencia.
-    if (sessionStorage.getItem("backAsistencia")) {
-      sessionStorage.setItem("vieneDeFichaDesigna", "true");
-      this.router.navigate(['/fichaAsistencia']);
-    } else if (sessionStorage.getItem("vieneDeFichaJusticiable")) {
+    if (sessionStorage.getItem("vieneDeFichaJusticiable")) {
       sessionStorage.removeItem("vieneDeFichaJusticiable")
-      this.location.back();
-    } else {
-      this.location.back();
     }
+
+    if (sessionStorage.getItem("idAsistencia")) {
+      //sessionStorage.setItem("vieneDeFichaDesigna", "true");
+      this.router.navigate(['/fichaAsistencia']);
+    }
+      this.location.back();
   }
 
   transformaFecha(fecha) {

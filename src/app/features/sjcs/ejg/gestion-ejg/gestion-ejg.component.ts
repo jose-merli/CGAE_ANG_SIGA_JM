@@ -308,13 +308,12 @@ export class GestionEjgComponent implements OnInit {
     // Si viene de asistencias expres
     if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda")){
       sessionStorage.setItem("vieneDeAsistenciaExpres", "true");
+      this.location.back();
     }
 
     // Volver a asistencia.
-    if (sessionStorage.getItem("filtroAsistencia")) {
-      var asistencia = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
-      sessionStorage.setItem("idAsistencia", asistencia.anio + "/" + asistencia.numero);
-      sessionStorage.setItem("vieneDeFichaDesigna", "true");
+    if (sessionStorage.getItem("idAsistencia")) {
+      //sessionStorage.setItem("vieneDeFichaDesigna", "true");
       this.router.navigate(['/fichaAsistencia']);
     }
     //Para evitar complicaciones según se acceda desde la pantalla de busqueda de EJGs de comision o 
