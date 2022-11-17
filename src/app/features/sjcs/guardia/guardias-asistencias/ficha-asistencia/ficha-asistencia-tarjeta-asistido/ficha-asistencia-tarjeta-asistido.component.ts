@@ -26,6 +26,7 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
   comboTipoPersona = [];
   progressSpinner = false;
   showJusticiableDialog : boolean = false;
+  showDesasociarJusticiableDialog : boolean = false;
 
   fichasPosibles = [
     {
@@ -253,31 +254,43 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
       );
   }
 
-  desasociarJusticiable(){
-    this.progressSpinner = true;
+  desasociarJusticiableModal (){
 
-    this.sigaServices
-    .postPaginado("busquedaGuardias_desasociarAsistido", "?anioNumero="+this.idAsistencia, this.asistido)
-    .subscribe(
-      data => {
-        let result = JSON.parse(data["body"]);
-        if(result.error){
-          this.showMsg('error', this.translate.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-        }else{
-          this.asistido = new JusticiableItem();
-          this.showMsg('success', this.translate.instant("general.message.accion.realizada"), '');
-          this.refreshTarjetas.emit(result.id);
-        }
+      this.showDesasociarJusticiableDialog = true;
 
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      },
-      () => {
+  }
+
+  desasociarJusticiable(desasocia : boolean){
+
+    if(desasocia){
+      this.progressSpinner = true;
+
+      this.sigaServices
+      .postPaginado("busquedaGuardias_desasociarAsistido", "?anioNumero="+this.idAsistencia, this.asistido)
+      .subscribe(
+        data => {
+          let result = JSON.parse(data["body"]);
+          if(result.error){
+            this.showMsg('error', this.translate.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+          }else{
+            this.asistido = new JusticiableItem();
+            this.showMsg('success', this.translate.instant("general.message.accion.realizada"), '');
+            this.refreshTarjetas.emit(result.id);
+          }
+  
+        },
+        err => {
+          //console.log(err);
           this.progressSpinner = false;
-        }
-      );
+        },
+        () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+    
+    this.showDesasociarJusticiableDialog = false;
+    
   }
 
   searchJusticiable(){

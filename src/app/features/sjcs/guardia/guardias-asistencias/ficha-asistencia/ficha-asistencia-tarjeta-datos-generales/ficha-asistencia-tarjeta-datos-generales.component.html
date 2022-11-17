@@ -34,13 +34,13 @@
       <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'censo.resultadosSolicitudesModificacion.literal.fecha' | translate}} {{'agenda.fichaEventos.datosAsistencia.asistencia' | translate}}(*)</label>
           <app-fecha [(value)]="asistencia.fechaAsistencia" (valueChangeSelected)="fillFechaAsistencia($event)"
-          (valueChangeInput)="fillFechaAsistencia($event)" [showTime]="true" [disabled]="disableDataForEdit || ineditable"
+          (valueChangeInput)="fillFechaAsistencia($event)" [disabled]="disableDataForEdit || ineditable"
           [inputStyleClass]="styleObligatorio(asistencia.fechaAsistencia)"></app-fecha>
       </div>
       <div class="form-group-interlineado col-lg-3 col-md-3">
         <label>{{'formacion.busquedaInscripcion.fechaSolicitud' | translate}}</label>
         <app-fecha [(value)]="asistencia.fechaSolicitud" (valueChangeSelected)="fillFechaSolicitud($event)"
-        (valueChangeInput)="fillFechaSolicitud($event)" [showTime]="true" [disabled]="ineditable"></app-fecha>
+        (valueChangeInput)="fillFechaSolicitud($event)" [disabled]="ineditable"></app-fecha>
       </div>
       <div class="form-group-interlineado col-lg-3 col-md-3">
         <label>{{"dato.jgr.guardia.guardias.turno" | translate}}(*)</label>

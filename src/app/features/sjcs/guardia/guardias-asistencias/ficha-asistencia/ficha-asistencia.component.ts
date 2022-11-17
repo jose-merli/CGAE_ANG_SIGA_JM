@@ -544,7 +544,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
                 },
                 {
                   "key": this.translateService.instant("gratuita.mantenimientoTablasMaestra.literal.apellidos"),
-                  "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2
+                  "value": [newAsistenciaData.apellido1, newAsistenciaData.apellido2].filter(Boolean).join(" ")
                 },
                 {
                   "key": this.translateService.instant("administracion.parametrosGenerales.literal.nombre"),
@@ -807,7 +807,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
               },
               {
                 "key": this.translateService.instant("gratuita.mantenimientoTablasMaestra.literal.apellidos"),
-                "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2
+                "value": [newAsistenciaData.apellido1, newAsistenciaData.apellido2].filter(Boolean).join(" ")
               },
               {
                 "key": this.translateService.instant("administracion.parametrosGenerales.literal.nombre"),
