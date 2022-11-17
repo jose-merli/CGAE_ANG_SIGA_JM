@@ -241,8 +241,33 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
         }else{
           this.showMsg('success', this.translate.instant("general.message.accion.realizada"), '');
           this.refreshTarjetas.emit(result.id);
-        }
+          let justiciableItem : JusticiableBusquedaItem = new JusticiableBusquedaItem();
+          justiciableItem.nif = this.asistido.nif;
 
+          this.sigaServices.post("gestionJusticiables_getJusticiableByNif", justiciableItem).subscribe(
+            n => {
+              let justiciableDTO : JusticiableObject = JSON.parse(n["body"]);
+              let justiciableItem : JusticiableItem  = justiciableDTO.justiciable;
+              if(justiciableItem.idpersona){
+  
+                this.asistido.nif = justiciableItem.nif;
+                this.asistido.nombre = justiciableItem.nombre;
+                this.asistido.apellido1 = justiciableItem.apellido1;
+                this.asistido.apellido2 = justiciableItem.apellido2;
+                this.asistido.idpersona = justiciableItem.idpersona;
+                this.asistido.idinstitucion = justiciableItem.idinstitucion;
+                this.asistido.tipopersonajg = justiciableItem.tipopersonajg;
+  
+              }
+            
+          },
+          err => {
+            //console.log(err);
+          },
+          () =>{
+          }
+          );
+        }
       },
       err => {
         //console.log(err);
