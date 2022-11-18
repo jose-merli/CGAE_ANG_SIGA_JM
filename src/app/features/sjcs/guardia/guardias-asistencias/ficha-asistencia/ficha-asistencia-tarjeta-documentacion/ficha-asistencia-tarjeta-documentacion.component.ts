@@ -163,6 +163,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
           this.progressSpinner = false;
         }, () => {
           this.commonServices.arregloTildesCombo(this.comboAsociado);
+          this.selectedDatos = [];
           this.progressSpinner = false;
         }
       );
@@ -214,6 +215,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
           },
           () => {
             this.progressSpinner = false;
+            this.selectedDatos = [];
           }
         );
     }
@@ -263,6 +265,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
         },
         () => {
           this.progressSpinner = false;
+          this.selectedDatos = [];
         }
       );
 

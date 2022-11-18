@@ -118,8 +118,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     imagen: "",
     icono: 'fa fa-briefcase',
     detalle: true,
-    fixed: false,
-    opened: false,
+    fixed: true,
+    opened: true,
     visible: this.visibleTarjetaCaract,
     campos: []
   },

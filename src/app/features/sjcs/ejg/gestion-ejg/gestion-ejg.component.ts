@@ -308,7 +308,6 @@ export class GestionEjgComponent implements OnInit {
     // Si viene de asistencias expres
     if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda")){
       sessionStorage.setItem("vieneDeAsistenciaExpres", "true");
-      this.location.back();
     }
 
     // Volver a asistencia.

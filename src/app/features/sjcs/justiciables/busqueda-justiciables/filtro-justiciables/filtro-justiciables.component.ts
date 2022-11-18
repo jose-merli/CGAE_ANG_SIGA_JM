@@ -77,6 +77,15 @@ export class FiltroJusticiablesComponent implements OnInit {
       this.checkOrigenAsuntos = true;
     }
     this.clearFilters();
+
+    // Mantenemos los filtros de la búsqueda anterior
+    if (sessionStorage.getItem("vieneDeFichaJusticiable") && sessionStorage.getItem("filtrosBusquedaJusticiable")) {
+
+      this.filtros = JSON.parse(sessionStorage.getItem("filtrosBusquedaJusticiable"));
+    }
+
+    sessionStorage.removeItem("vieneDeFichaJusticiable");
+    sessionStorage.removeItem("filtrosBusquedaJusticiable");
   }
 
   configuracionFiltros() {
@@ -210,6 +219,8 @@ export class FiltroJusticiablesComponent implements OnInit {
         this.isOpen.emit(false)
       }
     }
+
+    sessionStorage.setItem("filtrosBusquedaJusticiable", JSON.stringify(this.filtros));
   }
 
   checkPermisosNuevo() {
