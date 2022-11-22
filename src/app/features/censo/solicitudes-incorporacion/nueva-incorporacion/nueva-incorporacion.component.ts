@@ -127,7 +127,8 @@ export class NuevaIncorporacionComponent implements OnInit {
     private sigaServices: SigaServices,
     private confirmationService: ConfirmationService,
     private commonsService: CommonsService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) { }
 
   @ViewChild("poblacion")
@@ -135,7 +136,7 @@ export class NuevaIncorporacionComponent implements OnInit {
 
   ngOnInit() {
     this.resaltadoDatos = true;
-    this.resaltadoDatosBancos = true;
+    //this.resaltadoDatosBancos = true; // SMB COMENTADO AL INICIAR PAG --> TIENE SENTIDO POR DEFECT A TRUE?
 
     sessionStorage.removeItem("esNuevoNoColegiado");
     this.fechaActual = new Date();
@@ -577,13 +578,7 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.bodyInicial.apellidos = this.bodyInicial.apellidos.trim();
     }
 
-    if (this.solicitudEditar.poblacionExtranjera == undefined) {
-      this.bodyInicial.poblacionExtranjera = undefined;
-    } else if (this.solicitudEditar.poblacionExtranjera == null) {
-      this.bodyInicial.poblacionExtranjera = null;
-    } else {
-      this.bodyInicial.poblacionExtranjera = this.solicitudEditar.poblacionExtranjera;
-    }
+    this.bodyInicial.poblacionExtranjera = this.solicitudEditar.poblacionExtranjera;
 
     this.tipoSolicitudSelected = this.solicitudEditar.idTipo;
     this.tipoColegiacionSelected = this.solicitudEditar.idTipoColegiacion;
@@ -1187,11 +1182,12 @@ export class NuevaIncorporacionComponent implements OnInit {
                     },
                     error => {
                       console.log(error);
+                      
                       this.msgs = [
                         {
                           severity: "error",
                           summary: "Error",
-                          detail: "Error al aprobar la solicitud."
+                          detail: this.getErrorColumnOfHttpResponse(error, "error")
                         }
                       ];
                       this.progressSpinner = false;
@@ -1810,7 +1806,7 @@ para poder filtrar el dato con o sin estos caracteres*/
       sessionStorage.setItem("filtrosSolicitudesIncorporacion", JSON.stringify(filtros));
     }
 
-    this.router.navigate(["/solicitudesIncorporacion"]);
+    this.location.back();
   }
 
   // irAlterMutua() {
@@ -2134,7 +2130,10 @@ para poder filtrar el dato con o sin estos caracteres*/
       if ((this.consulta || this.pendienteAprobacion) && (this.solicitudEditar.idEstado != '50' && this.solicitudEditar.idEstado != '30')) {
         if (!this.disabledAprobar()) {
           if (this.cargo == true || this.abono == true || this.abonoJCS == true) {
-            if ((this.solicitudEditar.titular == "" || this.solicitudEditar.titular == undefined) || (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) || (this.solicitudEditar.bic == "" || this.solicitudEditar.bic == undefined) || (this.solicitudEditar.banco == "" || this.solicitudEditar.banco == undefined)) {
+            if ((this.solicitudEditar.titular == null || this.solicitudEditar.titular == "" || this.solicitudEditar.titular == undefined) 
+              || (this.solicitudEditar.iban == null || this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) 
+              || (this.solicitudEditar.bic == null || this.solicitudEditar.bic == "" || this.solicitudEditar.bic == undefined) 
+              || (this.solicitudEditar.banco == null || this.solicitudEditar.banco == "" || this.solicitudEditar.banco == undefined)) {
               this.muestraCamposObligatoriosBancos();
             }
           }
@@ -2212,19 +2211,21 @@ para poder filtrar el dato con o sin estos caracteres*/
               this.solicitudEditar.correoElectronico != undefined &&
               this.solicitudEditar.correoElectronico != ""
             ) {
-              if (this.solicitudEditar.iban != "" &&
-                this.solicitudEditar.iban != undefined && (this.validarIban() &&
-                  this.solicitudEditar.bic != "" &&
-                  this.solicitudEditar.bic != undefined &&
-                  this.solicitudEditar.titular != "" &&
-                  this.solicitudEditar.titular != undefined && this.solicitudEditar.titular.trim() != "")) {
-                this.resaltadoDatosAprobar= true;
+              if (this.solicitudEditar.iban != null && this.solicitudEditar.iban != "" && this.solicitudEditar.iban != undefined 
+                && (this.validarIban() && this.solicitudEditar.bic != null && this.solicitudEditar.bic != "" && this.solicitudEditar.bic != undefined 
+                && this.solicitudEditar.titular != null && this.solicitudEditar.titular != "" && this.solicitudEditar.titular != undefined 
+                && this.solicitudEditar.titular.trim() != "")) {
+                //this.resaltadoDatosAprobar= true;
+                this.resaltadoDatosAprobar = false; // Seria false porque no encuentra ningun error como para resaltar no?
                 return true;
               } else {
-                if (this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) {
-                  this.resaltadoDatosAprobar= true;
+                if (this.solicitudEditar.iban == null || this.solicitudEditar.iban == "" || this.solicitudEditar.iban == undefined) {
+                  console.log("+++ Entrada 1");
+                  this.muestraCamposObligatoriosBancos();  
+                  this.resaltadoDatosAprobar= true;
                   return true;
-                } else {
+                } else {
+                  console.log("+++ Entrada 2");
                   this.resaltadoDatosAprobar= false;
                   return false;
                 }
@@ -2238,4 +2239,10 @@ para poder filtrar el dato con o sin estos caracteres*/
             return false;
           }
   }
+
+  getErrorColumnOfHttpResponse(errObj, columnToGet) {
+    let columnErrDecoded = JSON.parse(errObj[columnToGet]);
+    return columnErrDecoded.error.message;
+  }
+
 }

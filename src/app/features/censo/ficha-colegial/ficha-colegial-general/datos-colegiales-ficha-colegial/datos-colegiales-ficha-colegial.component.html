@@ -409,7 +409,12 @@
   </p-footer>
 </p-confirmDialog>
 
-
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="cambioSituacionColegiado" icon="icon" width="425" #cambioSituacionColegiado>
+  <p-footer>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cambioSituacionColegiado.accept()"></button>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cambioSituacionColegiado.reject()"></button>
+  </p-footer>
+</p-confirmDialog>
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deleteEstado" icon="icon" width="425" #deleteEstado>
   <p-footer>
