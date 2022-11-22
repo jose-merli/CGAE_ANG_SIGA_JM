@@ -490,7 +490,8 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
         //Salto de linea
         letrado = letrado.concat(". ");
       });
-      row.cells[3].value = letrado;
+      row.cells[3].value = [];
+      row.cells[3].value.push(letrado);
       // Si es grupo se pone el grupo
       row.cells[12].value = row.cells[2].value[0].split('/')[0];
       //Si no, se pone el numColegiado

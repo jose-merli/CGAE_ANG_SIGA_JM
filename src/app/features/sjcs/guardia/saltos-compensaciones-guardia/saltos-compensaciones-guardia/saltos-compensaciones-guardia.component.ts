@@ -308,13 +308,19 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     }
     
     if (dato.grupo != undefined && dato.grupo != null && dato.letradosGrupo != undefined && dato.letradosGrupo != null) {
-      dato.nColegiado = `${dato.letradosGrupo[0].colegiado}/${dato.grupo}`;
       dato.letrado = [];
+      let nColegiado :String = '';
 
       if (dato.letradosGrupo != undefined && dato.letradosGrupo != null) {
-        dato.letradosGrupo.forEach(element => {
+        dato.letradosGrupo.forEach((element,i, letrados) => {
           dato.letrado.push(element.letrado);
+          let siguienteElemento = i + 1 < letrados.length ? true : false; //Compruebo si hay más elementos
+          nColegiado = nColegiado + dato.letradosGrupo[0].colegiado + "/" + dato.grupo;
+          if(siguienteElemento){
+            nColegiado = nColegiado + ", ";
+          }
         });
+        dato.nColegiado = `${nColegiado}`;
       }
 
     } else {
