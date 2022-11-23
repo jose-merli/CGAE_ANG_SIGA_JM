@@ -75,6 +75,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     }
   ];
   comboTurnos: SelectItem[];
+  comboTurnosGrupo:SelectItem[];
   comboGuardias: SelectItem[];
   comboTipos = [
     {
@@ -145,6 +146,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       ).catch(error => console.error(error));
 
     this.getComboTurno();
+    this.getComboTurnoGrupo();
 
     this.dataFilterFromColaGuardia = JSON.parse(sessionStorage.getItem("itemSaltosCompColaGuardia"));
   }
@@ -173,6 +175,19 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
           this.isNewFromOtherPageObject = data;
           this.search(false);
         }
+      },
+      err => {
+        //console.log(err);
+      }
+    );
+  }
+
+  getComboTurnoGrupo() {
+
+    this.sigaServices.get("busquedaGuardia_turnogrupo").subscribe(
+      n => {
+        this.comboTurnosGrupo = n.combooItems;
+        this.commonsService.arregloTildesCombo(this.comboTurnosGrupo);
       },
       err => {
         //console.log(err);

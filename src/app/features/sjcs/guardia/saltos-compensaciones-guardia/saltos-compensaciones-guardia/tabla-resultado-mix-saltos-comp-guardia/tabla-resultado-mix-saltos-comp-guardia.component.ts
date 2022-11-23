@@ -28,6 +28,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   @Input() seleccionarTodo = false;
   @Input() totalRegistros = 0;
   @Input() comboTurnos = [];
+  @Input() comboTurnosGrupo = [];
   @Input() comboTipos = [];
 
   @Output() anySelected = new EventEmitter<any>();
@@ -297,7 +298,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     if (grupo){
         
       cell1.type = 'select-grupo';
-      cell1.combo = this.comboTurnos;
+      cell1.combo = this.comboTurnosGrupo;
       cell1.value = '';
       cell1.header = this.cabeceras[0].id;
 
