@@ -350,6 +350,8 @@ export class SigaServices {
 		fichaDatosColegiales_datosColegialesSearch: '/fichaDatosColegiales/datosColegialesSearch',
 
 		fichaDatosColegiales_datosColegialesSearchActual: '/fichaDatosColegiales/datosColegialesSearchActual',
+		fichaDatosColegiales_datosColegialesSearchHistor: '/fichaDatosColegiales/datosColegialesSearchHistor',
+		fichaDatosColegiales_sendMailsOtherCentres: '/fichaDatosColegiales/sendMailsOtherCentres',
 
 		fichaColegialColegiales_search: 'fichaDatosColegiales/searchDatosColegiales',
 		fichaDatosColegiales_getNumColegiado: '/fichaDatosColegiales/getNumColegiado',
