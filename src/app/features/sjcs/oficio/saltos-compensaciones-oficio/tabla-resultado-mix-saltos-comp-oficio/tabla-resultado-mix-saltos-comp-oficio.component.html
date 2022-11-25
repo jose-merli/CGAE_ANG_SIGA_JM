@@ -43,6 +43,13 @@
                 </p-dropdown>
               </span>
 
+              <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select-tipo'">
+                <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
+                  [options]="cell.combo" showClear="true" styleClass="widthAll" filter="true"
+                  filterBy="label,labelSinTilde" (onChange)="changeSelect(row, cell)" [disabled]="this.disabledCheck && (this.disabledRow &lt; i ||  (this.disabledRow != i && this.contadorNuevo == 1)) || this.disableTipo">
+                </p-dropdown>
+              </span>
+
               <span class="w100 cell-value" *ngIf="cell.type == 'textarea'">
                 <textarea pInputTextarea [(ngModel)]="cell.value" class="form-control"></textarea>
               </span>
@@ -66,7 +73,7 @@
 
       <button *ngIf="!historico" (click)="toogleHistorico(true)" pButton type="button" icon="fa fa-history"
         iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"
-        [disabled]="!activacionEditar"></button>
+        [disabled]="!activacionEditar || disableButtons"></button>
 
       <button *ngIf="historico" (click)="toogleHistorico(false)" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{'general.message.ocultarHistorico' | translate}}" [disabled]="!activacionEditar"></button>
@@ -76,22 +83,24 @@
 
 
       <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.anular' | translate}}"
-        [disabled]="historico || emptyResults || isDisabled || !activacionEditar" (click)="anular()"></button>
+        [disabled]="historico || emptyResults || isDisabled || !activacionEditar || disableButtons" (click)="anular()"></button>
 
       <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
-        [disabled]="historico || !activacionEditar" (click)="nuevo()"></button>
+        [disabled]="historico || !activacionEditar || disableButtons" (click)="nuevo()"></button>
 
       <button pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-        label="{{ 'general.boton.eliminar' | translate}}" [disabled]="emptyResults || isDisabled || !activacionEditar"
+        label="{{ 'general.boton.eliminar' | translate}}" [disabled]="emptyResults || isDisabled || !activacionEditar || disableButtons"
         (click)="delete()"></button>
 
       <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{ 'general.boton.restablecer' | translate}}"
-        [disabled]="emptyResults || historico || !activacionEditar"></button>
+        [disabled]="emptyResults || historico || !activacionEditar || disableButtons"></button>
     </div>
   </div>
 </div>
-
+<div class="mt-3 text-right main-button " id="down" *ngIf="showVolver">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+</div>
 <div *ngIf="progressSpinner" class="overlay-spinner">
   <div class="loader"></div>
 </div>
