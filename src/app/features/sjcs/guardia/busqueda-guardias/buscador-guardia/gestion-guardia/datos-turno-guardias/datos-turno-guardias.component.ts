@@ -14,6 +14,7 @@ export class DatosTurnoGuardiasComponent implements OnInit {
 
   body: TurnosItems = new TurnosItems();
   progressSpinner: boolean = false;
+  datos: any;
 
   @Input() modoEdicion: boolean = false;
   @Input() tarjetaTurno: string;
@@ -31,13 +32,14 @@ export class DatosTurnoGuardiasComponent implements OnInit {
       });
   }
   goToFichaTurnos(){
-    sessionStorage.setItem("idGuardiaFromFichaGuardia",this.persistenceService.getDatos().idGuardia);
-    this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: this.persistenceService.getDatos().idTurno } });
+    sessionStorage.setItem("idGuardiaFromFichaGuardia",this.datos.idGuardia);
+    this.router.navigate(["/gestionTurnos"], { queryParams: { idturno: this.datos.idTurno } });
   }
 
   getResumen() {
-    this.progressSpinner = true;
-    this.sigaServices.post("gestionGuardias_resumenTurno", this.persistenceService.getDatos().idTurno).subscribe(
+    //this.progressSpinner = true;
+    this.datos = JSON.parse(this.persistenceService.getDatos());
+    this.sigaServices.post("gestionGuardias_resumenTurno", this.datos.idTurno).subscribe(
       data => {
         this.body = JSON.parse(data.body).turnosItem[0];
         this.progressSpinner = false;

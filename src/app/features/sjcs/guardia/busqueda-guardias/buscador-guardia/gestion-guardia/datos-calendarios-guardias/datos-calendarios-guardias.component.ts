@@ -319,8 +319,8 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
       && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)) || boolFestivo || boolLaborable)) {
       return false;*/
       if (!this.historico && this.permisoEscritura && this.body.diasSeparacionGuardias && this.body.diasGuardia && this.body.tipoDiasGuardia
-        && !(this.body.requeridaValidacion && !this.body.diasPeriodo) &&
-        !(this.body.diasPeriodo && !this.body.tipoDiasPeriodo) && !(!this.body.diasPeriodo && this.body.tipoDiasPeriodo)) {
+        && !(this.body.requeridaValidacion) &&
+        !(this.body.diasPeriodo != "" && this.body.tipoDiasPeriodo == null) && !(this.body.diasPeriodo == "" && this.body.tipoDiasPeriodo != null)) {
         return false;
     }
     return true;
