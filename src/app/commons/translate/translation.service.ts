@@ -1,7 +1,5 @@
 import { MenuItem } from "primeng/primeng";
 import { SigaServices } from "../../_services/siga.service";
-import { DICCIONARIO } from "./diccionario";
-
 // app/translate/translate.service.ts
 
 import { Injectable, Inject } from "@angular/core";
@@ -168,10 +166,9 @@ export class TranslateService {
 
   getTranslations(): Promise<any> {
     return new Promise(async (resolve, reject) => {
-      
-      //this.service.get("diccionarios").subscribe(response => {
-      //this._translations = response.DiccionarioItems;
-        this._translations = DICCIONARIO.DiccionarioItems;
+
+      this.service.get("diccionarios").subscribe(response => {
+        this._translations = response.DiccionarioItems;
 
         this.service.get("menu").subscribe(res => {
           resolve(res.menuItems);
@@ -179,7 +176,7 @@ export class TranslateService {
           //console.log(err);
         });
 
-      //});
+      });
 
 
     });
