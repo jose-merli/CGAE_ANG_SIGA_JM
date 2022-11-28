@@ -62,7 +62,7 @@ export class TablaResultadoMixComponent implements OnInit {
       value: 'C'
     }
   ];
-
+  estadosDistintos: boolean = false;
   habilitadoValidar: boolean;
   habilitadoDenegar: boolean;
   habilitadoSolicitarBaja: boolean;
@@ -1123,41 +1123,77 @@ export class TablaResultadoMixComponent implements OnInit {
     let validarInscripciones = '';
     let estadoNombre = '';
     rowsSelecteds.push(this.selectedRowValue);
+
+
+    this.estadosDistintos = false;
+    if(this.selectedArray.length > 0){
+      let i =this.selectedArray[0];
+    let estadoInicial= this.rowGroups[i].cells[8].value;
+
+    this.selectedArray.forEach(item => {
+      let obj = this.rowGroups[item];
+      if(obj.cells[8].value != estadoInicial){
+        this.estadosDistintos = true;
+      }
+    });
     
+
     if (this.selectedRowValue[22] != undefined){
       validarInscripciones = this.selectedRowValue[23].value;
     }
-    if (this.selectedRowValue[8] != undefined){
+    /*if (this.selectedRowValue[8] != undefined){
       estadoNombre = this.selectedRowValue[8].value;
-    }
+    }*/
     this.infoHabilitado= {
       isLetrado : this.isLetrado,
       validarInscripciones: validarInscripciones,
-      estadoNombre: estadoNombre
+      estadoNombre: estadoInicial
  };    
 
-    if(this.infoHabilitado.validarInscripciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado){
+    if(this.infoHabilitado.validarInscripciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado && (!this.estadosDistintos)){
       this.habilitadoValidar=false;
     }else{
       this.habilitadoValidar=true;
     }
 
-    if((this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja")&& !this.isLetrado){
+    if((this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja")&& !this.isLetrado && (!this.estadosDistintos)){
       this.habilitadoDenegar=false;
+      this.habilitadoCambiarFecha=false;
     }else{
       this.habilitadoDenegar=true;
+      this.habilitadoCambiarFecha=true;
     }
 
+    if(this.infoHabilitado.estadoNombre=="Baja"&& !this.isLetrado  && (!this.estadosDistintos)){
+      this.habilitadoCambiarFecha=false;
+    }else{
+      this.habilitadoCambiarFecha=true;
+    }
 
-    if(this.infoHabilitado.estadoNombre=="Alta"){
+    if((this.infoHabilitado.estadoNombre=="Denegada") && !this.isLetrado){
+      this.habilitadoCambiarFecha=true;
+    }
+
+    if(this.infoHabilitado.estadoNombre=="Alta"  && (this.estadosDistintos)){
       this.habilitadoSolicitarBaja=false;
     }else{
       this.habilitadoSolicitarBaja=true;
 
+    }
+    }
+
   }
 
-
+  desactBotones(selectedRowValue) {
+    if (selectedRowValue.length == 0) {
+      this.habilitadoValidar = false;
+      this.habilitadoSolicitarBaja = false;
+      this.habilitadoCambiarFecha = false;
+      this.habilitadoDenegar = false;
+    }
+    this.habilitarBotones();
   }
+
 
   validar(){
     

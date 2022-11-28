@@ -523,7 +523,12 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         if (resp.status == 'OK') {
           this.showMessage({ severity: "success", summary: 'Operación realizada con éxito', msg: 'Los registros seleccionados han sido guardados' });
           this.isNewFromOtherPage = false;
-          this.search(false);
+          if(sessionStorage.getItem("fromTurnoOficio")){
+            sessionStorage.removeItem("fromTurnoOficio");
+            this.backTo();
+          }else{
+            this.search(false);
+          }
         }
         this.progressSpinner = false;
       },
@@ -714,5 +719,9 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         this.rowGroups.find(el => el.id == row.id).cells[2].combo = this.comboColegiados;
       }
     );
+  }
+
+  backTo() {
+    this.location.back();
   }
 }

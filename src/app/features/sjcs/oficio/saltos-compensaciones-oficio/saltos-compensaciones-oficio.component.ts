@@ -429,7 +429,12 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         if (resp.status == 'OK') {
           this.showMessage({ severity: "success", summary: 'Operación realizada con éxito', msg: 'Los registros seleccionados han sido guardados' });
           this.isNewFromOtherPage = false;
-          this.search(false);
+          if(sessionStorage.getItem("fromTurnoOficio")){
+            sessionStorage.removeItem("fromTurnoOficio");
+            this.backTo();
+          }else{
+            this.search(false);
+          }
         }
 
       },
@@ -473,7 +478,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
       cell3.header = this.cabeceras[2].id;
       cell3.disabled = false;
 
-      cell4.type = 'select';
+      cell4.type = 'select-tipo';
       cell4.combo = this.comboTipos;
       cell4.value = '';
       cell4.header = this.cabeceras[3].id;
@@ -590,6 +595,9 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   backTo() {
     this.location.back();
   }
-  
+
+  ngOnDestroy(){
+    sessionStorage.removeItem("fromTurnoOficio");
+  }
 
 }

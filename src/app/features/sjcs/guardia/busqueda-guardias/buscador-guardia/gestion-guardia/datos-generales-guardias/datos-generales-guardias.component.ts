@@ -239,7 +239,10 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           })
           this.modoEdicionSend.emit(true);
           this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.guardia.gestion.guardiaCreadaDatosPred"));
-        } else this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        } else{
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.modoEdicionSend.emit(false);
+        } 
 
         this.resumenTipoGuardiaResumen();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));

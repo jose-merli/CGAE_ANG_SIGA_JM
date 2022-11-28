@@ -38,7 +38,7 @@ export class GestionGuardiaComponent implements OnInit {
   infoResumen = [];
   enlacesTarjetaResumen: any[] = [];
   manuallyOpened: Boolean;
-  openGen: Boolean = true;
+  openGen: Boolean = false;
   openCalendarios: Boolean = false;
   openConfigCola: Boolean = false;
   openCola: Boolean = false;
@@ -183,6 +183,8 @@ export class GestionGuardiaComponent implements OnInit {
     if (event) {
       this.search();
       this.modoEdicion = true;
+    }else{
+      this.getDatosResumen();
     }
   }
 
@@ -215,7 +217,7 @@ export class GestionGuardiaComponent implements OnInit {
     // Aqui obtenemos todos los permisos de las distintas fichas.
     // Estos permisos nos diran si estaran las fichas desbilitadaso no apareceran.
 
-    this.progressSpinner = true
+    //this.progressSpinner = true
     this.commonService.checkAcceso(procesos_guardia.resumen)
       .then(respuesta => {
 

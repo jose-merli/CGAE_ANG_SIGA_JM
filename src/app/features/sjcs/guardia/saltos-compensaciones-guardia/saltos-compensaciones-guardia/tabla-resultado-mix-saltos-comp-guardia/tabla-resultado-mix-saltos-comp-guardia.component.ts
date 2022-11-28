@@ -3,12 +3,13 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Sort } from '@angular/material/sort';
 import { Row, Cell } from './tabla-resultado-mix-saltos-comp.service';
 import { Message } from 'primeng/components/common/api';
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location} from '@angular/common';
 import { SigaServices } from '../../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 import { FileAlreadyExistException } from '@angular-devkit/core';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
+
 interface Cabecera {
   id: string,
   name: string,
@@ -59,10 +60,13 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   textSelected: String = "{0} guardias seleccionadas";
   comboGuardias = [];
   comboColegiados = [];
-  isDisabled;
+  isDisabled: boolean = true;
+  showVolver = false;
+  disableButtons = false;
+
   constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService
-    , private persistenceService : PersistenceService) {
-    this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
+    , private persistenceService : PersistenceService, private location: Location) {
+    /* this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
         if (!event.target.classList.contains("selectedRowClass")) {
@@ -70,7 +74,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           this.selectedArray = [];
         }
       }
-    });
+    }); */
   }
 
   ngOnInit(): void {
@@ -97,6 +101,15 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     });
 
     this.historico = this.persistenceService.getHistorico()
+
+    if(sessionStorage.getItem("fromTurnoOficio") === "true"){
+      this.disableButtons = true;
+      this.showVolver = true;
+    }else{
+      this.disableButtons = false;
+      this.showVolver = false;
+    }
+
   }
 
   selectRow(rowId) {
@@ -114,8 +127,10 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
 
     if (this.selectedArray.length != 0) {
       this.anySelected.emit(true);
+      this.isDisabled = false;
     } else {
       this.anySelected.emit(false);
+      this.isDisabled = true;
     }
 
   }
@@ -610,6 +625,14 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
 
   getTamanioColumn(cabecera: string) {
     return this.cabeceras.find(el => el.id == cabecera).width;
+  }
+
+  backTo() {
+    this.location.back();
+  }
+
+  ngOnDestroy(){
+    sessionStorage.removeItem("fromTurnoOficio");
   }
 
 }
