@@ -631,10 +631,6 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     this.location.back();
   }
 
-  ngOnDestroy(){
-    sessionStorage.removeItem("fromTurnoOficio");
-  }
-
 }
 function compare2(a: string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

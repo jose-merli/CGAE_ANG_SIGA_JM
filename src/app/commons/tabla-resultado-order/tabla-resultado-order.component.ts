@@ -126,7 +126,7 @@ export class TablaResultadoOrderComponent implements OnInit {
     private persistenceService: PersistenceService,
     private sigaStorageService : SigaStorageService
   ) {
-    this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
+    /* this.renderer.listen('window', 'click',(event: { target: HTMLInputElement; })=>{
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
       if(!event.target.classList.contains("selectedRowClass")){
@@ -135,7 +135,7 @@ export class TablaResultadoOrderComponent implements OnInit {
         this.anySelectedBol = false;
       }
     }
-    });
+    }); */
   }
 
   ngOnInit(): void {
@@ -1535,6 +1535,7 @@ this.totalRegistros = this.rowGroups.length;
     );
     //this.persistenceService.setHistorico(evento.fechabaja ? true : false);
     // this.router.navigate(["/guardiasSaltosCompensaciones"]); 
+    sessionStorage.setItem("fromTurnoOficio", "true");
     this.router.navigate(["/guardiasSaltosCompensaciones"], { queryParams: { 
       idturno: dataFilterFromColaGuardia.turno, 
       idguardia: dataFilterFromColaGuardia.guardia, 

@@ -724,4 +724,8 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
   backTo() {
     this.location.back();
   }
+  
+  ngOnDestroy(){
+    sessionStorage.removeItem("fromTurnoOficio");
+  }
 }
