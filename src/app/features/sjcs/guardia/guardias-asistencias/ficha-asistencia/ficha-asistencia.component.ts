@@ -118,8 +118,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     imagen: "",
     icono: 'fa fa-briefcase',
     detalle: true,
-    fixed: true,
-    opened: true,
+    fixed: false,
+    opened: false,
     visible: this.visibleTarjetaCaract,
     campos: []
   },
@@ -175,6 +175,11 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
       this.nuevaAsistencia = false;
       let idAsistencia = sessionStorage.getItem("asistenciaAsistido");
       this.searchTarjetaAsistencia(idAsistencia);
+    }
+
+    // Si viene de asistencias expres
+    if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda")){
+      sessionStorage.setItem("vieneDeAsistenciaExpres", "true");
     }
 
     // Datos Justiciables

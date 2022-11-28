@@ -14,8 +14,14 @@ export class CaracteristicasItem {
     otras: boolean;
     otrasDesc: string;
     asesoramiento : boolean;
+    derivaractuacionesjudiciales : string;
     ministerioFiscal : string;
     medicoForense : string;
+    derechosjusticiagratuita : string;
+    obligadadesalojodomicilio : string;
+    entrevistaletradodemandante : string;
+    letradodesignadocontiactujudi : string;
+    civilespenales : string;
     numColegiado : string;
     nombreColegiado : string;
     idProcedimiento : string;

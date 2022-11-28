@@ -125,11 +125,23 @@
       </div>
       <div class="col-lg-12 col-md-12 d-flex justify-content-between">
         <div class="form-group col-lg-6 col-md-6">
+          {{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.derivaractuacionesjudiciales' | translate}}</div>
+        <div class="form-group col-lg-6 col-md-6 inline">
+          <p-radioButton name="derivaractuacionesjudiciales" value="S" label="{{'messages.si' | translate}}"
+            [(ngModel)]="caracteristica.derivaractuacionesjudiciales" [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="derivaractuacionesjudiciales" value="N" label="{{'general.boton.no' | translate}}"
+            [(ngModel)]="caracteristica.derivaractuacionesjudiciales" [disabled]="!permisoEscritura || !editable"></p-radioButton>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 d-flex justify-content-between">
+        <div class="form-group col-lg-6 col-md-6">
           {{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.ministeriofiscal' | translate}}</div>
         <div class="form-group col-lg-6 col-md-6 inline">
           <p-radioButton name="ministerioFiscal" value="S" label="{{'messages.si' | translate}}"
             [(ngModel)]="caracteristica.ministerioFiscal" [disabled]="!permisoEscritura || !editable"></p-radioButton>
           &nbsp;&nbsp;<p-radioButton name="ministerioFiscal" value="N" label="{{'general.boton.no' | translate}}"
+            [(ngModel)]="caracteristica.ministerioFiscal" [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="ministerioFiscal" value="P" label="{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.estabaPresente' | translate}}"
             [(ngModel)]="caracteristica.ministerioFiscal" [disabled]="!permisoEscritura || !editable"></p-radioButton>
         </div>
       </div>
@@ -143,7 +155,58 @@
             [(ngModel)]="caracteristica.medicoForense" [disabled]="!permisoEscritura || !editable"></p-radioButton>
         </div>
       </div>
-
+      <div class="col-lg-12 col-md-12 d-flex justify-content-between">
+        <div class="form-group col-lg-6 col-md-6">
+          {{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.derechosjusticiagratuita' | translate}}</div>
+        <div class="form-group col-lg-6 col-md-6 inline">
+          <p-radioButton name="derechosjusticiagratuita " value="S" label="{{'messages.si' | translate}}"
+            [(ngModel)]="caracteristica.derechosjusticiagratuita " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="derechosjusticiagratuita " value="N" label="{{'general.boton.no' | translate}}"
+            [(ngModel)]="caracteristica.derechosjusticiagratuita " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 d-flex justify-content-between">
+        <div class="form-group col-lg-6 col-md-6">
+          {{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.obligadadesalojodomicilio' | translate}}</div>
+        <div class="form-group col-lg-6 col-md-6 inline">
+          <p-radioButton name="obligadadesalojodomicilio " value="S" label="{{'messages.si' | translate}}"
+            [(ngModel)]="caracteristica.obligadadesalojodomicilio " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="obligadadesalojodomicilio " value="N" label="{{'general.boton.no' | translate}}"
+            [(ngModel)]="caracteristica.obligadadesalojodomicilio " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 d-flex justify-content-between">
+        <div class="form-group col-lg-6 col-md-6">
+          {{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.entrevistaletradodemandante' | translate}}</div>
+        <div class="form-group col-lg-6 col-md-6 inline">
+          <p-radioButton name="entrevistaletradodemandante " value="S" label="{{'messages.si' | translate}}"
+            [(ngModel)]="caracteristica.entrevistaletradodemandante " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="entrevistaletradodemandante " value="N" label="{{'general.boton.no' | translate}}"
+            [(ngModel)]="caracteristica.entrevistaletradodemandante " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 d-flex justify-content-between">
+        <div class="form-group col-lg-6 col-md-6">
+          {{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.letradodesignadocontiactujudi' | translate}}</div>
+        <div class="form-group col-lg-6 col-md-6 inline">
+          <p-radioButton name="letradodesignadocontiactujudi " value="SC" label="{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.letradodesignadocontiactujudiciviles' | translate}}"
+            [(ngModel)]="caracteristica.letradodesignadocontiactujudi " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="letradodesignadocontiactujudi " value="SP" label="{{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.letradodesignadocontiactujudipenales' | translate}}"
+            [(ngModel)]="caracteristica.letradodesignadocontiactujudi " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="letradodesignadocontiactujudi " value="N" label="{{'general.boton.no' | translate}}"
+            [(ngModel)]="caracteristica.letradodesignadocontiactujudi " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+        </div>
+      </div>
+      <div class="col-lg-12 col-md-12 d-flex justify-content-between">
+        <div class="form-group col-lg-6 col-md-6">
+          {{'justiciaGratuita.guardia.fichaasistencia.tarjetacaract.civilespenales' | translate}}</div>
+        <div class="form-group col-lg-6 col-md-6 inline">
+          <p-radioButton name="civilespenales " value="S" label="{{'messages.si' | translate}}"
+            [(ngModel)]="caracteristica.civilespenales " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+          &nbsp;&nbsp;<p-radioButton name="civilespenales " value="N" label="{{'general.boton.no' | translate}}"
+            [(ngModel)]="caracteristica.civilespenales " [disabled]="!permisoEscritura || !editable"></p-radioButton>
+        </div>
+      </div>
     </div>
     <div class="card form-row w-100">
       <div class="card-box">

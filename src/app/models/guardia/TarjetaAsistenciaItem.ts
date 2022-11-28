@@ -12,6 +12,7 @@ export class TarjetaAsistenciaItem{
 	  fechaCierre : string;
 	  idTipoAsistenciaColegio : string;
 	  idLetradoGuardia : string;
+	  idLetradoManual : string;
 	  idSolicitudCentralita : string;
 	  descripcionEstado : string;
 	  descripcionTurno : string;
@@ -59,4 +60,5 @@ export class TarjetaAsistenciaItem{
 	  guardiaRequeridaValidacion : string;
 	  idInstitucion: string;
 	  salto: string;
+	  isSustituto : string;
 }
