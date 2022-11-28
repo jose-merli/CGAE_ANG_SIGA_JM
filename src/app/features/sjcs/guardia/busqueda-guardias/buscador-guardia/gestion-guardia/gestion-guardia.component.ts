@@ -99,7 +99,7 @@ export class GestionGuardiaComponent implements OnInit {
         sessionStorage.getItem("filtrosBusquedaGuardias")
       );
 
-      sessionStorage.removeItem("filtrosBusquedaGuardias");
+      //sessionStorage.removeItem("filtrosBusquedaGuardias");
     }
 
     //en caso de que la guardia venga desde Guardias de Colegiado.
