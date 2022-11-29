@@ -224,6 +224,10 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
       dato.fechaUso = this.formatDate(dato.fechaUso);
     }
 
+    if (dato.fechaAnulacion != undefined && dato.fechaAnulacion != null) {
+      dato.fechaAnulacion = this.formatDate(dato.fechaAnulacion);
+    }
+
     if (dato.colegiadoGrupo != undefined && dato.colegiadoGrupo != null) {
       dato.nColegiado = dato.colegiadoGrupo;
     }
@@ -243,18 +247,34 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
       if (italic || this.historico || !this.activacionEditar) {
 
-        obj = [
-          { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
-          { type: 'text', value: element.nColegiado, header: this.cabeceras[1].id, disabled: false },
-          { type: 'text', value: element.letrado, header: this.cabeceras[2].id, disabled: false },
-          { type: 'text', value: this.comboTipos.find(el => el.value == element.saltoCompensacion).label, header: this.cabeceras[3].id, disabled: false },
-          { type: 'text', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
-          { type: 'text', value: element.motivo, header: this.cabeceras[5].id, disabled: false },
-          { type: 'text', value: element.fechaUso, header: this.cabeceras[6].id, disabled: false },
-          { type: 'invisible', value: element.idSaltosTurno, header: 'idSaltosTurno', disabled: false },
-          { type: 'invisible', value: element.idTurno, header: 'idTurno', disabled: false },
-          { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false }
-        ];
+        if(element.fechaAnulacion != null){
+          obj = [
+            { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
+            { type: 'text', value: element.nColegiado, header: this.cabeceras[1].id, disabled: false },
+            { type: 'text', value: element.letrado, header: this.cabeceras[2].id, disabled: false },
+            { type: 'text', value: this.comboTipos.find(el => el.value == element.saltoCompensacion).label, header: this.cabeceras[3].id, disabled: false },
+            { type: 'text', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
+            { type: 'text', value: "Anulada en fecha " + element.fechaAnulacion + " / " + element.motivo, header: this.cabeceras[5].id, disabled: false },
+            { type: 'text', value: "Anulada " + element.fechaAnulacion, header: this.cabeceras[6].id, disabled: false },
+            { type: 'invisible', value: element.idSaltosTurno, header: 'idSaltosTurno', disabled: false },
+            { type: 'invisible', value: element.idTurno, header: 'idTurno', disabled: false },
+            { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false }
+          ];
+        }else{
+          obj = [
+            { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
+            { type: 'text', value: element.nColegiado, header: this.cabeceras[1].id, disabled: false },
+            { type: 'text', value: element.letrado, header: this.cabeceras[2].id, disabled: false },
+            { type: 'text', value: this.comboTipos.find(el => el.value == element.saltoCompensacion).label, header: this.cabeceras[3].id, disabled: false },
+            { type: 'text', value: element.fecha, header: this.cabeceras[4].id, disabled: false },
+            { type: 'text', value: element.motivo, header: this.cabeceras[5].id, disabled: false },
+            { type: 'text', value: element.fechaUso, header: this.cabeceras[6].id, disabled: false },
+            { type: 'invisible', value: element.idSaltosTurno, header: 'idSaltosTurno', disabled: false },
+            { type: 'invisible', value: element.idTurno, header: 'idTurno', disabled: false },
+            { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false }
+          ];
+        }
+        
 
       } else {
         obj = [

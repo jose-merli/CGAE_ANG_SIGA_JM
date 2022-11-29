@@ -321,6 +321,10 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     if (dato.fechaUso != undefined && dato.fechaUso != null) {
       dato.fechaUso = this.formatDate(dato.fechaUso);
     }
+
+    if (dato.fechaAnulacion != undefined && dato.fechaAnulacion != null) {
+      dato.fechaAnulacion = this.formatDate(dato.fechaAnulacion);
+    }
     
     if (dato.grupo != undefined && dato.grupo != null && dato.letradosGrupo != undefined && dato.letradosGrupo != null) {
       dato.letrado = [];
@@ -353,23 +357,64 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
       element = this.modifyData(element);
 
       let italic = (element.fechaUso != null || element.fechaAnulacion != null);
+      let obj = [];
 
-      let obj = [
-        { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
-        { type: 'text', value: element.guardia, header: this.cabeceras[1].id, disabled: false },
-        { type: 'text', value: element.nColegiado, header: this.cabeceras[2].id, disabled: false },
-        { type: element.grupo == null ? 'text' : 'arrayText', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
-        { type: 'select', combo: element.grupo == null ? this.comboTipos : this.comboTiposGrupo, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
-        { type: 'datePicker', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
-        { type: 'textarea', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
-        { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
-	      { type: 'invisible', value: element.idSaltosTurno, header: 'idSaltosTurno', disabled: false },
-	      { type: 'invisible', value: element.idTurno, header: 'idTurno', disabled: false },
-	      { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false },
-        { type: 'invisible', value: element.idGuardia, header: 'idGuardia', disabled: false },
-        { type: 'invisible', value: element.grupo, header: 'grupo', disabled: false },
-        { type: 'invisible', value: element.colegiadoGrupo, header: 'numeroColegiado', disabled: false }
-      ];
+      if (italic || this.historico) {
+
+        if(element.fechaAnulacion != null){
+          obj = [
+            { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
+            { type: 'text', value: element.guardia, header: this.cabeceras[1].id, disabled: false },
+            { type: 'text', value: element.nColegiado, header: this.cabeceras[2].id, disabled: false },
+            { type: element.grupo == null ? 'text' : 'arrayText', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
+            { type: 'text', combo: element.grupo == null ? this.comboTipos : this.comboTiposGrupo, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
+            { type: 'text', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
+            { type: 'text', value: "Anulada en fecha " + element.fechaAnulacion + " / " + element.motivo, header: this.cabeceras[6].id, disabled: false },
+            { type: 'text', value: "Anulada " + element.fechaAnulacion, header: this.cabeceras[7].id, disabled: false },
+            { type: 'invisible', value: element.idSaltosTurno, header: 'idSaltosTurno', disabled: false },
+            { type: 'invisible', value: element.idTurno, header: 'idTurno', disabled: false },
+            { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false },
+            { type: 'invisible', value: element.idGuardia, header: 'idGuardia', disabled: false },
+            { type: 'invisible', value: element.grupo, header: 'grupo', disabled: false },
+            { type: 'invisible', value: element.colegiadoGrupo, header: 'numeroColegiado', disabled: false }
+          ];
+        }else{
+          obj = [
+            { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
+            { type: 'text', value: element.guardia, header: this.cabeceras[1].id, disabled: false },
+            { type: 'text', value: element.nColegiado, header: this.cabeceras[2].id, disabled: false },
+            { type: element.grupo == null ? 'text' : 'arrayText', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
+            { type: 'text', combo: element.grupo == null ? this.comboTipos : this.comboTiposGrupo, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
+            { type: 'text', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
+            { type: 'text', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
+            { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
+            { type: 'invisible', value: element.idSaltosTurno, header: 'idSaltosTurno', disabled: false },
+            { type: 'invisible', value: element.idTurno, header: 'idTurno', disabled: false },
+            { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false },
+            { type: 'invisible', value: element.idGuardia, header: 'idGuardia', disabled: false },
+            { type: 'invisible', value: element.grupo, header: 'grupo', disabled: false },
+            { type: 'invisible', value: element.colegiadoGrupo, header: 'numeroColegiado', disabled: false }
+          ];
+        }
+      }else{
+        obj = [
+          { type: 'text', value: element.turno, header: this.cabeceras[0].id, disabled: false },
+          { type: 'text', value: element.guardia, header: this.cabeceras[1].id, disabled: false },
+          { type: 'text', value: element.nColegiado, header: this.cabeceras[2].id, disabled: false },
+          { type: element.grupo == null ? 'text' : 'arrayText', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
+          { type: 'select', combo: element.grupo == null ? this.comboTipos : this.comboTiposGrupo, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
+          { type: 'datePicker', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
+          { type: 'textarea', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
+          { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
+          { type: 'invisible', value: element.idSaltosTurno, header: 'idSaltosTurno', disabled: false },
+          { type: 'invisible', value: element.idTurno, header: 'idTurno', disabled: false },
+          { type: 'invisible', value: element.idPersona, header: 'idPersona', disabled: false },
+          { type: 'invisible', value: element.idGuardia, header: 'idGuardia', disabled: false },
+          { type: 'invisible', value: element.grupo, header: 'grupo', disabled: false },
+          { type: 'invisible', value: element.colegiadoGrupo, header: 'numeroColegiado', disabled: false }
+        ];
+      }
+      
 
       let superObj = {
         id: index,
