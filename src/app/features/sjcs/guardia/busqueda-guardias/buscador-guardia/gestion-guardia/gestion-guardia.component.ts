@@ -120,7 +120,7 @@ export class GestionGuardiaComponent implements OnInit {
     this.enviarEnlacesTarjeta();
   }
   search() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     if (this.origenGuarColeg) {
       this.datos = JSON.parse(sessionStorage.getItem("datosGuardiaGuardiaColeg"));
       this.origenGuarColeg = false

@@ -147,6 +147,7 @@ export class DatosBaremosComponent implements OnInit {
   getDatosBaremos() {
     if (this.persistenceService.getDatos().idGuardia) {
       let idGuardia = this.persistenceService.getDatos().idGuardia;
+      this.progressSpinner = true;
       this.sigaServices.getParam(
         "busquedaGuardias_baremosGuardias", "?idGuardia="+idGuardia).subscribe(
           data => {
@@ -170,7 +171,6 @@ export class DatosBaremosComponent implements OnInit {
      this.openFicha = !this.openFicha;
      if (this.openFicha)
        if (!this.datos) {
-         this.progressSpinner = true;
          this.getDatosBaremos();
        } else this.onChangeRowsPerPages({ value: this.selectedItem })
    }

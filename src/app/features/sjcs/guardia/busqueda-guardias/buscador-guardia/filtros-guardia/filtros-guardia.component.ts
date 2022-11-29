@@ -77,7 +77,7 @@ export class FiltrosGuardiaComponent implements OnInit {
         this.isDisabledMateria = false;
       }
 
-      sessionStorage.removeItem("filtrosBusquedaGuardias");
+      //sessionStorage.removeItem("filtrosBusquedaGuardias");
 
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
