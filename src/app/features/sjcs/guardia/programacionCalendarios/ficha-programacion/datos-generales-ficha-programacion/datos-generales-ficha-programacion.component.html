@@ -36,11 +36,12 @@
           <label>
             {{"justiciaGratuita.Calendarios.Observaciones" | translate}} 
           </label>
-          <textarea *ngIf="datosGenerales.observaciones != null" rows="2" [placeholder] = "datosGenerales.observaciones" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class=" form-control ui-inputtext" pInputTextarea
-            [(ngModel)]="datosGenerales.observaciones" autoResize="autoResize" maxlength="3999"></textarea>
-            <textarea *ngIf="datosGenerales.observaciones == null"  [placeholder] = "" name="textoEnPlantilla" [disabled]="historico || !permisoEscritura" class="  form-control ui-inputtext" pInputTextarea
-            [(ngModel)]="datosGenerales.observaciones" rows="2" autoResize="autoResize" maxlength="3999"></textarea> 
-        </div>
+            <input  type="text"  [disabled]="historico || !permisoEscritura" name="textoEnPlantilla" value="" class="box" class="form-control"
+             [(ngModel)]='datosGenerales.observaciones' 
+            maxLength="1000"  pInputText>
+        
+        
+          </div>
         <!-- FechaDesde -->
         <div class="form-group col-lg-3 col-md-3">
           <label>
@@ -64,29 +65,32 @@
           <label>
             {{"justiciaGratuita.Calendarios.FechaProgramada" | translate}}
           </label>
-          <app-fecha [(value)]="datosGenerales.fechaProgramacion" [showTime]="true"
+          <app-fecha disabled [(value)]="datosGenerales.fechaProgramacion" [showTime]="true"
           (valueChangeSelected)="fillFechaProgramada($event)"  (valueChangeInput)="fillFechaProgramada($event)"></app-fecha>
         </div>
         <!-- Estado -->
           <div class="form-group col-lg-3 col-md-3">
             <label>{{"justiciaGratuita.Calendarios.Estado" | translate}} </label>   
-            <input type="text" name="estado" value="" class="box" class="form-control" [(ngModel)]='datosGenerales.estado' pInputText
+            <input type="text" name="estado" value="" class="box" class="form-control" [(ngModel)]='estadoNombre' pInputText
             maxLength="40" disabled pInputText>
             
           </div>
           
 
       </div>
+
+    </div>
+
+    <div class="card-footer">
       <div class="text-right main-button">
         <button  pButton (click)="descargarLog()" type="button" icon="fa fa-download" iconPos="left"
         label="{{ 'facturacionSJCS.fichaCertificacion.descargarLog' | translate }}"></button>
 
         <button (click)="rest()" pButton [disabled]="historico || !permisoEscritura" type="button" icon="fa fa-undo" iconPos="left"
           label="{{ 'general.boton.restablecer' | translate}}"></button>
-        <button (click)="save()" pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
+        <button (click)="save()"  [disabled]="isDisabledByEstado"  pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"></button>
       </div>
     </div>
-
 
   </div>
 </div>

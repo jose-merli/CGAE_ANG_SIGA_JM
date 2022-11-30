@@ -40,7 +40,8 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
     'idCalendarioProgramado': '',
     'idTurno': '',
     'idGuardia': '',
-    'idInstitucion': ''
+    'idInstitucion': '',
+    'estadoProgramacion' : ''
   };
   @Input() datosTarjetaGuardiasCalendarioIni = []
   @Input() idCal;
@@ -51,7 +52,6 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
   @Output() fillDatosTarjetaGuardiasCalendario = new EventEmitter<any[]>();
   @Output() linkGuardiaColegiado2 = new EventEmitter<any>();
   @Output() searchGuardiasFromCal = new EventEmitter<any>();
-  @Input() estado;
   dataReady = false;
   tipoGuardiaResumen = {
     label: "",
@@ -87,12 +87,12 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
       name: "dato.jgr.guardia.guardias.guardia"
     },
     {
-      id: "generado",
-      name: "justiciaGratuita.Calendarios.Generado"
+      id: "estado",
+      name: "justiciaGratuita.Calendarios.Estado"
     },
     {
-      id: "numGuardias",
-      name: "justiciaGratuita.Calendarios.NumGuardias"
+      id: "generado",
+      name: "justiciaGratuita.Calendarios.Generado",
     }
   ];
   allSelected = false;
@@ -310,7 +310,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
     );
   }
     ngOnChanges(changes){
-      if(this.permisoEscritura && (!this.modoEdicion || this.estado == "Pendiente" || this.estado == "Programada")){
+      if(this.permisoEscritura && (!this.modoEdicion || this.datosGenerales.estado == "4")){
         this.isDisabledByEstado = false;
       }else{
         this.isDisabledByEstado = true;
@@ -391,7 +391,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
 
   rest() {
     
-    if(this.permisoEscritura && (!this.modoEdicion || this.estado == "Pendiente" || this.estado == "Programada")){
+    if(this.permisoEscritura && (!this.modoEdicion || this.datosGenerales.estado == "4")){
       this.isDisabledByEstado = false;
     }else{
       this.isDisabledByEstado = true;
@@ -498,9 +498,9 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
               'guardia': nrg.cells[2].value,
               'generado': nrg.cells[3].value,
               'idGuardia': nrg.cells[5].value,
-              'idTurno': nrg.cells[6].value
+              'idTurno': nrg.cells[6].value,
             });
-            if (nrg.cells[3].value != true && nrg.cells[3].value != "Si" && nrg.cells[3].value != 1){
+            if (nrg.cells[3].value != true && nrg.cells[3].value == "No" && nrg.cells[3].value != 1){
               newList.push(responseObject);
             }else{
               this.showMessage("error", this.translateService.instant("No pueden eliminarse calendarios generados"), this.translateService.instant("No pueden eliminarse calendarios generados"));
@@ -549,8 +549,8 @@ jsonToRow(fromCombo){
     { type: 'text', value: ord , combo: null, hiddenValue:'', required : false},
     { type: 'text', value: dat.turno , combo: null, hiddenValue:'', required : false},
     { type: 'link', value: dat.guardia , combo: null, hiddenValue:'', required : false},
-    { type: 'text', value: dat.generado, combo: null, hiddenValue:'', required : false},
-    { type: 'link2', value:  this.datosTarjetaGuardiasCalendario.length , combo: null, hiddenValue:'', required : false},
+    { type: 'text', value: dat.estado, combo: null, hiddenValue:'', required : false},
+    { type: 'link2', value:  dat.generado , combo: null, hiddenValue:'', required : false},
     { type: 'invisible', value: dat.idGuardia, combo: null, hiddenValue:'', required : false},
     { type: 'invisible', value: dat.idTurno, combo: null, hiddenValue:'', required : false},
     { type: 'invisible', value: dat.idCalendarioGuardia, combo: null, hiddenValue:'', required : false}
@@ -768,16 +768,8 @@ setGuardiasCalendario(guardiaCalendario){
       this.progressSpinner = true;
 
       if (this.permisoEscritura && this.datosGenerales.fechaHasta && this.datosGenerales.fechaDesde) {
-        //Guardar sólo actualizará el estado si no tiene estado (creación) o es Pendiente/Programada
-        if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada") {
-          if (this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null) {
-            //Al guardar con Fecha de programación vacía, se pasará al estado Pendiente y fechaProgramacion = hoy
-            this.datosGenerales.estado = "Pendiente";
-          } else {
-            //Al guardar con Fecha de programación rellena, se pasará al estado Programada. 
-            this.datosGenerales.estado = "Programada";
-          }
-
+        //Guardar sólo actualizará el estado si no tiene estado (creación) o es Pendiente
+        if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "4") {
           //GUARDAMOS
           this.guardarDatosCalendario.emit(this.datosGenerales)
           this.progressSpinner = false;

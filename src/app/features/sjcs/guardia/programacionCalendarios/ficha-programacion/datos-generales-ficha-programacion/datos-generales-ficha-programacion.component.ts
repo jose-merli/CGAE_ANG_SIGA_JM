@@ -61,6 +61,7 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'idGuardia': '',
     'idInstitucion': '',
     'soloGenerarVacio': '',
+    'estadoProgramacion' : ''
   };
   controlSoloGenerarVacio: boolean = false;
   @Output() guardarDatosCalendario = new EventEmitter<{}>();
@@ -79,8 +80,10 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
   progressSpinner;
   msgs;
   resaltadoDatos: boolean = false;
+  isDisabledByEstado: boolean = false;
   comboListaGuardias = [];
   comboConjuntoGuardias = [];
+  estadoNombre:string = "";
   constructor(private persistenceService: PersistenceService,
     private sigaService: SigaServices,
     private commonServices: CommonsService,
@@ -88,7 +91,14 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     private datepipe: DatePipe,
     private globalGuardiasService: GlobalGuardiasService) {
   }
-
+  comboEstados = [
+    { label: "Pendiente", value: "4" },
+    { label: "Programada", value: "0" },
+    { label: "En proceso", value: "1" },
+    { label: "Procesada con Errores", value: "2" },
+    { label: "Finalizada", value: "3" },
+    { label: "Reprogramada", value: "5" }
+  ];
 
   ngOnInit() {
     this.openFicha = true;
@@ -102,6 +112,13 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
 
       if(this.datosGenerales.soloGenerarVacio == 'S'){
         this.controlSoloGenerarVacio = true
+      }
+
+      if(this.datosGenerales.estadoProgramacion != "" && this.datosGenerales.estadoProgramacion != "4" && this.datosGenerales.estadoProgramacion != undefined){
+        this.isDisabledByEstado = true;
+      }
+      if(this.datosGenerales.estadoProgramacion != undefined){
+        this.estadoNombre = this.getStatusValue(this.datosGenerales.estadoProgramacion)
       }
 
       //this.getComboListaGuardia();
@@ -173,6 +190,18 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     } else {
       this.datosGenerales.fechaProgramacion = new Date(event.toString());
     }
+  }
+
+  getStatusValue(id) {
+    let status;
+    this.comboEstados.forEach(estado => {
+      if (estado.value != null && id != null) {
+        if (estado.value.toString() == id.toString()) {
+          status = estado.label;
+        }
+      }
+    })
+    return status;
   }
 
   formatDate2(date) {
@@ -399,14 +428,6 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
           if (this.permisoEscritura && !this.historico) {
             //Guardar sólo actualizará el estado si no tiene estado (creación) o es Pendiente/Programada
             if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada") {
-              if (this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null) {
-                //Al guardar con Fecha de programación vacía, se pasará al estado Pendiente y fechaProgramacion = hoy
-                //this.datosGenerales.fechaProgramacion = new Date();
-                this.datosGenerales.estado = "Pendiente";
-              } else {
-                //Al guardar con Fecha de programación rellena, se pasará al estado Programada. 
-                this.datosGenerales.estado = "Programada";
-              }
 
               // Actualizamos la tarjeta Guardias Calendario en caso de que este vacía
               if (this.datosGenerales.listaGuarias.value == undefined) {

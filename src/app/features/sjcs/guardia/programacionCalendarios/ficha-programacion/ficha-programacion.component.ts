@@ -41,6 +41,7 @@ export class FichaProgramacionComponent implements OnInit {
   historico: boolean = false;
   progressSpinner: boolean = false;
   datosRedy = new EventEmitter<any>();
+  displayProgramacion:boolean = false;
 
   infoResumen = [];
   enlacesTarjetaResumen: any[] = [];
@@ -84,7 +85,8 @@ export class FichaProgramacionComponent implements OnInit {
     'idGuardia': '',
     'guardias': [],
     'idInstitucion' : '',
-    'soloGenerarVacio' : ''
+    'soloGenerarVacio' : '',
+    'estadoProgramacion' :''
   };
 
   datosGeneralesIniciales = {
@@ -105,7 +107,8 @@ export class FichaProgramacionComponent implements OnInit {
     'idGuardia': '',
     'guardias': [],
     'idInstitucion' : '',
-    'soloGenerarVacio' : ''
+    'soloGenerarVacio' : '',
+    'estadoProgramacion' : ''
   };
   rowGroupsSaved: Row[];
   dataToReceive = {
@@ -126,7 +129,8 @@ export class FichaProgramacionComponent implements OnInit {
     'idGuardia': '',
     'filtrosBusqueda': new CalendarioProgramadoItem(),
     'idInstitucion' : '',
-    'soloGenerarVacio' : ''
+    'soloGenerarVacio' : '',
+    'estadoProgramacion' : ''
   }
   estado: string = "";
   dataReady = false;
@@ -145,7 +149,7 @@ export class FichaProgramacionComponent implements OnInit {
     { label: "Programada", value: "0" },
     { label: "En proceso", value: "1" },
     { label: "Procesada con Errores", value: "2" },
-    { label: "Generada", value: "3" },
+    { label: "Finalizada", value: "3" },
     { label: "Reprogramada", value: "5" }
   ];
 
@@ -224,7 +228,7 @@ export class FichaProgramacionComponent implements OnInit {
       );
     }
 
-    this.estado = this.datosGeneralesIniciales.estado;
+    this.estado = this.datosGeneralesIniciales.estadoProgramacion;
 
     // Mensaje mostrado tras acualizar o guardar correctamente
     if (sessionStorage.getItem("mensaje")) {
@@ -528,30 +532,7 @@ export class FichaProgramacionComponent implements OnInit {
     //console.log('DATA TO DUPLICATE *: ', event)
     //TO DO: pasar los datos event al servicio global para obtenerlos desde tabla-mix
     this.persistenceService.setDatos(event);
-    let estadoNumerico = "4";
-    switch (event.estado) {
-      case "Pendiente":
-        estadoNumerico = "4";
-        break;
-      case "Programada":
-        estadoNumerico = "0";
-        break;
-      case "En proceso":
-        estadoNumerico = "1";
-        break;
-      case "Procesada con Errores":
-        estadoNumerico = "2";
-        break;
-      case "Generada":
-        estadoNumerico = "3";
-        break;
-      case "Reprogramada":
-        estadoNumerico = "5";
-        break;
-      default:
-        estadoNumerico = "4";
-        break;
-    }
+
     let idCalG;
     if (this.idConjuntoGuardiaElegido == 0) {
       idCalG = null;
@@ -570,7 +551,7 @@ export class FichaProgramacionComponent implements OnInit {
       'fechaDesde': event.fechaDesde,
       'fechaHasta': event.fechaHasta,
       'fechaProgramacion': this.formatDate3(event.fechaProgramacion),
-      'estado': estadoNumerico,
+      'estado': event.estado,
       'generado': event.generado,
       'numGuardias': event.numGuardias,
       'idCalG': idCalG,
@@ -614,7 +595,8 @@ export class FichaProgramacionComponent implements OnInit {
                 'numGuardias': numGuardias,
                 'idGuardia': dat.idGuardia,
                 'idTurno': dat.idTurno,
-                'idCalendarioGuardia': dat.idCalendarioGuardia
+                'idCalendarioGuardia': dat.idCalendarioGuardia,
+                'estado': dat.estado
               }
 
             );
@@ -653,35 +635,11 @@ export class FichaProgramacionComponent implements OnInit {
         'idGuardia': '',
         'guardias': [],
         'idInstitucion': '',
-        'soloGenerarVacio' : ''
+        'soloGenerarVacio' : '',
+        'estadoProgramacion' : ''
       };
 
       datosGeneralesToSave = datGen;
-
-      let estadoNumerico = "4";
-      switch (datosGeneralesToSave.estado) {
-        case "Pendiente":
-          estadoNumerico = "4";
-          break;
-        case "Programada":
-          estadoNumerico = "0";
-          break;
-        case "En proceso":
-          estadoNumerico = "1";
-          break;
-        case "Procesada con Errores":
-          estadoNumerico = "2";
-          break;
-        case "Generada":
-          estadoNumerico = "3";
-          break;
-        case "Reprogramada":
-          estadoNumerico = "5";
-          break;
-        default:
-          estadoNumerico = "4";
-          break;
-      }
       this.estado = datosGeneralesToSave.estado;
       this.dataReady = false;
       this.datosTarjetaGuardiasCalendario = []; //reload tarjeta guardias cal
@@ -708,7 +666,7 @@ export class FichaProgramacionComponent implements OnInit {
         'fechaDesde': datosGeneralesToSave.fechaDesde,
         'fechaHasta': datosGeneralesToSave.fechaHasta,
         'fechaProgramacion': this.formatDate3(datosGeneralesToSave.fechaProgramacion),
-        'estado': estadoNumerico,
+        'estado': datosGeneralesToSave.estadoProgramacion,//GUD
         'generado': datosGeneralesToSave.generado,
         'numGuardias': datosGeneralesToSave.numGuardias,
         'idCalG': datosGeneralesToSave.listaGuarias.value,
@@ -810,6 +768,19 @@ export class FichaProgramacionComponent implements OnInit {
     this.datosTarjetaGuardiasCalendario = event;
   }
 
+  controlGenerate(){
+     //Generar sólo se permitirá desde los estados vacío (creación), , Procesada con errores
+     if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "4" || this.datosGenerales.estado == "2") {
+      this.datosGenerales.fechaProgramacion = new Date();
+    return true
+     }else {
+      this.showMessage('error', 'Error. Debido al estado de la programación, no es posible generar', '')
+      return false
+      
+    }
+  }
+
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({
@@ -819,32 +790,6 @@ export class FichaProgramacionComponent implements OnInit {
     });
   }
   generate() {
-    //Generar sólo se permitirá desde los estados vacío (creación), Pendiente, Programada y Procesada con errores
-    if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada" || this.datosGenerales.estado == "Procesada con errores") {
-      //Al generar, pasará al estado Programada (rellenando previamente la Fecha de programación si estaba vacía)
-      if (this.datosGenerales.fechaProgramacion == undefined || this.datosGenerales.fechaProgramacion == null) {
-        this.datosGenerales.fechaProgramacion = new Date();
-        //console.log('this.datosGenerales.fechaProgramacion: ', this.datosGenerales.fechaProgramacion)
-      }
-
-      let estadoNumerico = "0";
-      switch (this.datosGenerales.estado) {
-        case "Pendiente":
-          estadoNumerico = "4";
-          break;
-        case "Programada":
-          estadoNumerico = "0";
-          break;
-        default:
-          estadoNumerico = "1";
-          break;
-      }
-      this.datosGenerales.estado = estadoNumerico;
-      //Al generar, pasará al estado Programada
-      if (this.datosGenerales.estado == "Pendiente") {
-        estadoNumerico = "0";
-      }
-
       let dataToGenerate = {
         'turno': this.datosGenerales.turno,
         'guardia': this.datosGenerales.nombre,
@@ -854,7 +799,7 @@ export class FichaProgramacionComponent implements OnInit {
         'fechaDesde': this.datosGenerales.fechaDesde,
         'fechaHasta': this.datosGenerales.fechaHasta,
         'fechaProgramacion': this.formatDate2(this.datosGenerales.fechaProgramacion),
-        'estado': estadoNumerico,
+        'estado': "0",
         'generado': this.datosGenerales.generado,
         'numGuardias': this.datosGenerales.numGuardias,
         'idCalG': this.datosGenerales.listaGuarias.value,
@@ -866,12 +811,7 @@ export class FichaProgramacionComponent implements OnInit {
 
       };
       this.generarCalendario(dataToGenerate);
-    } else {
-      this.showMessage('error', 'Error. Debido al estado de la programación, no es posible generar', '')
-    }
 
-
-    this.datosGenerales.estado = "Programada";
   }
 
   updateCalendarData(datos) {
@@ -960,22 +900,6 @@ export class FichaProgramacionComponent implements OnInit {
       'idTurno': event.idTurno,
       'idGuardia': event.idGuardia
     };
-    let estadoNumerico = "0";
-    switch (this.datosGenerales.estado) {
-      case "Pendiente":
-        estadoNumerico = "5";
-        break;
-      case "Programada":
-        estadoNumerico = "1";
-        break;
-      case "Generada":
-        estadoNumerico = "4";
-        break;
-      default:
-        estadoNumerico = "0";
-        break;
-    }
-    this.datosGenerales.estado = estadoNumerico;
 
     let dataToDownload = {
       'turno': this.datosGenerales.turno,
@@ -986,7 +910,7 @@ export class FichaProgramacionComponent implements OnInit {
       'fechaDesde': this.datosGenerales.fechaDesde,
       'fechaHasta': this.datosGenerales.fechaHasta,
       'fechaProgramacion': this.datosGenerales.fechaProgramacion,
-      'estado': estadoNumerico,
+      'estado': this.datosGenerales.estado,
       'generado': this.datosGenerales.generado,
       'numGuardias': this.datosGenerales.numGuardias,
       'idCalG': this.datosGenerales.listaGuarias.value, //conjunto
@@ -1013,41 +937,11 @@ export class FichaProgramacionComponent implements OnInit {
         let blob = new Blob([resHead.response], { type: 'application/octet-stream' });
         saveAs(blob, fileName);
         this.showMessage('success', 'LOG descargado correctamente', 'LOG descargado correctamente');
-        switch (estadoNumerico) {
-          case "5":
-            this.datosGenerales.estado = "Pendiente";
-            break;
-          case "1":
-            this.datosGenerales.estado = "Programada";
-            break;
-          case "4":
-            this.datosGenerales.estado = "Generada";
-            break;
-          default:
-            this.datosGenerales.estado = "-";
-            break;
-        }
       },
         err => {
           this.progressSpinner = false;
           this.showMessage('error', 'El LOG no pudo descargarse', 'El LOG no pudo descargarse');
           //console.log(err);
-
-
-          switch (estadoNumerico) {
-            case "5":
-              this.datosGenerales.estado = "Pendiente";
-              break;
-            case "1":
-              this.datosGenerales.estado = "Programada";
-              break;
-            case "4":
-              this.datosGenerales.estado = "Generada";
-              break;
-            default:
-              this.datosGenerales.estado = "-";
-              break;
-          }
 
         });
     }
@@ -1072,7 +966,7 @@ export class FichaProgramacionComponent implements OnInit {
               'fechaDesde': this.datosGenerales.fechaDesde,
               'fechaHasta': this.datosGenerales.fechaHasta,
               'fechaProgramacion': this.datosGenerales.fechaProgramacion,
-              'estado': "Generada",
+              'estado': '0',
               'observaciones': this.datosGenerales.observaciones,
               'idCalendarioProgramado': this.datosGenerales.idCalendarioProgramado,
               'idTurno': this.datosGenerales.idTurno,
@@ -1080,11 +974,12 @@ export class FichaProgramacionComponent implements OnInit {
               'filtrosBusqueda': this.dataToReceive.filtrosBusqueda,
               'idInstitucion': this.dataToReceive.idInstitucion,
               'soloGenerarVacio': this.dataToReceive.soloGenerarVacio,
+              'estadoProgramacion' : "0"
             }
             this.persistenceService.setDatos(dataToSend);
             this.router.navigate(["/fichaProgramacion"]);
 
-          }, 3000);
+          }, 1000);
 
 
         }, err => {
@@ -1120,6 +1015,24 @@ export class FichaProgramacionComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  generateModal(){
+    if(this.controlGenerate())
+      this.displayProgramacion = true;
+  }
+  fillFechaProgramada(event) {
+
+    if (event == null) {
+      this.datosGenerales.fechaProgramacion = null;
+    } else {
+      this.datosGenerales.fechaProgramacion = new Date(event.toString());
+    }
+  }
+
+  cancelar(){
+    this.datosGenerales.fechaProgramacion = null;
+    this.displayProgramacion = false;
   }
 
   linkGuardiaColegiado2(event) {
@@ -1190,13 +1103,14 @@ export class FichaProgramacionComponent implements OnInit {
             'fechaDesde': this.changeDateFormat(datos[0].fechaDesde),
             'fechaHasta': this.changeDateFormat(datos[0].fechaHasta),
             'fechaProgramacion': (fechaProgramacion != null) ? this.formatDate4(fechaProgramacion) : null,
-            'estado': this.getStatusValue(datos[0].estado),
+            'estado': datos[0].estado,
             'observaciones': datos[0].observaciones,
             'idCalendarioProgramado': datos[0].idCalendarioProgramado,
             'idTurno': datos[0].idTurno,
             'idGuardia': datos[0].idGuardia,
             'idInstitucion' : datos[0].idInstitucion,
-            'soloGenerarVacio' : datos[0].soloGenerarVacio
+            'soloGenerarVacio' : datos[0].soloGenerarVacio,
+            'estadoProgramacion': datos[0].estadoProgramacion,
           }
 
           this.progressSpinner = false

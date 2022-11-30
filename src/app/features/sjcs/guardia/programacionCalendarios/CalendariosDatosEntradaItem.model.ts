@@ -19,7 +19,9 @@ export class CalendariosDatosEntradaItem{
   facturado: boolean;
   asistenciasAsociadas: boolean;
   idCalendarioGuardias: string;
+  estadoProgramacion:string;
   constructor(obj: Object) {
+    this.estadoProgramacion = obj['estadoProgramacion']
     this.soloGenerarVacio = obj['soloGenerarVacio']
     this.contadorGenerados = obj['contadorGenerados']
     this.idInstitucion = obj['idInstitucion']

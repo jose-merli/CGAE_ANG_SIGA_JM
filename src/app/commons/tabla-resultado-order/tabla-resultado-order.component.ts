@@ -1389,7 +1389,7 @@ this.totalRegistros = this.rowGroups.length;
     return new Blob(byteArrays, {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     }
   descargarLog(){
-    if (this.estado != 'Pendiente'){
+    if (this.estado != 'Pendiente' || this.estado != 'Procesada con Errores'){
     let datosCalendariosSeleccionado = {
       'idCalendarioGuardias': this.rowwSelected.cells[7].value,
       'idTurno': this.rowwSelected.cells[6].value,

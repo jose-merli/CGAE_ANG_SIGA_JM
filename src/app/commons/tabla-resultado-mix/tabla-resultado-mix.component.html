@@ -177,10 +177,9 @@
           label="Duplicar"
           [disabled]="!anySelected || this.selectedRowValue.length == 0 || selectedArray.length == 0 || selectedArray.length > 1"
           (click)="duplicar()"></button>
-        <button pButton *ngIf="!inscripciones && !incompatibilidades" type="button" icon="fa fa-download" iconPos="left"
+        <button pButton *ngIf="(!inscripciones && !incompatibilidades) || calendarios " type="button" icon="fa fa-download" iconPos="left"
           label="Descargar LOG" (click)="descargarLOG()"></button>
-        <button pButton [disabled]="!anySelected || this.selectedRowValue.length == 0" *ngIf="calendarios" type="button"
-          icon="far fa-save" iconPos="left" label="Comunicar" (click)="comunicar()"></button>
+       
       </div>
 
 

@@ -107,11 +107,11 @@ export class ProgramacionCalendariosComponent implements OnInit {
       name: "justiciaGratuita.Calendarios.Generado",
       size: 80
     },
-    {
+    /*{
       id: "numGuardias",
       name: "justiciaGratuita.Calendarios.NumGuardias",
       size: 80
-    }
+    }*/
   ];
 
   comboEstados = [
@@ -119,7 +119,7 @@ export class ProgramacionCalendariosComponent implements OnInit {
     { label: "Programada", value: "0" },
     { label: "En proceso", value: "1" },
     { label: "Procesada con Errores", value: "2" },
-    { label: "Generada", value: "3" },
+    { label: "Finalizada", value: "3" },
     { label: "Reprogramada", value: "5" }
   ];
   @ViewChild(FiltrosGuardiaCalendarioComponent) filtros;
@@ -156,11 +156,13 @@ export class ProgramacionCalendariosComponent implements OnInit {
           { type: 'link', value: this.dataToDuplicate.observaciones , combo: null, size: 150, disabled: false},
           { type: 'text', value: this.dataToDuplicate.estado , combo: null, size: 80, disabled: false},
           { type: 'text', value: this.dataToDuplicate.generado, combo: null , size: 80 , disabled: false},
-          { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 80 , disabled: false},
+         // { type: 'text', value: this.dataToDuplicate.numGuardias, combo: null, size: 80 , disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idCalendarioProgramado, combo: null, size: 0, disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idTurno, combo: null, size: 0, disabled: false},
           { type: 'invisible', value: this.dataToDuplicate.idGuardia, combo: null, size: 0, disabled: false},   
-          { type: 'invisible', value: this.dataToDuplicate.soloGenerarVacio, combo: null, size: 0, disabled: false},           
+          { type: 'invisible', value: this.dataToDuplicate.soloGenerarVacio, combo: null, size: 0, disabled: false}, 
+          { type: 'invisible', value: this.dataToDuplicate.estadoProgramacion, combo: null, size: 0, disabled: false},   
+          { type: 'invisible', value: this.dataToDuplicate.estado, combo: null, size: 0, disabled: false},      
           ];
       
           let obj: Row = {id: this.rowGroups.length, cells: objCells};
@@ -305,13 +307,13 @@ let datosEntrada =
                 'fechaProgramacion': dat.fechaProgramacion,
                 'estado': dat.estado,
                 'generado': dat.generado,
-                'numGuardias': dat.numGuardias,
                 'idCalG': dat.idCalG,
                 'listaGuardias': dat.listaGuardias,
                 'idCalendarioProgramado': dat.idCalendarioProgramado,
                 'facturado': dat.facturado,
                 'asistenciasAsociadas': dat.asistenciasAsociadas,
-                'idCalendarioGuardias' : dat.idCalendarioGuardias
+                'idCalendarioGuardias' : dat.idCalendarioGuardias,
+                'estadoProgramacion' : dat.estadoProgramacion
               }
              
             );
@@ -372,7 +374,7 @@ jsonToRow(){
     { type: 'link', value: res.observaciones, size: 150  },
     { type: 'text', value: this.getStatusValue(res.estado), size: 80 },
     { type: 'text', value: res.generado, size: 80 },
-    { type: 'text', value: res.numGuardias, size: 80},
+   // { type: 'text', value: res.numGuardias, size: 80},
     { type: 'invisible', value: res.idCalendarioProgramado, size: 0},
     { type: 'invisible', value: res.idTurno, size: 0},
     { type: 'invisible', value: res.idGuardia, size: 0},
@@ -382,6 +384,8 @@ jsonToRow(){
     { type: 'invisible', value: res.idInstitucion, size: 0},
     { type: 'invisible', value: res.contadorGenerados, size: 0},
     { type: 'invisible', value: res.soloGenerarVacio, size: 0},
+    { type: 'invisible', value: res.estadoProgramacion, size: 0},
+    { type: 'invisible', value: res.estado, size: 80 },
     ];
     let obj = {id: i, cells: objCells};
     arr.push(obj);
@@ -543,20 +547,20 @@ delete(indexToDelete){
   this.listaDel=[];
   toDelete.forEach(row => {
     row.cells.forEach((c, index) => {
-      if (index == 10){
+      if (index == 9){
         idCalendarioProgramado = c.value;
       }
-      if (index == 12){
+      if (index == 11){
         idGuardia = c.value;
       }
-      if (index == 11){
+      if (index == 10){
         idTurno = c.value;
       }
-      if(index == 13){
+      if(index == 12){
         if(c.value == true )facturado= true
         else facturado = false
       }
-      if(index == 14){
+      if(index == 13){
         if(c.value == true )asociadoAsistencias= true
         else asociadoAsistencias = false
       }
@@ -566,7 +570,7 @@ delete(indexToDelete){
       if (index == 3) {
         fechaHasta = c.value;
       }
-      if(index == 17){
+      if(index == 16){
         contadorGenerado = c.value
       }
       /* if(c.type == "multiselect"){
@@ -759,31 +763,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
     let noGenerado = false;
     let dataToZipArr = [];
     eventArr.forEach(event => {
-   if (event.estado == 'Generada'){
-        let estadoNumerico = "0";
-        switch (event.estado) {
-          case "Pendiente":
-            estadoNumerico = "4";
-            break;
-          case "Programada":
-            estadoNumerico = "0";
-            break;
-          case "En proceso":
-            estadoNumerico = "1";
-            break;
-          case "Procesada con Errores":
-            estadoNumerico = "2";
-            break;
-          case "Generada":
-            estadoNumerico = "3";
-            break;
-          case "Reprogramada":
-            estadoNumerico = "5";
-            break;
-          default:
-            estadoNumerico = "4";
-            break;
-        }
+   if (event.estado == '3'){
         let dataToZip = {
           'turno': event.turno,
           'guardia': event.nombre,
@@ -793,7 +773,7 @@ guardarInc(nombreTurno, nombreGuardia, nombreTurnoIncompatible, nombreGuardiaInc
           'fechaDesde': event.fechaDesde,
           'fechaHasta': event.fechaHasta,
           'fechaProgramacion': event.fechaProgramacion,
-          'estado': estadoNumerico,
+          'estado': event.estado,
           'generado': event.generado,
           'numGuardias': event.numGuardias,
           'idCalG': event.listaGuarias.value,
