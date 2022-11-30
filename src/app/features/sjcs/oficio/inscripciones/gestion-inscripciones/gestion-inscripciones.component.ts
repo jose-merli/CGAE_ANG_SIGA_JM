@@ -17,6 +17,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { ConfirmationService } from '../../../../../../../node_modules/primeng/primeng';
 import { TurnosItems } from '../../../../../models/sjcs/TurnosItems';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { Item } from '@syncfusion/ej2-splitbuttons';
 
 
 @Component({
@@ -36,6 +37,7 @@ export class TablaInscripcionesComponent implements OnInit {
   bodyDirecciones: DatosDireccionesItem;
   datosInicial = [];
   editMode: boolean = false;
+  estadosDistintos: boolean = false;
   selectedBefore;
   buscadores = [];
   updatePartidasPres = [];
@@ -441,6 +443,16 @@ export class TablaInscripcionesComponent implements OnInit {
     this.progressSpinner = false;
   }
 
+  mensajeObservaciones() {
+    this.msgs = [];
+      this.msgs.push({
+        severity: "error",
+        summary: "Incorrecto",
+        detail: "Es necesario seleccionar algún registro y rellenar la fecha y las observaciones"
+      });
+  }
+
+
   validar(selectedDatos, access = 0) {
     let vb = 0;
     this.progressSpinner = true;
@@ -451,6 +463,9 @@ export class TablaInscripcionesComponent implements OnInit {
       element.observaciones = this.datos.observaciones;
       if (element.estado == "2") vb++;
     });
+    if(this.datos.fechaActual == null || this.datos.fechaActual== undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
+      this.mensajeObservaciones();
+    }else{
     if (vb > 0 && access == 0) this.checkTrabajosSJCS(this.body, access);
     else {
       if (vb > 0) {
@@ -503,6 +518,8 @@ export class TablaInscripcionesComponent implements OnInit {
       );
     }
   }
+  this.progressSpinner = false;
+}
 
   cambiarFecha(selectedDatos) {
     this.progressSpinner = true;
@@ -512,6 +529,9 @@ export class TablaInscripcionesComponent implements OnInit {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
     });
+    if(this.datos.fechaActual == null || this.datos.fechaActual== undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
+      this.mensajeObservaciones();
+    }else{
     this.sigaServices.post("inscripciones_updateCambiarFecha", this.body).subscribe(
       data => {
         this.selectedDatos = [];
@@ -536,6 +556,8 @@ export class TablaInscripcionesComponent implements OnInit {
         this.nuevo = false;
       }
     );
+    }
+    this.progressSpinner = false;
   }
 
   denegar(selectedDatos) {
@@ -546,6 +568,9 @@ export class TablaInscripcionesComponent implements OnInit {
       element.fechaActual = this.datos.fechaActual;
       element.observaciones = this.datos.observaciones;
     });
+    if(this.datos.fechaActual == null || this.datos.fechaActual== undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
+      this.mensajeObservaciones();
+    }else{
     this.sigaServices.post("inscripciones_updateDenegar", this.body).subscribe(
       data => {
         this.selectedDatos = [];
@@ -570,6 +595,8 @@ export class TablaInscripcionesComponent implements OnInit {
         this.nuevo = false;
       }
     );
+    }
+    this.progressSpinner = false;
   }
 
   solicitarBaja(selectedDatos, access = 2) {
@@ -577,13 +604,15 @@ export class TablaInscripcionesComponent implements OnInit {
     let fechaDeHoy = new Date();
     let fechaHoy = this.datepipe.transform(fechaDeHoy, 'dd/MM/yyyy');
     let fechaActual2 = this.datepipe.transform(this.datos.fechaActual, 'dd/MM/yyyy')
-    if (fechaActual2 != fechaHoy) {
+    if(fechaActual2 == null || fechaActual2 == undefined || this.datos.observaciones == null || this.datos.observaciones== "" || this.selectedDatos.length==0){
+      this.mensajeObservaciones();
+    }else if (fechaActual2 != fechaHoy) {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.inscripciones.mensajesolicitarbaja"));
       this.progressSpinner = false;
     } else {
       let vb = 0;
       this.body = new InscripcionesObject();
-      this.body.inscripcionesItem = selectedDatos
+      this.body.inscripcionesItem = selectedDatos;
       this.body.inscripcionesItem.forEach(element => {
         element.fechaActual = this.datos.fechaActual;
         element.observaciones = this.datos.observaciones;
@@ -617,7 +646,10 @@ export class TablaInscripcionesComponent implements OnInit {
         );
       }
     }
+                this.progressSpinner = false;
   }
+
+  
 
   onChangeSelectAll() {
     if (this.selectAll === true) {
@@ -779,7 +811,17 @@ export class TablaInscripcionesComponent implements OnInit {
       this.selectedDatos = []
     }
 
-    if (selectedDatos != null && selectedDatos.length != 0) {
+    this.estadosDistintos = false;
+    let estadoInicial=this.selectedDatos[0].estado;
+
+    this.selectedDatos.forEach(item => {
+      if(item.estado != estadoInicial){
+        this.estadosDistintos = true;
+      }
+    });
+
+
+    if (selectedDatos != null && selectedDatos.length != 0 && this.estadosDistintos == false) {
       this.numSelected = selectedDatos.length;
       let findDato = this.selectedDatos.find(item => item.estado != "1");
       let currentDate = new Date();
@@ -817,16 +859,25 @@ export class TablaInscripcionesComponent implements OnInit {
       else {
         this.disabledDenegar = false;
       }*/
-      let findDato3 = this.selectedDatos.find(item => item.estado != "1" && item.estado != 2 && item.estado != "3");
+      let findDato3 = this.selectedDatos.find(item => item.estado != "1" && item.estado != "3");
       if (findDato3 != null) {
         this.disabledCambiarFecha = true;
       }
       else {
         this.disabledCambiarFecha = false;
       }
+    }else{
+      this.disabledValidar = true;
+        this.disabledDenegar = true;
+        this.selectAll = false;
+        this.selectMultiple = false;
+        this.disabledCambiarFecha = true;
+        this.disabledSolicitarBaja = true;
+        this.disabledCambiarFecha = true;
+        this.disabledDenegar = true;
     }
 
-    if (this.selectedDatos && this.selectedDatos != null) {
+    if (this.selectedDatos && this.selectedDatos != null && this.estadosDistintos == false) {
       this.checkValidarInscripciones = false;
       this.selectedDatos.forEach(el => {
         if (this.isLetrado && el.validarinscripciones && el.validarinscripciones != null && el.validarinscripciones.toUpperCase() != 'N') {
@@ -846,7 +897,7 @@ export class TablaInscripcionesComponent implements OnInit {
       this.disabledCambiarFecha = true;
       this.disabledDenegar = true;
     }
-
+    this.actualizaBotones(selectedDatos);
   }
 
   esPendienteAltaOpendienteBaja(item) {

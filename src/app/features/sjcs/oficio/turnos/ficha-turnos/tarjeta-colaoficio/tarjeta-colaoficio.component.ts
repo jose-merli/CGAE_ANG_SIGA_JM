@@ -769,6 +769,7 @@ export class TarjetaColaOficio implements OnInit {
   saltoCompensacion() {
     this.progressSpinner = true;
     this.persistenceService.setDatos(this.selectedDatos[0]);
+    sessionStorage.setItem("fromTurnoOficio", "true")
     this.router.navigate(["/saltosYCompensaciones"],
       {
         queryParams:

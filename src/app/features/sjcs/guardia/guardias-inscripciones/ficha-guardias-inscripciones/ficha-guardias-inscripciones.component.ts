@@ -1319,8 +1319,8 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	formatDateSol2(date) {
 		//console.log('ana 2: ', date)
 		const pattern = 'dd/MM/yyyy';
-		if (date != undefined && isNaN(Number(date))) {
-			if (!date.includes('/')) {
+		if (date != undefined && !isNaN(Number(date))) {
+			if (!date.toString().includes('/')) {
 				return this.datepipe.transform(date, pattern);
 			}
 		}

@@ -205,6 +205,7 @@ export class TablaGuardiasComponent implements OnInit {
     if (this.permisoEscritura) {
       let guardiaDelete = new GuardiaObject();
       guardiaDelete.guardiaItems = this.selectedDatos;
+      this.progressSpinner = true;
       this.sigaServices.post("busquedaGuardias_deleteGuardias", guardiaDelete).subscribe(
 
         data => {

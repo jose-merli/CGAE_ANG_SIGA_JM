@@ -5,15 +5,15 @@
 <div class="row w-100 m-0 padding-interior">
     <div class="form-row">
 
-      <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-group col-lg-2 col-md-2">
         <label>{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}}(*)</label>
         <input type="text" pKeyFilter="int" class="form-control" pInputText [disabled]="true" [(ngModel)]="asistencia.anio" size="4"/>
       </div>
-      <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-group col-lg-1 col-md-1">
         <label>{{'facturacionSJCS.facturacionesYPagos.numero' | translate}}(*)</label>
         <input type="text" pKeyFilter="int" class="form-control" pInputText [disabled]="true"  [(ngModel)]="asistencia.numero"/>
       </div>
-      <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-group col-lg-3 col-md-3">
         <label>{{'censo.fichaIntegrantes.literal.estado' | translate}}</label>
         <p-dropdown class="select-form"
             placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
@@ -21,26 +21,26 @@
             [ngModelOptions]="{standalone: true}" [options]="comboEstadosAsistencia">
         </p-dropdown>
       </div>
-      <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-group col-lg-3 col-md-3">
         <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaEstado' | translate}}</label>
         <app-fecha [(value)]="asistencia.fechaEstado" (valueChangeSelected)="fillFechaEstado($event)" [disabled]="true"
         (valueChangeInput)="fillFechaEstado($event)"></app-fecha>
       </div>
-      <div class="form-group-interlineado col-lg-3 col-md-3">
+      <div class="form-group col-lg-2 col-md-2">
+        <label>{{'formacion.busquedaInscripcion.fechaSolicitud' | translate}}</label>
+        <app-fecha [(value)]="asistencia.fechaSolicitud" (valueChangeSelected)="fillFechaSolicitud($event)" [showTime]="true"
+        (valueChangeInput)="fillFechaSolicitud($event)" [disabled]="ineditable"></app-fecha>
+      </div>
+      <div class="form-group col-lg-1 col-md-1">
         <label>{{'justiciaGratuita.guardia.fichaasistencia.fechacierre' | translate}}</label>
         <app-fecha [(value)]="asistencia.fechaCierre" (valueChangeSelected)="fillFechaCierre($event)"
         (valueChangeInput)="fillFechaCierre($event)" [disabled]="ineditable"></app-fecha>
       </div>
       <div class="form-group-interlineado col-lg-3 col-md-3">
           <label>{{'censo.resultadosSolicitudesModificacion.literal.fecha' | translate}} {{'agenda.fichaEventos.datosAsistencia.asistencia' | translate}}(*)</label>
-          <app-fecha [(value)]="asistencia.fechaAsistencia" (valueChangeSelected)="fillFechaAsistencia($event)"
-          (valueChangeInput)="fillFechaAsistencia($event)" [showTime]="true" [disabled]="disableDataForEdit || ineditable"
+          <app-fecha [(value)]="asistencia.fechaAsistencia" (valueChangeSelected)="fillFechaAsistencia($event)" [showTime]="true"
+          (valueChangeInput)="fillFechaAsistencia($event)" [disabled]="disableDataForEdit || ineditable"
           [inputStyleClass]="styleObligatorio(asistencia.fechaAsistencia)"></app-fecha>
-      </div>
-      <div class="form-group-interlineado col-lg-3 col-md-3">
-        <label>{{'formacion.busquedaInscripcion.fechaSolicitud' | translate}}</label>
-        <app-fecha [(value)]="asistencia.fechaSolicitud" (valueChangeSelected)="fillFechaSolicitud($event)"
-        (valueChangeInput)="fillFechaSolicitud($event)" [showTime]="true" [disabled]="ineditable"></app-fecha>
       </div>
       <div class="form-group-interlineado col-lg-3 col-md-3">
         <label>{{"dato.jgr.guardia.guardias.turno" | translate}}(*)</label>
@@ -79,11 +79,26 @@
             [ngClass]="styleObligatorio(asistencia.idLetradoGuardia)">
         </p-dropdown>
       </div>
-      <div class="form-group col-lg-12 col-md-12">
+      <div class="form-group-interlineado col-lg-3 col-md-3">
+        <label>{{"justiciaGratuita.guardia.asistenciasexpress.refuerzoSustitucion" | translate}}</label>
+        &nbsp;&nbsp;
+        <p-dropdown class="select-form"
+            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+            [showClear]="true" [(ngModel)]="asistencia.isSustituto" [disabled]=" disableDataForEdit || ineditable || !asistencia.idLetradoGuardia"
+            [ngModelOptions]="{standalone: true}" [options]="comboRefuerzoSustitucion" (onChange)="onChangeRefuerzoSustitucion($event)">
+        </p-dropdown>
+      </div>
+      <div class="form-group col-lg-5 col-md-5">
         <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                                    [pantalla]="'guardia'" [disabled]="ineditable"
+                                    [pantalla]="'guardia'" (idPersona)="getIdPersonaLetradoManual($event)" [disabled]="ineditable || this.refuerzoSustitucionNoSeleccionado"
                                     [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)" (click)="setDatosAsistencia()">
         </app-busqueda-colegiado-express>
+      </div>
+      <div class="form-group-interlineado col-lg-1 col-md-1">
+        <br>
+        <p-checkbox (onChange)="onChangeCheckSalto($event)" (ngModel)="salto" binary="true"
+            label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate }}" name="groupname" [ngModelOptions]="{standalone: true}"
+        ></p-checkbox>
       </div>
     </div>
 </div>
@@ -101,7 +116,7 @@
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
       (click)="resetDatosGenerales();" [disabled]="ineditable"></button>
     <button pButton type="button" icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "saveDisabled || ineditable"
-      (click)="saveAsistencia();"></button>
+      (click)="saveAsistenciaModal();"></button>
   </div>
 </div>
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmEliminarGeneral" width="425"
@@ -118,3 +133,20 @@
     <button type="button" pButton icon="fa-close" label="No" (click)="confirmCambioLetradoActuaciones.reject()"></button>
   </p-footer>
 </p-confirmDialog>
+
+<p-dialog [(visible)]="showSustitutoDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+  <p-header>
+      <label>Confirmación</label>
+  </p-header>
+  <div class="row">
+      <div class="form-group col-lg-8 col-md-8">
+      {{mensajeSustitutoDialog}}
+      </div>
+  </div>
+  <p-footer>
+      <div class="text-right main-button ">
+      <button (click)="cancelar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+      <button (click)="confirmarSustituto()" type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.submit' | translate}}" pButton></button>
+      </div>
+  </p-footer>
+</p-dialog>

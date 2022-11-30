@@ -26,6 +26,7 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
   comboTipoPersona = [];
   progressSpinner = false;
   showJusticiableDialog : boolean = false;
+  showDesasociarJusticiableDialog : boolean = false;
 
   fichasPosibles = [
     {
@@ -240,8 +241,32 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
         }else{
           this.showMsg('success', this.translate.instant("general.message.accion.realizada"), '');
           this.refreshTarjetas.emit(result.id);
-        }
+          let justiciableItem : JusticiableBusquedaItem = new JusticiableBusquedaItem();
+          justiciableItem.nif = this.asistido.nif;
 
+          this.sigaServices.post("gestionJusticiables_getJusticiableByNif", justiciableItem).subscribe(
+            n => {
+              let justiciableDTO : JusticiableObject = JSON.parse(n["body"]);
+              let justiciableItem : JusticiableItem  = justiciableDTO.justiciable;
+              if(justiciableItem.idpersona){
+  
+                this.asistido.nif = justiciableItem.nif;
+                this.asistido.nombre = justiciableItem.nombre;
+                this.asistido.apellido1 = justiciableItem.apellido1;
+                this.asistido.apellido2 = justiciableItem.apellido2;
+                this.asistido.idpersona = justiciableItem.idpersona;
+                this.asistido.idinstitucion = justiciableItem.idinstitucion;
+                this.asistido.tipopersonajg = justiciableItem.tipopersonajg;
+              }
+            
+          },
+          err => {
+            //console.log(err);
+          },
+          () =>{
+          }
+          );
+        }
       },
       err => {
         //console.log(err);
@@ -253,31 +278,43 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
       );
   }
 
-  desasociarJusticiable(){
-    this.progressSpinner = true;
+  desasociarJusticiableModal (){
 
-    this.sigaServices
-    .postPaginado("busquedaGuardias_desasociarAsistido", "?anioNumero="+this.idAsistencia, this.asistido)
-    .subscribe(
-      data => {
-        let result = JSON.parse(data["body"]);
-        if(result.error){
-          this.showMsg('error', this.translate.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-        }else{
-          this.asistido = new JusticiableItem();
-          this.showMsg('success', this.translate.instant("general.message.accion.realizada"), '');
-          this.refreshTarjetas.emit(result.id);
-        }
+      this.showDesasociarJusticiableDialog = true;
 
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      },
-      () => {
+  }
+
+  desasociarJusticiable(desasocia : boolean){
+
+    if(desasocia){
+      this.progressSpinner = true;
+
+      this.sigaServices
+      .postPaginado("busquedaGuardias_desasociarAsistido", "?anioNumero="+this.idAsistencia, this.asistido)
+      .subscribe(
+        data => {
+          let result = JSON.parse(data["body"]);
+          if(result.error){
+            this.showMsg('error', this.translate.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+          }else{
+            this.asistido = new JusticiableItem();
+            this.showMsg('success', this.translate.instant("general.message.accion.realizada"), '');
+            this.refreshTarjetas.emit(result.id);
+          }
+  
+        },
+        err => {
+          //console.log(err);
           this.progressSpinner = false;
-        }
-      );
+        },
+        () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+    
+    this.showDesasociarJusticiableDialog = false;
+    
   }
 
   searchJusticiable(){

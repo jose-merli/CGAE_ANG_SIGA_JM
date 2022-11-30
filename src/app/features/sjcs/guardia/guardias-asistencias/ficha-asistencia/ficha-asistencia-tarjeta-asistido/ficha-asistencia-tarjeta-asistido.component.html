@@ -61,7 +61,7 @@
 <div class="card-footer">
     <div class="text-right main-button">
         <button pButton type="button"  icon="fa fa-undo" iconPos="left" label="{{'censo.tipoCuenta.cargo.desasociar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
-            (click)="desasociarJusticiable();"></button>
+            (click)="desasociarJusticiableModal();"></button>
         <button pButton type="button"  icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
             (click)="searchJusticiable();" ></button>
         <button pButton type="button"  icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
@@ -83,6 +83,24 @@
         <div class="text-right main-button ">
         <button (click)="asociarJusticiable(false)" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.no' | translate}}"></button>
         <button (click)="asociarJusticiable(true)" type="button" icon="fa fa-check" iconPos="left" label="{{'messages.si' | translate}}" pButton></button>
+        </div>
+    </p-footer>
+</p-dialog>
+
+<p-dialog [(visible)]="showDesasociarJusticiableDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+    <p-header>
+        <label>Confirmación</label>
+    </p-header>
+    <div class="row">
+        <div class="form-group col-lg-8 col-md-8">
+        <!--{{mensajeSustitutoDialog}}-->
+        {{'gratuita.personaJG.mensaje.desasociarAsistido' | translate}}
+        </div>
+    </div>
+    <p-footer>
+        <div class="text-right main-button ">
+        <button (click)="desasociarJusticiable(false);" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.no' | translate}}"></button>
+        <button (click)="desasociarJusticiable(true)" type="button" icon="fa fa-check" iconPos="left" label="{{'messages.si' | translate}}" pButton></button>
         </div>
     </p-footer>
 </p-dialog>

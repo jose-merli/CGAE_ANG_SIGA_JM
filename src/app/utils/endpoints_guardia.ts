@@ -7,6 +7,7 @@ export let endpoints_guardia: any = {
     busquedaGuardia_gruposFacturacion: "combo/grupoFacturacion",
     busquedaGuardia_partidaspresupuestarias: "combo/partidasPresupuestarias",
     busquedaGuardia_turno: "combo/turnos",
+    busquedaGuardia_turnogrupo: "combo/turnosgrupo",
     busquedaGuardia_area: "combo/areas",
     busquedaGuardia_materia: "combo/materias",
     busquedaGuardia_tipoTurno: "combo/tipoTurno",

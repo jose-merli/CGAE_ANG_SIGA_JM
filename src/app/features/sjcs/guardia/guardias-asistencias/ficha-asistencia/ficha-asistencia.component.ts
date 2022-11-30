@@ -177,6 +177,11 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
       this.searchTarjetaAsistencia(idAsistencia);
     }
 
+    // Si viene de asistencias expres
+    if (sessionStorage.getItem("filtroAsistenciaExpresBusqueda")){
+      sessionStorage.setItem("vieneDeAsistenciaExpres", "true");
+    }
+
     // Datos Justiciables
     if (sessionStorage.getItem("justiciable")) {
       this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
@@ -544,7 +549,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
                 },
                 {
                   "key": this.translateService.instant("gratuita.mantenimientoTablasMaestra.literal.apellidos"),
-                  "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2
+                  "value": [newAsistenciaData.apellido1, newAsistenciaData.apellido2].filter(Boolean).join(" ")
                 },
                 {
                   "key": this.translateService.instant("administracion.parametrosGenerales.literal.nombre"),
@@ -807,7 +812,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
               },
               {
                 "key": this.translateService.instant("gratuita.mantenimientoTablasMaestra.literal.apellidos"),
-                "value": newAsistenciaData.apellido1 + " " + newAsistenciaData.apellido2
+                "value": [newAsistenciaData.apellido1, newAsistenciaData.apellido2].filter(Boolean).join(" ")
               },
               {
                 "key": this.translateService.instant("administracion.parametrosGenerales.literal.nombre"),

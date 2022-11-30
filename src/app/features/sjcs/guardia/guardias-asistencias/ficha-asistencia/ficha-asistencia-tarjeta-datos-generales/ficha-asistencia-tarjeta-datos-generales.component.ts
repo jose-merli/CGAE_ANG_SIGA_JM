@@ -33,11 +33,16 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   @Input() asistencia: TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
   asistenciaAux: TarjetaAsistenciaItem;
   isNuevaAsistencia: boolean = false;
+  refuerzoSustitucionNoSeleccionado: boolean = true;
   comboTurnos = [];
   comboGuardias = [];
   comboTipoAsistenciaColegio = [];
+  comboRefuerzoSustitucion = [];
   disableDataForEdit: boolean = false;
   comboLetradoGuardia = [];
+  salto: boolean = false;
+  showSustitutoDialog: boolean = false;
+  mensajeSustitutoDialog: string;
 
   ineditable: boolean = false; //Si esta finalizada o anulada no se puede editar ningun campo
   reactivable: boolean = false;
@@ -116,6 +121,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
     this.preasistencia = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
     if (this.preasistencia) {
+      this.refuerzoSustitucionNoSeleccionado = false;
       this.isNuevaAsistencia = true;
       this.asistencia.fechaAsistencia = this.preasistencia.fechaLlamada;
       this.getTurnosByColegiadoFecha();
@@ -138,7 +144,15 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     }
 
     this.getComboEstadosAsistencia();
+    this.getComboRefuerzoSustitucion();
 
+  }
+
+  getComboRefuerzoSustitucion() {
+    this.comboRefuerzoSustitucion = [
+      { label: this.translateService.instant('justiciaGratuita.guardia.asistenciasexpress.refuerzo'), value: "N" },
+      { label: this.translateService.instant('justiciaGratuita.guardia.asistenciasexpress.sustitucion'), value: "S" }
+    ];
   }
 
   ngAfterViewInit(): void {
@@ -514,6 +528,18 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     }
   }
 
+  saveAsistenciaModal() {
+    if (this.asistencia.isSustituto != null) {
+      if (this.usuarioBusquedaExpress.numColegiado != null) {
+        this.checkSustitutoCheckBox();
+      } else {
+        this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
+      }
+    } else {
+      this.saveAsistencia();
+    }
+  }
+
   saveAsistencia() {
     let isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     if (this.checkDatosObligatorios()) {
@@ -542,6 +568,10 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
               this.asistencia.anioNumero = result.id;
               this.asistencia.anio = result.id.split("/")[0];
               this.asistencia.numero = result.id.split("/")[1];
+              this.onChangeGuardia();
+              this.asistencia.idLetradoManual = undefined;
+              this.asistencia.filtro = undefined;
+              this.refuerzoSustitucionNoSeleccionado = true;
               this.refreshDatosGenerales.emit(result.id);
             }
 
@@ -566,9 +596,6 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     } else {
       this.showMsg('error', this.translateService.instant('general.message.camposObligatorios'), '');
     }
-
-
-
   }
 
   asociarJusticiable() {
@@ -786,5 +813,63 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           //console.log(err);
         }
       );
+  }
+  onChangeCheckSalto(event){
+    this.salto = event;
+
+    if (this.salto == true) {
+      this.asistencia.salto = "S";
+    } else {
+      this.asistencia.salto = "N";
+    }
+  }
+
+  onChangeRefuerzoSustitucion(event){
+    if (this.asistencia.isSustituto != null) {
+      this.refuerzoSustitucionNoSeleccionado = false;
+    } else {
+      this.refuerzoSustitucionNoSeleccionado = true;
+      this.usuarioBusquedaExpress.nombreAp = undefined;
+      this.usuarioBusquedaExpress.numColegiado = undefined;
+      this.asistencia.idLetradoManual = undefined;
+    }
+  }
+  getIdPersonaLetradoManual(event){
+    if (event == "") {
+      this.asistencia.idLetradoManual = undefined;
+    } else {
+      this.asistencia.idLetradoManual = event;
+    }
+    
+  }
+
+  checkSustitutoCheckBox(){
+    if(this.checkDatosObligatorios()){
+      this.showSustitutoDialog = true;
+      if(this.asistencia.isSustituto == 'S'){
+          this.mensajeSustitutoDialog =  this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.sustituirletradoguardia");
+      }else{
+          this.mensajeSustitutoDialog = this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.refuerzoguardia2");
+      }
+    }
+  }
+
+  cancelar(){
+    this.showSustitutoDialog = false;
+  }
+  confirmarSustituto(){
+    this.showSustitutoDialog = false;
+
+    // Añadimos los datos al filtro
+    this.asistencia.filtro = new FiltroAsistenciaItem();
+    this.asistencia.filtro.isSustituto = this.asistencia.isSustituto;
+    this.asistencia.filtro.idLetradoGuardia = this.asistencia.idLetradoGuardia;
+    this.asistencia.filtro.idLetradoManual = this.asistencia.idLetradoManual;
+    this.asistencia.filtro.diaGuardia = this.asistencia.fechaAsistencia;
+    this.asistencia.filtro.idTurno = this.asistencia.idTurno;
+    this.asistencia.filtro.idGuardia = this.asistencia.idGuardia;
+    this.asistencia.filtro.salto = this.asistencia.salto;
+
+    this.saveAsistencia();
   }
 }

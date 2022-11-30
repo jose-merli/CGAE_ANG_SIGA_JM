@@ -186,7 +186,6 @@ inicio(){
   }
   save() {
     if (this.permisoEscritura && !this.historico) {
-      this.progressSpinner = true;
       this.updateInscripciones = this.updateInscripciones.map(it => {
         it.orden = it.orden + "";
         it.numeroGrupo = it.numeroGrupo + "";
@@ -302,6 +301,9 @@ inicio(){
             }
             this.progressSpinner = false;
 
+          },
+          () => {
+            this.progressSpinner = false;
           }
         );
     }
@@ -366,6 +368,9 @@ inicio(){
         }, err => {
           this.progressSpinner = false;
           //console.log(err);
+        },
+        () => {
+          this.progressSpinner = false;
         });
   }
 
@@ -412,6 +417,9 @@ inicio(){
         },
         err => {
           //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
           this.progressSpinner = false;
         }
       );
@@ -702,6 +710,9 @@ inicio(){
         },
         err => {
           //console.log(err);
+          this.progressSpinner = false;
+        },
+        () => {
           this.progressSpinner = false;
         });
 

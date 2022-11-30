@@ -9,7 +9,7 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
   </p-column>
   <p-column field="descripcionGuardia" header="{{'justiciaGratuita.justiciables.literal.turnoGuardia' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
   </p-column>
-  <p-column field="anio" header="{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+  <p-column field="anio" header="{{'justiciaGratuita.sjcs.designas.DatosIden.ano' | translate}}" [style]="{'width': '4%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
     <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
       <td class="text-center">
         <div>
@@ -18,7 +18,7 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
       </td>
     </ng-template>
   </p-column>
-  <p-column field="numero" header="{{'gratuita.busquedaAsistencias.literal.numero' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
+  <p-column field="numero" header="{{'gratuita.busquedaAsistencias.literal.numero' | translate}}" [style]="{'width': '5%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}">
     <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
       <td class="text-center">
         <div>
@@ -27,11 +27,11 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
       </td>
     </ng-template>
   </p-column>
-  <p-column field="fechaAsistencia" header="{{'dato.jgr.guardia.saltcomp.fecha' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="fechaAsistencia" header="{{'dato.jgr.guardia.saltcomp.fecha' | translate}}" [style]="{'width': '7%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
   <p-column field="nombreColegiado" header="{{'busquedaSanciones.detalleSancion.letrado.literal' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
   <p-column field="asistido" header="{{'justiciaGratuita.guardia.solicitudescentralita.asistido' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
-  <p-column field="descripcionEstado" header="{{'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
-  <p-column field="validada" header="{{'justiciaGratuita.oficio.designas.actuaciones.validada' | translate}}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="descripcionEstado" header="{{'justiciaGratuita.sjcs.designas.DatosIden.estado' | translate}}" [style]="{'width': '5%'}"  [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
+  <p-column field="validada" header="{{'justiciaGratuita.oficio.designas.actuaciones.validada' | translate}}" [style]="{'width': '5%'}" [sortable]="true" [filter]="true" filterMatchMode = "contains" filterPlaceholder="{{'general.boton.search' | translate}}"></p-column>
   <ng-template pTemplate="paginatorLeft">
     <div class="mostrar d-flex text-right justify-content-end">
         <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}} {{table.first

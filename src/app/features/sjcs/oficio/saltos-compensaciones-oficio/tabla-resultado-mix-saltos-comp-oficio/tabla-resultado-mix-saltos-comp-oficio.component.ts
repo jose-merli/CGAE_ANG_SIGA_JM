@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, Renderer2, SimpleChanges, ViewChild } from '@angular/core';
 import { Sort } from '@angular/material';
 import { Message } from 'primeng/api';
@@ -56,12 +56,15 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   progressSpinner: boolean = false;
   isDisabled: boolean = true;
   isDisabled2: boolean = true;
+  disableTipo: boolean = true;
   disabledCheck: boolean = false;
   disabledRow = 0;
   contadorNuevo = 0;
+  disableButtons = false;
+  showVolver = false;
 
-  constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService) {
-    this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
+  constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService, private location: Location) {
+    /* this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
       for (let i = 0; i < this.table.nativeElement.children.length; i++) {
 
         if (!event.target.classList.contains("selectedRowClass")) {
@@ -69,13 +72,21 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
           this.selectedArray = [];
         }
       }
-    });
+    }); */
   }
 
   ngOnInit() {
     this.totalRegistros = this.rowGroups.length;
     this.numCabeceras = this.cabeceras.length;
     this.numColumnas = this.numCabeceras;
+    if(sessionStorage.getItem("fromTurnoOficio") === "true"){
+      this.disableButtons = true;
+      this.disableTipo = false;
+      this.showVolver = true;
+    }else{
+      this.disableButtons = false;
+      this.showVolver = false;
+    }
   }
 
   selectRow(rowId, cells) {
@@ -238,6 +249,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   nuevo() {
     this.disabledCheck = true;
     this.isDisabled2 = false;
+    this.disableTipo = false;
     this.contadorNuevo = this.contadorNuevo + 1;
     if ((this.contadorNuevo - 1) != 0) {
       this.disabledRow = this.disabledRow + 1;
@@ -270,7 +282,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     cell3.value = '';
     cell3.header = this.cabeceras[2].id;
 
-    cell4.type = 'select';
+    cell4.type = 'select-tipo';
     cell4.combo = this.comboTipos;
     cell4.value = '';
     cell4.header = this.cabeceras[3].id;
@@ -315,10 +327,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   }
 
   guardar() {
-    this.disabledRow = 0;
-    this.contadorNuevo = 0;
-    this.isDisabled2 = true;
-    this.disabledCheck = false;
     let error = false;
 
     this.rowGroups.forEach(row => {
@@ -344,6 +352,11 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     if (error) {
       this.showMsg({ severity: 'error', summary: 'Error. Existen campos vacíos en la tabla.', detail: '' });
     } else {
+      this.disabledRow = 0;
+      this.contadorNuevo = 0;
+      this.isDisabled2 = true;
+      this.disableTipo = true;
+      this.disabledCheck = false;
       this.saveEvent.emit(this.rowGroups);
       this.selectedArray = [];
     }
@@ -384,6 +397,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     this.disabledRow = 0;
     this.contadorNuevo = 0;
     this.isDisabled2 = true;
+    this.disableTipo = true;
     this.disabledCheck = false;
     this.selectedArray = [];
     this.progressSpinner = true;
@@ -416,12 +430,14 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     } else {
       this.emptyResults = false;
     }
+
   }
 
   anular() {
     this.disabledRow = 0;
     this.contadorNuevo = 0;
     this.isDisabled2 = true;
+    this.disableTipo = true;
     this.disabledCheck = false;
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.anularEvent.emit(this.selectedArray);
@@ -494,6 +510,10 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     }
   }
 
+  backTo() {
+    this.location.back();
+  }
+
 }
 function compareDate (fechaA:  any, fechaB:  any, isAsc: boolean){
 
@@ -535,4 +555,3 @@ function compare(a: number | string | Date, b: number | string | Date, isAsc: bo
 
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
-

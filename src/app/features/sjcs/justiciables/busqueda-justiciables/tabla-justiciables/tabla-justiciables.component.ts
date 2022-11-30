@@ -99,6 +99,7 @@ export class TablaJusticiablesComponent implements OnInit {
       this.persistenceService.setBody(evento);
       this.router.navigate(["/gestionJusticiables"]);
     }
+    sessionStorage.setItem("vieneDeFichaJusticiable", "true") ;
   }
 
   checkInteresado(justiciable) {

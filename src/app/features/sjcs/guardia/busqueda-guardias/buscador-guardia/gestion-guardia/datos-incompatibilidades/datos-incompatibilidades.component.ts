@@ -82,7 +82,6 @@ export class DatosIncompatibilidadesComponent implements OnInit {
       this.openFicha = !this.openFicha;
       if (this.openFicha)
         if (!this.datos) {
-          this.progressSpinner = true;
           this.getDatosIncompatibilidades();
         } else this.onChangeRowsPerPages({ value: this.selectedItem })
     }
@@ -131,6 +130,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
       let idGuardia = this.persistenceService.getDatos().idGuardia;
       let idTurno = this.persistenceService.getDatos().idTurno;
       //idGuardia = 358; //borrar
+      this.progressSpinner = true;
       this.sigaServices.getParam(
         "busquedaGuardias_tarjetaIncompatibilidades", "?idGuardia="+idGuardia+"&idTurno="+idTurno).subscribe(
           data => {

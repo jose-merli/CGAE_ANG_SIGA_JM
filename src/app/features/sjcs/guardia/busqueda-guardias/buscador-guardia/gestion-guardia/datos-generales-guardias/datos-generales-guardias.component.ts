@@ -227,6 +227,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
     if (this.body.descripcion != undefined) this.body.descripcion = this.body.descripcion.trim();
     if (this.body.nombre != undefined) this.body.nombre = this.body.nombre.trim();
     if (this.body.envioCentralita == undefined) this.body.envioCentralita = false;
+    this.progressSpinner = true;
     this.sigaService.post(url, this.body).subscribe(
       data => {
         let respuesta = JSON.parse(data.body);
@@ -239,7 +240,10 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           })
           this.modoEdicionSend.emit(true);
           this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.guardia.gestion.guardiaCreadaDatosPred"));
-        } else this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        } else{
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+          this.modoEdicionSend.emit(false);
+        } 
 
         this.resumenTipoGuardiaResumen();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
@@ -266,7 +270,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   save() {
     if(!this.disabledSave()){
       if (this.permisoEscritura && !this.historico) {
-        this.progressSpinner = true;
         let url = "";
 
         if (!this.modoEdicion && this.permisoEscritura) {

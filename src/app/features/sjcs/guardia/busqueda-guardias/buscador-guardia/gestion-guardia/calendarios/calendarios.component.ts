@@ -92,11 +92,18 @@ export class CalendariosComponent implements OnInit {
   }
 
   getCalProg(){
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
+
+    let datos = this.persistenceService.getDatos();
+
+    if(datos.idGuardia == undefined || datos.idGuardia == null){
+      datos = JSON.parse(this.persistenceService.getDatos());
+    }
+
     let datosEntrada = 
-    { 'idTurno': this.persistenceService.getDatos().idTurno,
+    { 'idTurno': datos.idTurno,
       'idConjuntoGuardia': null,
-     'idGuardia': this.persistenceService.getDatos().idGuardia,
+     'idGuardia': datos.idGuardia,
       'fechaCalendarioDesde': null,
       'fechaCalendarioHasta': null,
       'fechaProgramadaDesde': null,

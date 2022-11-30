@@ -180,41 +180,41 @@ export class FichaAsistenciaTarjetaActuacionesComponent implements OnInit, OnCha
 
     var contActuacionesErroneas: number = 0;
     this.selectedDatos.forEach(sD => {
-      if (sD.facturada != null || sD.facturada == this.FACTURADA || sD.validada != null || sD.validada == this.VALIDADA) contActuacionesErroneas++;
+      if (sD.facturada != null || sD.facturada == this.FACTURADA || (sD.validada != null && (sD.validada != "NO" || sD.validada == this.VALIDADA))) contActuacionesErroneas++;
     })
 
     if (contActuacionesErroneas == 0) {
-    this.progressSpinner = true;
-    let actuaciones: ActuacionAsistenciaItem[] = [];
-    if (Array.isArray(this.selectedDatos)) { //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
-      actuaciones = this.selectedDatos;
-    } else {
-      actuaciones.push(this.selectedDatos);
-    }
-
-    if (actuaciones) {
-
-      this.sigaServices.postPaginado("busquedaGuardias_eliminarActuaciones", "?anioNumero=" + this.asistencia.anioNumero, actuaciones).subscribe(
-        n => {
-
-          let error = JSON.parse(n.body).error;
-          this.progressSpinner = false;
-
-          if (error != null && error.description != null) {
-            this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
-          } else {
-            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
-            this.getActuaciones();
-            this.refreshTarjetas.emit(this.asistencia.anioNumero);
-          }
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        }, () => {
-          this.progressSpinner = false;
-        });
+      this.progressSpinner = true;
+      let actuaciones: ActuacionAsistenciaItem[] = [];
+      if (Array.isArray(this.selectedDatos)) { //Si hemos seleccionado varios registros o hemos seleccionado al menos uno
+        actuaciones = this.selectedDatos;
+      } else {
+        actuaciones.push(this.selectedDatos);
       }
+
+      if (actuaciones) {
+
+        this.sigaServices.postPaginado("busquedaGuardias_eliminarActuaciones", "?anioNumero=" + this.asistencia.anioNumero, actuaciones).subscribe(
+          n => {
+
+            let error = JSON.parse(n.body).error;
+            this.progressSpinner = false;
+
+            if (error != null && error.description != null) {
+              this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
+            } else {
+              this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
+              this.getActuaciones();
+              this.refreshTarjetas.emit(this.asistencia.anioNumero);
+            }
+          },
+          err => {
+            //console.log(err);
+            this.progressSpinner = false;
+          }, () => {
+            this.progressSpinner = false;
+          });
+        }
     }else{
       this.showMsg("error",this.translateService.instant("general.message.incorrect") ,this.translateService.instant("justiciaGratuita.guardia.actuaciones.errorEliminar") );
     }

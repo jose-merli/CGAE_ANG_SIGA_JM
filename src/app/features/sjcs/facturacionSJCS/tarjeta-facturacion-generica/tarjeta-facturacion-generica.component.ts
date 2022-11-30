@@ -414,7 +414,9 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
   procesaDatos() {
 
     let contador = 0;
+    let total;
     this.datos.forEach(el => {
+      
       el.id = contador;
       contador++;
       if (el.importe && el.importe.toString().trim().length > 0) {
@@ -428,10 +430,21 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
             });
           }
         }
+
+        if (el.tipo == "Facturación") {
+          total = this.totalFacturado;
+        }
+
         if (el.tipo == this.TIPOMOVIMIENTO) {
           this.totalFacturado += parseFloat(el.importe);
-          this.totalPagado += parseFloat(el.importe);
+          this.totalPagado = ((total + parseFloat(el.importe))/total)*100;
         }
+        if (this.totalPagado > 100 ){
+          this.totalPagado = 100;
+        } else if (this.totalPagado < 0 ){
+          this.totalPagado = 0;
+        }
+    
       }
       this.changeEstado = true;
 

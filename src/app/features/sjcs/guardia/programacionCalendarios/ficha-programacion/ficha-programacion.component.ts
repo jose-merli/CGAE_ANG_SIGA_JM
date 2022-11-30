@@ -220,11 +220,11 @@ export class FichaProgramacionComponent implements OnInit {
 
     this.obtenerPermisos();
 
-    if (sessionStorage.getItem("filtrosBusquedaGuardias")) {
+    if (sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")) {
       sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
       this.persistenciaGuardia = new GuardiaItem();
       this.persistenciaGuardia = JSON.parse(
-        sessionStorage.getItem("filtrosBusquedaGuardias")
+        sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
       );
     }
 

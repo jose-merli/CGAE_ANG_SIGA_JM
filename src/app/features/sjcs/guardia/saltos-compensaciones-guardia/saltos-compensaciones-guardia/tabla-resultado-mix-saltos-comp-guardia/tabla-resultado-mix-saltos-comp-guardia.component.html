@@ -46,7 +46,7 @@
               <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                 <p-dropdown autoWidth="false" class="center" [placeholder]="textFilter" [(ngModel)]="cell.value"
                   [options]="cell.combo" showClear="true" styleClass="widthAll" (onChange)="changeSelect(row, cell)"
-                  [disabled]="cell.disabled">
+                  [disabled]="cell.disabled" [filter]="true">
                 </p-dropdown>
               </span>
 
@@ -91,29 +91,32 @@
     <div class="text-right main-button butBottom mt10">
 
       <button *ngIf="!historico" (click)="toogleHistorico(true)" pButton type="button" icon="fa fa-history"
-        iconPos="left" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
+        iconPos="left" [disabled]="disableButtons" label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
 
       <button *ngIf="historico" (click)="toogleHistorico(false)" pButton type="button" icon="fa fa-undo" iconPos="left"
         label="{{'general.message.ocultarHistorico' | translate}}"></button>
 
       <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.guardar' | translate}}"
-        [disabled]="isDisabled" (click)="guardar()"></button>
+        [disabled]="historico" (click)="guardar()"></button>
 
 
       <button pButton type="button" icon="far fa-save" iconPos="left" label="{{ 'general.boton.anular' | translate}}"
-        [disabled]="historico" (click)="anular()"></button>
+        [disabled]="historico || disableButtons || isDisabled" (click)="anular()"></button>
 
       <button pButton type="button" icon="fa fa-plus" iconPos="left" label="{{ 'general.boton.new' | translate}}"
-        [disabled]="!anySelected" (click)="nuevo(false)"></button>
+        [disabled]="!anySelected || disableButtons || historico" (click)="nuevo(false)"></button>
 
       <button pButton type="button" icon="fa fa-plus" iconPos="left" label="Grupo"
-        [disabled]="!anySelected" (click)="nuevo(true)"></button>
+        [disabled]="!anySelected || disableButtons || historico" (click)="nuevo(true)"></button>
 
       <button pButton type="button" icon="fa fa-trash-alt" iconPos="left"
-        label="{{ 'general.boton.eliminar' | translate}}" [disabled]="!anySelected" (click)="delete()"></button>
+        label="{{ 'general.boton.eliminar' | translate}}" [disabled]="!anySelected || disableButtons || historico || isDisabled" (click)="delete()"></button>
 
-      <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left"
+      <button (click)="restablecer()" pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="disableButtons || historico"
         label="{{ 'general.boton.restablecer' | translate}}"></button>
     </div>
   </div>
+</div>
+<div class="mt-3 text-right main-button " id="down" *ngIf="showVolver">
+  <button (click)="backTo()" pButton type="button" icon="fa fa-angle-left" iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
 </div>

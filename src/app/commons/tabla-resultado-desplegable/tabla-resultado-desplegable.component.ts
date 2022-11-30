@@ -1964,6 +1964,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       id = id.split("\n")[0];
 
       this.busquedaDesignaciones(id);
+    } else if (this.pantalla == "AE" && id) {
+      sessionStorage.setItem("modoBusqueda", "b");
+      sessionStorage.setItem("idAsistencia", id.slice(1));
+      this.router.navigate(["/fichaAsistencia"]);
     }
   }
 

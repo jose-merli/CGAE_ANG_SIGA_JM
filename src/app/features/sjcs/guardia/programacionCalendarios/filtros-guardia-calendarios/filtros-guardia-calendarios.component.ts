@@ -341,7 +341,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       this.persistenceService.setFiltros(this.filtros);
       this.persistenceService.setFiltrosAux(this.filtros);
       this.filtroAux = this.persistenceService.getFiltrosAux();
-      sessionStorage.setItem('filtrosBusquedaGuardias', JSON.stringify(this.filtros));
+      sessionStorage.setItem('filtrosBusquedaGuardiasFichaGuardia', JSON.stringify(this.filtros));
       this.isOpen.emit(false)
       this.filtrosValues.emit(Object.assign({},this.filtros));
       
