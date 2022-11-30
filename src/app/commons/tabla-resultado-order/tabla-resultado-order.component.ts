@@ -997,6 +997,11 @@ this.totalRegistros = this.rowGroups.length;
             aDesplazar.forEach(row => row.cells[y].value = groupSelected);
 
             this.rowGroupsAux = this.rowGroups;
+            //Movemos la selección de la fila
+            this.selectRow(this.positionSelected, this.rowGroups[this.positionSelected]);
+            if(this.positionSelected > 0){
+              this.selectRow(this.positionSelected - 1, this.rowGroups[this.positionSelected - 1])
+            }
           } else if (movement == 'down'){
             let newGroup = parseInt(groupSelected) + 1;
 
@@ -1011,6 +1016,11 @@ this.totalRegistros = this.rowGroups.length;
             aDesplazar.forEach(row => row.cells[y].value = groupSelected);
 
             this.rowGroupsAux = this.rowGroups;
+            //Movemos la selección de la fila
+            this.selectRow(this.positionSelected, this.rowGroups[this.positionSelected]);
+            if(this.positionSelected+1+this.from < this.to){
+              this.selectRow(this.positionSelected + 1, this.rowGroups[this.positionSelected + 1])
+            }
           }
         }
     }else{
