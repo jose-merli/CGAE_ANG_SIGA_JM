@@ -881,7 +881,6 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         
         // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A BAJA COLEGIAL");
 
-        let matchOtherEjerNoResi = false;
         // Que la persona no tenga otra colegiación en vigor como ejerciente no residente
         this.sigaServices
         .post(
@@ -890,20 +889,20 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         .subscribe(
           data => {
 
+            let matchOtherEjerResi:Boolean = false;
             let colegialesObjectSpec = JSON.parse(data["body"]);
             let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
             datosColegialesActualSpec.forEach(datColActuIte => {
               if (datColActuIte.idEstado == "20"
-                && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
-                matchOtherEjerNoResi = true;
+                && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
+                  matchOtherEjerResi = true;
               }
             });
     
-            if (matchOtherEjerNoResi) {
-              
+            if (!matchOtherEjerResi) {     
               this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
-                ""), "fa fa-warning", "cambioSituacionColegiado");
+                "fichacolegial.cambiosituacion_ejer_res_bajacolegial.warning"), "fa fa-warning", "cambioSituacionColegiado");
             } else {
               this.callServiceGuardarColegiales();
             }
@@ -914,20 +913,20 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         && (this.nuevoEstadoColegial.situacionResidente == "0" || this.nuevoEstadoColegial.situacionResidente == "No")) {  
           // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A NO RESIDENTE");
 
-          let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
+              let matchOtherEjerNoResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
               datosColegialesActualSpec.forEach(datColActuIte => {
                 if (datColActuIte.idEstado == "20"
-                  && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
+                  && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
                     matchOtherEjerNoResi = true;
                 }
               });
       
-              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {           
+              if (!matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {           
                 this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                   "fichacolegial.cambiosituacion_ejer_res_ejer_nores.warning"), "fa fa-warning", "cambioSituacionColegiado");
               } else {
@@ -942,9 +941,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         && (this.nuevoEstadoColegial.situacionResidente == "1" || this.nuevoEstadoColegial.situacionResidente == "Si")) {  
           // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE NO RESIDENTE A RESIDENTE");
           
-          let matchOtherEjerResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
+              let matchOtherEjerResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
@@ -980,9 +979,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")) {  
           // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A NO EJERCIENTE");
 
-          let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
+              let matchOtherEjerNoResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
@@ -1035,9 +1034,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         && (this.datosColegiales[1].idEstado == "10" || this.datosColegiales[1].idEstado == "30" || this.datosColegiales[1].idEstado == "40" || this.datosColegiales[1].idEstado == "50")) {  
           // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE RESIDENTE");
 
-          let matchOtherEjerResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
+              let matchOtherEjerResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
@@ -1072,20 +1071,20 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         && (this.datosColegiales[1].idEstado == "10" || this.datosColegiales[1].idEstado == "30" || this.datosColegiales[1].idEstado == "40" || this.datosColegiales[1].idEstado == "50")) {  
           // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE NO RESIDENTE");
 
-          let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
+              let matchOtherEjerResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
               datosColegialesActualSpec.forEach(datColActuIte => {
                 if (datColActuIte.idEstado == "20"
-                  && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
-                    matchOtherEjerNoResi = true;
+                  && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
+                    matchOtherEjerResi = true;
                 }
               });
       
-              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {
+              if (!matchOtherEjerResi || (!matchOtherEjerResi && datosColegialesActualSpec.length < 1)) {
 
                 this.msgs = [
                   {
@@ -1126,7 +1125,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       if (this.datosColegialesInit[0].idEstado == "20" && this.datosColegiales[0].idEstado == "30"
         && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")) {       
           // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A BAJA COLEGIAL");
-          let matchOtherEjerNoResi = false;
+          
           // Que la persona no tenga otra colegiación en vigor como ejerciente no residente
           this.sigaServices
           .post(
@@ -1134,18 +1133,18 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
           )
           .subscribe(
             data => {
-
+              let matchOtherEjerResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
               datosColegialesActualSpec.forEach(datColActuIte => {
                 if (datColActuIte.idEstado == "20"
-                  && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
-                  matchOtherEjerNoResi = true;
+                  && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
+                    matchOtherEjerResi = true;
                 }
               });
       
-              if (matchOtherEjerNoResi) {
+              if (!matchOtherEjerResi) {
                 
                 this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                   "fichacolegial.cambiosituacion_ejer_res_bajacolegial.warning"), "fa fa-warning", "cambioSituacionColegiado");
@@ -1161,20 +1160,20 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         && (this.datosColegiales[0].situacionResidente == "0" || this.datosColegiales[0].situacionResidente == "No")) {  
           // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A NO RESIDENTE");
 
-          let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
+              let matchOtherEjerNoResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
               datosColegialesActualSpec.forEach(datColActuIte => {
                 if (datColActuIte.idEstado == "20"
-                  && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
+                  && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
                     matchOtherEjerNoResi = true;
                 }
               });
       
-              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {               
+              if (!matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {               
                 this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                   "fichacolegial.cambiosituacion_ejer_res_ejer_nores.warning"), "fa fa-warning", "cambioSituacionColegiado");
               } else {
@@ -1189,10 +1188,10 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         && (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si")) {  
         
           // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE NO RESIDENTE A RESIDENTE");
-    
-          let matchOtherEjerResi = false;
+
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
+              let matchOtherEjerResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
@@ -1226,21 +1225,20 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")) {  
         // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A NO EJERCIENTE");
 
-        let matchOtherEjerNoResi = false;
         this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
           data => {
+            let matchOtherEjerResi:Boolean = false;
             let colegialesObjectSpec = JSON.parse(data["body"]);
             let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
             datosColegialesActualSpec.forEach(datColActuIte => {
               if (datColActuIte.idEstado == "20"
-                && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
-                  matchOtherEjerNoResi = true;
+                && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
+                  matchOtherEjerResi = true;
               }
             });
     
-            if (matchOtherEjerNoResi) {
-              
+            if (!matchOtherEjerResi) {             
               this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                 "fichacolegial.cambiosituacion_ejer_res_noejer.warning"), "fa fa-warning", "cambioSituacionColegiado");
             } else {
@@ -1280,9 +1278,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       && (this.datosColegialesInit[0].idEstado == "10" || this.datosColegialesInit[0].idEstado == "30" || this.datosColegialesInit[0].idEstado == "40" || this.datosColegialesInit[0].idEstado == "50")) {  
         // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE RESIDENTE");
 
-        let matchOtherEjerResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
+              let matchOtherEjerResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
@@ -1317,21 +1315,20 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       && (this.datosColegialesInit[0].idEstado == "10" || this.datosColegialesInit[0].idEstado == "30" || this.datosColegialesInit[0].idEstado == "40" || this.datosColegialesInit[0].idEstado == "50")) {  
         // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE NO RESIDENTE");
 
-        let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
+              let matchOtherEjerResi:Boolean = false;
               let colegialesObjectSpec = JSON.parse(data["body"]);
               let datosColegialesActualSpec = colegialesObjectSpec.colegiadoItem;
 
               datosColegialesActualSpec.forEach(datColActuIte => {
                 if (datColActuIte.idEstado == "20"
-                  && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
-                    matchOtherEjerNoResi = true;
+                  && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
+                    matchOtherEjerResi = true;
                 }
               });
       
-              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {
-
+              if (!matchOtherEjerResi || (!matchOtherEjerResi && datosColegialesActualSpec.length < 1)) {
                 this.msgs = [
                   {
                     severity: "error",
