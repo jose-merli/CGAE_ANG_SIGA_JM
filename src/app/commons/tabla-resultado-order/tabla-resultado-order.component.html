@@ -25,7 +25,7 @@
               <div (click)="selectRow(i, row)" class="table-row-wrapper hoverBlue" [ngClass]="{'hoverBlue2': isSelected(i), 'fixedBlue': seleccionarTodo, 'fixedRed': selectWrong(i)}">
             
             <div *ngFor="let cell of row['cells'] | slice:fromSlice:toSlice; let z = index " class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'borders-child-last': isLast(i)}" #cellSelected>
-                <div class="breakWord cell-wrapper selectedRowClass">
+                <div class="w100 breakWord cell-wrapper selectedRowClass">
                     <span class="w100 cell-value" *ngIf="cell.type != 'inputNumber' && cell.type != 'text' && cell.type != 'select' && cell.type != 'selectDependency' && cell.type != 'selectDependency2' && cell.type != 'invisible' && cell.type != 'link' && cell.type != 'link2' && cell.type != 'textNew' && cell.type != 'linkNew'">
                         <input *ngIf="cell.value != null" type="text"  (change)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="cell.value">
                         <input *ngIf="cell.value == null" type="text"  (input)="valueChange(i, z, $event)"  [ngClass]="styleObligatorio(cell.required , cell.value)" class="form-control mt-2" pInputText  [(ngModel)]="cell.value" [placeholder]="">
@@ -36,15 +36,15 @@
                     <span class="w100 cell-value" *ngIf="cell.type == 'link' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'linkNew' && cell.type != 'invisible'" class="enlace" (click)="openTab(row)">{{cell.value}}</span> 
                     <span class="w100 cell-value" *ngIf="cell.type == 'link2' && cell.type != 'invisible'" class="enlace" (click)="openTab2(row)">{{cell.value}}</span> 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency' && cell.type != 'invisible'"><p-dropdown class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeTurno(cell.value, row)"
+                    <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeTurno(cell.value, row)"
                                                                                     [options]="comboTurno" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
                                                                                     [showClear]="true" [ngClass]="styleObligatorio(cell.required , cell.value)">
                                                                                 </p-dropdown></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'select' && cell.type != 'invisible'"><p-dropdown class="select-form"  [filter]="true" [(ngModel)]="cell.value" 
+                    <span class="w100 cell-value" *ngIf="cell.type == 'select' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" 
                                                                                     [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
                                                                                     [showClear]="true">
                                                                                 </p-dropdown></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency2' && cell.type != 'invisible'"><p-dropdown class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeGuardia(row)"
+                    <span class="w100 cell-value" *ngIf="cell.type == 'selectDependency2' && cell.type != 'invisible'"><p-dropdown autoWidth="false" class="select-form"  [filter]="true" [(ngModel)]="cell.value" (onChange)="onChangeGuardia(row)"
                                                                                     [options]="cell.combo" filterMatchMode="contains" placeholder="{{'general.boton.seleccionar' | translate}}"
                                                                                     [showClear]="true" [ngClass]="styleObligatorio(cell.required , cell.value)">
                                                                                 </p-dropdown></span>
