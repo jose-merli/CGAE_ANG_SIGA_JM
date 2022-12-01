@@ -26,8 +26,8 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
   comboGuardia;
   isDisabledGuardia;
   comboValidar = [
-    { label: 'SI', value: 1 },
-    { label: 'NO', value: 0 }
+    { label: 'SI', value: 0 },
+    { label: 'NO', value: 1 }
   ];
   disabledBusquedaExpress: boolean = false;
   usuarioBusquedaExpress = {
@@ -92,6 +92,9 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
         if(this.dataBuscador.fechaHasta != ''){
           this.filtros.fechahasta = new Date(this.changeDateFormat(this.dataBuscador.fechaHasta));//MM/dd/yyyy
         }
+      }
+      if(this.filtros.numColegiado != null){
+        this.usuarioBusquedaExpress.numColegiado = this.filtros.numColegiado;
       }
       this.search();
   

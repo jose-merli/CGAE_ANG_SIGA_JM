@@ -50,7 +50,6 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
           //console.log(n);
           this.progressSpinner = false;
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.body.observacionesAnulacion = "";
         },
         err => {
           //console.log(err);

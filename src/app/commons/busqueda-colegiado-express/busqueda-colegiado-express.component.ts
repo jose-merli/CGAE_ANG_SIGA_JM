@@ -48,6 +48,11 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
     if (this.numColegiado) {
       this.colegiadoForm.get('numColegiado').setValue(this.numColegiado);
+      let usuarioBusquedaExpress = {
+        numColegiado: this.numColegiado,
+        nombreAp: ''
+      };
+      this.isBuscar(usuarioBusquedaExpress);
     }
 
     if (this.nombreAp) {
