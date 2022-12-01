@@ -425,9 +425,9 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
         //TO DO
       } else {
         if (!this.disabledSave()) {
-          if (this.permisoEscritura && !this.historico) {
+          if (this.permisoEscritura ) {
             //Guardar sólo actualizará el estado si no tiene estado (creación) o es Pendiente/Programada
-            if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "Pendiente" || this.datosGenerales.estado == "Programada") {
+            if (this.datosGenerales.estado == "" || this.datosGenerales.estado == "4" || this.datosGenerales.estado == "0") {
 
               // Actualizamos la tarjeta Guardias Calendario en caso de que este vacía
               if (this.datosGenerales.listaGuarias.value == undefined) {
