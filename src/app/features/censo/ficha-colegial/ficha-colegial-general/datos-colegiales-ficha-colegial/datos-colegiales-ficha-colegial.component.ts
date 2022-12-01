@@ -993,7 +993,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                 }
               });
       
-              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {
+              if (matchOtherEjerNoResi) {
                 
                 this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                   "fichacolegial.cambiosituacion_ejer_res_noejer.warning"), "fa fa-warning", "cambioSituacionColegiado");
@@ -1239,7 +1239,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
               }
             });
     
-            if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {
+            if (matchOtherEjerNoResi) {
               
               this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                 "fichacolegial.cambiosituacion_ejer_res_noejer.warning"), "fa fa-warning", "cambioSituacionColegiado");
