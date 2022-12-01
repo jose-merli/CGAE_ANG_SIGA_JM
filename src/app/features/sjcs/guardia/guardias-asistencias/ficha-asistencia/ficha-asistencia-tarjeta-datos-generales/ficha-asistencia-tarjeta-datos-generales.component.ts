@@ -856,6 +856,15 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
   cancelar(){
     this.showSustitutoDialog = false;
+    this.msgs = [
+      {
+        severity: "info",
+        summary: "Cancel",
+        detail: this.translateService.instant(
+          "general.message.accion.cancelada"
+        )
+      }
+    ];
   }
   confirmarSustituto(){
     this.showSustitutoDialog = false;
