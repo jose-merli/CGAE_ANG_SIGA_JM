@@ -313,6 +313,9 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
                 this.filtro.idLetradoGuardia = this.comboLetradosGuardia[0].value;
                 if (this.filtro.idLetradoGuardia != undefined && this.filtro.idLetradoGuardia != null){
                   this.letradoFillAutomatic.emit(true);
+
+                  this.filtro.isSustituto = null;
+                  this.refuerzoSustitucionNoSeleccionado = true;
                 }else{
                   this.letradoFillAutomatic.emit(false);
                 }
