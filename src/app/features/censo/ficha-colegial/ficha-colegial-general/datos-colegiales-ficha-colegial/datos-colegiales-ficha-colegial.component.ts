@@ -879,7 +879,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       if (this.datosColegialesInit[0].idEstado == "20" && this.nuevoEstadoColegial.situacion == "30"
         && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")) {  
         
-        console.log("+++++ [SMB - this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A BAJA COLEGIAL");
+        // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A BAJA COLEGIAL");
 
         let matchOtherEjerNoResi = false;
         // Que la persona no tenga otra colegiación en vigor como ejerciente no residente
@@ -912,9 +912,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       } else if (this.nuevoEstadoColegial.situacion == "20" && this.datosColegiales[1].idEstado == "20"
         && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")
         && (this.nuevoEstadoColegial.situacionResidente == "0" || this.nuevoEstadoColegial.situacionResidente == "No")) {  
-          console.log("+++++ [SMB - this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A NO RESIDENTE");
+          // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A NO RESIDENTE");
 
-          let matchOtherEjerResi = false;
+          let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
               let colegialesObjectSpec = JSON.parse(data["body"]);
@@ -923,12 +923,11 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
               datosColegialesActualSpec.forEach(datColActuIte => {
                 if (datColActuIte.idEstado == "20"
                   && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
-                    matchOtherEjerResi = true;
+                    matchOtherEjerNoResi = true;
                 }
               });
       
-              if (matchOtherEjerResi) {
-                
+              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {           
                 this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                   "fichacolegial.cambiosituacion_ejer_res_ejer_nores.warning"), "fa fa-warning", "cambioSituacionColegiado");
               } else {
@@ -941,7 +940,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       } else if (this.nuevoEstadoColegial.situacion == "20" && this.datosColegiales[1].idEstado == "20"
         && (this.datosColegialesInit[0].situacionResidente == "0" || this.datosColegialesInit[0].situacionResidente == "No")
         && (this.nuevoEstadoColegial.situacionResidente == "1" || this.nuevoEstadoColegial.situacionResidente == "Si")) {  
-          console.log("+++++ [SMB - this.isCrearColegial == true] - CAMBIO DE EJERCIENTE NO RESIDENTE A RESIDENTE");
+          // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE NO RESIDENTE A RESIDENTE");
           
           let matchOtherEjerResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
@@ -979,7 +978,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         // Cambio de situación de un ejerciente residente a no ejerciente || --> AVISAR Y PREGUNTAR     
       } else if (this.nuevoEstadoColegial.situacion == "10" && this.datosColegiales[1].idEstado == "20"
         && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")) {  
-          console.log("+++++ [SMB - this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A NO EJERCIENTE");
+          // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A NO EJERCIENTE");
 
           let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
@@ -994,7 +993,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                 }
               });
       
-              if (matchOtherEjerNoResi) {
+              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {
                 
                 this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                   "fichacolegial.cambiosituacion_ejer_res_noejer.warning"), "fa fa-warning", "cambioSituacionColegiado");
@@ -1007,7 +1006,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         // Cambio de situación de un ejerciente (residente o no) a Inhabilitación o Suspensión ejercicio || --> AVISAR A OTROS COLEGIOS 
       } else if ( (this.nuevoEstadoColegial.situacion == "40" || this.nuevoEstadoColegial.situacion == "50") 
         && this.datosColegiales[1].idEstado == "20") {  
-          console.log("+++++ [SMB - this.isCrearColegial == true] - CAMBIO DE EJERCIENTE A INHABILITACION / SUSPENSION EJERCICIO");
+          // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE A INHABILITACION / SUSPENSION EJERCICIO");
 
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
@@ -1034,7 +1033,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       } else if ( (this.nuevoEstadoColegial.situacion == "20" 
         && (this.nuevoEstadoColegial.situacionResidente == "1" || this.nuevoEstadoColegial.situacionResidente == "Si")) 
         && (this.datosColegiales[1].idEstado == "10" || this.datosColegiales[1].idEstado == "30" || this.datosColegiales[1].idEstado == "40" || this.datosColegiales[1].idEstado == "50")) {  
-          console.log("+++++ [SMB - this.isCrearColegial == true] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE RESIDENTE");
+          // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE RESIDENTE");
 
           let matchOtherEjerResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
@@ -1071,9 +1070,9 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       } else if ( (this.nuevoEstadoColegial.situacion == "20"
         && (this.nuevoEstadoColegial.situacionResidente == "0" || this.nuevoEstadoColegial.situacionResidente == "No")) 
         && (this.datosColegiales[1].idEstado == "10" || this.datosColegiales[1].idEstado == "30" || this.datosColegiales[1].idEstado == "40" || this.datosColegiales[1].idEstado == "50")) {  
-          console.log("+++++ [SMB - this.isCrearColegial == true] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE NO RESIDENTE");
+          // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE NO RESIDENTE");
 
-          let matchOtherEjerResi = false;
+          let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
             data => {
               let colegialesObjectSpec = JSON.parse(data["body"]);
@@ -1081,12 +1080,12 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
               datosColegialesActualSpec.forEach(datColActuIte => {
                 if (datColActuIte.idEstado == "20"
-                  && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
-                    matchOtherEjerResi = true;
+                  && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
+                    matchOtherEjerNoResi = true;
                 }
               });
       
-              if (matchOtherEjerResi) {
+              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {
 
                 this.msgs = [
                   {
@@ -1126,7 +1125,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       //Si el cambio pertenece de un colegiado "Ejerciente Residente -> Baja Colegial"
       if (this.datosColegialesInit[0].idEstado == "20" && this.datosColegiales[0].idEstado == "30"
         && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")) {       
-          console.log("+++++ [SMB - this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A BAJA COLEGIAL");
+          // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A BAJA COLEGIAL");
           let matchOtherEjerNoResi = false;
           // Que la persona no tenga otra colegiación en vigor como ejerciente no residente
           this.sigaServices
@@ -1160,7 +1159,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       } else if (this.datosColegiales[0].idEstado == "20" && this.datosColegialesInit[0].idEstado == "20"
         && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")
         && (this.datosColegiales[0].situacionResidente == "0" || this.datosColegiales[0].situacionResidente == "No")) {  
-          console.log("+++++ [SMB - this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A NO RESIDENTE");
+          // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A NO RESIDENTE");
 
           let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
@@ -1175,8 +1174,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                 }
               });
       
-              if (matchOtherEjerNoResi) {
-                
+              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {               
                 this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                   "fichacolegial.cambiosituacion_ejer_res_ejer_nores.warning"), "fa fa-warning", "cambioSituacionColegiado");
               } else {
@@ -1190,7 +1188,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
         && (this.datosColegialesInit[0].situacionResidente == "0" || this.datosColegialesInit[0].situacionResidente == "No")
         && (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si")) {  
         
-          console.log("+++++ [SMB - this.isCrearColegial == false] - CAMBIO DE EJERCIENTE NO RESIDENTE A RESIDENTE");
+          // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE NO RESIDENTE A RESIDENTE");
     
           let matchOtherEjerResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
@@ -1226,7 +1224,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       // Cambio de situación de un ejerciente residente a no ejerciente || --> AVISAR Y PREGUNTAR     
       } else if (this.datosColegiales[0].idEstado == "10" && this.datosColegialesInit[0].idEstado == "20"
       && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")) {  
-        console.log("+++++ [SMB - this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A NO EJERCIENTE");
+        // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A NO EJERCIENTE");
 
         let matchOtherEjerNoResi = false;
         this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
@@ -1241,7 +1239,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
               }
             });
     
-            if (matchOtherEjerNoResi) {
+            if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {
               
               this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                 "fichacolegial.cambiosituacion_ejer_res_noejer.warning"), "fa fa-warning", "cambioSituacionColegiado");
@@ -1254,7 +1252,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       // Cambio de situación de un ejerciente (residente o no) a Inhabilitación o Suspensión ejercicio || --> AVISAR A OTROS COLEGIOS 
     } else if ( (this.datosColegiales[0].idEstado == "40" || this.datosColegiales[0].idEstado == "50") 
       && this.datosColegialesInit[0].idEstado == "20") {  
-        console.log("+++++ [SMB - this.isCrearColegial == false] - CAMBIO DE EJERCIENTE A INHABILITACION / SUSPENSION EJERCICIO");
+        // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE A INHABILITACION / SUSPENSION EJERCICIO");
 
         this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
           data => {
@@ -1280,7 +1278,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     } else if ( (this.datosColegiales[0].idEstado == "20" 
       && (this.datosColegiales[0].situacionResidente == "1" || this.datosColegiales[0].situacionResidente == "Si")) 
       && (this.datosColegialesInit[0].idEstado == "10" || this.datosColegialesInit[0].idEstado == "30" || this.datosColegialesInit[0].idEstado == "40" || this.datosColegialesInit[0].idEstado == "50")) {  
-        console.log("+++++ [SMB - this.isCrearColegial == false] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE RESIDENTE");
+        // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE RESIDENTE");
 
         let matchOtherEjerResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
@@ -1317,7 +1315,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
     } else if ( (this.datosColegiales[0].idEstado == "20"
       && (this.datosColegiales[0].situacionResidente == "0" || this.datosColegiales[0].situacionResidente == "No")) 
       && (this.datosColegialesInit[0].idEstado == "10" || this.datosColegialesInit[0].idEstado == "30" || this.datosColegialesInit[0].idEstado == "40" || this.datosColegialesInit[0].idEstado == "50")) {  
-        console.log("+++++ [SMB - this.isCrearColegial == false] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE NO RESIDENTE");
+        // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE NO EJERCIENTE / BAJA COLEGIAL / INHABILITACION / SUSPENSION EJERCICIO A EJERCIENTE NO RESIDENTE");
 
         let matchOtherEjerNoResi = false;
           this.sigaServices.post("fichaDatosColegiales_datosColegialesSearchHistor", this.generalBody).subscribe(
@@ -1332,7 +1330,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
                 }
               });
       
-              if (matchOtherEjerNoResi) {
+              if (matchOtherEjerNoResi || (!matchOtherEjerNoResi && datosColegialesActualSpec.length < 1)) {
 
                 this.msgs = [
                   {
