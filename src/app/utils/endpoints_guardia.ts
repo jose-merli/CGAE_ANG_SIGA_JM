@@ -175,6 +175,7 @@ export let endpoints_guardia: any = {
     //CARGAS MASIVAS GUARDIA
     busquedaGuardia_guardia: "combo/guardias",
     busquedaGuardia_guardiaNoBaja: "combo/guardiasNoBaja",
+    busquedaGuardia_guardiaNoBajaNoExistentesEnListaGuardias: "combo/guardiasNoBajaNoExistentesEnListaGuardias",
     cargasMasivasGuardia_decargarModelo: "guardia/cargasMasivasGuardia/descargarModelo",
     cargasMasivasGuardia_uploadFileI: "guardia/cargasMasivasGuardia/uploadFileI",
     cargasMasivasGuardia_uploadFileGC: "guardia/cargasMasivasGuardia/uploadFileGC",

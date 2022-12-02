@@ -16,6 +16,7 @@ import { GuardiaItem } from '../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../_services/persistence.service';
 import { BuscadorGuardiaComponent } from '../../features/sjcs/guardia/busqueda-guardias/buscador-guardia/buscador-guardia.component';
 import { SigaStorageService } from '../../siga-storage.service';
+import { ListaGuardiasItem } from '../../models/guardia/ListaGuardiasItem';
 @Component({
   selector: 'app-tabla-resultado-order',
   templateUrl: './tabla-resultado-order.component.html',
@@ -33,6 +34,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() listaGuardias : boolean = false;
   rowGroupsOrdered = [];
   @Input() seleccionarTodo = false;
+  @Input() lista : ListaGuardiasItem;
   @Input() estado;
   @Output() anySelected = new EventEmitter<any>();
   @Output() selectedRow = new EventEmitter<any>();
@@ -141,7 +143,8 @@ export class TablaResultadoOrderComponent implements OnInit {
   ngOnInit(): void {
     this.currentRoute = this.router.url;
     this.marcadoultimo = false;
-    this.ordenarByOrderField();
+    // Descomentar para ordenar por orden ascendente
+    //this.ordenarByOrderField();
     //console.log('rowGroups al inicio: ', this.rowGroups)
     this.selectedArray = [];
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
@@ -1343,7 +1346,7 @@ this.totalRegistros = this.rowGroups.length;
     getComboGuardia(idTurno, row) {
       this.progressSpinner = true;
     this.sigaServices.getParam(
-      "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+      "busquedaGuardia_guardiaNoBajaNoExistentesEnListaGuardias", "?idTurno=" + idTurno + "&idListaGuardias=" + this.lista.idLista).subscribe(
         data => {
           this.progressSpinner = false;
           let comboGuardia = data.combooItems;
@@ -1451,11 +1454,16 @@ this.totalRegistros = this.rowGroups.length;
       ];
       let rowObject: Row = new Row();
       rowObject.cells = newCells;
-      this.rowGroups.push(rowObject); 
+      this.rowGroups.unshift(rowObject); 
       this.totalRegistros = this.rowGroups.length;
+
+      if ((this.to - this.from) % 10 != 0) {
+        this.to++;
+        this.toReg(this.to);
+      }
+      
       //console.log('this.rowGroups NUEVO: ', this.rowGroups)
       //console.log('this.totalRegistros NUEVO: ', this.totalRegistros)
-      this.to = this.totalRegistros;
       this.cd.detectChanges();
    }
   saveGuardias(){
