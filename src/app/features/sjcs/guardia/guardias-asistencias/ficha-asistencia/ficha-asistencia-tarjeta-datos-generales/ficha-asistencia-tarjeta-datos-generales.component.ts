@@ -43,6 +43,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   salto: boolean = false;
   showSustitutoDialog: boolean = false;
   mensajeSustitutoDialog: string;
+  deshabilitarLetradoGuardia: boolean = false;
 
   ineditable: boolean = false; //Si esta finalizada o anulada no se puede editar ningun campo
   reactivable: boolean = false;
@@ -246,6 +247,8 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
 
   onChangeGuardia() {
 
+    this.deshabilitarLetradoGuardia = false;
+
     if (this.asistencia.idTurno && this.asistencia.idGuardia) {
 
       sessionStorage.setItem("idGuardiaAsistencia", this.asistencia.idGuardia);
@@ -292,9 +295,22 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
                 this.onChangeLetradoGuardia();
               }*/
 
-            if (this.asistencia.idLetradoGuardia == null || this.asistencia.idLetradoGuardia == undefined) {
-              this.asistencia.idLetradoGuardia = this.comboLetradoGuardia[0].value;
-              this.onChangeLetradoGuardia();
+            if(this.comboLetradoGuardia !== null
+              && this.comboLetradoGuardia.length > 0){
+
+              if (this.asistencia.idLetradoGuardia == null || this.asistencia.idLetradoGuardia == undefined) {
+                this.asistencia.idLetradoGuardia = this.comboLetradoGuardia[0].value;
+
+                this.asistencia.isSustituto = null;
+                this.refuerzoSustitucionNoSeleccionado = true;
+
+                this.onChangeLetradoGuardia();
+              }
+            } else {
+              this.asistencia.idLetradoGuardia = null;
+              this.deshabilitarLetradoGuardia = true;
+              this.asistencia.isSustituto = 'N';
+              this.refuerzoSustitucionNoSeleccionado = false;
             }
 
           },
