@@ -41,7 +41,8 @@ export class DatosGeneralesFichaProgramacionComponent implements OnInit {
     'idTurno': '',
     'idGuardia': '',
     'idInstitucion': '',
-    'soloGenerarVacio': ''
+    'soloGenerarVacio': '',
+    'estadoProgramacion' : ''
   };
   @Input() datosGenerales = {
     'duplicar': '',

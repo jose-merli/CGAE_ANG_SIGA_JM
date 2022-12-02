@@ -7,6 +7,7 @@ import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
 import * as moment from 'moment';
 import { CalendarioProgramadoItem } from '../../../../../../models/guardia/CalendarioProgramadoItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-calendario-gestion-guardia-colegiado',
@@ -36,7 +37,8 @@ comboListaGuardias =[];
     private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private router: Router,
-    private commonsService : CommonsService
+    private commonsService : CommonsService,
+    private datepipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -68,27 +70,31 @@ comboListaGuardias =[];
       )
 
   }
-
+  formatDate2(date) {
+    const pattern = 'dd/MM/yyyy';
+    return this.datepipe.transform(date, pattern);
+  }
   getCalendarioInfo() {
-
     this.progressSpinner = true
     let datosEntrada =
-    {
-      'idTurno': this.calendarioBody.idTurno,
-      'idConjuntoGuardia': null,
-      'idGuardia': this.calendarioBody.idGuardia,
-      'fechaCalendarioDesde': null,
-      'fechaCalendarioHasta': null,
-      'fechaProgramadaDesde': null,
-      'fechaProgramadaHasta': null,
-    };
+      {
+        'idTurno': this.calendarioBody.idTurno,
+        'idConjuntoGuardia': null,
+        'idGuardia': this.calendarioBody.idGuardia,
+        'fechaCalendarioDesde': this.calendarioBody.fechadesde != null ? this.calendarioBody.fechadesde.toString().length > 10 ?  this.formatDate2(this.calendarioBody.fechadesde) : this.calendarioBody.fechadesde  : null ,
+        'fechaCalendarioHasta': this.calendarioBody.fechahasta != null ? this.calendarioBody.fechahasta.toString().length > 10 ?  this.formatDate2(this.calendarioBody.fechahasta) : this.calendarioBody.fechahasta  : null ,
+        'fechaProgramadaDesde': null,
+        'fechaProgramadaHasta': null,
+        'idCalendarioProgramado' : this.calendarioBody.idCalendarioProgramado != null ? this.calendarioBody.idCalendarioProgramado : null ,
+      };
+
     this.sigaServices.post(
-      "guardiaUltimoCalendario_buscar", datosEntrada).subscribe(
+      "guardiaCalendario_buscar", datosEntrada).subscribe(
         data => {
           if(data.body){
             let error = JSON.parse(data.body).error;
           };
-          this.calendarioItem = JSON.parse(data.body);
+          this.calendarioItem = JSON.parse(data.body)[0];
           if(this.calendarioItem){
             this.responseObject =
             {
@@ -99,18 +105,22 @@ comboListaGuardias =[];
               'idTurno': this.calendarioItem.idTurno,
               'idGuardia': this.calendarioItem.idGuardia,
               'observaciones': this.calendarioItem.observaciones,
-              'fechaDesde': this.calendarioItem.fechaDesde.split("-")[2].split(" ")[0] +"/"+ this.calendarioItem.fechaDesde.split("-")[1] + "/"+ this.calendarioItem.fechaDesde.split("-")[0],
-              'fechaHasta': this.calendarioItem.fechaHasta.split("-")[2].split(" ")[0] +"/"+ this.calendarioItem.fechaHasta.split("-")[1] + "/"+ this.calendarioItem.fechaHasta.split("-")[0],
-              'fechaProgramacion': moment(this.calendarioItem.fechaProgramacion, 'DD/MM/YYYY HH:mm:ss').toDate(),
-              'estado': this.comboEstado.find(comboItem => comboItem.value == this.calendarioItem.estado).label,
+              'fechaDesde': this.calendarioItem.fechaDesde.toString().split("-")[2].split(" ")[0] +"/"+ this.calendarioItem.fechaDesde.toString().split("-")[1] + "/"+ this.calendarioItem.fechaDesde.toString().split("-")[0],
+              'fechaHasta': this.calendarioItem.fechaHasta.toString().split("-")[2].split(" ")[0] +"/"+ this.calendarioItem.fechaHasta.toString().split("-")[1] + "/"+ this.calendarioItem.fechaHasta.toString().split("-")[0],
+              // 'fechaDesde': this.calendarioItem.fechaDesde,
+              //'fechaHasta': this.calendarioItem.fechaHasta,
+              'fechaProgramacion':this.calendarioItem.fechaProgramacion,
+              //'fechaProgramacion': moment(this.calendarioItem.fechaProgramacion, 'DD/MM/YYYY HH:mm:ss').toDate(),
+              'estado':this.calendarioItem.estado,
               'generado': this.calendarioItem.generado,
               'numGuardias': this.calendarioItem.numGuardias,
               'idInstitucion': this.calendarioItem.idInstitucion,
               'idCalG': this.calendarioItem.idCalG,
-              'listaGuarias':   {value : this.comboListaGuardias.find(comboItem => comboItem.label == this.calendarioItem.listaGuardias).value},
+              'listaGuarias':   {label: null, value: null},
               'idCalendarioProgramado': this.calendarioItem.idCalendarioProgramado,
               'facturado': this.calendarioItem.facturado,
               'asistenciasAsociadas': this.calendarioItem.asistenciasAsociadas,
+              'estadoProgramacion' : this.calendarioItem.estado,
               //'idCalendarioGuardias' : this.datosGenerales.idCalendarioGuardias
             };
           this.dataRecived = true;
@@ -124,6 +134,7 @@ comboListaGuardias =[];
           this.progressSpinner = false
           this.showMessage("error", "No existen calendarios para esta guardia", "No existen calendarios para esta guardia");
         }
+        
       );
   }
   showMessage(severity, summary, msg) {
@@ -138,6 +149,7 @@ comboListaGuardias =[];
 
   navigateToFichaGuardia() {
     sessionStorage.setItem('guardiaColegiadoData',JSON.stringify(this.responseObject));
+    sessionStorage.setItem('desdeGC','true');
     this.router.navigate(["/fichaProgramacion"]);
 
 

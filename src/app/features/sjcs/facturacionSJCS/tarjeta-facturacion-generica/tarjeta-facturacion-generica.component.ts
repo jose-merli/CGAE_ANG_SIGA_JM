@@ -307,7 +307,7 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
         idturno: this.datosEntrada.idTurno,
         idguardia: this.datosEntrada.idGuardia,
         idpersona: this.datosEntrada.idPersona,
-        fechainicio: this.datosEntrada.fechadesde
+        fechainicio: this.datosEntrada.fechadesde.toString().length > 10 ? this.datosEntrada.fechadesde : Date.parse(this.datosEntrada.fechadesde)
       };
 
       this.callService("tarjGenFac_getFacturacionesPorGuardia", payload);

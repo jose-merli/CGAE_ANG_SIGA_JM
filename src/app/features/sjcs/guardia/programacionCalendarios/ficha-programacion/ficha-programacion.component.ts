@@ -172,30 +172,10 @@ export class FichaProgramacionComponent implements OnInit {
         this.dataReady = true;
       }
     });
-
     //console.log('this.persistenceService.getDatos(): ', this.persistenceService.getDatos())
     this.infoResumen = [];
-    if (this.persistenceService.getDatos() != undefined) {
-      this.dataToReceive = this.persistenceService.getDatos();
-
-      if (this.dataToReceive.idCalendarioProgramado != null) {
-        this.disableGenerar = false;
-        this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
-      } else {
-        this.disableGenerar = true;
-        this.dataReady = true;
-      }
-      this.rowGroupsSaved = this.persistenceService.getDatos().tabla;
-      //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
-      this.datosGenerales = this.persistenceService.getDatos();
-      this.datosGeneralesIniciales = deepCopy(this.datosGenerales);
-      this.duplicar = this.dataToReceive.duplicar;
-      //this.search();
-      this.modoEdicion = true;
-    } else if (sessionStorage.getItem('guardiaColegiadoData')) { //si el origen es guardias de colegiado
+    if(sessionStorage.getItem('guardiaColegiadoData')) { //si el origen es guardias de colegiado
       this.dataToReceive = JSON.parse(sessionStorage.getItem('guardiaColegiadoData'));
-
-
       if (this.dataToReceive.idCalendarioProgramado != null) {
         this.disableGenerar = false;
         this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
@@ -213,6 +193,23 @@ export class FichaProgramacionComponent implements OnInit {
 
       this.modoEdicion = true;
       sessionStorage.removeItem('guardiaColegiadoData');
+    } 
+    else if (this.persistenceService.getDatos() != undefined) {
+      this.dataToReceive = this.persistenceService.getDatos();
+      if (this.dataToReceive.idCalendarioProgramado != null) {
+        this.disableGenerar = false;
+        this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
+      } else {
+        this.disableGenerar = true;
+        this.dataReady = true;
+      }
+      this.rowGroupsSaved = this.persistenceService.getDatos().tabla;
+      //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
+      this.datosGenerales = this.persistenceService.getDatos();
+      this.datosGeneralesIniciales = deepCopy(this.datosGenerales);
+      this.duplicar = this.dataToReceive.duplicar;
+      //this.search();
+      this.modoEdicion = true;
     } else {
       this.dataReady = false;
       this.modoEdicion = false;
@@ -237,7 +234,6 @@ export class FichaProgramacionComponent implements OnInit {
         this.showMessage(message.severity, message.summary, message.detail);
       sessionStorage.removeItem("mensaje");
     }
-
   }
 
   ngOnDestroy() {

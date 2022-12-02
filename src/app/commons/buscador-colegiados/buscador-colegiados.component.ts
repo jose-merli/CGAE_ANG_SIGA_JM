@@ -52,7 +52,7 @@ export class BuscadorColegiadosComponent implements OnInit {
 
   ngOnInit() {
     //console.log('sessionStorage.getItem("calendariosProgramados"): ', sessionStorage.getItem("calendariosProgramados"))
-    if(sessionStorage.getItem("calendariosProgramados") == "true"){
+    if(sessionStorage.getItem("calendariosProgramados") ){
       this.calendarioSelected = JSON.parse(sessionStorage.getItem("calendarioSeleccinoado"));
       //console.log('calendarioSelected: ', this.calendarioSelected)
     }
@@ -176,15 +176,8 @@ export class BuscadorColegiadosComponent implements OnInit {
         sessionStorage.setItem("datosColegiado",JSON.stringify(event));
         this.router.navigate(["/fichaMovimientosVarios"]);
       
-    }else{
-      sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
-
-      sessionStorage.getItem('nuevo');
-      
-      this.location.back();
-    }
-
-    if(sessionStorage.getItem("calendariosProgramados") == "true"){
+    }else   if(sessionStorage.getItem("calendariosProgramados")){
+      sessionStorage.removeItem('calendariosProgramados')
       this.calendarioSelected = JSON.parse(sessionStorage.getItem("calendarioSeleccinoado"));
        //redirigimos a fichaGuardiasColegiado
       let guardia = new GuardiaItem()
@@ -200,7 +193,7 @@ export class BuscadorColegiadosComponent implements OnInit {
       guardia.tipoTurno = this.calendarioSelected.turno;
       guardia.tipoGuardia = this.calendarioSelected.nombre;
       guardia.numColegiado = event.nColegiado;
-      guardia.idCalendarioGuardias = this.calendarioSelected.idCalendarioProgramado;
+      guardia.idCalendarioProgramado = this.calendarioSelected.idCalendarioProgramado;
       guardia.idConjuntoGuardia = this.calendarioSelected.idConjunto;
       /*estadoGuardia: "Facturada - 1er Trimestre 2010 - GUARDIAS / ASISTENCIAS"
       facturado: "1"
@@ -224,7 +217,15 @@ export class BuscadorColegiadosComponent implements OnInit {
       sessionStorage.setItem("infoGuardiaColeg",JSON.stringify(guardia));
       sessionStorage.setItem("originGuardiaColeg","true");
       this.router.navigate(['/gestionGuardiaColegiado']);
+    }else{
+      sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
+
+      sessionStorage.getItem('nuevo');
+      
+      this.location.back();
     }
+
+  
 
   }
 
