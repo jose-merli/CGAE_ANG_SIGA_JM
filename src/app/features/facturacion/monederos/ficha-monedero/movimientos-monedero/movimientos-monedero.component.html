@@ -39,13 +39,13 @@
                   <span *ngIf="col.field == 'fecha'">{{rowData[col.field] | date: 'dd/MM/yyyy'}}</span>
 
                   <span *ngIf="col.field == 'concepto' && !rowData.nuevo">{{rowData[col.field]}}</span>
-                  <input [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'concepto' && rowData.nuevo && movimientosTarjeta.length - 1 == rowIndex" type="text"
+                  <input [ngClass]="styleObligatorio(rowData[col.field])" *ngIf="col.field == 'concepto' && rowData.nuevo" type="text"
                     [(ngModel)]="rowData[col.field]" pInputText>
 
                     <!-- Las lineas de anticipo no apoyan que tengan conceptos individuales en la BBDD-->
-                  <input *ngIf="col.field == 'cuentaContable' && movimientosTarjeta.length - 1 == rowIndex" 
+                  <input *ngIf="col.field == 'cuentaContable'" 
                     [(ngModel)]="rowData[col.field]" type="text" pInputText>
-                  <span *ngIf="col.field == 'cuentaContable' && movimientosTarjeta.length - 1 != rowIndex">{{rowData[col.field]}}</span>
+                  <!-- <span *ngIf="col.field == 'cuentaContable' && movimientosTarjeta.length - 1 != rowIndex">{{rowData[col.field]}}</span> -->
 
                   <span *ngIf="col.field == 'impOp' && !rowData.nuevo">{{rowData[col.field] | number:'.2'}} €</span>
                   <input [ngClass]="styleObligatorio(rowData[col.field])" step="0.01"

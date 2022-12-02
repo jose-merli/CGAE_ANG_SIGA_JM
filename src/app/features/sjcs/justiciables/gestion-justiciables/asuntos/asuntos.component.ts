@@ -313,7 +313,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
       if (JSON.parse(sessionStorage.getItem("Familiar"))) {
         let justiciableUF = JSON.parse(sessionStorage.getItem("Familiar"));
         this.body.idpersona = justiciableUF.uf_idPersona;
-        sessionStorage.removeItem("Familiar");
+        //sessionStorage.removeItem("Familiar");
       }
     }
     this.search();
@@ -360,7 +360,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     switch (identificador) {
       case 'A':
         sessionStorage.setItem("idAsistencia", dato.anio + "/" + dato.numero);
-        sessionStorage.setItem("vieneDeFichaDesigna", "true");
+        sessionStorage.setItem("vieneDeFichaJusticiable", "true");
         this.router.navigate(["/fichaAsistencia"]);
 
         break;
