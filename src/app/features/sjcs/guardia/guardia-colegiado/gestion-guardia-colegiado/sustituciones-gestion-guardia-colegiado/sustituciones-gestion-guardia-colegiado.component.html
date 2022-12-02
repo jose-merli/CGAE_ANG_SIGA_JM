@@ -71,7 +71,7 @@
         <button *ngIf="esLetrado && esColegiado" [disabled]="modoLectura || esLetrado || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
           label="{{ 'general.boton.solicitarSustitucion' | translate}}"></button>
 
-        <button *ngIf="!esLetrado && esColegiado" [disabled]="modoLectura || esLetrado || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
+        <button *ngIf="!esLetrado" [disabled]="modoLectura || esLetrado || (usuarioBusquedaExpress.numColegiado == '' || usuarioBusquedaExpress.numColegiado == undefined)" (click)="sustituir()" pButton type="button" icon="fa fa-save" iconPos="left"
         label="{{ 'general.boton.sustituir' | translate}}"></button>
       </div>
     </div>

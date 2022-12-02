@@ -17,10 +17,14 @@
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
             <div class="form-group-interlineado col-lg-6 col-md-6">
-              <label>{{ "justiciaGratuita.guardia.solicitudescentralita.fechaguardia" | translate }}</label>
-              <app-fecha [(disabled)] = "modificar" [(value)]="campoFecha" (valueChangeSelected)="fillFechaGuardia($event)"
-                (valueChangeInput)="fillFechaGuardia($event)">
-              </app-fecha>
+               <label>{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}</label>
+               <app-fecha [(disabled)] = "modificar" [(value)]="campoFechaIni" (valueChangeSelected)="fillFechaGuardiaIni($event)"
+                 (valueChangeInput)="fillFechaGuardiaIni($event)">
+                </app-fecha>
+                <label>{{ "censo.consultaDatos.literal.fechaFin" | translate }}</label>
+                <app-fecha [(disabled)] = "modificar" [(value)]="campoFechaFin" (valueChangeSelected)="fillFechaGuardiaFin($event)"
+                  (valueChangeInput)="fillFechaGuardiaFin($event)">
+                </app-fecha>
             </div>
             <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>Motivo de Anulacion</label>

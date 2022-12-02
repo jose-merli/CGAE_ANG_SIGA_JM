@@ -38,7 +38,7 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
 
   ngOnInit() {
     this.esLetrado = JSON.parse(sessionStorage.getItem('isLetrado'));
-    this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
+    //this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
     sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
     if(this.persistenceService.getDatos()){
@@ -78,11 +78,11 @@ export class SustitucionesGestionGuardiaColegiadoComponent implements OnInit {
   
   async sustituir() {
     if((this.newLetrado != undefined || this.newLetrado != null) && (this.fechaSustitucion != undefined || this.fechaSustitucion != null)) {
-      if (this.salto == true && this.compensacion == true) {
+      if (this.salto && this.compensacion) {
         this.saltoOcompensacion = "S/C";
-      } else if (this.salto == true && this.compensacion == false) {
+      } else if (this.salto && !this.compensacion) {
         this.saltoOcompensacion = "S";
-      } else if (this.salto == false && this.compensacion == true) {
+      } else if (!this.salto&& this.compensacion) {
         this.saltoOcompensacion = "C";
       } else {
         this.saltoOcompensacion = "N";

@@ -14,7 +14,8 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
   progressSpinner;
   msgs
   body:GuardiaItem;
-  campoFecha: Date;
+  campoFechaIni: Date;
+  campoFechaFin: Date;
   @Input()modificar
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -26,7 +27,9 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
       if(this.persistenceService.getDatos()){
         this.body = this.persistenceService.getDatos();
         this.body.fechadesde = new Date(this.body.fechadesde);
-        this.campoFecha = this.body.fechadesde;
+        this.body.fechahasta = new Date(this.body.fechahasta);
+        this.campoFechaIni = this.body.fechadesde;
+        this.campoFechaFin = this.body.fechahasta;
       }
     }
     
@@ -80,8 +83,12 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
     );
   }
 
-  fillFechaGuardia(event){
-    this.campoFecha = event
+  fillFechaGuardiaIni(event){
+    this.campoFechaIni = event
+  }
+
+  fillFechaGuardiaFin(event){
+    this.campoFechaFin = event
   }
 
   showMessage(severity, summary, msg) {
