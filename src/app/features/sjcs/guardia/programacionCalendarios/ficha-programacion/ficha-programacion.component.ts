@@ -1058,7 +1058,8 @@ export class FichaProgramacionComponent implements OnInit {
       'idTurno': calendario.idTurno,
       'idGuardia': calendario.idGuardia,
       'orden': calendario.orden,
-      'idConjunto': this.datosGenerales.listaGuarias.value
+      'idConjunto': this.datosGenerales.listaGuarias.value,
+      'idCalendarioGuardias':event.idCalendarioGuardias
     };
 
     sessionStorage.setItem("calendariosProgramados", "true");

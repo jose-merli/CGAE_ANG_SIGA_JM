@@ -1367,7 +1367,8 @@ this.totalRegistros = this.rowGroups.length;
               'guardia': this.rowwSelected.cells[2].value,
               'generado': this.rowwSelected.cells[3].value,
               'idGuardia': this.rowwSelected.cells[5].value,
-              'idTurno': this.rowwSelected.cells[6].value
+              'idTurno': this.rowwSelected.cells[6].value,
+              'idCalendarioGuardias' : this.rowwSelected.cells[7].value,
       }
     
     this.linkGuardiaColegiado.emit(calendario);

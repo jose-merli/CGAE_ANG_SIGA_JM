@@ -44,11 +44,12 @@ export class GuardiaItem {
   idPersona;
   fechaValidacion;
   idCalendarioGuardias;
-  observacionesAnulacion;
+  observacionesAnulacion:string;
   fechasustitucion:Date;
   comensustitucion;
   sustituto;
   letradosustituido;
+  fechaIntro;
   constructor() { }
 
 }

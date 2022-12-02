@@ -151,6 +151,7 @@ export let endpoints_guardia: any = {
 
 
     //guardias colegiado
+    guardiasColegiado_fechasDisponibles:"guardia/getComboDiasDisponiblesGC",
     guardiasColegiado_buscarGuardiasColegiado: "guardia/busquedaGuardia/busquedaGuardiasColegiado",
     guardiasColegiado_validarSolicitudGuardia: "guardia/validarSolicitudGuardia",
     guardiasColegiado_desvalidarGuardiaColegiado: "guardia/desvalidarGuardiaColegiado",

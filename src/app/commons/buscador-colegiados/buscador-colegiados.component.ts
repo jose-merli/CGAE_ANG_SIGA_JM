@@ -46,7 +46,8 @@ export class BuscadorColegiadosComponent implements OnInit {
     'idTurno': '',
     'idGuardia': '',
     'orden' : '',
-    'idConjunto': ''
+    'idConjunto': '',
+    'idCalendarioGuardias': ''
   };
   constructor(private router: Router, private persistenceService: PersistenceService, private location: Location, private sigaServices: SigaServices, private translateService: TranslateService) { }
 
@@ -195,6 +196,8 @@ export class BuscadorColegiadosComponent implements OnInit {
       guardia.numColegiado = event.nColegiado;
       guardia.idCalendarioProgramado = this.calendarioSelected.idCalendarioProgramado;
       guardia.idConjuntoGuardia = this.calendarioSelected.idConjunto;
+      guardia.observacionesAnulacion = "";
+      guardia.idCalendarioGuardias = this.calendarioSelected.idCalendarioGuardias;
       /*estadoGuardia: "Facturada - 1er Trimestre 2010 - GUARDIAS / ASISTENCIAS"
       facturado: "1"
       fechadesde: 1265842800000
@@ -216,6 +219,7 @@ export class BuscadorColegiadosComponent implements OnInit {
       this.persistenceService.setDatos(guardia);
       sessionStorage.setItem("infoGuardiaColeg",JSON.stringify(guardia));
       sessionStorage.setItem("originGuardiaColeg","true");
+      sessionStorage.setItem("crearGuardiaColegiado","true");
       this.router.navigate(['/gestionGuardiaColegiado']);
     }else{
       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));

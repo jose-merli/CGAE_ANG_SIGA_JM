@@ -16,7 +16,8 @@
 
         <div class="bloque col-lg-6 col-md-6">
           <div class="form-row">
-            <div class="form-group-interlineado col-lg-6 col-md-6">
+
+            <div *ngIf="modificar" class="form-group-interlineado col-lg-6 col-md-6">
                <label>{{ "facturacion.seriesFacturacion.literal.fInicio" | translate }}</label>
                <app-fecha [(disabled)] = "modificar" [(value)]="campoFechaIni" (valueChangeSelected)="fillFechaGuardiaIni($event)"
                  (valueChangeInput)="fillFechaGuardiaIni($event)">
@@ -26,6 +27,15 @@
                   (valueChangeInput)="fillFechaGuardiaFin($event)">
                 </app-fecha>
             </div>
+            <div *ngIf="!modificar" class="form-group-interlineado col-lg-6 col-md-6">
+                <label>Fechas Disponibles</label>
+                <p-dropdown class="select-form" [(ngModel)]='body.fechaIntro'
+                    placeholder="{{'general.boton.seleccionar' | translate}}" [options]="fechasDisponibles"
+                    [filter]="false" filterBy="label,labelSinTilde" ></p-dropdown>
+            
+           </div>
+
+
             <div class="form-group-interlineado col-lg-6 col-md-6">
               <label>Motivo de Anulacion</label>
               <textarea pInputTextarea [(ngModel)]="body.observacionesAnulacion"

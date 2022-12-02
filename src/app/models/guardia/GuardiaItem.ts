@@ -72,7 +72,7 @@ export class GuardiaItem {
 	maximo;
 	porDia;
     nDias;
-    
+    observacionesAnulacion:string;
     constructor() { }
 
 }

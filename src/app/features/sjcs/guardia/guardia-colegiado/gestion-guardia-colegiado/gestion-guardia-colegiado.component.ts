@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { TurnosItem } from '../../../../../models/sjcs/TurnosItem';
-import { GuardiaItem } from '../../../../../models/guardia/GuardiaItem';
+import { GuardiaItem } from '../../../../../models/sjcs/GuardiaItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
@@ -14,7 +14,6 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
 
   turnosItem;
   guardia: GuardiaItem;
-  activa: boolean = false;
   modificar: boolean;
   constructor(private location: Location,
     private sigaServices: SigaServices,
@@ -29,10 +28,13 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
         this.persistenceService.setDatos(this.guardia);
 
         this.modificar = true;
-        this.activa = true
       } else {
-        this.modificar = true;
+        this.modificar = false;
       }
+    }
+    if(sessionStorage.getItem("crearGuardiaColegiado")){
+      sessionStorage.removeItem('crearGuardiaColegiado')
+      this.modificar = false;
     }
 
   }
