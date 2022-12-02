@@ -74,7 +74,7 @@
         <label>{{"sjcs.guardia.asistencia.letradoguardia" | translate}}(*)</label>
         <p-dropdown class="select-form"
             placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-            [showClear]="true" [(ngModel)]="asistencia.idLetradoGuardia" [disabled]="ineditable"
+            [showClear]="true" [(ngModel)]="asistencia.idLetradoGuardia" [disabled]="ineditable || deshabilitarLetradoGuardia"
             [ngModelOptions]="{standalone: true}" [options]="comboLetradoGuardia" (onChange)="onChangeLetradoGuardia()"
             [ngClass]="styleObligatorio(asistencia.idLetradoGuardia)">
         </p-dropdown>
