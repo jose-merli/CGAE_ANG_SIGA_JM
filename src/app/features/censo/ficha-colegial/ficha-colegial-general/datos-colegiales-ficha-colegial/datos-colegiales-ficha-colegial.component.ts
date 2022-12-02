@@ -876,7 +876,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       } else*/ 
       
       //Si el cambio pertenece de un colegiado "Ejerciente Residente -> Baja Colegial"
-      if (this.datosColegialesInit[0].idEstado == "20" && this.nuevoEstadoColegial.situacion == "30"
+      if (this.datosColegialesInit[0].idEstado == "20" && (this.nuevoEstadoColegial.situacion == "30" || this.nuevoEstadoColegial.situacion == "60")
         && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")) {  
         
         // console.log("+++++ [this.isCrearColegial == true] - CAMBIO DE EJERCIENTE RESIDENTE A BAJA COLEGIAL");
@@ -895,12 +895,12 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
             datosColegialesActualSpec.forEach(datColActuIte => {
               if (datColActuIte.idEstado == "20"
-                && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
+                && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
                   matchOtherEjerResi = true;
               }
             });
     
-            if (!matchOtherEjerResi) {     
+            if (matchOtherEjerResi) {     
               this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                 "fichacolegial.cambiosituacion_ejer_res_bajacolegial.warning"), "fa fa-warning", "cambioSituacionColegiado");
             } else {
@@ -1021,6 +1021,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
               if (this.arrayAvisosColegios.length > 0) {   
                 this.callServiceSendMailsOtherCentres(this.translateService.instant(
                   "fichacolegial.cambiosituacion_ejer_ina_susp_envio_mail.info"), "fa fa-info", "cambioSituacionColegiado", this.arrayAvisosColegios);
+                  this.arrayAvisosColegios = [];
               } else {
                 this.callServiceGuardarColegiales();
               }
@@ -1122,7 +1123,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
       //Si es una modificacion de estado
     } else {
       //Si el cambio pertenece de un colegiado "Ejerciente Residente -> Baja Colegial"
-      if (this.datosColegialesInit[0].idEstado == "20" && this.datosColegiales[0].idEstado == "30"
+      if (this.datosColegialesInit[0].idEstado == "20" && (this.datosColegiales[0].idEstado == "30" || this.datosColegiales[0].idEstado == "60")
         && (this.datosColegialesInit[0].situacionResidente == "1" || this.datosColegialesInit[0].situacionResidente == "Si")) {       
           // console.log("+++++ [this.isCrearColegial == false] - CAMBIO DE EJERCIENTE RESIDENTE A BAJA COLEGIAL");
           
@@ -1139,12 +1140,12 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
               datosColegialesActualSpec.forEach(datColActuIte => {
                 if (datColActuIte.idEstado == "20"
-                  && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
+                  && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
                     matchOtherEjerResi = true;
                 }
               });
       
-              if (!matchOtherEjerResi) {
+              if (matchOtherEjerResi) {
                 
                 this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                   "fichacolegial.cambiosituacion_ejer_res_bajacolegial.warning"), "fa fa-warning", "cambioSituacionColegiado");
@@ -1233,12 +1234,12 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
 
             datosColegialesActualSpec.forEach(datColActuIte => {
               if (datColActuIte.idEstado == "20"
-                && (datColActuIte.situacionResidente == "1" || datColActuIte.situacionResidente == "Si")) {
+                && (datColActuIte.situacionResidente == "0" || datColActuIte.situacionResidente == "No")) {
                   matchOtherEjerResi = true;
               }
             });
     
-            if (!matchOtherEjerResi) {             
+            if (matchOtherEjerResi) {             
               this.callServiceShowMessageAndIconCustomized(this.translateService.instant(
                 "fichacolegial.cambiosituacion_ejer_res_noejer.warning"), "fa fa-warning", "cambioSituacionColegiado");
             } else {
@@ -1266,6 +1267,7 @@ export class DatosColegialesFichaColegialComponent implements OnInit, OnChanges 
             if (this.arrayAvisosColegios.length > 0) {
               this.callServiceSendMailsOtherCentres(this.translateService.instant(
                 "fichacolegial.cambiosituacion_ejer_ina_susp_envio_mail.info"), "fa fa-info", "cambioSituacionColegiado", this.arrayAvisosColegios);
+                this.arrayAvisosColegios = [];
             } else {
               this.callServiceGuardarColegiales();
             }
