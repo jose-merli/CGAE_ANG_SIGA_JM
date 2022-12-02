@@ -826,7 +826,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
     turno.nombre_zona = rowData.nombreZona;
     turno.obligatoriedad_inscripcion = rowData.obligatoriedadInscripcion;
     turno.tipoguardias = rowData.descripcionbligatoriedad;
-    turno.idguardia = rowData.idGuardia;
+    //turno.idguardia = rowData.idGuardia;
     turno.fechasolicitud = rowData.fechasolicitud;
     if (event == true) {
       //Guardias Todas o ninguna y obligatorias

@@ -89,7 +89,11 @@ export class GuardiasInscripcionesFiltrosComponent implements OnInit, OnChanges,
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisos = this.persistenceService.getPermisos();
     }
-    //console.log('this.permisos: ', this.permisos)
+    if (this.isLetrado && (this.usuarioBusquedaExpress.numColegiado == null || this.usuarioBusquedaExpress.numColegiado == undefined || this.usuarioBusquedaExpress.numColegiado == '')) {
+      this.desactivarNuevo = true;
+    } else {
+      this.desactivarNuevo = false;
+    }
     if (this.persistenceService.getFiltros() != undefined && sessionStorage.getItem("FichaInscripciones") != undefined) {
       this.filtros = this.persistenceService.getFiltros();
       if (this.filtros.afechade != null && this.filtros.afechade != undefined) {

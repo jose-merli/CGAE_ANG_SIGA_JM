@@ -1043,12 +1043,19 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 			this.sigaServices.post("guardiasInscripciones_insertSolicitarAlta", body).subscribe(
 				data => {
+					let nguardias = 0;
+					//TODO contar las guardias inscritas en esta solicitud
+					body.inscripcionesItem.forEach(element => {
+						if(element.idguardia != null && element.idguardia != undefined){
+							nguardias++;
+						}
+					});
 					this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada")
-						+ ". Se ha dado de alta en " + body.inscripcionesItem.length + " guardias");
+						+ ". Se ha dado de alta correctamente");
 					this.progressSpinner = false;
 					sessionStorage.setItem("filtroInsertInscripcionGuardias", JSON.stringify(this.datos));
 					//Como se puede solicitar el alta para varias guardias no se puede refrescar la pantalla
-					//this.location.back;
+					this.router.navigate(['/inscripcionesGuardia']);
 				},
 				err => {
 					if (err != undefined && JSON.parse(err.error).error.description != "") {
