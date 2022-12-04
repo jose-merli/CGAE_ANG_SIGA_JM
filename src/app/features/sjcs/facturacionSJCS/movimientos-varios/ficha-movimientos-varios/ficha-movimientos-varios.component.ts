@@ -15,7 +15,6 @@ import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_factu
 import { MovimientosVariosFacturacionDTO } from '../../../../../models/sjcs/MovimientosVariosFacturacionDTO';
 import { TarjetaCriteriosAplicacionComponent } from './tarjeta-criterios-aplicacion/tarjeta-criterios-aplicacion.component';
 import { TarjetaDatosGeneralesComponent } from './tarjeta-datos-generales/tarjeta-datos-generales.component';
-import { error } from 'selenium-webdriver';
 
 @Component({
   selector: 'app-ficha-movimientos-varios',
