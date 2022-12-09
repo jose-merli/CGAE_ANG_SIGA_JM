@@ -77,6 +77,11 @@ export class FiltrosGuardiaComponent implements OnInit {
         this.isDisabledMateria = false;
       }
 
+      if (this.filtros.zona != null && this.filtros.zona != undefined && this.filtros.zona != '') {
+        this.getComboZona("");
+        this.isDisabledZona = false;
+      }
+
       //sessionStorage.removeItem("filtrosBusquedaGuardias");
 
       if (this.persistenceService.getHistorico() != undefined) {
@@ -95,11 +100,15 @@ export class FiltrosGuardiaComponent implements OnInit {
       n => {
         this.comboGrupoZona = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboGrupoZona);
+        if(this.filtroAux.grupoZona != null) 
+        {this.filtros.grupoZona = this.filtroAux.grupoZona
+        this.getComboZona("")
+        }
       },
       err => {
         //console.log(err);
       }
-    );
+    ),() => { };
   }
 
   getComboJurisdiccion() {
@@ -153,7 +162,10 @@ export class FiltrosGuardiaComponent implements OnInit {
       n => {
         this.comboArea = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboArea);
-
+        if(this.filtroAux.materia != null) 
+        {this.filtros.materia = this.filtroAux.materia
+        this.getComboMateria("")
+        }
       },
       err => {
         //console.log(err);
@@ -299,8 +311,7 @@ export class FiltrosGuardiaComponent implements OnInit {
             }
           });
         },
-        error => { },
-        () => { }
+        error => { }
       );
   }
 
