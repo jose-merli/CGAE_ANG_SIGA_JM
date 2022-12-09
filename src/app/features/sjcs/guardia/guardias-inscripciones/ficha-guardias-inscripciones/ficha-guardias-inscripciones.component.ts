@@ -1315,7 +1315,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 		//console.log('ana 1: ', date)
 		//console.log('date.includes ',date.includes('/'))
 		const pattern = 'dd/MM/yyyy hh:mm:ss';
-		if (date != undefined && isNaN(Number(date))) {
+		if (date != undefined && !isNaN(Number(date))) {
 			if (!date.includes('/')) {
 				return this.datepipe.transform(date, pattern);
 			}
