@@ -4,8 +4,8 @@
   <div class="card-body p-0 padding-paginador" #tablaFoco>
 
     <div class="padding-interior w-100" id="paginador">
-      <app-paginador (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)"
-        (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador>
+      <app-paginador2 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)" (fromReg)="fromReg($event)"
+        (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador2>
     </div>
 
     <div class="table" matSort (matSortChange)="sortData($event)" #table>
@@ -23,8 +23,7 @@
         <div (click)="selectRow(row['id'])" class="table-row-wrapper hoverBlue"
           [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
           <div *ngFor="let cell of row['cells'] | slice:0:8; let z = index; "
-            class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i)}" #cellSelected
-            [style.minWidth]="getTamanioColumn(cell.header)">
+            class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(i), 'text-left': emptyResults}" #cellSelected>
             <div class="cell-wrapper selectedRowClass w-100">
 
               <span class="w100 cell-value" *ngIf="cell.type == 'text'"
@@ -75,6 +74,10 @@
 
               <span class="w100 cell-value" *ngIf="cell.type == 'textarea'">
                 <textarea pInputTextarea [(ngModel)]="cell.value" class="form-control"></textarea>
+              </span>
+
+              <span class="w100 cell-value" *ngIf="cell.type == 'empty'">
+                {{cell.value}}
               </span>
 
             </div>
