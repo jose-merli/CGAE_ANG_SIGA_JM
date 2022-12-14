@@ -411,7 +411,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
         let ejgItem = new EJGItem();
         ejgItem.annio = dato.anio;
         // ejgItem.numero = dato.numero;
-        ejgItem.numero = dato.numero;
+        ejgItem.numero = dato.asunto.substring(dato.asunto.indexOf('/')+1);
         ejgItem.idInstitucion = dato.idinstitucion;
         ejgItem.tipoEJG = dato.clave;
 
