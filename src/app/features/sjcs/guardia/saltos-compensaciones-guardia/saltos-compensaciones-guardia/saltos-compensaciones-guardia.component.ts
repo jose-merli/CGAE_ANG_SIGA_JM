@@ -103,6 +103,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
   msgs: Message[] = [];
   permisoEscritura;
   showResults: boolean = false;
+  emptyResults: boolean = false;
   isNewFromOtherPage: boolean = false;
   isNewFromOtherPageObject: any;
   comboColegiados = [];
@@ -205,6 +206,25 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
     this.search(event);
   }
 
+  jsonToRowEmptyResults() {
+
+    let arr = [
+      {
+        id: 0,
+        italic: false,
+        row: [{ type: 'empty', value: 'No hay resultados' }]
+      }
+    ];
+
+    this.rowGroups = [];
+    this.rowGroups = this.trmService.getTableData(arr);
+    this.rowGroupsAux = [];
+    this.rowGroupsAux = this.trmService.getTableData(arr);
+    this.rowGroupsInit = [];
+    this.rowGroupsInit = this.trmService.getTableData(arr);
+    this.totalRegistros = this.rowGroups.length;
+  }
+
   search(event) {
     this.filtros.filtroAux = this.persistenceService.getFiltrosAux()
     this.filtros.filtroAux.historico = event;
@@ -241,8 +261,16 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
 
         this.datos = JSON.parse(n.body).saltosCompItems;
         let error = JSON.parse(n.body).error;
+        this.emptyResults = false;
         this.historico = event;
-        this.jsonToRow();
+
+        if (this.datos.length == 0 && !this.isNewFromOtherPage) {
+          this.emptyResults = true;
+          this.jsonToRowEmptyResults();
+        } else if (this.datos.length > 0) {
+          this.jsonToRow();
+        }
+
         this.showResults = true;
         this.progressSpinner = false;
 
@@ -481,6 +509,10 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
 
     event.forEach(element => {
       array.push(this.datos[element]);
+    });
+
+    array.forEach(element =>{
+      element.letrado = null;
     });
 
     let anyElementDeleted = array.find(element => element.fechaUso != null || element.fechaAnulacion != null);
