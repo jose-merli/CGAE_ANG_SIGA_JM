@@ -421,6 +421,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.borrarSuscripcionBajaItem.idtiposervicios = this.servicio.idtiposervicios;
     this.borrarSuscripcionBajaItem.idservicio = this.servicio.idservicio;
     this.borrarSuscripcionBajaItem.idserviciosinstitucion = this.servicio.idserviciosinstitucion;
+    this.borrarSuscripcionBajaItem.checkboxDialogServicioAutomaticoAManual = this.checkboxDialogServicioAutomaticoAManual;
 
     this.subscriptionBorrarSuscripcionesBajas = this.sigaServices.post("fichaServicio_borrarSuscripcionesBajas", this.borrarSuscripcionBajaItem).subscribe(
       respuesta => {
@@ -431,7 +432,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
           this.showModalSuscripcionesBajas = false;
           this.showModalServicioAutomaticoAManual = false;
         }
-
+        this.servicioOriginal = { ...this.servicio };
 
         this.progressSpinner = false;
       },
