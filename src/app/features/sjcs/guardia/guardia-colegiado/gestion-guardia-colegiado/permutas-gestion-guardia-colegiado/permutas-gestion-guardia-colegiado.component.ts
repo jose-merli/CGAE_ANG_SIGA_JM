@@ -97,6 +97,8 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     let permutaItem = new PermutaItem();
     permutaItem.idturno = this.body.idTurno;
     permutaItem.idguardia = this.body.idGuardia;
+    permutaItem.idpersona = this.body.idPersona;
+    permutaItem.fechasolicitud = this.body.fechadesde;
 
       this.progressSpinner = true
       this.sigaServices.post("guardiasColegiado_getPermutasColegiado", permutaItem).subscribe(
