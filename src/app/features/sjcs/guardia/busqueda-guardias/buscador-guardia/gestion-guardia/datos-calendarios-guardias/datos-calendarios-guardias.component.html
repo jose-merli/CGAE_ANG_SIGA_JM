@@ -79,7 +79,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.periodo" | translate}}
             </label>
-            <input type="text" [disabled]="!permisoEscritura || historico || isLetrado" [(ngModel)]="body.diasPeriodo" (keypress)="numberOnly($event)"
+            <input type="text" [disabled]="!permisoEscritura || historico || isLetrado" [(ngModel)]="body.diasPeriodo" (keypress)="numberOnly($event)" [ngClass]="styleObligatorioPeriodo(body.diasPeriodo)"
               class="form-control" pInputText>
 
           </div>

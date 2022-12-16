@@ -114,6 +114,14 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
     }
   }
 
+  styleObligatorioPeriodo(evento){
+    if(this.resaltadoDatos && this.body.tipoDiasPeriodo && (evento==undefined || evento==null || evento=="")){
+      this.openFicha = true;
+      this.opened.emit(this.openFicha);
+      return this.commonsService.styleObligatorio(evento);
+    }
+  }
+
   styleObligatorioPeriodoTipoDia(evento){
     if(this.resaltadoDatos && this.body.diasPeriodo && (evento==undefined || evento==null || evento=="")){
       this.openFicha = true;
