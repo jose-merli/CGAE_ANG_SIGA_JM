@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
@@ -41,6 +41,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   editable: boolean = true;
   rowGroups: Row[];
   rowGroupsAux: Row[];
+  datosConfColaGuardias: any;
   cabeceras = [
     /*{
       id: "ordenCola",
@@ -102,6 +103,10 @@ export class DatosColaGuardiaComponent implements OnInit {
   minimoLetrado = 0;
   //@ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
   @ViewChild(TablaResultadoOrderComponent) tablaOrder;
+
+  @Input() dataConfColaGuardiaPadre: String;
+
+  //colaOrderConf : String;
 
   constructor(private sigaService: SigaServices,
     private persistenceService: PersistenceService,
@@ -507,6 +512,13 @@ inicio(){
     this.rowGroups = this.trmService.getTableData(this.processedData);
     this.rowGroupsAux = this.trmService.getTableData(this.processedData);
     this.totalRegistros = this.rowGroups.length;
+
+    if (this.configuracionCola.manual) {
+      this.manual = true;
+    } else{
+      this.manual = false;
+    }
+
   }
   colaGuardiaOrdenada(event){
     
@@ -704,7 +716,7 @@ inicio(){
             this.botActivos = true;
             this.editable = true;
           }
-
+          //getConfColaGuardias();
           this.getColaGuardia();
           this.progressSpinner = false;
         },
@@ -717,6 +729,7 @@ inicio(){
         });
 
   }
+  
   checkSelectedRow(selected){
     this.selectedRow = selected;
   }
@@ -776,4 +789,22 @@ if (rest){
       detail: msg
     });
   }
+
+  getConfColaGuardias() {
+    let datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
+    this.sigaService.post("busquedaGuardias_resumenConfCola", datos)
+      .subscribe(data => {
+        if (data.body)
+          data = JSON.parse(data.body);
+        //this.numeroletradosguardia = data.letradosIns;
+        this.datosConfColaGuardias = data.idOrdenacionColas;
+        if (this.datosConfColaGuardias && this.datosConfColaGuardias.split(",").length > 4)
+          this.datosConfColaGuardias = this.datosConfColaGuardias.substring(0, this.datosConfColaGuardias.lastIndexOf(","));
+      },
+        err => {
+          //console.log(err);
+        })
+  }
+
 }
+

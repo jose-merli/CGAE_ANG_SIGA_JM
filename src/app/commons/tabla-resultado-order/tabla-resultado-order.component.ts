@@ -17,6 +17,8 @@ import { PersistenceService } from '../../_services/persistence.service';
 import { BuscadorGuardiaComponent } from '../../features/sjcs/guardia/busqueda-guardias/buscador-guardia/buscador-guardia.component';
 import { SigaStorageService } from '../../siga-storage.service';
 import { ListaGuardiasItem } from '../../models/guardia/ListaGuardiasItem';
+import { TurnosItems } from '../../models/sjcs/TurnosItems';
+
 @Component({
   selector: 'app-tabla-resultado-order',
   templateUrl: './tabla-resultado-order.component.html',
@@ -116,6 +118,10 @@ export class TablaResultadoOrderComponent implements OnInit {
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
+  datosConfColaGuardias: any;
+  body: TurnosItems = new TurnosItems();
+  enableUpDownButtonsManual: boolean = true;
+  @Input() dataConfOrdColaHered: String;
 
   constructor(
     private renderer: Renderer2,
@@ -150,8 +156,7 @@ export class TablaResultadoOrderComponent implements OnInit {
     this.isLetrado = this.sigaStorageService.isLetrado && this.sigaStorageService.idPersona;
     if(this.rowGroups != undefined){
 
-
-
+      
 
       this.sigaServices.get("busquedaGuardia_turno").subscribe(
         n => {
@@ -194,22 +199,16 @@ export class TablaResultadoOrderComponent implements OnInit {
           //console.log(err);
         }
       );
-  
 
-
-
-
-
-
-
-      
       this.totalRegistros = this.rowGroups.length;
     }
+
     this.numCabeceras = this.cabeceras.length;
     this.numColumnas = this.numCabeceras;
     this.cabeceras.forEach(cab =>{
       this.cabecerasMultiselect.push(cab.name);
-    })
+    });
+
     if(!this.listaGuardias){
       this.xArr = [];
       if (this.rowGroups != undefined){
@@ -231,6 +230,8 @@ export class TablaResultadoOrderComponent implements OnInit {
 
       }
     }
+
+    this.getConfColaGuardias();
   }
   perPage(perPage){
     this.numperPage = perPage;
@@ -283,10 +284,10 @@ export class TablaResultadoOrderComponent implements OnInit {
     })
     this.progressSpinner = true;
     //console.log('this.rowGroups: ', this.rowGroups)
-    if (this.calendarios){
+    if (this.calendarios) {
       this.guardiasCalendarioModified.emit(this.rowGroups);
       this.totalRegistros = this.rowGroups.length;
-    }else{
+    } else {
       this.wrongPositionArr = [];
       this.ordenarGrupos();
       if (this.pantalla == 'colaGuardias'){
@@ -295,55 +296,57 @@ export class TablaResultadoOrderComponent implements OnInit {
         this.orderByOrder(1);
       }
       this.displayWrongSequence();
-    let errorVacio = this.checkEmpty();
-    let errorSecuenciaOrden = false;
-    let errorSecuenciaGrupo = false;
-    let errorMismoLetradoEnGrupo = false;
-    let errorGrupoNoOrden = false;
-    if (this.pantalla == 'colaGuardias') {
-      if (!ultimo){
-        errorSecuenciaGrupo = this.checkSequence(0);
+      let errorVacio = this.checkEmpty();
+      let errorSecuenciaOrden = false;
+      let errorSecuenciaGrupo = false;
+      let errorMismoLetradoEnGrupo = false;
+      let errorGrupoNoOrden = false;
+
+      if (this.pantalla == 'colaGuardias') {
+        if (!ultimo){
+          errorSecuenciaGrupo = this.checkSequence(0);
+          errorSecuenciaOrden = this.checkSequence(1);
+        }
+        errorMismoLetradoEnGrupo = this.checkLetrados();
+        errorGrupoNoOrden = this.checkOrdeIfGrupo();
+      }else{
         errorSecuenciaOrden = this.checkSequence(1);
       }
-      errorMismoLetradoEnGrupo = this.checkLetrados();
-      errorGrupoNoOrden = this.checkOrdeIfGrupo();
-    }else{
-      errorSecuenciaOrden = this.checkSequence(1);
-    }
-    this.totalRegistros = this.rowGroups.length;
-    if (!errorVacio && !errorSecuenciaOrden && !errorSecuenciaGrupo){
-      if (!ultimo){
-          this.updateColaGuardia();
-      }else{
-          this.updateColaGuardiaSameOrder();
+      
+      this.totalRegistros = this.rowGroups.length;
+      if (!errorVacio && !errorSecuenciaOrden && !errorSecuenciaGrupo){
+        if (!ultimo){
+            this.updateColaGuardia();
+        }else{
+            this.updateColaGuardiaSameOrder();
+        }
+
+        this.showMsg('success', 'Se ha guardado correctamente', '')
+        this.progressSpinner = false;
+      } else if (errorGrupoNoOrden){
+        this.showMsg('error', 'Error. Todo letrado que pertenezcan a un grupo, tienen que tener valor en el campo orden.', '')
+        this.progressSpinner = false;
+      } else if (errorMismoLetradoEnGrupo){
+        this.showMsg('error', 'Error. Un letrado no puede encontrarse 2 veces en el mismo grupo.', '')
+        this.progressSpinner = false;
+      } else if (errorVacio){
+        this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
+        this.progressSpinner = false;
+      } else if (errorSecuenciaOrden && !errorSecuenciaGrupo){
+        this.showMsg('error', 'Error. Los valores en la columna "Orden" deben ser secuenciales.', '')
+        this.progressSpinner = false;
+      } else if (errorSecuenciaGrupo && !errorSecuenciaOrden){
+        this.showMsg('error', 'Error. Los valores en la columna "Grupo" deben ser secuenciales.', '')
+        this.progressSpinner = false;
+      } else if (errorSecuenciaGrupo && errorSecuenciaOrden){
+        this.showMsg('error', 'Error. Los valores en las columnas "Grupo" y "Orden" deben ser secuenciales.', '')
+        this.progressSpinner = false;
       }
-    
-        
-
-
-      this.showMsg('success', 'Se ha guardado correctamente', '')
-      this.progressSpinner = false;
-    }else if (errorGrupoNoOrden){
-      this.showMsg('error', 'Error. Todo letrado que pertenezcan a un grupo, tienen que tener valor en el campo orden.', '')
-      this.progressSpinner = false;
-    }else if (errorMismoLetradoEnGrupo){
-      this.showMsg('error', 'Error. Un letrado no puede encontrarse 2 veces en el mismo grupo.', '')
-      this.progressSpinner = false;
-    } else if (errorVacio){
-      this.showMsg('error', 'Error. Existen campos vacíos en la tabla.', '')
-      this.progressSpinner = false;
-    }else if (errorSecuenciaOrden && !errorSecuenciaGrupo){
-      this.showMsg('error', 'Error. Los valores en la columna "Orden" deben ser secuenciales.', '')
-      this.progressSpinner = false;
-    }else if (errorSecuenciaGrupo && !errorSecuenciaOrden){
-      this.showMsg('error', 'Error. Los valores en la columna "Grupo" deben ser secuenciales.', '')
-      this.progressSpinner = false;
-    }else if (errorSecuenciaGrupo && errorSecuenciaOrden){
-      this.showMsg('error', 'Error. Los valores en las columnas "Grupo" y "Orden" deben ser secuenciales.', '')
-      this.progressSpinner = false;
+      
+      this.progressSpinner = false; //Necesario?
+      return errorVacio;
     }
-    return errorVacio;
-    }
+
     this.progressSpinner = false;
   }
 
@@ -1099,52 +1102,38 @@ this.totalRegistros = this.rowGroups.length;
   disableButton(type){
     let posicion = this.numperPage*(this.numPage) + this.positionSelected;
     if (this.rowGroups != undefined){
-    this.grupos = [];
-    this.rowGroups.forEach((rg, i) =>{
-      if (this.pantalla == 'colaGuardias'){
-        this.grupos.push(rg.cells[0].value);
-      }else{
-        this.grupos.push(rg.cells[1].value);
-      }
-  })
-    let disable = false;
-    if (posicion == 1 || this.grupos[posicion] <= 2){
-      this.unavailableUp = true;
-    } else {
-      this.unavailableUp = false;
-    }
-    if((this.listaGuardias || this.calendarios) && posicion == 0){
-      this.unavailableUp = true;
-    }else if ((this.listaGuardias || this.calendarios) && posicion > 0){
-      this.unavailableUp = false;
-    }
-
-   /* if (this.calendarios){
-      if (posicion== this.grupos.length || this.grupos[posicion]  >= this.maxGroup){
-        this.unavailableDown = true;
+      this.grupos = [];
+      this.rowGroups.forEach((rg, i) =>{
+        if (this.pantalla == 'colaGuardias'){
+          this.grupos.push(rg.cells[0].value);
+        }else{
+          this.grupos.push(rg.cells[1].value);
+        }
+      })
+      
+      if ( this.enableUpDownButtonsManual && (posicion == 1 || this.grupos[posicion] <= 2) || ((this.listaGuardias || this.calendarios) && posicion >= 0) ) {
+        this.unavailableUp = true;
+      } else if (!this.enableUpDownButtonsManual) {
+        this.unavailableUp = true;
       } else {
-        this.unavailableDown = false;
+        this.unavailableUp = false;
       }
-    }else{*/
-    
-      if (posicion == this.grupos.length - 1 || this.grupos[posicion]  >= this.maxGroup && this.grupos[posicion] != null){
+
+      if ( this.enableUpDownButtonsManual && (posicion == this.grupos.length - 1 || this.grupos[posicion]  >= this.maxGroup && this.grupos[posicion] != null) ) {
+        this.unavailableDown = true;
+      } else if (!this.enableUpDownButtonsManual) {
         this.unavailableDown = true;
       } else {
         this.unavailableDown = false;
       }
 
-      //this.grupos = this.grupos.map(g => g.startsWith("U") ? g.substring(1) : g);
+      let disable = false;  
+      if ( !this.enableUpDownButtonsManual || (this.selectedArray.length != 1 || ( (this.unavailableUp && type == 'up') || (this.unavailableDown && type == 'down') )) ) {
+        disable = true;
+      }
 
-    //}
-
-
-    if ( this.selectedArray.length != 1 || (this.unavailableUp && type == 'up')){
-      disable = true;
-    }else if ( this.selectedArray.length != 1 || (this.unavailableDown && type == 'down')){
-      disable = true;
+      return disable;
     }
-    return disable;
-  }
   }
   sortData(sort: Sort) {
     let data :Row[] = [];
@@ -1627,6 +1616,48 @@ this.totalRegistros = this.rowGroups.length;
         }
       );
   }
+
+  /* getResumen() {
+    this.datosConfColaGuardias = JSON.parse(this.persistenceService.getDatos());
+    this.sigaServices.post("gestionGuardias_resumenTurno", this.datosConfColaGuardias.idTurno).subscribe(
+      data => {
+        this.body = JSON.parse(data.body).turnosItem[0];
+        this.progressSpinner = false;
+      },
+
+      () => {
+        this.progressSpinner = false;
+      }
+    );
+  } */
+
+  getConfColaGuardias() {
+    let datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
+    this.sigaServices.post("busquedaGuardias_resumenConfCola", datos)
+      .subscribe(data => {
+        if (data.body)
+          data = JSON.parse(data.body);
+        //this.numeroletradosguardia = data.letradosIns;
+        this.datosConfColaGuardias = data.idOrdenacionColas;
+        if (this.datosConfColaGuardias && this.datosConfColaGuardias.split(",").length > 4) {
+          this.datosConfColaGuardias = this.datosConfColaGuardias.substring(0, this.datosConfColaGuardias.lastIndexOf(","));
+          this.manual = false;
+          this.enableUpDownButtonsManual = this.datosConfColaGuardias.includes("Ordenación manual") ? true : false;
+        } else if (this.datosConfColaGuardias && (this.datosConfColaGuardias === "Ordenación manual" || this.datosConfColaGuardias.includes("Ordenación manual"))) {
+          //this.manual = true;
+          this.enableUpDownButtonsManual = true;
+        } else {
+          //this.manual = false;
+          this.enableUpDownButtonsManual = false;
+        }
+          
+      },
+        err => {
+          //console.log(err);
+        })
+  }
+  
+
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
