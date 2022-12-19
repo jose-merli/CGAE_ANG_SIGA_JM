@@ -88,7 +88,9 @@ export class ComunicacionesComponent implements OnInit {
   numSelectedNewDocs: number = 0;
   resaltadoDatos: boolean = false;
   comboPlantillas: any;
+  institucionActual: any;
   @ViewChild("nuevaComm") dialogNuevaComm: Dialog;
+  datosBuscar: any;
 
   constructor(
     private sigaServices: SigaServices,
@@ -104,6 +106,7 @@ export class ComunicacionesComponent implements OnInit {
 
     sessionStorage.removeItem("crearNuevaCom");
 
+    this.getNigValidador();
     this.getComboColegios();
     this.getComboJuzgado();
     this.getTipoEnvios();
@@ -558,58 +561,43 @@ para poder filtrar el dato con o sin estos caracteres*/
     //Esto es para la validacion de CADENA
 
     //Obtenemos la institucion actual
-    // let idInstitucion = this.body.idInstitucion;
+     let idInstitucion = this.institucionActual ? this.institucionActual : "";
 
     //Codigo copiado de la tarjeta detalles de la ficha de designaciones
-    // if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
-    //   idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
-    //   if (nProcedimiento != '') {
-    //     var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
-    //     var ret = objRegExp.test(nProcedimiento);
-    //     return ret;
-    //   }
-    //   else
-    //     return true;
-    // } else {
-      // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
+     if (idInstitucion == "2008" || idInstitucion == "2015" || idInstitucion == "2029" || idInstitucion == "2033" || idInstitucion == "2036" ||
+       idInstitucion == "2043" || idInstitucion == "2006" || idInstitucion == "2021" || idInstitucion == "2035" || idInstitucion == "2046" || idInstitucion == "2066") {
+       if (nProcedimiento != '') {
+         var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+         var ret = objRegExp.test(nProcedimiento);
+         return ret;
+       }
+       else
+         return true;
+     } else {
       var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
       var ret = objRegExp.test(nProcedimiento);
       if(!ret && this.bodyNuevaComm.numProcedimiento != null && this.bodyNuevaComm.numProcedimiento.trim() != ""){
-        this.msgs = [{severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("justiciaGratuita.ejg.preDesigna.errorNumProc")}];
+        this.msgs = [{severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido")}];
         return false;
       }
       else{
         return true;
       }
-    // }
+     }
   }
 
-  //Codigo copiado de la tarjeta detalles de la ficha de designaciones y adaptado. Necesita completarse.
   validarNig(nig) {
     let ret = false;
-    let parametro = new ParametroRequestDto();
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      parametro.idInstitucion = n.value;
-      parametro.modulo = "SCS";
-      parametro.parametrosGenerales = "NIG_VALIDADOR";
-      if (nig != null && nig != '') {
-        this.progressSpinner = true;
-        this.sigaServices
-          .postPaginado("parametros_search", "?numPagina=1", parametro)
-          .toPromise().then(
-            data => {
-              let searchParametros = JSON.parse(data["body"]);
-              let datosBuscar = searchParametros.parametrosItems;
-              datosBuscar.forEach(element => {
-                if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-                  let valorParametroNIG: RegExp = new RegExp(element.valor);
-                  if (nig != '') {
-                    ret = valorParametroNIG.test(nig);
-                    if (ret) {
-                      return true;
-                    }
-                    else {
-                      let severity = "error";
+    
+    if (nig != null && nig != '' && this.datosBuscar != undefined) {
+      this.datosBuscar.forEach(element => {
+        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+          let valorParametroNIG: RegExp = new RegExp(element.valor);
+          if (nig != '') {
+            if(valorParametroNIG.test(nig)){
+              ret = true;
+            }else{
+              let severity = "error";
                       let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
                       let detail = "";
                       this.msgs.push({
@@ -617,31 +605,31 @@ para poder filtrar el dato con o sin estos caracteres*/
                         summary,
                         detail
                       });
-                      return false;
-                    }
-                  }
-                  else {
-                    return true;
-                  }
-                }
-              });
-              this.progressSpinner = false;
-            }).catch(error => {
-              let severity = "error";
-              let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
-              let detail = "";
-              this.msgs.push({
-                severity,
-                summary,
-                detail
-              });
-              return false;
-            });
-        this.progressSpinner = false;
-      }
-    });
 
-    if (!ret) return true;
+              ret = false
+            }
+          }
+        }
+      });
+    }
+
+    return ret;
+  }
+
+  getNigValidador(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.institucionActual;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "NIG_VALIDADOR";
+
+    this.sigaServices
+    .postPaginado("parametros_search", "?numPagina=1", parametro)
+    .subscribe(
+      data => {
+        let searchParametros = JSON.parse(data["body"]);
+        this.datosBuscar = searchParametros.parametrosItems;
+        //this.progressSpinner = false;
+      });
   }
 
   onChangeSelectAllNewDocs(){

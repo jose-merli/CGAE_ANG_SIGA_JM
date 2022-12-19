@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
 import { TarjetaDefensaJuridicaItem } from '../../../../../../models/guardia/TarjetaDefensaJuridicaItem';
+import { ParametroRequestDto } from '../../../../../../models/ParametroRequestDto';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
@@ -24,6 +25,9 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
   defensaJuridicaItemAux : TarjetaDefensaJuridicaItem = new TarjetaDefensaJuridicaItem();
   progressSpinner : boolean = false;
   @Output() refreshTarjetas = new EventEmitter<string>();
+  valorFormatoProc: any;
+  institucionActual: any;
+  datosBuscar: any;
   
 
   constructor(private sigaServices : SigaServices,
@@ -31,6 +35,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
     private translateService : TranslateService) { }
 
   ngOnInit() {
+    this.getNigValidador();
     this.getComboComisarias();
     this.getComboJuzgados();
     this.getComboProcedimientos();
@@ -133,31 +138,127 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
   }
 
   saveDefensaJuridicaData(){
-    if(this.idAsistencia){
-      this.progressSpinner = true;
-      this.sigaServices.postPaginado("busquedaGuardias_guardarTarjetaDefensaJuridica","?anioNumero="+this.idAsistencia, this.defensaJuridicaItem).subscribe(
-        n => {
+    if(!this.compruebaCamposObligatorios()){
+    
+      if(this.idAsistencia){
+        this.progressSpinner = true;
+        this.sigaServices.postPaginado("busquedaGuardias_guardarTarjetaDefensaJuridica","?anioNumero="+this.idAsistencia, this.defensaJuridicaItem).subscribe(
+          n => {
 
-          let id = JSON.parse(n.body).id;
-          let error = JSON.parse(n.body).error;
-          this.progressSpinner = false;
+            let id = JSON.parse(n.body).id;
+            let error = JSON.parse(n.body).error;
+            this.progressSpinner = false;
 
-          if (error != null && error.description != null) {
-            this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
-          } else {
-            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
-            this.refreshTarjetas.emit(id);
-            this.defensaJuridicaItemAux = Object.assign({},this.defensaJuridicaItem);
+            if (error != null && error.description != null) {
+              this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
+            } else {
+              this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
+              this.refreshTarjetas.emit(id);
+              this.defensaJuridicaItemAux = Object.assign({},this.defensaJuridicaItem);
+            }
+          },
+          err => {
+            //console.log(err);
+            this.progressSpinner = false;
+          }, () => {
+            this.progressSpinner = false;
           }
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        }, () => {
-          this.progressSpinner = false;
-        }
-      );
+        );
+      }
     }
+    
+  }
+
+  compruebaCamposObligatorios() {
+
+    let error = false;
+
+    if (this.defensaJuridicaItem.nig == null || (this.defensaJuridicaItem.nig != null && !error && !this.validarNig(this.defensaJuridicaItem.nig))) {
+      this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
+      error = true;
+    }
+
+    if (this.defensaJuridicaItem.numProcedimiento == null || (this.defensaJuridicaItem.numProcedimiento != null && !error && !this.validarNProcedimiento(this.defensaJuridicaItem.numProcedimiento))) {
+      this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido"));
+      error = true;
+    }
+    return error;
+  }
+
+  validarNProcedimiento(nProcedimiento:string) {
+    //Esto es para la validacion de CADECA
+
+    let response:boolean = false;
+
+    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
+      this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
+      if (nProcedimiento != '' && nProcedimiento != null) {
+        let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+        let ret = objRegExp.test(nProcedimiento);
+        response = ret;
+      }
+    } else {
+      if (nProcedimiento != '' && nProcedimiento != null && nProcedimiento.length == 12) {
+        let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
+        let ret = objRegExp.test(nProcedimiento);
+        response = ret;
+      } 
+    }
+    return response;
+
+  }
+
+  validarNig(nig) {
+    let ret = false;
+    
+    if (nig != null && nig != '' && this.datosBuscar != undefined) {
+      //this.progressSpinner = true;
+      this.datosBuscar.forEach(element => {
+        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+          let valorParametroNIG: RegExp = new RegExp(element.valor);
+          if (nig != '') {
+            ret = valorParametroNIG.test(nig);
+          }
+        }
+      });
+      //this.progressSpinner = false;
+    }
+
+    return ret;
+  }
+
+  getNigValidador(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.institucionActual;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "NIG_VALIDADOR";
+
+    this.sigaServices
+    .postPaginado("parametros_search", "?numPagina=1", parametro)
+    .subscribe(
+      data => {
+        let searchParametros = JSON.parse(data["body"]);
+        this.datosBuscar = searchParametros.parametrosItems;
+        //this.progressSpinner = false;
+      });
+  }
+
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
+  }
+
+  formatoProc(){
+    this.sigaServices.get('actuaciones_designacion_numProcedimiento').subscribe(
+      (data) => {
+        console.log("FORMATO PROC")
+        console.log(data)
+       this.valorFormatoProc = data.valor;
+        console.log(this.valorFormatoProc)
+      },
+      (err) => {
+        //console.log(err);
+      }
+    );
   }
 
   onChangeComisaria(){

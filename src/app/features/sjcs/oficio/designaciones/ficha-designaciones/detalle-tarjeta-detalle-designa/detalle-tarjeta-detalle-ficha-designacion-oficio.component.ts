@@ -332,6 +332,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     if (detail == "Guardar") {
       designaUpdate.estado = "";
       let validaProcedimiento = true;
+      let validaNig = true;
       designaUpdate.nig = this.inputs[0].value;
       designaUpdate.numProcedimiento = this.inputs[1].value;
       designaUpdate.resumenAsunto = this.asuntoValue
@@ -369,27 +370,29 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       } else if (this.estadoValue) {
         designaUpdate.estado = this.estadoValue[0];
       }
-      // if(designaUpdate.nig != "" && designaUpdate.nig!= undefined){
-      //   this.validarNig(designaUpdate.nig).then(value=>validaNIG = value);
-      //   //console.log(this.validarNig(designaUpdate.nig));
-      // }
+      if(designaUpdate.nig != "" && designaUpdate.nig!= undefined){
+        if(!this.validarNig(designaUpdate.nig)){
+          validaNig = false;
+        }
+      }
       if (designaUpdate.numProcedimiento != "" && designaUpdate.numProcedimiento != undefined) {
-        validaProcedimiento = this.validarNProcedimiento(designaUpdate.numProcedimiento);
+        if(this.validarNProcedimiento(designaUpdate.numProcedimiento)){
+          validaProcedimiento = false;
+          this.progressSpinner = false;
+          let severity = "error";
+          let summary = this.translateService.instant('justiciaGratuita.oficio.designa.numProcedimientoNoValido');;
+          let detail = "";
+          this.msgs.push({
+            severity,
+            summary,
+            detail
+          });
+        }
       }
 
-      if (validaProcedimiento != false) {
+      if (validaProcedimiento && validaNig) {
         designaUpdate.fechaAnulacion = new Date();
         this.checkDesignaJuzgadoProcedimiento(designaUpdate);
-      } else {
-        this.progressSpinner = false;
-        let severity = "error";
-        let summary = this.translateService.instant('justiciaGratuita.oficio.designa.numProcedimientoNoValido');;
-        let detail = "";
-        this.msgs.push({
-          severity,
-          summary,
-          detail
-        });
       }
     }
     //ANULAR
@@ -776,43 +779,48 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       });
   }
 
-  async validarNig(nig) {
+  validarNig(nig) {
     let ret = false;
+    if (nig != null && nig != '' && this.datosBuscar != undefined) {
+      this.datosBuscar.forEach(element => {
+        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+          let valorParametroNIG: RegExp = new RegExp(element.valor);
+          if (nig != '') {
+            if(valorParametroNIG.test(nig)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+      });
+    }
+    return ret;
+  }
+
+  getNigValidador(){
     let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.campos.idInstitucion;
+    parametro.idInstitucion = this.institucionActual;
     parametro.modulo = "SCS";
     parametro.parametrosGenerales = "NIG_VALIDADOR";
-    await this.sigaServices
-      .postPaginado("parametros_search", "?numPagina=1", parametro)
-      .toPromise().then(
-        data => {
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosBuscar = this.searchParametros.parametrosItems;
-          this.datosBuscar.forEach(element => {
-            if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-              this.valorParametroNIG = element.valor;
-              if (nig != '') {
-                ret = this.valorParametroNIG.test(nig);
-              }
-              else {
-                ret = true;
-              }
-            }
-          });
-        }).catch(error => {
-          this.progressSpinner = false;
-          let severity = "error";
-          let summary = this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido");
-          let detail = "";
-          this.msgs.push({
-            severity,
-            summary,
-            detail
-          });
-          ret = false;
-        });
 
-    return ret;
+    this.sigaServices
+    .postPaginado("parametros_search", "?numPagina=1", parametro)
+    .subscribe(
+      data => {
+        let searchParametros = JSON.parse(data["body"]);
+        this.datosBuscar = searchParametros.parametrosItems;
+        //this.progressSpinner = false;
+      });
   }
 
   validarNProcedimiento(nProcedimiento) {
@@ -821,17 +829,14 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
       this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
       if (nProcedimiento != '') {
-        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
-        var ret = objRegExp.test(nProcedimiento);
-        return ret;
+        let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+        return objRegExp.test(nProcedimiento);
       }
       else
         return true;
     } else {
-      // var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
-      var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
-      var ret = objRegExp.test(nProcedimiento);
-      return ret;
+      let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
+      return objRegExp.test(nProcedimiento);
     }
 
   }
