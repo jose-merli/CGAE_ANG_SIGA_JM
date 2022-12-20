@@ -11,14 +11,16 @@
         </div>
         <div class="col-lg-11 col-md-10">
           <div class="d-flex justify-content-start mb-1" (click)="onHideDatosGenerales()">
-            <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.fichaConceptosFacturacion" |
-              translate }}
+            <label class="mr-auto title-ficha">{{ "facturacionSJCS.facturacionesYPagos.fichaConceptosFacturacion" | translate }}
             </label>
           </div>
           <div class="d-flex justify-content-between">
             <label>{{ "facturacionSJCS.facturacionesYPagos.numeroCriterios" | translate }}:
               <span>{{ numCriterios }}</span>
             </label>
+            <!-- <label>{{ "facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria" | translate }}:
+              <span>{{ partidaPresupuestaria }} </span>
+            </label> -->
             <label>{{ "facturacionSJCS.facturacionesYPagos.importeTotal" | translate }}:
               <span>{{ importeTotal | number }} €</span>
             </label>
@@ -90,6 +92,22 @@
                     </span>
 
                   </div>
+
+                  <div *ngIf="col.field == 'partidaPresupuestaria'">
+
+                    <p-dropdown *ngIf="idEstadoFacturacion == '10' && permisos" class="select-form" 
+                      [(ngModel)]='dato.idPartidaPresupuestaria' (onChange)="changeCombo(dato)"
+                      [options]="partidaPresupuestaria" [filter]="true"
+                      placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
+                      [showClear]="true">
+                    </p-dropdown>
+
+                    <span *ngIf="idEstadoFacturacion != '10' || !permisos">
+                      {{ dato[col.field] }}
+                    </span>
+
+                  </div>
+
                   <div *ngIf="col.field == 'importeTotal'">
                     {{ dato.importeTotalFormat | numberPipe }} €
                   </div>
