@@ -178,7 +178,7 @@ export class TablaEjgComponent implements OnInit {
 
   getCols() {
     this.cols = [
-      { field: "turnoDes", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "16%" },
+      { field: "turnoDes", header: "dato.jgr.guardia.guardias.turnoguardiatramitacion", width: "16%" },
       { field: "turno", header: "dato.jgr.guardia.guardias.turno", width: "16%" },
       { field: "numAnnioProcedimiento", header: "justiciaGratuita.ejg.datosGenerales.annioNum", width: "10%" },
       { field: "apellidosYNombre", header: "busquedaSanciones.detalleSancion.letrado.literal", width: "16%" },
