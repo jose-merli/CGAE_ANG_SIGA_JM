@@ -26,6 +26,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   isDisabled = false;
   @Input() isDisabledNuevo = false;
   @Input() isDisabledByEstado = false;
+  @Input() esFinalizado = false;
   info = new FormControl();
   @Input() cabeceras = [];  
   @Input() rowGroups: Row[];
@@ -1345,19 +1346,35 @@ this.totalRegistros = this.rowGroups.length;
   
     getComboGuardia(idTurno, row) {
       this.progressSpinner = true;
-    this.sigaServices.getParam(
-      "busquedaGuardia_guardiaNoBajaNoExistentesEnListaGuardias", "?idTurno=" + idTurno + "&idListaGuardias=" + this.lista.idLista).subscribe(
-        data => {
-          this.progressSpinner = false;
-          let comboGuardia = data.combooItems;
-          this.commonServices.arregloTildesCombo(comboGuardia);
-          row.cells.find(c => c.type == 'selectDependency2').combo = comboGuardia;
-        },
-        err => {
-          this.progressSpinner = false;
-          //console.log(err);
-        }
-      )
+      if(this.lista != undefined ){
+        this.sigaServices.getParam(
+          "busquedaGuardia_guardiaNoBajaNoExistentesEnListaGuardias", "?idTurno=" + idTurno + "&idListaGuardias=" + this.lista.idLista).subscribe(
+            data => {
+              this.progressSpinner = false;
+              let comboGuardia = data.combooItems;
+              this.commonServices.arregloTildesCombo(comboGuardia);
+              row.cells.find(c => c.type == 'selectDependency2').combo = comboGuardia;
+            },
+            err => {
+              this.progressSpinner = false;
+              //console.log(err);
+            }
+          )
+      }else{
+        this.sigaServices.getParam(
+          "busquedaGuardia_guardia", "?idTurno=" + idTurno).subscribe(
+            data => {
+              this.progressSpinner = false;
+              let comboGuardia = data.combooItems;
+              this.commonServices.arregloTildesCombo(comboGuardia);
+              row.cells.find(c => c.type == 'selectDependency2').combo = comboGuardia;
+            },
+            err => {
+              this.progressSpinner = false;
+              //console.log(err);
+            }
+          )
+      }
 
   }
   

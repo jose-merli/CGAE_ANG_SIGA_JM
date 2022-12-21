@@ -101,6 +101,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
   idConjuntoGuardiaElegido: number;
   comboGuardiaConjunto = [];
   isDisabledByEstado;
+  esFinalizado:boolean;
   @Input() duplicar = false;
   @Input() datosGenerales = {
     'duplicar': '',
@@ -315,6 +316,12 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
       }else{
         this.isDisabledByEstado = true;
       }
+      if(this.datosGenerales.estado == "3"){
+        this.esFinalizado = true;
+      }else{
+        this.esFinalizado = false;
+      }
+
     }
 
     getGuardiasFromConjunto(idConjunto, fromCombo) {
@@ -395,6 +402,11 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
       this.isDisabledByEstado = false;
     }else{
       this.isDisabledByEstado = true;
+    }
+    if(this.datosGenerales.estado == "3"){
+      this.esFinalizado = true;
+    }else{
+      this.esFinalizado = false;
     }
 
     this.body = JSON.parse(JSON.stringify(this.bodyInicial));
