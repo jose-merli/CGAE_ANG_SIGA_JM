@@ -74,8 +74,8 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     this.filtros.fechadesde = new Date( new Date().setFullYear(new Date().getFullYear()-1)); 
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      if(this.filtros.fechadesde != null || this.filtros.fechadesde != undefined) this.filtros.fechadesde = new Date(this.changeDateFormat( this.filtros.fechadesde));
-      if(this.filtros.fechahasta != null || this.filtros.fechahasta != undefined) this.filtros.fechahasta = new Date(this.changeDateFormat( this.filtros.fechahasta));
+      if(this.filtros.fechadesde != null || this.filtros.fechadesde != undefined) this.filtros.fechadesde = this.changeDateFormat( this.filtros.fechadesde);
+      if(this.filtros.fechahasta != null || this.filtros.fechahasta != undefined) this.filtros.fechahasta = this.changeDateFormat( this.filtros.fechahasta);
       if (this.filtros.idGuardia != null || this.filtros.idGuardia != undefined) {
         this.getComboGuardia();
       }
@@ -87,10 +87,10 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
           this.filtros.idTurno = [this.dataBuscador.turno.toString()];
         }
         if(this.dataBuscador.fechaDesde != ''){
-          this.filtros.fechadesde = new Date(this.changeDateFormat(this.dataBuscador.fechaDesde)); //MM/dd/yyyy
+          this.filtros.fechadesde = this.changeDateFormat(this.dataBuscador.fechaDesde); //MM/dd/yyyy
         }
         if(this.dataBuscador.fechaHasta != ''){
-          this.filtros.fechahasta = new Date(this.changeDateFormat(this.dataBuscador.fechaHasta));//MM/dd/yyyy
+          this.filtros.fechahasta = this.changeDateFormat(this.dataBuscador.fechaHasta);//MM/dd/yyyy
         }
       }
       if(this.filtros.numColegiado != null){
@@ -178,12 +178,15 @@ getDataLoggedUser() {
 }
 
   changeDateFormat(date1){
-    let date1C = date1;
+    //let date1C = date1;
     // date1 dd/MM/yyyy
-    if (!isNaN(Number(date1))){
-      date1C = date1.split("/").reverse().join("-");
-    }
-     
+   // if (!isNaN(Number(date1))){
+    //  date1C = date1.split("/").reverse().join("-");
+   // }
+   var dateParts = date1.split("/");
+
+   // month is 0-based, that's why we need dataParts[1] - 1
+   var date1C = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]); 
     return date1C;
   }
  
