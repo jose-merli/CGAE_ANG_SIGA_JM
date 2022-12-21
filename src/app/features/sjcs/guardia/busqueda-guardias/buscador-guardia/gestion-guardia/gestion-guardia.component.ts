@@ -78,6 +78,7 @@ export class GestionGuardiaComponent implements OnInit {
     if (sessionStorage.getItem("saltos-compesacionesItem")) {
       this.persistenceService.setDatos(sessionStorage.getItem("saltos-compesacionesItem"));
     }
+    
     if (this.persistenceService.getDatos() != undefined) {
       this.search();
       this.modoEdicion = true;
@@ -128,7 +129,10 @@ export class GestionGuardiaComponent implements OnInit {
     if (this.origenGuarColeg) {
       this.datos = JSON.parse(sessionStorage.getItem("datosGuardiaGuardiaColeg"));
       this.origenGuarColeg = false
-    } else {
+    } else if(sessionStorage.getItem("itemFichaProgramacionCalendarios")){
+      this.datos = JSON.parse(sessionStorage.getItem("itemFichaProgramacionCalendarios"));
+    }
+    else {
       this.datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
     }
 

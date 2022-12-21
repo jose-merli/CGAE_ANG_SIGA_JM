@@ -1428,9 +1428,13 @@ this.totalRegistros = this.rowGroups.length;
 
   openTab(row) {
     let guardiaItem = new GuardiaItem();
-    guardiaItem.idGuardia = row.cells[2].value;
-    guardiaItem.idTurno = row.cells[1].value;
+    guardiaItem.idGuardia = row.cells[5].value;
+    guardiaItem.idTurno = row.cells[6].value;
     this.persistenceService.setDatos(this.tarjetaDatosGenerales);
+    sessionStorage.setItem(
+      "itemFichaProgramacionCalendarios",
+      JSON.stringify(this.tarjetaDatosGenerales)
+    );
     sessionStorage.setItem(
       "filtrosBusquedaGuardiasFichaGuardia",
       JSON.stringify(guardiaItem)
