@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '../../../../../../commons/translate';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
@@ -8,6 +8,7 @@ import { procesos_maestros } from '../../../../../../permisos/procesos_maestros'
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { DatosColaGuardiaComponent } from './datos-cola-guardia/datos-cola-guardia.component';
 
 
 @Component({
@@ -61,6 +62,9 @@ export class GestionGuardiaComponent implements OnInit {
   origenGuarColeg: boolean;
   guardiaCole: any;
   idTurnoFromFichaTurno = null;
+
+  @ViewChild(DatosColaGuardiaComponent) datosColaGuardiaComponent;
+
   constructor(private persistenceService: PersistenceService,
     private location: Location, private sigaServices: SigaServices,
     private commonService: CommonsService,
@@ -564,5 +568,9 @@ export class GestionGuardiaComponent implements OnInit {
           break;
       }
     }
+  }
+
+  getConfColaGuardiasPadre(confOrdCola) {
+    this.datosColaGuardiaComponent.tablaOrder.getConfColaGuardias();
   }
 }

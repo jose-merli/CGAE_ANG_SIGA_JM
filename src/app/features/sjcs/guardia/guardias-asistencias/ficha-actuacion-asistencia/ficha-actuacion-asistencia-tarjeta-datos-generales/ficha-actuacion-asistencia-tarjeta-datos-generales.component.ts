@@ -6,6 +6,7 @@ import { TranslateService } from '../../../../../../commons/translate';
 import { ActuacionAsistenciaItem } from '../../../../../../models/guardia/ActuacionAsistenciaItem';
 import { DatosGeneralesActuacionAsistenciaItem } from '../../../../../../models/guardia/DatosGeneralesActuacionAsistenciaItem';
 import { TarjetaAsistenciaItem } from '../../../../../../models/guardia/TarjetaAsistenciaItem';
+import { ParametroRequestDto } from '../../../../../../models/ParametroRequestDto';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
@@ -31,6 +32,9 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   comboCoste = [];
   comboTipoActuacion = [];
   fActuacionvalida : boolean = true;
+  institucionActual: any;
+  datosBuscar: any;
+  valorFormatoProc: any;
 
   constructor(private datepipe : DatePipe,
     private sigaServices : SigaServices,
@@ -38,6 +42,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
     private translateService : TranslateService) { }
 
   ngOnInit() {
+    this.getNigValidador();
     this.getComboComisaria();
     this.getComboJuzgado();
     this.getComboPrision();
@@ -54,7 +59,6 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         this.datosGeneralesActuacion.numAsunto = this.asistencia.numDiligencia;
       }
     }
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -68,6 +72,100 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
 
       }
     
+  }
+
+  compruebaCamposObligatorios() {
+
+    let error = false;
+
+    if (this.datosGeneralesActuacion.nig == null || (this.datosGeneralesActuacion.nig != null && !error && !this.validarNig(this.datosGeneralesActuacion.nig))) {
+      this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
+      error = true;
+    }
+
+    if(this.asistencia.numProcedimiento && !this.asistencia.numDiligencia){
+      if (this.datosGeneralesActuacion.numAsunto == null || (this.datosGeneralesActuacion.numAsunto != null && !error && !this.validarNProcedimiento(this.datosGeneralesActuacion.numAsunto))) {
+        this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido"));
+        error = true;
+      }
+    }
+    return error;
+  }
+
+  validarNProcedimiento(nProcedimiento:string) {
+    //Esto es para la validacion de CADECA
+
+    let response:boolean = false;
+
+    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
+      this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
+      if (nProcedimiento != '' && nProcedimiento != null) {
+        let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+        let ret = objRegExp.test(nProcedimiento);
+        response = ret;
+      }
+    } else {
+      if (nProcedimiento != '' && nProcedimiento != null && nProcedimiento.length == 12) {
+        let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
+        let ret = objRegExp.test(nProcedimiento);
+        response = ret;
+      } 
+    }
+    return response;
+
+  }
+
+  validarNig(nig) {
+    let ret = false;
+    
+    if (nig != null && nig != '' && this.datosBuscar != undefined) {
+      //this.progressSpinner = true;
+      this.datosBuscar.forEach(element => {
+        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+          let valorParametroNIG: RegExp = new RegExp(element.valor);
+          if (nig != '') {
+            ret = valorParametroNIG.test(nig);
+          }
+        }
+      });
+      //this.progressSpinner = false;
+    }
+
+    return ret;
+  }
+
+  getNigValidador(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.institucionActual;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "NIG_VALIDADOR";
+
+    this.sigaServices
+    .postPaginado("parametros_search", "?numPagina=1", parametro)
+    .subscribe(
+      data => {
+        let searchParametros = JSON.parse(data["body"]);
+        this.datosBuscar = searchParametros.parametrosItems;
+        //this.progressSpinner = false;
+      });
+  }
+
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
+  }
+
+  formatoProc(){
+    this.sigaServices.get('actuaciones_designacion_numProcedimiento').subscribe(
+      (data) => {
+        console.log("FORMATO PROC")
+        console.log(data)
+       this.valorFormatoProc = data.valor;
+        console.log(this.valorFormatoProc)
+      },
+      (err) => {
+        //console.log(err);
+      }
+    );
   }
 
   getDatosGenerales(){
@@ -97,37 +195,41 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   }
 
   save(){
-    if(this.datosGeneralesActuacion.fechaActuacion && this.fActuacionvalida && this.datosGeneralesActuacion.tipoActuacion){
+    if(!this.compruebaCamposObligatorios()){
+    
+     if(this.datosGeneralesActuacion.fechaActuacion && this.fActuacionvalida && this.datosGeneralesActuacion.tipoActuacion){
 
-      this.progressSpinner = true;
-      this.sigaServices
-      .postPaginado("actuaciones_saveTarjetaDatosGenerales","?anioNumero="+this.asistencia.anioNumero, this.datosGeneralesActuacion)
-      .subscribe(
-        n => {
-          let result = JSON.parse(n["body"]);
-          if(result.error){
-            this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+        this.progressSpinner = true;
+       this.sigaServices
+       .postPaginado("actuaciones_saveTarjetaDatosGenerales","?anioNumero="+this.asistencia.anioNumero, this.datosGeneralesActuacion)
+       .subscribe(
+         n => {
+            let result = JSON.parse(n["body"]);
+            if(result.error){
+              this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           }else{
-            this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
-            this.datosGeneralesActuacionAux = Object.assign({}, this.datosGeneralesActuacion);
-            this.datosGeneralesActuacion.idActuacion = result.id;
-            this.refreshTarjetas.emit(result.id);
-            this.refreshHistorico.emit(true);
-          }
-          this.progressSpinner = false;
-        },
-        err => {
-          //console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-          this.progressSpinner = false;
-        }
-      );
+              this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
+              this.datosGeneralesActuacionAux = Object.assign({}, this.datosGeneralesActuacion);
+              this.datosGeneralesActuacion.idActuacion = result.id;
+              this.refreshTarjetas.emit(result.id);
+              this.refreshHistorico.emit(true);
+            }
+            this.progressSpinner = false;
+          },
+          err => {
+            //console.log(err);
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+         }
+       );
 
-    }else{
-      this.showMsg('error','Error', this.translateService.instant('general.message.camposObligatorios'));
-    }
+      }else{
+        this.showMsg('error','Error', this.translateService.instant('general.message.camposObligatorios'));
+     }
+      
+   }
   }
 
   onChangeTipoActuacion(){

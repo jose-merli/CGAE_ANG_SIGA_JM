@@ -31,6 +31,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   @Input() comboTurnos = [];
   @Input() comboTurnosGrupo = [];
   @Input() comboTipos = [];
+  @Input() emptyResults: boolean = false;
 
   @Output() anySelected = new EventEmitter<any>();
   @Output() saveEvent = new EventEmitter<Row[]>();
@@ -81,9 +82,9 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     let values = [];
     let labels = [];
     let arrayOfSelected = [];
-    this.rowGroups.forEach((row, i) => {
+    /* this.rowGroups.forEach((row, i) => {
       values.push(row.cells[6].value);
-    });
+    }); */
 
     values.forEach((v, i) => {
       let selecteCombo = { label: '', value: '' }
@@ -391,9 +392,16 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
 
     //TODO Falta añadir Grupo y Colegiado Grupo
     row.cells = [cell1, cell2, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10, cell11, cell12, cell13, cell14];
+    row.id = this.totalRegistros;
     this.rowGroups.unshift(row);
     this.rowGroupsAux = this.rowGroups;
     this.totalRegistros = this.rowGroups.length;
+    this.tablaFoco.nativeElement.scrollIntoView();
+
+    if (this.emptyResults) {
+      this.rowGroups.pop();
+      this.emptyResults = false;
+    }
   }
 
   guardar() {
@@ -425,7 +433,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.deleteEvent.emit(this.selectedArray);
       this.selectedArray = [];
-      this.showSuccessDelete();
+      //this.showSuccessDelete();
     }
   }
 

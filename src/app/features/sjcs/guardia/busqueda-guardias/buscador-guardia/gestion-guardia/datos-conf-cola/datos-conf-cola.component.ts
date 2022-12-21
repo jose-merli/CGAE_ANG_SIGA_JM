@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input, ViewChild } from '@angular/core';
 
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../../_services/siga.service';
@@ -9,6 +9,9 @@ import { endpoints_guardia } from '../../../../../../../utils/endpoints_guardia'
 import { TranslateService } from '../../../../../../../commons/translate';
 import { ConfiguracionCola, GlobalGuardiasService } from '../../../../guardiasGlobal.service';
 import { SigaStorageService } from '../../../../../../../siga-storage.service';
+import { Router } from '../../../../../../../../../node_modules/@angular/router';
+import { MultiSelect } from 'primeng/primeng';
+
 
 const asc = "ascendente"
 const desc = "descendente"
@@ -45,13 +48,37 @@ export class DatosConfColaComponent implements OnInit {
   isLetrado : boolean = false;
   resumenPesos : string;
   isDisabledGuardia: boolean = true;
+
+  @Output() opened = new EventEmitter<Boolean>();
+  @Output() idOpened = new EventEmitter<Boolean>();
+
+  @ViewChild("table") table;
+  @ViewChild("multiSelect") multiSelect: MultiSelect;
+  fichasPosibles = [
+    {
+      key: "generales",
+      activa: false
+    },
+    {
+      key: "configuracion",
+      activa: false
+    },
+    {
+      key: "tablacolaguardias",
+      activa: false
+    },
+  ];
+
+  @Output() actualizaBotonConfCola = new EventEmitter<String>();
+
   constructor(private persistenceService: PersistenceService,
     private translateService: TranslateService,
     private sigaServices: SigaServices,
     private globalGuardiasService: GlobalGuardiasService,
     private commonServices : CommonsService,
-    private sigaStorageService : SigaStorageService) { }
-
+    private sigaStorageService : SigaStorageService,
+    private router: Router) { }
+    
   ngOnInit() {
 
     //Enviamos el valor de "porGrupo"
@@ -487,6 +514,12 @@ export class DatosConfColaComponent implements OnInit {
         this.progressSpinner = false;
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
 
+        //Llamada a funcion tarjeta colaGuardia para habilitar/deshabilitar botonera ordenacion manual
+        //this.router.navigate(["/gestionGuardias"]); // Funciona, pero es muy lento
+        
+        // EMIT A app-gestion-guardia para recargar y luego el de gestionGuardiaComponent se activa el metodo para llamar al tabla-resultado-order.component para que haga el onInit
+        //this.
+        this.abreCierraFichaByKey('colaGuardias');
       },
       err => {
 
@@ -502,6 +535,32 @@ export class DatosConfColaComponent implements OnInit {
       }
     );
   }
+  
+  abreCierraFichaByKey(key) {
+    let fichaPosible = this.getFichaPosibleByKey(key);
+    if (key == "colaGuardias" && !this.modoEdicion) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.modoEdicion) {
+      fichaPosible.activa = !fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+    this.actualizaBotonConfCola.emit(this.ordenacion);
+  }
+
+  getFichaPosibleByKey(key): any {
+    let fichaPosible = this.fichasPosibles.filter(elto => {
+      return elto.key === key;
+    });
+    if (fichaPosible && fichaPosible.length) {
+      return fichaPosible[0];
+    }
+    return {};
+  }
+
   numberOnly(event): boolean {
     const charCode = (event.which) ? event.which : event.keyCode;
     if (charCode >= 48 && charCode <= 57) {

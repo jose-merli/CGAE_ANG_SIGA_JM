@@ -5,6 +5,7 @@ import { BusquedaColegiadoExpressComponent } from '../../../../../../commons/bus
 import { TranslateService } from '../../../../../../commons/translate';
 import { CaracteristicasItem } from '../../../../../../models/guardia/CaracteristicasItem';
 import { TarjetaAsistenciaItem } from '../../../../../../models/guardia/TarjetaAsistenciaItem';
+import { ParametroRequestDto } from '../../../../../../models/ParametroRequestDto';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
 
@@ -33,6 +34,9 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
   caracteristica : CaracteristicasItem = new CaracteristicasItem();
   caracteristicaAux : CaracteristicasItem = new CaracteristicasItem();
   comboJuzgados = [];
+  institucionActual: string;
+  datosBuscar: any;
+  valorFormatoProc: any;
   constructor(private router: Router,
     private sigaServices : SigaServices,
     private commonServices : CommonsService, 
@@ -42,6 +46,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
   ngOnInit() {
     //sessionStorage.removeItem("volver");
     //sessionStorage.removeItem("modoBusqueda");
+    this.getNigValidador();
     this.checkLastRoute();
     if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('usuarioBusquedaExpress')) {
       this.usuarioBusquedaExpress = JSON.parse(sessionStorage.getItem('usuarioBusquedaExpress'));
@@ -100,6 +105,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
   saveCaracteristicas(){
     //busquedaGuardias_saveCaracteristicas
     if(this.asistencia){
+      if(!this.compruebaCamposObligatorios()){
         this.progressSpinner = true;
         this.sigaServices.postPaginado("busquedaGuardias_saveCaracteristicas","?anioNumero="+this.asistencia.anioNumero, this.caracteristica).subscribe(
           n => {
@@ -123,8 +129,100 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
             this.progressSpinner = false;
           }
         );
-      
+      }
     }
+  }
+
+  compruebaCamposObligatorios() {
+
+    let error = false;
+
+    if (this.caracteristica.nig == null || (this.caracteristica.nig != null && !error && !this.validarNig(this.caracteristica.nig))) {
+      this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
+      error = true;
+    }
+
+    if (this.caracteristica.numeroProcedimiento == null || (this.caracteristica.numeroProcedimiento != null && !error && !this.validarNProcedimiento(this.caracteristica.numeroProcedimiento))) {
+      this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido"));
+      error = true;
+    }
+    return error;
+  }
+
+  validarNProcedimiento(nProcedimiento:string) {
+    //Esto es para la validacion de CADECA
+
+    let response:boolean = false;
+
+    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
+      this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
+      if (nProcedimiento != '' && nProcedimiento != null) {
+        let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+        let ret = objRegExp.test(nProcedimiento);
+        response = ret;
+      }
+    } else {
+      if (nProcedimiento != '' && nProcedimiento != null && nProcedimiento.length == 12) {
+        let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
+        let ret = objRegExp.test(nProcedimiento);
+        response = ret;
+      } 
+    }
+    return response;
+
+  }
+
+  validarNig(nig) {
+    let ret = false;
+    
+    if (nig != null && nig != '' && this.datosBuscar != undefined) {
+      //this.progressSpinner = true;
+      this.datosBuscar.forEach(element => {
+        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+          let valorParametroNIG: RegExp = new RegExp(element.valor);
+          if (nig != '') {
+            ret = valorParametroNIG.test(nig);
+          }
+        }
+      });
+      //this.progressSpinner = false;
+    }
+
+    return ret;
+  }
+
+  getNigValidador(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.institucionActual;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "NIG_VALIDADOR";
+
+    this.sigaServices
+    .postPaginado("parametros_search", "?numPagina=1", parametro)
+    .subscribe(
+      data => {
+        let searchParametros = JSON.parse(data["body"]);
+        this.datosBuscar = searchParametros.parametrosItems;
+        //this.progressSpinner = false;
+      });
+  }
+
+  getInstitucionActual() {
+    this.sigaServices.get("institucionActual").subscribe(n => { this.institucionActual = n.value });
+  }
+
+  formatoProc(){
+    this.sigaServices.get('actuaciones_designacion_numProcedimiento').subscribe(
+      (data) => {
+        console.log("FORMATO PROC")
+        console.log(data)
+       this.valorFormatoProc = data.valor;
+        console.log(this.valorFormatoProc)
+      },
+      (err) => {
+        //console.log(err);
+      }
+    );
   }
 
   restablecer(){

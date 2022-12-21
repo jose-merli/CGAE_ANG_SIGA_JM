@@ -238,7 +238,7 @@ export class RelacionesComponent implements OnInit {
       { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
       { field: "codigo", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
       { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
-      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: '6%' },
+      { field: "descturno", header: "dato.jgr.guardia.guardias.turnoguardiatramitacion", width: '6%' },
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: '6%' },
       { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados", width: '6%' },
       { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion", width: '6%' },

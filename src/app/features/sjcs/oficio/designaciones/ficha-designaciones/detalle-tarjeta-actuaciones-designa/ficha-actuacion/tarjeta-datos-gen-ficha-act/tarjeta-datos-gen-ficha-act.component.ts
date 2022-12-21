@@ -165,6 +165,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
+  datosBuscar: any;
 
   constructor(private commonsService: CommonsService,
     private sigaServices: SigaServices,
@@ -174,6 +175,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     private router: Router) { }
 
   ngOnInit() {
+    this.getNigValidador();
     this.currentRoute = this.router.url;
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDatosGenerales)
       .then(respuesta => {
@@ -914,8 +916,13 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     let modulo = this.datos.selectores.find(el => el.id == 'modulo');
     let acreditacion = this.datos.selectores.find(el => el.id == 'acreditacion');
 
-    if (!error && !this.validarNProcedimiento(this.datos.inputNumPro.value) || (this.datos.inputNumPro.obligatorio && this.datos.inputNumPro.value.trim().length == 0)) {
-      this.showMsg('error', this.translateService.instant('general.message.incorrect'), 'Es necesario introducir el campo Nº procedimiento en el formato establecido: ' + this.valorFormatoProc);
+    if ((this.datos.inputNig.obligatorio && this.datos.inputNig.value == null) || (this.datos.inputNig.value != null && !error && !this.validarNig(this.datos.inputNig.value))) {
+      this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
+      error = true;
+    }
+
+    if ((this.datos.inputNumPro.obligatorio && this.datos.inputNumPro.value == null) || (this.datos.inputNumPro.value != null && !error && !this.validarNProcedimiento(this.datos.inputNumPro.value))) {
+      this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido"));
       error = true;
     }
 
@@ -964,12 +971,48 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     }
   }
 
+  getNigValidador(){
+    let parametro = new ParametroRequestDto();
+    parametro.idInstitucion = this.institucionActual;
+    parametro.modulo = "SCS";
+    parametro.parametrosGenerales = "NIG_VALIDADOR";
+
+    this.sigaServices
+    .postPaginado("parametros_search", "?numPagina=1", parametro)
+    .subscribe(
+      data => {
+        let searchParametros = JSON.parse(data["body"]);
+        this.datosBuscar = searchParametros.parametrosItems;
+        //this.progressSpinner = false;
+      });
+  }
+
+  //Codigo copiado de la tarjeta detalles de la ficha de designaciones
+  validarNig(nig) {
+    let ret = false;
+    
+    if (nig != null && nig != '' && this.datosBuscar != undefined) {
+      //this.progressSpinner = true;
+      this.datosBuscar.forEach(element => {
+        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
+          let valorParametroNIG: RegExp = new RegExp(element.valor);
+          if (nig != '') {
+            ret = valorParametroNIG.test(nig);
+          }
+        }
+      });
+      //this.progressSpinner = false;
+    }
+
+    return ret;
+  }
+
   validarNProcedimiento(nProcedimiento:string) {
     //Esto es para la validacion de CADECA
 
-    let response:boolean = true;
+    let response:boolean = false;
 
-    if(nProcedimiento != null && nProcedimiento.length > 0){
+    /* if(nProcedimiento != null && nProcedimiento.length > 0){
       let arraNum = nProcedimiento.split("")
       let arraValidacion= this.valorFormatoProc.split("")
       var RegExpNum = /^[0-9]/;
@@ -986,27 +1029,23 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       });
   
       response = datoNoValido != 0 ? false :true;  
-    }
+    } */
 
 
-    /*if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
+    if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
       this.institucionActual == "2043" || this.institucionActual == "2006" || this.institucionActual == "2021" || this.institucionActual == "2035" || this.institucionActual == "2046" || this.institucionActual == "2066") {
       if (nProcedimiento != '' && nProcedimiento != null) {
-        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
-        var ret = objRegExp.test(nProcedimiento);
+        let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{5}[\.]{1}[0-9]{2}$/;
+        let ret = objRegExp.test(nProcedimiento);
         response = ret;
       }
-      else
-        response = true;
     } else {
-      if (nProcedimiento != '' && nProcedimiento != null && nProcedimiento.length == 19) {
-        var objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}[/]$/;
-        var ret = objRegExp.test(nProcedimiento);
+      if (nProcedimiento != '' && nProcedimiento != null && nProcedimiento.length == 12) {
+        let objRegExp = /^[0-9]{4}[\/]{1}[0-9]{7}$/;
+        let ret = objRegExp.test(nProcedimiento);
         response = ret;
-      } else {
-        response = true;
-      }
-    }*/
+      } 
+    }
     return response;
 
   }

@@ -19,7 +19,7 @@
   [rowGroups]="rowGroups" (searchHistory)="searchHistory($event)" (anySelected)="notifyAnySelected($event)"
   (selectedRow)="checkSelectedRow($event)" [rowGroupsInit]="rowGroupsInit" (anularEvent)="anular($event)"
   (deleteEvent)="delete($event)" (saveEvent)="guardar($event)" [comboTurnos]="comboTurnos"
-  [comboTurnosGrupo]="comboTurnosGrupo" [comboTipos]="comboTipos">
+  [comboTurnosGrupo]="comboTurnosGrupo" [comboTipos]="comboTipos" [emptyResults]="emptyResults">
 </app-tabla-resultado-mix-saltos-comp-guardia>
 
 <div *ngIf="progressSpinner" class="overlay-spinner">

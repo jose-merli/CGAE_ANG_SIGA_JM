@@ -402,6 +402,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     }
+    this.servicioOriginal = this.servicio;
   }
 
   checkGuardarDialogBorrarSuscripcionesBajas(){
@@ -421,6 +422,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     this.borrarSuscripcionBajaItem.idtiposervicios = this.servicio.idtiposervicios;
     this.borrarSuscripcionBajaItem.idservicio = this.servicio.idservicio;
     this.borrarSuscripcionBajaItem.idserviciosinstitucion = this.servicio.idserviciosinstitucion;
+    this.borrarSuscripcionBajaItem.checkboxDialogServicioAutomaticoAManual = this.checkboxDialogServicioAutomaticoAManual;
 
     this.subscriptionBorrarSuscripcionesBajas = this.sigaServices.post("fichaServicio_borrarSuscripcionesBajas", this.borrarSuscripcionBajaItem).subscribe(
       respuesta => {
