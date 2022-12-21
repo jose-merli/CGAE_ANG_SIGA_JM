@@ -104,7 +104,7 @@ export class DatosConfColaComponent implements OnInit {
           "minimoLetradosCola": this.body.letradosGuardia
         };
         this.globalGuardiasService.emitConf(configuracionCola);
-        this.body.rotarComponentes = data.rotarComponentes;
+        this.body.rotarComponentes = data.rotarComponentes == "1" ? true : false;
         this.body.idGuardia = data.idGuardia;
         this.body.idTurno = data.idTurno;
         this.getPerfilesSeleccionados();
