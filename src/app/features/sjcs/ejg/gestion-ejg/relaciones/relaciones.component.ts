@@ -146,19 +146,19 @@ export class RelacionesComponent implements OnInit {
         let resumen = false;
         this.relaciones.forEach(relacion => {
           relacion.fechaasunto = this.formatDate(relacion.fechaasunto);
-          // switch (relacion.sjcs) {
-          //   case 'ASISTENCIA':
-          //     this.noAsociaASI = true;
-          //     break;
-          //   case 'SOJ':
-          //     this.noAsociaSOJ = true;
-          //     break;
-          //   case 'DESIGNACIÓN':
-          //     //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
-          //     this.noAsociaDES = true;
-          //     this.noCreaDes = true;
-          //     break;
-          // }
+          switch (relacion.sjcs) {
+            case 'ASISTENCIA':
+              this.noAsociaASI = true;
+              break;
+            case 'SOJ':
+              this.noAsociaSOJ = true;
+              break;
+            case 'DESIGNACIÓN':
+              //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
+              this.noAsociaDES = true;
+              this.noCreaDes = true;
+              break;
+          }
           //relacion.idsjcs = "D"+relacion.anio+"/"+relacion.codigo;
           if (relacion.sjcs == 'DESIGNACIÓN' && resumen == false) {
             resumen = true;
