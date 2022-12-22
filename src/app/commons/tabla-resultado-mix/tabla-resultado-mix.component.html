@@ -93,7 +93,7 @@
 
                 <p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected"
                   [defaultLabel]="textFilter" [options]="cell.combo" maxSelectedLabels="10" styleClass="widthAll"
-                  [disabled]="cell.disabled" [filter]="true" filterBy="label,labelSinTilde"
+                  [disabled]="cell.disabled" [filter]="true" filterBy="label,labelSinTilde" (ngModelChange)="sortOptions(cell.value, cell.combo)"
                   (onChange)="onChangeMulti($event, i, cell)">
                 </p-multiSelect>
               </span>
