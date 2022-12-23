@@ -193,7 +193,26 @@ export class FichaProgramacionComponent implements OnInit {
 
       this.modoEdicion = true;
       sessionStorage.removeItem('guardiaColegiadoData');
-    } 
+    } else if(sessionStorage.getItem('itemFichaProgramacionCalendarios')){
+      this.dataToReceive = JSON.parse(sessionStorage.getItem('itemFichaProgramacionCalendarios'));
+      if (this.dataToReceive.idCalendarioProgramado != null) {
+        this.disableGenerar = false;
+        this.getGuardiasFromCal(this.dataToReceive.idCalendarioProgramado, this.dataToReceive.fechaDesde, this.dataToReceive.fechaHasta);
+      } else {
+        this.disableGenerar = true;
+        this.dataReady = true;
+      }
+
+      this.rowGroupsSaved = this.dataToReceive.tabla;
+      //console.log('rowGroupsSaved: ', this.rowGroupsSaved)
+      this.datosGenerales = JSON.parse(sessionStorage.getItem('itemFichaProgramacionCalendarios'));
+      this.datosGeneralesIniciales = deepCopy(this.datosGenerales);
+      this.duplicar = this.dataToReceive.duplicar;
+      //this.search();
+
+      this.modoEdicion = true;
+      sessionStorage.removeItem('itemFichaProgramacionCalendarios');
+    }
     else if (this.persistenceService.getDatos() != undefined) {
       this.dataToReceive = this.persistenceService.getDatos();
       if (this.dataToReceive.idCalendarioProgramado != null) {

@@ -146,19 +146,19 @@ export class RelacionesComponent implements OnInit {
         let resumen = false;
         this.relaciones.forEach(relacion => {
           relacion.fechaasunto = this.formatDate(relacion.fechaasunto);
-          // switch (relacion.sjcs) {
-          //   case 'ASISTENCIA':
-          //     this.noAsociaASI = true;
-          //     break;
-          //   case 'SOJ':
-          //     this.noAsociaSOJ = true;
-          //     break;
-          //   case 'DESIGNACIÓN':
-          //     //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
-          //     this.noAsociaDES = true;
-          //     this.noCreaDes = true;
-          //     break;
-          // }
+          switch (relacion.sjcs) {
+            case 'ASISTENCIA':
+              this.noAsociaASI = true;
+              break;
+            case 'SOJ':
+              this.noAsociaSOJ = true;
+              break;
+            case 'DESIGNACIÓN':
+              //en caso de designacion, si ya esta relacionado no se podra crear una nueva designacion para ese EJG
+              this.noAsociaDES = true;
+              this.noCreaDes = true;
+              break;
+          }
           //relacion.idsjcs = "D"+relacion.anio+"/"+relacion.codigo;
           if (relacion.sjcs == 'DESIGNACIÓN' && resumen == false) {
             resumen = true;
@@ -238,7 +238,7 @@ export class RelacionesComponent implements OnInit {
       { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
       { field: "codigo", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
       { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
-      { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: '6%' },
+      { field: "descturno", header: "dato.jgr.guardia.guardias.turnoguardiatramitacion", width: '6%' },
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: '6%' },
       { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados", width: '6%' },
       { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion", width: '6%' },

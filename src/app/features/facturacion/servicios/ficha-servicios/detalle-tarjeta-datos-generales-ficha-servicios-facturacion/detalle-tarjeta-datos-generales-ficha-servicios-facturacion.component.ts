@@ -402,6 +402,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
     } else {
       this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.camposObligatorios"));
     }
+    this.servicioOriginal = this.servicio;
   }
 
   checkGuardarDialogBorrarSuscripcionesBajas(){
@@ -432,7 +433,7 @@ export class DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent impl
           this.showModalSuscripcionesBajas = false;
           this.showModalServicioAutomaticoAManual = false;
         }
-        this.servicioOriginal = { ...this.servicio };
+
 
         this.progressSpinner = false;
       },

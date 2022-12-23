@@ -201,7 +201,7 @@ export class TablaResultadoMixComponent implements OnInit {
     let nombreTurnoInc = this.rowGroups[rowPosition].cells[9];
     if (deseleccionado){
       //eliminar doble
-      this.eliminarFromCombo(this.rowGroups[rowPosition])
+      this.eliminarFromCombo(idGuardia, idTurno, selected);
     } else {
       //guardar doble
       
@@ -218,6 +218,29 @@ export class TablaResultadoMixComponent implements OnInit {
     }
   
   }
+
+  sortOptions(value, combo) {
+    if (combo && value) {
+      combo.sort((a, b) => {
+        //const includeA = this.etiquetasPersonaJuridicaSelecionados.includes(a);
+        //const includeB = this.etiquetasPersonaJuridicaSelecionados.includes(b)
+        const includeA = value.find(item => item == a.value);
+        const includeB = value.find(item => item == b.value);
+        if (includeA && !includeB) {
+        //const includeA = this.etiquetasPersonaJuridicaSelecionados.indexOf(a);
+        //const includeB = this.etiquetasPersonaJuridicaSelecionados.indexOf(b);
+        //if ((includeA != -1) && (includeB == -1)) {
+          return -1;
+        }
+        else if (!includeA && includeB) {
+        //else if ((includeA == -1) && (includeB != -1)) {
+          return 1;
+        }
+        return a.label.localeCompare(b.label);
+      });
+    }
+  }
+
   getComboTurno() {
     this.sigaServices.get("busquedaGuardia_turno").subscribe(
       n => {
@@ -844,6 +867,7 @@ export class TablaResultadoMixComponent implements OnInit {
     let cell10: Cell = new Cell();
     let cellMulti:  Cell = new Cell();
 
+    this.sortOptions([], this.comboGuardiasIncompatibles)
 
     if(this.calendarios){
       cell1.type = 'input';
@@ -893,6 +917,7 @@ export class TablaResultadoMixComponent implements OnInit {
       cellMulti.type = 'multiselect'; 
       row.cells = [cell1, cell2, cellMulti, cell3, cell4, cell5, cell6, cell7, cell8, cell9, cell10];
     }
+
     row.id = 0;
     this.rowGroups.map(row => row.id += 1);
     this.rowGroups.unshift(row);
@@ -1057,8 +1082,8 @@ export class TablaResultadoMixComponent implements OnInit {
       }
     });
   }
-  eliminarFromCombo(rowToDelete){
-    this.deleteFromCombo.emit(rowToDelete);
+  eliminarFromCombo(idGuardia, idTurno, idGuardiaIncomp){
+    this.deleteFromCombo.emit({idGuardia, idTurno, idGuardiaIncomp});
     this.rowGroupsAux = this.rowGroups;
   }
   selectedAll(evento){
