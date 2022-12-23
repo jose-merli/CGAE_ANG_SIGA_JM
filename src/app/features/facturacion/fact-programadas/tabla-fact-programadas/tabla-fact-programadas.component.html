@@ -63,10 +63,10 @@
 
                 <div *ngSwitchCase="'estado'">
                   <span [ngClass]="{ historico: historico }">
-                    <span class="badge badge-{{ calcBadgeEstado('fac', dato['idEstadoConfirmacion']) }}">Fac</span>
-                    <span class="badge badge-{{ calcBadgeEstado('pdf', dato['idEstadoPDF']) }}">PDF</span>
-                    <span class="badge badge-{{ calcBadgeEstado('env', dato['idEstadoEnvio']) }}">Env</span>
-                    <span class="badge badge-{{ calcBadgeEstado('tra', dato['idEstadoTraspaso']) }}" *ngIf="controlEmisionFacturasSII">Tra</span>
+                    <span class="badge badge-{{ calcBadgeEstado('fac', dato['idEstadoConfirmacion']) }}" data-bs-toggle="tooltip" title="Facturado">Fac</span>
+                    <span class="badge badge-{{ calcBadgeEstado('pdf', dato['idEstadoPDF']) }}" data-bs-toggle="tooltip" title="Generado">PDF</span>
+                    <span class="badge badge-{{ calcBadgeEstado('env', dato['idEstadoEnvio']) }}" data-bs-toggle="tooltip" title="Emitido">Env</span>
+                    <span class="badge badge-{{ calcBadgeEstado('tra', dato['idEstadoTraspaso']) }}" *ngIf="controlEmisionFacturasSII" data-bs-toggle="tooltip" title="Traspasado">Tra</span>
                   </span>
                 </div>
   
