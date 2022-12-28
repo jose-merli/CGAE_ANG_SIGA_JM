@@ -112,7 +112,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     // if(!esColegiado){   
     this.checkAccesoDesigna();
     this.checkAccesoFichaActuacion();
-    this.getParamsEJG();
+    this.getParamsEJG(false);
 
     //console.log('this.usuarioBusquedaExpressFromFicha*********', this.usuarioBusquedaExpressFromFicha)
     if (sessionStorage.getItem("buscadorColegiados") && this.permisoDesigna == true) {
@@ -134,7 +134,7 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   }
 
-  getParamsEJG() {
+  getParamsEJG(restricted) {
     let parametro = new ParametroRequestDto();
     let institucionActual;
     this.sigaServices.get("institucionActual").subscribe(n => {
@@ -153,6 +153,11 @@ export class FiltroDesignacionesComponent implements OnInit {
               if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
                 this.valorParametro = element.valor;
                 this.sinEjg = this.valorParametro;
+
+                if (restricted) {
+                  this.filtroJustificacion.sinEJG = element.valor;
+                }
+                
               }
             });
           });
@@ -168,6 +173,11 @@ export class FiltroDesignacionesComponent implements OnInit {
               if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
                 this.valorParametro = element.valor;
                 this.ejgSinResolucion = this.valorParametro;
+
+                if (restricted) {
+                  this.filtroJustificacion.ejgSinResolucion = element.valor; 
+                }
+
               }
             });
           });
@@ -183,6 +193,11 @@ export class FiltroDesignacionesComponent implements OnInit {
               if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
                 this.valorParametro = element.valor;
                 this.ejgPtecajg = this.valorParametro;
+
+                if (restricted) {
+                  this.filtroJustificacion.resolucionPTECAJG = element.valor;
+                }
+
               }
             });
           });
@@ -198,6 +213,11 @@ export class FiltroDesignacionesComponent implements OnInit {
               if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
                 this.valorParametro = element.valor;
                 this.ejgNoFavorable = this.valorParametro;
+
+                if (restricted) {
+                  this.filtroJustificacion.conEJGNoFavorables = element.valor;
+                }
+
               }
             });
           });
@@ -1214,21 +1234,12 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.checkRestricciones = event;
 
     if (!event) {
-      this.checkRestriccionesasLetrado.emit(false);
       this.disableRestricciones = false;
-      /*this.filtroJustificacion.ejgSinResolucion="2"; 
-      this.filtroJustificacion.sinEJG="2";
-      this.filtroJustificacion.resolucionPTECAJG="2";
-      this.filtroJustificacion.conEJGNoFavorables="2";*/
-
+      this.checkRestriccionesasLetrado.emit(false);
     } else {
-      this.checkRestriccionesasLetrado.emit(true);
+      this.getParamsEJG(true);
       this.disableRestricciones = true;
-      /*this.filtroJustificacion.ejgSinResolucion="0"; 
-      this.filtroJustificacion.sinEJG="0";
-      this.filtroJustificacion.resolucionPTECAJG="0";
-      this.filtroJustificacion.conEJGNoFavorables="0";
-      */
+      this.checkRestriccionesasLetrado.emit(true);
     }
   }
 
