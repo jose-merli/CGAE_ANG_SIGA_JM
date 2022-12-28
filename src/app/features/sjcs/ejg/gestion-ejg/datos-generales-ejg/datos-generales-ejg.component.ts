@@ -27,7 +27,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   //Resultados de la busqueda
   @Input() datos: EJGItem;
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaDatosGenerales: string;
   @Input() art27: boolean = false;
 
@@ -148,6 +148,12 @@ export class DatosGeneralesEjgComponent implements OnInit {
       this.institucionActual = n.value;
       this.getParamMaxLengthNum();
     });
+
+    this.commonsServices.checkAcceso(procesos_ejg.datosGenerales)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+      }
+      ).catch(error => console.error(error));
 
   }
   getParamMaxLengthNum() {

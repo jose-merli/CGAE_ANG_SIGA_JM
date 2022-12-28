@@ -15,6 +15,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 import { OldSigaServices } from '../../../../../_services/oldSiga.service';
 import { OtrasColegiacionesFichaColegialComponent } from '../../../../censo/ficha-colegial/ficha-colegial-general/otras-colegiaciones-ficha-colegial/otras-colegiaciones-ficha-colegial.component';
 import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-relaciones',
@@ -23,7 +24,7 @@ import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
 })
 export class RelacionesComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaRelaciones: string;
   @Input() art27: boolean = false;
 
@@ -96,7 +97,11 @@ export class RelacionesComponent implements OnInit {
       this.nuevo = true;
       this.modoEdicion = true;
     }
-
+    this.commonsServices.checkAcceso(procesos_ejg.relaciones)
+    .then(respuesta => {
+      this.permisoEscritura = respuesta;
+    }
+    ).catch(error => console.error(error));
     this.getCols();
   }
 

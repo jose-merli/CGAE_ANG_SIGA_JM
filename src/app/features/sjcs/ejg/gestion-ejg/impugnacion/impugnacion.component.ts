@@ -5,6 +5,7 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-impugnacion',
@@ -13,7 +14,7 @@ import { ConfirmationService } from 'primeng/api';
 })
 export class ImpugnacionComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaImpugnacion: string;
 
   openFicha: boolean = false;
@@ -69,6 +70,12 @@ export class ImpugnacionComponent implements OnInit {
     }
     this.getComboImpugnacion();
     this.getComboFundamentoImpug();
+
+    this.commonsService.checkAcceso(procesos_ejg.impugnacion)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+      }
+      ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

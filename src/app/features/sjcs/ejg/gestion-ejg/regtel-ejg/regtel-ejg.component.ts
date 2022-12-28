@@ -10,6 +10,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/api';
 import { DocushareObject } from '../../../../../models/DocushareObject';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-regtel-ejg',
@@ -18,7 +19,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 })
 export class RegtelEjgComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaRegtel: string;
 
   messageRegtel: string;
@@ -100,6 +101,11 @@ export class RegtelEjgComponent implements OnInit {
       this.modoEdicion = false;
       this.item = new EJGItem();
     }
+    this.commonsServices.checkAcceso(procesos_ejg.regtel)
+    .then(respuesta => {
+      this.permisoEscritura = respuesta;
+    }
+    ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

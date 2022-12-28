@@ -7,6 +7,8 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { TranslateService } from '../../../../../commons/translate';
 import { DataTable } from 'primeng/primeng';
 import { EnviosMasivosItem } from '../../../../../models/EnviosMasivosItem';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
+import { CommonsService } from '../../../../../_services/commons.service';
 
 @Component({
   selector: 'app-comunicaciones-ejg',
@@ -15,7 +17,7 @@ import { EnviosMasivosItem } from '../../../../../models/EnviosMasivosItem';
 })
 export class ComunicacionesEJGComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaComunicaciones: string;
   @Input() openTarjetaComunicaciones;
   
@@ -49,6 +51,7 @@ export class ComunicacionesEJGComponent implements OnInit {
   constructor(private persistenceService: PersistenceService,
     private router: Router, private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
+    private commonsService: CommonsService, 
     private translateService: TranslateService) { }
 
   ngOnInit() {
@@ -66,6 +69,11 @@ export class ComunicacionesEJGComponent implements OnInit {
       this.modoEdicion = false;
       this.item = new EJGItem();
     }
+    this.commonsService.checkAcceso(procesos_ejg.comunicaciones)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+      }
+      ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

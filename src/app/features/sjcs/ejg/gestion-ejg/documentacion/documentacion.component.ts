@@ -12,6 +12,7 @@ import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliar
 import { DatePipe } from '@angular/common';
 import { elementEnd } from '@angular/core/src/render3/instructions';
 import { forEach } from '@angular/router/src/utils/collection';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-documentacion',
@@ -20,7 +21,7 @@ import { forEach } from '@angular/router/src/utils/collection';
 })
 export class DocumentacionComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaDocumentacion: string;
   openFicha: boolean = false;
   nuevo;
@@ -102,6 +103,11 @@ export class DocumentacionComponent implements OnInit {
       this.modoEdicion = false;
       this.item = new EJGItem();
     }
+    this.commonsServices.checkAcceso(procesos_ejg.documentacion)
+    .then(respuesta => {
+      this.permisoEscritura = respuesta;
+    }
+    ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -13,6 +13,7 @@ import { ConfirmationService, DataTable } from 'primeng/primeng';
 import { TranslateService } from '../../../../../commons/translate';
 import { EjgService } from '../services/ejg.service';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-expedientes-economicos',
@@ -21,7 +22,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 })
 export class ExpedientesEconomicosComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaExpedientesEconomicos: string;
 
   @ViewChild("table") table: DataTable;
@@ -93,6 +94,12 @@ export class ExpedientesEconomicosComponent implements OnInit {
       this.modoEdicion = false;
       this.body = new EJGItem();
     }
+    this.commonsService.checkAcceso(procesos_ejg.expedientesEconomicos)
+    .then(respuesta => {
+      this.permisoEscritura = respuesta;
+    }
+    ).catch(error => console.error(error));
+
   }
 
   ngOnChanges(changes: SimpleChanges): void {

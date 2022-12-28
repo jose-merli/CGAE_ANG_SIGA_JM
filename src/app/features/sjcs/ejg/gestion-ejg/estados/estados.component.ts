@@ -9,6 +9,7 @@ import { ConfirmationService } from 'primeng/api';
 import { DataTable } from "primeng/datatable";
 import { forEach } from '@angular/router/src/utils/collection';
 import { DatePipe } from '@angular/common';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-estados',
@@ -17,7 +18,7 @@ import { DatePipe } from '@angular/common';
 })
 export class EstadosComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaEstados: string;
 
   openFicha: boolean = false;
@@ -105,6 +106,12 @@ export class EstadosComponent implements OnInit {
 
     this.esZonaComun().then(value => this.esColegioZonaComun = value)
       .catch(() => this.esColegioZonaComun = false);
+
+      this.commonsServices.checkAcceso(procesos_ejg.estados)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+      }
+      ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

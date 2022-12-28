@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { saveAs } from "file-saver/FileSaver";
 import { JusticiableBusquedaItem } from '../../../../../models/sjcs/JusticiableBusquedaItem';
 import { EjgService } from '../services/ejg.service';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-unidad-familiar',
@@ -59,7 +60,7 @@ export class UnidadFamiliarComponent implements OnInit {
 
   @Input() modoEdicion;
   @Input() tarjetaUnidadFamiliar: string;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() openTarjetaUnidadFamiliar;
 
   @Output() searchHistoricalSend = new EventEmitter<boolean>();
@@ -119,6 +120,11 @@ export class UnidadFamiliarComponent implements OnInit {
       }
       sessionStorage.removeItem('tarjeta');
     }
+    this.commonsService.checkAcceso(procesos_ejg.unidadFamiliar)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+      }
+      ).catch(error => console.error(error));
   }
 
 
