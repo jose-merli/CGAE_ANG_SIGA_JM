@@ -5,6 +5,7 @@ import { CommonsService } from '../../../../../_services/commons.service';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/primeng';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-informe-calificacion',
@@ -13,7 +14,7 @@ import { ConfirmationService } from 'primeng/primeng';
 })
 export class InformeCalificacionComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaInformeCalificacion: string;
 
   openFicha: boolean = false;
@@ -78,6 +79,13 @@ export class InformeCalificacionComponent implements OnInit {
       this.getComboTipoDictamen();
     }
     this.bodyInicial = JSON.parse(JSON.stringify(this.dictamen));
+
+    this.commonServices.checkAcceso(procesos_ejg.informeCalif)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+
+      }
+      ).catch(error => console.error(error));
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -10,6 +10,7 @@ import { ConfirmationService } from 'primeng/api';
 import { saveAs } from "file-saver/FileSaver";
 import { ActasItem } from '../../../../../models/sjcs/ActasItem';
 import { t } from '@angular/core/src/render3';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 @Component({
   selector: 'app-resolucion',
@@ -18,7 +19,7 @@ import { t } from '@angular/core/src/render3';
 })
 export class ResolucionComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaResolucion: string;
 
   //[x : string] : any;
@@ -74,6 +75,12 @@ export class ResolucionComponent implements OnInit {
     this.getComboPonente();
     this.getComboOrigen();
     this.checkPerfil();
+
+    this.commonsServices.checkAcceso(procesos_ejg.resolucion)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+      }
+      ).catch(error => console.error(error));
   }
 
   checkPerfil(){

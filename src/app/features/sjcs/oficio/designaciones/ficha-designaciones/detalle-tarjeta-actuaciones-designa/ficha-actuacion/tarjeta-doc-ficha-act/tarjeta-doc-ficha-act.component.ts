@@ -13,6 +13,7 @@ import { DocumentoDesignaItem } from '../../../../../../../../models/sjcs/Docume
 import { CommonsService } from '../../../../../../../../_services/commons.service';
 import { procesos_oficio } from '../../../../../../../../permisos/procesos_oficio';
 import { Router } from '@angular/router';
+import { TurnosItem } from '../../../../../../../../models/sjcs/TurnosItem';
 
 export class Documento extends DocumentoDesignaItem {
   file: File;
@@ -36,7 +37,8 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
   // Este modo lectura se produce cuando:
   // - Es colegiado y la actuación está validada y el turno no permite la modificación o la actuación no pertenece al colegiado
   // - La actuación está facturada
-  @Input() modoLectura2;
+  modoLectura2 : boolean = false;
+  permiteTurno : boolean = false;
 
   @Output() buscarDocumentosEvent = new EventEmitter<any>();
 
@@ -134,6 +136,37 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       }
       ).catch(error => console.error(error));
 
+      this.getPermiteTurno();
+
+  }
+
+  getPermiteTurno() {
+
+    this.progressSpinner = true;
+
+    let turnoItem = new TurnosItem();
+    turnoItem.idturno = this.actuacionDesigna.designaItem.idTurno;
+
+    this.sigaServices.post("turnos_busquedaFichaTurnos", turnoItem).subscribe(
+      data => {
+        let resp: TurnosItem = JSON.parse(data.body).turnosItem[0];
+        this.permiteTurno = resp.letradoactuaciones == "1";
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      },
+      () => {
+        this.progressSpinner = false;
+        this.cargaInicial();
+      }
+    );
+
+  }
+  cargaInicial() {
+    if ((!this.isColegiado && this.actuacionDesigna.actuacion.validada && (!this.permiteTurno || !this.actuacionDesigna.actuacion.permiteModificacion)) || (this.actuacionDesigna.actuacion.facturado)) {
+      this.modoLectura2 = true;
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

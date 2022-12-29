@@ -8,6 +8,7 @@ import { datos_combos } from '../../../../../utils/datos_combos';
 import { FichaColegialGeneralesItem } from '../../../../../models/FichaColegialGeneralesItem';
 import { ColegiadosSJCSItem } from '../../../../../models/ColegiadosSJCSItem';
 import { BusquedaColegiadoExpressComponent } from '../../../../../commons/busqueda-colegiado-express/busqueda-colegiado-express.component';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { BusquedaColegiadoExpressComponent } from '../../../../../commons/busque
 })
 export class ServiciosTramitacionComponent implements OnInit {
   @Input() modoEdicion;
-  @Input() permisoEscritura;
+  permisoEscritura: boolean = false;
   @Input() tarjetaServiciosTramitacion: string;
 
   @Output() modoEdicionSend = new EventEmitter<any>();
@@ -177,6 +178,15 @@ export class ServiciosTramitacionComponent implements OnInit {
     if (this.body.apellidosYNombre != undefined && this.body.apellidosYNombre != null  && this.art27 == true){ 
       this.checkArt27();
     }
+
+    this.commonServices.checkAcceso(procesos_ejg.serviciosTramitacion)
+      .then(respuesta => {
+        this.permisoEscritura = respuesta;
+        
+      }
+      ).catch(error => console.error(error));
+
+
   }
 
   checkArt27() {
