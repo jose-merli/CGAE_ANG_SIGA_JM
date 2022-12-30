@@ -76,16 +76,18 @@ export class SolicitanteDetalleSojComponent implements OnInit {
   @Input() permisoEscritura: boolean;
 
   ngOnInit() {
-    if (this.bodyInicial != undefined) {
-      this.idPersonaAsistido = this.bodyInicial.idPersonaJG;
-      this.getComboTipoPersona();
-      if (this.idPersonaAsistido) {
-        this.asistido.idpersona = this.idPersonaAsistido;
-        this.getAsistidoData();
-        //Preparamos los datos de persistencia por si se hace click en el enlace de ficha justiciable
-        this.setAsistidoPersistenceData();
+    setTimeout(() => {
+      if (this.bodyInicial != undefined) {
+        this.idPersonaAsistido = this.bodyInicial.idPersonaJG;
+        this.getComboTipoPersona();
+        if (this.idPersonaAsistido) {
+          this.asistido.idpersona = this.idPersonaAsistido;
+          this.getAsistidoData();
+          //Preparamos los datos de persistencia por si se hace click en el enlace de ficha justiciable
+          this.setAsistidoPersistenceData();
+        }
       }
-    }
+    }, 1000);
   }
 
   getAsistidoData() {

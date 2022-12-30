@@ -42,14 +42,11 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
 
 
   ngOnInit() {
+    this.body = new FichaSojItem();
     this.progressSpinner = true;
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
-    if (this.bodyInicial != undefined) {
-      this.initBody();
-    }
-
 
 
   }
@@ -64,9 +61,9 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
     if (this.bodyInicial.fechaApertura != undefined) {
       this.bodyInicial.fechaApertura = new Date(this.bodyInicial.fechaApertura);
     }
-    this.body = new FichaSojItem();
+    
     Object.assign(this.body, this.bodyInicial);
-    //Se comprueba si vueleve de una busqueda de colegiado
+    //Se comprueba si vuelve de una busqueda de colegiado
     if (sessionStorage.getItem("idTurno")) {
       this.body.idTurno = sessionStorage.getItem("idTurno");
       sessionStorage.removeItem('idTurno');
@@ -131,6 +128,9 @@ export class ServiciosTramitacionDetalleSojComponent implements OnInit, OnChange
     }
   }
 
+  setIdPersona(event){
+    this.body.idPersona = event;
+  }
 
   clear() {
     this.msgs = [];

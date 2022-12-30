@@ -272,7 +272,7 @@ export class DetalleSOJComponent implements OnInit {
     for (let index = 0; index < this.camposResumen.length; index++) {
       // Anio/numero
       if (this.camposResumen[index].key === "1") {
-        this.camposResumen[index].value = this.body.anio.toUpperCase() + "/" + this.body.numero.toUpperCase();
+        this.camposResumen[index].value = this.body.anio.toUpperCase() + "/" + this.body.numSoj.toUpperCase();
       }
 
       // Fecha Apertura 
