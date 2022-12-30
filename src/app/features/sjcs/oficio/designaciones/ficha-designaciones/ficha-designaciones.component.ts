@@ -32,7 +32,7 @@ import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 })
 export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
-  designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+  designaItem;
   procurador;
   listaPrueba = [];
   relaciones: any;
@@ -244,6 +244,9 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     private persistenceService: PersistenceService) { }
 
   ngOnInit() {
+    if(sessionStorage.getItem("designaItemLink")!= null && sessionStorage.getItem("designaItemLink") != undefined && sessionStorage.getItem("designaItemLink") != "undefined"){
+      this.designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    }
     this.progressSpinner = true;
     this.getDataLoggedUser();
 
@@ -256,7 +259,10 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
     this.checkAcceso();
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
-    let designaItem = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    let designaItem = null;
+    if(sessionStorage.getItem("designaItemLink")!= null && sessionStorage.getItem("designaItemLink") != undefined && sessionStorage.getItem("designaItemLink") != "undefined"){
+      designaItem= JSON.parse(sessionStorage.getItem("designaItemLink"));
+    }
     if (designaItem == null) {
       this.campos = new DesignaItem();
     } else {
@@ -1819,8 +1825,11 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
 
   searchLetrados() {
 
-    let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    let datos: DesignaItem = designa;
+    let designa : DesignaItem;
+    if(sessionStorage.getItem("designaItemLink")!= null && sessionStorage.getItem("designaItemLink") != undefined && sessionStorage.getItem("designaItemLink") != "undefined"){
+      designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    }
+    
     this.progressSpinner = true;
     if (this.isLetrado) {
       this.sigaServices.get("usuario_logeado").subscribe(n => {
@@ -1831,70 +1840,72 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
           usr => {
             this.usuarioLogado = JSON.parse(usr.body).colegiadoItem[0];
             //Buscamos los letrados asociados a la designacion
-            let request = [designa.ano, designa.idTurno, designa.numero, this.usuarioLogado.idPersona];
-            this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
-              data => {
-                let datos = JSON.parse(data.body);
-                if (datos.length != 0) {
-                  this.letrados = datos;
-                  this.primerLetrado = this.letrados[0];
-                  if (this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == '') {
-                    if (this.primerLetrado != null && this.primerLetrado != undefined && this.primerLetrado.apellidosNombre != '') {
-                      this.tarjetaFija.campos[1].value = this.primerLetrado.apellidosNombre;
+            if(designa != null && designa != undefined) {
+              let request = [designa.ano, designa.idTurno, designa.numero, this.usuarioLogado.idPersona];
+              this.sigaServices.post("designaciones_busquedaLetradosDesignacion", request).subscribe(
+                data => {
+                  let datos = JSON.parse(data.body);
+                  if (datos.length != 0) {
+                    this.letrados = datos;
+                    this.primerLetrado = this.letrados[0];
+                    if (this.tarjetaFija.campos[1].value == null || this.tarjetaFija.campos[1].value == undefined || this.tarjetaFija.campos[1].value == '') {
+                      if (this.primerLetrado != null && this.primerLetrado != undefined && this.primerLetrado.apellidosNombre != '') {
+                        this.tarjetaFija.campos[1].value = this.primerLetrado.apellidosNombre;
+                      }
                     }
+                    /* this.datos.fecharenunciasolicita;
+                    this.datos.fecharenuncia;
+                    this.datos.motivosrenuncia; */
+
+                    let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigCamb');
+                    if (tarj != undefined) {
+                      tarj.campos = [
+                        {
+                          "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+                          "value": this.letrados[0].nColegiado
+                        },
+                        {
+                          "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+                          "value": this.letrados[0].apellidosNombre
+                        }
+                      ]
+                      tarj.enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
+                      tarj.letrado = datos[0];
+                    }
+
+
+
+                  } else if (datos.length == 0) {
+                    let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigCamb');
+                    if (tarj != undefined) {
+                      tarj.campos = [
+                        {
+                          "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
+                          "value": ""
+                        },
+                        {
+                          "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
+                          "value": designa.nombreColegiado
+                        }
+                      ]
+                    }
+                    // this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
+                    // this.listaTarjetas[6].letrado = datos[0];
                   }
-                  /* this.datos.fecharenunciasolicita;
-                  this.datos.fecharenuncia;
-                  this.datos.motivosrenuncia; */
-
-                  let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigCamb');
-                  if (tarj != undefined) {
-                    tarj.campos = [
-                      {
-                        "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
-                        "value": this.letrados[0].nColegiado
-                      },
-                      {
-                        "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
-                        "value": this.letrados[0].apellidosNombre
-                      }
-                    ]
-                    tarj.enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
-                    tarj.letrado = datos[0];
+                },
+                err => {
+                  if (err != undefined && JSON.parse(err.error).error.description != "") {
+                    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
+                  } else {
+                    this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
                   }
-
-
-
-                } else if (datos.length == 0) {
-                  let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigCamb');
-                  if (tarj != undefined) {
-                    tarj.campos = [
-                      {
-                        "key": this.translateService.instant('censo.resultadosSolicitudesModificacion.literal.nColegiado'),
-                        "value": ""
-                      },
-                      {
-                        "key": this.translateService.instant('justiciaGratuita.justiciables.literal.colegiado'),
-                        "value": designa.nombreColegiado
-                      }
-                    ]
-                  }
-                  // this.listaTarjetas[6].enlaceCardClosed = { click: 'irFechaColegial()', title: this.translateService.instant('informesycomunicaciones.comunicaciones.fichaColegial') };
-                  // this.listaTarjetas[6].letrado = datos[0];
+                  this.progressSpinner = false;
+                },
+                () => {
+                  this.progressSpinner = false;
                 }
-              },
-              err => {
-                if (err != undefined && JSON.parse(err.error).error.description != "") {
-                  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-                } else {
-                  this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-                }
-                this.progressSpinner = false;
-              },
-              () => {
-                this.progressSpinner = false;
-              }
-            );
+              );
+            }
           });
       });
     } else {

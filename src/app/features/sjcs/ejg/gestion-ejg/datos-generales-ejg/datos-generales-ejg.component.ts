@@ -433,7 +433,15 @@ export class DatosGeneralesEjgComponent implements OnInit {
             if (JSON.parse(n.body).error.code == 200) {
               let ejgObject = JSON.parse(n.body).ejgItems;
               let datosItem = ejgObject[0];
+              
+              datosItem.numAnnioProcedimiento = "E" + this.body.annio + "/" + (this.body.numEjg != undefined && this.body.numEjg != null && this.body.numEjg != "undefined" ? this.body.numEjg : datosItem.numEjg);
               this.persistenceService.setDatos(datosItem);
+
+              /*this.body.numero = datosItem.numero;
+              this.body.numEjg = datosItem.numEjg;
+              this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
+              this.bodyInicial = this.body;
+              this.persistenceService.setDatos(this.bodyInicial);*/
 
 
               //En el caso que se proceda de una designación, se asocia el EJG con la designación
