@@ -47,7 +47,6 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
   body: FacturacionItem = new FacturacionItem();
   bodyAux: FacturacionItem = new FacturacionItem();
 
-  partidaPresupuestaria: ComboItem;
   estadosFacturacion = [];
   cols;
   msgs;
@@ -77,8 +76,6 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
         this.router.navigate(["/errorAcceso"]);
       }
-
-      this.comboPartidasPresupuestarias();
 
       if (undefined == this.idFacturacion) {
         this.body = new FacturacionItem();
@@ -207,33 +204,11 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
 
   }
 
-  comboPartidasPresupuestarias() {
-    this.progressSpinnerDatos = true;
-    let parametro:String = "?importe=1";
-    if(this.modoEdicion){
-      parametro = "?importe=0";
-    }
-
-    this.sigaService.getParam("combo_partidasPresupuestarias", parametro).subscribe(
-      data => {
-        this.partidaPresupuestaria = data.combooItems;
-        this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
-        this.progressSpinnerDatos = false;
-      },
-      err => {
-        if (null != err.error) {
-          console.log(err.error);
-        }
-        this.progressSpinnerDatos = false;
-      }
-    );
-  }
-
   save() {
     let url = "";
     if ((!this.cerrada && JSON.stringify(this.body) != JSON.stringify(this.bodyAux) && this.body.nombre.trim() != "") || (this.checkRegularizar != this.checkRegularizarInicial) || (this.checkVisible != this.checkVisibleInicial)) {
 
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta)) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta)) {
         if (undefined == this.body.regularizacion) {
           this.body.regularizacion = "0";
         }
@@ -513,13 +488,13 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
   disabledSave() {
     if (this.modoEdicion) {
 
-      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial != this.checkRegularizar || this.checkVisibleInicial != this.checkVisible) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta) && (this.idEstadoFacturacion == "10" || this.idEstadoFacturacion == "50")) {
+      if ((JSON.stringify(this.body) != JSON.stringify(this.bodyAux) || this.checkRegularizarInicial != this.checkRegularizar || this.checkVisibleInicial != this.checkVisible) && (undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta) && (this.idEstadoFacturacion == "10" || this.idEstadoFacturacion == "50")) {
         return false;
       } else {
         return true;
       }
     } else {
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.idPartidaPresupuestaria) && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta)) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") && (undefined != this.body.fechaDesde) && (undefined != this.body.fechaHasta)) {
         return false;
       } else {
         return true;
@@ -535,7 +510,7 @@ export class DatosFacturacionComponent extends SigaWrapper implements OnInit, Af
         return true;
       }
     } else {
-      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") || (undefined != this.body.idPartidaPresupuestaria) || (undefined != this.body.fechaDesde) || (undefined != this.body.fechaHasta || this.checkRegularizarInicial != this.checkRegularizar || this.checkVisibleInicial != this.checkVisible)) {
+      if ((undefined != this.body.nombre && this.body.nombre.trim() != "") || (undefined != this.body.fechaDesde) || (undefined != this.body.fechaHasta || this.checkRegularizarInicial != this.checkRegularizar || this.checkVisibleInicial != this.checkVisible)) {
         return false;
       } else {
         return true;

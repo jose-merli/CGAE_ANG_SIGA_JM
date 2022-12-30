@@ -44,6 +44,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   //COMBOS
   conceptos: ComboItem;
   grupoTurnos: ComboItem;
+  partidaPresupuestaria: ComboItem; 
 
   @Input() cerrada;
   @Input() idFacturacion;
@@ -54,6 +55,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
   @Output() editing = new EventEmitter<boolean>();
   @Output() addEnlace = new EventEmitter<Enlace>();
 
+  
   @ViewChild("tabla") tabla;
 
   constructor(private sigaService: SigaServices,
@@ -73,7 +75,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     this.commonsService.checkAcceso(procesos_facturacionSJCS.fichaFacTarjetaConceptosFac).then(respuesta => {
 
       this.permisos = respuesta;
-
+      
       if (this.permisos == undefined) {
         sessionStorage.setItem("codError", "403");
         sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
@@ -82,6 +84,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
 
       this.comboConceptos();
       this.comboGruposTurnos();
+      this.comboPartidasPresupuestarias();
       this.cargaDatos();
       this.getCols();
 
@@ -130,6 +133,8 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
           let datos = data.facturacionItem;
           let importeTotal = 0;
           let importePendiente = 0;
+          let partPresupuestaria;
+
           const importesConHitosNoRepetidos: { idConcepto: string, importeTotal: number, importePendiente: number }[] = [];
 
           if (undefined != data.facturacionItem && data.facturacionItem.length > 0) {
@@ -143,6 +148,13 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
                 }
               } else {
                 element.importeTotalFormat = 0;
+              }
+
+              if (element.idPartidaPresupuestaria != undefined) {
+                //partPresupuestaria
+                element.idPartidaPresupuestaria = ConvertStringToNumber(element.idPartidaPresupuestaria);
+              } else {
+                element.idPartidaPresupuestaria = 0;
               }
 
               if (element.importePendiente != undefined) {
@@ -166,7 +178,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
                   importePendiente: (element.importePendiente && element.importePendiente.length > 0) ? parseFloat(element.importePendiente) : 0
                 });
               }
-
+              
             });
           }
 
@@ -440,6 +452,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
       let concepto = {
         idConcepto: undefined,
         idGrupo: undefined,
+        idPartidaPresupuestaria: "0",
         importeTotal: "0",
         importePendiente: "0",
         nuevo: true,
@@ -520,6 +533,7 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     this.cols = [
       { field: "descConcepto", header: "facturacionSJCS.facturacionesYPagos.conceptos" },
       { field: "descGrupo", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.grupoTurnos" },
+      { field: "partidaPresupuestaria", header: "facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria" },
       { field: "importeTotal", header: "facturacionSJCS.facturacionesYPagos.importe" },
       { field: "importePendiente", header: "facturacionSJCS.facturacionesYPagos.importePendiente" }
     ];
@@ -565,4 +579,33 @@ export class ConceptosFacturacionComponent extends SigaWrapper implements OnInit
     this.addEnlace.emit(enlace);
   }
 
+  comboPartidasPresupuestarias() {
+    this.progressSpinnerConceptos = true;
+    let parametro:String = "?importe=1";
+    if(this.modoEdicion){
+      parametro = "?importe=0";
+    }
+
+    this.sigaService.getParam("combo_partidasPresupuestarias", parametro).subscribe(
+      data => {
+        this.partidaPresupuestaria = data.combooItems;
+        this.commonsService.arregloTildesCombo(this.partidaPresupuestaria);
+        this.progressSpinnerConceptos = false;
+      },
+      err => {
+        if (null != err.error) {
+          console.log(err.error);
+        }
+        this.progressSpinnerConceptos = false;
+      }
+    );
+  }
+
+}
+
+function ConvertStringToNumber(input: string) { 
+  if ( (input != null || input != undefined) && input.trim().length==0) { 
+      return NaN;
+  }
+  return Number(input);
 }

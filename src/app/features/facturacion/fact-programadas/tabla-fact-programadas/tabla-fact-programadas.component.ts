@@ -187,7 +187,7 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
 
     switch (estado) {
       case 'fac':
-        if (idEstado == "1" || idEstado == "18" || idEstado == "19" || idEstado == "17") {
+        if (idEstado == "1" || idEstado == "17" || idEstado == "18" || idEstado == "19") {
           res = "warning";
         } else if (idEstado == "2" || idEstado == "3") {
           res = "success";
@@ -226,6 +226,12 @@ export class TablaFactProgramadasComponent implements OnInit, OnChanges {
         break;
     }
     return res;
+  }
+
+  getTooltipEstadoFact(keyEstadoFact: string): string {
+    let msg : string = "";
+    msg = this.translateService.instant(keyEstadoFact);
+    return msg.replace(/\\\\n/g, "").replace(/\./g, "\n");
   }
 
   // Acción del botón de eliminar

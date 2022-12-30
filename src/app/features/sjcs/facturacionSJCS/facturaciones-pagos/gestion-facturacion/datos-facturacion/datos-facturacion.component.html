@@ -52,16 +52,7 @@
                 [disabled]='cerrada || !permisos || camposDisabled()' [(ngModel)]='body.nombre' pInputText
                 [ngClass]="{'camposObligatorios': marcarObligatorio('input', body.nombre)}" />
             </div>
-            <div style="margin-top: 1em; margin-bottom: 1em;">
-              <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.partidaPresupuestaria' | translate}}
-                (*)</label>
-              <p-dropdown class="select-form" [(ngModel)]='body.idPartidaPresupuestaria'
-                [options]="partidaPresupuestaria" [filter]="true"
-                placeholder="{{'general.boton.seleccionar' | translate}}" filterBy="label,labelSinTilde"
-                [showClear]="true" [disabled]='cerrada || !permisos || camposDisabled()'
-                [ngClass]="{'camposObligatorios': marcarObligatorio('select', body.idPartidaPresupuestaria)}">
-              </p-dropdown>
-            </div>
+            
             <div style="display: flex;">
               <div class="form-group col-lg-6 col-md-6" style="margin-left: -1em;">
                 <label>{{'facturacionSJCS.facturacionesYPagos.buscarFacturacion.fechaDesde' | translate}} (*)</label>
