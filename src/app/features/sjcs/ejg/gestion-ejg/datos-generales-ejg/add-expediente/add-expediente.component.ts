@@ -104,8 +104,8 @@ export class AddExpedienteComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.persistenceService.getDatos()) {
-      this.datos = this.persistenceService.getDatos();
+    if (this.persistenceService.getDatosEJG()) {
+      this.datos = this.persistenceService.getDatosEJG();
     }
   }
 
@@ -116,7 +116,7 @@ export class AddExpedienteComponent implements OnInit {
       n => {
         let ejgObject = JSON.parse(n.body).ejgItems;
         let datosItem = ejgObject[0];
-        this.persistenceService.setDatos(datosItem);
+        this.persistenceService.setDatosEJG(datosItem);
         //this.consultaUnidadFamiliar(this.datos);
         this.location.back();
         this.progressSpinner = false;

@@ -82,10 +82,10 @@ export class RegtelEjgComponent implements OnInit {
     private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
       this.nuevo = false;
       this.modoEdicion = true;
-      this.body = this.persistenceService.getDatos();
+      this.body = this.persistenceService.getDatosEJG();
       this.item = this.body;
       //Se comprueba que se tiene una carpeta DocuShare creada mediante el atributo "identificadords"
       //que se actualizara correspondientemente en el servicio si tuviera una asociada.
@@ -199,7 +199,7 @@ export class RegtelEjgComponent implements OnInit {
         data => {
           this.item.identificadords = data.body;
           //Se introduce el cambio en la capa de persistencia para evitar que pida crear una coleccion innecesariamente.
-          this.persistenceService.setDatos(this.item);
+          this.persistenceService.setDatosEJG(this.item);
           let mess = this.translateService.instant("messages.collectionCreated");
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           // if (this.nRegtel != 0) {

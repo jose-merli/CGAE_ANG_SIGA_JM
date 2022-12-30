@@ -2206,7 +2206,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         n => {
           let ejgObject: any[] = JSON.parse(n.body).ejgItems;
           let datosItem: EJGItem = ejgObject[0];
-          this.persistenceService.setDatos(datosItem);
+          this.persistenceService.setDatosEJG(datosItem);
           //this.consultaUnidadFamiliar(ejgItem);
           if (sessionStorage.getItem("EJGItem")) {
             sessionStorage.removeItem("EJGItem");

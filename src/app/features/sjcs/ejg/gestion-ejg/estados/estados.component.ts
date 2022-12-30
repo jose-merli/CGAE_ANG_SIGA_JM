@@ -88,10 +88,10 @@ export class EstadosComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef, private datepipe: DatePipe) { }
 
   ngOnInit() {
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
       this.nuevo = false;
       this.modoEdicion = true;
-      this.body = this.persistenceService.getDatos();
+      this.body = this.persistenceService.getDatosEJG();
       this.item = this.body;
       this.creaEstado = true;
       this.getEstados(this.item);

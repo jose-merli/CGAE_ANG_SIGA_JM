@@ -59,7 +59,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     this.checkAcceso(procesos_ejg.contrarios);
 
     this.getCols();
-    this.ejg = this.persistenceService.getDatos();
+    this.ejg = this.persistenceService.getDatosEJG();
 
     sessionStorage.removeItem("origin");
     sessionStorage.removeItem("procuradorFicha");
@@ -247,7 +247,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
 		} else{
       sessionStorage.setItem("origin", "newContrarioEJG");
       sessionStorage.setItem("contrariosEJG", JSON.stringify(this.contrariosEJG));
-      this.ejg = this.persistenceService.getDatos();
+      this.ejg = this.persistenceService.getDatosEJG();
       sessionStorage.setItem("itemEJG", JSON.stringify(true));
       sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
       //this.searchContrarios.emit(true);
@@ -271,9 +271,9 @@ export class ContrariosPreDesignacionComponent implements OnInit {
           this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
         }
 
-        this.ejg = this.persistenceService.getDatos();
+        this.ejg = this.persistenceService.getDatosEJG();
         sessionStorage.setItem("EJGItem", JSON.stringify(this.ejg));
-        this.persistenceService.setDatos(datos[0]);
+        this.persistenceService.setDatosEJG(datos[0]);
         sessionStorage.setItem("origin", "ContrarioEJG");
         this.persistenceService.clearBody();
         sessionStorage.setItem("contrarioEJG", JSON.stringify(evento));

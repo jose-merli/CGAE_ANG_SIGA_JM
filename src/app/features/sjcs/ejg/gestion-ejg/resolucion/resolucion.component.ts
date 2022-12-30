@@ -61,10 +61,10 @@ export class ResolucionComponent implements OnInit {
     private confirmationService: ConfirmationService, private router: Router) { }
 
   ngOnInit() {
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
       this.modoEdicion = true;
       this.nuevo = false;
-      this.body = this.persistenceService.getDatos();
+      this.body = this.persistenceService.getDatosEJG();
       this.getResolucion(this.body);
       this.getHabilitarActasComision();
     } else {
@@ -306,7 +306,7 @@ export class ResolucionComponent implements OnInit {
       } else {
         if(this.perfilCJG){
             //Se recupera la propiedad "edtablecomision" del ultimo estado del EJG
-            let ejg = this.persistenceService.getDatos();
+            let ejg = this.persistenceService.getDatosEJG();
             this.progressSpinner = true;
             this.sigaServices.post("gestionejg_getEditResolEjg", ejg).subscribe(
               n => {
@@ -367,7 +367,7 @@ export class ResolucionComponent implements OnInit {
 
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           //Para que se actualice la informacion si fuera necesario
-          this.getResolucion(this.persistenceService.getDatos());
+          this.getResolucion(this.persistenceService.getDatosEJG());
           this.setCabecera();
         } else {
           this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
@@ -466,7 +466,7 @@ export class ResolucionComponent implements OnInit {
 
         localStorage.setItem('actasItem', JSON.stringify(acta));
         //Se crea una variable de entorno para el caso en el cual se vuelva desde la ficha de acta al EJG.
-        sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatos()));
+        sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatosEJG()));
 
         this.router.navigate(["/fichaGestionActas"]);
       });

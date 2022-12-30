@@ -76,8 +76,8 @@ export class EJGComponent implements OnInit {
       //console.log("Remesa -> ", this.remesa);
     }
 
-    if (sessionStorage.getItem("EJG") != null) {
-      this.ejg = JSON.parse(sessionStorage.getItem("EJG"));
+    if (this.persistenceService.getDatosEJG() != null) {
+      this.ejg = this.persistenceService.getDatosEJG();
       sessionStorage.removeItem("EJG");
       sessionStorage.setItem('fichaEJG', JSON.stringify(this.ejg));
       this.router.navigate(['/gestionEjg']);

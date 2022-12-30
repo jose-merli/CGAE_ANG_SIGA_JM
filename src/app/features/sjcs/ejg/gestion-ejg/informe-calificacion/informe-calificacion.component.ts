@@ -59,9 +59,9 @@ export class InformeCalificacionComponent implements OnInit {
 
   ngOnInit() {
     if (this.modoEdicion) {
-      if (this.persistenceService.getDatos()) {
+      if (this.persistenceService.getDatosEJG()) {
         this.nuevo = false;
-        this.dictamen = this.persistenceService.getDatos();
+        this.dictamen = this.persistenceService.getDatosEJG();
         if(this.dictamen.fechaDictamen != null){
           this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
           this.fechaDictCabecera = this.dictamen.fechaDictamen;
@@ -229,7 +229,7 @@ export class InformeCalificacionComponent implements OnInit {
                 this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
                 let ejgObject = JSON.parse(n.body).ejgItems;
                 let datosItem = ejgObject[0];
-                this.persistenceService.setDatos(datosItem);
+                this.persistenceService.setDatosEJG(datosItem);
                 this.dictamen = datosItem;
                 //Para que se presente la fecha correctamente
                 this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
@@ -260,7 +260,7 @@ export class InformeCalificacionComponent implements OnInit {
 
             this.fechaDictCabecera = this.dictamen.fechaDictamen;
 
-            this.persistenceService.setDatos(this.bodyInicial);
+            this.persistenceService.setDatosEJG(this.bodyInicial);
 
             this.progressSpinner = false;
             }
@@ -349,7 +349,7 @@ export class InformeCalificacionComponent implements OnInit {
           this.bodyInicial = dictamenPeticion;
           this.dictamen = dictamenPeticion;
           this.dictamen.dictamenSing = "";
-          this.persistenceService.setDatos(this.bodyInicial);
+          this.persistenceService.setDatosEJG(this.bodyInicial);
 
           this.fechaDictCabecera = this.dictamen.fechaDictamen;
 

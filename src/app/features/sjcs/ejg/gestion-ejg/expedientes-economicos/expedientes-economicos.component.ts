@@ -77,10 +77,10 @@ export class ExpedientesEconomicosComponent implements OnInit {
     private sigaStorageService: SigaStorageService) { }
 
   ngOnInit() {
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
       this.nuevo = false;
       this.modoEdicion = true;
-      this.body = this.persistenceService.getDatos();
+      this.body = this.persistenceService.getDatosEJG();
       this.item = this.body;
       this.getExpedientesEconomicos(this.item);
       this.getCols();

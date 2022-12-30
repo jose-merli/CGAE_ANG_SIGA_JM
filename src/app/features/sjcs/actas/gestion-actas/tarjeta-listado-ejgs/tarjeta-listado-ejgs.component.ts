@@ -266,7 +266,7 @@ export class TarjetaListadoEjgsComponent implements OnInit {
     this.sigaServices.post("gestionejg_datosEJG", rowData).subscribe(
       n => {
         let ejgObject = JSON.parse(n.body).ejgItems;
-        this.persistenceService.setDatos(ejgObject[0]);
+        this.persistenceService.setDatosEJG(ejgObject[0]);
         //this.consultaUnidadFamiliar(rowData);
         sessionStorage.setItem('actasItem', JSON.stringify(this.datos));
         this.router.navigate(['/gestionEjg']);

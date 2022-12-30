@@ -128,7 +128,7 @@ export class TablaEjgComponent implements OnInit {
       n => {
         this.ejgObject = JSON.parse(n.body).ejgItems;
         this.datosItem = this.ejgObject[0];
-        this.persistenceService.setDatos(this.datosItem);
+        this.persistenceService.setDatosEJG(this.datosItem);
         this.persistenceService.setFiltrosEJG(this.filtro);
         //this.ngOnInit();
         //this.consultaUnidadFamiliar(selected);

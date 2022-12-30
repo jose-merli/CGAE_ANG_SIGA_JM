@@ -97,10 +97,10 @@ export class UnidadFamiliarComponent implements OnInit {
   ngOnInit() {
 
     this.getCols();
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
       this.nuevo = false;
       this.modoEdicion = true;
-      this.body = this.persistenceService.getDatos();
+      this.body = this.persistenceService.getDatosEJG();
       //this.datosFamiliares = this.persistenceService.getBodyAux();
 
       this.consultaUnidadFamiliar(this.body);
@@ -464,7 +464,7 @@ export class UnidadFamiliarComponent implements OnInit {
           if (solP != undefined) {
             this.body.idPersonajg = null;
             this.body.nombreApeSolicitante = null;
-            this.persistenceService.setDatos(this.body);
+            this.persistenceService.setDatosEJG(this.body);
             this.updateRes.emit();
           }
           this.consultaUnidadFamiliar(this.body);
@@ -652,7 +652,7 @@ export class UnidadFamiliarComponent implements OnInit {
     sessionStorage.setItem("datosFamiliares", JSON.stringify(this.datosFamiliares));
     // Controlar Justiciable vienen de EJG.
     sessionStorage.setItem("itemEJG", JSON.stringify(true));
-    sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatos()));
+    sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatosEJG()));
     //this.searchContrarios.emit(true);
     this.router.navigate(["/justiciables"]);
   }
