@@ -590,13 +590,13 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
   asociarJusticiable() {
     let icon = "fa fa-edit";
-    let message = "¿ Deseas asociar el justiciable ?";//this.translateService.instant("justiciaGratuita.justiciables.message.cambiarTelefonoPreferente");
+    /*let message = "¿ Deseas asociar el justiciable ?";//this.translateService.instant("justiciaGratuita.justiciables.message.cambiarTelefonoPreferente");
 
     this.confirmationService.confirm({
       key: "cdAsociarJusticiable",
       message: message,
       icon: icon,
-      accept: () => {
+      accept: () => {*/
         // Asociar para Interesados.
         if (this.nuevoInteresado) {
           if (this.checkInteresado(this.body)) {
@@ -658,11 +658,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           }
         }
 
-      },
+      /*},
       reject: () => {
         this.showMessage("info", "Cancelada", this.translateService.instant("general.message.accion.cancelada"));
       }
-    });
+    });*/
   }
 
   validateCampos(url) {
