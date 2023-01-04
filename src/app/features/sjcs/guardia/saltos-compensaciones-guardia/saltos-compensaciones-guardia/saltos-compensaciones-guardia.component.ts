@@ -362,7 +362,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
         dato.letradosGrupo.forEach((element,i, letrados) => {
           dato.letrado.push(element.letrado);
           let siguienteElemento = i + 1 < letrados.length ? true : false; //Compruebo si hay más elementos
-          nColegiado = nColegiado + dato.letradosGrupo[0].colegiado + "/" + dato.grupo;
+          nColegiado = nColegiado + dato.letradosGrupo[i].colegiado + "/" + dato.grupo;
           if(siguienteElemento){
             nColegiado = nColegiado + ", ";
           }
