@@ -5,6 +5,7 @@ import { CalendariosDatosEntradaItem } from '../../../../programacionCalendarios
 import { Router } from '@angular/router';
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import * as moment from 'moment';
+import { CalendarioProgramadoItem } from '../../../../../../../models/guardia/CalendarioProgramadoItem';
 
 @Component({
   selector: 'app-calendarios',
@@ -32,6 +33,8 @@ export class CalendariosComponent implements OnInit {
   ];
   comboListaGuardias =[];
   progressSpinner = false;
+  idTurno;
+  idGuardia;
   responseObject = 
               {
                 'duplicar': false,
@@ -66,6 +69,8 @@ export class CalendariosComponent implements OnInit {
         if (data.body) {
           data = JSON.parse(data.body)
           this.modoEdicion = true;
+          this.idGuardia = data.idGuardia;
+          this.idTurno = data.idTurno
           //this.getDatosCalendario();
           this.getCalProg();
         }
@@ -164,11 +169,17 @@ export class CalendariosComponent implements OnInit {
 
   }
 
-  goToFichaProgramacion(){
-    this.persistenceService.setDatos(this.responseObject);
+  goToCalendariosProgramados(){
     this.progressSpinner = false;
-    this.router.navigate(["/fichaProgramacion"]);
+    let data :  CalendarioProgramadoItem = new CalendarioProgramadoItem();
+    data.idGuardia = this.idGuardia
+    data.idTurno = this.idTurno
+    sessionStorage.setItem(
+      "filtroGuardiaDesdeGuardias",JSON.stringify(data)
+    );
+    this.router.navigate(["/programacionCalendarios"]);
   }
+
   showMessage(severity, summary, msg) {
     this.msgs = [];
     this.msgs.push({

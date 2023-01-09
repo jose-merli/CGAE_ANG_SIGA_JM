@@ -28,6 +28,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   resaltadoDatos = false;
   isDisabledZona: boolean = true;
   isDisabledMateria: boolean = true;
+  isFromGuardias : boolean = false;
   resultadosZonas: any;
   resultadosAreas: any;
   @Input() permisoEscritura;
@@ -41,6 +42,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
   KEY_CODE = {
     ENTER: 13
   }
+  dataFilter//Aux para guardar data si viene desde Guardia
   emptyFilters = true;
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} etiquetas seleccionadas";
@@ -65,8 +67,31 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
     this.getComboTurno()
     this.getComboEstado();
     this.getComboConjuntouardia();
+    if (sessionStorage.getItem("filtroGuardiaDesdeGuardias") != null) {
 
-    if (sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") != null) {
+      this.dataFilter = JSON.parse(sessionStorage.getItem("filtroGuardiaDesdeGuardias"));
+      
+      //Formateao 
+      let arr = [];
+      arr.push(this.dataFilter.idGuardia)
+      this.filtros.idGuardia = arr  
+      arr = [];
+      arr.push(this.dataFilter.idTurno)
+      this.filtros.idTurno = arr
+
+      let AnioAnterior = new Date().getFullYear() - 1;
+      this.filtros.fechaCalendarioDesde = new Date(AnioAnterior, new Date().getMonth(), new Date().getDate());
+      this.isFromGuardias = true;
+      this.getComboGuardia();
+      this.search();
+      sessionStorage.removeItem("filtroGuardiaDesdeGuardias");
+      
+      if (this.persistenceService.getHistorico() != undefined) {
+        this.historico = this.persistenceService.getHistorico();
+      }
+      this.isOpen.emit(this.historico)
+
+    } else if (sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia") != null) {
 
       this.filtros = JSON.parse(
         sessionStorage.getItem("filtrosBusquedaGuardiasFichaGuardia")
@@ -89,16 +114,13 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
         this.search();
         sessionStorage.removeItem("filtrosBusquedaGuardiasFichaGuardia");
       }
-  
-
-     
 
       if (this.persistenceService.getHistorico() != undefined) {
         this.historico = this.persistenceService.getHistorico();
       }
       this.isOpen.emit(this.historico)
 
-    } else {
+    }  else {
       this.filtros = new CalendarioProgramadoItem();
       if (!this.filtros.volver){
       let AnioAnterior = new Date().getFullYear() - 1;
@@ -386,6 +408,10 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       'idTurno': '',
       'idGuardia': '',
     }; */
+
+    if(this.isFromGuardias){
+      sessionStorage.setItem("nuevoConGuardia",JSON.stringify(this.dataFilter));
+    }
 
     this.persistenceService.clearDatos();
     this.router.navigate(["/fichaProgramacion"]);

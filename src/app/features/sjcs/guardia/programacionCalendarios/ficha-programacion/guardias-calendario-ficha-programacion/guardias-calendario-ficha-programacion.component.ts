@@ -8,6 +8,7 @@ import { Cell, Row, TablaResultadoOrderCGService } from '../../../../../../commo
 import { ConfiguracionCola, GlobalGuardiasService } from '../../../guardiasGlobal.service';
 import { Subscription } from 'rxjs';
 import { DatePipe } from '@angular/common';
+import { CalendarioProgramadoItem } from '../../../../../../models/guardia/CalendarioProgramadoItem';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
 
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
+  @Input() guardiaNew : CalendarioProgramadoItem;
   @Output() modoEdicionSend = new EventEmitter<any>();
   @Output() descargaLog= new EventEmitter<String>();
   @Input() tarjetaDatosGenerales= {
@@ -382,17 +384,20 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
   }
 
   getComboGuardia() {
-    this.sigaService.getParam(
-      "busquedaGuardia_guardia", "?idTurno=" + this.body.idTurnoPrincipal).subscribe(
-        data => {
-          this.isDisabledGuardia = false;
-          this.comboGuardia = data.combooItems;
-          this.commonServices.arregloTildesCombo(this.comboGuardia);
-        },
-        err => {
-          //console.log(err);
-        }
-      )
+    if(this.guardiaNew == null || this.guardiaNew == undefined || this.guardiaNew.idGuardia == undefined){
+      this.sigaService.getParam(
+        "busquedaGuardia_guardia", "?idTurno=" + this.body.idTurnoPrincipal).subscribe(
+          data => {
+            this.isDisabledGuardia = false;
+            this.comboGuardia = data.combooItems;
+            this.commonServices.arregloTildesCombo(this.comboGuardia);
+          },
+          err => {
+            //console.log(err);
+          }
+        )
+    }
+   
 
   }
 

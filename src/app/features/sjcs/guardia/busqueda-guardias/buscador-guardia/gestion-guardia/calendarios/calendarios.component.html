@@ -23,13 +23,13 @@
             <strong>{{datos.generado}}</strong>
           </label>
           <label>
-            <div *ngIf="calendarioDisponible" class="verticalAlign">
+            <div class="verticalAlign">
               <div>
                 <i class="fas fa-external-link-alt mr-2 icono-enlace"
                 aria-hidden="true"></i>
               </div>
               <div>
-                <a class="enlace" (click)="goToFichaProgramacion()">{{'dato.jgr.guardia.guardias.fichaProgramacion' | translate}}</a>
+                <a class="enlace" (click)="goToCalendariosProgramados()">{{'justiciaGratuita.Calendarios' | translate}}</a>
               </div>
             </div>
           </label>
