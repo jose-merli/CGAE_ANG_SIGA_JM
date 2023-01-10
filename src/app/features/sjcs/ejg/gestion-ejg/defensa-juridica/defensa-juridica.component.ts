@@ -75,7 +75,7 @@ export class DefensaJuridicaComponent implements OnInit {
     this.getNigValidador();
     this.checkAcceso(procesos_ejg.defensaJuridica);
 
-    this.body = this.persistenceService.getDatos();
+    this.body = this.persistenceService.getDatosEJG();
     //Valor inicial a reestablecer
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     
@@ -274,7 +274,7 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   asociarDes() {
-    this.body = this.persistenceService.getDatos();
+    this.body = this.persistenceService.getDatosEJG();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
@@ -302,7 +302,7 @@ export class DefensaJuridicaComponent implements OnInit {
   createDes() {
     this.progressSpinner = true;
     //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
-    this.body = this.persistenceService.getDatos();
+    this.body = this.persistenceService.getDatosEJG();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
@@ -361,7 +361,7 @@ export class DefensaJuridicaComponent implements OnInit {
         if (n.statusText == "OK") {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
           this.bodyInicial = this.body;
-          this.persistenceService.setDatos(this.body);
+          this.persistenceService.setDatosEJG(this.body);
           this.getCabecera();
           //this.actualizarDelitosEJG();
           this.progressSpinner = false;
@@ -407,8 +407,8 @@ export class DefensaJuridicaComponent implements OnInit {
         let ejgObject = JSON.parse(n.body).ejgItems;
         let datosItem = ejgObject[0];
 
-        this.persistenceService.setDatos(datosItem);
-        this.body = this.persistenceService.getDatos();
+        this.persistenceService.setDatosEJG(datosItem);
+        this.body = this.persistenceService.getDatosEJG();
         this.bodyInicial = JSON.parse(JSON.stringify(this.body));
         this.progressSpinner = false;
       },

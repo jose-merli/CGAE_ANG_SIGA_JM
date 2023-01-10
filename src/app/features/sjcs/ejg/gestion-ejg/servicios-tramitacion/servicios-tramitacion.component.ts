@@ -72,10 +72,10 @@ export class ServiciosTramitacionComponent implements OnInit {
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
     });
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
       this.nuevo = false;
       this.modoEdicion = true;
-      this.body = this.persistenceService.getDatos();
+      this.body = this.persistenceService.getDatosEJG();
       this.bodyInicial = JSON.parse(JSON.stringify(this.body));
       this.usuarioBusquedaExpress = {
         numColegiado: this.body.numColegiado,
@@ -383,8 +383,8 @@ export class ServiciosTramitacionComponent implements OnInit {
               let ejgObject = JSON.parse(n.body).ejgItems;
               let datosItem = ejgObject[0];
               
-              this.persistenceService.setDatos(datosItem);
-              this.body = this.persistenceService.getDatos();
+              this.persistenceService.setDatosEJG(datosItem);
+              this.body = this.persistenceService.getDatosEJG();
               this.bodyInicial = JSON.parse(JSON.stringify(this.body));
               this.progressSpinner = false;
             },

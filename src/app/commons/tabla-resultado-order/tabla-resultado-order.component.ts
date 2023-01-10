@@ -18,6 +18,7 @@ import { BuscadorGuardiaComponent } from '../../features/sjcs/guardia/busqueda-g
 import { SigaStorageService } from '../../siga-storage.service';
 import { ListaGuardiasItem } from '../../models/guardia/ListaGuardiasItem';
 import { TurnosItems } from '../../models/sjcs/TurnosItems';
+import { CalendarioProgramadoItem } from '../../models/guardia/CalendarioProgramadoItem';
 
 @Component({
   selector: 'app-tabla-resultado-order',
@@ -29,6 +30,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   @Input() isDisabledNuevo = false;
   @Input() isDisabledByEstado = false;
   @Input() esFinalizado = false;
+  @Input() guardiaNew : CalendarioProgramadoItem;
   info = new FormControl();
   @Input() cabeceras = [];  
   @Input() rowGroups: Row[];
@@ -233,6 +235,9 @@ export class TablaResultadoOrderComponent implements OnInit {
     }
 
     this.getConfColaGuardias();
+    if(this.guardiaNew != undefined && this.guardiaNew != null){
+      this.nuevo();
+    }
   }
   perPage(perPage){
     this.numperPage = perPage;
@@ -1223,6 +1228,7 @@ this.totalRegistros = this.rowGroups.length;
       //this.to = this.totalRegistros;
       }
       nuevo(){
+        this.progressSpinner = true;
         /*
         this.comboTurno.forEach(cT=> {
           if (cT.value == this.rowGroups[0].cells[1].value){
@@ -1269,7 +1275,16 @@ this.totalRegistros = this.rowGroups.length;
           this.totalRegistros = this.rowGroups.length;
           this.to = this.totalRegistros <= this.numperPage ? this.totalRegistros : this.numperPage;
           this.cd.detectChanges();
-
+          if(this.guardiaNew != undefined && this.guardiaNew != null){
+            this.getComboGuardia(this.guardiaNew.idTurno, this.rowGroups[0])
+            this.progressSpinner = true;
+            setTimeout(() => {
+              this.rowGroups[0].cells[1].value = this.guardiaNew.idTurno
+              this.rowGroups[0].cells[2].value = this.guardiaNew.idGuardia
+              this.progressSpinner = false;
+            }, 3500);
+            
+          }
           //console.log(this.rowGroups);
       }
 
@@ -1357,6 +1372,10 @@ this.totalRegistros = this.rowGroups.length;
               let comboGuardia = data.combooItems;
               this.commonServices.arregloTildesCombo(comboGuardia);
               row.cells.find(c => c.type == 'selectDependency2').combo = comboGuardia;
+              if(this.guardiaNew != null && this.guardiaNew != undefined && this.guardiaNew.idGuardia != undefined){
+                this.rowGroups[0].cells[1].value = this.guardiaNew.idTurno
+                this.rowGroups[0].cells[2].value = this.guardiaNew.idGuardia
+              }
             },
             err => {
               this.progressSpinner = false;

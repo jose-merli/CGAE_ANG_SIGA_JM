@@ -143,7 +143,7 @@ export class FichaProgramacionComponent implements OnInit {
   suscription: Subscription;
   wrongList = [];
   fromCombo = false;
-
+  guardiaNew : CalendarioProgramadoItem 
   comboEstados = [
     { label: "Pendiente", value: "4" },
     { label: "Programada", value: "0" },
@@ -229,6 +229,12 @@ export class FichaProgramacionComponent implements OnInit {
       this.duplicar = this.dataToReceive.duplicar;
       //this.search();
       this.modoEdicion = true;
+    } else if (sessionStorage.getItem("nuevoConGuardia")) {
+      this.guardiaNew =   JSON.parse(sessionStorage.getItem("nuevoConGuardia"));
+        sessionStorage.removeItem("nuevoConGuardia");
+        this.dataReady = true;
+        this.modoEdicion = false;
+
     } else {
       this.dataReady = false;
       this.modoEdicion = false;
@@ -254,6 +260,7 @@ export class FichaProgramacionComponent implements OnInit {
       sessionStorage.removeItem("mensaje");
     }
   }
+
 
   ngOnDestroy() {
     this.suscription.unsubscribe();

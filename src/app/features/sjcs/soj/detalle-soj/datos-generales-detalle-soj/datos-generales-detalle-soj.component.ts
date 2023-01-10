@@ -37,6 +37,7 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   ) { }
 
   ngOnInit() {
+    this.body = new FichaSojItem();
     if (this.bodyInicial != undefined) {
       this.initBody();
     }
@@ -53,7 +54,7 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
     if (this.bodyInicial.fechaApertura != undefined) {
       this.bodyInicial.fechaApertura = new Date(this.bodyInicial.fechaApertura);
     }
-    this.body = new FichaSojItem();
+    
     Object.assign(this.body, this.bodyInicial);
     // RellenarCombosEnTarjetaResumen.
     this.rellenarCombosTarjetaResumen();
@@ -134,9 +135,13 @@ export class DatosGeneralesDetalleSojComponent implements OnInit, OnChanges {
   }
 
   deshabilitarGuardado(): boolean {
-    return this.body == undefined || this.compareFieldsBody('anio', 'numero', 'idTipoSoj',
-      'idTipoSojColegio', 'fechaApertura', 'tipoConsulta', 'tipoRespuesta', 'descripcionConsulta',
-      'respuestaLetrado');
+    if(this.body == undefined || this.bodyInicial == undefined){
+      return true;
+    }else{
+      return this.compareFieldsBody('anio', 'numero', 'idTipoSoj',
+        'idTipoSojColegio', 'fechaApertura', 'tipoConsulta', 'tipoRespuesta', 'descripcionConsulta',
+        'respuestaLetrado');
+    }
   }
 
   compareFieldsBody(...fields: string[]) {

@@ -102,10 +102,10 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.getComboTipoExpediente();
     
 
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
       this.modoEdicion = true;
       this.nuevo = false;
-      this.body = this.persistenceService.getDatos();
+      this.body = this.persistenceService.getDatosEJG();
 
       this.disabledNumEJG = true;
 
@@ -394,7 +394,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
             this.body.numEjg = n.body.substring(n.body.indexOf("id")+5,n.body.indexOf("error")-3);
             this.bodyInicial = this.body;
             this.nuevo = false;
-            this.persistenceService.setDatos(this.bodyInicial);
+            this.persistenceService.setDatosEJG(this.bodyInicial);
 
             this.guardadoSend.emit(true);
 
@@ -433,15 +433,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
             if (JSON.parse(n.body).error.code == 200) {
               let ejgObject = JSON.parse(n.body).ejgItems;
               let datosItem = ejgObject[0];
-              
-              datosItem.numAnnioProcedimiento = "E" + this.body.annio + "/" + (this.body.numEjg != undefined && this.body.numEjg != null && this.body.numEjg != "undefined" ? this.body.numEjg : datosItem.numEjg);
-              this.persistenceService.setDatos(datosItem);
-
-              /*this.body.numero = datosItem.numero;
-              this.body.numEjg = datosItem.numEjg;
-              this.body.numAnnioProcedimiento = "E" + this.body.annio + "/" + this.body.numEjg;
-              this.bodyInicial = this.body;
-              this.persistenceService.setDatos(this.bodyInicial);*/
+              this.persistenceService.setDatosEJG(datosItem);
 
 
               //En el caso que se proceda de una designación, se asocia el EJG con la designación
@@ -678,7 +670,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
 
   asociarDes() {
-    this.body = this.persistenceService.getDatos();
+    this.body = this.persistenceService.getDatosEJG();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Esto determina que en la pantalla de busqueda de asuntos no se pueda cambiar de la pocion de designaciones
     sessionStorage.setItem("radioTajertaValue", 'des');
@@ -699,7 +691,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   createDes() {
     this.progressSpinner = true;
     //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
-    this.body = this.persistenceService.getDatos();
+    this.body = this.persistenceService.getDatosEJG();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));

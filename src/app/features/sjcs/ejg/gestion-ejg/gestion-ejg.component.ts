@@ -133,7 +133,7 @@ export class GestionEjgComponent implements OnInit {
         //obtiene un EJG desde la tarjeta relaciones de la ficha designacion
         this.body = JSON.parse(sessionStorage.getItem("EJGItemDesigna"));
         this.body.apellidosYNombre = "";
-        this.persistenceService.setDatos(this.body);
+        this.persistenceService.setDatosEJG(this.body);
         this.modoEdicion = true;
         this.updateTarjResumen();
       }
@@ -141,11 +141,11 @@ export class GestionEjgComponent implements OnInit {
       sessionStorage.removeItem("EJGItemDesigna");
 
     } else {
-      this.body = this.persistenceService.getDatos();
+      this.body = this.persistenceService.getDatosEJG();
       if (this.body != null && this.body.annio == null && sessionStorage.getItem("EJGItem") != null) {
         this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
         sessionStorage.removeItem("EJGItem");
-        this.persistenceService.setDatos(this.body);
+        this.persistenceService.setDatosEJG(this.body);
         this.updateTarjResumen();
         this.modoEdicion = true;
       }
@@ -156,14 +156,14 @@ export class GestionEjgComponent implements OnInit {
       if (sessionStorage.getItem("fichaEJG") != null) {
         this.body = JSON.parse(sessionStorage.getItem("fichaEJG"));
         sessionStorage.removeItem("fichaEJG");
-        this.persistenceService.setDatos(this.body);
+        this.persistenceService.setDatosEJG(this.body);
         this.updateTarjResumen();
       }
 
       if (sessionStorage.getItem("datosDesdeJusticiable")) {
         this.body = JSON.parse(sessionStorage.getItem("datosDesdeJusticiable"));
         sessionStorage.removeItem("datosDesdeJusticiable");
-        this.persistenceService.setDatos(this.body);
+        this.persistenceService.setDatosEJG(this.body);
         this.updateTarjResumen();
       }
 
@@ -183,7 +183,7 @@ export class GestionEjgComponent implements OnInit {
         else {
           this.body = JSON.parse(sessionStorage.getItem("EJGItem"));
           sessionStorage.removeItem("EJGItem");
-          this.persistenceService.setDatos(this.body);
+          this.persistenceService.setDatosEJG(this.body);
           this.updateTarjResumen();
           this.modoEdicion = true;
         }
@@ -793,7 +793,7 @@ export class GestionEjgComponent implements OnInit {
   }
 
   guardarDatos() {
-    this.persistenceService.setDatos(this.body);
+    this.persistenceService.setDatosEJG(this.body);
   }
 
   actualizarTarjetasIntercambios() {

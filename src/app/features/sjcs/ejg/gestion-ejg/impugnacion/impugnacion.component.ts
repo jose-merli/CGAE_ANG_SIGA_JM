@@ -54,10 +54,10 @@ export class ImpugnacionComponent implements OnInit {
 
   ngOnInit() {
     // this.getComboSentidoAuto();
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
       this.nuevo = false;
       this.modoEdicion = true;
-      this.impugnacion = this.persistenceService.getDatos();
+      this.impugnacion = this.persistenceService.getDatosEJG();
       if (this.impugnacion.fechaAuto != undefined)
         this.impugnacion.fechaAuto = new Date(this.impugnacion.fechaAuto);
       if (this.impugnacion.fechaPublicacion != undefined)
@@ -185,7 +185,7 @@ export class ImpugnacionComponent implements OnInit {
             this.impugnacion.impugnacionDesc = impug.label;
           }
           this.bodyInicial = JSON.parse(JSON.stringify(this.impugnacion));
-          this.persistenceService.setDatos(this.impugnacion);
+          this.persistenceService.setDatosEJG(this.impugnacion);
           //Output para que actualice los datos de la tarjeta resumen
           this.updateRes.emit();
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));

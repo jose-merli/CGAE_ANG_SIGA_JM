@@ -85,12 +85,12 @@ export class DocumentacionComponent implements OnInit {
     private datepipe: DatePipe,) { }
 
   ngOnInit() {
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
 
       this.resaltadoDatos = true;
       this.nuevo = false;
       this.modoEdicion = true;
-      this.item = this.persistenceService.getDatos();
+      this.item = this.persistenceService.getDatosEJG();
       this.getCols();
       this.getComboPresentador();
       this.getComboTipoDocumentacion();

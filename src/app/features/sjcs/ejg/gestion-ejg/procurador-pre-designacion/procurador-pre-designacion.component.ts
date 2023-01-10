@@ -55,7 +55,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 		this.checkAcceso(procesos_ejg.procurador);
 
-		this.ejg = this.persistenceService.getDatos();
+		this.ejg = this.persistenceService.getDatosEJG();
 
 		/* Procede de search*() */
 		if (sessionStorage.getItem("datosProcurador")) {
@@ -175,7 +175,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 			);
 		} else {
 			this.progressSpinner = true;
-			let ejgPeticion: EJGItem = this.persistenceService.getDatos();
+			let ejgPeticion: EJGItem = this.persistenceService.getDatosEJG();
 			ejgPeticion.idProcurador = null;
 			ejgPeticion.idInstitucionProc = null;
 			ejgPeticion.fechaDesProc = null;
@@ -192,7 +192,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 						this.generalBody = new ProcuradorItem();
 						this.fechaCabecera = null;
 						this.nombreCabecera = "";
-						this.persistenceService.setDatos(ejgPeticion);
+						this.persistenceService.setDatosEJG(ejgPeticion);
 						this.ejg = ejgPeticion;
 					}
 					else {
@@ -251,7 +251,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 
 		this.progressSpinner = true;
 
-		let ejgPeticion = this.persistenceService.getDatos();
+		let ejgPeticion = this.persistenceService.getDatosEJG();
 		ejgPeticion.idProcurador = this.generalBody.idProcurador;
 		ejgPeticion.idInstitucionProc = parseInt(this.generalBody.idInstitucion);
 		ejgPeticion.fechaDesProc = this.generalBody.fechaDesigna;
@@ -271,7 +271,7 @@ export class ProcuradorPreDesignacionComponent implements OnInit {
 					this.ejg = ejgPeticion;
 					this.fechaCabecera = this.generalBody.fechaDesigna;
 					this.nombreCabecera = this.generalBody.nombre;
-					this.persistenceService.setDatos(this.ejg);
+					this.persistenceService.setDatosEJG(this.ejg);
 				}
 				else {
 					this.showMessage(

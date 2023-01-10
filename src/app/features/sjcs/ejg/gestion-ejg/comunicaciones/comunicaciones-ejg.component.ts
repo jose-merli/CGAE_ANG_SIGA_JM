@@ -57,10 +57,10 @@ export class ComunicacionesEJGComponent implements OnInit {
   ngOnInit() {
     this.numComunicaciones=0;
 
-    if (this.persistenceService.getDatos()) {
+    if (this.persistenceService.getDatosEJG()) {
       this.nuevo = false;
       this.modoEdicion = true;
-      this.item = this.persistenceService.getDatos();
+      this.item = this.persistenceService.getDatosEJG();
 
       this.searchComunicaciones();
       this.getCols();

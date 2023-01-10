@@ -9,6 +9,7 @@ export class PersistenceService {
     private volverEJGName: string = "volverEJG";
     private paginacionName: string = "paginacion";
     private datosName: string = "datos";
+    private datosEJGName: string = "datosEJG";
     private datosRelaciones: string = "datos";
     private bodyName: string = "body";
     private bodyAuxName: string = "bodyAux";
@@ -91,6 +92,15 @@ export class PersistenceService {
 
     getDatos() {
         let data = sessionStorage.getItem(this.datosName);
+        return JSON.parse(data);
+    }
+
+    setDatosEJG(data: any) {
+        sessionStorage.setItem(this.datosEJGName, JSON.stringify(data));
+    }
+
+    getDatosEJG() {
+        let data = sessionStorage.getItem(this.datosEJGName);
         return JSON.parse(data);
     }
 

@@ -87,8 +87,8 @@ export class RelacionesComponent implements OnInit {
     public oldSigaServices: OldSigaServices) { }
 
   ngOnInit() {
-    if (this.persistenceService.getDatos()) {
-      this.body = this.persistenceService.getDatos();
+    if (this.persistenceService.getDatosEJG()) {
+      this.body = this.persistenceService.getDatosEJG();
       this.nuevo = false;
       this.modoEdicion = true;
       this.getRelaciones();
@@ -611,7 +611,7 @@ export class RelacionesComponent implements OnInit {
     this.router.navigate(["/fichaDesignaciones"]); */
     this.progressSpinner = true;
     //Recogemos los datos de nuevo de la capa de persistencia para captar posibles cambios realizados en el resto de tarjetas
-    this.body = this.persistenceService.getDatos();
+    this.body = this.persistenceService.getDatosEJG();
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     //Utilizamos el bodyInicial para no tener en cuenta cambios que no se hayan guardado.
     sessionStorage.setItem("EJG", JSON.stringify(this.bodyInicial));
