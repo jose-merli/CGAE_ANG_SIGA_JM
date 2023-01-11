@@ -200,7 +200,7 @@ export class TablaRemesasComponent implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "nRegistro", header: "formacion.fichaCursos.tarjetaPrecios.resumen.numRegistros" },
+      { field: "nRegistro", header: "justiciaGratuita.remesas.tabla.FechaGeneracion.numRemesa" },
       { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
       { field: "fechaGeneracion", header: "justiciaGratuita.remesas.tabla.FechaGeneracion" },
       { field: "fechaEnvio", header: "justiciaGratuita.remesas.tabla.FechaEnvio" },

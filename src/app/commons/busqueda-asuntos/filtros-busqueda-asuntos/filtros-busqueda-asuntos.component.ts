@@ -455,7 +455,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   getComboTurno() {
     this.progressSpinner = true;
     if (this.data != null) {
-      this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG").subscribe(
+      this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=EJG&idTurno="+this.data.idTurno).subscribe(
         n => {
           this.comboTurno = n.combooItems;
           this.commonService.arregloTildesCombo(this.comboTurno);
