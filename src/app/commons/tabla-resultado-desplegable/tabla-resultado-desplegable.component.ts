@@ -1962,7 +1962,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   linkFichaDesigna(rowGroup: RowGroup, id: string) {
     if (this.pantalla == "JE" && id) {
       id = id.split("\n")[0];
-
+      sessionStorage.setItem("vieneDeJE", "true");
       this.busquedaDesignaciones(id);
     } else if (this.pantalla == "AE" && id) {
       sessionStorage.setItem("modoBusqueda", "b");
