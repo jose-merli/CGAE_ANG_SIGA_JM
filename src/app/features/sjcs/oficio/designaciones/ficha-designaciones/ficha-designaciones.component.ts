@@ -849,6 +849,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     }
   }
   backTo() {
+    sessionStorage.setItem("volver", "true");
     if (sessionStorage.getItem("vieneDeFichaJusticiable")) {
       sessionStorage.removeItem("vieneDeFichaJusticiable")
     }
