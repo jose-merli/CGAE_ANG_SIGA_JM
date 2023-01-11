@@ -14,7 +14,7 @@ export class DatosIncripcionesGuardiasComponent implements OnInit {
     idGuardia : '',
     idTurno : ''
   }
-  
+  @Input() modoVinculado = false;
   constructor(private persistenceService : PersistenceService,
     private router : Router) { }
 
@@ -24,7 +24,7 @@ export class DatosIncripcionesGuardiasComponent implements OnInit {
 
   goToInscripciones(){
 
-    if(this.persistenceService.getDatos()){
+    if(this.persistenceService.getDatos() && !this.modoVinculado){
       this.filtroInscripciones.idGuardia = this.persistenceService.getDatos().idGuardia;
       this.filtroInscripciones.idTurno = this.persistenceService.getDatos().idTurno;
       sessionStorage.setItem("filtroFromFichaGuardia",JSON.stringify(this.filtroInscripciones));

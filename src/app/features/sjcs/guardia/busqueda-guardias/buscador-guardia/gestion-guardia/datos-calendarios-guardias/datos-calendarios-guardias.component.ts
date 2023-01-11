@@ -41,7 +41,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
   @Input() tarjetaCalendariosGuardias;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
-
+  @Input() modoVinculado: boolean = false;
   comboUnidad = datos_combos.comboUnidadesTiempo;
   resaltadoDatos: boolean = false;
   isLetrado : boolean = false;
@@ -237,7 +237,7 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
 
   abreCierraFicha(key) {
-    if (this.modoEdicion)
+    if (this.modoEdicion && !this.modoVinculado)
       this.openFicha = !this.openFicha;
 
     this.opened.emit(this.openFicha);

@@ -99,6 +99,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   @Input() tarjetaColaGuardia;
   @Input() permisoEscritura: boolean = false;
   @Input() modoEdicion = false;
+  @Input() modoVinculado = false;
   manual: Boolean;
   minimoLetrado = 0;
   //@ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
@@ -180,7 +181,7 @@ inicio(){
       }
     }
   abreCierraFicha() {
-    if (this.modoEdicion)
+    if (this.modoEdicion && !this.modoVinculado)
       this.openFicha = !this.openFicha
   }
 

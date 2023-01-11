@@ -62,7 +62,7 @@ export class GestionGuardiaComponent implements OnInit {
   origenGuarColeg: boolean;
   guardiaCole: any;
   idTurnoFromFichaTurno = null;
-
+  modoVinculado: Boolean = false;
   @ViewChild(DatosColaGuardiaComponent) datosColaGuardiaComponent;
 
   constructor(private persistenceService: PersistenceService,
@@ -78,8 +78,11 @@ export class GestionGuardiaComponent implements OnInit {
     if (sessionStorage.getItem("saltos-compesacionesItem")) {
       this.persistenceService.setDatos(sessionStorage.getItem("saltos-compesacionesItem"));
     }
-    
-    if (this.persistenceService.getDatos() != undefined) {
+    if (sessionStorage.getItem("nuevoDesdeTablaFiltroGuardias")) {
+      sessionStorage.removeItem("nuevoDesdeTablaFiltroGuardias");
+      this.modoEdicion = false;
+      this.openGen = true;
+    }else  if (this.persistenceService.getDatos() != undefined) {
       this.search();
       this.modoEdicion = true;
     } else {
@@ -87,7 +90,7 @@ export class GestionGuardiaComponent implements OnInit {
       this.openGen = true;
     }
     this.obtenerPermisos();
-
+    
     if (sessionStorage.getItem("crearGuardiaFromFichaTurno")) {
 
       this.persistenciaGuardia = new GuardiaItem();
@@ -139,6 +142,9 @@ export class GestionGuardiaComponent implements OnInit {
     this.sigaServices.post("busquedaGuardias_getGuardia", this.datos).subscribe(
       n => {
         this.datos = JSON.parse(n.body);
+        if(this.datos.idGuardiaPrincipal != null && this.datos.idGuardiaPrincipal != undefined ){
+          this.modoVinculado = true;
+        }
         this.sigaServices.notifysendDatosRedy(n);
         this.getDatosResumen();
 

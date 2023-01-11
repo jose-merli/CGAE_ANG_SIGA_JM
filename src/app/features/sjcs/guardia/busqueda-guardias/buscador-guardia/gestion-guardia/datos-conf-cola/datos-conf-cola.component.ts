@@ -30,6 +30,7 @@ export class DatosConfColaComponent implements OnInit {
   @Input() modoEdicion: boolean = false;
   @Input() permisoEscritura: boolean;
   @Output() modoEdicionSend = new EventEmitter<any>();
+  @Input() modoVinculado = false;
   @Input() tarjetaConfigCola;
 
   body: GuardiaItem = new GuardiaItem();
@@ -120,7 +121,7 @@ export class DatosConfColaComponent implements OnInit {
   }
 
   abreCierraFicha() {
-    if (this.modoEdicion)
+    if (this.modoEdicion && !this.modoVinculado)
       this.openFicha = !this.openFicha;
   }
 
