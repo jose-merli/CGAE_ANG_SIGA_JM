@@ -280,10 +280,11 @@ export class AsuntosComponent implements OnInit, OnChanges {
     }
 
     this.cols = [
-      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "7%" },
-      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "7%" },
+      { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "6%" },
+      { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
       { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
-      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "15%" },
+      { field: "nColegiado", header: "censo.resultadosSolicitudesModificacion.literal.nColegiado", width: "6%" },
+      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "12%" },
       { field: fieldRol, header: headerRol, width: widthRol },
       { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
 
