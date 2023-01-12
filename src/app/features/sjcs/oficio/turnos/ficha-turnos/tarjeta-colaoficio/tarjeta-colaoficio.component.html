@@ -143,7 +143,8 @@
           pButton type="button" icon="fa fa-undo" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.marcarultimo' | translate}}"></button>
         <button pButton [disabled]=" disableAll || selectedDatos.length == 0 || selectedDatos.length > 1" type="button"
           (click)="saltoCompensacion()" icon="fa fa-plus" iconPos="left" label="{{ 'justiciaGratuita.oficio.turnos.nuevosaltocompen' | translate}}"></button>
-
+        <button  (click)="comunicar()" pButton type="button" icon="fa fa-comment" iconPos="left"
+            label="{{'general.boton.comunicar' | translate }}"></button>
       </div>
     </div>
   </div>

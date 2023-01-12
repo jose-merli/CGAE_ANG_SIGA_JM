@@ -74,6 +74,10 @@ export class TarjetaColaOficio implements OnInit {
   //Resultados de la busqueda
   // @Input() modoEdicion: boolean = false;
 
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
+
   @ViewChild("table") table;
   @ViewChild("multiSelect") multiSelect: MultiSelect;
   fichasPosibles = [
@@ -133,6 +137,9 @@ export class TarjetaColaOficio implements OnInit {
         this.abreCierraFicha('colaOficio')
       }
     }
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      if(this.body != undefined) this.body.idinstitucion = n.value;
+    });
   }
 
   ngOnInit() {
@@ -168,6 +175,8 @@ export class TarjetaColaOficio implements OnInit {
       this.disableAll = true
     }
   }
+
+
 
   confirmUltimo(selectedDatos) {
     let mess = this.translateService.instant(
@@ -786,4 +795,55 @@ export class TarjetaColaOficio implements OnInit {
   onHideTarjeta() {
     this.showTarjeta = !this.showTarjeta;
   }
+
+  comunicar(){
+    sessionStorage.setItem("rutaComunicacion", "/turnos");
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    
+    this.getDatosComunicar();
+  }
+
+  getDatosComunicar() {
+    let datosSeleccionados = [];
+    let rutaClaseComunicacion = "/turnos";
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                //    this.actuacionesSeleccionadas.forEach(element => {
+                let keysValues = [];
+                this.keys.forEach(key => {
+                if (this.body[key.nombre.toLowerCase()] != undefined) {
+                  keysValues.push(this.body[key.nombre.toLowerCase()]);
+                } 
+                });
+                datosSeleccionados.push(keysValues);
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
+  }
+
 }
