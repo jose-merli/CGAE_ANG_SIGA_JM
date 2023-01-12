@@ -111,7 +111,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   ngOnInit() {
-    this.currentRoute = this.router.url;
+    this.currentRoute = "/designaciones"; 
     this.getKeysClaseComunicacion();
     this.resaltadoDatos = true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
@@ -1093,11 +1093,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 let keysValues = [];
                 this.keys.forEach(key => {
                   if (this.initDatos[key.nombre] != undefined) {
-                    keysValues.push(this.initDatos[key.nombre]);
+                    keysValues.push(this.initDatos[key.nombre].toString());
                   } else if (key.nombre == "num" && this.initDatos["numero"] != undefined) {
-                    keysValues.push(this.initDatos["numero"]);
+                    keysValues.push(this.initDatos["numero"].toString());
                   } else if (key.nombre == "idturno" && this.initDatos["idTurno"] != undefined) {
-                    keysValues.push(this.initDatos["idTurno"]);
+                    keysValues.push(this.initDatos["idTurno"].toString());
                   }
                 });
                 datosSeleccionados.push(keysValues);

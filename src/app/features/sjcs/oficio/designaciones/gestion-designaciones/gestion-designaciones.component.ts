@@ -527,11 +527,11 @@ export class GestionDesignacionesComponent implements OnInit {
                   let keysValues = [];
                   this.keys.forEach(key => {
                     if (element[key.nombre] != undefined) {
-                      keysValues.push(element[key.nombre]);
+                      keysValues.push(element[key.nombre].toString());
                     }else if(key.nombre == "num" && element["numero"] != undefined){
-                      keysValues.push(element["numero"]);
+                      keysValues.push(element["numero"].toString());
                     }else if(key.nombre == "idturno" && element["idTurno"] != undefined){
-                      keysValues.push(element["idTurno"]);
+                      keysValues.push(element["idTurno"].toString());
                     }
                   });
                   datosSeleccionados.push(keysValues);
