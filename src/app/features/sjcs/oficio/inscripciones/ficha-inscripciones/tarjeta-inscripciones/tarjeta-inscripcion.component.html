@@ -46,10 +46,13 @@
 				   binary="true"></p-checkbox>      
                   </div>                     
                 <a [pRowToggler]="rowData">
-                  <div class="text-center" *ngIf="col.field == 'nombreTurno'">                       
-                      <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
-                      <a style="color: blue;text-decoration: underline;" (click)="openTab(rowData, 'Turno')"><span >{{rowData[col.field]}}</span></a>
+                  <div class="text-center" *ngIf="col.field == 'nombreTurno' && rowData.idGuardia && !modoEdicion">           
+                    <i [ngClass]="expanded ? 'fa fa-fw fa-chevron-circle-down' : 'fa fa-fw fa-chevron-circle-right'"></i>
+                    <a style="color: blue;text-decoration: underline;" (click)="openTab(rowData, 'Turno')"><span>{{rowData[col.field]}}</span></a>
                   </div>
+                  <div class="text-center" *ngIf="col.field == 'nombreTurno' && (!rowData.idGuardia || modoEdicion)">
+                    <a style="color: blue;text-decoration: underline;" (click)="openTab(rowData, 'Turno')"><span>{{rowData[col.field]}}</span></a>
+                </div>
                 </a>
               </div>
                 <div class="text-center" *ngIf="col.field !='nombreTurno' ">
@@ -87,7 +90,7 @@
             <tr [pSelectableRow]="dato">        
               <td *ngFor="let col of columns">
                 <div *ngIf="col.field == 'nombreTurno'" class="displayMargin">    
-                    <p-checkbox [disabled]="disabledGuardias || disableAll" [(ngModel)]="dato.selectedBoolean" (onChange)="seleccionarFila(dato, $event)" binary="true"></p-checkbox>    
+                    <p-checkbox [disabled]="dato.disabled || disableAll" [(ngModel)]="dato.selectedBoolean" (onChange)="seleccionarFila(dato, $event)" binary="true"></p-checkbox>    
                     <a style="color: blue;text-decoration: underline;" (click)="openTab(dato, 'Guardia')" class="form-group-label"><span>{{dato.nombreGuardia}}</span></a>
                 </div>
               </td>

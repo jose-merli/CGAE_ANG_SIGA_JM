@@ -332,7 +332,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
         }
       );
     } else {
-      this.sigaServices.post("guardiasInscripciones_inscripcionesDisponibles", objVal).subscribe(
+      this.sigaServices.post("guardiasInscripciones_inscripcionesDisponiblesGuardia", objVal).subscribe(
         n => {
 
           this.inscripcionesItem = JSON.parse(n.body).accion;

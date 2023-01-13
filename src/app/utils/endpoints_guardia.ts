@@ -145,6 +145,7 @@ export let endpoints_guardia: any = {
     guardiasInscripciones_TarjetaColaGuardia: "guardias/inscripciones/inscripcionesCombo",
     guardiasInscripciones_TarjetaGestionInscripciones: "guardias/inscripciones/historicoInscripcion",
     guardiasInscripciones_inscripcionesDisponibles:"guardias/inscripciones/inscripcionesDisponibles",
+    guardiasInscripciones_inscripcionesDisponiblesGuardia:"guardias/inscripciones/inscripcionesDisponiblesGuardia",
     guardiasInscripciones_inscripcionPorguardia: "guardias/inscripciones/inscripcionPorguardia",
     guardiasInscripciones_updateInscripcion: "guardias/inscripciones/updateInscripcion",
     guardiasInscripciones_insertSolicitarAlta: "guardias/inscripciones/insertSolicitarAlta",

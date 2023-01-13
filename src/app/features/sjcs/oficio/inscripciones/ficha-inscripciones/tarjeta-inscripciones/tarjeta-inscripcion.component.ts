@@ -69,7 +69,6 @@ export class TarjetaInscripcion implements OnInit {
   nombreGuardia;
   numeroGuardias;
   duracionGuardias;
-  disabledGuardias: boolean = true;
   nletradosGuardias;
   overlayVisible: boolean = false;
   selectionMode: string = "none";
@@ -363,6 +362,7 @@ export class TarjetaInscripcion implements OnInit {
           element.selectedBooleanPadre = true;
           }
           else{
+            element.disabled = true;
             element.selectedBoolean =false;
             element.selectedBooleanPadre = false;
           }
@@ -853,9 +853,9 @@ export class TarjetaInscripcion implements OnInit {
         rowData.selectedBooleanPadre = true;
         //Guardias obligatorias: Se marcan todas las guardias
         if(rowData.obligatoriedadInscripcion == 0){
-          this.disabledGuardias = true;
           this.inscripcionesItem.forEach(element => {
             if (element.idTurno == rowData.idTurno){
+              element.disabled = true;
               let findDato = this.inscripcionesSelected.find(item => item.idGuardia  == element.idGuardia);
               if(findDato == null || findDato == undefined) {
                 element.selectedBoolean = true;
@@ -864,23 +864,31 @@ export class TarjetaInscripcion implements OnInit {
             }
           });
         }else{ //Guardias todas o ninguna: se dejan como seleccionables para que se seleccionen manualmente
-          this.disabledGuardias = false;
+          this.inscripcionesItem.forEach(element => {
+            if (element.idTurno == rowData.idTurno){
+              element.disabled = false;
+            }
+          });
         }
       }
 
       //Guardias a elegir
       if (rowData.obligatoriedadInscripcion == 2) {
-        this.disabledGuardias = false;
+        this.inscripcionesItem.forEach(element => {
+          if (element.idTurno == rowData.idTurno){
+            element.disabled = false;
+          }
+        });
         rowData.selectedBooleanPadre = true;
       }
       //Se añade el turno a los elementos seleccionados
       this.inscripcionesSelected.push(turno);
     } else {
       //Si se desmarca el turno hay que quitar todas sus guardias de los elementos seleccionados
-      this.disabledGuardias = true;
       rowData.selectedBooleanPadre = false;
       this.inscripcionesItem.forEach(element => {
         if (element.idTurno == rowData.idTurno){
+          element.disabled = true;
           let findDato = this.inscripcionesSelected.find(item => item.idGuardia == element.idGuardia);
           if (findDato != undefined) {
             element.selectedBoolean = false;
