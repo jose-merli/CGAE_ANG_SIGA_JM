@@ -26,6 +26,7 @@ export class DatosColaGuardiaComponent implements OnInit {
   fecha;
   datosInicial;
   body = new GuardiaItem();
+  guardiaComunicar : GuardiaItem;
   datos;
   nuevo;
   historico: boolean = false;
@@ -164,6 +165,12 @@ inicio(){
           this.editable = true;
           this.botActivos = true;
         }
+        this.sigaService.get("institucionActual").subscribe(n => {
+          if(this.body != undefined) this.body.idInstitucion = n.value;
+          this.guardiaComunicar = this.body;
+        });
+
+        
       });
 
 

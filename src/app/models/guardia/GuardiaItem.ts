@@ -1,5 +1,5 @@
 export class GuardiaItem {
-
+    idInstitucion;
     idGuardia;
     idTurno;
     idGuardiaPrincipal;

@@ -125,6 +125,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   body: TurnosItems = new TurnosItems();
   enableUpDownButtonsManual: boolean = true;
   @Input() dataConfOrdColaHered: String;
+  @Input() guardiaComunicar : GuardiaItem;
 
   constructor(
     private renderer: Renderer2,
@@ -1630,7 +1631,16 @@ this.totalRegistros = this.rowGroups.length;
             .subscribe(
               data => {
                 this.keys = JSON.parse(data["body"]).keysItem;
-                this.selectedArray.forEach(element => {
+                let keysValues = [];
+                if(this.pantalla == "colaGuardias"){
+                  this.keys.forEach(key => {
+                    if (this.guardiaComunicar[key.nombre] != undefined) {
+                      keysValues.push(this.guardiaComunicar[key.nombre]);
+                    }
+                  });
+                  datosSeleccionados.push(keysValues);
+                }
+               /* this.selectedArray.forEach(element => {
                   let keysValues = [];
                   this.keys.forEach(key => {
                     if (element[key.nombre.toLowerCase()] != undefined) {
@@ -1638,7 +1648,7 @@ this.totalRegistros = this.rowGroups.length;
                     }
                   });
                   datosSeleccionados.push(keysValues);
-                });
+                });*/
 
                 sessionStorage.setItem(
                   "datosComunicar",
