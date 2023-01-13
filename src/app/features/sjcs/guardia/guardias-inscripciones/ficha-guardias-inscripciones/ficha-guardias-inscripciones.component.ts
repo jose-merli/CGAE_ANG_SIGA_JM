@@ -73,6 +73,9 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	existeTrabajosSJCS: any;
 	existeSaltosCompensaciones: any;
 	
+	idClasesComunicacionArray: string[] = [];
+	idClaseComunicacion: String;
+	keys: any[] = [];
 
 	constructor(public datepipe: DatePipe, private translateService: TranslateService, private route: ActivatedRoute,
 		private sigaServices: SigaServices, private location: Location, private persistenceService: PersistenceService,
@@ -239,7 +242,11 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	}
 
 	comunicar(selectedDatos) {
-
+		sessionStorage.setItem("rutaComunicacion", "/inscripciones");
+		//IDMODULO de SJCS es 10
+		sessionStorage.setItem("idModulo", '10');
+	
+		this.getDatosComunicar();
 	}
 
 	showMessage(severity, summary, msg) {
@@ -1382,6 +1389,51 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	clear() {
 		this.msgs = [];
 	}
+
+	
+	getDatosComunicar() {
+		let datosSeleccionados = [];
+		let rutaClaseComunicacion = "/inscripciones";
+
+		this.sigaServices
+		.post("dialogo_claseComunicacion", rutaClaseComunicacion)
+		.subscribe(
+			data => {
+			this.idClaseComunicacion = JSON.parse(
+				data["body"]
+			).clasesComunicaciones[0].idClaseComunicacion;
+			this.sigaServices
+				.post("dialogo_keys", this.idClaseComunicacion)
+				.subscribe(
+				data => {
+					this.keys = JSON.parse(data["body"]).keysItem;
+					//    this.actuacionesSeleccionadas.forEach(element => {
+					let keysValues = [];
+					this.keys.forEach(key => {
+					if (this.datos[key.nombre.toLowerCase()] != undefined) {
+						keysValues.push(this.datos[key.nombre.toLowerCase()]);
+					} 
+					});
+					datosSeleccionados.push(keysValues);
+					sessionStorage.setItem(
+						"datosComunicar",
+						JSON.stringify(datosSeleccionados)
+						);
+					//datosSeleccionados.push(keysValues);
+					
+					this.router.navigate(["/dialogoComunicaciones"]);
+				},
+				err => {
+				//console.log(err);
+				}
+			);
+		},
+		err => {
+			//console.log(err);
+		}
+		);
+		}
+	
 }
 
 

@@ -1405,7 +1405,12 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   navigateComunicar(dato) {
-    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    if(this.currentRoute.toString() == "/inscripcionesGuardia"){
+      sessionStorage.setItem("rutaComunicacion", "/inscripciones");
+    }else{
+      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    }
+    
     //IDMODULO de SJCS es 10
     sessionStorage.setItem("idModulo", '10');
     
@@ -1425,8 +1430,14 @@ export class TablaResultadoMixComponent implements OnInit {
 
   getDatosComunicar() {
     let datosSeleccionados = [];
-    let rutaClaseComunicacion = this.currentRoute.toString();
-
+    let rutaClaseComunicacion :string;
+    if(this.currentRoute.toString() == "/inscripcionesGuardia"){
+      rutaClaseComunicacion =  "/inscripciones"
+    }else{
+      rutaClaseComunicacion = this.currentRoute.toString();
+    }
+   
+    
     this.sigaServices
       .post("dialogo_claseComunicacion", rutaClaseComunicacion)
       .subscribe(
@@ -1439,7 +1450,7 @@ export class TablaResultadoMixComponent implements OnInit {
             .subscribe(
               data => {
                 this.keys = JSON.parse(data["body"]).keysItem;
-                if(this.currentRoute.toString() == "/inscripcionesGuardia"){
+                if(rutaClaseComunicacion == "/inscripciones"){
                   this.selectedArray.forEach(index =>{
                      let keysValues = [];
                      this.rowGroups[index].cells[21]
