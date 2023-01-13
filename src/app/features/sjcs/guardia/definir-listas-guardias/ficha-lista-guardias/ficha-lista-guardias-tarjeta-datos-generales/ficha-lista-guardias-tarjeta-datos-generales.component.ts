@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import { Router } from '@angular/router';
 import { Message } from 'primeng/api';
 import { Row } from '../../../../../../commons/tabla-resultado-order/tabla-resultado-order-cg.service';
 import { TranslateService } from '../../../../../../commons/translate';
@@ -33,14 +34,26 @@ export class FichaListaGuardiasTarjetaDatosGeneralesComponent implements OnInit,
       value : ''
     }
   ]
-
+  currentRoute : string;
+  idClaseComunicacion : string;
+  keys: any[] = [];
+  institucionActual : string ;
   constructor(private translateService : TranslateService,
     private sigaServices : SigaServices,
+    private router : Router,
     private commonServices : CommonsService) { }
 
   ngOnInit() {
+    this.currentRoute = "/definirListasGuardias";
+    this.getInstitucion();
   }
 
+  getInstitucion() {
+    this.sigaServices.get("institucionActual").subscribe(n => {
+      this.institucionActual = n.value;
+    });
+
+  }
   ngOnChanges(changes: SimpleChanges): void {
     if(changes.lista || this.lista){
       this.listaAux = Object.assign({},this.lista);
@@ -117,4 +130,52 @@ export class FichaListaGuardiasTarjetaDatosGeneralesComponent implements OnInit,
       detail: detailParam
     });
   }
+
+  comunicar() {
+    if (this.lista.idLista != null) {
+
+
+      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+      //IDMODULO de SJCS es 10
+      sessionStorage.setItem("idModulo", '10');
+      let datosSeleccionados = [];
+      let rutaClaseComunicacion = this.currentRoute.toString();
+
+      this.sigaServices
+        .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+        .subscribe(
+          data => {
+            this.idClaseComunicacion = JSON.parse(
+              data["body"]
+            ).clasesComunicaciones[0].idClaseComunicacion;
+            this.sigaServices
+              .post("dialogo_keys", this.idClaseComunicacion)
+              .subscribe(
+                data => {
+                  this.keys = JSON.parse(data["body"]).keysItem;
+                  let keysValues = [];
+                  keysValues.push(this.institucionActual);
+                  keysValues.push(this.lista.idLista);
+
+                  datosSeleccionados.push(keysValues);
+
+                  sessionStorage.setItem(
+                    "datosComunicar",
+                    JSON.stringify(datosSeleccionados)
+                  );
+                  this.router.navigate(["/dialogoComunicaciones"]);
+                },
+                err => {
+                  //console.log(err);
+                }
+              );
+          },
+          err => {
+            //console.log(err);
+          }
+        );
+
+    }
+  }
+
 }

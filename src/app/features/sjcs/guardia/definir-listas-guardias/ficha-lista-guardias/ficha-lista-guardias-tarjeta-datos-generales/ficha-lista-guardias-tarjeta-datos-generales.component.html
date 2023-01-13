@@ -34,7 +34,7 @@
 
 <div class="card-footer">
   <div class="text-right main-button">
-    <button pButton type="button" icon="fa fa-send" iconPos="left" label="Comunicar" [disabled]="!permisosEscritura">
+    <button pButton type="button" icon="fa fa-send" iconPos="left" label="{{'general.boton.comunicar' | translate}}"  [disabled]="!permisosEscritura" (click)="comunicar()">
     </button>
     <button pButton type="button" icon="fa fa-undo" iconPos="left" label="{{'general.boton.restablecer' | translate}}"
       (click)="restablecer(); " [disabled]="!permisosEscritura"></button>
