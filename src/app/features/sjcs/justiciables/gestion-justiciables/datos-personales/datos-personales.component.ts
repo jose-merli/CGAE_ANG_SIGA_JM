@@ -1430,15 +1430,19 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   onChangeSelectAll() {
     if (this.selectAll) {
-      this.selectionMode = "multiple";
+      /* this.selectionMode = "multiple";
       let arrays = JSON.parse(JSON.stringify(this.datos));
       arrays.shift();
       arrays.shift();
       this.selectedDatos = JSON.parse(JSON.stringify(arrays));
+      this.selectMultiple = true; */
       this.selectMultiple = true;
+      this.selectedDatos = this.datos;
+      this.numSelected = this.datos.length;
+      this.selectionMode = "multiple";
 
     } else {
-      this.selectionMode = "";
+      this.selectionMode = "single";
       this.selectedDatos = [];
       this.numSelected = 0;
       this.selectMultiple = false;
@@ -1446,20 +1450,50 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   }
 
-  isSelectMultiple() {
+ /* ORIGINAL    */
+ isSelectMultiple() {
     if (this.permisoEscritura) {
       this.selectMultiple = !this.selectMultiple;
       if (!this.selectMultiple) {
         this.selectedDatos = [];
         this.numSelected = 0;
-        this.selectionMode = "";
+        this.selectionMode = "single";
+        this.selectAll = false;
+        this.selectMultiple = false;
       } else {
         this.selectAll = false;
+        this.selectMultiple = true;
         this.selectedDatos = [];
         this.selectionMode = "multiple";
         this.numSelected = 0;
       }
     }
+  }
+
+  /* ANALOGO A TABLA ACREDITACIONES 
+  isSelectMultiple() {
+
+    if (this.permisoEscritura) {
+    this.selectAll = false;
+    this.selectMultiple = !this.selectMultiple;
+      if (!this.selectMultiple) {
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "single";
+
+      } else {
+        this.selectAll = false;
+        this.selectedDatos = [];
+        this.numSelected = 0;
+        this.selectionMode = "multiple";
+      }
+    } else {
+      this.selectionMode = undefined;
+    }
+  }*/
+
+  selectFila(event) {
+    this.numSelected = event.length;
   }
 
   actualizaSeleccionados(selectedDatos) {
