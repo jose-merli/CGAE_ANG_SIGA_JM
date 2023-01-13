@@ -1439,16 +1439,25 @@ export class TablaResultadoMixComponent implements OnInit {
             .subscribe(
               data => {
                 this.keys = JSON.parse(data["body"]).keysItem;
-                this.selectedArray.forEach(element => {
-                  let keysValues = [];
-                  this.keys.forEach(key => {
-                    if (element[key.nombre.toLowerCase()] != undefined) {
-                      keysValues.push(element[key.nombre.toLowerCase()]);
-                    }
+                if(this.currentRoute.toString() == "/inscripcionesGuardia"){
+                  this.selectedArray.forEach(index =>{
+                     let keysValues = [];
+                     this.rowGroups[index].cells[21]
+                     keysValues.push( this.rowGroups[index].cells[9].value.toString());
+                     keysValues.push( this.rowGroups[index].cells[21].value);
+                     keysValues.push( this.rowGroups[index].cells[10].value);
+                     datosSeleccionados.push(keysValues);
                   });
-                  datosSeleccionados.push(keysValues);
-                });
-
+                  /*this.selectedArray.forEach(element => {
+                    let keysValues = [];
+                    this.keys.forEach(key => {
+                      if (element[key.nombre.toLowerCase()] != undefined) {
+                        keysValues.push(element[key.nombre.toLowerCase()]);
+                      }
+                    });
+                    datosSeleccionados.push(keysValues);
+                  });*/
+                }
                 sessionStorage.setItem(
                   "datosComunicar",
                   JSON.stringify(datosSeleccionados)
