@@ -389,9 +389,8 @@ para poder filtrar el dato con o sin estos caracteres*/
     let msg = this.commonsService.checkPermisos(this.permisoNuevaCom, undefined);
     if (msg != undefined) {
       this.msgs = msg;
-    } 
-    else if(this.validarNProcedimiento(this.bodyNuevaComm.numProcedimiento)
-    && (this.validarNig(this.bodyNuevaComm.nig) || this.bodyNuevaComm.nig == null || this.bodyNuevaComm.nig.trim() =="")){
+    } else if(this.validarNProcedimiento(this.bodyNuevaComm.numProcedimiento)
+        && (this.validarNig(this.bodyNuevaComm.nig) || this.bodyNuevaComm.nig == null || this.bodyNuevaComm.nig.trim() =="")){
       if (this.checkCamposObligatoriosNuevaComm()){
         if(this.permisoIntPNJ){
           let tamDocs = 0;
@@ -399,16 +398,15 @@ para poder filtrar el dato con o sin estos caracteres*/
             tamDocs += doc.size;
           }
           //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)
-          if (tamDocs > 5242880)this.msgs = [{ severity: "info", summary: this.translateService.instant("general.message.informacion"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.documentacion.tamMaxFicheros") }];
-          else {
+          if (tamDocs > 5242880){
+            this.msgs = [{ severity: "info", summary: this.translateService.instant("general.message.informacion"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.documentacion.tamMaxFicheros") }];
+          } else {
             this.saveNuevaComm();
           }
-        }
-        else{
+        } else{
           this.msgs = [{ severity: "error", summary: this.translateService.instant("general.message.incorrect"), detail: this.translateService.instant("informesycomunicaciones.comunicaciones.noAccesoPNJ") }];
         }
-      }
-      else {
+      } else {
         this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
         this.resaltadoDatos = true;
       }

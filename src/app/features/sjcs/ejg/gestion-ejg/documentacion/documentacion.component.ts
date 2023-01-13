@@ -42,6 +42,10 @@ export class DocumentacionComponent implements OnInit {
   nDocumentos;
   documentos: DocumentacionEjgItem[] = [];
   tiposCabecera: string = "";
+  //SIGARNV-3078@INICIO
+  ejecutado = false;
+  indice = 0;
+  //SIGARNV-3078@FIN
 
   colsModal = [
     { field: 'fecha', header: "dato.jgr.guardia.saltcomp.fecha" },
@@ -201,7 +205,8 @@ export class DocumentacionComponent implements OnInit {
         }
         this.nDocumentos = this.documentos.length;
         // this.progressSpinner = false;
-        if (this.tableDocumentacion != undefined) this.tableDocumentacion.reset();
+        if (this.tableDocumentacion != undefined) 
+          this.tableDocumentacion.reset();
       },
       err => {
         //this.progressSpinner = false;
@@ -447,9 +452,56 @@ export class DocumentacionComponent implements OnInit {
           this.progressSpinner = false;
         },
         error => {
+          //SIGARNV-3078@INICIO
+          //Como ha habido un error, borramos el ultimo documento añadido al EJG
+          if(!this.ejecutado){ //Este metodo se ejecuta 2 veces, controlamos que solo se borre el documento la primera vez
+            this.indice = this.documentos.length - 1; //El ultimo documento de la lista es el que se ha creado durante este flujo
+            this.ejecutado = true;
+          }
+
+          if(this.indice + 1 == this.documentos.length){
+            //Creamos un nuevo array con el documento que queremos el iminar
+            let documentosBorrar = [];
+            documentosBorrar.push(this.documentos[this.indice]);
+
+            //Llamamos al servicio de eliminar documento
+            this.sigaServices.post("gestionejg_eliminarDocumentacionEjg", documentosBorrar).subscribe(
+              data => {
+                let resp = data;
+                let error = JSON.parse(data.body).error;
+        
+                if (resp.statusText == 'OK') {
+                  this.progressSpinner = false;
+                  // this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+                  console.log('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+                  // this.selectedDatos = [];
+                  //this.deseleccionarTodo = true;
+                  this.getDocumentos(this.item);
+                } else {
+                  if (error != null && error.description != null && error.description != '') {
+                    // this.showMsg('error', 'Error', this.translateService.instant(error.description));
+                    console.log('error', 'Error', this.translateService.instant(error.description));
+                  } else {
+                    // this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+                    console.log('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+                  }
+                }
+              },
+              err => {
+                // this.progressSpinner = false;
+                // this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+                console.log('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+              }
+            );
+          }
+
           //Maximo de tamaño permitido actualmente al hacer peticiones al back (5242880)
-          if (this.ficheroTemporal.size > 5242880) this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.tamMax"));
-          else this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.errorFich"));
+          if (this.ficheroTemporal.size > 5242880){
+            this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.tamMax"));
+          } else { 
+            this.showMessage("error", this.translateService.instant("general.message.informacion"), this.translateService.instant("justiciaGratuita.ejg.documentacion.errorFich"));
+          }
+          //SIGARNV-3078@FIN
           this.progressSpinner = false;
         },
         () => {
