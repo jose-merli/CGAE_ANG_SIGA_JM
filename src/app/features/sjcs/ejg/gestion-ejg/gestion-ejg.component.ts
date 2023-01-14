@@ -189,7 +189,7 @@ export class GestionEjgComponent implements OnInit {
         }
       }
     }
-
+    this.progressSpinner = false;
     //sessionStorage.removeItem("EJGItem");
     //this.updateTarjResumen();
     this.datosEntradaTarjGenerica = this.body;

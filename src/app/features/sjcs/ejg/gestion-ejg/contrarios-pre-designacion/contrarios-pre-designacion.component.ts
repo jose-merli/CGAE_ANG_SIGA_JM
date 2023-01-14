@@ -260,7 +260,7 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     let datos;
     contrario.idpersona = evento.idPersona;
     sessionStorage.setItem("personaDesigna", evento.idPersona);
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", contrario).subscribe(
       n => {
         datos = JSON.parse(n.body).justiciableBusquedaItems;

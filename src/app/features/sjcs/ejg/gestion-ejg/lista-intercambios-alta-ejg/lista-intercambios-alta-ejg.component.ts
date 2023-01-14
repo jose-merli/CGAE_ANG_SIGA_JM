@@ -115,7 +115,7 @@ export class ListaIntercambiosAltaEjgComponent implements OnInit, OnChanges {
   }
 
   getListaIntercambiosAltaEjg(request): Promise<ListaIntercambiosEjgItem[]> {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     return this.sigaServices.post("gestionejg_getListaIntercambiosAltaEjg", request).toPromise().then(
       n => {
         this.progressSpinner = false;
