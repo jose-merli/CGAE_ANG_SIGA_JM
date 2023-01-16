@@ -321,13 +321,7 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
 
   }
 
-  navigateComunicar() {
-    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
-    //IDMODULO de SJCS es 10
-    sessionStorage.setItem("idModulo", '10');
-    
-    this.getDatosComunicar();
-  }
+
   
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
@@ -340,9 +334,13 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
     );
   }
 
-  getDatosComunicar() {
+  navigateComunicar() {
+     let ruta = '/actuacionesDesignacion'
+    sessionStorage.setItem("rutaComunicacion",ruta);
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
     let datosSeleccionados = [];
-    let rutaClaseComunicacion = this.currentRoute.toString();
+    let rutaClaseComunicacion = ruta;
 
     this.sigaServices
       .post("dialogo_claseComunicacion", rutaClaseComunicacion)
