@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { DesignaItem } from '../../../../../../models/sjcs/DesignaItem';
 import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/JusticiableBusquedaItem';
 import { ConfirmationService, Message } from 'primeng/components/common/api';
+import { isGeneratedFile } from '@angular/compiler/src/aot/util';
 
 @Component({
   selector: 'app-detalle-tarjeta-interesados-ficha-designacion-oficio',
@@ -19,7 +20,7 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
   @Output() searchInteresados = new EventEmitter<boolean>();
 
   @Input() interesados;
-
+  @Input() campos;
 
   selectedItem: number = 10;
   datos;
@@ -34,7 +35,9 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
   selectAll: boolean = false;
   progressSpinner: boolean = false;
 
-  
+  idClasesComunicacionArray: string[] = [];
+  idClaseComunicacion: String;
+  keys: any[] = [];
 
   @ViewChild("table") tabla;
 
@@ -231,5 +234,72 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
 
   clear() {
     this.msgs = [];
+  }
+
+  comunicar(){
+    let rutaPri;
+    if(this.selectedDatos.length > 0){
+      rutaPri = "/fichaDesignacionesInteresados"
+    }else{
+      rutaPri = "/fichaDesignacionesSinInteresados"
+    }
+    sessionStorage.setItem("rutaComunicacion", rutaPri);
+    //IDMODULO de SJCS 10
+    sessionStorage.setItem("idModulo", '10');
+    let datosSeleccionados = [];
+
+    this.sigaServices
+      .post("dialogo_claseComunicacion", rutaPri)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                if(this.selectedDatos.length > 0){
+                  this.selectedDatos.forEach(element => {
+                    let keysValues = [];
+                    this.keys.forEach(key => {
+                      if (element[key.nombre] != undefined) {
+                        keysValues.push(element[key.nombre]);
+                      }  else if (key.nombre == "num" && element["numero"] != undefined) {
+                        keysValues.push(element["numero"]);
+                      }
+                    });
+                    datosSeleccionados.push(keysValues);
+                  });
+                }else{
+                  let keysValues = [];
+                this.keys.forEach(key => {
+                  if (this.campos[key.nombre] != undefined) {
+                    keysValues.push(this.campos[key.nombre].toString());
+                  } else if (key.nombre == "num" && this.campos["numero"] != undefined) {
+                    keysValues.push(this.campos["numero"].toString());
+                  } else if (key.nombre == "idturno" && this.campos["idTurno"] != undefined) {
+                    keysValues.push(this.campos["idTurno"].toString());
+                  }
+                });
+                datosSeleccionados.push(keysValues);
+                }
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
   }
 }

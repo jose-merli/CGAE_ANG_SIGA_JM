@@ -66,8 +66,6 @@
   </p-table>
   <div class="card-footer">
     <div class="text-right main-button">
-      <button pButton type="button"  icon="fa fa-comment" iconPos="left"
-      label="{{'general.boton.comunicar' | translate}}"></button>
       <button *ngIf="!historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-history" iconPos="left"
         label="{{ 'general.message.mostrarHistorico' | translate}}"></button>
       <button *ngIf="historicoContrario" (click)="searchHistorical()" pButton type="button" icon="fa fa-undo" iconPos="left"

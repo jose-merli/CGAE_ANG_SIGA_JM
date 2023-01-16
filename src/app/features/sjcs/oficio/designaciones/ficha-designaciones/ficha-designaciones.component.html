@@ -101,7 +101,7 @@
                                         </app-detalle-tarjeta-letrados-designa>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Interesados'">
-                                        <app-detalle-tarjeta-interesados-ficha-designacion-oficio
+                                        <app-detalle-tarjeta-interesados-ficha-designacion-oficio  [campos]="campos"
                                             [interesados]="interesados" (searchInteresados)="searchInteresados($event)">
                                         </app-detalle-tarjeta-interesados-ficha-designacion-oficio>
                                     </div>
