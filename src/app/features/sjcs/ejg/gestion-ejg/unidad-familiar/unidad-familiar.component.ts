@@ -100,7 +100,7 @@ export class UnidadFamiliarComponent implements OnInit {
     private ejgService: EjgService) { }
 
   ngOnInit() {
-
+    this.progressSpinner = false;
     this.getCols();
     if (this.persistenceService.getDatosEJG()) {
       this.nuevo = false;

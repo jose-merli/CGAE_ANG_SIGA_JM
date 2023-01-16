@@ -116,7 +116,7 @@ export class ListaIntercambiosDocumentacionEjgComponent implements OnInit, OnCha
   }
 
   getListaIntercambiosDocumentacionEjg(request): Promise<ListaIntercambiosEjgItem[]> {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     return this.sigaServices.post("gestionejg_getListaIntercambiosDocumentacionEjg", request).toPromise().then(
       n => {
         this.progressSpinner = false;

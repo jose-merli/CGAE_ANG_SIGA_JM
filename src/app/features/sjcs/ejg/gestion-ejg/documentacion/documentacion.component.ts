@@ -804,7 +804,7 @@ export class DocumentacionComponent implements OnInit {
   }
 
   getComboPresentador() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices.get("gestionejg_comboPresentadores").subscribe(
       n => {

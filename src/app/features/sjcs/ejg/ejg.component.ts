@@ -76,12 +76,12 @@ export class EJGComponent implements OnInit {
       //console.log("Remesa -> ", this.remesa);
     }
 
-    if (this.persistenceService.getDatosEJG() != null) {
+    /*if (this.persistenceService.getDatosEJG() != null) {
       this.ejg = this.persistenceService.getDatosEJG();
       sessionStorage.removeItem("EJG");
       sessionStorage.setItem('fichaEJG', JSON.stringify(this.ejg));
       this.router.navigate(['/gestionEjg']);
-    }
+    }*/
   }
 
   searchEJGs(event) {

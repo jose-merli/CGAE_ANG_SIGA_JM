@@ -82,6 +82,7 @@ export class GestionJusticiablesComponent implements OnInit {
   showAsuntos;
   showProcuradorContrario;
   showAbogadoContrario;
+  datosAsuntos = [];
 
   constructor(private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -766,14 +767,14 @@ export class GestionJusticiablesComponent implements OnInit {
     let busquedaJusticiable = new JusticiableBusquedaItem();
     busquedaJusticiable.idpersona = this.body.idpersona;
 
-    this.sigaServices.post("busquedaJusticiables_searchJusticiables", busquedaJusticiable).subscribe(
+    this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
       n => {
 
-        let justiciableBusquedaItem = JSON.parse(n.body).justiciableBusquedaItems;
+        this.datosAsuntos = JSON.parse(n.body).asuntosJusticiableItems;
 
-        if (justiciableBusquedaItem != undefined && justiciableBusquedaItem != null && justiciableBusquedaItem.length > 0) {
-          this.body.numeroAsuntos = justiciableBusquedaItem[0].numeroAsuntos;
-          this.body.ultimoAsunto = justiciableBusquedaItem[0].ultimoAsunto;
+        if (this.datosAsuntos != undefined && this.datosAsuntos != null && this.datosAsuntos.length > 0) {
+          this.body.numeroAsuntos = this.datosAsuntos.length.toString();
+          this.body.ultimoAsunto = this.datosAsuntos[0].asunto;
           // Actualizar Nº Asunto en tarjeta resumen.
           this.updateTarjResumen();
         }
