@@ -179,7 +179,7 @@ export class BusquedaJusticiablesComponent implements OnInit, OnChanges {
             this.tabla.tabla.reset();
             this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
           }
-          if (error != null && error.description != null && filas != 50) {
+          if (error != null && error.description != null) {
             this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
           }
           
