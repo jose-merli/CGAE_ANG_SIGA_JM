@@ -242,7 +242,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	}
 
 	comunicar(selectedDatos) {
-		sessionStorage.setItem("rutaComunicacion", "/inscripciones");
+		sessionStorage.setItem("rutaComunicacion", "/inscripcionesGuardia");
 		//IDMODULO de SJCS es 10
 		sessionStorage.setItem("idModulo", '10');
 	
@@ -1393,7 +1393,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 	
 	getDatosComunicar() {
 		let datosSeleccionados = [];
-		let rutaClaseComunicacion = "/inscripciones";
+		let rutaClaseComunicacion = "/inscripcionesGuardia";
 
 		this.sigaServices
 		.post("dialogo_claseComunicacion", rutaClaseComunicacion)
