@@ -150,6 +150,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     this.comboPoblacion = [];
     if (this.filtros.idProvincia != undefined && this.filtros.idProvincia != "") {
       this.isDisabledPoblacion = false;
+      this.getComboPoblacion("-1");
     } else {
       this.isDisabledPoblacion = true;
     }
