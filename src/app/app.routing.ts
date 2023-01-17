@@ -130,15 +130,16 @@ import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/v
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { EJGComponent } from './features/sjcs/ejg/ejg.component';
 
-
-
-
-import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
-
+import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
+import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
+import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
+import { MovimientosVariosComponentClassique } from './features/sjcs/facturacionSJCS/movimientos-varios-classique/movimientos-varios-classique.component';
+import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
+import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/abonos-sjcs.component';
 import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
-import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
-
+import { GenerarImpreso190ComponentClassique } from './features/sjcs/facturacionSJCS/generar-impreso190-classique/generar-impreso190-classique.component';
+import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component';
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
 import { JustificacionLetradoComponent } from './features/sjcs/informes/justificacion-letrado/justificacion-letrado.component';
 import { InformeFacturacionComponent } from './features/sjcs/informes/informe-facturacion/informe-facturacion.component';
@@ -1027,13 +1028,33 @@ const appRoutes: Routes = [
 		canActivate: [ AuthGuard ]
 	},
 	{
+		path: 'mantenimientoFacturacion',
+		component: MantenimientoFacturacionComponent,
+		canActivate: [AuthGuard]
+	},
+	{
 		path: 'fichaGestionActas',
 		component: GestionActasComponent,
 		canActivate: [AuthGuard]
 	},
 	{
+		path: 'previsiones',
+		component: PrevisionesComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'mantenimientoPagos',
+		component: MantenimientoPagosComponent,
+		canActivate: [AuthGuard]
+	},
+	{
 		path: 'movimientosVarios',
-		component: MovimientosVariosComponent,
+		component: MovimientosVariosComponentClassique,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'tramosLEC',
+		component: TramosLECComponent,
 		canActivate: [AuthGuard]
 	},
 	{
@@ -1047,18 +1068,28 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
+		path: 'retencionesJudiciales',
+		component: RetencionesJudicialesComponent,
+		canActivate: [AuthGuard]
+	},
+	{
 		path: 'busquedaRetencionesAplicadas',
 		component: BusquedaRetencionesAplicadasComponent,
 		canActivate: [AuthGuard]
 	},
 	{
 		path: 'generarImpreso190',
-		component: GenerarImpreso190Component,
+		component: GenerarImpreso190ComponentClassique,
 		canActivate: [AuthGuard]
 	},
 	{
 		path: 'comunicaDesignaciones',
 		component: ComunicaDesignacionesComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'resumenPagos',
+		component: ResumenPagosComponent,
 		canActivate: [AuthGuard]
 	},
 	{
