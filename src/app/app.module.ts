@@ -523,7 +523,7 @@ import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
 import { GenerarImpreso190ComponentClassique } from './features/sjcs/facturacionSJCS/generar-impreso190-classique/generar-impreso190-classique.component';
-
+import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
 
 
 import { MatSelectModule } from '@angular/material/select';
@@ -1604,7 +1604,7 @@ import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-so
 
 
 		BusquedaRetencionesAplicadasComponent,
-		GenerarImpreso190ComponentClassique,
+		GenerarImpreso190Component,
 
 		EnvioReintegrosXuntaComponent,
 		JustificacionLetradoComponent,
