@@ -79,9 +79,6 @@ export class DefensaJuridicaComponent implements OnInit {
     //Valor inicial a reestablecer
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     
-    // Cargar Parametro CONFIGURAR_COMBO_DESIGNA y combo procedimientos.
-    this.cargarProcedimiento();
-
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
     //Se obtiene la designacion si hay una designacion entre las relaciones
@@ -133,6 +130,8 @@ export class DefensaJuridicaComponent implements OnInit {
       this.getComboCDetencion();
       this.getComboCalidad();
       this.getComboJuzgado();
+      // Cargar Parametro CONFIGURAR_COMBO_DESIGNA y combo procedimientos.
+      this.cargarProcedimiento();
       // Función de rellenar el combo como Designaciones.
       //if (this.body.juzgado != null) this.getComboProcedimiento();
       this.getComboDelitos();
@@ -140,7 +139,7 @@ export class DefensaJuridicaComponent implements OnInit {
       //if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
 
-    }, 1000);
+    }, 2000);
   }
 
   checkAcceso(defesaJuridica:String){
@@ -626,9 +625,23 @@ export class DefensaJuridicaComponent implements OnInit {
     let aux = this.persistenceService.getDatosRelaciones();
     relaciones.push(aux);
     //Comprobamos si entre la relaciones hay una designacion
-    let foundDesigna = relaciones.find(element =>
-      element.sjcs == "DESIGNACIÓN"
-    )
+    let foundDesigna = undefined;
+
+    if(relaciones!=null){
+      relaciones.forEach(element => {
+        if(element!=null && element!=undefined){
+          if(element.sjcs!=null && element.sjcs != undefined && element.sjcs == "DESIGNACIÓN"){
+            foundDesigna = element;
+          }
+          element.forEach(elemen1 =>{
+            if(elemen1.sjcs == "DESIGNACIÓN"){
+              foundDesigna = elemen1;
+            }
+          });
+        }
+      });
+    }
+
     if (foundDesigna != undefined) {
       this.designa.ano = parseInt(foundDesigna.anio.toString());
       this.designa.codigo = foundDesigna.numero.toString();
