@@ -50,11 +50,11 @@ const routesFacturacionsjcs: Routes = [
     component: BusquedaGeneralSJCSComponent,
     canActivate: [AuthGuard]
   },
-  {
+  /*{
     path: 'movimientosVarios',
     component: MovimientosVariosComponent,
     canActivate: [AuthGuard]
-  },
+  },*/
   {
     path: "fichaMovimientosVarios",
     component: FichaMovimientosVariosComponent,
