@@ -8,6 +8,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { FacturacionesYPagosModule } from './facturaciones-pagos/facturaciones-pagos.module';
 import { CartasFacturacionPagoModule } from './cartas-facturacion-pago/cartas-facturacion-pago.module';
 import {MovimientosVariosModule} from './movimientos-varios/movimientos-varios.module';
+import { GenerarImpreso190Component } from './generar-impreso190/generar-impreso190.component';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import {MovimientosVariosModule} from './movimientos-varios/movimientos-varios.m
                 MenubarModule,
                 SpinnerModule,
                 CartasFacturacionPagoModule,
-                MovimientosVariosModule
+                MovimientosVariosModule,
+                GenerarImpreso190Component
         ],
 
         providers: []
