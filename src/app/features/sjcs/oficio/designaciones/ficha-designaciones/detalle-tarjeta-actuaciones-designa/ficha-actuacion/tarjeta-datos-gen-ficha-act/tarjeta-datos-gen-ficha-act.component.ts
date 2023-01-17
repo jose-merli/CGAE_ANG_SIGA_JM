@@ -1280,14 +1280,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     );
   }
 
-  navigateComunicar() {
-    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
-    //IDMODULO de SJCS es 10
-    sessionStorage.setItem("idModulo", '10');
-
-    this.getDatosComunicar();
-  }
-
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
       data => {
@@ -1299,9 +1291,14 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     );
   }
 
-  getDatosComunicar() {
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", "/actuacionesDesignacion");
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+
+    
     let datosSeleccionados = [];
-    let rutaClaseComunicacion = this.currentRoute.toString();
+    let rutaClaseComunicacion = "/actuacionesDesignacion";
 
     this.sigaServices
       .post("dialogo_claseComunicacion", rutaClaseComunicacion)
