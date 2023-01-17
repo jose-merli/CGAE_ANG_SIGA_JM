@@ -14,6 +14,7 @@ import { GenerarImpreso190Component } from './generar-impreso190/generar-impreso
 @NgModule({
         declarations: [
               //  FiltrosMovimientosVariosComponent
+              GenerarImpreso190Component
         ],
         imports: [
                 CommonModule,
@@ -22,8 +23,7 @@ import { GenerarImpreso190Component } from './generar-impreso190/generar-impreso
                 MenubarModule,
                 SpinnerModule,
                 CartasFacturacionPagoModule,
-                MovimientosVariosModule,
-                GenerarImpreso190Component
+                MovimientosVariosModule
         ],
 
         providers: []
