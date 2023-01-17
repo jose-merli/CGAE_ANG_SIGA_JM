@@ -13,6 +13,7 @@ export class InputDivididoComponent implements OnInit {
   @Input() titulo = "";
   @Input() anio;
   @Input() numero;
+  @Input() nuevaDesigna;
   @Output() showMsgError = new EventEmitter<String>();
   disabledNumDes: boolean = true;
   msgs: String = "";
@@ -37,7 +38,7 @@ export class InputDivididoComponent implements OnInit {
   disableEnableNumDes() {
     this.commonsServices.checkAcceso(procesos_oficio.CambioNumDesigna)
       .then(respuesta => {
-        if (respuesta) {
+        if (respuesta && this.nuevaDesigna == false) {
           this.disabledNumDes = !this.disabledNumDes;
         } else {
           this.msgs = this.translateService.instant("general.message.noTienePermisosRealizarAccion");
