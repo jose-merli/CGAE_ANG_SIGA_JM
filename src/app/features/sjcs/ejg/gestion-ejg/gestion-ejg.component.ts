@@ -321,8 +321,13 @@ export class GestionEjgComponent implements OnInit {
       sessionStorage.setItem("actasItem", sessionStorage.getItem("actasItemAux"));
       sessionStorage.removeItem("actasItemAux");
     }
+    this.persistenceService.clearDatosEJG();
     this.persistenceService.setVolverEJG();
     this.location.back();
+  }
+
+  ngOnDestroy(){
+    this.persistenceService.setVolverEJG();
   }
 
   async obtenerPermisos() {
