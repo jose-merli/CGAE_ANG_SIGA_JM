@@ -38,6 +38,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
   datosBuscar: any;
   valorFormatoProc: any;
   parametroNIG: any;
+  parametroNProc: any;
   constructor(private router: Router,
     private sigaServices : SigaServices,
     private commonServices : CommonsService, 
@@ -48,6 +49,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
     //sessionStorage.removeItem("volver");
     //sessionStorage.removeItem("modoBusqueda");
     this.getNigValidador();
+    this.getNprocValidador();
     this.checkLastRoute();
     if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('usuarioBusquedaExpress')) {
       this.usuarioBusquedaExpress = JSON.parse(sessionStorage.getItem('usuarioBusquedaExpress'));
@@ -150,6 +152,49 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
     return error;
   }
 
+  getNprocValidador(){
+    let parametro = {
+      valor: "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNProc = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    let ret = false;
+    
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
+      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
+          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
+          if (nProcedimiento != '') {
+            if(valorParametroNProc.test(nProcedimiento)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+    }
+
+    return ret;
+  }
+
+  /*
   validarNProcedimiento(nProcedimiento:string) {
     //Esto es para la validacion de CADECA
 
@@ -172,6 +217,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
     return response;
 
   }
+  */
 
   validarNig(nig) {
     let ret = false;

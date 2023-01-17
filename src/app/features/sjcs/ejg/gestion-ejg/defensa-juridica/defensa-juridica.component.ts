@@ -62,6 +62,7 @@ export class DefensaJuridicaComponent implements OnInit {
   delitosValue: any = [];
 
   msgs: Message[] = [];
+  parametroNProc: any;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
@@ -74,6 +75,7 @@ export class DefensaJuridicaComponent implements OnInit {
 
   ngOnInit() {
     this.getNigValidador();
+    this.getNprocValidador();
     this.checkAcceso(procesos_ejg.defensaJuridica);
 
     this.body = this.persistenceService.getDatosEJG();
@@ -203,6 +205,48 @@ export class DefensaJuridicaComponent implements OnInit {
       });
   }
 
+  getNprocValidador(){
+    let parametro = {
+      valor: "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNProc = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    let ret = false;
+    
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
+      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
+          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
+          if (nProcedimiento != '') {
+            if(valorParametroNProc.test(nProcedimiento)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+    }
+
+    return ret;
+  }
+/*
   validarNProcedimiento(nProcedimiento) {
     //Esto es para la validacion de CADENA
 
@@ -224,6 +268,7 @@ export class DefensaJuridicaComponent implements OnInit {
       return objRegExp.test(nProcedimiento);
     }
   }
+*/
 
   getCabecera() {
     //Valor de la cabecera para la comisaria

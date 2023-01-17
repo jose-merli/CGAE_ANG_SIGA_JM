@@ -167,6 +167,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   keys: any[] = [];
   datosBuscar: any;
   parametroNIG: any;
+  parametroNProc: any;
 
   constructor(private commonsService: CommonsService,
     private sigaServices: SigaServices,
@@ -177,6 +178,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   ngOnInit() {
     this.getNigValidador();
+    this.getNprocValidador();
     this.currentRoute = this.router.url;
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDatosGenerales)
       .then(respuesta => {
@@ -1003,29 +1005,53 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     return ret;
   }
 
+  getNprocValidador(){
+    let parametro = {
+      valor: "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNProc = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    let ret = false;
+    
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
+      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
+          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
+          if (nProcedimiento != '') {
+            if(valorParametroNProc.test(nProcedimiento)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+    }
+
+    return ret;
+  }
+
+  /*
   validarNProcedimiento(nProcedimiento:string) {
     //Esto es para la validacion de CADECA
 
     let response:boolean = false;
-
-    /* if(nProcedimiento != null && nProcedimiento.length > 0){
-      let arraNum = nProcedimiento.split("")
-      let arraValidacion= this.valorFormatoProc.split("")
-      var RegExpNum = /^[0-9]/;
-      let datoNoValido:number = 0;
-      if(arraValidacion.length != arraNum.length) return false;
-  
-      arraValidacion.forEach(function callback(value, index) {
-        if(value == "y" || value == 'n'){
-          var boo:boolean = RegExpNum.test(arraNum[index])
-           datoNoValido =  boo ? datoNoValido : datoNoValido=+1;
-        }else if(value != arraNum[index]){
-          datoNoValido = datoNoValido=+1;
-        }
-      });
-  
-      response = datoNoValido != 0 ? false :true;  
-    } */
 
 
     if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
@@ -1045,6 +1071,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     return response;
 
   }
+  */
 
   getLetradoActuacion() {
 

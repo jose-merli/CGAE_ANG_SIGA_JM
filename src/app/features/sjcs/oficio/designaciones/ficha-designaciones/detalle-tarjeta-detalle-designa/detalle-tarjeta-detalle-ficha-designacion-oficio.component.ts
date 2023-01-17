@@ -50,7 +50,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   procedimientoOpciones: any[] = [];
   parametroNIG: any;
   moduloValue: any;
-  moduloOpciones: any[] = [];;
+  moduloOpciones: any[] = [];parametroNProc: any;
+;
   disableEstado: boolean = false;
   institucionActual: String;
   isLetrado: boolean;
@@ -84,6 +85,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
 
   ngOnInit() {
     this.getNigValidador();
+    this.getNprocValidador();
     this.datosInicial = this.campos;
     this.initDelitos = this.delitosValue;
     this.estadosOpciones = [
@@ -822,6 +824,49 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       });
   }
 
+  getNprocValidador(){
+    let parametro = {
+      valor: "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNProc = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    let ret = false;
+    
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
+      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
+          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
+          if (nProcedimiento != '') {
+            if(valorParametroNProc.test(nProcedimiento)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+    }
+
+    return ret;
+  }
+
+/*
   validarNProcedimiento(nProcedimiento) {
     //Esto es para la validacion de CADENA
 
@@ -839,6 +884,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     }
 
   }
+  */
 
   updateDetalle(updateDetalle) {
     this.progressSpinner = true;
