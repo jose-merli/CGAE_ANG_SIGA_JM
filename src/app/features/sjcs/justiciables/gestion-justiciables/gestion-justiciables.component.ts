@@ -1100,16 +1100,6 @@ export class GestionJusticiablesComponent implements OnInit {
           this.enlacesTarjetaResumen.push(pruebaTarjeta);
         }
 
-        if (this.showAsuntos == true) { // Comprobar si esta activada la Tarjeta
-          pruebaTarjeta = {
-            label: "justiciaGratuita.justiciables.literal.asuntos",
-            value: document.getElementById("DivAsuntos"),
-            nombre: "Asuntos",
-          };
-
-          this.enlacesTarjetaResumen.push(pruebaTarjeta);
-        }
-
         if (this.showDatosPersonales == true) { // Comprobar si esta activada la Tarjeta
           pruebaTarjeta = {
             label: "formacion.fichaInscripcion.datosPersonales.cabecera",
@@ -1140,7 +1130,15 @@ export class GestionJusticiablesComponent implements OnInit {
           this.enlacesTarjetaResumen.push(pruebaTarjeta);
         }
 
-       
+        if (this.showAsuntos == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "justiciaGratuita.justiciables.literal.asuntos",
+            value: document.getElementById("DivAsuntos"),
+            nombre: "Asuntos",
+          };
+
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
 
         if (this.showAbogadoContrario == true) { // Comprobar si esta activada la Tarjeta
           pruebaTarjeta = {
