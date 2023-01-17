@@ -166,6 +166,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   idClaseComunicacion: String;
   keys: any[] = [];
   datosBuscar: any;
+  parametroNIG: any;
 
   constructor(private commonsService: CommonsService,
     private sigaServices: SigaServices,
@@ -972,17 +973,15 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   }
 
   getNigValidador(){
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.institucionActual;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "NIG_VALIDADOR";
+    let parametro = {
+      valor: "NIG_VALIDADOR"
+    };
 
     this.sigaServices
-    .postPaginado("parametros_search", "?numPagina=1", parametro)
-    .subscribe(
-      data => {
-        let searchParametros = JSON.parse(data["body"]);
-        this.datosBuscar = searchParametros.parametrosItems;
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNIG = JSON.parse(data.body);
         //this.progressSpinner = false;
       });
   }
@@ -991,16 +990,13 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   validarNig(nig) {
     let ret = false;
     
-    if (nig != null && nig != '' && this.datosBuscar != undefined) {
-      //this.progressSpinner = true;
-      this.datosBuscar.forEach(element => {
-        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-          let valorParametroNIG: RegExp = new RegExp(element.valor);
+    if (nig != null && nig != '' && this.parametroNIG != undefined) {
+      if (this.parametroNIG != null && this.parametroNIG.parametro != "") {
+          let valorParametroNIG: RegExp = new RegExp(this.parametroNIG.parametro);
           if (nig != '') {
             ret = valorParametroNIG.test(nig);
           }
         }
-      });
       //this.progressSpinner = false;
     }
 

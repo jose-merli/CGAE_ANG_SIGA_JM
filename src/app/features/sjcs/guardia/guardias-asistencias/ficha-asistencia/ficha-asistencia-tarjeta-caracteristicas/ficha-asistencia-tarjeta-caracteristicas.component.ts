@@ -37,6 +37,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
   institucionActual: string;
   datosBuscar: any;
   valorFormatoProc: any;
+  parametroNIG: any;
   constructor(private router: Router,
     private sigaServices : SigaServices,
     private commonServices : CommonsService, 
@@ -175,16 +176,13 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
   validarNig(nig) {
     let ret = false;
     
-    if (nig != null && nig != '' && this.datosBuscar != undefined) {
-      //this.progressSpinner = true;
-      this.datosBuscar.forEach(element => {
-        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-          let valorParametroNIG: RegExp = new RegExp(element.valor);
+    if (nig != null && nig != '' && this.parametroNIG != undefined) {
+      if (this.parametroNIG != null && this.parametroNIG.parametro != "") {
+          let valorParametroNIG: RegExp = new RegExp(this.parametroNIG.parametro);
           if (nig != '') {
             ret = valorParametroNIG.test(nig);
           }
         }
-      });
       //this.progressSpinner = false;
     }
 
@@ -192,17 +190,15 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
   }
 
   getNigValidador(){
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.institucionActual;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "NIG_VALIDADOR";
+    let parametro = {
+      valor: "NIG_VALIDADOR"
+    };
 
     this.sigaServices
-    .postPaginado("parametros_search", "?numPagina=1", parametro)
-    .subscribe(
-      data => {
-        let searchParametros = JSON.parse(data["body"]);
-        this.datosBuscar = searchParametros.parametrosItems;
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNIG = JSON.parse(data.body);
         //this.progressSpinner = false;
       });
   }

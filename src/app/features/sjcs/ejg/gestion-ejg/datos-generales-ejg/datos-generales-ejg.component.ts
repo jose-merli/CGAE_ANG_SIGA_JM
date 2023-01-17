@@ -759,7 +759,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   disableEnableNumEJG() {
     this.commonsServices.checkAcceso(procesos_ejg.cambioNumEJG)
       .then(respuesta => {
-        if (respuesta) {
+        if (respuesta && this.nuevo == false) {
           this.disabledNumEJG = !this.disabledNumEJG;
         } else {
           this.msgs = this.commonsServices.checkPermisos(false, undefined);
