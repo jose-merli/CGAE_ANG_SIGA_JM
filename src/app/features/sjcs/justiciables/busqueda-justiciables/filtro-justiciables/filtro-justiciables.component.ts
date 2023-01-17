@@ -237,6 +237,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     this.modoRepresentante = true;
     sessionStorage.setItem("nuevoJusticiable", "true");
     sessionStorage.setItem("Nuevo", "true");
+    sessionStorage.setItem("nuevoJusticiableTarjetas", "true");
     this.persistenceService.setFichasPosibles(this.fichasPosiblesNew);
     if (this.modoRepresentante) {
       this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });

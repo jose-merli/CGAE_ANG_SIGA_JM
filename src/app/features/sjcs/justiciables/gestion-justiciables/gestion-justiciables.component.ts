@@ -1069,7 +1069,8 @@ export class GestionJusticiablesComponent implements OnInit {
     setTimeout(() => {
 
       // Creacion Mostrar solo Datos Generales.
-      if (sessionStorage.getItem("fichasPosibles")) {
+     if (sessionStorage.getItem("nuevoJusticiableTarjetas")) {
+      sessionStorage.removeItem('nuevoJusticiableTarjetas');
         pruebaTarjeta = {
           label: "general.message.datos.generales",
           value: document.getElementById("datosGenerales"),
@@ -1094,6 +1095,16 @@ export class GestionJusticiablesComponent implements OnInit {
             label: "justiciaGratuita.justiciables.rol.unidadFamiliar",
             value: document.getElementById("unidadFamiliar"),
             nombre: "unidadFamiliar",
+          };
+
+          this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        }
+
+        if (this.showAsuntos == true) { // Comprobar si esta activada la Tarjeta
+          pruebaTarjeta = {
+            label: "justiciaGratuita.justiciables.literal.asuntos",
+            value: document.getElementById("DivAsuntos"),
+            nombre: "Asuntos",
           };
 
           this.enlacesTarjetaResumen.push(pruebaTarjeta);
@@ -1129,15 +1140,7 @@ export class GestionJusticiablesComponent implements OnInit {
           this.enlacesTarjetaResumen.push(pruebaTarjeta);
         }
 
-        if (this.showAsuntos == true) { // Comprobar si esta activada la Tarjeta
-          pruebaTarjeta = {
-            label: "justiciaGratuita.justiciables.literal.asuntos",
-            value: document.getElementById("DivAsuntos"),
-            nombre: "Asuntos",
-          };
-
-          this.enlacesTarjetaResumen.push(pruebaTarjeta);
-        }
+       
 
         if (this.showAbogadoContrario == true) { // Comprobar si esta activada la Tarjeta
           pruebaTarjeta = {
