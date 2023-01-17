@@ -47,8 +47,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   juzgadoValue: any;
   juzgadoOpciones: any;
   procedimientoValue: any;
-  procedimientoOpciones: any[] = [];parametroNIG: any;
-;
+  procedimientoOpciones: any[] = [];
+  parametroNIG: any;
   moduloValue: any;
   moduloOpciones: any[] = [];;
   disableEstado: boolean = false;
@@ -83,6 +83,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   constructor(private sigaServices: SigaServices, private datepipe: DatePipe, private commonsService: CommonsService, private confirmationService: ConfirmationService, private translateService: TranslateService) { }
 
   ngOnInit() {
+    this.getNigValidador();
     this.datosInicial = this.campos;
     this.initDelitos = this.delitosValue;
     this.estadosOpciones = [
