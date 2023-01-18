@@ -82,6 +82,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   toRowGroup = 9;
   totalRegistros = 0;
   disableDelete = true;
+  todoDesplegado = false;
   idTurno = "";
   rowIdWithNewActuacion = "";
   //@Input() comboAcreditacionesPorModulo: any [];
@@ -2367,6 +2368,26 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               });
         }
       );
+  }
+
+  expandAll() {
+    this.todoDesplegado = true;
+    for (let i = 1; i < this.table.nativeElement.children.length; i++) {
+      if(!this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0].className.includes("collapse")){
+        this.rowGroupArrowClick(this.table.nativeElement.children[i], this.rowGroups[this.from + i-1].id);
+        this.iconClickChange(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0], this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[1]);
+      }
+    }
+  }
+
+  collapseAll() {
+    this.todoDesplegado = false;
+    for (let i = 1; i < this.table.nativeElement.children.length; i++) {
+      if(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0].className.includes("collapse")){
+        this.rowGroupArrowClick(this.table.nativeElement.children[i], this.rowGroups[this.from + i-1].id);
+        this.iconClickChange2(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0], this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[1]);
+      }
+    }
   }
 }
 function compare(a: number | string, b: number | string, isAsc: boolean) {
