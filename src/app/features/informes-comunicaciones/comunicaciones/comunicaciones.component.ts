@@ -91,6 +91,8 @@ export class ComunicacionesComponent implements OnInit {
   institucionActual: any;
   @ViewChild("nuevaComm") dialogNuevaComm: Dialog;
   datosBuscar: any;
+  parametroNIG: any;
+  parametroNProc: any;
 
   constructor(
     private sigaServices: SigaServices,
@@ -107,6 +109,7 @@ export class ComunicacionesComponent implements OnInit {
     sessionStorage.removeItem("crearNuevaCom");
 
     this.getNigValidador();
+    this.getNprocValidador();
     this.getComboColegios();
     this.getComboJuzgado();
     this.getTipoEnvios();
@@ -556,6 +559,34 @@ para poder filtrar el dato con o sin estos caracteres*/
   }
 
   validarNProcedimiento(nProcedimiento) {
+    let ret = false;
+    
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
+      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
+          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
+          if (nProcedimiento != '') {
+            if(valorParametroNProc.test(nProcedimiento)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+    }
+
+    return ret;
+  }
+
+ /* validarNProcedimiento(nProcedimiento) {
     //Esto es para la validacion de CADENA
 
     //Obtenemos la institucion actual
@@ -582,15 +613,14 @@ para poder filtrar el dato con o sin estos caracteres*/
         return true;
       }
      }
-  }
+  }*/
 
   validarNig(nig) {
     let ret = false;
     
-    if (nig != null && nig != '' && this.datosBuscar != undefined) {
-      this.datosBuscar.forEach(element => {
-        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-          let valorParametroNIG: RegExp = new RegExp(element.valor);
+    if (nig != null && nig != '' && this.parametroNIG != undefined) {
+      if (this.parametroNIG != null && this.parametroNIG.parametro != "") {
+          let valorParametroNIG: RegExp = new RegExp(this.parametroNIG.parametro);
           if (nig != '') {
             if(valorParametroNIG.test(nig)){
               ret = true;
@@ -608,24 +638,35 @@ para poder filtrar el dato con o sin estos caracteres*/
             }
           }
         }
-      });
     }
 
     return ret;
   }
 
   getNigValidador(){
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.institucionActual;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "NIG_VALIDADOR";
+    let parametro = {
+      valor: "NIG_VALIDADOR"
+    };
 
     this.sigaServices
-    .postPaginado("parametros_search", "?numPagina=1", parametro)
-    .subscribe(
-      data => {
-        let searchParametros = JSON.parse(data["body"]);
-        this.datosBuscar = searchParametros.parametrosItems;
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNIG = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
+  }
+
+  getNprocValidador(){
+    let parametro = {
+      valor: "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNProc = JSON.parse(data.body);
         //this.progressSpinner = false;
       });
   }

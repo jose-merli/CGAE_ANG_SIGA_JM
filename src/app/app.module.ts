@@ -423,6 +423,13 @@ import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/g
 import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component';
 import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component';
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
+import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
+import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
+import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
+import { MovimientosVariosComponentClassique } from './features/sjcs/facturacionSJCS/movimientos-varios-classique/movimientos-varios-classique.component';
+import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
+import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
+import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component';
 import { JustificacionLetradoComponent } from './features/sjcs/informes/justificacion-letrado/justificacion-letrado.component';
 import { InformeFacturacionComponent } from './features/sjcs/informes/informe-facturacion/informe-facturacion.component';
 import { InformeFacturacionMultipleComponent } from './features/sjcs/informes/informe-facturacion-multiple/informe-facturacion-multiple.component';
@@ -515,8 +522,8 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
+import { GenerarImpreso190ComponentClassique } from './features/sjcs/facturacionSJCS/generar-impreso190-classique/generar-impreso190-classique.component';
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
-
 
 
 import { MatSelectModule } from '@angular/material/select';
@@ -1106,9 +1113,15 @@ import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-so
 		AddExpedienteComponent,
 		ComunicacionesEJGComponent,
 		RegtelEjgComponent,
-		
+		MantenimientoFacturacionComponent,
+		PrevisionesComponent,
+		MantenimientoPagosComponent,
+		MovimientosVariosComponentClassique,
+		TramosLECComponent,
+		RetencionesJudicialesComponent,
 		BusquedaRetencionesAplicadasComponent,
-		GenerarImpreso190Component,
+		GenerarImpreso190ComponentClassique,
+		ResumenPagosComponent,
 		EnvioReintegrosXuntaComponent,
 		JustificacionLetradoComponent,
 		InformeFacturacionComponent,

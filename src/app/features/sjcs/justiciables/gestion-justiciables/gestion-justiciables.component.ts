@@ -1069,7 +1069,8 @@ export class GestionJusticiablesComponent implements OnInit {
     setTimeout(() => {
 
       // Creacion Mostrar solo Datos Generales.
-      if (sessionStorage.getItem("fichasPosibles")) {
+     if (sessionStorage.getItem("nuevoJusticiableTarjetas")) {
+      sessionStorage.removeItem('nuevoJusticiableTarjetas');
         pruebaTarjeta = {
           label: "general.message.datos.generales",
           value: document.getElementById("datosGenerales"),

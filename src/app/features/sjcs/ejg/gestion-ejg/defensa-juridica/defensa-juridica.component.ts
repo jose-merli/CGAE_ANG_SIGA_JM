@@ -44,7 +44,8 @@ export class DefensaJuridicaComponent implements OnInit {
   comboJuzgado = [];
   comboProcedimiento = [];
   comboDelitos = [];
-  datosBuscar: any[];
+  datosBuscar: any;
+  parametroNIG: any;
   valorParametro: any;
   disabledProcedimiento: Boolean = false;
 
@@ -61,6 +62,7 @@ export class DefensaJuridicaComponent implements OnInit {
   delitosValue: any = [];
 
   msgs: Message[] = [];
+  parametroNProc: any;
 
   constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
     private commonsServices: CommonsService,
@@ -73,15 +75,13 @@ export class DefensaJuridicaComponent implements OnInit {
 
   ngOnInit() {
     this.getNigValidador();
+    this.getNprocValidador();
     this.checkAcceso(procesos_ejg.defensaJuridica);
 
     this.body = this.persistenceService.getDatosEJG();
     //Valor inicial a reestablecer
     this.bodyInicial = JSON.parse(JSON.stringify(this.body));
     
-    // Cargar Parametro CONFIGURAR_COMBO_DESIGNA y combo procedimientos.
-    this.cargarProcedimiento();
-
     //Los valores de la cabecera se actualizan en cada combo y al en el metodo getCabecera()
     //Se asignan al iniciar la tarjeta y al guardar.
     //Se obtiene la designacion si hay una designacion entre las relaciones
@@ -133,6 +133,8 @@ export class DefensaJuridicaComponent implements OnInit {
       this.getComboCDetencion();
       this.getComboCalidad();
       this.getComboJuzgado();
+      // Cargar Parametro CONFIGURAR_COMBO_DESIGNA y combo procedimientos.
+      this.cargarProcedimiento();
       // Función de rellenar el combo como Designaciones.
       //if (this.body.juzgado != null) this.getComboProcedimiento();
       this.getComboDelitos();
@@ -140,7 +142,7 @@ export class DefensaJuridicaComponent implements OnInit {
       //if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
 
-    }, 1000);
+    }, 2000);
   }
 
   checkAcceso(defesaJuridica:String){
@@ -166,10 +168,9 @@ export class DefensaJuridicaComponent implements OnInit {
   //Codigo copiado de la tarjeta detalles de la ficha de designaciones
   validarNig(nig) {
     
-    if (nig != null && nig != '' && this.datosBuscar != undefined) {
-      this.datosBuscar.forEach(element => {
-        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-          let valorParametroNIG: RegExp = new RegExp(element.valor);
+    if (nig != null && nig != '' && this.parametroNIG != undefined) {
+      if (this.parametroNIG != null && this.parametroNIG.parametro != "") {
+          let valorParametroNIG: RegExp = new RegExp(this.parametroNIG.parametro);
           if (nig != '') {
             if(valorParametroNIG.test(nig)){
               this.save();
@@ -184,29 +185,68 @@ export class DefensaJuridicaComponent implements OnInit {
                       });
             }
           }
-        }
-      });
+      }
     }else{
       this.save();
     }
   }
 
   getNigValidador(){
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.body.idInstitucion;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "NIG_VALIDADOR";
+    let parametro = {
+      valor: "NIG_VALIDADOR"
+    };
 
     this.sigaServices
-    .postPaginado("parametros_search", "?numPagina=1", parametro)
-    .subscribe(
-      data => {
-        let searchParametros = JSON.parse(data["body"]);
-        this.datosBuscar = searchParametros.parametrosItems;
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNIG = JSON.parse(data.body);
         //this.progressSpinner = false;
       });
   }
 
+  getNprocValidador(){
+    let parametro = {
+      valor: "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNProc = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    let ret = false;
+    
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
+      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
+          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
+          if (nProcedimiento != '') {
+            if(valorParametroNProc.test(nProcedimiento)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+    }
+
+    return ret;
+  }
+/*
   validarNProcedimiento(nProcedimiento) {
     //Esto es para la validacion de CADENA
 
@@ -228,6 +268,7 @@ export class DefensaJuridicaComponent implements OnInit {
       return objRegExp.test(nProcedimiento);
     }
   }
+*/
 
   getCabecera() {
     //Valor de la cabecera para la comisaria
@@ -626,9 +667,23 @@ export class DefensaJuridicaComponent implements OnInit {
     let aux = this.persistenceService.getDatosRelaciones();
     relaciones.push(aux);
     //Comprobamos si entre la relaciones hay una designacion
-    let foundDesigna = relaciones.find(element =>
-      element.sjcs == "DESIGNACIÓN"
-    )
+    let foundDesigna = undefined;
+
+    if(relaciones!=null){
+      relaciones.forEach(element => {
+        if(element!=null && element!=undefined){
+          if(element.sjcs!=null && element.sjcs != undefined && element.sjcs == "DESIGNACIÓN"){
+            foundDesigna = element;
+          }
+          element.forEach(elemen1 =>{
+            if(elemen1.sjcs == "DESIGNACIÓN"){
+              foundDesigna = elemen1;
+            }
+          });
+        }
+      });
+    }
+
     if (foundDesigna != undefined) {
       this.designa.ano = parseInt(foundDesigna.anio.toString());
       this.designa.codigo = foundDesigna.numero.toString();

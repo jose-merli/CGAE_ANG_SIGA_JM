@@ -95,6 +95,10 @@ export class PersistenceService {
         return JSON.parse(data);
     }
 
+    clearDatosEJG() {
+        sessionStorage.removeItem(this.datosEJGName);
+    }
+
     setDatosEJG(data: any) {
         sessionStorage.setItem(this.datosEJGName, JSON.stringify(data));
     }

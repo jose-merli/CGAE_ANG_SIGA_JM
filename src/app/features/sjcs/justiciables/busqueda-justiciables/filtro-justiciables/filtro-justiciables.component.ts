@@ -150,6 +150,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     this.comboPoblacion = [];
     if (this.filtros.idProvincia != undefined && this.filtros.idProvincia != "") {
       this.isDisabledPoblacion = false;
+      this.getComboPoblacion("-1");
     } else {
       this.isDisabledPoblacion = true;
     }
@@ -237,6 +238,7 @@ export class FiltroJusticiablesComponent implements OnInit {
     this.modoRepresentante = true;
     sessionStorage.setItem("nuevoJusticiable", "true");
     sessionStorage.setItem("Nuevo", "true");
+    sessionStorage.setItem("nuevoJusticiableTarjetas", "true");
     this.persistenceService.setFichasPosibles(this.fichasPosiblesNew);
     if (this.modoRepresentante) {
       this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "1" } });

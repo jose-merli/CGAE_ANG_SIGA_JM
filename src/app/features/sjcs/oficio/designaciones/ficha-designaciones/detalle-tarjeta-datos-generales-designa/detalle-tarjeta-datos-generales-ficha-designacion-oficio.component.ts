@@ -668,8 +668,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     }
 
     if (detail == "Restablecer") {
-      this.nuevaDesigna = sessionStorage.getItem("nuevaDesigna");
-
+      
       this.initDatos = this.campos;
       if (this.nuevaDesigna == "false") {
         //EDICION
