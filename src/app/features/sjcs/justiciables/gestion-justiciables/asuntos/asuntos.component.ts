@@ -13,6 +13,8 @@ import { DesignaItem } from '../../../../../models/sjcs/DesignaItem';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { DatePipe } from '@angular/common'
 import { Session } from 'protractor';
+import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
+import { OldSigaServices } from '../../../../../_services/oldSiga.service';
 
 @Component({
   selector: 'app-asuntos',
@@ -60,7 +62,7 @@ export class AsuntosComponent implements OnInit, OnChanges {
     private sigaStorageService: SigaStorageService,
     private persistenceService: PersistenceService,
     private router: Router,
-    private datepipe: DatePipe) { }
+    private datepipe: DatePipe, public oldSigaServices: OldSigaServices) { }
 
   ngOnInit() {
     this.getCols();
@@ -282,9 +284,9 @@ export class AsuntosComponent implements OnInit, OnChanges {
     this.cols = [
       { field: "asunto", header: "justiciaGratuita.justiciables.literal.asuntos", width: "6%" },
       { field: "fecha", header: "censo.resultadosSolicitudesModificacion.literal.fecha", width: "5%" },
-      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardia", width: "10%" },
-      { field: "nColegiado", header: "censo.resultadosSolicitudesModificacion.literal.nColegiado", width: "6%" },
-      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "12%" },
+      { field: "turnoGuardia", header: "justiciaGratuita.justiciables.literal.turnoGuardiaTarjAsuntos", width: "10%" },
+      { field: "nColegiado", header: "justiciaGratuita.justiciables.literal.numColegiado", width: "4%" },
+      { field: "letrado", header: "justiciaGratuita.justiciables.literal.colegiado", width: "14%" },
       { field: fieldRol, header: headerRol, width: widthRol },
       { field: "datosInteres", header: "justiciaGratuita.justiciables.literal.datosInteres", width: "20%" }
 
@@ -439,7 +441,27 @@ export class AsuntosComponent implements OnInit, OnChanges {
           }
         );
         break;
+        case 'S':
+          let us = this.oldSigaServices.getOldSigaUrl('detalleSOJ');
 
+          us += '?idInstitucion=' + dato.idinstitucion + '&anio=' + dato.anio + '&numero=' + dato.numero + '&idTipoSoj=' + dato.clave;
+
+          us = encodeURI(us);
+  
+          sessionStorage.setItem("url", JSON.stringify(us));
+          sessionStorage.removeItem("reload");
+          sessionStorage.setItem("reload", "si");
+          let detalleSOJ: any = new FichaSojItem();
+          detalleSOJ.numero = dato.numero;
+          detalleSOJ.idInstitucion = dato.idinstitucion;
+          detalleSOJ.anio = dato.anio;
+          detalleSOJ.idTipoSoj = dato.clave;
+          detalleSOJ.idTurno = dato.idturno;
+          detalleSOJ.idPersona = dato.idpersonajg;
+          detalleSOJ.idGuardia = dato.idGuardia;
+          sessionStorage.setItem("sojItemLink", JSON.stringify(detalleSOJ));
+          this.router.navigate(['/detalle-soj']);
+          break;
       default:
         //Introducir en la BBDD
         this.showMessage("error", this.translateServices.instant("general.message.incorrect"), "No se puede abrir el Tipo de Asunto, es incorrecto.");

@@ -13,6 +13,7 @@ import { DatePipe } from '@angular/common';
 import { elementEnd } from '@angular/core/src/render3/instructions';
 import { forEach } from '@angular/router/src/utils/collection';
 import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-documentacion',
@@ -73,6 +74,11 @@ export class DocumentacionComponent implements OnInit {
     activa: false
   }
 
+  idClasesComunicacionArray: string[] = [];
+	idClaseComunicacion: String;
+	keys: any[] = [];
+
+
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
@@ -85,7 +91,7 @@ export class DocumentacionComponent implements OnInit {
 
   constructor(private sigaServices: SigaServices, private persistenceService: PersistenceService,
     private translateService: TranslateService, private confirmationService: ConfirmationService,
-    private commonsServices: CommonsService, private changeDetectorRef: ChangeDetectorRef,
+    private commonsServices: CommonsService, private changeDetectorRef: ChangeDetectorRef,private router: Router,
     private datepipe: DatePipe,) { }
 
   ngOnInit() {
@@ -579,7 +585,56 @@ export class DocumentacionComponent implements OnInit {
     else return true;
   }
   print() {
+    sessionStorage.setItem("rutaComunicacion", "/documentacionEjg");
+		//IDMODULO de SJCS es 10
+		sessionStorage.setItem("idModulo", '10');
+	
+    let datosSeleccionados = [];
+		let rutaClaseComunicacion = "/documentacionEjg";
 
+		this.sigaServices
+		.post("dialogo_claseComunicacion", rutaClaseComunicacion)
+		.subscribe(
+			data => {
+			this.idClaseComunicacion = JSON.parse(
+				data["body"]
+			).clasesComunicaciones[0].idClaseComunicacion;
+			this.sigaServices
+				.post("dialogo_keys", this.idClaseComunicacion)
+				.subscribe(
+				data => {
+					this.keys = JSON.parse(data["body"]).keysItem;
+					//    this.actuacionesSeleccionadas.forEach(element => {
+            let keysValues = [];
+            this.keys.forEach(key => {
+               if (this.item[key.nombre] != undefined) {
+                keysValues.push(this.item[key.nombre]);
+              } else if (key.nombre == "num" && this.item["numEjg"] != undefined) {
+                keysValues.push(this.item["numEjg"]);
+              } else if (key.nombre == "anio" && this.item["annio"] != undefined) {
+                keysValues.push(this.item["annio"]);
+              } else if (key.nombre == "idtipoejg" && this.item["tipoEJG"] != undefined) {
+                keysValues.push(this.item["tipoEJG"]);
+              } 
+            });
+            datosSeleccionados.push(keysValues);
+					sessionStorage.setItem(
+						"datosComunicar",
+						JSON.stringify(datosSeleccionados)
+						);
+					//datosSeleccionados.push(keysValues);
+					
+					this.router.navigate(["/dialogoComunicaciones"]);
+				},
+				err => {
+				//console.log(err);
+				}
+			);
+		},
+		err => {
+			//console.log(err);
+		}
+		);
   }
 
   rest() {

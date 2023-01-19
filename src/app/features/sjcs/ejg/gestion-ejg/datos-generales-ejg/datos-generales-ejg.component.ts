@@ -299,7 +299,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
 
   abreCierraFicha(key) {
-    this.resaltadoDatosGenerales = true;
+    if(!this.nuevo){
+      this.resaltadoDatosGenerales = true;
+    }
     if (
       key == "datosGenerales" &&
       !this.activacionTarjeta
@@ -360,6 +362,9 @@ export class DatosGeneralesEjgComponent implements OnInit {
   }
 
   checkPermisosSave() {
+    if(this.nuevo){
+      this.resaltadoDatosGenerales = true;
+    }
     let msg = this.commonsServices.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {
       this.msgs = msg;
@@ -575,7 +580,15 @@ export class DatosGeneralesEjgComponent implements OnInit {
       if (this.body.tipoEJG != undefined)
         this.showTipoExp = true;
     } else {
-      this.body = JSON.parse(JSON.stringify(this.nuevoBody));
+      this.disabledNumEJG = true;
+      this.nuevo = true;
+      this.modoEdicion = false;
+      this.body = new EJGItem();
+      this.body.fechaApertura = new Date();
+      this.bodyInicial = new EJGItem();
+      this.bodyInicial.fechaApertura = new Date();
+      this.showTipoExp = false;
+      this.getComboPrestaciones();
     }
   }
 
@@ -759,7 +772,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
   disableEnableNumEJG() {
     this.commonsServices.checkAcceso(procesos_ejg.cambioNumEJG)
       .then(respuesta => {
-        if (respuesta) {
+        if (respuesta && this.nuevo == false) {
           this.disabledNumEJG = !this.disabledNumEJG;
         } else {
           this.msgs = this.commonsServices.checkPermisos(false, undefined);

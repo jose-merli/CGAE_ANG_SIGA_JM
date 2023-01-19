@@ -6,6 +6,7 @@ import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { TranslateService } from '../../../../../commons/translate';
 import { ConfirmationService } from 'primeng/primeng';
 import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-informe-calificacion',
@@ -47,6 +48,11 @@ export class InformeCalificacionComponent implements OnInit {
     activa: false
   }
 
+  idClasesComunicacionArray: string[] = [];
+	idClaseComunicacion: String;
+	keys: any[] = [];
+
+
   activacionTarjeta: boolean = false;
   @Output() opened = new EventEmitter<Boolean>();
   @Output() idOpened = new EventEmitter<Boolean>();
@@ -54,7 +60,7 @@ export class InformeCalificacionComponent implements OnInit {
   @Input() openTarjetaInformeCalificacion;
 
 
-  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,
+  constructor(private persistenceService: PersistenceService, private sigaServices: SigaServices,private router: Router,
     private commonServices: CommonsService, private translateService: TranslateService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
@@ -377,21 +383,57 @@ export class InformeCalificacionComponent implements OnInit {
     this.dictamen.fechaDictamen = new Date(this.dictamen.fechaDictamen);
   }
 
-  download() {
-    // if (this.disabledSave()) {
-      this.progressSpinner = true;
+  comunicacion() {
+    sessionStorage.setItem("rutaComunicacion", "/comunicacionEjgca");
+		//IDMODULO de SJCS es 10
+		sessionStorage.setItem("idModulo", '10');
+	
+    let datosSeleccionados = [];
+		let rutaClaseComunicacion = "/comunicacionEjgca";
 
-      // this.dictamen.nuevoEJG=!this.modoEdicion;
-
-      this.sigaServices.post("gestionejg_descargarInformeCalificacion", this.dictamen).subscribe(
-        n => {
-          this.progressSpinner = false;
-        },
-        err => {
-          this.progressSpinner = false;
-        }
-      );
-    // }
+		this.sigaServices
+		.post("dialogo_claseComunicacion", rutaClaseComunicacion)
+		.subscribe(
+			data => {
+			this.idClaseComunicacion = JSON.parse(
+				data["body"]
+			).clasesComunicaciones[0].idClaseComunicacion;
+			this.sigaServices
+				.post("dialogo_keys", this.idClaseComunicacion)
+				.subscribe(
+				data => {
+					this.keys = JSON.parse(data["body"]).keysItem;
+					//    this.actuacionesSeleccionadas.forEach(element => {
+            let keysValues = [];
+            this.keys.forEach(key => {
+               if (this.dictamen[key.nombre] != undefined) {
+                keysValues.push(this.dictamen[key.nombre]);
+              } else if (key.nombre == "num" && this.dictamen["numEjg"] != undefined) {
+                keysValues.push(this.dictamen["numEjg"]);
+              } else if (key.nombre == "anio" && this.dictamen["annio"] != undefined) {
+                keysValues.push(this.dictamen["annio"]);
+              } else if (key.nombre == "idtipoejg" && this.dictamen["tipoEJG"] != undefined) {
+                keysValues.push(this.dictamen["tipoEJG"]);
+              } 
+            });
+            datosSeleccionados.push(keysValues);
+					sessionStorage.setItem(
+						"datosComunicar",
+						JSON.stringify(datosSeleccionados)
+						);
+					//datosSeleccionados.push(keysValues);
+					
+					this.router.navigate(["/dialogoComunicaciones"]);
+				},
+				err => {
+				//console.log(err);
+				}
+			);
+		},
+		err => {
+			//console.log(err);
+		}
+		);
   }
 
   showMessage(severity, summary, msg) {
@@ -468,7 +510,7 @@ export class InformeCalificacionComponent implements OnInit {
     if (msg != undefined) {
       this.msgs = msg;
     } else {
-      this.download();
+      this.comunicacion();
     }
   }
 }

@@ -70,6 +70,11 @@ export class UnidadFamiliarComponent implements OnInit {
 
   @ViewChild("cdDelete") cdDelete: Dialog;
 
+  idClasesComunicacionArray: string[] = [];
+	idClaseComunicacion: String;
+	keys: any[] = [];
+
+
   fichaPosible = {
     key: "unidadFamiliar",
     activa: false
@@ -616,10 +621,60 @@ export class UnidadFamiliarComponent implements OnInit {
   }
 
   comunicar(datos) {
-    this.persistenceService.clearDatos();
-    this.router.navigate(["/gestionEjg"]);
-  }
+    sessionStorage.setItem("rutaComunicacion", "/unidadFamiliar");
+		//IDMODULO de SJCS es 10
+		sessionStorage.setItem("idModulo", '10');
+	
+    let datosSeleccionados = [];
+		let rutaClaseComunicacion = "/unidadFamiliar";
 
+		this.sigaServices
+		.post("dialogo_claseComunicacion", rutaClaseComunicacion)
+		.subscribe(
+			data => {
+			this.idClaseComunicacion = JSON.parse(
+				data["body"]
+			).clasesComunicaciones[0].idClaseComunicacion;
+			this.sigaServices
+				.post("dialogo_keys", this.idClaseComunicacion)
+				.subscribe(
+				data => {
+					this.keys = JSON.parse(data["body"]).keysItem;
+					//    this.actuacionesSeleccionadas.forEach(element => {
+            let keysValues = [];
+            this.keys.forEach(key => {
+              if (key.nombre == "idPersona" && this.selectedDatos[0] != undefined) {
+                keysValues.push(this.selectedDatos[0].solicitantePpal);
+              } else if (this.body[key.nombre] != undefined) {
+                keysValues.push(this.body[key.nombre]);
+              } else if (key.nombre == "num" && this.body["numEjg"] != undefined) {
+                keysValues.push(this.body["numEjg"]);
+              } else if (key.nombre == "anio" && this.body["annio"] != undefined) {
+                keysValues.push(this.body["annio"]);
+              } else if (key.nombre == "idtipoejg" && this.body["tipoEJG"] != undefined) {
+                keysValues.push(this.body["tipoEJG"]);
+              } 
+            });
+            datosSeleccionados.push(keysValues);
+					sessionStorage.setItem(
+						"datosComunicar",
+						JSON.stringify(datosSeleccionados)
+						);
+					//datosSeleccionados.push(keysValues);
+					
+					this.router.navigate(["/dialogoComunicaciones"]);
+				},
+				err => {
+				//console.log(err);
+				}
+			);
+		},
+		err => {
+			//console.log(err);
+		}
+		);
+	}
+	
   checkPermisosConfirmDelete() {
     let msg = this.commonsService.checkPermisos(this.permisoEscritura, undefined);
     if (msg != undefined) {

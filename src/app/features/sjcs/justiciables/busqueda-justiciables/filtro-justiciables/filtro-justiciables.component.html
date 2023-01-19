@@ -46,7 +46,7 @@
         <div class="form-group col-lg-3 col-md-3">
           <label>{{"gratuita.partidosJudiciales.literal.poblaciones" | translate}}</label>
           <p-dropdown class="select-form" [(ngModel)]='filtros.idPoblacion' [filter]="true" filterBy="label,labelSinTilde" [(disabled)]="isDisabledPoblacion"
-            [options]="comboPoblacion" (input)="buscarPoblacion($event)" placeholder="{{'general.boton.seleccionar' | translate}}"
+            [options]="comboPoblacion" placeholder="{{'general.boton.seleccionar' | translate}}"
             [emptyFilterMessage]="resultadosPoblaciones" [showClear]="true">
           </p-dropdown>
         </div>

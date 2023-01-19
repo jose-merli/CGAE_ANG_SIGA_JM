@@ -1405,11 +1405,9 @@ export class TablaResultadoMixComponent implements OnInit {
   }
 
   navigateComunicar(dato) {
-    if(this.currentRoute.toString() == "/inscripcionesGuardia"){
-      sessionStorage.setItem("rutaComunicacion", "/inscripciones");
-    }else{
-      sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
-    }
+
+    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
+    
     
     //IDMODULO de SJCS es 10
     sessionStorage.setItem("idModulo", '10');
@@ -1431,11 +1429,9 @@ export class TablaResultadoMixComponent implements OnInit {
   getDatosComunicar() {
     let datosSeleccionados = [];
     let rutaClaseComunicacion :string;
-    if(this.currentRoute.toString() == "/inscripcionesGuardia"){
-      rutaClaseComunicacion =  "/inscripciones"
-    }else{
-      rutaClaseComunicacion = this.currentRoute.toString();
-    }
+
+    rutaClaseComunicacion = this.currentRoute.toString();
+    
    
     
     this.sigaServices
@@ -1450,7 +1446,7 @@ export class TablaResultadoMixComponent implements OnInit {
             .subscribe(
               data => {
                 this.keys = JSON.parse(data["body"]).keysItem;
-                if(rutaClaseComunicacion == "/inscripciones"){
+              
                   this.selectedArray.forEach(index =>{
                      let keysValues = [];
                      this.rowGroups[index].cells[21]
@@ -1468,7 +1464,7 @@ export class TablaResultadoMixComponent implements OnInit {
                     });
                     datosSeleccionados.push(keysValues);
                   });*/
-                }
+                
                 sessionStorage.setItem(
                   "datosComunicar",
                   JSON.stringify(datosSeleccionados)

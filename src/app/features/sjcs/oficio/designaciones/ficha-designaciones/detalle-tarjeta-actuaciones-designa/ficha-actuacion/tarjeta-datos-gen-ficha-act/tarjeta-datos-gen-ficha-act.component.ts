@@ -166,6 +166,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   idClaseComunicacion: String;
   keys: any[] = [];
   datosBuscar: any;
+  parametroNIG: any;
+  parametroNProc: any;
 
   constructor(private commonsService: CommonsService,
     private sigaServices: SigaServices,
@@ -176,6 +178,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   ngOnInit() {
     this.getNigValidador();
+    this.getNprocValidador();
     this.currentRoute = this.router.url;
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesDatosGenerales)
       .then(respuesta => {
@@ -972,17 +975,15 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   }
 
   getNigValidador(){
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.institucionActual;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "NIG_VALIDADOR";
+    let parametro = {
+      valor: "NIG_VALIDADOR"
+    };
 
     this.sigaServices
-    .postPaginado("parametros_search", "?numPagina=1", parametro)
-    .subscribe(
-      data => {
-        let searchParametros = JSON.parse(data["body"]);
-        this.datosBuscar = searchParametros.parametrosItems;
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNIG = JSON.parse(data.body);
         //this.progressSpinner = false;
       });
   }
@@ -991,45 +992,66 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   validarNig(nig) {
     let ret = false;
     
-    if (nig != null && nig != '' && this.datosBuscar != undefined) {
-      //this.progressSpinner = true;
-      this.datosBuscar.forEach(element => {
-        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-          let valorParametroNIG: RegExp = new RegExp(element.valor);
+    if (nig != null && nig != '' && this.parametroNIG != undefined) {
+      if (this.parametroNIG != null && this.parametroNIG.parametro != "") {
+          let valorParametroNIG: RegExp = new RegExp(this.parametroNIG.parametro);
           if (nig != '') {
             ret = valorParametroNIG.test(nig);
           }
         }
-      });
       //this.progressSpinner = false;
     }
 
     return ret;
   }
 
+  getNprocValidador(){
+    let parametro = {
+      valor: "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNProc = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    let ret = false;
+    
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
+      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
+          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
+          if (nProcedimiento != '') {
+            if(valorParametroNProc.test(nProcedimiento)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+    }
+
+    return ret;
+  }
+
+  /*
   validarNProcedimiento(nProcedimiento:string) {
     //Esto es para la validacion de CADECA
 
     let response:boolean = false;
-
-    /* if(nProcedimiento != null && nProcedimiento.length > 0){
-      let arraNum = nProcedimiento.split("")
-      let arraValidacion= this.valorFormatoProc.split("")
-      var RegExpNum = /^[0-9]/;
-      let datoNoValido:number = 0;
-      if(arraValidacion.length != arraNum.length) return false;
-  
-      arraValidacion.forEach(function callback(value, index) {
-        if(value == "y" || value == 'n'){
-          var boo:boolean = RegExpNum.test(arraNum[index])
-           datoNoValido =  boo ? datoNoValido : datoNoValido=+1;
-        }else if(value != arraNum[index]){
-          datoNoValido = datoNoValido=+1;
-        }
-      });
-  
-      response = datoNoValido != 0 ? false :true;  
-    } */
 
 
     if (this.institucionActual == "2008" || this.institucionActual == "2015" || this.institucionActual == "2029" || this.institucionActual == "2033" || this.institucionActual == "2036" ||
@@ -1049,6 +1071,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     return response;
 
   }
+  */
 
   getLetradoActuacion() {
 
@@ -1280,14 +1303,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     );
   }
 
-  navigateComunicar() {
-    sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
-    //IDMODULO de SJCS es 10
-    sessionStorage.setItem("idModulo", '10');
-
-    this.getDatosComunicar();
-  }
-
   getKeysClaseComunicacion() {
     this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
       data => {
@@ -1299,9 +1314,14 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     );
   }
 
-  getDatosComunicar() {
+  navigateComunicar() {
+    sessionStorage.setItem("rutaComunicacion", "/actuacionesDesignacion");
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+
+    
     let datosSeleccionados = [];
-    let rutaClaseComunicacion = this.currentRoute.toString();
+    let rutaClaseComunicacion = "/actuacionesDesignacion";
 
     this.sigaServices
       .post("dialogo_claseComunicacion", rutaClaseComunicacion)

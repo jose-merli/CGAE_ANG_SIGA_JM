@@ -28,6 +28,8 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
   valorFormatoProc: any;
   institucionActual: any;
   datosBuscar: any;
+  parametroNIG: any;
+  parametroNProc: any;
   
 
   constructor(private sigaServices : SigaServices,
@@ -36,6 +38,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
 
   ngOnInit() {
     this.getNigValidador();
+    this.getNprocValidador();
     this.getComboComisarias();
     this.getComboJuzgados();
     this.getComboProcedimientos();
@@ -185,6 +188,49 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
     return error;
   }
 
+  getNprocValidador(){
+    let parametro = {
+      valor: "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNProc = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    let ret = false;
+    
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
+      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
+          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
+          if (nProcedimiento != '') {
+            if(valorParametroNProc.test(nProcedimiento)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+    }
+
+    return ret;
+  }
+
+/*
   validarNProcedimiento(nProcedimiento:string) {
     //Esto es para la validacion de CADECA
 
@@ -207,20 +253,18 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
     return response;
 
   }
+  */
 
   validarNig(nig) {
     let ret = false;
     
-    if (nig != null && nig != '' && this.datosBuscar != undefined) {
-      //this.progressSpinner = true;
-      this.datosBuscar.forEach(element => {
-        if (element.parametro == "NIG_VALIDADOR" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-          let valorParametroNIG: RegExp = new RegExp(element.valor);
+    if (nig != null && nig != '' && this.parametroNIG != undefined) {
+      if (this.parametroNIG != null && this.parametroNIG.parametro != "") {
+          let valorParametroNIG: RegExp = new RegExp(this.parametroNIG.parametro);
           if (nig != '') {
             ret = valorParametroNIG.test(nig);
           }
         }
-      });
       //this.progressSpinner = false;
     }
 
@@ -228,17 +272,15 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
   }
 
   getNigValidador(){
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.institucionActual;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "NIG_VALIDADOR";
+    let parametro = {
+      valor: "NIG_VALIDADOR"
+    };
 
     this.sigaServices
-    .postPaginado("parametros_search", "?numPagina=1", parametro)
-    .subscribe(
-      data => {
-        let searchParametros = JSON.parse(data["body"]);
-        this.datosBuscar = searchParametros.parametrosItems;
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNIG = JSON.parse(data.body);
         //this.progressSpinner = false;
       });
   }
