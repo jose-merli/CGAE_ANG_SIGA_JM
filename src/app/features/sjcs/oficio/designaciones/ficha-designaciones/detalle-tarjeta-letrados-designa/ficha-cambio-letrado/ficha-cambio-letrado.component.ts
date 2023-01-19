@@ -222,7 +222,8 @@ export class FichaCambioLetradoComponent implements OnInit {
       this.entrante.body.idPersona, //9
       this.saliente.body.compensacion, //10
       this.entrante.body.salto, //11
-      this.entrante.body.art27 //12
+      this.entrante.body.art27, //12
+      this.entrante.minDateDesigna //13
       ];
     } else {
       this.entrante.body.art27 = "No";
@@ -238,7 +239,8 @@ export class FichaCambioLetradoComponent implements OnInit {
       this.entrante.body.idPersona, //9
       this.saliente.body.compensacion, //10
       this.entrante.body.salto, //11
-      this.entrante.body.art27 //12
+      this.entrante.body.art27, //12
+      this.entrante.minDateDesigna //13
       ];
     }
 

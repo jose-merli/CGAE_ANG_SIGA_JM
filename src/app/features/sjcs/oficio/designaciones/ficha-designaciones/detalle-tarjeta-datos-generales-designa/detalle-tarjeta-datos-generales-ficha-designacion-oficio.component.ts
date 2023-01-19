@@ -615,53 +615,68 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.nombreColegiado = this.inputs[1].value;
         newDesigna.apellidosNombre = this.inputs[2].value;
         // newDesigna.fechaAlta = new Date(this.fechaGenerales);
-        newDesigna.fechaAlta = new Date(this.fechaGenerales);
-        var today = new Date();
-        // var year = today.getFullYear().valueOf();
-        newDesigna.ano = Number(this.anio.value);
-        if (this.nuevaDesignaCreada != undefined) {
-          newDesigna.numero = Number(this.nuevaDesignaCreada.numero);
-        } else if (this.initDatos != undefined) {
-          newDesigna.numero = Number(this.initDatos.numero);
-        }
-        newDesigna.codigo = this.numero.value;
-        this.checkDatosGenerales();
-        if (this.resaltadoDatos == false) {
-          this.progressSpinner = true;
-          this.sigaServices.post("designaciones_updateDesigna", newDesigna).subscribe(
-            n => {
-              this.progressSpinner = false;
-              this.refreshDataGenerales.emit(newDesigna);
-              //MENSAJE DE TODO CORRECTO
-              this.msgs.push({
-                severity,
-                summary,
-                detail
-              });
-              //console.log(n);
-              this.progressSpinner = false;
-            },
-            err => {
-              detail = this.translateService.instant('justiciaGratuita.oficio.designa.yaexiste');
-              severity = "error";
-              if (err.status == 400) {
-                summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
-              } else {
-                summary = "No se han podido modificar los datos";
+        //var fechaGeneralesSplited : String[] = this.fechaGenerales.split("/");
+        //var fechaGeneralesDate : Date = new Date(+fechaGeneralesSplited[2], +fechaGeneralesSplited[1] - 1, +fechaGeneralesSplited[0]);
+        var fechaGeneralesDate : Date = this.fechaGenerales;
+        var anioFecha = fechaGeneralesDate.getFullYear();
+        if (Number(anioFecha) == Number(this.anio.value)) {
+          newDesigna.fechaAlta = new Date(fechaGeneralesDate);
+          var today = new Date();
+          // var year = today.getFullYear().valueOf();
+          newDesigna.ano = Number(this.anio.value);
+          if (this.nuevaDesignaCreada != undefined) {
+            newDesigna.numero = Number(this.nuevaDesignaCreada.numero);
+          } else if (this.initDatos != undefined) {
+            newDesigna.numero = Number(this.initDatos.numero);
+          }
+          newDesigna.codigo = this.numero.value;
+          this.checkDatosGenerales();
+          if (this.resaltadoDatos == false) {
+            this.progressSpinner = true;
+            this.sigaServices.post("designaciones_updateDesigna", newDesigna).subscribe(
+              n => {
+                this.progressSpinner = false;
+                this.refreshDataGenerales.emit(newDesigna);
+                //MENSAJE DE TODO CORRECTO
+                this.msgs.push({
+                  severity,
+                  summary,
+                  detail
+                });
+                //console.log(n);
+                this.progressSpinner = false;
+              },
+              err => {
+                detail = this.translateService.instant('justiciaGratuita.oficio.designa.yaexiste');
+                severity = "error";
+                if (err.status == 400) {
+                  summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
+                } else if (err.status == 406) {
+                  summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
+                  var errorJson = JSON.parse(err["error"]);
+                  let detailNoTranslate = JSON.stringify(errorJson.error.description);
+                  //summary = this.translateService.instant(err.description.toString());
+                  detail = detailNoTranslate;
+                } else {
+                  summary = "No se han podido modificar los datos";
+                }
+                this.msgs.push({
+                  severity,
+                  summary,
+                  detail
+                });
+                //console.log(err);
+                this.progressSpinner = false;
+              }, () => {
+                this.progressSpinner = false;
               }
-              this.msgs.push({
-                severity,
-                summary,
-                detail
-              });
-              //console.log(err);
-              this.progressSpinner = false;
-            }, () => {
-              this.progressSpinner = false;
-            }
-          );
+            );
+          }
+        } else {
+          this.showMessage("error", this.translateService.instant("general.message.error.realiza.accion"), "La fecha de designacion no puede ser distinta a la asignada (Campo 'AÑO')");
         }
       }
+
       if (this.resaltadoDatos == true) {
         this.progressSpinner = false;
       }
