@@ -61,12 +61,16 @@
                                     class="fas fa-chevron-down"></i></span>
                         </span>
                         
-                        <span class="enlace" (click)="linkFichaDesigna(rowGroup, rowGroup.id)">D{{rowGroup.id}} </span>
+                        <span *ngIf="permisosFichaAct == true" class="enlace" (click)="linkFichaDesigna(rowGroup, rowGroup.id)">D{{rowGroup.id}} </span>
+                        <span *ngIf="permisosFichaAct == false">D{{rowGroup.id}} </span>
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"
                         class="table-row-header p-2 selectedRowClass mw80" [id]="rowGroup.id2">
-                        <span [pTooltip]="rowGroup.estadoEx" tooltipPosition="top"
+                        <span *ngIf="permisosEJG == true" class="enlace" (click)="linkToFichaEJG(rowGroup, rowGroup.id2);" [pTooltip]="rowGroup.estadoEx" tooltipPosition="top"
+                            [ngClass]="{'color-red': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'red', 'color-blue': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'blue', 'color-black': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'black'}">
+                            <span *ngIf="rowGroup.id2 != ''">E</span>{{rowGroup.id2}}</span>
+                        <span *ngIf="permisosEJG == false" [pTooltip]="rowGroup.estadoEx" tooltipPosition="top"
                             [ngClass]="{'color-red': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'red', 'color-blue': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'blue', 'color-black': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'black'}">
                             <span *ngIf="rowGroup.id2 != ''">E</span>{{rowGroup.id2}}</span>
                         <button *ngIf="rowGroup.resolucionDesignacion != 'SIN_RESOLUCION' && rowGroup.id2 != ''" pButton

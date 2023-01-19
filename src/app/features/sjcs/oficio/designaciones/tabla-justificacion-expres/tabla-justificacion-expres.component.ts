@@ -7,6 +7,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ParametroDto } from '../../../../../models/ParametroDto';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -27,6 +28,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   @Input() colegiado;
   @Input() isLetrado;
   @Input() permisosFichaAct;
+  permisosEJG = false;
   fechaFiltro;
   totalRegistros = 0;
   
@@ -163,6 +165,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
     this.checkPermisos();
     this.checkAccesoFichaActuacion();
+    this.checkAccesoEJG();
   }
 
   getParams(param){
@@ -196,6 +199,17 @@ export class TablaJustificacionExpresComponent implements OnInit {
       .then(respuesta => {
         if (respuesta != undefined) {
           this.permisosFichaAct = true;
+        }
+      }
+      ).catch(error => console.error(error));
+
+  }
+
+  checkAccesoEJG() {
+    this.commonsService.checkAcceso(procesos_ejg.ejg)
+      .then(respuesta => {
+        if (respuesta != undefined) {
+          this.permisosEJG = true;
         }
       }
       ).catch(error => console.error(error));
@@ -382,7 +396,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         finalizada = false;
       }
 
-      if (designacion.expedientes != null && designacion.expedientes.length > 0){
+      if (designacion.expedientes != null){
       /*designacion.expedientes.forEach(exp =>{
        // expedientes += '\n' + exp;
        expedientes +=  exp + '\n';

@@ -35,6 +35,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() colegiado;
   @Input() isLetrado;
   @Input() permisosFichaAct;
+  @Input() permisosEJG;
   @Input() fechaFiltro;
   @Input() filtroAsistencia: FiltroAsistenciaItem;
   turnoAllow;  //to do
@@ -2212,6 +2213,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           if (sessionStorage.getItem("EJGItem")) {
             sessionStorage.removeItem("EJGItem");
           }
+          sessionStorage.setItem("vieneDeJE", "true");
 
           this.router.navigate(['/gestionEjg']);
           this.progressSpinner = false;
