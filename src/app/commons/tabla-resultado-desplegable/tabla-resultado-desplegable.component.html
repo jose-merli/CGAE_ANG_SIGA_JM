@@ -12,6 +12,12 @@
     </p-multiSelect> Columnas
 </div>
 <div style="padding-left: 0.5rem">
+    <label *ngIf="!todoDesplegado" (click)="expandAll()" class="desplegar-todo">Desplegar todo
+        <i class="fa fa-angle-down"></i>
+    </label>
+    <label *ngIf="todoDesplegado" (click)="collapseAll()" class="desplegar-todo">Plegar todo
+        <i class="fa fa-angle-up"></i>
+    </label>
     <div class="table w-100" matSort (matSortChange)="sortData($event)" #table id="tablaResultadoDesplegable">
         <div class="table-header ">
             <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index"
