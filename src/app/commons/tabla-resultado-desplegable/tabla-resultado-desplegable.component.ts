@@ -885,7 +885,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   inputChange(event, rowId, row, rowGroup, padre, index) {
 
     this.rowValidadas = [];
-    if (row == undefined) {
+    if (this.pantalla == 'AE' && row == undefined) {
       //designacion
       if (this.isLetrado) {
         if (this.justActivarDesigLetrado != "1") {
@@ -901,7 +901,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.rowIdsToUpdate.push(rowId);
         }
       }
-    } else if (this.pantalla == 'JE') {
+    } else if (this.pantalla == 'JE' && row == undefined) {
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if ((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)) {
