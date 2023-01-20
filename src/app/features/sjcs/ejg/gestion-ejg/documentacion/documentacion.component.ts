@@ -649,7 +649,7 @@ export class DocumentacionComponent implements OnInit {
 
         if (resp.statusText == 'OK') {
           this.progressSpinner = false;
-          this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+         // this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
           this.selectedDatos = [];
           //this.deseleccionarTodo = true;
           this.getDocumentos(this.item);
@@ -699,7 +699,7 @@ export class DocumentacionComponent implements OnInit {
         let error = JSON.parse(data.body).error;
 
         if (resp.statusText == 'OK') {
-          this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+         // this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
           this.selectedDatos = [];
           //this.deseleccionarTodo = true;
           this.getDocumentos(this.item);
