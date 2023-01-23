@@ -160,9 +160,10 @@ export class ResolucionComponent implements OnInit {
     );
   }
   getComboResolucion() {
-    this.sigaServices.get("filtrosejg_comboResolucion").subscribe(
+    this.sigaServices.get("gestionejg_comboResolucion").subscribe(
       n => {
         this.comboResolucion = n.combooItems;
+        this.comboResolucion.splice
         this.commonsServices.arregloTildesCombo(this.comboResolucion);
         let resol = this.comboResolucion.find(
           item => item.value == this.resolucion.idTiporatificacionEJG
