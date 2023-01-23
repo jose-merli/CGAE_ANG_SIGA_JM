@@ -452,9 +452,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.apellidosNombre = this.inputs[2].value;
         newDesigna.fechaAlta = new Date(this.fechaGenerales);
         newDesigna.nif = this.nif;
-        newDesigna.nombreColegiado = this.nombreColegiado;
+        /* newDesigna.nombreColegiado = this.nombreColegiado;
         newDesigna.apellido1Colegiado = this.apellido1Colegiado;
-        newDesigna.apellido2Colegiado = this.apellido2Colegiado;
+        newDesigna.apellido2Colegiado = this.apellido2Colegiado; */
+        newDesigna.nombreColegiado = this.inputs[2].value;
+        newDesigna.apellidosNombre = this.inputs[1].value + this.inputs[2].value;
         newDesigna.idInstitucion = this.institucionColegiado;
         // Obtener información del justiciable
         if (sessionStorage.getItem("justiciable")) {
@@ -582,17 +584,30 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               this.progressSpinner = false;
               //MENSAJE DE TODO CORRECTO
               detail = "";
+              if (JSON.parse(n.body).error.code == 202) {
+                severity = "warn";
+                summary = this.translateService.instant("general.message.warn")
+                detail = JSON.parse(n.body).error.description
+              }
               this.msgs.push({
                 severity,
                 summary,
                 detail
               });
+
               //console.log(n);
               this.progressSpinner = false;
             },
             err => {
               severity = "error";
               summary = "No se han podido modificar los datos";
+              if (err.status == 406) {
+                summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
+                var errorJson = JSON.parse(err["error"]);
+                let detailNoTranslate = JSON.stringify(errorJson.error.description);
+                //summary = this.translateService.instant(err.description.toString());
+                detail = detailNoTranslate;
+              }
               this.msgs.push({
                 severity,
                 summary,
@@ -673,7 +688,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             );
           }
         } else {
-          this.showMessage("error", this.translateService.instant("general.message.error.realiza.accion"), "La fecha de designacion no puede ser distinta a la asignada (Campo 'AÑO')");
+          this.showMessage("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("justiciaGratuita.oficio.designa.annodistintoprimeradesignacion"));
         }
       }
 

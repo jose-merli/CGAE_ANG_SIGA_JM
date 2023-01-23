@@ -258,6 +258,14 @@ export class FichaCambioLetradoComponent implements OnInit {
             //this.openTab(this.designaItem);
             this.busquedaDesignacionesParaVolver();
           }, 400);
+        
+        } else if (data.error.code == '202') {
+          this.showMessage("warn", this.translateService.instant("general.message.warn"), this.translateService.instant(data.error.description));
+          setTimeout(() => {
+            this.busquedaDesignacionesParaVolver();
+          }, 1000);
+        } else if (data.error.code == '406') {
+          this.showMessage("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant(data.error.description));
         } else {
           //Mostrar mensaje todo correcto
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
@@ -271,10 +279,9 @@ export class FichaCambioLetradoComponent implements OnInit {
 
       },
       err => {
-        if (err.error != null
-          /* || err != undefined && JSON.parse(err.error).error.description != "" */
-        ) {
-          if (JSON.parse(err.error).error.code == 100) {
+        if (err.error != null) {
+          let dataError = JSON.parse(err.error);
+          if (dataError.error.code == 100) {
             this.confirmationService.confirm({
               key: "errorPlantillaDoc",
               message: this.translateService.instant("justiciaGratuita.oficio.designas.letrados.nocolaletrado"),
@@ -282,8 +289,11 @@ export class FichaCambioLetradoComponent implements OnInit {
               accept: () => {
               }
             });
+          } else if (dataError.error.code = 406) {
+            this.showMessage("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant(dataError.error.description));
+          } else {
+            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(dataError.error.description));
           }
-          else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
         } else {
           this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
         }
@@ -340,7 +350,7 @@ export class FichaCambioLetradoComponent implements OnInit {
     let designaProcedimiento = new DesignaItem();
     let data = sessionStorage.getItem("designaItem");
     let dataProcedimiento = JSON.parse(data);
-    dataProcedimiento.idPretension = dato.idPretension;
+    dataProcedimiento.idPretension = dato.idPretension != undefined && dato.idPretension != null ? dato.idPretension : null;
     dataProcedimiento.idTurno = dato.idTurno;
     dataProcedimiento.ano = dato.factConvenio;
     dataProcedimiento.numero = dato.numero
@@ -352,7 +362,12 @@ export class FichaCambioLetradoComponent implements OnInit {
           dato.idProcedimiento = "";
         } else {
           dato.nombreProcedimiento = datosProcedimiento[0].nombreProcedimiento;
-          dato.idProcedimiento = dataProcedimiento.idPretension;
+          if (dataProcedimiento.idPretension != null && dataProcedimiento.idPretension != undefined && (dataProcedimiento.idPretension != 0 && dataProcedimiento.idPretension != "0")) {
+            dato.idProcedimiento = dataProcedimiento.idPretension;
+          } else {
+            dato.idProcedimiento = datosProcedimiento[0].idPretension
+          }
+          
         }
 
         let designaModulo = new DesignaItem();
