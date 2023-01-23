@@ -138,6 +138,11 @@ export class DefensaJuridicaComponent implements OnInit {
       // Función de rellenar el combo como Designaciones.
       //if (this.body.juzgado != null) this.getComboProcedimiento();
       this.getComboDelitos();
+      //Hay un problema con angular que por algún motivo parece que
+        //los delitos asociados no se muestran de forma consistente (a veces si, a veces no).
+      if (this.designa == null || this.designa.ano == null) {
+        this.getDelitosEJG();
+      }
       this.progressSpinner = false;
       //if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
@@ -513,11 +518,6 @@ export class DefensaJuridicaComponent implements OnInit {
       n => {
         this.comboDelitos = n.combooItems;
         this.commonsServices.arregloTildesCombo(this.comboDelitos);
-        //Hay un problema con angular que por algún motivo parece que
-        //los delitos asociados no se muestran de forma consistente (a veces si, a veces no).
-        if (this.designa == null || this.designa.ano == null) {
-          this.getDelitosEJG();
-        }
       },
       err => {
       }, () => {
@@ -623,7 +623,7 @@ export class DefensaJuridicaComponent implements OnInit {
           let delitosEjg = JSON.parse(n.body).delitosEjgItem;
           this.delitosValue = delitosEjg.map(it => it.iddelito.toString());
           this.delitosValueInicial = this.delitosValue;
-          this.commonsServices.arregloTildesCombo(this.comboDelitos);
+          //this.commonsServices.arregloTildesCombo(this.comboDelitos);
         },
         err => {
         }
