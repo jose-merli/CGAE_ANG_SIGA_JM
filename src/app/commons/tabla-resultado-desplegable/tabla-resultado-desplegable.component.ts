@@ -183,10 +183,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   selectRow(rowSelected, rowId, child) {
     // Disabled de Módulo.
     let filaSeleccionada = this.rowGroups.filter(row => row.id == rowId);
-    if (filaSeleccionada[0].rows[0].cells[4].value === "") {
-      this.permisoProcedimiento = true;
-    } else {
-      this.permisoProcedimiento = false;
+    if (filaSeleccionada.length > 0 && filaSeleccionada[0].rows != undefined) {
+      if (filaSeleccionada[0].rows[0].cells[4].value === "") {
+        this.permisoProcedimiento = true;
+      } else {
+        this.permisoProcedimiento = false;
+      }
     }
 
     if (child == undefined) {
@@ -629,6 +631,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             if ((row.cells[0].value[1] == undefined || row.cells[0].value[1].length == 0) && row.cells[6].value != undefined) {
               this.newActuacionesArr.push(row);
             }
+
+            this.rowIdsToUpdate.push(rowId);
           }
 
         } else {
@@ -796,6 +800,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         if ((this.isLetrado && newAllow == "1" && this.turnoAllow != "1") || (!this.isLetrado)) {
           if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
             this.indicesToUpdate.push([rowId, index]);
+            this.rowIdsToUpdate.push(rowId);
           }
           /*}else{
             this.rowValidadas.push(row);
@@ -844,7 +849,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
   }
   changeSelect(event, cell, rowId, row, rowGroup, padre, index) {
-    if (row == undefined) {
+    if (this.pantalla == 'AE' && row == undefined) {
       //designacion
       if (this.isLetrado) {
         if (this.justActivarDesigLetrado != "1") {
@@ -860,18 +865,23 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.rowIdsToUpdate.push(rowId);
         }
       }
-    } else if (this.pantalla == 'JE') {
+    } else if (this.pantalla == 'JE' && row != undefined) {
       //actuacion
       if (row.cells[8].value != true) {
         if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
           this.indicesToUpdate.push([rowId, index]);
         }
+
+        this.rowIdsToUpdate.push(rowId);
       } else {
         this.rowValidadas.push(row);
         this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
         this.refreshData.emit(true);
       }
     } else {
+      if (this.pantalla == 'JE' && rowGroup.rows != undefined) {
+        rowGroup.rows[0].cells[4].value = cell.value;
+      }
       this.rowIdsToUpdate.push(rowId);
     }
 
@@ -901,7 +911,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.rowIdsToUpdate.push(rowId);
         }
       }
-    } else if (this.pantalla == 'JE' && row == undefined) {
+    } else if (this.pantalla == 'JE' && row != undefined) {
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if ((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)) {
@@ -914,6 +924,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.showMsg('error', "No se pueden actualizar actuaciones validadas", '')
           this.refreshData.emit(true);
         }
+
+        this.rowIdsToUpdate.push(rowId);
       } else {
         this.showMsg('error', "No tiene permiso para actualizar datos de una actuación", '')
         this.refreshData.emit(true);
