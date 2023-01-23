@@ -78,6 +78,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   comboColegiados = [];
   activacionEditar: boolean = false;
   showFilters: boolean = false;
+  idTurno: string;
 
   @ViewChild(FiltrosSaltosCompensacionesOficioComponent) filtros: FiltrosSaltosCompensacionesOficioComponent;
   @ViewChild(TablaResultadoMixSaltosCompOficioComponent) tabla: TablaResultadoMixSaltosCompOficioComponent;
@@ -110,6 +111,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
 
     let params = this.activatedRoute.snapshot.queryParams;
     if (params.idturno) {
+      this.idTurno = params.idturno;
       let data = {
         idpersona: params.idpersona,
         idturno: params.idturno,
@@ -153,7 +155,6 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
         filtros.idTurno = "";
       }
     }
-
     sessionStorage.setItem("historicoSaltosCompOficio", event);
     this.progressSpinner = true;
     this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
@@ -613,6 +614,7 @@ export class SaltosCompensacionesOficioComponent implements OnInit {
   }
 
   backTo() {
+    sessionStorage.setItem("volver", "true");
     this.location.back();
   }
 

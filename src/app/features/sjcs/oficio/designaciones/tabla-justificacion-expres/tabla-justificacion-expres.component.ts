@@ -624,7 +624,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         if (finalizada) {
           arr1 = [
             { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto], size: 120, combo: null },
-            { type: 'tooltip', value: actuacion.categoriaJuzgado, size: 400 , combo: actuacion.nombreJuzgado},
+            { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
             { type: 'text', value: actuacion.nig, size: 200, combo: null},
             { type: 'text', value: actuacion.numProcedimiento, size: 200 , combo: null},
             { type: 'tooltip', value: actuacion.categoriaProcedimiento, size: 400 , combo: actuacion.procedimiento,}, //modulo
@@ -664,7 +664,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
          arr1 = 
           [
           { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto], size: 120, combo: null },
-          { type: 'tooltip', value: actuacion.categoriaJuzgado, size: 400 , combo: actuacion.nombreJuzgado},
+          { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
           { type: 'input', value: actuacion.nig, size: 200, combo: null},
           { type: numProcType, value: actuacion.numProcedimiento, size: 200 , combo: null},
           { type: moduloType, value: moduloValue2, size: 400 , combo: moduloCombo2 }, //modulo
@@ -705,7 +705,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         arr1 = 
         [
         { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto], size: 120, combo: null },
-        { type: 'tooltip', value: actuacion.categoriaJuzgado, size: 400 , combo: actuacion.nombreJuzgado},
+        { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
         { type: 'text', value: actuacion.nig, size: 200, combo: null},
         { type: 'text', value: actuacion.numProcedimiento, size: 200 , combo: null},
         { type: 'tooltip', value: actuacion.categoriaProcedimiento, size: 400 , combo: actuacion.procedimiento,}, //modulo
@@ -1071,8 +1071,8 @@ actCellToJson(actuacionesCells){
   let permitirAniadirLetrado = actuacionesCells[18].value;
   let numAsunto = actuacionesCells[19].value;
   let idProcedimiento = actuacionesCells[20].value;
-  let idJuzgado = actuacionesCells[21].value;
-  let nombreJuzgado = actuacionesCells[1].value;
+  let idJuzgado = actuacionesCells[1].value;
+  let nombreJuzgado = actuacionesCells[1].combo[idJuzgado].label;
   let fechaJustificacion = actuacionesCells[6].value;
   if (actuacionesCells[8].value == true){
     validada = "1";

@@ -17,6 +17,8 @@ import { MultiSelect } from '../../../../../../../../node_modules/primeng/primen
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
 import { TurnosItem } from '../../../../../../models/sjcs/TurnosItem';
+import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: "app-tarjeta-colaoficio",
   templateUrl: "./tarjeta-colaoficio.component.html",
@@ -33,15 +35,20 @@ export class TarjetaColaOficio implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
 
   selectedItem: number = 10;
+  selectedItemSaltosCompensaciones: number = 3;
   selectAll;
   selectedDatos: any[] = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   cols;
+  colsCompensaciones;
+  colsSaltos;
   rowsPerPage;
   historico: boolean = false;
   datos: any[];
+  datosSaltos: any[];
+  datosCompensaciones: any[];
   listaTabla: TurnosItems = new TurnosItems();
   fechaActual;
   disableAll: boolean = false;
@@ -79,6 +86,8 @@ export class TarjetaColaOficio implements OnInit {
   keys: any[] = [];
 
   @ViewChild("table") table;
+  @ViewChild("tableComp") tableComp;
+  @ViewChild("tableSaltos") tableSaltos;
   @ViewChild("multiSelect") multiSelect: MultiSelect;
   fichasPosibles = [
     {
@@ -97,7 +106,7 @@ export class TarjetaColaOficio implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
     private persistenceService: PersistenceService, private commonsService: CommonsService, private confirmationService: ConfirmationService,
-    private router: Router) {
+    private router: Router, private activatedRoute: ActivatedRoute) {
 
   }
 
@@ -126,6 +135,10 @@ export class TarjetaColaOficio implements OnInit {
           this.turnosItem.fechaActual = new Date();
           this.modoEdicion = true;
           this.getColaOficio();
+        }
+      } else {
+        if (this.activatedRoute.snapshot.queryParamMap.get('idturno')) {
+          this.idTurno = this.activatedRoute.snapshot.queryParamMap.get('idturno');
         }
       }
     } else {
@@ -301,14 +314,11 @@ export class TarjetaColaOficio implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.post("turnos_busquedaColaOficio", this.turnosItem).subscribe(
       n => {
-        // this.datos = n.turnosItem;
         this.datos = JSON.parse(n.body).turnosItem;
         this.datos.forEach(element => {
           element.orden = +element.orden;
         });
-        // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
-        //   this.turnosItem.historico = true;
-        // }
+        this.getSaltosYCompensaciones();
       },
       err => {
         this.progressSpinner = false;
@@ -324,6 +334,24 @@ export class TarjetaColaOficio implements OnInit {
         }
       }
     );
+  }
+
+  getSaltosYCompensaciones() {
+    let filtros: SaltoCompItem = new SaltoCompItem();
+    if (sessionStorage.getItem("filtrosSaltosCompOficio")) {
+      filtros = JSON.parse(sessionStorage.getItem("filtrosSaltosCompOficio"));
+    }
+    if (sessionStorage.getItem("saltos-compesacionesItem")) {
+      filtros = JSON.parse(sessionStorage.getItem("saltos-compesacionesItem"));
+    }
+    filtros.idTurno = this.idTurno;
+    this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
+      n => {
+        let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
+        this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
+        this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
+        let error = JSON.parse(n.body).error;
+      });
   }
 
 
@@ -396,6 +424,12 @@ export class TarjetaColaOficio implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
+    this.tableComp.sortOrder = 0;
+    this.tableComp.sortField = '';
+    this.tableComp.reset();
+    this.tableSaltos.sortOrder = 0;
+    this.tableSaltos.sortField = '';
+    this.tableSaltos.reset();
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     } else {
@@ -615,6 +649,12 @@ export class TarjetaColaOficio implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
+    this.tableComp.sortOrder = 0;
+    this.tableComp.sortField = '';
+    this.tableComp.reset();
+    this.tableSaltos.sortOrder = 0;
+    this.tableSaltos.sortField = '';
+    this.tableSaltos.reset();
   }
 
   showMessage(severity, summary, msg) {
@@ -633,14 +673,23 @@ export class TarjetaColaOficio implements OnInit {
   getCols() {
 
     this.cols = [
-      { field: "orden", header: "administracion.informes.literal.orden" },
-      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
-      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
-      { field: "fechabajapersona", header: "justiciaGratuita.oficio.turnos.fechaBaja" },
-      { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
-      { field: "compensaciones", header: "justiciaGratuita.oficio.turnos.compensaciones" }
+      { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
+      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
+      { field: "fechabajapersona", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
+    ];
+
+    this.colsCompensaciones = [
+      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
+    ];
+
+    this.colsSaltos = [
+      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
     ];
 
     this.rowsPerPage = [
@@ -667,6 +716,8 @@ export class TarjetaColaOficio implements OnInit {
     this.selectedItem = event.value;
     this.changeDetectorRef.detectChanges();
     this.table.reset();
+    this.tableComp.reset();
+    this.tableSaltos.reset();
   }
 
 
@@ -846,4 +897,7 @@ export class TarjetaColaOficio implements OnInit {
       );
   }
 
+  goToSaltosYComp() {
+    this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: this.idTurno } });
+  }
 }
