@@ -257,10 +257,6 @@ export class GestionJusticiablesComponent implements OnInit {
             activa: false
           },
           {
-            key: "asuntos",
-            activa: false
-          },
-          {
             key: "personales",
             activa: false
           },
@@ -270,6 +266,10 @@ export class GestionJusticiablesComponent implements OnInit {
           },
           {
             key: "representante",
+            activa: false
+          },
+          {
+            key: "asuntos",
             activa: false
           },
           {
