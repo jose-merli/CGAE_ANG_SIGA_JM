@@ -574,7 +574,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
     arrDesignacion = [];
 
     designacion.actuaciones.forEach((actuacion, index) =>{
-      let acreditacionPorcentaje = actuacion.descripcion + " " + actuacion.porcentaje + "%";
+      let acreditacionPorcentaje =actuacion.numAsunto + " - " + actuacion.descripcion + " " + actuacion.porcentaje + "%";
       let validaAct = false;
       let moduleSelector =
       {
