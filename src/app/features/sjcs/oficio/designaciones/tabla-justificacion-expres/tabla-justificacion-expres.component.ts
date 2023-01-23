@@ -7,6 +7,7 @@ import { TranslateService } from '../../../../../commons/translate';
 import { ParametroDto } from '../../../../../models/ParametroDto';
 import { ParametroRequestDto } from '../../../../../models/ParametroRequestDto';
 import { JustificacionExpressItem } from '../../../../../models/sjcs/JustificacionExpressItem';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
@@ -27,6 +28,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   @Input() colegiado;
   @Input() isLetrado;
   @Input() permisosFichaAct;
+  permisosEJG = false;
   fechaFiltro;
   totalRegistros = 0;
   
@@ -163,6 +165,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
     this.checkPermisos();
     this.checkAccesoFichaActuacion();
+    this.checkAccesoEJG();
   }
 
   getParams(param){
@@ -196,6 +199,17 @@ export class TablaJustificacionExpresComponent implements OnInit {
       .then(respuesta => {
         if (respuesta != undefined) {
           this.permisosFichaAct = true;
+        }
+      }
+      ).catch(error => console.error(error));
+
+  }
+
+  checkAccesoEJG() {
+    this.commonsService.checkAcceso(procesos_ejg.ejg)
+      .then(respuesta => {
+        if (respuesta != undefined) {
+          this.permisosEJG = true;
         }
       }
       ).catch(error => console.error(error));
@@ -382,7 +396,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         finalizada = false;
       }
 
-      if (designacion.expedientes != null && designacion.expedientes.length > 0){
+      if (designacion.expedientes != null){
       /*designacion.expedientes.forEach(exp =>{
        // expedientes += '\n' + exp;
        expedientes +=  exp + '\n';
@@ -826,55 +840,55 @@ export class TablaJustificacionExpresComponent implements OnInit {
         numProcType2 = 'input';
       }
       
-      // Obtenemos las acreditaciones disponibles para el turno y módulo de la designación
-      const acreditaciones = await this.getAcreditacionesPorModulo([designacion.idProcedimiento, designacion.idTurno]);
-      acreditaciones.forEach(acreditacion => {
-        arr1 = [
-          { type: 'checkboxPermisos', value: [undefined, designacion.numAsunto], size: 120, combo: null },
-          { type: 'tooltip', value: designacion.categoriaJuzgado, size: 400, combo: designacion.nombreJuzgado },
-          { type: 'input', value: designacion.nig, size: 200, combo: null},
-          { type: numProcType, value: designacion.numProcedimiento, size: 200 , combo: null},
-          { type: 'tooltip', value: designacion.categoriaProcedimiento, size: 400 , combo: designacion.procedimiento }, //modulo
-          { type: fechaActType, value:  this.formatDate(new Date()), size: 200 , combo: null},
-          { type: 'checkboxDate', value:  false, size: 200, combo: null},
-          { type: "text", value: acreditacion.label, size: 200, combo: null},
-          { type: 'checkbox', value: validaAct, size: 80 , combo: null },
-          { type: 'invisible', value:  designacion.numDesignacion , size: 0, combo: null},
-          { type: 'invisible', value:  acreditacion.value, size: 0, combo: null},
-          { type: 'invisible', value:  designacion.tipoAcreditacion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.idTipoAcreditacion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.porcentaje , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.tipoAcreditacion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.categoriaProcedimiento , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.idJurisdiccion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.complemento , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.permitirAniadirLetrado , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.numAsunto , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.idProcedimiento , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.idJuzgado , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.nombreJuzgado , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.fechaJustificacion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.validada , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.idFacturacion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.anioProcedimiento , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.descripcionFacturacion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.docJustificacion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.anulacion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.nigNumProcedimiento , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.permitirLetrado , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.anioDesignacion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.idTurno , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.idInstitucion , size: 0, combo: null},
-          { type: 'invisible', value:  designacion.facturado , size: 0, combo: null}
-        ];
+      // // Obtenemos las acreditaciones disponibles para el turno y módulo de la designación
+      // const acreditaciones = await this.getAcreditacionesPorModulo([designacion.idProcedimiento, designacion.idTurno]);
+      // acreditaciones.forEach(acreditacion => {
+      //   arr1 = [
+      //     { type: 'checkboxPermisos', value: [undefined, designacion.numAsunto], size: 120, combo: null },
+      //     { type: 'tooltip', value: designacion.categoriaJuzgado, size: 400, combo: designacion.nombreJuzgado },
+      //     { type: 'input', value: designacion.nig, size: 200, combo: null},
+      //     { type: numProcType, value: designacion.numProcedimiento, size: 200 , combo: null},
+      //     { type: 'tooltip', value: designacion.categoriaProcedimiento, size: 400 , combo: designacion.procedimiento }, //modulo
+      //     { type: fechaActType, value:  this.formatDate(new Date()), size: 200 , combo: null},
+      //     { type: 'checkboxDate', value:  false, size: 200, combo: null},
+      //     { type: "text", value: acreditacion.label, size: 200, combo: null},
+      //     { type: 'checkbox', value: validaAct, size: 80 , combo: null },
+      //     { type: 'invisible', value:  designacion.numDesignacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  acreditacion.value, size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.tipoAcreditacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.idTipoAcreditacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.porcentaje , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.tipoAcreditacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.categoriaProcedimiento , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.idJurisdiccion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.complemento , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.permitirAniadirLetrado , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.numAsunto , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.idProcedimiento , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.idJuzgado , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.nombreJuzgado , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.fechaJustificacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.validada , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.idFacturacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.anioProcedimiento , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.descripcionFacturacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.docJustificacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.anulacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.nigNumProcedimiento , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.permitirLetrado , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.anioDesignacion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.idTurno , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.idInstitucion , size: 0, combo: null},
+      //     { type: 'invisible', value:  designacion.facturado , size: 0, combo: null}
+      //   ];
   
-        let lastNum = designacion.actuaciones.length + 2;
-        let lastKey = letra + lastNum;
-        let objnew =  { [lastKey] : arr1, position: 'collapse'};
-        //console.log('objnew: ', objnew)
-        arr2.push(Object.assign({},objnew));
-        objnew = null;
-      });
+      //   let lastNum = designacion.actuaciones.length + 2;
+      //   let lastKey = letra + lastNum;
+      //   let objnew =  { [lastKey] : arr1, position: 'collapse'};
+      //   //console.log('objnew: ', objnew)
+      //   arr2.push(Object.assign({},objnew));
+      //   objnew = null;
+      // });
       
     }
 

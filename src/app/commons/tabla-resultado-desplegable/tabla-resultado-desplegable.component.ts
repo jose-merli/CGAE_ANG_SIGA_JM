@@ -35,6 +35,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() colegiado;
   @Input() isLetrado;
   @Input() permisosFichaAct;
+  @Input() permisosEJG;
   @Input() fechaFiltro;
   @Input() filtroAsistencia: FiltroAsistenciaItem;
   turnoAllow;  //to do
@@ -884,7 +885,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   inputChange(event, rowId, row, rowGroup, padre, index) {
 
     this.rowValidadas = [];
-    if (row == undefined) {
+    if (this.pantalla == 'AE' && row == undefined) {
       //designacion
       if (this.isLetrado) {
         if (this.justActivarDesigLetrado != "1") {
@@ -900,7 +901,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           this.rowIdsToUpdate.push(rowId);
         }
       }
-    } else if (this.pantalla == 'JE') {
+    } else if (this.pantalla == 'JE' && row == undefined) {
       //actuacion
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if ((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)) {
@@ -1318,6 +1319,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.rowGroupWithNew = rowGroup.id;
       this.rowIdWithNewActuacion = rowGroup.id;
       let desig = rowGroup.rows[0].cells;
+      let juzgado = desig[1].value;
       //this.getJuzgados(desig[17].value);
 
       this.idTurno = desig[17].value;
@@ -1330,7 +1332,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             this.commonsService.arregloTildesCombo(this.comboJuzgados);
             this.progressSpinner = false;
             if (this.configComboDesigna == "1" || this.configComboDesigna == "2" || this.configComboDesigna == "3") {
-              this.cargaModulosPorJuzgado(this.comboJuzgados[0].value, designacion, rowGroup);
+              this.cargaModulosPorJuzgado(juzgado, designacion, rowGroup);
             } else if (this.configComboDesigna == "4" || this.configComboDesigna == "5") {
               this.cargaModulos(designacion, rowGroup);
             }
@@ -1345,9 +1347,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               this.cargaModulos(designacion, rowGroup);
             }
 
-            this.progressSpinner = false;
           }
 
+          this.progressSpinner = false;
         },
         err => {
           //console.log(err);
@@ -1677,7 +1679,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           const newAllow = rowGroup.rows[0].cells[40].value;
           if (!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")) {
             let newRow: Row = { cells: newArrayCells, position: 'noCollapse' };
-            rowGroup.rows.push(newRow);
+            if (rowGroup.rows[rowGroup.rows.length-1].cells[0].value[1] == "Nuevo") {
+              rowGroup.rows.splice(rowGroup.rows.length-1, 0, newRow);
+            } else {
+              rowGroup.rows.push(newRow);
+            }
             this.newActuacionesArr.push(newRow);
           } else {
             this.showMsg('error', "No tiene permiso para añadir actuaciones", '')
@@ -1703,12 +1709,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               if (this.comboJuzgados.length != 0) {
                 newArrayCells = [
                   { type: 'checkboxPermisos', value: [undefined, ''], size: 120, combo: null, disabled: null },
-                  { type: 'multiselect1', value: desig[1].value, size: 400, combo: this.comboJuzgados, disabled: null },
+                  { type: 'select', value: desig[1].value, size: 400, combo: this.comboJuzgados, disabled: null },
                   { type: 'input', value: desig[2].value, size: 200, combo: null, disabled: null },
                   { type: 'input', value: desig[3].value, size: 200, combo: null, disabled: null },//numProc
                   { type: 'multiselect2', value: desig[21].value, size: 400, combo: this.comboModulos, disabled: null }, //modulo
                   { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
-                  { type: 'datePicker', value: this.formatDate(new Date()), size: 100, combo: null, disabled: null },
+                  { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
                   { type: 'multiselect3', value: this.comboAcreditacion[0].value, size: 200, combo: this.comboAcreditacion, disabled: null },
                   { type: 'checkbox', value: validacion, size: 80, combo: null, disabled: null },
                   { type: 'invisible', value: desig[19].value, size: 0, combo: null, disabled: null },//numDesig
@@ -1740,7 +1746,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               } else {
                 newArrayCells = [
                   { type: 'checkboxPermisos', value: [undefined, ''], size: 120, combo: null, disabled: null },
-                  { type: 'multiselect1', value: "0", size: 400, combo: [], disabled: null },
+                  { type: 'select', value: "0", size: 400, combo: [], disabled: null },
                   { type: 'input', value: desig[2].value, size: 200, combo: null, disabled: null },
                   { type: 'input', value: desig[3].value, size: 200, combo: null, disabled: null },//numProc
                   { type: 'multiselect2', value: this.comboModulos[0].value, size: 400, combo: this.comboModulos, disabled: null }, //modulo
@@ -1779,7 +1785,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
               const newAllow = rowGroup.rows[0].cells[40].value;
               if (!this.isLetrado || (this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && newArrayCells[8].value != true) && newAllow == "1")) {
                 let newRow: Row = { cells: newArrayCells, position: 'noCollapse' };
-                rowGroup.rows.push(newRow);
+                if (rowGroup.rows[rowGroup.rows.length-1].cells[0].value[1] == "Nuevo") {
+                  rowGroup.rows.splice(rowGroup.rows.length-1, 0, newRow);
+                } else {
+                  rowGroup.rows.push(newRow);
+                }
                 this.newActuacionesArr.push(newRow);
               } else {
                 this.showMsg('error', "No tiene permiso para añadir actuaciones", '')
@@ -1807,14 +1817,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.progressSpinner = true;
     this.sigaServices.getParam("combo_comboModulosConJuzgado", "?idJuzgado=" + $event).subscribe(
       n => {
-        this.comboModulos = JSON.parse(n.body).combooItems;
-        this.commonsService.arregloTildesCombo(this.comboModulos);
-        let data: String[] = [];
-        let desig = rowGroup.rows[0].cells;
-        this.idTurno = desig[17].value;
-        data.push(this.comboModulos[0].value);
-        data.push(this.idTurno);
-        this.cargaAcreditacionesPorModulo(data, designacion, rowGroup);
+        this.comboModulos = n.combooItems;
+        if (this.comboModulos != undefined && this.comboModulos.length > 0 ) {
+          this.commonsService.arregloTildesCombo(this.comboModulos);
+          let data: String[] = [];
+          let desig = rowGroup.rows[0].cells;
+          this.idTurno = desig[17].value;
+          data.push(this.comboModulos[0].value);
+          data.push(this.idTurno);
+          this.cargaAcreditacionesPorModulo(data, designacion, rowGroup);
+        }
+        
         this.progressSpinner = false;
       },
       err => {
@@ -2212,6 +2225,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           if (sessionStorage.getItem("EJGItem")) {
             sessionStorage.removeItem("EJGItem");
           }
+          sessionStorage.setItem("vieneDeJE", "true");
 
           this.router.navigate(['/gestionEjg']);
           this.progressSpinner = false;

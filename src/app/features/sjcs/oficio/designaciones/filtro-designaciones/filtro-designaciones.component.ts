@@ -342,6 +342,11 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.showColegiado = true;
     }
 
+    if (sessionStorage.getItem("filtroJustificacionExpres")) {
+      this.filtroJustificacion = JSON.parse(sessionStorage.getItem("filtroJustificacionExpres"));
+      this.cargarFiltrosJustificacionExpres();
+    }
+
     sessionStorage.removeItem("filtroJustificacionExpres");
     sessionStorage.removeItem("volver");
 
