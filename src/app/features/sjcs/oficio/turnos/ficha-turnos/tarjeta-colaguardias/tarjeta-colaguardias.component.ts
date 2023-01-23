@@ -16,6 +16,8 @@ import { PartidasObject } from '../../../../../../models/sjcs/PartidasObject';
 import { MultiSelect } from '../../../../../../../../node_modules/primeng/primeng';
 import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { Router } from '../../../../../../../../node_modules/@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { SaltoCompItem } from '../../../../../../models/guardia/SaltoCompItem';
 @Component({
   selector: "app-tarjeta-colaguardias",
   templateUrl: "./tarjeta-colaguardias.component.html",
@@ -32,15 +34,20 @@ export class TarjetaColaGuardias implements OnInit {
   @Output() idOpened = new EventEmitter<Boolean>();
   
   selectedItem: number = 10;
+  selectedItemSaltosCompensaciones: number = 3;
   selectAll;
   selectedDatos = [];
   numSelected = 0;
   selectMultiple: boolean = false;
   seleccion: boolean = false;
   cols;
+  colsCompensaciones;
+  colsSaltos;
   rowsPerPage;
   historico: boolean = false;
   datos: any[];
+  datosSaltos: any[];
+  datosCompensaciones: any[];
   listaTabla: TurnosItems = new TurnosItems();
   fechaActual;
   disableAll: boolean = false;
@@ -76,6 +83,8 @@ export class TarjetaColaGuardias implements OnInit {
   // @Input() modoEdicion: boolean = false;
 
   @ViewChild("table") table;
+  @ViewChild("tableComp") tableComp;
+  @ViewChild("tableSaltos") tableSaltos;
   @ViewChild("multiSelect") multiSelect: MultiSelect;
   fichasPosibles = [
     {
@@ -94,7 +103,7 @@ export class TarjetaColaGuardias implements OnInit {
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices, private translateService: TranslateService, private upperCasePipe: UpperCasePipe,
     private persistenceService: PersistenceService, private confirmationService: ConfirmationService, private commonsService: CommonsService,
-    private router: Router) { }
+    private router: Router, private activatedRoute: ActivatedRoute) { }
 
   ngOnChanges(changes: SimpleChanges) {
     this.getCols();
@@ -159,6 +168,10 @@ export class TarjetaColaGuardias implements OnInit {
           this.modoEdicion = false;
         } else {
           this.modoEdicion = true;
+        }
+      } else {
+        if (this.activatedRoute.snapshot.queryParamMap.get('idturno')) {
+          this.idTurno = this.activatedRoute.snapshot.queryParamMap.get('idturno');
         }
       }
     } else {
@@ -251,6 +264,12 @@ export class TarjetaColaGuardias implements OnInit {
       this.table.sortOrder = 0;
       this.table.sortField = '';
       this.table.reset();
+      this.tableComp.sortOrder = 0;
+      this.tableComp.sortField = '';
+      this.tableComp.reset();
+      this.tableSaltos.sortOrder = 0;
+      this.tableSaltos.sortField = '';
+      this.tableSaltos.reset();
     }
 
   }
@@ -300,6 +319,7 @@ export class TarjetaColaGuardias implements OnInit {
         this.datos.forEach(element => {
           element.orden = +element.orden;
         });
+        this.getSaltosYCompensaciones();
         // if (this.turnosItem.fechabaja != undefined || this.persistenceService.getPermisos() != true) {
         //   this.turnosItem.historico = true;
         // }
@@ -389,6 +409,12 @@ export class TarjetaColaGuardias implements OnInit {
     this.table.sortOrder = 0;
     this.table.sortField = '';
     this.table.reset();
+    this.tableComp.sortOrder = 0;
+    this.tableComp.sortField = '';
+    this.tableComp.reset();
+    this.tableSaltos.sortOrder = 0;
+    this.tableSaltos.sortField = '';
+    this.tableSaltos.reset();
     if (this.datosInicial != undefined && this.datosInicial != null) {
       this.datos = JSON.parse(JSON.stringify(this.datosInicial));
     } else {
@@ -622,16 +648,24 @@ export class TarjetaColaGuardias implements OnInit {
   }
 
   getCols() {
-
     this.cols = [
-      { field: "orden", header: "administracion.informes.literal.orden" },
-      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nColegiado" },
-      { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion" },
-      { field: "fechabajaguardia", header: "dato.jgr.guardia.guardias.fechaBaja" },
-      // { field: "alfabeticoapellidos", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "saltos", header: "justiciaGratuita.oficio.turnos.saltos" },
-      { field: "compensaciones", header: "justiciaGratuita.oficio.turnos.compensaciones" }
+      { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
+      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "nombreguardia", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
+      { field: "fechabajaguardia", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
+    ];
+
+    this.colsCompensaciones = [
+      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
+    ];
+
+    this.colsSaltos = [
+      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
     ];
 
     this.rowsPerPage = [
@@ -839,5 +873,27 @@ export class TarjetaColaGuardias implements OnInit {
         this.progressSpinner = false;
       }
     );
+  }
+
+  goToSaltosYComp() {
+    this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: this.idTurno } });
+  }
+
+  getSaltosYCompensaciones() {
+    let filtros: SaltoCompItem = new SaltoCompItem();
+    if (sessionStorage.getItem("filtrosSaltosCompOficio")) {
+      filtros = JSON.parse(sessionStorage.getItem("filtrosSaltosCompOficio"));
+    }
+    if (sessionStorage.getItem("saltos-compesacionesItem")) {
+      filtros = JSON.parse(sessionStorage.getItem("saltos-compesacionesItem"));
+    }
+    filtros.idTurno = this.idTurno;
+    this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
+      n => {
+        let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
+        this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
+        this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
+        let error = JSON.parse(n.body).error;
+      });
   }
 }

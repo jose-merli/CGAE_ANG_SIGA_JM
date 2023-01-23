@@ -5,6 +5,7 @@ import { SaltoCompItem } from '../../../../../models/guardia/SaltoCompItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { SigaServices } from '../../../../../_services/siga.service';
+import { ActivatedRoute } from '@angular/router';
 
 export enum KEY_CODE {
   ENTER = 13
@@ -33,6 +34,7 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
   textFilter: string = "Seleccionar";
   textSelected: String = "{0} turnos seleccionados";
   isLetrado:boolean = false;
+  idTurno: string;
 
   @Input() isNewFromOtherPage: boolean = false;
   @Input() activacionEditar: boolean = false;
@@ -43,12 +45,16 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
     private sigaServices: SigaServices,
     private commonServices: CommonsService,
     private datepipe: DatePipe,
-    private localStorageService: SigaStorageService
+    private localStorageService: SigaStorageService,
+    private activatedRoute: ActivatedRoute
   ) { }
 
   ngOnInit() {
     sessionStorage.removeItem("volver");
     sessionStorage.removeItem("modoBusqueda");
+    if (this.activatedRoute.snapshot.queryParamMap.get('idturno')) {
+      this.idTurno = this.activatedRoute.snapshot.queryParamMap.get('idturno');
+    }
     this.isLetrado = this.localStorageService.isLetrado;
     if (this.isLetrado) {
       this.disabledBusquedaExpress = true;
@@ -83,6 +89,8 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
       this.search();
     }
 
+    
+
   }
 
   getComboTurno() {
@@ -91,6 +99,10 @@ export class FiltrosSaltosCompensacionesOficioComponent implements OnInit {
       n => {
         this.comboTurnos = n.combooItems;
         this.commonServices.arregloTildesCombo(this.comboTurnos);
+        if (this.idTurno) {
+          this.filtros.idTurno = [this.idTurno];
+          this.search();
+        }
       },
       err => {
         //console.log(err);

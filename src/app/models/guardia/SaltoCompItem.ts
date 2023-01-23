@@ -20,4 +20,5 @@ export class SaltoCompItem {
     comboGuardia;
     comboColegiados;
 
+    constructor() { }
 }

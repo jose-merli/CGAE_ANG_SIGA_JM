@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, Output, EventEmitter, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { SigaServices } from '../../../../../../../_services/siga.service';
 import { GuardiaItem } from '../../../../../../../models/guardia/GuardiaItem';
 import { PersistenceService } from '../../../../../../../_services/persistence.service';
@@ -10,24 +10,33 @@ import { Row, TablaResultadoOrderCGService } from '../../../../../../../commons/
 import { TablaResultadoOrderComponent } from '../../../../../../../commons/tabla-resultado-order/tabla-resultado-order.component';
 import { ConfiguracionCola, GlobalGuardiasService } from '../../../../guardiasGlobal.service';
 import { Subscription } from 'rxjs';
+import { SaltoCompItem } from '../../../../../../../models/guardia/SaltoCompItem';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-datos-cola-guardia',
   templateUrl: './datos-cola-guardia.component.html',
   styleUrls: ['./datos-cola-guardia.component.scss']
 })
-export class DatosColaGuardiaComponent implements OnInit {
+export class DatosColaGuardiaComponent implements OnInit, AfterViewInit {
 
   msgs = [];
   @Input() openFicha: boolean = false;
   permitirGuardar: boolean = false;
   rowsPerPage;
   cols = [];
+  colsSaltos = [];
+  colsCompensaciones = [];
+  selectedDatos = [];
+  numSelected = 0;
   fecha;
   datosInicial;
   body = new GuardiaItem();
   guardiaComunicar : GuardiaItem;
-  datos;
+  datos: any[];
+  datosSaltos: any[];
+  datosCompensaciones: any[];
+  idTurno: string;
   nuevo;
   historico: boolean = false;
   progressSpinner: boolean = false;
@@ -43,6 +52,8 @@ export class DatosColaGuardiaComponent implements OnInit {
   rowGroups: Row[];
   rowGroupsAux: Row[];
   datosConfColaGuardias: any;
+  selectedItem: number = 10;
+  selectedItemSaltosCompensaciones: number = 3;
   cabeceras = [
     /*{
       id: "ordenCola",
@@ -105,6 +116,9 @@ export class DatosColaGuardiaComponent implements OnInit {
   minimoLetrado = 0;
   //@ViewChild(TablaDinamicaColaGuardiaComponent) tabla;
   @ViewChild(TablaResultadoOrderComponent) tablaOrder;
+  @ViewChild("table") table;
+  @ViewChild("tableComp") tableComp;
+  @ViewChild("tableSaltos") tableSaltos;
 
   @Input() dataConfColaGuardiaPadre: String;
 
@@ -116,7 +130,10 @@ export class DatosColaGuardiaComponent implements OnInit {
     public commonsService: CommonsService,
     public translateService: TranslateService,
     private trmService: TablaResultadoOrderCGService,
-    private globalGuardiasService: GlobalGuardiasService) { }
+    private globalGuardiasService: GlobalGuardiasService,
+    private sigaServices: SigaServices,
+    private cdRef: ChangeDetectorRef,
+    private router: Router) { }
 
     ngOnInit(): void {
       this.suscription = this.globalGuardiasService.getConf().subscribe((confValue)=>{
@@ -130,6 +147,11 @@ export class DatosColaGuardiaComponent implements OnInit {
       });
       this.inicio();
   }
+
+  ngAfterViewInit(): void {
+    this.initTablas();
+  }
+
  ngOnDestroy(){
   this.suscription.unsubscribe();
  }
@@ -148,6 +170,7 @@ inicio(){
         this.body.idOrdenacionColas = data.idOrdenacionColas;
         this.body.idGuardia = data.idGuardia;
         this.body.idTurno = data.idTurno;
+        this.idTurno = data.idTurno;
         this.body.idPersonaUltimo = data.idPersonaUltimo;
         this.body.idGrupoUltimo = data.idGrupoUltimo;
         this.body.porGrupos = data.porGrupos == "1" ? true : false;
@@ -394,33 +417,27 @@ inicio(){
     //this.body.idTurno = 802; //borrar
     //this.body.idGuardia = 1441; //borrar
     //this.body.letradosIns = '09/12/10';
+    // TODO: modificar aqui
     this.sigaService.post(
       "busquedaGuardias_getColaGuardia", this.body).subscribe(
         data => {
           this.datos = JSON.parse(data.body).inscripcionesItem;
+          let orden = 1;
           this.datos = this.datos.map(it => {
             it.nombreApe = it.apellido1 + " " + it.apellido2 + " " + it.nombre;
-            /*if (!this.body.porGrupos && !this.body.ordenacionManual) {
-              it.numeroGrupo = "";
-              it.orden = "";
-            } else {
-              it.numeroGrupo = +it.numeroGrupo
-              it.order = +it.order
-            }*/
+            it.orden = orden;
+            orden++;
             return it;
           });
           this.transformData();
+          this.getSaltosYCompensaciones();
           this.datosInicial = JSON.parse(JSON.stringify(this.datos));
           if (this.datos && this.datos.length > 0){
-
-
             this.primerLetrado = this.datos[0].nColegiado
             this.nombreApellidosPrimerLetrado = this.datos[0].nombreApe 
             this.ultimoLetrado = this.datos[this.datos.length - 1].nColegiado
             this.apeyNombreUltimo = this.datos[this.datos.length - 1].nombreApe;
-
-            this.nInscritos = this.datos.length;
-
+            this.nInscritos = this.datos.length.toString();
           if (this.body.idPersonaUltimo && this.datos.length > 0)
             this.body.idGrupoUltimo = this.datos[this.datos.length - 1].idGrupoGuardia;
           }
@@ -814,5 +831,92 @@ if (rest){
         })
   }
 
+  private initTablas(): void {
+    this.getCols();
+    this.cdRef.detectChanges();
+    if (this.table) {
+      this.table.sortOrder = 0;
+      this.table.sortField = '';
+      this.table.reset();
+      this.tableComp.sortOrder = 0;
+      this.tableComp.sortField = '';
+      this.tableComp.reset();
+      this.tableSaltos.sortOrder = 0;
+      this.tableSaltos.sortField = '';
+      this.tableSaltos.reset();
+    }
+  }
+
+  private getCols(): void {
+    this.cols = [
+      { field: "orden", header: "administracion.informes.literal.orden", width: "15%" },
+      { field: "nColegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "nombreApe", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fechaValidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" },
+      { field: "fechabaja", header: "justiciaGratuita.oficio.turnos.fechaBaja", width: "20%" },
+    ];
+
+    this.colsCompensaciones = [
+      { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fecha", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
+    ];
+
+    this.colsSaltos = [
+      { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "fecha", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
+    ];
+
+    this.rowsPerPage = [
+      {
+        label: 10,
+        value: 10
+      },
+      {
+        label: 20,
+        value: 20
+      },
+      {
+        label: 30,
+        value: 30
+      },
+      {
+        label: 40,
+        value: 40
+      }
+    ];
+  }
+
+  actualizaSeleccionados(selectedDatos) {
+    if (this.selectedDatos == undefined) {
+      this.selectedDatos = []
+    }
+    if (selectedDatos != undefined) {
+      this.numSelected = selectedDatos.length;
+    }
+  }
+
+  getSaltosYCompensaciones() {
+    let filtros: SaltoCompItem = new SaltoCompItem();
+    if (sessionStorage.getItem("filtrosSaltosCompOficio")) {
+      filtros = JSON.parse(sessionStorage.getItem("filtrosSaltosCompOficio"));
+    }
+    if (sessionStorage.getItem("saltos-compesacionesItem")) {
+      filtros = JSON.parse(sessionStorage.getItem("saltos-compesacionesItem"));
+    }
+    filtros.idTurno = this.idTurno;
+    this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
+      n => {
+        let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
+        this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
+        this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
+        let error = JSON.parse(n.body).error;
+      });
+  }
+
+  goToSaltosYComp() {
+    this.router.navigate(["/saltosYCompensaciones"], { queryParams: { idturno: this.idTurno } });
+  }
 }
 

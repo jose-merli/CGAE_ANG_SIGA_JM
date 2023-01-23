@@ -1979,7 +1979,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           actuacion: act,
           relaciones: null
         };
-
+        sessionStorage.setItem("vieneDeJE", "true");
         this.searchRelaciones(actuacion);
       }
     }
