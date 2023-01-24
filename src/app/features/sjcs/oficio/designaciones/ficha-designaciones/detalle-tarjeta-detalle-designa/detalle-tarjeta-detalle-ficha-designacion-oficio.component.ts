@@ -1023,7 +1023,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       n => {
         this.progressSpinner = false;
         if (JSON.parse(n.body).existeDesignaJuzgadoProcedimiento > 1) {
-          let mess = "Atención: Ya existe una designación con el mismo número de prodecimiento y juzgado.¿Desea continuar?";
+          let mess = "Atención: Ya existe una designación con el mismo número de procedimiento y juzgado.¿Desea continuar?";
           let icon = "fa fa-question-circle";
           let keyConfirmation = "confirmGuardar";
           this.confirmationService.confirm({
