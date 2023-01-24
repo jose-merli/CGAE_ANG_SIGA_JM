@@ -317,7 +317,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         this.inputs[1].value = "";
         this.inputs[2].value = "";
       }
-      if (this.datosEJG.apellidosYNombre != undefined && this.datosEJG.apellidosYNombre != null) {
+      /*if (this.datosEJG.apellidosYNombre != undefined && this.datosEJG.apellidosYNombre != null) {
         if (!this.checkArt) {
           this.sigaServices.post("designaciones_searchAbogadoByIdPersona", this.datosEJG.idPersona).subscribe(
             n => {
@@ -331,7 +331,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         let colegiado = this.datosEJG.apellidosYNombre.split(", ")
         this.inputs[1].value = colegiado[0];
         this.inputs[2].value = colegiado[1];
-      }
+      }*/
 
       //Los valores y bloqueo del turno y del tipo se determinan en los combos correspondientes.
 
