@@ -57,6 +57,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	confirmationAssociate: boolean = false;
 	confirmationDisassociate: boolean = false;
 	confirmationCreateRepresentante: boolean = false;
+	cargaInicial:boolean =false;
 
 	@ViewChild('cdCreateRepresentante') cdCreateRepresentante: Dialog;
 	@ViewChild('cdRepresentanteAssociate') cdRepresentanteAssociate: Dialog;
@@ -81,6 +82,13 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	ngOnInit() {
 		this.progressSpinner = true;
 
+		if (this.body.idrepresentantejg != undefined) {
+			this.generalBody.nif = this.body.idrepresentantejg.toString();
+			this.searchRepresentanteByIdPersona();
+			this.nifRepresentante = this.generalBody.nif;
+			this.cargaInicial = true;
+		}
+
 		this.getTiposIdentificacion();
 		this.persistenceService.clearFiltrosAux();
 
@@ -97,40 +105,44 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			this.body != undefined &&
 			this.body.idpersona != undefined
 		)**/
-		if(this.body.idrepresentantejg != null) {
-			this.generalBody = this.persistenceService.getBody();
+		if(this.body.idrepresentantejg != null && this.body.idrepresentantejg != undefined
+			 && this.cargaInicial) {
+			
+			if(this.persistenceService.getBody()!=null){
+				this.generalBody = this.persistenceService.getBody();
 
-			//Si tiene nif lo volvemos a buscar
-			if (this.generalBody.nif != undefined && this.generalBody.nif != '') {
-				this.searchRepresentanteByIdPersona();
-				this.nifRepresentante = this.generalBody.nif;
-				//Si no tiene se mantiene el que guardamos
-			} else {
-				if (
-					this.persistenceService.getBody().nombreSolo != undefined &&
-					this.persistenceService.getBody().nombreSolo != null
-				) {
-					this.generalBody.nombre = this.persistenceService.getBody().nombreSolo;
-				}
+				//Si tiene nif lo volvemos a buscar
+				if (this.generalBody.nif != undefined && this.generalBody.nif != '') {
+					this.searchRepresentanteByIdPersona();
+					this.nifRepresentante = this.generalBody.nif;
+					//Si no tiene se mantiene el que guardamos
+				} else {
+					if (
+						this.persistenceService.getBody().nombreSolo != undefined &&
+						this.persistenceService.getBody().nombreSolo != null
+					) {
+						this.generalBody.nombre = this.persistenceService.getBody().nombreSolo;
+					}
 
-				if (
-					this.persistenceService.getBody().apellido1 != undefined &&
-					this.persistenceService.getBody().apellido1 != null
-				) {
-					this.generalBody.apellidos = this.persistenceService.getBody().apellido1;
-				}
+					if (
+						this.persistenceService.getBody().apellido1 != undefined &&
+						this.persistenceService.getBody().apellido1 != null
+					) {
+						this.generalBody.apellidos = this.persistenceService.getBody().apellido1;
+					}
 
-				if (
-					this.persistenceService.getBody().apellido2 != undefined &&
-					this.persistenceService.getBody().apellido2 != null
-				) {
-					this.generalBody.apellidos += ' ' + this.persistenceService.getBody().apellido2;
+					if (
+						this.persistenceService.getBody().apellido2 != undefined &&
+						this.persistenceService.getBody().apellido2 != null
+					) {
+						this.generalBody.apellidos += ' ' + this.persistenceService.getBody().apellido2;
+					}
 				}
 			}
-
 			this.compruebaDNI();
 			this.showTarjeta = true;
 			this.searchRepresentanteGeneral = true;
+		
 		} else {
 			this.generalBody = new JusticiableItem();
 		}

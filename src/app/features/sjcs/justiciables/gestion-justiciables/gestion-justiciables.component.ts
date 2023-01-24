@@ -608,6 +608,12 @@ export class GestionJusticiablesComponent implements OnInit {
     this.justiciableBusquedaItem.idpersona = justiciableUnidadFamiliar.uf_idPersona;
     this.justiciableBusquedaItem.idinstitucion = justiciableUnidadFamiliar.uf_idInstitucion;
 
+    if(this.body == undefined || this.body == null){
+      this.body = new JusticiableItem();
+    }
+    this.body.idrepresentantejg = justiciableUnidadFamiliar.nifRepresentante;
+    this.body.nombre = justiciableUnidadFamiliar.representante;
+
     this.searchByIdPersona(this.justiciableBusquedaItem);
   }
   //Servicio para extraer el solicitante principal de esa unidad familiar
