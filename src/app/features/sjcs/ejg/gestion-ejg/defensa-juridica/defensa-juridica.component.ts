@@ -762,6 +762,8 @@ export class DefensaJuridicaComponent implements OnInit {
         let datosAdicionales = JSON.parse(n.body);
         if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
           item.delitos = datosAdicionales[0].delitos;
+          this.delitosValue = item.delitos;
+          this.delitosValueInicial = this.delitosValue;
           item.fechaOficioJuzgado = datosAdicionales[0].fechaOficioJuzgado;
           item.observaciones = datosAdicionales[0].observaciones;
           item.fechaRecepcionColegio = datosAdicionales[0].fechaRecepcionColegio;
