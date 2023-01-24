@@ -380,19 +380,20 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     this.sigaServices.get("combo_turnos_designas").subscribe(
       n => {
         this.selectores[0].opciones = n.combooItems;
+        this.selectores[0].value = "";
         let datosGeneralesDesigna = JSON.parse(sessionStorage.getItem("datosGeneralesDesigna"));
         if (datosGeneralesDesigna != null && datosGeneralesDesigna != undefined) {
           this.selectores[0].value = datosGeneralesDesigna[0];
           this.checkArt = datosGeneralesDesigna[2];
         }
         //Condicion pensada para que se aplique cuandose crea una designacion desde EJG
-        if (this.datosEJG != undefined && this.datosEJG != null) {
+        /*if (this.datosEJG != undefined && this.datosEJG != null) {
           if (this.datosEJG.idTurno != null) {
             this.selectores[0].value = this.datosEJG.idTurno;
             this.selectores[0].disable = true;
           }
           else this.selectores[0].value = "";
-        }
+        }*/
         this.progressSpinner = false;
       },
       err => {

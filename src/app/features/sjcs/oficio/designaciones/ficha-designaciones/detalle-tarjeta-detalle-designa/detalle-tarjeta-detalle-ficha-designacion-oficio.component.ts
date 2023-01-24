@@ -214,7 +214,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.disableRestablecer = false;
           }
           let designaUpdate = new DesignaItem();
-          designaUpdate.ano = this.campos.factConvenio;
+          designaUpdate.ano = this.campos.anio;
           designaUpdate.idTurno = this.campos.idTurno;
           designaUpdate.numero = this.campos.numero;
           this.getComboDelitos(designaUpdate);
@@ -458,7 +458,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.datePickers[0].value = this.formatDate(this.datosInicial.fechaEstado);
         this.delitosValue = this.initDelitos;
         let designaUpdate = new DesignaItem();
-        designaUpdate.ano = this.datosInicial.factConvenio;
+        designaUpdate.ano = this.datosInicial.anio;
         designaUpdate.idTurno = this.datosInicial.idTurno;
         designaUpdate.numero = this.datosInicial.numero;
         this.getComboDelitos(designaUpdate);
@@ -490,7 +490,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.disableRestablecer = false;
         this.getComboJuzgados();
         let designaUpdate = new DesignaItem();
-        designaUpdate.ano = this.datosInicial.factConvenio;
+        designaUpdate.ano = this.datosInicial.anio;
         designaUpdate.idTurno = this.datosInicial.idTurno;
         designaUpdate.numero = this.datosInicial.numero;
         this.getComboDelitos(designaUpdate);
@@ -974,7 +974,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           let severity = "error";
           let summary;
           if (err.status == 400) {
-            summary = this.translateService.instant('justiciaGratuita.oficio.designa.NIGInvalido');
+            summary = this.translateService.instant('general.mensaje.error.bbdd');
           } else {
             summary = "No se ha podido modificar correctamente";
           }
