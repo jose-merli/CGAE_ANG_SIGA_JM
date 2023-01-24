@@ -362,6 +362,12 @@ export class GestionJusticiablesComponent implements OnInit {
       } else if (this.fromUniFamiliar) {
         this.modoEdicion = true;
         this.fillJusticiableBuesquedaItemToUnidadFamiliarEJG();
+      } else if (this.fromContrarioEJG && !this.modoRepresentante) {
+        this.modoEdicion = true;
+        this.justiciableBusquedaItem = this.persistenceService.getDatosEJG();
+        sessionStorage.setItem("fichaJusticiable", JSON.stringify(this.justiciableBusquedaItem));
+        this.search();
+
       } else if (this.persistenceService.getDatos() != null && !this.modoRepresentante) {
         this.modoEdicion = true;
         this.justiciableBusquedaItem = this.persistenceService.getDatos();
