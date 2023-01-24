@@ -263,7 +263,7 @@ export class FichaCambioLetradoComponent implements OnInit {
           this.showMessage("warn", this.translateService.instant("general.message.warn"), this.translateService.instant(data.error.description));
           setTimeout(() => {
             this.busquedaDesignacionesParaVolver();
-          }, 1000);
+          }, 1500);
         } else if (data.error.code == '406') {
           this.showMessage("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant(data.error.description));
         } else {

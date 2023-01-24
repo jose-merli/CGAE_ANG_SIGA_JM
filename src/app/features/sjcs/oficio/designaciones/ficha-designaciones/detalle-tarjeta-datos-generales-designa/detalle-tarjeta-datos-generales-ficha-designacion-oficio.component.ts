@@ -585,10 +585,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               this.progressSpinner = false;
               //MENSAJE DE TODO CORRECTO
               detail = "";
-              if (JSON.parse(n.body).error.code == 202) {
+              let dataRes = JSON.parse(n.body);
+              if (dataRes.error.code == 202) {
                 severity = "warn";
                 summary = this.translateService.instant("general.message.warn")
-                detail = JSON.parse(n.body).error.description
+                detail = this.translateService.instant(dataRes.error.description);
               }
               this.msgs.push({
                 severity,
@@ -604,10 +605,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               summary = "No se han podido modificar los datos";
               if (err.status == 406) {
                 summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
-                var errorJson = JSON.parse(err["error"]);
-                let detailNoTranslate = JSON.stringify(errorJson.error.description);
-                //summary = this.translateService.instant(err.description.toString());
-                detail = detailNoTranslate;
+                //var errorJson = JSON.parse(err["error"]);
+                var errorJson = JSON.parse(err.error);
+                detail = detail = this.translateService.instant(errorJson.error.description);
               }
               this.msgs.push({
                 severity,
@@ -669,10 +669,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                   summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
                 } else if (err.status == 406) {
                   summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
-                  var errorJson = JSON.parse(err["error"]);
-                  let detailNoTranslate = JSON.stringify(errorJson.error.description);
-                  //summary = this.translateService.instant(err.description.toString());
-                  detail = detailNoTranslate;
+                  //var errorJson = JSON.parse(err["error"]);
+                  var errorJson = JSON.parse(err.error);
+                  detail = this.translateService.instant(errorJson.error.description);
                 } else {
                   summary = "No se han podido modificar los datos";
                 }
