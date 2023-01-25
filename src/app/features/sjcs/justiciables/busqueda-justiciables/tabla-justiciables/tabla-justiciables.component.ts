@@ -155,15 +155,15 @@ export class TablaJusticiablesComponent implements OnInit {
 
   checkUniFamiliar(justiciable) {
     let datosFamiliares: any = sessionStorage.getItem("datosFamiliares");
-    if (datosFamiliares != "") datosFamiliares = JSON.parse(datosFamiliares);
     let exist = false;
-
-    if (datosFamiliares == "") exist = false;
-    else {
-      //Comprobamos que el justiciable no esta ya en la designacion
-      datosFamiliares.forEach(element => {
-        if (element.uf_idPersona == justiciable.idpersona && element.fechaBaja == null) exist = true;
-      });
+    if (datosFamiliares!=null && datosFamiliares != undefined && datosFamiliares != "" && datosFamiliares != "undefined"){
+       datosFamiliares = JSON.parse(datosFamiliares);
+       //Comprobamos que el justiciable no esta ya en la designacion
+       datosFamiliares.forEach(element => {
+         if (element.uf_idPersona == justiciable.idpersona && element.fechaBaja == null){ 
+            exist = true;
+         }
+       });
     }
 
     return !exist;
