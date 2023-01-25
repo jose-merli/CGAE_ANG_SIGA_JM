@@ -183,6 +183,7 @@ export class DatosPersonalesComponent implements OnInit {
       if (this.body.idprovincia != undefined && this.body.idprovincia != null &&
         this.body.idprovincia != "") {
         this.isDisabledPoblacion = false;
+        this.getComboPoblacion("-1");
       } else {
         this.isDisabledPoblacion = true;
       }
@@ -845,9 +846,9 @@ export class DatosPersonalesComponent implements OnInit {
         }
 
 
-        if (this.body.idpoblacion != undefined && this.body.idpoblacion != null) {
-          this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
-        }
+        //if (this.body.idpoblacion != undefined && this.body.idpoblacion != null) {
+        //  this.getComboPoblacionByIdPoblacion(this.body.idpoblacion);
+        //}
       },
       error => { },
       () => {
@@ -946,6 +947,7 @@ export class DatosPersonalesComponent implements OnInit {
           this.body.idprovincia = this.provinciaSelecionada;
           this.body.idpoblacion = "";
           this.comboPoblacion = [];
+          this.getComboPoblacion("-1");
           this.isDisabledProvincia = true;
           this.isDisabledPoblacion = false;
         }
