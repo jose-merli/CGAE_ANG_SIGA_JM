@@ -609,8 +609,8 @@ export class DocumentacionComponent implements OnInit {
             this.keys.forEach(key => {
                if (this.item[key.nombre] != undefined) {
                 keysValues.push(this.item[key.nombre]);
-              } else if (key.nombre == "num" && this.item["numEjg"] != undefined) {
-                keysValues.push(this.item["numEjg"]);
+              } else if (key.nombre == "num" && this.item["numero"] != undefined) {
+                keysValues.push(this.item["numero"]);
               } else if (key.nombre == "anio" && this.item["annio"] != undefined) {
                 keysValues.push(this.item["annio"]);
               } else if (key.nombre == "idtipoejg" && this.item["tipoEJG"] != undefined) {

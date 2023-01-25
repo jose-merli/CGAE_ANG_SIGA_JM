@@ -644,8 +644,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
                   if (this.bodyInicial[key.nombre] != undefined) {
                     keysValues.push(this.bodyInicial[key.nombre]);
-                  } else if (key.nombre == "num" && this.bodyInicial["numEjg"] != undefined) {
-                    keysValues.push(this.bodyInicial["numEjg"]);
+                  } else if (key.nombre == "num" && this.bodyInicial["numero"] != undefined) {
+                    keysValues.push(this.bodyInicial["numero"]);
                   } else if (key.nombre == "anio" && this.bodyInicial["annio"] != undefined) {
                     keysValues.push(this.bodyInicial["annio"]);
                   } else if (key.nombre == "idtipoejg" && this.bodyInicial["tipoEJG"] != undefined) {

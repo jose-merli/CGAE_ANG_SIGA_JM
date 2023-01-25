@@ -655,8 +655,8 @@ export class TablaEjgComponent implements OnInit {
                   this.keys.forEach(key => {
                     if (element[key.nombre] != undefined) {
                       keysValues.push(element[key.nombre]);
-                    } else if (key.nombre == "num" && element["numEjg"] != undefined) {
-                      keysValues.push(element["numEjg"]);
+                    } else if (key.nombre == "num" && element["numero"] != undefined) {
+                      keysValues.push(element["numero"]);
                     } else if (key.nombre == "anio" && element["annio"] != undefined) {
                       keysValues.push(element["annio"]);
                     } else if (key.nombre == "idtipoejg" && element["tipoEJG"] != undefined) {

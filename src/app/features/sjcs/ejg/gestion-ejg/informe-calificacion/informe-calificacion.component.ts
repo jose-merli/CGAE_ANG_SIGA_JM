@@ -408,8 +408,8 @@ export class InformeCalificacionComponent implements OnInit {
             this.keys.forEach(key => {
                if (this.dictamen[key.nombre] != undefined) {
                 keysValues.push(this.dictamen[key.nombre]);
-              } else if (key.nombre == "num" && this.dictamen["numEjg"] != undefined) {
-                keysValues.push(this.dictamen["numEjg"]);
+              } else if (key.nombre == "num" && this.dictamen["numero"] != undefined) {
+                keysValues.push(this.dictamen["numero"]);
               } else if (key.nombre == "anio" && this.dictamen["annio"] != undefined) {
                 keysValues.push(this.dictamen["annio"]);
               } else if (key.nombre == "idtipoejg" && this.dictamen["tipoEJG"] != undefined) {

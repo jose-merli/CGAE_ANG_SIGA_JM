@@ -647,8 +647,8 @@ export class UnidadFamiliarComponent implements OnInit {
                 keysValues.push(this.selectedDatos[0].solicitantePpal);
               } else if (this.body[key.nombre] != undefined) {
                 keysValues.push(this.body[key.nombre]);
-              } else if (key.nombre == "num" && this.body["numEjg"] != undefined) {
-                keysValues.push(this.body["numEjg"]);
+              } else if (key.nombre == "num" && this.body["numero"] != undefined) {
+                keysValues.push(this.body["numero"]);
               } else if (key.nombre == "anio" && this.body["annio"] != undefined) {
                 keysValues.push(this.body["annio"]);
               } else if (key.nombre == "idtipoejg" && this.body["tipoEJG"] != undefined) {
