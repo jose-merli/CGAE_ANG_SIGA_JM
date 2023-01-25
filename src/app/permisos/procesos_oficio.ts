@@ -20,7 +20,6 @@ export const procesos_oficio: any = {
     tarjetaResumenInscripciones: "99P",
     tarjetaResumenCola: "93P",
     solicitarAltaTurno: "9A1",
-    modificacionDirecciones: "151",
     //FIN INSCRIPCIONES TURNO
 
     bajastemporales: "9Z5",
