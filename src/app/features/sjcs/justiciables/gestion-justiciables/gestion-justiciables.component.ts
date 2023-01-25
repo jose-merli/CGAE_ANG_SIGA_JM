@@ -603,16 +603,22 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   fillJusticiableBuesquedaItemToUnidadFamiliarEJG() {
-    let justiciableUnidadFamiliar = JSON.parse(sessionStorage.getItem("Familiar"));
-    this.justiciableBusquedaItem = new JusticiableBusquedaItem();
-    this.justiciableBusquedaItem.idpersona = justiciableUnidadFamiliar.uf_idPersona;
-    this.justiciableBusquedaItem.idinstitucion = justiciableUnidadFamiliar.uf_idInstitucion;
-
     if(this.body == undefined || this.body == null){
       this.body = new JusticiableItem();
+      this.body = this.persistenceService.getDatos();
     }
-    this.body.idrepresentantejg = justiciableUnidadFamiliar.nifRepresentante;
-    this.body.nombre = justiciableUnidadFamiliar.representante;
+    
+    let justiciableUnidadFamiliar = JSON.parse(sessionStorage.getItem("Familiar"));
+    this.justiciableBusquedaItem = new JusticiableBusquedaItem();
+    
+    if(justiciableUnidadFamiliar == null || justiciableUnidadFamiliar == undefined){
+      this.justiciableBusquedaItem = this.persistenceService.getDatos();
+    }else {
+      this.justiciableBusquedaItem.idpersona = justiciableUnidadFamiliar.uf_idPersona;
+      this.justiciableBusquedaItem.idinstitucion = justiciableUnidadFamiliar.uf_idInstitucion;
+      this.body.idrepresentantejg = justiciableUnidadFamiliar.nifRepresentante;
+      this.body.nombre = justiciableUnidadFamiliar.representante;
+    }
 
     this.searchByIdPersona(this.justiciableBusquedaItem);
   }
