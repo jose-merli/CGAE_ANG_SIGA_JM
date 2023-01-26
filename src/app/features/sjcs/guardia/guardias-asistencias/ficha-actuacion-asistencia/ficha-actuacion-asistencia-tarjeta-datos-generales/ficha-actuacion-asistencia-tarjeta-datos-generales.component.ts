@@ -81,13 +81,13 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
 
     let error = false;
 
-    if (this.datosGeneralesActuacion.nig == null || (this.datosGeneralesActuacion.nig != null && !error && !this.validarNig(this.datosGeneralesActuacion.nig))) {
+    if ((this.datosGeneralesActuacion.nig != null && !error && !this.validarNig(this.datosGeneralesActuacion.nig))) {
       this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
       error = true;
     }
 
     if(this.asistencia.numProcedimiento && !this.asistencia.numDiligencia){
-      if (this.datosGeneralesActuacion.numAsunto == null || (this.datosGeneralesActuacion.numAsunto != null && !error && !this.validarNProcedimiento(this.datosGeneralesActuacion.numAsunto))) {
+      if ((this.datosGeneralesActuacion.numAsunto != null && !error && !this.validarNProcedimiento(this.datosGeneralesActuacion.numAsunto))) {
         this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido"));
         error = true;
       }

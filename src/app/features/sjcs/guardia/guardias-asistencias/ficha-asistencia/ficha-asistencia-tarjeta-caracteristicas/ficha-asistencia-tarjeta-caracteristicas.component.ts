@@ -140,12 +140,12 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
 
     let error = false;
 
-    if (this.caracteristica.nig == null || (this.caracteristica.nig != null && !error && !this.validarNig(this.caracteristica.nig))) {
+    if ((this.caracteristica.nig != null && !error && !this.validarNig(this.caracteristica.nig))) {
       this.showMsg('error', this.translateService.instant("justiciaGratuita.oficio.designa.NIGInvalido"), '');
       error = true;
     }
 
-    if (this.caracteristica.numeroProcedimiento == null || (this.caracteristica.numeroProcedimiento != null && !error && !this.validarNProcedimiento(this.caracteristica.numeroProcedimiento))) {
+    if ((this.caracteristica.numeroProcedimiento != null && !error && !this.validarNProcedimiento(this.caracteristica.numeroProcedimiento))) {
       this.showMsg('error', this.translateService.instant('general.message.incorrect'), this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido"));
       error = true;
     }
