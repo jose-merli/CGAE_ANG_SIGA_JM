@@ -386,7 +386,11 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   }
 
   getComboTipoActuacion(){
-    this.sigaServices.getParam("combo_comboTipoActuacion","?anioNumero="+this.asistencia.anioNumero).subscribe(
+    let idtipoActuacion = "-1";
+    if(this.actuacion != null){
+      idtipoActuacion= this.actuacion.tipoActuacion;
+    }
+    this.sigaServices.getParam("combo_comboTipoActuacion","?anioNumero="+this.asistencia.anioNumero+"&idTipoAsistencia="+idtipoActuacion).subscribe(
       n => {
         this.comboTipoActuacion = n.combooItems;
       },
