@@ -252,9 +252,17 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     if (this.asistencia.idTurno && this.asistencia.idGuardia) {
 
       sessionStorage.setItem("idGuardiaAsistencia", this.asistencia.idGuardia);
+      let idTurno = "x";
+      let idGuardia = "x";
+      if(this.asistencia.idTurno!=undefined && this.asistencia.idTurno != null){
+        idTurno = this.asistencia.idTurno;
+      }
+      if(this.asistencia.idGuardia!=undefined && this.asistencia.idGuardia != null){
+        idGuardia = this.asistencia.idGuardia;
+      }
 
       this.sigaServices.getParam(
-        "busquedaGuardias_getTiposAsistencia", "?idTurno=" + this.asistencia.idTurno + "&idGuardia=" + this.asistencia.idGuardia).subscribe(
+        "busquedaGuardias_getTiposAsistencia", "?idTurno=" + idTurno + "&idGuardia=" + idGuardia).subscribe(
           data => {
 
             this.comboTipoAsistenciaColegio = data.combooItems;

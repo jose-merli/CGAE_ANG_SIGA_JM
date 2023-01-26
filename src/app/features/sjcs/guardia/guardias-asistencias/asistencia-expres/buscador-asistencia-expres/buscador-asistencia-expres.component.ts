@@ -286,8 +286,16 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     this.usuarioBusquedaExpress.numColegiado = '';
     this.comboTiposAsistencia = [];
     this.comboLetradosGuardia = [];
+    let idTurno = "x";
+    let idGuardia = "x";
+    if(this.filtro.idTurno!=undefined && this.filtro.idTurno != null){
+      idTurno = this.filtro.idTurno;
+    }
+    if(this.filtro.idGuardia!=undefined && this.filtro.idGuardia != null){
+      idGuardia = this.filtro.idGuardia;
+    }
     this.sigaServices.getParam(
-      "busquedaGuardias_getTiposAsistencia", "?idTurno=" + this.filtro.idTurno + "&idGuardia=" + this.filtro.idGuardia).subscribe(
+      "busquedaGuardias_getTiposAsistencia", "?idTurno=" + idTurno + "&idGuardia=" + idGuardia).subscribe(
         data => {
           
           this.comboTiposAsistencia = data.combooItems;
