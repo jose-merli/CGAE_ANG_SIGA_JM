@@ -112,7 +112,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           if (!this.nuevaDesigna) {
             this.inputs[0].value = this.campos.nig;
             this.inputs[1].value = this.campos.numProcedimiento;
-            this.asuntoValue = this.campos.resumenAsunto
+            this.asuntoValue = this.campos.observaciones
             this.estadoValue = this.campos.sufijo;
             this.disableEstado = true;
             this.juzgadoValue = this.campos.idJuzgado;
@@ -454,7 +454,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.moduloOpciones = [];
         this.inputs[0].value = this.datosInicial.nig;
         this.inputs[1].value = this.datosInicial.numProcedimiento;
-        this.asuntoValue = this.datosInicial.resumenAsunto;
+        this.asuntoValue = this.datosInicial.observaciones;
         this.datePickers[0].value = this.formatDate(this.datosInicial.fechaEstado);
         this.delitosValue = this.initDelitos;
         let designaUpdate = new DesignaItem();

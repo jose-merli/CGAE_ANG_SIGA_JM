@@ -133,12 +133,33 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
       //Se cambia el valor del campo ano para que se procese de forma adecuada 
       //En la ficha en las distintas tarjetas para obtener sus valores
       desItem.ano = 'D' + desItem.ano + '/' + desItem.codigo;
-      // Volver a la ASISTENCIA desde Designas.
-      sessionStorage.setItem('backAsistencia',JSON.stringify(true));
-      sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
-      sessionStorage.setItem("nuevaDesigna", "false");
-      sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
-      this.router.navigate(['/fichaDesignaciones']);
+
+      let request = [desItem.ano, desItem.idTurno, desItem.numero];
+        this.sigaServices.post("designaciones_busquedaDesignacionActual", request).subscribe(
+          data => {
+            let datos = JSON.parse(data.body);
+            //Se cambia el valor del campo ano para que se procese de forma adecuada 
+            //En la ficha en las distintas tarjetas para obtener sus valores
+            //
+            datos.descripcionTipoDesigna = desItem.descripcionTipoDesigna;
+            datos.fechaEntradaInicio = desItem.fechaEntradaInicio;
+            datos.nombreColegiado = desItem.nombreColegiado;
+            datos.nombreProcedimiento = desItem.nombreProcedimiento;
+            datos.nombreTurno = desItem.nombreTurno;
+            datos.idInstitucion = desItem.idInstitucion;
+            datos.idTurno = desItem.idTurno;
+            desItem = datos;
+            desItem.anio = desItem.ano;
+            desItem.idProcedimiento = desItem.idProcedimiento;
+            desItem.numProcedimiento = desItem.numProcedimiento;
+            desItem.ano = 'D' + desItem.anio + '/' + desItem.codigo;
+
+            sessionStorage.setItem('backAsistencia',JSON.stringify(true));
+            sessionStorage.setItem('designaItemLink', JSON.stringify(desItem));
+            sessionStorage.setItem("idAsistencia", this.asistencia.anioNumero);
+            sessionStorage.setItem("nuevaDesigna", "false");
+            this.router.navigate(['/fichaDesignaciones']);
+          });
 
     } else if ('E' == tipoAsunto) { //Si empieza por E es un EJG, redirigimos a la ficha
       this.progressSpinner = true;
