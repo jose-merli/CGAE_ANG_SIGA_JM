@@ -8,6 +8,7 @@ export let endpoints_justiciables: any = {
     busquedaJusticiables_searchJusticiables: "justiciables/busquedaJusticiables/searchJusticiables",
     gestionJusticiables_comboPoblacion: "justiciables/gestionJusticiables/comboPoblacion",
     gestionJusticiables_comboTipoVias: "justiciables/gestionJusticiables/comboTipoVias",
+    gestionJusticiables_comboTipoVias2: "justiciables/gestionJusticiables/comboTipoVias2",
     gestionJusticiables_createJusticiable: "justiciables/gestionJusticiables/createJusticiable",
     gestionJusticiables_updateJusticiable: "justiciables/gestionJusticiables/updateJusticiable",
     gestionJusticiables_updateDatosSolicitudJusticiable: "justiciables/gestionJusticiables/updateDatosSolicitudJusticiable",

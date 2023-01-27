@@ -776,7 +776,7 @@ export class DatosPersonalesComponent implements OnInit {
 
   getComboTipoVia() {
     this.progressSpinner = true;
-    this.sigaServices.get("gestionJusticiables_comboTipoVias").subscribe(
+    this.sigaServices.getParam("gestionJusticiables_comboTipoVias2", "?idTipoViaJusticiable=" + this.body.idtipovia).subscribe(
       n => {
         this.comboTipoVia = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTipoVia);
