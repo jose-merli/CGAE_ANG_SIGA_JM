@@ -36,6 +36,7 @@ export class TablaResultadoMixSaltosCompService {
           cellObject.type = cell['type'];
           cellObject.combo = cell['combo'];
           cellObject.value = cell['value'];
+          cellObject.disabled = cell['disabled'];
         } else {
           cellObject.type = cell['type'];
           cellObject.value = cell['value'];

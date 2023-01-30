@@ -430,7 +430,7 @@ export class SaltosCompensacionesGuardiaComponent implements OnInit {
           { type: 'text', value: element.guardia, header: this.cabeceras[1].id, disabled: false },
           { type: 'text', value: element.nColegiado, header: this.cabeceras[2].id, disabled: false },
           { type: element.grupo == null ? 'text' : 'arrayText', value: element.letrado, header: this.cabeceras[3].id, disabled: false },
-          { type: 'select', combo: element.grupo == null ? this.comboTipos : this.comboTiposGrupo, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: false },
+          { type: 'select', combo: element.grupo == null ? this.comboTipos : this.comboTiposGrupo, value: element.saltoCompensacion, header: this.cabeceras[4].id, disabled: true },
           { type: 'datePicker', value: element.fecha, header: this.cabeceras[5].id, disabled: false },
           { type: 'textarea', value: element.motivo, header: this.cabeceras[6].id, disabled: false },
           { type: 'text', value: element.fechaUso, header: this.cabeceras[7].id, disabled: false },
