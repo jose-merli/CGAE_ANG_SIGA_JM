@@ -8,6 +8,7 @@ import { RemesasBusquedaObject } from '../../../../../models/sjcs/RemesasBusqued
 import { Router } from '../../../../../../../node_modules/@angular/router';
 import { ComboItem } from '../../../../administracion/parametros/parametros-generales/parametros-generales.component';
 import { RemesasItem } from '../../../../../models/sjcs/RemesasItem';
+import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 
 @Component({
   selector: 'app-tarjeta-ejgs',
@@ -69,6 +70,11 @@ export class TarjetaEjgsComponent implements OnInit {
     },
   ];
 
+
+  commonServices: CommonsService;
+  ejgObject = [];
+  datosItem: EJGItem;
+
   constructor(private translateService: TranslateService,
     private changeDetectorRef: ChangeDetectorRef,
     private sigaServices: SigaServices,
@@ -79,8 +85,9 @@ export class TarjetaEjgsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
     if(this.remesaTabla != null){
-      this.getEJGRemesa(this.remesaTabla);
+      this.getEJGRemesa(this.remesaTabla);    
     }
 
     this.getCols();
@@ -344,6 +351,94 @@ export class TarjetaEjgsComponent implements OnInit {
 
   clear() {
     this.msgs = [];
+  }
+
+  datosEJGRemesas(selected) {
+
+    let paginacion = {
+      paginacion: this.tabla.first,
+      selectedItem: this.selectedItem
+    };
+
+    this.persistenceService.setPaginacion(paginacion);
+    
+    this.progressSpinner = true;
+
+    let ejgItemSelected : EJGItem = this.fillEjgItemBySelectedRow(selected);
+
+    this.sigaServices.post("gestionejg_datosEJG", ejgItemSelected).subscribe(
+      n => {
+        this.ejgObject = JSON.parse(n.body).ejgItems;
+        this.datosItem = this.ejgObject[0];
+        this.persistenceService.setDatosEJG(this.datosItem);
+        //this.persistenceService.setFiltrosEJG(this.filtro);
+        //this.ngOnInit();
+        //this.consultaUnidadFamiliar(selected);
+        if (sessionStorage.getItem("EJGItem")) {
+          sessionStorage.removeItem("EJGItem");
+        }
+
+        this.router.navigate(['/gestionEjg']);
+        this.progressSpinner = false;
+        this.commonServices.scrollTop();
+      },
+      err => {
+        this.commonServices.scrollTop();
+      }
+    );
+  }
+
+  fillEjgItemBySelectedRow(rowSelect: any): EJGItem {
+    let ejgReturn : EJGItem = new EJGItem();
+    if (rowSelect != undefined) {
+      ejgReturn.annio = rowSelect.anioEJG != undefined && (rowSelect.anioEJG != null && rowSelect.anioEJG != "") ? rowSelect.anioEJG : null;
+      ejgReturn.estadoEJG = rowSelect.estadoEJG != undefined && (rowSelect.estadoEJG != null && rowSelect.estadoEJG != "") ? rowSelect.estadoEJG : null;
+      ejgReturn.identificadords = rowSelect.identificadorEJG != undefined && (rowSelect.identificadorEJG != null && rowSelect.identificadorEJG != "") ? rowSelect.identificadorEJG : null;
+      ejgReturn.idEJG = rowSelect.idEjgRemesa != undefined && (rowSelect.idEjgRemesa != null && rowSelect.idEjgRemesa != "") ? rowSelect.idEjgRemesa : null;
+      ejgReturn.tipoEJG = rowSelect.idTipoEJG != undefined && (rowSelect.idTipoEJG != null && rowSelect.idTipoEJG != "") ? rowSelect.idTipoEJG : null;
+      ejgReturn.numEjg = rowSelect.numeroEJG != undefined && (rowSelect.numeroEJG != null && rowSelect.numeroEJG != "") ? rowSelect.numeroEJG : null;
+      ejgReturn.idInstitucion = rowSelect.idInstitucion != undefined && (rowSelect.idInstitucion != null && rowSelect.idInstitucion != "") ? rowSelect.idInstitucion : null;
+    }
+    return ejgReturn;
+  }
+
+  goToEjgSelectedRemesa(rowSelected) {
+    this.progressSpinner = true;
+        //let ejgItem = this.fillEjgItemBySelectedRow(rowSelected);
+        let ejgItem = new EJGItem();
+        ejgItem.annio = rowSelected.anioEJG;
+        // ejgItem.numero = dato.numero;
+        ejgItem.numero = rowSelected.numeroEJG;
+        ejgItem.idInstitucion = rowSelected.idinstitucion;
+        ejgItem.tipoEJG = rowSelected.tipoEJG;
+
+        let result;
+        // al no poder obtener todos los datos del EJG necesarios para obtener su informacion
+        //se hace una llamada a al base de datos pasando las claves primarias y obteniendo los datos necesarios
+        this.sigaServices.post("filtrosejg_busquedaEJG", ejgItem).subscribe(
+          n => {
+            result = JSON.parse(n.body).ejgItems;
+            sessionStorage.setItem("EJGItemDesigna", JSON.stringify(result[0]));
+            let error = JSON.parse(n.body).error;
+
+            this.progressSpinner = false;
+            if (error != null && error.description != null) {
+              this.showMessage("info", this.translateService.instant("general.message.informacion"), error.description);
+            }
+          },
+          err => {
+            this.progressSpinner = false;
+            //console.log(err);
+          },
+          () => {
+            if (this.remesaTabla) {
+              localStorage.setItem("remesa", JSON.stringify(this.remesaTabla)); 
+            } else {
+              localStorage.setItem("remesa", JSON.stringify(this.remesaItem)); 
+            }
+            this.router.navigate(["/gestionEjg"]);
+          }
+        );
   }
 
 }

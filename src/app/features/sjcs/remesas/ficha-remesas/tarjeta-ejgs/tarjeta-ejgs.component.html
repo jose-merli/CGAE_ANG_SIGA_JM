@@ -76,11 +76,15 @@
       <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
         <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
 
-          <td class="text-center" *ngFor="let col of columns;">
-
-            <span *ngIf="col.field != 'incidencias'">
-              {{dato[col.field]}}
+          <td class="text-center" *ngFor="let col of columns;"> 
+            <span *ngIf="col.field != 'numeroEJG' && col.field != 'incidencias'">
+                {{dato[col.field]}}
             </span>
+            <a class="enlace" (click)="goToEjgSelectedRemesa(dato)">
+              <span *ngIf="col.field == 'numeroEJG'">
+                {{dato[col.field]}}
+              </span>
+            </a>
           </td>
 
         </tr>
