@@ -336,7 +336,7 @@
                             </p-dropdown>
                         </div>
 
-                        <div class="form-group-interlineado col-lg-3 col-md-3 vertical-center">
+                        <div [hidden]="ocultarRestricciones" class="form-group-interlineado col-lg-3 col-md-3 vertical-center">
                             <p-checkbox binary="true" [disabled]="isLetrado"
                                 label="{{ 'justiciaGratuita.oficio.justificacionExpres.activarRestriccionesVisualizacion' | translate }}"
                                 class="ml-0" [(ngModel)]="checkRestricciones"
@@ -348,7 +348,7 @@
                             <label>{{ 'justiciaGratuita.oficio.justificacionExpres.incluirSinEJG' | translate }}</label>
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                                [(ngModel)]='filtroJustificacion.sinEJG' [options]="comboEJGSinResolucion"
+                                [(ngModel)]='filtroJustificacion.sinEJG' [options]="comboSinEJG"
                                 [(disabled)]="disableRestricciones">
                             </p-dropdown>
                         </div>
@@ -366,7 +366,7 @@
                                 }}</label>
                             <p-dropdown [filter]="true" styleClass="widthAll" filterBy="label,labelSinTilde"
                                 [showClear]="false" placeholder="{{ 'general.boton.seleccionar' | translate }}"
-                                [(ngModel)]='filtroJustificacion.ejgSinResolucion' [options]="comboSinEJG"
+                                [(ngModel)]='filtroJustificacion.ejgSinResolucion' [options]="comboEJGSinResolucion"
                                 [(disabled)]="disableRestricciones">
                             </p-dropdown>
                         </div>

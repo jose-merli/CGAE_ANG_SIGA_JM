@@ -122,16 +122,49 @@ export class DesignacionesComponent implements OnInit {
     this.muestraTablaJustificacion=false;
     this.progressSpinner = true;
 
-    this.sigaServicesNew.post("justificacionExpres_actualizacion", event).subscribe(
+    this.sigaServicesNew.post("justificacionExpres_actualizacion", { listaItem: event, filtro:  this.filtros.filtroJustificacion }).subscribe(
       data => {
+        // Obtenemos los contadores de los registros actualizados mediante tokens
+        let contadores = JSON.parse(data.body).error.message.split(';');
+        // Generamos el mensaje de de confirmación
+        let mensaje = this.generaMensajeConfirmacion(contadores);
+
         //refrescamos tabla
         this.busquedaJustificacionExpres();
         this.progressSpinner = false;
-        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+
+        // Si todos los cambios han sido realizados correctamente, se mostrará el mensaje de éxito, de lo contrario se mostrará un aviso
+        if (mensaje.indexOf('.') == mensaje.lastIndexOf('.')) {
+          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        } else {
+          this.showMessage("warn", this.translateService.instant("general.message.warn"), mensaje);
+        }
       },
       err => {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       },);
+  }
+
+  generaMensajeConfirmacion(contadores: any) {
+    let mensaje = contadores[0] + " " + this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.guardadosCorrectamente");
+    
+    if (contadores[1] > 0) {
+      mensaje += "\n\r" + contadores[1] + " " + this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noGuardadosSinEjg");
+    }
+
+    if (contadores[2] > 0) {
+      mensaje += "\n\r" + contadores[2] + " " + this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noGuardadosEjgSinResolucion");
+    }
+
+    if (contadores[3] > 0) {
+      mensaje += "\n\r" + contadores[3] + " " + this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noGuardadosEjgNoFavorable");
+    }
+
+    if (contadores[4] > 0) {
+      mensaje += "\n\r" + contadores[4] + " " + this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noGuardadosEjgResolucionPteCajg");
+    }
+
+    return mensaje;
   }
 
   eliminacionJustificacionExpres(event){

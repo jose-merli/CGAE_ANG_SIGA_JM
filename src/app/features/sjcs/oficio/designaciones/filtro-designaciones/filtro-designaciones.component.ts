@@ -70,6 +70,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   disabledFechaAHasta: boolean = true;
   disabledfechaJustificacion: boolean = true;
   disableRestricciones: boolean = true;
+  ocultarRestricciones: boolean = false;
   comboTipoDesigna: any[];
   comboTurno: any[];
   actuacionesV: any[];
@@ -263,7 +264,13 @@ export class FiltroDesignacionesComponent implements OnInit {
       this.getDataLoggedUser();
       this.disableRestricciones = true;
     } else {
-      this.disableRestricciones = false;
+      if (this.isLetrado) {
+        this.disableRestricciones = true;
+        this.ocultarRestricciones = true;
+      } else {
+        this.disableRestricciones = false;
+      }
+
       this.disabledBusquedaExpress = false;
       this.filtroJustificacion.ejgSinResolucion = "2";
       this.filtroJustificacion.sinEJG = "2";
@@ -954,9 +961,9 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   cargaComboSinEJG() {
     this.comboSinEJG = [
-      { label: 'EJG con resolución', value: '0' },
-      { label: 'EJG sin resolución (modo lectura)', value: '1' },
-      { label: 'EJG sin resolución (se puede justificar)', value: '2' }
+      { label: 'Con EJG Relacionado', value: '0' },
+      { label: 'Sin EJG Relacionado (modo lectura)', value: '1' },
+      { label: 'Sin EJG Relacionado (se puede justificar)', value: '2' }
     ];
   }
 
@@ -970,9 +977,9 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   cargaComboEJGSinResolucion() {
     this.comboEJGSinResolucion = [
-      { label: 'Con EJG Relacionado', value: '0' },
-      { label: 'Sin EJG Relacionado (modo lectura)', value: '1' },
-      { label: 'Sin EJG Relacionado (se puede justificar)', value: '2' }
+      { label: 'EJG con resolución', value: '0' },
+      { label: 'EJG sin resolución (modo lectura)', value: '1' },
+      { label: 'EJG sin resolución (se puede justificar)', value: '2' }
     ];
   }
 
