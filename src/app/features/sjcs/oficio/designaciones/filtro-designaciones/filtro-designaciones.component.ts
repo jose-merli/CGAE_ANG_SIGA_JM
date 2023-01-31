@@ -961,41 +961,41 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   cargaComboSinEJG() {
     this.comboSinEJG = [
-      { label: 'Con EJG Relacionado', value: '0' },
-      { label: 'Sin EJG Relacionado (modo lectura)', value: '1' },
-      { label: 'Sin EJG Relacionado (se puede justificar)', value: '2' }
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboSinEJG.conejgrelacionado'), value: '0' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboSinEJG.sinejgrelacionadolectura'), value: '1' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboSinEJG.sinejgrelacionado'), value: '2' }
     ];
   }
 
   cargaComboEJGnoFavorable() {
     this.comboEJGnoFavorable = [
-      { label: 'No se incluyen', value: '0' },
-      { label: 'Se incluyen (modo lectura)', value: '1' },
-      { label: 'Se incluye (se puede justificar)', value: '2' }
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboEJGnofavorable.noincluye'), value: '0' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboEJGnofavorable.incluyelectura'), value: '1' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboEJGnofavorable.incluyejustificar'), value: '2' }
     ];
   }
 
   cargaComboEJGSinResolucion() {
     this.comboEJGSinResolucion = [
-      { label: 'EJG con resolución', value: '0' },
-      { label: 'EJG sin resolución (modo lectura)', value: '1' },
-      { label: 'EJG sin resolución (se puede justificar)', value: '2' }
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboEJGresolucion.ejgconresolucion'), value: '0' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboEJGresolucion.ejgsinresolucionlectura'), value: '1' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboEJGresolucion.ejgsinresolucionjustificar'), value: '2' }
     ];
   }
 
   cargaComboResoluciones() {
     this.comboResoluciones = [
-      { label: 'No se incluyen', value: '0' },
-      { label: 'Se incluyen (modo lectura)', value: '1' },
-      { label: 'Se incluye (se puede justificar)', value: '2' }
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboresoluciones.noincluye'), value: '0' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboresoluciones.incluyelectura'), value: '1' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboresoluciones.incluyejustificar'), value: '2' }
     ];
   }
 
   cargaComboActuacionesValidadas() {
     this.comboActuacionesValidadas = [
-      { label: 'Sí', value: 'SI' },
-      { label: 'No', value: 'NO' },
-      { label: 'Sin actuaciones', value: 'SINACTUACIONES' }
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboactuacionvalidada.si'), value: 'SI' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboactuacionvalidada.no'), value: 'NO' },
+      { label: this.translateService.instant('justiciaGratuita.oficio.justificacion.comboactuacionvalidada.sinactuaciones'), value: 'SINACTUACIONES' }
     ];
   }
 
