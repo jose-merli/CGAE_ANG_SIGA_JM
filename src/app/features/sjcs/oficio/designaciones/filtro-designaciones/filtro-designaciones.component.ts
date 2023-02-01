@@ -135,101 +135,67 @@ export class FiltroDesignacionesComponent implements OnInit {
 
   }
 
-  getParamsEJG(restricted) {
-    let parametro = new ParametroRequestDto();
-    let institucionActual;
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      institucionActual = n.value;
-      parametro.idInstitucion = institucionActual;
-      parametro.modulo = "SCS";
-      //PARAMETRO JUSTIFICACION_INCLUIR_SIN_EJG
-      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_SIN_EJG";
-      this.sigaServices
-        .postPaginado("parametros_search", "?numPagina=1", parametro)
-        .subscribe(
-          data => {
-            this.searchParametros = JSON.parse(data["body"]);
-            this.datosBuscar = this.searchParametros.parametrosItems;
-            this.datosBuscar.forEach(element => {
-              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
-                this.valorParametro = element.valor;
-                this.sinEjg = this.valorParametro;
+  getParamsEJG(restricted: boolean) {
+    //PARAMETRO JUSTIFICACION_INCLUIR_SIN_EJG
+    this.getConfComboRestriccionJustificacion(restricted, "JUSTIFICACION_INCLUIR_SIN_EJG");
 
-                if (restricted) {
-                  this.filtroJustificacion.sinEJG = element.valor;
-                }
-                
-              }
-            });
-          });
-      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION
-      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION";
-      this.sigaServices
-        .postPaginado("parametros_search", "?numPagina=1", parametro)
-        .subscribe(
-          data => {
-            this.searchParametros = JSON.parse(data["body"]);
-            this.datosBuscar = this.searchParametros.parametrosItems;
-            this.datosBuscar.forEach(element => {
-              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
-                this.valorParametro = element.valor;
-                this.ejgSinResolucion = this.valorParametro;
+    //PARAMETRO JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION
+    this.getConfComboRestriccionJustificacion(restricted, "JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION");
 
-                if (restricted) {
-                  this.filtroJustificacion.ejgSinResolucion = element.valor; 
-                }
+    //PARAMETRO JUSTIFICACION_INCLUIR_EJG_PTECAJG
+    this.getConfComboRestriccionJustificacion(restricted, "JUSTIFICACION_INCLUIR_EJG_PTECAJG");
 
-              }
-            });
-          });
-      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_PTECAJG
-      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_PTECAJG";
-      this.sigaServices
-        .postPaginado("parametros_search", "?numPagina=1", parametro)
-        .subscribe(
-          data => {
-            this.searchParametros = JSON.parse(data["body"]);
-            this.datosBuscar = this.searchParametros.parametrosItems;
-            this.datosBuscar.forEach(element => {
-              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
-                this.valorParametro = element.valor;
-                this.ejgPtecajg = this.valorParametro;
-
-                if (restricted) {
-                  this.filtroJustificacion.resolucionPTECAJG = element.valor;
-                }
-
-              }
-            });
-          });
-      //PARAMETRO JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE
-      parametro.parametrosGenerales = "JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE";
-      this.sigaServices
-        .postPaginado("parametros_search", "?numPagina=1", parametro)
-        .subscribe(
-          data => {
-            this.searchParametros = JSON.parse(data["body"]);
-            this.datosBuscar = this.searchParametros.parametrosItems;
-            this.datosBuscar.forEach(element => {
-              if (element.parametro == parametro.parametrosGenerales && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
-                this.valorParametro = element.valor;
-                this.ejgNoFavorable = this.valorParametro;
-
-                if (restricted) {
-                  this.filtroJustificacion.conEJGNoFavorables = element.valor;
-                }
-
-              }
-            });
-          });
-    });
-
-
-    /*escolegio sin check 2 y editabe¡le. es colegiado o colegio y actuvo el check disable y sin valores. Tiene que coger valores del paramero 
-    check solo visible para colegiados y activado
-    colegio desactivado*/
-
+    //PARAMETRO JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE
+    this.getConfComboRestriccionJustificacion(restricted, "JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE");
   }
+
+  getConfComboRestriccionJustificacion(restricted : boolean, parametroBusqueda : string){
+    let parametro = {
+      valor: parametroBusqueda
+    };
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.valorParametro = JSON.parse(data.body).parametro;
+          switch (parametroBusqueda) {
+            
+            case "JUSTIFICACION_INCLUIR_SIN_EJG": {
+              this.sinEjg = this.valorParametro;
+              if (restricted) {
+                this.filtroJustificacion.sinEJG = this.valorParametro.toString();
+              }        
+              break;
+            }
+
+            case "JUSTIFICACION_INCLUIR_EJG_SIN_RESOLUCION": {
+              this.ejgSinResolucion = this.valorParametro;
+              if (restricted) {
+                this.filtroJustificacion.ejgSinResolucion = this.valorParametro.toString(); 
+              }
+              break;
+            }
+
+            case "JUSTIFICACION_INCLUIR_EJG_PTECAJG": {
+              this.ejgPtecajg = this.valorParametro;
+              if (restricted) {
+                this.filtroJustificacion.resolucionPTECAJG = this.valorParametro.toString();
+              }
+              break;
+            }
+
+            case "JUSTIFICACION_INCLUIR_EJG_NOFAVORABLE": {
+              this.ejgNoFavorable = this.valorParametro;
+              if (restricted) {
+                this.filtroJustificacion.conEJGNoFavorables = this.valorParametro.toString();
+              }
+              break;
+            }
+          }
+
+      });
+  }
+
   cargaInicial() {
     this.isLetrado = this.localStorageService.isLetrado;
 
