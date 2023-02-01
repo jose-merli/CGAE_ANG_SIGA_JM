@@ -148,7 +148,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.rowValidadas = [];
       sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
       this.getParams("JUSTIFICACION_EDITAR_DESIGNA_LETRADOS");
-      this.getParams("CONFIGURAR_COMBO_DESIGNA");
+      this.getConfComboDesigna();
 
 
       //this.cargaJuzgados.emit(false);
@@ -1872,6 +1872,18 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     );
   }
 
+  getConfComboDesigna(){
+    let parametro = {
+      valor: "CONFIGURAR_COMBO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.configComboDesigna = JSON.parse(data.body).parametro;
+      });
+  }
 
   getParams(param) {
     let parametro = new ParametroRequestDto();
@@ -1892,8 +1904,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                 this.valorParametro = element.valor;
                 if (param == "JUSTIFICACION_EDITAR_DESIGNA_LETRADOS") {
                   this.justActivarDesigLetrado = this.valorParametro;
-                } else if (param == "CONFIGURAR_COMBO_DESIGNA") {
-                  this.configComboDesigna = this.valorParametro;
                 }
               }
             });

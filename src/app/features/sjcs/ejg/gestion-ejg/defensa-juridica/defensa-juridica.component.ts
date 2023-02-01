@@ -860,21 +860,15 @@ export class DefensaJuridicaComponent implements OnInit {
   }
 
   cargarProcedimiento(){
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.body.idInstitucion;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "CONFIGURAR_COMBO_DESIGNA";
+    let parametro = {
+      valor: "CONFIGURAR_COMBO_DESIGNA"
+    };
+
     this.sigaServices
-      .postPaginado("parametros_search", "?numPagina=1", parametro)
+      .post("busquedaPerJuridica_parametroColegio", parametro)
       .subscribe(
         data => {
-          this.searchParametrosSCS = JSON.parse(data["body"]);
-          this.datosBuscar = this.searchParametrosSCS.parametrosItems;
-          this.datosBuscar.forEach(element => {
-            if (element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-              this.valorParametro = element.valor;
-            }
-          });
+          this.valorParametro = JSON.parse(data.body).parametro;
 
           // Parametro "CONFIGURAR_COMBO_DESIGNA" 
           if (this.valorParametro == 1 || this.valorParametro == 4) {

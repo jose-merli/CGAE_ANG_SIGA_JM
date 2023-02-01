@@ -229,31 +229,17 @@ export class SelectorComponent implements OnInit {
   cargaCombosDesigna(){
     this.progressSpinner = true;
     let valorParametro;
-    let institucionActual;
-    let parametro = new ParametroRequestDto();
-    this.sigaServices.get("institucionActual").subscribe(n => {
-      institucionActual = n.value;});
-    parametro.idInstitucion = institucionActual;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "CONFIGURAR_COMBO_DESIGNA";
+
+    let parametro = {
+      valor: "CONFIGURAR_COMBO_DESIGNA"
+    };
+
     this.sigaServices
-      .postPaginado("parametros_search", "?numPagina=1", parametro)
+      .post("busquedaPerJuridica_parametroColegio", parametro)
       .subscribe(
         data => {
-           let searchParametros = JSON.parse(data["body"]);
-          let datosBuscar = searchParametros.parametrosItems;
-          datosBuscar.forEach(element => {
-            if (element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
-              valorParametro = element.valor;
-            }
-          });
-        },
-        err => {
-          //console.log(err);
-        },
-        () => {
-        }
-      );
+          valorParametro = JSON.parse(data.body).parametro;
+      });
 
     if (this.selector.nombre == "Juzgado" && this.selector.opciones[0].value !=null && this.selector.opciones[0].value !=undefined && this.selector.opciones[0].value !="") {
       if (valorParametro == 1) {
