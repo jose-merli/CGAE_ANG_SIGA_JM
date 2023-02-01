@@ -93,22 +93,14 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       { label: 'Finalizado', value: 'F' },
       { label: 'Anulada', value: 'A' }];
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
-    let parametro = new ParametroRequestDto();
     this.getComboJuzgados();
-    parametro.idInstitucion = this.campos.idInstitucion;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "CONFIGURAR_COMBO_DESIGNA";
+
     this.sigaServices
-      .postPaginado("parametros_search", "?numPagina=1", parametro)
+      .post("busquedaPerJuridica_parametroColegio", "CONFIGURAR_COMBO_DESIGNA")
       .subscribe(
         data => {
-          this.searchParametros = JSON.parse(data["body"]);
-          this.datosBuscar = this.searchParametros.parametrosItems;
-          this.datosBuscar.forEach(element => {
-            if (element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-              this.valorParametro = element.valor;
-            }
-          });
+          this.valorParametro = JSON.parse(data.body).parametro;
+
           if (!this.nuevaDesigna) {
             this.inputs[0].value = this.campos.nig;
             this.inputs[1].value = this.campos.numProcedimiento;
@@ -226,7 +218,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         () => {
         }
       );
-    parametro = new ParametroRequestDto();
+    let parametro = new ParametroRequestDto();
     parametro.idInstitucion = this.campos.idInstitucion;
     parametro.modulo = "SCS";
     parametro.parametrosGenerales = "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA";

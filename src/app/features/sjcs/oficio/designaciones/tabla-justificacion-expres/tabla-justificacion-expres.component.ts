@@ -1072,7 +1072,7 @@ actCellToJson(actuacionesCells){
   let numAsunto = actuacionesCells[19].value;
   let idProcedimiento = actuacionesCells[20].value;
   let idJuzgado = actuacionesCells[1].value;
-  let nombreJuzgado = actuacionesCells[1].combo[idJuzgado].label;
+  let nombreJuzgado = actuacionesCells[1].combo.find(item => item.value == idJuzgado).label;
   let fechaJustificacion = actuacionesCells[6].value;
   if (actuacionesCells[8].value == true){
     validada = "1";

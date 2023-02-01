@@ -1277,20 +1277,16 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
   getParametro() {
     this.progressSpinner = true;
+    
+    let parametro = {
+      valor: "CONFIGURAR_COMBO_DESIGNA"
+    };
 
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.institucionActual;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "CONFIGURAR_COMBO_DESIGNA";
-
-    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
-      data => {
-        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
-        resp.forEach(element => {
-          if (element.parametro == "CONFIGURAR_COMBO_DESIGNA" && (element.idInstitucion == element.idinstitucionActual || element.idInstitucion == '0')) {
-            this.parametroConfigCombos = element;
-          }
-        });
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroConfigCombos = JSON.parse(data.body).parametro;
       },
       err => {
         //console.log(err);
