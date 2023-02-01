@@ -141,6 +141,10 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       this.disableCrearEJG = true;
     }
 
+    if (this.tabla.selectedArray.length != 1) {
+      this.isDisabled = true;
+      this.disableCrearEJG = true;
+    }
     
   }
 
@@ -288,12 +292,14 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       cellNDiligencia.value = '';
       cellNDiligencia.size = 100;
       //Si es un RowGroup que puede estar colapsado lo comprobamos y si es asi la fila que añadimos tambien lo estara
-      /*if(this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.length > 1
+      let index = this.rowGroups.findIndex(rowGroup => rowGroup.id == this.tabla.selectedArray[0]);
+      if(this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.length > 1
           && this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows[1].position == 'collapse'){
-        rowToAdd.position = 'collapse';
-      }*/
+          this.tabla.rowGroupArrowClick(this.tabla.rowGroupEl, this.tabla.selectedArray[0]);
+          this.tabla.iconClickChange(this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[0],
+                                      this.tabla.rowGroupEl.toArray()[index].nativeElement.children[0].children[0].children[1]);
+      }
       rowToAdd.cells = [cellAsistido, cellDelitosObservaciones, cellEJG, cellFechaActuacion, cellLugar, cellNDiligencia];
-      //this.tabla.rowGroupArrowClick(this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]), this.tabla.selectedArray[0], true);
       this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows.push(rowToAdd);
       this.tabla.totalRegistros = this.rowGroups.length;
     }
@@ -321,7 +327,9 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
 
     let rowGroupsToUpdate : RowGroup[] = [];
 
-    if(this.tabla.rowIdsToUpdate && this.tabla.rowIdsToUpdate.length != 0){
+    if (this.compruebaCamposObligatorios()) {
+      this.showMsg('error',this.translateService.instant("formacion.mensaje.general.mensaje.error"), this.translateService.instant("general.message.camposObligatorios"));
+    } else if (this.tabla.rowIdsToUpdate && this.tabla.rowIdsToUpdate.length != 0) {
 
       let rowIdsToUpdateNOT_REPEATED = new Set(this.tabla.rowIdsToUpdate);
       this.tabla.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
@@ -343,9 +351,36 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       } else {
         this.saveTableData.emit(rowGroupsToUpdate);
       }
+    } else {
+      this.showMsg('warn',this.translateService.instant("formacion.mensaje.general.mensaje.warn"), this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.realizarModificacion"));
     }
 
     this.tabla.rowIdsToUpdate = [];
+  }
+
+  compruebaCamposObligatorios() {
+    let error = false;
+
+    this.rowGroups.forEach(rowGroup => {
+
+      rowGroup.rows.forEach(row => {
+
+        row.cells.forEach(cell => {
+          
+          if (cell.type == '5InputSelector') {
+
+            cell.value.forEach(val => {
+
+              if (val == undefined || val == '') {
+                error = true;
+              }
+            });
+          }
+        });
+      });
+    });
+
+    return error;
   }
 
   fillFecha(event) {

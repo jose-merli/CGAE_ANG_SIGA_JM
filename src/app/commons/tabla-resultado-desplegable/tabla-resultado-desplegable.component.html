@@ -162,23 +162,23 @@
                             <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [(ngModel)]="cell.value[0]" [value]="cell.value[0]"
+                                    [(ngModel)]="cell.value[0]" [value]="cell.value[0]" [ngClass]="styleObligatorio(cell.value[0])"
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);"
                                     (change)="onChangeNifJg($event.target.value, rowGroup.id, row, rowGroup);"
                                     placeholder="{{'administracion.usuarios.literal.NIF' | translate}}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [(ngModel)]="cell.value[1]" [value]="cell.value[1]"
+                                    [(ngModel)]="cell.value[1]" [value]="cell.value[1]" [ngClass]="styleObligatorio(cell.value[1])"
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                     placeholder="{{'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [(ngModel)]="cell.value[2]" [value]="cell.value[2]"
+                                    [(ngModel)]="cell.value[2]" [value]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[2])"
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                     placeholder="{{'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [(ngModel)]="cell.value[3]" [value]="cell.value[3]"
+                                    [(ngModel)]="cell.value[3]" [value]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[3])"
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                     placeholder="{{'administracion.parametrosGenerales.literal.nombre' | translate}}">
-                                <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[4]"
+                                <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[4]" [ngClass]="styleObligatorio(cell.value[4])"
                                     placeholder="{{'censo.busquedaClientesAvanzada.literal.sexo' | translate}}"
                                     [options]="cell.combo" showClear="true" styleClass="widthAll"
                                     (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
@@ -325,18 +325,18 @@
                         [ngClass]="{'column-d-flex': changeDisplay() == true}">
                         <input type="text" class="form-control " pInputText size="10" [value]="cell.value[0]"
                             (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);"
-                            [(ngModel)]="cell.value[0]"
+                            [(ngModel)]="cell.value[0]" [ngClass]="styleObligatorio(cell.value[0])"
                             (change)="onChangeNifJg($event.target.value, rowGroup.id, row, rowGroup);">
                         <input type="text" class="form-control " pInputText size="10" [value]="cell.value[1]"
                             (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
-                            [(ngModel)]="cell.value[1]">
+                            [(ngModel)]="cell.value[1]" [ngClass]="styleObligatorio(cell.value[1])">
                         <input type="text" class="form-control " pInputText size="10" [value]="cell.value[2]"
                             (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
-                            [(ngModel)]="cell.value[2]">
+                            [(ngModel)]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[2])">
                         <input type="text" class="form-control " pInputText size="10" [value]="cell.value[3]"
                             (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
-                            [(ngModel)]="cell.value[3]">
-                        <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[4]"
+                            [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[3])">
+                        <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[4]" [ngClass]="styleObligatorio(cell.value[4])"
                             placeholder="{{'censo.busquedaClientesAvanzada.literal.sexo' | translate}}"
                             [options]="cell.combo" showClear="true" styleClass="widthAll"
                             (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>

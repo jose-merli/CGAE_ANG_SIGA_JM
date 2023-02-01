@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange, ViewRef, KeyValueDiffers } from '@angular/core';
+import { ElementRef, Renderer2, Output, EventEmitter, SimpleChange, ViewRef, KeyValueDiffers, ViewChildren, QueryList } from '@angular/core';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Sort } from '@angular/material/sort';
@@ -25,6 +25,9 @@ import { EJGItem } from '../../models/sjcs/EJGItem';
 })
 export class TablaResultadoDesplegableComponent implements OnInit {
   @ViewChild("table") table;
+  @ViewChildren("rowGroupEl") rowGroupEl?: QueryList<ElementRef>;
+  @ViewChild("iconrightEl") iconrightEl;
+  @ViewChild("icondownEl") icondownEl;
   info = new FormControl();
   @Input() cabeceras = [];
   @Input() rowGroups: RowGroup[];
@@ -340,27 +343,29 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.down = !this.down
     this.RGid = rowGroupId;
     const toggle = rowWrapper;
-    for (let i = 0; i < rowWrapper.children.length; i++) {
-      if (rowWrapper.children[i].className.includes('child')) {
-        this.modalStateDisplay = false;
-        if (uncollapse === undefined) {
-          rowWrapper.children[i].className.includes('collapse')
-            ? this.renderer.removeClass(
+    if (rowWrapper.children != undefined) {
+      for (let i = 0; i < rowWrapper.children.length; i++) {
+        if (rowWrapper.children[i].className.includes('child')) {
+          this.modalStateDisplay = false;
+          if (uncollapse === undefined) {
+            rowWrapper.children[i].className.includes('collapse')
+              ? this.renderer.removeClass(
+                rowWrapper.children[i],
+                'collapse'
+              )
+              : this.renderer.addClass(
+                rowWrapper.children[i],
+                'collapse'
+              );
+          } else if (rowWrapper.children[i].className.includes('collapse')) {
+            this.renderer.removeClass(
               rowWrapper.children[i],
               'collapse'
             )
-            : this.renderer.addClass(
-              rowWrapper.children[i],
-              'collapse'
-            );
-        } else if (rowWrapper.children[i].className.includes('collapse')) {
-          this.renderer.removeClass(
-            rowWrapper.children[i],
-            'collapse'
-          )
+          }
+        } else {
+          this.modalStateDisplay = true;
         }
-      } else {
-        this.modalStateDisplay = true;
       }
     }
 
@@ -2423,6 +2428,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.rowGroupArrowClick(this.table.nativeElement.children[i], this.rowGroups[this.from + i-1].id);
         this.iconClickChange2(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0], this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[1]);
       }
+    }
+  }
+
+  styleObligatorio(evento){
+    if((evento==undefined || evento==null || evento=="")){
+      return this.commonsService.styleObligatorio(evento);
     }
   }
 }
