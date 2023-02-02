@@ -154,24 +154,24 @@ export class TarjetaLetradoComponent implements OnInit {
         }
       }).catch(error => console.error(error));
 
-    this.commonsService.checkAcceso(procesos_oficio.modificacionDirecciones)
-      .then(respuesta => {
-        this.permisosModificacionDirecciones = respuesta;
-        this.persistenceService.setPermisos(this.permisosTarjeta);
-        if (this.permisosModificacionDirecciones == undefined) {
-          sessionStorage.setItem("codError", "403");
-          sessionStorage.setItem(
-            "descError",
-            this.translateService.instant("generico.error.permiso.denegado")
-          );
-          this.router.navigate(["/errorAcceso"]);
-
-          this.permisosModificacionDirecciones = respuesta;
-        }/*else if(this.persistenceService.getPermisos() != true){
+   // this.commonsService.checkAcceso(procesos_oficio.modificacionDirecciones)
+   //   .then(respuesta => {
+   //     this.permisosModificacionDirecciones = respuesta;
+   //     this.persistenceService.setPermisos(this.permisosTarjeta);
+   //     if (this.permisosModificacionDirecciones == undefined) {
+   //       sessionStorage.setItem("codError", "403");
+   //       sessionStorage.setItem(
+   //         "descError",
+   //         this.translateService.instant("generico.error.permiso.denegado")
+   //       );
+   //       this.router.navigate(["/errorAcceso"]);
+   //       this.permisosModificacionDirecciones = respuesta;
+   //     }
+   /*else if(this.persistenceService.getPermisos() != true){
           this.permisosModificacionDirecciones = true;
         }*/
-      }
-      ).catch(error => console.error(error));
+   //   }
+   //   ).catch(error => console.error(error));
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
       let parametro = new ParametroRequestDto();
