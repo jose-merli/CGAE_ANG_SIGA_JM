@@ -94,7 +94,7 @@ export class TablaResultadoOrderComponent implements OnInit {
   xArr = [];
   unavailableUp = false;
   unavailableDown = false;
-  maxGroup = 0;
+  maxGroup;
   wrongPositionArr = [];
   @Input() totalRegistros = 0;
   numperPage = 10;
@@ -1118,7 +1118,7 @@ this.totalRegistros = this.rowGroups.length;
         }
       })
       
-      if ( this.enableUpDownButtonsManual && (posicion == 1 || this.grupos[posicion] <= 2) || ((this.listaGuardias || this.calendarios) && posicion >= 0) ) {
+      if ( this.enableUpDownButtonsManual && (posicion == 0 || this.grupos[posicion] <= 1) || ((this.listaGuardias || this.calendarios) && posicion > 0) ) {
         this.unavailableUp = true;
       } else if (!this.enableUpDownButtonsManual) {
         this.unavailableUp = true;
