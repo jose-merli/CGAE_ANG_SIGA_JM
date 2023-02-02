@@ -148,6 +148,8 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     this.getComboEstadosAsistencia();
     this.getComboRefuerzoSustitucion();
 
+    this.usuarioBusquedaExpress.numColegiado = this.asistencia.numeroColegiado;
+    this.usuarioBusquedaExpress.nombreAp = this.asistencia.nombreColegiado;
   }
 
   getComboRefuerzoSustitucion() {
