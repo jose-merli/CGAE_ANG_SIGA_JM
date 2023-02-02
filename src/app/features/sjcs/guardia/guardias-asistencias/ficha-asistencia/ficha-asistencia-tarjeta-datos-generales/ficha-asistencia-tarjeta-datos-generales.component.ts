@@ -69,6 +69,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   idClasesComunicacionArray: string[] = [];
   idClaseComunicacion: String;
   keys: any[] = [];
+  @Input() fechaHoraSelectedButton : boolean = false;
   
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
   constructor(private datepipe: DatePipe,
@@ -447,6 +448,12 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     }
   }
 
+  markSelectedButtonToday(event) {
+    if (event) {
+      this.fechaHoraSelectedButton = event;
+    }
+  }
+
   fillFechaSolicitud(event) {
     if (event) {
       this.asistencia.fechaSolicitud = this.datepipe.transform(new Date(event), 'dd/MM/yyyy HH:mm');
@@ -565,13 +572,14 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   }
 
   saveAsistencia() {
+    //console.log("+++++++++++ VALUE OF fechaHoraSelectedButton = " + this.fechaHoraSelectedButton);
     let isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     if (this.checkDatosObligatorios()) {
       this.progressSpinner = true
       let idAsistencia = this.idAsistenciaCopy ? this.idAsistenciaCopy : '';
       let asistencias: TarjetaAsistenciaItem[] = [this.asistencia];
       this.sigaServices
-        .postPaginado("busquedaGuardias_guardarAsistenciasDatosGenerales", "?idAsistenciaCopy=" + idAsistencia + "&isLetrado=" + isLetrado, asistencias)
+        .postPaginado("busquedaGuardias_guardarAsistenciasDatosGenerales", "?idAsistenciaCopy=" + idAsistencia + "&isLetrado=" + isLetrado + "&isTodaySelected=" + this.fechaHoraSelectedButton, asistencias)
         .subscribe(
           n => {
             let result = JSON.parse(n["body"]);
