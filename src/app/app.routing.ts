@@ -62,7 +62,7 @@ import { MantenimientoCertificadosComponent } from './features/certificados/mant
 import { MantenimientoSufijosComponent } from './features/facturacion/mantenimiento-sufijos/mantenimiento-sufijos.component';
 import { FacturaPlantillasComponent } from './features/facturacion/factura-plantillas/factura-plantillas.component';
 import { GestionCuentasBancariasComponent } from './features/facturacion/gestion-cuentas-bancarias/gestion-cuentas-bancarias.component';
-import { FichaCuentaBancariaComponent } from "./features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component";
+//import { FichaCuentaBancariaComponent } from "./features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component";
 import { SeriesFacturaComponent } from './features/facturacion/series-factura/series-factura.component';
 import { PrevisionesFacturaComponent } from './features/facturacion/previsiones-factura/previsiones-factura.component';
 import { ProgramarFacturaComponent } from './features/facturacion/programar-factura/programar-factura.component';
@@ -264,13 +264,13 @@ import { ProductosComponent } from "./features/facturacion/productos/productos.c
 import { FichaProductosComponent } from "./features/facturacion/productos/ficha-productos/ficha-productos.component";
 import { ServiciosComponent } from "./features/facturacion/servicios/servicios.component";
 import { FichaServiciosComponent } from "./features/facturacion/servicios/ficha-servicios/ficha-servicios.component";
-import { GestionSeriesFacturaComponent } from "./features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component";
-import { GestionAdeudosComponent } from "./features/facturacion/ficheros-adeudos/gestion-adeudos/gestion-adeudos.component";
+//import { GestionSeriesFacturaComponent } from "./features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component";
+//import { GestionAdeudosComponent } from "./features/facturacion/ficheros-adeudos/gestion-adeudos/gestion-adeudos.component";
 import { FactProgramadasComponent } from "./features/facturacion/fact-programadas/fact-programadas.component";
 import { FichaFactProgramadasComponent } from "./features/facturacion/fact-programadas/ficha-fact-programadas/ficha-fact-programadas.component";
-import { GestionFicherosTransferenciasComponent } from "./features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component";
-import { FichaFicherosDevolucionesComponent } from "./features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/ficha-ficheros-devoluciones.component";
-import { GestionFacturasComponent } from "./features/facturacion/facturas/gestion-facturas/gestion-facturas.component";
+//import { GestionFicherosTransferenciasComponent } from "./features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component";
+//import { FichaFicherosDevolucionesComponent } from "./features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/ficha-ficheros-devoluciones.component";
+//import { GestionFacturasComponent } from "./features/facturacion/facturas/gestion-facturas/gestion-facturas.component";
 import { FichaRemesasResolucionesComponent } from "./features/sjcs/remesas-resoluciones/ficha-remesas-resoluciones/ficha-remesas-resoluciones.component";
 import { RemesasResolucionesComponent } from "./features/sjcs/remesas-resoluciones/remesas-resoluciones.component";
 import { FichaRemesasResultadosComponent } from "./features/sjcs/remesas-resultados/ficha-remesas-resultados/ficha-remesas-resultados.component";
@@ -572,21 +572,21 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 
 	},
-	{
-		path: 'fichaCuentaBancaria',
-		component: FichaCuentaBancariaComponent,
-		canActivate: [AuthGuard]
-	},
+//	{
+//		path: 'fichaCuentaBancaria',
+//		component: FichaCuentaBancariaComponent,
+//		canActivate: [AuthGuard]
+//	},
 	{
 		path: 'seriesFactura',
 		component: SeriesFacturaComponent,
 		canActivate: [AuthGuard]
 	},
-	{
-		path: 'datosSeriesFactura',
-		component: GestionSeriesFacturaComponent,
-		canActivate: [AuthGuard]
-	},
+//	{
+//		path: 'datosSeriesFactura',
+//		component: GestionSeriesFacturaComponent,
+//		canActivate: [AuthGuard]
+//	},
 	{
 		path: 'facturaciones',
 		component: FactProgramadasComponent,
@@ -643,11 +643,11 @@ const appRoutes: Routes = [
 		component: FacturasComponent,
 		canActivate: [AuthGuard]
 	},
-	{
-		path: 'gestionFacturas',
-		component: GestionFacturasComponent,
-		canActivate: [AuthGuard]
-	},
+//	{
+//		path: 'gestionFacturas',
+//		component: GestionFacturasComponent,
+//		canActivate: [AuthGuard]
+//	},
 	{
 		path: 'facturasSociedad',
 		component: FacturacionSociedadesCensoComponent,
@@ -658,11 +658,11 @@ const appRoutes: Routes = [
 		component: ComunicacionSociedadesComponent,
 		canActivate: [AuthGuard]
 	},
-	{
-		path: 'gestionAdeudos',
-		component: GestionAdeudosComponent,
-		canActivate: [AuthGuard]
-	},
+//	{
+//		path: 'gestionAdeudos',
+//		component: GestionAdeudosComponent,
+//		canActivate: [AuthGuard]
+//	},
 
 	{
 		path: 'ficherosAdeudos',
@@ -674,11 +674,11 @@ const appRoutes: Routes = [
 		component: FicherosDevolucionesComponent,
 		canActivate: [AuthGuard]
 	},
-	{
-		path: 'fichaFicherosDevoluciones',
-		component: FichaFicherosDevolucionesComponent,
-		canActivate: [AuthGuard]
-	},
+//	{
+//		path: 'fichaFicherosDevoluciones',
+//		component: FichaFicherosDevolucionesComponent,
+//		canActivate: [AuthGuard]
+//	},
 	{
 		path: 'devolucionManual',
 		component: DevolucionManualComponent,
@@ -689,11 +689,11 @@ const appRoutes: Routes = [
 		component: AbonosComponent,
 		canActivate: [AuthGuard]
 	},
-	{
-		path: 'gestionFicherosTransferencias',
-		component: GestionFicherosTransferenciasComponent,
-		canActivate: [AuthGuard]
-	},
+//	{
+//		path: 'gestionFicherosTransferencias',
+//		component: GestionFicherosTransferenciasComponent,
+//		canActivate: [AuthGuard]
+//	},
 	{
 		path: 'ficherosTransferencia',
 		component: FicherosTransferenciaComponent,
