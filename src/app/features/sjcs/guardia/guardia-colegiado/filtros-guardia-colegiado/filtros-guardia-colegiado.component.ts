@@ -120,7 +120,7 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = busquedaColegiado.nColegiado;
       this.filtros.numColegiado = this.usuarioBusquedaExpress.numColegiado;
     }
-     
+    this.filtros.fechadesde = new Date( new Date().setFullYear(new Date().getFullYear()-1));
   }
 
   if (this.isColegiado) {
