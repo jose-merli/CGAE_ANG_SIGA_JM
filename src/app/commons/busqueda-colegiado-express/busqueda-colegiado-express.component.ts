@@ -210,6 +210,9 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
               this.apellidosNombre = data.colegiadoJGItem[0].nombre;
               this.idPersona.emit(data.colegiadoJGItem[0].idPersona);
               this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
+            }else if(data.colegiadoJGItem.length > 1){ 
+              sessionStorage.setItem("sizedatacolegiado", data.colegiadoJGItem.length);
+              this.router.navigate(["/buscadorColegiados"])
             } else {
               this.apellidosNombre = "";
               this.numColegiado = ""

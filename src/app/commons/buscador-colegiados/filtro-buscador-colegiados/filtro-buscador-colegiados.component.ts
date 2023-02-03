@@ -1,4 +1,5 @@
 import { Component, Output, OnInit, EventEmitter, HostListener, Input, ViewChild } from '@angular/core';
+import { stringToNumber } from '@syncfusion/ej2-charts';
 import { ColegiadosSJCSItem } from '../../../models/ColegiadosSJCSItem';
 import { CommonsService } from '../../../_services/commons.service';
 import { SigaServices } from '../../../_services/siga.service';
@@ -94,8 +95,12 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
           sessionStorage.removeItem('idTurnoAsistencia');
       }
       
+      let sizeOfDataColegiado = sessionStorage.getItem("sizedatacolegiado")
+      let ncol = sessionStorage.numColegiado;
+      if(stringToNumber(sizeOfDataColegiado, 1) > 1){
+        this.filtro.nColegiado = ncol;
+      }
       this.progressSpinner = false;
-
   }
 
   getComboColegios() {
@@ -118,6 +123,10 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
+    let sizeOfDataColegiado = sessionStorage.getItem("sizedatacolegiado")
+    if(stringToNumber(sizeOfDataColegiado, 1) > 1){
+      this.busquedaColegiado();
+    }
   }
 
   getComboTurno() {
