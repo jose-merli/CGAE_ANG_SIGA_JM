@@ -186,7 +186,7 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
         sessionStorage.setItem("designa", JSON.stringify(this.interesados));
         this.persistenceService.clearBody();
 
-        if (evento.representante != "" && evento.representante != null) {
+        if (evento.representante != "" && evento.representante != null && evento.representante == null) {
           let representante = new JusticiableBusquedaItem();
           let nombre = evento.representante.split(",");
           representante.apellidos = nombre[0];

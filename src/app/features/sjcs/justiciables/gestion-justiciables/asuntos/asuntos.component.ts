@@ -326,17 +326,19 @@ export class AsuntosComponent implements OnInit, OnChanges {
   search() {
     this.progressSpinner = true;
 
-    this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
-      n => {
+    if(this.body.idpersona != undefined){
+      this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
+        n => {
 
-        this.datos = JSON.parse(n.body).asuntosJusticiableItems;
-        this.progressSpinner = false;
+          this.datos = JSON.parse(n.body).asuntosJusticiableItems;
+          this.progressSpinner = false;
 
-      },
-      err => {
-        this.progressSpinner = false;
-        //console.log(err);
-      });
+        },
+        err => {
+          this.progressSpinner = false;
+          //console.log(err);
+        });
+    }
   }
 
   onChangeRowsPerPages(event) {
