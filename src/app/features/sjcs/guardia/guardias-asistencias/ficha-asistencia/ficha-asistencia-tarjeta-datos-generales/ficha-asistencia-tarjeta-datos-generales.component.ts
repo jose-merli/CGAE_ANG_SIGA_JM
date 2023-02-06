@@ -148,8 +148,6 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     this.getComboEstadosAsistencia();
     this.getComboRefuerzoSustitucion();
 
-    this.usuarioBusquedaExpress.numColegiado = this.asistencia.numeroColegiado;
-    this.usuarioBusquedaExpress.nombreAp = this.asistencia.nombreColegiado;
   }
 
   getComboRefuerzoSustitucion() {
@@ -298,6 +296,10 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           data => {
 
             this.comboLetradoGuardia = data.combooItems;
+            if(this.comboLetradoGuardia.length > 0){
+              this.usuarioBusquedaExpress.numColegiado = this.asistencia.numeroColegiado;
+              this.usuarioBusquedaExpress.nombreAp = this.asistencia.nombreColegiado;
+              }
             this.commonServices.arregloTildesCombo(this.comboLetradoGuardia);
 
             /*if(this.comboLetradoGuardia !== null
