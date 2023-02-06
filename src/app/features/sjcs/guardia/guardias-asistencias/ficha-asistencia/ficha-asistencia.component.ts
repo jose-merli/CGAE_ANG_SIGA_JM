@@ -1056,7 +1056,11 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
       this.router.navigate(['/fichaPreasistencia']);
     } else {
       sessionStorage.setItem("volver", "true");
-      this.router.navigate(['/guardiasAsistencias']);
+      let searchMode = "b";
+      if(sessionStorage.getItem("modoBusqueda")){
+        searchMode = sessionStorage.getItem("modoBusqueda");
+      }
+      this.router.navigate(["/guardiasAsistencias"], { queryParams: { searchMode: searchMode } });
     }
   }
 
