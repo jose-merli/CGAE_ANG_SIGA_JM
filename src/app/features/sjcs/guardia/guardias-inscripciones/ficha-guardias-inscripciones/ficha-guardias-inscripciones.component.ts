@@ -1004,7 +1004,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 		}
 
-		if (!this.modoEdicion) {
+		if (!this.modoEdicion && this.inscripcionesSelected != undefined) {
 			this.disabledSolicitarAlta = false;
 			//HACER EN LA FUNCIÓN 
 			// if(this.datos.validarinscripciones == "S"){
