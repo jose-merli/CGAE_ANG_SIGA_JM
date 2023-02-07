@@ -714,7 +714,7 @@ export class TablaInscripcionesComponent implements OnInit {
     this.cols = [
       { field: "ncolegiado", header: "facturacionSJCS.facturacionesYPagos.numColegiado" },
       { field: "apellidosnombre", header: "administracion.parametrosGenerales.literal.nombre.apellidos" },
-      { field: "abreviatura", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
+      { field: "nombreturno", header: "justiciaGratuita.sjcs.designas.DatosIden.turno" },
       { field: "fechasolicitud", header: "oficio.busquedaInscripcion.fechaSolicitudAlta" },
       { field: "fechavalidacion", header: "oficio.busquedaInscripcion.fechaEfectivaAlta" },
       { field: "fechasolicitudbaja", header: "oficio.busquedaInscripcion.fechaSolicitudBaja" },

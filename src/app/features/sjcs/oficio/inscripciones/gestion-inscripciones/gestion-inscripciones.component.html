@@ -35,7 +35,7 @@
               <a class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</a>
             </div>
             <!-- columna turno con tooltip indicando su nombre -->
-            <div *ngIf="!setItalic(dato) && col.field =='abreviatura'" title="{{dato['nombreturno']}}">
+            <div *ngIf="!setItalic(dato) && col.field =='nombreturno'" title="{{dato['nombreturno']}}">
               <span>{{dato[col.field]}}</span>
             </div>
             <!-- columnas con formato estandar -->
