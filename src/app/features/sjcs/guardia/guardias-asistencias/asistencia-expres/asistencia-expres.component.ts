@@ -565,6 +565,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
             this.showMsg('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
           }else{
             this.buscarAE();
+            this.refrescarFiltros();
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
           }
           
@@ -819,6 +820,29 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
         }
       }
+    }
+
+    refrescarFiltros() {
+      let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistenciaExpresBusqueda"));
+
+      this.filtrosAE.filtro.diaGuardia = oldFiltro.diaGuardia;
+      this.filtrosAE.getTurnosByColegiadoFecha();
+      this.filtrosAE.filtro.idTurno = oldFiltro.idTurno;
+      this.filtrosAE.onChangeTurno();
+      this.filtrosAE.filtro.idGuardia = oldFiltro.idGuardia;
+      this.filtrosAE.onChangeGuardia();
+
+      if (this.filtrosAE.filtro.idLetradoManual != null && this.filtrosAE.filtro.idLetradoManual != '') {
+        this.filtrosAE.filtro.idLetradoGuardia = oldFiltro.idLetradoManual;
+        this.filtrosAE.filtro.idPersona = oldFiltro.idLetradoManual;
+      } else {
+        this.filtrosAE.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
+        this.filtrosAE.filtro.idPersona = oldFiltro.idPersona;
+      }
+
+      this.filtrosAE.filtro.idLetradoManual = null;
+      this.filtrosAE.filtro.isSustituto = null;
+      this.filtrosAE.refuerzoSustitucionNoSeleccionado = true;
     }
 
     compruebaColegiadoSinLetrado(){
