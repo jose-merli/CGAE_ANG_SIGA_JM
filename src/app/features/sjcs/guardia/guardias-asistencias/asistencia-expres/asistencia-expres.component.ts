@@ -592,7 +592,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     arrayAsistencias.forEach(asistencia =>{
 
       //Si rellenamos algun dato obligatorio del justiciable y los demas obligatorios no estan rellenos avisamos
-      if(!asistencia.nif || !asistencia.nombre || !asistencia.apellido1){
+      if(!asistencia.nombre || !asistencia.apellido1){
 
         this.showMsg('error',this.translateService.instant("formacion.mensaje.general.mensaje.error"), this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorjusticiablereq"));
         this.progressSpinner = false;

@@ -373,6 +373,9 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
 
               if (val == undefined || val == '') {
                 error = true;
+                if(cell.value[0] == ""){
+                error = false;
+              }
               }
             });
           }

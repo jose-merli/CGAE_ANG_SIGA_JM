@@ -162,7 +162,7 @@
                             <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'"
                                 [ngClass]="{'column-d-flex': changeDisplay() == true}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [(ngModel)]="cell.value[0]" [value]="cell.value[0]" [ngClass]="styleObligatorio(cell.value[0])"
+                                    [(ngModel)]="cell.value[0]" [value]="cell.value[0]" [ngClass]="cell.value[0]"
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);"
                                     (change)="onChangeNifJg($event.target.value, rowGroup.id, row, rowGroup);"
                                     placeholder="{{'administracion.usuarios.literal.NIF' | translate}}">
