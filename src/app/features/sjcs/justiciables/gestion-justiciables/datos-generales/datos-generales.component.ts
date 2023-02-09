@@ -831,6 +831,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       },
       () => {
         this.progressSpinner = false;
+        sessionStorage.removeItem("nuevoJusticiable");
       }
     );
   }
@@ -1075,9 +1076,15 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.comboPais = n.combooItems;
         this.comboNacionalidad = n.combooItems;
 
-        this.comboNacionalidad.push({ label: "DESCONOCIDO", value: "D" });
+        this.comboNacionalidad.push({ label: "DESCONOCIDO", value: "0" });
         this.commonsService.arregloTildesCombo(this.comboPais);
         this.progressSpinner = false;
+
+      // Asignar por defecto nacionalidad(España).
+      if (sessionStorage.getItem("nuevoJusticiable")) {
+        this.body.idpais = this.comboNacionalidad[0].value;
+        this.nuevoJusticiable = true;
+      }
       },
       err => {
         //console.log(err);
@@ -1110,13 +1117,18 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
 
     this.comboRegimenConyugal = [
-      { label: "Indetermninado", value: "I" },
+      { label: "Indeterminado", value: "I" },
       { label: "Gananciales", value: "G" },
       { label: "Separación de bienes", value: "S" }
     ];
 
     this.commonsService.arregloTildesCombo(this.comboRegimenConyugal);
 
+    // Asignar por defecto el regimen conyugal(Indeterminado).
+    if (sessionStorage.getItem("nuevoJusticiable")) {
+      this.body.regimenConyugal = this.comboRegimenConyugal[0].value;
+      this.nuevoJusticiable = true;
+    }
 
   }
 
@@ -1134,7 +1146,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.body.tipopersonajg = this.comboTipoPersona[0].value;
       this.tipoPersona = this.comboTipoPersona[0].value;
       this.nuevoJusticiable = true;
-      sessionStorage.removeItem("nuevoJusticiable");
     }
 
     this.commonsService.arregloTildesCombo(this.comboTipoPersona);
@@ -1151,6 +1162,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       { label: "No Consta", value: "N" }
     ];
 
+    // Asignar por defecto el sexo(No-Consta).
+    if (sessionStorage.getItem("nuevoJusticiable")) {
+       this.body.sexo = this.comboSexo[2].value;
+       this.nuevoJusticiable = true;
+    }
   }
 
   getComboTiposIdentificacion() {
@@ -1195,6 +1211,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       n => {
         this.comboEstadoCivil = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboEstadoCivil);
+               // Asignar por defecto el estado civil(Desconocido).
+               if (sessionStorage.getItem("nuevoJusticiable")) {
+                this.body.idestadocivil = this.comboEstadoCivil[1].value;
+                this.nuevoJusticiable = true;
+             }
 
         this.progressSpinner = false;
       },
@@ -1204,7 +1225,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       }
     );
 
-  }
+    }
 
   getComboIdiomas() {
     this.progressSpinner = true;
