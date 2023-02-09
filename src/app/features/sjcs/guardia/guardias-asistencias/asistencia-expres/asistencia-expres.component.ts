@@ -53,6 +53,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   permisoEscrituraAE : boolean = false;
   resultModified;
   letradoFillAutomaticamente = false;
+  textoComActivo: string = '[Com] / Juz';
+  textoJuzActivo: string = 'Com / [Juz]';
+  parametroNProc: any;
   @ViewChild(BuscadorAsistenciaExpresComponent) filtrosAE: BuscadorAsistenciaExpresComponent;
   @ViewChild(ResultadoAsistenciaExpresComponent) resultadoAE: ResultadoAsistenciaExpresComponent;
   @ViewChild(BuscadorAsistenciasComponent) filtro : BuscadorAsistenciasComponent;
@@ -127,6 +130,8 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
                     { label: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.titulo"), value: 'b' }
                   ];
     this.rutas = ['SJCS', this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia")];
+
+    this.getNprocValidador();
 
   }
 
@@ -287,42 +292,93 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
   fromJsonToRowGroups(asistencias : TarjetaAsistenciaItem[]){
  
-    let nombreApellidosType, fechaActuacionType, lugarType, nDiligenciaType;
-    let nombreApellidosValue, delitosObservacionesValue, ejgValue, fechaActuacionValue, lugarValue, nDiligenciaValue;
+    let nombreApellidosType, fechaActuacionType, lugarType, nDiligenciaType, fechaAsistenciaType;
+    let nombreApellidosValue, delitosObservacionesValue, ejgValue, fechaActuacionValue, lugarValue, nDiligenciaValue,
+        fechaAsistenciaValue, numProcedimientoDiligenciaAsistenciaValue;
     let objetoActuacion = {};
     let objetoAsistencia = {};
     let arrayAsistencias = [];
     asistencias.forEach((asistencia, indice) => {
+
+      nDiligenciaType = 'input';
+
+      nombreApellidosType = '5InputSelector';
+      nombreApellidosValue = [asistencia.nif, asistencia.apellido1, asistencia.apellido2, asistencia.nombre, asistencia.sexo];
+
+      if(asistencia.idDelito
+          || asistencia.observaciones){
+            let comboDelitosValue = [];
+            if(asistencia.idDelito){
+              asistencia.idDelito.forEach(idDelito => {
+                comboDelitosValue.push(idDelito)
+              })
+            }
+        delitosObservacionesValue = [comboDelitosValue, asistencia.observaciones];
+      }else{
+        delitosObservacionesValue = ['',''];
+      }
+
+      if(asistencia.ejgAnioNumero){
+        ejgValue = asistencia.ejgAnioNumero;
+      }else{
+        ejgValue = '';
+      }
+
+      lugarType = 'buttomSelect';
+
+      if (asistencia.comisaria != null && asistencia.comisaria != '') {
+        lugarValue = [this.textoComActivo, this.comboComisarias, this.comboJuzgados
+                        , 'C' //C o J dependiendo si el lugar es una comisaria o juzgado
+                        , asistencia.comisaria
+                        , 'Asistencia'
+                      ];
+
+        numProcedimientoDiligenciaAsistenciaValue = asistencia.numDiligencia ? asistencia.numDiligencia : '';
+      } else if (asistencia.juzgado != null && asistencia.juzgado != '') {
+        lugarValue = [this.textoJuzActivo, this.comboComisarias, this.comboJuzgados
+                        , 'J' //C o J dependiendo si el lugar es una comisaria o juzgado
+                        , asistencia.juzgado
+                        , 'Asistencia'
+                      ];
+
+        numProcedimientoDiligenciaAsistenciaValue = asistencia.numProcedimiento ? asistencia.numProcedimiento : '';
+      } else {
+        lugarValue = [this.textoComActivo, this.comboComisarias, this.comboJuzgados
+                        , 'C' //C o J dependiendo si el lugar es una comisaria o juzgado
+                        , ''
+                        , 'Asistencia'
+                      ];
+
+        numProcedimientoDiligenciaAsistenciaValue = '';
+      }
       
+      fechaAsistenciaType = 'datePicker';
+      if(asistencia.fechaAsistencia != null){
+        fechaAsistenciaValue = new Date(Date.parse(asistencia.fechaAsistencia));
+      }else{
+        fechaAsistenciaValue = null;
+      }
+
       let arrayActuaciones = [];
+      let arrayDatosAsistencia = [];
+
+      arrayDatosAsistencia =
+          [
+            {type: nombreApellidosType, value: nombreApellidosValue, combo: this.comboSexo, size: 445.5},
+            {type: '2SelectorInput', value: delitosObservacionesValue, combo: this.comboDelitos, size: 225.75},
+            {type: 'link', value: ejgValue, size: 100},
+            {type: fechaAsistenciaType, value: fechaAsistenciaValue, showTime: true, size: 200},
+            {type: lugarType, value: lugarValue, size: 550},
+            {type: nDiligenciaType, value: numProcedimientoDiligenciaAsistenciaValue, size: 100},
+            {type: 'invisible', value: asistencia.idTipoEjg}
+          ];
+
+      objetoActuacion = {[0] : arrayDatosAsistencia};
+      arrayActuaciones.push(Object.assign({},objetoActuacion));
       
       asistencia.actuaciones.forEach((actuacion, indiceAct) => {
 
         let letra = (indiceAct + 10).toString(36).toUpperCase();
-
-        nombreApellidosType = '5InputSelector';
-        nombreApellidosValue = [asistencia.nif, asistencia.apellido1, asistencia.apellido2, asistencia.nombre, asistencia.sexo];
-        
-
-        if(asistencia.idDelito
-            || asistencia.observaciones){
-              let comboDelitosValue = [];
-              if(asistencia.idDelito){
-                asistencia.idDelito.forEach(idDelito => {
-                  comboDelitosValue.push(idDelito)
-                })
-              }
-          delitosObservacionesValue = [comboDelitosValue, asistencia.observaciones];
-        }else{
-          delitosObservacionesValue = ['',''];
-        }
-
-        if(asistencia.ejgAnioNumero){
-          ejgValue = asistencia.ejgAnioNumero;
-        }else{
-          ejgValue = '';
-        }
-
 
         fechaActuacionType = 'datePicker';
         if(actuacion.fechaActuacion!=null){
@@ -338,42 +394,39 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
           idJuzgadoComisaria = actuacion.lugar;
         }
         lugarType = 'buttomSelect';
-        lugarValue = ['C / J', this.comboComisarias, this.comboJuzgados
+
+        if (comisariaJuzgado != null && comisariaJuzgado == 'J') {
+          lugarValue = [this.textoJuzActivo, this.comboComisarias, this.comboJuzgados
                         , comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
                         , idJuzgadoComisaria
+                        , 'Actuacion'
                       ];
+        } else {
+          lugarValue = [this.textoComActivo, this.comboComisarias, this.comboJuzgados
+                        , comisariaJuzgado //C o J dependiendo si el lugar es una comisaria o juzgado
+                        , idJuzgadoComisaria
+                        , 'Actuacion'
+                      ];
+        }
+        
         
 
         if(actuacion.numeroAsunto){
-          nDiligenciaType = 'input';
           nDiligenciaValue = actuacion.numeroAsunto;
         }else{
-          nDiligenciaType = 'input';
           nDiligenciaValue = '';
         }
         let arrayDatosActuacion = [];
-        if(indiceAct != 0){
-          arrayDatosActuacion =
-          [
-            {type: 'invisible', value: '', combo: this.comboSexo, size: 445.5},
-            {type: 'invisible', value: '', combo: this.comboDelitos, size: 225.75},
-            {type: 'invisible', value: '', size: 100},
-            {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 200},
-            {type: lugarType, value: lugarValue, size: 400},
-            {type: nDiligenciaType, value: nDiligenciaValue, size: 100}
-          ]
-        }else{
-          arrayDatosActuacion =
-          [
-            {type: nombreApellidosType, value: nombreApellidosValue, combo: this.comboSexo, size: 445.5},
-            {type: '2SelectorInput', value: delitosObservacionesValue, combo: this.comboDelitos, size: 225.75},
-            {type: 'link', value: ejgValue, size: 100},
-            {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 200},
-            {type: lugarType, value: lugarValue, size: 400},
-            {type: nDiligenciaType, value: nDiligenciaValue, size: 100},
-            {type: 'invisible', value: asistencia.idTipoEjg}
-          ]
-        }
+
+        arrayDatosActuacion =
+        [
+          {type: 'invisible', value: '', combo: this.comboSexo, size: 445.5},
+          {type: 'invisible', value: '', combo: this.comboDelitos, size: 225.75},
+          {type: 'invisible', value: '', size: 100},
+          {type: fechaActuacionType, value: fechaActuacionValue, showTime: true, size: 200},
+          {type: lugarType, value: lugarValue, size: 550},
+          {type: nDiligenciaType, value: nDiligenciaValue, size: 100}
+        ]
 
         let key = letra + 1;
         objetoActuacion = {[key] : arrayDatosActuacion};
@@ -506,6 +559,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       rowGroupsToUpdate.forEach(rowGroup => {
 
         let tarjetaAsistenciaItem : TarjetaAsistenciaItem = new TarjetaAsistenciaItem();
+
+        let isNuevaAsistencia = rowGroup.rows[0].cells[4].value[6];
+
+        let comisariaJuzgadoAsistencia, lugarAsistencia, numAsuntoAsistencia;
+
         tarjetaAsistenciaItem.actuaciones = [];
         tarjetaAsistenciaItem.filtro = this.filtrosAE.filtroAux;
         if(rowGroup.id.length != 0){
@@ -531,16 +589,43 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
               tarjetaAsistenciaItem.idDelito = row.cells[1].value[0];
             }
             tarjetaAsistenciaItem.observaciones = row.cells[1].value[1];
+
+            if (row.cells[3].value &&
+                tarjetaAsistenciaItem.filtro.diaGuardia == this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy')) {
+              tarjetaAsistenciaItem.fechaAsistencia = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
+            }
+
+            if (row.cells[4].value[3] == 'C') {
+              tarjetaAsistenciaItem.comisaria = row.cells[4].value[4];
+              tarjetaAsistenciaItem.numDiligencia = row.cells[5].value;
+            } else if (row.cells[4].value[3] == 'J') {
+              tarjetaAsistenciaItem.juzgado = row.cells[4].value[4];
+              tarjetaAsistenciaItem.numProcedimiento = row.cells[5].value;
+            }
+
+            comisariaJuzgadoAsistencia = row.cells[4].value[3];
+            lugarAsistencia = row.cells[4].value[4];
+            numAsuntoAsistencia = row.cells[5].value;
           }
 
           if(row.cells[3].value){
             actuacionAsistenciaItem.fechaActuacion = this.datepipe.transform(row.cells[3].value, 'dd/MM/yyyy HH:mm');
           }
-          actuacionAsistenciaItem.comisariaJuzgado = row.cells[4].value[3];
-          actuacionAsistenciaItem.lugar = row.cells[4].value[4];
-          actuacionAsistenciaItem.numeroAsunto = row.cells[5].value;
+
+          if (index == 1 && isNuevaAsistencia != null && isNuevaAsistencia != '' && isNuevaAsistencia == 'S') {
+            actuacionAsistenciaItem.comisariaJuzgado = comisariaJuzgadoAsistencia;
+            actuacionAsistenciaItem.lugar = lugarAsistencia;
+            actuacionAsistenciaItem.numeroAsunto = numAsuntoAsistencia;
+          } else {
+            actuacionAsistenciaItem.comisariaJuzgado = row.cells[4].value[3];
+            actuacionAsistenciaItem.lugar = row.cells[4].value[4];
+            actuacionAsistenciaItem.numeroAsunto = row.cells[5].value;
+          }
           actuacionAsistenciaItem.fechaJustificacion = this.resultadoAE.fechaJustificacion;
-          tarjetaAsistenciaItem.actuaciones.push(actuacionAsistenciaItem);
+
+          if(index != 0){
+            tarjetaAsistenciaItem.actuaciones.push(actuacionAsistenciaItem);
+          }
 
         })
 
@@ -586,6 +671,48 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     }
   }
 
+  getNprocValidador(){
+    let parametro = {
+      valor: "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.parametroNProc = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
+  }
+
+  validarNProcedimiento(nProcedimiento) {
+    let ret = false;
+    
+    if (nProcedimiento != null && nProcedimiento != '' && this.parametroNProc != undefined) {
+      if (this.parametroNProc != null && this.parametroNProc.parametro != "") {
+          let valorParametroNProc: RegExp = new RegExp(this.parametroNProc.parametro);
+          if (nProcedimiento != '') {
+            if(valorParametroNProc.test(nProcedimiento)){
+              ret = true;
+            }else{
+              let severity = "error";
+                      let summary = this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido");
+                      let detail = "";
+                      this.msgs.push({
+                        severity,
+                        summary,
+                        detail
+                      });
+
+              ret = false
+            }
+          }
+        }
+    }
+
+    return ret;
+  }
+
   validateTableData(arrayAsistencias : TarjetaAsistenciaItem[]) : boolean{
 
     let valid = true;
@@ -599,6 +726,10 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
         this.progressSpinner = false;
         valid = false;
 
+      } else if (asistencia.numProcedimiento != null && asistencia.numProcedimiento != "" && !this.validarNProcedimiento(asistencia.numProcedimiento)) {
+        this.showMsg("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designa.numProcedimientoNoValido"));
+        this.progressSpinner = false;
+        valid = false;
       }
 
       if(valid){

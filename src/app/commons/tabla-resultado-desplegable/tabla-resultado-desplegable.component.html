@@ -44,9 +44,9 @@
                     [ngClass]="{'hoverBlue2': isSelected(rowGroup.id), 'fixedBlue': seleccionarTodo}" #rowSelected>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla != 'JE'"
-                        class="table-row-header p-2 selectedRowClass mw81"
+                        class="table-row-header p-2 selectedRowClass mw70"
                         [ngClass]="{'hoverToClick': rowGroup.rows.length > 1}" [id]="rowGroup.id">
-                        <span class="w100 cell-value enlace"><a
+                        <span class="w-100 cell-value enlace"><a
                                 (click)="linkFichaDesigna(rowGroup, rowGroup.id)">{{rowGroup.id}}</a></span>
                     </div>
                     <!--<div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 selectedRowClass" [id]="rowGroup.id">
@@ -206,7 +206,7 @@
                             <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
                                 <div class="main-button" style="width: 30%;">
                                     <button pButton type="button" iconPos="left" [label]="cell.value[0]"
-                                        (click)="cell.value[3] == 'C' ? cell.value[3] = 'J' :  cell.value[3] = 'C'"></button>
+                                        (click)="onClickBotonJuzProc(cell, rowGroup)"></button>
                                 </div>
 
                                 <!-- <app-selector [i]="cell.value[4]" [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
@@ -253,7 +253,7 @@
             <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 hidden selectedRowClass">
             </div>
             <div *ngIf="!posicionOcultar(-1) && pantalla == 'AE'"
-                class="table-row-header p-2 hidden selectedRowClass mw81">
+                class="table-row-header p-2 hidden selectedRowClass mw70">
             </div>
             <div *ngFor="let cell of row['cells']  | slice:fromRowGroup:toRowGroup; let z = index"
                 class="table-cell p-2 selectedRowClass"
@@ -355,7 +355,7 @@
                     <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
                         <div class="main-button" style="width: 30%;">
                             <button pButton type="button" iconPos="left" [label]="cell.value[0]"
-                                (click)="cell.value[3] == 'C' ? cell.value[3] = 'J' :  cell.value[3] = 'C'"></button>
+                                (click)="onClickBotonJuzProc(cell, rowGroup)"></button>
                         </div>
 
                         <!-- <app-selector [i]="cell.value[4]" [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
