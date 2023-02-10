@@ -19,6 +19,7 @@ export class SaltoCompItem {
     letradosGrupo;
     comboGuardia;
     comboColegiados;
+    numeroSaltosComp;
 
     constructor() { }
 }

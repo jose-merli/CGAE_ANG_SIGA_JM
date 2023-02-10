@@ -348,8 +348,29 @@ export class TarjetaColaOficio implements OnInit {
     this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
       n => {
         let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
-        this.datosSaltos = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
-        this.datosCompensaciones = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
+        let datosSaltosAux, datosCompensacionesAux;
+        this.datosSaltos = [];
+        this.datosCompensaciones = [];
+
+        datosSaltosAux = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'S');
+        datosCompensacionesAux = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
+
+        datosSaltosAux.forEach(element => {
+          if (this.datosSaltos.find(item => item.idPersona === element.idPersona) != undefined) {
+            this.datosSaltos.find(item => item.idPersona === element.idPersona).numeroSaltosComp= this.datosSaltos.find(item => item.idPersona === element.idPersona).numeroSaltosComp + 1;
+          } else {
+            this.datosSaltos.push(element);
+          }
+        });
+
+        datosCompensacionesAux.forEach(element => {
+          if (this.datosCompensaciones.find(item => item.idPersona === element.idPersona) != undefined) {
+            this.datosCompensaciones.find(item => item.idPersona === element.idPersona).numeroSaltosComp = this.datosCompensaciones.find(item => item.idPersona === element.idPersona).numeroSaltosComp + 1;
+          } else {
+            this.datosCompensaciones.push(element);
+          }
+        });
+
         let error = JSON.parse(n.body).error;
       });
   }
@@ -681,15 +702,15 @@ export class TarjetaColaOficio implements OnInit {
     ];
 
     this.colsCompensaciones = [
-      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
-      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
+      { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "numeroSaltosComp", header: "justiciaGratuita.oficio.turnos.compensaciones", width: "22%" }
     ];
 
     this.colsSaltos = [
-      { field: "numerocolegiado", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
-      { field: "nombrepersona", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-      { field: "fechavalidacion", header: "justiciaGratuita.oficio.turnos.fechavalidacion", width: "22%" }
+      { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
+      { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
+      { field: "numeroSaltosComp", header: "justiciaGratuita.oficio.turnos.saltos", width: "22%" }
     ];
 
     this.rowsPerPage = [
