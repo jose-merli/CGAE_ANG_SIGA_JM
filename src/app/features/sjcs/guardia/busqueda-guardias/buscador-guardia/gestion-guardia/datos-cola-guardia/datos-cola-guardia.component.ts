@@ -188,7 +188,10 @@ inicio(){
       }
     }
   abreCierraFicha() {
-    if (this.modoEdicion && !this.modoVinculado)
+    if(this.modoVinculado){
+      this.modoEdicion=false
+  }
+    if (this.modoEdicion)
       this.openFicha = !this.openFicha
   }
 

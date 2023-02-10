@@ -237,7 +237,10 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
 
 
   abreCierraFicha(key) {
-    if (this.modoEdicion && !this.modoVinculado)
+    if(this.modoVinculado){
+      this.modoEdicion=false
+  }
+    if (this.modoEdicion)
       this.openFicha = !this.openFicha;
 
     this.opened.emit(this.openFicha);

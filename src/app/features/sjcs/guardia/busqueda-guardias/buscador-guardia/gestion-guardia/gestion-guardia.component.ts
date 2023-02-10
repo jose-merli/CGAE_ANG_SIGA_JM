@@ -142,9 +142,12 @@ export class GestionGuardiaComponent implements OnInit {
     this.sigaServices.post("busquedaGuardias_getGuardia", this.datos).subscribe(
       n => {
         this.datos = JSON.parse(n.body);
-        if(this.datos.idGuardiaPrincipal != null && this.datos.idGuardiaPrincipal != undefined ){
-          this.modoVinculado = true;
-        }
+        setTimeout(() => {
+          if(this.datos.idGuardiaPrincipal != null && this.datos.idGuardiaPrincipal != undefined ){
+            this.modoVinculado = true;
+          }
+        }, 1000);
+
         this.sigaServices.notifysendDatosRedy(n);
         this.getDatosResumen();
 
@@ -554,12 +557,21 @@ export class GestionGuardiaComponent implements OnInit {
           break;
         case "calendarioGuardia":
           this.openCalendarioGuardia = true;
+          if(this.modoVinculado){
+            this.openCalendarioGuardia = false
+          }
           break;
         case "configuracionCola":
           this.openConfigCola = true;
+          if(this.modoVinculado){
+            this.openConfigCola = false
+          }
           break;
         case "colaGuardias":
           this.openCola = true;
+          if(this.modoVinculado){
+            this.openCola = false
+          }
           break;
         case "incompatibilidades":
           this.openIncompatibilidades = true;
@@ -572,6 +584,9 @@ export class GestionGuardiaComponent implements OnInit {
           break;
         case "inscripciones":
           this.openInscripciones = true;
+          if(this.modoVinculado){
+            this.openInscripciones = false
+          }
           break;
         case "turnos":
           this.openTurno = true;
