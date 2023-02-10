@@ -46,6 +46,8 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
   resultModified;
   permisoEscrituraAE : boolean = false;
   disableCrearEJG : boolean = false;
+  textoComActivo: string = '[Com] / Juz';
+  textoJuzActivo: string = 'Com / [Juz]';
   @ViewChild(TablaResultadoDesplegableComponent) tabla : TablaResultadoDesplegableComponent;
   constructor(private sigaStorageService: SigaStorageService,
     private datepipe: DatePipe,
@@ -87,7 +89,7 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       {
         id: "asistencia",
         name: this.translateService.instant("formacion.busquedaInscripcion.asistencia"),
-        size: 225.75
+        size: 100
       },
       {
         id: "idApNombreSexo",
@@ -106,13 +108,13 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       },
       {
         id: "actuacion",
-        name: this.translateService.instant("justiciaGratuita.oficio.designas.actuaciones.fechaActuacion") + " (*)",
+        name: this.translateService.instant("dato.jgr.guardia.saltcomp.fecha") + " (*)",
         size: 200
       },
       {
         id: "lugar",
         name: this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.cabeceralugar"),
-        size: 400
+        size: 550
       },
       {
         id: "diligencia",
@@ -199,11 +201,13 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     cellFechaActuacion.size = 200;
 
     cellLugar.type = 'buttomSelect';
-    cellLugar.value = ['C / J',this.comboComisarias, this.comboJuzgadosAE
+    cellLugar.value = [this.textoComActivo, this.comboComisarias, this.comboJuzgadosAE
                         , 'C'
                         ,''
+                        , 'Asistencia'
+                        , 'S' // Indica que la asistencia es nueva, se utiliza al guardar por primera vez la asistencia
                       ];
-    cellLugar.size = 400;
+    cellLugar.size = 550;
 
     cellNDiligencia.type = 'input';
     cellNDiligencia.value = '';
@@ -229,11 +233,11 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     cellFechaActuacion2.size = 200;
 
     cellLugar2.type = 'buttomSelect';
-    cellLugar2.value = ['C / J',this.comboComisarias, this.comboJuzgadosAE
+    cellLugar2.value = [this.textoComActivo ,this.comboComisarias, this.comboJuzgadosAE
                         , 'C'
                         ,''
                       ];
-    cellLugar2.size = 400;
+    cellLugar2.size = 550;
     
     cellNDiligencia2.type = 'input';
     cellNDiligencia2.value = '';
@@ -282,11 +286,12 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
       cellFechaActuacion.size = 200;
 
       cellLugar.type = 'buttomSelect';
-      cellLugar.value = ['C / J', this.comboComisarias, this.comboJuzgadosAE
+      cellLugar.value = [this.textoComActivo , this.comboComisarias, this.comboJuzgadosAE
                           , 'C'
                           ,''
+                          , 'Actuacion'
                         ];
-      cellLugar.size = 400;
+      cellLugar.size = 550;
       
       cellNDiligencia.type = 'input';
       cellNDiligencia.value = '';
@@ -373,6 +378,9 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
 
               if (val == undefined || val == '') {
                 error = true;
+                if(cell.value[0] == ""){
+                error = false;
+              }
               }
             });
           }

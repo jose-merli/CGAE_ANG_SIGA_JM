@@ -48,6 +48,7 @@ export class TablaEjgComponent implements OnInit {
   comboRemesa = [];
   fechaEstado = new Date();
   valueComboEstado = "";
+  observacionesIn = "";
   valueComboRemesa;
 
   //Resultados de la busqueda
@@ -93,6 +94,7 @@ export class TablaEjgComponent implements OnInit {
     this.showModalCambioEstado = false;
     this.fechaEstado = new Date();
     this.valueComboEstado = "";
+    this.observacionesIn = "";
 
     this.getCols();
     this.initDatos = JSON.parse(JSON.stringify((this.datos)));
@@ -299,6 +301,7 @@ export class TablaEjgComponent implements OnInit {
       ejg = this.selectedDatos[i];
       ejg.fechaEstadoNew = this.fechaEstado;
       ejg.estadoNew = this.valueComboEstado;
+      ejg.observaciones = this.observacionesIn;
 
       data.push(ejg);
     }
@@ -306,6 +309,7 @@ export class TablaEjgComponent implements OnInit {
     this.sigaServices.post("gestionejg_cambioEstadoMasivo", data).subscribe(
       async n => {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.observacionesIn = "";
       },
       err => {
         //console.log(err);

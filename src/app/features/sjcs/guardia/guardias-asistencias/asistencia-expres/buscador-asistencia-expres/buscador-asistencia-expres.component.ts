@@ -318,7 +318,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
             if(this.comboLetradosGuardia !== null
               && this.comboLetradosGuardia.length > 0){
-                this.filtro.idLetradoGuardia = this.comboLetradosGuardia[0].value;
+
+                if (this.filtro.idLetradoGuardia == null || this.filtro.idLetradoGuardia == '') {
+                  this.filtro.idLetradoGuardia = this.comboLetradosGuardia[0].value;
+                }
+
                 if (this.filtro.idLetradoGuardia != undefined && this.filtro.idLetradoGuardia != null){
                   this.letradoFillAutomatic.emit(true);
 

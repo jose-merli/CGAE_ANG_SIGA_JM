@@ -48,6 +48,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   lastChangeHijo;
   lastChange = "";
   permisoProcedimiento: boolean = true;
+  textoComActivo: string = '[Com] / Juz';
+  textoJuzActivo: string = 'Com / [Juz]';
   sumar = false;
   @Output() anySelected = new EventEmitter<any>();
   @Output() designasToDelete = new EventEmitter<any[]>();
@@ -2327,6 +2329,34 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   fillRowGroup(event, rowGroup) {
     rowGroup.id = event;
   }
+
+  onClickBotonJuzProc(cell, rowGroup) {
+
+    if (cell.value[3] == 'C') {
+      // Cambia a juzgado
+      cell.value[3] = 'J';
+
+      // Label juzgados
+      cell.value[0] = this.textoJuzActivo;
+
+      // Valor seleccionado del combo de juzgados
+      cell.value[4] = '';
+    } else {
+      // Cambia a comisarías
+      cell.value[3] = 'C';
+
+      // Label comisarías
+      cell.value[0] = this.textoComActivo;
+
+      // Valor seleccionado del combo de comisarías
+      cell.value[4] = '';
+    }
+
+    if (cell.value[5] == 'Asistencia') {
+      rowGroup.rows[0].cells[5].value = '';
+    }
+  }
+
   navigateComunicarJE(rowGroup, identificador) {
     sessionStorage.setItem("rutaComunicacion", this.currentRoute.toString());
     if (this.pantalla == 'JE') {

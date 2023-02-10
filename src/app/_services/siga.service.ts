@@ -564,6 +564,7 @@ export class SigaServices {
 		fichaDatosColegiales_datosColegialesInsertEstado: '/fichaDatosColegiales/datosColegialesInsertEstado',
 		fichaDatosColegiales_datosColegialesUpdateEstados: '/fichaDatosColegiales/datosColegialesUpdateEstados',
 		fichaDatosColegiales_datosColegialesDeleteEstado: '/fichaDatosColegiales/datosColegialesDeleteEstado',
+		fichaDatosColegiales_cuentaContableSJCSSearch: '/fichaDatosColegiales/cuentaContableSJCSSearch',
 		fichaDatosColegiales_searchTurnosGuardias: '/fichaDatosColegiales/searchTurnosGuardias',
 		fichaColegialRegTel_permisos: 'fichaColegialRegTel/permisos',
 		fichaColegialRegTel_searchListDoc: 'fichaColegialRegTel/searchListDoc',
