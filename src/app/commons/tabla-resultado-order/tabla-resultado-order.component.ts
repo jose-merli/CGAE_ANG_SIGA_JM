@@ -1214,7 +1214,7 @@ this.totalRegistros = this.rowGroups.length;
     eliminar(){
       this.disableGen.emit(true);
       if (this.calendarios){
-        if ( this.estado == "Pendiente"){
+        if ( this.estado == "4"){ 
           this.delete.emit(this.selectedArray);
         this.totalRegistros = this.rowGroups.length;
         this.rowGroupsAux = this.rowGroups;
@@ -1429,7 +1429,7 @@ this.totalRegistros = this.rowGroups.length;
     return new Blob(byteArrays, {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
     }
   descargarLog(){
-    if (this.estado != 'Pendiente' || this.estado != 'Procesada con Errores'){
+    if (this.estado != '4' || this.estado != '2'){
     let datosCalendariosSeleccionado = {
       'idCalendarioGuardias': this.rowwSelected.cells[7].value,
       'idTurno': this.rowwSelected.cells[6].value,

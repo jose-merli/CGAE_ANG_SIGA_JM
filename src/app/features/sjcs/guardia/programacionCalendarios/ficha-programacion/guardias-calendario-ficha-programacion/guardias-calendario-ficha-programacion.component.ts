@@ -72,6 +72,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
   resaltadoDatos: boolean = false;
   rowGroups: Row[];
   rowGroupsAux: Row[];
+  estado;
   totalRegistros = 0;
   selectedRow: Row;
   suscription: Subscription;
@@ -225,9 +226,10 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
             this.datosTarjetaGuardiasCalendario = [];
             this.jsonToRow(confValue.fromCombo);
             this.dataReady = true;
+            
           }
         });
-    
+    this.estado = this.datosGenerales.estado
   }
   ngOnDestroy(){
     this.suscription.unsubscribe();
@@ -517,7 +519,7 @@ export class GuardiasCalendarioFichaProgramacionComponent implements OnInit, OnC
               'idGuardia': nrg.cells[5].value,
               'idTurno': nrg.cells[6].value,
             });
-            if (nrg.cells[3].value != true && nrg.cells[3].value == "No" && nrg.cells[3].value != 1){
+            if (nrg.cells[4].value != true && nrg.cells[4].value == "No" && nrg.cells[4].value != 1){
               newList.push(responseObject);
             }else{
               this.showMessage("error", this.translateService.instant("No pueden eliminarse calendarios generados"), this.translateService.instant("No pueden eliminarse calendarios generados"));
