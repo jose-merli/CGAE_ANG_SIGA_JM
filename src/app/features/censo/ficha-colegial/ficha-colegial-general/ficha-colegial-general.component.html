@@ -43,8 +43,8 @@
     <!-- NUEVA TARJETA MODULO EXPEDIENTES Y EXPEDIENTES EXEA INICIO -->
     <app-expedientes-ficha-colegial [openExp]="openExp" (idOpened)="isCloseReceive($event)" (opened)="manuallyOpened = $event" [tarjetaExpedientes]="tarjetaExpedientes"></app-expedientes-ficha-colegial>
     <!-- NUEVA TARJETA MODULO EXPEDIENTES Y EXPEDIENTES EXEA FIN -->
-    <app-alter-mutua-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaAlterMutua]="tarjetaAlterMutua"></app-alter-mutua-ficha-colegial>
-    <app-mutualidad-abogacia-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaMutualidad]="tarjetaMutualidad" [datosBancarios]="datosBancarios"
+    <app-alter-mutua-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [datosTratamientos]="datosTratamientos" [tarjetaAlterMutua]="tarjetaAlterMutua"></app-alter-mutua-ficha-colegial>
+    <app-mutualidad-abogacia-ficha-colegial (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [datosTratamientos]="datosTratamientos" [tarjetaMutualidad]="tarjetaMutualidad" [datosBancarios]="datosBancarios"
       [datosDirecciones]="datosDirecciones"></app-mutualidad-abogacia-ficha-colegial>
 
   </div>
