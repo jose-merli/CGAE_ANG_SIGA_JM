@@ -25,6 +25,7 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
   msgs: Message[] = [];
   permisoEscritura: boolean;
   progressSpinner: boolean = false;
+  designacionPredeterminada = "";
 
   @Input() isAnulada: boolean;
   @Input() campos;
@@ -93,6 +94,7 @@ export class DetalleTarjetaDatosFacturacionFichaDesignacionOficioComponent imple
 
         if (resp.length > 0 && resp[0] != null) {
           this.selector.value = resp[0].value;
+          this.designacionPredeterminada = resp[0].label;
         } else {
           this.selector.value = null;
         }
