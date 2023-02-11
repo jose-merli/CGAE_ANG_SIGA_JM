@@ -1,0 +1,89 @@
+<p-growl (onHover)="clear()" [(value)]="msgs" life="30000"></p-growl>
+<div class="ficha-container" id="contadorFacturas">
+  <div class="card" id="top">
+    <div class="card-header header-ficha">
+
+      <!-- Cabecera en ficha cerrada -->
+      <div *ngIf="!esFichaActiva()" class="form-row">
+        <div class="col-lg-1 col-md-2" (click)="abreCierraFicha('contadorFacturas')">
+          <div class="img-colegiado">
+            <i class="fas fa-sort-numeric-down icon-ficha pointer"></i>
+          </div>
+        </div>
+        <div class="col-lg-11 col-md-10">
+          <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha('contadorFacturas')">
+            <label class="mr-auto title-ficha pointer">{{ 'facturacion.seriesFactura.contFact.literal' | translate }}</label>
+          </div>
+          <div class="d-flex justify-content-between default">
+            <label>{{ 'administracion.parametrosGenerales.literal.nombre' | translate }}: 
+              <span>{{ contadorFacturasSeleccionado.nombre }}</span></label>
+            <label>{{ 'administracion.parametrosGenerales.literal.prefijo' | translate }}: 
+              <span>{{ contadorFacturasSeleccionado.prefijo }}</span></label>
+            <label>{{ 'facturacion.seriesFactura.contador.literal' | translate }}: 
+              <span>{{ contadorFacturasSeleccionado.contador }}</span></label>
+            <label>{{ 'facturacionSJCS.facturacionesYPagos.sufijo' | translate }}: 
+              <span>{{ contadorFacturasSeleccionado.sufijo }}</span></label>
+            
+            <i class="fa fa-angle-down float-right" (click)="abreCierraFicha('contadorFacturas')"
+              *ngIf="!esFichaActiva()"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cabecera en ficha abierta -->
+      <div *ngIf="esFichaActiva()" class=" header-ficha-open d-flex justify-content-start align-items-center"
+        (click)="abreCierraFicha('contadorFacturas')">
+        <div class="img-colegiado">
+          <i class="fas fa-sort-numeric-down icon-ficha"></i>
+        </div>
+        <label class="title-ficha pointer">{{ 'facturacion.seriesFactura.contFact.literal' | translate }}</label>
+        <i class="fa fa-angle-up ml-auto"></i>
+      </div>
+    </div>
+
+    <!-- Cuerpo en ficha abierta -->
+    <div [hidden]="!esFichaActiva()" class="card-body card-body-ficha">
+      <div class="form-row">
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ (!nuevo ? 'facturacion.seriesFactura.cont.seleccion' : 'administracion.parametrosGenerales.literal.nombre') | translate }}</label>
+          <p-dropdown *ngIf="!nuevo" class="select-form" [(ngModel)]='body.idContadorFacturas' placeholder="{{'general.boton.seleccionar' | translate}}"
+              [options]="comboContadorFacturas" [filter]="true" filterBy="label,labelSinTilde" [ngClass]="styleObligatorio(!nuevo, body.idContadorFacturas)"
+              [showClear]="true" (onChange)="actualizarInputs()"></p-dropdown>
+          <input *ngIf="nuevo" type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.nombre" [ngClass]="styleObligatorio(nuevo, contadorFacturasSeleccionado.nombre)" />
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'administracion.parametrosGenerales.literal.prefijo' | translate }}</label>
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.prefijo" [disabled]="!nuevo" maxlength="8" />
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacion.seriesFactura.contador.literal' | translate }}</label>
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.contador" [ngClass]="styleObligatorio(nuevo, contadorFacturasSeleccionado.contador)" [disabled]="!nuevo" maxlength="10" />
+        </div>
+        <div class="form-group-interlineado col-lg-3 col-md-3">
+          <label>{{ 'facturacionSJCS.facturacionesYPagos.sufijo' | translate }}</label>
+          <input type="text" class="form-control" pInputText [(ngModel)]="contadorFacturasSeleccionado.sufijo" [disabled]="!nuevo" maxlength="8" />
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="esFichaActiva()" class="card-footer">
+      <div class="text-right main-button">
+        <button *ngIf="nuevo" (click)="backToSelect()" pButton type="button" icon="fa fa-angle-left" 
+          iconPos="left" label="{{ 'general.boton.volver' | translate }}"></button>
+
+        <button *ngIf="!nuevo" pButton type="button" icon="fa fa-plus" iconPos="left"
+          (click)="nuevoContador()" label="{{ 'general.boton.new' | translate}}"></button>
+
+        <button pButton type="button" icon="fa fa-undo" iconPos="left" [disabled]="deshabilitarGuardado()"
+          (click)="restablecer()" label="{{ 'general.boton.restablecer' | translate }}"></button>
+
+        <button pButton type="button" icon="fa fa-save" iconPos="left" [disabled]="deshabilitarGuardado()"
+          (click)="guardar()" label="{{ 'general.boton.guardar' | translate }}"></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>

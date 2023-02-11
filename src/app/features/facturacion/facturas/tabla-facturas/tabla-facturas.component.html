@@ -1,0 +1,251 @@
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+
+<div class="card mt-3">
+  <div class="card-body p-0">
+
+    <!-- TABLA RESULTADOS -->
+    <p-table [autoLayout]="true" [value]="datos" [columns]="cols" [(selection)]="selectedDatos" [responsive]="true" #table
+      class="tabla-listado overflow" [paginator]="true" [rows]="selectedItem"  (onRowSelect)="selectFila($event)" 
+      (onRowUnselect)="unselectFila($event)" [ngClass]="{ 'customCursor' : selectMultiple }" selectionMode="multiple" 
+      paginatorPosition="both" id="tablaFoco" >
+
+      <ng-template pTemplate="colgroup" let-columns>
+        <colgroup>
+          <col *ngFor="let col of cols" [style.width]="col.width">
+        </colgroup>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th *ngFor="let col of columns; let i = index" [ngSwitch]="col.field" [pSortableColumn]="col.field">
+            {{ col.header | translate }}
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+            <input pDroppable="false" [(ngModel)]="buscadores[i]" (click)="$event.stopPropagation()" *ngSwitchCase="col.field" pInputText
+              type="text"  placeholder="{{'general.boton.search' | translate}}" 
+              (input)="table.filter($event.target.value, col.field, 'contains')" />
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage" let-columns>
+        <tr>
+          <td [attr.colspan]="columns.length">
+            {{'justiciaGratuita.maestros.fundamentosCalificacion.tabla.sinResultados'|translate}}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
+        <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
+          <td class="text-center" *ngFor="let col of columns">
+
+            <div *ngIf="col.field == 'numeroFactura'">
+              <a class="enlace" (click)="openTab(dato)"><span>{{ dato[col.field] != null ? dato[col.field] : ('facturacionPyS.facturas.sinNumero' | translate) }}</span></a>
+            </div>
+
+            <div *ngIf="col.field == 'fechaEmision'">
+              <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+
+            <div *ngIf="col.field == 'numeroColegiado'">
+              <a class="enlace" (click)="navigateToCliente(dato)"><span>{{ dato[col.field] }}</span></a>
+            </div>
+
+            <div *ngIf="col.field == 'nombre'">
+              <a class="enlace" (click)="navigateToCliente(dato)"><span>{{ dato[col.field] }}</span></a>
+            </div>
+
+            <div *ngIf="col.field == 'importefacturado' && dato[col.field] != null">
+              <span class="pull-right">{{ dato[col.field] | number:'1.2-2':'es-ES'   }} €</span>
+            </div>
+
+            <div *ngIf="col.field == 'importeAdeudadoPendiente' && dato[col.field] != null">
+              <span class="pull-right">{{ dato[col.field] | number:'1.2-2':'es-ES'  }} €</span>
+            </div>
+
+            <div *ngIf="col.field == 'ultimaComunicacion'">
+              <span>{{ dato[col.field] | date: 'dd/MM/yyyy'}}</span>
+            </div>
+
+            <div *ngIf="col.field == 'comunicacionesFacturas'">
+              <span class="pull-right">{{ dato[col.field] }}</span>
+            </div>
+
+            <div *ngIf="col.field != 'numeroFactura' && col.field != 'importeAdeudadoPendiente' && col.field != 'importefacturado' 
+            && col.field != 'fechaEmision' && col.field != 'ultimaComunicacion' && col.field != 'comunicacionesFacturas' && col.field != 'numeroColegiado' && col.field != 'nombre' ">
+              <span>{{ dato[col.field] }}</span>
+            </div>
+
+            <div *ngIf="dato[col.field] == null && col.field != 'numeroFactura'">
+              <span class="pull-right">-</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="mostrar d-flex text-right justify-content-end">
+          <label class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate }}{{table.first + 1}} al {{table.first
+            + table.rows}} {{'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate }} {{table.totalRecords}}</label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos  && selectedDatos.length > 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: {{selectedDatos.length}}
+          </label>
+          <label class="pr-3 numSeleccionados" *ngIf="selectedDatos && selectedDatos.length <= 0">{{ 'agenda.fichaCalendario.tablaNotificaciones.mostrandoRegistros' | translate }}: 0
+          </label>
+          <label>{{"general.message.mostrar" | translate}}</label>
+          <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage" (onChange)="onChangeRowsPerPages($event)">
+          </p-dropdown>
+          <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
+          <div class="ml-3 selectAll">
+            <p-checkbox (onChange)="onChangeSelectAll()" [(ngModel)]="selectAll" binary="true" label="{{ 'tablas.literal.seleccionarTodo' | translate }}"
+              name="groupname"></p-checkbox>
+          </div>
+        </div>
+      </ng-template>
+    </p-table>
+    
+  </div>
+  <div class="card-footer">
+    <div class="text-right main-button">
+        <!-- Botón modal- RENEGOCIAR" -->
+        <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="renegociar()" 
+        [disabled]="disabledRenegociar() || esColegiado"
+        label="{{'general.boton.renegociar' | translate }}"></button>
+       <!-- Botón modal- Nuevo Cobro" -->
+       <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="nuevoCobro()" 
+       [disabled]=" disabledNuevoCobro() || esColegiado"
+       label="{{'facturacion.facturas.estadosPagos.nuevoCobro' | translate }}"></button>
+      <!-- Botón modal- Nuevo Abono" -->
+      <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="nuevoAbono()" 
+      [disabled]=" disabledNuevoAbono() || esColegiado"
+      label="{{'facturacion.facturas.estadosPagos.nuevoAbono' | translate }}"></button>
+      <!-- Botón modal- Devolver" -->
+      <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="devolver()" 
+      [disabled]=" disabledDevolver() || esColegiado"
+      label="{{'facturacion.facturas.estadosPagos.devolver' | translate }}"></button>
+      <!-- Botón modal- Devolver Comision" -->
+      <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="devolverComision()" 
+      [disabled]=" disabledDevolver() || esColegiado"
+      label="{{'facturacion.facturas.estadosPagos.devolverConComision' | translate }}"></button>
+      <!-- Botón modal- Anular" -->
+      <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="anular()" 
+      [disabled]="disabledAnular() || esColegiado"
+      label="{{'general.boton.anular' | translate }}"></button>
+      <!-- Botón debería ser "eliminar ultimo cobro" -->
+      <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="eliminarUltimoCobro()" 
+      [disabled]="disabledEliminar() || esColegiado"
+      label="{{'facturas.tabla.boton.eliminarUltCobro' | translate }}"></button>
+
+
+      <!-- Botón debería ser "consultar/editar" -->
+      <button pButton type="button" icon="fas fa-history" iconPos="left" 
+      label="{{'general.boton.generarInforme' | translate }}" [disabled]="esColegiado"></button>
+
+      <!-- Botón debería ser "comunicar" -->
+      <button pButton type="button" icon="fas fa-history" iconPos="left"  [disabled]="esColegiado"
+      label="{{'general.boton.comunicar' | translate }}"></button>
+
+      <!-- Botón debería ser "generar fichero transferencias" -->
+      <button pButton type="button" icon="fas fa-history" iconPos="left" (click)="confirmNuevoFicheroTransferencias()" [disabled]=" esColegiado || disableNuevoFicheroTransferencias()"
+      label="{{'general.boton.generarFichero' | translate }}"></button>
+
+      <!-- Botón debería ser "nuevo fichero de adeudos" -->
+      <button pButton type="button" icon="fas fa-plus" iconPos="left" (click)="nuevoFicheroAdeudos()" [disabled]="esColegiado || disableNuevoFicheroAdeudos()"
+      label="{{'menu.facturacion.disquetecargos' | translate }}"></button>
+    </div>
+  </div>
+</div>
+
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+  <div class="loader"></div>
+</div>
+
+<!--DIALOG CAMBIA ESTADO-->
+<p-dialog  [width]="800" responsive="true" modal="modal" [draggable]="false" resizable="false" [(visible)]="showModal">
+  <p-header  class="header-title">
+      <i class="fa fa-square"></i>
+         <p>{{ "menu.facturacion" | translate }}
+        <i class="fa fa-angle-right"></i>
+        {{ "menu.facturacion.facturas" | translate }}
+        <i class="fa fa-angle-right"></i>
+        {{ "facturacion.facturas.tarjeta.accion" | translate }}
+      </p>
+  </p-header>
+  <app-tabla-facturas-seleccionadas [bodyInicial]="selectedDatos"> </app-tabla-facturas-seleccionadas>
+
+  <!-- NUEVO COBRO TARJETA-->
+  <div class="ficha-container">
+    <div class="card" id="top">
+      <div class="card-header header-ficha">
+        <!-- Cabecera en ficha cerrada -->
+        <div *ngIf="!openFichaModal" class="form-row">
+          <div class="col-lg-1 col-md-2" (click)="abreCierraFicha()">
+            <div class="img-colegiado">
+              <i class="far fa-address-book icon-ficha pointer"></i>
+            </div>
+          </div>
+          <div class="col-lg-11 col-md-10">
+            <div class="d-flex justify-content-start mb-1" (click)="abreCierraFicha()">
+              <label class="mr-auto title-ficha pointer">{{ nombreTarjeta }}</label>
+            </div>
+            <div class="d-flex justify-content-between default">
+              <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}: 
+                  <span>{{ itemAction.fechaMin | date: "dd/MM/yyyy" }}</span></label>        
+              <i class="fa fa-angle-down float-right" (click)="abreCierraFicha()"
+                *ngIf="!openFichaModal"></i>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Cabecera en ficha abierta -->
+        <div *ngIf="openFichaModal" class=" header-ficha-open d-flex justify-content-start align-items-center"
+          (click)="abreCierraFicha()">
+          <div class="img-colegiado">
+            <i class="far fa-address-book icon-ficha"></i>
+          </div>
+          <label class="title-ficha pointer">{{ nombreTarjeta }}</label>
+          <i class="fa fa-angle-up ml-auto"></i>
+        </div>
+      </div>
+      <!-- Cuerpo en ficha abierta -->
+      <div  *ngIf="!openFichaModal" class="card-body card-body-ficha">
+        <div class="row">
+          <div class="col-lg-12 col-md-12">
+            <div class="form-row">
+              <div class="form-group col-lg-3 col-md-3">
+                <label>{{ 'facturacionSJCS.facturacionesYPagos.fecha' | translate }}(*)</label>
+                <app-fecha [(value)]="itemAction.fechaMin"  [inputStyleClass]="styleObligatorio(itemAction.fechaMin)"
+                  (valueChangeSelected)="fillFecha($event, 'fechaMin')"
+                  (valueChangeInput)="fillFecha($event, 'fechaMin')"></app-fecha>
+              </div>
+              <div *ngIf="comentario" class="form-group col-lg-3 col-md-3">
+                <label>{{ 'general.boton.comments' | translate }}</label>
+                <input type="text" class="form-control"  [(ngModel)]='itemAction.comentario' pInputText>
+              </div>
+              <div  *ngIf="combo && !esRenegociar" class="form-group col-lg-4 col-md-4">
+                <label>{{ 'censo.resultadosSolicitudesModificacion.literal.descripcion' | translate }}</label>
+                <p-dropdown class="select-form" [(ngModel)]='comboSel' [ngClass]="styleObligatorio( comboSel)"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [options]='comboAction' [filter]="true"
+                [showClear]="true"></p-dropdown>
+              </div>
+              <div  *ngIf="combo && esRenegociar" class="form-group col-lg-3 col-md-3">
+                <label>{{ 'facturacion.facturas.opcion.renegociar' | translate }}</label>
+                <p-dropdown class="select-form" [(ngModel)]='comboSel' [ngClass]="styleObligatorio(comboSel)"
+                placeholder="{{'general.boton.seleccionar' | translate}}" [options]='comboAction' [filter]="true"
+                [showClear]="true"></p-dropdown>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+  
+
+    </div>
+  </div>
+
+  <p-footer class="main-button col-lg-12 col-md-12 mt-2">
+    <button (click)="accion(accionAux)" pButton type="button" icon="fa fa-edit" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
+    <button (click)="cerrarDialog(true)" pButton type="button" icon="fa fa-close" iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+  </p-footer>
+</p-dialog>

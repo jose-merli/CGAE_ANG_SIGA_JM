@@ -1,1 +1,11 @@
-<app-my-iframe url="{{ url }}"></app-my-iframe>
+<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<div class="busqueda-container">
+    <app-filtros-facturas (buscarFacturas)="buscarFacturas()" ></app-filtros-facturas>
+    <app-tabla-facturas *ngIf="buscar" [filtro]="filtro" [datos]="datos" (busqueda)="buscarFacturas()"></app-tabla-facturas> 
+</div>
+
+<div *ngIf="progressSpinner" class="overlay-spinner">
+    <div class="loader"></div>
+</div>
+
+<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate }}" width="425"></p-confirmDialog>

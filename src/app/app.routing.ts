@@ -130,16 +130,8 @@ import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/v
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { EJGComponent } from './features/sjcs/ejg/ejg.component';
 
-import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
-import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
-import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
-import { MovimientosVariosComponentClassique } from './features/sjcs/facturacionSJCS/movimientos-varios-classique/movimientos-varios-classique.component';
-import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
-import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/abonos-sjcs.component';
 import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
-import { GenerarImpreso190ComponentClassique } from './features/sjcs/facturacionSJCS/generar-impreso190-classique/generar-impreso190-classique.component';
-import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component';
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
 import { JustificacionLetradoComponent } from './features/sjcs/informes/justificacion-letrado/justificacion-letrado.component';
 import { InformeFacturacionComponent } from './features/sjcs/informes/informe-facturacion/informe-facturacion.component';
@@ -284,7 +276,57 @@ import { GestionActasComponent } from "./features/sjcs/actas/gestion-actas/gesti
 import { FichaEnvioCamComponent } from "./features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-envio-cam/ficha-envio-cam.component";
 import { DetalleSOJComponent } from "./features/sjcs/soj/detalle-soj/detalle-soj.component";
 
+//classique
+import { ContabilidadClassiqueComponent } from './features/facturacionClassique/contabilidad/contabilidad.component';
+import { DevolucionManualClassiqueComponent } from './features/facturacionClassique/devoluciones/devolucion-manual/devolucion-manual.component';
+import { FicherosDevolucionesClassiqueComponent } from './features/facturacionClassique/devoluciones/ficheros-devoluciones/ficheros-devoluciones.component';
+import { FacturasClassiqueComponent } from './features/facturacionClassique/facturas/facturas.component';
+import { FicherosAdeudosClassiqueComponent } from './features/facturacionClassique/ficheros-adeudos/ficheros-adeudos.component';
+import { FicherosTransferenciaClassiqueComponent } from './features/facturacionClassique/ficheros-transferencia/ficheros-transferencia.component';
+import { GestionCuentasBancariasClassiqueComponent } from './features/facturacionClassique/gestion-cuentas-bancarias/gestion-cuentas-bancarias.component';
+import { SeriesFacturaClassiqueComponent } from './features/facturacionClassique/series-factura/series-factura.component';
 
+import { GenerarImpreso190ClassiqueComponent } from './features/sjcsClassique/facturacionSJCS/generar-impreso190-classique/generar-impreso190-classique.component';
+import { MantenimientoFacturacionComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
+import { PrevisionesComponent } from './features/sjcsClassique/facturacionSJCS/previsiones/previsiones.component';
+import { MantenimientoPagosComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
+import { MovimientosVariosComponent } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-classique/movimientos-varios.component';
+import { TramosLECComponent } from './features/sjcsClassique/facturacionSJCS/tramos-lec/tramos-lec.component';
+import { RetencionesJudicialesComponent } from './features/sjcsClassique/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
+import { ResumenPagosComponent } from './features/sjcsClassique/facturacionSJCS/resumen-pagos/resumen-pagos.component';
+
+
+import { EJGClassiqueComponent } from './features/sjcsClassique/ejgClassique/ejgClassique.component';
+import { GestionActasClassiqueComponent } from './features/sjcsClassique/gestion-actas/gestion-actas.component';
+import { DefinirListasGuardiasClassiqueComponent } from './features/sjcsClassique/guardiaClassique/definir-listas-guardias/definir-listas-guardias.component';
+import { GuardiasAsistenciasClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-asistencias/guardias-asistencias.component';
+import { GuardiasBajasTemporalesClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-bajas-temporales/guardias-bajas-temporales.component';
+import { GuardiasCentralitaClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-centralita/guardias-centralita.component';
+import { GuardiasIncompatibilidadesClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-incompatibilidades/guardias-incompatibilidades.component';
+import { GuardiasSaltosCompensacionesClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
+import { ProgramacionCalendariosClassiqueComponent } from './features/sjcsClassique/guardiaClassique/programacionCalendarios/programacionCalendarios.component';
+import { GuardiasSolicitudesTurnosClassiqueComponent } from './features/sjcsClassique/guardiaClassique/solicitudes-turnos/solicitudes-turnos.component';
+import { VolanteExpresClassiqueComponent } from './features/sjcsClassique/guardiaClassique/volante-expres/volante-expres.component';
+import { AreasYMateriasClassiqueComponent } from './features/sjcsClassique/maestros/areas-materias/areas-materias.component';
+import { CalendarioLaboralClassiqueComponent } from './features/sjcsClassique/maestros/calendarioLaboral/calendarioLaboral.component';
+import { DestinatariosRetencionesClassiqueComponent } from './features/sjcsClassique/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
+import { DocumentacionEJGClassiqueComponent } from './features/sjcsClassique/maestros/documentacion-ejg/documentacion-ejg.component';
+import { MaestroPJClassiqueComponent } from './features/sjcsClassique/maestros/maestro-pj/maestro-pj.component';
+import { MaestrosModulosClassiqueComponent } from './features/sjcsClassique/maestros/maestros-modulos/maestros-modulos.component';
+import { MantenimientoComisariasClassiqueComponent } from './features/sjcsClassique/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component';
+import { MantenimientoJuzgadosClassiqueComponent } from './features/sjcsClassique/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component';
+import { MantenimientoPrisionesClassiqueComponent } from './features/sjcsClassique/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
+import { MantenimientoProcuradoresClassiqueComponent } from './features/sjcsClassique/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
+import { PartidasClassiqueComponent } from './features/sjcsClassique/maestros/partidas/partidas.component';
+import { PartidosJudicialesClassiqueComponent } from './features/sjcsClassique/maestros/partidos-judiciales/partidos-judiciales.component';
+import { RetencionesIRPFClassiqueComponent } from './features/sjcsClassique/maestros/retenciones-IRPF/retenciones-IRPF.component';
+import { TiposAsistenciaClassiqueComponent } from './features/sjcsClassique/maestros/tiposAsistencia/tiposAsistencia.component';
+import { ZonasYSubzonasClassiqueComponent } from './features/sjcsClassique/maestros/zonas-subzonas/zonas-subzonas.component';
+import { BajasTemporalesClassiqueComponent } from './features/sjcsClassique/oficioClassique/bajas-temporales/bajas-temporales.component';
+import { DesignacionesClassiqueComponent } from './features/sjcsClassique/oficioClassique/designaciones/designaciones.component';
+import { SaltosYCompensacionesClassiqueComponent } from './features/sjcsClassique/oficioClassique/saltos-compensaciones/saltos-compensaciones.component';
+import { SolicitudesTurnosGuardiasClassiqueComponent } from './features/sjcsClassique/oficioClassique/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
+import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassique/turnos/turnos.component';
 
 
 
@@ -1028,33 +1070,8 @@ const appRoutes: Routes = [
 		canActivate: [ AuthGuard ]
 	},
 	{
-		path: 'mantenimientoFacturacion',
-		component: MantenimientoFacturacionComponent,
-		canActivate: [AuthGuard]
-	},
-	{
 		path: 'fichaGestionActas',
 		component: GestionActasComponent,
-		canActivate: [AuthGuard]
-	},
-	{
-		path: 'previsiones',
-		component: PrevisionesComponent,
-		canActivate: [AuthGuard]
-	},
-	{
-		path: 'mantenimientoPagos',
-		component: MantenimientoPagosComponent,
-		canActivate: [AuthGuard]
-	},
-	{
-		path: 'movimientosVarios',
-		component: MovimientosVariosComponentClassique,
-		canActivate: [AuthGuard]
-	},
-	{
-		path: 'tramosLEC',
-		component: TramosLECComponent,
 		canActivate: [AuthGuard]
 	},
 	{
@@ -1068,28 +1085,13 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'retencionesJudiciales',
-		component: RetencionesJudicialesComponent,
-		canActivate: [AuthGuard]
-	},
-	{
 		path: 'busquedaRetencionesAplicadas',
 		component: BusquedaRetencionesAplicadasComponent,
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'generarImpreso190',
-		component: GenerarImpreso190ComponentClassique,
-		canActivate: [AuthGuard]
-	},
-	{
 		path: 'comunicaDesignaciones',
 		component: ComunicaDesignacionesComponent,
-		canActivate: [AuthGuard]
-	},
-	{
-		path: 'resumenPagos',
-		component: ResumenPagosComponent,
 		canActivate: [AuthGuard]
 	},
 	{
@@ -1638,6 +1640,247 @@ const appRoutes: Routes = [
 	{
 		path: 'gestionExpedientesEXEA',
 		component: GestionExpedientesExeaComponent,
+		canActivate: [AuthGuard]
+	},
+
+	//Classique
+
+	//facturacionSJCS
+	{
+		path: 'generarImpreso190',
+		component: GenerarImpreso190ClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'mantenimientoFacturacion',
+		component: MantenimientoFacturacionComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'previsiones',
+		component: PrevisionesComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'mantenimientoPagos',
+		component: MantenimientoPagosComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'movimientosVarios',
+		component: MovimientosVariosComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'tramosLEC',
+		component: TramosLECComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'retencionesJudiciales',
+		component: RetencionesJudicialesComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'resumenPagos',
+		component: ResumenPagosComponent,
+		canActivate: [AuthGuard]
+	},
+
+	//resto
+	{
+		path: 'gestionCuentasBancariasClassique',
+		component: GestionCuentasBancariasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'seriesFacturaClassique',
+		component: SeriesFacturaClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'facturasClassique',
+		component: FacturasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'ficherosAdeudosClassique',
+		component: FicherosAdeudosClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'ficherosDevolucionesClassique',
+		component: FicherosDevolucionesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'devolucionManualClassique',
+		component: DevolucionManualClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'ficherosTransferenciasClassique',
+		component: FicherosTransferenciaClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'contabilidadClassique',
+		component: ContabilidadClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'ejgClassique',
+		component: EJGClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'gestionActasClassique',
+		component: GestionActasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'definirListasGuardiasClassique',
+		component: DefinirListasGuardiasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'guardiasAsistenciasClassique',
+		component: GuardiasAsistenciasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'guardiasBajasTemporalesClassique',
+		component: GuardiasBajasTemporalesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'guardiasCentralitaClassique',
+		component: GuardiasCentralitaClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'guardiasIncompatibilidadesClassique',
+		component: GuardiasIncompatibilidadesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'guardiasSaltosCompensacionesClassique',
+		component: GuardiasSaltosCompensacionesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'programacionCalendariosClassique',
+		component: ProgramacionCalendariosClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'guardiasSolicitudesTurnosClassique',
+		component: GuardiasSolicitudesTurnosClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'volanteExpresClassique',
+		component: VolanteExpresClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'areasYMateriasClassique',
+		component: AreasYMateriasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'calendarioLaboralClassique',
+		component: CalendarioLaboralClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'destinatariosRetencionesClassique',
+		component: DestinatariosRetencionesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'documentacionEJGClassique',
+		component: DocumentacionEJGClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'MaestroPLClassique',
+		component: MaestroPJClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'maestrosModulosClassique',
+		component: MaestrosModulosClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'mantenimientoComisariasClassique',
+		component: MantenimientoComisariasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'MantenimientoJuzgadosClassique',
+		component: MantenimientoJuzgadosClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'mantenimientoPrisionesClassique',
+		component: MantenimientoPrisionesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'mantenimientoProcuradoresClassique',
+		component: MantenimientoProcuradoresClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'partidasClassique',
+		component: PartidasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'partidosJudicialesClassique',
+		component: PartidosJudicialesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'retencionesIRPFClassique',
+		component: RetencionesIRPFClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'tiposAsistenciaClassique',
+		component: TiposAsistenciaClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'zonasYSubzonasClassique',
+		component: ZonasYSubzonasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'bajasTemporalesClassique',
+		component: BajasTemporalesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'designacionesClassique',
+		component: DesignacionesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'saltosYCompensacionesClassique',
+		component: SaltosYCompensacionesClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'solicitudesTurnosGuardiasClassique',
+		component: SolicitudesTurnosGuardiasClassiqueComponent,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'turnosClassique',
+		component: TurnosClassiqueComponent,
 		canActivate: [AuthGuard]
 	},
 	{ path: ' ', redirectTo: 'home' }

@@ -256,13 +256,9 @@ import { FicherosTransferenciaComponent } from './features/facturacion/ficheros-
 
 import { FacturasEmitidasComponent } from './features/facturacion/informes/facturas-emitidas/facturas-emitidas.component';
 
-//import { FiltrosExportacionesContabilidadComponent } from './features/facturacion/contabilidad/filtros-exportaciones-contabilidad/filtros-exportaciones-contabilidad.component';
+import { FiltrosExportacionesContabilidadComponent } from './features/facturacion/contabilidad/filtros-exportaciones-contabilidad/filtros-exportaciones-contabilidad.component';
 
 //Modulo de Facturacion
-
-
-
-
 
 import { BusquedaInscripcionesComponent } from './features/formacion/busqueda-inscripciones/busqueda-inscripciones.component';
 import { FichaCursoComponent } from './features/formacion/ficha-curso/ficha-curso.component';
@@ -337,34 +333,6 @@ import { ComunicaResolucionesComponent } from './features/sjcs/comunicaciones/co
 //Modulo de Justicia Gratuita
 import { DevolucionComponent } from './features/sjcs/devolucion/devolucion.component';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { JustificacionComponent } from './features/sjcs/justificacion/justificacion.component';
 import { ZonasYSubzonasComponent } from './features/sjcs/maestros/zonas-subzonas/zonas-subzonas.component';
 import { AreasYMateriasComponent } from './features/sjcs/maestros/areas-materias/areas-materias.component';
@@ -399,22 +367,6 @@ import { DetalleTarjetaContrariosFichaDesignacionOficioComponent } from './featu
 import { DetalleTarjetaInteresadosFichaDesignacionOficioComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-interesados-designa/detalle-tarjeta-interesados-ficha-designacion-oficio.component';
 import { DetalleTarjetaLetradosDesignaComponent } from './features/sjcs/oficio/designaciones/ficha-designaciones/detalle-tarjeta-letrados-designa/detalle-tarjeta-letrados-designa.component';
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import { GuardiasSolicitudesTurnosComponent } from './features/sjcs/guardia/solicitudes-turnos/solicitudes-turnos.component';
 import { GuardiasIncompatibilidadesComponent } from './features/sjcs/guardia/guardias-incompatibilidades/guardias-incompatibilidades.component';
 import { ProgramacionCalendariosComponent } from './features/sjcs/guardia/programacionCalendarios/programacionCalendarios.component';
@@ -423,13 +375,6 @@ import { GuardiasSaltosCompensacionesComponent } from './features/sjcs/guardia/g
 import { DefinirListasGuardiasComponent } from './features/sjcs/guardia/definir-listas-guardias/definir-listas-guardias.component';
 import { GuardiasAsistenciasComponent } from './features/sjcs/guardia/guardias-asistencias/guardias-asistencias.component';
 import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/volante-expres.component';
-import { MantenimientoFacturacionComponent } from './features/sjcs/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
-import { PrevisionesComponent } from './features/sjcs/facturacionSJCS/previsiones/previsiones.component';
-import { MantenimientoPagosComponent } from './features/sjcs/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
-import { MovimientosVariosComponentClassique } from './features/sjcs/facturacionSJCS/movimientos-varios-classique/movimientos-varios-classique.component';
-import { TramosLECComponent } from './features/sjcs/facturacionSJCS/tramos-lec/tramos-lec.component';
-import { RetencionesJudicialesComponent } from './features/sjcs/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
-import { ResumenPagosComponent } from './features/sjcs/facturacionSJCS/resumen-pagos/resumen-pagos.component';
 import { JustificacionLetradoComponent } from './features/sjcs/informes/justificacion-letrado/justificacion-letrado.component';
 import { InformeFacturacionComponent } from './features/sjcs/informes/informe-facturacion/informe-facturacion.component';
 import { InformeFacturacionMultipleComponent } from './features/sjcs/informes/informe-facturacion-multiple/informe-facturacion-multiple.component';
@@ -522,7 +467,6 @@ import { ServiciosInteresFichaColegialComponent } from './features/censo/ficha-c
 import { TarjetaResumenFijaModule } from './commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
 import { PipeTranslationModule } from './commons/translate/pipe-translation.module';
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
-import { GenerarImpreso190ComponentClassique } from './features/sjcs/facturacionSJCS/generar-impreso190-classique/generar-impreso190-classique.component';
 import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component';
 
 
@@ -646,10 +590,10 @@ import { FichaServiciosComponent } from './features/facturacion/servicios/ficha-
 import { DetalleTarjetaDatosGeneralesFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-datos-generales-ficha-servicios-facturacion/detalle-tarjeta-datos-generales-ficha-servicios-facturacion.component';
 import { DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent } from './features/facturacion/servicios/ficha-servicios/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion/detalle-tarjeta-formas-pagos-ficha-servicios-facturacion.component';
 import { TarjetaSolicitudCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-solicitud-compra-suscripcion/tarjeta-solicitud-compra-suscripcion.component';
-// import { FichaCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component';
-// import { FiltrosSeriesFacturaComponent } from './features/facturacion/series-factura/filtros-series-factura/filtros-series-factura.component';
-// import { TablaSeriesFacturaComponent } from './features/facturacion/series-factura/tabla-series-factura/tabla-series-factura.component';
-// import { GestionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component';
+import { FichaCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/ficha-cuenta-bancaria.component';
+ import { FiltrosSeriesFacturaComponent } from './features/facturacion/series-factura/filtros-series-factura/filtros-series-factura.component';
+ import { TablaSeriesFacturaComponent } from './features/facturacion/series-factura/tabla-series-factura/tabla-series-factura.component';
+import { GestionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/gestion-series-factura.component';
 import { CompraProductosComponent } from './features/facturacion/compra-productos/compra-productos.component';
 import { TarjetaFiltroCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-filtro-compra-productos/tarjeta-filtro-compra-productos.component';
 import { TarjetaListaCompraProductosComponent } from './features/facturacion/compra-productos/tarjeta-lista-compra-productos/tarjeta-lista-compra-productos.component';
@@ -659,34 +603,34 @@ import { TarjetaFacturaCompraSuscripcionComponent } from './features/facturacion
 import { QueryBuilderModule } from '@syncfusion/ej2-angular-querybuilder';
 import { enableRipple } from '@syncfusion/ej2-base';
 import { MatSlideToggleModule } from '@angular/material';
-// import { DatosGeneralesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/datos-generales-series-factura/datos-generales-series-factura.component';
-// import { DestinatariosIndividualesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-individuales-series-factura/destinatarios-individuales-series-factura.component';
-// import { DestinatariosEtiquetasSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-etiquetas-series-factura/destinatarios-etiquetas-series-factura.component';
-// import { ObservacionesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/observaciones-series-factura/observaciones-series-factura.component';
-// import { DestinatariosListaSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-lista-series-factura/destinatarios-lista-series-factura.component';
-// import { PagoAutomaticoSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/pago-automatico-series-factura/pago-automatico-series-factura.component';
-// import { ExportacionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/exportacion-series-factura/exportacion-series-factura.component';
-// import { TraspasoSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/traspaso-series-factura/traspaso-series-factura.component';
-// import { ContadorSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/contador-series-factura/contador-series-factura.component';
-// import { ContadorRectSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/contador-rect-series-factura/contador-rect-series-factura.component';
-// import { GeneracionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/generacion-series-factura/generacion-series-factura.component';
-// import { EnvioSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/envio-series-factura/envio-series-factura.component';
+import { DatosGeneralesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/datos-generales-series-factura/datos-generales-series-factura.component';
+import { DestinatariosIndividualesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-individuales-series-factura/destinatarios-individuales-series-factura.component';
+import { DestinatariosEtiquetasSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-etiquetas-series-factura/destinatarios-etiquetas-series-factura.component';
+import { ObservacionesSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/observaciones-series-factura/observaciones-series-factura.component';
+import { DestinatariosListaSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/destinatarios-lista-series-factura/destinatarios-lista-series-factura.component';
+import { PagoAutomaticoSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/pago-automatico-series-factura/pago-automatico-series-factura.component';
+import { ExportacionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/exportacion-series-factura/exportacion-series-factura.component';
+import { TraspasoSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/traspaso-series-factura/traspaso-series-factura.component';
+import { ContadorSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/contador-series-factura/contador-series-factura.component';
+import { ContadorRectSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/contador-rect-series-factura/contador-rect-series-factura.component';
+import { GeneracionSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/generacion-series-factura/generacion-series-factura.component';
+import { EnvioSeriesFacturaComponent } from './features/facturacion/series-factura/gestion-series-factura/envio-series-factura/envio-series-factura.component';
 import { DropDownListModule } from '@syncfusion/ej2-angular-dropdowns';
 import { RadioButtonModule as RadioButtonEJSModule} from '@syncfusion/ej2-angular-buttons';
 import { TarjetaDescuentosAnticiposCompraSuscripcionComponent } from './features/facturacion/ficha-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion/tarjeta-descuentos-anticipos-compra-suscripcion.component';
 import { ConstructorConsultasComponent } from './features/informes-comunicaciones/consultas/ficha-consulta/constructor-consultas/constructor-consultas.component';
-// import { FiltrosBusquedaAdeudosComponent } from './features/facturacion/ficheros-adeudos/filtros-busqueda-adeudos/filtros-busqueda-adeudos.component';
-// import { TablaAdeudosComponent } from './features/facturacion/ficheros-adeudos/tabla-adeudos/tabla-adeudos.component';
-// import { GestionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/gestion-adeudos.component';
-// import { DatosGeneralesCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/datos-generales-cuenta-bancaria/datos-generales-cuenta-bancaria.component';
-// import { ComisionCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/comision-cuenta-bancaria/comision-cuenta-bancaria.component';
-// import { ConfiguracionCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/configuracion-cuenta-bancaria/configuracion-cuenta-bancaria.component';
-// import { UsoFicherosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/uso-ficheros-cuenta-bancaria/uso-ficheros-cuenta-bancaria.component';
-// import { UsosSufijosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/usos-sufijos-cuenta-bancaria/usos-sufijos-cuenta-bancaria.component';
-// import { DatosGeneracionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/datos-generacion-adeudos/datos-generacion-adeudos.component';
-// import { CuentaEntidadAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/cuenta-entidad-adeudos/cuenta-entidad-adeudos.component';
-// import { FacturasAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturas-adeudos/facturas-adeudos.component';
-// import { FacturacionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturacion-adeudos/facturacion-adeudos.component';
+import { FiltrosBusquedaAdeudosComponent } from './features/facturacion/ficheros-adeudos/filtros-busqueda-adeudos/filtros-busqueda-adeudos.component';
+import { TablaAdeudosComponent } from './features/facturacion/ficheros-adeudos/tabla-adeudos/tabla-adeudos.component';
+import { GestionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/gestion-adeudos.component';
+import { DatosGeneralesCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/datos-generales-cuenta-bancaria/datos-generales-cuenta-bancaria.component';
+import { ComisionCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/comision-cuenta-bancaria/comision-cuenta-bancaria.component';
+import { ConfiguracionCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/configuracion-cuenta-bancaria/configuracion-cuenta-bancaria.component';
+import { UsoFicherosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/uso-ficheros-cuenta-bancaria/uso-ficheros-cuenta-bancaria.component';
+import { UsosSufijosCuentaBancariaComponent } from './features/facturacion/gestion-cuentas-bancarias/ficha-cuenta-bancaria/usos-sufijos-cuenta-bancaria/usos-sufijos-cuenta-bancaria.component';
+import { DatosGeneracionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/datos-generacion-adeudos/datos-generacion-adeudos.component';
+import { CuentaEntidadAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/cuenta-entidad-adeudos/cuenta-entidad-adeudos.component';
+import { FacturasAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturas-adeudos/facturas-adeudos.component';
+import { FacturacionAdeudosComponent } from './features/facturacion/ficheros-adeudos/gestion-adeudos/facturacion-adeudos/facturacion-adeudos.component';
 import { CuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/cuotas-suscripciones.component';
 import { TarjetaFiltroCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones/tarjeta-filtro-cuotas-suscripciones.component';
 import { TarjetaListaCuotasSuscripcionesComponent } from './features/facturacion/cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones/tarjeta-lista-cuotas-suscripciones.component';
@@ -702,10 +646,10 @@ import { EnvioFactProgramadasComponent } from './features/facturacion/fact-progr
 import { TraspasoFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/traspaso-fact-programadas/traspaso-fact-programadas.component';
 import { SerieFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/serie-factura-fact-programadas/serie-factura-fact-programadas.component';
 import { InfoFacturaFactProgramadasComponent } from './features/facturacion/fact-programadas/ficha-fact-programadas/info-factura-fact-programadas/info-factura-fact-programadas.component';
-// import { FiltrosBusquedaTransferenciasComponent } from './features/facturacion/ficheros-transferencia/filtros-busqueda-transferencias/filtros-busqueda-transferencias.component';
-// import { TablaFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/tabla-ficheros-transferencias/tabla-ficheros-transferencias.component';
-// import { GestionFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component';
-// import { DatosGeneracionFichTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/datos-generacion-fich-transferencias/datos-generacion-fich-transferencias.component';
+import { FiltrosBusquedaTransferenciasComponent } from './features/facturacion/ficheros-transferencia/filtros-busqueda-transferencias/filtros-busqueda-transferencias.component';
+import { TablaFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/tabla-ficheros-transferencias/tabla-ficheros-transferencias.component';
+import { GestionFicherosTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/gestion-ficheros-transferencias.component';
+import { DatosGeneracionFichTransferenciasComponent } from './features/facturacion/ficheros-transferencia/gestion-ficheros-transferencias/datos-generacion-fich-transferencias/datos-generacion-fich-transferencias.component';
 import { CargasMasivasComprasComponent } from './features/facturacion/cargas-masivas-compras/cargas-masivas-compras.component';
 import { TarjetaFicheroModeloCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-fichero-modelo-cmc/tarjeta-fichero-modelo-cmc.component';
 import { TarjetaSubidaFicheroCmcComponent } from './features/facturacion/cargas-masivas-compras/tarjeta-subida-fichero-cmc/tarjeta-subida-fichero-cmc.component';
@@ -718,23 +662,23 @@ import { FichaMonederoComponent } from './features/facturacion/monederos/ficha-m
 import { DatosGeneralesMonederoComponent } from './features/facturacion/monederos/ficha-monedero/datos-generales-monedero/datos-generales-monedero.component';
 import { MovimientosMonederoComponent } from './features/facturacion/monederos/ficha-monedero/movimientos-monedero/movimientos-monedero.component';
 import { ServiciosAsociadosMonederoComponent } from './features/facturacion/monederos/ficha-monedero/servicios-asociados-monedero/servicios-asociados-monedero.component';
-// import { TablaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/tabla-ficheros-devoluciones/tabla-ficheros-devoluciones.component';
-// import { FiltrosFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/filtros-ficheros-devoluciones/filtros-ficheros-devoluciones.component';
-// import { FichaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/ficha-ficheros-devoluciones.component';
-// import { FiltrosFacturasComponent } from './features/facturacion/facturas/filtros-facturas/filtros-facturas.component';
-// import { TablaFacturasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas.component';
-// import { GestionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/gestion-facturas.component';
-// import { DatosCargaDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/datos-carga-devoluciones/datos-carga-devoluciones.component';
-// import { ObservacionesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/observaciones-facturas/observaciones-facturas.component';
-// import { DatosGeneralesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/datos-generales-facturas/datos-generales-facturas.component';
-// import { EstadosPagosFacturasComponent } from './features/facturacion/facturas/gestion-facturas/estados-pagos-facturas/estados-pagos-facturas.component';
-// import { ObservacionesRectificativaFacturasComponent } from './features/facturacion/facturas/gestion-facturas/observaciones-rectificativa-facturas/observaciones-rectificativa-facturas.component';
-// import { LineasFacturasComponent } from './features/facturacion/facturas/gestion-facturas/lineas-facturas/lineas-facturas.component';
-// import { ComunicacionesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/comunicaciones-facturas/comunicaciones-facturas.component';
-// import { ClienteFacturasComponent } from './features/facturacion/facturas/gestion-facturas/cliente-facturas/cliente-facturas.component';
-// import { DeudorFacturasComponent } from './features/facturacion/facturas/gestion-facturas/deudor-facturas/deudor-facturas.component';
-// import { FacturacionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/facturacion-facturas/facturacion-facturas.component';
-// import { TablaExportacionesContabilidadComponent} from './features/facturacion/contabilidad/tabla-exportaciones-contabilidad/tabla-exportaciones-contabilidad.component';
+import { TablaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/tabla-ficheros-devoluciones/tabla-ficheros-devoluciones.component';
+import { FiltrosFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/filtros-ficheros-devoluciones/filtros-ficheros-devoluciones.component';
+import { FichaFicherosDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/ficha-ficheros-devoluciones.component';
+import { FiltrosFacturasComponent } from './features/facturacion/facturas/filtros-facturas/filtros-facturas.component';
+import { TablaFacturasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas.component';
+import { GestionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/gestion-facturas.component';
+import { DatosCargaDevolucionesComponent } from './features/facturacion/devoluciones/ficheros-devoluciones/ficha-ficheros-devoluciones/datos-carga-devoluciones/datos-carga-devoluciones.component';
+import { ObservacionesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/observaciones-facturas/observaciones-facturas.component';
+import { DatosGeneralesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/datos-generales-facturas/datos-generales-facturas.component';
+import { EstadosPagosFacturasComponent } from './features/facturacion/facturas/gestion-facturas/estados-pagos-facturas/estados-pagos-facturas.component';
+import { ObservacionesRectificativaFacturasComponent } from './features/facturacion/facturas/gestion-facturas/observaciones-rectificativa-facturas/observaciones-rectificativa-facturas.component';
+import { LineasFacturasComponent } from './features/facturacion/facturas/gestion-facturas/lineas-facturas/lineas-facturas.component';
+import { ComunicacionesFacturasComponent } from './features/facturacion/facturas/gestion-facturas/comunicaciones-facturas/comunicaciones-facturas.component';
+import { ClienteFacturasComponent } from './features/facturacion/facturas/gestion-facturas/cliente-facturas/cliente-facturas.component';
+import { DeudorFacturasComponent } from './features/facturacion/facturas/gestion-facturas/deudor-facturas/deudor-facturas.component';
+import { FacturacionFacturasComponent } from './features/facturacion/facturas/gestion-facturas/facturacion-facturas/facturacion-facturas.component';
+import { TablaExportacionesContabilidadComponent} from './features/facturacion/contabilidad/tabla-exportaciones-contabilidad/tabla-exportaciones-contabilidad.component';
 import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/abonos-sjcs.component';
 import { FiltrosAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/filtros-abonos-sjcs/filtros-abonos-sjcs.component';
 import { TablaAbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-sjcs.component';
@@ -846,9 +790,6 @@ import { GestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardi
 
 import { TablaGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/tabla-guardia-colegiado/tabla-guardia-colegiado.component';
 
-
-
-
 import { CalendarioGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/calendario-gestion-guardia-colegiado/calendario-gestion-guardia-colegiado.component';
 import { ColegiadoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado/colegiado-gestion-guardia-colegiado.component';
 import { DatosGeneralesGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado/datos-generales-gestion-guardia-colegiado.component';
@@ -858,9 +799,6 @@ import { SustitucionesGestionGuardiaColegiadoComponent } from './features/sjcs/g
 import { TurnoGestionGuardiaColegiadoComponent } from './features/sjcs/guardia/guardia-colegiado/gestion-guardia-colegiado/turno-gestion-guardia-colegiado/turno-gestion-guardia-colegiado.component';
 import { GuardiasSolicitudesCentralitaComponent } from './features/sjcs/guardia/guardias-solicitudes-centralita/guardias-solicitudes-centralita.component';
 import { PartidosJudicialesComponent } from './features/sjcs/maestros/partidos-judiciales/partidas-judiciales.component';
-
-
-
 
 import { TarjetaModule } from './commons/tarjeta/tarjeta.module';
 import { TablaResultadoOrderModule } from './commons/tabla-resultado-order/tabla-resultado-order.module';
@@ -893,7 +831,7 @@ import { FichaExpedienteExeaComponent } from './features/expedientes-exea/ficha-
 import { FichaExpExeaDatosGeneralesComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-datos-generales/ficha-exp-exea-datos-generales.component';
 import { FichaExpExeaDocumentacionComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-documentacion/ficha-exp-exea-documentacion.component';
 import { FichaExpExeaHistoricoComponent } from './features/expedientes-exea/ficha-expediente-exea/ficha-exp-exea-historico/ficha-exp-exea-historico.component';
-// import { TablaFacturasSeleccionadasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas-seleccionadas/tabla-facturas-seleccionadas.component';
+import { TablaFacturasSeleccionadasComponent } from './features/facturacion/facturas/tabla-facturas/tabla-facturas-seleccionadas/tabla-facturas-seleccionadas.component';
 import { TablaAbonosSeleccionadasComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/tabla-abonos-sjcs/tabla-abonos-seleccionadas/tabla-abonos-seleccionadas.component';
 import { FichaEnvioCamComponent } from './features/sjcs/facturacionSJCS/certificacion-fac/ficha-certificacion-fac/ficha-envio-cam/ficha-envio-cam.component';
 import { DetalleSOJComponent } from './features/sjcs/soj/detalle-soj/detalle-soj.component';
@@ -903,6 +841,59 @@ import { DatosGeneralesDetalleSojComponent } from './features/sjcs/soj/detalle-s
 import { ServiciosTramitacionDetalleSojComponent } from './features/sjcs/soj/detalle-soj/servicios-tramitacion-detalle-soj/servicios-tramitacion-detalle-soj.component';
 import { SolicitanteDetalleSojComponent } from './features/sjcs/soj/detalle-soj/solicitante-detalle-soj/solicitante-detalle-soj.component';
 import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-soj/documentacion-detalle-soj/documentacion-detalle-soj.component';
+
+//classique
+import { ContabilidadClassiqueComponent } from './features/facturacionClassique/contabilidad/contabilidad.component';
+import { DevolucionManualClassiqueComponent } from './features/facturacionClassique/devoluciones/devolucion-manual/devolucion-manual.component';
+import { FicherosDevolucionesClassiqueComponent } from './features/facturacionClassique/devoluciones/ficheros-devoluciones/ficheros-devoluciones.component';
+import { FacturasClassiqueComponent } from './features/facturacionClassique/facturas/facturas.component';
+import { FicherosAdeudosClassiqueComponent } from './features/facturacionClassique/ficheros-adeudos/ficheros-adeudos.component';
+import { FicherosTransferenciaClassiqueComponent } from './features/facturacionClassique/ficheros-transferencia/ficheros-transferencia.component';
+import { GestionCuentasBancariasClassiqueComponent } from './features/facturacionClassique/gestion-cuentas-bancarias/gestion-cuentas-bancarias.component';
+import { SeriesFacturaClassiqueComponent } from './features/facturacionClassique/series-factura/series-factura.component';
+
+import { GenerarImpreso190ClassiqueComponent } from './features/sjcsClassique/facturacionSJCS/generar-impreso190-classique/generar-impreso190-classique.component';
+import { MantenimientoFacturacionComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
+import { PrevisionesComponent } from './features/sjcsClassique/facturacionSJCS/previsiones/previsiones.component';
+import { MantenimientoPagosComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
+import { MovimientosVariosComponent } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-classique/movimientos-varios.component';
+import { TramosLECComponent } from './features/sjcsClassique/facturacionSJCS/tramos-lec/tramos-lec.component';
+import { RetencionesJudicialesComponent } from './features/sjcsClassique/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
+import { ResumenPagosComponent } from './features/sjcsClassique/facturacionSJCS/resumen-pagos/resumen-pagos.component';
+
+
+import { EJGClassiqueComponent } from './features/sjcsClassique/ejgClassique/ejgClassique.component';
+import { GestionActasClassiqueComponent } from './features/sjcsClassique/gestion-actas/gestion-actas.component';
+import { DefinirListasGuardiasClassiqueComponent } from './features/sjcsClassique/guardiaClassique/definir-listas-guardias/definir-listas-guardias.component';
+import { GuardiasAsistenciasClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-asistencias/guardias-asistencias.component';
+import { GuardiasBajasTemporalesClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-bajas-temporales/guardias-bajas-temporales.component';
+import { GuardiasCentralitaClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-centralita/guardias-centralita.component';
+import { GuardiasIncompatibilidadesClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-incompatibilidades/guardias-incompatibilidades.component';
+import { GuardiasSaltosCompensacionesClassiqueComponent } from './features/sjcsClassique/guardiaClassique/guardias-saltos-compensaciones/guardias-saltos-compensaciones.component';
+import { ProgramacionCalendariosClassiqueComponent } from './features/sjcsClassique/guardiaClassique/programacionCalendarios/programacionCalendarios.component';
+import { GuardiasSolicitudesTurnosClassiqueComponent } from './features/sjcsClassique/guardiaClassique/solicitudes-turnos/solicitudes-turnos.component';
+import { VolanteExpresClassiqueComponent } from './features/sjcsClassique/guardiaClassique/volante-expres/volante-expres.component';
+import { AreasYMateriasClassiqueComponent } from './features/sjcsClassique/maestros/areas-materias/areas-materias.component';
+import { CalendarioLaboralClassiqueComponent } from './features/sjcsClassique/maestros/calendarioLaboral/calendarioLaboral.component';
+import { DestinatariosRetencionesClassiqueComponent } from './features/sjcsClassique/maestros/destinatarios-retenciones/destinatarios-retenciones.component';
+import { DocumentacionEJGClassiqueComponent } from './features/sjcsClassique/maestros/documentacion-ejg/documentacion-ejg.component';
+import { MaestroPJClassiqueComponent } from './features/sjcsClassique/maestros/maestro-pj/maestro-pj.component';
+import { MaestrosModulosClassiqueComponent } from './features/sjcsClassique/maestros/maestros-modulos/maestros-modulos.component';
+import { MantenimientoComisariasClassiqueComponent } from './features/sjcsClassique/maestros/mantenimiento-comisarias/mantenimiento-comisarias.component';
+import { MantenimientoJuzgadosClassiqueComponent } from './features/sjcsClassique/maestros/mantenimiento-juzgados/mantenimiento-juzgados.component';
+import { MantenimientoPrisionesClassiqueComponent } from './features/sjcsClassique/maestros/mantenimiento-prisiones/mantenimiento-prisiones.component';
+import { MantenimientoProcuradoresClassiqueComponent } from './features/sjcsClassique/maestros/mantenimiento-procuradores/mantenimiento-procuradores.component';
+import { PartidasClassiqueComponent } from './features/sjcsClassique/maestros/partidas/partidas.component';
+import { PartidosJudicialesClassiqueComponent } from './features/sjcsClassique/maestros/partidos-judiciales/partidos-judiciales.component';
+import { RetencionesIRPFClassiqueComponent } from './features/sjcsClassique/maestros/retenciones-IRPF/retenciones-IRPF.component';
+import { TiposAsistenciaClassiqueComponent } from './features/sjcsClassique/maestros/tiposAsistencia/tiposAsistencia.component';
+import { ZonasYSubzonasClassiqueComponent } from './features/sjcsClassique/maestros/zonas-subzonas/zonas-subzonas.component';
+import { BajasTemporalesClassiqueComponent } from './features/sjcsClassique/oficioClassique/bajas-temporales/bajas-temporales.component';
+import { DesignacionesClassiqueComponent } from './features/sjcsClassique/oficioClassique/designaciones/designaciones.component';
+import { SaltosYCompensacionesClassiqueComponent } from './features/sjcsClassique/oficioClassique/saltos-compensaciones/saltos-compensaciones.component';
+import { SolicitudesTurnosGuardiasClassiqueComponent } from './features/sjcsClassique/oficioClassique/solicitudesTurnosGuardias/solicitudesTurnosGuardias.component';
+import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassique/turnos/turnos.component';
+
 
 @NgModule({
 	declarations: [
@@ -1113,15 +1104,7 @@ import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-so
 		AddExpedienteComponent,
 		ComunicacionesEJGComponent,
 		RegtelEjgComponent,
-		MantenimientoFacturacionComponent,
-		PrevisionesComponent,
-		MantenimientoPagosComponent,
-		MovimientosVariosComponentClassique,
-		TramosLECComponent,
-		RetencionesJudicialesComponent,
 		BusquedaRetencionesAplicadasComponent,
-		GenerarImpreso190ComponentClassique,
-		ResumenPagosComponent,
 		EnvioReintegrosXuntaComponent,
 		JustificacionLetradoComponent,
 		InformeFacturacionComponent,
@@ -1502,22 +1485,66 @@ import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-so
 		//Facturacion
 		MantenimientoSufijosComponent,
 		FacturaPlantillasComponent,
-		GestionCuentasBancariasComponent,
-		SeriesFacturaComponent,
 		PrevisionesFacturaComponent,
 		ProgramarFacturaComponent,
 		GenerarFacturaComponent,
 		MantenimientoFacturaComponent,
 		EliminarFacturaComponent,
-		FacturasComponent,
-		FicherosAdeudosComponent,
-		FicherosDevolucionesComponent,
-		DevolucionManualComponent,
 		AbonosComponent,
-		FicherosTransferenciaComponent,
-		ContabilidadComponent,
 		CobrosRecobrosComponent,
 		FacturasEmitidasComponent,
+
+		//Classique
+
+		GestionCuentasBancariasClassiqueComponent,
+		SeriesFacturaClassiqueComponent,
+		FacturasClassiqueComponent,
+		FicherosAdeudosClassiqueComponent,
+		FicherosDevolucionesClassiqueComponent,
+		DevolucionManualClassiqueComponent,
+		FicherosTransferenciaClassiqueComponent,
+		ContabilidadClassiqueComponent,
+
+		GenerarImpreso190ClassiqueComponent,
+		MantenimientoFacturacionComponent,
+		PrevisionesComponent,
+		MantenimientoPagosComponent,
+		MovimientosVariosComponent,
+		TramosLECComponent,
+		RetencionesJudicialesComponent,
+		ResumenPagosComponent,
+		
+		EJGClassiqueComponent,
+		GestionActasClassiqueComponent,
+		DefinirListasGuardiasClassiqueComponent,
+		GuardiasAsistenciasClassiqueComponent,
+		GuardiasBajasTemporalesClassiqueComponent,
+		GuardiasCentralitaClassiqueComponent,
+		GuardiasIncompatibilidadesClassiqueComponent,
+		GuardiasSaltosCompensacionesClassiqueComponent,
+		ProgramacionCalendariosClassiqueComponent,
+		GuardiasSolicitudesTurnosClassiqueComponent,
+		VolanteExpresClassiqueComponent,
+		AreasYMateriasClassiqueComponent,
+		CalendarioLaboralClassiqueComponent,
+		DestinatariosRetencionesClassiqueComponent,
+		DocumentacionEJGClassiqueComponent,
+		MaestroPJClassiqueComponent,
+		MaestrosModulosClassiqueComponent,
+		MantenimientoComisariasClassiqueComponent,
+		MantenimientoJuzgadosClassiqueComponent,
+		MantenimientoPrisionesClassiqueComponent,
+		MantenimientoProcuradoresClassiqueComponent,
+		PartidasClassiqueComponent,
+		PartidosJudicialesClassiqueComponent,
+		RetencionesIRPFClassiqueComponent,
+		TiposAsistenciaClassiqueComponent,
+		ZonasYSubzonasClassiqueComponent,
+		BajasTemporalesClassiqueComponent,
+		DesignacionesClassiqueComponent,
+		SaltosYCompensacionesClassiqueComponent,
+		SolicitudesTurnosGuardiasClassiqueComponent,
+		TurnosClassiqueComponent,
 
 		//Productos y Servicios
 		CategoriasProductoComponent,
@@ -1823,43 +1850,43 @@ import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-so
 		FichaCompraSuscripcionComponent,
 		DetalleTarjetaFormasPagosFichaServiciosFacturacionComponent,
 		TarjetaSolicitudCompraSuscripcionComponent,
-		// FichaCuentaBancariaComponent,
-		// FiltrosSeriesFacturaComponent,
-		// TablaSeriesFacturaComponent,
-		// GestionSeriesFacturaComponent,
+		FichaCuentaBancariaComponent,
+		FiltrosSeriesFacturaComponent,
+		TablaSeriesFacturaComponent,
+		GestionSeriesFacturaComponent,
 		CompraProductosComponent,
 		TarjetaFiltroCompraProductosComponent,
 		TarjetaListaCompraProductosComponent,
 		DetalleTarjetaPrecioFichaServiciosFacturacionComponent,
 		TarjetaProductosCompraSuscripcionComponent,
 		TarjetaFacturaCompraSuscripcionComponent,
-		// DatosGeneralesSeriesFacturaComponent,
-		// ObservacionesSeriesFacturaComponent,
-		// DestinatariosIndividualesSeriesFacturaComponent,
-		// DestinatariosEtiquetasSeriesFacturaComponent,
-		// DestinatariosListaSeriesFacturaComponent,
-		// PagoAutomaticoSeriesFacturaComponent,
-		// ExportacionSeriesFacturaComponent,
-		// TraspasoSeriesFacturaComponent,
-		// ContadorSeriesFacturaComponent,
-		// ContadorRectSeriesFacturaComponent,
-		// GeneracionSeriesFacturaComponent,
-		// EnvioSeriesFacturaComponent,
+		DatosGeneralesSeriesFacturaComponent,
+		ObservacionesSeriesFacturaComponent,
+		DestinatariosIndividualesSeriesFacturaComponent,
+		DestinatariosEtiquetasSeriesFacturaComponent,
+		DestinatariosListaSeriesFacturaComponent,
+		PagoAutomaticoSeriesFacturaComponent,
+		ExportacionSeriesFacturaComponent,
+		TraspasoSeriesFacturaComponent,
+		ContadorSeriesFacturaComponent,
+		ContadorRectSeriesFacturaComponent,
+		GeneracionSeriesFacturaComponent,
+		EnvioSeriesFacturaComponent,
 		ConstructorConsultasComponent,
 		TarjetaFacturaCompraSuscripcionComponent,
 		TarjetaDescuentosAnticiposCompraSuscripcionComponent,
-		// FiltrosBusquedaAdeudosComponent,
-		// TablaAdeudosComponent,
-		// GestionAdeudosComponent,
-		// DatosGeneralesCuentaBancariaComponent,
-		// ComisionCuentaBancariaComponent,
-		// ConfiguracionCuentaBancariaComponent,
-		// UsoFicherosCuentaBancariaComponent,
-		// UsosSufijosCuentaBancariaComponent,
-		// DatosGeneracionAdeudosComponent,
-		// CuentaEntidadAdeudosComponent,
-		// FacturasAdeudosComponent,
-		// FacturacionAdeudosComponent,
+		FiltrosBusquedaAdeudosComponent,
+		TablaAdeudosComponent,
+		GestionAdeudosComponent,
+		DatosGeneralesCuentaBancariaComponent,
+		ComisionCuentaBancariaComponent,
+		ConfiguracionCuentaBancariaComponent,
+		UsoFicherosCuentaBancariaComponent,
+		UsosSufijosCuentaBancariaComponent,
+		DatosGeneracionAdeudosComponent,
+		CuentaEntidadAdeudosComponent,
+		FacturasAdeudosComponent,
+		FacturacionAdeudosComponent,
 		FactProgramadasComponent,
 		FiltrosFactProgramadasComponent,
 		TablaFactProgramadasComponent,
@@ -1875,30 +1902,30 @@ import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-so
 		TraspasoFactProgramadasComponent,
 		SerieFacturaFactProgramadasComponent,
 		InfoFacturaFactProgramadasComponent,
-		// FiltrosBusquedaTransferenciasComponent,
-		// TablaFicherosTransferenciasComponent,
-		// GestionFicherosTransferenciasComponent,
-		// DatosGeneracionFichTransferenciasComponent,
+		FiltrosBusquedaTransferenciasComponent,
+		TablaFicherosTransferenciasComponent,
+		GestionFicherosTransferenciasComponent,
+		DatosGeneracionFichTransferenciasComponent,
 		FichaMonederoComponent,
 		DatosGeneralesMonederoComponent,
 		MovimientosMonederoComponent,
 		ServiciosAsociadosMonederoComponent,
-		// TablaFicherosDevolucionesComponent,
-		// FiltrosFicherosDevolucionesComponent,
-		// FichaFicherosDevolucionesComponent,
-		// FiltrosFacturasComponent,
-		// TablaFacturasComponent,
-		// GestionFacturasComponent,
-		// DatosCargaDevolucionesComponent,
-		// ObservacionesFacturasComponent,
-		// DatosGeneralesFacturasComponent,
-		// EstadosPagosFacturasComponent,
-		// ObservacionesRectificativaFacturasComponent,
-		// LineasFacturasComponent,
-		// ComunicacionesFacturasComponent,
-		// ClienteFacturasComponent,
-		// DeudorFacturasComponent,
-		// FacturacionFacturasComponent,
+		TablaFicherosDevolucionesComponent,
+		FiltrosFicherosDevolucionesComponent,
+		FichaFicherosDevolucionesComponent,
+		FiltrosFacturasComponent,
+		TablaFacturasComponent,
+		GestionFacturasComponent,
+		DatosCargaDevolucionesComponent,
+		ObservacionesFacturasComponent,
+		DatosGeneralesFacturasComponent,
+		EstadosPagosFacturasComponent,
+		ObservacionesRectificativaFacturasComponent,
+		LineasFacturasComponent,
+		ComunicacionesFacturasComponent,
+		ClienteFacturasComponent,
+		DeudorFacturasComponent,
+		FacturacionFacturasComponent,
 		FacturacionesYPagosComponent,
 		FichaEnvioCamComponent,
 		FiltroBusquedaFacturacionComponent,
@@ -1945,8 +1972,8 @@ import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-so
 		RetencionesIrpfColegialComponent,
 		TiposAsistenciaComponent,
 		TiposActuacionComponent,
-		// FiltrosExportacionesContabilidadComponent,
-		// TablaExportacionesContabilidadComponent,
+		FiltrosExportacionesContabilidadComponent,
+		TablaExportacionesContabilidadComponent,
 		EjgComisionBusquedaComponent,
 		TablaEjgComisionComponent,
 		RemesasComponent,
@@ -2022,7 +2049,7 @@ import { DocumentacionDetalleSojComponent } from './features/sjcs/soj/detalle-so
 		FichaExpExeaDatosGeneralesComponent,
 		FichaExpExeaDocumentacionComponent,
 		FichaExpExeaHistoricoComponent,
-		// TablaFacturasSeleccionadasComponent,
+		TablaFacturasSeleccionadasComponent,
 		TablaAbonosSeleccionadasComponent
 	],
 	imports: [
