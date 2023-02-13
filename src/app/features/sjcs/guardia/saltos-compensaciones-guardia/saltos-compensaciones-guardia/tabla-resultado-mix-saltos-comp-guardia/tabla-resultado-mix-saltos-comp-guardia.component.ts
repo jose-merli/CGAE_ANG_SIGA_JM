@@ -494,7 +494,7 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
   }
 
   changeMultiSelectGrupo(row, cell){
-    if (cell.value.length > 1) {
+    while(cell.value.length > 1) {
       cell.value.shift();
     }
     const header = cell.header;
