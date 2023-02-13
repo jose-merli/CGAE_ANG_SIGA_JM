@@ -18,6 +18,7 @@ export let endpoints_EJG: any = {
     filtrosejg_comboPrestaciones: "ejg/filtros-ejg/comboPrestaciones",
     gestionejg_searchPrestacionesRechazadasEJG: "ejg/gestion-ejg/searchPrestacionesRechazadas",
     gestionejg_datosEJG: "ejg/gestion-ejg/datosEJG",
+    gestionejg_datosEJGJustificacionExpres: "ejg/gestion-ejg/datosEJGJustificacionExpres",
     gestionejg_unidadFamiliarEJG: "ejg/gestion-ejg/unidadFamiliarEJG",
     gestionejg_getExpedientesEconomicos: "ejg/gestion-ejg/getExpedientesEconomicos",
     gestionejg_getEstados: "ejg/gestion-ejg/getEstados",

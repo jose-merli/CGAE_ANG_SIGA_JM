@@ -2245,7 +2245,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       //ejgItem.tipoEJG = rowGroup.rows[0].cells[6].value;
       this.progressSpinner = true;
 
-      this.sigaServices.post("gestionejg_datosEJG", ejgItem).subscribe(
+      this.sigaServices.post("gestionejg_datosEJGJustificacionExpres", ejgItem).subscribe(
         n => {
           let ejgObject: any[] = JSON.parse(n.body).ejgItems;
           let datosItem: EJGItem = ejgObject[0];
