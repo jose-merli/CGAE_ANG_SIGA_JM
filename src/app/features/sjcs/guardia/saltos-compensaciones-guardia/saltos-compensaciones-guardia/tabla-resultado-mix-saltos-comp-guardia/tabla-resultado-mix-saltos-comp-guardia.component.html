@@ -10,8 +10,7 @@
 
     <div class="table" matSort (matSortChange)="sortData($event)" #table>
       <div class="table-header">
-        <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader
-          [style.minWidth]="cabecera.width">
+        <div class="table-header-child p-2" *ngFor="let cabecera of cabeceras; let j = index" #BorderedHeader>
           <div>
             <div [mat-sort-header]=cabecera.id>{{cabecera.name | translate}}</div>
             <input type="text" class="form-control" pInputTex [(ngModel)]="searchText[j]"
