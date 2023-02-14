@@ -5,6 +5,7 @@ import { GuardiaItem } from '../../../../../models/sjcs/GuardiaItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
+import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
 @Component({
   selector: 'app-gestion-guardia-colegiado',
   templateUrl: './gestion-guardia-colegiado.component.html',
@@ -15,6 +16,10 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
   turnosItem;
   guardia: GuardiaItem;
   modificar: boolean;
+  //SIGARNV-2885 INICIO
+  guardiaColegiado: GuardiaItem;
+  //SIGARNV-2885 FIN
+
   constructor(private location: Location,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -68,4 +73,10 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
     sessionStorage.setItem("infoGuardiaColeg", JSON.stringify(this.guardia));
     sessionStorage.setItem("originGuardiaColeg", "true");
   }
+
+  //SIGARNV-2885 INICIO
+  getGuardiaColegiado(event){
+    this.guardiaColegiado = event;
+  }
+  //SIGARNV-2885 FIN
 }
