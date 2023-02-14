@@ -89,7 +89,7 @@
             <label>
               {{"justiciaGratuita.guardia.gestion.unidad" | translate}}
             </label>
-            <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasPeriodo" [disabled]="!permisoEscritura || historico || isLetrado" placeholder="{{'general.boton.seleccionar' | translate}}"
+            <p-dropdown class="select-form" [(ngModel)]="body.tipoDiasPeriodo" [disabled]="!permisoEscritura || historico || isLetrado || !body.diasPeriodo" placeholder="{{'general.boton.seleccionar' | translate}}"
               [showClear]="true" autoDisplayFirst="true" [options]="comboUnidad" [ngClass]="styleObligatorioPeriodoTipoDia(body.tipoDiasPeriodo)"></p-dropdown>
           </div>
 
