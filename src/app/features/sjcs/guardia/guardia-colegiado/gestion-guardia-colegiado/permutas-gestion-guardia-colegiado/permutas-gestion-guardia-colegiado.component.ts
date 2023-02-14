@@ -1,12 +1,15 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
+import { TurnosItem } from '../../../../../../models/sjcs/TurnosItem';
 import { GuardiaItem } from '../../../../../../models/guardia/GuardiaItem';
+import { ColegiadoItem } from '../../../../../../models/ColegiadoItem';
 import { PermutaItem } from '../../../../../../models/guardia/PermutaItem';
 import { CommonsService } from '../../../../../../_services/commons.service';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { InscripcionesComponent } from '../../../../oficio/inscripciones/busqueda-inscripciones.component';
 
 @Component({
   selector: 'app-permutas-gestion-guardia-colegiado',
@@ -36,6 +39,9 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   permutasAux;
   esLetrado: boolean=true;
   esColegiado: boolean=true;
+  // SIGARNV-2885 INICIO
+  fechaSolicitanteInicio;
+  // SIGARNV-2885 FIN
   constructor(private translateService: TranslateService,
     private router: Router,
     private sigaServices: SigaServices,
@@ -43,6 +49,10 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     private confirmationService: ConfirmationService,
     private changeDetectorRef: ChangeDetectorRef,
     private commonServices: CommonsService) { }
+
+  //SIGARNV-2885 INICIO
+  @Input() guardiaColegiado: GuardiaItem;
+  //SIGARNV-2885 FIN
 
   ngOnInit() {
     this.progressSpinner = true;
@@ -55,21 +65,25 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
      if(this.valueComboTurno != null || this.valueComboTurno != undefined){
        this.getComboGuardia(this.valueComboTurno);
      }
-     this.getCols()
+     this.recuperaFechaSolicitante();
+     this.getCols();
     }
     this.progressSpinner = false
-  
-    
 }
 
   getCols() {
+    //SIGARNV-2885 INICIO
     this.cols = [
-      { field: "fechaconfirmacion", header: "general.cabecera.confirmacion" },//cambiar
       { field: "fechasolicitud", header: "formacion.busquedaInscripcion.fechaSolicitud" },
-      { field: "nombreTurno", header: "dato.jgr.guardia.guardias.turno" },
-      { field: "nombreGuardia", header: "menu.justiciaGratuita.GuardiaMenu" },
+      { field: "fechaconfirmacion", header: "general.cabecera.confirmacion" },
+      { field: "turnoGuardiaSol", header: "dato.jgr.guardia.guardias.turno.sol" }, 
+      { field: "LetradoFechSol", header: "dato.letrado.guardia.sol" },
+      { field: "turnoGuardiaConf", header: "dato.jgr.guardia.guardias.turno.conf" }, 
+      { field: "LetradoFechConf", header: "dato.letrado.guardia.conf" }, 
+      // { field: "nombreTurno", header: "dato.jgr.guardia.guardias.turno" },
+      // { field: "nombreGuardia", header: "menu.justiciaGratuita.GuardiaMenu" },
       { field: "motivos", header: "dato.jgr.guardia.guardias.motivos" },
-
+      //SIGARNV-2885 FIN
     ];
     this.cols.forEach(it => this.buscadores.push(""))
     this.rowsPerPage = [
@@ -194,20 +208,19 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     ); 
   }
 
-  nuevaFila(){
- this.clickPermuta = true;
+  nuevaFila() {
+    this.clickPermuta = true;
 
- let dummy = {
-  fechaconfirmacion: "",
-  fechasolicitud: "",
-  nombreTurno: "",
-  nombreGuardia: "",
-  motivos: "",
-  nuevoRegistro: true
-};
-this.permutasAux = this.permutas;
-this.permutas = [dummy, ...this.permutas];
-
+    let dummy = {
+      fechaconfirmacion: "",
+      fechasolicitud: "",
+      nombreTurno: "",
+      nombreGuardia: "",
+      motivos: "",
+      nuevoRegistro: true
+    };
+    this.permutasAux = this.permutas;
+    this.permutas = [dummy, ...this.permutas];
   }
 
   checkPermutar(){
@@ -257,9 +270,9 @@ this.permutas = [dummy, ...this.permutas];
     this.sigaServices.post("guardiasColegiado_permutarGuardia", permutaItem).subscribe(
       n => {
         this.progressSpinner = false;
-          this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.restPermutas();
-          this.getPermutas();
+        this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
+        this.restPermutas();
+        this.getPermutas();
       },
       err => {
         //console.log(err);
@@ -269,6 +282,9 @@ this.permutas = [dummy, ...this.permutas];
         
       }
     ); 
+
+    console.log("El valor de valueComboGuardia: " + this.valueComboGuardia);
+    console.log("El valor de valueComboTurno: " + this.valueComboTurno);
   }
 
   restPermutas(){
@@ -279,6 +295,7 @@ this.permutas = [dummy, ...this.permutas];
       this.permutasAux = [];
     
   }
+
   getComboTurno() {
 
     this.progressSpinner = true;
@@ -296,6 +313,22 @@ this.permutas = [dummy, ...this.permutas];
     );
   }
 
+  // SIGARNV-2885 INICIO
+  recuperaFechaSolicitante(){
+    this.progressSpinner = true;
+    
+    this.sigaServices.getParam("guardiasColegiado_getFechaSolicitante",'?idPersona='+ this.body.idPersona + '&idCalendarioGuardias=' + this.guardiaColegiado.idCalendarioGuardias + '&idguardiaSolicitante=' + this.guardiaColegiado.idGuardia).subscribe(
+      n => {
+        this.fechaSolicitanteInicio = n; //n.fechaInicioSolicitante
+        this.progressSpinner = false;
+      },
+      err => {
+        this.progressSpinner = false;
+      }
+    );
+  }
+  // SIGARNV-2885 FIN
+
   getComboGuardia(turno) {
     this.progressSpinner = true;
     let guardiaItem = new GuardiaItem();
@@ -303,6 +336,7 @@ this.permutas = [dummy, ...this.permutas];
     guardiaItem.idCalendarioGuardias = this.body.idCalendarioGuardias;
     guardiaItem.fechadesde = new Date(this.body.fechadesde);
     guardiaItem.idGuardia = this.body.idGuardia;
+    guardiaItem.idPersona = this.guardiaColegiado.idPersona;
     this.sigaServices.post(
       "guardiasColegiado_getComboGuardiaDestinoInscrito",guardiaItem).subscribe(
         data => {

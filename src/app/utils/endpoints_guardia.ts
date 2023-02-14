@@ -169,6 +169,9 @@ export let endpoints_guardia: any = {
     guardiasColegiado_idConjuntoGuardia: "guardiaColegiado/getIdConjuntoGuardia",
     guardiasColegiado_getPermutasColegiado: "guardiaColegiado/getPermutasColegiado",
     guardiasColegiado_getComboTurnoInscrito: "guardiaColegiado/getTurnoInscrito",
+    // SIGARNV-2885 INICIO
+    guardiasColegiado_getFechaSolicitante: "guardiaColegiado/getFechaSolicitante",
+    //SIGARNV-2885 FIN
     guardiasColegiado_getComboGuardiaDestinoInscrito: "guardiaColegiado/getGuardiaDestinoInscrito",
     guardiasColegiado_permutarGuardia: "guardiaColegiado/permutarGuardia",
     guardiasColegiado_validarPermuta: "guardiaColegiado/validarPermuta",
