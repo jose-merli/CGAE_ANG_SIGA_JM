@@ -31,6 +31,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
 
   @Input() tarjetaIncompatibilidades;
   @Input() modoEdicion: boolean = false;
+  @Input() modoVinculado: boolean = false;
   @ViewChild("tabla") tabla;
   datos : GuardiaItem [] = [];
   resumenIncompatibilidades = "";
@@ -78,6 +79,9 @@ export class DatosIncompatibilidadesComponent implements OnInit {
   }
 
   abreCierraFicha() {
+    if(this.modoVinculado){
+      this.modoEdicion=false
+  }
     if (this.modoEdicion) {
       this.openFicha = !this.openFicha;
       if (this.openFicha)

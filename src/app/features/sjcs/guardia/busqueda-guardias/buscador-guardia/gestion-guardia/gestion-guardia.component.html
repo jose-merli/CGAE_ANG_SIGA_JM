@@ -19,9 +19,9 @@
     <app-datos-cola-guardia [openFicha]="openCola" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaColaGuardia]="tarjetaColaGuardia" *ngIf="permisoEscrituraColaGuardia != undefined" [permisoEscritura]="permisoEscrituraColaGuardia"
       [modoEdicion]="modoEdicion" [modoVinculado]="modoVinculado" [dataConfColaGuardiaPadre]="configuracionOrdenacionColaGuardias"></app-datos-cola-guardia>
 
-    <app-datos-incompatibilidades [openFicha]="openIncompatibilidades" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaIncompatibilidades]="tarjetaIncompatibilidades" *ngIf="permisoEscrituraIncomp != undefined" [modoEdicion]="modoEdicion"></app-datos-incompatibilidades>
+    <app-datos-incompatibilidades [openFicha]="openIncompatibilidades" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaIncompatibilidades]="tarjetaIncompatibilidades" *ngIf="permisoEscrituraIncomp != undefined" [modoEdicion]="modoEdicion" [modoVinculado]="modoVinculado"></app-datos-incompatibilidades>
 
-    <app-datos-baremos (opened)="manuallyOpened = $event" [openFicha]="openBaremos" (idOpened)="isCloseReceive($event)" [tarjetaBaremos]="tarjetaBaremos" *ngIf="permisoEscrituraBaremos != undefined" [modoEdicion]="modoEdicion"></app-datos-baremos>
+    <app-datos-baremos (opened)="manuallyOpened = $event" [openFicha]="openBaremos" (idOpened)="isCloseReceive($event)" [tarjetaBaremos]="tarjetaBaremos" *ngIf="permisoEscrituraBaremos != undefined" [modoEdicion]="modoEdicion" [modoVinculado]="modoVinculado"></app-datos-baremos>
 
     <app-calendarios (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaCalendarios]="tarjetaCalendarios" *ngIf="permisoEscrituraCalen != undefined"></app-calendarios>
 
