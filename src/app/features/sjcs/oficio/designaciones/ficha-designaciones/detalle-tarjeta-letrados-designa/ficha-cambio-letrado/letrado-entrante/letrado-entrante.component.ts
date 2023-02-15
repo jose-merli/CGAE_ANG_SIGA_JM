@@ -23,7 +23,7 @@ export class LetradoEntranteComponent implements OnInit {
   disableFechaDesignacion;
   disableCheck = false;
   isLetrado: boolean;
-  minDateDesigna: any;
+  // minDateDesigna: any;
   @Input() entrante;
   @Output() fillEntrante = new EventEmitter<boolean>();
 
@@ -62,13 +62,22 @@ export class LetradoEntranteComponent implements OnInit {
     }
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
-    this.minDateDesigna = new Date(this.entrante.fechaDesignacion.split('/').reverse().join('-'));
+    //SIGARNV-3125 INICIO
+    // this.minDateDesigna = new Date(this.entrante.fechaDesignacion.split('/').reverse().join('-'));
+    //SIGARNV-3125 FIN
     if (designa.art27 == "Si" || designa.art27 == 1) {
       this.body.art27 = true;
       this.body.fechaDesignacion = this.entrante.fechaDesignacion;
       this.disableFechaDesignacion = true;
     } else {
       this.body.art27 = false;
+      //SIGARNV-3125 INICIO
+      if(sessionStorage.getItem("entranteFechaDesignacion") != null 
+            && sessionStorage.getItem("entranteFechaDesignacion") != undefined){
+          this.body.fechaDesignacion = new Date(sessionStorage.getItem("entranteFechaDesignacion"));
+          sessionStorage.removeItem("entranteFechaDesignacion");
+      }
+      //SIGARNV-3125 FIN
     }
 
     if (sessionStorage.getItem("isLetrado") == "true") this.disableCheck = true;
@@ -140,6 +149,9 @@ export class LetradoEntranteComponent implements OnInit {
 
   fillFechaDesignacion(evento) {
     this.body.fechaDesignacion = evento;
+    //SIGARNV-3125 INICIO
+    sessionStorage.setItem("entranteFechaDesignacion", evento);
+    //SIGARNV-3125 FIN
   }
 
   search() {
