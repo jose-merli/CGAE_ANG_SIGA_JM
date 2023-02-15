@@ -575,9 +575,15 @@ export class GestionGuardiaComponent implements OnInit {
           break;
         case "incompatibilidades":
           this.openIncompatibilidades = true;
+          if(this.modoVinculado){
+            this.openIncompatibilidades = false
+          }
           break;
         case "baremos":
           this.openBaremos = true;
+          if(this.modoVinculado){
+            this.openBaremos = false
+          }
           break;
         case "calendarios":
           this.openCalendarios = true;

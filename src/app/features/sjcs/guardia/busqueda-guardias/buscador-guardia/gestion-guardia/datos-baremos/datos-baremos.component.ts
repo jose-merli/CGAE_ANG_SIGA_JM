@@ -34,6 +34,7 @@ export class DatosBaremosComponent implements OnInit {
   //Resultados de la busqueda
   @Input() openFicha: boolean = false;
   @Input() tarjetaBaremos;
+  @Input() modoVinculado: boolean = false;
   @ViewChild("tabla") tabla;
   buscadores = [];
   constructor(
@@ -167,6 +168,9 @@ export class DatosBaremosComponent implements OnInit {
   }
   
  abreCierraFicha() {
+  if(this.modoVinculado){
+    this.modoEdicion=false
+}
    if (this.modoEdicion) {
      this.openFicha = !this.openFicha;
      if (this.openFicha)
