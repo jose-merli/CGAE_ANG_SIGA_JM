@@ -35,7 +35,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   comboPrisiones: SelectItem[] = [];
   comboMotivosCambio: SelectItem[] = [];
 
-  parametroConfigCombos: ParametroItem;
+  parametroConfigCombos: any;
 
   valorFormatoProc: string;
 
@@ -224,8 +224,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     this.getComboMotivosCambio();
 
     // La selección de Juzgado carga el combo de Procedimientos, y la selección de procedimientos carga el combo de módulos.
-    if (this.parametroConfigCombos != null && this.parametroConfigCombos.valor != null) {
-      if (this.parametroConfigCombos.valor == '1') {
+    if (this.parametroConfigCombos != null) {
+      if (this.parametroConfigCombos == '1') {
         if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
           this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
           if (this.datos.selectores[1].value != undefined && this.datos.selectores[1].value != null && this.datos.selectores[1].value != '') {
@@ -239,7 +239,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }
 
       // La selección de Juzgado carga el combo de módulos y la selección de módulo carga el combo de procedimientos.
-      if (this.parametroConfigCombos.valor == '2') {
+      if (this.parametroConfigCombos== '2') {
         if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
           this.getComboModulosPorJuzgado(this.datos.selectores[0].value);
 
@@ -254,7 +254,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }
 
       // La selección de Juzgado carga el combo de módulos y la carga del combo de procedimientos es independiente, se cargan todos los existentes para el colegio.
-      if (this.parametroConfigCombos.valor == '3') {
+      if (this.parametroConfigCombos== '3') {
         if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
           this.getComboModulosPorJuzgado(this.datos.selectores[0].value);
         } else {
@@ -265,7 +265,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }
 
       // La selección de Juzgado carga el combo de procedimientos y la carga del combo de módulos es independiente, se cargan todos los existentes para el colegio.
-      if (this.parametroConfigCombos.valor == '4') {
+      if (this.parametroConfigCombos== '4') {
         if (this.datos.selectores[0].value != undefined && this.datos.selectores[0].value != null && this.datos.selectores[0].value != '') {
           this.getComboProcedimientosConJuzgado(this.datos.selectores[0].value);
         } else {
@@ -276,7 +276,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }
 
       // Todos los combos se cargan de forma independiente, con todos sus posibles valores de los existentes para el colegio.
-      if (this.parametroConfigCombos.valor == '5') {
+      if (this.parametroConfigCombos= '5') {
         this.getComboProcedimientos();
         this.getComboModulos();
       }
@@ -842,7 +842,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
         console.log(this.valorFormatoProc)
       },
       (err) => {
-        //console.log(err);
+        console.log(err);
       }
     );
   }
@@ -1151,7 +1151,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     let procedimiento = this.datos.selectores.find(el => el.id == 'procedimiento');
     let modulo = this.datos.selectores.find(el => el.id == 'modulo');
 
-    if (this.parametroConfigCombos.valor == '1') {
+    if (this.parametroConfigCombos== '1') {
 
       procedimiento.opciones = [];
       procedimiento.opciones = [{ label: this.actuacionDesigna.actuacion.nombreProcedimiento, value: this.actuacionDesigna.actuacion.idPretension }];
@@ -1161,7 +1161,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }
     }
 
-    if (this.parametroConfigCombos.valor == '2') {
+    if (this.parametroConfigCombos== '2') {
 
       modulo.opciones = [];
       modulo.opciones = [{ label: this.actuacionDesigna.actuacion.modulo, value: this.actuacionDesigna.actuacion.idProcedimiento }];
@@ -1171,7 +1171,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }
     }
 
-    if (this.parametroConfigCombos.valor == '3') {
+    if (this.parametroConfigCombos== '3') {
 
       modulo.opciones = [];
       modulo.opciones = [{ label: this.actuacionDesigna.actuacion.modulo, value: this.actuacionDesigna.actuacion.idProcedimiento }];
@@ -1181,7 +1181,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
       }
     }
 
-    if (this.parametroConfigCombos.valor == '4') {
+    if (this.parametroConfigCombos== '4') {
 
       procedimiento.opciones = [];
       procedimiento.opciones = [{ label: this.actuacionDesigna.actuacion.nombreProcedimiento, value: this.actuacionDesigna.actuacion.idPretension }];
@@ -1199,7 +1199,7 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     let acreditacion = this.datos.selectores.find(el => el.id == 'acreditacion');
     let modulo = this.datos.selectores.find(el => el.id == 'modulo');
 
-    if (this.parametroConfigCombos.valor == '2') {
+    if (this.parametroConfigCombos== '2') {
 
       procedimiento.opciones = [];
       procedimiento.opciones = [{ label: this.actuacionDesigna.actuacion.nombreProcedimiento, value: this.actuacionDesigna.actuacion.idPretension }];
@@ -1221,12 +1221,12 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
 
     let modulo = this.datos.selectores.find(el => el.id == 'modulo');
 
-    if (this.parametroConfigCombos.valor == '1') {
+    if (this.parametroConfigCombos== '1') {
 
       modulo.opciones = [];
       modulo.opciones = [{ label: this.actuacionDesigna.actuacion.modulo, value: this.actuacionDesigna.actuacion.idProcedimiento }];
       // modulo.value = this.actuacionDesigna.actuacion.idProcedimiento;
-
+ 
       if (selector.value != undefined && selector.value != null && selector.value != '') {
         this.getComboModulosConProcedimientos(selector.value);
       }

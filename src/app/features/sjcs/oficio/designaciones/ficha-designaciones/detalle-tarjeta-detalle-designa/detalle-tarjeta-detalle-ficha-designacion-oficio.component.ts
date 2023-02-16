@@ -95,8 +95,12 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     this.getComboJuzgados();
 
+    let parametroCombo = {
+      valor: "CONFIGURAR_COMBO_DESIGNA"
+    };
+
     this.sigaServices
-      .post("busquedaPerJuridica_parametroColegio", "CONFIGURAR_COMBO_DESIGNA")
+      .post("busquedaPerJuridica_parametroColegio", parametroCombo)
       .subscribe(
         data => {
           this.valorParametro = JSON.parse(data.body).parametro;
