@@ -130,6 +130,8 @@ import { VolanteExpresComponent } from './features/sjcs/guardia/volante-expres/v
 import { SOJComponent } from './features/sjcs/soj/soj.component';
 import { EJGComponent } from './features/sjcs/ejg/ejg.component';
 
+import { GenerarImpreso190Component } from './features/sjcs/facturacionSJCS/generar-impreso190/generar-impreso190.component'
+import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
 import { AbonosSCJSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/abonos-sjcs.component';
 import { BusquedaRetencionesAplicadasComponent } from './features/sjcs/facturacionSJCS/busqueda-retenciones-aplicadas/busqueda-retenciones-aplicadas.component';
 import { EnvioReintegrosXuntaComponent } from './features/sjcs/facturacionSJCS/envio-reintegros-xunta/envio-reintegros-xunta.component';
@@ -290,7 +292,7 @@ import { GenerarImpreso190ClassiqueComponent } from './features/sjcsClassique/fa
 import { MantenimientoFacturacionComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcsClassique/facturacionSJCS/previsiones/previsiones.component';
 import { MantenimientoPagosComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
-import { MovimientosVariosComponent } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-classique/movimientos-varios.component';
+import { MovimientosVariosComponentClassique } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-classique/movimientos-varios.component';
 import { TramosLECComponent } from './features/sjcsClassique/facturacionSJCS/tramos-lec/tramos-lec.component';
 import { RetencionesJudicialesComponent } from './features/sjcsClassique/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { ResumenPagosComponent } from './features/sjcsClassique/facturacionSJCS/resumen-pagos/resumen-pagos.component';
@@ -1075,6 +1077,16 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
+		path: 'generarImpreso190',
+		component: GenerarImpreso190Component,
+		canActivate: [AuthGuard]
+	},
+	{
+		path: 'movimientosVarios',
+		component: MovimientosVariosComponent,
+		canActivate: [AuthGuard]
+	},
+	{
 		path: 'abonosSJCS',
 		component: AbonosSCJSComponent,
 		canActivate: [AuthGuard]
@@ -1647,7 +1659,7 @@ const appRoutes: Routes = [
 
 	//facturacionSJCS
 	{
-		path: 'generarImpreso190',
+		path: 'generarImpreso190Classique',
 		component: GenerarImpreso190ClassiqueComponent,
 		canActivate: [AuthGuard]
 	},
@@ -1667,8 +1679,8 @@ const appRoutes: Routes = [
 		canActivate: [AuthGuard]
 	},
 	{
-		path: 'movimientosVarios',
-		component: MovimientosVariosComponent,
+		path: 'movimientosVariosClassique',
+		component: MovimientosVariosComponentClassique,
 		canActivate: [AuthGuard]
 	},
 	{

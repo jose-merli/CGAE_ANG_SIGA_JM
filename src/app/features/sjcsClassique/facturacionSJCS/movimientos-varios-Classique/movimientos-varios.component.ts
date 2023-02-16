@@ -3,12 +3,12 @@ import { OldSigaServices } from '../../../../_services/oldSiga.service'
 
 
 @Component({
-  selector: 'app-movimientos-varios',
+  selector: 'app-movimientos-varios-classique',
   templateUrl: './movimientos-varios.component.html',
   styleUrls: ['./movimientos-varios.component.scss'],
 
 })
-export class MovimientosVariosComponent implements OnInit {
+export class MovimientosVariosComponentClassique implements OnInit {
 
   url;
 
