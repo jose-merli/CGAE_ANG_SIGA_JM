@@ -72,6 +72,11 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
     private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
+
+    if(sessionStorage.getItem("filtroJustificacionExpres") != null){
+      sessionStorage.removeItem("filtroJustificacionExpres");
+    }
+
     this.show = false;
     this.getComboDelitosOnly();
   

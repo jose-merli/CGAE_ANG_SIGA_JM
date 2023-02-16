@@ -52,6 +52,10 @@ export class DesignacionesComponent implements OnInit {
 
   ngOnInit() {
 
+    if(sessionStorage.getItem("filtroAsistenciaExpresBusqueda") != null){
+      sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
+    }
+
     if (sessionStorage.getItem("colegiadoRelleno") == "true"){
       const { numColegiado, nombre } = JSON.parse(sessionStorage.getItem("datosColegiado"));
         this.usuarioBusquedaExpressFromFicha.numColegiado = numColegiado; //pasar al filtro
