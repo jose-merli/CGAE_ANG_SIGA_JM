@@ -210,8 +210,9 @@ export class FichaCambioLetradoComponent implements OnInit {
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
     let request = [];
+    let art27Aux = "No";
     if (this.entrante.body.art27 == true) {
-      this.entrante.body.art27 = "Si";
+      art27Aux = "Si";
       request = [designa.ano, //0
       designa.idTurno, //1
       designa.numero,//2
@@ -224,11 +225,11 @@ export class FichaCambioLetradoComponent implements OnInit {
       this.entrante.body.idPersona, //9
       this.saliente.body.compensacion, //10
       this.entrante.body.salto, //11
-      this.entrante.body.art27, //12
+      art27Aux, //12
       this.entrante.minDateDesigna //13
       ];
     } else {
-      this.entrante.body.art27 = "No";
+      art27Aux = "No";
       request = [designa.ano, //0
       designa.idTurno, //1
       designa.numero,//2
@@ -241,7 +242,7 @@ export class FichaCambioLetradoComponent implements OnInit {
       this.entrante.body.idPersona, //9
       this.saliente.body.compensacion, //10
       this.entrante.body.salto, //11
-      this.entrante.body.art27, //12
+      art27Aux, //12
       this.entrante.minDateDesigna //13
       ];
     }
