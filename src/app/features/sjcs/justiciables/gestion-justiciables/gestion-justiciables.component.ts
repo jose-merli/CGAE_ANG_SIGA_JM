@@ -589,7 +589,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
     this.commonsService.checkAcceso(procesos_justiciables.tarjetaDatosRepresentante)
       .then(respuesta => {
-        this.showDatosSolicitudes = respuesta;
+        this.showDatosRepresentantes = respuesta;
         recibidos++;
         if (recibidos == 4) this.enviarEnlacesTarjeta(); // Permiso para añadir enlaces Tarjetas Resumen
       }).catch(error => console.error(error));
