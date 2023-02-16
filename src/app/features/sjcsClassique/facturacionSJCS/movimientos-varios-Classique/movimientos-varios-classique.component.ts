@@ -4,8 +4,8 @@ import { OldSigaServices } from '../../../../_services/oldSiga.service'
 
 @Component({
   selector: 'app-movimientos-varios-classique',
-  templateUrl: './movimientos-varios.component.html',
-  styleUrls: ['./movimientos-varios.component.scss'],
+  templateUrl: './movimientos-varios-classique.component.html',
+  styleUrls: ['./movimientos-varios-classique.component.scss'],
 
 })
 export class MovimientosVariosComponentClassique implements OnInit {

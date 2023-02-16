@@ -821,7 +821,7 @@ import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-rete
 import { LineasAbonosComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/lineas-abonos/lineas-abonos.component';
 import { ObservacionesAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/observaciones-abonos-sjcs/observaciones-abonos-sjcs.component';
 import { EstadosPagosAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/estados-pagos-abonos/estados-pagos-abonos-sjcs.component';
-
+import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
 
 import { GestionExpedientesExeaComponent } from './features/expedientes-exea/gestion-expedientes-exea/gestion-expedientes-exea.component';
 import { NuevoExpedienteExeaComponent } from './features/expedientes-exea/nuevo-expediente-exea/nuevo-expediente-exea.component';
@@ -856,7 +856,7 @@ import { GenerarImpreso190ClassiqueComponent } from './features/sjcsClassique/fa
 import { MantenimientoFacturacionComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-facturacion/mantenimiento-facturacion.component';
 import { PrevisionesComponent } from './features/sjcsClassique/facturacionSJCS/previsiones/previsiones.component';
 import { MantenimientoPagosComponent } from './features/sjcsClassique/facturacionSJCS/mantenimiento-pagos/mantenimiento-pagos.component';
-import { MovimientosVariosComponent } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-classique/movimientos-varios.component';
+import { MovimientosVariosComponentClassique } from './features/sjcsClassique/facturacionSJCS/movimientos-varios-classique/movimientos-varios-classique.component';
 import { TramosLECComponent } from './features/sjcsClassique/facturacionSJCS/tramos-lec/tramos-lec.component';
 import { RetencionesJudicialesComponent } from './features/sjcsClassique/facturacionSJCS/retenciones-judiciales/retenciones-judiciales.component';
 import { ResumenPagosComponent } from './features/sjcsClassique/facturacionSJCS/resumen-pagos/resumen-pagos.component';
@@ -1509,7 +1509,7 @@ import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassiq
 		MantenimientoFacturacionComponent,
 		PrevisionesComponent,
 		MantenimientoPagosComponent,
-		MovimientosVariosComponent,
+		MovimientosVariosComponentClassique,
 		TramosLECComponent,
 		RetencionesJudicialesComponent,
 		ResumenPagosComponent,
@@ -1628,7 +1628,7 @@ import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassiq
 		FiltrosAbonosSCJSComponent,
 		TablaAbonosSCJSComponent,
 		FichaAbonosSCJSComponent,
-
+		MovimientosVariosComponent,
 
 		BusquedaRetencionesAplicadasComponent,
 		GenerarImpreso190Component,
