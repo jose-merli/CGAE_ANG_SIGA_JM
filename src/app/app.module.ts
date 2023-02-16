@@ -821,7 +821,6 @@ import { DestinatariosModule } from './features/sjcs/maestros/destinatarios-rete
 import { LineasAbonosComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/lineas-abonos/lineas-abonos.component';
 import { ObservacionesAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/observaciones-abonos-sjcs/observaciones-abonos-sjcs.component';
 import { EstadosPagosAbonosSJCSComponent } from './features/sjcs/facturacionSJCS/abonos_SJCS/ficha-abonos-sjcs/estados-pagos-abonos/estados-pagos-abonos-sjcs.component';
-import { MovimientosVariosComponent } from './features/sjcs/facturacionSJCS/movimientos-varios/movimientos-varios.component';
 
 import { GestionExpedientesExeaComponent } from './features/expedientes-exea/gestion-expedientes-exea/gestion-expedientes-exea.component';
 import { NuevoExpedienteExeaComponent } from './features/expedientes-exea/nuevo-expediente-exea/nuevo-expediente-exea.component';
@@ -1628,7 +1627,7 @@ import { TurnosClassiqueComponent } from './features/sjcsClassique/oficioClassiq
 		FiltrosAbonosSCJSComponent,
 		TablaAbonosSCJSComponent,
 		FichaAbonosSCJSComponent,
-		MovimientosVariosComponent,
+
 
 		BusquedaRetencionesAplicadasComponent,
 		GenerarImpreso190Component,
