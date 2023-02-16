@@ -330,8 +330,11 @@ export class DatosCalendariosGuardiasComponent implements OnInit {
       && ((JSON.stringify(this.body) != JSON.stringify(this.bodyInicial)) || boolFestivo || boolLaborable)) {
       return false;*/
       if (!this.historico && this.permisoEscritura && this.body.diasSeparacionGuardias && this.body.diasGuardia && this.body.tipoDiasGuardia
-        && !(this.body.requeridaValidacion) &&
-        !(this.body.diasPeriodo != "" && this.body.tipoDiasPeriodo == null) && !(this.body.diasPeriodo == "" && this.body.tipoDiasPeriodo != null)) {
+        && !(this.body.requeridaValidacion) 
+        // SIGARNV-3168 INICIO
+        // && !(this.body.diasPeriodo != "" && this.body.tipoDiasPeriodo == null) && !(this.body.diasPeriodo == "" && this.body.tipoDiasPeriodo != null)
+        // SIGARNV-3168 FIN
+        ){
         return false;
     }
     return true;
