@@ -89,17 +89,22 @@ export class TablaJusticiablesComponent implements OnInit {
 
 
   openTab(evento) {
-    if (!this.modoRepresentante) {
-      this.persistenceService.clearDatos();
-      this.persistenceService.setDatos(evento);
-      this.persistenceService.clearBody();
-      this.router.navigate(["/gestionJusticiables"]);
-    } else {
-      this.persistenceService.clearBody();
-      this.persistenceService.setBody(evento);
-      this.router.navigate(["/gestionJusticiables"]);
+    //Si hemos accedido desde algún asunto no accedemos a la ficha del justiciable
+    if (!this.nuevoInteresado && !this.nuevoContrario && !this.nuevoSOJ && !this.nuevoAsistido
+      && !this.nuevoContrarioAsistencia && !this.nuevoContrarioEJG && !this.nuevaUniFamiliar && !this.nuevoRepresentante){
+      //Si hemos accedido desde el menú de justiciables accedemos a la ficha
+      if (!this.modoRepresentante) {
+        this.persistenceService.clearDatos();
+        this.persistenceService.setDatos(evento);
+        this.persistenceService.clearBody();
+        this.router.navigate(["/gestionJusticiables"]);
+      } else {
+        this.persistenceService.clearBody();
+        this.persistenceService.setBody(evento);
+        this.router.navigate(["/gestionJusticiables"]);
+      }
+      sessionStorage.setItem("vieneDeFichaJusticiable", "true") ;
     }
-    sessionStorage.setItem("vieneDeFichaJusticiable", "true") ;
   }
 
   checkInteresado(justiciable) {
