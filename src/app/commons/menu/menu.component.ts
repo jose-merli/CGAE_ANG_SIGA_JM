@@ -116,11 +116,11 @@ export class MenuComponent implements OnInit {
           sessionStorage.removeItem("fichaColegialByMenu");
         }
 
-        if (ruta.includes("guardiasAsistencias")) {
+        if (ruta.includes("guardiasAsistencias") && ruta != "guardiasAsistenciasClassique") {
           let searchMode: string = ruta.split("=")[1];
           this.onCloseMenu();
           this.router.navigate(["/guardiasAsistencias"], { queryParams: { searchMode: searchMode } });
-        } else if (ruta.includes("ficherosTransferencia") && ruta.includes("fcs")) {
+        } else if (ruta.includes("ficherosTransferencia") && ruta.includes("fcs") && ruta != "ficherosTransferenciasClassique") {
           let fcs: string = ruta.split("=")[1];
           this.onCloseMenu();
           this.router.navigate(["/ficherosTransferencia"], { queryParams: { fcs: fcs } });
