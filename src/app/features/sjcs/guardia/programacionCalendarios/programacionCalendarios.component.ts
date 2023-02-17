@@ -495,29 +495,36 @@ rowToDelete.cells.forEach((c, index) => {
   let contadorGenerados:number = 0;
   let entreFechas = "";
   this.listaDel.forEach(element => {
+    if(!element.facturado || !element.asociadoAsistencias){
       if(element.contadorGenerados > 0) contadorGenerados = contadorGenerados + element.contadorGenerados
       entreFechas += "<br/>"+element.fechaDesde+" y "+element.fechaHasta+"\n"
-      if(!element.facturado || !element.asociadoAsistencias) this.currentDataToDelete.push(element)
+      this.currentDataToDelete.push(element)
+    } 
   });
   
+  if(this.currentDataToDelete.length == 0){
+    this.showMessage({ severity: 'error', summary: 'Error al eliminar', msg: 'Los calendarios Programados estan Facturados o Asociados con Asistencias.' });      
+  }else{
+    let mess = "Se  van a borrar "+contadorGenerados+" calendarios ya generados en la programación seleccionada entre :"+entreFechas+"<br/>¿Desea continuar?"
+  
+    let icon = "fa fa-eraser";
+   
+    this.confirmationService.confirm({
+      key: "first",
+      message: mess,
+      icon: icon,
+      acceptLabel: "Sí",
+      rejectLabel: "No",
+      accept:() => {
+          this.eliminarCal(this.currentDataToDelete)
+      },
+      reject: () => {
+        this.showMessage({ severity: 'info', summary: 'Cancelar', msg: this.translateService.instant("general.message.accion.cancelada") });
+      }
+    });
+  }
 
-  let mess = "Se  van a borrar "+contadorGenerados+" calendarios ya generados en la programación seleccionada entre :"+entreFechas+"<br/>¿Desea continuar?"
-  
-  let icon = "fa fa-eraser";
- 
-  this.confirmationService.confirm({
-    key: "first",
-    message: mess,
-    icon: icon,
-    acceptLabel: "Sí",
-    rejectLabel: "No",
-    accept:() => {
-        this.eliminarCal(this.currentDataToDelete)
-    },
-    reject: () => {
-      this.showMessage({ severity: 'info', summary: 'Cancelar', msg: this.translateService.instant("general.message.accion.cancelada") });
-    }
-  });
+
 }
 
 
