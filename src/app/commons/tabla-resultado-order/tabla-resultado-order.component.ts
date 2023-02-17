@@ -396,14 +396,14 @@ export class TablaResultadoOrderComponent implements OnInit {
         this.cd.detectChanges();
         this.commonServices.arregloTildesCombo(comboTurno);
 
-        this.rowGroups.forEach(rowG => {
+        /*this.rowGroups.forEach(rowG => {
           comboTurno.forEach(cT=> {
           if (cT.label == rowG.cells[1].value){
             rowG.cells[1].value = cT.value;
           }
         
           });
-        });
+        });*/
 
         this.sigaServices.getParam(
           "busquedaGuardia_guardia", "?idTurno=" + null).subscribe(
@@ -411,13 +411,14 @@ export class TablaResultadoOrderComponent implements OnInit {
               this.progressSpinner = false;
               let comboGuardia = data.combooItems;
               this.commonServices.arregloTildesCombo(comboGuardia);
-              this.rowGroups.forEach(rowG => {
+
+              /*this.rowGroups.forEach(rowG => {
                 comboGuardia.forEach(cG=> {
                    if (cG.label == rowG.cells[2].value){
                     rowG.cells[2].value = cG.value;
                   }
                   });
-                });
+                });*/
 
                 let event = {
                   'newRowGroups': newRowGroups,
@@ -1271,7 +1272,7 @@ this.totalRegistros = this.rowGroups.length;
           ];
           let rowObject: Row = new Row();
           rowObject.cells = newCells;
-          this.rowGroups.push(rowObject);
+          this.rowGroups.unshift(rowObject);
           this.rowGroupsAux = this.rowGroups;
           this.totalRegistros = this.rowGroups.length;
           this.to = this.totalRegistros <= this.numperPage ? this.totalRegistros : this.numperPage;
