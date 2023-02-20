@@ -171,7 +171,7 @@
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                     placeholder="{{'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [(ngModel)]="cell.value[2]" [value]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[2])"
+                                    [(ngModel)]="cell.value[2]" [value]="cell.value[2]"
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                     placeholder="{{'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}">
                                 <input type="text" class="form-control " pInputText size="10"
@@ -332,7 +332,7 @@
                             [(ngModel)]="cell.value[1]" [ngClass]="styleObligatorio(cell.value[1])">
                         <input type="text" class="form-control " pInputText size="10" [value]="cell.value[2]"
                             (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
-                            [(ngModel)]="cell.value[2]" [ngClass]="styleObligatorio(cell.value[2])">
+                            [(ngModel)]="cell.value[2]">
                         <input type="text" class="form-control " pInputText size="10" [value]="cell.value[3]"
                             (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                             [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[3])">
