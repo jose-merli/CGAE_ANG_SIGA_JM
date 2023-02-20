@@ -258,7 +258,6 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
   nuevaActuacion(){
 
     if(this.tabla.selectedArray.length != 0){
-      let rowInfoAsistencia = this.rowGroups.find(rowGroup => rowGroup.id == this.tabla.selectedArray[0]).rows[0];
       let rowToAdd : Row = new Row(); //Continuar y crear fila, despues añadirla al RowGroup y probar
       let cellAsistido : Cell = new Cell();
       let cellDelitosObservaciones : Cell = new Cell();
@@ -374,9 +373,9 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
           
           if (cell.type == '5InputSelector') {
 
-            cell.value.forEach(val => {
+            cell.value.forEach((val, index) => {
 
-              if (val == undefined || val == '') {
+              if ((val == undefined || val == '') && index != 2) {
                 error = true;
                 if(cell.value[0] == undefined || cell.value[0] == ""){
                   error = false;

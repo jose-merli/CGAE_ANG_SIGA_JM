@@ -65,6 +65,7 @@ export let endpoints_maestros: any = {
     modulosybasesdecompensacion_updateAcreditacion: "maestros/modulosybasesdecompensacion/updateAcreditacion",
     modulosybasesdecompensacion_createAcreditacion: "maestros/modulosybasesdecompensacion/createAcreditacion",
     modulosybasesdecompensacion_procedimientos: "maestros/modulosybasesdecompensacion/procedimientos",
+    modulosybasesdecompensacion_getComplementoProcedimiento: "maestros/modulosybasesdecompensacion/getComplementoProcedimiento",
 
     // Gestion partidas presupuestarias
     gestionPartidasPres_searchPartidasPres: "maestros/gestionPartidasPres/searchPartidasPres",

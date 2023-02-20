@@ -378,6 +378,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         row.position = row.position != 'collapse' ? 'collapse' : 'noCollapse';
       });
     }
+
+    this.selectedArray.length = 0;
+    this.anySelected.emit(false);
   }
   searchChange(j: any) {
     if (this.pantalla == 'AE') {
