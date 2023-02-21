@@ -48,7 +48,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
   from = 0;
   to = 10;
   numperPage = 10;
-  complementoModulo;
 
   cabeceras = [
     {
@@ -355,11 +354,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
       let arr2 = [];
       let cod = designacion.codigoDesignacion + '\n' + "("+this.formatDate(designacion.fechaDesignacion)+")";
       let estadoDesignacion = designacion.estado;
-     
-      this.complementoModulo = '';
-      if (designacion.idProcedimiento != null) {
-        this.getComplementoProcedimiento(designacion.idProcedimiento);
-      }
       
       arr1 = [];
       obj1 = {};
@@ -915,60 +909,64 @@ export class TablaJustificacionExpresComponent implements OnInit {
       
     }
 
-    if ((!this.isLetrado || designacion.letradoActuaciones == "1") && !finalizada && this.complementoModulo != '0') {
-      let numProcType2 = 'input';
-      if(this.isLetrado){
-        numProcType2 = 'text';
-      }else{
-        numProcType2 = 'input';
-      }
-    this.arrNuevo = [
-      { type: 'checkboxPermisos', value: [undefined, 'Nuevo'], size: 120, combo: null },
-      { type: 'invisible', value: '', size: 400 , combo: null},
-      { type: 'invisible', value: '', size: 200, combo: null},
-      { type: 'invisible', value: '', size: 200 , combo: null},
-      { type: 'invisible', value: '', size: 400 , combo: null}, //modulo
-      { type: 'invisible', value:  '', size: 200 , combo: null},
-      { type: 'invisible', value:  false , size: 200, combo: null},
-      { type: 'invisible', value: '' , size: 200, combo: null},
-      { type: 'invisible', value: false, size: 80 , combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null},
-      { type: 'invisible', value:  '' , size: 0, combo: null}
-    ];
+    if ((!this.isLetrado || designacion.letradoActuaciones == "1") && !finalizada) {
 
-     let lastNum = designacion.actuaciones.length + 2;
-    //  this.totalActuaciones = this.totalActuaciones + 1;
-     let lastKey = letra + lastNum;
-     let objnew =  { [lastKey] : this.arrNuevo, position: 'collapse'};
-     //console.log('objnew: ', objnew)
-     arr2.push(Object.assign({},objnew));
-     objnew = null;
-   // }
+      // Si se ha superado el 100% de acreditación y el modulo de la designación está marcado como complemento, se muestra el botón Nuevo
+      if (!this.noInsertarMasActuaciones || designacion.complemento != '0') {
+        let numProcType2 = 'input';
+        if(this.isLetrado){
+          numProcType2 = 'text';
+        }else{
+          numProcType2 = 'input';
+        }
+      this.arrNuevo = [
+        { type: 'checkboxPermisos', value: [undefined, 'Nuevo'], size: 120, combo: null },
+        { type: 'invisible', value: '', size: 400 , combo: null},
+        { type: 'invisible', value: '', size: 200, combo: null},
+        { type: 'invisible', value: '', size: 200 , combo: null},
+        { type: 'invisible', value: '', size: 400 , combo: null}, //modulo
+        { type: 'invisible', value:  '', size: 200 , combo: null},
+        { type: 'invisible', value:  false , size: 200, combo: null},
+        { type: 'invisible', value: '' , size: 200, combo: null},
+        { type: 'invisible', value: false, size: 80 , combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null},
+        { type: 'invisible', value:  '' , size: 0, combo: null}
+      ];
+  
+       let lastNum = designacion.actuaciones.length + 2;
+      //  this.totalActuaciones = this.totalActuaciones + 1;
+       let lastKey = letra + lastNum;
+       let objnew =  { [lastKey] : this.arrNuevo, position: 'collapse'};
+       //console.log('objnew: ', objnew)
+       arr2.push(Object.assign({},objnew));
+       objnew = null;
+     // }
+      }
   }
 
 
@@ -1009,18 +1007,6 @@ export class TablaJustificacionExpresComponent implements OnInit {
       summary,
       detail
     });
-  }
-
-  getComplementoProcedimiento(idProcedimiento) {
-    let modulo: ModulosItem = new ModulosItem;
-    modulo.idProcedimiento = idProcedimiento;
-
-    this.sigaServices.post("modulosybasesdecompensacion_getComplementoProcedimiento", modulo).subscribe(
-      n => {
-        this.complementoModulo = JSON.parse(n.body).valor;
-      },
-      err => {}
-    );
   }
 
   formatDate(date) {
@@ -1133,6 +1119,7 @@ actCellToJson(actuacionesCells){
   let anio = actuacionesCells[32].value;
   let idTurno = actuacionesCells[33].value;
   let idInstitucion = actuacionesCells[34].value;
+  let idPersonaColegiado = this.datosJustificacion[0].idPersona;
  
   let actuacionesItem = (
     { 'numDesignacion': numDesignacion,
@@ -1164,7 +1151,8 @@ actCellToJson(actuacionesCells){
       'permitirLetrado': permitirLetrado,
       'anio': anio,
       'idTurno': idTurno,
-      'idInstitucion': idInstitucion
+      'idInstitucion': idInstitucion,
+      'idPersonaColegiado': idPersonaColegiado
     }  );
 
     return actuacionesItem;
