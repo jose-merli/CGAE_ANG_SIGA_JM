@@ -82,7 +82,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	ngOnInit() {
 		this.progressSpinner = true;
 
-		if (this.body.idrepresentantejg != undefined) {
+		if (this.body != undefined &&
+			this.body.idrepresentantejg != undefined) {
 			this.generalBody.nif = this.body.idrepresentantejg.toString();
 			this.searchRepresentanteByIdPersona();
 			this.nifRepresentante = this.generalBody.nif;
@@ -105,7 +106,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			this.body != undefined &&
 			this.body.idpersona != undefined
 		)**/
-		if(this.body.idrepresentantejg != null && this.body.idrepresentantejg != undefined
+		if(this.body != undefined && this.body != null && 
+			this.body.idrepresentantejg != null && this.body.idrepresentantejg != undefined
 			 && this.cargaInicial) {
 			
 			if(this.persistenceService.getBody()!=null){
