@@ -46,8 +46,10 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   opcionSeleccionado: string = '0';
   verSeleccion: string = '';
   isLetrado : boolean = false;
+  primeraBusqueda = true;
   @Output() letradoFillAutomatic = new EventEmitter<boolean>();
   @Output() buscarAE = new EventEmitter<boolean>();
+  @Output() hideResponse = new EventEmitter<boolean>();
   progressSpinner: boolean = false;
   
   @ViewChild(BusquedaColegiadoExpressComponent) busquedaColegiado: BusquedaColegiadoExpressComponent;
@@ -147,9 +149,24 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   fillFechaFiltro(event) {
 
     if(event){
+      this.filtro.idGuardia = '';
+      this.comboGuardias = [];
+      this.filtro.idTipoAsistenciaColegiado = '';
+      this.filtro.idLetradoGuardia = '';
+      this.usuarioBusquedaExpress.nombreAp = '';
+      this.usuarioBusquedaExpress.numColegiado = '';
+      this.comboTiposAsistencia = [];
+      this.comboLetradosGuardia = [];
+
       this.filtro.diaGuardia = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
       sessionStorage.setItem("diaGuardiaFiltro", this.filtro.diaGuardia + " 00:00");
       this.getTurnosByColegiadoFecha();
+
+      if (!this.primeraBusqueda) {
+        this.hideResponse.emit();
+        this.buscarAE.emit();
+      }
+      
     }else{
       this.filtro.diaGuardia = '';
       this.comboTurnos = [];
@@ -250,6 +267,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     if (this.filtro.idTurno) {
       this.getComboGuardia();
     }
+
+    if (!this.primeraBusqueda) {
+      this.hideResponse.emit();
+      this.buscarAE.emit();
+    }
   }
 
   getComboGuardia() {
@@ -344,8 +366,19 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
           }
         );
     
-    
+      if (!this.primeraBusqueda) {
+        this.hideResponse.emit();
+        setTimeout(() => {
+          this.buscarAE.emit();
+        }, 1000);
+      }
+  }
 
+  onChangeTipoAsistencia() {
+    if (!this.primeraBusqueda) {
+      this.hideResponse.emit();
+      this.buscarAE.emit();
+    }
   }
 
   getDefaultTipoAsistenciaColegio(){
@@ -367,6 +400,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+
+    if (!this.primeraBusqueda) {
+      this.hideResponse.emit();
+    }
+
     this.buscarAE.emit();
   }
   
@@ -436,10 +474,19 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
       this.usuarioBusquedaExpress.numColegiado = undefined;
       this.filtro.idLetradoManual = undefined;
     }
+
+    if (!this.primeraBusqueda) {
+      this.hideResponse.emit();
+    }
+
     this.buscarAE.emit();
   }
 
   onChangeLetradoGuardia(event) {
+    if (!this.primeraBusqueda) {
+      this.hideResponse.emit();
+    }
+
     this.buscarAE.emit();
   }
 }

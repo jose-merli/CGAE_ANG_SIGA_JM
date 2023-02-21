@@ -41,7 +41,7 @@
                                 <label>{{"sjcs.guardia.asistencia.tipoasistenciacolegio" | translate}}</label>
                                 <p-dropdown class="select-form"
                                     placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                                    [showClear]="true" [(ngModel)]="filtro.idTipoAsistenciaColegiado"
+                                    [showClear]="true" [(ngModel)]="filtro.idTipoAsistenciaColegiado" (onChange)="onChangeTipoAsistencia()"
                                     [ngModelOptions]="{standalone: true}" [options]="comboTiposAsistencia"
                                     [disabled]="disabledIfEmptyArgs(filtro.diaGuardia, filtro.idTurno, filtro.idGuardia)">
                                 </p-dropdown>
