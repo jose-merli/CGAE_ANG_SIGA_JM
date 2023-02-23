@@ -336,7 +336,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       //Los valores y bloqueo del turno y del tipo se determinan en los combos correspondientes.
 
       //Comprobar que fechaapertura es lo mismo que fechagenerales.
-      this.fechaGenerales = new Date(this.datosEJG.fechaApertura);
+      this.fechaGenerales = new Date();
       /* this.anio.value = this.datosEJG.annio;
       this.numero.value = this.datosEJG.numEjg; */
 
