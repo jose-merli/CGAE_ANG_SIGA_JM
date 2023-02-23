@@ -17,6 +17,7 @@ import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/prime
 import { Dialog } from 'primeng/primeng';
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
+import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
 
 @Component({
   selector: 'app-datos-generales',
@@ -75,6 +76,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   nuevoContrarioAsistencia: boolean = false;
   nuevaUniFamiliar: boolean = false;
   nuevoContrarioEJG: boolean = false;
+  nuevoSoj: boolean = false;
 
   count: number = 1;
   selectedDatos = [];
@@ -146,6 +148,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.nuevaUniFamiliar = true;
     } else if (sessionStorage.getItem("origin") == "newContrarioEJG") {
       this.nuevoContrarioEJG = true;
+    } else if (sessionStorage.getItem("origin") == "newSoj") {
+      this.nuevoSoj = true;
     }
 
 
@@ -293,6 +297,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
       data => {
         sessionStorage.removeItem('origin');
+        sessionStorage.setItem('tarjeta', 'sjcsDesigInt');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.router.navigate(["/fichaDesignaciones"]);
@@ -337,6 +342,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.sigaServices.post("designaciones_insertContrario", request).subscribe(
       data => {
         sessionStorage.removeItem('origin');
+        sessionStorage.setItem('tarjeta', 'sjcsDesigContra');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
         this.router.navigate(["/fichaDesignaciones"]);
@@ -390,6 +396,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   asociarContrarioAsistencia(justiciable: JusticiableItem) {
 
     let idAsistencia = sessionStorage.getItem("idAsistencia");
+    sessionStorage.setItem('tarjeta', 'idAsistenciaContrarios');
     let justiciables: JusticiableItem[] = []
     justiciables.push(justiciable);
     if (idAsistencia) {
@@ -446,8 +453,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.sigaServices.post("gestionejg_insertContrarioEJG", request).subscribe(
       data => {
         sessionStorage.removeItem('origin');
+        sessionStorage.setItem('tarjeta', 'contrariosPreDesigna');
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
+        this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
+        sessionStorage.removeItem("EJGItem");
         this.router.navigate(["/gestionEjg"]);
       },
       err => {
@@ -665,6 +675,41 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     });*/
   }
 
+  asociarSOJ(justiciable){
+    let itemSojJusticiable = new FichaSojItem();
+    if (sessionStorage.getItem("sojAsistido")) {
+      let itemSoj = JSON.parse(sessionStorage.getItem("sojAsistido"));
+      itemSojJusticiable.anio = itemSoj.anio;
+      itemSojJusticiable.idTipoSoj = itemSoj.idTipoSoj;
+      itemSojJusticiable.numero = itemSoj.numero;
+      itemSojJusticiable.actualizaDatos = "S"; 
+      itemSojJusticiable.justiciable = justiciable; 
+    }
+    if (itemSojJusticiable != undefined || itemSojJusticiable != null ) {
+      this.sigaServices
+        .post("gestionSoj_asociarSOJ", itemSojJusticiable)
+        .subscribe(
+          data => {
+            let result = JSON.parse(data["body"]);
+            if (result.error) {
+              this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+            } else {
+              this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
+              this.router.navigate(["/detalle-soj"]);
+            }
+
+          },
+          err => {
+            this.showMessage('error', this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
+            this.progressSpinner = false;
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+    }
+  }
+
   validateCampos(url) {
 
     if (this.body.nombre != null && this.body.nombre != undefined) {
@@ -849,6 +894,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       if (sessionStorage.getItem("itemDesignas")) {
         sessionStorage.removeItem("itemDesignas");
       }
+    }else if(this.nuevoSoj){
+      this.asociarSOJ(this.body);
     }
   }
 

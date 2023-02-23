@@ -186,6 +186,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     if (sessionStorage.getItem("justiciable")) {
       this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
     }
+    
 
   }
 
@@ -1013,6 +1014,18 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
       },
       () => {
         this.progressSpinner = false;
+        if (sessionStorage.getItem("asistenciaAsistido")) {
+          let tarj = this.listaTarjetas.find(tarj => tarj.id === 'asistido');
+          if (tarj != undefined) {
+            tarj.opened = true;
+          }
+        }else if(sessionStorage.getItem('tarjeta') == 'idAsistenciaContrarios'){
+          let tarj = this.listaTarjetas.find(tarj => tarj.id === 'contrarios');
+          if (tarj != undefined) {
+            tarj.opened = true;
+            sessionStorage.removeItem("tarjeta");
+          }
+        }
         sessionStorage.removeItem("idAsistencia");
         sessionStorage.removeItem("asistenciaAsistido");
       }

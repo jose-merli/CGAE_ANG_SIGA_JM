@@ -51,7 +51,8 @@
         </app-defensa-juridica>
         
         <app-contrarios-pre-designacion *ngIf="permisoContrarios != undefined && modoEdicion" [permisoEscritura]="modoEdicion"
-            id="contrariosPreDesigna">
+            id="contrariosPreDesigna"(opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
+            
         </app-contrarios-pre-designacion>
         
         <app-procurador-pre-designacion *ngIf="permisoProcurador != undefined && modoEdicion" [permisoEscritura]="modoEdicion" 

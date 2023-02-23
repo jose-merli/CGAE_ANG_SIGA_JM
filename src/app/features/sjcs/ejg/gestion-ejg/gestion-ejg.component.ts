@@ -77,6 +77,7 @@ export class GestionEjgComponent implements OnInit {
   openTarjetaDatosGenerales: Boolean = false;
   openTarjetaServiciosTramitacion: Boolean = false;
   openTarjetaUnidadFamiliar: Boolean = false;
+  openTarjetaContrarios: Boolean = false;
   openTarjetaExpedientesEconomicos: Boolean = false;
   openTarjetaRelaciones: Boolean = false;
   openTarjetaEstados: Boolean = false;
@@ -676,6 +677,9 @@ export class GestionEjgComponent implements OnInit {
         case "unidadFamiliar":
           this.openTarjetaUnidadFamiliar = this.manuallyOpened;
           break;
+        case "contrariosPreDesigna":
+          this.openTarjetaContrarios = this.manuallyOpened;
+          break;
         case "expedientesEconomicos":
           this.openTarjetaExpedientesEconomicos = this.manuallyOpened;
           break;
@@ -749,6 +753,9 @@ export class GestionEjgComponent implements OnInit {
         case "unidadFamiliar":
           this.openTarjetaUnidadFamiliar = true;
           break;
+        case "contrariosPreDesigna":
+            this.openTarjetaContrarios = true;
+            break;
         case "expedientesEconomicos":
           this.openTarjetaExpedientesEconomicos = true;
           break;

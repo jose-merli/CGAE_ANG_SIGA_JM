@@ -10,7 +10,6 @@ import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
 import { CommonsService } from '../../../../../_services/commons.service';
 
 
-
 @Component({
   selector: 'app-contrarios-pre-designacion',
   templateUrl: './contrarios-pre-designacion.component.html',
@@ -36,16 +35,26 @@ export class ContrariosPreDesignacionComponent implements OnInit {
   numSelected = 0;
   nuevo: boolean = false;
   eliminar: boolean = false;
-
+  openFicha: boolean = false;
   selectedDatos: any = [];
 
   selectAll: boolean = false;
   progressSpinner: boolean = false;
+  resaltadoDatosGenerales: boolean = false;
+  activacionTarjeta: boolean = false;
 
   @Input() permisoEscritura: boolean = false;
   permisoContrarios:boolean = false;
-
+  @Output() opened = new EventEmitter<boolean>();
+  @Output() idOpened = new EventEmitter<boolean>();
+  
   @ViewChild("table") tabla;
+  
+  fichaPosible = {
+    key: "contrariosPreDesigna",
+    activa: false
+  }
+
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -55,11 +64,21 @@ export class ContrariosPreDesignacionComponent implements OnInit {
     private commonsService: CommonsService
   ) { }
 
+
   ngOnInit() {
     this.checkAcceso(procesos_ejg.contrarios);
 
     this.getCols();
     this.ejg = this.persistenceService.getDatosEJG();
+    if (sessionStorage.getItem('tarjeta') == 'contrariosPreDesigna') {
+      this.abreCierraFicha('contrariosPreDesigna');
+      let top = document.getElementById("contrariosPreDesigna");
+      if (top) {
+        top.scrollIntoView();
+        top = null;
+      }
+      sessionStorage.removeItem('tarjeta');
+    }
 
     sessionStorage.removeItem("origin");
     sessionStorage.removeItem("procuradorFicha");
@@ -117,6 +136,10 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       else this.numSelected = this.selectedDatos.length;
     }
   }
+  esFichaActiva(key) {
+
+    return this.fichaPosible.activa;
+  }
 
   getCols() {
 
@@ -148,7 +171,22 @@ export class ContrariosPreDesignacionComponent implements OnInit {
       }
     ];
   }
-
+  abreCierraFicha(key) {
+    this.resaltadoDatosGenerales = true;
+    if (
+      key == "contrariosPreDesigna" &&
+      !this.activacionTarjeta
+    ) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    if (this.activacionTarjeta) {
+      this.fichaPosible.activa = !this.fichaPosible.activa;
+      this.openFicha = !this.openFicha;
+    }
+    this.opened.emit(this.openFicha);
+    this.idOpened.emit(key);
+  }
   Eliminar() {
     if (!this.permisoEscritura) {
 			this.showMessage(
