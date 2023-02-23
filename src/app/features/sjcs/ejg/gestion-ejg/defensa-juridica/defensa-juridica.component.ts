@@ -390,17 +390,21 @@ export class DefensaJuridicaComponent implements OnInit {
     this.progressSpinner = true;
 
     //this.body.delitos = null;
-    this.delitosValue.forEach(delitoEJG => {
-      // this.comboDelitos.forEach(delito => {
-      //   if (delitoEJG == delito.value) {
-      //     if (this.body.delitos == null) this.body.delitos = delito.label;
-      //     else this.body.delitos = this.body.delitos + ", " + delito.label;
-      //   }
-      // })
-      if (this.body.delitosSeleccionados == null) this.body.delitosSeleccionados = delitoEJG.toString();
-      else if(!this.body.delitosSeleccionados.includes(delitoEJG.toString())) this.body.delitosSeleccionados = this.body.delitosSeleccionados + "," + delitoEJG.toString();
-
-    });
+    if(this.delitosValue != undefined && this.delitosValue != null){
+      this.delitosValue.forEach(delitoEJG => {
+        // this.comboDelitos.forEach(delito => {
+        //   if (delitoEJG == delito.value) {
+        //     if (this.body.delitos == null) this.body.delitos = delito.label;
+        //     else this.body.delitos = this.body.delitos + ", " + delito.label;
+        //   }
+        // })
+        if (this.body.delitosSeleccionados == null){
+          this.body.delitosSeleccionados = delitoEJG.toString();
+        } else if(!this.body.delitosSeleccionados.includes(delitoEJG.toString())){ 
+          this.body.delitosSeleccionados = this.body.delitosSeleccionados + "," + delitoEJG.toString();
+        }
+      });
+    }
 
     this.sigaServices.post("gestionejg_updateDatosJuridicos", this.body).subscribe(
       n => {
