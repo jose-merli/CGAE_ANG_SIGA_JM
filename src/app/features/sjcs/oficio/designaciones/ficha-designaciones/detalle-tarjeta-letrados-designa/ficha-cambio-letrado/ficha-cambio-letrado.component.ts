@@ -285,13 +285,7 @@ export class FichaCambioLetradoComponent implements OnInit {
         if (err.error != null) {
           let dataError = JSON.parse(err.error);
           if (dataError.error.code == 100) {
-            this.confirmationService.confirm({
-              key: "errorPlantillaDoc",
-              message: this.translateService.instant("justiciaGratuita.oficio.designas.letrados.nocolaletrado"),
-              icon: "fa fa-save",
-              accept: () => {
-              }
-            });
+            this.showMessage('warn',this.translateService.instant("formacion.mensaje.general.mensaje.warn"), this.translateService.instant(dataError.error.description));
           } else if (dataError.error.code = 406) {
             this.showMessage("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant(dataError.error.description));
           } else {
