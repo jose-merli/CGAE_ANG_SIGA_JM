@@ -57,6 +57,9 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
   permisoDeDesignas: boolean = false;
   permisoDeAdicionales: boolean = false;
   permisoProcurador: boolean = false;
+  manuallyOpened: boolean;
+  openTarjetaDesignaContrarios: boolean;
+  openTarjetaDesignaInteresados: Boolean;
   datosJusticiables: JusticiableItem;
 
   @ViewChild(DetalleTarjetaContrariosFichaDesignacionOficioComponent) tarjetaContrarios;
@@ -307,7 +310,22 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     }
 
     this.motivosRenuncia();
-
+    if (sessionStorage.getItem('tarjeta') == 'sjcsDesigContra') {
+      //let colegiadoGeneral = JSON.parse(sessionStorage.getItem("sjcsDesigContra"));
+      let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigContra');
+      if (tarj != undefined) {
+        tarj.opened = true;
+        sessionStorage.removeItem('tarjeta');
+      }
+    }
+    if (sessionStorage.getItem('tarjeta') == 'sjcsDesigInt') {
+      //let colegiadoGeneral = JSON.parse(sessionStorage.getItem("sjcsDesigContra"));
+      let tarj = this.listaTarjetas.find(tarj => tarj.id === 'sjcsDesigInt');
+      if (tarj != undefined) {
+        tarj.opened = true;
+        sessionStorage.removeItem('tarjeta');
+      }
+    }
     if (sessionStorage.getItem("buscadorColegiados")) {
       let busquedaColegiado = JSON.parse(sessionStorage.getItem("buscadorColegiados"));
       //sessionStorage.removeItem("buscadorColegiados");
@@ -781,7 +799,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         }
       }
     }
-
+    
 
     this.progressSpinner = false;
   }
@@ -805,6 +823,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         this.listaTarjetas[index].detalle = true;
       }
     }
+
     /*
         if (sessionStorage.getItem("rowGroupsProcurador")) {
           sessionStorage.removeItem("rowGroupsProcurador");
@@ -838,9 +857,28 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     if (tarjTemp.detalle) {
       tarjTemp.opened = true;
     }
+    switch (event) {
+      case "datosGenerales":
+        this.openTarjetaDesignaContrarios = true;
+        break;
+      case "serviciosTramitacion":
+        this.openTarjetaDesignaInteresados = true;
+        break;
+    }
 
   }
-
+  isCloseReceive(event) {
+    if (event != undefined) {
+      switch (event) {
+        case "datosGenerales":
+        this.openTarjetaDesignaContrarios = this.manuallyOpened;
+        break;
+      case "serviciosTramitacion":
+        this.openTarjetaDesignaInteresados = this.manuallyOpened;
+        break;
+      }
+    }
+  }
   goTop() {
     let top = document.getElementById("top");
     if (top) {

@@ -28,8 +28,7 @@
           <p-dropdown class="select-form"
           placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
           [showClear]="true" [(ngModel)]="defensaJuridicaItem.idComisaria"
-          [ngModelOptions]="{standalone: true}" [options]="comboComisarias"
-          (onChange)="onChangeComisaria()">
+          [ngModelOptions]="{standalone: true}" [options]="comboComisarias">
           </p-dropdown>
         </div>
         <div class="form-group col-lg-6 col-md-6">
@@ -37,8 +36,7 @@
           <p-dropdown class="select-form"
           placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled]="!editable"
           [showClear]="true" [(ngModel)]="defensaJuridicaItem.idJuzgado"
-          [ngModelOptions]="{standalone: true}" [options]="comboJuzgados"
-          (onChange)="onChangeJuzgado()">
+          [ngModelOptions]="{standalone: true}" [options]="comboJuzgados">
           </p-dropdown>
         </div>
         <div class="form-group col-lg-6 col-md-6">

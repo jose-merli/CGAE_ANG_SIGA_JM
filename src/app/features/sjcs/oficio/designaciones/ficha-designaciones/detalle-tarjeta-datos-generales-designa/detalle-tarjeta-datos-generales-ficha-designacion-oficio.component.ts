@@ -336,7 +336,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       //Los valores y bloqueo del turno y del tipo se determinan en los combos correspondientes.
 
       //Comprobar que fechaapertura es lo mismo que fechagenerales.
-      this.fechaGenerales = new Date(this.datosEJG.fechaApertura);
+      this.fechaGenerales = new Date();
       /* this.anio.value = this.datosEJG.annio;
       this.numero.value = this.datosEJG.numEjg; */
 
@@ -633,7 +633,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         // newDesigna.fechaAlta = new Date(this.fechaGenerales);
         //var fechaGeneralesSplited : String[] = this.fechaGenerales.split("/");
         //var fechaGeneralesDate : Date = new Date(+fechaGeneralesSplited[2], +fechaGeneralesSplited[1] - 1, +fechaGeneralesSplited[0]);
-        var fechaGeneralesDate : Date = this.fechaGenerales;
+        var fechaGeneralesDate = new Date(this.fechaGenerales)
+        var dateType = Object.prototype.toString.call(this.fechaGenerales)
+        if (dateType == "[object String]") {
+          const [day, month, year] = this.fechaGenerales.split('/');
+          fechaGeneralesDate = new Date(+year, +month - 1, +day);
+        }
         var anioFecha = fechaGeneralesDate.getFullYear();
         if (Number(anioFecha) == Number(this.anio.value)) {
           newDesigna.fechaAlta = new Date(fechaGeneralesDate);
@@ -660,6 +665,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                   detail
                 });
                 //console.log(n);
+                sessionStorage.setItem("designaItemLink", JSON.stringify(newDesigna));
                 this.progressSpinner = false;
               },
               err => {
@@ -1077,7 +1083,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       }, () => {
         this.progressSpinner = false;
         setTimeout(() => {
-          sessionStorage.setItem("designaItemLink", JSON.stringify(this.nuevaDesignaCreada));
           this.actualizaFicha.emit(this.nuevaDesignaCreada);
         }, 5);
       });;

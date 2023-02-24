@@ -60,10 +60,10 @@ export class FichaRemesasComponent implements OnInit {
       localStorage.removeItem('remesaInformacionEconomica');
       this.remesaInformacionEconomica = false;
     }
-
+    
     if (localStorage.getItem('ficha') == "registro") {
       this.remesaTabla = JSON.parse(localStorage.getItem('remesaItem'));
-      localStorage.removeItem('remesaItem');
+      // localStorage.removeItem('remesaItem');
       this.remesaTabla.informacionEconomica = this.remesaInformacionEconomica;
       //console.log("Item en JSON -> ", this.remesaTabla);
       this.guardado = true;
@@ -78,15 +78,15 @@ export class FichaRemesasComponent implements OnInit {
       this.descripcion = "";
       this.remesaFromTabla = false;
     }
-    localStorage.removeItem('ficha');
 
-    this.remesa = {
-      'idRemesa': 0,
-      'descripcion': "",
-      'numero': "0",
-      'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
-    }
+    // localStorage.removeItem('ficha');
 
+    // this.remesa = {
+    //   'idRemesa': 0,
+    //   'descripcion': "",
+    //   'numero': "0",
+    //   'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
+    // }
     // Recuperamos informacion cuando volvemos atras desde la ficha EJG a Remesa
     if (localStorage.getItem('remesa') != null) {
       this.remesaTabla = JSON.parse(localStorage.getItem('remesa'));
@@ -96,7 +96,7 @@ export class FichaRemesasComponent implements OnInit {
         this.remesa.numero = this.remesaTabla.numero;
         this.remesa.informacionEconomica = (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaTabla.informacionEconomica
       }
-      localStorage.removeItem('remesa');
+      // localStorage.removeItem('remesa');
     }
 
     this.commonsService.checkAcceso(procesos_comision.guardadoRemesasEnvio)
@@ -114,6 +114,9 @@ export class FichaRemesasComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
+        this.guardado = true;
+        this.estado = true;
+        this.acciones = true;
       }
     ).catch(error => console.error(error));
 
@@ -132,6 +135,9 @@ export class FichaRemesasComponent implements OnInit {
           );
           this.router.navigate(["/errorAcceso"]);
         }
+        this.guardado = true;
+        this.estado = true;
+        this.acciones = true;
       }
     ).catch(error => console.error(error));
 
@@ -149,7 +155,11 @@ export class FichaRemesasComponent implements OnInit {
             this.translateService.instant("generico.error.permiso.denegado")
           );
           this.router.navigate(["/errorAcceso"]);
+        
         }
+        this.guardado = true;
+        this.estado = true;
+        this.acciones = true;
       }
     ).catch(error => console.error(error));
   }

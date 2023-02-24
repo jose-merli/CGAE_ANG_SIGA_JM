@@ -584,6 +584,9 @@ export class FichaInscripcionesComponent implements OnInit {
 			if (!this.isLetrado) {
 				element.fechasolicitud = this.datos.fechaActual;
 			}
+			else{
+				element.fechasolicitud = this.datos.fechasolicitud;
+			}
 
 		});
 		this.sigaServices.post("inscripciones_insertSolicitarAlta", body).subscribe(

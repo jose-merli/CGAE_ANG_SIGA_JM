@@ -704,13 +704,13 @@ export class TarjetaColaOficio implements OnInit {
     this.colsCompensaciones = [
       { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
       { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-      { field: "numeroSaltosComp", header: "justiciaGratuita.oficio.turnos.compensaciones", width: "22%" }
+      { field: "fecha", header: "justiciaGratuita.oficio.turnos.fecha", width: "22%" }
     ];
 
     this.colsSaltos = [
       { field: "colegiadoGrupo", header: "censo.busquedaClientesAvanzada.literal.nCol", width: "15%" },
       { field: "letrado", header: "administracion.parametrosGenerales.literal.nombre.apellidos.coma", width: "30%" },
-      { field: "numeroSaltosComp", header: "justiciaGratuita.oficio.turnos.saltos", width: "22%" }
+      { field: "fecha", header: "justiciaGratuita.oficio.turnos.fecha", width: "22%" }
     ];
 
     this.rowsPerPage = [

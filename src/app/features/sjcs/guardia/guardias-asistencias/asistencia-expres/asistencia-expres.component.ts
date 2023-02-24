@@ -952,6 +952,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
 
           sessionStorage.setItem("filtroAsistenciaExpresBusqueda",JSON.stringify(this.filtrosAE.filtro));
           this.search();
+          this.filtrosAE.primeraBusqueda = false;
         } else {
           this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
         }

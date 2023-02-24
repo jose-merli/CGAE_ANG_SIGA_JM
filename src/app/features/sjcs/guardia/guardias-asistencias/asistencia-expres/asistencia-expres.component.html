@@ -7,7 +7,7 @@
                 name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
         </div>
         <div [hidden]="modoBusqueda != 'b'">
-            <app-buscador-asistencia-expres (letradoFillAutomatic)="letradoFillAutomatic($event)" (buscarAE)="buscarAE()" [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
+            <app-buscador-asistencia-expres (letradoFillAutomatic)="letradoFillAutomatic($event)" (buscarAE)="buscarAE()" (hideResponse)="hideResponse()" [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
         </div>
         <div [hidden]="modoBusqueda != 'a'">
             <app-buscador-asistencias (searchAgain)="searchAsistenciasEvent($event)" [modoBusqueda]="modoBusqueda"></app-buscador-asistencias>

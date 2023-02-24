@@ -84,7 +84,8 @@
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Contrarios'">
                                         <app-detalle-tarjeta-contrarios-ficha-designacion-oficio
-                                            [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)">
+                                            [contrarios]="contrarios" (searchContrarios)="searchContrarios($event)" id="sjcsDesigContra"
+                                            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
                                         </app-detalle-tarjeta-contrarios-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Procurador'" >
@@ -102,7 +103,8 @@
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Interesados'">
                                         <app-detalle-tarjeta-interesados-ficha-designacion-oficio  [campos]="campos"
-                                            [interesados]="interesados" (searchInteresados)="searchInteresados($event)">
+                                            [interesados]="interesados" (searchInteresados)="searchInteresados($event)" id="sjcsDesigInt"
+                                            (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)">
                                         </app-detalle-tarjeta-interesados-ficha-designacion-oficio>
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Actuaciones'">

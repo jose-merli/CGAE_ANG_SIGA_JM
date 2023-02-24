@@ -75,7 +75,6 @@ export class LetradoEntranteComponent implements OnInit {
       if(sessionStorage.getItem("entranteFechaDesignacion") != null 
             && sessionStorage.getItem("entranteFechaDesignacion") != undefined){
           this.body.fechaDesignacion = new Date(sessionStorage.getItem("entranteFechaDesignacion"));
-          sessionStorage.removeItem("entranteFechaDesignacion");
       }
       //SIGARNV-3125 FIN
     }
