@@ -455,7 +455,9 @@ export class TablaJusticiablesComponent implements OnInit {
 
   // Quitar seleccion de Fila.
   actualizaSeleccionados(selectedDatos) {
-    this.numSelected = selectedDatos.length;
+    if(selectedDatos != null && selectedDatos != undefined){
+      this.numSelected = selectedDatos.length;
+    }
     this.seleccion = false;
   }
 
