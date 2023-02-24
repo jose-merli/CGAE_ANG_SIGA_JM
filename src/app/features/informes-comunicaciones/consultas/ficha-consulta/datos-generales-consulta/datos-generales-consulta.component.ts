@@ -44,7 +44,7 @@ export class DatosGeneralesConsultaComponent implements OnInit {
   institucionActual: any;
   msgs: Message[];
   generica: string;
-  constructorConsultaExperta: string;
+  constructorConsultaExperta: string ; 
   @Output() emitConstructorConsultaExperta = new EventEmitter<string>();
   listaModelos: any = [];
   progressSpinner: Boolean = false;
@@ -93,7 +93,6 @@ export class DatosGeneralesConsultaComponent implements OnInit {
     this.getModulos();
     this.getClasesComunicaciones();
     this.getObjetivos();
-
     this.selectedItem = 4;
 
     this.getIdioma();
@@ -169,7 +168,10 @@ export class DatosGeneralesConsultaComponent implements OnInit {
         value: 40
       }
     ];
-
+    //Por defecto
+    this.constructorConsultaExperta = 'consultaExperta';
+    this.emitUsoConstructorConsultaExperta();
+  
     // this.body.idConsulta = this.consultas[1].value;
   }
 
