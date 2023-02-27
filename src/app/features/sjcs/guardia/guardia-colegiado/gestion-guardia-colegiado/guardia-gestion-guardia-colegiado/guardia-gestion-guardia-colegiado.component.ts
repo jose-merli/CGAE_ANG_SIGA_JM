@@ -29,6 +29,7 @@ export class GuardiaGestionGuardiaColegiadoComponent implements OnInit {
     this.progressSpinner = true;
     if(this.persistenceService.getDatos()){
       this.guardiaItem = this.persistenceService.getDatos();
+      this.guardiaItem.letradosGuardia.replace(",", ", ");
       this.getGuardiaInfo();
 
       //SIGARNV-2885 INICIO
