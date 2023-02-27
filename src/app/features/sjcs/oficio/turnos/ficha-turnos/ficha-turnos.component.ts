@@ -60,7 +60,7 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 
 
 	async ngOnInit() {
-		this.progressSpinner = true;
+		//this.progressSpinner = true;
 		this.datosTarjetaResumen = [];
 		this.commonsService.checkAcceso(procesos_oficio.tarjetaResumen)
 		.then(respuesta => {
@@ -151,7 +151,7 @@ export class FichaTurnosComponent implements OnInit, AfterViewChecked {
 
 	searchTurnos() {
 		// this.filtros.filtros.historico = event;
-		this.progressSpinner = true;
+		//this.progressSpinner = true;
 		let filtros: TurnosItems = new TurnosItems;
 
 		filtros.idturno = this.idTurno;

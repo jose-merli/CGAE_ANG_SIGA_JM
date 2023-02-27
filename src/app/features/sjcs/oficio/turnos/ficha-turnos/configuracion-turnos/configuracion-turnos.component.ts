@@ -304,7 +304,7 @@ export class ConfiguracionTurnosComponent implements OnInit {
   }
 
   getComboProvincias() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices.get("busquedaPrisiones_provinces").subscribe(
       n => {

@@ -311,7 +311,7 @@ export class TarjetaColaOficio implements OnInit {
   }
   getColaOficio() {
     this.turnosItem.historico = this.historico;
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.post("turnos_busquedaColaOficio", this.turnosItem).subscribe(
       n => {
         this.datos = JSON.parse(n.body).turnosItem;
