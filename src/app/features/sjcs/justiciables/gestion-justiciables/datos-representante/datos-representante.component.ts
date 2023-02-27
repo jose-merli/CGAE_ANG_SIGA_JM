@@ -162,7 +162,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			) */
 			if(this.body.idrepresentantejg != null) {
 				this.showTarjeta = true;
-				this.searchJusticiable();
+				this.searchJusticiableNew();
 			} else if (this.idPersona != undefined && this.idPersona != null && this.idPersona == this.body.idpersona) {
 				this.showTarjeta = false;
 				this.generalBody = new JusticiableItem();
@@ -236,6 +236,27 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 			(n) => {
 				this.generalBody = JSON.parse(n.body).justiciable;
 				this.nifRepresentante = this.generalBody.nif;
+				this.persistenceService.clearBody();
+				this.progressSpinner = false;
+				// this.navigateToJusticiable = false;
+				this.compruebaDNI();
+			},
+			(err) => {
+				this.progressSpinner = false;
+			}
+		);
+	}
+
+	searchJusticiableNew() {
+		this.progressSpinner = true;
+		let bodyBusqueda = new JusticiableBusquedaItem();
+		bodyBusqueda.idpersona = this.body.idrepresentantejg.toString();
+		bodyBusqueda.idinstitucion = this.body.idinstitucion;
+
+		this.sigaServices.post('gestionJusticiables_searchJusticiable', bodyBusqueda).subscribe(
+			(n) => {
+				this.body = JSON.parse(n.body).justiciable;
+				//this.nifRepresentante = this.generalBody.nif;
 				this.persistenceService.clearBody();
 				this.progressSpinner = false;
 				// this.navigateToJusticiable = false;
