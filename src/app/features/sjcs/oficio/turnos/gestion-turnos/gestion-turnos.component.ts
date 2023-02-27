@@ -592,17 +592,6 @@ export class TablaTurnosComponent implements OnInit {
     this.getDatosComunicar();
   }
   
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
-
   getDatosComunicar() {
     let datosSeleccionados = [];
     let rutaClaseComunicacion = this.currentRoute.toString();

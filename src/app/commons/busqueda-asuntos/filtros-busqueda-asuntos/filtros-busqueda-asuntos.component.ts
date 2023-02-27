@@ -655,16 +655,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
 
   onRowSelectModelos() { }
 
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["filtros"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
+
 
   getDatosComunicar() {
     let datosSeleccionados = [];

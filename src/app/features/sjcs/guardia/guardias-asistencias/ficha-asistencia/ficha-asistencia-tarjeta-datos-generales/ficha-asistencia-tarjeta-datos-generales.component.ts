@@ -89,8 +89,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
    
     //this.currentRoute = this.router.url.toString()
     this.currentRoute = '/guardiasAsistencias';
-   
-    this.getKeysClaseComunicacion();
+  
 
     if (sessionStorage.getItem("buscadorColegiados")) {
 
@@ -791,17 +790,6 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     sessionStorage.setItem("idModulo", '10');
     
     this.getDatosComunicar();
-  }
-  
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
   }
 
   setDatosAsistencia() {

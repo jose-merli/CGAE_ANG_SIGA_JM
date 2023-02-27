@@ -1299,16 +1299,6 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
     );
   }
 
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
 
   navigateComunicar() {
     sessionStorage.setItem("rutaComunicacion", "/actuacionesDesignacion");

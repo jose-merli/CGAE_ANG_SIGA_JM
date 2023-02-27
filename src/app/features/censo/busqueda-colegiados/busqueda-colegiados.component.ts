@@ -1205,16 +1205,6 @@ export class BusquedaColegiadosComponent extends SigaWrapper implements OnInit {
 
   onRowSelectModelos() { }
 
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
 
   getDatosComunicar() {
     let datosSeleccionados = [];

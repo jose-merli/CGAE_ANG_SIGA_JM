@@ -165,7 +165,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.searchNuevo(this.comboModulos, this.comboAcreditacion);
       }
     } else if (this.pantalla == 'AE') {
-      this.getKeysClaseComunicacion();
       this.fromRowGroup = 0;
       this.toRowGroup = 6;
       this.numCell = 0;
@@ -2377,16 +2376,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     ];
   }
 
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
 
 
   getDatosComunicarJE(rowGroup, expediente) {

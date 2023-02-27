@@ -322,18 +322,6 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
   }
 
 
-  
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
-
   navigateComunicar() {
      let ruta = '/actuacionesDesignacion'
     sessionStorage.setItem("rutaComunicacion",ruta);

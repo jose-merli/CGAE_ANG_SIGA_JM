@@ -69,7 +69,6 @@ export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.currentRoute = this.comprobacionRuta(this.router.url.toString()) 
-    this.getKeysClaseComunicacion();
   } 
 
   comprobacionRuta(routerString:string){
@@ -312,17 +311,6 @@ export class ResultadoAsistenciasComponent implements OnInit, AfterViewInit {
     sessionStorage.setItem("idModulo", '10');
     
     this.getDatosComunicar();
-  }
-  
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
   }
 
   getDatosComunicar() {

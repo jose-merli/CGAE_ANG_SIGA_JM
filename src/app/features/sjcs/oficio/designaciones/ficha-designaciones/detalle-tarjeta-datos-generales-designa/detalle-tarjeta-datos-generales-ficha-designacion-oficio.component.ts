@@ -112,7 +112,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   ngOnInit() {
     this.currentRoute = "/designaciones"; 
-    this.getKeysClaseComunicacion();
     this.resaltadoDatos = true;
     this.nuevaDesigna = JSON.parse(sessionStorage.getItem("nuevaDesigna"));
     this.initDatos = this.campos;
@@ -1095,17 +1094,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     sessionStorage.setItem("idModulo", '10');
 
     this.getDatosComunicar();
-  }
-
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
   }
 
   getDatosComunicar() {

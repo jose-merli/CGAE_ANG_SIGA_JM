@@ -94,7 +94,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
     //console.log('nuevo 2: ', this.nuevo)
     //this.currentRoute = this.router.url;
     this.currentRoute =  '/ejg'
-    this.getKeysClaseComunicacion();
     this.resaltadoDatos = true;
     this.getComboTipoEJG();
     this.getComboTipoEJGColegio();
@@ -610,16 +609,6 @@ export class DatosGeneralesEjgComponent implements OnInit {
     this.getDatosComunicar();
   }
   
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
 
 
   getDatosComunicar() {

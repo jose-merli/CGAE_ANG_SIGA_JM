@@ -86,7 +86,6 @@ export class TablaEjgComponent implements OnInit {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
     this.currentRoute = this.router.url;
-    this.getKeysClaseComunicacion();
 
     this.selectedDatos = [];
 
@@ -627,16 +626,7 @@ export class TablaEjgComponent implements OnInit {
     this.getDatosComunicar();
   }
   
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
+
 
   getDatosComunicar() {
     let datosSeleccionados = [];

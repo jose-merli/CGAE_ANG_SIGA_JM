@@ -970,16 +970,7 @@ export class TablaInscripcionesComponent implements OnInit {
     this.getDatosComunicar();
   }
 
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
+
 
   customSort(event: SortEvent) {
     event.data.sort((data1, data2) => {

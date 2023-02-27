@@ -50,7 +50,6 @@ export class GestionDesignacionesComponent implements OnInit {
 
   ngOnInit() {
     this.currentRoute = this.router.url;
-    this.getKeysClaseComunicacion();
     this.getComboTipoDesignas();
     this.checkAcceso();
     
@@ -495,17 +494,7 @@ export class GestionDesignacionesComponent implements OnInit {
     
     this.getDatosComunicar();
   }
-  
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
+
 
   getDatosComunicar() {
     let datosSeleccionados = [];

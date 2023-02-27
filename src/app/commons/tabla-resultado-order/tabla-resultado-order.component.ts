@@ -1603,17 +1603,6 @@ this.totalRegistros = this.rowGroups.length;
     
     this.getDatosComunicar();
   }
-  
-  getKeysClaseComunicacion() {
-    this.sigaServices.post("dialogo_keys", this.idClaseComunicacion).subscribe(
-      data => {
-        this.keys = JSON.parse(data["body"]);
-      },
-      err => {
-        //console.log(err);
-      }
-    );
-  }
 
 
   getDatosComunicar() {
