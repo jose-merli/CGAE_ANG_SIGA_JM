@@ -55,7 +55,7 @@
                 </div>
 
                 <div *ngIf="col.field == 'LetradoFechSol'">
-                  {{guardiaColegiado.letradosGuardia}} - {{fechaSolicitanteInicio | date: 'dd/MM/yyyy'}}
+                  {{guardiaColegiado.letradosGuardia.replace(",", ", ")}} - {{fechaSolicitanteInicio | date: 'dd/MM/yyyy'}}
                 </div>
 
                 <div *ngIf="col.field == 'turnoGuardiaConf' && !permutas[rowIndex].nuevoRegistro">

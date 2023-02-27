@@ -317,7 +317,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   recuperaFechaSolicitante(){
     this.progressSpinner = true;
     
-    this.sigaServices.getParam("guardiasColegiado_getFechaSolicitante",'?idPersona='+ this.body.idPersona + '&idCalendarioGuardias=' + this.guardiaColegiado.idCalendarioGuardias + '&idguardiaSolicitante=' + this.guardiaColegiado.idGuardia).subscribe(
+    this.sigaServices.getParam("guardiasColegiado_getFechaSolicitante",'?idPersona='+ this.body.idPersona + '&idCalendarioGuardias=' + this.guardiaColegiado.idCalendarioGuardias + '&idGuardia=' + this.guardiaColegiado.idGuardia).subscribe(
       n => {
         this.fechaSolicitanteInicio = n; //n.fechaInicioSolicitante
         this.progressSpinner = false;
