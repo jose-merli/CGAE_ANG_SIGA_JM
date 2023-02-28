@@ -299,7 +299,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       //Valor combo turno
       this.selectores[0].value = this.datosAsistencia.idTurno;
       let fechaNoHora = moment(this.datosAsistencia.fechaAsistencia.substr(0, 10), 'DD/MM/YYYY').toDate();
-      this.fechaGenerales = fechaNoHora;
+      //this.fechaGenerales = fechaNoHora;
       this.searchRelacionesAs.emit(true);
     } else if (sessionStorage.getItem("EJG")) { //Se comprueba si se procede de la pantalla de gestion de EJG
       this.datosEJG = JSON.parse(sessionStorage.getItem("EJG"));
@@ -335,7 +335,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       //Los valores y bloqueo del turno y del tipo se determinan en los combos correspondientes.
 
       //Comprobar que fechaapertura es lo mismo que fechagenerales.
-      this.fechaGenerales = new Date();
+      //this.fechaGenerales = new Date();
       /* this.anio.value = this.datosEJG.annio;
       this.numero.value = this.datosEJG.numEjg; */
 

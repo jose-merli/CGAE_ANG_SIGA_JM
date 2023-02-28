@@ -194,7 +194,7 @@ export class TarjetaGuardias implements OnInit {
   }
   getColaOficio() {
     this.turnosItem.historico = this.historico;
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.mostrarDatos = false;
     this.mostrarNumero = false;
     this.sigaServices.post("turnos_busquedaGuardias", this.turnosItem).subscribe(
@@ -611,7 +611,7 @@ export class TarjetaGuardias implements OnInit {
     // }
     if (!this.selectAll && !this.selectMultiple) {
       if (evento != undefined){
-        this.progressSpinner = true;
+        //this.progressSpinner = true;
         let guardiaItem = new GuardiaItem();
         guardiaItem.idGuardia = evento.idGuardia;
         guardiaItem.idTurno = evento.idTurno;

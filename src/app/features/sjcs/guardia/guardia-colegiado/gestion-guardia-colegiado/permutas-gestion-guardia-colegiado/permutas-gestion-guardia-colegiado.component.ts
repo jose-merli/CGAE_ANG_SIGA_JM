@@ -65,7 +65,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
      if(this.valueComboTurno != null || this.valueComboTurno != undefined){
        this.getComboGuardia(this.valueComboTurno);
      }
-     this.recuperaFechaSolicitante();
+    //  this.recuperaFechaSolicitante();
      this.getCols();
     }
     this.progressSpinner = false
