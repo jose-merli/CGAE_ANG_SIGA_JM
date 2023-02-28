@@ -345,6 +345,8 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let obj1 = {};
     let validada;
     let finalizada;
+    let numEJGAux;
+    let idTipoEJGAux;
     //console.log('this.datosJustificacion: ', this.datosJustificacion)
 
     const datosJustificacionArray = this.datosJustificacion.map((designacion, i) => ({designacion, i}));
@@ -403,8 +405,14 @@ export class TablaJustificacionExpresComponent implements OnInit {
        expedientes +=  exp + '\n';
        })*/
        
-        expedientes = Object.keys(designacion.expedientes)[0];
-        estados = Object.values(designacion.expedientes)[0].toString();
+        expedientes = Object.keys(designacion.expedientes)[1];
+        estados = Object.values(designacion.expedientes)[1].toString();
+
+        let aux = Object.values(designacion.expedientes)[0].toString();
+        if(aux != null && aux != undefined && aux.length > 0){
+          idTipoEJGAux = aux.split("/")[0]
+          numEJGAux =  aux.split("/")[1]
+        }
       }else{
         expedientes = "";
       }
@@ -520,7 +528,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
       { type: 'invisible', value: designacion.nombre , size: 0, combo: null},
       { type: 'invisible', value: designacion.nColegiado , size: 0, combo: null},
       { type: 'invisible', value: designacion.validarjustificaciones , size: 0, combo: null},
-      { type: 'invisible', value: designacion.letradoActuaciones , size: 0, combo: null}
+      { type: 'invisible', value: designacion.letradoActuaciones , size: 0, combo: null},
+      { type: 'invisible', value: "EJG-INFO" , size: 0, combo: null},
+      { type: 'invisible', value: idTipoEJGAux , size: 0, combo: null},
+      { type: 'invisible', value: numEJGAux , size: 0, combo: null}
     ];
   }else{
     arrDesignacion = 

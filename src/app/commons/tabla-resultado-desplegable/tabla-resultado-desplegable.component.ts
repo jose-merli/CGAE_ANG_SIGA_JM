@@ -2398,12 +2398,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   let institucionActual = n.value;
                   let i = 0;
                   let anioEJG: String = expediente.substr(0, 4);
-                  let numEJG: String = expediente.substr(5);
+                  let num: String = rowGroup.rows[0].cells[42].value;
                   let aniodes: String = rowGroup.rows[0].cells[10].value;
                   let idTurno: String = rowGroup.rows[0].cells[17].value;
                   let numeroDes: String = rowGroup.rows[0].cells[19].value;
-
-                  this.sigaServices.getParam("justificacionExpres_getEJG", "?numEjg=" + numEJG + "&anioEjg=" + anioEJG).subscribe(
+                  let tipoEJG : String  = rowGroup.rows[0].cells[43].value;
+                  this.sigaServices.getParam("justificacionExpres_getEJG", "?num=" + num + "&anioEjg=" + anioEJG + "&tipoEjg=" + tipoEJG).subscribe(
                     ejg => {
                       let keysValues = [];
 
