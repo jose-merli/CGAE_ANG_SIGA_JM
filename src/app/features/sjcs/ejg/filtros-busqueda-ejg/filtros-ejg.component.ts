@@ -287,9 +287,7 @@ export class FiltrosEjgComponent implements OnInit {
   }
 
   getComboProcedimiento() {
-    this.sigaServices
-      .get("busquedaProcedimientos_procedimientos")
-      .subscribe(
+    this.sigaServices.get("combo_comboProcedimientosDesignaciones").subscribe(
         n => {
           this.comboProcedimiento = n.combooItems;
           this.commonServices.arregloTildesCombo(this.comboProcedimiento);
