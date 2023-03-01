@@ -76,7 +76,7 @@ export class GestionGuardiaComponent implements OnInit {
     this.infoResumen = [];
     // Comprobar si venimos de Saltos de Compesaciones para informar Datos de Guardias.
     if (sessionStorage.getItem("saltos-compesacionesItem")) {
-      this.persistenceService.setDatos(sessionStorage.getItem("saltos-compesacionesItem"));
+      this.persistenceService.setDatos(sessionStorage.getItem("datos"));
     }
     if (sessionStorage.getItem("nuevoDesdeTablaFiltroGuardias")) {
       sessionStorage.removeItem("nuevoDesdeTablaFiltroGuardias");
