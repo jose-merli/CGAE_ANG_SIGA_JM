@@ -1,5 +1,5 @@
 import { DatePipe, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConfirmationService, Message } from 'primeng/components/common/api';
 import { TranslateService } from '../../../../../../commons/translate';
@@ -192,6 +192,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
             var apellidosNombre = colegiadoItem.colegiadoItem[0].nombre.split(",");
             this.inputs[1].value = apellidosNombre[0];
             this.inputs[2].value = apellidosNombre[1];
+            this.nombreColegiado = this.inputs[2].value;
             this.progressSpinner = false;
           },
           err => {
@@ -206,6 +207,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[1].value = this.campos.apellido1Colegiado + " " + this.campos.apellido2Colegiado;
       this.inputs[2].value = colegiadoInscrito[1];
     }
+
+    
 
     this.inputs[0].disable = true;
     this.inputs[1].disable = true;
@@ -439,7 +442,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         this.confirmarActivar(severity, summary, detail);
       }
     } else {
-
+      if (this.camposModificados()) {
       if (detail == "save" && (this.anio.value == "")) {
         detail = "Guardar";
         let newDesigna = new DesignaItem();
@@ -696,22 +699,23 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           this.showMessage("error", this.translateService.instant("general.message.error.realiza.accion"), this.translateService.instant("justiciaGratuita.oficio.designa.annodistintoprimeradesignacion"));
         }
       }
-
+    }
       if (this.resaltadoDatos == true) {
         this.progressSpinner = false;
       }
     }
+    if (!this.camposModificados) {
+      if (detail == "Restablecer") {
+        
+        this.initDatos = this.campos;
+        if (this.nuevaDesigna == "false") {
+          //EDICION
+          this.cargaDatos(this.initDatos);
 
-    if (detail == "Restablecer") {
-      
-      this.initDatos = this.campos;
-      if (this.nuevaDesigna == "false") {
-        //EDICION
-        this.cargaDatos(this.initDatos);
+        } else {
+          this.cargaDatosNueva();
 
-      } else {
-        this.cargaDatosNueva();
-
+        }
       }
     }
 
@@ -1140,4 +1144,21 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         }
       );
   }
+
+  camposModificados() {
+
+    if (this.initDatos.anio.toString() != this.anio.value) return true
+    if (this.initDatos.codigo != this.numero.value) return true
+    if (this.initDatos.fechaEntradaInicio != this.fechaGenerales) return true
+    if (this.initDatos.idTipoDesignaColegio.toString() != this.selectores[1].value) return true
+    if (this.initDatos.idTurno != this.selectores[0].value) return true
+    if ((this.initDatos.art27 == "No" || this.initDatos.art27 == 0 ) && this.checkArt == true) return true
+    if (this.initDatos.numColegiado != this.inputs[0].value) return true
+    if (this.initDatos.apellido1Colegiado + " " + this.initDatos.apellido2Colegiado != this.inputs[1].value) return true
+    if (this.nombreColegiado != this.inputs[2].value) return true
+    this.showMessage("info", this.translateService.instant("general.message.informacion"), "No hay cambios que guardar");
+    return false;
+  }
+
 }
+
