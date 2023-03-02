@@ -457,11 +457,7 @@ inicio(){
         ordenValue = '';
       }
       let nG;
-      if (datoObj.ultimoCola == 1){
-        nG = 'U' + datoObj.numeroGrupo;
-      }else{
-        nG = datoObj.numeroGrupo;
-      }
+      nG = datoObj.numeroGrupo;
       if (this.configuracionCola.porGrupos == false && this.configuracionCola.porGrupos == false){
         objArr.cells = [
           //{ type: 'text', value: datoObj.ordenCola },

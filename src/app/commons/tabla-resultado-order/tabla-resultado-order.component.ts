@@ -229,7 +229,6 @@ export class TablaResultadoOrderComponent implements OnInit {
       if (!this.calendarios){
         if (this.grupos.length != 0){
           this.maxGroup = this.grupos.reduce((a, b)=>Math.max(a, b)); 
-          this.ordenarGrupos();
         }
 
       }
@@ -296,7 +295,6 @@ export class TablaResultadoOrderComponent implements OnInit {
       this.totalRegistros = this.rowGroups.length;
     } else {
       this.wrongPositionArr = [];
-      this.ordenarGrupos();
       if (this.pantalla == 'colaGuardias'){
       this.orderByOrder(1);
       } else{
@@ -830,6 +828,8 @@ this.totalRegistros = this.rowGroups.length;
     this.rowGroups.forEach(rG=>{
       if (rG.cells[0].value != undefined && rG.cells[0].value.toString().startsWith('U')){
         rG.cells[0].value = rG.cells[0].value.substring(1);
+      } else if (rG.cells[16] != undefined && rG.cells[16].value == 1) {
+        rG.cells[16].value = 0;
       }
     })
     let posicionEntabla = this.from + this.positionSelected;
@@ -860,53 +860,15 @@ this.totalRegistros = this.rowGroups.length;
     let i = 1;
     let lastGroup = this.grupos[this.grupos.length - 1];
     let groupSelected = 0;
-    if (this.pantalla == 'colaGuardias'){
-      while (lastGroup == null && i <= this.grupos.length){
-      i++;
-      lastGroup = this.grupos[this.grupos.length - i];
-      }
-      groupSelected = this.rowGroups[posicionEntabla].cells[0].value;
-       this.rowGroupsAux.forEach((row, index)=> {
-          if(groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) == Number(groupSelected)){
-            this.rowGroups[index].cells[0].value = lastGroup;
-          } else if (groupSelected != null && row.cells[0].value != null && Number(row.cells[0].value) > Number(groupSelected)){
-            this.rowGroups[index].cells[0].value = Number(row.cells[0].value) - 1;
-          }else if (groupSelected != null && row.cells[0].value == null){
-            let last = this.rowGroups[this.rowGroups.length - 1];
-            this.rowGroups[this.rowGroups.length - 1] = this.rowGroups[index];
-            this.rowGroups[this.rowGroups.length - 2] = last;
-            //this.rowGroups[index].cells[0].value = Number(row.cells[0].value);
+    if (this.pantalla != 'colaGuardias'){
+      groupSelected = this.rowGroups[posicionEntabla].cells[1].value;
+      this.rowGroupsAux.forEach((row, index)=> {
+          if(Number(row.cells[1].value) == Number(groupSelected)){
+            this.rowGroups[index].cells[1].value = lastGroup;
+          } else if (Number(row.cells[1].value) > Number(groupSelected)){
+            this.rowGroups[index].cells[1].value = Number(row.cells[1].value) - 1;
           }
       });
-      
-  if (groupSelected == null){
-      let selected = this.rowGroups[posicionEntabla];
-          let ordenColaSeleccionado = Object.assign({},selected.cells[12]);
-         let ordenColaUltimo = Object.assign({},this.rowGroups[this.rowGroups.length - 1].cells[12]);
-         let ordenColaPrimero = Object.assign({},this.rowGroups[0].cells[12]);
-        let j = 0;
-        while (j < posicionEntabla){
-          //this.rowGroups[index] = this.rowGroupsAux[index - 1];
-          this.rowGroups[j].cells[12].value = this.rowGroupsAux[j+1].cells[12].value;
-          j++;
-          }
-       
-         //selected = last
-         this.rowGroups[posicionEntabla].cells[12].value = ordenColaUltimo.value;
-         //last = first
-         this.rowGroups[this.rowGroups.length - 1].cells[12].value = ordenColaPrimero.value;
-         
-        
-      }
-    }else{
-      groupSelected = this.rowGroups[posicionEntabla].cells[1].value;
-       this.rowGroupsAux.forEach((row, index)=> {
-      if(Number(row.cells[1].value) == Number(groupSelected)){
-        this.rowGroups[index].cells[1].value = lastGroup;
-      } else if (Number(row.cells[1].value) > Number(groupSelected)){
-        this.rowGroups[index].cells[1].value = Number(row.cells[1].value) - 1;
-      }
-  });
     }
    
  
