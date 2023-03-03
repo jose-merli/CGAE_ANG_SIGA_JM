@@ -25,7 +25,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
   nuevaDesigna: any;
   valorParametro: any;
   valorParametroNIG: any;
-  valorParametroNProcedimiento: any;
   searchParametros: ParametroDto = new ParametroDto();
   searchParametrosFormatoNProcedimiento: ParametroDto = new ParametroDto();
   datosBuscar: any[];
@@ -215,28 +214,6 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           designaUpdate.numero = this.campos.numero;
           this.getComboDelitos(designaUpdate);
 
-        },
-        err => {
-          //console.log(err);
-        },
-        () => {
-        }
-      );
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.campos.idInstitucion;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA";
-    this.sigaServices
-      .postPaginado("parametros_search", "?numPagina=1", parametro)
-      .subscribe(
-        data => {
-          this.searchParametrosFormatoNProcedimiento = JSON.parse(data["body"]);
-          this.datosBuscar = this.searchParametros.parametrosItems;
-          this.datosBuscar.forEach(element => {
-            if (element.parametro == "FORMATO_VALIDACION_NPROCEDIMIENTO_DESIGNA" && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
-              this.valorParametroNProcedimiento = element.valor;
-            }
-          });
         },
         err => {
           //console.log(err);

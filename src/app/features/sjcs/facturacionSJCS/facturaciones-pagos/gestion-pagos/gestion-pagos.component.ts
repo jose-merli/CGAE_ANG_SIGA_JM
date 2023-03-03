@@ -170,22 +170,17 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
 
   getParamDeducirCobroAutom() {
 
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.sigaStorageService.institucionActual;
-    parametro.modulo = 'FCS';
-    parametro.parametrosGenerales = 'DEDUCIR_COBROS_AUTOMATICO';
+    let parametro = {
+      valor: "DEDUCIR_COBROS_AUTOMATICO"
+    };
 
-    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
-      data => {
-        const resp: ParametroDto = JSON.parse(data['body']);
-        const parametros = resp.parametrosItems;
-        parametros.forEach(el => {
-          if (el.parametro == 'DEDUCIR_COBROS_AUTOMATICO' && (el.idInstitucion == el.idinstitucionActual || el.idInstitucion == '0')) {
-            this.paramDeducirCobroAutom = el;
-          }
-        });
-      }
-    );
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          this.paramDeducirCobroAutom = JSON.parse(data.body);
+        //this.progressSpinner = false;
+      });
 
   }
 

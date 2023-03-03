@@ -171,28 +171,20 @@ export class TablaJustificacionExpresComponent implements OnInit {
   }
 
   getParams(param){
-    let parametro = new ParametroRequestDto();
     let institucionActual;
     return this.sigaServices.get("institucionActual").toPromise().then(n => {
       institucionActual = n.value;
-      parametro.idInstitucion = institucionActual;
-      parametro.modulo = "SCS";
-      parametro.parametrosGenerales = param;
-      return this.sigaServices
-          .postPaginado("parametros_search", "?numPagina=1", parametro)
-          .toPromise().then(
-            data => {
-              let searchParametros = JSON.parse(data["body"]);
-              let datosBuscar = searchParametros.parametrosItems;
-              datosBuscar.forEach(element => {
-                if (element.parametro == param && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
-                  const valorParametro = element.valor;
-                  if (param == "JUSTIFICACION_EDITAR_DESIGNA_LETRADOS"){
-                    this.justActivarDesigLetrado = valorParametro;
-                }
-            }
+      
+      let parametro = {
+        valor: param
+      };
+  
+      this.sigaServices
+        .post("busquedaPerJuridica_parametroColegio", parametro)
+        .subscribe(
+          data => {
+            this.justActivarDesigLetrado = JSON.parse(data.body);
         });
-      });
     });
   }
 

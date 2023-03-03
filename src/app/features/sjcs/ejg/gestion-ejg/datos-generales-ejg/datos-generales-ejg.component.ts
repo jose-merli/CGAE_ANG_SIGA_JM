@@ -156,31 +156,17 @@ export class DatosGeneralesEjgComponent implements OnInit {
 
   }
   getParamMaxLengthNum() {
-    let parametro = new ParametroRequestDto();
-    parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.institucionActual;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "LONGITUD_CODEJG";
+
+    let parametro = {
+      valor: "LONGITUD_CODEJG"
+    };
+
     this.sigaServices
-      .postPaginado("parametros_search", "?numPagina=1", parametro)
+      .post("busquedaPerJuridica_parametroColegio", parametro)
       .subscribe(
         data => {
-          let searchParametros: ParametroDto = new ParametroDto();
-          searchParametros = JSON.parse(data["body"]);
-          let datosBuscar: any[];
-          datosBuscar = searchParametros.parametrosItems;
-          datosBuscar.forEach(element => {
-            if (element.parametro == "LONGITUD_CODEJG" && (element.idInstitucion == 0 || element.idInstitucion == element.idinstitucionActual)) {
-              this.maxLengthNum = element.valor;
-            }
-          }); 
-        },
-        err => {
-          //console.log(err);
-        },
-        () => {
-        }
-      );
+          this.maxLengthNum = JSON.parse(data.body);
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {

@@ -467,25 +467,22 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
   getParametro() {
     this.progressSpinner = true;
 
-    let parametro = new ParametroRequestDto();
-    parametro.idInstitucion = this.sigaStorageService.institucionActual;
-    parametro.modulo = "SCS";
-    parametro.parametrosGenerales = "ACTIVAR_SUBIDA_JUSTIFICACION_DESIGNA";
+    let parametro = {
+      valor: "ACTIVAR_SUBIDA_JUSTIFICACION_DESIGNA"
+    };
 
-    this.sigaServices.postPaginado("parametros_search", "?numPagina=1", parametro).subscribe(
-      data => {
-        let resp: ParametroItem[] = JSON.parse(data.body).parametrosItems;
-        this.permiteSubidDescargaFicheros = resp.find(el => el.parametro == "ACTIVAR_SUBIDA_JUSTIFICACION_DESIGNA" && (el.idInstitucion == '0' || el.idInstitucion == el.idinstitucionActual)).valor == "1";
-      },
-      err => {
-        //console.log(err);
-        this.progressSpinner = false;
-      },
-      () => {
-        this.convertObject();
-        this.progressSpinner = false;
-      }
-    );
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          if (JSON.parse(data.body) == "1"){
+            this.permiteSubidDescargaFicheros = true;
+          }
+          else{
+            this.permiteSubidDescargaFicheros = false;
+          }
+      });
+    
   }
 
 }

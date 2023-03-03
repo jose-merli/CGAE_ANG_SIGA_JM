@@ -88,29 +88,16 @@ export class FichaInscripcionesComponent implements OnInit {
 		sessionStorage.setItem("FichaInscripciones", "1");
 		this.sigaServices.get("institucionActual").subscribe(n => {
 			this.institucionActual = n.value;
-			let parametro = new ParametroRequestDto();
-			parametro.idInstitucion = this.institucionActual;
-			parametro.modulo = "CEN";
-			parametro.parametrosGenerales = "SOLICITUDES_MODIF_CENSO";
-			this.sigaServices
-				.postPaginado("parametros_search", "?numPagina=1", parametro)
+			let parametro = {
+				valor: "SOLICITUDES_MODIF_CENSO"
+			  };
+		  
+			  this.sigaServices
+				.post("busquedaPerJuridica_parametroColegio", parametro)
 				.subscribe(
-					data => {
-						this.searchParametros = JSON.parse(data["body"]);
-						let datosBuscar = this.searchParametros.parametrosItems;
-						datosBuscar.forEach(element => {
-							if (element.parametro == "SOLICITUDES_MODIF_CENSO") {
-								this.valorParametroDirecciones = element.valor;
-							}
-						});
-
-					},
-					err => {
-						//console.log(err);
-					},
-					() => {
-					}
-				);
+				  data => {
+					this.valorParametroDirecciones = JSON.parse(data.body);
+				});
 		});
 
 
