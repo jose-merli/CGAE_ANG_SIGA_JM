@@ -308,10 +308,10 @@ export class TablaResultadoOrderComponent implements OnInit {
       let errorGrupoNoOrden = false;
 
       if (this.pantalla == 'colaGuardias') {
-        if (!ultimo){
-          errorSecuenciaGrupo = this.checkSequence(0);
-          errorSecuenciaOrden = this.checkSequence(1);
-        }
+        // if (!ultimo){
+        //   errorSecuenciaGrupo = this.checkSequence(0);
+        //   errorSecuenciaOrden = this.checkSequence(1);
+        // }
         errorMismoLetradoEnGrupo = this.checkLetrados();
         errorGrupoNoOrden = this.checkOrdeIfGrupo();
       }else{
@@ -1089,7 +1089,7 @@ this.totalRegistros = this.rowGroups.length;
         this.unavailableUp = false;
       }
 
-      if ( this.enableUpDownButtonsManual && (posicion == this.grupos.length - 1 || this.grupos[posicion]  >= this.maxGroup && this.grupos[posicion] != null) ) {
+      if ( this.enableUpDownButtonsManual && (this.grupos[posicion]  >= this.maxGroup && this.grupos[posicion] != null) ) {
         this.unavailableDown = true;
       } else if (!this.enableUpDownButtonsManual) {
         this.unavailableDown = true;
