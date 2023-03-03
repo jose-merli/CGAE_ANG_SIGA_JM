@@ -50,7 +50,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
     this.getComboJuzgado();
     this.getComboPrision();
     this.getComboTipoActuacion();
-
+    this.compruebaActuacionValidada();
     //Si se trata de una nueva actuacion, inicializamos determinados campos con el valor que tienen en la asistencia
     if(!this.actuacion && this.asistencia){
       this.datosGeneralesActuacion.nig = this.asistencia.nig;
@@ -75,6 +75,15 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
 
       }
     
+  }
+
+   //Si la actuacion esta anulada o validada, no se podrá editar de ninguna forma
+  compruebaActuacionValidada(){
+    if (this.actuacion.anulada == '1' || this.actuacion.validada == 'SÍ') {
+      this.editable = false;
+    } else {
+      this.editable = true;
+    }
   }
 
   compruebaCamposObligatorios() {
