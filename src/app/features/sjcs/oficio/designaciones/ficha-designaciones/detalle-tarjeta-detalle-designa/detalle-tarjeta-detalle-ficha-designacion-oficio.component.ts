@@ -107,7 +107,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
           if (!this.nuevaDesigna) {
             this.inputs[0].value = this.campos.nig;
             this.inputs[1].value = this.campos.numProcedimiento;
-            this.asuntoValue = this.campos.resumenAsunto;
+            // this.asuntoValue = this.campos.resumenAsunto;
+            this.asuntoValue = this.campos.observaciones;
             this.estadoValue = this.campos.sufijo;
             this.disableEstado = true;
             this.juzgadoValue = this.campos.idJuzgado;
