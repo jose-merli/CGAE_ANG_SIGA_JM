@@ -67,6 +67,9 @@ export class DatosPersonalesComponent implements OnInit {
   nuevoTelefono: boolean = false;
   personaRepetida: boolean = false;
 
+  showConfirmacion: boolean = false;
+  vieneDeJusticiable: boolean = false;
+  guardaOpcion: String;
   count: number = 1;
   selectedDatos = [];
   rowsPerPage: any = [];
@@ -142,7 +145,6 @@ export class DatosPersonalesComponent implements OnInit {
       } else {
         this.isDisabledPoblacion = true;
       }
-
     }
 
     this.progressSpinner = false;
@@ -157,7 +159,13 @@ export class DatosPersonalesComponent implements OnInit {
     this.getCombos();
     this.getColsDatosContacto();
     this.getDatosContacto();
-
+    
+    if (sessionStorage.getItem("origin") != "newRepresentante" && sessionStorage.getItem("origin") != "newInteresado"
+    && sessionStorage.getItem("origin") != "newContrario" && sessionStorage.getItem("origin") != "newAsistido" 
+    && sessionStorage.getItem("origin") != "newContrarioAsistencia" && sessionStorage.getItem("origin") != "UnidadFamiliar"
+    && sessionStorage.getItem("origin") != "newContrarioEJG" && sessionStorage.getItem("origin") != "newSoj") {
+      this.vieneDeJusticiable = true;
+    }
 
   }
 
@@ -505,8 +513,8 @@ export class DatosPersonalesComponent implements OnInit {
   callConfirmationUpdate() {
     this.progressSpinner = false;
     this.confirmationUpdate = true;
-
-    this.confirmationService.confirm({
+    this.showConfirmacion = true;
+    /*this.confirmationService.confirm({
       key: "cdPersonalesUpdate",
       message: this.translateService.instant("gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos"),
       icon: "fa fa-search ",
@@ -517,7 +525,7 @@ export class DatosPersonalesComponent implements OnInit {
         this.validateCampos(url);
       },
       reject: () => { }
-    });
+    });*/
   }
 
   reject() {
@@ -1532,6 +1540,47 @@ para poder filtrar el dato con o sin estos caracteres*/
         this.provincia + " (" + this.pais + ") ";
     }
 
+  }
+  guardar(){
+    if(this.guardaOpcion=="s"){
+      
+      this.progressSpinner = true;
+        this.confirmationUpdate = false;
+        let url = "gestionJusticiables_updateJusticiable";
+        this.validateCampos(url);
+      
+    }else if(this.guardaOpcion=="n"){
+      if (this.confirmationUpdate) {
+        this.confirmationUpdate = false;
+        this.progressSpinner = true;
+        this.modoEdicion = false;
+        let url = "gestionJusticiables_createJusticiable";
+        this.body.asuntos = undefined;
+        this.body.datosAsuntos = [];
+        this.body.numeroAsuntos = undefined;
+        this.body.ultimoAsunto = undefined;
+        //Ya estavalidada la repeticion y puede crear al justiciable
+        this.body.validacionRepeticion = true;
+        this.body.asociarRepresentante = true;
+        this.validateCampos(url);
+        this.cdPersonalesUpdate.hide();
+      } else if (this.confirmationSave) {
+        this.confirmationSave = false;
+  
+        this.progressSpinner = true;
+        let url = "gestionJusticiables_createJusticiable";
+        //Ya esta validada la repeticion y puede crear al justiciable
+        this.body.validacionRepeticion = true;
+        this.body.asociarRepresentante = true;
+        this.callSaveService(url);
+        this.cdGeneralesSave.hide();
+      }
+
+    }
+    this.showConfirmacion = false;
+  }
+  cancelar(){
+    this.showConfirmacion = false;
   }
 
 }

@@ -31,7 +31,9 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 	comboAutorizaEjg;
 	comboAutorizaAvisotel;
 	comboSolicitajg;
-
+	showConfirmacion: boolean = false;
+	vieneDeJusticiable: boolean = false;
+	guardaOpcion: String;
 	selectedAutorizaavisotel;
 	selectedAsistidosolicitajg;
 	selectedAsistidoautorizaeejg;
@@ -100,6 +102,12 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 			this.modoEdicion = true;
 			this.bodyInicial = JSON.parse(JSON.stringify(this.body));
 		});
+		if (sessionStorage.getItem("origin") != "newRepresentante" && sessionStorage.getItem("origin") != "newInteresado"
+		&& sessionStorage.getItem("origin") != "newContrario" && sessionStorage.getItem("origin") != "newAsistido" 
+		&& sessionStorage.getItem("origin") != "newContrarioAsistencia" && sessionStorage.getItem("origin") != "UnidadFamiliar"
+		&& sessionStorage.getItem("origin") != "newContrarioEJG" && sessionStorage.getItem("origin") != "newSoj") {
+		  this.vieneDeJusticiable = true;
+		}
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -289,8 +297,9 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 
 	callConfirmationUpdate() {
 		this.progressSpinner = false;
+		this.showConfirmacion = true;
 
-		this.confirmationService.confirm({
+		/*this.confirmationService.confirm({
 			key: 'cdSolicitud',
 			message: this.translateService.instant('gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos'),
 			icon: 'fa fa-search ',
@@ -298,7 +307,7 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 				this.callServiceSave();
 			},
 			reject: () => { }
-		});
+		});*/
 	}
 
 	reject() {
@@ -363,4 +372,54 @@ export class DatosSolicitudComponent implements OnInit, OnChanges {
 		this.opened.emit(this.showTarjeta);   // Emit donde pasamos el valor de la Tarjeta Solicitud.
 		this.idOpened.emit('Solicitud'); // Constante para abrir la Tarjeta de Solicitud.
 	}
+
+	guardar(){
+		if(this.guardaOpcion=="s"){
+			this.callServiceSave();
+		  
+		}else if(this.guardaOpcion=="n"){
+			this.cdSolicitud.hide();
+			this.progressSpinner = false;
+			//Ya estavalidada la repeticion y puede crear al justiciable
+			this.body.validacionRepeticion = true;
+			this.body.asociarRepresentante = true;
+			let url = 'gestionJusticiables_createJusticiable';
+			this.sigaServices.post(url, this.body).subscribe(
+				(data) => {
+					let idJusticiable = JSON.parse(data.body).id;
+					this.body.idpersona = idJusticiable;
+					this.showMessage(
+						'success',
+						this.translateService.instant('general.message.correct'),
+						this.translateService.instant('general.message.accion.realizada')
+					);
+
+					this.createJusticiableByUpdateSolicitud.emit(this.body);
+				},
+				(err) => {
+					if (JSON.parse(err.error).error.description != '') {
+						this.showMessage(
+							'error',
+							this.translateService.instant('general.message.incorrect'),
+							this.translateService.instant(JSON.parse(err.error).error.description)
+						);
+					} else {
+						this.showMessage(
+							'error',
+							this.translateService.instant('general.message.incorrect'),
+							this.translateService.instant('general.message.error.realiza.accion')
+						);
+					}
+					this.progressSpinner = false;
+				},
+				() => {
+					this.progressSpinner = false;
+				}
+			);
+			}
+		this.showConfirmacion = false;
+	  }
+	  cancelar(){
+		this.showConfirmacion = false;
+	  }
 }

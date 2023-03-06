@@ -9,6 +9,7 @@ import { TranslateService } from '../../../../commons/translate';
 import { SigaServices } from '../../../../_services/siga.service';
 import { CommonsService } from '../../../../_services/commons.service';
 import { DatosRepresentanteComponent } from './datos-representante/datos-representante.component';
+import { AsuntosComponent } from './asuntos/asuntos.component';
 import { AuthenticationService } from '../../../../_services/authentication.service';
 import { procesos_justiciables } from "../../../../permisos/procesos_justiciables";
 import { EJGItem } from "../../../../models/sjcs/EJGItem";
@@ -59,6 +60,7 @@ export class GestionJusticiablesComponent implements OnInit {
 
   @ViewChild("topScroll") outlet;
   @ViewChild(DatosRepresentanteComponent) datosRepresentante;
+  @ViewChild(AsuntosComponent) actualizaAsuntos;
 
   fromJusticiable;
   modoRepresentante: boolean = false;
@@ -67,12 +69,13 @@ export class GestionJusticiablesComponent implements OnInit {
   justiciableOverwritten: boolean = false;
   justiciableCreateByUpdate: boolean = false;
   permisoEscritura;
-
+ 
   fromInteresado: boolean = false;
   fromContrario: boolean = false;
   fromUniFamiliar: boolean = false;
   fromContrarioEJG: boolean = false;
   fromAsistenciaAsistido: boolean = false;
+  fromNuevoJusticiable: boolean = false;
 
   showDatosGenerales;
   showDatosSolicitudes;
@@ -323,6 +326,45 @@ export class GestionJusticiablesComponent implements OnInit {
         ];
         this.persistenceService.setFichasPosibles(fichasPosiblesNewAsistido);
       }
+      if (sessionStorage.getItem("origin") == "Nuevo") {
+        sessionStorage.removeItem("origin");
+        this.fromNuevoJusticiable = true;
+        let fichasPosiblesNewJusticiable = [
+          {
+            origen: "justiciables",
+            activa: false
+          },
+          {
+            key: "generales",
+            activa: true
+          },
+          {
+            key: "personales",
+            activa: false
+          },
+          {
+            key: "solicitud",
+            activa: false
+          },
+          {
+            key: "representante",
+            activa: false
+          },
+          {
+            key: "asuntos",
+            activa: false
+          },
+          {
+            key: "abogado",
+            activa: false
+          },
+          {
+            key: "procurador",
+            activa: false
+          }
+        ];
+        this.persistenceService.setFichasPosibles(fichasPosiblesNewJusticiable);
+      }
     }
 
 
@@ -339,6 +381,8 @@ export class GestionJusticiablesComponent implements OnInit {
         this.nuevo();
       } else if (params.fr == "u") {
         this.permisoEscritura = false;
+      } else if (params.fr == "2"){
+        this.modoRepresentante = false;
       }
     });
 
@@ -672,7 +716,9 @@ export class GestionJusticiablesComponent implements OnInit {
       }
     );
   }
-
+  actualizaAsunto(){
+    this.actualizaAsuntos.getCols();
+  }
 
   newJusticiable(event) {
     if (!this.modoRepresentante) {
@@ -681,7 +727,7 @@ export class GestionJusticiablesComponent implements OnInit {
       this.justiciableBusquedaItem.idinstitucion = this.authenticationService.getInstitucionSession();
 
       if (this.fromUniFamiliar) {
-        sessionStorage.setItem("datosDesdeJusticiable", JSON.stringify(this.persistenceService.getDatos()));
+        sessionStorage.setItem("datos", JSON.stringify(this.persistenceService.getDatos()));
       } else if (this.fromAsistenciaAsistido && sessionStorage.getItem("idAsistencia")) {
         let idAsistencia = sessionStorage.getItem("idAsistencia");
         if (idAsistencia) {
@@ -781,7 +827,6 @@ export class GestionJusticiablesComponent implements OnInit {
   }
 
   getAsuntos() {
-
     let busquedaJusticiable = new JusticiableBusquedaItem();
     busquedaJusticiable.idpersona = this.body.idpersona;
 
@@ -912,9 +957,12 @@ export class GestionJusticiablesComponent implements OnInit {
         sessionStorage.setItem('tarjeta', 'unidadFamiliar');
         sessionStorage.setItem("origin", "UnidadFamiliar");
       }
-      //this.router.navigate(["/justiciables"]);
-
-      this.location.back();
+      if(this.fromNuevoJusticiable){
+        this.router.navigate(["/justiciables"]);
+      }else{
+        this.location.back();
+      }
+      
     }
 
   }

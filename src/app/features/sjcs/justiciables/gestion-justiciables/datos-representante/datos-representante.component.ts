@@ -58,7 +58,9 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	confirmationDisassociate: boolean = false;
 	confirmationCreateRepresentante: boolean = false;
 	cargaInicial:boolean =false;
-
+	showConfirmacion: boolean = false;
+	vieneDeJusticiable: boolean = false;
+	guardaOpcion: String;
 	@ViewChild('cdCreateRepresentante') cdCreateRepresentante: Dialog;
 	@ViewChild('cdRepresentanteAssociate') cdRepresentanteAssociate: Dialog;
 	@ViewChild('cdRepresentanteDisassociate') cdRepresentanteDisassociate: Dialog;
@@ -96,6 +98,13 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		this.validateShowEnlaceepresentante();
 
 		this.progressSpinner = false;
+
+		if (sessionStorage.getItem("origin") != "newRepresentante" && sessionStorage.getItem("origin") != "newInteresado"
+		&& sessionStorage.getItem("origin") != "newContrario" && sessionStorage.getItem("origin") != "newAsistido" 
+		&& sessionStorage.getItem("origin") != "newContrarioAsistencia" && sessionStorage.getItem("origin") != "UnidadFamiliar"
+		&& sessionStorage.getItem("origin") != "newContrarioEJG" && sessionStorage.getItem("origin") != "newSoj") {
+		  this.vieneDeJusticiable = true;
+		}
 	}
 
 	ngOnChanges(changes: SimpleChanges) {
@@ -706,7 +715,8 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		} else {
 			this.progressSpinner = false;
 			this.confirmationAssociate = true;
-			this.confirmationService.confirm({
+			this.showConfirmacion = true;
+			/*this.confirmationService.confirm({
 				key: 'cdRepresentanteAssociate',
 				message: this.translateService.instant(
 					'gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos'
@@ -741,7 +751,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 					}
 				},
 				reject: () => { }
-			});
+			});*/
 		}
 	}
 
@@ -749,7 +759,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		this.cdCreateRepresentante.hide();
 	}
 
-	rejectAssociate() {
+	/*rejectAssociate() {
 		this.cdRepresentanteAssociate.hide();
 		this.progressSpinner = true;
 		this.body.idrepresentantejg = Number(this.generalBody.idpersona);
@@ -783,13 +793,12 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 				this.progressSpinner = false;
 			}
 		);
-	}
+	}*/
 
 	callConfirmationDisassociate() {
 
 		this.progressSpinner = false;
 		this.confirmationDisassociate = true;
-
 		this.confirmationService.confirm({
 			key: 'cdRepresentanteDisassociate',
 			message: this.translateService.instant(
@@ -910,4 +919,73 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 		this.generalBody = new JusticiableItem();
 		this.nifRepresentante = undefined;
 	}
+
+	guardar(){
+		if(this.guardaOpcion=="s"){
+			if (
+			this.generalBody.idpersona != undefined &&
+			this.generalBody.idpersona != null &&
+			this.generalBody.idpersona.trim() != ''
+		) {
+			if (
+				this.generalBody.nif != undefined &&
+				this.generalBody.nif != '' &&
+				this.generalBody.nif != null &&
+				this.body != undefined &&
+				this.generalBody.nif == this.body.nif
+			) {
+				this.showMessage(
+					'error',
+					this.translateService.instant('general.message.incorrect'),
+					this.translateService.instant(
+						'justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable'
+					)
+				);
+				this.representanteValido = false;
+			} else {
+				this.body.idrepresentantejg = Number(this.generalBody.idpersona);
+				this.callServiceAssociate();
+			}
+		}
+
+		}else if(this.guardaOpcion=="n"){
+			this.progressSpinner = true;
+			this.body.idrepresentantejg = Number(this.generalBody.idpersona);
+			this.body.validacionRepeticion = true;
+			this.body.asociarRepresentante = true;
+			let url = 'gestionJusticiables_createJusticiable';
+			this.sigaServices.post(url, this.body).subscribe(
+				(data) => {
+					let idJusticiable = JSON.parse(data.body).id;
+					this.body.idpersona = idJusticiable;
+					this.progressSpinner = false;
+					this.createJusticiableByUpdateRepresentante.emit(this.body);
+				},
+				(err) => {
+					if (JSON.parse(err.error).error.description != '') {
+						this.showMessage(
+							'error',
+							this.translateService.instant('general.message.incorrect'),
+							this.translateService.instant(JSON.parse(err.error).error.description)
+						);
+					} else {
+						this.showMessage(
+							'error',
+							this.translateService.instant('general.message.incorrect'),
+							this.translateService.instant('general.message.error.realiza.accion')
+						);
+					}
+					this.progressSpinner = false;
+				},
+				() => {
+					this.progressSpinner = false;
+				}
+			);
+	
+		}
+		this.showConfirmacion = false;
+	  }
+	  cancelar(){
+		this.showConfirmacion = false;
+	  }
 }

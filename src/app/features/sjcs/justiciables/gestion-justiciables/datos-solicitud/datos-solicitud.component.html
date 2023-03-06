@@ -88,3 +88,29 @@
     <button type="button" pButton icon="fa-close" label="No" (click)="reject()"></button>
   </p-footer>
 </p-confirmDialog>
+
+<p-dialog [(visible)]="showConfirmacion" responsive="true" [draggable]="false"  resizable="false" width="550">
+  <p-header>
+    <label>{{'general.gestionJusticiables.confirmacion' | translate}}</label>
+  </p-header>
+  <div class="row">
+    <div class="form-group col-lg-8 col-md-8">
+      <label>{{'general.gestionJusticiables.textoConfirmacionUp' | translate}}</label>
+    </div>
+  </div>
+  <div class="field-radiobutton">
+    <p-radioButton class="radio-style"  name="sustituir" value="s" label="{{'general.gestionJusticiables.confirmacionSustituir' | translate}}" [(ngModel)]='guardaOpcion'></p-radioButton>
+  </div>
+
+  <div class="field-radiobutton">
+    <p-radioButton class="radio-style" name="nuevo" value="n" label="{{'general.gestionJusticiables.confirmacionNuevo' | translate}}" [(ngModel)]='guardaOpcion'></p-radioButton>
+  </div>
+
+  <label>{{'general.gestionJusticiables.textoConfirmacionDown' | translate}}</label>
+  <p-footer>
+    <div class="text-right main-button ">
+      <button (click)="guardar()" pButton type="button" icon="fa fa-check" iconPos="left" label="{{'general.boton.guardar' | translate}}"></button>
+      <button (click)="cancelar()" pButton type="button" icon="fa fa-close " iconPos="left" label="{{'general.boton.cancel' | translate}}"></button>
+    </div>
+  </p-footer>
+</p-dialog>
