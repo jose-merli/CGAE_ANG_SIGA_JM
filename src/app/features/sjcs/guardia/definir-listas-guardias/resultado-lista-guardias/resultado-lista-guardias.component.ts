@@ -137,9 +137,10 @@ export class ResultadoListaGuardiasComponent implements OnInit, AfterViewInit {
                   this.keys.forEach(key => {
                     if (element[key.nombre] != undefined) {
                       keysValues.push(element[key.nombre]);
-                    }else if(key.nombre == "idLista" && element["idLista"] != undefined){
+                    }else if(key.nombre == "idconjuntoguardia" && element["idLista"] != undefined){
                       keysValues.push(element["idLista"]);
                     }
+
                   });
                   datosSeleccionados.push(keysValues);
                 });
