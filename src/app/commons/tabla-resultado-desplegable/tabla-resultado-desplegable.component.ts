@@ -18,6 +18,7 @@ import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 import { PersistenceService } from '../../_services/persistence.service';
 import { FiltroAsistenciaItem } from '../../models/guardia/FiltroAsistenciaItem';
 import { EJGItem } from '../../models/sjcs/EJGItem';
+import { element } from 'protractor';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
   templateUrl: './tabla-resultado-desplegable.component.html',
@@ -202,11 +203,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     }
     this.selected = true;
     if (child != undefined) {
-      if (this.selecteChild.includes({ [rowId]: child })) {
-        const i = this.selecteChild.indexOf({ [rowId]: child });
+ 
+      if (this.selecteChild.includes(rowId)) {
+        const i = this.selecteChild.indexOf(rowId);
         this.selecteChild.splice(i, 1);
       } else {
-        this.selecteChild.push({ [rowId]: child });
+        this.selecteChild.push(rowId);
       }
       if (this.selecteChild.length != 0) {
         this.anySelected.emit(true);
@@ -1555,9 +1557,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
 
         this.selecteChild.forEach((child) => {
-          let rowIdChild = Object.keys(child)[0];
+
+          let rowIdChild = child;
           let rowId = rowIdChild.slice(0, -1);
-          this.childNumber = Number(Object.values(child)[0]);
+          this.childNumber = Number(rowIdChild.slice(rowId.length, rowIdChild.length));
+
           this.selectedArray.forEach(idToDelete => {
             if (rowIdChild == idToDelete && rowG.id == rowId) {
               this.turnoAllow = rowG.rows[0].cells[39].value;
@@ -2374,6 +2378,148 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         detail: "Boton no funcional actualmente"
       }
     ];
+  }
+
+  navigateComunicar() {
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    if (this.selecteChild.length > 0) {
+      sessionStorage.setItem("rutaComunicacion", "/actuacionesDesignacion");
+      //ID 9 idInstitucion  anio num idTurno numeroAsunto(numActuacion en un principio)
+      this.rowGroups.forEach((rowG, i) => {
+        //1. Cargamos en selecteChild todas las actuaciones de las Designaciones seleccionadas.
+        this.selectedArray.forEach(idDesigna => {
+          if (rowG.id == idDesigna) {
+            let infoDes = rowG;
+            infoDes.rows.forEach((element, index)=> {
+              let val:string = element.cells[1].value
+              if(element.cells[1].type == "select" && val.length > 0 && index > 0){
+                let identificador = rowG.id +""+(index - 1)
+                if(!this.selecteChild.includes(identificador))
+                  this.selecteChild.push(identificador)
+              }
+            }) 
+          }
+        });  
+      });
+
+      //2- Comunicar de actuaciones.
+      let datosSeleccionados = [];
+      let rutaClaseComunicacion = "/actuacionesDesignacion"
+      this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.rowGroups.forEach((rowG, i) => {
+                  this.selecteChild.forEach((child) => {
+                    let rowIdChild = child;
+                    let rowId = rowIdChild.slice(0, -1);
+                    this.childNumber = Number(rowIdChild.slice(rowId.length, rowIdChild.length));
+          
+                      if ( rowG.id == rowId) {
+                        
+                        let numAsunto = rowG.rows[this.childNumber + 1].cells[19].value
+                        let keysValues = [];
+                        this.keys.forEach(key =>{
+                          if(key.nombre == "idInstitucion")
+                            keysValues.push(rowG.rows[0].cells[13].value);
+                          else if(key.nombre == "idTurno" || key.nombre == "idturno" )
+                            keysValues.push(rowG.rows[0].cells[17].value);
+                          else if(key.nombre == "anio")
+                            keysValues.push(rowG.rows[0].cells[10].value);
+                          else if(key.nombre == "numero" || key.nombre == "num")
+                            keysValues.push(rowG.rows[0].cells[19].value);
+                          else if(key.nombre == "numAsunto" || key.nombre == "numeroAsunto" || key.nombre == "numeroasunto")
+                          keysValues.push(numAsunto);
+                        })
+                        datosSeleccionados.push(keysValues)
+                      }
+                  })
+                });
+
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]); 
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
+    } else {
+      sessionStorage.setItem("rutaComunicacion", "/designaciones");
+      //ID 30 idInstitucion idturno anio numero
+      let datosSeleccionados = [];
+      let rutaClaseComunicacion = "/designaciones"
+      this.sigaServices
+      .post("dialogo_claseComunicacion", rutaClaseComunicacion)
+      .subscribe(
+        data => {
+          this.idClaseComunicacion = JSON.parse(
+            data["body"]
+          ).clasesComunicaciones[0].idClaseComunicacion;
+          this.sigaServices
+            .post("dialogo_keys", this.idClaseComunicacion)
+            .subscribe(
+              data => {
+                this.keys = JSON.parse(data["body"]).keysItem;
+                this.rowGroups.forEach((rowG, i) => {
+                  //1. Eliminamos designaciones
+                  this.selectedArray.forEach(idDesigna => {
+                    if (rowG.id == idDesigna) {
+                      //info designa en rowG
+                      let keysValues = [];
+                      this.keys.forEach(key =>{
+                        if(key.nombre == "idInstitucion")
+                          keysValues.push(rowG.rows[0].cells[13].value);
+                        else if(key.nombre == "idTurno" || key.nombre == "idturno" )
+                          keysValues.push(rowG.rows[0].cells[17].value);
+                        else if(key.nombre == "anio")
+                          keysValues.push(rowG.rows[0].cells[10].value);
+                        else if(key.nombre == "numero" || key.nombre == "num")
+                          keysValues.push(rowG.rows[0].cells[19].value);
+                      })
+
+                      datosSeleccionados.push(keysValues)
+                    }
+                  });
+                 
+                });
+                sessionStorage.setItem(
+                  "datosComunicar",
+                  JSON.stringify(datosSeleccionados)
+                );
+                this.router.navigate(["/dialogoComunicaciones"]);
+
+              },
+              err => {
+                //console.log(err);
+              }
+            );
+        },
+        err => {
+          //console.log(err);
+        }
+      );
+
+ 
+
+    }
+
   }
 
 
