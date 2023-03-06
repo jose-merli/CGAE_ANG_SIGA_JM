@@ -14,11 +14,10 @@ import { SigaConstants } from '../../../../../utils/SigaConstants';
 import { procesos_maestros } from '../../../../../permisos/procesos_maestros';
 import { procesos_justiciables } from '../../../../../permisos/procesos_justiciables';
 import { Checkbox, ConfirmDialog } from '../../../../../../../node_modules/primeng/primeng';
-import { Dialog } from 'primeng/primeng';
+import { Dialog, DialogModule } from 'primeng/primeng';
 import { UnidadFamiliarEJGItem } from '../../../../../models/sjcs/UnidadFamiliarEJGItem';
 import { EJGItem } from '../../../../../models/sjcs/EJGItem';
 import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
-
 @Component({
   selector: 'app-datos-generales',
   templateUrl: './datos-generales.component.html',
@@ -48,6 +47,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   comboPoblacion;
   comboTipoVia;
   nuevoJusticiable: boolean = false;
+  showConfirmacion: boolean = false;
+  vieneDeJusticiable: boolean = false;
 
   provinciaSelecionada;
   isDisabledPoblacion: boolean = true;
@@ -101,6 +102,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   @Output() searchJusticiableOverwritten = new EventEmitter<any>();
   @Output() opened = new EventEmitter<Boolean>();  // Evento para abrir la tarjeta
   @Output() idOpened = new EventEmitter<String>(); // Evento para pasar la Información.
+  @Output() actualizaAsunto = new EventEmitter();
 
   @Input() showTarjeta;
   @Input() fromJusticiable;
@@ -115,7 +117,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   confirmationUpdate: boolean = false;
   nuevoRepresentante: boolean = false;
   tipoPersona;
-
+  guardaOpcion: String;
   menorEdadJusticiable: boolean = false;
 
   generalBody: UnidadFamiliarEJGItem;
@@ -150,6 +152,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       this.nuevoContrarioEJG = true;
     } else if (sessionStorage.getItem("origin") == "newSoj") {
       this.nuevoSoj = true;
+    }else {
+      this.vieneDeJusticiable = true;
     }
 
 
@@ -574,7 +578,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
           } else {
 
-            if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+            if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0" && !this.vieneDeJusticiable) {
               this.callConfirmationUpdate();
 
             } else {
@@ -583,7 +587,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             }
           }
         } else {
-          if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0") {
+          if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0" && !this.vieneDeJusticiable) {
             this.callConfirmationUpdate();
 
           } else {
@@ -657,6 +661,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (sessionStorage.getItem("fichaJust") != null) {
             sessionStorage.setItem("origin", sessionStorage.getItem("fichaJust"));
             sessionStorage.removeItem("fichaJust");
+
           }
         } else {
           let filtros: JusticiableBusquedaItem = new JusticiableBusquedaItem();
@@ -665,6 +670,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             fichasPosibles[6].activa = true;
             fichasPosibles[7].activa = true;
             this.persistenceService.setFichasPosibles(fichasPosibles);
+
           }
         }
 
@@ -876,7 +882,13 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       },
       () => {
         this.progressSpinner = false;
+        //Actualizamos la Tarjeta Asuntos
+        this.actualizaAsunto.emit();
         sessionStorage.removeItem("nuevoJusticiable");
+        if(this.vieneDeJusticiable && this.nuevoJusticiable){
+          sessionStorage.setItem("origin", "Nuevo");
+          this.router.navigate(["/gestionJusticiables"], { queryParams: { rp: "2" } });
+        }
       }
     );
   }
@@ -902,7 +914,6 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   callConfirmationSave(id) {
     this.progressSpinner = false;
     this.confirmationSave = true;
-
     this.confirmationService.confirm({
       key: "cdGeneralesSave",
       message: this.translateService.instant("gratuita.personaJG.mensaje.existeJusticiable.pregunta.crearNuevo"),
@@ -934,8 +945,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
   callConfirmationUpdate() {
     this.progressSpinner = false;
     this.confirmationUpdate = true;
+    this.showConfirmacion = true;
 
-    this.confirmationService.confirm({
+    /*this.confirmationService.confirm({
       key: "cdGeneralesUpdate",
       message: this.translateService.instant("gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos"),
       icon: "fa fa-search ",
@@ -972,7 +984,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           this.cdGeneralesSave.hide();
         }
       }
-    });
+    });*/
   }
 
   reject() {
@@ -1932,6 +1944,47 @@ para poder filtrar el dato con o sin estos caracteres*/
   muestraCamposObligatorios() {
     this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
 
+  }
+
+  guardar(){
+    if(this.guardaOpcion=="s"){
+      
+      this.progressSpinner = true;
+      this.confirmationUpdate = false;
+      let url = "gestionJusticiables_updateJusticiable";
+      this.validateCampos(url);
+      
+    }else if(this.guardaOpcion=="n"){
+      if (this.confirmationUpdate) {
+        this.confirmationUpdate = false;
+        this.progressSpinner = true;
+        this.modoEdicion = false;
+        let url = "gestionJusticiables_createJusticiable";
+        this.body.asuntos = undefined;
+        this.body.datosAsuntos = [];
+        this.body.numeroAsuntos = undefined;
+        this.body.ultimoAsunto = undefined;
+        //Ya estavalidada la repeticion y puede crear al justiciable
+        this.body.validacionRepeticion = true;
+        this.body.asociarRepresentante = true;
+        this.validateCampos(url);
+        this.cdGeneralesUpdate.hide();
+      } else if (this.confirmationSave) {
+        this.confirmationSave = false;
+
+        this.progressSpinner = true;
+        let url = "gestionJusticiables_createJusticiable";
+        //Ya esta validada la repeticion y puede crear al justiciable
+        this.body.validacionRepeticion = true;
+        this.body.asociarRepresentante = true;
+        this.callSaveService(url);
+      }
+
+    }
+    this.showConfirmacion = false;
+  }
+  cancelar(){
+    this.showConfirmacion = false;
   }
 
 }

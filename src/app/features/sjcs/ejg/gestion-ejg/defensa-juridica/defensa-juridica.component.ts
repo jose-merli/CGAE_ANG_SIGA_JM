@@ -86,8 +86,9 @@ export class DefensaJuridicaComponent implements OnInit {
     //Se asignan al iniciar la tarjeta y al guardar.
     //Se obtiene la designacion si hay una designacion entre las relaciones
     setTimeout(() => {
-      this.cargarDatosDefensaJuridica();
-
+      // this.cargarDatosDefensaJuridica();
+      this.getDelitosEJG();
+      
       this.getEjgItem();
 
       //Se sobreescribe la informacion de pre designacion (Primera mitad de la tarjeta) 
@@ -140,9 +141,9 @@ export class DefensaJuridicaComponent implements OnInit {
       this.getComboDelitos();
       //Hay un problema con angular que por algún motivo parece que
         //los delitos asociados no se muestran de forma consistente (a veces si, a veces no).
-      if (this.designa == null || this.designa.ano == null) {
-        this.getDelitosEJG();
-      }
+      // if (this.designa == null || this.designa.ano == null) {
+      //   this.getDelitosEJG();
+      // }
       this.progressSpinner = false;
       //if (this.body.juzgado != undefined && this.body.juzgado != null) this.isDisabledProcedimiento = false;
 
@@ -765,9 +766,9 @@ export class DefensaJuridicaComponent implements OnInit {
 
         let datosAdicionales = JSON.parse(n.body);
         if (datosAdicionales[0] != null && datosAdicionales[0] != undefined) {
-          item.delitos = datosAdicionales[0].delitos;
-          this.delitosValue = item.delitos.replace(/\s/g, "").split(',');
-          this.delitosValueInicial = this.delitosValue;
+          // item.delitos = datosAdicionales[0].delitos;
+          // this.delitosValue = item.delitos.replace(/\s/g, "").split(',');
+          // this.delitosValueInicial = this.delitosValue;
           item.fechaOficioJuzgado = datosAdicionales[0].fechaOficioJuzgado;
           item.observaciones = datosAdicionales[0].observaciones;
           item.fechaRecepcionColegio = datosAdicionales[0].fechaRecepcionColegio;

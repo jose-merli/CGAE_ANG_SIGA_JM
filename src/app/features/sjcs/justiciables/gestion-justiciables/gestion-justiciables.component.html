@@ -24,7 +24,7 @@
       <div *ngIf="showDatosGenerales != undefined">
         <app-datos-generales *ngSwitchCase="'generales'" (opened)="manuallyOpened = $event" (idOpened)="isCloseReceive($event)" [tarjetaDatosGenerales]="tarjetaDatosGenerales" [showTarjeta]="ficha.activa" [body]="body" [fromJusticiable]="fromJusticiable" [fromUniFamiliar]="fromUniFamiliar"
           [modoRepresentante]="modoRepresentante" [checkedViewRepresentante]="checkedViewRepresentante" (notifySearchJusticiableByNif)="searchJusticiableByNif($event)"
-          (newJusticiable)="newJusticiable($event)" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)" ></app-datos-generales>
+          (newJusticiable)="newJusticiable($event)" (actualizaAsunto)="actualizaAsunto()" (searchJusticiableOverwritten)="searchJusticiableOverwritten($event)" ></app-datos-generales>
       </div>
 
       <!-- showTarjeta: variable indica si se muestra o no la tarjeta -->

@@ -20,3 +20,26 @@
       border-right: none !important;
     }
   }
+  .cell-value {
+    text-align: right;
+  }
+  .w100 {
+    width: 100%;
+  }
+
+  .field-radiobutton {
+    margin-top: 0px;
+    margin-bottom: 25px;
+  }
+
+  .radio-style{
+    display:flex;
+
+    ::ng-deep .ui-radiobutton {
+      .ui-radiobutton-box {
+         .ui-radiobutton-icon {
+          vertical-align: middle;
+        }
+      }
+    }
+  }

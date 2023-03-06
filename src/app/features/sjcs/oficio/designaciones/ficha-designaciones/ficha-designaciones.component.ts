@@ -2169,7 +2169,8 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
       },
       {
         "key": "Asunto",
-        "value": designaItem.resumenAsunto
+        // "value": designaItem.resumenAsunto
+        "value": designaItem.observaciones
       }
     ];
     if ((designaItem.observaciones == null || designaItem.observaciones == undefined || designaItem.observaciones == "")

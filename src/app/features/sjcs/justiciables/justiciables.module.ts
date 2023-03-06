@@ -38,6 +38,7 @@ import { DatosProcuradorContrarioComponent } from './gestion-justiciables/datos-
 import { DatosPersonalesComponent } from './gestion-justiciables/datos-personales/datos-personales.component';
 import { DatosUnidadFamiliarComponent } from './gestion-justiciables/datos-unidad-familiar/datos-unidad-familiar.component';
 import { TarjetaResumenFijaModule } from '../../../commons/tarjeta-resumen-fija/tarjeta-resumen-fija.module';
+import { RadioButtonModule } from "primeng/radiobutton";
 
 @NgModule({
   imports: [
@@ -58,9 +59,11 @@ import { TarjetaResumenFijaModule } from '../../../commons/tarjeta-resumen-fija/
     PrecioModule,
     FechaModule,
     FileUploadModule,
-    DialogoModule,
     ConfirmDialogModule,
-    TarjetaResumenFijaModule
+    DialogModule,
+    TarjetaResumenFijaModule,
+    RadioButtonModule
+
   ],
   declarations: [
     BusquedaJusticiablesComponent,
