@@ -1080,26 +1080,45 @@ this.totalRegistros = this.rowGroups.length;
           this.grupos.push(rg.cells[1].value);
         }
       })
+
+      let disable = false;
       
-      if ( this.enableUpDownButtonsManual && (posicion == 0 || this.grupos[posicion] <= 1) || ((this.listaGuardias || this.calendarios) && posicion > 0) ) {
-        this.unavailableUp = true;
-      } else if (!this.enableUpDownButtonsManual) {
-        this.unavailableUp = true;
-      } else {
-        this.unavailableUp = false;
-      }
+      if (this.pantalla == 'colaGuardias') {
+        if ( this.enableUpDownButtonsManual && (posicion == 0 || this.grupos[posicion] <= 1) || ((this.listaGuardias || this.calendarios) && posicion > 0) ) {
+          this.unavailableUp = true;
+        } else if (!this.enableUpDownButtonsManual) {
+          this.unavailableUp = true;
+        } else {
+          this.unavailableUp = false;
+        }
+  
+        if ( this.enableUpDownButtonsManual && (this.grupos[posicion]  >= this.maxGroup && this.grupos[posicion] != null) ) {
+          this.unavailableDown = true;
+        } else if (!this.enableUpDownButtonsManual) {
+          this.unavailableDown = true;
+        } else {
+          this.unavailableDown = false;
+        }
 
-      if ( this.enableUpDownButtonsManual && (this.grupos[posicion]  >= this.maxGroup && this.grupos[posicion] != null) ) {
-        this.unavailableDown = true;
-      } else if (!this.enableUpDownButtonsManual) {
-        this.unavailableDown = true;
+        if ( !this.enableUpDownButtonsManual || (this.selectedArray.length != 1 || ( (this.unavailableUp && type == 'up') || (this.unavailableDown && type == 'down') )) ) {
+          disable = true;
+        }
       } else {
-        this.unavailableDown = false;
-      }
+        if (posicion == 0) {
+          this.unavailableUp = true;
+        } else {
+          this.unavailableUp = false;
+        }
+  
+        if (this.grupos[posicion] != null && posicion >= this.grupos.length - 1) {
+          this.unavailableDown = true;
+        } else {
+          this.unavailableDown = false;
+        }
 
-      let disable = false;  
-      if ( !this.enableUpDownButtonsManual || (this.selectedArray.length != 1 || ( (this.unavailableUp && type == 'up') || (this.unavailableDown && type == 'down') )) ) {
-        disable = true;
+        if (this.selectedArray.length != 1 || ( (this.unavailableUp && type == 'up') || (this.unavailableDown && type == 'down')) ) {
+          disable = true;
+        }
       }
 
       return disable;

@@ -665,15 +665,31 @@ setGuardiasCalendario(guardiaCalendario){
     let newRowGroups : Row[] = event2.newRowGroups;
     let newList = [];
     newRowGroups.forEach(nrg => {
-      let responseObject = (
-        {
-          'orden': nrg.cells[0].value,
-          'turno': nrg.cells[1].value,
-          'guardia': nrg.cells[2].value,
-          'generado': nrg.cells[3].value,
-          'idGuardia': nrg.cells[2].value,
-          'nuevo': nrg.cells.length <= 5
-        });
+      let responseObject;
+
+      // Cuando es nuevo
+      if (nrg.cells.length <= 5) {
+        responseObject = (
+          {
+            'orden': nrg.cells[0].value,
+            'turno': nrg.cells[1].value,
+            'guardia': nrg.cells[2].value,
+            'generado': nrg.cells[3].value,
+            'idGuardia': nrg.cells[2].value,
+            'nuevo': nrg.cells.length <= 5
+          });
+      } else {
+        responseObject = (
+          {
+            'orden': nrg.cells[0].value,
+            'turno': nrg.cells[1].value,
+            'guardia': nrg.cells[2].value,
+            'generado': nrg.cells[3].value,
+            'idGuardia': nrg.cells[5].value,
+            'idTurno': nrg.cells[6].value,
+            'nuevo': nrg.cells.length <= 5
+          });
+      }
         newList.push(responseObject);
     })
 
