@@ -802,7 +802,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let porcentajeTotal = 0;
 
     designacion.actuaciones.forEach(element => {
-      porcentajeTotal += Number(element.porcentaje);
+      if (element.validada != null && element.validada == "1") {
+        porcentajeTotal += Number(element.porcentaje);
+      }
     });
 
     this.noInsertarMasActuaciones = false;
