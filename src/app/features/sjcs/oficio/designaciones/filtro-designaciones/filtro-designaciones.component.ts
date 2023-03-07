@@ -1213,11 +1213,9 @@ export class FiltroDesignacionesComponent implements OnInit {
 
     if (!event) {
       this.disableRestricciones = false;
-      this.checkRestriccionesasLetrado.emit(false);
     } else {
       this.getParamsEJG(true);
       this.disableRestricciones = true;
-      this.checkRestriccionesasLetrado.emit(true);
     }
   }
 
