@@ -270,9 +270,9 @@ export class DesignacionesComponent implements OnInit {
          }
          element.nombreColegiado = this.nombreType(element);
 
-         if(element.nombreInteresado != null){
-          element.nombreInteresado = this.interesadoType(element);
-         }
+         //if(element.nombreInteresado != null){
+        //  element.nombreInteresado = this.interesadoType(element);
+         //}
          if(element.art27 == "1"){
           element.art27 = "Si";
          }else{
