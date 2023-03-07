@@ -67,6 +67,7 @@ export class LetradoEntranteComponent implements OnInit {
     //SIGARNV-3125 FIN
     if (designa.art27 == "Si" || designa.art27 == 1) {
       this.body.art27 = true;
+      this.entrante.body = this.body.art27;
       this.body.fechaDesignacion = this.entrante.fechaDesignacion;
       this.disableFechaDesignacion = true;
     } else {
