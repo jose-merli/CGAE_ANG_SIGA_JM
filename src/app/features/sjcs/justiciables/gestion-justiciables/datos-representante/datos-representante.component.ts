@@ -62,7 +62,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	vieneDeJusticiable: boolean = false;
 	guardaOpcion: String;
 	@ViewChild('cdCreateRepresentante') cdCreateRepresentante: Dialog;
-	@ViewChild('cdRepresentanteAssociate') cdRepresentanteAssociate: Dialog;
+	//@ViewChild('cdRepresentanteAssociate') cdRepresentanteAssociate: Dialog;
 	@ViewChild('cdRepresentanteDisassociate') cdRepresentanteDisassociate: Dialog;
 
 	@Output() newRepresentante = new EventEmitter<JusticiableItem>();

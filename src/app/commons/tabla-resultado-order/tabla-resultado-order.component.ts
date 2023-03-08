@@ -1473,6 +1473,9 @@ this.totalRegistros = this.rowGroups.length;
       if ((this.to - this.from) % 10 != 0) {
         this.to++;
         this.toReg(this.to);
+      } else if (this.to == 0 && this.from == 0) {
+        this.to++;
+        this.toReg(this.to);
       }
       
       //console.log('this.rowGroups NUEVO: ', this.rowGroups)

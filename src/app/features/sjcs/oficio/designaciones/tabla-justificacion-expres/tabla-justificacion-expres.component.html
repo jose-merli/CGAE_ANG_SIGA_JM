@@ -5,7 +5,7 @@
         <app-tabla-resultado-desplegable *ngIf="dataReady" [fechaFiltro]="fechaFiltro"
             [permisosFichaAct]="permisosFichaAct" [isLetrado]="isLetrado" (dataToUpdate)="getDataToUpdate($event)"
             (actuacionesToAdd)="getActuacionToAdd($event)" (actuacionesToDelete)="getActuacionesToDelete($event)"
-            [colegiado]="colegiado" [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras"
+            [seleccionarTodo]="seleccionarTodo" [cabeceras]="cabeceras"
             [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups" [pantalla]="'JE'" [comboModulos]="comboModulos"
             [comboJuzgados]="comboJuzgados" [permisosEJG]="permisosEJG"
             [comboAcreditacion]="comboAcreditacionesPorModulo" (refreshData)="getrefreshData($event)"

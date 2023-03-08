@@ -1147,10 +1147,10 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   camposModificados() {
 
-    if (this.initDatos.anio.toString() != this.anio.value) return true
+    if (this.initDatos.anio != null && this.initDatos.anio != undefined && this.initDatos.anio.toString() != this.anio.value) return true
     if (this.initDatos.codigo != this.numero.value) return true
     if (this.initDatos.fechaEntradaInicio != this.fechaGenerales) return true
-    if (this.initDatos.idTipoDesignaColegio.toString() != this.selectores[1].value) return true
+    if (this.initDatos.idTipoDesignaColegio != null && this.initDatos.idTipoDesignaColegio != undefined && this.initDatos.idTipoDesignaColegio.toString() != this.selectores[1].value) return true
     if (this.initDatos.idTurno != this.selectores[0].value) return true
     if ((this.initDatos.art27 == "No" || this.initDatos.art27 == 0 ) && this.checkArt == true) return true
     if (this.initDatos.numColegiado != this.inputs[0].value) return true

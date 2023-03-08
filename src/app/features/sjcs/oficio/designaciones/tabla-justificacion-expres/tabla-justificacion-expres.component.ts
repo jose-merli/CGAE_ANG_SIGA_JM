@@ -473,7 +473,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       let numJuzType = 'multiselect1';
 
       let arrDesignacion = [];
-      if (!this.colegiado){
+      if (!this.isLetrado){
       arrDesignacion = 
       [
       { type: 'checkboxPermisos', value: [finalizada, ""], size: 120, combo: finalizada},
@@ -664,7 +664,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
             { type: 'invisible', value:  actuacion.idInstitucion , size: 0, combo: null},
             { type: 'invisible', value:  actuacion.facturado , size: 0, combo: null}
           ];
-        } else if (!this.colegiado){
+        } else if (!this.isLetrado){
          arr1 = 
           [
           { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto], size: 120, combo: null },
@@ -716,7 +716,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         { type: fechaActType, value:  this.formatDate(actuacion.fecha), size: 200 , combo: null},
         { type: fechaJustType, value:  fechaJust , size: 200, combo: null},
         { type: linkOrText, value: acreditacionPorcentaje , size: 200, combo: null},
-        { type: 'checkbox', value: validaAct, size: 80 , combo: null },
+        { type: 'checkbox', value: validaAct, size: 80 , combo: false },
         { type: 'invisible', value:  actuacion.numDesignacion , size: 0, combo: null},
         { type: 'invisible', value:  actuacion.idAcreditacion , size: 0, combo: null},
         { type: 'invisible', value:  actuacion.tipoAcreditacion , size: 0, combo: null},
@@ -802,7 +802,9 @@ export class TablaJustificacionExpresComponent implements OnInit {
     let porcentajeTotal = 0;
 
     designacion.actuaciones.forEach(element => {
-      porcentajeTotal += Number(element.porcentaje);
+      if (element.validada != null && element.validada == "1") {
+        porcentajeTotal += Number(element.porcentaje);
+      }
     });
 
     this.noInsertarMasActuaciones = false;
