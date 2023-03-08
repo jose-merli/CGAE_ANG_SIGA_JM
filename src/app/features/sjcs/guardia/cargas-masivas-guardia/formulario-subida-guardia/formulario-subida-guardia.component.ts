@@ -206,7 +206,6 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
               this.progressSpinner = false;
               this.uploadFileDisable = true;
               body.errores = data["error"];
-
               if (data["error"].code == 200) {
                 this.showMessage("success", "Correcto", data["error"].message);
               } else if (data["error"].code == null) {
@@ -225,6 +224,11 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
           );
       }
       else{
+        this.showMessage("info", "Información",this.translateService.instant("guardias.cargasMasivas.mensaje.calendarios"));
+        this.progressSpinner = false;
+        this.uploadFileDisable = true;
+        this.pUploadFile.clear();
+        this.pUploadFile.chooseLabel = "Seleccionar Archivo";
         this.sigaServices
         .postSendContentAndParameter(
           "cargasMasivasGuardia_uploadFileC",
@@ -236,13 +240,6 @@ export class FormularioSubidaGuardiaComponent implements OnInit {
               //this.file = undefined;
               this.progressSpinner = false;
               this.uploadFileDisable = true;
-              body.errores = data["error"];
-
-              if (data["error"].code == 200) {
-                this.showMessage("success", "Correcto", data["error"].message);
-              } else if (data["error"].code == null) {
-                this.showMessage("info", "Información", data["error"].message);
-              }
             },
             error => {
               this.showFail("Se ha producido un error al cargar el fichero, vuelva a intentarlo de nuevo pasados unos minutos");
