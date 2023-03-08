@@ -79,7 +79,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
 
    //Si la actuacion esta anulada o validada, no se podrá editar de ninguna forma
   compruebaActuacionValidada(){
-    if (this.actuacion != null && this.actuacion.anulada == '1' || this.actuacion.validada == 'SÍ') {
+    if (this.actuacion != null && (this.actuacion.anulada == '1' || this.actuacion.validada == 'SÍ')) {
       this.editable = false;
     } else {
       this.editable = true;
