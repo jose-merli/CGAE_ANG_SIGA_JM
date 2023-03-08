@@ -475,7 +475,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
       .post("busquedaPerJuridica_parametroColegio", parametro)
       .subscribe(
         data => {
-          if (JSON.parse(data.body) == "1"){
+          if (JSON.parse(data.body).parametro == "1"){
             this.permiteSubidDescargaFicheros = true;
           }
           else{
