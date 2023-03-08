@@ -139,6 +139,9 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
 
   updateEstadoActuacion() {
     this.progressSpinner = true;
+    if (this.datosJustificacion != null && this.datosJustificacion.fechaJustificacion == null || this.datosJustificacion.fechaJustificacion == undefined || this.datosJustificacion.fechaJustificacion == ""){
+      this.datosJustificacion.fechaJustificacion = this.datepipe.transform(new Date(), 'dd/MM/yyyy');
+    }
     this.sigaServices
       .postPaginado("actuaciones_updateEstadoActuacion", "?anioNumero=" + this.idAsistencia + "&idActuacion=" + this.actuacion.idActuacion, this.datosJustificacion)
       .subscribe(
