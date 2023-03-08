@@ -1523,7 +1523,10 @@ this.totalRegistros = this.rowGroups.length;
         if(ok){
           let numero = row.cells[0].value;
           let frecuencia = 0;
-
+          if (numero.length > 5) {
+            ok = false;
+            this.showFail('El orden no puede tener más de 5 dígitos');
+          }
           this.rowGroups.forEach( rowAux => {
             if(numero == rowAux.cells[0].value){
               frecuencia ++ ;
