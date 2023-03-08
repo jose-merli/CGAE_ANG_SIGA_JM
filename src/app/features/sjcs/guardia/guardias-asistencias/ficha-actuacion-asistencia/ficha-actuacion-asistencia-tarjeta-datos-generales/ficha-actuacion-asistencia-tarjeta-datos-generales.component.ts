@@ -37,6 +37,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   valorFormatoProc: any;
   parametroNIG: any;
   parametroNProc: any;
+  hitoNueve:boolean = false;
 
   constructor(private datepipe : DatePipe,
     private sigaServices : SigaServices,
@@ -44,6 +45,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
     private translateService : TranslateService) { }
 
   ngOnInit() {
+    this.recuperaHitoNueve();
     this.getNigValidador();
     this.getNprocValidador();
     this.getComboComisaria();
@@ -217,6 +219,28 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
         //console.log(err);
       }
     );
+  }
+
+  recuperaHitoNueve(){
+    this.progressSpinner = true;
+    this.sigaServices.get("institucionActual").subscribe(a => {
+      this.institucionActual = a.value;
+      this.sigaServices.getParam("actuaciones_searchHitoNueveAsistencia","?anioNumero="+this.asistencia.anioNumero+"&idInstitucion="+this.institucionActual).subscribe(
+        n => {
+          if(n.error && n.error.code == 500){
+            this.showMsg('error','Error', n.error.description);
+          }else{
+            this.hitoNueve = n;
+            // this.datosGeneralesActuacion.controlCheckDiaDespues = n;
+          }
+          this.progressSpinner = false;
+        },
+        err => {
+          //console.log(err);
+          this.progressSpinner = false;
+        }
+      );
+    });
   }
 
   getDatosGenerales(){
