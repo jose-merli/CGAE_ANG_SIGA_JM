@@ -397,14 +397,25 @@ export class TablaJustificacionExpresComponent implements OnInit {
        expedientes +=  exp + '\n';
        })*/
        
-        expedientes = Object.keys(designacion.expedientes)[1];
-        estados = Object.values(designacion.expedientes)[1].toString();
+       if (Object.keys(designacion.expedientes)[1] == "EJG") {
+          expedientes = Object.keys(designacion.expedientes)[0];
+          estados = Object.values(designacion.expedientes)[0].toString();
 
-        let aux = Object.values(designacion.expedientes)[0].toString();
-        if(aux != null && aux != undefined && aux.length > 0){
-          idTipoEJGAux = aux.split("/")[0]
-          numEJGAux =  aux.split("/")[1]
-        }
+          let aux = Object.values(designacion.expedientes)[1].toString();
+          if(aux != null && aux != undefined && aux.length > 0){
+            idTipoEJGAux = aux.split("/")[0]
+            numEJGAux =  aux.split("/")[1]
+          }
+       } else {
+          expedientes = Object.keys(designacion.expedientes)[1];
+          estados = Object.values(designacion.expedientes)[1].toString();
+
+          let aux = Object.values(designacion.expedientes)[0].toString();
+          if(aux != null && aux != undefined && aux.length > 0){
+            idTipoEJGAux = aux.split("/")[0]
+            numEJGAux =  aux.split("/")[1]
+          }
+       }
       }else{
         expedientes = "";
       }
