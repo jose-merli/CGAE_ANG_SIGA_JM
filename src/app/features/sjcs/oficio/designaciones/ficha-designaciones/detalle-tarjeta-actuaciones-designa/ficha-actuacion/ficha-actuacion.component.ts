@@ -130,7 +130,7 @@ export class FichaActuacionComponent implements OnInit {
             }
             let colegiadoLog = JSON.parse(sessionStorage.getItem('personaBody'));
 
-            if (colegiadoLog != undefined) {
+            if (colegiadoLog != undefined && colegiadoLog.idPersona != null && colegiadoLog.numColegiado != null) {
               this.usuarioLogado = new UsuarioLogado();
               this.usuarioLogado.idPersona = colegiadoLog.idPersona.toString();
               this.usuarioLogado.numColegiado = colegiadoLog.numColegiado.toString();
