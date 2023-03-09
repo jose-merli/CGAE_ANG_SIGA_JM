@@ -23,7 +23,7 @@
         (valueChangeInput)="fillFechaActuacion($event)" [inputStyleClass]="styleObligatorio(datosGeneralesActuacion.fechaActuacion)"></app-fecha>
       </div>
       <div class="form-group col-lg-6 col-md-6 w-100" id="check">
-        <p-checkbox binary="true" label="Día Después" [(ngModel)]="datosGeneralesActuacion.diaDespues" [ngModelOptions]="{standalone: true}" [disabled]="!hitoNueve || !editable"></p-checkbox>
+        <p-checkbox binary="true" label="Día Después" [(ngModel)]="datosGeneralesActuacion.diaDespues" [ngModelOptions]="{standalone: true}" [disabled]="!datosGeneralesActuacion.controlCheckDiaDespues || !editable"></p-checkbox>
       </div>
     </div>
     <div  class="form-row">

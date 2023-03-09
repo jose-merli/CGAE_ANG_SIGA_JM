@@ -37,7 +37,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   valorFormatoProc: any;
   parametroNIG: any;
   parametroNProc: any;
-  hitoNueve:boolean = false;
+  // hitoNueve:boolean = false;
 
   constructor(private datepipe : DatePipe,
     private sigaServices : SigaServices,
@@ -230,8 +230,8 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
           if(n.error && n.error.code == 500){
             this.showMsg('error','Error', n.error.description);
           }else{
-            this.hitoNueve = n;
-            // this.datosGeneralesActuacion.controlCheckDiaDespues = n;
+            // this.hitoNueve = n;
+            this.datosGeneralesActuacion.controlCheckDiaDespues = n;
           }
           this.progressSpinner = false;
         },

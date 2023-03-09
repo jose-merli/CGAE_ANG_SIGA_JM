@@ -121,6 +121,7 @@ export let endpoints_guardia: any = {
     //Actuaciones asistencias
     actuaciones_searchTarjetaActuacion: "actuacionAsistencia/searchTarjetaActuacion",
     actuaciones_searchTarjetaDatosGenerales: "actuacionAsistencia/searchTarjetaDatosGenerales",
+    actuaciones_searchHitoNueveAsistencia: "actuacionAsistencia/recuperaHitoNueve",
     actuaciones_saveTarjetaDatosGenerales: "actuacionAsistencia/saveDatosGenerales",
     actuaciones_searchTarjetaJustificacion: "actuacionAsistencia/searchTarjetaJustificacion",
     actuaciones_saveTarjetaJustificacion: "actuacionAsistencia/saveTarjetaJustificacion",
