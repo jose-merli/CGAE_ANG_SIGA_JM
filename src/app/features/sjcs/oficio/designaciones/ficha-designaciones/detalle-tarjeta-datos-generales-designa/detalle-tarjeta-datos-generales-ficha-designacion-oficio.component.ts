@@ -85,19 +85,22 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   inputs = [{
     nombre: 'Número de colegiado',
     value: "",
-    disable: false
+    disable: false,
+    obligatorio: false
   },
   {
     nombre: 'Apellidos',
     value: "",
     // disable: false //SIGARNV-2371
-    disable: true //SIGARNV-2371
+    disable: true, //SIGARNV-2371
+    obligatorio: true
   },
   {
     nombre: 'Nombre',
     value: "",
     // disable: false //SIGARNV-2371
-    disable: true //SIGARNV-2371
+    disable: true, //SIGARNV-2371
+    obligatorio: true
   }];
 
   constructor(private sigaServices: SigaServices,
@@ -756,7 +759,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
 
   checkDatosGenerales() {
     if (this.fechaGenerales != "" && this.fechaGenerales != undefined &&
-      this.selectores[0].value != "" && this.selectores[0].value != undefined) {
+      this.selectores[0].value != "" && this.selectores[0].value != undefined &&
+      this.inputs[1].value != "" && this.inputs[1].value != undefined &&
+      this.inputs[2].value != "" && this.inputs[2].value != undefined)  {
       this.resaltadoDatos = false;
     } else {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
@@ -776,6 +781,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if (this.resaltadoDatos && (evento == "fechaGenerales") && resaltado == "fecha") {
       // return "campoDate";
       return this.commonsService.styleObligatorio(evento);
+    }
+    if (this.resaltadoDatos && evento == true && resaltado == "inputTitle") {
+      if (this.inputs[1].obligatorio == true && this.inputs[1].nombre == "Apellidos" && (this.inputs[1].value == "" || this.inputs[1].value == undefined) && this.inputs[2].obligatorio == true && this.inputs[2].nombre == "Nombre" && (this.inputs[2].value == "" || this.inputs[2].value == undefined) )  {
+        return "camposObligatorios";
+      }
     }
 
   }
