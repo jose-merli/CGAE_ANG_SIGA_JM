@@ -45,7 +45,7 @@ export class TarjetaHisFichaActComponent implements OnInit {
 
   constructor(private commonsService: CommonsService, private translateService: TranslateService, private router: Router) { }
 
-  ngOnInit() {
+  async ngOnInit() {
 
     this.commonsService.checkAcceso(procesos_oficio.designaTarjetaActuacionesHistorico)
       .then(respuesta => {
@@ -62,6 +62,18 @@ export class TarjetaHisFichaActComponent implements OnInit {
 
       }
       ).catch(error => console.error(error));
+
+      let esColegio=this.commonsService.getLetrado()
+        .then(respuesta => {
+          console.log("Es colegiado: "+respuesta);
+
+          if(respuesta){
+            console.log("valor a modificar: "+this.cols[2].header);
+            this.cols[2].header = 'censo.general.literal.Personal';
+          }
+
+        });
+
   }
 
 }
