@@ -292,10 +292,10 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
   formatoProc(){
     this.sigaServices.get('actuaciones_designacion_numProcedimiento').subscribe(
       (data) => {
-        console.log("FORMATO PROC")
-        console.log(data)
+        // console.log("FORMATO PROC")
+        // console.log(data)
        this.valorFormatoProc = data.valor;
-        console.log(this.valorFormatoProc)
+        // console.log(this.valorFormatoProc)
       },
       (err) => {
         //console.log(err);
