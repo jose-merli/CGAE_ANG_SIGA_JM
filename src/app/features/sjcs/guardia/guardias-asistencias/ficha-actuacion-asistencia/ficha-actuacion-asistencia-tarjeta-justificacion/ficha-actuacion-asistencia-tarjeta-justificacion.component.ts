@@ -213,7 +213,11 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
   }
 
   fillFechaJustificacion(event) {
-    this.datosJustificacion.fechaJustificacion = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    if(event == null){
+      this.datosJustificacion.fechaJustificacion = "";
+    } else{
+      this.datosJustificacion.fechaJustificacion = this.datepipe.transform(new Date(event), 'dd/MM/yyyy');
+    }
   }
 
   restablecer() {
