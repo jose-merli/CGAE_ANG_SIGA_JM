@@ -776,7 +776,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   getComboTurno() {
     this.progressSpinner = true;
 
-    this.sigaServices.get("combo_turnos").subscribe(
+    this.sigaServices.get("combo_turnos_designas").subscribe(
       n => {
         this.comboTurno = n.combooItems;
         this.progressSpinner = false;
