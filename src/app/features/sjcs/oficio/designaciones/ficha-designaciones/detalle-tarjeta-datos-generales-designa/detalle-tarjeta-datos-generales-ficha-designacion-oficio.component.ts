@@ -695,6 +695,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                 this.progressSpinner = false;
               }, () => {
                 this.progressSpinner = false;
+                this.initDatos = this.campos;
               }
             );
           }
@@ -707,20 +708,20 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         this.progressSpinner = false;
       }
     }
-    if (!this.camposModificados) {
-      if (detail == "Restablecer") {
-        
-        this.initDatos = this.campos;
-        if (this.nuevaDesigna == "false") {
-          //EDICION
-          this.cargaDatos(this.initDatos);
+    
+    if (detail == "Restablecer") {
+      
+      this.initDatos = this.campos;
+      if (!this.nuevaDesigna) {
+        //EDICION
+        this.cargaDatos(this.initDatos);
 
-        } else {
-          this.cargaDatosNueva();
+      } else {
+        this.cargaDatosNueva();
 
-        }
       }
     }
+    this.progressSpinner = false;
 
   }
 
