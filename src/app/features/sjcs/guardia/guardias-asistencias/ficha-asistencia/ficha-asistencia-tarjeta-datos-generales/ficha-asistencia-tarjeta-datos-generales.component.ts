@@ -295,10 +295,6 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
           data => {
 
             this.comboLetradoGuardia = data.combooItems;
-            if(this.comboLetradoGuardia.length > 0){
-              this.usuarioBusquedaExpress.numColegiado = this.asistencia.numeroColegiado;
-              this.usuarioBusquedaExpress.nombreAp = this.asistencia.nombreColegiado;
-              }
             this.commonServices.arregloTildesCombo(this.comboLetradoGuardia);
 
             /*if(this.comboLetradoGuardia !== null
@@ -674,6 +670,19 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
     return ok;
   }
 
+  checkDatosObligatoriosSiRefuerzoSustitucion() {
+
+    let ok: boolean = true;
+
+    if (this.asistencia.isSustituto != null && (this.asistencia.idLetradoManual == null || this.asistencia.idLetradoManual ==  "")) {
+
+      ok = false;
+
+    }
+
+    return ok;
+  }
+
   anular() {
 
     this.eventoAnular.emit(true);
@@ -893,16 +902,21 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
   confirmarSustituto(){
     this.showSustitutoDialog = false;
 
-    // Añadimos los datos al filtro
-    this.asistencia.filtro = new FiltroAsistenciaItem();
-    this.asistencia.filtro.isSustituto = this.asistencia.isSustituto;
-    this.asistencia.filtro.idLetradoGuardia = this.asistencia.idLetradoGuardia;
-    this.asistencia.filtro.idLetradoManual = this.asistencia.idLetradoManual;
-    this.asistencia.filtro.diaGuardia = this.asistencia.fechaAsistencia;
-    this.asistencia.filtro.idTurno = this.asistencia.idTurno;
-    this.asistencia.filtro.idGuardia = this.asistencia.idGuardia;
-    this.asistencia.filtro.salto = this.asistencia.salto;
+    if (this.checkDatosObligatoriosSiRefuerzoSustitucion()) {
+      // Añadimos los datos al filtro
+      this.asistencia.filtro = new FiltroAsistenciaItem();
+      this.asistencia.filtro.isSustituto = this.asistencia.isSustituto;
+      this.asistencia.filtro.idLetradoGuardia = this.asistencia.idLetradoGuardia;
+      this.asistencia.filtro.idLetradoManual = this.asistencia.idLetradoManual;
+      this.asistencia.filtro.diaGuardia = this.asistencia.fechaAsistencia;
+      this.asistencia.filtro.idTurno = this.asistencia.idTurno;
+      this.asistencia.filtro.idGuardia = this.asistencia.idGuardia;
+      this.asistencia.filtro.salto = this.asistencia.salto;
 
-    this.saveAsistencia();
+      this.saveAsistencia();
+    } else {
+      this.showMsg('error', 'Error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.colegiadoobligatoriosinletrado"));
+    }
+    
   }
 }
