@@ -830,26 +830,28 @@ export class GestionJusticiablesComponent implements OnInit {
     let busquedaJusticiable = new JusticiableBusquedaItem();
     busquedaJusticiable.idpersona = this.body.idpersona;
 
-    this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
-      n => {
+    if(this.body.idpersona != undefined){
+      this.sigaServices.post("gestionJusticiables_searchAsuntosJusticiable", this.body.idpersona).subscribe(
+        n => {
 
-        this.datosAsuntos = JSON.parse(n.body).asuntosJusticiableItems;
+          this.datosAsuntos = JSON.parse(n.body).asuntosJusticiableItems;
 
-        if (this.datosAsuntos != undefined && this.datosAsuntos != null && this.datosAsuntos.length > 0) {
-          this.body.numeroAsuntos = this.datosAsuntos.length.toString();
-          this.body.ultimoAsunto = this.datosAsuntos[0].asunto;
-          // Actualizar Nº Asunto en tarjeta resumen.
-          this.updateTarjResumen();
-        }
+          if (this.datosAsuntos != undefined && this.datosAsuntos != null && this.datosAsuntos.length > 0) {
+            this.body.numeroAsuntos = this.datosAsuntos.length.toString();
+            this.body.ultimoAsunto = this.datosAsuntos[0].asunto;
+            // Actualizar Nº Asunto en tarjeta resumen.
+            this.updateTarjResumen();
+          }
 
 
-        this.progressSpinner = false;
+          this.progressSpinner = false;
 
-      },
-      err => {
-        this.progressSpinner = false;
-        //console.log(err);
-      });
+        },
+        err => {
+          this.progressSpinner = false;
+          //console.log(err);
+        });
+      }
   }
 
   newRepresentante(event) {
