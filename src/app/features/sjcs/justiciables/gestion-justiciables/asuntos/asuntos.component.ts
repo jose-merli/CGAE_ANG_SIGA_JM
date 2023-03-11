@@ -15,6 +15,10 @@ import { DatePipe } from '@angular/common'
 import { Session } from 'protractor';
 import { FichaSojItem } from '../../../../../models/sjcs/FichaSojItem';
 import { OldSigaServices } from '../../../../../_services/oldSiga.service';
+import { procesos_ejg } from '../../../../../permisos/procesos_ejg';
+import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
+import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
+import { procesos_soj } from '../../../../../permisos/procesos_soj';
 
 @Component({
   selector: 'app-asuntos',
@@ -39,6 +43,10 @@ export class AsuntosComponent implements OnInit, OnChanges {
   seleccion: boolean = false;
 
   permisoEscritura: boolean = true;
+  permisoDesigna: boolean = false;
+  permisoAsistencia: boolean = false;
+  permisoSOJ: boolean = false;
+  permisoEJG: boolean = false;
   datos = [];
   datosInicio: boolean = false;
 
@@ -66,7 +74,33 @@ export class AsuntosComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.getCols();
+    this.checkPermisosAsuntos();
 
+  }
+  checkPermisosAsuntos() {
+    //PermisoEJG
+    this.commonsService.checkAcceso(procesos_ejg.ejg)
+      .then(respuesta => {
+        this.permisoEJG = respuesta;
+      }).catch(error => console.error(error));
+
+      //permisoDesigna
+    this.commonsService.checkAcceso(procesos_oficio.designa)
+    .then(respuesta => {
+      this.permisoDesigna = respuesta;
+    }).catch(error => console.error(error));
+
+    //permisoAsistencia
+    this.commonsService.checkAcceso(procesos_guardia.asistencias)
+      .then(respuesta => {
+        this.permisoAsistencia = respuesta;
+      }).catch(error => console.error(error));
+
+      //permisoSOJ
+    this.commonsService.checkAcceso(procesos_soj.detalleSOJ)
+    .then(respuesta => {
+      this.permisoSOJ = respuesta;
+    }).catch(error => console.error(error));
   }
 
   // Comprobar Permisos De Designación

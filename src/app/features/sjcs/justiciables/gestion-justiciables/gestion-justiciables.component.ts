@@ -717,7 +717,7 @@ export class GestionJusticiablesComponent implements OnInit {
     );
   }
   actualizaAsunto(){
-    this.actualizaAsuntos.getCols();
+    //this.actualizaAsuntos.getCols();
   }
 
   newJusticiable(event) {

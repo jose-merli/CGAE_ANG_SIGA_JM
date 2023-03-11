@@ -112,42 +112,42 @@
     <div [hidden]="!showTarjeta" class="card-footer ">
       <div class="text-right main-button">
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoEJG"
           (click)="checkPermisosCrearEJG()" type="button" iconPos="left"
           label="{{'general.boton.crearEJG' | translate}}">
         </button>
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoEJG "
           (click)="checkPermisosAsociarEJG()" type="button" iconPos="left"
           label="{{'general.boton.asociarEJG' | translate}}">
         </button>
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoDesigna"
           (click)="checkPermisosCrearDesignacion()" type="button" iconPos="left"
           label="{{'general.boton.crearDesignacion' | translate}}">
         </button>
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoDesigna "
           (click)="checkPermisosAsociarDesignacion()" type="button" iconPos="left"
           label="{{'general.boton.AsociarDesignacion' | translate}}">
         </button>
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoAsistencia "
           (click)="checkPermisosCrearAsistencia()" type="button" iconPos="left"
           label="{{ 'general.boton.crearAsistencia' | translate }}">
         </button>
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoAsistencia "
           (click)="checkPermisosAsociarAsistencia()" type="button" iconPos="left"
           label="{{'general.boton.AsociarAsistencia' | translate}}">
         </button>
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoSOJ "
           (click)="checkPermisosCrearSOJ()" type="button" iconPos="left"
           label="{{ 'general.boton.crearSOJ' | translate }}">
         </button>
         <button pButton
-          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura "
+          [disabled]="((!selectMultiple || !selectAll) && selectedDatos.length != 0) || !permisoEscritura || !permisoSOJ "
           (click)="checkPermisosAsociarSOJ()" type="button" iconPos="left"
           label="{{ 'general.boton.asociarSOJ' | translate }}">
         </button>

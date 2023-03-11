@@ -883,6 +883,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
       () => {
         this.progressSpinner = false;
         //Actualizamos la Tarjeta Asuntos
+        this.persistenceService.setDatos(this.body);
         this.actualizaAsunto.emit();
         sessionStorage.removeItem("nuevoJusticiable");
         if(this.vieneDeJusticiable && this.nuevoJusticiable){
