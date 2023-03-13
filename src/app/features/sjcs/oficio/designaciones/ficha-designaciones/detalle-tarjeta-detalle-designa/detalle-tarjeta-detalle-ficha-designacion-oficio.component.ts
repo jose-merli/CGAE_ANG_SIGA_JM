@@ -316,9 +316,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
       designaUpdate.resumenAsunto = this.asuntoValue
       designaUpdate.idJuzgado = this.juzgadoValue;
       // designaUpdate.idPretension = this.procedimientoValue;
-      designaUpdate.idPretension = this.procedimientoValue;
+      designaUpdate.idPretension = this.datosInicial.idPretension;
       designaUpdate.idProcedimiento = this.moduloValue;
       //designaUpdate.idModulo = this.moduloValue;
+      designaUpdate.idModulo = this.procedimientoValue;
 
       if (this.delitosValue == undefined || this.delitosValue == null || this.delitosValue.length == 0) {
         designaUpdate.delitos = null;

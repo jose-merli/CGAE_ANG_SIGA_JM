@@ -112,9 +112,14 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     permutaItem.idturno = Number(this.body.idTurno);
     permutaItem.idguardia = Number(this.body.idGuardia);
     permutaItem.idpersona = Number(this.body.idPersona);
-
-    let parts = this.body.fechadesde.split('/');
-    let myDate = new Date(parts[2], parts[1] - 1, parts[0]); 
+    let myDate;
+    if (this.body.fechadesde == "[object String]" && this.body.fechadesde.includes('/')) {
+      let parts = this.body.fechadesde.split('/');
+      myDate = new Date(parts[2], parts[1] - 1, parts[0]); 
+    }
+    else {
+      myDate = new Date(this.body.fechadesde);
+    }
     permutaItem.fechasolicitud = myDate;
 
       this.progressSpinner = true
