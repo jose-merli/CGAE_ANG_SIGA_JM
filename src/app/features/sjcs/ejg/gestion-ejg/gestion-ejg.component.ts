@@ -117,7 +117,7 @@ export class GestionEjgComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   async ngOnInit() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     //El padre de todas las tarjetas se encarga de enviar a sus hijos el objeto nuevo del EJG que se quiere mostrar
     //Para indicar que estamos en modo de creacion de representante

@@ -308,7 +308,7 @@ export class ResolucionComponent implements OnInit {
         if(this.perfilCJG){
             //Se recupera la propiedad "edtablecomision" del ultimo estado del EJG
             let ejg = this.persistenceService.getDatosEJG();
-            this.progressSpinner = true;
+            //this.progressSpinner = true;
             this.sigaServices.post("gestionejg_getEditResolEjg", ejg).subscribe(
               n => {
                 //Se comprueba si el ultimo estado introducido tiene "edtablecomision" == 1 (resolucion editable)
