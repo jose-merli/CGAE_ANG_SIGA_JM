@@ -623,7 +623,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 
 	getColaOficio() {
 		this.datos.historico = this.historico;
-		this.progressSpinner = true;
+		//this.progressSpinner = true;
 		if (this.datos.idguardia != null && this.datos.idguardia != undefined) {
 			this.sigaServices.post("guardiasInscripciones_TarjetaColaGuardia", this.datos.idguardia).subscribe(
 				n => {

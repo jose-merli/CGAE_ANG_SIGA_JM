@@ -102,7 +102,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
   }
 
   getListaContrarios(){
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam("busquedaGuardias_searchListaContrarios","?anioNumero="+this.idAsistencia+"&mostrarHistorico="+this.mostrarHistorico).subscribe(
       n => {
         this.contrarios = n;

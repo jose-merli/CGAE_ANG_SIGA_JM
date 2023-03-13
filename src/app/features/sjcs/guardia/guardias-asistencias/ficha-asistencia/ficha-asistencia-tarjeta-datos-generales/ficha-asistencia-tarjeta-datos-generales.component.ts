@@ -776,7 +776,7 @@ export class FichaAsistenciaTarjetaDatosGeneralesComponent implements OnInit, Af
       mostrarHistorico = 'N'
 
 
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
       this.sigaServices.getParam("busquedaGuardias_searchActuaciones", "?anioNumero=" + this.asistencia.anioNumero + "&mostrarHistorico=" + mostrarHistorico).subscribe(
         n => {
           this.actuaciones = n.actuacionAsistenciaItems;

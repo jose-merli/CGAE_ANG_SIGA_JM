@@ -51,7 +51,7 @@ export class FichaActuacionAsistenciaTarjetaJustificacionComponent implements On
 
   getTarjetaJustificacionData() {
 
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam("actuaciones_searchTarjetaJustificacion", "?anioNumero=" + this.idAsistencia + "&idActuacion=" + this.actuacion.idActuacion).subscribe(
       n => {
 

@@ -83,7 +83,7 @@ export class FichaAsistenciaTarjetaDocumentacionComponent implements OnInit, OnC
 
   getDocumentacion() {
 
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam("busquedaGuardias_searchDocumentacion", "?anioNumero=" + this.idAsistencia).subscribe(
       n => {
         this.documentaciones = n.documentacionAsistenciaItems;

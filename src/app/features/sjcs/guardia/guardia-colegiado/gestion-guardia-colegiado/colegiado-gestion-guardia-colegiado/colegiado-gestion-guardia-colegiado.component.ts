@@ -20,7 +20,7 @@ export class ColegiadoGestionGuardiaColegiadoComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     if(this.persistenceService.getDatos()){
       this.colegiado = this.persistenceService.getDatos();
       this.getColegiado();

@@ -266,7 +266,7 @@ export class TarjetaInscripcionGuardiaComponent implements OnInit {
   }
   getInscripciones() {
     this.datos.historico = this.historico;
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     let body = new InscripcionesItems();
     let nombreTurnoAux;
     body = this.datos;

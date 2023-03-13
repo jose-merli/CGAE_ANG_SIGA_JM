@@ -180,7 +180,7 @@ export class TarjetaLetradoComponent implements OnInit {
       if(this.letradoItem.idPersona != undefined)this.colegiadoInscripcion.idPersona = this.letradoItem.idPersona;
       this.colegiadoInscripcion.idInstitucion = this.letradoItem.idinstitucion;
       if(this.letradoItem.idInstitucion != undefined)this.colegiadoInscripcion.idInstitucion = this.letradoItem.idInstitucion;
-      this.progressSpinner = true; //añadido
+      //this.progressSpinner = true; //añadido
 
       this.sigaServices
         .post("busquedaColegiados_searchColegiadoFicha", this.colegiadoInscripcion)
@@ -202,7 +202,7 @@ export class TarjetaLetradoComponent implements OnInit {
             this.bodyDirecciones.historico = false;
 
             if (this.bodyDirecciones.idPersona != undefined && this.bodyDirecciones.idPersona != null) {
-              this.progressSpinner = true; //agregado
+              //this.progressSpinner = true; //agregado
               this.sigaServices
                 .postPaginado(
                   "fichaDatosDirecciones_datosDireccionesSearch",

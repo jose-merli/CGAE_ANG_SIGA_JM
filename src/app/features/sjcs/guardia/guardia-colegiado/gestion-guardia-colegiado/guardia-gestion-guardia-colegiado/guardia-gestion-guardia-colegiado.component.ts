@@ -26,7 +26,7 @@ export class GuardiaGestionGuardiaColegiadoComponent implements OnInit {
   //SIGARNV-2885 FIN
 
   ngOnInit() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     if(this.persistenceService.getDatos()){
       this.guardiaItem = this.persistenceService.getDatos();
       this.guardiaItem.letradosGuardia.replace(",", ", ");
@@ -44,7 +44,7 @@ export class GuardiaGestionGuardiaColegiadoComponent implements OnInit {
     let guardia = new GuardiaItem;
     guardia.idTurno = this.guardiaItem.idTurno;
     guardia.idGuardia = this.guardiaItem.idGuardia;
-    this.progressSpinner = true
+    //this.progressSpinner = true
     await this.sigaServices.post("guardiasColegiado_getGuardiaCole", guardia).subscribe(
       n => {
         this.bodyGuardia = JSON.parse(n.body).guardiaItems[0];

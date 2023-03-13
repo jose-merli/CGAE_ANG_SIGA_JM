@@ -393,7 +393,7 @@ inicio(){
   getColaGuardia() {
     if (this.body.letradosIns instanceof Date) // Se comprueba si es una fecha por si es necesario cambiar el formato.
       this.transformDate(this.body.letradosIns); // Si no es una fecha es que ya está formateada porque viene del back.
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     //this.body.idTurno = 802; //borrar
     //this.body.idGuardia = 1441; //borrar
     //this.body.letradosIns = '09/12/10';
@@ -706,7 +706,7 @@ inicio(){
   }
 
   isOrdenacionManual() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaService
       .getParam("combossjcs_ordenCola", "?idordenacioncolas=" + this.body.idOrdenacionColas)
       .subscribe(

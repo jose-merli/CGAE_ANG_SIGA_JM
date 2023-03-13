@@ -347,7 +347,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
 
     if (this.asistencia && this.actuacion) {
 
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
       this.sigaServices.getParam("actuaciones_searchTarjetaActuacion", "?anioNumero=" + this.asistencia.anioNumero + "&idActuacion=" + this.actuacion.idActuacion).subscribe(
         n => {
           this.actuacion = n.actuacionAsistenciaItems[0];

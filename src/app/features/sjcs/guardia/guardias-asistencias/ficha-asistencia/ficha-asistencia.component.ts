@@ -763,7 +763,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
 
   searchTarjetaAsistencia(idAsistencia) {
 
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero=" + idAsistencia).subscribe(
       n => {
         this.clear();

@@ -73,7 +73,7 @@ export class FichaAsistenciaTarjetaRelacionesComponent implements OnInit {
 
     if (this.asistencia) {
 
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
       this.sigaServices.getParam("busquedaGuardias_searchRelaciones", "?anioNumero=" + this.asistencia.anioNumero).subscribe(
         n => {
           this.relaciones = n.relacionesItem;

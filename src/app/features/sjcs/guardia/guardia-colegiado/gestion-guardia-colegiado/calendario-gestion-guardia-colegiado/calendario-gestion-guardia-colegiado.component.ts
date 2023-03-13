@@ -42,7 +42,7 @@ comboListaGuardias =[];
   ) { }
 
   ngOnInit() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     if (this.persistenceService.getDatos()) {
       this.calendarioBody = this.persistenceService.getDatos();
       this.getComboConjuntoGuardia();
@@ -55,7 +55,7 @@ comboListaGuardias =[];
   }
 
   getComboConjuntoGuardia() {
-    this.progressSpinner = true
+    //this.progressSpinner = true
     this.sigaServices.get(
       "busquedaGuardia_conjuntoGuardia").subscribe(
         data => {
@@ -75,7 +75,7 @@ comboListaGuardias =[];
     return this.datepipe.transform(date, pattern);
   }
   getCalendarioInfo() {
-    this.progressSpinner = true
+    //this.progressSpinner = true
     let datosEntrada =
       {
         'idTurno': this.calendarioBody.idTurno,

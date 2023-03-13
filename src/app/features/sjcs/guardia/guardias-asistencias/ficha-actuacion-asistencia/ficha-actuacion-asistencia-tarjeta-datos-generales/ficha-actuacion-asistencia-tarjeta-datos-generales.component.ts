@@ -222,7 +222,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   }
 
   recuperaHitoNueve(){
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.get("institucionActual").subscribe(a => {
       this.institucionActual = a.value;
       this.sigaServices.getParam("actuaciones_searchHitoNueveAsistencia","?anioNumero="+this.asistencia.anioNumero+"&idInstitucion="+this.institucionActual).subscribe(
@@ -244,7 +244,7 @@ export class FichaActuacionAsistenciaTarjetaDatosGeneralesComponent implements O
   }
 
   getDatosGenerales(){
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam("actuaciones_searchTarjetaDatosGenerales","?anioNumero="+this.asistencia.anioNumero+"&idActuacion="+this.actuacion.idActuacion).subscribe(
       n => {
         

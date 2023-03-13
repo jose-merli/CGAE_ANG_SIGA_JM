@@ -82,7 +82,7 @@ export class FichaActuacionAsistenciaTarjetaDocumentacionComponent implements On
 
   getDocumentacion(){
 
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam("busquedaGuardias_searchDocumentacion","?anioNumero="+this.idAsistencia+"&idActuacion="+this.idActuacion).subscribe(
       n => {
         this.documentaciones = n.documentacionAsistenciaItems;

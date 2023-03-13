@@ -231,7 +231,7 @@ export class TarjetaGestionInscripcionGuardiaComponent implements OnInit {
 	
 	  }
   busqueda() { //MIRAR DONDE SE LLAMA
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     let objVal: ResultadoInscripciones = this.rellenarObjetoBack(this.datos);
 
     if(this.datos.idturno != null ||

@@ -83,7 +83,7 @@ export class FichaActuacionAsistenciaTarjetaHistoricoComponent implements OnInit
   }
 
   getHistorico(){
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam("actuaciones_searchHistorico","?anioNumero="+this.idAsistencia+"&idActuacion="+this.idActuacion).subscribe(
       n => {
         this.historicoItems = n.historicoActuacionAsistenciaItem;

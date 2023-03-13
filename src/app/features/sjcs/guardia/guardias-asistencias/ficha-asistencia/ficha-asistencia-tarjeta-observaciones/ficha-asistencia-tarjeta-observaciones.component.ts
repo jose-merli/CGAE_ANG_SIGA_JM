@@ -30,7 +30,7 @@ export class FichaAsistenciaTarjetaObservacionesComponent implements OnInit {
 
   getTarjetaObservaciones(){
 
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
       this.sigaServices.getParam("busquedaGuardias_searchTarjetaObservaciones","?anioNumero="+this.idAsistencia).subscribe(
         n => {
           this.tarjetaObservacionesItem = n.tarjetaObservacionesItems[0];

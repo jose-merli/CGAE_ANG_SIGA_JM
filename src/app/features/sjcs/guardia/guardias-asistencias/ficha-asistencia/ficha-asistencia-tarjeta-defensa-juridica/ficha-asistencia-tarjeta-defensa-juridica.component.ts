@@ -123,7 +123,7 @@ export class FichaAsistenciaTarjetaDefensaJuridicaComponent implements OnInit {
   getDefensaJuridicaData(){
 
     if(this.idAsistencia){
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
       this.sigaServices.getParam("busquedaGuardias_searchTarjetaDefensaJuridica","?anioNumero="+this.idAsistencia).subscribe(
         n => {
           this.defensaJuridicaItem = n.tarjetaDefensaJuridicaItems[0];

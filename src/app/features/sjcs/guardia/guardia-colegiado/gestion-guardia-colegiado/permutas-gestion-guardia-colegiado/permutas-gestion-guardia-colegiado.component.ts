@@ -55,7 +55,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   //SIGARNV-2885 FIN
 
   ngOnInit() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.esLetrado = JSON.parse(sessionStorage.getItem('isLetrado'));
     this.esColegiado = JSON.parse(sessionStorage.getItem('esColegiado'));
     if(this.persistenceService.getDatos()){
@@ -122,7 +122,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
     }
     permutaItem.fechasolicitud = myDate;
 
-      this.progressSpinner = true
+      //this.progressSpinner = true
       this.sigaServices.post("guardiasColegiado_getPermutasColegiado", permutaItem).subscribe(
         n => {
           let error = JSON.parse(n.body).error;
@@ -306,7 +306,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
 
   getComboTurno() {
 
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
 
     this.sigaServices.getParam("guardiasColegiado_getComboTurnoInscrito",'?idPersona='+ this.body.idPersona).subscribe(
       n => {
@@ -323,7 +323,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
 
   // SIGARNV-2885 INICIO
   recuperaFechaSolicitante(){
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     
     this.sigaServices.getParam("guardiasColegiado_getFechaSolicitante",'?idPersona='+ this.body.idPersona + '&idCalendarioGuardias=' + this.guardiaColegiado.idCalendarioGuardias + '&idGuardia=' + this.guardiaColegiado.idGuardia).subscribe(
       n => {
@@ -338,7 +338,7 @@ export class PermutasGestionGuardiaColegiadoComponent implements OnInit {
   // SIGARNV-2885 FIN
 
   getComboGuardia(turno) {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     let guardiaItem = new GuardiaItem();
     guardiaItem.idTurno = turno;
     guardiaItem.idCalendarioGuardias = this.body.idCalendarioGuardias;

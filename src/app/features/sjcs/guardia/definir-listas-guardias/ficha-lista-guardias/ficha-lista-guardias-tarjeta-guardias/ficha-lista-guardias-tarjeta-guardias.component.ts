@@ -69,7 +69,7 @@ export class FichaListaGuardiasTarjetaGuardiasComponent implements OnInit, OnCha
 
   getGuardiasFromLista(){
     this.show = false;
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam(
       "listasGuardias_searchGuardiasFromLista", "?idLista=" + this.lista.idLista).subscribe(
         data => {

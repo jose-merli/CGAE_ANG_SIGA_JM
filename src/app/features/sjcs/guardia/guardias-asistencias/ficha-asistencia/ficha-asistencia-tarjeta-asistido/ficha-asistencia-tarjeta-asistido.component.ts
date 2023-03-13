@@ -83,7 +83,7 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
     }
   }
   getAsistidoData(){
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.post('gestionJusticiables_getJusticiableByIdPersona', this.asistido).subscribe(
       (n) => {
         this.asistido = JSON.parse(n.body).justiciable;

@@ -28,7 +28,7 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
 
   ngOnInit() {
    // this.body.observacionesAnulacion = "";
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
   
       if(this.persistenceService.getDatos()){
         this.body = this.persistenceService.getDatos();
@@ -63,7 +63,7 @@ export class DatosGeneralesGestionGuardiaColegiadoComponent implements OnInit {
   getFechas(){
 
     this.fechasDisponibles = [];
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     this.sigaServices.getParam("guardiasColegiado_fechasDisponibles", this.fillParams()).subscribe(
       n => {
         this.clear();

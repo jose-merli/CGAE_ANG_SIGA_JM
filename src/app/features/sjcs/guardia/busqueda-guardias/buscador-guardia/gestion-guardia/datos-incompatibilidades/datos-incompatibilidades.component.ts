@@ -134,7 +134,7 @@ export class DatosIncompatibilidadesComponent implements OnInit {
       let idGuardia = this.persistenceService.getDatos().idGuardia;
       let idTurno = this.persistenceService.getDatos().idTurno;
       //idGuardia = 358; //borrar
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
       this.sigaServices.getParam(
         "busquedaGuardias_tarjetaIncompatibilidades", "?idGuardia="+idGuardia+"&idTurno="+idTurno).subscribe(
           data => {

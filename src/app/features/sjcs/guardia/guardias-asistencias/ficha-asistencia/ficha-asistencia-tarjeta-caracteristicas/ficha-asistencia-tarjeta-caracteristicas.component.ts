@@ -83,7 +83,7 @@ export class FichaAsistenciaTarjetaCaracteristicasComponent implements OnInit, O
   getCaracteristicas(){
     //busquedaGuardias_searchCaracteristicas
     if(this.asistencia.anioNumero){
-      this.progressSpinner = true;
+      //this.progressSpinner = true;
       this.sigaServices.getParam("busquedaGuardias_searchCaracteristicas","?anioNumero="+this.asistencia.anioNumero).subscribe(
         n => {
           if(n.caracteristicasAsistenciaItems.length > 0){

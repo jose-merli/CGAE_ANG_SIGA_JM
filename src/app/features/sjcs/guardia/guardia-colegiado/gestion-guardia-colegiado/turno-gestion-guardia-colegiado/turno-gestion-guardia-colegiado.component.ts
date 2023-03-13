@@ -22,7 +22,7 @@ export class TurnoGestionGuardiaColegiadoComponent implements OnInit {
     private translateService: TranslateService,) { }
 
   ngOnInit() {
-    this.progressSpinner = true;
+    //this.progressSpinner = true;
     if(this.persistenceService.getDatos()){
       this.guardia = this.persistenceService.getDatos();
      this.getTurnoInfo();
@@ -34,7 +34,7 @@ export class TurnoGestionGuardiaColegiadoComponent implements OnInit {
   getTurnoInfo(){
     let turno = new TurnosItem();
     turno.idturno = this.guardia.idTurno;
-    this.progressSpinner = true
+    //this.progressSpinner = true
     this.sigaServices.post("guardiasColegiado_getTurnoGuardiaColeg", turno).subscribe(
       n => {
         this.turnosItem = JSON.parse(n.body).turnosItem[0];
