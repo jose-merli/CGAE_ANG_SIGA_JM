@@ -1266,8 +1266,9 @@ para poder filtrar el dato con o sin estos caracteres*/
 
 
   disabledSave() {
-    if (this.body.idtipoidentificacion != undefined && this.body.idtipoidentificacion != "" &&
-      this.body.nif != undefined && this.body.nif.trim() != "" &&
+    if (
+      //this.body.idtipoidentificacion != undefined && this.body.idtipoidentificacion != "" &&
+      //this.body.nif != undefined && this.body.nif.trim() != "" &&
       this.body.nombre != undefined && this.body.nombre.trim() != "" &&
       this.body.apellido1 != undefined && this.body.apellido1.trim() != "" &&
       this.body.tipopersonajg != undefined && this.body.tipopersonajg != "" &&
