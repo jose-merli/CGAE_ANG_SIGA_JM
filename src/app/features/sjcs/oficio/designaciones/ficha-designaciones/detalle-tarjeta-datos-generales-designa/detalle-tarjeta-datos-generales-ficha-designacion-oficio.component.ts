@@ -16,6 +16,7 @@ import { procesos_oficio } from '../../../../../../permisos/procesos_oficio';
 import { TreeModule } from 'primeng/primeng';
 import { JusticiableItem } from '../../../../../../models/sjcs/JusticiableItem';
 import { ScsDefendidosDesignasItem } from '../../../../../../models/sjcs/ScsDefendidosDesignasItem';
+import { AuthenticationService } from '../../../../../../_services/authentication.service';
 
 @Component({
   selector: 'app-detalle-tarjeta-datos-generales-ficha-designacion-oficio',
@@ -110,7 +111,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     private translateService: TranslateService,
     private router: Router,
     private persistenceService: PersistenceService,
-    private location: Location) {
+    private location: Location,
+    private authenticationService: AuthenticationService,) {
   }
 
   ngOnInit() {
@@ -254,7 +256,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     }
     else if (sessionStorage.getItem("colegiadoGeneralDesigna")) {
       let colegiadoGeneral = JSON.parse(sessionStorage.getItem("colegiadoGeneralDesigna"));
-      if (this.campos.idInstitucion == colegiadoGeneral[0].numeroInstitucion) {
+      if (this.authenticationService.getInstitucionSession() == colegiadoGeneral[0].numeroInstitucion) {
         this.inputs[0].value = colegiadoGeneral[0].numeroColegiado;
       }
       this.inputs[1].value = colegiadoGeneral[0].apellidos;
