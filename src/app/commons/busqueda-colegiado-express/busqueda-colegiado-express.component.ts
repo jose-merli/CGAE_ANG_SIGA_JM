@@ -294,8 +294,11 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   busquedaColegiadoJE() {
-    var vieneDeJE = "true";
-    sessionStorage.setItem("vieneDeJE", vieneDeJE);
+    if(sessionStorage.getItem("cargaJE")=="true"){
+      var vieneDeJE = "true";
+      sessionStorage.setItem("vieneDeJE", vieneDeJE);
+    }
+   
   }
 
 }

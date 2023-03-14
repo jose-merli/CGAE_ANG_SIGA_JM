@@ -558,6 +558,14 @@ export class FiltroDesignacionesComponent implements OnInit {
   async changeFilters(event) {
 
     if (event == 'designas' && this.permisoDesigna == true) {
+      if (event == 'designas' && this.permisoDesigna == true) {
+        if(sessionStorage.getItem("cargaJE")!=null){
+          sessionStorage.removeItem("cargaJE");
+        }
+        if(sessionStorage.getItem("cargaDesignas")==null){
+          sessionStorage.setItem("cargaDesignas","true");
+        }
+      }
       this.radioTarjeta = 'justificacion';
       
       let keyConfirmation = "confirmacionGuardarJustificacionExpress";
@@ -612,6 +620,13 @@ export class FiltroDesignacionesComponent implements OnInit {
     }
 
     if (event == 'justificacion' && this.permisoJE == true) {
+
+      if(sessionStorage.getItem("cargaDesignas")!=null){
+        sessionStorage.removeItem("cargaDesignas");
+      }
+      if(sessionStorage.getItem("cargaJE")==null){
+        sessionStorage.setItem("cargaJE","true");
+      }
       if (!sessionStorage.getItem("volver")) {
         if (this.body.codigo && this.body.codigo.trim().length != 0)
           this.filtroJustificacion.numDesignacion = this.body.codigo;
