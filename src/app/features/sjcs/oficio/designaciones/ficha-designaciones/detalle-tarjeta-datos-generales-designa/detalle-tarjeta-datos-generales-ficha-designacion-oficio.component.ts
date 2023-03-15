@@ -298,6 +298,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     if (sessionStorage.getItem("asistencia")) {
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
       sessionStorage.removeItem("asistencia");
+      sessionStorage.setItem("asistenciaCopy", JSON.stringify(this.datosAsistencia));
       //Numero colegiado letrado
       this.inputs[0].value = this.datosAsistencia.numeroColegiado;
       //Apellidos letrado
@@ -312,7 +313,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     } else if (sessionStorage.getItem("EJG")) { //Se comprueba si se procede de la pantalla de gestion de EJG
       this.datosEJG = JSON.parse(sessionStorage.getItem("EJG"));
       sessionStorage.removeItem("EJG");
-
+      sessionStorage.setItem("EJGcopy", JSON.stringify(this.datosEJG));
       //Datos de la tarjeta datos generales
       //Comprobar art 27.
       if (sessionStorage.getItem("Art27")) {
@@ -347,7 +348,14 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       /* this.anio.value = this.datosEJG.annio;
       this.numero.value = this.datosEJG.numEjg; */
 
+    } else if (sessionStorage.getItem("asistenciaCopy")) {
+      this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistenciaCopy"));
+      sessionStorage.removeItem("asistenciaCopy");
+    } else if (sessionStorage.getItem("EJGcopy")) {
+      this.datosEJG = JSON.parse(sessionStorage.getItem("EJGcopy"));
+      sessionStorage.removeItem("EJGcopy");
     }
+
     this.getComboTurno();
     this.getComboTipoDesignas();
   }
