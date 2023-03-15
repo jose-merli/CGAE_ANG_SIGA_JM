@@ -296,8 +296,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     }
 
     if (sessionStorage.getItem("asistencia")) {
-
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
+      sessionStorage.removeItem("asistencia");
       //Numero colegiado letrado
       this.inputs[0].value = this.datosAsistencia.numeroColegiado;
       //Apellidos letrado

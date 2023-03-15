@@ -1416,7 +1416,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     }
   }
   searchRelacionesAs(nueva) {
-    this.nuevaDesigna = false;
+    this.nuevaDesigna = nueva;
     this.searchRelaciones();
   }
   searchRelaciones() {
