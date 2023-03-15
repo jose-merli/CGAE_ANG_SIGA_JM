@@ -155,6 +155,10 @@ export class LetradoEntranteComponent implements OnInit {
   }
 
   search() {
+    if(sessionStorage.getItem("designaItemLink")){
+      let designaTurno = JSON.parse(sessionStorage.getItem("designaItemLink"));
+      sessionStorage.setItem("turnoDesigna",  JSON.stringify(designaTurno.idTurno));
+    }
     // Comprobar Art 27-28
     sessionStorage.setItem("origin", "AbogadoContrario");
     sessionStorage.setItem("Oldletrado", JSON.stringify(this.entrante));

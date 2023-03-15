@@ -294,6 +294,11 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   busquedaColegiadoJE() {
+    if(sessionStorage.getItem("datosEJG")){
+      let datosToNextScreen = JSON.parse(sessionStorage.getItem("datosEJG"));
+      sessionStorage.setItem("turnoEJG", datosToNextScreen.idTurno);
+    }
+
     if(sessionStorage.getItem("cargaJE")=="true"){
       var vieneDeJE = "true";
       sessionStorage.setItem("vieneDeJE", vieneDeJE);

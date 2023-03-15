@@ -131,21 +131,33 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
 
   getComboTurno() {
     this.progressSpinner = true;
-
     //si la pantalla viene de ejg, se cargan unos turnos
     this.sigaServices.getParam("componenteGeneralJG_comboTurnos", "?pantalla=" + sessionStorage.getItem("pantalla")).subscribe(
       n => {
         this.comboTurno = n.combooItems;
         this.commonsService.arregloTildesCombo(this.comboTurno);
         this.progressSpinner = false;
-        // if((this.datosDesgina != null && this.datosDesgina != undefined) && (this.datosDesgina.idTurno != null && this.datosDesgina.idTurno != undefined)){
-        //   this.filtro.idTurno = [this.datosDesgina.idTurno];
-        // }
       },
       err => {
         this.progressSpinner = false;
       }
     );
+    this.progressSpinner = true;
+    if (sessionStorage.getItem('turnoDesigna')) {
+      this.datosDesgina = JSON.parse(sessionStorage.getItem('turnoDesigna'));
+      if((this.datosDesgina != null && this.datosDesgina != undefined)){
+        this.filtro.idTurno = [this.datosDesgina];
+        }
+      sessionStorage.removeItem('turnoDesigna');
+    }
+    if (sessionStorage.getItem('turnoEJG')) {
+      this.datosDesgina = JSON.parse(sessionStorage.getItem('turnoEJG'));
+      if((this.datosDesgina != null && this.datosDesgina != undefined)){
+        this.filtro.idTurno = [this.datosDesgina];
+        }
+      sessionStorage.removeItem('turnoEJG');
+    }
+      
   }
 
   getComboguardiaPorTurno(evento) {
