@@ -436,11 +436,13 @@ export class FiltroDesignacionesComponent implements OnInit {
           } else if (
             sessionStorage.getItem("filtroJustificacionExpres") != null
           ) {
-            if (sessionStorage.getItem("volver") != null && sessionStorage.getItem("volver") != undefined) {
+            if (sessionStorage.getItem("volver") != null && sessionStorage.getItem("volver") != undefined && sessionStorage.getItem("cargaDesignas")==null) {
               await this.changeFilters('justificacion');
               this.radioTarjeta = 'justificacion';
               this.buscar();
               
+            }else if(sessionStorage.getItem("cargaEJ")==null){
+              this.buscar();
             }
           }
         } else if (derechoAcceso == 2) {//es colegiado y solo lectura
