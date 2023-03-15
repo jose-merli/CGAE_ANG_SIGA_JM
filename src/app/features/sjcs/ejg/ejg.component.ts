@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { OldSigaServices } from '../../../_services/oldSiga.service'
 import { TranslateService } from '../../../commons/translate';
 import { SigaServices } from '../../../_services/siga.service';
@@ -187,5 +187,9 @@ export class EJGComponent implements OnInit {
       fecha = new Date(fecha);
     // fecha = this.datepipe.transform(fecha, 'dd/MM/yyyy');
     return fecha;
+  }
+
+  ngOnDestroy(): void {
+    this.persistenceService.clearVolverEJG();
   }
 }

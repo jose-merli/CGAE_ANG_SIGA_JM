@@ -327,10 +327,6 @@ export class GestionEjgComponent implements OnInit {
     this.location.back();
   }
 
-  ngOnDestroy(){
-    this.persistenceService.setVolverEJG();
-  }
-
   async obtenerPermisos() {
     let recibidos = 0; //Determina cuantos servicios de los permisos se han terminado
     //TarjetaResumen
