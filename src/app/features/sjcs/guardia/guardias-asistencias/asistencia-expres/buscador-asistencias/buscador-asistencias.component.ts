@@ -347,6 +347,8 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
     this.filtro.numColegiado = event.nColegiado;
+
+    sessionStorage.setItem("modoBusqueda","a");
   }
 
   fillFechaAsistenciaHasta(event){

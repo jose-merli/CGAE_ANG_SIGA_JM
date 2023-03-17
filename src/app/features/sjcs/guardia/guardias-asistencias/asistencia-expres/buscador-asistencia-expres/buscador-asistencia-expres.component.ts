@@ -77,7 +77,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
       this.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
       this.filtro.isSustituto = oldFiltro.isSustituto;
 
-      sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
+      //sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
       sessionStorage.removeItem("vieneDeAsistenciaExpres");
 
       this.buscarAE.emit();
@@ -400,6 +400,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   changeColegiado(event) {
     this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
     this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
+
+    sessionStorage.setItem("modoBusqueda","b");
 
     if (!this.primeraBusqueda) {
       this.hideResponse.emit();

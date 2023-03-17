@@ -67,7 +67,7 @@
                             </div>
                             <div class="form-group-interlineado col-lg-5 col-md-5">
                                 <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                                    [pantalla]="'guardia'" (idPersona)="getIdPersonaLetradoManual($event)" [disabled]="isLetrado || refuerzoSustitucionNoSeleccionado"
+                                    [pantalla]="'asistenciaAE'" (idPersona)="getIdPersonaLetradoManual($event)" [disabled]="isLetrado || refuerzoSustitucionNoSeleccionado" [filtrosAE]="filtro"
                                     [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
                                 </app-busqueda-colegiado-express>
                             </div>

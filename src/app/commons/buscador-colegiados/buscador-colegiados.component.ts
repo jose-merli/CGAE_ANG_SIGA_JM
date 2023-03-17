@@ -99,6 +99,7 @@ export class BuscadorColegiadosComponent implements OnInit {
 
   goBack() {
     sessionStorage.setItem("volver", "true");
+    sessionStorage.setItem("buscadorColegiados", "");
     if(sessionStorage.getItem('filtroAsistencia')){
       sessionStorage.setItem("modoBusqueda","a");
     }
@@ -107,7 +108,9 @@ export class BuscadorColegiadosComponent implements OnInit {
 
   buscar(){
     sessionStorage.setItem("volver", "true");
-    sessionStorage.setItem("modoBusqueda","a");
+    if(!sessionStorage.getItem("modoBusqueda")){
+      sessionStorage.setItem("modoBusqueda","a");
+    }
 
     let guardia = "";
     let turno = "";

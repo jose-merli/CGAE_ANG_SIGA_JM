@@ -22,6 +22,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   @Input() idGuardia;
   @Input() art27;
   @Input() filtros;
+  @Input() filtrosAE;
   @Input() obligatorio: boolean;
   @Output() idPersona = new EventEmitter<string>();
   progressSpinner: boolean = false;
@@ -48,6 +49,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
     if (this.numColegiado) {
       this.colegiadoForm.get('numColegiado').setValue(this.numColegiado);
+      sessionStorage.setItem("numColegiado",this.numColegiado);
       let usuarioBusquedaExpress = {
         numColegiado: this.numColegiado,
         nombreAp: ''
@@ -85,6 +87,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       }
       this.colegiadoForm.get('numColegiado').setValue("");
       this.colegiadoForm.get('nombreAp').setValue("");
+      sessionStorage.setItem("numColegiado","");
       this.changeValue();
       if (sessionStorage.getItem("datosColegiado")) {
         sessionStorage.removeItem("datosColegiado");
@@ -96,6 +99,11 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     if (this.pantalla == 'asistencia'){
       sessionStorage.setItem('filtroAsistencia', JSON.stringify(this.filtros));
       }
+    if (this.pantalla == 'asistenciaAE'){
+        sessionStorage.setItem('filtroAsistenciaExpresBusqueda', JSON.stringify(this.filtrosAE));
+        sessionStorage.setItem("modoBusqueda", "b");
+        sessionStorage.setItem("vieneDeAsistenciaExpres", "true");
+    }
     //Se revisa si esta en la pantalla de gestion de Ejg y la tarjeta de servicios de tramitación
     if (this.tarjeta == "ServiciosTramit" && this.pantalla == "gestionEjg") {
       //Se comprueba que se han rellenado los campos de turno y guardia
@@ -278,7 +286,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
 
   changeValue() {
     const colegiado = {
-      nColegiado: this.colegiadoForm.get('numColegiado').value,
+      nColegiado: sessionStorage.getItem("numColegiado"),
       nombreAp: this.colegiadoForm.get('nombreAp').value
     }
 

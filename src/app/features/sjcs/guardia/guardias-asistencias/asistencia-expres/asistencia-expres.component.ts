@@ -141,9 +141,9 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "b"){
+    if(sessionStorage.getItem("filtroAsistenciaExpresBusqueda") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "b"){
       this.modoBusqueda = 'b';
-      let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
+      let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistenciaExpresBusqueda"));
       this.filtrosAE.filtro.diaGuardia = oldFiltro.diaGuardia;
       this.filtrosAE.getTurnosByColegiadoFecha();
       this.filtrosAE.filtro.idTurno = oldFiltro.idTurno;
@@ -154,7 +154,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.filtrosAE.filtro.idPersona = oldFiltro.idPersona;
       this.filtrosAE.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
       this.filtrosAE.filtro.isSustituto = oldFiltro.isSustituto;
-      sessionStorage.removeItem("filtroAsistencia");
+      sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
       sessionStorage.removeItem("volver");
       sessionStorage.removeItem("modoBusqueda");
       this.getComboComisarias(); // Posteriormente hace la busqueda de asistencias
