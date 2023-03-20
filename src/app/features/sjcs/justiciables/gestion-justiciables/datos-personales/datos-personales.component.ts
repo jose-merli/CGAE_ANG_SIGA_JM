@@ -1537,7 +1537,7 @@ para poder filtrar el dato con o sin estos caracteres*/
     if (this.body.direccion == null || this.body.direccion == undefined) {
       this.direccionPostal == "";
     } else {
-      this.direccionPostal = this.body.direccion + ", " + this.body.codigopostal + ",  " + this.poblacion + ", " +
+      this.direccionPostal = this.nombreVia+" "+ this.body.direccion + ", " + this.body.codigopostal + ",  " + this.poblacion + ", " +
         this.provincia + " (" + this.pais + ") ";
     }
 
