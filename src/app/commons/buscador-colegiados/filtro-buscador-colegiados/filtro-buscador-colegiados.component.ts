@@ -59,11 +59,11 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
       sessionStorage.removeItem('usuarioBusquedaExpress')
     }
 
-    //Bloquear el desplegable del estado de colegiado a ejerciente
-    if (this.nuevaInscripcion || (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit")) {
-      this.filtro.idEstado = "20";
-      this.disabledEstado = true;
+    //Bloquear el desplegable del estado de colegiado y lo colocamos en ejerciente por defecto
+    if (sessionStorage.getItem("pantalla") == "gestionEjg" && sessionStorage.getItem("tarjeta") == "ServiciosTramit") {
+        this.disabledEstado = true;
     }
+    this.filtro.idEstado = "20";
 
     this.sigaServices.get("institucionActual").subscribe(n => {
       this.institucionActual = n.value;
