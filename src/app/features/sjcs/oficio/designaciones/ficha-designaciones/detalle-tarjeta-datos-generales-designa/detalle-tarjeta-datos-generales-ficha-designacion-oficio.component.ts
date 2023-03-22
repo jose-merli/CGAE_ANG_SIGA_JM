@@ -774,16 +774,22 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[1].value != "" && this.inputs[1].value != undefined &&
       this.inputs[2].value != "" && this.inputs[2].value != undefined)  {
       this.resaltadoDatos = false;
-    } else if (this.selectores[0].value != "" && this.selectores[0].value != undefined && 
+    } else
+      if(this.checkArt == true){
+        if (this.selectores[0].value != "" && this.selectores[0].value != undefined && 
               this.inputs[1].value == "" || this.inputs[1].value == undefined &&
               this.inputs[2].value == "" || this.inputs[2].value == undefined){
-      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.oficio.designa.busquedaManualObligatoria') }];
-      this.resaltadoDatos = true;
-    }
-    else {
-      this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
-      this.resaltadoDatos = true;
-    }
+        this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.oficio.designa.busquedaManualObligatoria') }];
+        this.resaltadoDatos = true;
+        }
+        else {
+          this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
+          this.resaltadoDatos = true;
+        }
+      }
+      else{
+        this.resaltadoDatos = false;
+      }
   }
 
   clear() {
