@@ -487,7 +487,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       if (!this.isLetrado){
       arrDesignacion = 
       [
-      { type: 'checkboxPermisos', value: [finalizada, ""], size: 120, combo: finalizada},
+      { type: 'checkboxPermisos', value: [finalizada, "", designacion.tieneDocumentacion], size: 120, combo: finalizada},
       //{ type: listaClienteType, value: listaCliente, size: 400, combo: listaClienteCombo },
       { type: juzgadoType, value: juzgadoValue, size: 400 , combo: juzgadoCombo }, //moduloç
       //{ type: numJuzType, value: designacion.idJuzgado, size: 200 , combo: null},
@@ -539,7 +539,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   }else{
     arrDesignacion = 
     [
-    { type: 'checkboxPermisos', value: [finalizada, ""], size: 120, combo: null},
+    { type: 'checkboxPermisos', value: [finalizada, "", designacion.tieneDocumentacion], size: 120, combo: null},
     { type: juzgadoType, value: juzgadoValue, size: 400, combo: juzgadoCombo },
     { type: nigType, value: designacion.nig, size: 200, combo: null},
     { type: numProcType, value: designacion.numProcedimiento, size: 200 , combo: null},
@@ -638,7 +638,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
         if (finalizada) {
           arr1 = [
-            { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto], size: 120, combo: null },
+            { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto, actuacion.tieneDocumentacion], size: 120, combo: null },
             { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
             { type: 'text', value: actuacion.nig, size: 200, combo: null},
             { type: 'text', value: actuacion.numProcedimiento, size: 200 , combo: null},
@@ -678,7 +678,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         } else if (!this.isLetrado){
          arr1 = 
           [
-          { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto], size: 120, combo: null },
+          { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto, actuacion.tieneDocumentacion], size: 120, combo: null },
           { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
           { type: 'input', value: actuacion.nig, size: 200, combo: null},
           { type: numProcType, value: actuacion.numProcedimiento, size: 200 , combo: null},
@@ -719,7 +719,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       } else{
         arr1 = 
         [
-        { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto], size: 120, combo: null },
+        { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto, actuacion.tieneDocumentacion], size: 120, combo: null },
         { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
         { type: 'text', value: actuacion.nig, size: 200, combo: null},
         { type: 'text', value: actuacion.numProcedimiento, size: 200 , combo: null},
@@ -873,7 +873,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
       const acreditaciones = await this.getAcreditacionesPorModulo([designacion.idProcedimiento, designacion.idTurno]);
       acreditaciones.forEach(acreditacion => {
         arr1 = [
-          { type: 'checkboxPermisos', value: [undefined, designacion.numAsunto], size: 120, combo: null },
+          { type: 'checkboxPermisos', value: [undefined, designacion.numAsunto, undefined], size: 120, combo: null },
           { type: 'tooltip', value: designacion.categoriaJuzgado, size: 400, combo: designacion.nombreJuzgado },
           { type: 'input', value: designacion.nig, size: 200, combo: null},
           { type: numProcType, value: designacion.numProcedimiento, size: 200 , combo: null},
@@ -936,7 +936,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
           numProcType2 = 'input';
         }
       this.arrNuevo = [
-        { type: 'checkboxPermisos', value: [undefined, 'Nuevo'], size: 120, combo: null },
+        { type: 'checkboxPermisos', value: [undefined, 'Nuevo', undefined], size: 120, combo: null },
         { type: 'invisible', value: '', size: 400 , combo: null},
         { type: 'invisible', value: '', size: 200, combo: null},
         { type: 'invisible', value: '', size: 200 , combo: null},

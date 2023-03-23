@@ -14,4 +14,5 @@ export class DocumentoActDesignaItem {
     nombreFichero: string;
     asociado: string;
     idPersona: string;
+    idTurno: string;
 }

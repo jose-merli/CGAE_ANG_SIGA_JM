@@ -104,6 +104,7 @@
                                     (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, true, z)"
                                     [disabled]="isLetrado || cell.combo" [(ngModel)]="cell.value[0]" binary="true">
                                 </p-checkbox>
+                                <span style="float: right;" *ngIf="cell.value[2] != undefined && cell.value[2] == '1'"><i class="fas fa-paperclip"></i></span>
                                 <div *ngIf="cell.value[1] == 'Nuevo'"><button
                                         (click)="toDoButton(cell.value[1], rowGroup.id, rowGroup, rowGroupEl)"
                                         class="buttomStyle" [disabled]="isLetrado" pButton type="button" iconPos="left"
@@ -278,8 +279,12 @@
                                 class="buttomStyle" pButton type="button" iconPos="left" [label]="cell.value[1]"
                                 [disabled]="isLetrado || permisoProcedimiento"></button></div>
                         <div *ngIf="cell.value[1] != 'Nuevo' && permisosFichaAct"><a
-                                (click)="linkFichaActIfPermis(row, rowGroup)" class="enlace">{{cell.value[1]}}</a></div>
-                        <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}</div>
+                                (click)="linkFichaActIfPermis(row, rowGroup)" class="enlace">{{cell.value[1]}}</a>
+                                <span style="float: right;" *ngIf="cell.value[2] != undefined && cell.value[2] == '1'"><i class="fas fa-paperclip"></i></span>
+                        </div>
+                        <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}
+                            <span style="float: right;" *ngIf="cell.value[2] != undefined && cell.value[2] == '1'"><i class="fas fa-paperclip"></i></span>
+                        </div>
                     </span>
                     <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
                         <p-checkbox (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, false, i)"
@@ -396,6 +401,16 @@
 
 <div *ngIf="pantalla == 'JE' && permisoEscritura" class="right col-lg-12 col-md-6 ajustar marginButtons">
     <div class="inline-block text-right main-button setPosition">
+        <button [disabled]="selectedArray.length == 0 || !permiteSubidDescargaFicheros" (click)="download()" pButton type="button"
+            icon="fa fa-download" iconPos="left"
+            label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}">
+        </button>
+
+        <button [disabled]="(selectedArray.length == 0 || selectedArray.length > 1) || !permiteSubidDescargaFicheros" (click)="uploadFile()" pButton type="button"
+            icon="fa fa-upload" iconPos="left"
+            label="{{ 'general.boton.adjuntarFichero' | translate}}">
+        </button>
+
         <button [disabled]="disableDelete == true || isLetrado" pButton type="button" icon="fa fa-trash-alt"
             iconPos="left" label="Eliminar" (click)="eliminar()">
         </button>

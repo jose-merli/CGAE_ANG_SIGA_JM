@@ -18,7 +18,10 @@ import { Cell, Row, RowGroup } from './tabla-resultado-desplegable-je.service';
 import { PersistenceService } from '../../_services/persistence.service';
 import { FiltroAsistenciaItem } from '../../models/guardia/FiltroAsistenciaItem';
 import { EJGItem } from '../../models/sjcs/EJGItem';
+import { saveAs } from "file-saver/FileSaver";
 import { element } from 'protractor';
+import { JustificacionExpressItem } from '../../models/sjcs/JustificacionExpressItem';
+import { DocumentoDesignaItem } from '../../models/sjcs/DocumentoDesignaItem';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
   templateUrl: './tabla-resultado-desplegable.component.html',
@@ -111,6 +114,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   configComboDesigna;
   permisoEscritura;
   idClasesComunicacionArray: string[] = [];
+  permiteSubidDescargaFicheros: boolean;
   idClaseComunicacion: String;
   keys: any[] = [];
   numCell: number;
@@ -180,9 +184,31 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.totalRegistros = 0;
     }
 
+    this.getParametro();
+
     this.selected = false;
     this.selectedArray = [];
     this.selecteChild = [];
+  }
+
+  getParametro() {
+
+    let parametro = {
+      valor: "ACTIVAR_SUBIDA_JUSTIFICACION_DESIGNA"
+    };
+
+    this.sigaServices
+      .post("busquedaPerJuridica_parametroColegio", parametro)
+      .subscribe(
+        data => {
+          if (JSON.parse(data.body).parametro == "1"){
+            this.permiteSubidDescargaFicheros = true;
+          }
+          else{
+            this.permiteSubidDescargaFicheros = false;
+          }
+      });
+    
   }
 
   selectRow(rowSelected, rowId, child) {
@@ -2522,7 +2548,140 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   }
 
+  download() {
+    let descargados = 0;
 
+    if (this.selectedArray != undefined && this.selectedArray.length > 0) {
+      
+      if (this.selecteChild != undefined && this.selecteChild.length > 0) {
+
+        // Primero procesamos las actuaciones
+        for (let i = 0; i < this.selecteChild.length; i++) {
+    
+          let idRowGroupDesignacion = this.selecteChild[i].substr(0, this.selecteChild[i].indexOf(')')+1),
+              designacion = this.rowGroups.find(e => e.id == idRowGroupDesignacion),
+              idActuacionRowGroup = Number(this.selecteChild[i].substr(this.selecteChild[i].indexOf(')')+1, this.selecteChild[i].length));
+
+          let datosActuacion = new DocumentoDesignaItem();
+
+          datosActuacion.anio = designacion.rows[0].cells[10].value;
+          datosActuacion.numero = designacion.rows[0].cells[19].value;
+          datosActuacion.idTurno = designacion.rows[0].cells[17].value;
+          datosActuacion.idActuacion = designacion.rows[idActuacionRowGroup+1].cells[0].value[1];
+
+          if (datosActuacion.idActuacion != undefined && datosActuacion.idActuacion != '') {
+            this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesignaJustificacionExpres", datosActuacion).subscribe(
+              data => {
+                if (data.size != 0) {
+                  let blob = null;
+                  let idDesignacion = designacion.id.substring(0, designacion.id.indexOf("\n"));
+        
+                  blob = new Blob([data], { type: "application/zip" });
+                  saveAs(blob, "documentosDesigna_A" + idDesignacion.split("/")[0] + "_" + idDesignacion.split("/")[1] + "_" + datosActuacion.idActuacion + ".zip");
+      
+                  descargados++;
+                }
+              },
+              err => {
+    
+              },
+              () => {
+                if (descargados != 0) {
+                  this.showMsg('info', this.translateService.instant("general.accion.descargaDocumentacion"), '');
+                } else {
+                  this.showMsg('info', this.translateService.instant("general.accion.noSeHadescargadoDocumentacion"), '');
+                }
+              }
+            );
+          }
+        }
+    
+        // Eliminamos las actuaciones del array de seleccionados, por lo que sólo quedarán las designas a procesar
+        this.selectedArray = this.selectedArray.filter((el) => !this.selecteChild.includes(el));
+      }
+
+      // Por último procesamos las designaciones
+      for (let i = 0; i < this.selectedArray.length; i++) {
+        let designacion = this.rowGroups.find(e => e.id == this.selectedArray[i]);
+
+        let datosJustificacion = new JustificacionExpressItem();
+
+        datosJustificacion.anioDesignacion = designacion.rows[0].cells[10].value;
+        datosJustificacion.numDesignacion = designacion.rows[0].cells[19].value;
+        datosJustificacion.idTurno = designacion.rows[0].cells[17].value;
+
+        this.sigaServices.postDownloadFiles("designacion_descargarDocumentosDesignaJustificacionExpres", datosJustificacion).subscribe(
+          data => {
+            if (data.size != 0) {
+              let blob = null;
+              let idDesignacion = designacion.id.substring(0, designacion.id.indexOf("\n"));
+    
+              blob = new Blob([data], { type: "application/zip" });
+              saveAs(blob, "documentosDesigna_D" + idDesignacion.split("/")[0] + "_" + idDesignacion.split("/")[1] + ".zip");
+  
+              descargados++;
+            }
+          },
+          err => {
+
+          },
+          () => {
+            if (descargados != 0) {
+              this.showMsg('info', this.translateService.instant("general.accion.descargaDocumentacion"), '');
+            } else {
+              this.showMsg('info', this.translateService.instant("general.accion.noSeHadescargadoDocumentacion"), '');
+            }
+          }
+        );
+      }
+    }
+
+    this.selectedArray = [];
+    this.selecteChild = [];
+  }
+
+  getMimeType(extension: string): string {
+
+    let mime: string = "";
+
+    switch (extension.toLowerCase()) {
+
+      case "doc":
+        mime = "application/msword";
+        break;
+      case "docx":
+        mime = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+        break;
+      case "pdf":
+        mime = "application/pdf";
+        break;
+      case "jpg":
+        mime = "image/jpeg";
+        break;
+      case "png":
+        mime = "image/png";
+        break;
+      case "rtf":
+        mime = "application/rtf";
+        break;
+      case "txt":
+        mime = "text/plain";
+        break;
+    }
+
+    return mime;
+  }
+
+  uploadFile() {
+    
+  }
+
+  checkFile(rowGroup) {
+    if (rowGroup.rows != null && rowGroup.rows[0].cells != null
+        && rowGroup.rows[0].cells[22] != null && rowGroup.rows[0].cells[22]) {
+          console.log('rowGroup: ', rowGroup);
+    }
+  }
 
   getDatosComunicarJE(rowGroup, expediente) {
     let datosSeleccionados = [];
