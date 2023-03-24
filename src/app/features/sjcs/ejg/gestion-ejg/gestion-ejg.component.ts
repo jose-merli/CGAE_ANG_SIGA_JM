@@ -53,6 +53,7 @@ export class GestionEjgComponent implements OnInit {
   permisoEscrituraImpugnacion;
   permisoEscrituraRegtel;
   permisoEscrituraComunicaciones;
+  permisoEscrituraFacturaciones;
   permisoContrarios;
   permisoProcurador;
   permisoDefensaJuridica;
@@ -107,7 +108,7 @@ export class GestionEjgComponent implements OnInit {
   @ViewChild(ListaIntercambiosDocumentacionEjgComponent) listaIntercambiosDocumentacionEjg: ListaIntercambiosDocumentacionEjgComponent;
 
   datosEntradaTarjGenerica: any;
-  permisoEscrituraFacturaciones: any;
+  // permisoEscrituraFacturaciones: any;
 
   constructor(private sigaServices: SigaServices,
     private translateService: TranslateService,
@@ -334,7 +335,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResumen = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -343,7 +344,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDatosGenerales = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -352,7 +353,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraServiciosTramitacion = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -361,7 +362,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraUnidadFamiliar = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -370,7 +371,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraExpedientesEconomicos = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -379,7 +380,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRelaciones = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -390,7 +391,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraEstados = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -399,7 +400,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraDocumentacion = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -408,7 +409,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraInformeCalif = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -417,7 +418,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraResolucion = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -426,7 +427,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraImpugnacion = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -435,7 +436,7 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraRegtel = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -444,24 +445,24 @@ export class GestionEjgComponent implements OnInit {
       .then(respuesta => {
         this.permisoEscrituraComunicaciones = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
-    //   //Facturaciones
-    // this.commonsService.checkAcceso(procesos_ejg.facturaciones)
-    // .then(respuesta => {
-    //   this.permisoEscrituraFacturaciones = respuesta;
-    //   recibidos++;
-    //   if (recibidos == 16) this.enviarEnlacesTarjeta();
-    // }
-    // ).catch(error => console.error(error));
+    //Facturaciones
+    this.commonsService.checkAcceso(procesos_ejg.facturaciones)
+    .then(respuesta => {
+      this.permisoEscrituraFacturaciones = respuesta;
+      recibidos++;
+      if (recibidos == 15) this.enviarEnlacesTarjeta();
+    }
+    ).catch(error => console.error(error));
 
     this.commonsService.checkAcceso(procesos_ejg.intercambiosPericles)
       .then(respuesta => {
         this.permisoListasIntercambiosPericles = respuesta;
         recibidos++;
-        if (recibidos == 14) this.enviarEnlacesTarjeta();
+        if (recibidos == 15) this.enviarEnlacesTarjeta();
       }
       ).catch(error => console.error(error));
 
@@ -631,13 +632,15 @@ export class GestionEjgComponent implements OnInit {
         this.enlacesTarjetaResumen.push(pruebaTarjeta);
       }
 
-      pruebaTarjeta = {
-        label: "facturacionSJCS.tarjGenFac.facturaciones",
-        value: document.getElementById("facSJCSTarjFacGene"),
-        nombre: "facturaciones",
-      };
+      if(this.permisoEscrituraFacturaciones != undefined){
+        pruebaTarjeta = {
+          label: "facturacionSJCS.tarjGenFac.facturaciones",
+          value: document.getElementById("facSJCSTarjFacGene"),
+          nombre: "facturaciones",
+        };
 
-      this.enlacesTarjetaResumen.push(pruebaTarjeta);
+        this.enlacesTarjetaResumen.push(pruebaTarjeta);
+      }
 
       if (this.permisoListasIntercambiosPericles != undefined) {
         pruebaTarjeta = {

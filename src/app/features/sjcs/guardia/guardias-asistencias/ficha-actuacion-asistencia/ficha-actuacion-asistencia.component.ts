@@ -6,6 +6,8 @@ import { ActuacionAsistenciaItem } from '../../../../../models/guardia/Actuacion
 import { TarjetaAsistenciaItem } from '../../../../../models/guardia/TarjetaAsistenciaItem';
 import { SigaServices } from '../../../../../_services/siga.service';
 import { FichaActuacionAsistenciaTarjetaHistoricoComponent } from './ficha-actuacion-asistencia-tarjeta-historico/ficha-actuacion-asistencia-tarjeta-historico.component';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 
 @Component({
   selector: 'app-ficha-actuacion-asistencia',
@@ -14,6 +16,7 @@ import { FichaActuacionAsistenciaTarjetaHistoricoComponent } from './ficha-actua
 })
 export class FichaActuacionAsistenciaComponent implements OnInit {
 
+  permisoEscrituraFacturaciones;
   rutas: string[] = [];
   progressSpinner: boolean = false;
   asistencia: TarjetaAsistenciaItem;
@@ -80,9 +83,10 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
   constructor(private translateService: TranslateService,
     private router: Router,
     private sigaServices: SigaServices,
-    private datepipe: DatePipe) { }
+    private datepipe: DatePipe,
+    private commonsService: CommonsService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.rutas = ['SJCS', this.translateService.instant("menu.justiciaGratuita.asistencia"), 'Actuaciones'];
 
     this.asistencia = JSON.parse(sessionStorage.getItem('asistenciaToFichaActuacion'));
@@ -97,7 +101,22 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       this.getActuacionData();
     }
 
+    //Facturaciones
+    await this.commonsService.checkAcceso(procesos_facturacionSJCS.tarjetaFacFenerica)
+    .then(respuesta => {
+      this.permisoEscrituraFacturaciones = respuesta;
 
+      if(this.permisoEscrituraFacturaciones != undefined){
+        let tarjTmp = {
+          id: 'facSJCSTarjFacGene',
+          ref: document.getElementById('facSJCSTarjFacGene'),
+          nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+        };
+  
+        this.tarjetaFija.enlaces.push(tarjTmp);
+      }
+    }
+    ).catch(error => console.error(error));
   }
 
   initTarjetas() {
@@ -318,14 +337,15 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
       this.tarjetaFija.enlaces.push(tarjTmp);
     });
 
-    let tarjTmp = {
-      id: 'facSJCSTarjFacGene',
-      ref: document.getElementById('facSJCSTarjFacGene'),
-      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
-    };
+    if(this.permisoEscrituraFacturaciones != undefined){
+      let tarjTmp = {
+        id: 'facSJCSTarjFacGene',
+        ref: document.getElementById('facSJCSTarjFacGene'),
+        nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+      };
 
-    this.tarjetaFija.enlaces.push(tarjTmp);
-
+      this.tarjetaFija.enlaces.push(tarjTmp);
+    }
   }
 
   refreshTarjetas(event) {

@@ -43,5 +43,8 @@ export const procesos_ejg: any = {
     datosRepresentantesLegal: "93S",
     datosAbogadoContrario: "93T",
     datosProcuradorContrario: "93U",
-    asuntosContrarios: "93X"
+    asuntosContrarios: "93X",
+
+    //facturaciones
+    facturaciones: "625"
 }

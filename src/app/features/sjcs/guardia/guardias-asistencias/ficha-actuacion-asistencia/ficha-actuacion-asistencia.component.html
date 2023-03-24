@@ -66,6 +66,7 @@
               </div>
           </div>
           <app-tarjeta-facturacion-generica
+                *ngIf="permisoEscrituraFacturaciones != undefined"       
                 [datosEntrada]="{actuacion: actuacion, asistencia: asistencia, isNew: nuevaActuacion }"
                 [pantalla]="'ACTUACIONASISTENCIA'" (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac"
                 (opened)="openTarjetaFac = $event">

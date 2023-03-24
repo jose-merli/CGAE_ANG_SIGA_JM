@@ -9,6 +9,7 @@ import { FichaAsistenciaTarjetaDatosGeneralesComponent } from './ficha-asistenci
 import { Router } from '@angular/router';
 import { CommonsService } from '../../../../../_services/commons.service';
 import { procesos_guardia } from '../../../../../permisos/procesos_guarida';
+import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 
 @Component({
@@ -18,6 +19,7 @@ import { JusticiableItem } from '../../../../../models/sjcs/JusticiableItem';
 })
 export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  permisoEscrituraFacturaciones;
   msgs: Message[] = [];
   rutas: string[] = [];
   progressSpinner: boolean = false;
@@ -147,7 +149,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     private datePipe: DatePipe,
     private commonServices: CommonsService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    let recibidos = 0; //Determina cuantos servicios de los permisos se han terminado 
     this.nuevaAsistencia = true;
     this.preasistencia = JSON.parse(sessionStorage.getItem("preasistenciaItemLink"));
     this.rutas = ['SJCS', this.translateService.instant("menu.justiciaGratuita.GuardiaMenu"), this.translateService.instant("menu.justiciaGratuita.asistencia")];
@@ -161,8 +164,28 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
       .then(respuesta => {
         this.visibleTarjetaCaract = respuesta; //Si es undefined se oculta, si es false la mostramos pero ineditable
         this.listaTarjetas.find(tarj => tarj.id == 'caracteristicas').visible = this.visibleTarjetaCaract;
-        this.initTarjetas();
+        recibidos++;
+        if(recibidos == 2) this.initTarjetas();
       }).catch(error => console.error(error));
+    
+    //Facturaciones
+    this.commonServices.checkAcceso(procesos_facturacionSJCS.tarjetaFacFenerica)
+    .then(respuesta => {
+      this.permisoEscrituraFacturaciones = respuesta;
+      recibidos++;
+      if(recibidos == 2) this.initTarjetas();
+      
+      // if(this.permisoEscrituraFacturaciones != undefined){
+      //   let tarjTmp = {
+      //     id: 'facSJCSTarjFacGene',
+      //     ref: document.getElementById('facSJCSTarjFacGene'),
+      //     nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+      //   };
+  
+      //   this.tarjetaFija.enlaces.push(tarjTmp);
+      // }
+    }
+    ).catch(error => console.error(error));
 
     // Cargar datos para las tarjetas de Asistencias.
     if (sessionStorage.getItem("idAsistencia")) {
@@ -494,13 +517,16 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
         tarj.detalle = false;
       }
     });
-    let tarjTmp = {
-      id: 'facSJCSTarjFacGene',
-      ref: document.getElementById('facSJCSTarjFacGene'),
-      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
-    };
 
-    this.tarjetaFija.enlaces.push(tarjTmp);
+    if(this.permisoEscrituraFacturaciones != undefined){
+      let tarjTmp = {
+        id: 'facSJCSTarjFacGene',
+        ref: document.getElementById('facSJCSTarjFacGene'),
+        nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+      };
+
+      this.tarjetaFija.enlaces.push(tarjTmp);
+    }
   }
 
   refreshDatosGenerales(event) {
