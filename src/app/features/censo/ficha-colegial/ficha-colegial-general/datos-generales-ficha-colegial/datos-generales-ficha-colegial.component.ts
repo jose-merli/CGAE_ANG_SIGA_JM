@@ -473,7 +473,12 @@ export class DatosGeneralesFichaColegialComponent implements OnInit, OnChanges {
       this.obtenerPartidoJudicial();
     }
 
-    sessionStorage.setItem("idiomaPrefAlterMutua", this.generalBody.idLenguaje.toString());
+    if (this.generalBody.idLenguaje != undefined && this.generalBody.idLenguaje != '') { 
+      sessionStorage.setItem("idiomaPrefAlterMutua", this.generalBody.idLenguaje.toString()); 
+    } 
+    else { 
+      sessionStorage.setItem("idiomaPrefAlterMutua", this.translateService.currentLang); 
+    }
 
     this.getComboTemas();
 

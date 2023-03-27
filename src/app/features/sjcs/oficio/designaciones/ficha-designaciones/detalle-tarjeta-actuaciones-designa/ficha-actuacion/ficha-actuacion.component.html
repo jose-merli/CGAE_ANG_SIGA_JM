@@ -81,7 +81,7 @@
         </div>
       </div>
 
-      <app-tarjeta-facturacion-generica [datosEntrada]="actuacionDesigna" [pantalla]="'ACTUACIONDESIGNA'"
+      <app-tarjeta-facturacion-generica *ngIf="permisoEscrituraFacturaciones != undefined" [datosEntrada]="actuacionDesigna" [pantalla]="'ACTUACIONDESIGNA'"
         (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac"
         (opened)="openTarjetaFac = $event">
       </app-tarjeta-facturacion-generica>

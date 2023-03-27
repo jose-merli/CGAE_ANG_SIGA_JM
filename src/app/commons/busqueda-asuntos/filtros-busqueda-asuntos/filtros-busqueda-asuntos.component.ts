@@ -60,7 +60,7 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
   selectMultiple: boolean = false;
   textFilter: string = "Seleccionar";
   buscar: boolean = false;
-
+  idTipo: String = "";
   es: any = esCalendar;
 
   editar: boolean = true;
@@ -467,7 +467,12 @@ export class FiltrosBusquedaAsuntosComponent extends SigaWrapper implements OnIn
       );
     }
     else {
-      this.sigaServices.get("combo_turnos").subscribe(
+      if (sessionStorage.getItem("radioTajertaValue")=="asi" || sessionStorage.getItem("radioTajertaValue")=="des"){
+        this.idTipo="A";
+      }else if(sessionStorage.getItem("radioTajertaValue")=="ejg"){
+        this.idTipo="E";
+      }
+      this.sigaServices.getParam("combo_turnos_Asuntos", "?idTipo="+this.idTipo).subscribe(
         n => {
           this.comboTurno = n.combooItems;
           this.commonService.arregloTildesCombo(this.comboTurno);

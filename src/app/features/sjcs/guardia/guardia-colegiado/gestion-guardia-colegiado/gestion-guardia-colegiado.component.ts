@@ -6,6 +6,8 @@ import { SigaServices } from '../../../../../_services/siga.service';
 import { PersistenceService } from '../../../../../_services/persistence.service';
 import { Router } from '@angular/router';
 import { ColegiadoItem } from '../../../../../models/ColegiadoItem';
+import { CommonsService } from '../../../../../_services/commons.service';
+import { procesos_facturacionSJCS } from '../../../../../permisos/procesos_facturacionSJCS';
 @Component({
   selector: 'app-gestion-guardia-colegiado',
   templateUrl: './gestion-guardia-colegiado.component.html',
@@ -19,13 +21,15 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
   //SIGARNV-2885 INICIO
   guardiaColegiado: GuardiaItem;
   //SIGARNV-2885 FIN
+  permisoEscrituraFacturaciones;
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
-    private router: Router) { }
+    private router: Router,
+    private commonsService: CommonsService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
 
     if (sessionStorage.getItem("infoGuardiaColeg") != null || sessionStorage.getItem("infoGuardiaColeg") != undefined || sessionStorage.getItem("infoGuardiaColeg") != "false") {
       if (sessionStorage.getItem("infoGuardiaColeg") != null || sessionStorage.getItem("infoGuardiaColeg") != undefined) {
@@ -41,6 +45,13 @@ export class GestionGuardiaColegiadoComponent implements OnInit {
       sessionStorage.removeItem('crearGuardiaColegiado')
       this.modificar = false;
     }
+
+    //Facturaciones
+    await this.commonsService.checkAcceso(procesos_facturacionSJCS.tarjetaFacFenerica)
+    .then(respuesta => {
+      this.permisoEscrituraFacturaciones = respuesta;
+    }
+    ).catch(error => console.error(error));
 
   }
 

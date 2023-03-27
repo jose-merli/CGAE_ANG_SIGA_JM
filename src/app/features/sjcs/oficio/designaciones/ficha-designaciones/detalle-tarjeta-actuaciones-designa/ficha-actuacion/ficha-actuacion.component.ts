@@ -14,6 +14,7 @@ import { DocumentoDesignaItem } from '../../../../../../../models/sjcs/Documento
 import { DocumentoDesignaObject } from '../../../../../../../models/sjcs/DocumentoDesignaObject';
 import { CommonsService } from '../../../../../../../_services/commons.service';
 import { procesos_oficio } from '../../../../../../../permisos/procesos_oficio';
+import { procesos_facturacionSJCS } from '../../../../../../../permisos/procesos_facturacionSJCS';
 import { Router } from '@angular/router';
 import { FichaColegialGeneralesItem } from '../../../../../../../models/FichaColegialGeneralesItem';
 
@@ -31,6 +32,9 @@ export class FichaActuacionComponent implements OnInit {
 
   rutas: string[] = ['SJCS', 'Designaciones', 'Actuaciones', 'Ficha Actuación'];
 
+  permisoEscrituraFacturaciones;
+
+  
   tarjetaFija = {
     nombre: "Resumen Actuación",
     icono: 'fas fa-clipboard',
@@ -184,13 +188,15 @@ export class FichaActuacionComponent implements OnInit {
       this.tarjetaFija.enlaces.push(tarjTmp);
     });
 
-    let tarjTmp = {
-      id: 'facSJCSTarjFacGene',
-      ref: document.getElementById('facSJCSTarjFacGene'),
-      nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
-    };
+    // if(this.permisoEscrituraFacturaciones != undefined){
+    // let tarjTmp = {
+    //   id: 'facSJCSTarjFacGene',
+    //   ref: document.getElementById('facSJCSTarjFacGene'),
+    //   nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+    // };
 
-    this.tarjetaFija.enlaces.push(tarjTmp);
+    // this.tarjetaFija.enlaces.push(tarjTmp);
+    // }
   }
 
   cargaInicial() {
@@ -719,14 +725,15 @@ export class FichaActuacionComponent implements OnInit {
 
   }
 
-  getVisibilidadTarjetas() {
+  async getVisibilidadTarjetas() {
     return Promise.all([
       this.getVisibilidadDatosGenerales(),
       this.getVisibilidadJustificacion(),
       this.getVisibilidadDatosFacturacion(),
       this.getVisibilidadRelaciones(),
       this.getVisibilidadHistorico(),
-      this.getVisibilidadDocumentacion()
+      this.getVisibilidadDocumentacion(),
+      await this.getVisibilidadFacturaciones()
     ]);
   }
 
@@ -784,8 +791,25 @@ export class FichaActuacionComponent implements OnInit {
       ).catch(error => console.error(error));
   }
 
+  async getVisibilidadFacturaciones(){
+    return this.commonsService.checkAcceso(procesos_facturacionSJCS.tarjetaFacFenerica)
+    .then(respuesta => {
+      this.permisoEscrituraFacturaciones = respuesta;
+
+      if(this.permisoEscrituraFacturaciones != undefined){
+        let tarjTmp = {
+          id: 'facSJCSTarjFacGene',
+          ref: document.getElementById('facSJCSTarjFacGene'),
+          nombre: this.translateService.instant("facturacionSJCS.tarjGenFac.facturaciones")
+        };
+  
+        this.tarjetaFija.enlaces.push(tarjTmp);
+      }
+    }
+    ).catch(error => console.error(error));
+  }
+
   guardarDatos() {
     sessionStorage.setItem("actuacionDesigna", JSON.stringify(this.actuacionDesigna));
   }
-
 }

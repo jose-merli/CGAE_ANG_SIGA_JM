@@ -85,11 +85,11 @@ export class TarjetaFacturacionGenericaComponent implements OnInit, OnChanges {
 
       this.permisoEscritura = respuesta;
 
-      if (this.permisoEscritura == undefined) {
-        sessionStorage.setItem("codError", "403");
-        sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
-        this.router.navigate(["/errorAcceso"]);
-      }
+      // if (this.permisoEscritura == undefined) {
+      //   sessionStorage.setItem("codError", "403");
+      //   sessionStorage.setItem("descError", this.translateService.instant("generico.error.permiso.denegado"));
+      //   this.router.navigate(["/errorAcceso"]);
+      // }
       this.getCols();
     }).catch(error => console.error(error));
   }

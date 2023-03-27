@@ -86,7 +86,7 @@
                     </div>
                 </div>
             </div>
-            <app-tarjeta-facturacion-generica [datosEntrada]="{ asistencia: asistencia, isNew: nuevaAsistencia }"
+            <app-tarjeta-facturacion-generica *ngIf="permisoEscrituraFacturaciones != undefined"  [datosEntrada]="{ asistencia: asistencia, isNew: nuevaAsistencia }"
                 [pantalla]="'ASISTENCIA'" (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac"
                 (opened)="openTarjetaFac = $event">
             </app-tarjeta-facturacion-generica>

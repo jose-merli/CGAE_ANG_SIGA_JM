@@ -34,7 +34,7 @@
       </app-permutas-gestion-guardia-colegiado>
       <!--SIGARNV-2885 FIN-->
 
- <app-tarjeta-facturacion-generica [datosEntrada]="guardia" [pantalla]="'GUARDIA'" (guardarDatos)="guardarDatos()">
+ <app-tarjeta-facturacion-generica *ngIf="permisoEscrituraFacturaciones != undefined" [datosEntrada]="guardia" [pantalla]="'GUARDIA'" (guardarDatos)="guardarDatos()">
     </app-tarjeta-facturacion-generica>
   </div>
 

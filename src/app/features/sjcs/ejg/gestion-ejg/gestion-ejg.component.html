@@ -107,7 +107,7 @@
             [openTarjetaComunicaciones]="openTarjetaComunicaciones">
         </app-comunicaciones-ejg>
 
-        <app-tarjeta-facturacion-generica *ngIf="modoEdicion" [datosEntrada]="datosEntradaTarjGenerica" [pantalla]="'EJG'"
+        <app-tarjeta-facturacion-generica *ngIf="permisoEscrituraFacturaciones != undefined && modoEdicion" [datosEntrada]="datosEntradaTarjGenerica" [pantalla]="'EJG'"
             (guardarDatos)="guardarDatos()" [showTarjeta]="openTarjetaFac" (opened)="manuallyOpened = $event"
             (idOpened)="isCloseReceive($event)">
         </app-tarjeta-facturacion-generica>

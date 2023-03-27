@@ -153,6 +153,7 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
       this.filtrosAE.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
       this.filtrosAE.filtro.idPersona = oldFiltro.idPersona;
       this.filtrosAE.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
+      this.filtrosAE.getComboRefuerzoSustitucion();
       this.filtrosAE.filtro.isSustituto = oldFiltro.isSustituto;
       sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
       sessionStorage.removeItem("volver");

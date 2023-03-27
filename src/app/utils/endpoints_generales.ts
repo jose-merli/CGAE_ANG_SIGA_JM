@@ -1,5 +1,6 @@
 export let endpoints_generales: any = {
     combo_turnos: "combo/turnos",
+    combo_turnos_Asuntos: "combo/turnosAsuntos",
     combo_turnos_designas: "combo/turnosDesignacion",
     combo_turnos_filtrados: "combo/turnosFiltrados",
     combo_turnos_inscritos: "combo/turnosInscritos",
