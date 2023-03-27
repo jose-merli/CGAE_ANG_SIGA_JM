@@ -35,6 +35,7 @@ export class TablaModulosComponent implements OnInit {
 	colsPartidoJudicial;
 	msgs;
 	buscadores = [];
+	juzgados: any[] = [];
 	selectedItem: number = 10;
 	selectAll;
 	selectedDatos = [];
@@ -46,6 +47,8 @@ export class TablaModulosComponent implements OnInit {
 
 	message;
 	permisos: boolean = false;
+	juzgadoProcedente;
+	vieneDeJuzgados;
 
 	initDatos;
 	nuevo: boolean = false;
@@ -76,6 +79,8 @@ export class TablaModulosComponent implements OnInit {
 	ngOnInit() {
 		this.getCols();
 		this.initDatos = JSON.parse(JSON.stringify((this.datos)));
+		this.juzgadoProcedente = JSON.parse(sessionStorage.getItem("datos"));
+		this.vieneDeJuzgados = sessionStorage.getItem("vieneDeFichaJuzgado");
 		if (this.persistenceService.getPermisos()) {
 			this.permisos = true;
 		} else {
@@ -113,16 +118,25 @@ export class TablaModulosComponent implements OnInit {
 	}
 
 	seleccionaFila(evento) {
-		if (!this.selectAll && !this.selectMultiple) {
-			this.persistenceService.setHistorico(this.historico);
-			this.persistenceService.setDatos(this.selectedDatos[0]);
-			this.router.navigate(["/gestionModulos"], { queryParams: { idProcedimiento: this.selectedDatos[0].idProcedimiento } });
-		} else {
-			/* if (evento.data.fechabaja == undefined && this.historico == true) {
-				this.selectedDatos.pop();
-			} */
+		if(this.vieneDeJuzgados){
+			this.juzgados[0] = this.juzgadoProcedente.idJuzgado;
+			this.guardarDialogAsociarModulosAJuzgados();
 		}
+		else{
+			if (!this.selectAll && !this.selectMultiple) {
 
+				this.persistenceService.setHistorico(this.historico);
+				this.persistenceService.setDatos(this.selectedDatos[0]);
+				this.router.navigate(["/gestionModulos"], { queryParams: { idProcedimiento: this.selectedDatos[0].idProcedimiento } });
+			} else {
+				/* if (evento.data.fechabaja == undefined && this.historico == true) {
+					this.selectedDatos.pop();
+				} */
+			}
+		}
+		if(this.vieneDeJuzgados){
+			this.volverFichaJuzgado();
+		}
 	}
 
 	checkPermisosDelete() {
@@ -449,10 +463,8 @@ export class TablaModulosComponent implements OnInit {
 		  });
 	  }
 
-	juzgados: any[] = [];
 	guardarDialogAsociarModulosAJuzgados(){
 		this.progressSpinner = true;
-
 		this.juzgados.forEach(juzgado => {
 			let procedimientoDTO = new ProcedimientoObject();
 		
@@ -507,8 +519,9 @@ export class TablaModulosComponent implements OnInit {
 
 			});
 		});
-			
 	}
 
-
+	volverFichaJuzgado(){
+    	this.router.navigate(['gestionJuzgados']);
+	  }
 }

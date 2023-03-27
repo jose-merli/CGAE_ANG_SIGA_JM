@@ -339,10 +339,10 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
     this.msgs = [];
   }
 
-  abreCierraFicha() {
+  abreCierraFicha() { 
     if (this.modoEdicion) {
+      this.getProcJuged();
       this.openFicha = !this.openFicha;
-
     }
   }
 
@@ -362,6 +362,7 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
   aniadirModulos(){
     sessionStorage.setItem("vieneDeFichaJuzgado", "true");
+
     this.router.navigate(["maestrosModulos"]);
   }
 
