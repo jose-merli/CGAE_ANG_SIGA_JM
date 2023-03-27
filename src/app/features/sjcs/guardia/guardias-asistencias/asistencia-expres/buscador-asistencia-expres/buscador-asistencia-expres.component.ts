@@ -75,12 +75,15 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
       this.filtro.idLetradoGuardia = oldFiltro.idLetradoGuardia;
       this.filtro.idPersona = oldFiltro.idPersona;
       this.filtro.idTipoAsistenciaColegiado = oldFiltro.idTipoAsistenciaColegiado;
+      this.getComboRefuerzoSustitucion();
       this.filtro.isSustituto = oldFiltro.isSustituto;
 
       //sessionStorage.removeItem("filtroAsistenciaExpresBusqueda");
       sessionStorage.removeItem("vieneDeAsistenciaExpres");
 
       this.buscarAE.emit();
+    }else{
+      this.getComboRefuerzoSustitucion();
     }
 
     this.checkLastRoute();
@@ -100,7 +103,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     this.titulo = 'Datos Comunes';
     this.resaltadoDatos = true;
 
-    this.getComboRefuerzoSustitucion();
+    
     //this.getComboTurno();
 
     sessionStorage.setItem("deshabilitarBuscadorColegiadoExpres", "true");
