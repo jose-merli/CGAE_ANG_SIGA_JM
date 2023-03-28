@@ -712,10 +712,12 @@ export class FichaProgramacionComponent implements OnInit {
         if (datosGeneralesToSave.idCalendarioProgramado != null && datosGeneralesToSave.idCalendarioProgramado != '0' && datosGeneralesToSave.idCalendarioProgramado.length != 0) {
           //actualizar existente
           //console.log('****UPDATE')
+          sessionStorage.setItem("idLista", datosGeneralesToSave.listaGuarias.value);
           this.updateCalendarData(dataToSave);
         } else {
           //muevo
           //console.log('****NEW')
+          sessionStorage.setItem("idLista", datosGeneralesToSave.listaGuarias.value);
           this.newCalendarProg(dataToSave);
         }
 
