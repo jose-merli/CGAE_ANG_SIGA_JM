@@ -469,7 +469,7 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 	}
 
 	associate() {
-		if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != '0') {
+		if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
 			this.callConfirmationAssociate();
 		} else {
 			if (
