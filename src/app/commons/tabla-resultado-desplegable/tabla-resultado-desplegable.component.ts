@@ -23,6 +23,7 @@ import { element } from 'protractor';
 import { JustificacionExpressItem } from '../../models/sjcs/JustificacionExpressItem';
 import { DocumentoDesignaItem } from '../../models/sjcs/DocumentoDesignaItem';
 import { procesos_oficio } from '../../permisos/procesos_oficio';
+import { ControlAccesoDto } from '../../models/ControlAccesoDto';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
   templateUrl: './tabla-resultado-desplegable.component.html',
@@ -115,7 +116,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   configComboDesigna;
   permisoEscritura;
   idClasesComunicacionArray: string[] = [];
-  permiteSubidDescargaFicheros: boolean;
+  permiteAdjuntarFicheros: boolean;
+  permiteDescargarFicheros: boolean;
   idClaseComunicacion: String;
   keys: any[] = [];
   numCell: number;
@@ -185,26 +187,62 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.totalRegistros = 0;
     }
 
-    this.checkPermisoSubidaFicheros();
+    this.checkPermisoFicheros();
 
     this.selected = false;
     this.selectedArray = [];
     this.selecteChild = [];
   }
 
-  checkPermisoSubidaFicheros() {
+  checkPermisoFicheros() {
 
-      this.commonsService.checkAcceso(procesos_oficio.subidaFicherosJustificacionExpres)
-      .then(respuesta => {
-        let permisoEscritura = respuesta;
+    let controlAcceso = new ControlAccesoDto();
+    
+    controlAcceso.idProceso = procesos_oficio.subidaFicherosJustificacionExpres;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        const permisos = JSON.parse(data.body);
+        const permisosArray = permisos.permisoItems;
+        const derechoAcceso = permisosArray[0].derechoacceso;
 
-        if (!permisoEscritura) {
-          this.permiteSubidDescargaFicheros = false;
+        if (derechoAcceso == 3) {
+          this.permiteAdjuntarFicheros = true;
+        } else if (derechoAcceso == 2) {
+          this.permiteAdjuntarFicheros = false;
         } else {
-          this.permiteSubidDescargaFicheros = true;
+          this.permiteAdjuntarFicheros = false;
         }
-      })
-      .catch(err => console.log(err));
+      },
+      err => {
+
+      },
+      () => {
+
+      }
+    );
+
+    controlAcceso.idProceso = procesos_oficio.descargaFicherosJustificacionExpres;
+    this.sigaServices.post("acces_control", controlAcceso).subscribe(
+      data => {
+        const permisos = JSON.parse(data.body);
+        const permisosArray = permisos.permisoItems;
+        const derechoAcceso = permisosArray[0].derechoacceso;
+
+        if (derechoAcceso == 3) {
+          this.permiteDescargarFicheros = true;
+        } else if (derechoAcceso == 2) {
+          this.permiteDescargarFicheros = true;
+        } else {
+          this.permiteDescargarFicheros = false;
+        }
+      },
+      err => {
+
+      },
+      () => {
+
+      }
+    );
     
   }
 

@@ -56,5 +56,6 @@ export const procesos_oficio: any = {
 
     //JUSTIFICACION EXPRES
     je: "961",
-    subidaFicherosJustificacionExpres: "965"
+    subidaFicherosJustificacionExpres: "965",
+    descargaFicherosJustificacionExpres: "966"
 }
