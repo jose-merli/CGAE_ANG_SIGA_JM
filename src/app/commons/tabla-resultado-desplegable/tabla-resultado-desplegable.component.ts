@@ -22,6 +22,7 @@ import { saveAs } from "file-saver/FileSaver";
 import { element } from 'protractor';
 import { JustificacionExpressItem } from '../../models/sjcs/JustificacionExpressItem';
 import { DocumentoDesignaItem } from '../../models/sjcs/DocumentoDesignaItem';
+import { procesos_oficio } from '../../permisos/procesos_oficio';
 @Component({
   selector: 'app-tabla-resultado-desplegable',
   templateUrl: './tabla-resultado-desplegable.component.html',
@@ -184,30 +185,26 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.totalRegistros = 0;
     }
 
-    this.getParametro();
+    this.checkPermisoSubidaFicheros();
 
     this.selected = false;
     this.selectedArray = [];
     this.selecteChild = [];
   }
 
-  getParametro() {
+  checkPermisoSubidaFicheros() {
 
-    let parametro = {
-      valor: "ACTIVAR_SUBIDA_JUSTIFICACION_DESIGNA"
-    };
+      this.commonsService.checkAcceso(procesos_oficio.subidaFicherosJustificacionExpres)
+      .then(respuesta => {
+        let permisoEscritura = respuesta;
 
-    this.sigaServices
-      .post("busquedaPerJuridica_parametroColegio", parametro)
-      .subscribe(
-        data => {
-          if (JSON.parse(data.body).parametro == "1"){
-            this.permiteSubidDescargaFicheros = true;
-          }
-          else{
-            this.permiteSubidDescargaFicheros = false;
-          }
-      });
+        if (!permisoEscritura) {
+          this.permiteSubidDescargaFicheros = false;
+        } else {
+          this.permiteSubidDescargaFicheros = true;
+        }
+      })
+      .catch(err => console.log(err));
     
   }
 
@@ -2569,31 +2566,33 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           datosActuacion.idTurno = designacion.rows[0].cells[17].value;
           datosActuacion.idActuacion = designacion.rows[idActuacionRowGroup+1].cells[0].value[1];
 
-          if (datosActuacion.idActuacion != undefined && datosActuacion.idActuacion != '') {
-            this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesignaJustificacionExpres", datosActuacion).subscribe(
-              data => {
-                if (data.size != 0) {
-                  let blob = null;
-                  let idDesignacion = designacion.id.substring(0, designacion.id.indexOf("\n"));
-        
-                  blob = new Blob([data], { type: "application/zip" });
-                  saveAs(blob, "documentosDesigna_A" + idDesignacion.split("/")[0] + "_" + idDesignacion.split("/")[1] + "_" + datosActuacion.idActuacion + ".zip");
-      
-                  descargados++;
-                }
-              },
-              err => {
-    
-              },
-              () => {
-                if (descargados != 0) {
-                  this.showMsg('info', this.translateService.instant("general.accion.descargaDocumentacion"), '');
-                } else {
-                  this.showMsg('info', this.translateService.instant("general.accion.noSeHadescargadoDocumentacion"), '');
-                }
-              }
-            );
+          if (datosActuacion.idActuacion == undefined || datosActuacion.idActuacion == '') {
+            datosActuacion.idActuacion = "-1";
           }
+          
+          this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesignaJustificacionExpres", datosActuacion).subscribe(
+            data => {
+              if (data.size != 0) {
+                let blob = null;
+                let idDesignacion = designacion.id.substring(0, designacion.id.indexOf("\n"));
+      
+                blob = new Blob([data], { type: "application/zip" });
+                saveAs(blob, "documentosDesigna_D" + idDesignacion.split("/")[0] + "_" + idDesignacion.split("/")[1] + "_" + datosActuacion.idActuacion + ".zip");
+    
+                descargados++;
+              }
+            },
+            err => {
+  
+            },
+            () => {
+              if (descargados != 0) {
+                this.showMsg('info', this.translateService.instant("general.accion.descargaDocumentacion"), '');
+              } else {
+                this.showMsg('info', this.translateService.instant("general.accion.noSeHadescargadoDocumentacion"), '');
+              }
+            }
+          );
         }
     
         // Eliminamos las actuaciones del array de seleccionados, por lo que sólo quedarán las designas a procesar
@@ -2672,8 +2671,99 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     return mime;
   }
 
-  uploadFile() {
+  uploadFile(event, form) {
+
+    if (this.selectedArray != undefined && this.selectedArray.length > 0 && this.selecteChild != undefined && this.selecteChild.length > 0) {
+
+      let idRowGroupDesignacion = this.selecteChild[0].substr(0, this.selecteChild[0].indexOf(')')+1),
+      designacion = this.rowGroups.find(e => e.id == idRowGroupDesignacion),
+      idActuacionRowGroup = Number(this.selecteChild[0].substr(this.selecteChild[0].indexOf(')')+1, this.selecteChild[0].length));
+
+      let designa = {
+        anio: designacion.rows[0].cells[10].value,
+        numero: designacion.rows[0].cells[19].value,
+        idTurno: designacion.rows[0].cells[17].value,
+        idActuacion: designacion.rows[idActuacionRowGroup+1].cells[0].value[1]
+      }
+
+      if (designa.idActuacion == undefined || designa.idActuacion == '') {
+        designa.idActuacion = "-1";
+      }
+  
+      if (designa.idActuacion != undefined && designa.idActuacion != '') {
+        this.progressSpinner = true;
+        this.sigaServices.postSendFileAndDesignaJustificacionExpres("designacion_subirDocumentoDesignaJustificacionExpres", event.files, designa).subscribe(
+          data => {
+            let resp = data;
     
+            if (resp.status == 'KO') {
+              if (resp.error != null && resp.error.description != null && resp.error.description != '') {
+                this.showMsg('error', 'Error', this.translateService.instant(resp.error.description));
+              } else {
+                this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+              }
+            } else if (resp.status == 'OK') {
+              this.progressSpinner = false;
+              designacion.rows[idActuacionRowGroup+1].cells[0].value[2] = "1";
+              this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+            } else if (resp.status == '') {
+              this.showMsg('info', this.translateService.instant("general.accion.noSeHaPodidoAdjuntar"), '');
+            }
+    
+          },
+          err => {
+            this.progressSpinner = false;
+            this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+          },
+          () => {
+            this.progressSpinner = false;
+          }
+        );
+      }
+    } else if (this.selectedArray != undefined && this.selectedArray.length > 0) {
+
+      let designacion = this.rowGroups.find(e => e.id == this.selectedArray[0]);
+
+      let designa = {
+        anio: designacion.rows[0].cells[10].value,
+        numero: designacion.rows[0].cells[19].value,
+        idTurno: designacion.rows[0].cells[17].value
+      }
+
+      this.progressSpinner = true;
+
+      this.sigaServices.postSendFileAndDesignaJustificacionExpres("designacion_subirDocumentoDesignaJustificacionExpres", event.files, designa).subscribe(
+        data => {
+          let resp = data;
+  
+          if (resp.status == 'KO') {
+            if (resp.error != null && resp.error.description != null && resp.error.description != '') {
+              this.showMsg('error', 'Error', this.translateService.instant(resp.error.description));
+            } else {
+              this.showMsg('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
+            }
+          } else if (resp.status == 'OK') {
+            this.progressSpinner = false;
+            designacion.rows[0].cells[0].value[2] = "1";
+            this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
+          } else if (resp.status == '') {
+            this.showMsg('info', this.translateService.instant("general.accion.noSeHaPodidoAdjuntar"), '');
+          }
+  
+        },
+        err => {
+          this.progressSpinner = false;
+          this.showMsg('error', 'Error', this.translateService.instant('general.mensaje.error.bbdd'));
+        },
+        () => {
+          this.progressSpinner = false;
+        }
+      );
+    }
+
+    this.selecteChild = [];
+    this.selectedArray = [];
+    form.clear();
   }
 
   checkFile(rowGroup) {

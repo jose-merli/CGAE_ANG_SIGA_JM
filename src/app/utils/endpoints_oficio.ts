@@ -148,6 +148,7 @@ export let endpoints_oficio: any = {
     designaciones_updateDatosFacturacion: "oficio/designas/updatePartidaPresupuestaria",
     designacion_getDocumentosPorDesigna: "oficio/designas/getDocumentosPorDesigna",
     designacion_subirDocumentoDesigna: "oficio/designas/subirDocumentoDesigna",
+    designacion_subirDocumentoDesignaJustificacionExpres: "oficio/designas/subirDocumentoDesignaJustificacionExpres",
     designacion_eliminarDocumentosDesigna: "oficio/designas/eliminarDocumentosDesigna",
     designacion_descargarDocumentosDesigna: "oficio/designas/descargarDocumentosDesigna",
     designacion_descargarDocumentosDesignaJustificacionExpres: "oficio/designas/descargarDocumentosDesignaJustificacionExpres",
