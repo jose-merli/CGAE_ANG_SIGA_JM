@@ -356,19 +356,19 @@ export class TarjetaColaOficio implements OnInit {
         datosCompensacionesAux = datosSaltosYComp.filter(datos => datos.saltoCompensacion === 'C');
 
         datosSaltosAux.forEach(element => {
-          if (this.datosSaltos.find(item => item.idPersona === element.idPersona) != undefined) {
-            this.datosSaltos.find(item => item.idPersona === element.idPersona).numeroSaltosComp= this.datosSaltos.find(item => item.idPersona === element.idPersona).numeroSaltosComp + 1;
-          } else {
+          //if (this.datosSaltos.find(item => item.idPersona === element.idPersona) != undefined) {
+          // this.datosSaltos.find(item => item.idPersona === element.idPersona).numeroSaltosComp= this.datosSaltos.find(item => item.idPersona === element.idPersona).numeroSaltosComp + 1;
+          //} else {
             this.datosSaltos.push(element);
-          }
+          //}
         });
 
         datosCompensacionesAux.forEach(element => {
-          if (this.datosCompensaciones.find(item => item.idPersona === element.idPersona) != undefined) {
-            this.datosCompensaciones.find(item => item.idPersona === element.idPersona).numeroSaltosComp = this.datosCompensaciones.find(item => item.idPersona === element.idPersona).numeroSaltosComp + 1;
-          } else {
+          //if (this.datosCompensaciones.find(item => item.idPersona === element.idPersona) != undefined) {
+          //  this.datosCompensaciones.find(item => item.idPersona === element.idPersona).numeroSaltosComp = this.datosCompensaciones.find(item => item.idPersona === element.idPersona).numeroSaltosComp + 1;
+          //} else {
             this.datosCompensaciones.push(element);
-          }
+          //}
         });
 
         let error = JSON.parse(n.body).error;
