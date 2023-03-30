@@ -47,10 +47,10 @@
             </label>
             <label *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{"menu.justiciaGratuita.oficio.comboturno"
               | translate}}
-              <span *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{ relaciones[0].desturno}}</span>
+              <span *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{ relaciones[0].descturno}}</span>
             </label>
             <label
-              *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{"justiciaGratuita.oficio.justificacionExpres.numDesignacion"
+              *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{"justiciaGratuita.sjcs.designas.colegiado"
               | translate}}
               <span *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{ relaciones[0].letrado}}</span>
             </label>
