@@ -1753,7 +1753,7 @@ export class ConsultarDatosBancariosComponent implements OnInit {
   }
 
   rellenarComboProductoServicio(bodyDatosBancariosAnexo) {
-
+    this.comboProductoServicio = [];
     bodyDatosBancariosAnexo.forEach(element => {
       if (element.tipo === "MANDATO") {
         this.comboProductoServicio.push({
@@ -1836,12 +1836,18 @@ export class ConsultarDatosBancariosComponent implements OnInit {
       .subscribe(
         data => {
           this.progressSpinner = false;
-          this.bodyDatosBancariosAnexo.status = data.status;
-          this.bodyDatosBancariosAnexo.id = data.id;
+          this.bodyDatosBancariosAnexo.status = JSON.parse(data.body).status;
+          this.bodyDatosBancariosAnexo.id = JSON.parse(data.body).id;
               
           //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
           let peticion = new RevisionAutLetradoItem();
-          peticion.idPersona = this.body.idPersona.toString();
+
+          if (this.body != undefined && this.body.idPersona != undefined) {
+            peticion.idPersona = this.body.idPersona.toString();
+          } else {
+            peticion.idPersona = JSON.parse(sessionStorage.getItem("idPersona"));
+          }
+
           peticion.fechaProcesamiento = new Date();
           this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
 
@@ -1856,11 +1862,12 @@ export class ConsultarDatosBancariosComponent implements OnInit {
           this.progressSpinner = false;
         },
         () => {
+          this.progressSpinner = false;
+          this.displayNuevo = false;
           this.limpiarDatosAnexo();
           this.activarCamposMandatos();
         }
       );
-    this.activarCamposMandatos();
   }
 
   limpiarDatosAnexo() {
@@ -2017,6 +2024,9 @@ export class ConsultarDatosBancariosComponent implements OnInit {
 
   actualizar(body) {
     this.progressSpinner = true;
+
+    let fileAdjunto: File = this.file;
+
     this.sigaServices.post("anexos_update", body).subscribe(
       data => {
         this.progressSpinner = false;
@@ -2025,17 +2035,23 @@ export class ConsultarDatosBancariosComponent implements OnInit {
               
         //IMPORTANTE: LLAMADA PARA REVISION SUSCRIPCIONES (COLASUSCRIPCIONES)
         let peticion = new RevisionAutLetradoItem();
-        peticion.idPersona = this.body.idPersona.toString();
+
+        if (this.body != undefined && this.body.idPersona != undefined) {
+          peticion.idPersona = this.body.idPersona.toString();
+        } else {
+          peticion.idPersona = JSON.parse(sessionStorage.getItem("idPersona"));
+        }
+
         peticion.fechaProcesamiento = new Date();
         this.sigaServices.post("PyS_actualizacionColaSuscripcionesPersona", peticion).subscribe();
 
-        if (this.file != undefined) {
+        if (fileAdjunto != undefined) {
           this.progressSpinner = true;
 
           this.sigaServices
             .postSendFileAndParametersDataBank(
               "busquedaPerJuridica_uploadFile",
-              this.file,
+              fileAdjunto,
               body.idPersona,
               body.idCuenta,
               body.idMandato,
