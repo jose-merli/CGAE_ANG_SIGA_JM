@@ -38,6 +38,7 @@ export class DatosGeneralesFichaComponent implements OnInit {
   selectedClaseCom: boolean = false;
   progressSpinner: boolean = false;
   resaltadoDatos: boolean = false;
+  informeUnico: boolean = false;
   fichasPosibles = [
     {
       key: "generales",
@@ -163,11 +164,19 @@ export class DatosGeneralesFichaComponent implements OnInit {
       }else{
         this.selectedClaseCom = false;
       }
+      this.informeUnico = this.body.informeUnico == "1" ? true : false;
       this.habilitarBotones();
       this.isEdicion = true;
     } else {
       this.body.visible = 1;
     }
+  }
+
+  checkValue(event){
+    if(this.informeUnico)
+      this.body.informeUnico = "1"
+    else
+      this.body.informeUnico = "0"
   }
 
   guardar() {

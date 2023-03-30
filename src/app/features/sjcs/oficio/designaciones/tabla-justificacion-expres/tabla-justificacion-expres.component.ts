@@ -29,6 +29,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
   @Input() colegiado;
   @Input() isLetrado;
   @Input() permisosFichaAct;
+  @Input() queryImprimir;
   permisosEJG = false;
   fechaFiltro;
   totalRegistros = 0;

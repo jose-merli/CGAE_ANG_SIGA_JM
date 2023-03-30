@@ -14,7 +14,7 @@
 </div>
 
 <div>
-    <app-tabla-justificacion-expres *ngIf="muestraTablaJustificacion" [datosJustificacion]="datosJustificacion" [isLetrado]="isLetrado" [permisosFichaAct]="permisosFichaAct"
+    <app-tabla-justificacion-expres *ngIf="muestraTablaJustificacion" [datosJustificacion]="datosJustificacion" [isLetrado]="isLetrado" [permisosFichaAct]="permisosFichaAct" [queryImprimir]="queryImprimir"
         id="tablaFoco" (actuacionesToDleteArrEmit)="actuacionesToDleteArr($event)" (newActuacionItemEmit)="newActuacionItem($event)" (dataToUpdateArrEmit)="dataToUpdateArr($event)" ></app-tabla-justificacion-expres>
 
 </div>

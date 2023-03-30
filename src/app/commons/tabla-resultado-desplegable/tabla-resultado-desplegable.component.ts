@@ -45,6 +45,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   @Input() permisosEJG;
   @Input() fechaFiltro;
   @Input() filtroAsistencia: FiltroAsistenciaItem;
+  @Input() queryImprimir;
   turnoAllow;  //to do
   justActivarDesigLetrado;
   activarSubidaJustDesig;
@@ -2405,6 +2406,15 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     ];
   }
+  navigateImprimir(){
+    //IDMODULO de SJCS es 10
+    sessionStorage.setItem("idModulo", '10');
+    sessionStorage.setItem("rutaComunicacion", "/justificacionExpresImprimir");
+    let datosSeleccionados = [];
+    sessionStorage.setItem("datosComunicar",JSON.stringify(datosSeleccionados));
+    sessionStorage.setItem("queryImprimir",JSON.stringify(this.queryImprimir));
+    this.router.navigate(["/dialogoComunicaciones"]);
+  }
 
   navigateComunicar() {
     //IDMODULO de SJCS es 10
@@ -2475,6 +2485,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   "datosComunicar",
                   JSON.stringify(datosSeleccionados)
                 );
+                sessionStorage.setItem("queryImprimir",JSON.stringify(this.queryImprimir));// A eliminar
                 this.router.navigate(["/dialogoComunicaciones"]); 
               },
               err => {
@@ -2529,6 +2540,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   "datosComunicar",
                   JSON.stringify(datosSeleccionados)
                 );
+                sessionStorage.setItem("queryImprimir",JSON.stringify(this.queryImprimir));// A eliminar
                 this.router.navigate(["/dialogoComunicaciones"]);
 
               },
@@ -2727,10 +2739,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                         JSON.stringify(datosSeleccionados)
                       );
 
-                      i++;
-                      if (this.selectedArray.length == i) {
-                        this.router.navigate(["/dialogoComunicaciones"]);
-                      }
+                        this.router.navigate(["/dialogoComunicaciones"]);                      
                     });
                 });
               });

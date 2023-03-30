@@ -33,6 +33,7 @@ export class DesignacionesComponent implements OnInit {
   colegiadoDesig: boolean;
   isLetrado: boolean = false;
   idPersonaLogado;
+  queryImprimir: String;
   numColegiadoLogado;
   usuarioBusquedaExpressFromFicha = {numColegiado: '',
                             nombreAp: ''};
@@ -72,6 +73,20 @@ export class DesignacionesComponent implements OnInit {
     this.muestraTablaJustificacion=event;
   }
 
+  
+  getImprimirQuery(){
+    this.sigaServicesNew.post("designacion_queryImprimirJustificacionExpres", this.filtros.filtroJustificacion).subscribe(
+      data => {
+        this.queryImprimir = JSON.parse(data.body).valor;
+      },
+      err => {
+        this.progressSpinner = false;
+
+        this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
+      });
+
+  }
+
   busquedaJustificacionExpres(){
     this.progressSpinner=true;
     this.datosJustificacion = new JustificacionExpressItem();
@@ -85,7 +100,7 @@ export class DesignacionesComponent implements OnInit {
     }​
 
     let error = null;
-    
+    this.getImprimirQuery();
     this.progressSpinner=true;
     this.sigaServicesNew.post("justificacionExpres_busqueda", this.filtros.filtroJustificacion).subscribe(
       data => {

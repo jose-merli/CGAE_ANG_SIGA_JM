@@ -64,6 +64,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 	selectedModelosSend: any = [];
 	selectAll: boolean = false;
 	@ViewChild('table') tableModelos: DataTable;
+	sentenciaImprimir: any;
 
 	constructor(
 		public sigaServices: SigaServices,
@@ -79,6 +80,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 
         if (sessionStorage.getItem('descargasPendientes') == undefined) {
             sessionStorage.setItem('descargasPendientes', '0');
+        }
+
+		if (sessionStorage.getItem('queryImprimir') != undefined) {
+            this.sentenciaImprimir = JSON.parse(sessionStorage.getItem('queryImprimir'));
+			sessionStorage.removeItem('queryImprimir');
         }
 
 		this.progressSpinner = true;
@@ -524,7 +530,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 			idInstitucion: this.idInstitucion,
 			consultas: this.listaConsultas,
 			comunicar: this.comunicar,
-			ruta: this.rutaComunicacion
+			ruta: this.rutaComunicacion,
+			sentenciaImprimir : this.sentenciaImprimir
 		};
 
 		let descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes'));

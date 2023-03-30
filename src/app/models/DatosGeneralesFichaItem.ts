@@ -11,5 +11,6 @@ export class DatosGeneralesFicha {
   idPlantillaEnvio: String;
   idTipoEnvio: String;
   tipoEnvio: String;
+  informeUnico: String;
   constructor() { }
 }
