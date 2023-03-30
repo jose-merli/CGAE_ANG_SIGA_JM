@@ -1,8 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
-
-<div class="card" id="sjcsDesigProc">
-    <div class="card-body p-0">
-        <div class="padding-interior w-100">
+<div id="sjcsDesigProc">
+    <div class="padding-interior w-100" id="paginador">
             <app-paginador2 (perPage)="perPage($event)" (seleccionarTodo)="selectedAll($event)"
                 (fromReg)="fromReg($event)" (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador2>
         </div>
@@ -16,13 +14,13 @@
                     </div>
                 </div>
             </div>
-            <div *ngFor="let row of rowGroups | slice:from:to; let i = index;" class="table-row child">
-                <div (click)="selectRow(row['id'])" class="table-row-wrapper hoverBlue"
-                    [ngClass]="{'hoverBlue2': isSelected(row['id']), 'fixedBlue': seleccionarTodo}" #rowSelected>
-                    <div *ngFor="let cell of row['cells'] | slice:0:8; let z = index"
-                        class="table-cell p-2 selectedRowClass" [ngClass]="{'borders-child': isPar(row['id'])}"
-                        #cellSelected>
-                        <div class="cell-wrapper selectedRowClass">
+            <div *ngFor="let row of rowGroups | slice:from:to; let i = index" class="table-row child">
+                <div (click)="selectRow(row['id'], row['cells'])" class="table-row-wrapper hoverBlue"
+                  [ngClass]="{'hoverBlue2': isSelected(row['id'])}" #rowSelected>
+                  <div *ngFor="let cell of row['cells'] | slice:0:5" class="table-cell p-2 selectedRowClass"
+                    [ngClass]="{'borders-child': isPar(i), 'text-left': emptyResults}" #cellSelected
+                    [style.minWidth]="getTamanioColumn(cell)">
+                    <div class="cell-wrapper selectedRowClass w-100">
                             <span class="w100 cell-value" *ngIf="cell.type == 'newinput'"><input type="text"
                                     class="form-control mt-2" pInputText [(ngModel)]="this.newInputValue[z]"
                                     (change)="inputValueChange($event, i, z, cell)"></span>
@@ -66,7 +64,9 @@
                 </div>
             </div>
         </div>
-        <div class="card-footer h50 pt-5">
+        <div class="padding-interior paginador-bottom"></div>
+
+        <div class="card-footer" #footer>
             <div class="text-right main-button butBottom mt10">
                 <button pButton (click)="checkRestablecer()" [disabled]="disableEdition()" icon="fa fa-undo"
                     type="button" iconPos="left" label="{{ 'general.boton.restablecer' | translate}}"></button>
@@ -78,9 +78,7 @@
                     label="{{ 'general.boton.new' | translate}}"></button>
             </div>
         </div>
-    </div>
 </div>
-
 
 <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" icon="icon" key="confirmGuardar" width="425"
     #confirmGuardar>
