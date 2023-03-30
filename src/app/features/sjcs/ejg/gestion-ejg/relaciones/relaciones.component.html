@@ -21,7 +21,7 @@
 
             <label *ngIf="nRelaciones == 1 && tipoRelacion == 'ASISTENCIA'">{{
               "gratuita.busquedaAsistencias.literal.numero" | translate}}
-              <span *ngIf="nRelaciones == 1 && tipoRelacion == 'ASISTENCIA'">{{ relaciones[0].idsjcs}}</span>
+              <span *ngIf="nRelaciones == 1 && tipoRelacion == 'ASISTENCIA'">A{{ relaciones[0].anio}}/{{ relaciones[0].codigo}}</span>
             </label>
             <label *ngIf="nRelaciones == 1 && tipoRelacion == 'ASISTENCIA'">{{"menu.justiciaGratuita.GuardiaMenu" |
               translate}}
@@ -43,7 +43,7 @@
             <label
               *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{"justiciaGratuita.oficio.justificacionExpres.numDesignacion"
               | translate}}
-              <span *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{ relaciones[0].idsjcs}}</span>
+              <span *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">D{{ relaciones[0].anio}}/{{ relaciones[0].codigo}}</span>
             </label>
             <label *ngIf="nRelaciones == 1 && tipoRelacion == 'DESIGNACIÓN'">{{"menu.justiciaGratuita.oficio.comboturno"
               | translate}}
