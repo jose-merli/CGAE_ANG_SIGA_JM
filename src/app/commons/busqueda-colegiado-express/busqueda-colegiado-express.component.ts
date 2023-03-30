@@ -47,7 +47,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
       this.isLetrado = JSON.parse(sessionStorage.getItem("isLetrado"));
     }
 
-    if (this.numColegiado) {
+    if (this.numColegiado && this.numColegiado != '') {
       this.colegiadoForm.get('numColegiado').setValue(this.numColegiado);
       sessionStorage.setItem("numColegiado",this.numColegiado);
       if(sessionStorage.getItem("personaBody")!= null && sessionStorage.getItem("personaBody") != undefined){
@@ -122,89 +122,23 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   searchTramitacionEJG(form) {
-    if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
-      this.progressSpinner = true;
-
-
-      this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + form.numColegiado).subscribe(
-        data => {
-          this.progressSpinner = false;
-
-          if (data.colegiadoJGItem.length == 1) {
-            this.apellidosNombre = data.colegiadoJGItem[0].nombre;
-            this.idPersona.emit(data.colegiadoJGItem[0].idPersona);
-            this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
-          } else {
-            this.apellidosNombre = "";
-            this.numColegiado = ""
-            form.numColegiado = "";
-            this.idPersona.emit("");
-
-            this.showMessage("info", this.translateService.instant("general.message.informacion"), this.translateService.instant("general.message.colegiadoNoEncontrado"));
-          }
-          this.changeValue();
-  
-        },
-        error => {
-          this.progressSpinner = false;
-          this.apellidosNombre = "";
-          form.numColegiado = "";
-          this.numColegiado = "";
-          this.idPersona.emit("");
-          this.changeValue();
-          //console.log(error);
-          this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-        }
-      );
-      //Si se a introducido un num de colegiado y se activo art 27. 
-      //Al revisar que la busqueda express se realiza con limitacion de colegio
-      //ya que los numeros de colegiado no son unicos, se decide devolver un mensaje de negativa.
-      if (this.art27){
-         this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.tramitacion.noExpressArt') }];
-         this.progressSpinner = false;
-      }
-      else {
-        this.defaultsearch(form)
-      }
-    } else {
-      this.progressSpinner = false;
-      this.apellidosNombre = "";
-      this.idPersona.emit("");
-
-      if (sessionStorage.getItem("tarjeta")) {
-        sessionStorage.removeItem("tarjeta");
-      }
-
-      if (sessionStorage.getItem("pantalla")) {
-        sessionStorage.removeItem("pantalla");
-      }
-
-      if (this.pantalla) {
-        sessionStorage.setItem("pantalla", this.pantalla);
-      }
-
-      if (this.tarjeta) {
-        sessionStorage.setItem("tarjeta", this.tarjeta);
-      }
-
-      if(this.idTurno!=null  && this.idGuardia!=null){
-      sessionStorage.setItem("idTurno", this.idTurno);
-      sessionStorage.setItem("idGuardia", this.idGuardia);
+    //Si se a introducido un num de colegiado y se activo art 27. 
+    //Al revisar que la busqueda express se realiza con limitacion de colegio
+    //ya que los numeros de colegiado no son unicos, se decide devolver un mensaje de negativa.
+    if (this.art27){
+       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('justiciaGratuita.ejg.tramitacion.noExpressArt') }];
+       this.progressSpinner = false;
+    }
+    else {
+      this.defaultsearch(form)
     }
 
-      if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {
-
-        //Comprobamos el estado del checkbox para el art 27-28
-        if (this.art27) sessionStorage.setItem("art27", "true");
-
-        if (this.art27){
-          sessionStorage.setItem("Art27Activo", "true");
-          this.router.navigate(["/busquedaGeneral"]);
-        }
-        else this.router.navigate(["/buscadorColegiados"]);
-      }
-    }
+    if(this.idTurno!=null  && this.idGuardia!=null){
+    sessionStorage.setItem("idTurno", this.idTurno);
+    sessionStorage.setItem("idGuardia", this.idGuardia);
   }
+}
+
 
   defaultsearch(form) {
     if(this.localStorageService.isLetrado && this.localStorageService.numColegiado != form.numColegiado ){
@@ -213,17 +147,18 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     }else{
       if (form.numColegiado != undefined && form.numColegiado != null && form.numColegiado.length != 0) {
         this.progressSpinner = true;
-        sessionStorage.setItem("numColegiado", form.numColegiado);
-
+        
         this.sigaServices.getParam("componenteGeneralJG_busquedaColegiado", "?colegiadoJGItem=" + form.numColegiado).subscribe(
           data => {
             this.progressSpinner = false;
 
             if (data.colegiadoJGItem.length == 1) {
+              sessionStorage.setItem("numColegiado", form.numColegiado);
               this.apellidosNombre = data.colegiadoJGItem[0].nombre;
               this.idPersona.emit(data.colegiadoJGItem[0].idPersona);
               this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
             }else if(data.colegiadoJGItem.length > 1){ 
+              sessionStorage.setItem("numColegiado", form.numColegiado);
               sessionStorage.setItem("sizedatacolegiado", data.colegiadoJGItem.length);
               sessionStorage.setItem("pantalla", this.pantalla);
               this.router.navigate(["/buscadorColegiados"]);
@@ -270,12 +205,21 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
         }
 
         if (form.numColegiado == null || form.numColegiado == undefined || form.numColegiado.trim() == "") {
-          this.router.navigate(["/buscadorColegiados"]);
+
+          //Comprobamos el estado del checkbox para el art 27-28
+          if (this.art27) sessionStorage.setItem("art27", "true");
+
+          if (this.art27){
+            sessionStorage.setItem("Art27Activo", "true");
+            this.router.navigate(["/busquedaGeneral"]);
+          }
+          else this.router.navigate(["/buscadorColegiados"]);
         }
       }
     // this.buscarDisabled=false;
     }
   }
+
 
   showMessage(severity, summary, msg) {
     this.msgs = [];

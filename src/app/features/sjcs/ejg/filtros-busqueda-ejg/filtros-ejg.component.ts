@@ -788,8 +788,9 @@ export class FiltrosEjgComponent implements OnInit {
     this.body.idPersona = "";
     this.numColegiadoRelleno = false;
     this.tipoLetrado = "";
-    this.usuarioBusquedaExpress.numColegiado = " ";
-    this.usuarioBusquedaExpress.nombreAp = " ";
+    this.usuarioBusquedaExpress.numColegiado = '';
+    this.usuarioBusquedaExpress.nombreAp = '';
+    this.usuarioBusquedaExpress.idPersona = '';
     sessionStorage.removeItem("numColegiado");
   }
   clearFilters() {
