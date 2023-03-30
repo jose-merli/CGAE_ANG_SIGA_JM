@@ -583,7 +583,9 @@ export class DialogoComunicacionesComponent implements OnInit {
 									this.showValores = false;
 									this.progressSpinner = false;
 									this.clearPerenne();
-									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+									if(descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) != 0){
+										this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+									}
 								}
 							},
 							(error) => {

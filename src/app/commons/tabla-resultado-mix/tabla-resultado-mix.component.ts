@@ -612,7 +612,7 @@ export class TablaResultadoMixComponent implements OnInit {
           'filtrosBusqueda' : this.filtrosValues,
          // 'idCalendarioGuardia': selectedRowValue.cells[16].value,
         }
-          if( dataToSend.estado == "Generada"){
+          if( dataToSend.estado == "3"){
             dataToSendArr.push(dataToSend);
             
           }
@@ -641,7 +641,7 @@ export class TablaResultadoMixComponent implements OnInit {
         'idGuardia': this.selectedRowValue[11].value,
         'filtrosBusqueda' : this.filtrosValues
       }
-       if( dataToSend.estado == "Generada"){
+       if( dataToSend.estado == "3"){
         dataToSendArr.push(dataToSend);
        }else{
         this.showMsg('info', 'Error. No puede descargar el log del calendario ' + dataToSend.idCalendarioProgramado + ' porque no está Generado' ,'')

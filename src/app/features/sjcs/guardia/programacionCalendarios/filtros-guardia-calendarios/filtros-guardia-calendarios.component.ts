@@ -161,7 +161,7 @@ export class FiltrosGuardiaCalendarioComponent implements OnInit {
       { label: "Programada", value: "0" },
       { label: "En proceso", value: "1" },
       { label: "Procesada con Errores", value: "2" },
-      { label: "Generada", value: "3" },
+      { label: "Finalizada", value: "3" },
       { label: "Reprogramada", value: "5" }
     ];
     /*this.sigaServices.get("busquedaGuardia_estado").subscribe(

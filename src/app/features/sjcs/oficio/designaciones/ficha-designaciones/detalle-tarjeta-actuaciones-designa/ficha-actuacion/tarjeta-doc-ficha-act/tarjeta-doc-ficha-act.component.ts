@@ -195,7 +195,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
 
        copiaDocumentos2.forEach((el, i) => {
 
-        if (!el.nuevo && this.isColegiado == false && !(this.usuarioLogado.idPersona == el.idPersona)) {
+        if (!el.nuevo && this.isColegiado == true && !(this.usuarioLogado.idPersona == el.idPersona)) {
           copiaDocumentos2.splice(i, 1);
           error = true;
         }
@@ -316,7 +316,7 @@ export class TarjetaDocFichaActComponent implements OnInit, OnChanges {
     let error = false;
     this.selectedDatos.forEach((el, i) => {
 
-      if (this.isColegiado == false && !(this.usuarioLogado.idPersona == el.idPersona)) {
+      if (this.isColegiado == true && !(this.usuarioLogado.idPersona == el.idPersona)) {
         this.selectedDatos.splice(i, 1);
         error = true;
       }

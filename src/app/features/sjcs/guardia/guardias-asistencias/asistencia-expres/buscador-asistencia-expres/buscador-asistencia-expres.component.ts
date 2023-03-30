@@ -103,8 +103,18 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     this.titulo = 'Datos Comunes';
     this.resaltadoDatos = true;
 
-    
     //this.getComboTurno();
+
+    this.deshabilitarLetradoGuardia = false;
+    if (this.filtro.isSustituto != null) {
+      this.refuerzoSustitucionNoSeleccionado = false;
+      this.deshabilitarLetradoGuardia = true;
+    } else {
+      this.refuerzoSustitucionNoSeleccionado = true;
+      this.usuarioBusquedaExpress.nombreAp = undefined;
+      this.usuarioBusquedaExpress.numColegiado = undefined;
+      this.filtro.idLetradoManual = undefined;
+    }
 
     sessionStorage.setItem("deshabilitarBuscadorColegiadoExpres", "true");
   }
@@ -351,7 +361,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
                 if (this.filtro.idLetradoGuardia != undefined && this.filtro.idLetradoGuardia != null){
                   this.letradoFillAutomatic.emit(true);
 
-                  this.filtro.isSustituto = null;
+                  //this.filtro.isSustituto = null;
                   this.refuerzoSustitucionNoSeleccionado = true;
                 }else{
                   this.letradoFillAutomatic.emit(false);
@@ -471,8 +481,10 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   }
 
   onChangeRefuerzoSustitucion(event){
+    this.deshabilitarLetradoGuardia = false;
     if (this.filtro.isSustituto != null) {
       this.refuerzoSustitucionNoSeleccionado = false;
+      this.deshabilitarLetradoGuardia = true;
     } else {
       this.refuerzoSustitucionNoSeleccionado = true;
       this.usuarioBusquedaExpress.nombreAp = undefined;

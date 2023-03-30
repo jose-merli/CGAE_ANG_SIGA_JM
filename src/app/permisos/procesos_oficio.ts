@@ -55,5 +55,7 @@ export const procesos_oficio: any = {
     designaTarjetaActuacionesDocumentacion: "96V",
 
     //JUSTIFICACION EXPRES
-    je: "961"
+    je: "961",
+    subidaFicherosJustificacionExpres: "965",
+    descargaFicherosJustificacionExpres: "966"
 }

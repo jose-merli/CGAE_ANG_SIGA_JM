@@ -401,15 +401,15 @@
 
 <div *ngIf="pantalla == 'JE' && permisoEscritura" class="right col-lg-12 col-md-6 ajustar marginButtons">
     <div class="inline-block text-right main-button setPosition">
-        <button [disabled]="selectedArray.length == 0 || !permiteSubidDescargaFicheros" (click)="download()" pButton type="button"
+        <button [disabled]="selectedArray.length == 0 || !permiteDescargarFicheros" (click)="download()" pButton type="button"
             icon="fa fa-download" iconPos="left"
             label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}">
         </button>
 
-        <button [disabled]="(selectedArray.length == 0 || selectedArray.length > 1) || !permiteSubidDescargaFicheros" (click)="uploadFile()" pButton type="button"
-            icon="fa fa-upload" iconPos="left"
-            label="{{ 'general.boton.adjuntarFichero' | translate}}">
-        </button>
+        <p-fileUpload #pUploadFile name="file" [disabled]="(selectedArray.length == 0 || selectedArray.length > 1) || !permiteAdjuntarFicheros"
+              mode="basic" accept=".doc,.docx,.pdf,.jpg,.png,.rtf,.txt"
+              chooseLabel="{{ 'general.boton.adjuntarFichero' | translate }}" class="edit my-0 mx-auto main-button"
+              auto="true" [customUpload]="true" (uploadHandler)="uploadFile($event, pUploadFile)"></p-fileUpload>
 
         <button [disabled]="disableDelete == true || isLetrado" pButton type="button" icon="fa fa-trash-alt"
             iconPos="left" label="Eliminar" (click)="eliminar()">

@@ -325,7 +325,7 @@ export class GestionEjgComponent implements OnInit {
     }
     this.persistenceService.clearDatosEJG();
     this.persistenceService.setVolverEJG();
-    this.location.back();
+    this.router.navigate(["/ejg"]);
   }
 
   async obtenerPermisos() {

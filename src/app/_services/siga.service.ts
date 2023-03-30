@@ -1232,6 +1232,29 @@ export class SigaServices {
 			});
 	}
 
+	postSendFileAndDesignaJustificacionExpres(service: string, files: any, designa: any): Observable<any> {
+		let formData: FormData = new FormData();
+		
+		if (files != undefined) {
+			for (let file of files) {
+				formData.append('uploadFile', file, file.name + ';' + JSON.stringify(designa));
+			}
+		}
+
+		let headers = new HttpHeaders();
+
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+
+		return this.http
+			.post(environment.newSigaUrl + this.endpoints[service], formData, {
+				headers: headers
+			})
+			.map((response) => {
+				return response;
+			});
+	}
+
 	postSendFilesAndComunicacion(service: string, documentos: File[], nuevaComunicacion: NuevaComunicacionItem): Observable<any> {
 		let formData: FormData = new FormData();
 

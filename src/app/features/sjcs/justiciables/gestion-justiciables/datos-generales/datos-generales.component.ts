@@ -578,7 +578,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
           } else {
 
-            if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0" && !this.vieneDeJusticiable) {
+            if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
               this.callConfirmationUpdate();
 
             } else {
@@ -587,7 +587,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             }
           }
         } else {
-          if (this.body.numeroAsuntos != undefined && this.body.numeroAsuntos != "0" && !this.vieneDeJusticiable) {
+          if (this.body.numeroAsuntos != undefined && parseInt(this.body.numeroAsuntos) > 1 && !this.vieneDeJusticiable && this.body.nif != null) {
             this.callConfirmationUpdate();
 
           } else {
