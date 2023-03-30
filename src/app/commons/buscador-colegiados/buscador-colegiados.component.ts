@@ -224,6 +224,10 @@ export class BuscadorColegiadosComponent implements OnInit {
       sessionStorage.setItem("originGuardiaColeg","true");
       sessionStorage.setItem("crearGuardiaColegiado","true");
       this.router.navigate(['/gestionGuardiaColegiado']);
+    }else if(sessionStorage.getItem("pantalla") == "designaciones"){
+      sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
+      sessionStorage.removeItem("pantalla");
+      this.router.navigate(['/designaciones']);
     }else{
       sessionStorage.setItem("buscadorColegiados", JSON.stringify(event));
 

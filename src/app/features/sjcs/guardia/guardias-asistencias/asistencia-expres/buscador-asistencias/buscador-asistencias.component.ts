@@ -92,7 +92,8 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
         this.usuarioBusquedaExpress.numColegiado = oldFiltro.numColegiado;
 
         setTimeout(()=>{
-          if(this.buscador){
+          if(this.buscador && this.usuarioBusquedaExpress.numColegiado != null && this.usuarioBusquedaExpress.numColegiado != ''
+              && this.usuarioBusquedaExpress.nombreAp != null && this.usuarioBusquedaExpress.nombreAp != ''){
             this.buscador.isBuscar(this.usuarioBusquedaExpress);
           }
         },500) 

@@ -44,6 +44,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   nombreColegiado: any;
   apellido1Colegiado: any;
   apellido2Colegiado: any;
+  idPersona: any;
   institucionColegiado: any;
   @Input() campos;
   @Input() selectedValue;
@@ -188,6 +189,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       let colegiado = new ColegiadoItem();
       colegiado.numColegiado = datosInicial.numColegiado;
       colegiado.idInstitucion = datosInicial.idInstitucion;
+      colegiado.idPersona = datosInicial.idPersona;
       this.sigaServices
         .post("busquedaColegiados_searchColegiado", colegiado)
         .subscribe(
@@ -230,6 +232,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.inputs[0].value = this.busquedaColegiado.nColegiado;
       this.inputs[1].value = this.busquedaColegiado.apellidos;
       this.inputs[2].value = this.busquedaColegiado.nombre;
+      if(sessionStorage.getItem("personaBody") != null && sessionStorage.getItem("personaBody")!= undefined){
+        this.idPersona = JSON.parse(sessionStorage.getItem("personaBody")).idPersona;
+      }
       this.inputs[0].disable = true;
       this.inputs[1].disable = true;
       this.inputs[2].disable = true;
@@ -466,6 +471,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.numColegiado = this.inputs[0].value;
         newDesigna.nombreColegiado = this.inputs[1].value;
         newDesigna.apellidosNombre = this.inputs[2].value;
+        newDesigna.idPersona = this.idPersona;
         newDesigna.fechaAlta = new Date(this.fechaGenerales);
         newDesigna.nif = this.nif;
         /* newDesigna.nombreColegiado = this.nombreColegiado;

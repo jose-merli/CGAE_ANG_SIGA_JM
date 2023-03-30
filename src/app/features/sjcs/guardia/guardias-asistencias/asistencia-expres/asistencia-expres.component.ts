@@ -20,6 +20,7 @@ import { KEY_CODE } from '../../../../administracion/parametros/parametros-gener
 import { BuscadorAsistenciasComponent } from './buscador-asistencias/buscador-asistencias.component';
 import { ResultadoAsistenciasComponent } from '../resultado-asistencias/resultado-asistencias.component';
 import { GuardiaItem } from '../../../../../models/guardia/GuardiaItem';
+import { IfStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-asistencia-expres',
@@ -869,8 +870,10 @@ export class AsistenciaExpresComponent implements OnInit,AfterViewInit {
   resetFiltros(){
     if(!this.filtro.filtroAux.anio){
       this.filtro.filtro = new FiltroAsistenciaItem();
-      this.filtro.usuarioBusquedaExpress.nombreAp = '';
-      this.filtro.usuarioBusquedaExpress.numColegiado = '';
+      if(!this.isLetrado){
+        this.filtro.usuarioBusquedaExpress.nombreAp = '';
+        this.filtro.usuarioBusquedaExpress.numColegiado = '';
+      }
       this.filtro.filtro.anio = String(new Date().getFullYear());
     }else{
       this.filtro.filtro = Object.assign({},this.filtro.filtroAux);

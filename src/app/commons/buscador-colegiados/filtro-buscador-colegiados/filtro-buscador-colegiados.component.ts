@@ -95,10 +95,13 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
           sessionStorage.removeItem('idTurnoAsistencia');
       }
       
-      let sizeOfDataColegiado = sessionStorage.getItem("sizedatacolegiado")
+      let sizeOfDataColegiado = sessionStorage.getItem("sizedatacolegiado");
+      sessionStorage.removeItem("sizedatacolegiado");
       let ncol = sessionStorage.numColegiado;
+      sessionStorage.removeItem("numColegiado");
       if(stringToNumber(sizeOfDataColegiado, 1) > 1){
         this.filtro.nColegiado = ncol;
+        this.busquedaColegiado();
       }
       this.progressSpinner = false;
   }
@@ -123,10 +126,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
         this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
       }
     );
-    let sizeOfDataColegiado = sessionStorage.getItem("sizedatacolegiado")
-    if(stringToNumber(sizeOfDataColegiado, 1) > 1){
-      this.busquedaColegiado();
-    }
+    
   }
 
   getComboTurno() {

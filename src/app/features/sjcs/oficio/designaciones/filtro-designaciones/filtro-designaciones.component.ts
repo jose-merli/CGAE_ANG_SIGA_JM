@@ -116,15 +116,13 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.getParamsEJG(false);
 
     //console.log('this.usuarioBusquedaExpressFromFicha*********', this.usuarioBusquedaExpressFromFicha)
-    if (sessionStorage.getItem("buscadorColegiados") && this.permisoDesigna == true) {
+    if (sessionStorage.getItem("buscadorColegiados")) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
       this.showColegiado = true;
 
       this.buscar();
-
-      sessionStorage.removeItem("buscadorColegiados");
     } else if (this.usuarioBusquedaExpressFromFicha != undefined) {
       this.usuarioBusquedaExpress.nombreAp = this.usuarioBusquedaExpressFromFicha.nombreAp;
       this.usuarioBusquedaExpress.numColegiado = this.usuarioBusquedaExpressFromFicha.numColegiado;

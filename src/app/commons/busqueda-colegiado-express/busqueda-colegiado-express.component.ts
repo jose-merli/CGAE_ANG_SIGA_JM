@@ -50,11 +50,16 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
     if (this.numColegiado) {
       this.colegiadoForm.get('numColegiado').setValue(this.numColegiado);
       sessionStorage.setItem("numColegiado",this.numColegiado);
+      if(sessionStorage.getItem("personaBody")!= null && sessionStorage.getItem("personaBody") != undefined){
+        this.nombreAp = JSON.parse(sessionStorage.getItem("personaBody")).nombre
+      }
       let usuarioBusquedaExpress = {
         numColegiado: this.numColegiado,
-        nombreAp: ''
+        nombreAp: this.nombreAp
       };
-      this.isBuscar(usuarioBusquedaExpress);
+      if(this.nombreAp == null || this.nombreAp == undefined || this.nombreAp == ''){
+        this.isBuscar(usuarioBusquedaExpress);
+      }
     }
 
     if (this.nombreAp) {
@@ -220,7 +225,8 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
               this.colegiadoForm.get("nombreAp").setValue(this.apellidosNombre);
             }else if(data.colegiadoJGItem.length > 1){ 
               sessionStorage.setItem("sizedatacolegiado", data.colegiadoJGItem.length);
-              this.router.navigate(["/buscadorColegiados"])
+              sessionStorage.setItem("pantalla", this.pantalla);
+              this.router.navigate(["/buscadorColegiados"]);
             } else {
               this.apellidosNombre = "";
               this.numColegiado = ""
