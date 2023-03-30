@@ -241,7 +241,7 @@ export class RelacionesComponent implements OnInit {
     this.cols = [
       { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '6%' },
       { field: "anio", header: "justiciaGratuita.maestros.calendarioLaboralAgenda.anio", width: "3%" },
-      { field: "codigo", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
+      { field: "numero", header: "justiciaGratuita.sjcs.designas.DatosIden.numero", width: "3%" },
       { field: "fechaasunto", header: "dato.jgr.guardia.saltcomp.fecha", width: '6%' },
       { field: "descturno", header: "dato.jgr.guardia.guardias.turnoguardiatramitacion", width: '6%' },
       { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado", width: '6%' },
