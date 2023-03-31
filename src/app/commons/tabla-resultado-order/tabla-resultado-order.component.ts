@@ -890,6 +890,12 @@ this.totalRegistros = this.rowGroups.length;
         let ordenSelected = this.rowGroups[posicionEntabla].cells[0].value;
         if (movement == 'up'){
           let aboveRow = this.rowGroups[posicionEntabla - 1];
+
+          if (this.positionSelected != 0) {
+            this.selectedArray = [];
+            this.selectRow(this.positionSelected - 1, aboveRow);
+          }
+          
           let aboveOrden = aboveRow.cells[0].value;
           this.rowGroups[posicionEntabla - 1] = this.rowGroups[posicionEntabla];
           this.rowGroups[posicionEntabla - 1].cells[0].value = aboveOrden;
@@ -897,6 +903,12 @@ this.totalRegistros = this.rowGroups.length;
           this.rowGroups[posicionEntabla].cells[0].value = ordenSelected;
         } else if (movement == 'down'){
           let belowRow = this.rowGroups[posicionEntabla + 1];
+
+          if (this.positionSelected != this.to -1) {
+            this.selectedArray = [];
+            this.selectRow(this.positionSelected + 1, belowRow);
+          }
+
           let belowOrden = belowRow.cells[0].value;
           this.rowGroups[posicionEntabla + 1] = this.rowGroups[posicionEntabla];
           this.rowGroups[posicionEntabla + 1].cells[0].value = belowOrden;
@@ -909,6 +921,12 @@ this.totalRegistros = this.rowGroups.length;
 
       if (movement == 'up'){
         let aboveRow = this.rowGroups[posicionEntabla - 1];
+        
+        if (this.positionSelected != 0) {
+          this.selectedArray = [];
+          this.selectRow(this.positionSelected - 1, aboveRow);
+        }
+        
         let aboveOrden = aboveRow.cells[0].value;
         this.rowGroups[posicionEntabla - 1] = this.rowGroups[posicionEntabla];
         this.rowGroups[posicionEntabla - 1].cells[0].value = aboveOrden;
@@ -916,6 +934,12 @@ this.totalRegistros = this.rowGroups.length;
         this.rowGroups[posicionEntabla].cells[0].value = ordenSelected;
       } else if (movement == 'down'){
         let belowRow = this.rowGroups[posicionEntabla + 1];
+
+        if (this.positionSelected != this.to -1) {
+          this.selectedArray = [];
+          this.selectRow(this.positionSelected + 1, belowRow);
+        }
+
         let belowOrden = belowRow.cells[0].value;
         this.rowGroups[posicionEntabla + 1] = this.rowGroups[posicionEntabla];
         this.rowGroups[posicionEntabla + 1].cells[0].value = belowOrden;
