@@ -887,48 +887,40 @@ this.totalRegistros = this.rowGroups.length;
     this.disableGen.emit(true);
     let groupSelected;
     if (this.calendarios){
-      //groupSelected = this.rowGroups[this.positionSelected - 1].cells[1].value;
-      //this.rowGroupsAux.forEach((row, index)=> {
-        let ordenSelected = this.rowGroups[this.positionSelected].cells[0].value;
+        let ordenSelected = this.rowGroups[posicionEntabla].cells[0].value;
         if (movement == 'up'){
-         /* let first = this.rowGroups[this.positionSelected - 1];
-          this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected - 2];
-          this.rowGroups[this.positionSelected - 2] = first;*/
-          let aboveRow = this.rowGroups[this.positionSelected - 1];
+          let aboveRow = this.rowGroups[posicionEntabla - 1];
           let aboveOrden = aboveRow.cells[0].value;
-          this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
-          this.rowGroups[this.positionSelected - 1].cells[0].value = aboveOrden;
-          this.rowGroups[this.positionSelected] = aboveRow;
-          this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
+          this.rowGroups[posicionEntabla - 1] = this.rowGroups[posicionEntabla];
+          this.rowGroups[posicionEntabla - 1].cells[0].value = aboveOrden;
+          this.rowGroups[posicionEntabla] = aboveRow;
+          this.rowGroups[posicionEntabla].cells[0].value = ordenSelected;
         } else if (movement == 'down'){
-          //let first = this.rowGroups[this.positionSelected - 1];
-          //this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
-          //this.rowGroups[this.positionSelected] = first;
-          let belowRow = this.rowGroups[this.positionSelected + 1];
+          let belowRow = this.rowGroups[posicionEntabla + 1];
           let belowOrden = belowRow.cells[0].value;
-          this.rowGroups[this.positionSelected + 1] = this.rowGroups[this.positionSelected];
-          this.rowGroups[this.positionSelected + 1].cells[0].value = belowOrden;
-          this.rowGroups[this.positionSelected] = belowRow;
-          this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
+          this.rowGroups[posicionEntabla + 1] = this.rowGroups[posicionEntabla];
+          this.rowGroups[posicionEntabla + 1].cells[0].value = belowOrden;
+          this.rowGroups[posicionEntabla] = belowRow;
+          this.rowGroups[posicionEntabla].cells[0].value = ordenSelected;
         }
       //});
     }else if(this.listaGuardias){
-      let ordenSelected = this.rowGroups[this.positionSelected].cells[0].value;
+      let ordenSelected = this.rowGroups[posicionEntabla].cells[0].value;
 
       if (movement == 'up'){
-        let aboveRow = this.rowGroups[this.positionSelected - 1];
+        let aboveRow = this.rowGroups[posicionEntabla - 1];
         let aboveOrden = aboveRow.cells[0].value;
-        this.rowGroups[this.positionSelected - 1] = this.rowGroups[this.positionSelected];
-        this.rowGroups[this.positionSelected - 1].cells[0].value = aboveOrden;
-        this.rowGroups[this.positionSelected] = aboveRow;
-        this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
+        this.rowGroups[posicionEntabla - 1] = this.rowGroups[posicionEntabla];
+        this.rowGroups[posicionEntabla - 1].cells[0].value = aboveOrden;
+        this.rowGroups[posicionEntabla] = aboveRow;
+        this.rowGroups[posicionEntabla].cells[0].value = ordenSelected;
       } else if (movement == 'down'){
-        let belowRow = this.rowGroups[this.positionSelected + 1];
+        let belowRow = this.rowGroups[posicionEntabla + 1];
         let belowOrden = belowRow.cells[0].value;
-        this.rowGroups[this.positionSelected + 1] = this.rowGroups[this.positionSelected];
-        this.rowGroups[this.positionSelected + 1].cells[0].value = belowOrden;
-        this.rowGroups[this.positionSelected] = belowRow;
-        this.rowGroups[this.positionSelected].cells[0].value = ordenSelected;
+        this.rowGroups[posicionEntabla + 1] = this.rowGroups[posicionEntabla];
+        this.rowGroups[posicionEntabla + 1].cells[0].value = belowOrden;
+        this.rowGroups[posicionEntabla] = belowRow;
+        this.rowGroups[posicionEntabla].cells[0].value = ordenSelected;
       }
       }else if (this.pantalla == "colaGuardias"){
       groupSelected = this.rowGroups[posicionEntabla].cells[0].value;
