@@ -474,9 +474,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.idPersona = this.idPersona;
         newDesigna.fechaAlta = new Date(this.fechaGenerales);
         newDesigna.nif = this.nif;
-        /* newDesigna.nombreColegiado = this.nombreColegiado;
+        newDesigna.nombreColegiado = this.nombreColegiado;
         newDesigna.apellido1Colegiado = this.apellido1Colegiado;
-        newDesigna.apellido2Colegiado = this.apellido2Colegiado; */
+        newDesigna.apellido2Colegiado = this.apellido2Colegiado;
         newDesigna.nombreColegiado = this.inputs[2].value;
         newDesigna.apellidosNombre = this.inputs[1].value + this.inputs[2].value;
         newDesigna.idInstitucion = this.institucionColegiado;
