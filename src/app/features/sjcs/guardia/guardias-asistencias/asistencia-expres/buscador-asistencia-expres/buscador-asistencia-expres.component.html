@@ -67,8 +67,9 @@
                             </div>
                             <div class="form-group-interlineado col-lg-5 col-md-5">
                                 <app-busqueda-colegiado-express [numColegiado]="usuarioBusquedaExpress.numColegiado"
-                                    [pantalla]="'asistenciaAE'" (idPersona)="getIdPersonaLetradoManual($event)" [disabled]="isLetrado || refuerzoSustitucionNoSeleccionado" [filtrosAE]="filtro"
-                                    [nombreAp]="usuarioBusquedaExpress.nombreAp" (colegiado)="changeColegiado($event)">
+                                    [pantalla]="'asistenciaAE'" (colegiado)="changeColegiado($event)" 
+                                    (idPersona)="getIdPersonaLetradoManual($event)" [disabled]="isLetrado || refuerzoSustitucionNoSeleccionado" [filtrosAE]="filtro"
+                                    [nombreAp]="usuarioBusquedaExpress.nombreAp">
                                 </app-busqueda-colegiado-express>
                             </div>
                             <div class="form-group-interlineado col-lg-1 col-md-1">

@@ -99,6 +99,7 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
       this.usuarioBusquedaExpress.nombreAp = `${apellidos}, ${nombre}`;
       this.usuarioBusquedaExpress.numColegiado = nColegiado;
+
     }
     this.titulo = 'Datos Comunes';
     this.resaltadoDatos = true;
@@ -272,8 +273,10 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     this.comboGuardias = [];
     this.filtro.idTipoAsistenciaColegiado = '';
     this.filtro.idLetradoGuardia = '';
-    this.usuarioBusquedaExpress.nombreAp = '';
-    this.usuarioBusquedaExpress.numColegiado = '';
+    if (sessionStorage.getItem('esBuscadorColegiados') != "true" && sessionStorage.getItem('buscadorColegiados')== null){
+      this.usuarioBusquedaExpress.nombreAp = '';
+      this.usuarioBusquedaExpress.numColegiado = '';
+    }
     this.comboTiposAsistencia = [];
     this.comboLetradosGuardia = [];
 
@@ -317,8 +320,10 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     this.deshabilitarLetradoGuardia = false;
     this.filtro.idTipoAsistenciaColegiado = '';
     this.filtro.idLetradoGuardia = '';
-    this.usuarioBusquedaExpress.nombreAp = '';
-    this.usuarioBusquedaExpress.numColegiado = '';
+    if (sessionStorage.getItem('esBuscadorColegiados') != "true" && sessionStorage.getItem('buscadorColegiados')== null){
+      this.usuarioBusquedaExpress.nombreAp = '';
+      this.usuarioBusquedaExpress.numColegiado = '';
+    }
     this.comboTiposAsistencia = [];
     this.comboLetradosGuardia = [];
     let idTurno = "x";
