@@ -46,7 +46,7 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
   showCards: boolean = false;
   editingConceptos: boolean = false;
   facturasMarcadas: CompensacionFacItem[] = [];
-  paramDeducirCobroAutom: ParametroItem;
+  paramDeducirCobroAutom: any;
 
   tarjetaFija = {
     nombre: 'facturacionSJCS.facturacionesYPagos.inforesumen',
@@ -165,7 +165,7 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
   }
 
   compensacionFact() {
-    this.compensacion.getCompensacionFacturas(this.paramDeducirCobroAutom.valor.toString());
+    this.compensacion.getCompensacionFacturas(this.paramDeducirCobroAutom);
   }
 
   getParamDeducirCobroAutom() {
@@ -178,7 +178,7 @@ export class GestionPagosComponent extends SigaWrapper implements OnInit, AfterV
       .post("busquedaPerJuridica_parametroColegio", parametro)
       .subscribe(
         data => {
-          this.paramDeducirCobroAutom = JSON.parse(data.body);
+          this.paramDeducirCobroAutom = JSON.parse(data.body).parametro;
         //this.progressSpinner = false;
       });
 

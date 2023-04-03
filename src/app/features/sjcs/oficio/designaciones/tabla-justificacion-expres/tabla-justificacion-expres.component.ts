@@ -184,7 +184,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         .post("busquedaPerJuridica_parametroColegio", parametro)
         .subscribe(
           data => {
-            this.justActivarDesigLetrado = JSON.parse(data.body);
+            this.justActivarDesigLetrado = JSON.parse(data.body).parametro;
         });
     });
   }

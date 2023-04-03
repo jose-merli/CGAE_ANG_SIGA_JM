@@ -165,7 +165,7 @@ export class DatosGeneralesEjgComponent implements OnInit {
       .post("busquedaPerJuridica_parametroColegio", parametro)
       .subscribe(
         data => {
-          this.maxLengthNum = JSON.parse(data.body);
+          this.maxLengthNum = JSON.parse(data.body).parametro;
       });
   }
 

@@ -100,7 +100,7 @@ export class FichaGuardiasInscripcionesComponent implements OnInit {
 			.post("busquedaPerJuridica_parametroColegio", parametro)
 			.subscribe(
 				data => {
-				this.valorParametroDirecciones = JSON.parse(data.body);
+				this.valorParametroDirecciones = JSON.parse(data.body).parametro;
 				//this.progressSpinner = false;
 			});
 			
