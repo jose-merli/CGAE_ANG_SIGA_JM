@@ -58,6 +58,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   textoComActivo: string = '[Com] / Juz';
   textoJuzActivo: string = 'Com / [Juz]';
   sumar = false;
+  llamaFichaActDesigna = true;
   @Output() anySelected = new EventEmitter<any>();
   @Output() designasToDelete = new EventEmitter<any[]>();
   @Output() actuacionesToDelete = new EventEmitter<any[]>();
@@ -2019,55 +2020,84 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   linkFichaActIfPermis(row, rowGroup) {
     if (this.pantalla == 'JE') {
-      if (this.permisosFichaAct) {
-
-        let des: DesignaItem = new DesignaItem();
-        if (rowGroup != null) {
-          des.ano = rowGroup.id.split('\n')[0];
-          des.idTurno = rowGroup.rows[0].cells[17].value;
-          des.numero = rowGroup.rows[0].cells[19].value;
-          des.idInstitucion = rowGroup.rows[0].cells[13].value;
-          des.nig = rowGroup.rows[0].cells[2].value;
-          des.numProcedimiento = rowGroup.rows[0].cells[3].value;
-          des.idJuzgado = rowGroup.rows[0].cells[15].value;
-          des.idProcedimiento = rowGroup.rows[0].cells[21].value;
-          des.numColegiado = rowGroup.rows[0].cells[38].value;
-          des.fechaEntradaInicio = rowGroup.rows[0].cells[9].value;
+      let mensaje;
+      if (sessionStorage.getItem("filtroJustificacionExpres") != null) {
+        let data = JSON.parse(sessionStorage.getItem("filtroJustificacionExpres"));
+        if(data.sinEJG=="1" && rowGroup.estadoEx=="SIN_EJG"){
+          this.llamaFichaActDesigna=false;
+          mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noNuevoSinEJG");
+        }else if (data.ejgSinResolucion=="1" && rowGroup.resolucionDesignacion=="SIN_RESOLUCION"){
+          this.llamaFichaActDesigna=false;
+          mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noNuevoEJGSinResolucion");
+        }else if (data.conEJGNoFavorables=="1" && rowGroup.resolucionDesignacion=="NO_FAVORABLE"){
+          this.llamaFichaActDesigna=false;
+          mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noNuevoEJGNoFavorable");
+        }else if (data.resolucionPTECAJG=="1" && rowGroup.resolucionDesignacion=="PTE_CAJG"){
+          this.llamaFichaActDesigna=false;
+          mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.EJGPTECAJG");
         }
+      }
+      if(this.llamaFichaActDesigna){
 
-        let act: ActuacionDesignaItem = new ActuacionDesignaItem();
-        if (row != null) {
-          act.idTurno = row.cells[33].value;
-          act.anio = row.cells[32].value;
-          act.fechaActuacion = row.cells[5].value;
-          act.idJuzgado = row.cells[21].value;
-          act.idProcedimiento = row.cells[20].value;
-          act.nig = row.cells[2].value;
-          act.numProcedimiento = row.cells[3].value;
-          act.idAcreditacion = row.cells[10].value;
-          act.numeroAsunto = row.cells[19].value;
-        } else {
-          act.idTurno = rowGroup.rows[0].cells[17].value;
-          act.anio = rowGroup.rows[0].cells[10].value;
-          act.fechaActuacion = rowGroup.rows[0].cells[9].value;
-          act.idJuzgado = rowGroup.rows[0].cells[15].value;
-          act.idProcedimiento = rowGroup.rows[0].cells[21].value;
-          act.nig = rowGroup.rows[0].cells[2].value;
-          act.numProcedimiento = rowGroup.rows[0].cells[3].value;
-          //act.idAcreditacion = rowGroup.rows[0].cells[10].value;
-          //act.numeroAsunto = rowGroup.rows[0].cells[19].value;
+        if (this.permisosFichaAct && this.llamaFichaActDesigna) {
+          let des: DesignaItem = new DesignaItem();
+          if (rowGroup != null) {
+            des.ano = rowGroup.id.split('\n')[0];
+            des.idTurno = rowGroup.rows[0].cells[17].value;
+            des.numero = rowGroup.rows[0].cells[19].value;
+            des.idInstitucion = rowGroup.rows[0].cells[13].value;
+            des.nig = rowGroup.rows[0].cells[2].value;
+            des.numProcedimiento = rowGroup.rows[0].cells[3].value;
+            des.idJuzgado = rowGroup.rows[0].cells[15].value;
+            des.idProcedimiento = rowGroup.rows[0].cells[21].value;
+            des.numColegiado = rowGroup.rows[0].cells[38].value;
+            des.fechaEntradaInicio = rowGroup.rows[0].cells[9].value;
+          }
+          let act: ActuacionDesignaItem = new ActuacionDesignaItem();
+          if (row != null) {
+            act.idTurno = row.cells[33].value;
+            act.anio = row.cells[32].value;
+            act.fechaActuacion = row.cells[5].value;
+            act.idJuzgado = row.cells[21].value;
+            act.idProcedimiento = row.cells[20].value;
+            act.nig = row.cells[2].value;
+            act.numProcedimiento = row.cells[3].value;
+            act.idAcreditacion = row.cells[10].value;
+            act.numeroAsunto = row.cells[19].value;
+          } else {
+            act.idTurno = rowGroup.rows[0].cells[17].value;
+            act.anio = rowGroup.rows[0].cells[10].value;
+            act.fechaActuacion = rowGroup.rows[0].cells[9].value;
+            act.idJuzgado = rowGroup.rows[0].cells[15].value;
+            act.idProcedimiento = rowGroup.rows[0].cells[21].value;
+            act.nig = rowGroup.rows[0].cells[2].value;
+            act.numProcedimiento = rowGroup.rows[0].cells[3].value;
+            //act.idAcreditacion = rowGroup.rows[0].cells[10].value;
+            //act.numeroAsunto = rowGroup.rows[0].cells[19].value;
+          }
+
+          let actuacion: Actuacion = {
+            isNew: (row == null),
+            designaItem: des,
+            actuacion: act,
+            relaciones: null
+          };
+          sessionStorage.setItem("vieneDeJE", "true");
+          this.searchRelaciones(actuacion);
         }
-
-        let actuacion: Actuacion = {
-          isNew: (row == null),
-          designaItem: des,
-          actuacion: act,
-          relaciones: null
-        };
-        sessionStorage.setItem("vieneDeJE", "true");
-        this.searchRelaciones(actuacion);
+      }else{
+        this.showMessage("warn", this.translateService.instant("general.message.warn"), mensaje);
       }
     }
+  }
+
+  showMessage(severity, summary, msg) {
+    this.msgs = [];
+    this.msgs.push({
+      severity: severity,
+      summary: summary,
+      detail: msg
+    });
   }
 
   linkFichaDesigna(rowGroup: RowGroup, id: string) {
