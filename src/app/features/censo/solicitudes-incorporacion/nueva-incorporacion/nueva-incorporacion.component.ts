@@ -825,9 +825,9 @@ export class NuevaIncorporacionComponent implements OnInit {
       this.bodyInicial.apellidos = this.bodyInicial.apellidos.trim();
     }
 
-    if (this.solicitudEditar.poblacionExtranjera == undefined) {
+    if (this.solicitudEditar.poblacionExtranjera === undefined) {
       this.bodyInicial.poblacionExtranjera = undefined;
-    } else if (this.solicitudEditar.poblacionExtranjera == null) {
+    } else if (this.solicitudEditar.poblacionExtranjera === null) {
       this.bodyInicial.poblacionExtranjera = null;
     } else {
       this.bodyInicial.poblacionExtranjera = this.solicitudEditar.poblacionExtranjera;
