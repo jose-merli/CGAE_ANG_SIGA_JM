@@ -153,6 +153,11 @@ export class DatosUnidadFamiliarComponent implements OnInit, OnChanges {
         pass = false;
       }
     }
+
+    if (this.generalBody.uf_enCalidad == null) {
+      this.muestraCamposObligatorios();
+      pass = false;
+    }
     //Se comprueba el campo de rol y si ya hay un solicitante principal si se introduce dicho valor
     // if(this.generalBody.uf_enCalidad=="3"){
     //   let ejg: EJGItem = new EJGItem();
