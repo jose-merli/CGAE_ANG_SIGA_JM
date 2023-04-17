@@ -77,6 +77,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   numColumnasChecked = 0;
   selected = false;
   eliminaActuacion = true;
+  actualizaActuacion=true;
+  creaActuacion=true;
   currentRoute: String;
   selectedArray = [];
   selecteChild = [];
@@ -97,6 +99,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   toRowGroup = 9;
   totalRegistros = 0;
   disableDelete = true;
+  mensaje="";
   todoDesplegado = false;
   idTurno = "";
   rowIdWithNewActuacion = "";
@@ -1378,12 +1381,18 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         icon: "fa fa-trash-alt",
         accept: () => {
           this.rowGroups.forEach((rowG, i) => {
-            this.selectedArray.forEach(id => {
-              if (rowG.id == id) {
-                //this.toDoButton('Nuevo', rowG.id, rowG, null)
-                this.linkFichaActIfPermis(null, rowG);
-              }
-            });
+            this.llamaFichaActDesigna=this.compruebaNoLectura(rowG, "nuevo");
+            if (this.llamaFichaActDesigna){
+              this.selectedArray.forEach(id => {
+                if (rowG.id == id) {
+                  //this.toDoButton('Nuevo', rowG.id, rowG, null)
+                  this.linkFichaActIfPermis(null, rowG);
+                }
+              });
+            }else{
+              this.showMsg('info', this.translateService.instant("general.message.informacion"), this.mensaje);
+            }
+            
           });
         },
         reject: () => {
@@ -1391,15 +1400,60 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       });
     } else {
       this.rowGroups.forEach((rowG, i) => {
-        this.selectedArray.forEach(id => {
-          if (rowG.id == id) {
-            //this.toDoButton('Nuevo', rowG.id, rowG, null)
-            this.linkFichaActIfPermis(null, rowG);
-          }
-        });
+        this.llamaFichaActDesigna=this.compruebaNoLectura(rowG, "nuevo");
+        if (this.llamaFichaActDesigna){
+          this.selectedArray.forEach(id => {
+            if (rowG.id == id) {
+              //this.toDoButton('Nuevo', rowG.id, rowG, null)
+              this.linkFichaActIfPermis(null, rowG);
+            }
+          });
+        }else{
+          this.showMsg('info', this.translateService.instant("general.message.informacion"), this.mensaje);
+        }  
       });
     }
   }
+
+  compruebaNoLectura(rowG, accion){
+    if (sessionStorage.getItem("filtroJustificacionExpres") != null) {
+      let data = JSON.parse(sessionStorage.getItem("filtroJustificacionExpres"));
+      this.mensaje="";
+      if(data.sinEJG=="1" && (rowG.estadoEx=="SIN_EJG" || rowG.resolucionDesignacion=="SIN_EJG")){
+        if(accion=="nuevo"){
+          this.mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noNuevoSinEJG");
+        }else if(accion=="eliminar"){
+          this.mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelSinEJG");
+        }
+        return false;
+      }else if (data.ejgSinResolucion=="1" && rowG.resolucionDesignacion=="SIN_RESOLUCION"){
+        if(accion=="nuevo"){
+          this.mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noNuevoEJGSinResolucion");
+        }else if(accion=="eliminar"){
+          this.mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelEJGSinResolucion");
+        }
+        return false;
+      }else if (data.conEJGNoFavorables=="1" && rowG.resolucionDesignacion=="NO_FAVORABLE"){
+        if(accion=="nuevo"){
+          this.mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noNuevoEJGNoFavorable");
+        }else if(accion=="eliminar"){
+          this.mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelEJGNoFavorable");
+        }
+        return false;
+      }else if (data.resolucionPTECAJG=="1" && rowG.resolucionDesignacion=="PTE_CAJG"){
+        if(accion=="nuevo"){
+          this.mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.EJGPTECAJG");
+        }else if(accion=="eliminar"){
+          this.mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelEJGPTECAJG");
+        }
+        return false;
+      }else{
+        return true;
+      }
+    }
+    return true;
+  }
+
   toDoButton(type, designacion, rowGroup, rowWrapper) {
     this.turnoAllow = rowGroup.rows[0].cells[39].value;
     if (type == 'Nuevo') {
@@ -1478,11 +1532,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     let idAcreditacionArr = [];
     this.rowGroups.forEach(rowGroup => {
       if (rowGroup.id == rowGroupWithNew) {
+        this.creaActuacion=this.compruebaNoLectura(rowGroup, "nuevo");
         let actuaciones = rowGroup.rows.slice(1, rowGroup.rows.length - 1);
         actuaciones.forEach(rowAct => {
           let idAcre = rowAct.cells[14].value;
           nameAcreditacionArr.push(idAcre);
         })
+      }else if(rowGroup.id==this.RGid){
+        this.creaActuacion=this.compruebaNoLectura(rowGroup, "nuevo");
       }
     })
     nameAcreditacionArr.forEach(nameA => {
@@ -1527,21 +1584,26 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         // Si las actuaciones han sido creadas a partir de los checkbox de actuacion,
         // se establece la fecha de justificación con la fecha del selector y se cambian los
         // valores de las columnas donde deberían ir los ids de los combos.
-        if (newAct.cells[6].type == 'checkboxDate' && newAct.cells[6].value) newAct.cells[6].value = this.fechaFiltro;
-        if (newAct.cells[1].type != 'multiselect1') newAct.cells[1].value = newAct.cells[21].value;
-        if (newAct.cells[4].type != 'multiselect2') newAct.cells[4].value = newAct.cells[20].value;
-        if (newAct.cells[7].type != 'multiselect3') newAct.cells[7].value = newAct.cells[10].value;
-
-
-        let idAcreditacionNew = newAct.cells[7].value;
-        esPosibleCrearNuevo = this.searchActuacionwithSameNumDesig(idAcreditacionNew, this.rowGroupWithNew);
-        if (esPosibleCrearNuevo) {
-          newActuacionesToSend.push(newAct);
-        } else {
-          this.showMsg('error', "No es posible crear otra actuación con valor de acreditación Inicio/Fin", '')
-        }
+          if (newAct.cells[6].type == 'checkboxDate' && newAct.cells[6].value) newAct.cells[6].value = this.fechaFiltro;
+          if (newAct.cells[1].type != 'multiselect1') newAct.cells[1].value = newAct.cells[21].value;
+          if (newAct.cells[4].type != 'multiselect2') newAct.cells[4].value = newAct.cells[20].value;
+          if (newAct.cells[7].type != 'multiselect3') newAct.cells[7].value = newAct.cells[10].value;
+  
+  
+          let idAcreditacionNew = newAct.cells[7].value;
+          esPosibleCrearNuevo = this.searchActuacionwithSameNumDesig(idAcreditacionNew, this.rowGroupWithNew);
+          if (esPosibleCrearNuevo) {
+            if(this.creaActuacion){
+              newActuacionesToSend.push(newAct);
+            }else{
+              this.showMsg('info', this.translateService.instant("general.message.informacion"), this.mensaje);
+          }
+          } else {
+            this.showMsg('error', "No es posible crear otra actuación con valor de acreditación Inicio/Fin", '')
+          }
+          
       });
-
+     
       if (newActuacionesToSend.length != 0) {
         this.actuacionesToAdd.emit(newActuacionesToSend);
         this.totalActuaciones.emit(newActuacionesToSend.length);
@@ -1558,30 +1620,30 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       let rowIdsToUpdateNOT_REPEATED = new Set(this.rowIdsToUpdate);
       this.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
       this.rowGroups.forEach(row => {
-        if (this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0 || this.indicesToUpdate.some(d => d[0] == row.id.toString())) {
-          let rowGroupToUpdate = row;
-
-          let rowsToUpdate = [];
-
-          // Línea que actualiza la designación
-          rowsToUpdate.push(row.rows[0]);
-
-          // Se agregan las actuaciones modificadas
-          rowsToUpdate = rowsToUpdate.concat(row.rows.slice(1).filter(d => Array.isArray(d.cells[0].value)
-            && d.cells[0].value.length > 1
-            && d.cells[0].value[1] != undefined && d.cells[0].value[1] != 'Nuevo'
-            && (d.cells[0].value[1] != undefined || d.cells[0].value[1] != '')));
-
-          row.rows = rowsToUpdate;
-
-          this.rowValidadas.forEach(rowValid => {
-            if (rowGroupToUpdate.rows.includes(rowValid)) {
-            }
-          })
-          this.rowValidadas = [];
-
-          this.dataToUpdateArr.push(row);
-        }
+          if (this.rowIdsToUpdate.indexOf(row.id.toString()) >= 0 || this.indicesToUpdate.some(d => d[0] == row.id.toString())) {
+            let rowGroupToUpdate = row;
+  
+            let rowsToUpdate = [];
+  
+            // Línea que actualiza la designación
+            rowsToUpdate.push(row.rows[0]);
+  
+            // Se agregan las actuaciones modificadas
+            rowsToUpdate = rowsToUpdate.concat(row.rows.slice(1).filter(d => Array.isArray(d.cells[0].value)
+              && d.cells[0].value.length > 1
+              && d.cells[0].value[1] != undefined && d.cells[0].value[1] != 'Nuevo'
+              && (d.cells[0].value[1] != undefined || d.cells[0].value[1] != '')));
+  
+            row.rows = rowsToUpdate;
+  
+            this.rowValidadas.forEach(rowValid => {
+              if (rowGroupToUpdate.rows.includes(rowValid)) {
+              }
+            })
+            this.rowValidadas = [];
+  
+            this.dataToUpdateArr.push(row);
+          }
       })
       if (this.dataToUpdateArr.length != 0) {
         this.dataToUpdate.emit(this.dataToUpdateArr);
@@ -1599,7 +1661,10 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.newActuacionesArr = []; //limpiamos
     this.rowValidadas = [];
     sessionStorage.setItem("rowIdsToUpdate", JSON.stringify(this.rowIdsToUpdate));
-    this.refreshData.emit(true);
+    if(this.creaActuacion){
+      this.refreshData.emit(true);
+    }
+    
   }
 
   eliminar() {
@@ -1618,32 +1683,12 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       });
       //2. Eliminamos actuaciones
       if (this.selecteChild.length) {
-
-
         this.selecteChild.forEach((child) => {
-            let mensaje;
-            if (sessionStorage.getItem("filtroJustificacionExpres") != null) {
-              let data = JSON.parse(sessionStorage.getItem("filtroJustificacionExpres"));
-              if(data.sinEJG=="1" && rowG.estadoEx=="SIN_EJG"){
-                this.eliminaActuacion=false;
-                mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelSinEJG");
-              }else if (data.ejgSinResolucion=="1" && rowG.resolucionDesignacion=="SIN_RESOLUCION"){
-                this.eliminaActuacion=false;
-                mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelEJGSinResolucion");
-              }else if (data.conEJGNoFavorables=="1" && rowG.resolucionDesignacion=="NO_FAVORABLE"){
-                this.eliminaActuacion=false;
-                mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelEJGNoFavorable");
-              }else if (data.resolucionPTECAJG=="1" && rowG.resolucionDesignacion=="PTE_CAJG"){
-                this.eliminaActuacion=false;
-                mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelEJGPTECAJG");
-              }
-            }
-
+          this.eliminaActuacion=this.compruebaNoLectura(rowG, "eliminar");
             if(this.eliminaActuacion){
               let rowIdChild = child;
               let rowId = rowIdChild.slice(0, -1);
               this.childNumber = Number(rowIdChild.slice(rowId.length, rowIdChild.length));
-
               this.selectedArray.forEach(idToDelete => {
                 if (rowIdChild == idToDelete && rowG.id == rowId) {
                   this.turnoAllow = rowG.rows[0].cells[39].value;
@@ -1673,7 +1718,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                 }
               });
             }else{
-              this.showMessage("warn", this.translateService.instant("general.message.warn"), mensaje);
+              this.showMsg('info', this.translateService.instant("general.message.informacion"), this.mensaje);
             }
         })
       
@@ -2042,26 +2087,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
   linkFichaActIfPermis(row, rowGroup) {
     if (this.pantalla == 'JE') {
-      let mensaje;
-      if (sessionStorage.getItem("filtroJustificacionExpres") != null) {
-        let data = JSON.parse(sessionStorage.getItem("filtroJustificacionExpres"));
-        if(data.sinEJG=="1" && rowGroup.estadoEx=="SIN_EJG"){
-          this.llamaFichaActDesigna=false;
-          mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noNuevoSinEJG");
-        }else if (data.ejgSinResolucion=="1" && rowGroup.resolucionDesignacion=="SIN_RESOLUCION"){
-          this.llamaFichaActDesigna=false;
-          mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noNuevoEJGSinResolucion");
-        }else if (data.conEJGNoFavorables=="1" && rowGroup.resolucionDesignacion=="NO_FAVORABLE"){
-          this.llamaFichaActDesigna=false;
-          mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noNuevoEJGNoFavorable");
-        }else if (data.resolucionPTECAJG=="1" && rowGroup.resolucionDesignacion=="PTE_CAJG"){
-          this.llamaFichaActDesigna=false;
-          mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.EJGPTECAJG");
-        }
-      }
-      if(this.llamaFichaActDesigna){
-
-        if (this.permisosFichaAct && this.llamaFichaActDesigna) {
+        if (this.permisosFichaAct) {
           let des: DesignaItem = new DesignaItem();
           if (rowGroup != null) {
             des.ano = rowGroup.id.split('\n')[0];
@@ -2107,9 +2133,6 @@ export class TablaResultadoDesplegableComponent implements OnInit {
           sessionStorage.setItem("vieneDeJE", "true");
           this.searchRelaciones(actuacion);
         }
-      }else{
-        this.showMessage("warn", this.translateService.instant("general.message.warn"), mensaje);
-      }
     }
   }
 
