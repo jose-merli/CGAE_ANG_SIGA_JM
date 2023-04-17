@@ -24,6 +24,7 @@ import { findIndex } from 'rxjs/operators';
 export class DialogoComunicacionesComponent implements OnInit {
 	msgs: any;
 	msgsDescarga: any;
+	msgsEnvio: any;
 	msgsDescargaFinalizada: any;
 	selectedItem: number = 10;
 	//Diálogo de comunicación
@@ -394,10 +395,12 @@ export class DialogoComunicacionesComponent implements OnInit {
 				ruta: this.rutaComunicacion,
 				fechaProgramada: this.bodyComunicacion.fechaProgramacion
 			};
-
+			this.showInfoPerenneEnv(
+				'Se ha iniciado el envio, puede continuar trabajando.'
+			);
 			this.sigaServices.post('dialogo_generarEnvios', datos).subscribe(
 				(data) => {
-					this.showSuccess(
+					this.showSucessPerenneEnv(
 						this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.envio.generado')
 					);
 					this.showValores = false;
@@ -405,11 +408,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 				},
 				(err) => {
 					if (JSON.parse(err.error).description != undefined && JSON.parse(err.error).description != null) {
-						this.showFail(
+						this.showFailPerenneEnv(
 							JSON.parse(err.error).description
 						);
 					} else {
-						this.showFail(
+						this.showFailPerenneEnv(
 							this.translateService.instant(
 								'informesycomunicaciones.comunicaciones.mensaje.envio.error.generar'
 							)
@@ -423,7 +426,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 				}
 			);
 		} else {
-			this.showFail(
+			this.showFailPerenneEnv(
 				this.translateService.instant('informesycomunicaciones.comunicaciones.mensaje.envio.error.datos')
 			);
 			this.progressSpinner = false;
@@ -684,6 +687,21 @@ export class DialogoComunicacionesComponent implements OnInit {
 	showInfo(mensaje: string) {
 		this.msgs = [];
 		this.msgs.push({ severity: 'info', summary: '', detail: mensaje });
+	}
+
+	showInfoPerenneEnv(mensaje: string) {
+		this.msgsEnvio = [];
+		this.msgsEnvio.push({ severity: 'info', summary: '', detail: mensaje });
+	}
+	
+	showSucessPerenneEnv(mensaje: string) {
+		this.msgsEnvio = [];
+		this.msgsEnvio.push({ severity: 'success', summary: '', detail: mensaje });
+	}
+	
+	showFailPerenneEnv(mensaje: string) {
+		this.msgsEnvio = [];
+		this.msgsEnvio.push({ severity: 'error', summary: '', detail: mensaje });
 	}
 
 	showInfoPerenne(mensaje: string) {
