@@ -145,7 +145,7 @@
             label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}"></button>
           <button [disabled]="selectedDatos.length == 0 || !permisoEscritura" (click)="deleteDocumentacion()" pButton
             type="button" icon="fa fa-trash" iconPos="left" label="{{ 'general.boton.eliminar' | translate}}"></button>
-          <button [disabled]="selectedDatos.length == 0 || !permisoEscritura" (click)="checkPermisosPrint()" pButton
+          <button [disabled]="nDocumentos == 0 || !permisoEscritura" (click)="checkPermisosPrint()" pButton
             type="button" icon="fa fa-print" iconPos="left" label="{{ 'general.boton.imprimir' | translate}}"></button>
 
           <button *ngIf="esColegioZonaComun && esIdentificadorPericlesDisponible" 

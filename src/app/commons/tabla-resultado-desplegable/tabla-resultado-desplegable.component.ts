@@ -76,6 +76,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   positionsToDelete = [];
   numColumnasChecked = 0;
   selected = false;
+  eliminaActuacion = true;
   currentRoute: String;
   selectedArray = [];
   selecteChild = [];
@@ -1620,41 +1621,62 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
 
         this.selecteChild.forEach((child) => {
-
-          let rowIdChild = child;
-          let rowId = rowIdChild.slice(0, -1);
-          this.childNumber = Number(rowIdChild.slice(rowId.length, rowIdChild.length));
-
-          this.selectedArray.forEach(idToDelete => {
-            if (rowIdChild == idToDelete && rowG.id == rowId) {
-              this.turnoAllow = rowG.rows[0].cells[39].value;
-              //rowG.rows.splice(this.childNumber, 1);
-              if (rowG.rows[this.childNumber + 1].cells[8].value == false) {
-                //actuacion No Validada
-                //console.log("isListreado")
-                if ((this.isLetrado && this.turnoAllow != "1") || (!this.isLetrado)) {
-                  if (rowG.rows[this.childNumber + 1].cells[35].value == "1") {
-                    this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
-                    this.refreshData.emit(true);
-                  } else {
-                    //console.log("push del else");
-                    deletedAct.push(rowG.rows[this.childNumber + 1].cells)
-                  }
-                } else {
-                  this.showMsg('error', "No tiene permiso para eliminar actuaciones", '')
-                  this.refreshData.emit(true);
-                }
-              } else {
-                this.showMsg('error', "No se pueden eliminar actuaciones validadas", '')
-                this.refreshData.emit(true);
+            let mensaje;
+            if (sessionStorage.getItem("filtroJustificacionExpres") != null) {
+              let data = JSON.parse(sessionStorage.getItem("filtroJustificacionExpres"));
+              if(data.sinEJG=="1" && rowG.estadoEx=="SIN_EJG"){
+                this.eliminaActuacion=false;
+                mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelSinEJG");
+              }else if (data.ejgSinResolucion=="1" && rowG.resolucionDesignacion=="SIN_RESOLUCION"){
+                this.eliminaActuacion=false;
+                mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelEJGSinResolucion");
+              }else if (data.conEJGNoFavorables=="1" && rowG.resolucionDesignacion=="NO_FAVORABLE"){
+                this.eliminaActuacion=false;
+                mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelEJGNoFavorable");
+              }else if (data.resolucionPTECAJG=="1" && rowG.resolucionDesignacion=="PTE_CAJG"){
+                this.eliminaActuacion=false;
+                mensaje=this.translateService.instant("justiciaGratuita.oficio.justificacionExpres.noDelEJGPTECAJG");
               }
-
-              this.totalActuaciones.emit(-1);
-
             }
-          });
-        })
 
+            if(this.eliminaActuacion){
+              let rowIdChild = child;
+              let rowId = rowIdChild.slice(0, -1);
+              this.childNumber = Number(rowIdChild.slice(rowId.length, rowIdChild.length));
+
+              this.selectedArray.forEach(idToDelete => {
+                if (rowIdChild == idToDelete && rowG.id == rowId) {
+                  this.turnoAllow = rowG.rows[0].cells[39].value;
+                  //rowG.rows.splice(this.childNumber, 1);
+                  if (rowG.rows[this.childNumber + 1].cells[8].value == false) {
+                    //actuacion No Validada
+                    //console.log("isListreado")
+                    if ((this.isLetrado && this.turnoAllow != "1") || (!this.isLetrado)) {
+                      if (rowG.rows[this.childNumber + 1].cells[35].value == "1") {
+                        this.showMsg('error', "No puede eliminar actuaciones facturadas", '')
+                        this.refreshData.emit(true);
+                      } else {
+                        //console.log("push del else");
+                        deletedAct.push(rowG.rows[this.childNumber + 1].cells)
+                      }
+                    } else {
+                      this.showMsg('error', "No tiene permiso para eliminar actuaciones", '')
+                      this.refreshData.emit(true);
+                    }
+                  } else {
+                    this.showMsg('error', "No se pueden eliminar actuaciones validadas", '')
+                    this.refreshData.emit(true);
+                  }
+
+                  this.totalActuaciones.emit(-1);
+
+                }
+              });
+            }else{
+              this.showMessage("warn", this.translateService.instant("general.message.warn"), mensaje);
+            }
+        })
+      
       }
     });
     this.totalRegistros = this.rowGroups.length;
