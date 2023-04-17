@@ -1289,19 +1289,37 @@ this.totalRegistros = this.rowGroups.length;
 
     getComboTurno() {
       this.progressSpinner = true;
-      this.sigaServices.getParam("busquedaGuardia_turnoFiltrados", "?idListaGuardias=" + sessionStorage.getItem("idLista")).subscribe(
-      n => {
-        this.progressSpinner = false;
-        this.comboTurno = n.combooItems;
-        //console.log('this.comboTurno : ', this.comboTurno )
-        this.cd.detectChanges();
-        this.commonServices.arregloTildesCombo(this.comboTurno);
-      },
-      err => {
-        this.progressSpinner = false;
-        //console.log(err);
+      if(this.lista != undefined ){
+        this.sigaServices.getParam("busquedaGuardia_turnoFiltrados", "?idListaGuardias=" + sessionStorage.getItem("idLista")).subscribe(
+          n => {
+            this.progressSpinner = false;
+            this.comboTurno = n.combooItems;
+            //console.log('this.comboTurno : ', this.comboTurno )
+            this.cd.detectChanges();
+            this.commonServices.arregloTildesCombo(this.comboTurno);
+          },
+          err => {
+            this.progressSpinner = false;
+            //console.log(err);
+          }
+        );
+      }else{
+        this.sigaServices.get("busquedaGuardia_turno").subscribe(
+          n => {
+            this.progressSpinner = false;
+            this.comboTurno = n.combooItems;
+            //console.log('this.comboTurno : ', this.comboTurno )
+            this.cd.detectChanges();
+            this.commonServices.arregloTildesCombo(this.comboTurno);
+          },
+          err => {
+            this.progressSpinner = false;
+            //console.log(err);
+          }
+        );
       }
-    );
+
+     
   }
   
   onChangeTurno(idTurno, row : Row) {
@@ -1676,7 +1694,8 @@ this.totalRegistros = this.rowGroups.length;
 
   getConfColaGuardias() {
     let datos = JSON.parse(JSON.stringify(this.persistenceService.getDatos()));
-    this.sigaServices.post("busquedaGuardias_resumenConfCola", datos)
+    if(datos != null){
+      this.sigaServices.post("busquedaGuardias_resumenConfCola", datos)
       .subscribe(data => {
         if (data.body)
           data = JSON.parse(data.body);
@@ -1698,6 +1717,8 @@ this.totalRegistros = this.rowGroups.length;
         err => {
           //console.log(err);
         })
+    }
+    
   }
   
 
