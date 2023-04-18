@@ -86,6 +86,7 @@ export class FichaActuacionComponent implements OnInit {
 
   permiteTurno: boolean;
   openTarjetaFac: Boolean = false;
+  isLetrado: boolean = false;
 
   constructor(private location: Location,
     private sigaServices: SigaServices,
@@ -386,13 +387,16 @@ export class FichaActuacionComponent implements OnInit {
     this.progressSpinner = true;
     this.listaAcciones = [];
 
+    this.isLetrado = this.sigaStorageService.isLetrado;
+
     let params = {
       anio: this.actuacionDesigna.actuacion.anio,
       idTurno: this.actuacionDesigna.actuacion.idTurno,
       numero: this.actuacionDesigna.actuacion.numero,
       numeroAsunto: this.actuacionDesigna.actuacion.numeroAsunto,
       idPersonaColegiado: '',
-      historico: false
+      historico: false,
+      esLetrado: this.isLetrado
     };
 
     this.sigaServices.post("actuaciones_designacion_getHistorioAccionesActDesigna", params).subscribe(
