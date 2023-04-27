@@ -240,6 +240,7 @@ export class FiltroBuscadorColegiadosComponent implements OnInit {
     this.filtro = new ColegiadosSJCSItem();
     this.filtro.idInstitucion = colegio;
     //En el caso que se este buscando un colegiado para una nueva inscripcion
+    this.filtro.idEstado = "20";
     if(this.dropEstado.disabled) this.filtro.idEstado = estado;
   }
 
