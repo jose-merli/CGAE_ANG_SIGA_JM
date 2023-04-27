@@ -2926,12 +2926,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   this.sigaServices.getParam("justificacionExpres_getEJG", "?num=" + num + "&anioEjg=" + anioEJG + "&tipoEjg=" + tipoEJG).subscribe(
                     ejg => {
                       let keysValues = [];
-
                       keysValues.push(ejg.idinstitucion);
+                      keysValues.push(idTurno);
                       keysValues.push(ejg.idtipoejg);
                       keysValues.push(anioEJG);
                       keysValues.push(ejg.numero);
-                      keysValues.push(idTurno);
                       keysValues.push(aniodes);
                       keysValues.push(numeroDes);
 
