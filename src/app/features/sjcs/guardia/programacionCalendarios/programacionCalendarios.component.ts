@@ -609,7 +609,7 @@ delete(indexToDelete){
 
 
   eliminarCal(lista){
-;  this.progressSpinner = true;
+  this.progressSpinner = true;
     this.sigaServices.post(
       "guardiaCalendario_eliminar", lista).subscribe(
         data => {
@@ -617,10 +617,14 @@ delete(indexToDelete){
           let contador = JSON.parse(data.body).id;
 
           this.progressSpinner = false;
-          this.showMessage({ severity: 'success', summary: this.translateService.instant("general.message.informacion"), msg: "Se eliminaron "+contador + " Programaciones de Calendarios." });
+          this.showMessage({ severity: 'success', summary: this.translateService.instant("general.message.informacion"), msg: "Se eliminaron "+ contador + " Programaciones de Calendarios." });
           this.buscarCal()
           if (error != null && error.description != null) {
-            this.showMessage({ severity: 'info', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
+            if (error.description == 'general.mensaje.error.bbdd') {
+              this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.informacion"), msg: this.translateService.instant(error.description) });
+            } else {
+              this.showMessage({ severity: 'error', summary: this.translateService.instant("general.message.informacion"), msg: error.description });
+            }
           }
         },
         err => {
