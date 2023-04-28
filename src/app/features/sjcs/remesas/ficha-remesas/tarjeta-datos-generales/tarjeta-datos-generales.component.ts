@@ -8,6 +8,7 @@ import { procesos_oficio } from '../../../../../permisos/procesos_oficio';
 import { Router } from '@angular/router';
 import { RemesasItem } from '../../../../../models/sjcs/RemesasItem';
 import { SigaStorageService } from '../../../../../siga-storage.service';
+import { procesos_comision } from '../../../../../permisos/procesos_comision';
 
 @Component({
   selector: 'app-tarjeta-datos-generales',
@@ -98,7 +99,7 @@ export class TarjetaDatosGeneralesComponent implements OnInit {
 
     this.resaltadoDatosGenerales = true;
     // this.abreCierraFicha('datosGenerales');
-    this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
+    this.commonsService.checkAcceso(procesos_comision.remesasEnvio)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
         this.persistenceService.setPermisos(this.permisosTarjeta);
