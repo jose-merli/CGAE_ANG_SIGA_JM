@@ -88,7 +88,7 @@ export class FichaRemesasComponent implements OnInit {
     //   'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
     // }
     // Recuperamos informacion cuando volvemos atras desde la ficha EJG a Remesa
-    if (localStorage.getItem('remesa') != null) {
+    if (localStorage.getItem('remesa') != null && localStorage.getItem('remesa') != undefined && localStorage.getItem('remesa') != 'undefined') {
       this.remesaTabla = JSON.parse(localStorage.getItem('remesa'));
       if (this.remesaTabla != null && this.remesaTabla != undefined) {
         this.remesa.idRemesa = this.remesaTabla.idRemesa;
@@ -201,16 +201,20 @@ export class FichaRemesasComponent implements OnInit {
     //console.log("Dentro del getAcciones --> ", this.tarjetaDatosGenerales);
     let remesaGetAcciones;
 
-    if(event != ""){
-      this.remesaTabla.estado = event;
-    }
+    // if(event != ""){
+    //   this.remesaTabla.estado = event;
+    // }
 
-    if (this.remesaTabla != null) {
+    if (this.remesaTabla != null && this.remesaTabla != undefined) {
+      if(event != ""){
+        this.remesaTabla.estado = event;
+      }
+
       remesaGetAcciones =
       {
         'estado': (this.remesaTabla.estado != null && this.remesaTabla.estado != undefined) ? this.remesaTabla.estado.toString() : this.remesaTabla.estado,
       };
-    }else if(this.remesaItem != null){
+    }else if(this.remesaItem != null && this.remesaItem != undefined){
       let indice = this.tarjetaDatosGenerales.resultado.length - 1;
       remesaGetAcciones =
       {
@@ -347,16 +351,16 @@ export class FichaRemesasComponent implements OnInit {
   }
 
   save() {
-    if (this.tarjetaDatosGenerales.remesaTabla != null) {
+    if (this.tarjetaDatosGenerales != null && this.tarjetaDatosGenerales.remesaTabla != null) {
       this.remesa = {
         'idRemesa': this.remesaTabla.idRemesa,
         'descripcion': this.remesaTabla.descripcion,
         'numero': this.remesaTabla.numero,
         'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
       };
-    } else if (this.tarjetaDatosGenerales.remesaItem != null) {
+    } else if (this.tarjetaDatosGenerales.remesaItem != null != null && this.tarjetaDatosGenerales.remesaItem != null) {
       this.remesa = {
-        'idRemesa': (this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
+        'idRemesa': (this.remesa != null && this.remesa != undefined && this.remesa.idRemesa != null && this.remesa.idRemesa != undefined) ? this.remesa.idRemesa.toString() : 0,
         'descripcion': this.tarjetaDatosGenerales.remesaItem.descripcion,
         'numero': this.tarjetaDatosGenerales.remesaItem.numero.toString(),
         'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaInformacionEconomica
