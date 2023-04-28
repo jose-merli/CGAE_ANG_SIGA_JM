@@ -79,7 +79,12 @@
           <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
             <td class="text-center" *ngFor="let col of columns">
               <div *ngIf="!isEliminado(dato)">
-                <span class="enlace" (click)="openTab(dato)">{{dato[col.field]}}</span>
+                <div *ngIf="col.field == 'nif' || col.field == 'apellidosnombre'">
+                  <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+                </div>
+                <div *ngIf="col.field != 'nif' && col.field != 'apellidosnombre'">
+                  <span>{{dato[col.field]}}</span>
+                </div>
               </div>
               <div *ngIf="isEliminado(dato)">
                 <span
