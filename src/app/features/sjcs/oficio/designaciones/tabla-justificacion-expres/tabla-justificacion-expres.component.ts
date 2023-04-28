@@ -873,9 +873,18 @@ export class TablaJustificacionExpresComponent implements OnInit {
       // Obtenemos las acreditaciones disponibles para el turno y módulo de la designación
       const acreditaciones = await this.getAcreditacionesPorModulo([designacion.idProcedimiento, designacion.idTurno]);
       acreditaciones.forEach(acreditacion => {
+
+      let juzgadoValueAcreditacion;
+
+      if (designacion.categoriaJuzgado != null && designacion.categoriaJuzgado != undefined && designacion.categoriaJuzgado != '') {
+        juzgadoValueAcreditacion = designacion.categoriaJuzgado;
+      } else {
+        juzgadoValueAcreditacion = juzgadoValue;
+      }
+
         arr1 = [
           { type: 'checkboxPermisos', value: [undefined, designacion.numAsunto, undefined], size: 120, combo: null },
-          { type: 'tooltip', value: designacion.categoriaJuzgado, size: 400, combo: designacion.nombreJuzgado },
+          { type: 'tooltip', value: juzgadoValueAcreditacion, size: 400, combo: designacion.nombreJuzgado },
           { type: 'input', value: designacion.nig, size: 200, combo: null},
           { type: numProcType, value: designacion.numProcedimiento, size: 200 , combo: null},
           { type: 'tooltip', value: designacion.categoriaProcedimiento, size: 400 , combo: designacion.procedimiento }, //modulo
