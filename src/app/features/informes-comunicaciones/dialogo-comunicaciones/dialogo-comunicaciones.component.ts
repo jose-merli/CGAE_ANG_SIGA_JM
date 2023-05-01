@@ -620,8 +620,8 @@ export class DialogoComunicacionesComponent implements OnInit {
 				let mensaje = this.translateService.instant('informes.error.descargaDocumento');
 				if (err != null && err != undefined && err.error != null && err.error != undefined) {
 					let errDTO = JSON.parse(err.error);
-					if (errDTO.message != null && errDTO.message != undefined) {
-						mensaje = errDTO.message;
+					if (errDTO.messageError != null && errDTO.messageError != undefined) {
+						mensaje = errDTO.messageError;
 					}
 				}
 				this.showFail(mensaje);
