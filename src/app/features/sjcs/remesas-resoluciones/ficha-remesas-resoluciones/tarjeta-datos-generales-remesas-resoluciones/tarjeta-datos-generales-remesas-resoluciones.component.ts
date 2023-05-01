@@ -20,6 +20,7 @@ import { SigaStorageService } from '../../../../../siga-storage.service';
 import { RemesasResultadoItem } from '../../../../../models/sjcs/RemesasResultadoItem';
 import { RemesasResolucionItem } from '../../../../../models/sjcs/RemesasResolucionItem';
 import { saveAs } from "file-saver/FileSaver";
+import { procesos_comision } from '../../../../../permisos/procesos_comision';
 
 @Component({
   selector: 'app-tarjeta-datos-generales-remesas-resoluciones',
@@ -168,7 +169,7 @@ export class TarjetaDatosGeneralesRemesasResolucionesComponent implements OnInit
     }
     this.resaltadoDatosGenerales = true;
     // this.abreCierraFicha('datosGenerales');
-    this.commonsService.checkAcceso(procesos_oficio.datosGenerales)
+    this.commonsService.checkAcceso(procesos_comision.remesasResoluciones)
       .then(respuesta => {
         this.permisosTarjeta = respuesta;
         this.persistenceService.setPermisos(this.permisosTarjeta);

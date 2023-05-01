@@ -499,9 +499,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
 
     if (!this.primeraBusqueda) {
       this.hideResponse.emit();
+      this.buscarAE.emit();
     }
-
-    this.buscarAE.emit();
   }
 
   onChangeLetradoGuardia(event) {

@@ -24,8 +24,11 @@
     <ng-template pTemplate="body" let-dato let-columns="columns" let-rowIndex="rowIndex">
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
-          <div>
+          <div *ngIf="col.field == 'nif' || col.field == 'apellidosnombre'">
             <a class="enlace" (click)="openTab(dato)"><span>{{dato[col.field]}}</span></a>
+          </div>
+          <div *ngIf="col.field != 'nif' && col.field != 'apellidosnombre'">
+            <span>{{dato[col.field]}}</span>
           </div>
           <!-- <div *ngIf="isEliminado(dato)">
             <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>

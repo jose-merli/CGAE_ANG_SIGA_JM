@@ -2679,7 +2679,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
 
         // Primero procesamos las actuaciones
         for (let i = 0; i < this.selecteChild.length; i++) {
-    
+          
           let idRowGroupDesignacion = this.selecteChild[i].substr(0, this.selecteChild[i].indexOf(')')+1),
               designacion = this.rowGroups.find(e => e.id == idRowGroupDesignacion),
               idActuacionRowGroup = Number(this.selecteChild[i].substr(this.selecteChild[i].indexOf(')')+1, this.selecteChild[i].length));
@@ -2695,29 +2695,32 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             datosActuacion.idActuacion = "-1";
           }
           
-          this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesignaJustificacionExpres", datosActuacion).subscribe(
-            data => {
-              if (data.size != 0) {
-                let blob = null;
-                let idDesignacion = designacion.id.substring(0, designacion.id.indexOf("\n"));
+          if (this.selectedArray.indexOf(idRowGroupDesignacion) == -1) {
+
+            this.sigaServices.postDownloadFiles("actuaciones_designacion_descargarDocumentosActDesignaJustificacionExpres", datosActuacion).subscribe(
+              data => {
+                if (data.size != 0) {
+                  let blob = null;
+                  let idDesignacion = designacion.id.substring(0, designacion.id.indexOf("\n"));
+        
+                  blob = new Blob([data], { type: "application/zip" });
+                  saveAs(blob, "documentosDesigna_D" + idDesignacion.split("/")[0] + "_" + idDesignacion.split("/")[1] + "_" + datosActuacion.idActuacion + ".zip");
       
-                blob = new Blob([data], { type: "application/zip" });
-                saveAs(blob, "documentosDesigna_D" + idDesignacion.split("/")[0] + "_" + idDesignacion.split("/")[1] + "_" + datosActuacion.idActuacion + ".zip");
+                  descargados++;
+                }
+              },
+              err => {
     
-                descargados++;
+              },
+              () => {
+                if (descargados != 0) {
+                  this.showMsg('info', this.translateService.instant("general.accion.descargaDocumentacion"), '');
+                } else {
+                  this.showMsg('info', this.translateService.instant("general.accion.noSeHadescargadoDocumentacion"), '');
+                }
               }
-            },
-            err => {
-  
-            },
-            () => {
-              if (descargados != 0) {
-                this.showMsg('info', this.translateService.instant("general.accion.descargaDocumentacion"), '');
-              } else {
-                this.showMsg('info', this.translateService.instant("general.accion.noSeHadescargadoDocumentacion"), '');
-              }
-            }
-          );
+            );
+          }
         }
     
         // Eliminamos las actuaciones del array de seleccionados, por lo que sólo quedarán las designas a procesar
