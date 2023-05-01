@@ -543,94 +543,89 @@ export class DialogoComunicacionesComponent implements OnInit {
         this.showInfoPerenne(
             'Se ha iniciado la descarga, puede continuar trabajando. Descargas Pendientes: ' + descargasPendientes
         );
-        this.showValores = false;
-
 		let filename;
-		this.sigaServices.post('dialogo_nombredoc', datos).subscribe(
-            (data) => {
-                if (data['body'] != '') {
-                    let fileInfo = JSON.parse(data['body']);
-                    if (fileInfo.name != 'ResultadoConsulta.xlsx') {
-						filename = fileInfo.name;
-					} else {
-							if (sessionStorage.getItem('nombreConsulta') != undefined) {
-								filename = sessionStorage.getItem('nombreConsulta');
-								filename += '.xlsx';
-							} else {
-								filename = fileInfo.name;
-							}
+        this.showValores = false;
+		this.sigaServices.post('dialogo_nombredoc', datos).toPromise().then( 
+			(data) => {
+			if (data['body'] != '') {
+				let fileInfo = JSON.parse(data['body']);
+				if (fileInfo.name != 'ResultadoConsulta.xlsx') {
+					filename = fileInfo.name;
+				} else {
+						if (sessionStorage.getItem('nombreConsulta') != undefined) {
+							filename = sessionStorage.getItem('nombreConsulta');
+							filename += '.xlsx';
+						} else {
+							filename = fileInfo.name;
 						}
-						
-						this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
-							(data) => {
-								if (data.size != 0) {
-									// let a = JSON.parse(data);
-									const blob = new Blob([data], { type: 'text/csv' });
+					}
+					
+					this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
+						(data) => {
+							if (data.size != 0) {
+								// let a = JSON.parse(data);
+								const blob = new Blob([data], { type: 'text/csv' });
 
-									if (blob != undefined) {
-										// 	saveAs(blob, data.nombre);
-										// } else {
-										saveAs(blob, filename);
-										this.progressSpinner = false;
-									}
-									descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-									sessionStorage.setItem('descargasPendientes', descargasPendientes);
-									this.showInfoPerenne(
-										'La descarga ha finalizado. Descargas Pendientes: ' + descargasPendientes
-									);
-	
-									this.showValores = false;
-								} else {
-									descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-									sessionStorage.setItem('descargasPendientes', descargasPendientes);
-									this.showValores = false;
+								if (blob != undefined) {
+									// 	saveAs(blob, data.nombre);
+									// } else {
+									saveAs(blob, filename);
 									this.progressSpinner = false;
-									this.clearPerenne();
-									if(descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) != 0){
-										this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
-									}
 								}
-							},
-							(error) => {
-								console.log(error);
-
-								this.progressSpinner = false;
 								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
 								sessionStorage.setItem('descargasPendientes', descargasPendientes);
+								this.showInfoPerenne(
+									'La descarga ha finalizado. Descargas Pendientes: ' + descargasPendientes
+								);
+
+								this.showValores = false;
+							} else {
+								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+								sessionStorage.setItem('descargasPendientes', descargasPendientes);
+								this.showValores = false;
+								this.progressSpinner = false;
 								this.clearPerenne();
-								if (error.message != null && error.message != undefined) {
-									this.showFail(error.message);
-								} else {
+								if(descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) != 0){
 									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
 								}
-
-							},
-							() => {
-								this.progressSpinner = false;
 							}
-						);
-					}
-				},
-				(err) => {
-					this.progressSpinner = false;
-					this.showValores = false;
-					console.log(err);
-					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-					sessionStorage.setItem('descargasPendientes', descargasPendientes);
-					this.clearPerenne();
-					let mensaje = this.translateService.instant('informes.error.descargaDocumento');
-					if (err != null && err != undefined && err.error != null && err.error != undefined) {
-						let errDTO = JSON.parse(err.error);
-						if (errDTO.message != null && errDTO.message != undefined) {
-							mensaje = errDTO.message;
+						},
+						(error) => {
+							console.log(error);
+
+							this.progressSpinner = false;
+							descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+							sessionStorage.setItem('descargasPendientes', descargasPendientes);
+							this.clearPerenne();
+							if (error.message != null && error.message != undefined) {
+								this.showFail(error.message);
+							} else {
+								this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+							}
+
+						},
+						() => {
+							this.progressSpinner = false;
 						}
-					}
-					this.showFail(mensaje);
-			},
-			() => {
-					this.progressSpinner = false;
+					);
 				}
-			);
+			},
+			(err) => {
+				this.progressSpinner = false;
+				this.showValores = false;
+				console.log(err);
+				descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+				sessionStorage.setItem('descargasPendientes', descargasPendientes);
+				this.clearPerenne();
+				let mensaje = this.translateService.instant('informes.error.descargaDocumento');
+				if (err != null && err != undefined && err.error != null && err.error != undefined) {
+					let errDTO = JSON.parse(err.error);
+					if (errDTO.message != null && errDTO.message != undefined) {
+						mensaje = errDTO.message;
+					}
+				}
+				this.showFail(mensaje);
+		});
 
 
 	}
