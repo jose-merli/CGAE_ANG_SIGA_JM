@@ -358,6 +358,33 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	enviarComunicacion() {
 		//this.progressSpinner = true;
+		
+		if (this.listaConsultas != null) {
+			for (let i = 0; this.listaConsultas.length > i; i++) {
+
+				if (this.listaConsultas[i].camposDinamicos != null) {
+					for (let j = 0; this.listaConsultas[i].camposDinamicos.length > j; j++) {
+
+						let find = this.valores.find((x) => x.campo == this.listaConsultas[i].camposDinamicos[j].campo);
+						if (find != undefined) {
+
+							if (find.valor != null && typeof find.valor == 'object') {
+								if (find.valor.ID != null && find.valor.ID != undefined) {
+									this.listaConsultas[i].camposDinamicos[j].valor = find.valor.ID;
+								}else{
+									this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+								}
+							}else{
+								this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+							}
+							
+							this.listaConsultas[i].camposDinamicos[j].operacion = find.operacion;
+						}
+					}
+				}
+
+			}
+		}
 
 		this.valores.forEach((element) => {
 			if (element.valor != null && typeof element.valor == 'object') {
