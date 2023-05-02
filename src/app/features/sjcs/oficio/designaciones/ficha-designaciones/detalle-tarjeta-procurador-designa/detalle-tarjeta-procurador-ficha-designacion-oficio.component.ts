@@ -587,7 +587,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   }
 
   disableEdition() {
-    return this.rowGroups.length == 0;
+    return this.rowGroups == undefined || this.rowGroups.length == 0 ;
   }
 
 }
