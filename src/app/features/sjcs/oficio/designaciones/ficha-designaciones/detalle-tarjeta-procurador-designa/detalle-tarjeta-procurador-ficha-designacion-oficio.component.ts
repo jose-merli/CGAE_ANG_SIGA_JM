@@ -249,8 +249,13 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     if (this.rowGroups[0] != undefined) {
       //Fecha designacion
       var dateString = this.rowGroups[0].cells[0].value;
+      var dateParts;
 
-      var dateParts = dateString.split("/");
+      if (dateString instanceof Date) {
+        dateParts = dateString.toLocaleDateString("es-ES").split("/");
+      } else {
+        dateParts = dateString.split("/");
+      }
 
       // month is 0-based, that's why we need dataParts[1] - 1
       this.fechaDesigna = new Date(+dateParts[2], dateParts[1] - 1, +dateParts[0]);
