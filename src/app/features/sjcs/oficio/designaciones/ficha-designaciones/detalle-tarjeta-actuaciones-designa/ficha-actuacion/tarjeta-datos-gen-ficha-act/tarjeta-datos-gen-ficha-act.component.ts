@@ -1000,6 +1000,8 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
           }
         }
       //this.progressSpinner = false;
+    } else if (!this.datos.inputNig.obligatorio && (nig == null || nig == ''))  {
+      ret = true;
     }
 
     return ret;
