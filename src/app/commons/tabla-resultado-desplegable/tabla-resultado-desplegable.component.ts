@@ -1782,7 +1782,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       }
     } else {
       //colegio
-      validacion = true;
+      validacion = false;
     }
 
 
