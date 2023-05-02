@@ -33,7 +33,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   disableCheckArt: boolean;
   initDatos: any;
   disableButtons: boolean;
-  progressSpinner: boolean;
+  progressSpinner: boolean = false;
   datosEJG: EJGItem
   datosJusticiables: JusticiableItem;
   permisoEscritura: boolean;
@@ -463,6 +463,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       if (this.camposModificados()) {
       if (detail == "save" && (this.anio.value == "")) {
         detail = "Guardar";
+        this.progressSpinner = true;
         let newDesigna = new DesignaItem();
         var idTurno: number = +this.selectores[0].value;
         newDesigna.idTurno = idTurno;
@@ -494,7 +495,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         newDesigna.ano = year;
         this.checkDatosGenerales();
         if (this.resaltadoDatos == false) {
-          this.progressSpinner = true;
           this.sigaServices.post("create_NewDesigna", newDesigna).subscribe(
             n => {
               let newId = JSON.parse(n.body);
@@ -518,6 +518,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     } else {
                       this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), 'Se ha asociado la Designacion con la Asistencia correctamente');
                       //this.router.navigate(["/fichaDesignaciones"]);
+                      this.progressSpinner = false;
                       this.location.back();
                     }
                   },
@@ -555,6 +556,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                         );
                       },
                       err => {
+                        this.progressSpinner = false;
                         this.location.back();
                       }
                     );
@@ -592,6 +594,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                         this.translateService.instant("informesycomunicaciones.plantillasenvio.ficha.errorAsociar"));
                     }
                     sessionStorage.removeItem("justiciables");
+                    this.progressSpinner = false;
                     this.location.back();
                   },
                   err => {
@@ -603,7 +606,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               }
 
               this.busquedaDesignaciones(newDesignaRfresh);
-              this.progressSpinner = false;
               //MENSAJE DE TODO CORRECTO
               detail = "";
               let dataRes = JSON.parse(n.body);
@@ -913,6 +915,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
         accept: () => {
           this.progressSpinner = true;
           if (detail == "save" && this.anio.value == "") {
+            this.progressSpinner = true;
             detail = "Guardar";
             let newDesigna = new DesignaItem();
             var idTurno: number = +this.selectores[0].value;
@@ -964,7 +967,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                       }
                     );
                   }
-                  this.progressSpinner = false;
                   this.busquedaDesignaciones(newDesignaRfresh);
                   //MENSAJE DE TODO CORRECTO
                   detail = "";
@@ -1070,7 +1072,6 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   busquedaDesignaciones(evendesginaItem: DesignaItem) {
-    this.progressSpinner = true;
     this.numero.disable = false;
     this.sigaServices.post("designaciones_busquedaNueva", evendesginaItem).subscribe(
       n => {

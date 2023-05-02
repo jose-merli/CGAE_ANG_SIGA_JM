@@ -2071,9 +2071,11 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     this.campos = event;
     this.progressSpinner = true;
     let designaItem = this.campos;
+    sessionStorage.setItem('designaItemLink', JSON.stringify(designaItem));
 
     this.getPermiteTurno();
     this.searchLetrados();
+    sessionStorage.removeItem('designaItemLink');
     if (sessionStorage.getItem("datosProcurador")) {
       let tarjProc = this.listaTarjetas.find(tarjProc => tarjProc.id === 'sjcsDesigProc');
       if (tarjProc != undefined) {
