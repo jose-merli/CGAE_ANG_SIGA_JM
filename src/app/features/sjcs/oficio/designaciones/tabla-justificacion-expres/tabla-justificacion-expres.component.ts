@@ -1120,9 +1120,9 @@ actCellToJson(actuacionesCells){
   let idProcedimiento = actuacionesCells[20].value;
   let idJuzgado = actuacionesCells[1].value;
   let nombreJuzgado;
-  if (typeof actuacionesCells[1].combo === 'string') {
+  if (actuacionesCells[1] != null && actuacionesCells[1].combo != null && typeof actuacionesCells[1].combo === 'string' ) {
     nombreJuzgado = actuacionesCells[1].combo;
-  } else {
+  } else if (actuacionesCells[1] != null && actuacionesCells[1].combo != null) {
     nombreJuzgado = actuacionesCells[1].combo.find(item => item.value == idJuzgado).label;
   }
   let fechaJustificacion = actuacionesCells[6].value;
