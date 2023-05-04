@@ -346,7 +346,6 @@
       </div>
 
       <div *ngIf="openFichaListadoFicherosAnexos" class="card-body card-body-ficha">
-        <div *ngIf="selectMultiple == true">
           <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
             [ngClass]="{'customCursor': selectMultiple}" [(selection)]="selectedDatos" [paginator]="activarPaginacion()"
             selectionMode="single" [responsive]="true" #table class="tabla-listado"
@@ -385,9 +384,6 @@
                 <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
                   (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
                 <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
-                  (click)="isSelectMultiple(); selectedDatos=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.seleccionarFila" | translate}}</label>
               </div>
             </ng-template>
             <p-footer *ngIf="selectedDatos && selectedDatos !=''">
@@ -406,63 +402,6 @@
               </div>
             </p-footer>
           </p-dataTable>
-        </div>
-        <div *ngIf="selectMultiple==false">
-          <p-dataTable emptyMessage="{{ 'general.message.no.registros' | translate}}"
-            [ngClass]="{'customCursor': selectMultiple}" [paginator]="activarPaginacion()" #table class="tabla-listado"
-            [value]="bodyDatosBancariosAnexoSearch.datosBancariosAnexoItem" [paginator]="true" paginatorPosition="both"
-            [rows]="selectedItem" [editable]="!selectMultiple" (onEdit)="editarCompleto($event)"
-            (onEditInit)="editarAnexo=true" (onEditCancel)="onEditCancel()" (onRowSelect)="controlarEdicion()" pageLinks="4">
-
-
-
-
-            <p-column field="descripcion" header="{{ 'general.description' | translate}}" [sortable]="true"
-              [editable]="permisos && !selectMultiple" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-
-            </p-column>
-            <p-column field="tipo" header="{{ 'censo.busquedaClientesAvanzada.literal.tipoCliente' | translate}}"
-              [editable]="selectMultiple" [sortable]="true" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains">
-            </p-column>
-            <p-column field="tipoMandato" header="{{ 'censo.sociedades.datosBancarios.tipoMandato' | translate}}"
-              [editable]="selectMultiple" [sortable]="true" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="fechaUso" header="{{ 'censo.sociedades.datosBancarios.fechaUso' | translate}}"
-              [editable]="selectMultiple" [sortable]="true" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="firmaFecha"
-              header="{{ 'censo.fichaCliente.bancos.mandatos.anexos.fechaFirmada' | translate}}"
-              [editable]="selectMultiple" [sortable]="true" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-            <p-column field="firmaLugar"
-              header="{{ 'censo.fichaCliente.bancos.mandatos.anexos.lugarFirma' | translate}}"
-              [editable]="selectMultiple" [sortable]="true" [filter]="true"
-              filterPlaceholder="{{'general.boton.search' | translate}}" filterMatchMode="contains"></p-column>
-
-            <ng-template pTemplate="paginatorLeft">
-              <div class="mostrar d-flex text-right justify-content-end">
-                <label
-                  class="pr-3 registros-totales">{{'informesycomunicaciones.plantillasenvio.ficha.mostrandoRegistros' | translate}}
-                  {{table.first + 1}} al
-                  {{table.first + table.rows}} {{ 'informesycomunicaciones.plantillasenvio.ficha.deUnTotalDe' | translate
-                  }} {{table.totalRecords}}</label>
-                <label>{{ "general.message.mostrar" | translate}}</label>
-                <p-dropdown [(ngModel)]="selectedItem" [options]="rowsPerPage"
-                  (onChange)="onChangeRowsPerPages($event)"></p-dropdown>
-                <label class="pl-1"> {{"cargaMasivaDatosCurriculares.numRegistros.literal" | translate}}</label>
-                <label class="ml-3 seleccionMultiple" [ngClass]="{' seleccion-multiple': selectMultiple}"
-                  (click)="isSelectMultiple(); selectedDatos=false">
-                  <i class="pr-2 fa fa-mouse-pointer"></i>{{ "general.seleccionarFila" | translate}}</label>
-              </div>
-            </ng-template>
-            <!-- <p-footer>
-
-            </p-footer> -->
-          </p-dataTable>
-
-        </div>
 
       </div>
 
