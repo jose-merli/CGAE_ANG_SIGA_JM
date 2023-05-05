@@ -2408,6 +2408,7 @@ para poder filtrar el dato con o sin estos caracteres*/
 
   checkDatosAprobar() {
     this.showDialog = false;
+    this.resaltadoDatosBancos = false;
     if ((this.consulta || this.pendienteAprobacion || (this.isActivoEXEA && !this.consulta)) && (this.solicitudEditar.idEstado != '50' && this.solicitudEditar.idEstado != '30')) {
       if (!this.disabledAprobar()) {
         if (this.cargo == true || this.abono == true || this.abonoJCS == true) {
