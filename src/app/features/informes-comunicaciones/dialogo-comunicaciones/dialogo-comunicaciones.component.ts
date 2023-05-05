@@ -425,6 +425,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 			this.showInfoPerenneEnv(
 				'Se ha iniciado el envio, puede continuar trabajando.'
 			);
+			this.showValores = false;
 			this.sigaServices.post('dialogo_generarEnvios', datos).subscribe(
 				(data) => {
 					this.showSucessPerenneEnv(
