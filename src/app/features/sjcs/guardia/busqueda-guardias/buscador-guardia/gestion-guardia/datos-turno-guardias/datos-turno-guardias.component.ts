@@ -38,7 +38,12 @@ export class DatosTurnoGuardiasComponent implements OnInit {
 
   getResumen() {
     //this.progressSpinner = true;
-    this.datos = JSON.parse(this.persistenceService.getDatos());
+    try{
+      this.datos = JSON.parse(this.persistenceService.getDatos());
+    }catch(Ex){
+      this.datos = this.persistenceService.getDatos();
+    }
+    
     this.sigaServices.post("gestionGuardias_resumenTurno", this.datos.idTurno).subscribe(
       data => {
         this.body = JSON.parse(data.body).turnosItem[0];
