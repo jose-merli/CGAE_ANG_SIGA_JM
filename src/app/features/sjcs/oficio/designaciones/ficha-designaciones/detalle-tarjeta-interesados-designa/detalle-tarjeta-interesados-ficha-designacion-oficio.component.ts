@@ -171,6 +171,16 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
     let datos;
     interesado.idpersona = evento.idPersona;
     sessionStorage.setItem("personaDesigna", evento.idPersona);
+
+    //Asignamos los objetos itemDesignas e interesados para la edicion
+    if(sessionStorage.getItem("itemDesignas") == null || sessionStorage.getItem("itemDesignas") == undefined) {
+      sessionStorage.setItem("itemDesignas", JSON.stringify(true));
+    }
+
+    if(sessionStorage.getItem("interesados") == null || sessionStorage.getItem("interesados") == undefined){
+      sessionStorage.setItem("interesados", JSON.stringify(this.interesados));
+    }
+
     this.progressSpinner = true;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", interesado).subscribe(
       n => {
