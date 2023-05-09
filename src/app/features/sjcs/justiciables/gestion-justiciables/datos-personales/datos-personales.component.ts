@@ -1546,9 +1546,9 @@ para poder filtrar el dato con o sin estos caracteres*/
     if(this.guardaOpcion=="s"){
       
       this.progressSpinner = true;
-        this.confirmationUpdate = false;
-        let url = "gestionJusticiables_updateJusticiable";
-        this.validateCampos(url);
+      this.confirmationUpdate = false;
+      let url = "gestionJusticiables_updateJusticiable";
+      this.validateCampos(url);
       
     }else if(this.guardaOpcion=="n"){
       if (this.confirmationUpdate) {

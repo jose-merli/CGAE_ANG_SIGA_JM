@@ -262,10 +262,17 @@ export class UnidadFamiliarComponent implements OnInit {
     else return true;
   }
   openTab(evento) {
+    //Asignamos los objetos itemEJG y EJGItem para la edicion
+    if(sessionStorage.getItem("itemEJG") == null || sessionStorage.getItem("itemEJG") == undefined) {
+      sessionStorage.setItem("itemEJG", JSON.stringify(true));
+    }
+
+    if(sessionStorage.getItem("EJGItem") == null || sessionStorage.getItem("EJGItem") == undefined){
+      sessionStorage.setItem("EJGItem", JSON.stringify(this.persistenceService.getDatosEJG()));
+    }
     sessionStorage.setItem("origin", "UnidadFamiliar");
     sessionStorage.setItem("Familiar", JSON.stringify(evento));
     this.router.navigate(["/gestionJusticiables"]);
-
   }
 
   getCols() {
