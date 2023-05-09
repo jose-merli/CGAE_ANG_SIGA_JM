@@ -145,6 +145,12 @@
               [options]="comboDictamen" [selectedItemsLabel]="textSelected" styleClass="widthAll"
               (onChange)="onChangeDictamen()" [filter]="true" filterBy="label,labelSinTilde,value"
               maxSelectedLabels="10">
+              <ng-template let-dictamen pTemplate="item">
+                <div [ngClass]="{'opcionesComboBaja': dictamen.bloqueado==='S',
+                                  'opcionesComboBold': dictamen.bloqueado!=='S'&&dictamen.bloqueado!=='N'}">
+                  {{dictamen.label}}
+                </div>
+              </ng-template> 
             </p-multiSelect>
           </div>
 
@@ -158,7 +164,7 @@
               [showClear]="true">
               
               <ng-template let-fundamento pTemplate="item">
-                <div [ngClass]="{'comboFundamentoCalif': fundamento.fechaBaja!==null}">
+                <div [ngClass]="{'opcionesComboBaja': fundamento.fechaBaja!==null}">
                   {{fundamento.label}}
                 </div>
               </ng-template> 
