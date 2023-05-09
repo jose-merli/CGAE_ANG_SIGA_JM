@@ -149,6 +149,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     private datePipe: DatePipe,
     private commonServices: CommonsService) { }
 
+
   async ngOnInit() {
     let recibidos = 0; //Determina cuantos servicios de los permisos se han terminado 
     this.nuevaAsistencia = true;
@@ -167,7 +168,6 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
         recibidos++;
         if(recibidos == 2) this.initTarjetas();
       }).catch(error => console.error(error));
-    
     //Facturaciones
     this.commonServices.checkAcceso(procesos_facturacionSJCS.tarjetaFacFenerica)
     .then(respuesta => {
@@ -210,7 +210,6 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
       this.datosJusticiables = JSON.parse(sessionStorage.getItem("justiciable"));
     }
     
-
   }
 
   ngAfterViewInit() {
@@ -376,7 +375,31 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     }
 
     //Observaciones - no tiene campos
-    //Defensa juridica - no tiene campos
+    let camposObservaciones = []; 
+    if (this.preasistencia || this.nuevaAsistencia) {
+      camposObservaciones = [
+        {
+          "key": null,
+          "value": this.translateService.instant('justiciaGratuita.guardia.fichaasistencia.noobservacionesnoincidencias')
+        }
+      ]
+
+    } else {
+      camposObservaciones = [
+        {
+          "key": this.translateService.instant('gratuita.mantenimientoLG.literal.observaciones'),
+          "value": ""
+        },
+        {
+          "key": this.translateService.instant('justiciaGratuita.remesas.tabla.Incidencias'),
+          "value": ""
+        }
+      ]
+    }
+    let tarjObservaciones =  this.listaTarjetas.find(tarjObservaciones => tarjObservaciones.id === 'observaciones');
+    if(tarjObservaciones != undefined){
+      tarjObservaciones.campos  = camposObservaciones
+    }
 
     //TARJETA Relaciones[5]
     if (this.preasistencia || this.nuevaAsistencia) {
@@ -529,8 +552,8 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  refreshDatosGenerales(event) {
 
+  refreshDatosGenerales(event) {
     this.progressSpinner = true;
     this.sigaServices.getParam("busquedaGuardias_buscarTarjetaAsistencia", "?anioNumero=" + event).subscribe(
       n => {
@@ -623,7 +646,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           if(tarjContra != undefined){
             tarjContra.campos  = camposContrarios
           }
-
+          
           let camposRelaciones = [];
           if (!newAsistenciaData.primeraRelacion) {
             camposRelaciones = [
@@ -687,7 +710,62 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           if(tarjRelaciones != undefined){
             tarjRelaciones.campos  =  camposRelaciones
           }
+          //Observaciones
+          let camposObservaciones = [];
+          if (newAsistenciaData.observaciones == null && newAsistenciaData.incidencias == null) {
+            camposObservaciones = [
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noobservaciones")
+              },
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noincidencias")
+              }
+            ]
+          } else 
+          if (newAsistenciaData.incidencias == null) {
+            camposObservaciones = [
+              {
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.observaciones'),
+                "value": newAsistenciaData.observaciones
+              },
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noincidencias")
+              }
+            ]
+          }else if (newAsistenciaData.observaciones == null) {
+            camposObservaciones = [
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noobservaciones")
+              },
+              {
+                "key": this.translateService.instant("justiciaGratuita.remesas.tabla.Incidencias"),
+                "value": newAsistenciaData.incidencias
+              }
+            ]
+          } else {
+            camposObservaciones = [
+              {
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.observaciones'),
+                "value": newAsistenciaData.observaciones
+              },
+              {
+                "key": this.translateService.instant("justiciaGratuita.remesas.tabla.Incidencias"),
+                "value": newAsistenciaData.incidencias
+              }
+            ]
+          }
 
+          let tarjObservaciones =  this.listaTarjetas.find(tarjObservaciones => tarjObservaciones.id === 'observaciones');
+          if(tarjObservaciones != undefined){
+            tarjObservaciones.campos = camposObservaciones
+          }
+
+
+          //Documentacion
           let camposDocumentacion = [];
           if (!newAsistenciaData.numDocumentos) {
             camposDocumentacion = [
@@ -947,7 +1025,61 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           if(tarjRelaciones != undefined){
             tarjRelaciones.campos  = camposRelaciones
           }
+          //Observaciones
+          let camposObservaciones = [];
+          if (newAsistenciaData.observaciones == null && newAsistenciaData.incidencias == null) {
+            camposObservaciones = [
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noobservaciones")
+              },
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noincidencias")
+              }
+            ]
+          } else 
+          if (newAsistenciaData.incidencias == null) {
+            camposObservaciones = [
+              {
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.observaciones'),
+                "value": newAsistenciaData.observaciones
+              },
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noincidencias")
+              }
+            ]
+          }else if (newAsistenciaData.observaciones == null) {
+            camposObservaciones = [
+              {
+                "key": null,
+                "value": this.translateService.instant("justiciaGratuita.guardia.fichaasistencia.noobservaciones")
+              },
+              {
+                "key": this.translateService.instant("justiciaGratuita.remesas.tabla.Incidencias"),
+                "value": newAsistenciaData.incidencias
+              }
+            ]
+          } else {
+            camposObservaciones = [
+              {
+                "key": this.translateService.instant('justiciaGratuita.oficio.designas.aistencias.observaciones'),
+                "value": newAsistenciaData.observaciones
+              },
+              {
+                "key": this.translateService.instant("justiciaGratuita.remesas.tabla.Incidencias"),
+                "value": newAsistenciaData.incidencias
+              }
+            ]
+          }
 
+          let tarjObservaciones =  this.listaTarjetas.find(tarjObservaciones => tarjObservaciones.id === 'observaciones');
+          if(tarjObservaciones != undefined){
+            tarjObservaciones.campos = camposObservaciones
+          }
+
+          //
           let camposDocumentacion = [];
           if (!newAsistenciaData.numDocumentos) {
             camposDocumentacion = [
