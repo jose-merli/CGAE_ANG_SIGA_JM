@@ -42,6 +42,7 @@ import { DocumentoAsistenciaItem } from '../models/guardia/DocumentoAsistenciaIt
 import { BehaviorSubject } from 'rxjs';
 import { endpoints_expedientes } from '../utils/endpoints_expedientes';
 import { DocumentacionIncorporacionItem } from '../models/DocumentacionIncorporacionItem';
+import { saveAs } from 'file-saver/FileSaver';
 
 @Injectable()
 export class SigaServices {
@@ -755,6 +756,9 @@ export class SigaServices {
 	private createJusticiable = new Subject<any>();
 	createJusticiable$ = this.createJusticiable.asObservable();
 
+	private documentosInformes = new Subject<any>();
+	documentotosInformes = this.documentosInformes.asObservable();
+
 	private rutaMenu = new BehaviorSubject<string>('');
 
 	rutaMenu$ = this.rutaMenu.asObservable();
@@ -852,11 +856,50 @@ export class SigaServices {
 		return obs;
 	}
 
-	postDownloadFiles(service: string, body: any): Observable<any> {
+	asyncDownloadInformes(fileObservable : Observable<any>, filename : String){
+		let descargasPendientes;
+		fileObservable.subscribe(
+			(data) => {
+				if (data.size != 0) {
+					// let a = JSON.parse(data);
+					const blob = new Blob([data], { type: 'text/csv' });
+
+					if (blob != undefined) {
+						// 	saveAs(blob, data.nombre);
+						// } else {
+						saveAs(blob, filename);
+					}
+					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+					sessionStorage.setItem('descargasPendientes', descargasPendientes);
+				} else {
+					descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+					sessionStorage.setItem('descargasPendientes', descargasPendientes);
+					/*if(descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) != 0){
+						this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+					}*/
+					console.log('Descargar pendientes != 0');
+				}
+			},
+			(error) => {
+				descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
+				sessionStorage.setItem('descargasPendientes', descargasPendientes);
+				/*this.clearPerenne();
+				if (error.message != null && error.message != undefined) {
+					this.showFail(error.message);
+				} else {
+					this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
+				}*/
+				console.log(' No se pudo descargar. (Error de back)' , error);
+			}
+		);
+
+	}
+
+	postDownloadFiles(service: string, body: any, asyncDownload: boolean = false, fileName:String = '' ): Observable<any>  {
 		let headers = new HttpHeaders({
 			'Content-Type': 'application/json'
 		});
-		return this.http
+		const fileObservable : Observable<any> = this.http
 			.post(environment.newSigaUrl + this.endpoints[service], body, {
 				headers: headers,
 				observe: 'body', // si observe: "response" no sirve. Si se quita el observe sirve
@@ -865,6 +908,12 @@ export class SigaServices {
 			.map((response) => {
 				return response;
 			});
+			if(asyncDownload){
+				this.asyncDownloadInformes(fileObservable, fileName);
+			}
+				
+			return fileObservable;
+			
 		//   .catch((response) => {
 		//     return this.parseErrorBlob(response);
 		//   });

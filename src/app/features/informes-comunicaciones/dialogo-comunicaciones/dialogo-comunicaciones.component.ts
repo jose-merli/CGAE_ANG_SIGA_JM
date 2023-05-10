@@ -14,6 +14,7 @@ import { DataTable } from 'primeng/datatable';
 import { Observable } from 'rxjs/Observable';
 import { truncate } from 'fs';
 import { findIndex } from 'rxjs/operators';
+import { CommonsService } from '../../../_services/commons.service';
 
 @Component({
 	selector: 'app-dialogo-comunicaciones',
@@ -69,6 +70,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	constructor(
 		public sigaServices: SigaServices,
+		public sigaCommons : CommonsService,
 		private translateService: TranslateService,
 		private location: Location
 	) { }
@@ -588,54 +590,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 						}
 					}
 					
-					this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo).subscribe(
-						(data) => {
-							if (data.size != 0) {
-								// let a = JSON.parse(data);
-								const blob = new Blob([data], { type: 'text/csv' });
-
-								if (blob != undefined) {
-									// 	saveAs(blob, data.nombre);
-									// } else {
-									saveAs(blob, filename);
-									this.progressSpinner = false;
-								}
-								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-								sessionStorage.setItem('descargasPendientes', descargasPendientes);
-								this.showInfoPerenne(
-									'La descarga ha finalizado. Descargas Pendientes: ' + descargasPendientes
-								);
-
-								this.showValores = false;
-							} else {
-								descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-								sessionStorage.setItem('descargasPendientes', descargasPendientes);
-								this.showValores = false;
-								this.progressSpinner = false;
-								this.clearPerenne();
-								if(descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) != 0){
-									this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
-								}
-							}
-						},
-						(error) => {
-							console.log(error);
-
-							this.progressSpinner = false;
-							descargasPendientes = JSON.parse(sessionStorage.getItem('descargasPendientes')) - 1;
-							sessionStorage.setItem('descargasPendientes', descargasPendientes);
-							this.clearPerenne();
-							if (error.message != null && error.message != undefined) {
-								this.showFail(error.message);
-							} else {
-								this.showFail(this.translateService.instant('informes.error.descargaDocumento'));
-							}
-
-						},
-						() => {
-							this.progressSpinner = false;
-						}
-					);
+					this.sigaServices.postDownloadFiles('dialogo_descargar', fileInfo, true, filename);
 				}
 			},
 			(err) => {
@@ -652,6 +607,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 						mensaje = errDTO.messageError;
 					}
 				}
+				this.sigaCommons.showMessage('error','', mensaje)
 				this.showFail(mensaje);
 		});
 
