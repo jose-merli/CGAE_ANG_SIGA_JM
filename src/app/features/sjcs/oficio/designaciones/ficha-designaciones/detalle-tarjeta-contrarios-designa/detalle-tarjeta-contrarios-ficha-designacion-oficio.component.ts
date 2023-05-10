@@ -147,6 +147,16 @@ export class DetalleTarjetaContrariosFichaDesignacionOficioComponent implements 
     let datos;
     contrario.idpersona=evento.idPersona;
     sessionStorage.setItem("personaDesigna",evento.idPersona);
+
+    //Asignamos los objetos itemDesignas y contrarios para la edicion
+    if(sessionStorage.getItem("itemDesignas") == null || sessionStorage.getItem("itemDesignas") == undefined) {
+      sessionStorage.setItem("itemDesignas", JSON.stringify(true));
+    }
+
+    if(sessionStorage.getItem("contrarios") == null || sessionStorage.getItem("contrarios") == undefined){
+      sessionStorage.setItem("contrarios", JSON.stringify(JSON.stringify(this.contrarios)));
+    }
+
     this.progressSpinner = true;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", contrario).subscribe(
       n => {

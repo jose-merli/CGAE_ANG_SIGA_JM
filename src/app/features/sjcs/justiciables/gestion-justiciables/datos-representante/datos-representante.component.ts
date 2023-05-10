@@ -922,32 +922,20 @@ export class DatosRepresentanteComponent implements OnInit, OnChanges, OnDestroy
 
 	guardar(){
 		if(this.guardaOpcion=="s"){
-			if (
-			this.generalBody.idpersona != undefined &&
-			this.generalBody.idpersona != null &&
-			this.generalBody.idpersona.trim() != ''
-		) {
-			if (
-				this.generalBody.nif != undefined &&
-				this.generalBody.nif != '' &&
-				this.generalBody.nif != null &&
-				this.body != undefined &&
-				this.generalBody.nif == this.body.nif
-			) {
-				this.showMessage(
-					'error',
-					this.translateService.instant('general.message.incorrect'),
-					this.translateService.instant(
-						'justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable'
-					)
-				);
-				this.representanteValido = false;
-			} else {
-				this.body.idrepresentantejg = Number(this.generalBody.idpersona);
-				this.callServiceAssociate();
-			}
-		}
+			if (this.generalBody.idpersona != undefined && this.generalBody.idpersona != null &&
+				this.generalBody.idpersona.trim() != '') {
 
+				if (this.generalBody.nif != undefined && this.generalBody.nif != '' && this.generalBody.nif != null 
+					&& this.body != undefined && this.generalBody.nif == this.body.nif) {
+
+					this.showMessage('error', this.translateService.instant('general.message.incorrect'),
+						this.translateService.instant('justiciaGratuita.justiciables.message.representanteNoPuedeSerPropioJusticiable'));
+					this.representanteValido = false;
+				} else {
+					this.body.idrepresentantejg = Number(this.generalBody.idpersona);
+					this.callServiceAssociate();
+				}
+			}
 		}else if(this.guardaOpcion=="n"){
 			this.progressSpinner = true;
 			this.body.idrepresentantejg = Number(this.generalBody.idpersona);

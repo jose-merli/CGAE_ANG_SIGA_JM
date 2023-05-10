@@ -8,6 +8,7 @@ import { JusticiableBusquedaItem } from '../../../../../../models/sjcs/Justiciab
 import { JusticiableItem } from '../../../../../../models/sjcs/JusticiableItem';
 import { PersistenceService } from '../../../../../../_services/persistence.service';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { AsistenciasItem } from '../../../../../../models/sjcs/AsistenciasItem';
 
 
 @Component({
@@ -34,6 +35,7 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
   deleteDisabled : boolean = true;
   reactivarDisabled : boolean = true;
   mostrarHistorico : boolean = false;
+  asistencia: AsistenciasItem;
 
   fichasPosibles = [
     {
@@ -153,26 +155,30 @@ export class FichaAsistenciaTarjetaContrariosComponent implements OnInit {
     asistidoBusqueda.idpersona = contrario.idPersona;
     this.progressSpinner = true;
     this.sigaServices.post("busquedaJusticiables_searchJusticiables", asistidoBusqueda).subscribe(
-    n => {
-      datos = JSON.parse(n.body).justiciableBusquedaItems;
-      let error = JSON.parse(n.body).error;
-      this.progressSpinner = false;
+      n => {
+        datos = JSON.parse(n.body).justiciableBusquedaItems;
+        // this.asistencia = this.persistenceService.getDatosAsistencia();
+        // sessionStorage.setItem("AsistenciaItem", JSON.stringify(this.asistencia));
+        sessionStorage.setItem("itemAsistencia", JSON.stringify(true));
+        let error = JSON.parse(n.body).error;
+        this.progressSpinner = false;
 
-      if (error != null && error.description != null) {
-        this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
-      } else {
-        this.persistenceService.setDatos(datos[0]);
-        this.persistenceService.setFichasPosibles(this.fichasPosibles);
-        sessionStorage.setItem("origin","Asistencia");
-        sessionStorage.setItem("idAsistencia",this.idAsistencia);
-        this.persistenceService.clearBody();   
-        this.router.navigate(["/gestionJusticiables"]);
+        if (error != null && error.description != null) {
+          this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
+        } else {
+          this.persistenceService.setDatos(datos[0]);
+          this.persistenceService.setFichasPosibles(this.fichasPosibles);
+          sessionStorage.setItem("origin","Asistencia");
+          sessionStorage.setItem("idAsistencia",this.idAsistencia);
+          this.persistenceService.clearBody();   
+          this.router.navigate(["/gestionJusticiables"]);
+        }
+      },
+      err => {
+        this.progressSpinner = false;
+        //console.log(err);
       }
-    },
-    err => {
-      this.progressSpinner = false;
-      //console.log(err);
-    });
+    );
   }
 
   newContrario(){

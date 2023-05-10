@@ -4,6 +4,8 @@ import { ContrarioItem } from "./ContrarioItem";
 import { FiltroAsistenciaItem } from "./FiltroAsistenciaItem";
 
 export class TarjetaAsistenciaItem{
+	  incidencias : string;
+	  observaciones: string;
       anio : string;
 	  numero: string;
 	  fechaAsistencia : string;
@@ -25,7 +27,6 @@ export class TarjetaAsistenciaItem{
 	  anioNumero: string;
 	  asistido: string;
 	  idDelito: string [];
-	  observaciones: string;
 	  ejgNumero: string;
 	  ejgAnio: string;
 	  ejgAnioNumero: string;

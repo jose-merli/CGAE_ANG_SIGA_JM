@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Message } from 'primeng/api';
 import { TranslateService } from '../../../../../../commons/translate';
 import { TarjetaObservacionesItem } from '../../../../../../models/guardia/TarjetaObservacionesItem';
 import { SigaServices } from '../../../../../../_services/siga.service';
+import { FichaAsistenciaComponent } from '../ficha-asistencia.component';
 
 @Component({
   selector: 'app-ficha-asistencia-tarjeta-observaciones',
@@ -18,9 +19,11 @@ export class FichaAsistenciaTarjetaObservacionesComponent implements OnInit {
   tarjetaObservacionesItem : TarjetaObservacionesItem = new TarjetaObservacionesItem();
   tarjetaObservacionesItemAux : TarjetaObservacionesItem = new TarjetaObservacionesItem();
   progressSpinner : boolean = false;
+  @Output() refreshTarjetas = new EventEmitter<FichaAsistenciaComponent>();
 
   constructor(private sigaServices : SigaServices,
-    private translateService : TranslateService) { }
+    private translateService : TranslateService
+    ) { }
 
   ngOnInit() {
     if(this.idAsistencia){
@@ -45,9 +48,8 @@ export class FichaAsistenciaTarjetaObservacionesComponent implements OnInit {
       );
 
   }
-
+  
   saveTarjetaObservaciones(){
-
     if(this.idAsistencia){
       this.progressSpinner = true;
       this.sigaServices.postPaginado("busquedaGuardias_guardarTarjetaObservaciones","?anioNumero="+this.idAsistencia, this.tarjetaObservacionesItem).subscribe(
@@ -56,13 +58,14 @@ export class FichaAsistenciaTarjetaObservacionesComponent implements OnInit {
           let id = JSON.parse(n.body).id;
           let error = JSON.parse(n.body).error;
           this.progressSpinner = false;
-
+          this.refreshTarjetas.emit(id);
           if (error != null && error.description != null) {
             this.showMsg("info", this.translateService.instant("general.message.informacion"), error.description);
           } else {
             this.showMsg('success', this.translateService.instant("general.message.accion.realizada"), '');
             this.tarjetaObservacionesItemAux = Object.assign({},this.tarjetaObservacionesItem);
           }
+          
         },
         err => {
           //console.log(err);
