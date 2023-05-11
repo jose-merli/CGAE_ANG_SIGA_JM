@@ -97,6 +97,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
   fromAbogadoContrario: boolean = false;
   fromCliente: boolean = false;
   fromAbogadoContrarioEJG: boolean = false;
+  fromDesignaciones: boolean = false;
 
   migaPan: string = '';
   migaPan2: string = '';
@@ -148,6 +149,12 @@ export class BusquedaGeneralComponent implements OnDestroy {
     if (sessionStorage.getItem("origin") == "AbogadoContrario") {
       this.fromAbogadoContrario = true;
     }
+
+    if (sessionStorage.getItem("fromDesignaciones") != null) {
+      this.fromDesignaciones = true;
+      sessionStorage.removeItem('fromDesignaciones');
+    }
+
     if(sessionStorage.getItem("origin") == "AbogadoContrarioEJG"){
       this.fromAbogadoContrarioEJG = true;
     }
@@ -698,6 +705,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
           this.bodyFisica.addDestinatarioIndv = false;
         } else {
           this.bodyFisica.addDestinatarioIndv = this.addDestinatarioIndv;
+        }
+
+        if (this.fromDesignaciones != null){
+          this.bodyFisica.fromDesignaciones = this.fromDesignaciones;
         }
 
         this.sigaServices.postPaginado('busquedaPer_searchFisica', '?numPagina=1', this.bodyFisica).subscribe(

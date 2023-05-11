@@ -252,6 +252,7 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
     }
     this.progressSpinner = true;
     this.getDataLoggedUser();
+    sessionStorage.setItem("fromDesignaciones", "true");
 
     this.isLetrado = this.localStorageService.isLetrado;
     this.idPersonaLogado = this.localStorageService.idPersona;

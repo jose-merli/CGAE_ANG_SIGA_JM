@@ -33,5 +33,7 @@ export class BusquedaFisicaItem {
   fax2: String;
   movil: String;
   correoelectronico: String;
+  fromDesignaciones: boolean;
+
   constructor() { }
 }
