@@ -247,7 +247,6 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
     if (changes.rowGroups.currentValue) {
       sessionStorage.setItem("rowGroupsInitProcurador", JSON.stringify(changes.rowGroups.currentValue));
-      console.log(changes.rowGroups.currentValue);
     }
 
     //Cuando se actualiza la tabla
@@ -296,7 +295,6 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   }
 
   checkGuardar() {
-    console.log("entrando en checkGuardar");
     if (this.disableGuardar()) {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     }
