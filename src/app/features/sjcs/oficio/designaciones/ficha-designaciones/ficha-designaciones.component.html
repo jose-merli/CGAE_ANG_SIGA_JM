@@ -90,6 +90,7 @@
                                     </div>
                                     <div *ngIf="tarj.nombre == 'Procurador'" >
                                         <app-detalle-tarjeta-procurador-ficha-designacion-oficio [cabeceras]="cabeceras"
+                                            [campos]="campos.fechaEntradaInicio"
                                             [totalRegistros]="totalRegistros" [seleccionarTodo]="seleccionarTodo"
                                             [rowGroupsAux]="rowGroupsAux" [rowGroups]="rowGroups"
                                             [procuradores]="procurador"

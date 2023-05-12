@@ -20,6 +20,7 @@ import { Dialog } from 'primeng/dialog';
 export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements OnInit {
 
   @Input() cabeceras = [];
+  @Input() campos;
   msgs: Message[] = [];
   @Input() rowGroups: Row[];
   @Input() rowGroupsAux: Row[];
@@ -41,6 +42,9 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   nuevoProcurador: boolean = false;
   isAssociated = false;
   initDate: Date;
+
+  camposInit: any;
+  fechaDesignacion: any;
 
   @ViewChild("confirmGuardarEJG") cdGuardarEJG: Dialog;
 
@@ -82,6 +86,8 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   }
 
   ngOnInit() {
+    this.fechaDesignacion=this.campos;
+
     //En el caso que se traiga un procurador desde la pantalla de busqueda de procuradores
     if (sessionStorage.getItem("datosProcurador")) {
       //Para mover el scroll a la tajeta si se selecciona un procurador nuevo
@@ -241,6 +247,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
     if (changes.rowGroups.currentValue) {
       sessionStorage.setItem("rowGroupsInitProcurador", JSON.stringify(changes.rowGroups.currentValue));
+      console.log(changes.rowGroups.currentValue);
     }
 
     //Cuando se actualiza la tabla
@@ -289,6 +296,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   }
 
   checkGuardar() {
+    console.log("entrando en checkGuardar");
     if (this.disableGuardar()) {
       this.msgs = [{ severity: "error", summary: "Error", detail: this.translateService.instant('general.message.camposObligatorios') }];
     }
@@ -423,6 +431,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   }
 //procurador restringe fechas y mirar designaciones
   comprobarFechaProcurador() {
+    
     this.progressSpinner = true;
 
     //Se comprueba si la fecha de designacion del procurador editable se ha modificado o no.
@@ -435,12 +444,6 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     var checkFechas = false;
     // Controlar que existan más de un Procurados.
     if (initValues.length > 1) {
-      //Formateo de fecha Original
-      let fechaOriginalString = initValues[0].cells[0].value;
-      let diaAuxA = fechaOriginalString.substring(0, 2);
-      let mesAuxA = fechaOriginalString.substring(3, 5);
-      let anioAuxA = fechaOriginalString.substring(6, 10);
-      let fechaOrignalDate = new Date(anioAuxA + "-" + mesAuxA + "-" + diaAuxA);
 
       //Formateo de fecha Nueva
       let diaAux = fechaNueva.getDate().toString();
@@ -449,31 +452,26 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
       let fechaNuevaFormateado = new Date(anioAux + "-" + mesAux + "-" + diaAux);
 
-      // Formateo de fecha Actual 
-      let fechaActualSF = new Date()
-      let dia = fechaActualSF.getUTCDate().toString();
-      let mes = fechaActualSF.getMonth() < 9 ?  "0"+(fechaActualSF.getMonth() +1) :  (fechaActualSF.getMonth() +1).toString()
-      let anio = fechaActualSF.getFullYear().toString();
-      let fechaActualF = new Date(anio + "-" + mes + "-" + dia);
+      //Formateo de fecha de procurador anterior
+      let fechaProcuradorAnterior=initValues[1].cells[0].value;
+      let diaAuxPA = fechaProcuradorAnterior.substring(0, 2);
+      let mesAuxPA = fechaProcuradorAnterior.substring(3, 5);
+      let anioAuxPA = fechaProcuradorAnterior.substring(6, 10);
+      let fechaProcuradorAnteriorFormateada = new Date(anioAuxPA + "-" + mesAuxPA + "-" + diaAuxPA);
 
-  
+      if (fechaNuevaFormateado.valueOf() > fechaProcuradorAnteriorFormateada.valueOf()) {
+        checkFechas = true;
+      }else if(fechaNuevaFormateado.getDay() == fechaProcuradorAnteriorFormateada.getDay() 
+      && fechaNuevaFormateado.getMonth() == fechaProcuradorAnteriorFormateada.getMonth() && fechaNuevaFormateado.getFullYear() == fechaProcuradorAnteriorFormateada.getFullYear() ){
+        checkFechas = true;
+      }
+
+      /*
       if (fechaNuevaFormateado.valueOf() >= fechaActualF.valueOf() || fechaNuevaFormateado.valueOf() == fechaOrignalDate.valueOf()) {
         checkFechas = true;
       }
+      */
     }else if (initValues.length == 1) {
-      //Formateo de fecha Original
-      let fechaOriginalString = initValues[0].cells[0].value;
-      let dia = fechaOriginalString.substring(0, 2);
-      let mes = fechaOriginalString.substring(3, 5);
-      let anio = fechaOriginalString.substring(6, 10);
-      let fechaOrignalDate = new Date(anio + "-" + mes + "-" + dia);
-
-      // Formateo de fecha Actual 
-      let fechaActualSF = new Date()
-      let diaAux = fechaActualSF.getUTCDate().toString();
-      let mesAux = fechaActualSF.getMonth() < 9 ?  "0"+(fechaActualSF.getMonth() +1) :  (fechaActualSF.getMonth() +1).toString()
-      let anioAux = fechaActualSF.getFullYear().toString();
-      let fechaActualF = new Date(anioAux + "-" + mesAux + "-" + diaAux);
 
       //Formateo de fecha Nueva
       let diaAuxA = fechaNueva.getDate();
@@ -481,14 +479,24 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       let anioAuxA = fechaNueva.getFullYear().toString();
       let fechaNuevaFormateado = new Date(anioAuxA + "-" + mesAuxA + "-" + diaAuxA);
 
+      //Formateo de fecha Designación
+      let diaAuxD = this.fechaDesignacion.substring(0, 2);
+      let mesAuxD = this.fechaDesignacion.substring(3, 5);
+      let anioAuxD = this.fechaDesignacion.substring(6, 10);
+      let fechaDesignacionFormateada = new Date(anioAuxD + "-" + mesAuxD + "-" + diaAuxD);
 
-      if ( fechaNuevaFormateado.valueOf() >= fechaActualF.valueOf() || fechaNuevaFormateado.valueOf() == fechaOrignalDate.valueOf()) {
+      if (fechaNuevaFormateado.valueOf() >= fechaDesignacionFormateada.valueOf()) {
         checkFechas = true;
       }
+
+      /*
+      if ( fechaNuevaFormateado.valueOf() >= fechaActualF.valueOf() || fechaNuevaFormateado.valueOf() >= fechaOrignalDate.valueOf()) {
+        checkFechas = true;
+      }*/
     }
     // Chekear que la fecha sea mayor a la fecha mas actual.
     if (checkFechas == true) {
-      if (this.rowGroups.length == 1 || (!this.nuevoProcurador && this.initDate == this.rowGroups[0].cells[0].value)) {
+      if (this.rowGroups.length == 1 || (!this.nuevoProcurador && this.initDate == this.rowGroups[1].cells[0].value)) {
         if (this.isAssociated) {
           this.confirmUpdateProcEJG();
         }
