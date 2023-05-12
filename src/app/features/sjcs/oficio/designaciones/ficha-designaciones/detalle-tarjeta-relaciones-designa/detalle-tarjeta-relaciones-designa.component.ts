@@ -93,10 +93,8 @@ export class DetalleTarjetaRelacionesDesignaComponent implements OnInit, OnChang
       { field: "sjcs", header: "justiciaGratuita.oficio.designas.interesados.identificador", width: '120px' },
       { field: "fechaasunto", header: "justiciaGratuita.designas.relaciones.fecha", width: '120px' },
       { field: "descturno", header: "justiciaGratuita.justiciables.literal.turnoGuardia" },
-      { field: "nColLetrado", header: "justiciaGratuita.designas.relaciones.numColegiado", width: '120px'},
-      { field: "letrado", header: "justiciaGratuita.sjcs.designas.colegiado" },
-      { field: "nifInteresado", header: "justiciaGratuita.designas.relaciones.numIdentificador", width: '120px'},
-      { field: "interesado", header: "justiciaGratuita.sjcs.designas.datosInteresados" },
+      { field: "colegiado", header: "justiciaGratuita.justiciables.literal.colegiado" },
+      { field: "justiciable", header: "menu.justiciaGratuita.justiciable" },
       { field: "dilnigproc", header: 'justiciaGratuita.designas.relaciones.dilnigproc' },
       { field: "resolucion", header: "justiciaGratuita.maestros.fundamentosResolucion.resolucion" }
 
