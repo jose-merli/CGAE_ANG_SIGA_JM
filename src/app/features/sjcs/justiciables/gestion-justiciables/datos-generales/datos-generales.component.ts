@@ -702,7 +702,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.checkContrario(this.body)) {
             this.insertContrario(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            }
           }
           
           // Asociar para Asistido
@@ -714,7 +716,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.checkContrario(this.body)) {
             this.asociarContrarioAsistencia(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            }
           }
          
           // Asociar para Nuevo Contrario EJG
@@ -722,7 +726,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.checkContrarioEJG(this.body)) {
             this.insertContrarioEJG(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            }
           }
         }
         
@@ -731,7 +737,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.checkUniFamiliar(this.body)) {
             this.insertUniFamiliar(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"));
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"));
+            }
           }
         
         // Asociar para Nuevo Representante
