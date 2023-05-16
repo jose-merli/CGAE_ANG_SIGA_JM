@@ -299,8 +299,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
 
     let designa = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    let datosInteresado = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
 
-    let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero]
+    // let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero];
+    let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero, this.creaNuevoJusticiable, datosInteresado.idpersona];
+
     this.sigaServices.post("designaciones_insertInteresado", request).subscribe(
       data => {
         sessionStorage.removeItem('origin');
@@ -308,12 +311,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
 
-        //Si hemos creado un nuevo Justiciable al editar, eliminamos la relacion del antiguo con el Asunto
-        if(this.creaNuevoJusticiable){
-          this.borraRelacionJusticiableAntiguo(3, false, null);
-        }
-
-        // this.router.navigate(["/fichaDesignaciones"]);
+        this.router.navigate(["/fichaDesignaciones"]);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -360,8 +358,11 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
 
     let designa: any = JSON.parse(sessionStorage.getItem("designaItemLink"));
+    let datosInteresado = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
 
-    let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero]
+    // let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero];
+    let request = [designa.idInstitucion, justiciable.idpersona, designa.ano, designa.idTurno, designa.numero, this.creaNuevoJusticiable, datosInteresado.idpersona];
+    
     this.sigaServices.post("designaciones_insertContrario", request).subscribe(
       data => {
         sessionStorage.removeItem('origin');
@@ -369,12 +370,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
         this.progressSpinner = false;
 
-        //Si hemos creado un nuevo Justiciable al editar, eliminamos la relacion del antiguo con el Asunto
-        if(this.creaNuevoJusticiable){
-          this.borraRelacionJusticiableAntiguo(3, true, null);
-        }
-
-        // this.router.navigate(["/fichaDesignaciones"]);
+        this.router.navigate(["/fichaDesignaciones"]);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -428,10 +424,21 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     sessionStorage.setItem('tarjeta', 'idAsistenciaContrarios');
     let justiciables: JusticiableItem[] = []
     justiciables.push(justiciable);
-    if (idAsistencia) {
 
-      this.sigaServices.postPaginado("busquedaGuardias_asociarContrario", "?anioNumero=" + idAsistencia, justiciables)
-        .subscribe(
+    if (idAsistencia) {
+      //Si estamos editando un justiciable como nuevo
+      if (this.creaNuevoJusticiable) {
+        let contrarios: ContrarioItem[] = [];
+        let contrarioI: ContrarioItem;
+
+        //Recupero el justiciable antiguo editado
+        let fichaJusticiable = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
+
+        let request = [idAsistencia, justiciable.idpersona, fichaJusticiable.idpersona];
+
+        contrarios.push(contrarioI);
+
+        this.sigaServices.post("busquedaGuardias_actualizarContrario", request).subscribe(
           data => {
             let result = JSON.parse(data["body"]);
             if (result.error) {
@@ -439,14 +446,8 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             } else {
               this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
 
-              //Si hemos creado un nuevo Justiciable al editar, eliminamos la relacion del antiguo con el Asunto
-              if(this.creaNuevoJusticiable){
-                this.borraRelacionJusticiableAntiguo(2, true, null);
-              }
-
-              // this.router.navigate(["/fichaAsistencia"]);
+              this.router.navigate(["/fichaAsistencia"]);
             }
-
           },
           err => {
             //console.log(err);
@@ -456,7 +457,31 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
             this.progressSpinner = false;
           }
         );
+      }
 
+      //Creamos un justiciable desde cero
+      else {
+        this.sigaServices.postPaginado("busquedaGuardias_asociarContrario", "?anioNumero=" + idAsistencia, justiciables)
+          .subscribe(
+            data => {
+              let result = JSON.parse(data["body"]);
+              if (result.error) {
+                this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
+              } else {
+                this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
+
+                this.router.navigate(["/fichaAsistencia"]);
+              }
+            },
+            err => {
+              //console.log(err);
+              this.progressSpinner = false;
+            },
+            () => {
+              this.progressSpinner = false;
+            }
+          );
+      }
     }
   }
 
@@ -492,7 +517,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
 
     let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
 
-    let request = [justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero]
+    // let request = [justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero];
+    let request = [justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, this.creaNuevoJusticiable, this.idPersonaAntiguoJusticiable];
+
     this.sigaServices.post("gestionejg_insertContrarioEJG", request).subscribe(
       data => {
         sessionStorage.removeItem('origin');
@@ -502,12 +529,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
         sessionStorage.removeItem("EJGItem");
 
-        //Si hemos creado un nuevo Justiciable al editar, eliminamos la relacion del antiguo con el Asunto
-        if(this.creaNuevoJusticiable){
-          this.borraRelacionJusticiableAntiguo(1, true, ejg);
-        }
-
-        // this.router.navigate(["/gestionEjg"]);
+        this.router.navigate(["/gestionEjg"]);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error.description != "") {
@@ -544,8 +566,14 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
     this.progressSpinner = true;
 
     let ejg: EJGItem = JSON.parse(sessionStorage.getItem("EJGItem"));
+    let data = []; 
+    let ejg2;
+    ejg2 = {uf_anio : ejg.annio, uf_idPersona : this.idPersonaAntiguoJusticiable, uf_idTipoejg : ejg.tipoEJG, uf_numero : ejg.numero};
+    data.push(ejg2);
 
-    let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero]
+    // let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero]
+    let request = [ejg.idInstitucion, justiciable.idpersona, ejg.annio, ejg.tipoEJG, ejg.numero, this.creaNuevoJusticiable, this.idPersonaAntiguoJusticiable];
+
     this.sigaServices.post("gestionejg_insertFamiliarEJG", request).subscribe(
       data => {
         sessionStorage.removeItem('origin');
@@ -558,11 +586,7 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
         this.persistenceService.setDatosEJG(JSON.parse(sessionStorage.getItem("EJGItem")));
         sessionStorage.removeItem("EJGItem");
 
-        //Si hemos creado un nuevo Justiciable al editar, eliminamos la relacion del antiguo con el Asunto
-        if(this.creaNuevoJusticiable){
-          this.borraRelacionJusticiableAntiguo(1, false, ejg);
-        }
-        // this.router.navigate(["/gestionEjg"]);
+        this.router.navigate(["/gestionEjg"]);
       },
       err => {
         if (err != undefined && JSON.parse(err.error).error != null) {
@@ -668,7 +692,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.checkInteresado(this.body)) {
             this.insertInteresado(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.interesados.existente"));
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.interesados.existente"));
+            }
           }
           
           // Asociar para Contrarios.
@@ -676,7 +702,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.checkContrario(this.body)) {
             this.insertContrario(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            }
           }
           
           // Asociar para Asistido
@@ -688,7 +716,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.checkContrario(this.body)) {
             this.asociarContrarioAsistencia(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"))
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            }
           }
          
           // Asociar para Nuevo Contrario EJG
@@ -696,7 +726,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.checkContrarioEJG(this.body)) {
             this.insertContrarioEJG(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.oficio.designas.contrarios.existente"));
+            }
           }
         }
         
@@ -705,7 +737,9 @@ export class DatosGeneralesComponent implements OnInit, OnChanges {
           if (this.checkUniFamiliar(this.body)) {
             this.insertUniFamiliar(this.body);
           } else {
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"));
+            if(this.guardaOpcion != "s"){
+              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.uniFamiliar.existente"));
+            }
           }
         
         // Asociar para Nuevo Representante
@@ -2029,195 +2063,23 @@ para poder filtrar el dato con o sin estos caracteres*/
       this.modoEdicion = false;
       this.modoRepresentante = true;  
       this.confirmationSave = false;
-        this.confirmationUpdate = false;
-        this.progressSpinner = true;
-        let url = "gestionJusticiables_createJusticiable";
-        //Ya esta validada la repeticion y puede crear al justiciable
-        this.body.validacionRepeticion = true;
-        this.body.asociarRepresentante = true;
-        this.showConfirmacion = false;
-        //Indicamos que venimos como nuevo Justiciable
-        this.creaNuevoJusticiable = true;
-        this.callSaveService(url);
+      this.confirmationUpdate = false;
+      this.progressSpinner = true;
+      let url = "gestionJusticiables_createJusticiable";
+     
+      //Ya esta validada la repeticion y puede crear al justiciable
+      this.body.validacionRepeticion = true;
+      this.body.asociarRepresentante = true;
+      this.showConfirmacion = false;
+      
+      //Indicamos que venimos como nuevo Justiciable editando
+      this.creaNuevoJusticiable = true;
+      this.callSaveService(url);
       // }
-
     }
     this.showConfirmacion = false;
   }
   cancelar(){
     this.showConfirmacion = false;
-  }
-
-  borraRelacionJusticiableAntiguo(tipo, contrario, item){
-    //EJG
-    if(tipo == 1){
-      if(contrario){
-        //Si vengo de EJG Contrario
-        //	/deleteContrarioEJG - gestionejg_deleteContrarioEJG - contrarios-pre-designacion.component.ts - Eliminar()
-        this.progressSpinner = true;
-        let request = [this.idPersonaAntiguoJusticiable, item.annio, item.numero, item.tipoEJG]
-        this.sigaServices.post("gestionejg_deleteContrarioEJG", request).subscribe(
-          data => {
-            this.progressSpinner = false;
-            this.selectedDatos = [];
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-
-            this.router.navigate(["/gestionEjg"]);
-          },
-          err => {
-            if (err != undefined && JSON.parse(err.error).error.description != "") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            } else {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            }
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-            this.selectMultiple = false;
-            this.selectAll = false;
-          }
-        );
-      } else{
-        //Si vengo de EJG U.F.
-        //	/borrarFamiliar - gestionejg_borrarFamiliar - unidad-familiar.component.ts - delete()
-        this.progressSpinner = true;
-        let data = []; 
-        let ejg;
-
-        ejg = {uf_anio : item.annio, uf_idPersona : this.idPersonaAntiguoJusticiable, uf_idTipoejg : item.tipoEJG, uf_numero : item.numero};
-
-        data.push(ejg);
-
-        this.sigaServices.post("gestionejg_borrarFamiliar", data).subscribe(
-          n => {
-            this.progressSpinner = false;
-            this.generalBody = undefined;
-
-            if (n.statusText == 'OK') {
-              this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            } else {
-              this.showMessage('error', 'Error', this.translateService.instant('general.message.error.realiza.accion'));
-            }
-            this.router.navigate(["/gestionEjg"]);
-          },
-          err => {
-            this.progressSpinner = false;
-            this.selectedDatos = [];
-            this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.mensaje.error.bbdd"));
-          }
-        );
-      }      
-    } 
-
-    //Asistencia
-    else if(tipo == 2){
-      //Desde Asistencia solo puede venir desde contrario
-        //	/desasociarContrario - busquedaGuardias_desasociarContrario - ficha-asistencia-tarjeta-contrarios.component.ts - deleteContrarios()
-      this.progressSpinner = true;
-      let idAsistencia = sessionStorage.getItem("idAsistencia");
-
-      let contrarios : ContrarioItem [] = [];
-      let contrarioI : ContrarioItem;
-
-      //Recupero de objetos de sesion: anio, apellidosnombre, idInstitucion, idPersona, nif, numero
-      let fichaJusticiable = JSON.parse(sessionStorage.getItem("fichaJusticiable")); // --> idInstitucion, idPersona, nif, nombre
-      let filtroAsistencia = JSON.parse(sessionStorage.getItem("filtroAsistencia")); // --> anio, numero
-
-      contrarioI = {anio : filtroAsistencia.anio, apellidosnombre : fichaJusticiable.nombre, idInstitucion : fichaJusticiable.idinstitucion, 
-                      idPersona : fichaJusticiable.idpersona, nif : fichaJusticiable.nif, numero : filtroAsistencia.numero,
-                      idTurno : null, abogado : null, procurador : null, representante : null, fechaBaja : null, idabogadocontrario : null, idprocurador : null};
-
-      contrarios.push(contrarioI);
-
-      this.sigaServices.postPaginado("busquedaGuardias_desasociarContrario", "?anioNumero=" + idAsistencia, contrarios).subscribe(
-        data => {
-          this.progressSpinner = false;
-          let result = JSON.parse(data["body"]);
-          if(result.error){
-            this.showMessage('error', this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.errorguardar"), result.error.description);
-          }else{
-            this.showMessage('success', this.translateService.instant("general.message.accion.realizada"), '');
-          }
-          this.router.navigate(["/fichaAsistencia"]);
-        },
-        err => {
-          // console.log(err);
-          this.progressSpinner = false;
-        },
-        () => {
-            this.progressSpinner = false;
-          }
-        );
-    } 
-
-    //Designa
-    else if(tipo == 3){
-      if(contrario){
-        //Si vengo de Designa Contrario
-        //	/deleteContrario - designaciones_deleteContrario - detalle-tarjeta-contrarios-ficha-designacion-oficio.component.ts - Eliminar()
-
-        this.progressSpinner = true;
-
-        let datosInteresado = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
-        let datosInterea2 = JSON.parse(sessionStorage.getItem("designaItemLink"));
-
-        let request = [datosInteresado.idinstitucion, datosInteresado.idpersona, datosInterea2.anio, datosInterea2.idTurno, datosInterea2.numero];
-        this.sigaServices.post("designaciones_deleteContrario", request).subscribe(
-          data => {
-            this.selectedDatos = [];
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.progressSpinner = false;
-
-            this.router.navigate(["/fichaDesignaciones"]);
-          },
-          err => {
-            if (err != undefined && JSON.parse(err.error).error.description != "") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            } else {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            }
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-            this.selectMultiple = false;
-            this.selectAll = false;
-          }
-        );
-      } else{
-        //Si vengo de Designa Interesado
-        //  /deleteInteresado - designaciones_deleteInteresado - detalle-tarjeta-interesados-ficha-designacion-oficio.component.ts - Eliminar()
-
-        let datosInteresado = JSON.parse(sessionStorage.getItem("fichaJusticiable"));
-        let datosInterea2 = JSON.parse(sessionStorage.getItem("designaItemLink"));
-
-        this.progressSpinner = true;
-        let request = [datosInteresado.idinstitucion, datosInteresado.idpersona, datosInterea2.anio, datosInterea2.idTurno, datosInterea2.numero];
-        this.sigaServices.post("designaciones_deleteInteresado", request).subscribe(
-          data => {
-            this.selectedDatos = [];
-            // this.searchInteresados.emit();
-            this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-            this.progressSpinner = false;
-
-            this.router.navigate(["/fichaDesignaciones"]);
-          },
-          err => {
-            if (err != null && err != undefined && JSON.parse(err.error).error.description != "") {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant(JSON.parse(err.error).error.description));
-            } else {
-              this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("general.message.error.realiza.accion"));
-            }
-            this.progressSpinner = false;
-          },
-          () => {
-            this.progressSpinner = false;
-            this.selectMultiple = false;
-            this.selectAll = false;
-          }
-        );
-      }
-    }
   }
 }

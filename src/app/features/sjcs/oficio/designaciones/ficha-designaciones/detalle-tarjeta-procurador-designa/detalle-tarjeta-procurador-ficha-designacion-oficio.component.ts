@@ -66,6 +66,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   //disabledSave: boolean = true;
 
   fechaDesigna: Date = new Date();
+  datepipe: any;
 
   constructor(
     private renderer: Renderer2,
@@ -240,7 +241,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
 
 
   ngOnChanges(changes: SimpleChanges) {
-
+    
     if (sessionStorage.getItem("rowGroupsInitProcurador")) {
       sessionStorage.removeItem("rowGroupsInitProcurador");
     }
@@ -286,9 +287,10 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
   disableGuardar() {
     //Se revisa la primera fila que es la editable.
     //Campos respectivamente: "Fecha designaicon", "Numero Designacion" y "Observaciones"
-    if (this.rowGroups[0].cells[0].value != null
-      //&& this.rowGroups[0].cells[1].value !=null 
-      && this.rowGroups[0].cells[5].value != null) {
+    var row=this.rowGroups.find(r=>r.cells[0].type=="datePicker");
+
+    if (row.cells[0].value != null
+      && row.cells[5].value != null) {
       return false;
     }
     else return true;
@@ -330,11 +332,13 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     procuradorPeticion.numero = designa.numero.toString();
 
     //Se asignan los valores asignados en la tabla.
-    procuradorPeticion.fechaDesigna = this.rowGroups[0].cells[0].value;
-    procuradorPeticion.numerodesignacion = this.rowGroups[0].cells[1].value;
-    procuradorPeticion.motivosRenuncia = this.rowGroups[0].cells[4].value;
-    procuradorPeticion.observaciones = this.rowGroups[0].cells[5].value;
-    procuradorPeticion.fecharenunciasolicita = this.rowGroups[0].cells[6].value;
+    var row=this.rowGroups.find(r=>r.cells[0].type=="datePicker");
+
+    procuradorPeticion.fechaDesigna = this.fechaDesigna;
+    procuradorPeticion.numerodesignacion = row.cells[1].value;
+    procuradorPeticion.motivosRenuncia = row.cells[4].value;
+    procuradorPeticion.observaciones = row.cells[5].value;
+    procuradorPeticion.fecharenunciasolicita = row.cells[6].value;
 
     //Para que el back sepa si se trata de la actualizacion de un procurador existente o la introducion de uno nuevo.
     procuradorPeticion.numeroTotalProcuradores = this.rowGroups.length.toString();
@@ -352,6 +356,7 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       }
     );
   }
+  
 
   checkRestablecer() {
     this.restablecer.emit();
@@ -367,6 +372,11 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     if (evento == undefined || evento == null || evento == "") {
       return this.commonsService.styleObligatorio(evento);
     }
+  }
+
+  formatDate(date) { 
+    const pattern = 'dd/MM/yyyy'; 
+    return this.datepipe.transform(date, pattern); 
   }
 
   guardarProcEJG() {
@@ -385,11 +395,12 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     procuradorPeticion.numero = designa.numero.toString();
 
     //Se asignan los valores asignados en la tabla.
-    procuradorPeticion.fechaDesigna = this.rowGroups[0].cells[0].value;
-    procuradorPeticion.numerodesignacion = this.rowGroups[0].cells[1].value;
-    procuradorPeticion.motivosRenuncia = this.rowGroups[0].cells[4].value;
-    procuradorPeticion.observaciones = this.rowGroups[0].cells[5].value;
-    procuradorPeticion.fecharenunciasolicita = this.rowGroups[0].cells[6].value;
+    var row=this.rowGroups.find(r=>r.cells[0].type=="datePicker");
+    procuradorPeticion.fechaDesigna = this.fechaDesigna;
+    procuradorPeticion.numerodesignacion = row.cells[1].value;
+    procuradorPeticion.motivosRenuncia = row.cells[4].value;
+    procuradorPeticion.observaciones = row.cells[5].value;
+    procuradorPeticion.fecharenunciasolicita = row.cells[6].value;
 
     this.sigaServices.post("designaciones_guardarProcuradorEJG", procuradorPeticion).subscribe(
       data => {
@@ -436,8 +447,13 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
     //Esto se realiza para prevenir que si se comprueba la fecha de designacion de todos los procuradores,
     //no se tenga en cuenta el procurador que se esta modificacndo.
     let initValues = JSON.parse(sessionStorage.getItem("rowGroupsInitProcurador"));
-    // Fecha nueva a importar
-    var fechaNueva = new Date(this.rowGroups[0].cells[0].value);
+    //myArr.sort((val1, val2)=> {return new Date(val2.CREATE_TS) - new 
+    //Date(val1.CREATE_TS)})
+
+    // Fecha nueva
+    var fechaNueva = new Date(this.fechaDesigna);
+    //var fechaNueva = new Date(initValues[0].cells[0].value);
+
     // Bandera para controla error de fechas
     var checkFechas = false;
     // Controlar que existan más de un Procurados.
@@ -464,11 +480,6 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
         checkFechas = true;
       }
 
-      /*
-      if (fechaNuevaFormateado.valueOf() >= fechaActualF.valueOf() || fechaNuevaFormateado.valueOf() == fechaOrignalDate.valueOf()) {
-        checkFechas = true;
-      }
-      */
     }else if (initValues.length == 1) {
 
       //Formateo de fecha Nueva
@@ -486,15 +497,10 @@ export class DetalleTarjetaProcuradorFichaDesignacionOficioComponent implements 
       if (fechaNuevaFormateado.valueOf() >= fechaDesignacionFormateada.valueOf()) {
         checkFechas = true;
       }
-
-      /*
-      if ( fechaNuevaFormateado.valueOf() >= fechaActualF.valueOf() || fechaNuevaFormateado.valueOf() >= fechaOrignalDate.valueOf()) {
-        checkFechas = true;
-      }*/
     }
     // Chekear que la fecha sea mayor a la fecha mas actual.
     if (checkFechas == true) {
-      if (this.rowGroups.length == 1 || (!this.nuevoProcurador && this.initDate == this.rowGroups[1].cells[0].value)) {
+      if (this.rowGroups.length == 1 || (this.initDate != fechaNueva)) {//!this.nuevoProcurador && 
         if (this.isAssociated) {
           this.confirmUpdateProcEJG();
         }

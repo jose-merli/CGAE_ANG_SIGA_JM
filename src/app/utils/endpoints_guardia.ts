@@ -98,6 +98,7 @@ export let endpoints_guardia: any = {
     busquedaGuardias_desasociarAsistido: "asistencia/desasociarAsistido",
     busquedaGuardias_searchListaContrarios: "asistencia/searchListaContrarios",
     busquedaGuardias_asociarContrario: "asistencia/asociarContrario",
+    busquedaGuardias_actualizarContrario: "asistencia/actualizarContrario",
     busquedaGuardias_desasociarContrario: "asistencia/desasociarContrario",
     busquedaGuardias_searchTarjetaDefensaJuridica: "asistencia/searchTarjetaDefensaJuridica",
     busquedaGuardias_guardarTarjetaDefensaJuridica: "asistencia/guardarTarjetaDefensaJuridica",
