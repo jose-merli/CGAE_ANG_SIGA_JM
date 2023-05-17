@@ -25,10 +25,23 @@
       <tr [pSelectableRow]="dato" [pSelectableRowIndex]="rowIndex">
         <td class="text-center" *ngFor="let col of columns">
           <div *ngIf="col.field == 'sjcs'">
-            <span class="enlace" (click) = "checkPermisosEditar(dato)">{{dato[col.field]}}</span>
+            <span class="enlace" (click) = "checkPermisosEditar(dato)">{{dato[col.field]}}</span> 
           </div>
           <div *ngIf="col.field != 'sjcs'">
-            <span>{{dato[col.field]}}</span>
+            <div *ngIf="col.field == 'letrado'">
+              <span *ngIf="dato['nColLetrado'] != null && dato['nColLetrado'] != ' '">
+                {{ dato['nColLetrado']}} - {{ dato['letrado'].replace(",", ", ") }}
+              </span>
+            </div>
+            <div *ngIf="col.field == 'interesado'">
+              <span *ngIf="dato['nifInteresado'] != null && dato['nifInteresado'] != ' '">
+                {{ dato['nifInteresado']}} - {{ dato['interesado'].replace(",", ", ") }}
+              </span>
+            </div>
+            <div *ngIf="col.field == 'dilnigproc'">
+              {{ dato['dilnigproc'].replace(" null/null", "Sin número") }}
+            </div>
+            <span *ngIf="col.field != 'letrado' && col.field != 'interesado' && col.field != 'dilnigproc'">{{dato[col.field]}}</span>
           </div>
         </td>
       </tr>
