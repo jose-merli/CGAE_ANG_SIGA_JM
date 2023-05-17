@@ -157,6 +157,11 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     if (this.persistenceService.getPermisos() != undefined) {
       this.permisoEscritura = this.persistenceService.getPermisos();
     }
+    if(!this.permisoEscritura){
+      //Poner los datos del módulo que tiene ese id
+
+    }
+
     if (this.pantalla == 'JE') {
       this.fromRowGroup = 0;
       this.toRowGroup = 9;
