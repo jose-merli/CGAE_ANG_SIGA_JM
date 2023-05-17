@@ -584,7 +584,7 @@ color: green;
 }
 .sameLine{
   position: relative;
-    bottom: 46px;
+    bottom: 27px;
 }
 .setPosition{
   position: relative;
@@ -663,6 +663,10 @@ div.hoverToClick:hover  span{
 .setDiv{
     width: fit-content;
     margin: 0 auto;
+}
+
+.selectColumnas{
+  height: 0;
 }
 
 ::ng-deep {

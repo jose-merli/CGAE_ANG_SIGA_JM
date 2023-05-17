@@ -5,12 +5,13 @@
         (toReg)="toReg($event)" [totalRegistros]="totalRegistros"></app-paginador3>
 </div>
 
-<div class="center sameLine setDiv">
+<div class="center sameLine setDiv selectColumnas">
     <p-multiSelect #mySelect [formControl]="info" [(ngModel)]='selectedHeader' [options]="cabeceras" optionLabel="name"
         optionValue="id" (onChange)="ocultarColumna($event)" defaultLabel="0 visibles" maxSelectedLabels="0"
         [selectedItemsLabel]="textSelected">
     </p-multiSelect> Columnas
 </div>
+
 <div style="padding-left: 0.5rem">
     <label *ngIf="!todoDesplegado" (click)="expandAll()" class="desplegar-todo">Desplegar todo
         <i class="fa fa-angle-down"></i>
