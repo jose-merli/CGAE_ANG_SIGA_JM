@@ -41,6 +41,8 @@ export class FichaRemesasComponent implements OnInit {
   acciones: boolean = false;
   estado: boolean = false;
   remesaInformacionEconomica: boolean;
+  deshabilitarAniadirExpedientes: boolean = false;
+  deshabilitarEliminarRemesa: boolean = false;
 
   constructor(private sigaServices: SigaServices,
     private persistenceService: PersistenceService,
@@ -73,6 +75,12 @@ export class FichaRemesasComponent implements OnInit {
       if(this.remesaTabla.estado == "Iniciada" || this.remesaTabla.estado == "Validada" || this.remesaTabla.estado == "Error envío"){
         this.estado = true;
       }
+
+      if (this.remesaTabla.estado == "Enviada") {
+        this.deshabilitarAniadirExpedientes = true;
+        this.deshabilitarEliminarRemesa = true;
+      }
+
     } else if (localStorage.getItem('ficha') == "nuevo") {
       this.remesaItem.descripcion = "";
       this.descripcion = "";
@@ -99,8 +107,31 @@ export class FichaRemesasComponent implements OnInit {
         this.remesa.informacionEconomica = (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaTabla.informacionEconomica
       }
       localStorage.removeItem('remesa');
-    }
+    } else {
+      if (localStorage.getItem('remesaAniadirExpediente') != null && localStorage.getItem('remesaAniadirExpediente') != undefined && localStorage.getItem('remesaAniadirExpediente') != 'undefined') {
+        this.remesaTabla = JSON.parse(localStorage.getItem('remesaAniadirExpediente'));
+        if (this.remesaTabla != null && this.remesaTabla != undefined) {
+          this.remesa = {
+            'idRemesa': this.remesaTabla.idRemesa,
+            'descripcion': this.remesaTabla.descripcion,
+            'numero': this.remesaTabla.numero,
+            'informacionEconomica': (this.remesaInformacionEconomica) ? this.remesaInformacionEconomica : this.remesaTabla.informacionEconomica
+          };
+          this.guardado = true;
+          this.search();
+          this.remesaFromTabla = true;
+          this.descripcion = this.remesaTabla.descripcion;
+          if(this.remesaTabla.estado == "Iniciada" || this.remesaTabla.estado == "Validada" || this.remesaTabla.estado == "Error envío"){
+            this.estado = true;
+          }
 
+          if (this.remesaTabla.estado == "Enviada") {
+            this.deshabilitarAniadirExpedientes = true;
+          }
+        }
+        localStorage.removeItem('remesaAniadirExpediente');
+      }
+    }
     this.commonsService.checkAcceso(procesos_comision.guardadoRemesasEnvio)
       .then(respuesta => {
 
@@ -545,8 +576,10 @@ export class FichaRemesasComponent implements OnInit {
     this.router.navigate(["/ejg"]);
     if(this.remesaFromTabla){
       localStorage.setItem('remesa', JSON.stringify(this.remesaTabla)); 
+      localStorage.setItem('remesaAniadirExpediente', JSON.stringify(this.remesaTabla));
     }else{
-      localStorage.setItem('remesa', JSON.stringify(this.remesa)); 
+      localStorage.setItem('remesa', JSON.stringify(this.remesa));
+      localStorage.setItem('remesaAniadirExpediente', JSON.stringify(this.remesa));
     }
   }
   

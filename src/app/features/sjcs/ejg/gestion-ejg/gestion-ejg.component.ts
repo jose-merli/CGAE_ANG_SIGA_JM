@@ -326,6 +326,11 @@ export class GestionEjgComponent implements OnInit {
     this.persistenceService.clearDatosEJG();
     this.persistenceService.setVolverEJG();
     this.router.navigate(["/ejg"]);
+
+    // Si viene de remesas de envío
+    if (localStorage.getItem('remesa')) {
+      this.router.navigate(['/fichaRemesasEnvio']);
+    }
   }
 
   async obtenerPermisos() {

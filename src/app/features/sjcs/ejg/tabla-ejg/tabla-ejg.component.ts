@@ -9,6 +9,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { DatePipe } from '../../../../../../node_modules/@angular/common';
 import { Dialog } from 'primeng/primeng';
 import { saveAs } from "file-saver/FileSaver";
+import { Location } from '@angular/common';
 //import moment = require('moment');
 
 @Component({
@@ -76,7 +77,7 @@ export class TablaEjgComponent implements OnInit {
  
 
   constructor(private translateService: TranslateService, private changeDetectorRef: ChangeDetectorRef, private router: Router,
-    private sigaServices: SigaServices, private persistenceService: PersistenceService,
+    private sigaServices: SigaServices, private persistenceService: PersistenceService, private location: Location,
     private confirmationService: ConfirmationService, private commonServices: CommonsService) {
 
   }
@@ -559,7 +560,8 @@ export class TablaEjgComponent implements OnInit {
         this.progressSpinner = false;
         if (JSON.parse(n.body).status == "OK") {
           this.showMessage("success", this.translateService.instant("general.message.correct"), this.translateService.instant("general.message.accion.realizada"));
-          this.busqueda.emit(true);
+          //this.busqueda.emit(true);
+          this.location.back();
         } else this.showMessage("error", this.translateService.instant("general.message.incorrect"), this.translateService.instant("justiciaGratuita.ejg.busqueda.EjgEnRemesa"));
       },
       err => {
