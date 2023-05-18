@@ -57,12 +57,16 @@
                         [(ngModel)]='persona'></p-radioButton>
                     <p-radioButton *ngIf="!isFormador && !nuevoProcurador" name="person" value="j" label="Personas Juridicas"
                         [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
-                    <p-radioButton *ngIf="isFormador && !nuevoProcurador" disabled name="person" value="j" label="Personas Juridicas"
+                    <p-radioButton *ngIf="isFormador && !nuevoProcurador && !origenSolicitudIncorporacion" disabled name="person" value="j" label="Personas Juridicas"
+                        [(ngModel)]='persona'></p-radioButton>
+                    <p-radioButton *ngIf="isFormador && !nuevoProcurador && origenSolicitudIncorporacion" name="person" value="j" label="Personas Juridicas"
                         [(ngModel)]='persona'></p-radioButton>
                     <!-- menu.facturacionSJCS.mantenimientoProcurador -->
                     <p-radioButton *ngIf="!isFormador" name="person" value="p" label="Procuradores"
                         [(ngModel)]='persona' (click)="changeColsAndData();"></p-radioButton>
-                    <p-radioButton *ngIf="isFormador" disabled name="person" value="p" label="Procuradores"
+                    <p-radioButton *ngIf="isFormador && !origenSolicitudIncorporacion" disabled name="person" value="p" label="Procuradores"
+                        [(ngModel)]='persona'></p-radioButton>
+                        <p-radioButton *ngIf="isFormador && origenSolicitudIncorporacion" name="person" value="p" label="Procuradores"
                         [(ngModel)]='persona'></p-radioButton>
                 </div>
             </div>

@@ -220,6 +220,8 @@ export class SolicitudesIncorporacionComponent implements OnInit {
     let menuProcede = this.translateService.instant("menu.censo");
     sessionStorage.setItem("migaPan", migaPan);
     sessionStorage.setItem("menuProcede", menuProcede);
+    sessionStorage.setItem("origenSolicitudIncorporacion", "true");
+
     this.router.navigate(["/busquedaGeneral"]);
   }
 

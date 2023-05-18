@@ -118,6 +118,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     }
   ];
 
+  origenSolicitudIncorporacion: boolean = false;
   isFormador: boolean = false;
   isSociedad: boolean = false;
 
@@ -145,6 +146,10 @@ export class BusquedaGeneralComponent implements OnDestroy {
   }
 
   ngOnInit() {
+
+    if(sessionStorage.getItem("origenSolicitudIncorporacion") == "true"){
+      this.origenSolicitudIncorporacion=true;
+    }
 
     if (sessionStorage.getItem("origin") == "AbogadoContrario") {
       this.fromAbogadoContrario = true;
@@ -335,6 +340,7 @@ export class BusquedaGeneralComponent implements OnDestroy {
     sessionStorage.removeItem('AddDestinatarioIndv');
     sessionStorage.removeItem('abrirRemitente');
     sessionStorage.removeItem('abrirSociedad');
+    sessionStorage.removeItem("origenSolicitudIncorporacion");
   }
 
   getInstitucion() {
