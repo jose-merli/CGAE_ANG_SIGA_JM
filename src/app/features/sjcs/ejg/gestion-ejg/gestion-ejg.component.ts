@@ -128,7 +128,7 @@ export class GestionEjgComponent implements OnInit {
         //No parece que haya informacion en común entre la designación y el EJG que permita rellenar la tarjeta de datos generales.
         //this.body = JSON.parse(sessionStorage.getItem("Designacion"));
         this.body = new EJGItem();
-        this.persistenceService.clearDatos();
+        this.persistenceService.clearDatosEJG();
         this.modoEdicion = false;
         this.openTarjetaDatosGenerales = true;
       } else {
