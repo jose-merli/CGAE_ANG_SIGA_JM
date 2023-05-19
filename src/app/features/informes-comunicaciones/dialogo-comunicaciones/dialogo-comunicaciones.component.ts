@@ -7,7 +7,7 @@ import { esCalendar } from './../../../utils/calendar';
 import { ConsultaConsultasItem } from '../../../models/ConsultaConsultasItem';
 import { CampoDinamicoItem } from '../../../models/CampoDinamicoItem';
 import { saveAs } from 'file-saver/FileSaver';
-import { Location } from '@angular/common';
+import { DatePipe, Location } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { typeSourceSpan } from '@angular/compiler';
 import { DataTable } from 'primeng/datatable';
@@ -70,6 +70,7 @@ export class DialogoComunicacionesComponent implements OnInit {
 
 	constructor(
 		public sigaServices: SigaServices,
+		private datepipe: DatePipe,
 		public sigaCommons : CommonsService,
 		private translateService: TranslateService,
 		private location: Location
@@ -374,7 +375,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 								if (find.valor.ID != null && find.valor.ID != undefined) {
 									this.listaConsultas[i].camposDinamicos[j].valor = find.valor.ID;
 								}else{
+									if(find.valor instanceof  Date){
+										this.listaConsultas[i].camposDinamicos[j].valor =  this.datepipe.transform(find.valor, 'dd/MM/yyyy');
+									}else {
 									this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+									}
 								}
 							}else{
 								this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
@@ -538,7 +543,11 @@ export class DialogoComunicacionesComponent implements OnInit {
 								if (find.valor.ID != null && find.valor.ID != undefined) {
 									this.listaConsultas[i].camposDinamicos[j].valor = find.valor.ID;
 								}else{
+									if(find.valor instanceof  Date){
+										this.listaConsultas[i].camposDinamicos[j].valor =  this.datepipe.transform(find.valor, 'dd/MM/yyyy');
+									}else {
 									this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
+									}
 								}
 							}else{
 								this.listaConsultas[i].camposDinamicos[j].valor = find.valor;
