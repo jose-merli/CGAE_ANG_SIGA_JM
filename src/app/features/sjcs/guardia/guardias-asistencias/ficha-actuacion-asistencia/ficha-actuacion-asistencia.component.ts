@@ -24,8 +24,8 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
   editable: boolean = true;
   actuacionValidada : boolean = false;
   nuevaActuacion: boolean;
-  tarjetaFija = {
-    nombre: "Resumen Actuación",
+  tarjetaFija = { 
+    nombre: this.translateService.instant("sjcs.asistencia.actuacion.resumenactuacion"),
     icono: 'fas fa-clipboard',
     imagen: '',
     detalle: false,
@@ -37,7 +37,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
   listaTarjetas = [
     {
       id: 'sjcsDesigActuaDatosGen',
-      nombre: "Datos Generales",
+      nombre: this.translateService.instant("administracion.catalogos.titulo.datos.generales"),
       imagen: "",
       icono: 'far fa-address-book',
       fixed: false,
@@ -47,7 +47,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
     },
     {
       id: 'sjcsDesigActuaJusti',
-      nombre: "Justificación",
+      nombre: this.translateService.instant("sjcs.asistencia.actuacion.justificacion"),
       icono: "fa fa-gavel",
       detalle: true,
       fixed: false,
@@ -56,7 +56,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
     },
     {
       id: 'sjcsDesigActuaHidtoAct',
-      nombre: "Histórico de la Actuación",
+      nombre: this.translateService.instant("sjcs.asistencia.actuacion.historicoactuacion"),
       imagen: "",
       icono: 'fa fa-user',
       detalle: true,
@@ -66,7 +66,7 @@ export class FichaActuacionAsistenciaComponent implements OnInit {
     },
     {
       id: 'sjcsDesigActuaDoc',
-      nombre: "Documentación",
+      nombre: this.translateService.instant("justiciaGratuita.ejg.documentacion.doc"),
       imagen: "",
       icono: "fa fa-briefcase",
       detalle: true,

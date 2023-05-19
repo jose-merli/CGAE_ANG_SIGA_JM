@@ -42,20 +42,20 @@
                                   </app-tarjeta>
                               </mat-expansion-panel-header>
                               <ng-template matExpansionPanelContent>
-                                  <div *ngIf="tarj.nombre == 'Datos Generales'">
+                                  <div *ngIf="tarj.id == 'sjcsDesigActuaDatosGen'">
                                       <app-ficha-actuacion-asistencia-tarjeta-datos-generales [actuacion]="actuacion" [asistencia]="asistencia" [editable] = "editable" 
                                       (refreshTarjetas)="refreshTarjetas($event)" (refreshHistorico)="refreshHistorico($event)">
                                       </app-ficha-actuacion-asistencia-tarjeta-datos-generales>
                                   </div>
-                                  <div *ngIf="tarj.nombre == 'Justificación'">
+                                  <div *ngIf="tarj.id == 'sjcsDesigActuaJusti'">
                                       <app-ficha-actuacion-asistencia-tarjeta-justificacion [editable] = "editable" [actuacion]="actuacion" [idAsistencia]="asistencia.anioNumero" (refreshTarjetas)="refreshTarjetas($event)" (refreshHistorico)="refreshHistorico($event)">
                                       </app-ficha-actuacion-asistencia-tarjeta-justificacion>
                                   </div>
-                                  <div *ngIf="tarj.nombre == 'Histórico de la Actuación'">
+                                  <div *ngIf="tarj.id == 'sjcsDesigActuaHidtoAct'">
                                       <app-ficha-actuacion-asistencia-tarjeta-historico [idActuacion]="actuacion.idActuacion" [idAsistencia]="asistencia.anioNumero" [validada]="actuacionValidada">
                                       </app-ficha-actuacion-asistencia-tarjeta-historico>
                                   </div>
-                                  <div *ngIf="tarj.nombre == 'Documentación'">
+                                  <div *ngIf="tarj.id == 'sjcsDesigActuaDoc'">
                                       <app-ficha-actuacion-asistencia-tarjeta-documentacion [idActuacion]="actuacion.idActuacion" [idAsistencia]="asistencia.anioNumero" (refreshTarjetas)="refreshTarjetas($event)" [editable]="editable">
                                       </app-ficha-actuacion-asistencia-tarjeta-documentacion>
                                   </div>
