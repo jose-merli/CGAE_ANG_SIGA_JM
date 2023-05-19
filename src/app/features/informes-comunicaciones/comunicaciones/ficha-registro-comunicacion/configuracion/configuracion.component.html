@@ -15,6 +15,10 @@
               <label class="mr-auto title-ficha">{{ 'enviosMasivos.literal.configComunicacion' | translate }}</label>
             </div>
             <div class="d-flex justify-content-between">
+              <label>{{ 'justiciaGratuita.oficio.designas.contrarios.identificador' | translate
+              }}:
+              <span>{{body.idEnvio}}</span>
+            </label>
               <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.claseComunicacion' | translate
                 }}:
                 <span>{{body.claseComunicacion}}</span>
@@ -47,6 +51,13 @@
                   <strong>{{ 'enviosMasivos.literal.datosGlobales' | translate }}</strong>
                 </label>
               </div>
+              <div class="form-group"
+              [ngClass]="{'col-lg-4': body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
+              <label>{{ 'justiciaGratuita.oficio.designas.contrarios.identificador' |
+                translate }}</label>
+              <input [disabled]="true" type="text" class="form-control" [(ngModel)]="body.idEnvio"
+                pInputText>
+            </div>
               <div class="form-group"
                 [ngClass]="{'col-lg-4': body.idTipoEnvios!='7' && body.idTipoEnvios!='1' && body.idTipoEnvios!='4' && body.idTipoEnvios!='5','col-lg-12':body.idTipoEnvios=='7' || body.idTipoEnvios=='1' || body.idTipoEnvios=='4' || body.idTipoEnvios=='5'}">
                 <label>{{ 'informesycomunicaciones.comunicaciones.fichaRegistroComunicacion.configuracion.claseComunicaciones' | translate
