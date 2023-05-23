@@ -362,6 +362,7 @@ export class TarjetaColaOficio implements OnInit {
             this.datosSaltos.push(element);
           //}
         });
+        this.datosSaltos.sort((a , b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
 
         datosCompensacionesAux.forEach(element => {
           //if (this.datosCompensaciones.find(item => item.idPersona === element.idPersona) != undefined) {
@@ -370,6 +371,7 @@ export class TarjetaColaOficio implements OnInit {
             this.datosCompensaciones.push(element);
           //}
         });
+        this.datosCompensaciones.sort((a , b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
 
         let error = JSON.parse(n.body).error;
       });
