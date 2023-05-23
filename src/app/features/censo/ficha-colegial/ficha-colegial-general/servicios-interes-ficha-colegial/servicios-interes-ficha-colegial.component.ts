@@ -239,7 +239,7 @@ export class ServiciosInteresFichaColegialComponent implements OnInit, OnChanges
       sessionStorage.setItem("datosColegiado",JSON.stringify(this.generalBody));
     }
     sessionStorage.setItem("origin","fichaColegial");
-    this.router.navigate(["/guardiasAsistencias"], { queryParams: { searchMode: 'a' } });
+    this.router.navigate(["/guardiasAsistencias"]); //, { queryParams: { searchMode: 'a' } }
   }
   preAsistencia(){
     if(!this.isLetrado){

@@ -28,11 +28,11 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   });
   filtro : FiltroAsistenciaItem = new FiltroAsistenciaItem();
   filtroAux : FiltroAsistenciaItem = new FiltroAsistenciaItem();
-  @Input() modoBusqueda: string;
-  modoBusquedaB: boolean = true;
+  //@Input() modoBusqueda: string;
+  //modoBusquedaB: boolean = true;
   @Input() titulo: string;
   msgs: Message[] = [];
-  rutas: string[] = ['SJCS', 'Guardia', 'Asistencias'];
+  //rutas: string[] = ['SJCS', 'Guardia', 'Asistencias'];
   salto: boolean = false;
   refuerzoSustitucionNoSeleccionado: boolean = true;
   deshabilitarLetradoGuardia: boolean = false;
@@ -47,8 +47,8 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   verSeleccion: string = '';
   isLetrado : boolean = false;
   primeraBusqueda = true;
-  @Output() letradoFillAutomatic = new EventEmitter<boolean>();
   @Output() buscarAE = new EventEmitter<boolean>();
+  @Output() clearAE = new EventEmitter<boolean>();
   @Output() hideResponse = new EventEmitter<boolean>();
   progressSpinner: boolean = false;
   
@@ -87,12 +87,9 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
     }
 
     this.checkLastRoute();
-    if(this.sigaStorageService.idPersona
-      && this.sigaStorageService.isLetrado){
-
+    if(this.sigaStorageService.idPersona && this.sigaStorageService.isLetrado){
       this.filtro.idPersona = this.sigaStorageService.idPersona;
       this.isLetrado = true;
-
     }
     if (sessionStorage.getItem('esBuscadorColegiados') == "true" && sessionStorage.getItem('buscadorColegiados')) {
       const { nombre, apellidos, nColegiado } = JSON.parse(sessionStorage.getItem('buscadorColegiados'));
@@ -356,20 +353,17 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
             this.comboLetradosGuardia = data.combooItems;
             this.commonServices.arregloTildesCombo(this.comboLetradosGuardia);
 
-            if(this.comboLetradosGuardia !== null
-              && this.comboLetradosGuardia.length > 0){
+            if(this.comboLetradosGuardia !== null && this.comboLetradosGuardia.length > 0){
 
                 if (this.filtro.idLetradoGuardia == null || this.filtro.idLetradoGuardia == '') {
                   this.filtro.idLetradoGuardia = this.comboLetradosGuardia[0].value;
                 }
 
                 if (this.filtro.idLetradoGuardia != undefined && this.filtro.idLetradoGuardia != null){
-                  this.letradoFillAutomatic.emit(true);
-
                   //this.filtro.isSustituto = null;
-                  this.refuerzoSustitucionNoSeleccionado = true;
+                  this.refuerzoSustitucionNoSeleccionado = false;
                 }else{
-                  this.letradoFillAutomatic.emit(false);
+                  this.refuerzoSustitucionNoSeleccionado = true;
                 }
                // this.onChangeLetradoGuardia();
               } else {
@@ -377,7 +371,6 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
                 this.filtro.isSustituto = 'N';
                 this.refuerzoSustitucionNoSeleccionado = false;
               }
-  
           },
           err => {
             //console.log(err);
@@ -416,16 +409,24 @@ export class BuscadorAsistenciaExpresComponent implements OnInit {
   }
 
   changeColegiado(event) {
-    this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
-    this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
 
-    sessionStorage.setItem("modoBusqueda","b");
+    if(event != null){
+      this.usuarioBusquedaExpress.nombreAp = event.nombreAp;
+      this.usuarioBusquedaExpress.numColegiado = event.nColegiado;
 
-    if (!this.primeraBusqueda) {
-      this.hideResponse.emit();
+      //sessionStorage.setItem("modoBusqueda","b");
+
+      if (!this.primeraBusqueda) {
+        this.hideResponse.emit();
+      }
+
+      this.buscarAE.emit();
+    } else {
+      this.usuarioBusquedaExpress.nombreAp = "";
+      this.usuarioBusquedaExpress.numColegiado = "";
+      this.clearAE.emit();
     }
 
-    this.buscarAE.emit();
   }
   
   getIdPersonaLetradoManual(event){

@@ -52,7 +52,7 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
   isLetrado : boolean = false;
   disabledBusqColegiado : boolean = false;
   @Output() searchAgain = new EventEmitter<boolean>();
-  @Input() modoBusqueda : string;
+  //@Input() modoBusqueda : string;
   @ViewChild(BusquedaColegiadoExpressComponent) buscador : BusquedaColegiadoExpressComponent;
   constructor(private router : Router,
     private sigaServices : SigaServices,
@@ -74,8 +74,8 @@ export class BuscadorAsistenciasComponent implements OnInit, AfterViewInit, OnCh
   ngAfterViewInit(): void {
     if(sessionStorage.getItem("filtroAsistencia") && sessionStorage.getItem("volver") && sessionStorage.getItem("modoBusqueda") == "a"){
       sessionStorage.removeItem("volver");
-      sessionStorage.removeItem("modoBusqueda");
-      this.modoBusqueda = 'a';
+      //sessionStorage.removeItem("modoBusqueda");
+      //this.modoBusqueda = 'a';
       let oldFiltro : FiltroAsistenciaItem = JSON.parse(sessionStorage.getItem("filtroAsistencia"));
       this.filtro = oldFiltro;
       if(oldFiltro.idTurno){

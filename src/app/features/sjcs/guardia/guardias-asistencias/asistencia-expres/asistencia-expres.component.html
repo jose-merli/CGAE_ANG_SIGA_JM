@@ -1,30 +1,27 @@
-<p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
+<p-growl [(value)]="msgs" life="30000"></p-growl>
 <app-migas-de-pan [rutas]="rutas"></app-migas-de-pan>
 <div class="card">
     <div class="card-body">
         <div>
-            <p-radioButton *ngFor="let radio of radios" [(ngModel)]='modoBusqueda' (click)="hideResponse()" class="mr-4"
-                name="modo" [value]="radio.value" [label]="radio.label"></p-radioButton>
+            <p-radioButton *ngFor="let radio of radios" [(ngModel)]="modeSearch" (click)="changeSearch()" class="mr-4" name="modo" [value]="radio.value" [label]="radio.label" [disabled]="radio.disabled"></p-radioButton>
         </div>
-        <div [hidden]="modoBusqueda != 'b'">
-            <app-buscador-asistencia-expres (letradoFillAutomatic)="letradoFillAutomatic($event)" (buscarAE)="buscarAE()" (hideResponse)="hideResponse()" [modoBusqueda]="modoBusqueda"></app-buscador-asistencia-expres>
+        <div *ngIf="searchExpres">
+            <app-buscador-asistencia-expres (buscarAE)="buscarAE()" (clearAE)="clearAE()"></app-buscador-asistencia-expres><!--[modoBusqueda]="modoBusqueda"-->
         </div>
-        <div [hidden]="modoBusqueda != 'a'">
-            <app-buscador-asistencias (searchAgain)="searchAsistenciasEvent($event)" [modoBusqueda]="modoBusqueda"></app-buscador-asistencias>
+        <div *ngIf="!searchExpres">
+            <app-buscador-asistencias (searchAgain)="searchAsistenciasEvent($event)"></app-buscador-asistencias> <!--[modoBusqueda]="modoBusqueda"-->
         </div>
     </div>
-    <div [hidden]="modoBusqueda != 'b'" class="card-footer">
+    <div *ngIf="searchExpres" class="card-footer">
         <div class="text-right main-button">
             <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
-                label="{{ 'general.boton.clear' | translate}}" (click)="hideResponse();clearForm();"
-                [disabled]="isDisabled()"></button>
+                label="{{ 'general.boton.clear' | translate}}" (click)="clearForm();"></button>
             <button type="submit" pButton icon="fa fa-search" iconPos="left"
                 label="{{'general.boton.search' | translate}}"
-                (click)="buscarAE()"
-                [disabled]="isDisabled()"></button>
+                (click)="buscarAE()"></button>
         </div>
     </div>
-    <div [hidden]="modoBusqueda != 'a'" class="card-footer">
+    <div *ngIf="!searchExpres" class="card-footer">
         <div class="text-right main-button">
             <button pButton type="button"  icon="fa fa-eraser"  iconPos="left"
                 label="{{ 'general.boton.clear' | translate}}"
@@ -38,19 +35,19 @@
         </div>
     </div>
 </div>
-<div [hidden]="modoBusqueda != 'b' || !show">
+<div *ngIf="searchExpres && show">
     <div class="card mt-3">
-        <div *ngIf="modoBusqueda == 'b'" class="card-body p-0" id="tablaFoco1">
-            <app-resultado-asistencia-expres [filtro]="filtrosAE.filtro" [rowGroups] = "rowGroups" [rowGroupsAux] = "rowGroupsAux"  [initialRowGroups] = "initialRowGroups" (refreshInitialRowGroup) = "refreshInitialRowGroup($event)"
-            [comboJuzgadosAE]="comboJuzgados" [comboComisarias]="comboComisarias" [comboDelitos]="comboDelitos" [comboSexo] = "comboSexo"
-            (saveTableData)="saveTableData($event)" (checkSustitutoCheckBox)="checkSustitutoCheckBox()"></app-resultado-asistencia-expres>
+        <div *ngIf="searchExpres" class="card-body p-0" id="tablaFoco1">
+            <app-resultado-asistencia-expres [filtro]="filtrosAE.filtro" [rowGroups]="rowGroups" [rowGroupsAux]="rowGroupsAux" [initialRowGroups]="initialRowGroups" 
+            (refreshInitialRowGroup)="refreshInitialRowGroup($event)" [comboJuzgadosAE]="comboJuzgados" [comboComisarias]="comboComisarias" [comboDelitos]="comboDelitos" 
+            [comboSexo]="comboSexo" (saveTableData)="saveTableData($event)" (checkSustitutoCheckBox)="checkSustitutoCheckBox()"></app-resultado-asistencia-expres>
         </div>
     </div>
 </div>
 
-<div [hidden]="modoBusqueda != 'a' || !show">
+<div *ngIf="!searchExpres && show">
     <div class="card mt-3">
-        <div *ngIf="modoBusqueda == 'a'" class="card-body p-0" id="tablaFoco2">
+        <div *ngIf="!searchExpres" class="card-body p-0" id="tablaFoco2">
             <!--Componente con la p-table para resultado de asistencias, por hacer-->
             <app-resultado-asistencias [asistencias]="asistencias" [filtro]="filtro.filtro" (searchAgain)="searchAsistenciasEvent($event)"></app-resultado-asistencias>
         </div>
@@ -66,9 +63,7 @@
         <label>Confirmación</label>
     </p-header>
     <div class="row">
-        <div class="form-group col-lg-8 col-md-8">
-        {{mensajeSustitutoDialog}}
-        </div>
+        <div class="form-group col-lg-8 col-md-8">{{mensajeSustitutoDialog}}</div>
     </div>
     <p-footer>
         <div class="text-right main-button ">

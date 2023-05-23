@@ -1,7 +1,7 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div id="buscadAsisExpr">
 
-    <div *ngIf="modoBusqueda === 'b'">
+    
         <form [formGroup]="aeForm">
             <mat-accordion class="example-headers-align" multi>
                 <mat-expansion-panel class="my-1" [expanded]="expanded">
@@ -83,7 +83,6 @@
                 </mat-expansion-panel>
             </mat-accordion>
         </form>
-    </div>
 
 </div>
 
