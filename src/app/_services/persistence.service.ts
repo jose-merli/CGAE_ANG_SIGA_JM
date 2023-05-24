@@ -18,6 +18,8 @@ export class PersistenceService {
     private fichasPosibles: string = "fichasPosibles";
     private datosBusquedaGeneralSJCS: string = "datosBusquedaGeneralSJCS";
     private filtrosBusquedaGeneralSJCS: string = "filtrosBusquedaGeneralSJCS";
+    private idJuzgadoName: string = "idJuzgado";
+    private historicoJuzgadoName: string = "historicoJuzgado";
 
     constructor() { }
 
@@ -72,6 +74,32 @@ export class PersistenceService {
     clearFiltrosAux() {
         sessionStorage.removeItem(this.filtrosAuxName);
     }
+
+    setIdJuzgado(data: any) {
+        sessionStorage.setItem(this.idJuzgadoName, data);
+    }
+
+    getIdJuzgado() {
+        return sessionStorage.getItem(this.idJuzgadoName);
+    }
+
+    clearIdJuzgado() {
+        sessionStorage.removeItem(this.idJuzgadoName);
+    }
+
+    //historicoJuzgado
+    setHistoricoJuzgado(data: any) {
+        sessionStorage.setItem(this.historicoJuzgadoName, data);
+    }
+
+    getHistoricoJuzgado() {
+        return sessionStorage.getItem(this.historicoJuzgadoName);
+    }
+
+    clearHistoricoJuzgado() {
+        sessionStorage.removeItem(this.historicoJuzgadoName);
+    }
+
 
     setPaginacion(data: any) {
         sessionStorage.setItem(this.paginacionName, JSON.stringify(data));

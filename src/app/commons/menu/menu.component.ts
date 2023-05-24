@@ -65,10 +65,14 @@ export class MenuComponent implements OnInit {
   isRoute(ruta) {
 
     var currentRoute = this.router.url;
-
     this.encontrado = false;
-    //if (currentRoute.indexOf(ruta) != -1) {
-    if (currentRoute == ('/' + ruta)) {
+    //Si el booleano de vieneDeFichaJuzgado está en true y la ruta es la de módulos
+    if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "maestrosModulos"){
+      this.encontrado = false;
+    }
+    else if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "mantenimientoJuzgados"){
+      this.encontrado = true;
+    }else if (currentRoute == ('/' + ruta)) {
       this.encontrado = true;
     }
     return currentRoute === ruta || this.encontrado;

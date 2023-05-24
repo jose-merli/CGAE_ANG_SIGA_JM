@@ -362,6 +362,8 @@ export class ProcedimientosJuzgadoComponent implements OnInit {
 
   aniadirModulos(){
     sessionStorage.setItem("vieneDeFichaJuzgado", "true");
+    sessionStorage.setItem("idJuzgado", this.datos.idJuzgado);
+    sessionStorage.setItem("historicoJuzgado", this.datos.historico);
 
     this.router.navigate(["maestrosModulos"]);
   }
