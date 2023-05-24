@@ -660,7 +660,9 @@ export class UnidadFamiliarComponent implements OnInit {
                 keysValues.push(this.body["annio"]);
               } else if (key.nombre == "idtipoejg" && this.body["tipoEJG"] != undefined) {
                 keysValues.push(this.body["tipoEJG"]);
-              } 
+              } else if(key.nombre == "identificador"){
+                keysValues.push(this.body["numAnnioProcedimiento"]);
+              }
             });
             datosSeleccionados.push(keysValues);
 					sessionStorage.setItem(

@@ -657,6 +657,8 @@ export class TablaEjgComponent implements OnInit {
                       keysValues.push(element["annio"]);
                     } else if (key.nombre == "idtipoejg" && element["tipoEJG"] != undefined) {
                       keysValues.push(element["tipoEJG"]);
+                    } else if (key.nombre == "identificador"){
+                      keysValues.push(element["numAnnioProcedimiento"])
                     }
 
 

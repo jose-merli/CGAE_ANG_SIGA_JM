@@ -414,6 +414,8 @@ export class InformeCalificacionComponent implements OnInit {
                 keysValues.push(this.dictamen["annio"]);
               } else if (key.nombre == "idtipoejg" && this.dictamen["tipoEJG"] != undefined) {
                 keysValues.push(this.dictamen["tipoEJG"]);
+              } else if (key.nombre == "identificador" ) {
+                keysValues.push(this.dictamen["numAnnioProcedimiento"]);
               } 
             });
             datosSeleccionados.push(keysValues);

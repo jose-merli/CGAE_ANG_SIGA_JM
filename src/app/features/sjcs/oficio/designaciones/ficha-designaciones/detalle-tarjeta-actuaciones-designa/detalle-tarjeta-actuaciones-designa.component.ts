@@ -349,6 +349,8 @@ export class DetalleTarjetaActuacionesFichaDesignacionOficioComponent implements
                       keysValues.push(element[key.nombre]);
                     }else if(key.nombre == "num" && element["numero"] != undefined){
                       keysValues.push(element["numero"]);
+                    }else if(key.nombre == "identificador" && element["ano"]){
+                      keysValues.push("D" + element["anio"] + "/" + element['numero'])
                     }
                   });
                   datosSeleccionados.push(keysValues);

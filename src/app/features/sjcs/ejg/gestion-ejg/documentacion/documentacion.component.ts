@@ -615,6 +615,8 @@ export class DocumentacionComponent implements OnInit {
                 keysValues.push(this.item["annio"]);
               } else if (key.nombre == "idtipoejg" && this.item["tipoEJG"] != undefined) {
                 keysValues.push(this.item["tipoEJG"]);
+              } else if (key.nombre == "identificador" ) {
+                keysValues.push(this.item["numAnnioProcedimiento"]);
               } 
             });
             datosSeleccionados.push(keysValues);

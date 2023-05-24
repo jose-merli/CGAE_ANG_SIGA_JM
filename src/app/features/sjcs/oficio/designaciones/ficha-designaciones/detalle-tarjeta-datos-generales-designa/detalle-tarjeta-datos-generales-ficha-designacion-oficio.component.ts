@@ -1164,6 +1164,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
                     keysValues.push(this.initDatos["numero"].toString());
                   } else if (key.nombre == "idturno" && this.initDatos["idTurno"] != undefined) {
                     keysValues.push(this.initDatos["idTurno"].toString());
+                  }else if(key.nombre == "identificador" ){
+                    keysValues.push(this.initDatos["ano"].toString());
                   }
                 });
                 datosSeleccionados.push(keysValues);
