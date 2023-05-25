@@ -2957,22 +2957,43 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       );
   }
 
-  expandAll() {
-    this.todoDesplegado = true;
-    for (let i = 1; i < this.table.nativeElement.children.length; i++) {
-      if(!this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0].className.includes("collapse")){
-        this.rowGroupArrowClick(this.table.nativeElement.children[i], this.rowGroups[this.from + i-1].id);
-        this.iconClickChange(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0], this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[1]);
+  expandAll() { // crear un if para el que sea asistencia express con dos children menos, JE
+    if (this.pantalla == 'JE'){
+      this.todoDesplegado = true;
+      for (let i = 1; i < this.table.nativeElement.children.length; i++) {
+        if(!this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0].className.includes("collapse")){
+          this.rowGroupArrowClick(this.table.nativeElement.children[i], this.rowGroups[this.from + i-1].id);
+          this.iconClickChange(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0], this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[1]);
+        }
+      }
+    } else if (this.pantalla == 'AE'){
+      this.todoDesplegado = true;
+      for (let i = 1; i < this.table.nativeElement.children.length; i++) {
+        if(!this.table.nativeElement.children[i].children[0].children[0].children[0].className.includes("collapse")){
+          this.rowGroupArrowClick(this.table.nativeElement.children[i], this.rowGroups[this.from + i-1].id);
+          this.iconClickChange(this.table.nativeElement.children[i].children[0].children[0].children[0], this.table.nativeElement.children[i].children[0].children[0].children[1]);
+        }
       }
     }
+    
   }
 
-  collapseAll() {
-    this.todoDesplegado = false;
-    for (let i = 1; i < this.table.nativeElement.children.length; i++) {
-      if(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0].className.includes("collapse")){
-        this.rowGroupArrowClick(this.table.nativeElement.children[i], this.rowGroups[this.from + i-1].id);
-        this.iconClickChange2(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0], this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[1]);
+  collapseAll() { // crear un if para el que sea asistencia express con dos children menos,
+    if (this.pantalla == 'JE'){
+      this.todoDesplegado = false;
+      for (let i = 1; i < this.table.nativeElement.children.length; i++) {
+        if(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0].className.includes("collapse")){
+          this.rowGroupArrowClick(this.table.nativeElement.children[i], this.rowGroups[this.from + i-1].id);
+          this.iconClickChange2(this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[0], this.table.nativeElement.children[i].children[0].children[0].children[0].children[0].children[1]);
+        }
+      }
+    }else if (this.pantalla == 'AE'){
+      this.todoDesplegado = false;
+      for (let i = 1; i < this.table.nativeElement.children.length; i++) {
+        if(this.table.nativeElement.children[i].children[0].children[0].children[0].className.includes("collapse")){
+          this.rowGroupArrowClick(this.table.nativeElement.children[i], this.rowGroups[this.from + i-1].id);
+          this.iconClickChange2(this.table.nativeElement.children[i].children[0].children[0].children[0], this.table.nativeElement.children[i].children[0].children[0].children[1]);
+        }
       }
     }
   }
