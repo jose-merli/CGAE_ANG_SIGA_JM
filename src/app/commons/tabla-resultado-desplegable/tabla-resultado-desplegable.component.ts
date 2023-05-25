@@ -2957,7 +2957,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       );
   }
 
-  expandAll() { // crear un if para el que sea asistencia express con dos children menos, JE
+  expandAll() { 
     if (this.pantalla == 'JE'){
       this.todoDesplegado = true;
       for (let i = 1; i < this.table.nativeElement.children.length; i++) {
@@ -2978,7 +2978,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     
   }
 
-  collapseAll() { // crear un if para el que sea asistencia express con dos children menos,
+  collapseAll() { 
     if (this.pantalla == 'JE'){
       this.todoDesplegado = false;
       for (let i = 1; i < this.table.nativeElement.children.length; i++) {
