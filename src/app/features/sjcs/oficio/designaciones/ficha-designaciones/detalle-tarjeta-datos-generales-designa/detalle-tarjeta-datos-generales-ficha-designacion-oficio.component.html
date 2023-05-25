@@ -48,6 +48,11 @@
             <p-checkbox binary="true" label="Art. 27-28" [(ngModel)]="checkArt" [disabled]="disableCheckArt"
               (onChange)="onChangeArt()"></p-checkbox>
           </div>
+          <div id="check2">
+            <p-checkbox *ngIf="nuevaDesigna" [disabled] = "modoLectura || (esLetrado)" (onChange)="onChangeCheckSalto($event)" [(ngModel)]="salto" binary="true"
+                label="{{ 'justiciaGratuita.oficio.designas.letrados.salto' | translate }}" name="groupname"
+                ></p-checkbox>
+          </div>
           <div class="main-button">
             <button pButton (click)="eraseColegiado()" type="button" icon="fa fa-eraser" iconPos="left" [disabled]="disableButtons"></button>
             <button pButton (click)="searchColegiado()" type="button" icon="fa fa-search" iconPos="left"

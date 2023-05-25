@@ -30,6 +30,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   msgs: Message[] = [];
   nuevaDesigna: any;
   checkArt: boolean;
+  salto: boolean;
   disableCheckArt: boolean;
   initDatos: any;
   disableButtons: boolean;
@@ -300,6 +301,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
       this.selectores[1].value = "";
     }
 
+	 if (sessionStorage.getItem("salto") == 'true') {
+      this.salto = true;
+      sessionStorage.removeItem("salto");
+    }else{
+      this.salto = false;
+      sessionStorage.removeItem("salto");
+    }
     if (sessionStorage.getItem("asistencia")) {
       this.datosAsistencia = JSON.parse(sessionStorage.getItem("asistencia"));
       sessionStorage.removeItem("asistencia");
@@ -489,6 +497,12 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
           newDesigna.art27 = "0";
         } else {
           newDesigna.art27 = "1";
+        }
+		
+		if (this.salto == true) {
+          newDesigna.salto = "1";
+        } else {
+          newDesigna.salto = "0";
         }
         var today = new Date();
         var year = today.getFullYear().valueOf();
@@ -859,6 +873,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
   }
 
   searchColegiado() {
+	  if (this.salto == true) {
+      sessionStorage.setItem("salto", "true");
+    } else {
+      sessionStorage.setItem("salto", "false");
+    }
     if (this.inputs != null && this.inputs.length > 1 && this.inputs[0].value != undefined && this.inputs[0].value.trim().length > 0) {
       this.isBuscarColegiado();
     } else {
@@ -929,6 +948,11 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               newDesigna.art27 = "0";
             } else {
               newDesigna.art27 = "1";
+            }
+			 if (this.salto == true) {
+              newDesigna.salto = "1";
+            } else {
+              newDesigna.salto = "0";
             }
             newDesigna.fechaAlta = new Date(this.fechaGenerales);
             var today = new Date();
@@ -1202,5 +1226,8 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     return false;
   }
 
+	 onChangeCheckSalto(event){
+    this.salto = event
+  }
 }
 
