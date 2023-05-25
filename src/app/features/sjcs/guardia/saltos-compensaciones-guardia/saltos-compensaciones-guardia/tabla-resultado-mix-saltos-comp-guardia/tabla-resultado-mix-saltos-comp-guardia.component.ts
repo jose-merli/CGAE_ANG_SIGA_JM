@@ -410,7 +410,6 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     this.rowGroups.forEach(row => {
       if (
         row.cells[0].value == null || row.cells[0].value.trim() == '' ||
-        row.cells[1].value == null || row.cells[1].value.trim() == '' ||
         row.cells[2].value == null ||
         row.cells[3].value == null || 
         row.cells[4].value == null || row.cells[4].value.trim() == '' ||

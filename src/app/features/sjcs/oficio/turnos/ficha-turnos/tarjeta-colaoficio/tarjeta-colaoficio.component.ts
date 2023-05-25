@@ -345,6 +345,7 @@ export class TarjetaColaOficio implements OnInit {
       filtros = JSON.parse(sessionStorage.getItem("saltos-compesacionesItem"));
     }
     filtros.idTurno = this.idTurno;
+    filtros.idGuardia = null;
     this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
       n => {
         let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
