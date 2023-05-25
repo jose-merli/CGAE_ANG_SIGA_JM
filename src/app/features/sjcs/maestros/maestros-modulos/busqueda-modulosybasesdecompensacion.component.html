@@ -1,6 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div class="busqueda-container">
-    <app-filtros-modulos (busqueda)="searchModulos($event)" [vieneDeFichaJuzgado]="vieneDeFichaJuzgado" [permisos]="permisoEscritura"></app-filtros-modulos>
+    <app-filtros-modulos (busqueda)="searchModulos($event)" [permisos]="permisoEscritura"></app-filtros-modulos>
     <app-tabla-modulos *ngIf="buscar" [datos]="datos" (searchModulos)="searchModulos($event)"></app-tabla-modulos>
 </div>
 

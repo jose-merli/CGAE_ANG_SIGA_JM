@@ -25,7 +25,7 @@ export class FiltrosModulosComponent implements OnInit {
   filtroAux: ModulosItem = new ModulosItem();
   jurisdicciones: any[] = [];
   @Input() permisos;
-  @Input() vieneDeFichaJuzgado;
+  vieneDeFichaJuzgado;
   /*Éste método es útil cuando queremos queremos informar de cambios en los datos desde el hijo,
     por ejemplo, si tenemos un botón en el componente hijo y queremos actualizar los datos del padre.*/
   @Output() busqueda = new EventEmitter<boolean>();
@@ -38,6 +38,11 @@ export class FiltrosModulosComponent implements OnInit {
     private commonsService: CommonsService) { }
 
   ngOnInit() {
+
+    if (sessionStorage.getItem("vieneDeFichaJuzgado")) {
+      this.vieneDeFichaJuzgado = true;
+      // this.isBuscar();
+    }
 
     if (this.persistenceService.getHistorico() != undefined) {
       this.filtros.historico = this.persistenceService.getHistorico();
