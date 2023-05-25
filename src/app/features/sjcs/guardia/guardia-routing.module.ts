@@ -41,7 +41,14 @@ const routesGuardia: Routes = [
     {
 		path: 'guardiasAsistencias',
 		component: AsistenciaExpresComponent,
-		canActivate: [AuthGuard]
+		canActivate: [AuthGuard],
+        data :{ search:'a'}
+	},
+    {
+		path: 'guardiasAsistenciasExpres',
+		component: AsistenciaExpresComponent,
+		canActivate: [AuthGuard],
+        data :{ search:'b'}
 	},
     {
 		path: 'fichaPreasistencia',

@@ -1,7 +1,6 @@
 <p-growl [(value)]="msgs" (onHover)="clear()" life="30000"></p-growl>
 <div id="buscadAsisExpr">
 
-    <div *ngIf="modoBusqueda === 'a'">
       <mat-accordion class="example-headers-align" multi>
           <mat-expansion-panel class="my-1" [expanded]="openDatosGenerales">
               <mat-expansion-panel-header class="h100" [collapsedHeight]="'auto'" [expandedHeight]="'auto'">
@@ -174,6 +173,5 @@
             </ng-template>
         </mat-expansion-panel>
       </mat-accordion>
-    </div>
 
 </div>

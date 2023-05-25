@@ -625,6 +625,8 @@ export class DatosGeneralesEjgComponent implements OnInit {
                     keysValues.push(this.bodyInicial["annio"]);
                   } else if (key.nombre == "idtipoejg" && this.bodyInicial["tipoEJG"] != undefined) {
                     keysValues.push(this.bodyInicial["tipoEJG"]);
+                  }else if(key.nombre == "identificador"){
+                    keysValues.push(this.bodyInicial["numAnnioProcedimiento"]);
                   }
                 });
                 datosSeleccionados.push(keysValues);

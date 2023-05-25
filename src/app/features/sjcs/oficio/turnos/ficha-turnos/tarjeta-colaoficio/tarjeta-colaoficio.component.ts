@@ -345,6 +345,7 @@ export class TarjetaColaOficio implements OnInit {
       filtros = JSON.parse(sessionStorage.getItem("saltos-compesacionesItem"));
     }
     filtros.idTurno = this.idTurno;
+    filtros.idGuardia = null;
     this.sigaServices.postPaginado("saltosCompensacionesOficio_buscar", "?numPagina=1", filtros).subscribe(
       n => {
         let datosSaltosYComp: SaltoCompItem[] = JSON.parse(n.body).saltosCompItems.filter(item => item.fechaUso === null);
@@ -362,6 +363,7 @@ export class TarjetaColaOficio implements OnInit {
             this.datosSaltos.push(element);
           //}
         });
+        this.datosSaltos.sort((a , b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
 
         datosCompensacionesAux.forEach(element => {
           //if (this.datosCompensaciones.find(item => item.idPersona === element.idPersona) != undefined) {
@@ -370,6 +372,7 @@ export class TarjetaColaOficio implements OnInit {
             this.datosCompensaciones.push(element);
           //}
         });
+        this.datosCompensaciones.sort((a , b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime());
 
         let error = JSON.parse(n.body).error;
       });

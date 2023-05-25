@@ -410,7 +410,6 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
     this.rowGroups.forEach(row => {
       if (
         row.cells[0].value == null || row.cells[0].value.trim() == '' ||
-        row.cells[1].value == null || row.cells[1].value.trim() == '' ||
         row.cells[2].value == null ||
         row.cells[3].value == null || 
         row.cells[4].value == null || row.cells[4].value.trim() == '' ||
@@ -502,7 +501,10 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
       //Marcar todos los values que empiecen por grupo
       let values = [];
       row.cells[2].combo.forEach(element => {
-        if (element.label.startsWith("["+row.cells[2].value[0].split('/')[0]+"]")){
+        console.log(row.cells[2].value[0]);
+        if(element.label.startsWith("(") && row.cells[2].value[0].startsWith("null")){
+          values.push(element.value);
+        } else if (element.label.startsWith("["+row.cells[2].value[0].split('/')[0]+"]")){
           values.push(element.value);
         }
       });
@@ -611,9 +613,13 @@ export class TablaResultadoMixSaltosCompGuardiaComponent implements OnInit {
           let comboColegiados = JSON.parse(data.body).letradosGuardiaItem;
           let error = JSON.parse(data.body).error;
           comboColegiados.forEach(combo => {
-            if (grupo){
+            if (grupo && combo.grupo != null){
               this.comboColegiados.push({
-                label:"["+combo.grupo+"]"+"("+combo.numeroColegiado+") "+combo.apellidos1+combo.apellidos2+", "+combo.nombre,
+                label:"["+combo.grupo+"]" + " " + "("+combo.numeroColegiado+") "+combo.apellidos1+combo.apellidos2+", "+combo.nombre,
+                value:combo.grupo+"/"+combo.numeroColegiado});
+            }else if (grupo && combo.grupo == null){
+              this.comboColegiados.push({
+                label:"("+combo.numeroColegiado+") "+combo.apellidos1+combo.apellidos2+", "+combo.nombre,
                 value:combo.grupo+"/"+combo.numeroColegiado});
             }else{
               this.comboColegiados.push({

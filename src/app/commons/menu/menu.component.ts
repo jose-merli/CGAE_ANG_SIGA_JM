@@ -63,10 +63,16 @@ export class MenuComponent implements OnInit {
   }
 
   isRoute(ruta) {
-    var currentRoute = this.router.url;
 
+    var currentRoute = this.router.url;
     this.encontrado = false;
-    if (currentRoute.indexOf(ruta) != -1) {
+    //Si el booleano de vieneDeFichaJuzgado está en true y la ruta es la de módulos
+    if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "maestrosModulos"){
+      this.encontrado = false;
+    }
+    else if(sessionStorage.getItem("vieneDeFichaJuzgado") && ruta == "mantenimientoJuzgados"){
+      this.encontrado = true;
+    }else if (currentRoute == ('/' + ruta)) {
       this.encontrado = true;
     }
     return currentRoute === ruta || this.encontrado;
@@ -116,11 +122,16 @@ export class MenuComponent implements OnInit {
           sessionStorage.removeItem("fichaColegialByMenu");
         }
 
+        /*
         if (ruta.includes("guardiasAsistencias") && ruta != "guardiasAsistenciasClassique") {
-          let searchMode: string = ruta.split("=")[1];
+          
+          //let searchMode: string = ruta.split("=")[1];
           this.onCloseMenu();
-          this.router.navigate(["/guardiasAsistencias"], { queryParams: { searchMode: searchMode } });
-        } else if (ruta.includes("ficherosTransferencia") && ruta.includes("fcs") && ruta != "ficherosTransferenciasClassique") {
+          this.router.navigate(["/guardiasAsistencias"]); //, { queryParams: { searchMode: searchMode } }
+
+        } else 
+        */
+        if (ruta.includes("ficherosTransferencia") && ruta.includes("fcs") && ruta != "ficherosTransferenciasClassique") {
           let fcs: string = ruta.split("=")[1];
           this.onCloseMenu();
           this.router.navigate(["/ficherosTransferencia"], { queryParams: { fcs: fcs } });

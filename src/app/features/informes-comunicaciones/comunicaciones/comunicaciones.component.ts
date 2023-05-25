@@ -216,6 +216,7 @@ export class ComunicacionesComponent implements OnInit {
     this.cols = [
       { field: "idEnvio", header: "justiciaGratuita.oficio.designas.contrarios.identificador" },
       { field: "claseComunicacion", header: "comunicaciones.literal.claseComunicaciones" },
+      { field: "descripcion", header: "administracion.parametrosGenerales.literal.descripcion" },
       { field: "destinatario", header: "informesycomunicaciones.comunicaciones.busqueda.destinatario" },
       { field: "fechaCreacion", header: "informesycomunicaciones.enviosMasivos.fechaCreacion" },
       { field: "fechaProgramada", header: "enviosMasivos.literal.fechaProgramacion" },

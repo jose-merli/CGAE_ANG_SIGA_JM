@@ -54,6 +54,7 @@ export let endpoints_maestros: any = {
 
     // Módulos y bases de compensación
     modulosYBasesDeCompensacion_searchModulos: "maestros/modulosybasesdecompensacion/searchModulos",
+    modulosYBasesDeCompensacion_searchModulosJuzgados: "maestros/modulosybasesdecompensacion/searchModulosJuzgados",
     modulosybasesdecompensacion_deleteModulos: "maestros/modulosybasesdecompensacion/deleteModulos",
     modulosybasesdecompensacion_checkModulos: "maestros/modulosybasesdecompensacion/checkModulos",
     modulosybasesdecompensacion_searchAcreditaciones: "maestros/modulosybasesdecompensacion/searchAcreditaciones",

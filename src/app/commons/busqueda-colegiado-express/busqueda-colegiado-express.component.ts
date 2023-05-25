@@ -85,6 +85,7 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
   }
 
   clearForm() {
+
     if(!this.isLetrado){
       this.colegiadoForm.reset();
       if(this.obligatorio){
@@ -98,6 +99,8 @@ export class BusquedaColegiadoExpressComponent implements OnInit {
         sessionStorage.removeItem("datosColegiado");
       }
     }
+
+    this.colegiado.emit(null);
   }
 
   isBuscar(form) {

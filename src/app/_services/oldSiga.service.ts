@@ -104,6 +104,7 @@ export class OldSigaServices {
 		guardiasSaltosCompensaciones: 'Dispatcher.do?proceso=76S',
 		definirListasGuardias: 'Dispatcher.do?proceso=91B',
 		guardiasAsistencias: 'Dispatcher.do?proceso=952',
+		guardiasAsistenciasExpres: 'Dispatcher.do?proceso=952',
 		guardiasAceptadasCentralita: 'Dispatcher.do?proceso=956',
 		volanteExpres: 'Dispatcher.do?proceso=11A',
 		soj: 'Dispatcher.do?proceso=941',

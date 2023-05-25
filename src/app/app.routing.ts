@@ -1036,10 +1036,17 @@ const appRoutes: Routes = [
 		component: FichaListaGuardiasComponent,
 		canActivate: [AuthGuard]
 	},
-		{
+    {
 		path: 'guardiasAsistencias',
 		component: GuardiasAsistenciasComponent,
-		canActivate: [AuthGuard]
+		canActivate: [AuthGuard],
+        data :{ search:'a'}
+	},
+    {
+		path: 'guardiasAsistenciasExpres',
+		component: GuardiasAsistenciasComponent,
+		canActivate: [AuthGuard],
+        data :{ search:'b'}
 	},
 	{
 		path: 'volanteExpres',

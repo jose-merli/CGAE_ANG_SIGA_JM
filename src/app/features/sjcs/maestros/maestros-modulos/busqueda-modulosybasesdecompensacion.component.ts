@@ -9,6 +9,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { PersistenceService } from '../../../../_services/persistence.service';
 import { procesos_maestros } from '../../../../permisos/procesos_maestros';
 import { Router } from '@angular/router';
+import { ModulosJuzgadoItem } from '../../../../models/sjcs/ModulosJuzgadoItem';
 
 @Component({
   selector: 'app-busqueda-modulosybasesdecompensacion',
@@ -29,6 +30,7 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
    el hijo lo declaramos como @ViewChild(ChildComponent)).*/
 
   @ViewChild(FiltrosModulosComponent) filtros;
+  filtrosJuzgado: ModulosJuzgadoItem = new ModulosJuzgadoItem();
   @ViewChild(TablaModulosComponent) tabla;
 
   //comboPartidosJudiciales
@@ -66,17 +68,17 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
       }
       ).catch(error => console.error(error));
 
-      if(sessionStorage.getItem("vieneDeFichaJuzgado")) this.vieneDeFichaJuzgado = sessionStorage.getItem("vieneDeFichaJuzgado");
+    if (sessionStorage.getItem("vieneDeFichaJuzgado")) this.vieneDeFichaJuzgado = sessionStorage.getItem("vieneDeFichaJuzgado");
   }
 
   ngAfterViewInit() {
   }
 
-  ngOnDestroy(){
-    if(sessionStorage.getItem("vieneDeFichaJuzgado")) sessionStorage.removeItem("vieneDeFichaJuzgado");
+  ngOnDestroy() {
+    if (sessionStorage.getItem("vieneDeFichaJuzgado")) sessionStorage.removeItem("vieneDeFichaJuzgado");
   }
 
-  volverFichaJuzgado(){
+  volverFichaJuzgado() {
     this.router.navigate(["gestionJuzgados"]);
   }
 
@@ -90,31 +92,66 @@ export class MaestrosModulosComponent implements OnInit, AfterViewInit {
     this.filtros.filtroAux.historico = event;
     this.persistenceService.setHistorico(event);
     this.progressSpinner = true;
-    this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", this.filtros.filtroAux).subscribe(
-      n => {
-        this.datos = JSON.parse(n.body).modulosItem;
-        this.buscar = true
-        if (this.datos != undefined)
-          this.datos.forEach(element => {
-            element.precio = element.importe.replace(".", ",");
-            if (element.precio[0] == '.' || element.precio[0] == ',')
-              element.precio = "0".concat(element.precio)
-          });
 
-        if (this.tabla != null && this.tabla != undefined) {
-          this.tabla.historico = event;
-          this.tabla.tabla.sortOrder = 0;
-          this.tabla.tabla.sortField = '';
-          this.tabla.tabla.reset();
-          this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
-        }
-        this.progressSpinner = false;
-        this.resetSelect();
-      },
-      err => {
-        this.progressSpinner = false;
-        //console.log(err);
-      });
+    if (this.vieneDeFichaJuzgado) {
+      this.filtrosJuzgado.modulo = this.filtros.filtroAux;
+      this.filtrosJuzgado.modulo.historico = event;
+      this.filtrosJuzgado.idJuzgado = this.persistenceService.getIdJuzgado();
+      this.filtrosJuzgado.historicoJuzgado = this.persistenceService.getHistoricoJuzgado();
+      this.sigaServices.post("modulosYBasesDeCompensacion_searchModulosJuzgados", this.filtrosJuzgado).subscribe(
+        n => {
+          this.datos = JSON.parse(n.body).modulosItem;
+          this.buscar = true
+          if (this.datos != undefined)
+            this.datos.forEach(element => {
+              element.precio = element.importe.replace(".", ",");
+              if (element.precio[0] == '.' || element.precio[0] == ',')
+                element.precio = "0".concat(element.precio)
+            });
+
+          if (this.tabla != null && this.tabla != undefined) {
+            this.tabla.historico = event;
+            this.tabla.tabla.sortOrder = 0;
+            this.tabla.tabla.sortField = '';
+            this.tabla.tabla.reset();
+            this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+          }
+          this.progressSpinner = false;
+          this.resetSelect();
+        },
+        err => {
+          this.progressSpinner = false;
+          //console.log(err);
+        });
+    } else {
+      this.sigaServices.post("modulosYBasesDeCompensacion_searchModulos", this.filtros.filtroAux).subscribe(
+        n => {
+          this.datos = JSON.parse(n.body).modulosItem;
+          this.buscar = true
+          if (this.datos != undefined)
+            this.datos.forEach(element => {
+              element.precio = element.importe.replace(".", ",");
+              if (element.precio[0] == '.' || element.precio[0] == ',')
+                element.precio = "0".concat(element.precio)
+            });
+
+          if (this.tabla != null && this.tabla != undefined) {
+            this.tabla.historico = event;
+            this.tabla.tabla.sortOrder = 0;
+            this.tabla.tabla.sortField = '';
+            this.tabla.tabla.reset();
+            this.tabla.buscadores = this.tabla.buscadores.map(it => it = "");
+          }
+          this.progressSpinner = false;
+          this.resetSelect();
+        },
+        err => {
+          this.progressSpinner = false;
+          //console.log(err);
+        });
+    }
+
+
   }
 
 

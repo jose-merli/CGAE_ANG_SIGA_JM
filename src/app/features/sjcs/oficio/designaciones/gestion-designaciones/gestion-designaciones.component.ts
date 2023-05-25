@@ -521,7 +521,10 @@ export class GestionDesignacionesComponent implements OnInit {
                       keysValues.push(element["numero"].toString());
                     }else if(key.nombre == "idturno" && element["idTurno"] != undefined){
                       keysValues.push(element["idTurno"].toString());
+                    }else if(key.nombre == "identificador" ){
+                      keysValues.push(element["ano"].toString());
                     }
+
                   });
                   datosSeleccionados.push(keysValues);
                 });

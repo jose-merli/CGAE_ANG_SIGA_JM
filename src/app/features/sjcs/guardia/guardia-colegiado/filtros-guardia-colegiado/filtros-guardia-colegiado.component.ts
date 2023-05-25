@@ -74,8 +74,12 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
     this.filtros.fechadesde = new Date( new Date().setFullYear(new Date().getFullYear()-1)); 
     if (this.persistenceService.getFiltros() != undefined) {
       this.filtros = this.persistenceService.getFiltros();
-      if(this.filtros.fechadesde != null || this.filtros.fechadesde != undefined) this.filtros.fechadesde = this.changeDateFormat( this.filtros.fechadesde);
-      if(this.filtros.fechahasta != null || this.filtros.fechahasta != undefined) this.filtros.fechahasta = this.changeDateFormat( this.filtros.fechahasta);
+      if(this.filtros.fechadesde != null || this.filtros.fechadesde != undefined) {
+        this.filtros.fechadesde = new Date(this.filtros.fechadesde);
+      }
+      if(this.filtros.fechahasta != null || this.filtros.fechahasta != undefined) {
+        this.filtros.fechahasta = new Date( this.filtros.fechahasta);
+      }
       if (this.filtros.idGuardia != null || this.filtros.idGuardia != undefined) {
         this.getComboGuardia();
       }
@@ -87,10 +91,10 @@ export class FiltrosGuardiaColegiadoComponent implements OnInit {
           this.filtros.idTurno = [this.dataBuscador.turno.toString()];
         }
         if(this.dataBuscador.fechaDesde != ''){
-          this.filtros.fechadesde = this.changeDateFormat(this.dataBuscador.fechaDesde); //MM/dd/yyyy
+          this.filtros.fechadesde = new Date(this.dataBuscador.fechaDesde); //MM/dd/yyyy
         }
         if(this.dataBuscador.fechaHasta != ''){
-          this.filtros.fechahasta = this.changeDateFormat(this.dataBuscador.fechaHasta);//MM/dd/yyyy
+          this.filtros.fechahasta = new Date(this.dataBuscador.fechaHasta);//MM/dd/yyyy
         }
       }
       if(this.filtros.numColegiado != null){

@@ -278,6 +278,8 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
                         keysValues.push(element[key.nombre]);
                       }  else if (key.nombre == "num" && element["numero"] != undefined) {
                         keysValues.push(element["numero"]);
+                      }else if(key.nombre == "identificador" && element["ano"] != undefined ){
+                        keysValues.push(element["ano"])
                       }
                     });
                     datosSeleccionados.push(keysValues);
@@ -291,6 +293,8 @@ export class DetalleTarjetaInteresadosFichaDesignacionOficioComponent implements
                     keysValues.push(this.campos["numero"].toString());
                   } else if (key.nombre == "idturno" && this.campos["idTurno"] != undefined) {
                     keysValues.push(this.campos["idTurno"].toString());
+                  }else if(key.nombre == "identificador" && this.campos["ano"] != undefined ){
+                    keysValues.push(this.campos["ano"].toString())
                   }
                 });
                 datosSeleccionados.push(keysValues);
