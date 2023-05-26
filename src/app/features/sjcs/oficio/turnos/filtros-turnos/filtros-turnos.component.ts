@@ -348,6 +348,7 @@ export class FiltrosTurnos implements OnInit {
   }
 
   newTurno() {
+    this.persistenceService.clearDatos();
     this.persistenceService.setFiltros(this.filtros);
     this.router.navigate(["/gestionTurnos"]);
   }

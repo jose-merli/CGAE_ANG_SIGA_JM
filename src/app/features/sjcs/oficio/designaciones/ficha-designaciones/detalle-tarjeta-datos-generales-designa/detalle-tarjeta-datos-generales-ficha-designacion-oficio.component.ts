@@ -459,7 +459,7 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
     sessionStorage.removeItem("datosGeneralesDesigna");
     this.progressSpinner = true;
     this.msgs = [];
-    if (detail == "save" && ((this.inputs[0].value == "" && this.inputs[0].disable == false) || this.inputs[0].value == undefined)) {
+    if (detail == "save" && this.inputs[0].disable == false) {
       if (this.inputs[0].value == "" && this.inputs[0].disable == false && this.checkArt == true) {
         this.showMsgError(this.translateService.instant("justiciaGratuita.oficio.designa.busquedaManualObligatoria"));
         this.progressSpinner = false;
