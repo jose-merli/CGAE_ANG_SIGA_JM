@@ -97,10 +97,9 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
     let parametroCombo = {
       valor: "CONFIGURAR_COMBO_DESIGNA"
     };
-
     this.sigaServices
       .post("busquedaPerJuridica_parametroColegio", parametroCombo)
-      .subscribe(
+      .subscribe( 
         data => {
           this.valorParametro = JSON.parse(data.body).parametro;
 
@@ -206,7 +205,7 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
             this.disableRestablecer = false;
           } else {
             this.datePickers[0].value = this.formatDate(new Date());
-
+            this.juzgadoValue=null;
             this.getComboJuzgados();
 
             this.disableAnular = true;
@@ -508,7 +507,10 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         // Añadir el Juzgado al buscar designaciones_busquedaProcedimiento.
         if (this.campos.nombreJuzgado != "" && this.campos.nombreJuzgado != null && this.campos.nombreJuzgado != undefined) {
           this.juzgadoOpciones.push({ label: this.campos.nombreJuzgado, value: this.campos.idJuzgado });
+          if(this.nuevaDesigna){
+          this.juzgadoValue = null;}
         }
+        
         
       },
       err => {
