@@ -8,6 +8,7 @@ import { CommonsService } from '../../../../_services/commons.service';
 import { datos_combos } from '../../../../utils/datos_combos';
 import { KEY_CODE } from '../../../administracion/auditoria/usuarios/auditoria-usuarios.component';
 import { MultiSelect } from 'primeng/multiselect';
+import { Location } from '@angular/common';
 import { ThrowStmt } from '@angular/compiler';
 import { underscore } from '@angular-devkit/core/src/utils/strings';
 
@@ -107,16 +108,20 @@ export class FiltrosEjgComponent implements OnInit {
     nombreAp: '',
     idPersona: ''
   };
+  datoParaEjg: boolean = false;
 
   constructor(private router: Router,
     private sigaServices: SigaServices,
     private translateService: TranslateService,
     private persistenceService: PersistenceService,
     private _elementRef: ElementRef,
-    private commonServices: CommonsService) { }
+    private commonServices: CommonsService,
+    private location: Location) { }
 
 
   ngOnInit() {
+    this.datoParaEjg = sessionStorage.getItem('datoParaEjg') === 'true';
+    sessionStorage.removeItem('datoParaEjg');
     sessionStorage.removeItem("modoBusqueda");
     this.progressSpinner = true;
     this.getCombos();
@@ -233,9 +238,9 @@ export class FiltrosEjgComponent implements OnInit {
     // }
   }
 
-  onChangeDictamen() {
+  onChangeDictamen() { 
     this.comboFundamentoCalif = [];
-    if (this.bodyDictamen != undefined && this.bodyDictamen != [] && this.bodyDictamen.length != 0) {
+    if (this.bodyDictamen != undefined && /*this.bodyDictamen != [] &&*/ this.bodyDictamen.length != 0) {
       this.isDisabledFundamentosCalif = false;
       this.getComboFundamentoCalif();
 
@@ -979,6 +984,10 @@ export class FiltrosEjgComponent implements OnInit {
       this.getComboRol();
     }
 
+  }
+  volver(){
+    this.progressSpinner = true;
+    this.location.back();
   }
 
 

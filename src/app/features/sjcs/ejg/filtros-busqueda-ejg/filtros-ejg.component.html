@@ -497,6 +497,8 @@
           label="{{'general.boton.search' | translate}}"></button>
         <button (click)="checkPermisosIsNuevo()" [disabled]="!permisoEscritura" pButton type="button"  icon="fa fa-plus"
            iconPos="left"  label="{{ 'general.boton.new' | translate}}"></button>
+        <button (click)="volver()" pButton type="button" icon="fa fa-angle-left" iconPos="left"
+        label="{{ 'general.boton.volver' | translate}}" [hidden]="!datoParaEjg"></button>
       </div>
     </div>
   </div>
