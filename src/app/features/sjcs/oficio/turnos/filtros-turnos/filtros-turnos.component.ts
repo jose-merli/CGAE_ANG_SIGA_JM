@@ -265,6 +265,10 @@ export class FiltrosTurnos implements OnInit {
 
   }
 
+ngOnDestroy() {
+    sessionStorage.removeItem("volver");
+  } 
+
   // buscarPoblacion(e) {
   //   if (e.target.value && e.target.value !== null && e.target.value !== "") {
   //     if (e.target.value.length >= 3) {
@@ -349,7 +353,8 @@ export class FiltrosTurnos implements OnInit {
 
   newTurno() {
     this.persistenceService.clearDatos();
-    this.persistenceService.setFiltros(this.filtros);
+    this.persistenceService.clearFiltros();
+    sessionStorage.removeItem("filtrosTurnos");
     this.router.navigate(["/gestionTurnos"]);
   }
 
@@ -457,6 +462,8 @@ export class FiltrosTurnos implements OnInit {
     this.filtros.jurisdiccion = "";
     this.filtros.grupofacturacion = "";
     this.partidoJudicial = "";
+    this.persistenceService.clearFiltros();
+    sessionStorage.removeItem("filtrosTurnos");
   }
 
   //búsqueda con enter
