@@ -38,6 +38,7 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
   progressSpinner;
   msgs;
   resaltadoDatos: boolean = false;
+  controlCargaInicial: boolean = false;
   isLetrado : boolean = false;
   @Input() idTurnoFromFichaTurno = null;
   constructor(private persistenceService: PersistenceService,
@@ -62,46 +63,48 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
         sessionStorage.getItem("filtrosDatosGeneralesGuardia")
       );
     }*/
+    if (this.controlCargaInicial == false) {
+      this.sigaService.datosRedy$.subscribe(
+        data => {
+          data = JSON.parse(data.body);
+          this.body.idGuardia = data.idGuardia;
+          this.body.descripcionFacturacion = data.descripcionFacturacion;
+          this.body.descripcion = data.descripcion;
+          this.body.descripcionPago = data.descripcionPago;
+          this.body.idTipoGuardia = data.idTipoGuardia;
+          if (this.idTurnoFromFichaTurno != null){
+            this.body.idTurno =  this.idTurnoFromFichaTurno;
+            this.modoEdicion = false;
+            this.permisoEscritura = true;
+          }else{
+            this.body.idTurno = data.idTurno;
+          }
+          this.body.nombre = data.nombre;
+          this.body.envioCentralita = data.envioCentralita;
+          this.getComboTipoGuardia();
 
-    this.sigaService.datosRedy$.subscribe(
-      data => {
-        data = JSON.parse(data.body);
-        this.body.idGuardia = data.idGuardia;
-        this.body.descripcionFacturacion = data.descripcionFacturacion;
-        this.body.descripcion = data.descripcion;
-        this.body.descripcionPago = data.descripcionPago;
-        this.body.idTipoGuardia = data.idTipoGuardia;
-        if (this.idTurnoFromFichaTurno != null){
-          this.body.idTurno =  this.idTurnoFromFichaTurno;
-          this.modoEdicion = false;
-          this.permisoEscritura = true;
-        }else{
-          this.body.idTurno = data.idTurno;
-        }
-        this.body.nombre = data.nombre;
-        this.body.envioCentralita = data.envioCentralita;
-        this.getComboTipoGuardia();
-
-        this.getComboTurno();
-        //Informamos de la guardia de la que hereda si existe.
-        if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
-          this.datos.push({
-            vinculacion: 'Principal',
-            turno: data.idTurnoPrincipal,
-            guardia: data.idGuardiaPrincipal
-          })
-        if (data.idGuardiaVinculada && data.idTurnoVinculada) {
-          let guardias = data.idGuardiaVinculada.split(",");
-          let turno = data.idTurnoVinculada.split(",");
-          this.datos = guardias.map(function (x, i) {
-            return { vinculacion: "Vinculada", guardia: x, turno: turno[i] }
-          });
-          this.datos.pop()
-        }
-       
-        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
-        this.progressSpinner = false;
-      });
+          this.getComboTurno();
+          //Informamos de la guardia de la que hereda si existe.
+          if (data.idGuardiaPrincipal && data.idTurnoPrincipal)
+            this.datos.push({
+              vinculacion: 'Principal',
+              turno: data.idTurnoPrincipal,
+              guardia: data.idGuardiaPrincipal
+            })
+          if (data.idGuardiaVinculada && data.idTurnoVinculada) {
+            let guardias = data.idGuardiaVinculada.split(",");
+            let turno = data.idTurnoVinculada.split(",");
+            this.datos = guardias.map(function (x, i) {
+              return { vinculacion: "Vinculada", guardia: x, turno: turno[i] }
+            });
+            this.datos.pop()
+          }
+        
+          this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+          this.progressSpinner = false;
+          this.controlCargaInicial = true;
+        });
+      }
   }
 
   styleObligatorio(evento){
