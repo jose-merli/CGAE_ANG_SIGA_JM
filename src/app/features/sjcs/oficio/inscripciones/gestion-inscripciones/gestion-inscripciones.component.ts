@@ -812,14 +812,17 @@ export class TablaInscripcionesComponent implements OnInit {
     }
 
     this.estadosDistintos = false;
-    let estadoInicial=this.selectedDatos[0].estado;
+    let estadoInicial = null;
 
-    this.selectedDatos.forEach(item => {
-      if(item.estado != estadoInicial){
-        this.estadosDistintos = true;
-      }
-    });
+    if (selectedDatos != null && selectedDatos.length != 0) {
+      estadoInicial= this.selectedDatos[0].estado;
 
+      this.selectedDatos.forEach(item => {
+        if(item.estado != estadoInicial){
+          this.estadosDistintos = true;
+        }
+      });
+    }
 
     if (selectedDatos != null && selectedDatos.length != 0 && this.estadosDistintos == false) {
       this.numSelected = selectedDatos.length;
@@ -866,8 +869,19 @@ export class TablaInscripcionesComponent implements OnInit {
       else {
         this.disabledCambiarFecha = false;
       }
+
+      let findDato4 = this.selectedDatos.find(item => item.estado == null || item.estado == undefined || item.estado == '');
+
+      if (findDato4 != null) {
+        this.disabledValidar = true;
+        this.disabledDenegar = true;
+        this.disabledCambiarFecha = true;
+        this.disabledSolicitarBaja = true;
+        this.disabledCambiarFecha = true;
+        this.disabledDenegar = true;
+      }
     }else{
-      this.disabledValidar = true;
+        this.disabledValidar = true;
         this.disabledDenegar = true;
         this.selectAll = false;
         this.selectMultiple = false;

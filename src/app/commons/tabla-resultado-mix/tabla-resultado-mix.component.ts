@@ -1202,6 +1202,13 @@ export class TablaResultadoMixComponent implements OnInit {
       this.habilitadoSolicitarBaja=true;
 
     }
+
+    if(this.infoHabilitado.estadoNombre == null || this.infoHabilitado.estadoNombre == undefined || this.infoHabilitado.estadoNombre==""){
+      this.habilitadoValidar = true;
+      this.habilitadoSolicitarBaja = true;
+      this.habilitadoCambiarFecha = true;
+      this.habilitadoDenegar = true;
+    }
     }
 
   }

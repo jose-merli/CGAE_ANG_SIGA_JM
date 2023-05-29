@@ -425,7 +425,8 @@ export class GuardiasInscripcionesComponent implements OnInit {
         case "1": estadoNombre = "Alta"; break;
         case "2": estadoNombre = "Pendiente de Baja"; break;
         case "3": estadoNombre = "Baja"; break;
-        default: estadoNombre = "Denegada";
+        case "4": estadoNombre = "Denegada"; break;
+        default: estadoNombre = null;
       }
 
       let objCells = [
