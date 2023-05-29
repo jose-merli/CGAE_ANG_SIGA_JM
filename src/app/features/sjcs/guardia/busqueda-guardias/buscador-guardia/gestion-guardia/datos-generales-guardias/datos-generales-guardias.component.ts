@@ -64,6 +64,19 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
       );
     }*/
     if (this.controlCargaInicial == false) {
+
+      if (sessionStorage.getItem("crearGuardiaFromFichaTurno") != null) {
+        if (this.idTurnoFromFichaTurno != null){
+          this.body.idTurno =  this.idTurnoFromFichaTurno;
+          this.modoEdicion = false;
+          this.permisoEscritura = true;
+        }
+        this.getComboTipoGuardia();
+        this.getComboTurno();
+
+        this.bodyInicial = JSON.parse(JSON.stringify(this.body));
+      }
+
       this.sigaService.datosRedy$.subscribe(
         data => {
           data = JSON.parse(data.body);
@@ -105,6 +118,12 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           this.controlCargaInicial = true;
         });
       }
+  }
+
+  ngAfterViewInit() {
+    if (sessionStorage.getItem("primeraVezCrearGuardiaFromFichaTurno") != null) {
+      sessionStorage.removeItem("primeraVezCrearGuardiaFromFichaTurno");
+    }
   }
 
   styleObligatorio(evento){

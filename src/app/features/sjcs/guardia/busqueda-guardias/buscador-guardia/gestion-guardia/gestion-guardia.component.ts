@@ -81,17 +81,18 @@ export class GestionGuardiaComponent implements OnInit {
     if (sessionStorage.getItem("nuevoDesdeTablaFiltroGuardias")) {
       sessionStorage.removeItem("nuevoDesdeTablaFiltroGuardias");
       this.modoEdicion = false;
-      this.openGen = true;
     }else  if (this.persistenceService.getDatos() != undefined) {
       this.search();
       this.modoEdicion = true;
     } else {
       this.modoEdicion = false;
-      this.openGen = true;
     }
+
+    this.openGen = true;
     this.obtenerPermisos();
     
     if (sessionStorage.getItem("crearGuardiaFromFichaTurno")) {
+      this.modoEdicion = false;
 
       this.persistenciaGuardia = new GuardiaItem();
       this.persistenciaGuardia = JSON.parse(
@@ -148,7 +149,10 @@ export class GestionGuardiaComponent implements OnInit {
           }
         }, 1000);
 
-        this.sigaServices.notifysendDatosRedy(n);
+        if (sessionStorage.getItem("primeraVezCrearGuardiaFromFichaTurno") == null) {
+          this.sigaServices.notifysendDatosRedy(n);
+        }
+        
         this.getDatosResumen();
 
         this.progressSpinner = false;

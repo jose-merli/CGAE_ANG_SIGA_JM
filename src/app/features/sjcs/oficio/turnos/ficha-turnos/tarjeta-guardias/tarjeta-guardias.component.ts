@@ -705,6 +705,7 @@ export class TarjetaGuardias implements OnInit {
         "crearGuardiaFromFichaTurno",
         JSON.stringify(datos)
       );
+      sessionStorage.setItem("primeraVezCrearGuardiaFromFichaTurno", "true");
       this.persistenceService.setHistorico(this.turnosItem.fechabaja ? true : false);
       this.router.navigate(["/gestionGuardias"], { queryParams: { idturno: this.turnosItem.idturno } });
 
