@@ -854,7 +854,7 @@ export class FiltroDesignacionesComponent implements OnInit {
   getComboJuzgados() {
     this.progressSpinner = true;
     if (this.body.idJuzgado == null || this.body.idJuzgado == undefined) {
-      this.body.idJuzgado = 0;
+      this.body.idJuzgado = '0';
     }
 
     this.sigaServices.post("combo_comboJuzgadoDesignaciones",this.body.idJuzgado).subscribe(

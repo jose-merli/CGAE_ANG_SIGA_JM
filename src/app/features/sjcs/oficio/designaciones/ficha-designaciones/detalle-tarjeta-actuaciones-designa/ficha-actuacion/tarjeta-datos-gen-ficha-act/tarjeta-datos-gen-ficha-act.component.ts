@@ -304,8 +304,13 @@ export class TarjetaDatosGenFichaActComponent implements OnInit, OnChanges, OnDe
   // Inicio combos Juzgado
   getComboJuzgados() {
     this.progressSpinner = true;
+    if(this.designaItem == null || this.designaItem == undefined){
+      this.designaItem=new DesignaItem();
+      this.designaItem.idJuzgado = '0';
+    }else{
     if (this.designaItem.idJuzgado == null || this.designaItem.idJuzgado == undefined) {
-      this.designaItem.idJuzgado = 0;
+      this.designaItem.idJuzgado = '0';
+    }
     }
     this.sigaServices.post("combo_comboJuzgadoDesignaciones", this.designaItem.idJuzgado).subscribe(
       n => {

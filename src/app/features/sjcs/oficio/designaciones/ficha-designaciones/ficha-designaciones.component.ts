@@ -283,8 +283,8 @@ export class FichaDesignacionesComponent implements OnInit, OnChanges {
         this.campos.numProcedimiento = dataRefresh.numProcedimiento;
       }
 
-      if (this.campos.idJuzgado == undefined || this.campos.idJuzgado == null || this.campos.idJuzgado == 0) {
-        this.campos.idJuzgado = dataRefresh.idJuzgado == undefined ? Number(dataRefresh.idJuzgado) : null;
+      if (this.campos.idJuzgado == undefined || this.campos.idJuzgado == null || this.campos.idJuzgado == '0') {
+        this.campos.idJuzgado = dataRefresh.idJuzgado == undefined ? dataRefresh.idJuzgado : null;
       }
 
       if (this.campos.idModulos == undefined || this.campos.idModulos == null) {

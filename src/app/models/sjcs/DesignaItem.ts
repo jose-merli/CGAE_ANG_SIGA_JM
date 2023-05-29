@@ -22,7 +22,7 @@ export class DesignaItem {
 	idInstitucion_juzg: number;
 	idInstitucion_procur: number;
 	idJuzgados: String[];
-	idJuzgado: number;
+	idJuzgado: String;
 	nombreJuzgado: String;
 	idJuzgadoActu: String[];
 	nombreJuzgadoActu: String;
