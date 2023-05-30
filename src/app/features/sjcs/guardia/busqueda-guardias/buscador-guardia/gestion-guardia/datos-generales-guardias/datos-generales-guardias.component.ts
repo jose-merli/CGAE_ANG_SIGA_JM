@@ -87,7 +87,6 @@ export class DatosGeneralesGuardiasComponent implements OnInit {
           this.body.idTipoGuardia = data.idTipoGuardia;
           if (this.idTurnoFromFichaTurno != null){
             this.body.idTurno =  this.idTurnoFromFichaTurno;
-            this.modoEdicion = false;
             this.permisoEscritura = true;
           }else{
             this.body.idTurno = data.idTurno;
