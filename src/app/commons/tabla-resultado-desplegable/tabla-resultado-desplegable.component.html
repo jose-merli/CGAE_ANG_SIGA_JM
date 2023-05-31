@@ -35,7 +35,8 @@
         <div *ngFor="let rowGroup of rowGroups | slice:from:to" class="table-row-group" #rowGroupEl>
             <div class="table-row parent">
 
-                <span *ngIf="rowGroup.rows.length > 1 && pantalla != 'JE'" class="mr-2 arrow" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
+                <span *ngIf="rowGroup.rows.length > 1 && pantalla != 'JE'" class="mr-2 arrow"
+                    (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id)">
                     <span (click)="iconClickChange(iconrightEl, icondownEl)" #iconrightEl><i
                             class="fas fa-chevron-right"></i></span>
                     <span class="collapse" (click)="iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i
@@ -55,20 +56,26 @@
                     </div>-->
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"
                         class="table-row-header p-2 selectedRowClass mw80" [id]="rowGroup.id">
-                        <span *ngIf="rowGroup.rows.length > 1" class="arrow2" [ngClass]="{'hoverToClick': rowGroup.rows.length > 1}">
-                            <span class="arrow2" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id); iconClickChange(iconrightEl, icondownEl)" #iconrightEl><i
-                                    class="fas fa-chevron-right"></i></span>
-                            <span class="collapse arrow2" (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id); iconClickChange2(iconrightEl, icondownEl)" #icondownEl><i
-                                    class="fas fa-chevron-down"></i></span>
+                        <span *ngIf="rowGroup.rows.length > 1" class="arrow2"
+                            [ngClass]="{'hoverToClick': rowGroup.rows.length > 1}">
+                            <span class="arrow2"
+                                (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id); iconClickChange(iconrightEl, icondownEl)"
+                                #iconrightEl><i class="fas fa-chevron-right"></i></span>
+                            <span class="collapse arrow2"
+                                (click)="rowGroupArrowClick(rowGroupEl, rowGroup.id); iconClickChange2(iconrightEl, icondownEl)"
+                                #icondownEl><i class="fas fa-chevron-down"></i></span>
                         </span>
-                        
-                        <span *ngIf="permisosFichaAct == true" class="enlace" (click)="linkFichaDesigna(rowGroup, rowGroup.id)">D{{rowGroup.id}} </span>
+
+                        <span *ngIf="permisosFichaAct == true" class="enlace"
+                            (click)="linkFichaDesigna(rowGroup, rowGroup.id)">D{{rowGroup.id}} </span>
                         <span *ngIf="permisosFichaAct == false">D{{rowGroup.id}} </span>
                     </div>
 
                     <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"
                         class="table-row-header p-2 selectedRowClass mw80" [id]="rowGroup.id2">
-                        <span *ngIf="permisosEJG == true" class="enlace" (click)="linkToFichaEJG(rowGroup, rowGroup.id2);" [pTooltip]="rowGroup.estadoEx" tooltipPosition="top"
+                        <span *ngIf="permisosEJG == true" class="enlace"
+                            (click)="linkToFichaEJG(rowGroup, rowGroup.id2);" [pTooltip]="rowGroup.estadoEx"
+                            tooltipPosition="top"
                             [ngClass]="{'color-red': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'red', 'color-blue': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'blue', 'color-black': colorByStateExpediente(rowGroup.resolucionDesignacion) == 'black'}">
                             <span *ngIf="rowGroup.id2 != ''">E</span>{{rowGroup.id2}}</span>
                         <span *ngIf="permisosEJG == false" [pTooltip]="rowGroup.estadoEx" tooltipPosition="top"
@@ -105,7 +112,9 @@
                                     (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, true, z)"
                                     [disabled]="isLetrado || cell.combo" [(ngModel)]="cell.value[0]" binary="true">
                                 </p-checkbox>
-                                <span style="float: right;" *ngIf="cell.value[2] != undefined && cell.value[2] == '1'"><i class="fas fa-paperclip"></i></span>
+                                <span style="float: right;"
+                                    *ngIf="cell.value[2] != undefined && cell.value[2] == '1'"><i
+                                        class="fas fa-paperclip"></i></span>
                                 <div *ngIf="cell.value[1] == 'Nuevo'"><button
                                         (click)="toDoButton(cell.value[1], rowGroup.id, rowGroup, rowGroupEl)"
                                         class="buttomStyle" [disabled]="isLetrado" pButton type="button" iconPos="left"
@@ -116,7 +125,8 @@
                                 <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}</div>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                                <p-checkbox (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, true, z)"
+                                <p-checkbox
+                                    (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, true, z)"
                                     [(ngModel)]="cell.value" binary="true" [disabled]="isLetrado || cell.combo">
                                 </p-checkbox>
                             </span>
@@ -148,9 +158,9 @@
                                 </span>-->
 
                             <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select'">
-                                <p-dropdown autoWidth="false" class="center" [placeholder]="'Seleccionar'"
+                                <p-dropdown [autoWidth]="true" class="center" [placeholder]="'Seleccionar'"
                                     [(ngModel)]="cell.value" [options]="cell.combo" showClear="true"
-                                    styleClass="widthAll"
+                                    styleClass="widthAll colorAmarillo"
                                     (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, true, z)"
                                     [disabled]="cell.disabled">
                                 </p-dropdown>
@@ -169,7 +179,8 @@
                                     (change)="onChangeNifJg($event.target.value, rowGroup.id, row, rowGroup);"
                                     placeholder="{{'administracion.usuarios.literal.NIF' | translate}}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [(ngModel)]="cell.value[1]" [value]="cell.value[1]" [ngClass]="styleObligatorio(cell.value[1])"
+                                    [(ngModel)]="cell.value[1]" [value]="cell.value[1]"
+                                    [ngClass]="styleObligatorio(cell.value[1])"
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                     placeholder="{{'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}">
                                 <input type="text" class="form-control " pInputText size="10"
@@ -177,10 +188,12 @@
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                     placeholder="{{'gratuita.mantenimientoTablasMaestra.literal.apellidos' | translate}}">
                                 <input type="text" class="form-control " pInputText size="10"
-                                    [(ngModel)]="cell.value[3]" [value]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[3])"
+                                    [(ngModel)]="cell.value[3]" [value]="cell.value[3]"
+                                    [ngClass]="styleObligatorio(cell.value[3])"
                                     (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
                                     placeholder="{{'administracion.parametrosGenerales.literal.nombre' | translate}}">
-                                <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[4]" [ngClass]="styleObligatorio(cell.value[4])"
+                                <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[4]"
+                                    [ngClass]="styleObligatorio(cell.value[4])"
                                     placeholder="{{'censo.busquedaClientesAvanzada.literal.sexo' | translate}}"
                                     [options]="cell.combo" showClear="true" styleClass="widthAll"
                                     (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
@@ -242,201 +255,232 @@
                 </div>
             </div>
 
-            <div *ngFor="let row of rowGroup.rows | slice:1; let i = index" class="table-row child" [ngClass]="{'collapse': row.position == 'collapse'}">
-                <div *ngIf="row.position != 'collapse'"
-                    (click)="selectRow(rowSelected, rowGroup.id + i, i)" class="table-row-wrapper hoverBlue"
+            <div *ngFor="let row of rowGroup.rows | slice:1; let i = index" class="table-row child"
+                [ngClass]="{'collapse': row.position == 'collapse'}">
+                <div *ngIf="row.position != 'collapse'" (click)="selectRow(rowSelected, rowGroup.id + i, i)"
+                    class="table-row-wrapper hoverBlue"
                     [ngClass]="{'hoverBlue2': isSelected(rowGroup.id + i), 'fixedBlue': seleccionarTodo}"
                     [id]="rowGroup.id" #rowSelected>
 
-            <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 hidden selectedRowClass">
-            </div>
-            <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 hidden selectedRowClass">
-            </div>
-            <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'" class="table-row-header p-2 hidden selectedRowClass">
-            </div>
-            <div *ngIf="!posicionOcultar(-1) && pantalla == 'AE'"
-                class="table-row-header p-2 hidden selectedRowClass mw70">
-            </div>
-            <div *ngFor="let cell of row['cells']  | slice:fromRowGroup:toRowGroup; let z = index"
-                class="table-cell p-2 selectedRowClass"
-                [ngClass]="{'collapse':posicionOcultar(z + numCell), 'borders-child': isPar(i)}"
-                [ngStyle]="setMyStyles(cell.size)" #cellSelected>
-                <div *ngIf="cell.type != 'invisible'" [ngStyle]="setMyStyles(cell.size)"
-                    class="cell-wrapper selectedRowClass w-100">
-                    <span class="column-title">{{cabeceras[z+1].name}}</span>
-                    <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'text'">{{cell.value}}</span>
-                    <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'tooltip'" [pTooltip]="cell.combo"
-                        tooltipPosition="bottom">{{cell.value}}</span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button
-                            (click)="toDoButton(cell.value, rowGroup.id, rowGroup, rowGroupEl)" class="buttomStyle"
-                            pButton type="button" iconPos="left" [label]="cell.value"></button></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'checkboxPermisos'">
-                        <p-checkbox *ngIf="cell.value[0] != undefined" 
-                            (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, false, i)"
-                            [disabled]="isLetrado" [(ngModel)]="cell.value[0]" binary="true">
-                        </p-checkbox>
-                        <div *ngIf="cell.value[1] == 'Nuevo'"><button
-                                (click)="toDoButton(cell.value[1], rowGroup.id, rowGroup, rowGroupEl)"
-                                class="buttomStyle" pButton type="button" iconPos="left" [label]="cell.value[1]"
-                                [disabled]="isLetrado || permisoProcedimiento"></button></div>
-                        <div *ngIf="cell.value[1] != 'Nuevo' && permisosFichaAct"><a
-                                (click)="linkFichaActIfPermis(row, rowGroup)" class="enlace">{{cell.value[1]}}</a>
-                                <span style="float: right;" *ngIf="cell.value[2] != undefined && cell.value[2] == '1'"><i class="fas fa-paperclip"></i></span>
-                        </div>
-                        <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}
-                            <span style="float: right;" *ngIf="cell.value[2] != undefined && cell.value[2] == '1'"><i class="fas fa-paperclip"></i></span>
-                        </div>
-                    </span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
-                        <p-checkbox (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, false, i)"
-                            [(ngModel)]="cell.value" binary="true" [disabled]="isLetrado || cell.combo">
-                        </p-checkbox>
-                    </span>
+                    <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"
+                        class="table-row-header p-2 hidden selectedRowClass">
+                    </div>
+                    <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"
+                        class="table-row-header p-2 hidden selectedRowClass">
+                    </div>
+                    <div *ngIf="!posicionOcultar(-1) && pantalla == 'JE'"
+                        class="table-row-header p-2 hidden selectedRowClass">
+                    </div>
+                    <div *ngIf="!posicionOcultar(-1) && pantalla == 'AE'"
+                        class="table-row-header p-2 hidden selectedRowClass mw70">
+                    </div>
+                    <div *ngFor="let cell of row['cells']  | slice:fromRowGroup:toRowGroup; let z = index"
+                        class="table-cell p-2 selectedRowClass"
+                        [ngClass]="{'collapse':posicionOcultar(z + numCell), 'borders-child': isPar(i)}"
+                        [ngStyle]="setMyStyles(cell.size)" #cellSelected>
+                        <div *ngIf="cell.type != 'invisible'" [ngStyle]="setMyStyles(cell.size)"
+                            class="cell-wrapper selectedRowClass w-100">
+                                <span class="column-title">{{cabeceras[z+1].name}}</span>
+                                <span class="w100 cell-value selectWrap"
+                                    *ngIf="cell.type == 'text'">{{cell.value}}</span>
+                                <span class="w100 cell-value selectWrap" *ngIf="cell.type == 'tooltip'"
+                                    [pTooltip]="cell.combo" tooltipPosition="bottom">{{cell.value}}</span>
+                                <span class="w100 cell-value" *ngIf="cell.type == 'buttom'"><button
+                                        (click)="toDoButton(cell.value, rowGroup.id, rowGroup, rowGroupEl)"
+                                        class="buttomStyle" pButton type="button" iconPos="left"
+                                        [label]="cell.value"></button></span>
+                                <span class="w100 cell-value" *ngIf="cell.type == 'checkboxPermisos'">
+                                    <p-checkbox *ngIf="cell.value[0] != undefined"
+                                        (onChange)="checkBoxChange($event, rowGroup.id, cell, row, rowGroup, false, i)"
+                                        [disabled]="isLetrado" [(ngModel)]="cell.value[0]" binary="true">
+                                    </p-checkbox>
+                                    <div *ngIf="cell.value[1] == 'Nuevo'"><button
+                                            (click)="toDoButton(cell.value[1], rowGroup.id, rowGroup, rowGroupEl)"
+                                            class="buttomStyle" pButton type="button" iconPos="left"
+                                            [label]="cell.value[1]"
+                                            [disabled]="isLetrado || permisoProcedimiento"></button></div>
+                                    <div *ngIf="cell.value[1] != 'Nuevo' && permisosFichaAct"><a
+                                            (click)="linkFichaActIfPermis(row, rowGroup)"
+                                            class="enlace">{{cell.value[1]}}</a>
+                                        <span style="float: right;"
+                                            *ngIf="cell.value[2] != undefined && cell.value[2] == '1'"><i
+                                                class="fas fa-paperclip"></i></span>
+                                    </div>
+                                    <div *ngIf="cell.value[1] != 'Nuevo' && !permisosFichaAct">{{cell.value[1]}}
+                                        <span style="float: right;"
+                                            *ngIf="cell.value[2] != undefined && cell.value[2] == '1'"><i
+                                                class="fas fa-paperclip"></i></span>
+                                    </div>
+                                </span>
+                                <span class="w100 cell-value" *ngIf="cell.type == 'checkbox'">
+                                    <p-checkbox
+                                        (onChange)="checkBoxChange2($event, rowGroup.id, cell, row, rowGroup, false, i)"
+                                        [(ngModel)]="cell.value" binary="true" [disabled]="isLetrado || cell.combo">
+                                    </p-checkbox>
+                                </span>
 
-                    <span class="w100 cell-value" *ngIf="cell.type == 'checkboxDate'">
-                        <p-checkbox (onChange)="checkBoxDateChange($event, rowGroup.id, cell, row, rowGroup, false, i)"
-                            [(ngModel)]="cell.value" binary="true" [disabled]="isLetrado">
-                        </p-checkbox>
-                    </span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
-                        <app-fecha [(value)]="cell.value" [utc]="false"
-                            (valueChangeSelected)="fillFecha($event, cell, rowGroup.id, row, rowGroup, false, i)"
-                            (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)"
-                            [disabled]="isLetrado" [showTime]="cell.showTime">
-                        </app-fecha>
-                    </span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'datePickerAct'">
-                        <app-fecha [(value)]="cell.value" [utc]="false"
-                            (valueChangeSelected)="fillFecha($event, cell, rowGroup.id, row, rowGroup, false, i)"
-                            (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)"
-                            [disabled]="isLetrado" [showTime]="cell.showTime">
-                        </app-fecha>
-                    </span>
-                    <!--<span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
+                                <span class="w100 cell-value" *ngIf="cell.type == 'checkboxDate'">
+                                    <p-checkbox
+                                        (onChange)="checkBoxDateChange($event, rowGroup.id, cell, row, rowGroup, false, i)"
+                                        [(ngModel)]="cell.value" binary="true" [disabled]="isLetrado">
+                                    </p-checkbox>
+                                </span>
+                                <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
+                                    <app-fecha [(value)]="cell.value" [utc]="false"
+                                        (valueChangeSelected)="fillFecha($event, cell, rowGroup.id, row, rowGroup, false, i)"
+                                        (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)"
+                                        [disabled]="isLetrado" [showTime]="cell.showTime">
+                                    </app-fecha>
+                                </span>
+                                <span class="w100 cell-value" *ngIf="cell.type == 'datePickerAct'">
+                                    <app-fecha [(value)]="cell.value" [utc]="false"
+                                        (valueChangeSelected)="fillFecha($event, cell, rowGroup.id, row, rowGroup, false, i)"
+                                        (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)"
+                                        [disabled]="isLetrado" [showTime]="cell.showTime">
+                                    </app-fecha>
+                                </span>
+                                <!--<span class="w100 cell-value selectWrap" *ngIf="cell.type == 'select'">
                                 <app-selector class="center" [i]="0" [textoVisible]="" [selector]="cell.value">
                                 </app-selector>
-                            </span>-->
+                                </span>-->
 
-                    <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select'">
-                        <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value" [options]="cell.combo"
-                            showClear="true" styleClass="widthAll"
-                            (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, false, i)"
-                            [disabled]="cell.disabled">
-                        </p-dropdown>
-                    </span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
-                    <span class="w100 cell-value enlace" *ngIf="cell.type == 'link'"><a
-                            (click)="linkFichaActIfPermis(row, rowGroup)">{{cell.value}}</a></span>
-                    <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'"
-                        [ngClass]="{'column-d-flex': changeDisplay() == true}">
-                        <input type="text" class="form-control " pInputText size="10" [value]="cell.value[0]"
-                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);"
-                            [(ngModel)]="cell.value[0]" [ngClass]="styleObligatorio(cell.value[0])"
-                            (change)="onChangeNifJg($event.target.value, rowGroup.id, row, rowGroup);">
-                        <input type="text" class="form-control " pInputText size="10" [value]="cell.value[1]"
-                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
-                            [(ngModel)]="cell.value[1]" [ngClass]="styleObligatorio(cell.value[1])">
-                        <input type="text" class="form-control " pInputText size="10" [value]="cell.value[2]"
-                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
-                            [(ngModel)]="cell.value[2]">
-                        <input type="text" class="form-control " pInputText size="10" [value]="cell.value[3]"
-                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
-                            [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[3])">
-                        <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[4]" [ngClass]="styleObligatorio(cell.value[4])"
-                            placeholder="{{'censo.busquedaClientesAvanzada.literal.sexo' | translate}}"
-                            [options]="cell.combo" showClear="true" styleClass="widthAll"
-                            (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
-                    </span>
-                    <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'"
-                        [ngClass]="{'column-d-flex': changeDisplay() == true}">
-                        <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[0]"
-                            placeholder="{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}" [filter]="true"
-                            [options]="cell.combo" showClear="true" filterBy="label,labelSinTilde" styleClass="widthAll"
-                            (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
-                        <input type="text" class="form-control" pInputText [value]="cell.value[1]"
-                            [(ngModel)]="cell.value[1]"
-                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
-                            placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
-                    </span>
-                    <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
-                        <div class="main-button" style="width: 30%;">
-                            <button pButton type="button" iconPos="left" [label]="cell.value[0]"
-                                (click)="onClickBotonJuzProc(cell, rowGroup)"></button>
-                        </div>
+                                <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select' && !estaValidada(row)">
+                                    select1
+                                    <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value"
+                                        [options]="cell.combo" showClear="true" styleClass="widthAll"
+                                        (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, false, i)"
+                                        [disabled]="cell.disabled">
+                                    </p-dropdown>
+                                </span>
 
-                        <!-- <app-selector [i]="cell.value[4]" [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
+                                <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select' && estaValidada(row)">
+                                    <span [pTooltip]="searchLabelValorCombo(cell)" tooltipPosition="right">{{ cell.value }}</span>
+                                </span>
+
+                                <span class="w100 cell-value" *ngIf="cell.type == 'number'">{{cell.value}}</span>
+                                <span class="w100 cell-value enlace" *ngIf="cell.type == 'link'"><a
+                                        (click)="linkFichaActIfPermis(row, rowGroup)">{{cell.value}}</a></span>
+                                <span class="w100 cell-value" *ngIf="cell.type == '5InputSelector'"
+                                    [ngClass]="{'column-d-flex': changeDisplay() == true}">
+                                    <input type="text" class="form-control " pInputText size="10"
+                                        [value]="cell.value[0]"
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup);"
+                                        [(ngModel)]="cell.value[0]" [ngClass]="styleObligatorio(cell.value[0])"
+                                        (change)="onChangeNifJg($event.target.value, rowGroup.id, row, rowGroup);">
+                                    <input type="text" class="form-control " pInputText size="10"
+                                        [value]="cell.value[1]"
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
+                                        [(ngModel)]="cell.value[1]" [ngClass]="styleObligatorio(cell.value[1])">
+                                    <input type="text" class="form-control " pInputText size="10"
+                                        [value]="cell.value[2]"
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
+                                        [(ngModel)]="cell.value[2]">
+                                    <input type="text" class="form-control " pInputText size="10"
+                                        [value]="cell.value[3]"
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
+                                        [(ngModel)]="cell.value[3]" [ngClass]="styleObligatorio(cell.value[3])">
+                                    <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[4]"
+                                        [ngClass]="styleObligatorio(cell.value[4])"
+                                        placeholder="{{'censo.busquedaClientesAvanzada.literal.sexo' | translate}}"
+                                        [options]="cell.combo" showClear="true" styleClass="widthAll"
+                                        (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
+                                </span>
+                                <span class="w100 cell-value" *ngIf="cell.type == '2SelectorInput'"
+                                    [ngClass]="{'column-d-flex': changeDisplay() == true}">
+                                    <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value[0]"
+                                        placeholder="{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}"
+                                        [filter]="true" [options]="cell.combo" showClear="true"
+                                        filterBy="label,labelSinTilde" styleClass="widthAll"
+                                        (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup)"></p-dropdown>
+                                    <input type="text" class="form-control" pInputText [value]="cell.value[1]"
+                                        [(ngModel)]="cell.value[1]"
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup)"
+                                        placeholder="{{'gratuita.mantenimientoLG.literal.observaciones' | translate}}">
+                                </span>
+                                <span class="w100 cell-value d-flex" *ngIf="cell.type == 'buttomSelect'">
+                                    <div class="main-button" style="width: 30%;">
+                                        <button pButton type="button" iconPos="left" [label]="cell.value[0]"
+                                            (click)="onClickBotonJuzProc(cell, rowGroup)"></button>
+                                    </div>
+
+                                    <!-- <app-selector [i]="cell.value[4]" [selector]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
                                     style="width: 60%;" (value)="onChangeSelector($event, row, cell, rowGroup.id, row, rowGroup)">
                                 </app-selector>-->
-                        <p-dropdown autoWidth="false" [(ngModel)]="cell.value[4]"
-                            placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
-                            class="center width70 showFull"
-                            [options]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]" showClear="true"
-                            filterBy="label,labelSinTilde" styleClass="widthAll"
-                            (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, false, i)"></p-dropdown>
-                    </span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">
-                        <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{ cell.value[1] }}</span>
-                    </span>
-                    <span class="w100 cell-value" *ngIf="cell.type == 'input'">
-                        <input type="text" class="form-control" pInputText size="10" [placeholder]="cell.value"
-                            [(ngModel)]="cell.value"
-                            (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup, false, i)"></span>
-                    <span class="w100 cell-value selectWrap wrapText"
-                        *ngIf="cell.type == 'multiselect1' || cell.type == 'multiselect2' || cell.type == 'multiselect3'">
-                        <!--<p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected" [defaultLabel]="textFilter"
+                                    <p-dropdown autoWidth="false" [(ngModel)]="cell.value[4]"
+                                        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true"
+                                        class="center width70 showFull"
+                                        [options]="cell.value[3] == 'C' ? cell.value[1] : cell.value[2]"
+                                        showClear="true" filterBy="label,labelSinTilde" styleClass="widthAll"
+                                        (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, false, i)"></p-dropdown>
+                                </span>
+                                <span class="w100 cell-value" *ngIf="cell.type == 'textTooltip'">
+                                    <span [pTooltip]="cell.value[0]" tooltipPosition="right">{{ cell.value[1] }}</span>
+                                </span>
+                                <span class="w100 cell-value" *ngIf="cell.type == 'input'">
+                                    <input type="text" class="form-control" pInputText size="10"
+                                        [placeholder]="cell.value" [(ngModel)]="cell.value"
+                                        (input)="inputChange($event.target.value, rowGroup.id, row, rowGroup, false, i)"></span>
+                                <span class="w100 cell-value selectWrap wrapText"
+                                    *ngIf="cell.type == 'multiselect1' || cell.type == 'multiselect2' || cell.type == 'multiselect3'">
+                                    <!--<p-multiSelect #{i} autoWidth="false" [(ngModel)]='cell.value' [selectedItemsLabel]="textSelected" [defaultLabel]="textFilter"
                                         [options]="cell.combo" maxSelectedLabels="10"  styleClass="widthAll"
                                         [filter]="true" filterBy="label,labelSinTilde" (onChange)="onChangeMulti($event, row['id'], cell, z)" >
                                         </p-multiSelect>-->
-                        <p-dropdown autoWidth="false" class="inputWidth" [ngModelOptions]="cell.combo"
-                            [autoWidth]="false" [(ngModel)]='cell.value' filterBy="label,labelSinTilde" [filter]="true"
-                            [options]="cell.combo" showClear="true"
-                            (onChange)="onChangeMulti($event, row['id'], cell, z, false, i)" class="select-form">
-                        </p-dropdown>
-                    </span>
+                                    <p-dropdown autoWidth="false" class="inputWidth" [ngModelOptions]="cell.combo"
+                                        [autoWidth]="false" [(ngModel)]='cell.value' filterBy="label,labelSinTilde"
+                                        [filter]="true" [options]="cell.combo" showClear="true"
+                                        (onChange)="onChangeMulti($event, row['id'], cell, z, false, i)"
+                                        class="select-form">
+                                    </p-dropdown>
+                                </span>
+
+                        </div>
+                    </div>
                 </div>
             </div>
-                </div>
         </div>
     </div>
-</div>
 
-<div *ngIf="pantalla == 'JE' && permisoEscritura" class="right col-lg-12 col-md-6 ajustar marginButtons">
-    <div class="inline-block text-right main-button setPosition">
-        <button [disabled]="selectedArray.length == 0 || !permiteDescargarFicheros" (click)="download()" pButton type="button"
-            icon="fa fa-download" iconPos="left"
-            label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}">
-        </button>
+    <div *ngIf="pantalla == 'JE' && permisoEscritura" class="right col-lg-12 col-md-6 ajustar marginButtons">
+        <div class="inline-block text-right main-button setPosition">
+            <button [disabled]="selectedArray.length == 0 || !permiteDescargarFicheros" (click)="download()" pButton
+                type="button" icon="fa fa-download" iconPos="left"
+                label="{{ 'agenda.fichaEventos.datosAsistencia.descargar' | translate}}">
+            </button>
 
-        <p-fileUpload #pUploadFile name="file" [disabled]="(selectedArray.length == 0 || selectedArray.length > 1) || !permiteAdjuntarFicheros"
-              mode="basic" accept=".doc,.docx,.pdf,.jpg,.png,.rtf,.txt"
-              chooseLabel="{{ 'general.boton.adjuntarFichero' | translate }}" class="edit my-0 mx-auto main-button"
-              auto="true" [customUpload]="true" (uploadHandler)="uploadFile($event, pUploadFile)"></p-fileUpload>
+            <p-fileUpload #pUploadFile name="file"
+                [disabled]="(selectedArray.length == 0 || selectedArray.length > 1) || !permiteAdjuntarFicheros"
+                mode="basic" accept=".doc,.docx,.pdf,.jpg,.png,.rtf,.txt"
+                chooseLabel="{{ 'general.boton.adjuntarFichero' | translate }}" class="edit my-0 mx-auto main-button"
+                auto="true" [customUpload]="true" (uploadHandler)="uploadFile($event, pUploadFile)"></p-fileUpload>
 
-        <button [disabled]="disableDelete == true || isLetrado" pButton type="button" icon="fa fa-trash-alt"
-            iconPos="left" label="Eliminar" (click)="eliminar()">
-        </button>
+            <button [disabled]="disableDelete == true || isLetrado" pButton type="button" icon="fa fa-trash-alt"
+                iconPos="left" label="Eliminar" (click)="eliminar()">
+            </button>
 
-        <button [hidden]="isLetrado"  pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar" (click)="navigateComunicar()">
-        </button>
+            <button [hidden]="isLetrado" pButton type="button" icon="fa fa-comment" iconPos="left" label="Comunicar"
+                (click)="navigateComunicar()">
+            </button>
 
-        <button [hidden]="isLetrado"  pButton type="button" icon="fa fa-comment" iconPos="left" label="Imprimir" (click)="navigateImprimir()">
-        </button>
+            <button [hidden]="isLetrado" pButton type="button" icon="fa fa-comment" iconPos="left" label="Imprimir"
+                (click)="navigateImprimir()">
+            </button>
 
-        <button [disabled]="isLetrado" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
-            (click)="guardar()">
-        </button>
-        <button pButton [disabled]="selectedArray.length != 1 || !permisosFichaAct || isLetrado" type="button"
-            icon="fa fa-plus" iconPos="left" label="Nuevo" (click)="newFromSelected()">
-        </button>
+            <button [disabled]="isLetrado" pButton type="button" icon="far fa-save" iconPos="left" label="Guardar"
+                (click)="guardar()">
+            </button>
+            <button pButton [disabled]="selectedArray.length != 1 || !permisosFichaAct || isLetrado" type="button"
+                icon="fa fa-plus" iconPos="left" label="Nuevo" (click)="newFromSelected()">
+            </button>
+        </div>
     </div>
-</div>
-<p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
-    width="425" #deletePlantillaDoc>
-    <p-footer>
-        <button type="button" pButton icon="fa-check" label="OK" (click)="deletePlantillaDoc.accept()"></button>
-        <button type="button" pButton icon="fa-close" label="Cancel" (click)="deletePlantillaDoc.reject()"></button>
-    </p-footer>
-</p-confirmDialog>
-<div *ngIf="progressSpinner" class="overlay-spinner">
-    <div class="loader"></div>
-</div>
+    <p-confirmDialog header="{{ 'general.cabecera.confirmacion' | translate}}" key="deletePlantillaDoc" icon="icon"
+        width="425" #deletePlantillaDoc>
+        <p-footer>
+            <button type="button" pButton icon="fa-check" label="OK" (click)="deletePlantillaDoc.accept()"></button>
+            <button type="button" pButton icon="fa-close" label="Cancel" (click)="deletePlantillaDoc.reject()"></button>
+        </p-footer>
+    </p-confirmDialog>
+    <div *ngIf="progressSpinner" class="overlay-spinner">
+        <div class="loader"></div>
+    </div>

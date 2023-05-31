@@ -2772,6 +2772,29 @@ export class TablaResultadoDesplegableComponent implements OnInit {
     this.selecteChild = [];
   }
 
+  estaValidada(row){
+    let checkbox = row.cells.find( a =>{
+      if(a.type == 'checkbox'){
+        return a;
+      }
+    });
+    if(checkbox.value==true){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  searchLabelValorCombo(cell){
+    let label = cell.combo.find(opcion => {
+      if(opcion.value == cell.value){
+        return opcion.label;
+      }
+    });
+    return label.label;
+  }
+
   getMimeType(extension: string): string {
 
     let mime: string = "";
