@@ -13,7 +13,7 @@ class="tabla-listado" [sortOrder]="1" [(selection)]="selectedDatos" [paginator]=
     <ng-template let-col let-dato="rowData" let-ri="rowIndex" pTemplate="body">
       <td class="text-center">
         <div>
-          <a class="enlace" (click)="onClickEnlace(dato)"><span>A{{dato.anio}} - {{dato.numero}}</span></a>
+          <a class="enlace" (click)="onClickEnlace(dato)"><span>A{{dato.anio}}/{{dato.numero}}</span></a>
         </div>
       </td>
     </ng-template>
