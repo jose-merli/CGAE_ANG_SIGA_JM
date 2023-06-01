@@ -330,10 +330,10 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
   guardar(){
 
     let rowGroupsToUpdate : RowGroup[] = [];
-
-    if (this.compruebaCamposObligatorios()) {
-      this.showMsg('error',this.translateService.instant("formacion.mensaje.general.mensaje.error"), this.translateService.instant("general.message.camposObligatorios"));
-    } else if (this.tabla.rowIdsToUpdate && this.tabla.rowIdsToUpdate.length != 0) {
+    if(this.fechaJustificacion != "" && this.fechaJustificacion != null){
+      if (this.compruebaCamposObligatorios()) {
+        this.showMsg('error',this.translateService.instant("formacion.mensaje.general.mensaje.error"), this.translateService.instant("general.message.camposObligatorios"));
+      } else if (this.tabla.rowIdsToUpdate && this.tabla.rowIdsToUpdate.length != 0) {
 
       let rowIdsToUpdateNOT_REPEATED = new Set(this.tabla.rowIdsToUpdate);
       this.tabla.rowIdsToUpdate = Array.from(rowIdsToUpdateNOT_REPEATED);
@@ -358,8 +358,11 @@ export class ResultadoAsistenciaExpresComponent implements OnInit, AfterViewInit
     } else {
       this.showMsg('warn',this.translateService.instant("formacion.mensaje.general.mensaje.warn"), this.translateService.instant("justiciaGratuita.guardia.asistenciasexpress.realizarModificacion"));
     }
-
     this.tabla.rowIdsToUpdate = [];
+    } else {
+      
+      this.showMsg('error', this.translateService.instant("sjcs.asistenciaexpres.asignarfechavalidacion") ,'');
+    }
   }
 
   compruebaCamposObligatorios() {

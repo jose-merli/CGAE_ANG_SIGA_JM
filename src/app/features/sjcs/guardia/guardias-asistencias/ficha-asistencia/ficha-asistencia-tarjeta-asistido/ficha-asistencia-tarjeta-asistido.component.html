@@ -13,42 +13,42 @@
                 <div class="form-group col-lg-3 col-md-6 inline">
                     <div class="w-100">
                         <label>{{'censo.fichaCliente.literal.identificacion' | translate}} (*)</label>
-                        <input type="text" [(ngModel)]="asistido.nif" class="form-control" pInputText [disabled] = "!editable"
-                        [ngClass]="styleObligatorio(asistido.nif)" [ngModelOptions]="{standalone: true}">
+                        <input type="text" [(ngModel)]="asistido.nif" disabled class="form-control" pInputText [disabled] = "!editable"
+                        [ngModelOptions]="{standalone: true}">
                     </div>
-                    <div class="toBottom ml-3">
+                    <!--<div class="toBottom ml-3">
                         <i class="toBottom fa fa-search icon-search" (click)="onClickSearch();"></i>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="form-group col-lg-3 col-md-6 inline">
                   <div class="w-100">
                       <label>{{'administracion.parametrosGenerales.literal.nombre' | translate}}</label>
-                      <input type="text" [(ngModel)]="asistido.nombre" class="form-control" pInputText [disabled] = "!editable"
+                      <input type="text" [(ngModel)]="asistido.nombre" disabled class="form-control" pInputText [disabled] = "!editable"
                       [ngModelOptions]="{standalone: true}">
                   </div>
                 </div>
                 <div class="form-group col-lg-3 col-md-6 inline">
                   <div class="w-100">
                       <label>{{'censo.busquedaClientes.literal.apellido1' | translate}}</label>
-                      <input type="text" [(ngModel)]="asistido.apellido1" class="form-control" pInputText [disabled] = "!editable"
+                      <input type="text" [(ngModel)]="asistido.apellido1" disabled class="form-control" pInputText [disabled] = "!editable"
                       [ngModelOptions]="{standalone: true}">
                   </div>
                 </div>
                 <div class="form-group col-lg-3 col-md-6 inline">
                   <div class="w-100">
                       <label>{{'censo.busquedaClientes.literal.apellido2' | translate}}</label>
-                      <input type="text" [(ngModel)]="asistido.apellido2" class="form-control" pInputText [disabled] = "!editable"
+                      <input type="text" [(ngModel)]="asistido.apellido2" disabled class="form-control" pInputText [disabled] = "!editable"
                       [ngModelOptions]="{standalone: true}">
                   </div>
                 </div>
                 <div class="form-group col-lg-3 col-md-6 inline">
                   <div class="w-100">
                       <label>{{'dato.jgr.guardia.saltcomp.tipo' | translate}} (*)</label>
-                      <p-dropdown class="select-form"
-                        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" [disabled] = "!editable"
+                      <p-dropdown class="select-form" disabled
+                        placeholder="{{'general.boton.seleccionar' | translate}}" [filter]="true" 
                         [showClear]="true" [(ngModel)]="asistido.tipopersonajg"
                         [ngModelOptions]="{standalone: true}" [options]="comboTipoPersona"
-                         [ngClass]="styleObligatorio(asistido.tipopersonajg)">
+                         disabled>
                     </p-dropdown>
                   </div>
                 </div>
@@ -61,21 +61,21 @@
 <div class="card-footer">
     <div class="text-right main-button">
         <button pButton type="button"  icon="fa fa-undo" iconPos="left" label="{{'censo.tipoCuenta.cargo.desasociar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
-            (click)="desasociarJusticiableModal();"></button>
+            (click)="desasociarJusticiableModal();" [disabled] = disabledDisassociate()></button>
         <button pButton type="button"  icon="fa fa-search" iconPos="left" label="{{'general.boton.search' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
             (click)="searchJusticiable();" ></button>
-        <button pButton type="button"  icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
-            (click)="guardarJusticiable();"></button>
+        <!--<button pButton type="button"  icon="far fa-save" iconPos="left" label="{{'general.boton.guardar' | translate}}" [disabled] = "idAsistencia == null || idAsistencia =='' || !editable || modoLectura"
+            (click)="guardarJusticiable();" [disabled] = disabledSave()></button>-->
     </div>
 </div>
 
-<p-dialog [(visible)]="showJusticiableDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
+<!--<p-dialog [(visible)]="showJusticiableDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
     <p-header>
         <label>Confirmación</label>
     </p-header>
     <div class="row">
-        <div class="form-group col-lg-8 col-md-8">
-        <!--{{mensajeSustitutoDialog}}-->
+        <div class="form-group col-lg-8 col-md-8">-->
+        <!--{{mensajeSustitutoDialog}}--><!--
         {{'gratuita.personaJG.mensaje.actualizarJusticiableParaTodosAsuntos' | translate}}
         </div>
     </div>
@@ -85,7 +85,7 @@
         <button (click)="asociarJusticiable(true)" type="button" icon="fa fa-check" iconPos="left" label="{{'messages.si' | translate}}" pButton></button>
         </div>
     </p-footer>
-</p-dialog>
+</p-dialog>-->
 
 <p-dialog [(visible)]="showDesasociarJusticiableDialog" responsive="true" [draggable]="false" modal="modal" resizable="false" [minWidth]="500">
     <p-header>

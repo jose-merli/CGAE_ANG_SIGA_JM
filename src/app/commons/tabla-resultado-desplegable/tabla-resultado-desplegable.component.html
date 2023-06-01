@@ -345,7 +345,6 @@
                                 </span>-->
 
                                 <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select' && !estaValidada(row)">
-                                    select1
                                     <p-dropdown autoWidth="false" class="center" [(ngModel)]="cell.value"
                                         [options]="cell.combo" showClear="true" styleClass="widthAll"
                                         (onChange)="changeSelect(row, cell, rowGroup.id, row, rowGroup, false, i)"
