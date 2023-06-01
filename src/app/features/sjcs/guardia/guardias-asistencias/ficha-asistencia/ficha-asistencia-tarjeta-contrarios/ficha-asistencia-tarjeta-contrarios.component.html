@@ -13,7 +13,7 @@
             <a class="enlace" (click)="onClickEnlace(dato)"><span>{{dato[col.field]}}</span></a>
           </div>
           <div *ngIf="isEliminado(dato)">
-            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+            <a class="enlace" (click)="onClickEnlace(dato)"><span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span></a>
           </div>
         </td>
       </ng-template>
@@ -25,7 +25,7 @@
             <a class="enlace" (click)="onClickEnlace(dato)"><span>{{dato[col.field]}}</span></a>
           </div>
           <div *ngIf="isEliminado(dato)">
-            <span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span>
+            <a class="enlace" (click)="onClickEnlace(dato)"><span [ngStyle]="{'font-style': 'italic', 'font-weight':'bold', 'text-decoration':'line-through'}">{{dato[col.field]}}</span></a>
           </div>
         </td>
       </ng-template>
