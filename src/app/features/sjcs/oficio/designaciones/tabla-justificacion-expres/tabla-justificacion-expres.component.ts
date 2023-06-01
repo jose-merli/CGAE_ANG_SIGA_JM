@@ -823,7 +823,7 @@ export class TablaJustificacionExpresComponent implements OnInit {
         arr1 = 
         [
         { type: 'checkboxPermisos', value: [undefined, actuacion.numAsunto, actuacion.tieneDocumentacion], size: 120, combo: null },
-        { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados },
+        { type: 'select', value: actuacion.idJuzgado, size: 400 , combo: this.comboJuzgados }, //juzgado
         { type: 'text', value: actuacion.nig, size: 200, combo: null},
         { type: 'text', value: actuacion.numProcedimiento, size: 200 , combo: null},
         { type: 'tooltip', value: actuacion.categoriaProcedimiento, size: 400 , combo: actuacion.procedimiento,}, //modulo
@@ -986,10 +986,10 @@ export class TablaJustificacionExpresComponent implements OnInit {
 
         arr1 = [
           { type: 'checkboxPermisos', value: [undefined, designacion.numAsunto, undefined], size: 120, combo: null },
-          { type: 'tooltip', value: juzgadoValueAcreditacion, size: 400, combo: designacion.nombreJuzgado },
+          { type: 'text', value: designacion.nombreJuzgado, size: 400, combo: designacion.nombreJuzgado }, //juzgado
           { type: 'input', value: designacion.nig, size: 200, combo: null},
           { type: numProcType, value: designacion.numProcedimiento, size: 200 , combo: null},
-          { type: 'tooltip', value: designacion.categoriaProcedimiento, size: 400 , combo: designacion.procedimiento }, //modulo
+          { type: 'text', value: designacion.procedimiento, size: 400 , combo: designacion.procedimiento }, //modulo
           { type: fechaActType, value:  this.formatDate(new Date()), size: 200 , combo: null},
           { type: 'checkboxDate', value:  false, size: 200, combo: null},
           { type: "text", value: acreditacion.label, size: 200, combo: null},
