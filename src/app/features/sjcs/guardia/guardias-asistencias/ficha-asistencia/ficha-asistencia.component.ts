@@ -57,7 +57,7 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
     campos: [],
     enlaces: [],
     visible: true,
-    enlaceCardOpen: { href: '/gestionJusticiables', title: this.translateService.instant("justiciaGratuita.justiciables.fichaJusticiable") }
+    enlaceCardOpen: {},
   },
   {
     id: 'contrarios',
@@ -572,6 +572,11 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           this.tarjetaFija.campos[5]["value"] = newAsistenciaData.numeroActuaciones;
           this.tarjetaFija.campos[6]["value"] = newAsistenciaData.validada;
 
+          if(this.tarjetaFija.campos[3]["value"]!= null){
+            this.listaTarjetas[1].enlaceCardOpen = { href: '/gestionJusticiables', title: this.translateService.instant("justiciaGratuita.justiciables.fichaJusticiable") };
+          }else{
+            this.listaTarjetas[1].enlaceCardOpen = undefined;
+          }
           let tarjDatosGen =  this.listaTarjetas.find(tarjDatosGen => tarjDatosGen.id === 'datosgenerales');
           if(tarjDatosGen != undefined){
             tarjDatosGen.campos[0]["value"] = newAsistenciaData.descripcionTurno;
@@ -891,7 +896,11 @@ export class FichaAsistenciaComponent implements OnInit, AfterViewInit, OnDestro
           this.tarjetaFija.campos[5]["value"] = newAsistenciaData.numeroActuaciones;
           this.tarjetaFija.campos[6]["value"] = newAsistenciaData.validada;
 
-
+          if(this.tarjetaFija.campos[3]["value"]!= null){
+            this.listaTarjetas[1].enlaceCardOpen = { href: '/gestionJusticiables', title: this.translateService.instant("justiciaGratuita.justiciables.fichaJusticiable") };
+          }else{
+            this.listaTarjetas[1].enlaceCardOpen = undefined;
+          }
           let tarjDatosGen =  this.listaTarjetas.find(tarjDatosGen => tarjDatosGen.id === 'datosgenerales');
           if(tarjDatosGen != undefined){
             tarjDatosGen.campos[0]["value"] = newAsistenciaData.descripcionTurno;
