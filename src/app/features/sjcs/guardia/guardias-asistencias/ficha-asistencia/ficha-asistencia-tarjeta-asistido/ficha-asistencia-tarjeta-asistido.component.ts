@@ -342,4 +342,20 @@ export class FichaAsistenciaTarjetaAsistidoComponent implements OnInit {
     }
   }
 
+  // disabledSave() {
+	// 	if (this.asistido.idpersona != undefined && this.asistido.idpersona != '' ) {
+	// 		return false;
+	// 	} else {
+	// 		return true;
+	// 	}
+	// }
+
+  disabledDisassociate() {
+		if (this.asistido.idpersona != undefined && this.asistido.idpersona != '' ) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 }
