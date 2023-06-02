@@ -352,7 +352,7 @@
                                     </p-dropdown>
                                 </span>
 
-                                <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'select' && estaValidada(row)">
+                                <span class="w100 cell-value selectWrap wrapText" *ngIf="cell.type == 'tooltip' && estaValidada(row)">
                                     <span [pTooltip]="searchLabelValorCombo(cell)" tooltipPosition="right">{{ cell.value }}</span>
                                 </span>
 
