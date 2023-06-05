@@ -62,6 +62,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   contadorNuevo = 0;
   disableButtons = false;
   showVolver = false;
+  rowGroupsActualizar: Row[] = [];
 
   constructor(private renderer: Renderer2, private datepipe: DatePipe, private sigaServices: SigaServices, private commonsService: CommonsService, private location: Location) {
     /* this.renderer.listen('window', 'click', (event: { target: HTMLInputElement; }) => {
@@ -329,7 +330,8 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
   guardar() {
     let error = false;
 
-    this.rowGroups.forEach(row => {
+    // this.rowGroups.forEach(row => {
+    this.rowGroupsActualizar.forEach(row => {
       if (
         (row.cells[0].value != undefined &&
         row.cells[1].value != undefined &&
@@ -357,8 +359,9 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       this.isDisabled2 = true;
       this.disableTipo = true;
       this.disabledCheck = false;
-      this.saveEvent.emit(this.rowGroups);
+      this.saveEvent.emit(this.rowGroupsActualizar);
       this.selectedArray = [];
+      this.rowGroupsActualizar = [];
     }
   }
 
@@ -466,6 +469,29 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       row.cells[2].value = '';
       let letrado = row.cells[1].combo.find(el => el.value == row.cells[1].value).label.split(')')[1].trim();
       row.cells[2].value = letrado;
+    }
+
+    this.addCellChange(row);
+  }
+
+  addCellChange(row: Row){
+    let repetida = false;
+
+    //Si es el primero lo anadimos directamente
+    if(this.rowGroupsActualizar.length == 0){
+      this.rowGroupsActualizar[0] = row;
+      repetida = true;
+    } else{
+      //Recorremos el array de filas, si hay coincidencia ignoramos, si no esta la insertamos
+      for(let i = 0; i <= this.rowGroupsActualizar.length; i  ++ ){
+        if(this.rowGroupsActualizar[i] == row){
+          repetida = true;
+        }
+      }
+    }
+
+    if(!repetida){
+      this.rowGroupsActualizar[this.rowGroupsActualizar.length] = row;
     }
   }
 

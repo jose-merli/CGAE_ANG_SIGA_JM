@@ -27,12 +27,12 @@
             <div class="cell-wrapper selectedRowClass">
 
               <span class="w100 cell-value" *ngIf="cell.type == 'text'"
-                [ngClass]="{'setItalic': row.italic}">{{cell.value}}</span>
+                [ngClass]="{'setItalic': row.italic}" (onChange)="changeSelect(row, cell)">{{cell.value}}</span>
 
 
               <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
                 <app-fecha [(value)]="cell.value" [utc]="false" (valueChangeSelected)="fillFecha($event, cell)"
-                  (valueChangeInput)="fillFecha($event, cell)">
+                  (valueChangeInput)="fillFecha($event, cell, row)">
                 </app-fecha>
               </span>
 
@@ -51,7 +51,7 @@
               </span>
 
               <span class="w100 cell-value" *ngIf="cell.type == 'textarea'">
-                <textarea pInputTextarea [(ngModel)]="cell.value" class="form-control"></textarea>
+                <textarea pInputTextarea [(ngModel)]="cell.value" class="form-control" (input)="changeSelect(row, cell)"></textarea>
               </span>
 
               <span class="w100 cell-value" *ngIf="cell.type == 'empty'">
