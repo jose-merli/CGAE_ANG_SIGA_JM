@@ -329,8 +329,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
 
   guardar() {
     let error = false;
-
-    // this.rowGroups.forEach(row => {
     this.rowGroupsActualizar.forEach(row => {
       if (
         (row.cells[0].value != undefined &&
@@ -350,7 +348,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
         error = true;
       }
     });
-
     if (error) {
       this.showMsg({ severity: 'error', summary: 'Error. Existen campos vacíos en la tabla.', detail: '' });
     } else {
@@ -448,13 +445,13 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     }
   }
 
-  fillFecha(event, cell) {
+  fillFecha(event, cell, row) {
     cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
+    this.addCellChange(row);
   }
 
   changeSelect(row: Row, cell) {
     const header = cell.header;
-
     if (header == 'turno') {
       if (row.cells[0].value == null) {
         row.cells[1].disabled = true;
@@ -470,14 +467,12 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
       let letrado = row.cells[1].combo.find(el => el.value == row.cells[1].value).label.split(')')[1].trim();
       row.cells[2].value = letrado;
     }
-
     this.addCellChange(row);
   }
 
   addCellChange(row: Row){
     let repetida = false;
-
-    //Si es el primero lo anadimos directamente
+    //Si es el primero lo añadimos directamente
     if(this.rowGroupsActualizar.length == 0){
       this.rowGroupsActualizar[0] = row;
       repetida = true;
@@ -489,7 +484,6 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
         }
       }
     }
-
     if(!repetida){
       this.rowGroupsActualizar[this.rowGroupsActualizar.length] = row;
     }
