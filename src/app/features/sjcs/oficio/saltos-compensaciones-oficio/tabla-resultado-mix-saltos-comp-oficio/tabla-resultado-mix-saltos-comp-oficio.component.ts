@@ -366,11 +366,13 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.deleteEvent.emit(this.selectedArray);
       this.selectedArray = [];
+      this.rowGroupsActualizar = [];
     }
 
   }
 
   toogleHistorico(valor: boolean) {
+    this.rowGroupsActualizar = [];
     this.historico = valor;
     this.searchHistory.emit(valor);
   }
@@ -400,6 +402,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     this.disableTipo = true;
     this.disabledCheck = false;
     this.selectedArray = [];
+    this.rowGroupsActualizar = [];
     this.progressSpinner = true;
     this.rowGroups = [];
     this.rowGroups = JSON.parse(sessionStorage.getItem("rowGroupsInitSaltCompOficio"));
@@ -442,6 +445,7 @@ export class TablaResultadoMixSaltosCompOficioComponent implements OnInit, OnCha
     if (this.selectedArray != null && this.selectedArray.length > 0) {
       this.anularEvent.emit(this.selectedArray);
       this.selectedArray = [];
+      this.rowGroupsActualizar = [];
     }
   }
 
