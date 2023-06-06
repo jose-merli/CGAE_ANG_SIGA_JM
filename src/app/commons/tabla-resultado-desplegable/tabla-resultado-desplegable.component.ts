@@ -258,12 +258,13 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   }
 
   selectRow(rowSelected, rowId, child) {
-    // Disabled de Módulo.
+    // Disabled de Módulo y Juzgado.
     let filaSeleccionada = this.rowGroups.filter(row => row.id == rowId);
     if (filaSeleccionada.length > 0 && filaSeleccionada[0].rows != undefined) {
-      if (filaSeleccionada[0].rows[0].cells[4].value === "") {
+      if (filaSeleccionada[0].rows[0].cells[4].value === ""||filaSeleccionada[0].rows[0].cells[1].value === ""||filaSeleccionada[0].rows[0].cells[1].value === undefined) {
         this.permisoProcedimiento = true;
-      } else {
+      } 
+      else {
         this.permisoProcedimiento = false;
       }
     }
@@ -949,6 +950,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       }
     } else if (this.pantalla == 'JE' && row != undefined) {
+      this.actuacionesToAdd=rowGroup;
       //actuacion
       if (row.cells[8].value != true) {
         if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
@@ -1590,8 +1592,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         // se establece la fecha de justificación con la fecha del selector y se cambian los
         // valores de las columnas donde deberían ir los ids de los combos.
           if (newAct.cells[6].type == 'checkboxDate' && newAct.cells[6].value) newAct.cells[6].value = this.fechaFiltro;
-          if (newAct.cells[1].type != 'multiselect1') newAct.cells[1].value = newAct.cells[21].value;
-          if (newAct.cells[4].type != 'multiselect2') newAct.cells[4].value = newAct.cells[20].value;
+          if (newAct.cells[1].type != 'multiselect1') newAct.cells[1].value = newAct.cells[1].value;
+          if (newAct.cells[4].type != 'multiselect2') newAct.cells[4].value = newAct.cells[4].value;
           if (newAct.cells[7].type != 'multiselect3') newAct.cells[7].value = newAct.cells[10].value;
   
   
@@ -1872,7 +1874,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   { type: 'select', value: desig[1].value, size: 400, combo: this.comboJuzgados, disabled: null },
                   { type: 'input', value: desig[2].value, size: 200, combo: null, disabled: null },
                   { type: 'input', value: desig[3].value, size: 200, combo: null, disabled: null },//numProc
-                  { type: 'multiselect2', value: desig[21].value, size: 400, combo: this.comboModulos, disabled: null }, //modulo
+                  { type: 'select', value: desig[4].value, size: 400, combo: this.comboModulos, disabled: null }, //modulo
                   { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
                   { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
                   { type: 'multiselect3', value: this.comboAcreditacion[0].value, size: 200, combo: this.comboAcreditacion, disabled: null },
@@ -2121,7 +2123,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             act.idTurno = rowGroup.rows[0].cells[17].value;
             act.anio = rowGroup.rows[0].cells[10].value;
             act.fechaActuacion = rowGroup.rows[0].cells[9].value;
-            act.idJuzgado = rowGroup.rows[0].cells[15].value;
+            act.idJuzgado = rowGroup.rows[0].cells[4].value;
             act.idProcedimiento = rowGroup.rows[0].cells[21].value;
             act.nig = rowGroup.rows[0].cells[2].value;
             act.numProcedimiento = rowGroup.rows[0].cells[3].value;
@@ -2789,10 +2791,17 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   searchLabelValorCombo(cell){
     let label = cell.combo.find(opcion => {
       if(opcion.value == cell.value){
-        return opcion.label;
+        if(opcion.label!=null && opcion.label!=undefined){
+          return opcion.label;
+        }  
       }
     });
-    return label.label;
+    if(label!=undefined){
+    if(label.label!=null && label.label !=undefined){
+      return label.label;
+    }
+  }
+    
   }
 
   getMimeType(extension: string): string {
