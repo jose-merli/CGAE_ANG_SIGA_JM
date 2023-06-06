@@ -520,6 +520,9 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               newDesignaRfresh.codigo = newId.id;
               newDesignaRfresh.idTurnos = [String(newDesigna.idTurno)];
 
+              //Añadida esta línea para que deshabilitar el combo del turno tras crear una nueva asignación
+              this.selectores[0].disable = true;
+
               if (this.datosAsistencia) {
                 this.sigaServices.postPaginado("busquedaGuardias_asociarDesigna", "?anioNumero=" + this.datosAsistencia.anioNumero + "&copiarDatos=S", newDesignaRfresh).subscribe(
                   n => {
@@ -642,6 +645,13 @@ export class DetalleTarjetaDatosGeneralesFichaDesignacionOficioComponent impleme
               summary = "No se han podido modificar los datos";
               if (err.status == 406) {
                 summary = this.translateService.instant('justiciaGratuita.oficio.designa.errorGuardarDesignacion');
+                //var errorJson = JSON.parse(err["error"]);
+                var errorJson = JSON.parse(err.error);
+                detail = detail = this.translateService.instant(errorJson.error.description);
+              }
+              //Añadido control de errores cuando no encuentra letrado en la cola
+              if (err.status == 404) {
+                summary =this.translateService.instant('justiciaGratuita.oficio.designa.errorNoExisteLetrado');
                 //var errorJson = JSON.parse(err["error"]);
                 var errorJson = JSON.parse(err.error);
                 detail = detail = this.translateService.instant(errorJson.error.description);
