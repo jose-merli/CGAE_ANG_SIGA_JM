@@ -97,7 +97,7 @@ export class TablaGuardiasComponent implements OnInit {
     this.cols = [
       { field: "turno", header: "dato.jgr.guardia.guardias.turno" },
       { field: "nombre", header: "administracion.parametrosGenerales.literal.nombre" },
-      { field: "idTipoGuardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
+      { field: "tipoGuardia", header: "dato.jgr.guardia.guardias.tipoGuardia" },
       { field: "obligatoriedad", header: "dato.jgr.guardia.guardias.obligatoriedad" },
       { field: "tipoDia", header: "dato.jgr.guardia.guardias.tipoDia" },
       { field: "duracion", header: "dato.jgr.guardia.guardias.duracion" },
