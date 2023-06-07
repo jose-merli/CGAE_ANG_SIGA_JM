@@ -434,7 +434,7 @@
                                         [autoWidth]="false" [(ngModel)]='cell.value' filterBy="label,labelSinTilde"
                                         [filter]="true" [options]="cell.combo" showClear="true"
                                         (onChange)="onChangeMulti($event, row['id'], cell, z, false, i)"
-                                        class="select-form">
+                                        class="select-form" [autoDisplayFirst]="false">
                                     </p-dropdown>
                                 </span>
 

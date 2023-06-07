@@ -1877,7 +1877,7 @@ export class TablaResultadoDesplegableComponent implements OnInit {
                   { type: 'select', value: desig[4].value, size: 400, combo: this.comboModulos, disabled: null }, //modulo
                   { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
                   { type: 'datePicker', value: this.formatDate(new Date()), size: 200, combo: null, disabled: null },
-                  { type: 'multiselect3', value: this.comboAcreditacion[0].value, size: 200, combo: this.comboAcreditacion, disabled: null },
+                  { type: 'multiselect3', value: null, size: 200, combo: this.comboAcreditacion, disabled: null },
                   { type: 'checkbox', value: validacion, size: 80, combo: null, disabled: null },
                   { type: 'invisible', value: desig[19].value, size: 0, combo: null, disabled: null },//numDesig
                   { type: 'invisible', value: '', size: 0, combo: null, disabled: null },
