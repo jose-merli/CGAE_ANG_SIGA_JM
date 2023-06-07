@@ -43,7 +43,7 @@
       <label>{{'justiciaGratuita.ejg.datosGenerales.Juzgado' | translate}}</label>
       <p-dropdown class="select-form" [(ngModel)]="juzgadoValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="juzgadoOpciones" [filter]="true"
-        (onChange)="changeJuzgado()" filterBy="label,labelSinTilde" [showClear]="true">
+        (onChange)="changeJuzgado()" filterBy="label,labelSinTilde,labelTildeContraria"  [showClear]="true">
       </p-dropdown>
     </div>
 
@@ -51,7 +51,7 @@
       <label>{{'justiciaGratuita.maestros.Procedimiento' | translate}}</label>
       <p-dropdown class="select-form" [(ngModel)]="procedimientoValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="procedimientoOpciones" [filter]="true"
-        (onChange)="changeProcedimiento()" filterBy="label,labelSinTilde" [showClear]="true">
+        (onChange)="changeProcedimiento()" filterBy="label,labelSinTilde,labelTildeContraria" [showClear]="true">
       </p-dropdown>
     </div>
 
@@ -59,7 +59,7 @@
       <label>{{'justiciaGratuita.oficio.designas.actuaciones.modulo' | translate}}</label>
       <p-dropdown class="select-form" [(ngModel)]="moduloValue"
         placeholder="{{'general.boton.seleccionar' | translate}}" [options]="moduloOpciones" [filter]="true"
-        (onChange)="changeModulo()" filterBy="label,labelSinTilde" [showClear]="true">
+        (onChange)="changeModulo()" filterBy="label,labelSinTilde,labelTildeContraria" [showClear]="true">
       </p-dropdown>
     </div>
 
@@ -67,7 +67,7 @@
       <label>{{'justiciaGratuita.ejg.preDesigna.delitos' | translate}}</label>
       <p-multiSelect #someDropdown defaultLabel="{{'general.boton.seleccionar' | translate}}" autoWidth="false"
         [(ngModel)]="delitosValue" [options]="delitosOpciones" maxSelectedLabels="10"
-        [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde"
+        [selectedItemsLabel]="textSelected" styleClass="widthAll" [filter]="true" filterBy="label,labelSinTilde,labelTildeContraria"
         (onPanelShow)="focusInputField(someDropdown)">
       </p-multiSelect>
     </div>

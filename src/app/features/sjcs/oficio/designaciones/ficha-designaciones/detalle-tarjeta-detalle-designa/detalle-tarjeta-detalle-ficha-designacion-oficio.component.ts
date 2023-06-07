@@ -517,14 +517,16 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        this.arregloTildesCombo(this.juzgadoOpciones);
+        // this.arregloTildesCombo(this.juzgadoOpciones); // Ahora se llamará desde el servicio
+        this.commonsService.arregloTildesCombo(this.juzgadoOpciones);
+        this.commonsService.arregloTildesContrariaCombo(this.juzgadoOpciones);
         this.juzgadoOpciones.sort( (a, b) => {
           return a.label.localeCompare(b.label);
         });
         this.progressSpinner = false;
       }
     );
-  }
+  } 
 
   getComboProcedimientos() {
     this.progressSpinner = true;
@@ -550,7 +552,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.progressSpinner = false;
       }, () => {
         if (!this.procedimientoOpciones != null) {
-          this.arregloTildesCombo(this.procedimientoOpciones);
+          this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
+          this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
         }
         this.progressSpinner = false;
       }
@@ -586,7 +589,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.progressSpinner = false;
       }, () => {
         if (!this.moduloOpciones != null) {
-          this.arregloTildesCombo(this.moduloOpciones);
+          this.commonsService.arregloTildesCombo(this.moduloOpciones);
+          this.commonsService.arregloTildesContrariaCombo(this.moduloOpciones);
         }
         this.progressSpinner = false;
       }
@@ -604,7 +608,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         //console.log(err);
         this.progressSpinner = false;
       }, () => {
-        this.arregloTildesCombo(this.delitosOpciones);
+        this.commonsService.arregloTildesCombo(this.delitosOpciones);
+        this.commonsService.arregloTildesContrariaCombo(this.delitosOpciones);
         //this.progressSpinner = false;
         this.getDelitosSeleccionados(designaItem);
         
@@ -636,7 +641,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.progressSpinner = false;
       }, () => {
         if (!this.procedimientoOpciones != null) {
-          this.arregloTildesCombo(this.procedimientoOpciones);
+          this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
+          this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
         }
         this.progressSpinner = false;
       }
@@ -667,7 +673,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.progressSpinner = false;
       }, () => {
         if (!this.procedimientoOpciones != null) {
-          this.arregloTildesCombo(this.procedimientoOpciones);
+          this.commonsService.arregloTildesCombo(this.procedimientoOpciones);
+          this.commonsService.arregloTildesContrariaCombo(this.procedimientoOpciones);
         }
         this.progressSpinner = false;
       }
@@ -698,7 +705,8 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.progressSpinner = false;
       }, () => {
         if (!this.moduloOpciones != null) {
-          this.arregloTildesCombo(this.moduloOpciones);
+          this.commonsService.arregloTildesCombo(this.moduloOpciones);
+          this.commonsService.arregloTildesContrariaCombo(this.moduloOpciones);
         }
         this.progressSpinner = false;
       }
@@ -744,29 +752,40 @@ export class DetalleTarjetaDetalleFichaDesignacionOficioComponent implements OnI
         this.progressSpinner = false;
       }, () => {
         if (!this.moduloOpciones != null) {
-          this.arregloTildesCombo(this.moduloOpciones);
+          this.commonsService.arregloTildesCombo(this.moduloOpciones);
+          this.commonsService.arregloTildesContrariaCombo(this.moduloOpciones);
         }
         this.progressSpinner = false;
       }
     );
   }
-  arregloTildesCombo(combo) {
-    if (combo != undefined)
-      combo.map(e => {
-        let accents =
-          "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
-        let accentsOut =
-          "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
-        let i;
-        let x;
-        for (i = 0; e.label != undefined && i < e.label.length; i++) {
-          if ((x = accents.indexOf(e.label[i])) != -1) {
-            e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
-            return e.labelSinTilde;
-          }
-        }
-      });
-  }
+
+
+  // La función que se declara a continuación ha sido comentada porque existe en el servicio, donde se use ahora se va a importar desde allí y no desde aquí
+
+  // arregloTildesCombo(combo) {
+
+  //   console.log("desde la clase detalle tarjeta");
+
+  //   if (combo != undefined)
+    
+  //     combo.map(e => {
+  //       let accents =
+  //         "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
+  //       let accentsOut =
+  //         "AAAAAAaaaaaaOOOOOOOooooooEEEEeeeeeCcDIIIIiiiiUUUUuuuuNnSsYyyZz";
+  //       let i;
+  //       let x;
+  //       for (i = 0; e.label != undefined && i < e.label.length; i++) {
+  //         if ((x = accents.indexOf(e.label[i])) != -1) {
+            
+  //           e.labelSinTilde = e.label.replace(e.label[i], accentsOut[x]);
+  //           return e.labelSinTilde;
+  //         }
+  //       }
+  //     });
+  // }
+            
 
   validarNig(nig) {
     let ret = false;

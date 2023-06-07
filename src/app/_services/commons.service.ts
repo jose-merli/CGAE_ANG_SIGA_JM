@@ -120,7 +120,10 @@ export class CommonsService {
     );
   }
 
+
+
   arregloTildesCombo(combo) {
+   
     combo.map(e => {
       let accents =
         "ÀÁÂÃÄÅàáâãäåÒÓÔÕÕÖØòóôõöøÈÉÊËèéêëðÇçÐÌÍÎÏìíîïÙÚÛÜùúûüÑñŠšŸÿýŽž";
@@ -136,6 +139,31 @@ export class CommonsService {
       }
     });
   }
+          
+          
+         
+        
+
+  arregloTildesContrariaCombo(combo) {
+    
+    combo.map(e => {
+      let accents =
+        "ÁÉÍÓÚáéíóú";
+      let accentsOut =
+        "ÀÈÌÒÙàèìòù";
+      let i;
+      let x;
+      for (i = 0; i < e.label.length; i++) {
+        if ((x = accents.indexOf(e.label[i])) != -1) {
+          e.labelTildeContraria = e.label.replace(e.label[i], accentsOut[x]);
+          return e.labelTildeContraria;
+        }
+      }
+    });
+  }
+          
+          
+         
 
   getLetrado = () => {
 		let isLetrado: ComboItem;
@@ -316,9 +344,9 @@ export class CommonsService {
 	para poder filtrar el dato con o sin estos caracteres*/
     let labelSinTilde = string;
     let accents =
-      'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
+      'ÀÁÂÃÄÅAàáâãäåÒÓÔÕÕÖOØòóôõöøEÈÉÊËèèéêëðCÇçÐDÌÍÎÏIìíîïUÙÚÛÜùúûüÑñSŠšŸYÿýŽžZ';
     let accentsOut =
-      'aaaaaaaaaaaaaooooooooooooooeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz';
+      'aaaaaaaaaaaaaooooooooooooooeeeeeeeeeeecccddiiiiiiiiiuuuuuuuuunnsssyyyyzzz';
     let i;
     let x;
     for (i = 0; i < labelSinTilde.length; i++) {
