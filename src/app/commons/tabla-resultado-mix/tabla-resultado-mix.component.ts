@@ -1139,76 +1139,89 @@ export class TablaResultadoMixComponent implements OnInit {
     this.fechaActual = event;
   }
 
-  habilitarBotones(){
+  habilitarBotones() {
     // Creamos Array con todas las filas selecionadas
-    var rowsSelecteds =  [];
+    var rowsSelecteds = [];
     let validarInscripciones = '';
     let estadoNombre = '';
+    let hayInscripcionObligatoria = false;
     rowsSelecteds.push(this.selectedRowValue);
 
+    if (rowsSelecteds.length > 0) {
+      rowsSelecteds.forEach(item => {
+        if (hayInscripcionObligatoria == false && item[32].value == "Obligatorias") {
+          this.habilitadoValidar = true;
+          this.habilitadoSolicitarBaja = true;
+          this.habilitadoCambiarFecha = true;
+          this.habilitadoDenegar = true;
+
+          hayInscripcionObligatoria = true;
+        }
+      });
+    }
 
     this.estadosDistintos = false;
-    if(this.selectedArray.length > 0){
-      let i =this.selectedArray[0];
-    let estadoInicial= this.rowGroups[i].cells[8].value;
+    if (!hayInscripcionObligatoria && this.selectedArray.length > 0) {
+      let i = this.selectedArray[0];
+      let estadoInicial = this.rowGroups[i].cells[8].value;
 
-    this.selectedArray.forEach(item => {
-      let obj = this.rowGroups[item];
-      if(obj.cells[8].value != estadoInicial){
-        this.estadosDistintos = true;
+      this.selectedArray.forEach(item => {
+        let obj = this.rowGroups[item];
+        if (obj.cells[8].value != estadoInicial) {
+          this.estadosDistintos = true;
+        }
+      });
+
+
+      if (this.selectedRowValue[22] != undefined) {
+        validarInscripciones = this.selectedRowValue[23].value;
       }
-    });
-    
+      /*if (this.selectedRowValue[8] != undefined){
+        estadoNombre = this.selectedRowValue[8].value;
+      }*/
+      this.infoHabilitado = {
+        isLetrado: this.isLetrado,
+        validarInscripciones: validarInscripciones,
+        estadoNombre: estadoInicial
+      };
 
-    if (this.selectedRowValue[22] != undefined){
-      validarInscripciones = this.selectedRowValue[23].value;
-    }
-    /*if (this.selectedRowValue[8] != undefined){
-      estadoNombre = this.selectedRowValue[8].value;
-    }*/
-    this.infoHabilitado= {
-      isLetrado : this.isLetrado,
-      validarInscripciones: validarInscripciones,
-      estadoNombre: estadoInicial
- };    
+      if (this.infoHabilitado.validarInscripciones == "S" && (this.infoHabilitado.estadoNombre == "Pendiente de Alta" || this.infoHabilitado.estadoNombre == "Pendiente de Baja") && !this.isLetrado && (!this.estadosDistintos)) {
+        this.habilitadoValidar = false;
+      } else {
+        this.habilitadoValidar = true;
+      }
 
-    if(this.infoHabilitado.validarInscripciones=="S" && (this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja") && !this.isLetrado && (!this.estadosDistintos)){
-      this.habilitadoValidar=false;
-    }else{
-      this.habilitadoValidar=true;
-    }
+      if ((this.infoHabilitado.estadoNombre == "Pendiente de Alta" || this.infoHabilitado.estadoNombre == "Pendiente de Baja") && !this.isLetrado && (!this.estadosDistintos)) {
+        this.habilitadoDenegar = false;
+        this.habilitadoCambiarFecha = false;
+      } else {
+        this.habilitadoDenegar = true;
+        this.habilitadoCambiarFecha = true;
+      }
 
-    if((this.infoHabilitado.estadoNombre=="Pendiente de Alta" || this.infoHabilitado.estadoNombre=="Pendiente de Baja")&& !this.isLetrado && (!this.estadosDistintos)){
-      this.habilitadoDenegar=false;
-      this.habilitadoCambiarFecha=false;
-    }else{
-      this.habilitadoDenegar=true;
-      this.habilitadoCambiarFecha=true;
-    }
+      if (this.infoHabilitado.estadoNombre == "Baja" && !this.isLetrado && (!this.estadosDistintos)) {
+        this.habilitadoCambiarFecha = false;
+      } else {
+        this.habilitadoCambiarFecha = true;
+      }
 
-    if(this.infoHabilitado.estadoNombre=="Baja"&& !this.isLetrado  && (!this.estadosDistintos)){
-      this.habilitadoCambiarFecha=false;
-    }else{
-      this.habilitadoCambiarFecha=true;
-    }
+      if ((this.infoHabilitado.estadoNombre == "Denegada") && !this.isLetrado) {
+        this.habilitadoCambiarFecha = true;
+      }
 
-    if((this.infoHabilitado.estadoNombre=="Denegada") && !this.isLetrado){
-      this.habilitadoCambiarFecha=true;
-    }
+      if (this.infoHabilitado.estadoNombre == "Alta" && (this.estadosDistintos)) {
+        this.habilitadoSolicitarBaja = false;
+      } else {
+        this.habilitadoSolicitarBaja = true;
 
-    if(this.infoHabilitado.estadoNombre=="Alta"  && (this.estadosDistintos)){
-      this.habilitadoSolicitarBaja=false;
-    }else{
-      this.habilitadoSolicitarBaja=true;
+      }
 
-    }
-
-    if(this.infoHabilitado.estadoNombre == null || this.infoHabilitado.estadoNombre == undefined || this.infoHabilitado.estadoNombre==""){
-      this.habilitadoValidar = true;
-      this.habilitadoSolicitarBaja = true;
-      this.habilitadoCambiarFecha = true;
-      this.habilitadoDenegar = true;
-    }
+      if (this.infoHabilitado.estadoNombre == null || this.infoHabilitado.estadoNombre == undefined || this.infoHabilitado.estadoNombre == "") {
+        this.habilitadoValidar = true;
+        this.habilitadoSolicitarBaja = true;
+        this.habilitadoCambiarFecha = true;
+        this.habilitadoDenegar = true;
+      }
     }
 
   }
