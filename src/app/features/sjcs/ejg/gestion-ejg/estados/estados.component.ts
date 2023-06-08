@@ -408,9 +408,13 @@ export class EstadosComponent implements OnInit {
 
     if (this.creaEstado == true) {
       let estadoNew = new EstadoEJGItem();
-
-      let fechaAux :number = this.formatDate4(this.formatDate3(this.fechaIni));
-      estadoNew.fechaInicio = new Date(fechaAux);
+      if(this.fechaIni){
+        let fechaAux :number = this.formatDate4(this.formatDate3(this.fechaIni));
+        estadoNew.fechaInicio = new Date(fechaAux);
+      } else {
+        estadoNew.fechaInicio = new Date();
+      }
+      
       estadoNew.idEstadoejg = this.valueComboEstado;
       estadoNew.observaciones = this.observacionesEstado;
 
