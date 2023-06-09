@@ -1210,6 +1210,7 @@ export class FiltroDesignacionesComponent implements OnInit {
     this.fechaJustificacionHastaSelect = undefined;
     this.getBuscadorDesignas();
     sessionStorage.removeItem("filtroDesignas");
+    this.showTablaJustificacionExpres.emit(false);
   }
 
   onChangeCheckMostrarPendientes(event) {
