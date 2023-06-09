@@ -141,14 +141,14 @@
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
                                 <app-fecha [(value)]="cell.value" [utc]="false"
                                     (valueChangeSelected)="fillFecha($event, cell, rowGroup.id, row, rowGroup, true, z)"
-                                    (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)"
+                                    (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup, undefined, z)"
                                     [disabled]="isLetrado" [showTime]="cell.showTime">
                                 </app-fecha>
                             </span>
                             <span class="w100 cell-value" *ngIf="cell.type == 'datePickerAsist'">
                                 <app-fecha [(value)]="cell.value" [utc]="false"
                                     (valueChangeSelected)="fillFechaAsist($event, cell, rowGroup.id, row, rowGroup, true, z)"
-                                    (valueChangeInput)="fillFechaAsist($event, cell, rowGroup.id, row, rowGroup)"
+                                    (valueChangeInput)="fillFechaAsist($event, cell, rowGroup.id, row, rowGroup, undefined, z)"
                                     [disabled]="isLetrado" [showTime]="cell.showTime">
                                 </app-fecha>
                             </span>
@@ -329,14 +329,14 @@
                                 <span class="w100 cell-value" *ngIf="cell.type == 'datePicker'">
                                     <app-fecha [(value)]="cell.value" [utc]="false"
                                         (valueChangeSelected)="fillFecha($event, cell, rowGroup.id, row, rowGroup, false, i)"
-                                        (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)"
+                                        (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup, undefined, i)"
                                         [disabled]="isLetrado" [showTime]="cell.showTime">
                                     </app-fecha>
                                 </span>
                                 <span class="w100 cell-value" *ngIf="cell.type == 'datePickerAct'">
                                     <app-fecha [(value)]="cell.value" [utc]="false"
                                         (valueChangeSelected)="fillFecha($event, cell, rowGroup.id, row, rowGroup, false, i)"
-                                        (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup)"
+                                        (valueChangeInput)="fillFecha($event, cell, rowGroup.id, row, rowGroup, undefined, i)"
                                         [disabled]="isLetrado" [showTime]="cell.showTime">
                                     </app-fecha>
                                 </span>

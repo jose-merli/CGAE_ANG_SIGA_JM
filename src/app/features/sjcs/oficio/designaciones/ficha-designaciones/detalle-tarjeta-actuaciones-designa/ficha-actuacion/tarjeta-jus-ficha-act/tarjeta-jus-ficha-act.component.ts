@@ -20,6 +20,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
   msgs: Message[] = [];
   progressSpinner: boolean = false;
   isAnulada: boolean = false;
+  isValidada: boolean = false;
   @Output() isAnuladaEvent = new EventEmitter<boolean>();
   @Output() changeDataEvent = new EventEmitter<any>();
   @Output() buscarActuacionEvent = new EventEmitter<any>();
@@ -123,6 +124,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.validada = true;
           this.estado = 'Validada';
+          this.isValidada = true;
 
           if (fechaTarjetaPlegada != null) {
             this.actuacionDesigna.actuacion.fechaJustificacion = fechaTarjetaPlegada;
@@ -163,6 +165,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
 
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.validada = false;
+          this.isValidada = false;
           this.estado = '';
           this.buscarActuacionEvent.emit(this.actuacionDesigna.actuacion.numeroAsunto);
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
@@ -186,6 +189,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       this.isAnulada = this.anuladaActuacion;
       this.estado = 'Anulada';
     } else if (this.validadaActuacion) {
+      this.isValidada = this.validadaActuacion;
       this.estado = 'Validada';
     } else {
       this.estado = '';
@@ -206,6 +210,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
       this.isAnulada = this.anuladaActuacion;
       this.estado = 'Anulada';
     } else if (this.validadaActuacion) {
+      this.isValidada = this.validadaActuacion;
       this.estado = 'Validada';
     } else {
       this.estado = '';
@@ -255,6 +260,7 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
           this.isAnulada = true;
           this.estado = 'Anulada';
           this.isAnuladaEvent.emit(true);
+          this.buscarActuacionEvent.emit(this.actuacionDesigna.actuacion.numeroAsunto);
           sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }
@@ -291,8 +297,14 @@ export class TarjetaJusFichaActComponent implements OnInit, OnChanges, OnDestroy
         if (resp.status == 'OK') {
           this.actuacionDesigna.actuacion.anulada = false;
           this.isAnulada = false;
-          this.estado = '';
+          if (this.validadaActuacion) {
+            this.isValidada = this.validadaActuacion;
+            this.estado = 'Validada';
+          } else {
+            this.estado = '';
+          }
           this.isAnuladaEvent.emit(false);
+          this.buscarActuacionEvent.emit(this.actuacionDesigna.actuacion.numeroAsunto);
           sessionStorage.setItem("datosIniActuDesignaJust", JSON.stringify(this.actuacionDesigna));
           this.showMsg('success', this.translateService.instant('general.message.correct'), this.translateService.instant('general.message.accion.realizada'));
         }

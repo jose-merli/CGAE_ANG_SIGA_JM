@@ -156,6 +156,7 @@ export class FichaActuacionComponent implements OnInit {
 
           if (actuacionJE.isNew) {
             this.actuacionDesigna = actuacionJE;
+            this.isAnulada = this.actuacionDesigna.actuacion.anulada;
             this.getPermiteTurno();
           } else {
             this.getActuacionDesigna('0', actuacionJE);
@@ -169,9 +170,7 @@ export class FichaActuacionComponent implements OnInit {
           this.actuacionDesigna = actuacion;
           this.getPermiteTurno();
           // Actuacion Anulada Permiso solo para visualizar Datos de Actuacion.
-          if (this.actuacionDesigna.actuacion.anulada == true) {
-            this.isAnulada = true;
-          }
+          this.isAnulada = this.actuacionDesigna.actuacion.anulada;
         }
 
       }
@@ -212,7 +211,7 @@ export class FichaActuacionComponent implements OnInit {
       this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiDatosGen').opened = true;
     } else {
 
-      if ((!this.isColegiado && this.actuacionDesigna.actuacion.validada && (!this.permiteTurno || !this.actuacionDesigna.actuacion.permiteModificacion)) || (this.actuacionDesigna.actuacion.facturado)) {
+      if ((this.isColegiado && this.actuacionDesigna.actuacion.validada && (!this.permiteTurno || !this.actuacionDesigna.actuacion.permiteModificacion)) || (this.actuacionDesigna.actuacion.facturado)) {
         this.modoLectura = true;
       }
 
@@ -395,7 +394,7 @@ export class FichaActuacionComponent implements OnInit {
       numero: this.actuacionDesigna.actuacion.numero,
       numeroAsunto: this.actuacionDesigna.actuacion.numeroAsunto,
       idPersonaColegiado: '',
-      historico: false,
+      historico: true,
       esLetrado: this.isLetrado
     };
 
@@ -514,7 +513,7 @@ export class FichaActuacionComponent implements OnInit {
         idTurno: actuacionJE.actuacion.idTurno,
         numero: actuacionJE.designaItem.numero,
         numeroAsunto: actuacionJE.actuacion.numeroAsunto,
-        historico: false,
+        historico: (actuacionJE.actuacion.anulada)? true:false,// false,
         idPersonaColegiado: ''
       };
     } else {
@@ -523,7 +522,7 @@ export class FichaActuacionComponent implements OnInit {
         idTurno: this.actuacionDesigna.designaItem.idTurno,
         numero: this.actuacionDesigna.designaItem.numero,
         numeroAsunto: event,
-        historico: false,
+        historico: (this.actuacionDesigna.actuacion && this.actuacionDesigna.actuacion.anulada)? true:false,//false,
         idPersonaColegiado: ''
       };
     }
@@ -565,6 +564,7 @@ export class FichaActuacionComponent implements OnInit {
 
           this.actuacionDesigna.designaItem = designa;
           this.actuacionDesigna.actuacion = resp;
+          this.isAnulada = this.actuacionDesigna.actuacion.anulada;
           this.actuacionDesigna.isNew = false;
           this.isNewActDesig = false;
 
@@ -609,7 +609,13 @@ export class FichaActuacionComponent implements OnInit {
       } else {
         this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[0].value = null;
       }
-      this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[1].value = this.actuacionDesigna.actuacion.validada ? 'Validada' : 'Pendiente de validar';
+      if(this.actuacionDesigna.actuacion.anulada){
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[1].value = 'Anulada';
+      } else if(this.actuacionDesigna.actuacion.validada){
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[1].value = 'Validada';
+      } else{
+        this.listaTarjetas.find(el => el.id == 'sjcsDesigActuaOfiJustifi').campos[1].value = 'Pendiente de validar';
+      }
     }
 
     // Se rellenan los campos de la tarjeta Relaciones plegada

@@ -696,9 +696,9 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         }
       } else if (this.pantalla == 'JE') {
         cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
-          this.indicesToUpdate.push([rowId, index]);
-        }
+        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) { // Esto lo hacen para no meter dups
+          this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
+        }   
       } else {
         cell.value = event;
         this.rowIdsToUpdate.push(rowId);
@@ -709,8 +709,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       if ((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)) {
         if (row.cells[8].value != true) {
           cell.value = this.datepipe.transform(event, 'dd/MM/yyyy');
-          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
-            this.indicesToUpdate.push([rowId, index]);
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
+            this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
 
             if ((row.cells[0].value[1] == undefined || row.cells[0].value[1].length == 0) && row.cells[6].value != undefined) {
               this.newActuacionesArr.push(row);
@@ -783,8 +783,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       const newAllow = rowGroup.rows[0].cells[40].value;
       if ((this.isLetrado && row.cells[8].value != true && newAllow == "1") || (!this.isLetrado)) {
         if (row.cells[8].value != true) {
-          if (row.cells[0].value[1] != undefined && row.cells[0].value[1].length != 0 && !this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
-            this.indicesToUpdate.push([rowId, index]);
+          if (row.cells[0].value[1] != undefined && row.cells[0].value[1].length != 0 && !this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
+            this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
           }
         } else {
           this.rowValidadas.push(row);
@@ -832,8 +832,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if ((this.isLetrado && row.cells[8].value != true && this.turnoAllow != "1") || (!this.isLetrado)) {
         if (row.cells[8].value != true) {
-          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
-            this.indicesToUpdate.push([rowId, index]);
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
+            this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
           }
           if (cell != undefined) {
             cell.value[0] = event;
@@ -882,8 +882,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
         this.turnoAllow = rowGroup.rows[0].cells[39].value;
         const newAllow = rowGroup.rows[0].cells[40].value;
         if ((this.isLetrado && newAllow == "1" && this.turnoAllow != "1") || (!this.isLetrado)) {
-          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
-            this.indicesToUpdate.push([rowId, index]);
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
+            this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
             this.rowIdsToUpdate.push(rowId);
           }
           /*}else{
@@ -953,8 +953,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.actuacionesToAdd=rowGroup;
       //actuacion
       if (row.cells[8].value != true) {
-        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
-          this.indicesToUpdate.push([rowId, index]);
+        if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
+          this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
         }
 
         this.rowIdsToUpdate.push(rowId);
@@ -1001,8 +1001,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
       this.turnoAllow = rowGroup.rows[0].cells[39].value;
       if ((this.isLetrado && (this.turnoAllow != "1" || this.turnoAllow == "1" && row.cells[8].value != true)) || (!this.isLetrado)) {
         if (row.cells[8].value != true) {
-          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == index)) {
-            this.indicesToUpdate.push([rowId, index]);
+          if (!this.indicesToUpdate.some(d => d[0] == rowId && d[1] == rowGroup.rows[index+1].cells[19].value)) {
+            this.indicesToUpdate.push([rowId, rowGroup.rows[index+1].cells[19].value]);
           }
         } else {
           this.rowValidadas.push(row);
@@ -1634,12 +1634,14 @@ export class TablaResultadoDesplegableComponent implements OnInit {
   
             // Línea que actualiza la designación
             rowsToUpdate.push(row.rows[0]);
-  
+            //Se obtiene el numero de las actuaciones que se han modificado de una designacion concreta
+            let actIndexes = this.indicesToUpdate.filter(d => d[0] == row.id.toString()).map(d=>d[1]);
             // Se agregan las actuaciones modificadas
             rowsToUpdate = rowsToUpdate.concat(row.rows.slice(1).filter(d => Array.isArray(d.cells[0].value)
               && d.cells[0].value.length > 1
               && d.cells[0].value[1] != undefined && d.cells[0].value[1] != 'Nuevo'
-              && (d.cells[0].value[1] != undefined || d.cells[0].value[1] != '')));
+              && (d.cells[0].value[1] != undefined || d.cells[0].value[1] != '')
+              && actIndexes.includes(d.cells[19].value)));
   
             row.rows = rowsToUpdate;
   
@@ -2130,7 +2132,8 @@ export class TablaResultadoDesplegableComponent implements OnInit {
             //act.idAcreditacion = rowGroup.rows[0].cells[10].value;
             //act.numeroAsunto = rowGroup.rows[0].cells[19].value;
           }
-
+          // Para que en la query busque entre actuaciones anuladas y no anuladas (true), solo no anuladas(false)
+          act.anulada = true;
           let actuacion: Actuacion = {
             isNew: (row == null),
             designaItem: des,
